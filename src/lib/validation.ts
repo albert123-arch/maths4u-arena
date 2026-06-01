@@ -34,6 +34,17 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+export const registerSchema = z.object({
+  email: z.email().transform((value) => value.toLowerCase()),
+  password: z.string().min(8, messages.validation.passwordTooShort),
+  name: z
+    .string()
+    .trim()
+    .max(191)
+    .optional()
+    .transform((value) => (value ? value : null)),
+});
+
 export const testWriteSchema = z.object({
   title: z.string().trim().min(2).max(191),
   slug: z.string().trim().max(191).optional().default(""),

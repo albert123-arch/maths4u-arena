@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { AdminLoginForm } from "@/components/admin-login-form";
 import { messages } from "@/lib/messages";
 
@@ -12,6 +14,12 @@ export default function AdminLoginPage() {
           <p className="text-sm text-slate-600">{messages.adminLogin.subtitle}</p>
         </div>
         <AdminLoginForm />
+        <Link
+          href="/register"
+          className="mt-4 block text-sm font-medium text-teal-800 hover:text-teal-900"
+        >
+          {messages.adminLogin.registerLink}
+        </Link>
       </section>
     </main>
   );

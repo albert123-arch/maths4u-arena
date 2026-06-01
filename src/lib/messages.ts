@@ -41,6 +41,20 @@ export const messages = {
     signIn: "Sign In",
     signingIn: "Signing In...",
     failed: "Login failed",
+    registerLink: "Create a temporary account",
+  },
+  register: {
+    title: "Create Account",
+    subtitle: "Create a regular account. Change its role to ADMIN in the database if needed.",
+    name: "Name",
+    nameOptional: "Name (optional)",
+    password: "Password",
+    submit: "Create Account",
+    pending: "Creating...",
+    success:
+      "Account created. Change the user's role to ADMIN in the database, then sign in.",
+    loginLink: "Back to admin login",
+    failed: "Registration failed",
   },
   dashboard: {
     title: "Dashboard",
@@ -173,6 +187,8 @@ export const messages = {
       "Question controls, timers, and live results will be added in later stages.",
   },
   api: {
+    emailAlreadyRegistered: "Email is already registered.",
+    registrationFailed: "Registration failed.",
     invalidCredentials: "Invalid email or password.",
     loginFailed: "Login failed",
     unauthorized: "Unauthorized.",
@@ -193,5 +209,6 @@ export const messages = {
   validation: {
     jsonFieldInvalid: "JSON field must contain valid JSON.",
     correctOptionRequired: "At least one option must be marked correct.",
+    passwordTooShort: "Password must be at least 8 characters.",
   },
 } as const;
