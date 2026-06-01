@@ -1,7 +1,7 @@
+"use client";
+
 import { AdminLoginForm } from "@/components/admin-login-form";
 import { messages } from "@/lib/messages";
-
-export const dynamic = "force-dynamic";
 
 export default function AdminLoginPage() {
   return (

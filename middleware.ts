@@ -8,6 +8,7 @@ function isPublicOrStaticPath(pathname: string) {
     pathname.startsWith("/admin/login/") ||
     pathname === "/api/admin/login" ||
     pathname === "/api/health" ||
+    pathname === "/api/ping" ||
     pathname === "/api/db-check" ||
     pathname.startsWith("/_next/") ||
     pathname === "/favicon.ico" ||
