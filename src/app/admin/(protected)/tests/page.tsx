@@ -59,8 +59,8 @@ export default async function AdminTestsPage() {
                         </span>
                       </div>
                       <p className="mt-1 text-sm text-slate-600">
-                        {test.subject} · {test.slug} · {messages.tests.versionPrefix.toLowerCase()}{" "}
-                        {latestVersion?.versionNumber ?? 1} · {messages.tests.questionCount}{" "}
+                        {test.subject} - {test.slug} - {messages.tests.versionPrefix.toLowerCase()}{" "}
+                        {latestVersion?.versionNumber ?? 1} - {messages.tests.questionCount}{" "}
                         {latestVersion?._count.questions ?? 0}
                       </p>
                     </div>

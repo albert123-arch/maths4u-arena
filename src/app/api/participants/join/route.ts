@@ -42,6 +42,7 @@ export async function POST(request: Request) {
 
     const response = ok({
       participant,
+      participantToken,
       session,
     });
 

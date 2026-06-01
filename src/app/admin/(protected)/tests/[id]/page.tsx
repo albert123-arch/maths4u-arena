@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { TestForm } from "@/components/test-form";
+import { TestVersionEditor } from "@/components/test-version-editor";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 
@@ -13,23 +14,51 @@ type PageProps = {
 
 export default async function EditTestPage({ params }: PageProps) {
   const { id } = await params;
-  const test = await prisma.test.findUnique({
-    where: { id },
-    include: {
-      versions: {
-        orderBy: { versionNumber: "desc" },
-        include: {
-          _count: {
-            select: { questions: true },
+  const [test, questionBank] = await Promise.all([
+    prisma.test.findUnique({
+      where: { id },
+      include: {
+        versions: {
+          orderBy: { versionNumber: "desc" },
+          include: {
+            _count: {
+              select: { questions: true },
+            },
+            questions: {
+              orderBy: { sortOrder: "asc" },
+              include: {
+                question: {
+                  select: {
+                    id: true,
+                    prompt: true,
+                    type: true,
+                    subject: true,
+                    difficulty: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
-    },
-  });
+    }),
+    prisma.question.findMany({
+      orderBy: [{ subject: "asc" }, { difficulty: "asc" }, { updatedAt: "desc" }],
+      select: {
+        id: true,
+        prompt: true,
+        type: true,
+        subject: true,
+        difficulty: true,
+      },
+    }),
+  ]);
 
   if (!test) {
     notFound();
   }
+
+  const draftVersion = test.versions.find((version) => version.status === "DRAFT") ?? null;
 
   return (
     <div className="grid gap-6">
@@ -45,19 +74,39 @@ export default async function EditTestPage({ params }: PageProps) {
       <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
         <TestForm initial={test} mode="edit" />
       </section>
-      <section className="rounded-md border border-dashed border-slate-300 bg-white p-5">
-        <h2 className="text-lg font-semibold">{messages.tests.versionsTitle}</h2>
-        <div className="mt-3 grid gap-2 text-sm text-slate-600">
-          {test.versions.map((version) => (
-            <p key={version.id}>
-              {messages.tests.versionPrefix} {version.versionNumber}: {version.status},{" "}
-              {messages.tests.questionCount}{" "}
-              {version._count.questions}
-            </p>
-          ))}
-          <p>{messages.tests.versionAttachPlaceholder}</p>
-        </div>
-      </section>
+      <TestVersionEditor
+        key={draftVersion?.id ?? "no-draft-version"}
+        testId={test.id}
+        versions={test.versions.map((version) => ({
+          id: version.id,
+          versionNumber: version.versionNumber,
+          title: version.title,
+          status: version.status,
+          publishedAt: version.publishedAt?.toISOString() ?? null,
+          _count: version._count,
+        }))}
+        draftVersion={
+          draftVersion
+            ? {
+                id: draftVersion.id,
+                versionNumber: draftVersion.versionNumber,
+                title: draftVersion.title,
+                instructions: draftVersion.instructions,
+                settingsJson: draftVersion.settingsJson,
+                status: draftVersion.status,
+                questions: draftVersion.questions.map((item) => ({
+                  id: item.id,
+                  questionId: item.questionId,
+                  sortOrder: item.sortOrder,
+                  points: item.points,
+                  timeLimitSeconds: item.timeLimitSeconds,
+                  question: item.question,
+                })),
+              }
+            : null
+        }
+        questionBank={questionBank}
+      />
     </div>
   );
 }

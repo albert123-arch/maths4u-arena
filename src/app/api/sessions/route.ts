@@ -61,6 +61,22 @@ export async function POST(request: Request) {
 
   try {
     const input = sessionCreateSchema.parse(await request.json());
+    const version = await prisma.testVersion.findUnique({
+      where: { id: input.testVersionId },
+      select: {
+        id: true,
+        status: true,
+      },
+    });
+
+    if (!version) {
+      return fail(messages.api.versionNotFound, 404);
+    }
+
+    if (version.status !== "PUBLISHED") {
+      return fail(messages.api.publishedVersionRequired, 409);
+    }
+
     const session = await prisma.gameSession.create({
       data: {
         testVersionId: input.testVersionId,
@@ -68,6 +84,18 @@ export async function POST(request: Request) {
         mode: input.mode,
         settingsJson: input.settingsJson,
         showResults: input.showResults,
+      },
+      include: {
+        testVersion: {
+          select: {
+            title: true,
+            test: {
+              select: {
+                title: true,
+              },
+            },
+          },
+        },
       },
     });
 

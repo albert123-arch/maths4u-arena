@@ -20,13 +20,13 @@ const cards = [
   },
   {
     label: messages.dashboard.cards.sessions.label,
-    href: "#sessions",
+    href: "/admin/sessions",
     description: messages.dashboard.cards.sessions.description,
     key: "sessions",
   },
   {
     label: messages.dashboard.cards.results.label,
-    href: "#results",
+    href: "/admin/sessions",
     description: messages.dashboard.cards.results.description,
     key: "results",
   },

@@ -12,6 +12,7 @@ type ApiResponse =
         participant: {
           id: string;
         };
+        participantToken: string;
         session: {
           code: string;
         };
@@ -48,7 +49,10 @@ export function PlayJoinForm() {
 
     localStorage.setItem(
       `maths4u_participant_${result.data.session.code}`,
-      result.data.participant.id,
+      JSON.stringify({
+        participantId: result.data.participant.id,
+        participantToken: result.data.participantToken,
+      }),
     );
     router.push(`/game/${result.data.session.code}`);
   }

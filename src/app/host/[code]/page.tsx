@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { HostControls } from "@/components/host-controls";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 
@@ -65,8 +66,20 @@ export default async function HostPage({ params }: PageProps) {
             <p className="mt-2 text-2xl font-bold">{session._count.answers}</p>
           </div>
         </div>
-        <section className="rounded-md border border-dashed border-slate-700 bg-slate-900 p-5 text-center text-slate-300">
-          {messages.host.controlsPlaceholder}
+        <HostControls code={session.code} status={session.status} />
+        <section className="grid gap-3 rounded-md border border-slate-700 bg-slate-900 p-5 text-slate-300">
+          <h2 className="text-lg font-semibold text-white">{messages.host.linksTitle}</h2>
+          <div className="flex flex-wrap gap-3 text-sm">
+            <Link href={`/game/${session.code}`} className="font-semibold text-teal-300">
+              {messages.sessions.gameLink}
+            </Link>
+            <Link href="/play" className="font-semibold text-teal-300">
+              {messages.sessions.playLink}
+            </Link>
+            <Link href={`/admin/sessions/${session.code}/results`} className="font-semibold text-teal-300">
+              {messages.sessions.resultsLink}
+            </Link>
+          </div>
         </section>
       </section>
     </main>

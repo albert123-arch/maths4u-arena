@@ -49,8 +49,8 @@ export default async function AdminQuestionsPage() {
                       </span>
                     </div>
                     <p className="mt-1 text-sm text-slate-600">
-                      {question.subject} · {messages.questions.fields.difficulty.toLowerCase()}{" "}
-                      {question.difficulty} · {messages.questions.fields.options.toLowerCase()}{" "}
+                      {question.subject} - {messages.questions.fields.difficulty.toLowerCase()}{" "}
+                      {question.difficulty} - {messages.questions.fields.options.toLowerCase()}{" "}
                       {question.options.length}
                     </p>
                   </div>

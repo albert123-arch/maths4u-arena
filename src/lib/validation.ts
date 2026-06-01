@@ -29,6 +29,19 @@ function nullableJsonText() {
   });
 }
 
+function optionalNullableInt(min = 0) {
+  return z.preprocess(
+    (value) => {
+      if (value === "" || value === null) {
+        return null;
+      }
+
+      return value;
+    },
+    z.coerce.number().int().min(min).nullable().optional(),
+  );
+}
+
 export const loginSchema = z.object({
   email: z.email().transform((value) => value.toLowerCase()),
   password: z.string().min(1),
@@ -55,6 +68,12 @@ export const testWriteSchema = z.object({
 });
 
 export const testUpdateSchema = testWriteSchema.partial();
+
+export const testVersionUpdateSchema = z.object({
+  title: z.string().trim().min(2).max(191).optional(),
+  instructions: nullableText(),
+  settingsJson: nullableJsonText(),
+});
 
 export const questionOptionWriteSchema = z.object({
   id: z.string().optional(),
@@ -94,15 +113,33 @@ export const sessionCreateSchema = z.object({
   showResults: z.boolean().default(true),
 });
 
+export const sessionStatusUpdateSchema = z.object({
+  action: z.enum(["START", "FINISH"]),
+});
+
 export const participantJoinSchema = z.object({
   code: z.string().trim().min(4).max(16).transform((value) => value.toUpperCase()),
   displayName: z.string().trim().min(2).max(191),
+});
+
+export const testVersionQuestionAddSchema = z.object({
+  questionId: z.string().min(1),
+});
+
+export const testVersionQuestionUpdateSchema = z.object({
+  points: z.coerce.number().int().min(0).max(1000).optional(),
+  timeLimitSeconds: optionalNullableInt(1),
+});
+
+export const testVersionQuestionReorderSchema = z.object({
+  orderedIds: z.array(z.string().min(1)).min(1),
 });
 
 export const answerSubmitSchema = z.object({
   sessionId: z.string().optional(),
   code: z.string().trim().max(16).optional(),
   participantId: z.string().min(1),
+  participantToken: z.string().min(1),
   questionId: z.string().min(1),
   answer: z.unknown(),
   responseMs: z.coerce.number().int().min(0).optional(),
