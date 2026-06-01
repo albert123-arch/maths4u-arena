@@ -3,6 +3,7 @@ import { errorResponse, fail, ok } from "@/lib/api-response";
 import { createGameCode } from "@/lib/game-code";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
+import { parseSessionSettings, sessionSettingsJson } from "@/lib/session-settings";
 import { sessionCreateSchema } from "@/lib/validation";
 
 async function uniqueGameCode() {
@@ -35,6 +36,11 @@ export async function GET() {
         select: {
           id: true,
           title: true,
+          questions: {
+            select: {
+              questionId: true,
+            },
+          },
           test: {
             select: {
               title: true,
@@ -49,10 +55,46 @@ export async function GET() {
           answers: true,
         },
       },
+      participants: {
+        select: {
+          id: true,
+          answers: {
+            select: {
+              questionId: true,
+            },
+          },
+        },
+      },
     },
   });
 
-  return ok(sessions);
+  return ok(
+    sessions.map((session) => {
+      const questionCount = session.testVersion.questions.length;
+      const submittedCount = session.participants.filter((participant) => {
+        const answered = new Set(participant.answers.map((answer) => answer.questionId)).size;
+        return questionCount > 0 && answered >= questionCount;
+      }).length;
+
+      return {
+        id: session.id,
+        code: session.code,
+        status: session.status,
+        mode: session.mode,
+        createdAt: session.createdAt.toISOString(),
+        settingsJson: session.settingsJson,
+        testVersion: {
+          id: session.testVersion.id,
+          title: session.testVersion.title,
+          test: session.testVersion.test,
+        },
+        _count: session._count,
+        submittedCount,
+        questionCount,
+        settings: parseSessionSettings(session.settingsJson),
+      };
+    }),
+  );
 }
 
 export async function POST(request: Request) {
@@ -85,7 +127,7 @@ export async function POST(request: Request) {
         testVersionId: input.testVersionId,
         code: await uniqueGameCode(),
         mode: input.mode,
-        settingsJson: input.settingsJson,
+        settingsJson: sessionSettingsJson(parseSessionSettings(input.settingsJson)),
         showResults: input.showResults,
       },
       include: {

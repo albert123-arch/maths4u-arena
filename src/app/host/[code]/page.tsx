@@ -2,7 +2,8 @@ import Link from "next/link";
 
 import { HostControls } from "@/components/host-controls";
 import { messages } from "@/lib/messages";
-import { prisma } from "@/lib/prisma";
+import { sessionSettingsJson } from "@/lib/session-settings";
+import { getLiveSessionData } from "@/lib/session-live";
 
 export const dynamic = "force-dynamic";
 
@@ -12,24 +13,9 @@ type PageProps = {
 
 export default async function HostPage({ params }: PageProps) {
   const { code } = await params;
-  const session = await prisma.gameSession.findUnique({
-    where: { code: code.toUpperCase() },
-    include: {
-      testVersion: {
-        include: {
-          test: true,
-        },
-      },
-      _count: {
-        select: {
-          participants: true,
-          answers: true,
-        },
-      },
-    },
-  });
+  const live = await getLiveSessionData(code);
 
-  if (!session) {
+  if (!live) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-center text-white">
         <section className="grid gap-4">
@@ -42,36 +28,17 @@ export default async function HostPage({ params }: PageProps) {
     );
   }
 
+  const appUrl = process.env.APP_URL?.replace(/\/$/, "") ?? "";
+  const joinLink = `${appUrl || ""}/play?code=${live.code}`;
+
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-10 text-white">
-      <section className="mx-auto grid max-w-5xl gap-8">
-        <header className="grid gap-3 text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-teal-300">
-            {messages.host.title}
-          </p>
-          <h1 className="text-5xl font-bold sm:text-7xl">{session.code}</h1>
-          <p className="text-xl text-slate-300">{session.testVersion.test.title}</p>
-        </header>
+    <main className="min-h-screen bg-slate-950 px-4 py-8 text-white">
+      <section className="mx-auto grid max-w-6xl gap-8">
         <HostControls
-          code={session.code}
-          initialStatus={session.status}
-          initialParticipantCount={session._count.participants}
-          initialAnswerCount={session._count.answers}
+          initialLive={live}
+          joinLink={joinLink}
+          settingsJson={sessionSettingsJson(live.settings)}
         />
-        <section className="grid gap-3 rounded-md border border-slate-700 bg-slate-900 p-5 text-slate-300">
-          <h2 className="text-lg font-semibold text-white">{messages.host.linksTitle}</h2>
-          <div className="flex flex-wrap gap-3 text-sm">
-            <Link href={`/game/${session.code}`} className="font-semibold text-teal-300">
-              {messages.sessions.gameLink}
-            </Link>
-            <Link href="/play" className="font-semibold text-teal-300">
-              {messages.sessions.playLink}
-            </Link>
-            <Link href={`/admin/sessions/${session.code}/results`} className="font-semibold text-teal-300">
-              {messages.sessions.resultsLink}
-            </Link>
-          </div>
-        </section>
       </section>
     </main>
   );

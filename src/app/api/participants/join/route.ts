@@ -4,6 +4,7 @@ import { errorResponse, fail, ok } from "@/lib/api-response";
 import { messages } from "@/lib/messages";
 import { hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
+import { parseSessionSettings } from "@/lib/session-settings";
 import { participantJoinSchema } from "@/lib/validation";
 
 export async function POST(request: Request) {
@@ -15,6 +16,7 @@ export async function POST(request: Request) {
         id: true,
         code: true,
         status: true,
+        settingsJson: true,
       },
     });
 
@@ -24,6 +26,10 @@ export async function POST(request: Request) {
 
     if (session.status === "FINISHED") {
       return fail(messages.api.gameFinished, 409);
+    }
+
+    if (session.status === "RUNNING" && !parseSessionSettings(session.settingsJson).allowLateJoin) {
+      return fail(messages.api.lateJoinClosed, 409);
     }
 
     const participantToken = randomUUID();

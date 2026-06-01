@@ -1,8 +1,5 @@
-import { NextResponse } from "next/server";
-
-import { fail } from "@/lib/api-response";
 import { messages } from "@/lib/messages";
-import { prisma } from "@/lib/prisma";
+import { getLiveSessionData, noStoreJson } from "@/lib/session-live";
 
 export const dynamic = "force-dynamic";
 
@@ -12,34 +9,14 @@ type RouteContext = {
 
 export async function GET(_request: Request, { params }: RouteContext) {
   const { code } = await params;
-  const session = await prisma.gameSession.findUnique({
-    where: { code: code.toUpperCase() },
-    select: {
-      status: true,
-      _count: {
-        select: {
-          participants: true,
-          answers: true,
-        },
-      },
-    },
-  });
+  const data = await getLiveSessionData(code);
 
-  if (!session) {
-    return fail(messages.api.sessionNotFound, 404);
+  if (!data) {
+    return noStoreJson({ ok: false, error: messages.api.sessionNotFound }, 404);
   }
 
-  return NextResponse.json(
-    {
-      status: session.status,
-      participantCount: session._count.participants,
-      answerCount: session._count.answers,
-      serverTime: new Date().toISOString(),
-    },
-    {
-      headers: {
-        "Cache-Control": "no-store, max-age=0",
-      },
-    },
-  );
+  return noStoreJson({
+    ok: true,
+    data,
+  });
 }

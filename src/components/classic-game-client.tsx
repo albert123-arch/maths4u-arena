@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { messages } from "@/lib/messages";
 
@@ -32,15 +32,33 @@ type ApiResponse =
 
 type LiveSessionData = {
   status: "LOBBY" | "RUNNING" | "PAUSED" | "FINISHED";
+  mode: string;
+  testTitle: string;
+  sessionLabel: string;
   participantCount: number;
   answerCount: number;
+  submittedCount: number;
+  questionCount: number;
   serverTime: string;
+  settings: {
+    showStudentResults: boolean;
+    showCorrectAnswers: boolean;
+    showLeaderboard: boolean;
+  };
 };
 
 type ParticipantSession = {
   participantId: string;
   participantToken: string;
+  displayName: string;
 };
+
+type LiveApiResponse =
+  | {
+      ok: true;
+      data: LiveSessionData;
+    }
+  | { ok: false; error: string };
 
 function readParticipantSessionRaw(code: string) {
   if (typeof window === "undefined") {
@@ -62,6 +80,7 @@ function parseParticipantSession(stored: string): ParticipantSession | null {
       return {
         participantId: parsed.participantId,
         participantToken: parsed.participantToken,
+        displayName: typeof parsed.displayName === "string" ? parsed.displayName : messages.play.player,
       };
     }
   } catch {
@@ -132,18 +151,25 @@ export function ClassicGameClient({
   code,
   sessionId,
   initialStatus,
+  initialTestTitle,
+  initialSessionLabel,
   initialParticipantCount,
   initialAnswerCount,
+  initialSettings,
   questions,
 }: {
   code: string;
   sessionId: string;
   initialStatus: LiveSessionData["status"];
+  initialTestTitle: string;
+  initialSessionLabel: string;
   initialParticipantCount: number;
   initialAnswerCount: number;
+  initialSettings: LiveSessionData["settings"];
   questions: Question[];
 }) {
   const startedAt = useRef<number | null>(null);
+  const lastLiveStatus = useRef<LiveSessionData["status"]>(initialStatus);
   const participantRaw = useSyncExternalStore(
     subscribeParticipantSession,
     () => readParticipantSessionRaw(code),
@@ -155,10 +181,17 @@ export function ClassicGameClient({
   );
   const [live, setLive] = useState<LiveSessionData>({
     status: initialStatus,
+    mode: "CLASSIC",
+    testTitle: initialTestTitle,
+    sessionLabel: initialSessionLabel,
     participantCount: initialParticipantCount,
     answerCount: initialAnswerCount,
+    submittedCount: 0,
+    questionCount: questions.length,
     serverTime: "",
+    settings: initialSettings,
   });
+  const [startingCountdown, setStartingCountdown] = useState<number | "now" | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>(() => {
     const initialParticipant = parseParticipantSession(readParticipantSessionRaw(code));
     return initialParticipant ? readDraftAnswers(code, initialParticipant.participantId) : {};
@@ -172,6 +205,14 @@ export function ClassicGameClient({
     () => [...questions].sort((left, right) => left.sortOrder - right.sortOrder),
     [questions],
   );
+
+  const showStartingCountdown = useCallback(() => {
+    setStartingCountdown("now");
+    window.setTimeout(() => setStartingCountdown(3), 400);
+    window.setTimeout(() => setStartingCountdown(2), 1100);
+    window.setTimeout(() => setStartingCountdown(1), 1800);
+    window.setTimeout(() => setStartingCountdown(null), 2500);
+  }, []);
 
   useEffect(() => {
     if (!participant) {
@@ -191,10 +232,18 @@ export function ClassicGameClient({
           return;
         }
 
-        const data = (await response.json()) as LiveSessionData;
+        const result = (await response.json()) as LiveApiResponse;
 
-        if (stopped) {
+        if (stopped || !result.ok) {
           return;
+        }
+
+        const data = result.data;
+        const previousStatus = lastLiveStatus.current;
+        lastLiveStatus.current = data.status;
+
+        if (previousStatus === "LOBBY" && data.status === "RUNNING") {
+          showStartingCountdown();
         }
 
         setLive((current) => {
@@ -227,7 +276,7 @@ export function ClassicGameClient({
       stopped = true;
       window.clearInterval(interval);
     };
-  }, [code, live.status, participant]);
+  }, [code, live.status, participant, showStartingCountdown]);
 
   function setAnswer(questionId: string, value: string) {
     startedAt.current ??= Date.now();
@@ -316,12 +365,35 @@ export function ClassicGameClient({
 
   if (live.status === "LOBBY") {
     return (
-      <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
-        <h2 className="text-2xl font-bold">{messages.game.lobbyTitle}</h2>
+      <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm transition">
+        <h2 className="text-2xl font-bold">{messages.game.joinedTitle}</h2>
+        <p className="mt-2 text-slate-600">
+          {messages.game.joinedAs} <span className="font-semibold">{participant.displayName}</span>
+        </p>
+        <p className="mt-3 text-sm font-semibold text-teal-800">
+          {messages.game.codeLabel}: {code}
+        </p>
+        <p className="mt-3 font-semibold">{live.testTitle}</p>
         <p className="mt-2 text-slate-600">{messages.game.lobbyDescription}</p>
+        <div className="mt-3 flex items-center justify-center gap-1 text-teal-700">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-teal-600" />
+          <span className="h-2 w-2 animate-pulse rounded-full bg-teal-600 [animation-delay:120ms]" />
+          <span className="h-2 w-2 animate-pulse rounded-full bg-teal-600 [animation-delay:240ms]" />
+        </div>
         <p className="mt-4 text-sm font-semibold text-teal-800">
           {live.participantCount} {messages.game.participantsLabel}
         </p>
+      </section>
+    );
+  }
+
+  if (startingCountdown !== null) {
+    return (
+      <section className="rounded-md border border-teal-200 bg-white p-8 text-center shadow-sm">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-800">
+          {startingCountdown === "now" ? messages.game.startingNow : messages.game.startingIn}
+        </p>
+        <p className="mt-4 text-7xl font-black text-teal-800">{startingCountdown}</p>
       </section>
     );
   }
@@ -351,11 +423,11 @@ export function ClassicGameClient({
             {completedCount} / {questions.length} {messages.game.completedLabel}
           </p>
         </div>
-        {isComplete ? (
-          <span className="rounded-md bg-teal-100 px-3 py-2 text-sm font-semibold text-teal-900">
-            {messages.game.completeTitle}
-          </span>
-        ) : null}
+      {isComplete ? (
+        <span className="rounded-md bg-teal-100 px-3 py-2 text-sm font-semibold text-teal-900">
+          {messages.game.completeTitle}
+        </span>
+      ) : null}
       </div>
       {error ? <p className="rounded-md border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700">{error}</p> : null}
       {live.status === "FINISHED" ? (
@@ -367,9 +439,23 @@ export function ClassicGameClient({
         <section className="rounded-md border border-teal-200 bg-white p-6 text-center shadow-sm">
           <h2 className="text-2xl font-bold">{messages.game.completeTitle}</h2>
           <p className="mt-2 text-slate-600">{messages.game.completeDescription}</p>
+          <p className="mt-2 text-sm font-semibold text-slate-700">
+            {completedCount} / {questions.length} {messages.game.completedLabel}
+          </p>
+          {live.settings.showStudentResults ? (
+            <Link
+              href={`/game/${code}/results`}
+              className="mt-4 inline-flex rounded-md bg-teal-700 px-4 py-2 font-semibold text-white transition hover:bg-teal-800 active:scale-[0.98]"
+            >
+              {live.status === "FINISHED" ? messages.game.viewResults : messages.game.viewMyResults}
+            </Link>
+          ) : null}
+          <p className="mt-3 text-sm text-slate-600">
+            {live.status === "FINISHED" ? messages.game.resultsReady : messages.game.waitingForFinish}
+          </p>
         </section>
       ) : null}
-      {orderedQuestions.map((question, index) => {
+      {!isComplete ? orderedQuestions.map((question, index) => {
         const isSubmitted = question.id in submitted;
         const result = submitted[question.id];
 
@@ -436,7 +522,7 @@ export function ClassicGameClient({
             </button>
           </article>
         );
-      })}
+      }) : null}
     </section>
   );
 }

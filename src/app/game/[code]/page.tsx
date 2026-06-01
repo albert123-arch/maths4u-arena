@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ClassicGameClient } from "@/components/classic-game-client";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
+import { parseSessionSettings } from "@/lib/session-settings";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +42,8 @@ export default async function GamePage({ params }: PageProps) {
       </main>
     );
   }
+
+  const settings = parseSessionSettings(session.settingsJson);
 
   const questions = await prisma.testVersionQuestion.findMany({
     where: { testVersionId: session.testVersionId },
@@ -82,8 +85,15 @@ export default async function GamePage({ params }: PageProps) {
           code={session.code}
           sessionId={session.id}
           initialStatus={session.status}
+          initialTestTitle={session.testVersion.test.title}
+          initialSessionLabel={settings.label}
           initialParticipantCount={session._count.participants}
           initialAnswerCount={session._count.answers}
+          initialSettings={{
+            showStudentResults: settings.showStudentResults,
+            showCorrectAnswers: settings.showCorrectAnswers,
+            showLeaderboard: settings.showLeaderboard,
+          }}
           questions={questions.map((item) => ({
             id: item.question.id,
             type: item.question.type,

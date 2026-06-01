@@ -5,7 +5,7 @@ import { FormEvent, useMemo, useState } from "react";
 
 import { messages } from "@/lib/messages";
 
-import { CreateSessionButton } from "./create-session-button";
+import { LaunchSessionModal } from "./launch-session-modal";
 
 type ApiResponse = { ok: true; data: unknown } | { ok: false; error: string };
 
@@ -56,11 +56,13 @@ function versionDate(value: string | Date | null) {
 }
 
 export function TestVersionEditor({
+  testTitle,
   testId,
   versions,
   draftVersion,
   questionBank,
 }: {
+  testTitle: string;
   testId: string;
   versions: VersionSummary[];
   draftVersion: DraftVersion | null;
@@ -262,7 +264,12 @@ export function TestVersionEditor({
                 </p>
               </div>
               {version.status === "PUBLISHED" ? (
-                <CreateSessionButton testVersionId={version.id} />
+                <LaunchSessionModal
+                  testTitle={testTitle}
+                  versionTitle={`${messages.tests.versionPrefix} ${version.versionNumber}`}
+                  testVersionId={version.id}
+                  questionCount={version._count.questions}
+                />
               ) : null}
             </div>
           ))}

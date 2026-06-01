@@ -76,6 +76,7 @@ export default async function EditTestPage({ params }: PageProps) {
       </section>
       <TestVersionEditor
         key={draftVersion?.id ?? "no-draft-version"}
+        testTitle={test.title}
         testId={test.id}
         versions={test.versions.map((version) => ({
           id: version.id,

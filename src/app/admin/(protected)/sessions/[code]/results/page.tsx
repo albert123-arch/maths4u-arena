@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { SessionResultsTable } from "@/components/session-results-table";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
+import { parseSessionSettings } from "@/lib/session-settings";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +50,40 @@ export default async function SessionResultsPage({ params }: PageProps) {
   }
 
   const totalPossible = session.testVersion.questions.reduce((sum, item) => sum + item.points, 0);
+  const settings = parseSessionSettings(session.settingsJson);
+  const questionCount = session.testVersion.questions.length;
+  const participants = session.participants.map((participant) => {
+    const totalScore = participant.answers.reduce((sum, answer) => sum + answer.points, 0);
+    const correct = participant.answers.filter((answer) => answer.isCorrect === true).length;
+    const answered = participant.answers.length;
+    const lastAnswer = participant.answers.at(-1);
+
+    return {
+      id: participant.id,
+      displayName: participant.displayName,
+      totalScore,
+      answered,
+      correct,
+      correctness: answered === 0 ? 0 : Math.round((correct / answered) * 100),
+      percentage: totalPossible === 0 ? 0 : Math.round((totalScore / totalPossible) * 100),
+      status:
+        questionCount > 0 && answered >= questionCount
+          ? "Submitted"
+          : answered > 0
+            ? "In progress"
+            : "Joined",
+      lastAnswerPrompt: lastAnswer?.question.prompt ?? null,
+    };
+  });
+  const submittedCount = participants.filter((participant) => participant.status === "Submitted").length;
+  const averageScore =
+    participants.length === 0
+      ? 0
+      : Math.round(
+          (participants.reduce((sum, participant) => sum + participant.totalScore, 0) /
+            participants.length) *
+            10,
+        ) / 10;
 
   return (
     <div className="grid gap-6">
@@ -68,22 +103,15 @@ export default async function SessionResultsPage({ params }: PageProps) {
           code: session.code,
           status: session.status,
           testTitle: session.testVersion.test.title,
+          sessionLabel: settings.label,
+          testVersionId: session.testVersionId,
+          settingsJson: session.settingsJson,
           totalPossible,
-          participants: session.participants.map((participant) => {
-            const totalScore = participant.answers.reduce((sum, answer) => sum + answer.points, 0);
-            const correct = participant.answers.filter((answer) => answer.isCorrect === true).length;
-            const answered = participant.answers.length;
-            const lastAnswer = participant.answers.at(-1);
-
-            return {
-              id: participant.id,
-              displayName: participant.displayName,
-              totalScore,
-              answered,
-              correctness: answered === 0 ? 0 : Math.round((correct / answered) * 100),
-              lastAnswerPrompt: lastAnswer?.question.prompt ?? null,
-            };
-          }),
+          participantCount: participants.length,
+          submittedCount,
+          averageScore,
+          lastUpdated: new Date().toISOString(),
+          participants,
         }}
       />
     </div>

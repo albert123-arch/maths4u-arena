@@ -1,9 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 import { messages } from "@/lib/messages";
+
+type StoredParticipant = {
+  participantId: string;
+  participantToken: string;
+  displayName: string;
+};
 
 type ApiResponse =
   | {
@@ -11,6 +17,7 @@ type ApiResponse =
       data: {
         participant: {
           id: string;
+          displayName: string;
         };
         participantToken: string;
         session: {
@@ -20,12 +27,66 @@ type ApiResponse =
     }
   | { ok: false; error: string };
 
-export function PlayJoinForm() {
+function participantKey(code: string) {
+  return `maths4u_participant_${code}`;
+}
+
+function readStoredParticipant(code: string): StoredParticipant | null {
+  if (!code || typeof window === "undefined") {
+    return null;
+  }
+
+  const stored = localStorage.getItem(participantKey(code));
+
+  if (!stored) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(stored) as Partial<StoredParticipant>;
+
+    if (parsed.participantId && parsed.participantToken && parsed.displayName) {
+      return {
+        participantId: parsed.participantId,
+        participantToken: parsed.participantToken,
+        displayName: parsed.displayName,
+      };
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
+export function PlayJoinForm({ initialCode = "" }: { initialCode?: string }) {
   const router = useRouter();
-  const [code, setCode] = useState("");
+  const displayNameRef = useRef<HTMLInputElement>(null);
+  const normalizedInitialCode = initialCode.toUpperCase();
+  const [code, setCode] = useState(normalizedInitialCode);
   const [displayName, setDisplayName] = useState("");
+  const [existingParticipant, setExistingParticipant] = useState<StoredParticipant | null>(null);
+  const [joinAsAnother, setJoinAsAnother] = useState(false);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+
+  useEffect(() => {
+    if (normalizedInitialCode) {
+      displayNameRef.current?.focus();
+      const timer = window.setTimeout(() => {
+        setExistingParticipant(readStoredParticipant(normalizedInitialCode));
+      }, 0);
+
+      return () => window.clearTimeout(timer);
+    }
+  }, [normalizedInitialCode]);
+
+  function updateCode(value: string) {
+    const nextCode = value.toUpperCase();
+    setCode(nextCode);
+    setJoinAsAnother(false);
+    setExistingParticipant(readStoredParticipant(nextCode));
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -48,44 +109,78 @@ export function PlayJoinForm() {
     }
 
     localStorage.setItem(
-      `maths4u_participant_${result.data.session.code}`,
+      participantKey(result.data.session.code),
       JSON.stringify({
         participantId: result.data.participant.id,
         participantToken: result.data.participantToken,
+        displayName: result.data.participant.displayName,
       }),
     );
     router.push(`/game/${result.data.session.code}`);
   }
 
+  const showExisting = existingParticipant && !joinAsAnother;
+
   return (
-    <form onSubmit={submit} className="grid gap-4">
-      <label className="grid gap-1 text-sm font-medium text-slate-700">
-        {messages.play.gameCode}
-        <input
-          value={code}
-          onChange={(event) => setCode(event.target.value.toUpperCase())}
-          className="rounded-md border border-slate-300 px-3 py-3 text-center text-2xl font-bold uppercase tracking-widest outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-          maxLength={16}
-          required
-        />
-      </label>
-      <label className="grid gap-1 text-sm font-medium text-slate-700">
-        {messages.play.displayName}
-        <input
-          value={displayName}
-          onChange={(event) => setDisplayName(event.target.value)}
-          className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-          required
-        />
-      </label>
-      {error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}
-      <button
-        type="submit"
-        disabled={pending}
-        className="rounded-md bg-teal-700 px-4 py-3 font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
-      >
-        {pending ? messages.play.pending : messages.play.submit}
-      </button>
-    </form>
+    <div className="grid gap-4">
+      {showExisting ? (
+        <section className="grid gap-3 rounded-md border border-teal-200 bg-teal-50 p-4">
+          <p className="font-semibold text-teal-950">
+            {messages.play.alreadyJoined} {existingParticipant.displayName}.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => router.push(`/game/${code}`)}
+              className="rounded-md bg-teal-700 px-4 py-2 font-semibold text-white transition hover:bg-teal-800 active:scale-[0.98]"
+            >
+              {messages.play.continue}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                localStorage.removeItem(participantKey(code));
+                setExistingParticipant(null);
+                setJoinAsAnother(true);
+                window.setTimeout(() => displayNameRef.current?.focus(), 0);
+              }}
+              className="rounded-md border border-teal-300 px-4 py-2 font-semibold text-teal-950 transition hover:bg-white active:scale-[0.98]"
+            >
+              {messages.play.joinAnother}
+            </button>
+          </div>
+        </section>
+      ) : null}
+      <form onSubmit={submit} className="grid gap-4">
+        <label className="grid gap-1 text-sm font-medium text-slate-700">
+          {messages.play.gameCode}
+          <input
+            value={code}
+            onChange={(event) => updateCode(event.target.value)}
+            className="rounded-md border border-slate-300 px-3 py-3 text-center text-2xl font-bold uppercase tracking-widest outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            maxLength={16}
+            required
+          />
+        </label>
+        <label className="grid gap-1 text-sm font-medium text-slate-700">
+          {messages.play.displayName}
+          <input
+            ref={displayNameRef}
+            value={displayName}
+            onChange={(event) => setDisplayName(event.target.value)}
+            className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            required
+          />
+        </label>
+        {error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}
+        <button
+          type="submit"
+          disabled={pending || Boolean(showExisting)}
+          className="rounded-md bg-teal-700 px-4 py-3 font-semibold text-white transition hover:bg-teal-800 active:scale-[0.99] disabled:opacity-60"
+        >
+          {pending ? messages.play.pending : messages.play.submit}
+        </button>
+      </form>
+    </div>
   );
 }

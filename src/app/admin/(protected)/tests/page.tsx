@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ArchiveTestButton } from "@/components/archive-test-button";
+import { LaunchSessionModal } from "@/components/launch-session-modal";
 import { TestForm } from "@/components/test-form";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
@@ -12,6 +13,7 @@ export default async function AdminTestsPage() {
     orderBy: { updatedAt: "desc" },
     include: {
       versions: {
+        where: { status: "PUBLISHED" },
         orderBy: { versionNumber: "desc" },
         take: 1,
         include: {
@@ -44,7 +46,7 @@ export default async function AdminTestsPage() {
           ) : (
             <div className="divide-y divide-slate-200">
               {tests.map((test) => {
-                const latestVersion = test.versions[0];
+                const publishedVersion = test.versions[0];
 
                 return (
                   <article
@@ -60,11 +62,19 @@ export default async function AdminTestsPage() {
                       </div>
                       <p className="mt-1 text-sm text-slate-600">
                         {test.subject} - {test.slug} - {messages.tests.versionPrefix.toLowerCase()}{" "}
-                        {latestVersion?.versionNumber ?? 1} - {messages.tests.questionCount}{" "}
-                        {latestVersion?._count.questions ?? 0}
+                        {publishedVersion?.versionNumber ?? messages.tests.noPublishedVersion} -{" "}
+                        {messages.tests.questionCount} {publishedVersion?._count.questions ?? 0}
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
+                      {publishedVersion ? (
+                        <LaunchSessionModal
+                          testTitle={test.title}
+                          versionTitle={`${messages.tests.versionPrefix} ${publishedVersion.versionNumber}`}
+                          testVersionId={publishedVersion.id}
+                          questionCount={publishedVersion._count.questions}
+                        />
+                      ) : null}
                       <Link
                         href={`/admin/tests/${test.id}`}
                         className="rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700"

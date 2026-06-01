@@ -1,51 +1,102 @@
 "use client";
 
+import Link from "next/link";
+import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 
 import { messages } from "@/lib/messages";
 
-type LiveSessionData = {
+import { CopyButton } from "./copy-button";
+import { RunAgainButton } from "./run-again-button";
+
+type ParticipantLive = {
+  id: string;
+  displayName: string;
+  joinedAt: string;
+  answerCount: number;
+  status: string;
+};
+
+type HostLiveSession = {
+  code: string;
   status: "LOBBY" | "RUNNING" | "PAUSED" | "FINISHED";
+  mode: string;
+  testVersionId: string;
+  testTitle: string;
+  versionTitle: string;
+  sessionLabel: string;
   participantCount: number;
   answerCount: number;
+  submittedCount: number;
+  questionCount: number;
   serverTime: string;
+  settings: {
+    label: string;
+    allowLateJoin: boolean;
+    showStudentResults: boolean;
+    showCorrectAnswers: boolean;
+    showLeaderboard: boolean;
+    autoSubmitOnFinish: boolean;
+  };
+  participants: ParticipantLive[];
 };
 
 type ApiResponse =
   | {
       ok: true;
-      data: {
-        status: LiveSessionData["status"];
-      };
+      data: HostLiveSession;
     }
   | { ok: false; error: string };
 
+function statusBadge(status: HostLiveSession["status"]) {
+  if (status === "RUNNING") {
+    return "bg-emerald-100 text-emerald-900 border-emerald-200";
+  }
+
+  if (status === "FINISHED") {
+    return "bg-slate-200 text-slate-900 border-slate-300";
+  }
+
+  return "bg-amber-100 text-amber-900 border-amber-200";
+}
+
 export function HostControls({
-  code,
-  initialStatus,
-  initialParticipantCount,
-  initialAnswerCount,
+  initialLive,
+  joinLink,
+  settingsJson,
 }: {
-  code: string;
-  initialStatus: LiveSessionData["status"];
-  initialParticipantCount: number;
-  initialAnswerCount: number;
+  initialLive: HostLiveSession;
+  joinLink: string;
+  settingsJson: string;
 }) {
-  const [live, setLive] = useState<LiveSessionData>({
-    status: initialStatus,
-    participantCount: initialParticipantCount,
-    answerCount: initialAnswerCount,
-    serverTime: "",
-  });
+  const [live, setLive] = useState(initialLive);
   const [pendingAction, setPendingAction] = useState<"START" | "FINISH" | null>(null);
   const [error, setError] = useState("");
+  const [countdown, setCountdown] = useState<number | "started" | null>(null);
+  const [qrLarge, setQrLarge] = useState(false);
+
+  async function fetchLive() {
+    const response = await fetch(`/api/sessions/${live.code}/live`, {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      return;
+    }
+
+    const result = (await response.json()) as ApiResponse;
+
+    if (result.ok) {
+      setLive(result.data);
+    }
+  }
 
   useEffect(() => {
     let stopped = false;
 
     async function pollLiveStatus() {
       try {
-        const response = await fetch(`/api/sessions/${code}/live`, {
+        const response = await fetch(`/api/sessions/${initialLive.code}/live`, {
           cache: "no-store",
         });
 
@@ -53,10 +104,10 @@ export function HostControls({
           return;
         }
 
-        const data = (await response.json()) as LiveSessionData;
+        const result = (await response.json()) as ApiResponse;
 
-        if (!stopped) {
-          setLive(data);
+        if (!stopped && result.ok) {
+          setLive(result.data);
         }
       } catch {
         // Keep the last host state when a silent poll fails.
@@ -69,18 +120,22 @@ export function HostControls({
       stopped = true;
       window.clearInterval(interval);
     };
-  }, [code]);
+  }, [initialLive.code]);
+
+  function showStartCountdown() {
+    setCountdown(3);
+    window.setTimeout(() => setCountdown(2), 700);
+    window.setTimeout(() => setCountdown(1), 1400);
+    window.setTimeout(() => setCountdown("started"), 2100);
+    window.setTimeout(() => setCountdown(null), 3200);
+  }
 
   async function updateStatus(action: "START" | "FINISH") {
     setPendingAction(action);
     setError("");
 
-    const response = await fetch(`/api/sessions/${code}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ action }),
+    const response = await fetch(`/api/sessions/${live.code}/${action === "START" ? "start" : "finish"}`, {
+      method: "POST",
     });
     const result = (await response.json()) as ApiResponse;
     setPendingAction(null);
@@ -90,50 +145,212 @@ export function HostControls({
       return;
     }
 
-    setLive((current) => ({
-      ...current,
-      status: result.data.status,
-    }));
+    setLive(result.data);
+
+    if (action === "START") {
+      showStartCountdown();
+    }
   }
 
+  const progress =
+    live.participantCount === 0 ? 0 : Math.round((live.submittedCount / live.participantCount) * 100);
+
   return (
-    <div className="grid gap-4">
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
-          <p className="text-sm text-slate-400">{messages.host.status}</p>
-          <p className="mt-2 text-2xl font-bold">{live.status}</p>
+    <div className="grid gap-6">
+      <header className="grid gap-3 text-center">
+        <div className="flex flex-wrap justify-center gap-2">
+          <span className={`rounded-md border px-3 py-1 text-sm font-bold ${statusBadge(live.status)}`}>
+            {live.status === "LOBBY"
+              ? messages.host.waitingStatus
+              : live.status === "RUNNING"
+                ? messages.host.liveStatus
+                : messages.host.finishedStatus}
+          </span>
+          <span className="rounded-md border border-teal-700 bg-teal-500/15 px-3 py-1 text-sm font-bold text-teal-200">
+            {messages.sessions.modeClassic}
+          </span>
         </div>
-        <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
-          <p className="text-sm text-slate-400">{messages.host.participants}</p>
-          <p className="mt-2 text-2xl font-bold">{live.participantCount}</p>
+        <h1 className="text-5xl font-black tracking-[0.18em] sm:text-7xl">{live.code}</h1>
+        <p className="text-xl text-slate-300">{live.testTitle}</p>
+        {live.sessionLabel ? <p className="text-sm font-semibold text-teal-200">{live.sessionLabel}</p> : null}
+      </header>
+
+      {live.status === "LOBBY" ? (
+        <section className="grid gap-4 lg:grid-cols-[320px_1fr]">
+          <div className="grid gap-3 rounded-md border border-slate-700 bg-white p-4 text-slate-950 shadow-lg">
+            <div className="mx-auto rounded-md bg-white p-3">
+              <QRCodeSVG value={joinLink} size={240} level="M" />
+            </div>
+            <p className="break-all text-center text-sm text-slate-600">{joinLink}</p>
+            <div className="grid grid-cols-2 gap-2">
+              <CopyButton value={joinLink} label={messages.host.copyJoinLink} />
+              <CopyButton value={live.code} label={messages.host.copyGameCode} />
+            </div>
+            <button
+              type="button"
+              onClick={() => setQrLarge((current) => !current)}
+              className="rounded-md bg-slate-950 px-3 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98]"
+            >
+              {qrLarge ? messages.host.hideFullscreenQr : messages.host.fullscreenQr}
+            </button>
+          </div>
+
+          <div className="grid gap-4">
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
+                <p className="text-sm text-slate-400">{messages.host.participants}</p>
+                <p className="mt-2 text-3xl font-bold">{live.participantCount}</p>
+              </div>
+              <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
+                <p className="text-sm text-slate-400">{messages.host.questions}</p>
+                <p className="mt-2 text-3xl font-bold">{live.questionCount}</p>
+              </div>
+              <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
+                <p className="text-sm text-slate-400">{messages.host.status}</p>
+                <p className="mt-2 text-xl font-bold">{messages.host.waitingStatus}</p>
+              </div>
+            </div>
+            <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h2 className="text-lg font-semibold">{messages.host.playersTitle}</h2>
+                <button
+                  type="button"
+                  onClick={fetchLive}
+                  className="rounded-md border border-slate-600 px-3 py-2 text-sm font-semibold transition hover:bg-slate-800 active:scale-[0.98]"
+                >
+                  {messages.host.refreshNow}
+                </button>
+              </div>
+              {live.participants.length === 0 ? (
+                <p className="mt-4 rounded-md border border-dashed border-slate-700 p-4 text-sm text-slate-400">
+                  {messages.host.noPlayers}
+                </p>
+              ) : (
+                <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {live.participants.map((participant) => (
+                    <div key={participant.id} className="rounded-md border border-slate-700 bg-slate-950 p-3">
+                      <p className="font-semibold">{participant.displayName}</p>
+                      <p className="text-xs text-slate-400">{participant.status}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {qrLarge && live.status === "LOBBY" ? (
+        <section className="grid place-items-center rounded-md border border-slate-700 bg-white p-8 text-slate-950">
+          <QRCodeSVG value={joinLink} size={360} level="M" />
+          <p className="mt-4 text-4xl font-black tracking-[0.18em]">{live.code}</p>
+        </section>
+      ) : null}
+
+      {live.status === "RUNNING" ? (
+        <section className="grid gap-4">
+          <div className="grid gap-4 sm:grid-cols-4">
+            <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
+              <p className="text-sm text-slate-400">{messages.host.participants}</p>
+              <p className="mt-2 text-3xl font-bold">{live.participantCount}</p>
+            </div>
+            <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
+              <p className="text-sm text-slate-400">{messages.host.submitted}</p>
+              <p className="mt-2 text-3xl font-bold">{live.submittedCount}</p>
+            </div>
+            <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
+              <p className="text-sm text-slate-400">{messages.host.answers}</p>
+              <p className="mt-2 text-3xl font-bold">{live.answerCount}</p>
+            </div>
+            <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
+              <p className="text-sm text-slate-400">{messages.host.questions}</p>
+              <p className="mt-2 text-3xl font-bold">{live.questionCount}</p>
+            </div>
+          </div>
+          <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
+            <div className="flex items-center justify-between gap-3">
+              <p className="font-semibold">{messages.host.progress}</p>
+              <p className="text-sm text-slate-400">
+                {live.submittedCount} / {live.participantCount}
+              </p>
+            </div>
+            <div className="mt-3 h-3 overflow-hidden rounded-full bg-slate-800">
+              <div className="h-full rounded-full bg-teal-400 transition-all" style={{ width: `${progress}%` }} />
+            </div>
+          </div>
+          <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
+            <h2 className="text-lg font-semibold">{messages.host.playersTitle}</h2>
+            <div className="mt-4 grid gap-2">
+              {live.participants.map((participant) => (
+                <div
+                  key={participant.id}
+                  className="grid gap-2 rounded-md border border-slate-700 bg-slate-950 p-3 sm:grid-cols-[1fr_auto]"
+                >
+                  <span className="font-semibold">{participant.displayName}</span>
+                  <span className="text-sm text-slate-300">{participant.status}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {countdown !== null ? (
+        <div className="rounded-md border border-teal-400 bg-teal-400/15 p-6 text-center text-teal-100">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em]">
+            {countdown === "started" ? messages.host.gameStarted : messages.host.startingCountdown}
+          </p>
+          <p className="mt-2 text-6xl font-black">{countdown}</p>
         </div>
-        <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
-          <p className="text-sm text-slate-400">{messages.host.answers}</p>
-          <p className="mt-2 text-2xl font-bold">{live.answerCount}</p>
-        </div>
-      </div>
-      <div className="grid gap-3 rounded-md border border-slate-700 bg-slate-900 p-5">
+      ) : null}
+
+      <section className="grid gap-3 rounded-md border border-slate-700 bg-slate-900 p-5">
         <h2 className="text-lg font-semibold">{messages.host.controlsTitle}</h2>
         <div className="flex flex-wrap gap-3">
+          {live.status === "LOBBY" ? (
+            <button
+              type="button"
+              onClick={() => updateStatus("START")}
+              disabled={pendingAction !== null}
+              className="rounded-md bg-teal-500 px-4 py-2 font-semibold text-slate-950 transition hover:bg-teal-400 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {pendingAction === "START" ? messages.host.starting : messages.host.start}
+            </button>
+          ) : null}
+          {live.status === "RUNNING" ? (
+            <button
+              type="button"
+              onClick={() => updateStatus("FINISH")}
+              disabled={pendingAction !== null}
+              className="rounded-md border border-slate-600 px-4 py-2 font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {pendingAction === "FINISH" ? messages.host.finishing : messages.host.finish}
+            </button>
+          ) : null}
+          <Link
+            href={`/admin/sessions/${live.code}/results`}
+            className="rounded-md border border-slate-600 px-4 py-2 font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98]"
+          >
+            {messages.sessions.resultsLink}
+          </Link>
           <button
             type="button"
-            onClick={() => updateStatus("START")}
-            disabled={live.status === "RUNNING" || live.status === "FINISHED" || pendingAction !== null}
-            className="rounded-md bg-teal-500 px-4 py-2 font-semibold text-slate-950 hover:bg-teal-400 disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={fetchLive}
+            className="rounded-md border border-slate-600 px-4 py-2 font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98]"
           >
-            {pendingAction === "START" ? messages.host.starting : messages.host.start}
+            {messages.host.refreshNow}
           </button>
-          <button
-            type="button"
-            onClick={() => updateStatus("FINISH")}
-            disabled={live.status === "FINISHED" || pendingAction !== null}
-            className="rounded-md border border-slate-600 px-4 py-2 font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {pendingAction === "FINISH" ? messages.host.finishing : messages.host.finish}
-          </button>
+          {live.status === "FINISHED" ? (
+            <RunAgainButton testVersionId={live.testVersionId} settingsJson={settingsJson} />
+          ) : null}
         </div>
+        {live.status === "FINISHED" ? (
+          <p className="rounded-md bg-slate-950 p-3 text-sm font-semibold text-teal-200">
+            {messages.host.sessionFinished}
+          </p>
+        ) : null}
         {error ? <p className="text-sm font-medium text-red-300">{error}</p> : null}
-      </div>
+      </section>
     </div>
   );
 }
