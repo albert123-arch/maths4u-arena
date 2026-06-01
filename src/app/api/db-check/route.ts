@@ -1,35 +1,8 @@
 import { NextResponse } from "next/server";
 
+import { getDatabaseRedactionValues, getSafeDatabaseConfigInfo } from "@/lib/database-url";
+
 export const dynamic = "force-dynamic";
-
-function getDatabaseUrlInfo() {
-  const databaseUrl = process.env.DATABASE_URL;
-
-  if (!databaseUrl) {
-    return {
-      hasDatabaseUrl: false,
-      databaseUrlHost: null,
-      databaseName: null,
-    };
-  }
-
-  try {
-    const parsed = new URL(databaseUrl);
-    const databaseName = parsed.pathname.replace(/^\/+/, "").split("/")[0];
-
-    return {
-      hasDatabaseUrl: true,
-      databaseUrlHost: parsed.hostname || null,
-      databaseName: databaseName ? decodeURIComponent(databaseName) : null,
-    };
-  } catch {
-    return {
-      hasDatabaseUrl: true,
-      databaseUrlHost: null,
-      databaseName: null,
-    };
-  }
-}
 
 function getStringProperty(error: unknown, key: string) {
   if (!error || typeof error !== "object" || !(key in error)) {
@@ -53,26 +26,11 @@ function getPrismaErrorCode(error: unknown): string | null {
 function sanitizeErrorMessage(error: unknown) {
   const rawMessage =
     error instanceof Error ? error.message : typeof error === "string" ? error : "Unknown error";
-  const databaseUrl = process.env.DATABASE_URL;
 
   let message = rawMessage;
 
-  if (databaseUrl) {
-    message = message.replaceAll(databaseUrl, "[redacted DATABASE_URL]");
-
-    try {
-      const parsed = new URL(databaseUrl);
-
-      if (parsed.username) {
-        message = message.replaceAll(parsed.username, "[redacted user]");
-      }
-
-      if (parsed.password) {
-        message = message.replaceAll(parsed.password, "[redacted password]");
-      }
-    } catch {
-      // Ignore invalid DATABASE_URL parsing here; regex cleanup below still helps.
-    }
+  for (const value of getDatabaseRedactionValues()) {
+    message = message.replaceAll(value, "[redacted]");
   }
 
   return message
@@ -96,7 +54,7 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number) {
 }
 
 export async function GET() {
-  const databaseUrlInfo = getDatabaseUrlInfo();
+  const databaseConfigInfo = getSafeDatabaseConfigInfo();
 
   try {
     const { prisma } = await import("@/lib/prisma");
@@ -106,7 +64,7 @@ export async function GET() {
     return NextResponse.json({
       ok: true,
       database: "connected",
-      ...databaseUrlInfo,
+      ...databaseConfigInfo,
       prismaErrorCode: null,
       prismaErrorMessageShort: null,
     });
@@ -124,7 +82,7 @@ export async function GET() {
       {
         ok: false,
         database: "failed",
-        ...databaseUrlInfo,
+        ...databaseConfigInfo,
         prismaErrorCode: getPrismaErrorCode(error),
         prismaErrorMessageShort: sanitizeErrorMessage(error),
       },
