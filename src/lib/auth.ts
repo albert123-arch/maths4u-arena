@@ -2,7 +2,6 @@ import jwt, { type JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { prisma } from "./prisma";
 import { verifyPassword } from "./password";
 
 export const SESSION_COOKIE_NAME = "maths4u_admin_session";
@@ -64,7 +63,14 @@ function verifySessionToken(token: string): SessionPayload | null {
   }
 }
 
+async function getPrisma() {
+  const { prisma } = await import("./prisma");
+
+  return prisma;
+}
+
 export async function authenticateAdmin(email: string, password: string) {
+  const prisma = await getPrisma();
   const user = await prisma.user.findUnique({
     where: { email: email.trim().toLowerCase() },
     select: {
@@ -136,6 +142,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     return null;
   }
 
+  const prisma = await getPrisma();
   const user = await prisma.user.findUnique({
     where: { id: payload.sub },
     select: {

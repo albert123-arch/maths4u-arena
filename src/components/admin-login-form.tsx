@@ -21,24 +21,28 @@ export function AdminLoginForm() {
     setPending(true);
     setError("");
 
-    const response = await fetch("/api/admin/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    const result = (await response.json()) as ApiResponse;
+    try {
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const result = (await response.json()) as ApiResponse;
 
-    setPending(false);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
 
-    if (!result.ok) {
-      setError(result.error);
-      return;
+      router.push("/admin");
+      router.refresh();
+    } catch {
+      setError(messages.adminLogin.failed);
+    } finally {
+      setPending(false);
     }
-
-    router.push("/admin");
-    router.refresh();
   }
 
   return (

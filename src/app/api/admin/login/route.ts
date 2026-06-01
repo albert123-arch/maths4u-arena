@@ -1,5 +1,5 @@
 import { authenticateAdmin, createAdminSession } from "@/lib/auth";
-import { errorResponse, fail, ok } from "@/lib/api-response";
+import { fail, ok } from "@/lib/api-response";
 import { messages } from "@/lib/messages";
 import { loginSchema } from "@/lib/validation";
 
@@ -23,6 +23,11 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    return errorResponse(error);
+    console.error(
+      "Admin login failed",
+      error instanceof Error ? error.name : "UnknownError",
+    );
+
+    return fail(messages.api.loginFailed, 500);
   }
 }

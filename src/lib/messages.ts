@@ -40,6 +40,7 @@ export const messages = {
     password: "Password",
     signIn: "Sign In",
     signingIn: "Signing In...",
+    failed: "Login failed",
   },
   dashboard: {
     title: "Dashboard",
@@ -173,6 +174,7 @@ export const messages = {
   },
   api: {
     invalidCredentials: "Invalid email or password.",
+    loginFailed: "Login failed",
     unauthorized: "Unauthorized.",
     testNotFound: "Test not found.",
     questionNotFound: "Question not found.",
