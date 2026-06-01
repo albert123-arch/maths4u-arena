@@ -1,5 +1,5 @@
 // Prisma schema for Maths4U Arena.
-// Add models here when the app domain is ready.
+// This MVP foundation keeps flexible JSON text fields for future quiz modes.
 
 generator client {
   provider = "prisma-client"
@@ -8,4 +8,235 @@ generator client {
 
 datasource db {
   provider = "mysql"
+}
+
+enum UserRole {
+  ADMIN
+  TEACHER
+}
+
+enum TestStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  MULTI_SELECT
+  SHORT_TEXT
+  NUMERIC
+  TRUE_FALSE
+  FILL_BLANK
+  MATCHING
+  ORDERING
+  MANUAL_REVIEW
+}
+
+enum GradingType {
+  EXACT
+  ACCEPTED_ANSWERS
+  KEYWORDS
+  REGEX
+  NUMERIC_TOLERANCE
+  MANUAL
+  FORMULA
+}
+
+enum GameMode {
+  CLASSIC
+  ACCURACY
+  HOST_PACED
+  TEAM
+  PRACTICE
+  CAROUSEL
+}
+
+enum GameSessionStatus {
+  LOBBY
+  RUNNING
+  PAUSED
+  FINISHED
+}
+
+model User {
+  id           String   @id @default(cuid()) @db.VarChar(191)
+  email        String   @unique @db.VarChar(191)
+  passwordHash String   @db.VarChar(255)
+  name         String?  @db.VarChar(191)
+  role         UserRole @default(TEACHER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tests Test[]
+}
+
+model Test {
+  id          String     @id @default(cuid()) @db.VarChar(191)
+  title       String     @db.VarChar(191)
+  slug        String     @unique @db.VarChar(191)
+  subject     String     @db.VarChar(191)
+  description String?    @db.Text
+  locale      String     @default("ru") @db.VarChar(16)
+  status      TestStatus @default(DRAFT)
+  createdById String?    @db.VarChar(191)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  createdBy User?         @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  versions  TestVersion[]
+
+  @@index([createdById])
+  @@index([status])
+  @@index([subject])
+}
+
+model TestVersion {
+  id            String     @id @default(cuid()) @db.VarChar(191)
+  testId        String     @db.VarChar(191)
+  versionNumber Int
+  title         String     @db.VarChar(191)
+  instructions  String?    @db.LongText
+  settingsJson  String?    @db.LongText
+  status        TestStatus @default(DRAFT)
+  publishedAt   DateTime?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  test      Test                  @relation(fields: [testId], references: [id], onDelete: Cascade)
+  questions TestVersionQuestion[]
+  sessions  GameSession[]
+
+  @@unique([testId, versionNumber])
+  @@index([status])
+}
+
+model Question {
+  id               String       @id @default(cuid()) @db.VarChar(191)
+  subject          String       @db.VarChar(191)
+  type             QuestionType
+  prompt           String       @db.LongText
+  explanation      String?      @db.LongText
+  difficulty       Int          @default(1)
+  tagsJson         String?      @db.LongText
+  mediaJson        String?      @db.LongText
+  gradingType      GradingType
+  gradingRulesJson String?      @db.LongText
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  options      QuestionOption[]
+  testVersions TestVersionQuestion[]
+  answers      Answer[]
+  scoreEvents  ScoreEvent[]
+
+  @@index([subject])
+  @@index([type])
+  @@index([difficulty])
+}
+
+model QuestionOption {
+  id         String  @id @default(cuid()) @db.VarChar(191)
+  questionId String  @db.VarChar(191)
+  optionText String  @db.LongText
+  isCorrect  Boolean @default(false)
+  sortOrder  Int     @default(0)
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId])
+}
+
+model TestVersionQuestion {
+  id               String  @id @default(cuid()) @db.VarChar(191)
+  testVersionId    String  @db.VarChar(191)
+  questionId       String  @db.VarChar(191)
+  sortOrder        Int
+  points           Int     @default(1)
+  timeLimitSeconds Int?
+  settingsJson     String? @db.LongText
+
+  testVersion TestVersion @relation(fields: [testVersionId], references: [id], onDelete: Cascade)
+  question    Question    @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@unique([testVersionId, questionId])
+  @@index([questionId])
+}
+
+model GameSession {
+  id            String            @id @default(cuid()) @db.VarChar(191)
+  testVersionId String            @db.VarChar(191)
+  code          String            @unique @db.VarChar(16)
+  mode          GameMode          @default(CLASSIC)
+  status        GameSessionStatus @default(LOBBY)
+  settingsJson  String?           @db.LongText
+  showResults   Boolean           @default(true)
+  startedAt     DateTime?
+  finishedAt    DateTime?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  testVersion  TestVersion   @relation(fields: [testVersionId], references: [id], onDelete: Restrict)
+  participants Participant[]
+  answers      Answer[]
+  scoreEvents  ScoreEvent[]
+
+  @@index([testVersionId])
+  @@index([status])
+}
+
+model Participant {
+  id          String   @id @default(cuid()) @db.VarChar(191)
+  sessionId   String   @db.VarChar(191)
+  displayName String   @db.VarChar(191)
+  tokenHash   String   @db.VarChar(255)
+  teamId      String?  @db.VarChar(191)
+  joinedAt    DateTime @default(now())
+
+  session     GameSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  answers     Answer[]
+  scoreEvents ScoreEvent[]
+
+  @@index([sessionId])
+  @@index([teamId])
+}
+
+model Answer {
+  id            String   @id @default(cuid()) @db.VarChar(191)
+  sessionId     String   @db.VarChar(191)
+  participantId String   @db.VarChar(191)
+  questionId    String   @db.VarChar(191)
+  answerJson    String   @db.LongText
+  isCorrect     Boolean?
+  points        Int      @default(0)
+  responseMs    Int?
+  submittedAt   DateTime @default(now())
+
+  session     GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  question    Question    @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@index([sessionId])
+  @@index([participantId])
+  @@index([questionId])
+}
+
+model ScoreEvent {
+  id            String   @id @default(cuid()) @db.VarChar(191)
+  sessionId     String   @db.VarChar(191)
+  participantId String?  @db.VarChar(191)
+  questionId    String?  @db.VarChar(191)
+  eventType     String   @db.VarChar(64)
+  pointsDelta   Int      @default(0)
+  metaJson      String?  @db.LongText
+  createdAt     DateTime @default(now())
+
+  session     GameSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  participant Participant? @relation(fields: [participantId], references: [id], onDelete: SetNull)
+  question    Question?    @relation(fields: [questionId], references: [id], onDelete: SetNull)
+
+  @@index([sessionId])
+  @@index([participantId])
+  @@index([questionId])
+  @@index([eventType])
 }

@@ -1,6 +1,8 @@
 # Maths4U Arena
 
-Clean starter for the Maths4U Arena educational quiz/game platform.
+Full-stack MVP foundation for the Maths4U Arena educational quiz/game platform.
+
+The current app includes the database schema, admin authentication, admin CRUD screens for tests and questions, classic student flow skeleton, host screen skeleton, and clean API route handlers. Advanced live game modes are intentionally left for later.
 
 ## Stack
 
@@ -9,7 +11,7 @@ Clean starter for the Maths4U Arena educational quiz/game platform.
 - Tailwind CSS
 - Prisma ORM
 - MySQL
-- Node.js hosting target
+- Node.js hosting target for Hostinger Business Web Hosting
 
 ## Local Setup
 
@@ -25,16 +27,32 @@ Create a local environment file:
 cp .env.example .env
 ```
 
-Update `DATABASE_URL` in `.env` with your MySQL credentials:
+Set the required values in `.env`:
 
 ```env
 DATABASE_URL="mysql://USER:PASSWORD@HOST:3306/DATABASE"
+JWT_SECRET="replace-with-a-long-random-secret"
+APP_URL="http://localhost:3000"
+ADMIN_EMAIL="admin@example.com"
+ADMIN_PASSWORD="change-this-password"
 ```
 
 Generate the Prisma client:
 
 ```bash
 npm run prisma:generate
+```
+
+Apply the schema to a MySQL database during MVP development:
+
+```bash
+npm run db:push
+```
+
+Create the first admin user:
+
+```bash
+npm run prisma:seed
 ```
 
 Start the development server:
@@ -45,34 +63,47 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+## Useful Scripts
+
+- `npm run lint` - generate Prisma client and run ESLint
+- `npm run build` - generate Prisma client and build Next.js
+- `npm run prisma:generate` - generate Prisma client
+- `npm run prisma:migrate` - create/apply a Prisma migration locally
+- `npm run prisma:seed` - create the first admin from env variables
+- `npm run db:push` - push schema to MySQL without a migration file for early MVP hosting
+
 ## Project Structure
 
-- `src/app/admin` - admin area route structure
-- `src/app/play` - player route structure
-- `src/app/host` - host route structure
-- `src/app/api` - API route structure
-- `src/components` - shared React components
-- `src/lib` - shared TypeScript utilities
-- `prisma` - Prisma schema and migrations
+- `src/app/admin` - protected admin dashboard and CRUD pages
+- `src/app/play` - student join screen
+- `src/app/game/[code]` - student game skeleton
+- `src/app/host/[code]` - host screen skeleton
+- `src/app/api` - App Router API route handlers
+- `src/components` - shared UI/client components
+- `src/lib` - auth, Prisma, validation, grading, slug, and game-code utilities
+- `prisma` - Prisma schema and seed script
 
 ## Database Notes
 
-The project is configured for MySQL through Prisma. No application models have been added yet.
+The schema is MySQL-compatible and includes:
 
-When models are added later, use:
+- users with admin/teacher roles
+- tests and versioned tests
+- reusable question bank with options and grading rules
+- game sessions, participants, answers, and score events
 
-```bash
-npm run prisma:migrate
-```
+Flexible `LongText` JSON fields are used for future game modes and grading settings without requiring Redis, Docker, PostgreSQL, or paid external services.
 
 ## Hostinger Deployment Notes
 
 1. Create a MySQL database and user in Hostinger hPanel.
-2. Set `DATABASE_URL` with the Hostinger MySQL host, database name, username, and password.
+2. Set `DATABASE_URL`, `JWT_SECRET`, `APP_URL`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` as private server environment variables.
 3. Use a Node.js runtime compatible with this Next.js version. Node.js 20 or newer is recommended.
 4. Install dependencies with `npm install`.
-5. Build with `npm run build`.
-6. Start with `npm run start` for a full project upload, or run `.next/standalone/server.js` if deploying the standalone build output.
-7. Keep `.env` private on the server. Commit only `.env.example`.
+5. Run `npm run db:push` or deploy migrations once migration files are introduced.
+6. Run `npm run prisma:seed` once to create the first admin.
+7. Build with `npm run build`.
+8. Start with `npm run start` for a full project upload, or run `.next/standalone/server.js` if deploying the standalone build output.
+9. Keep `.env` private on the server. Commit only `.env.example`.
 
-This repository is intentionally limited to the starter setup. The full app features will be added later.
+Existing deployment target: `https://arena.maths4u.sbs`.

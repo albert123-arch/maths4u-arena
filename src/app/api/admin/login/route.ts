@@ -1,0 +1,27 @@
+import { authenticateAdmin, createAdminSession } from "@/lib/auth";
+import { errorResponse, fail, ok } from "@/lib/api-response";
+import { loginSchema } from "@/lib/validation";
+
+export async function POST(request: Request) {
+  try {
+    const input = loginSchema.parse(await request.json());
+    const user = await authenticateAdmin(input.email, input.password);
+
+    if (!user) {
+      return fail("Неверный email или пароль.", 401);
+    }
+
+    await createAdminSession(user);
+
+    return ok({
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    return errorResponse(error);
+  }
+}
