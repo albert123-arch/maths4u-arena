@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { messages } from "@/lib/messages";
@@ -59,6 +60,8 @@ type LiveApiResponse =
       data: LiveSessionData;
     }
   | { ok: false; error: string };
+
+type AnswerSource = "MANUAL" | "AUTO_FINISH";
 
 function readParticipantSessionRaw(code: string) {
   if (typeof window === "undefined") {
@@ -168,8 +171,10 @@ export function ClassicGameClient({
   initialSettings: LiveSessionData["settings"];
   questions: Question[];
 }) {
+  const router = useRouter();
   const startedAt = useRef<number | null>(null);
   const lastLiveStatus = useRef<LiveSessionData["status"]>(initialStatus);
+  const finishAutoSubmitStarted = useRef(false);
   const participantRaw = useSyncExternalStore(
     subscribeParticipantSession,
     () => readParticipantSessionRaw(code),
@@ -198,6 +203,9 @@ export function ClassicGameClient({
   });
   const [submitted, setSubmitted] = useState<Record<string, boolean | null>>({});
   const [pendingQuestionId, setPendingQuestionId] = useState("");
+  const [finishAutoSubmitStatus, setFinishAutoSubmitStatus] = useState<
+    "idle" | "submitting" | "redirecting"
+  >("idle");
   const [error, setError] = useState("");
   const completedCount = Object.keys(submitted).length;
   const isComplete = questions.length > 0 && completedCount === questions.length;
@@ -294,6 +302,128 @@ export function ClassicGameClient({
     });
   }
 
+  const sendAnswer = useCallback(
+    async (question: Question, source: AnswerSource = "MANUAL") => {
+      if (!participant) {
+        return { ok: false, error: messages.game.joinRequired };
+      }
+
+      const selected = answers[question.id] ?? "";
+
+      if (!selected.trim()) {
+        return { ok: false, skipped: true };
+      }
+
+      const selectedOption = question.options.find((option) => option.id === selected);
+      startedAt.current ??= Date.now();
+
+      let result: ApiResponse;
+
+      try {
+        const response = await fetch("/api/answers/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sessionId,
+            code,
+            participantId: participant.participantId,
+            participantToken: participant.participantToken,
+            questionId: question.id,
+            answer: selectedOption
+              ? { optionId: selectedOption.id, value: selectedOption.optionText }
+              : { value: selected },
+            responseMs: Date.now() - startedAt.current,
+            source,
+          }),
+        });
+
+        result = (await response.json()) as ApiResponse;
+      } catch {
+        return { ok: false, error: messages.api.answerSubmitFailed };
+      }
+
+      if (!result.ok) {
+        if (source === "AUTO_FINISH" && result.error === messages.api.answerAlreadySubmitted) {
+          setSubmitted((current) => ({
+            ...current,
+            [question.id]: null,
+          }));
+
+          return { ok: true };
+        }
+
+        return { ok: false, error: result.error };
+      }
+
+      setSubmitted((current) => ({
+        ...current,
+        [question.id]: result.data.grading.isCorrect,
+      }));
+
+      return { ok: true };
+    },
+    [answers, code, participant, sessionId],
+  );
+
+  useEffect(() => {
+    if (
+      !participant ||
+      live.status !== "FINISHED" ||
+      !live.settings.showStudentResults ||
+      finishAutoSubmitStarted.current
+    ) {
+      return;
+    }
+
+    finishAutoSubmitStarted.current = true;
+    let stopped = false;
+
+    const timer = window.setTimeout(() => {
+      async function submitDraftAnswersAndOpenResults() {
+        setFinishAutoSubmitStatus("submitting");
+
+        const submittedIds = new Set(Object.keys(submitted));
+        const draftQuestions = orderedQuestions.filter(
+          (question) => !submittedIds.has(question.id) && (answers[question.id] ?? "").trim(),
+        );
+
+        for (const question of draftQuestions) {
+          if (stopped) {
+            return;
+          }
+
+          await sendAnswer(question, "AUTO_FINISH");
+        }
+
+        if (stopped) {
+          return;
+        }
+
+        setFinishAutoSubmitStatus("redirecting");
+        router.push(`/game/${code}/results`);
+      }
+
+      void submitDraftAnswersAndOpenResults();
+    }, 0);
+
+    return () => {
+      stopped = true;
+      window.clearTimeout(timer);
+    };
+  }, [
+    answers,
+    code,
+    live.settings.showStudentResults,
+    live.status,
+    orderedQuestions,
+    participant,
+    router,
+    sendAnswer,
+    submitted,
+  ]);
+
   async function submit(question: Question) {
     if (!participant) {
       setError(messages.game.joinRequired);
@@ -307,40 +437,15 @@ export function ClassicGameClient({
       return;
     }
 
-    const selectedOption = question.options.find((option) => option.id === selected);
-    startedAt.current ??= Date.now();
     setPendingQuestionId(question.id);
     setError("");
-
-    const response = await fetch("/api/answers/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        sessionId,
-        code,
-        participantId: participant.participantId,
-        participantToken: participant.participantToken,
-        questionId: question.id,
-        answer: selectedOption
-          ? { optionId: selectedOption.id, value: selectedOption.optionText }
-          : { value: selected },
-        responseMs: Date.now() - startedAt.current,
-      }),
-    });
-    const result = (await response.json()) as ApiResponse;
+    const result = await sendAnswer(question);
     setPendingQuestionId("");
 
     if (!result.ok) {
-      setError(result.error);
+      setError(result.error ?? messages.api.unknownError);
       return;
     }
-
-    setSubmitted((current) => ({
-      ...current,
-      [question.id]: result.data.grading.isCorrect,
-    }));
   }
 
   if (!participant && live.status === "FINISHED") {
@@ -430,6 +535,13 @@ export function ClassicGameClient({
       ) : null}
       </div>
       {error ? <p className="rounded-md border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700">{error}</p> : null}
+      {finishAutoSubmitStatus !== "idle" ? (
+        <p className="rounded-md border border-teal-200 bg-teal-50 p-4 text-sm font-semibold text-teal-900">
+          {finishAutoSubmitStatus === "submitting"
+            ? messages.game.autoSubmittingOnFinish
+            : messages.game.openingResults}
+        </p>
+      ) : null}
       {live.status === "FINISHED" ? (
         <p className="rounded-md border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-700">
           {messages.game.finished}

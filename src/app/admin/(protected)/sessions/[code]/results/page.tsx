@@ -75,13 +75,29 @@ export default async function SessionResultsPage({ params }: PageProps) {
       lastAnswerPrompt: lastAnswer?.question.prompt ?? null,
     };
   });
-  const submittedCount = participants.filter((participant) => participant.status === "Submitted").length;
+  const rankedParticipants = [...participants]
+    .sort((left, right) => {
+      if (right.totalScore !== left.totalScore) {
+        return right.totalScore - left.totalScore;
+      }
+
+      if (right.correct !== left.correct) {
+        return right.correct - left.correct;
+      }
+
+      return left.displayName.localeCompare(right.displayName);
+    })
+    .map((participant, index) => ({
+      ...participant,
+      rank: index + 1,
+    }));
+  const submittedCount = rankedParticipants.filter((participant) => participant.status === "Submitted").length;
   const averageScore =
-    participants.length === 0
+    rankedParticipants.length === 0
       ? 0
       : Math.round(
-          (participants.reduce((sum, participant) => sum + participant.totalScore, 0) /
-            participants.length) *
+          (rankedParticipants.reduce((sum, participant) => sum + participant.totalScore, 0) /
+            rankedParticipants.length) *
             10,
         ) / 10;
 
@@ -107,11 +123,11 @@ export default async function SessionResultsPage({ params }: PageProps) {
           testVersionId: session.testVersionId,
           settingsJson: session.settingsJson,
           totalPossible,
-          participantCount: participants.length,
+          participantCount: rankedParticipants.length,
           submittedCount,
           averageScore,
           lastUpdated: new Date().toISOString(),
-          participants,
+          participants: rankedParticipants,
         }}
       />
     </div>

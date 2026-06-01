@@ -8,6 +8,7 @@ import { RunAgainButton } from "./run-again-button";
 
 type ResultParticipant = {
   id: string;
+  rank: number;
   displayName: string;
   totalScore: number;
   answered: number;
@@ -39,6 +40,16 @@ type ApiResponse =
       data: ResultData;
     }
   | { ok: false; error: string };
+
+function csvCell(value: string | number | null) {
+  const text = String(value ?? "");
+
+  if (/[",\n]/.test(text)) {
+    return `"${text.replaceAll('"', '""')}"`;
+  }
+
+  return text;
+}
 
 export function SessionResultsTable({ initialData }: { initialData: ResultData }) {
   const [data, setData] = useState(initialData);
@@ -83,6 +94,40 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
     };
   }, [data.status, refreshResults]);
 
+  function downloadResults() {
+    const rows = [
+      [
+        messages.results.rank,
+        messages.results.participant,
+        messages.results.score,
+        messages.results.totalPossible,
+        messages.results.answers,
+        messages.results.correct,
+        messages.results.percentage,
+        messages.host.status,
+      ],
+      ...data.participants.map((participant) => [
+        participant.rank,
+        participant.displayName,
+        participant.totalScore,
+        data.totalPossible,
+        participant.answered,
+        participant.correct,
+        `${participant.percentage}%`,
+        participant.status,
+      ]),
+    ];
+    const csv = rows.map((row) => row.map(csvCell).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `maths4u-results-${data.code}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="grid gap-6">
       <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
@@ -95,6 +140,13 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={downloadResults}
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold transition hover:bg-slate-50 active:scale-[0.98]"
+            >
+              {messages.results.downloadResults}
+            </button>
             <button
               type="button"
               onClick={refreshResults}
@@ -130,6 +182,9 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
         </div>
       </section>
       <section className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-200 p-4">
+          <h3 className="text-lg font-bold">{messages.results.leaderboard}</h3>
+        </div>
         {data.participants.length === 0 ? (
           <p className="p-5 text-sm text-slate-600">{messages.results.empty}</p>
         ) : (
@@ -137,6 +192,7 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
             <table className="w-full min-w-[680px] text-left text-sm">
               <thead className="bg-slate-50 text-slate-600">
                 <tr>
+                  <th className="px-4 py-3 font-semibold">{messages.results.rank}</th>
                   <th className="px-4 py-3 font-semibold">{messages.results.participant}</th>
                   <th className="px-4 py-3 font-semibold">{messages.results.score}</th>
                   <th className="px-4 py-3 font-semibold">{messages.results.answers}</th>
@@ -148,6 +204,7 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
               <tbody className="divide-y divide-slate-200">
                 {data.participants.map((participant) => (
                   <tr key={participant.id}>
+                    <td className="px-4 py-3 font-bold text-teal-800">{participant.rank}</td>
                     <td className="px-4 py-3 font-medium">{participant.displayName}</td>
                     <td className="px-4 py-3">
                       {participant.totalScore} / {data.totalPossible}

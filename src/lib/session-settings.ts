@@ -13,7 +13,7 @@ export const DEFAULT_SESSION_SETTINGS: SessionSettings = {
   showStudentResults: true,
   showCorrectAnswers: false,
   showLeaderboard: true,
-  autoSubmitOnFinish: false,
+  autoSubmitOnFinish: true,
 };
 
 function booleanSetting(value: unknown, fallback: boolean) {

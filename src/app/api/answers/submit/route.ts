@@ -8,6 +8,8 @@ import { verifyPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 import { answerSubmitSchema } from "@/lib/validation";
 
+const FINISH_AUTO_SUBMIT_GRACE_MS = 2 * 60 * 1000;
+
 function submittedOptionId(answer: unknown) {
   if (
     typeof answer === "object" &&
@@ -36,6 +38,7 @@ export async function POST(request: Request) {
             code: true,
             status: true,
             testVersionId: true,
+            finishedAt: true,
           },
         },
       },
@@ -59,7 +62,13 @@ export async function POST(request: Request) {
       return fail(messages.api.participantCodeMismatch, 400);
     }
 
-    if (participant.session.status !== "RUNNING") {
+    const canAutoSubmitAfterFinish =
+      input.source === "AUTO_FINISH" &&
+      participant.session.status === "FINISHED" &&
+      participant.session.finishedAt !== null &&
+      Date.now() - participant.session.finishedAt.getTime() <= FINISH_AUTO_SUBMIT_GRACE_MS;
+
+    if (participant.session.status !== "RUNNING" && !canAutoSubmitAfterFinish) {
       return fail(messages.api.answerOutsideRunningSession, 409);
     }
 

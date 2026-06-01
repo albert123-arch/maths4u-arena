@@ -143,4 +143,5 @@ export const answerSubmitSchema = z.object({
   questionId: z.string().min(1),
   answer: z.unknown(),
   responseMs: z.coerce.number().int().min(0).optional(),
+  source: z.enum(["MANUAL", "AUTO_FINISH"]).default("MANUAL"),
 });
