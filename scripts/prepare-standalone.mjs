@@ -27,6 +27,8 @@ copyDirectory(
   path.join(standaloneDir, ".next", "static"),
   { clean: true },
 );
-copyDirectory(path.join(root, ".next", "static"), path.join(root, "_next", "static"));
+copyDirectory(path.join(root, ".next", "static"), path.join(root, "_next", "static"), {
+  clean: true,
+});
 
 console.log("Standalone build prepared for Hostinger.");
