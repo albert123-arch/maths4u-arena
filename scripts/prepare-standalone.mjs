@@ -30,5 +30,20 @@ copyDirectory(
 copyDirectory(path.join(root, ".next", "static"), path.join(root, "_next", "static"), {
   clean: true,
 });
+copyDirectory(
+  path.join(root, "src", "generated", "prisma"),
+  path.join(standaloneDir, "src", "generated", "prisma"),
+  { clean: true },
+);
+copyDirectory(
+  path.join(root, "node_modules", ".prisma"),
+  path.join(standaloneDir, "node_modules", ".prisma"),
+  { clean: true },
+);
+copyDirectory(
+  path.join(root, "node_modules", "@prisma", "client"),
+  path.join(standaloneDir, "node_modules", "@prisma", "client"),
+  { clean: true },
+);
 
 console.log("Standalone build prepared for Hostinger.");
