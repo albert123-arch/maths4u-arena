@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { QuestionForm } from "@/components/question-form";
+import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -18,23 +19,21 @@ export default async function AdminQuestionsPage() {
   return (
     <div className="grid gap-6">
       <div>
-        <h1 className="text-3xl font-bold">Вопросы</h1>
-        <p className="mt-2 text-slate-600">
-          Банк вопросов поддерживает разные типы и JSON-правила проверки для будущих режимов.
-        </p>
+        <h1 className="text-3xl font-bold">{messages.questions.title}</h1>
+        <p className="mt-2 text-slate-600">{messages.questions.description}</p>
       </div>
       <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-xl font-semibold">Новый вопрос</h2>
+        <h2 className="mb-4 text-xl font-semibold">{messages.questions.newTitle}</h2>
         <QuestionForm />
       </section>
       <section className="grid gap-3">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="text-xl font-semibold">Банк вопросов</h2>
-          <span className="text-sm text-slate-500">Фильтры по предмету, типу и сложности будут позже.</span>
+          <h2 className="text-xl font-semibold">{messages.questions.bankTitle}</h2>
+          <span className="text-sm text-slate-500">{messages.questions.filterPlaceholder}</span>
         </div>
         <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
           {questions.length === 0 ? (
-            <p className="p-5 text-sm text-slate-600">Пока нет вопросов.</p>
+            <p className="p-5 text-sm text-slate-600">{messages.questions.empty}</p>
           ) : (
             <div className="divide-y divide-slate-200">
               {questions.map((question) => (
@@ -50,7 +49,8 @@ export default async function AdminQuestionsPage() {
                       </span>
                     </div>
                     <p className="mt-1 text-sm text-slate-600">
-                      {question.subject} · сложность {question.difficulty} · вариантов{" "}
+                      {question.subject} · {messages.questions.fields.difficulty.toLowerCase()}{" "}
+                      {question.difficulty} · {messages.questions.fields.options.toLowerCase()}{" "}
                       {question.options.length}
                     </p>
                   </div>
@@ -58,7 +58,7 @@ export default async function AdminQuestionsPage() {
                     href={`/admin/questions/${question.id}`}
                     className="w-fit rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700"
                   >
-                    Редактировать
+                    {messages.common.edit}
                   </Link>
                 </article>
               ))}

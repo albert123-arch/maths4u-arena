@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { GAME_MODES, GRADING_TYPES, QUESTION_TYPES, TEST_STATUSES } from "./constants";
+import { messages } from "./messages";
 
 function nullableText() {
   return z
@@ -22,7 +23,7 @@ function nullableJsonText() {
     } catch {
       context.addIssue({
         code: "custom",
-        message: "JSON field must contain valid JSON.",
+        message: messages.validation.jsonFieldInvalid,
       });
     }
   });
@@ -70,7 +71,7 @@ export const questionWriteSchema = z
     ) {
       context.addIssue({
         code: "custom",
-        message: "At least one option must be marked correct.",
+        message: messages.validation.correctOptionRequired,
       });
     }
   });

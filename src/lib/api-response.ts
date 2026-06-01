@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
+import { messages } from "./messages";
+
 export function ok<T>(data: T, status = 200) {
   return NextResponse.json(
     {
@@ -21,7 +23,7 @@ export function fail(error: string, status = 400) {
   );
 }
 
-export function errorResponse(error: unknown, fallback = "Something went wrong.") {
+export function errorResponse(error: unknown, fallback: string = messages.api.unknownError) {
   if (error instanceof ZodError) {
     return fail(
       error.issues.map((issue) => issue.message).join("; "),

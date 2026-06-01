@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { ArchiveTestButton } from "@/components/archive-test-button";
 import { TestForm } from "@/components/test-form";
+import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -25,23 +26,21 @@ export default async function AdminTestsPage() {
   return (
     <div className="grid gap-6">
       <div>
-        <h1 className="text-3xl font-bold">Тесты</h1>
-        <p className="mt-2 text-slate-600">
-          Создайте тест. При создании автоматически появится первая черновая версия.
-        </p>
+        <h1 className="text-3xl font-bold">{messages.tests.title}</h1>
+        <p className="mt-2 text-slate-600">{messages.tests.description}</p>
       </div>
       <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-xl font-semibold">Новый тест</h2>
+        <h2 className="mb-4 text-xl font-semibold">{messages.tests.newTitle}</h2>
         <TestForm />
       </section>
       <section className="grid gap-3">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="text-xl font-semibold">Список тестов</h2>
-          <span className="text-sm text-slate-500">Дублирование теста будет добавлено позже.</span>
+          <h2 className="text-xl font-semibold">{messages.tests.listTitle}</h2>
+          <span className="text-sm text-slate-500">{messages.tests.duplicatePlaceholder}</span>
         </div>
         <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
           {tests.length === 0 ? (
-            <p className="p-5 text-sm text-slate-600">Пока нет тестов.</p>
+            <p className="p-5 text-sm text-slate-600">{messages.tests.empty}</p>
           ) : (
             <div className="divide-y divide-slate-200">
               {tests.map((test) => {
@@ -60,8 +59,8 @@ export default async function AdminTestsPage() {
                         </span>
                       </div>
                       <p className="mt-1 text-sm text-slate-600">
-                        {test.subject} · {test.slug} · версия{" "}
-                        {latestVersion?.versionNumber ?? 1} · вопросов{" "}
+                        {test.subject} · {test.slug} · {messages.tests.versionPrefix.toLowerCase()}{" "}
+                        {latestVersion?.versionNumber ?? 1} · {messages.tests.questionCount}{" "}
                         {latestVersion?._count.questions ?? 0}
                       </p>
                     </div>
@@ -70,7 +69,7 @@ export default async function AdminTestsPage() {
                         href={`/admin/tests/${test.id}`}
                         className="rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700"
                       >
-                        Редактировать
+                        {messages.common.edit}
                       </Link>
                       <ArchiveTestButton id={test.id} />
                     </div>

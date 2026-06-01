@@ -1,6 +1,7 @@
 import { requireAdminApi } from "@/lib/auth";
 import { errorResponse, fail, ok } from "@/lib/api-response";
 import { createGameCode } from "@/lib/game-code";
+import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 import { sessionCreateSchema } from "@/lib/validation";
 
@@ -17,14 +18,14 @@ async function uniqueGameCode() {
     }
   }
 
-  throw new Error("Could not generate a unique game code.");
+  throw new Error(messages.api.uniqueGameCodeFailed);
 }
 
 export async function GET() {
   const user = await requireAdminApi();
 
   if (!user) {
-    return fail("Unauthorized.", 401);
+    return fail(messages.api.unauthorized, 401);
   }
 
   const sessions = await prisma.gameSession.findMany({
@@ -55,7 +56,7 @@ export async function POST(request: Request) {
   const user = await requireAdminApi();
 
   if (!user) {
-    return fail("Unauthorized.", 401);
+    return fail(messages.api.unauthorized, 401);
   }
 
   try {

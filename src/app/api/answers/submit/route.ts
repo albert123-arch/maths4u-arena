@@ -1,6 +1,7 @@
 import { errorResponse, fail, ok } from "@/lib/api-response";
 import type { GradingTypeValue } from "@/lib/constants";
 import { gradeAnswer } from "@/lib/grading";
+import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 import { answerSubmitSchema } from "@/lib/validation";
 
@@ -23,19 +24,19 @@ export async function POST(request: Request) {
     });
 
     if (!participant) {
-      return fail("Participant not found.", 404);
+      return fail(messages.api.participantNotFound, 404);
     }
 
     if (input.sessionId && participant.sessionId !== input.sessionId) {
-      return fail("Participant does not belong to this session.", 400);
+      return fail(messages.api.participantSessionMismatch, 400);
     }
 
     if (input.code && participant.session.code !== input.code.toUpperCase()) {
-      return fail("Participant does not belong to this game code.", 400);
+      return fail(messages.api.participantCodeMismatch, 400);
     }
 
     if (participant.session.status !== "RUNNING") {
-      return fail("Answers can only be submitted while a session is running.", 409);
+      return fail(messages.api.answerOutsideRunningSession, 409);
     }
 
     const question = await prisma.question.findUnique({
@@ -48,7 +49,7 @@ export async function POST(request: Request) {
     });
 
     if (!question) {
-      return fail("Question not found.", 404);
+      return fail(messages.api.questionNotFound, 404);
     }
 
     const graded = gradeAnswer({

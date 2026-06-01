@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
+import { messages } from "@/lib/messages";
+
 type ApiResponse =
   | {
       ok: true;
@@ -54,7 +56,7 @@ export function PlayJoinForm() {
   return (
     <form onSubmit={submit} className="grid gap-4">
       <label className="grid gap-1 text-sm font-medium text-slate-700">
-        Код игры
+        {messages.play.gameCode}
         <input
           value={code}
           onChange={(event) => setCode(event.target.value.toUpperCase())}
@@ -64,7 +66,7 @@ export function PlayJoinForm() {
         />
       </label>
       <label className="grid gap-1 text-sm font-medium text-slate-700">
-        Имя игрока
+        {messages.play.displayName}
         <input
           value={displayName}
           onChange={(event) => setDisplayName(event.target.value)}
@@ -78,7 +80,7 @@ export function PlayJoinForm() {
         disabled={pending}
         className="rounded-md bg-teal-700 px-4 py-3 font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
       >
-        {pending ? "Подключение..." : "Играть"}
+        {pending ? messages.play.pending : messages.play.submit}
       </button>
     </form>
   );

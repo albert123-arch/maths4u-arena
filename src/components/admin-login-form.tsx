@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
+import { messages } from "@/lib/messages";
+
 type ApiResponse =
   | { ok: true; data: unknown }
   | { ok: false; error: string };
@@ -42,7 +44,7 @@ export function AdminLoginForm() {
   return (
     <form onSubmit={submit} className="grid gap-4">
       <label className="grid gap-1 text-sm font-medium text-slate-700">
-        Email
+        {messages.common.email}
         <input
           type="email"
           value={email}
@@ -53,7 +55,7 @@ export function AdminLoginForm() {
         />
       </label>
       <label className="grid gap-1 text-sm font-medium text-slate-700">
-        Пароль
+        {messages.adminLogin.password}
         <input
           type="password"
           value={password}
@@ -69,7 +71,7 @@ export function AdminLoginForm() {
         disabled={pending}
         className="rounded-md bg-teal-700 px-4 py-2 font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
       >
-        {pending ? "Вход..." : "Войти"}
+        {pending ? messages.adminLogin.signingIn : messages.adminLogin.signIn}
       </button>
     </form>
   );

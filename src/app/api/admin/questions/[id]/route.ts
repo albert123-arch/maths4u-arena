@@ -1,5 +1,6 @@
 import { requireAdminApi } from "@/lib/auth";
 import { errorResponse, fail, ok } from "@/lib/api-response";
+import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 import { questionWriteSchema } from "@/lib/validation";
 
@@ -11,7 +12,7 @@ export async function GET(_request: Request, { params }: RouteContext) {
   const user = await requireAdminApi();
 
   if (!user) {
-    return fail("Unauthorized.", 401);
+    return fail(messages.api.unauthorized, 401);
   }
 
   const { id } = await params;
@@ -25,7 +26,7 @@ export async function GET(_request: Request, { params }: RouteContext) {
   });
 
   if (!question) {
-    return fail("Question not found.", 404);
+    return fail(messages.api.questionNotFound, 404);
   }
 
   return ok(question);
@@ -35,7 +36,7 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   const user = await requireAdminApi();
 
   if (!user) {
-    return fail("Unauthorized.", 401);
+    return fail(messages.api.unauthorized, 401);
   }
 
   try {
@@ -83,7 +84,7 @@ export async function DELETE(_request: Request, { params }: RouteContext) {
   const user = await requireAdminApi();
 
   if (!user) {
-    return fail("Unauthorized.", 401);
+    return fail(messages.api.unauthorized, 401);
   }
 
   try {
@@ -94,6 +95,6 @@ export async function DELETE(_request: Request, { params }: RouteContext) {
 
     return ok(question);
   } catch (error) {
-    return errorResponse(error, "Question could not be deleted.");
+    return errorResponse(error, messages.api.questionDeleteFailed);
   }
 }

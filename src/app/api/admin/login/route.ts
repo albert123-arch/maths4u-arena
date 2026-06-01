@@ -1,5 +1,6 @@
 import { authenticateAdmin, createAdminSession } from "@/lib/auth";
 import { errorResponse, fail, ok } from "@/lib/api-response";
+import { messages } from "@/lib/messages";
 import { loginSchema } from "@/lib/validation";
 
 export async function POST(request: Request) {
@@ -8,7 +9,7 @@ export async function POST(request: Request) {
     const user = await authenticateAdmin(input.email, input.password);
 
     if (!user) {
-      return fail("Неверный email или пароль.", 401);
+      return fail(messages.api.invalidCredentials, 401);
     }
 
     await createAdminSession(user);

@@ -1,5 +1,6 @@
 import { requireAdminApi } from "@/lib/auth";
 import { errorResponse, fail, ok } from "@/lib/api-response";
+import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 import { questionWriteSchema } from "@/lib/validation";
 
@@ -7,7 +8,7 @@ export async function GET() {
   const user = await requireAdminApi();
 
   if (!user) {
-    return fail("Unauthorized.", 401);
+    return fail(messages.api.unauthorized, 401);
   }
 
   const questions = await prisma.question.findMany({
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
   const user = await requireAdminApi();
 
   if (!user) {
-    return fail("Unauthorized.", 401);
+    return fail(messages.api.unauthorized, 401);
   }
 
   try {

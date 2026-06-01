@@ -1,13 +1,14 @@
 import Link from "next/link";
 
 import type { AuthUser } from "@/lib/auth";
+import { messages } from "@/lib/messages";
 
 import { LogoutButton } from "./logout-button";
 
 const navItems = [
-  { href: "/admin", label: "Панель" },
-  { href: "/admin/tests", label: "Тесты" },
-  { href: "/admin/questions", label: "Вопросы" },
+  { href: "/admin", label: messages.adminShell.nav.dashboard },
+  { href: "/admin/tests", label: messages.adminShell.nav.tests },
+  { href: "/admin/questions", label: messages.adminShell.nav.questions },
 ];
 
 export function AdminShell({
@@ -23,9 +24,9 @@ export function AdminShell({
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <Link href="/admin" className="text-xl font-bold">
-              Maths4U Arena
+              {messages.common.appName}
             </Link>
-            <p className="text-sm text-slate-500">Администрирование платформы</p>
+            <p className="text-sm text-slate-500">{messages.adminShell.subtitle}</p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-sm text-slate-600">{user.email}</span>

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 import { TEST_STATUSES } from "@/lib/constants";
+import { messages } from "@/lib/messages";
 
 type TestFormValues = {
   id?: string;
@@ -76,7 +77,7 @@ export function TestForm({
       setStatus("DRAFT");
     }
 
-    setMessage(mode === "create" ? "Тест создан." : "Тест обновлен.");
+    setMessage(mode === "create" ? messages.tests.created : messages.tests.updated);
     router.refresh();
   }
 
@@ -84,7 +85,7 @@ export function TestForm({
     <form onSubmit={submit} className="grid gap-4">
       <div className="grid gap-4 md:grid-cols-2">
         <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Название
+          {messages.tests.fields.title}
           <input
             value={title}
             onChange={(event) => setTitle(event.target.value)}
@@ -93,18 +94,18 @@ export function TestForm({
           />
         </label>
         <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Slug
+          {messages.tests.fields.slug}
           <input
             value={slug}
             onChange={(event) => setSlug(event.target.value)}
             className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-            placeholder="avto-iz-nazvaniya"
+            placeholder={messages.tests.fields.slugPlaceholder}
           />
         </label>
       </div>
       <div className="grid gap-4 md:grid-cols-3">
         <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Предмет
+          {messages.tests.fields.subject}
           <input
             value={subject}
             onChange={(event) => setSubject(event.target.value)}
@@ -113,7 +114,7 @@ export function TestForm({
           />
         </label>
         <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Язык
+          {messages.tests.fields.locale}
           <input
             value={locale}
             onChange={(event) => setLocale(event.target.value)}
@@ -122,7 +123,7 @@ export function TestForm({
           />
         </label>
         <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Статус
+          {messages.tests.fields.status}
           <select
             value={status}
             onChange={(event) => setStatus(event.target.value)}
@@ -137,7 +138,7 @@ export function TestForm({
         </label>
       </div>
       <label className="grid gap-1 text-sm font-medium text-slate-700">
-        Описание
+        {messages.tests.fields.description}
         <textarea
           value={description}
           onChange={(event) => setDescription(event.target.value)}
@@ -151,7 +152,11 @@ export function TestForm({
         disabled={pending}
         className="w-fit rounded-md bg-teal-700 px-4 py-2 font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
       >
-        {pending ? "Сохранение..." : mode === "create" ? "Создать тест" : "Сохранить"}
+        {pending
+          ? messages.common.saving
+          : mode === "create"
+            ? messages.tests.createButton
+            : messages.common.save}
       </button>
     </form>
   );

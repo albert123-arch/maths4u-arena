@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
 
 import { GRADING_TYPES, QUESTION_TYPES } from "@/lib/constants";
+import { messages } from "@/lib/messages";
 
 type QuestionOptionValue = {
   id?: string;
@@ -29,8 +30,8 @@ type ApiResponse =
   | { ok: false; error: string };
 
 const trueFalseOptions = [
-  { optionText: "Верно", isCorrect: true, sortOrder: 0 },
-  { optionText: "Неверно", isCorrect: false, sortOrder: 1 },
+  { optionText: messages.questions.defaults.trueOption, isCorrect: true, sortOrder: 0 },
+  { optionText: messages.questions.defaults.falseOption, isCorrect: false, sortOrder: 1 },
 ];
 
 export function QuestionForm({
@@ -41,7 +42,7 @@ export function QuestionForm({
   mode?: "create" | "edit";
 }) {
   const router = useRouter();
-  const [subject, setSubject] = useState(initial?.subject ?? "Математика");
+  const [subject, setSubject] = useState(initial?.subject ?? messages.questions.defaults.subject);
   const [type, setType] = useState(initial?.type ?? "MULTIPLE_CHOICE");
   const [prompt, setPrompt] = useState(initial?.prompt ?? "");
   const [explanation, setExplanation] = useState(initial?.explanation ?? "");
@@ -63,18 +64,18 @@ export function QuestionForm({
   const usesOptions = type === "MULTIPLE_CHOICE" || type === "TRUE_FALSE";
   const rulesPlaceholder = useMemo(() => {
     if (gradingType === "EXACT") {
-      return '{ "answer": "42", "caseSensitive": false }';
+      return messages.questions.placeholders.exact;
     }
 
     if (gradingType === "NUMERIC_TOLERANCE") {
-      return '{ "answer": 12.5, "tolerance": 0.01 }';
+      return messages.questions.placeholders.numericTolerance;
     }
 
     if (gradingType === "KEYWORDS") {
-      return '{ "required": ["дробь", "знаменатель"], "caseSensitive": false }';
+      return messages.questions.placeholders.keywords;
     }
 
-    return '{ "answers": ["Paris", "Париж"], "caseSensitive": false }';
+    return messages.questions.placeholders.acceptedAnswers;
   }, [gradingType]);
 
   function changeType(nextType: string) {
@@ -163,7 +164,7 @@ export function QuestionForm({
       ]);
     }
 
-    setMessage(mode === "create" ? "Вопрос создан." : "Вопрос обновлен.");
+    setMessage(mode === "create" ? messages.questions.created : messages.questions.updated);
     router.refresh();
   }
 
@@ -171,7 +172,7 @@ export function QuestionForm({
     <form onSubmit={submit} className="grid gap-4">
       <div className="grid gap-4 md:grid-cols-3">
         <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Предмет
+          {messages.questions.fields.subject}
           <input
             value={subject}
             onChange={(event) => setSubject(event.target.value)}
@@ -180,7 +181,7 @@ export function QuestionForm({
           />
         </label>
         <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Тип
+          {messages.questions.fields.type}
           <select
             value={type}
             onChange={(event) => changeType(event.target.value)}
@@ -194,7 +195,7 @@ export function QuestionForm({
           </select>
         </label>
         <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Сложность
+          {messages.questions.fields.difficulty}
           <input
             type="number"
             min="1"
@@ -207,7 +208,7 @@ export function QuestionForm({
         </label>
       </div>
       <label className="grid gap-1 text-sm font-medium text-slate-700">
-        Вопрос
+        {messages.questions.fields.prompt}
         <textarea
           value={prompt}
           onChange={(event) => setPrompt(event.target.value)}
@@ -216,7 +217,7 @@ export function QuestionForm({
         />
       </label>
       <label className="grid gap-1 text-sm font-medium text-slate-700">
-        Объяснение
+        {messages.questions.fields.explanation}
         <textarea
           value={explanation}
           onChange={(event) => setExplanation(event.target.value)}
@@ -225,7 +226,7 @@ export function QuestionForm({
       </label>
       <div className="grid gap-4 md:grid-cols-[220px_1fr]">
         <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Проверка
+          {messages.questions.fields.grading}
           <select
             value={gradingType}
             onChange={(event) => setGradingType(event.target.value)}
@@ -239,7 +240,7 @@ export function QuestionForm({
           </select>
         </label>
         <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Правила проверки JSON
+          {messages.questions.fields.gradingRules}
           <textarea
             value={gradingRulesJson}
             onChange={(event) => setGradingRulesJson(event.target.value)}
@@ -251,14 +252,16 @@ export function QuestionForm({
       {usesOptions ? (
         <div className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3">
           <div className="flex items-center justify-between gap-3">
-            <h3 className="font-semibold text-slate-900">Варианты ответа</h3>
+            <h3 className="font-semibold text-slate-900">
+              {messages.questions.fields.options}
+            </h3>
             {type === "MULTIPLE_CHOICE" ? (
               <button
                 type="button"
                 onClick={addOption}
                 className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium hover:bg-white"
               >
-                Добавить
+                {messages.questions.fields.add}
               </button>
             ) : null}
           </div>
@@ -268,7 +271,7 @@ export function QuestionForm({
                 value={option.optionText}
                 onChange={(event) => updateOption(index, { optionText: event.target.value })}
                 className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-                placeholder={`Вариант ${index + 1}`}
+                placeholder={`${messages.questions.fields.optionPlaceholder} ${index + 1}`}
                 required={usesOptions}
               />
               <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
@@ -277,7 +280,7 @@ export function QuestionForm({
                   checked={option.isCorrect}
                   onChange={(event) => updateOption(index, { isCorrect: event.target.checked })}
                 />
-                Верный
+                {messages.questions.fields.correct}
               </label>
               {type === "MULTIPLE_CHOICE" && options.length > 2 ? (
                 <button
@@ -285,7 +288,7 @@ export function QuestionForm({
                   onClick={() => removeOption(index)}
                   className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium hover:bg-white"
                 >
-                  Удалить
+                  {messages.questions.fields.remove}
                 </button>
               ) : null}
             </div>
@@ -299,7 +302,11 @@ export function QuestionForm({
         disabled={pending}
         className="w-fit rounded-md bg-teal-700 px-4 py-2 font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
       >
-        {pending ? "Сохранение..." : mode === "create" ? "Создать вопрос" : "Сохранить"}
+        {pending
+          ? messages.common.saving
+          : mode === "create"
+            ? messages.questions.createButton
+            : messages.common.save}
       </button>
     </form>
   );

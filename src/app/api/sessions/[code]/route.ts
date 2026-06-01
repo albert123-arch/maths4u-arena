@@ -1,4 +1,5 @@
 import { fail, ok } from "@/lib/api-response";
+import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 
 type RouteContext = {
@@ -34,7 +35,7 @@ export async function GET(_request: Request, { params }: RouteContext) {
   });
 
   if (!session) {
-    return fail("Session not found.", 404);
+    return fail(messages.api.sessionNotFound, 404);
   }
 
   return ok(session);

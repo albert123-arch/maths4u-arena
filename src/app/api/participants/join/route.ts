@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { errorResponse, fail, ok } from "@/lib/api-response";
+import { messages } from "@/lib/messages";
 import { hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 import { participantJoinSchema } from "@/lib/validation";
@@ -18,11 +19,11 @@ export async function POST(request: Request) {
     });
 
     if (!session) {
-      return fail("Игра с таким кодом не найдена.", 404);
+      return fail(messages.api.gameCodeNotFound, 404);
     }
 
     if (session.status === "FINISHED") {
-      return fail("Эта игра уже завершена.", 409);
+      return fail(messages.api.gameFinished, 409);
     }
 
     const participantToken = randomUUID();

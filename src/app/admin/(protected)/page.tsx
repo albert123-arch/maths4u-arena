@@ -1,32 +1,33 @@
 import Link from "next/link";
 
+import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 const cards = [
   {
-    label: "Тесты",
+    label: messages.dashboard.cards.tests.label,
     href: "/admin/tests",
-    description: "Создание, публикация и архив тестов.",
+    description: messages.dashboard.cards.tests.description,
     key: "tests",
   },
   {
-    label: "Вопросы",
+    label: messages.dashboard.cards.questions.label,
     href: "/admin/questions",
-    description: "Банк заданий и правила проверки.",
+    description: messages.dashboard.cards.questions.description,
     key: "questions",
   },
   {
-    label: "Сессии",
+    label: messages.dashboard.cards.sessions.label,
     href: "#sessions",
-    description: "Live-коды и игровые комнаты.",
+    description: messages.dashboard.cards.sessions.description,
     key: "sessions",
   },
   {
-    label: "Результаты",
+    label: messages.dashboard.cards.results.label,
     href: "#results",
-    description: "Ответы, баллы и события счета.",
+    description: messages.dashboard.cards.results.description,
     key: "results",
   },
 ];
@@ -48,11 +49,8 @@ export default async function AdminDashboardPage() {
   return (
     <div className="grid gap-6">
       <div>
-        <h1 className="text-3xl font-bold">Панель управления</h1>
-        <p className="mt-2 text-slate-600">
-          Базовая структура для серьезной образовательной платформы уже разделена на тесты,
-          вопросы, игровые сессии и результаты.
-        </p>
+        <h1 className="text-3xl font-bold">{messages.dashboard.title}</h1>
+        <p className="mt-2 text-slate-600">{messages.dashboard.description}</p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
@@ -68,10 +66,9 @@ export default async function AdminDashboardPage() {
         ))}
       </div>
       <section className="rounded-md border border-dashed border-slate-300 bg-white p-5">
-        <h2 className="text-lg font-semibold">Дальше</h2>
+        <h2 className="text-lg font-semibold">{messages.dashboard.nextTitle}</h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          Дублирование тестов, фильтры, live host controls и расширенные режимы оставлены как
-          подготовленные направления, без преждевременной реализации.
+          {messages.dashboard.nextDescription}
         </p>
       </section>
     </div>
