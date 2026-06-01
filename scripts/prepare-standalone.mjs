@@ -4,9 +4,13 @@ import path from "node:path";
 const root = process.cwd();
 const standaloneDir = path.join(root, ".next", "standalone");
 
-function copyDirectory(source, destination) {
+function copyDirectory(source, destination, { clean = false } = {}) {
   if (!fs.existsSync(source)) {
     return;
+  }
+
+  if (clean) {
+    fs.rmSync(destination, { recursive: true, force: true });
   }
 
   fs.mkdirSync(destination, { recursive: true });
@@ -21,6 +25,10 @@ copyDirectory(path.join(root, "public"), path.join(standaloneDir, "public"));
 copyDirectory(
   path.join(root, ".next", "static"),
   path.join(standaloneDir, ".next", "static"),
+  { clean: true },
 );
+copyDirectory(path.join(root, ".next", "static"), path.join(root, "_next", "static"), {
+  clean: true,
+});
 
 console.log("Standalone build prepared for Hostinger.");
