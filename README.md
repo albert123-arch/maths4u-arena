@@ -94,6 +94,28 @@ The schema is MySQL-compatible and includes:
 
 Flexible `LongText` JSON fields are used for future game modes and grading settings without requiring Redis, Docker, PostgreSQL, or paid external services.
 
+## Manual MySQL Import With phpMyAdmin
+
+If Hostinger cannot run Prisma commands during build, initialize the database manually:
+
+1. Open Hostinger hPanel.
+2. Open phpMyAdmin for the target MySQL database.
+3. Select the database, for example `u770916388_arena2`.
+4. Open the Import tab.
+5. Upload and import `database/init_mysql.sql`.
+6. Confirm that the tables were created.
+7. Create the first admin user later.
+
+Optional admin seed:
+
+1. Generate a bcrypt hash locally for the admin password.
+2. Open `database/seed_admin.sql`.
+3. Replace `ADMIN_EMAIL_HERE` with the admin email.
+4. Replace `PASSWORD_HASH_HERE` with the bcrypt hash.
+5. Import `database/seed_admin.sql` in phpMyAdmin.
+
+Never put a real password or real bcrypt hash into Git.
+
 ## Hostinger Deployment Notes
 
 1. Create a MySQL database and user in Hostinger hPanel.
