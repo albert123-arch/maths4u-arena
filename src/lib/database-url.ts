@@ -1,5 +1,16 @@
 type DatabaseUrlSource = "db_parts" | "database_url" | "missing";
 
+type DatabaseConnectionConfig = {
+  host: string;
+  port: number;
+  user: string;
+  password: string;
+  database: string;
+  connectTimeout: number;
+  acquireTimeout: number;
+  socketTimeout: number;
+};
+
 const databaseUrlKeys = {
   host: ["DB_HOST", "MYSQL_HOST", "MYSQLHOST"],
   port: ["DB_PORT", "MYSQL_PORT", "MYSQLPORT"],
@@ -7,6 +18,24 @@ const databaseUrlKeys = {
   password: ["DB_PASSWORD", "MYSQL_PASSWORD", "MYSQLPASSWORD"],
   name: ["DB_NAME", "MYSQL_DATABASE", "MYSQLDATABASE"],
 } as const;
+
+function normalizeHost(host: string) {
+  return host.trim().toLowerCase() === "localhost" ? "127.0.0.1" : host.trim();
+}
+
+function parsePort(port: string | null) {
+  const parsed = Number.parseInt(port ?? "3306", 10);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : 3306;
+}
+
+function withTimeouts(config: Omit<DatabaseConnectionConfig, "connectTimeout" | "acquireTimeout" | "socketTimeout">) {
+  return {
+    ...config,
+    connectTimeout: 5_000,
+    acquireTimeout: 5_000,
+    socketTimeout: 10_000,
+  };
+}
 
 function firstEnvValue(keys: readonly string[]) {
   for (const key of keys) {
@@ -40,12 +69,78 @@ function buildDatabaseUrlFromParts() {
   const user = encodeURIComponent(parts.user);
   const password = encodeURIComponent(parts.password);
   const name = encodeURIComponent(parts.name);
+  const host = normalizeHost(parts.host);
 
-  return `mysql://${user}:${password}@${parts.host}:${parts.port}/${name}`;
+  return `mysql://${user}:${password}@${host}:${parts.port}/${name}`;
 }
 
 export function getConfiguredDatabaseUrl() {
-  return buildDatabaseUrlFromParts() ?? process.env.DATABASE_URL?.trim() ?? null;
+  const databaseUrlFromParts = buildDatabaseUrlFromParts();
+
+  if (databaseUrlFromParts) {
+    return databaseUrlFromParts;
+  }
+
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+
+  if (!databaseUrl) {
+    return null;
+  }
+
+  try {
+    const parsed = new URL(databaseUrl);
+    parsed.hostname = normalizeHost(parsed.hostname);
+    return parsed.toString();
+  } catch {
+    return databaseUrl;
+  }
+}
+
+function getConnectionConfigFromParts(): DatabaseConnectionConfig | null {
+  const parts = getDatabaseParts();
+
+  if (!parts.host || !parts.user || !parts.password || !parts.name) {
+    return null;
+  }
+
+  return withTimeouts({
+    host: normalizeHost(parts.host),
+    port: parsePort(parts.port),
+    user: parts.user,
+    password: parts.password,
+    database: parts.name,
+  });
+}
+
+function getConnectionConfigFromDatabaseUrl(): DatabaseConnectionConfig | null {
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+
+  if (!databaseUrl) {
+    return null;
+  }
+
+  try {
+    const parsed = new URL(databaseUrl);
+    const database = parsed.pathname.replace(/^\/+/, "").split("/")[0];
+
+    if (!parsed.hostname || !parsed.username || !parsed.password || !database) {
+      return null;
+    }
+
+    return withTimeouts({
+      host: normalizeHost(parsed.hostname),
+      port: parsePort(parsed.port),
+      user: decodeURIComponent(parsed.username),
+      password: decodeURIComponent(parsed.password),
+      database: decodeURIComponent(database),
+    });
+  } catch {
+    return null;
+  }
+}
+
+export function getConfiguredDatabaseConnectionConfig() {
+  return getConnectionConfigFromParts() ?? getConnectionConfigFromDatabaseUrl();
 }
 
 export function getDatabaseUrlSource(): DatabaseUrlSource {
@@ -65,6 +160,7 @@ export function getSafeDatabaseConfigInfo() {
   const parts = getDatabaseParts();
 
   let databaseUrlHost: string | null = parts.host;
+  let databaseHostEffective: string | null = parts.host ? normalizeHost(parts.host) : null;
   let databaseName: string | null = parts.name;
 
   if (configuredUrl) {
@@ -73,9 +169,11 @@ export function getSafeDatabaseConfigInfo() {
       const parsedName = parsed.pathname.replace(/^\/+/, "").split("/")[0];
 
       databaseUrlHost = parsed.hostname || databaseUrlHost;
+      databaseHostEffective = parsed.hostname ? normalizeHost(parsed.hostname) : databaseHostEffective;
       databaseName = parsedName ? decodeURIComponent(parsedName) : databaseName;
     } catch {
       databaseUrlHost = parts.host;
+      databaseHostEffective = parts.host ? normalizeHost(parts.host) : null;
       databaseName = parts.name;
     }
   }
@@ -88,6 +186,7 @@ export function getSafeDatabaseConfigInfo() {
     hasDbName: Boolean(parts.name),
     databaseUrlSource: getDatabaseUrlSource(),
     databaseUrlHost,
+    databaseHostEffective,
     databaseName,
   };
 }

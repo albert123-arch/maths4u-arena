@@ -1,20 +1,20 @@
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
 import { PrismaClient } from "../generated/prisma/client";
-import { getConfiguredDatabaseUrl } from "./database-url";
+import { getConfiguredDatabaseConnectionConfig } from "./database-url";
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
 };
 
 function createPrismaClient() {
-  const databaseUrl = getConfiguredDatabaseUrl();
+  const databaseConfig = getConfiguredDatabaseConnectionConfig();
 
-  if (!databaseUrl) {
+  if (!databaseConfig) {
     throw new Error("Database connection settings are required.");
   }
 
-  const adapter = new PrismaMariaDb(databaseUrl);
+  const adapter = new PrismaMariaDb(databaseConfig);
 
   return new PrismaClient({
     adapter,
