@@ -21,7 +21,10 @@ export default async function GamePage({ params }: PageProps) {
         },
       },
       _count: {
-        select: { participants: true },
+        select: {
+          participants: true,
+          answers: true,
+        },
       },
     },
   });
@@ -39,31 +42,28 @@ export default async function GamePage({ params }: PageProps) {
     );
   }
 
-  const questions =
-    session.status === "RUNNING"
-      ? await prisma.testVersionQuestion.findMany({
-          where: { testVersionId: session.testVersionId },
-          orderBy: { sortOrder: "asc" },
-          select: {
-            sortOrder: true,
-            points: true,
-            question: {
-              select: {
-                id: true,
-                type: true,
-                prompt: true,
-                options: {
-                  orderBy: { sortOrder: "asc" },
-                  select: {
-                    id: true,
-                    optionText: true,
-                  },
-                },
-              },
+  const questions = await prisma.testVersionQuestion.findMany({
+    where: { testVersionId: session.testVersionId },
+    orderBy: { sortOrder: "asc" },
+    select: {
+      sortOrder: true,
+      points: true,
+      question: {
+        select: {
+          id: true,
+          type: true,
+          prompt: true,
+          options: {
+            orderBy: { sortOrder: "asc" },
+            select: {
+              id: true,
+              optionText: true,
             },
           },
-        })
-      : [];
+        },
+      },
+    },
+  });
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-950">
@@ -78,41 +78,21 @@ export default async function GamePage({ params }: PageProps) {
             {session._count.participants}
           </p>
         </header>
-        {session.status === "LOBBY" ? (
-          <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
-            <h2 className="text-2xl font-bold">{messages.game.lobbyTitle}</h2>
-            <p className="mt-2 text-slate-600">{messages.game.lobbyDescription}</p>
-          </section>
-        ) : null}
-        {session.status === "RUNNING" ? (
-          <>
-            {questions.length === 0 ? (
-              <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
-                {messages.game.noQuestions}
-              </p>
-            ) : (
-              <ClassicGameClient
-                code={session.code}
-                sessionId={session.id}
-                questions={questions.map((item) => ({
-                  id: item.question.id,
-                  type: item.question.type,
-                  prompt: item.question.prompt,
-                  sortOrder: item.sortOrder,
-                  points: item.points,
-                  options: item.question.options,
-                }))}
-              />
-            )}
-          </>
-        ) : null}
-        {session.status === "PAUSED" || session.status === "FINISHED" ? (
-          <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
-            <h2 className="text-2xl font-bold">
-              {session.status === "PAUSED" ? messages.game.paused : messages.game.finished}
-            </h2>
-          </section>
-        ) : null}
+        <ClassicGameClient
+          code={session.code}
+          sessionId={session.id}
+          initialStatus={session.status}
+          initialParticipantCount={session._count.participants}
+          initialAnswerCount={session._count.answers}
+          questions={questions.map((item) => ({
+            id: item.question.id,
+            type: item.question.type,
+            prompt: item.question.prompt,
+            sortOrder: item.sortOrder,
+            points: item.points,
+            options: item.question.options,
+          }))}
+        />
       </section>
     </main>
   );

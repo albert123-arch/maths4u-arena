@@ -44,7 +44,10 @@ export async function GET() {
         },
       },
       _count: {
-        select: { participants: true },
+        select: {
+          participants: true,
+          answers: true,
+        },
       },
     },
   });

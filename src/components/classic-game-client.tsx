@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { messages } from "@/lib/messages";
 
@@ -29,6 +29,13 @@ type ApiResponse =
       };
     }
   | { ok: false; error: string };
+
+type LiveSessionData = {
+  status: "LOBBY" | "RUNNING" | "PAUSED" | "FINISHED";
+  participantCount: number;
+  answerCount: number;
+  serverTime: string;
+};
 
 type ParticipantSession = {
   participantId: string;
@@ -74,13 +81,66 @@ function subscribeParticipantSession(callback: () => void) {
   return () => window.removeEventListener("storage", callback);
 }
 
+function draftAnswerKey(code: string, participantId: string) {
+  return `maths4u_arena_answers_${code}_${participantId}`;
+}
+
+function readDraftAnswers(code: string, participantId: string) {
+  if (typeof window === "undefined") {
+    return {};
+  }
+
+  const stored = localStorage.getItem(draftAnswerKey(code, participantId));
+
+  if (!stored) {
+    return {};
+  }
+
+  try {
+    const parsed = JSON.parse(stored);
+    return typeof parsed === "object" && parsed !== null
+      ? (parsed as Record<string, string>)
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveDraftAnswers(code: string, participantId: string, answers: Record<string, string>) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  localStorage.setItem(draftAnswerKey(code, participantId), JSON.stringify(answers));
+}
+
+function isFormElementFocused() {
+  if (typeof document === "undefined") {
+    return false;
+  }
+
+  const activeElement = document.activeElement;
+
+  return (
+    activeElement instanceof HTMLInputElement ||
+    activeElement instanceof HTMLTextAreaElement ||
+    activeElement instanceof HTMLSelectElement
+  );
+}
+
 export function ClassicGameClient({
   code,
   sessionId,
+  initialStatus,
+  initialParticipantCount,
+  initialAnswerCount,
   questions,
 }: {
   code: string;
   sessionId: string;
+  initialStatus: LiveSessionData["status"];
+  initialParticipantCount: number;
+  initialAnswerCount: number;
   questions: Question[];
 }) {
   const startedAt = useRef<number | null>(null);
@@ -93,7 +153,16 @@ export function ClassicGameClient({
     () => parseParticipantSession(participantRaw),
     [participantRaw],
   );
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [live, setLive] = useState<LiveSessionData>({
+    status: initialStatus,
+    participantCount: initialParticipantCount,
+    answerCount: initialAnswerCount,
+    serverTime: "",
+  });
+  const [answers, setAnswers] = useState<Record<string, string>>(() => {
+    const initialParticipant = parseParticipantSession(readParticipantSessionRaw(code));
+    return initialParticipant ? readDraftAnswers(code, initialParticipant.participantId) : {};
+  });
   const [submitted, setSubmitted] = useState<Record<string, boolean | null>>({});
   const [pendingQuestionId, setPendingQuestionId] = useState("");
   const [error, setError] = useState("");
@@ -104,11 +173,76 @@ export function ClassicGameClient({
     [questions],
   );
 
+  useEffect(() => {
+    if (!participant) {
+      return;
+    }
+
+    let stopped = false;
+    const intervalMs = live.status === "LOBBY" ? 2000 : 5000;
+
+    async function pollLiveStatus() {
+      try {
+        const response = await fetch(`/api/sessions/${code}/live`, {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data = (await response.json()) as LiveSessionData;
+
+        if (stopped) {
+          return;
+        }
+
+        setLive((current) => {
+          if (
+            current.status === "RUNNING" &&
+            data.status !== "FINISHED" &&
+            isFormElementFocused()
+          ) {
+            return current;
+          }
+
+          if (
+            current.status === data.status &&
+            current.participantCount === data.participantCount &&
+            current.answerCount === data.answerCount
+          ) {
+            return current;
+          }
+
+          return data;
+        });
+      } catch {
+        // Keep the current game state if a silent background poll fails.
+      }
+    }
+
+    const interval = window.setInterval(pollLiveStatus, intervalMs);
+
+    return () => {
+      stopped = true;
+      window.clearInterval(interval);
+    };
+  }, [code, live.status, participant]);
+
   function setAnswer(questionId: string, value: string) {
-    setAnswers((current) => ({
-      ...current,
-      [questionId]: value,
-    }));
+    startedAt.current ??= Date.now();
+    setAnswers((current) => {
+      const next = {
+        ...current,
+        [questionId]: value,
+      };
+
+      if (participant) {
+        saveDraftAnswers(code, participant.participantId, next);
+      }
+
+      return next;
+    });
   }
 
   async function submit(question: Question) {
@@ -160,6 +294,14 @@ export function ClassicGameClient({
     }));
   }
 
+  if (!participant && live.status === "FINISHED") {
+    return (
+      <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
+        <h2 className="text-2xl font-bold">{messages.game.finished}</h2>
+      </section>
+    );
+  }
+
   if (!participant) {
     return (
       <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
@@ -169,6 +311,34 @@ export function ClassicGameClient({
           {messages.game.enterDifferentCode}
         </Link>
       </section>
+    );
+  }
+
+  if (live.status === "LOBBY") {
+    return (
+      <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
+        <h2 className="text-2xl font-bold">{messages.game.lobbyTitle}</h2>
+        <p className="mt-2 text-slate-600">{messages.game.lobbyDescription}</p>
+        <p className="mt-4 text-sm font-semibold text-teal-800">
+          {live.participantCount} {messages.game.participantsLabel}
+        </p>
+      </section>
+    );
+  }
+
+  if (live.status === "PAUSED") {
+    return (
+      <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
+        <h2 className="text-2xl font-bold">{messages.game.paused}</h2>
+      </section>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
+        {messages.game.noQuestions}
+      </p>
     );
   }
 
@@ -188,6 +358,11 @@ export function ClassicGameClient({
         ) : null}
       </div>
       {error ? <p className="rounded-md border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700">{error}</p> : null}
+      {live.status === "FINISHED" ? (
+        <p className="rounded-md border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-700">
+          {messages.game.finished}
+        </p>
+      ) : null}
       {isComplete ? (
         <section className="rounded-md border border-teal-200 bg-white p-6 text-center shadow-sm">
           <h2 className="text-2xl font-bold">{messages.game.completeTitle}</h2>
@@ -229,7 +404,7 @@ export function ClassicGameClient({
                       value={option.id}
                       checked={answers[question.id] === option.id}
                       onChange={(event) => setAnswer(question.id, event.target.value)}
-                      disabled={isSubmitted}
+                      disabled={isSubmitted || live.status === "FINISHED"}
                     />
                     <span>{option.optionText}</span>
                   </label>
@@ -239,14 +414,14 @@ export function ClassicGameClient({
                   type="number"
                   value={answers[question.id] ?? ""}
                   onChange={(event) => setAnswer(question.id, event.target.value)}
-                  disabled={isSubmitted}
+                  disabled={isSubmitted || live.status === "FINISHED"}
                   className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 disabled:bg-slate-50"
                 />
               ) : (
                 <textarea
                   value={answers[question.id] ?? ""}
                   onChange={(event) => setAnswer(question.id, event.target.value)}
-                  disabled={isSubmitted}
+                  disabled={isSubmitted || live.status === "FINISHED"}
                   className="min-h-24 rounded-md border border-slate-300 px-3 py-2 text-base outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 disabled:bg-slate-50"
                 />
               )}
@@ -254,7 +429,7 @@ export function ClassicGameClient({
             <button
               type="button"
               onClick={() => submit(question)}
-              disabled={isSubmitted || pendingQuestionId === question.id}
+              disabled={isSubmitted || pendingQuestionId === question.id || live.status === "FINISHED"}
               className="mt-4 rounded-md bg-teal-700 px-4 py-2 font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
             >
               {pendingQuestionId === question.id ? messages.game.submitting : messages.game.submitAnswer}

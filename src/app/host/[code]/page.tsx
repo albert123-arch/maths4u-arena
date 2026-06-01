@@ -52,21 +52,12 @@ export default async function HostPage({ params }: PageProps) {
           <h1 className="text-5xl font-bold sm:text-7xl">{session.code}</h1>
           <p className="text-xl text-slate-300">{session.testVersion.test.title}</p>
         </header>
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
-            <p className="text-sm text-slate-400">{messages.host.status}</p>
-            <p className="mt-2 text-2xl font-bold">{session.status}</p>
-          </div>
-          <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
-            <p className="text-sm text-slate-400">{messages.host.participants}</p>
-            <p className="mt-2 text-2xl font-bold">{session._count.participants}</p>
-          </div>
-          <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
-            <p className="text-sm text-slate-400">{messages.host.answers}</p>
-            <p className="mt-2 text-2xl font-bold">{session._count.answers}</p>
-          </div>
-        </div>
-        <HostControls code={session.code} status={session.status} />
+        <HostControls
+          code={session.code}
+          initialStatus={session.status}
+          initialParticipantCount={session._count.participants}
+          initialAnswerCount={session._count.answers}
+        />
         <section className="grid gap-3 rounded-md border border-slate-700 bg-slate-900 p-5 text-slate-300">
           <h2 className="text-lg font-semibold text-white">{messages.host.linksTitle}</h2>
           <div className="flex flex-wrap gap-3 text-sm">
