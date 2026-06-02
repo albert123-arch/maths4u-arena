@@ -1,5 +1,5 @@
-process.env.HOSTNAME = "0.0.0.0";
-process.env.PORT = "3000";
+process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
+process.env.PORT = process.env.PORT || "3000";
 
 function redactValue(message, value) {
   if (!value) {
