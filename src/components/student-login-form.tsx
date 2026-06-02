@@ -49,6 +49,15 @@ export function StudentLoginForm({ next = "/student" }: { next?: string }) {
       return;
     }
 
+    const classCode = result.data.next.match(/^\/join-class\/([^/?#]+)/)?.[1];
+
+    if (classCode) {
+      await fetch(`/api/student/classes/${classCode}/join`, { method: "POST" });
+      router.push("/student");
+      router.refresh();
+      return;
+    }
+
     router.push(safeNext(result.data.next));
     router.refresh();
   }

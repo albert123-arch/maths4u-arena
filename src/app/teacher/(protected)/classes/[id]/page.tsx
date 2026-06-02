@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ClassJoinCard } from "@/components/class-join-card";
+import { CopyButton } from "@/components/copy-button";
 import { RemoveClassStudentButton } from "@/components/teacher-class-actions";
 import { requireTeacherUser } from "@/lib/auth";
 import { messages } from "@/lib/messages";
@@ -44,8 +45,9 @@ export default async function TeacherClassDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const appUrl = process.env.APP_URL?.replace(/\/$/, "") ?? "";
+  const appUrl = process.env.APP_URL?.replace(/\/$/, "") || "http://localhost:3000";
   const joinLink = `${appUrl}/join-class/${classroom.joinCode}`;
+  const inviteInstructions = `Open ${joinLink}, create or log in to your student account, then join ${classroom.title}.`;
 
   return (
     <div className="grid gap-6">
@@ -70,6 +72,24 @@ export default async function TeacherClassDetailPage({ params }: PageProps) {
             <InfoCard label={messages.teacher.studentList} value={classroom.memberships.length} />
             <InfoCard label={messages.host.status} value={classroom.status} />
           </div>
+          <section className="grid gap-3 rounded-md border border-teal-200 bg-teal-50 p-5 shadow-sm">
+            <div>
+              <h2 className="text-xl font-semibold text-teal-950">Invite Students</h2>
+              <p className="mt-1 text-sm text-teal-900">
+                Students can scan the QR code, create their own account, and join this class.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href={`/teacher/classes/${classroom.id}/invite`}
+                className="rounded-md bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+              >
+                Open invite screen
+              </Link>
+              <CopyButton value={joinLink} label={messages.host.copyJoinLink} className="bg-white" />
+              <CopyButton value={inviteInstructions} label="Copy instructions" className="bg-white" />
+            </div>
+          </section>
           <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
             <h2 className="text-xl font-semibold">{messages.teacher.studentList}</h2>
             {classroom.memberships.length === 0 ? (

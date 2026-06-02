@@ -245,6 +245,20 @@ After importing `database/migrations/003_assignments.sql`, use this flow to conf
 9. Teacher opens `/teacher/assignments/ASSIGNMENT_ID/results`.
 10. Teacher reviews a submission, adds feedback or point overrides, and exports CSV.
 
+### Simple Teacher Workflow
+
+Use this shorter flow when preparing a real lesson:
+
+1. Log in as a teacher and open `/teacher/classes`.
+2. Create a class, then open the class invite screen.
+3. Students scan the QR code, create a student account, and join the class from `/join-class/CODE`.
+4. Open `/teacher/sets/new` and create a Quiz Set.
+5. Add questions inline or paste a small question list into the Quiz Set editor.
+6. Publish the Quiz Set.
+7. Choose `Host Live` for a live Classic or Host-paced game, or choose `Assign Homework` for class work.
+8. Review live results from `/teacher/results` or assignment results from `/teacher/assignments`.
+9. Share useful Quiz Sets to the teacher library so other teachers can copy them.
+
 ## Hostinger Deployment Notes
 
 1. Create a MySQL database and user in Hostinger hPanel.

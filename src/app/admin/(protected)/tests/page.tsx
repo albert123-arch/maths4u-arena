@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AdminLibraryVisibilityButton } from "@/components/admin-library-actions";
 import { ArchiveTestButton } from "@/components/archive-test-button";
 import { LaunchSessionModal } from "@/components/launch-session-modal";
 import { TestForm } from "@/components/test-form";
@@ -47,6 +48,7 @@ export default async function AdminTestsPage() {
             <div className="divide-y divide-slate-200">
               {tests.map((test) => {
                 const publishedVersion = test.versions[0];
+                const isShared = test.visibility === "PUBLIC" || test.visibility === "CURATED";
 
                 return (
                   <article
@@ -58,6 +60,11 @@ export default async function AdminTestsPage() {
                         <h3 className="font-semibold">{test.title}</h3>
                         <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
                           {test.status}
+                        </span>
+                        <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-medium text-teal-800">
+                          {test.visibility === "PUBLIC" || test.visibility === "CURATED"
+                            ? "Shared"
+                            : "Private"}
                         </span>
                       </div>
                       <p className="mt-1 text-sm text-slate-600">
@@ -75,6 +82,12 @@ export default async function AdminTestsPage() {
                           questionCount={publishedVersion._count.questions}
                         />
                       ) : null}
+                      <AdminLibraryVisibilityButton
+                        kind="tests"
+                        id={test.id}
+                        visibility={isShared ? "PRIVATE" : "PUBLIC"}
+                        label={isShared ? "Unshare" : "Share"}
+                      />
                       <Link
                         href={`/admin/tests/${test.id}`}
                         className="rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700"

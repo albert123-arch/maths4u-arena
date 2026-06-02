@@ -67,17 +67,45 @@ export default async function TeacherDashboardPage() {
       <section className="grid gap-4 md:grid-cols-5">
         <MetricCard label={messages.teacher.myClasses} value={classCount} href="/teacher/classes" />
         <MetricCard label={messages.teacher.myStudents} value={classStudentCount} href="/teacher/students" />
-        <MetricCard label={messages.teacher.myTests} value={testCount} href="/teacher/tests" />
+        <MetricCard label="Quiz Sets" value={testCount} href="/teacher/sets" />
         <MetricCard label={messages.teacher.myQuestions} value={questionCount} href="/teacher/questions" />
         <MetricCard label={messages.teacher.myLiveSessions} value={liveSessions} href="/teacher/live" />
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="rounded-md border border-teal-200 bg-teal-50 p-5 shadow-sm">
+        <h2 className="text-xl font-bold">Start here</h2>
+        <div className="mt-4 grid gap-3 md:grid-cols-4">
+          <StepCard step="1" title="Create a class" href="/teacher/classes" />
+          <StepCard step="2" title="Invite students" href="/teacher/classes" />
+          <StepCard step="3" title="Create a quiz set" href="/teacher/sets/new" />
+          <StepCard step="4" title="Host or assign" href="/teacher/sets" />
+        </div>
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-4">
+        <ActionCard
+          title="Invite Students"
+          description="Open a class, share its QR code or join link, and let students create accounts."
+          href="/teacher/classes"
+        />
+        <ActionCard
+          title="Create Quiz Set"
+          description="Build questions directly inside a set without technical version tools."
+          href="/teacher/sets/new"
+        />
         <ActionCard
           title={messages.teacher.assignmentsTitle}
           description={messages.teacher.assignmentsDescription}
           href="/teacher/assignments"
         />
+        <ActionCard
+          title="Host Live Game"
+          description="Launch Classic or Host-paced from a published quiz set."
+          href="/teacher/sets"
+        />
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-3">
         <ActionCard
           title={messages.teacher.resultsTitle}
           description={messages.teacher.resultsDescription}
@@ -88,13 +116,18 @@ export default async function TeacherDashboardPage() {
           description={messages.teacher.libraryDescription}
           href="/teacher/library"
         />
+        <ActionCard
+          title="Question Bank"
+          description="Advanced direct question management for power users."
+          href="/teacher/questions"
+        />
       </section>
 
       <section className="grid gap-3 rounded-md border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-xl font-semibold">{messages.dashboard.nextTitle}</h2>
         <div className="flex flex-wrap gap-2">
           <LinkButton href="/teacher/classes">{messages.teacher.createClass}</LinkButton>
-          <LinkButton href="/teacher/tests">{messages.teacher.createTest}</LinkButton>
+          <LinkButton href="/teacher/sets/new">Create Quiz Set</LinkButton>
           <LinkButton href="/teacher/library">{messages.teacher.browseLibrary}</LinkButton>
         </div>
       </section>
@@ -144,6 +177,18 @@ function LinkButton({ href, children }: { href: string; children: React.ReactNod
   return (
     <Link href={href} className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800">
       {children}
+    </Link>
+  );
+}
+
+function StepCard({ step, title, href }: { step: string; title: string; href: string }) {
+  return (
+    <Link
+      href={href}
+      className="rounded-md border border-teal-200 bg-white p-4 shadow-sm transition hover:border-teal-400 hover:shadow-md"
+    >
+      <p className="text-sm font-bold text-teal-800">Step {step}</p>
+      <p className="mt-1 font-semibold">{title}</p>
     </Link>
   );
 }

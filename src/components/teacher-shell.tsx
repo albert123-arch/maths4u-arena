@@ -9,12 +9,16 @@ const navItems = [
   { href: "/teacher", label: messages.teacherShell.nav.dashboard },
   { href: "/teacher/classes", label: messages.teacherShell.nav.classes },
   { href: "/teacher/students", label: messages.teacherShell.nav.students },
-  { href: "/teacher/tests", label: messages.teacherShell.nav.tests },
-  { href: "/teacher/questions", label: messages.teacherShell.nav.questions },
-  { href: "/teacher/library", label: messages.teacherShell.nav.library },
-  { href: "/teacher/live", label: messages.teacherShell.nav.live },
+  { href: "/teacher/sets", label: "Quiz Sets" },
   { href: "/teacher/assignments", label: messages.teacherShell.nav.assignments },
+  { href: "/teacher/live", label: messages.teacherShell.nav.live },
   { href: "/teacher/results", label: messages.teacherShell.nav.results },
+  { href: "/teacher/library", label: messages.teacherShell.nav.library },
+];
+
+const advancedItems = [
+  { href: "/teacher/questions", label: "Question Bank" },
+  { href: "/teacher/tests", label: "Advanced Tests" },
 ];
 
 export function TeacherShell({
@@ -47,6 +51,18 @@ export function TeacherShell({
               key={item.href}
               href={item.href}
               className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white hover:text-slate-950"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div className="hidden border-t border-slate-200 pt-3 md:block">
+            <p className="px-3 text-xs font-semibold uppercase text-slate-400">Advanced</p>
+          </div>
+          {advancedItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-md px-3 py-2 text-sm font-medium text-slate-500 hover:bg-white hover:text-slate-950"
             >
               {item.label}
             </Link>

@@ -278,7 +278,7 @@ export const messages = {
       tests: "Tests",
       questions: "Questions",
       library: "Library",
-      live: "Live",
+      live: "Live Games",
       assignments: "Assignments",
       results: "Results",
     },

@@ -111,6 +111,19 @@ export const studentWriteSchema = z.object({
 
 export const studentUpdateSchema = studentWriteSchema.partial();
 
+export const studentSelfRegisterSchema = z
+  .object({
+    username: z.string().trim().min(2).max(191).transform((value) => value.toLowerCase()),
+    displayName: z.string().trim().min(2).max(191),
+    password: z.string().min(4, messages.validation.pinTooShort),
+    confirmPassword: z.string().min(4, messages.validation.pinTooShort),
+    next: z.string().trim().max(500).optional(),
+  })
+  .refine((value) => value.password === value.confirmPassword, {
+    message: "Password confirmation does not match.",
+    path: ["confirmPassword"],
+  });
+
 export const testWriteSchema = z.object({
   title: z.string().trim().min(2).max(191),
   slug: z.string().trim().max(191).optional().default(""),
@@ -292,4 +305,54 @@ export const assignmentReviewSchema = z.object({
       }),
     )
     .default([]),
+});
+
+export const quizSetWriteSchema = z.object({
+  title: z.string().trim().min(2).max(191),
+  description: nullableText(),
+  subject: z.string().trim().min(2).max(191),
+  gradeLevel: z
+    .string()
+    .trim()
+    .max(64)
+    .optional()
+    .transform((value) => (value ? value : null)),
+  visibility: z.enum(["PRIVATE", "PUBLIC"]).default("PRIVATE"),
+});
+
+export const quizSetUpdateSchema = quizSetWriteSchema.partial();
+
+export const quizSetQuestionSchema = z.object({
+  prompt: z.string().trim().min(2),
+  type: z.enum(["MULTIPLE_CHOICE", "TRUE_FALSE", "SHORT_TEXT", "NUMERIC"]),
+  explanation: nullableText(),
+  points: z.coerce.number().int().min(0).max(1000).default(1),
+  timeLimitSeconds: optionalNullableInt(1),
+  options: z.array(z.string().trim()).default([]),
+  correctOptionIndex: z.coerce.number().int().min(0).max(20).default(0),
+  correctBoolean: z.boolean().default(true),
+  acceptedAnswers: z.array(z.string().trim()).default([]),
+  caseSensitive: z.boolean().default(false),
+  correctNumber: z.coerce.number().optional(),
+  tolerance: z.coerce.number().min(0).default(0),
+});
+
+export const quizSetQuestionUpdateSchema = quizSetQuestionSchema.partial().extend({
+  action: z.enum(["UPDATE", "DUPLICATE", "DELETE", "MOVE_UP", "MOVE_DOWN"]).default("UPDATE"),
+});
+
+export const quizSetImportSchema = z.object({
+  questions: z.array(quizSetQuestionSchema).min(1),
+});
+
+export const quizSetAssignmentCreateSchema = z.object({
+  testVersionId: z.string().min(1),
+  classId: z.string().min(1),
+  title: z.string().trim().min(2).max(191),
+  dueAt: nullableText(),
+  type: z.enum(ASSIGNMENT_TYPES).default("HOMEWORK"),
+  showResultsToStudents: z.boolean().default(true),
+  showCorrectAnswers: z.boolean().default(false),
+  allowLateSubmission: z.boolean().default(false),
+  allowPhotoSolutions: z.boolean().default(false),
 });
