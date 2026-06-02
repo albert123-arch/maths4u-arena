@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
@@ -142,7 +143,9 @@ export function AdminTeachersManager({ teachers }: { teachers: TeacherRow[] }) {
             {teachers.map((teacher) => (
               <article key={teacher.id} className="grid gap-4 p-4 lg:grid-cols-[1fr_auto] lg:items-center">
                 <div>
-                  <h3 className="font-semibold">{teacher.name ?? teacher.email}</h3>
+                  <Link href={`/admin/teachers/${teacher.id}`} className="font-semibold text-teal-800 hover:text-teal-950">
+                    {teacher.name ?? teacher.email}
+                  </Link>
                   <p className="mt-1 text-sm text-slate-600">{teacher.email}</p>
                   <p className="mt-1 text-xs text-slate-500">
                     {teacher._count.classrooms} {messages.adminTeachers.classes.toLowerCase()} -{" "}

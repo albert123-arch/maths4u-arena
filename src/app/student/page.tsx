@@ -4,6 +4,7 @@ import { StudentShell } from "@/components/student-shell";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 import { getSeriesLeaderboard } from "@/lib/series-scoring";
+import { parseSessionSettings } from "@/lib/session-settings";
 import { requireStudent } from "@/lib/student-auth";
 
 export const dynamic = "force-dynamic";
@@ -64,6 +65,27 @@ export default async function StudentDashboardPage() {
       },
     },
   });
+  const classIds = classMemberships.map((membership) => membership.classId);
+  const liveClassSessions = classIds.length
+    ? (
+        await prisma.gameSession.findMany({
+          where: { status: { in: ["LOBBY", "RUNNING"] } },
+          orderBy: { createdAt: "desc" },
+          take: 80,
+          include: {
+            testVersion: {
+              select: {
+                test: { select: { title: true } },
+              },
+            },
+          },
+        })
+      ).filter((session) => {
+        const settings = parseSessionSettings(session.settingsJson);
+
+        return Boolean(settings.classId && classIds.includes(settings.classId));
+      })
+    : [];
 
   return (
     <StudentShell student={student}>
@@ -95,11 +117,42 @@ export default async function StudentDashboardPage() {
                   <p className="mt-3 text-sm font-semibold text-teal-800">
                     {messages.teacher.joinCode}: {membership.classroom.joinCode}
                   </p>
+                  <div className="mt-4 grid gap-2 border-t border-slate-200 pt-4 text-sm text-slate-600">
+                    <p>{messages.student.classLiveGamesPlaceholder}</p>
+                    <p>{messages.student.classAssignmentsPlaceholder}</p>
+                  </div>
                 </article>
               ))}
             </div>
           )}
         </section>
+
+        {liveClassSessions.length > 0 ? (
+          <section className="grid gap-3">
+            <h2 className="text-xl font-semibold">{messages.teacher.myLiveSessions}</h2>
+            <div className="grid gap-3 md:grid-cols-2">
+              {liveClassSessions.map((session) => (
+                <article key={session.id} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="font-semibold">{session.testVersion.test.title}</h3>
+                    <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
+                      {session.status}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm text-slate-600">
+                    {messages.game.codeLabel}: <span className="font-semibold">{session.code}</span>
+                  </p>
+                  <Link
+                    href={`/student/join/${session.code}`}
+                    className="mt-4 inline-flex rounded-md bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+                  >
+                    {messages.student.joinLiveRound}
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section className="grid gap-3">
           <div className="flex items-center justify-between gap-3">

@@ -95,7 +95,11 @@ export default async function TeacherStudentsPage({ searchParams }: PageProps) {
             <tbody className="divide-y divide-slate-200">
               {memberships.map((membership) => (
                 <tr key={membership.id}>
-                  <td className="px-4 py-3 font-medium">{membership.student.displayName}</td>
+                  <td className="px-4 py-3 font-medium">
+                    <Link href={`/teacher/students/${membership.student.id}`} className="text-teal-800 hover:text-teal-950">
+                      {membership.student.displayName}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3">{membership.student.username}</td>
                   <td className="px-4 py-3">{membership.student.groupName ?? "-"}</td>
                   <td className="px-4 py-3">

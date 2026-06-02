@@ -72,6 +72,24 @@ export default async function TeacherDashboardPage() {
         <MetricCard label={messages.teacher.myLiveSessions} value={liveSessions} href="/teacher/live" />
       </section>
 
+      <section className="grid gap-4 md:grid-cols-3">
+        <ActionCard
+          title={messages.teacher.assignmentsTitle}
+          description={messages.teacher.assignmentsDescription}
+          href="/teacher/assignments"
+        />
+        <ActionCard
+          title={messages.teacher.resultsTitle}
+          description={messages.teacher.resultsDescription}
+          href="/teacher/results"
+        />
+        <ActionCard
+          title={messages.teacher.libraryTitle}
+          description={messages.teacher.libraryDescription}
+          href="/teacher/library"
+        />
+      </section>
+
       <section className="grid gap-3 rounded-md border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-xl font-semibold">{messages.dashboard.nextTitle}</h2>
         <div className="flex flex-wrap gap-2">
@@ -126,6 +144,26 @@ function LinkButton({ href, children }: { href: string; children: React.ReactNod
   return (
     <Link href={href} className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800">
       {children}
+    </Link>
+  );
+}
+
+function ActionCard({
+  title,
+  description,
+  href,
+}: {
+  title: string;
+  description: string;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="rounded-md border border-slate-200 bg-white p-5 shadow-sm transition hover:border-teal-200 hover:shadow-md"
+    >
+      <h2 className="font-semibold">{title}</h2>
+      <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
     </Link>
   );
 }
