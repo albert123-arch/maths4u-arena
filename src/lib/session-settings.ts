@@ -44,6 +44,8 @@ export type SessionSettings = {
   teamAssignMode: TeamAssignMode;
   teams: SessionTeam[];
   teamScoring: TeamScoringMode;
+  archived: boolean;
+  archivedAt: string | null;
 };
 
 export const DEFAULT_SESSION_TEAMS: SessionTeam[] = [
@@ -77,6 +79,8 @@ export const DEFAULT_SESSION_SETTINGS: SessionSettings = {
   teamAssignMode: "manual",
   teams: DEFAULT_SESSION_TEAMS,
   teamScoring: "sum",
+  archived: false,
+  archivedAt: null,
 };
 
 function booleanSetting(value: unknown, fallback: boolean) {
@@ -233,6 +237,8 @@ export function parseSessionSettings(settingsJson?: string | null): SessionSetti
       teamAssignMode: teamAssignModeSetting(parsed.teamAssignMode),
       teams: teamsSetting(parsed.teams),
       teamScoring: teamScoringSetting(parsed.teamScoring),
+      archived: booleanSetting(parsed.archived, DEFAULT_SESSION_SETTINGS.archived),
+      archivedAt: nullableDateText(parsed.archivedAt),
     };
   } catch {
     return DEFAULT_SESSION_SETTINGS;

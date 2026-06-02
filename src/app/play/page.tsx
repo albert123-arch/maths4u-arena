@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { FinishedGameActions } from "@/components/finished-game-actions";
 import { PlayJoinForm } from "@/components/play-join-form";
 import { StudentJoinRoundClient } from "@/components/student-join-round-client";
 import { messages } from "@/lib/messages";
@@ -88,13 +89,8 @@ export default async function PlayPage({ searchParams }: PageProps) {
   if (session?.status === "FINISHED") {
     return messagePage(
       messages.game.finished,
-      messages.play.sessionFinished,
-      <Link
-        href={`/game/${session.code}/results`}
-        className="rounded-md bg-slate-950 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-      >
-        {messages.game.viewMyResults}
-      </Link>,
+      messages.play.finishedNoResultAccess,
+      <FinishedGameActions code={session.code} />,
     );
   }
 

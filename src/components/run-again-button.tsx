@@ -14,6 +14,22 @@ type ApiResponse =
     }
   | { ok: false; error: string };
 
+function unarchiveSettings(settingsJson?: string | null) {
+  if (!settingsJson) {
+    return null;
+  }
+
+  try {
+    return JSON.stringify({
+      ...(JSON.parse(settingsJson) as Record<string, unknown>),
+      archived: false,
+      archivedAt: null,
+    });
+  } catch {
+    return settingsJson;
+  }
+}
+
 export function RunAgainButton({
   testVersionId,
   mode = "CLASSIC",
@@ -48,7 +64,7 @@ export function RunAgainButton({
         body: JSON.stringify({
           testVersionId,
           mode,
-          settingsJson: settingsJson ?? null,
+          settingsJson: unarchiveSettings(settingsJson),
           showResults: true,
         }),
       });

@@ -20,7 +20,7 @@ export default async function StudentResultsPage() {
       session: { select: { code: true } },
     },
   });
-  const liveResults = await prisma.participant.findMany({
+  const liveResultsRaw = await prisma.participant.findMany({
     where: {
       studentAccountId: student.id,
       session: {
@@ -55,6 +55,11 @@ export default async function StudentResultsPage() {
         },
       },
     },
+  });
+  const liveResults = liveResultsRaw.filter((participant) => {
+    const settings = parseSessionSettings(participant.session.settingsJson);
+
+    return !settings.archived;
   });
 
   return (

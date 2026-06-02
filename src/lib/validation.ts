@@ -229,6 +229,7 @@ export const teacherSessionCreateSchema = sessionCreateSchema.extend({
     .string()
     .trim()
     .max(191)
+    .nullable()
     .optional()
     .transform((value) => (value ? value : null)),
 });

@@ -120,7 +120,7 @@ export default async function StudentDashboardPage() {
           const settings = parseSessionSettings(session.settingsJson);
           const isClassGame = settings.audience === "CLASS" || Boolean(settings.classId && !settings.seriesId);
 
-          if (!isClassGame || !settings.classId || !classIds.includes(settings.classId)) {
+          if (settings.archived || !isClassGame || !settings.classId || !classIds.includes(settings.classId)) {
             return [];
           }
 
@@ -134,7 +134,7 @@ export default async function StudentDashboardPage() {
           ];
         })
     : [];
-  const recentLiveResults = await prisma.participant.findMany({
+  const recentLiveResultsRaw = await prisma.participant.findMany({
     where: {
       studentAccountId: student.id,
       session: {
@@ -172,6 +172,12 @@ export default async function StudentDashboardPage() {
       },
     },
   });
+  const recentLiveResults = recentLiveResultsRaw.filter((participant) => {
+    const settings = parseSessionSettings(participant.session.settingsJson);
+
+    return !settings.archived;
+  });
+  const primaryLiveSession = liveClassSessions[0] ?? null;
 
   return (
     <StudentShell student={student}>
@@ -196,6 +202,35 @@ export default async function StudentDashboardPage() {
             </p>
           ) : null}
         </section>
+
+        {primaryLiveSession ? (
+          <section className="grid gap-4 rounded-md border border-blue-200 bg-blue-50 p-5 shadow-sm sm:grid-cols-[1fr_auto] sm:items-center">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-blue-800">
+                  {primaryLiveSession.status === "LOBBY" ? messages.host.waitingStatus : messages.host.liveStatus}
+                </span>
+                <span className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-slate-700">
+                  {primaryLiveSession.mode === "HOST_PACED"
+                    ? messages.sessions.modeHostPaced
+                    : messages.sessions.modeClassic}
+                </span>
+              </div>
+              <h2 className="mt-3 text-xl font-bold text-blue-950">
+                {primaryLiveSession.testVersion.test.title}
+              </h2>
+              <p className="mt-1 text-sm text-blue-900">
+                {primaryLiveSession.classTitle} - {messages.game.codeLabel}: {primaryLiveSession.code}
+              </p>
+            </div>
+            <Link
+              href={`/play?code=${primaryLiveSession.code}`}
+              className="rounded-md border border-blue-300 bg-white px-5 py-3 text-center font-semibold text-blue-950 shadow-sm hover:bg-blue-100"
+            >
+              {messages.student.joinLiveRound}
+            </Link>
+          </section>
+        ) : null}
 
         <section className="grid gap-3">
           <div className="flex items-center justify-between gap-3">
@@ -253,7 +288,10 @@ export default async function StudentDashboardPage() {
             <div className="grid gap-3 md:grid-cols-2">
               {classMemberships.map((membership) => (
                 <article key={membership.id} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-                  <h3 className="font-semibold">{membership.classroom.title}</h3>
+                  <div className="flex items-center gap-2">
+                    <span className="h-2.5 w-2.5 rounded-full bg-teal-600" />
+                    <h3 className="font-semibold">{membership.classroom.title}</h3>
+                  </div>
                   <p className="mt-1 text-sm text-slate-600">
                     {membership.classroom.teacher.name ?? membership.classroom.teacher.email}
                   </p>

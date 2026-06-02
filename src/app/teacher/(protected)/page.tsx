@@ -1,9 +1,12 @@
 import Link from "next/link";
 
+import { TeacherQuickLaunchForm } from "@/components/teacher-quick-launch-form";
 import { requireTeacherUser } from "@/lib/auth";
 import { isStudentSeriesMigrationError } from "@/lib/migration-warning";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
+import { buildSessionResults } from "@/lib/session-results";
+import { parseSessionSettings } from "@/lib/session-settings";
 
 export const dynamic = "force-dynamic";
 
@@ -21,167 +24,398 @@ async function countTeacherSeries(teacherId: string) {
   }
 }
 
+function classAccent(index: number) {
+  return ["bg-blue-600", "bg-teal-600", "bg-orange-600", "bg-violet-600"][index % 4];
+}
+
 export default async function TeacherDashboardPage() {
   const teacher = await requireTeacherUser();
-  const [classCount, classStudentCount, testCount, questionCount, seriesCount, liveSessions, recentSessions] =
+  const [classrooms, quizSets, activeGames, recentFinishedGames, assignmentCount, seriesCount] =
     await Promise.all([
-      prisma.classroom.count({
+      prisma.classroom.findMany({
         where: { teacherId: teacher.id, status: "ACTIVE" },
-      }),
-      prisma.classMembership.count({
-        where: {
-          status: "ACTIVE",
-          classroom: { teacherId: teacher.id },
+        orderBy: { title: "asc" },
+        include: {
+          memberships: {
+            where: { status: "ACTIVE" },
+            select: { id: true },
+          },
         },
       }),
-      prisma.test.count({
-        where: { ownerUserId: teacher.id, status: { not: "ARCHIVED" } },
-      }),
-      prisma.question.count({
-        where: { ownerUserId: teacher.id, visibility: { not: "ARCHIVED" } },
-      }),
-      countTeacherSeries(teacher.id),
-      prisma.gameSession.count({
+      prisma.test.findMany({
         where: {
-          status: { in: ["LOBBY", "RUNNING"] },
-          testVersion: { test: { ownerUserId: teacher.id } },
+          ownerUserId: teacher.id,
+          status: { not: "ARCHIVED" },
+        },
+        orderBy: { updatedAt: "desc" },
+        take: 12,
+        include: {
+          versions: {
+            where: { status: "PUBLISHED" },
+            orderBy: { versionNumber: "desc" },
+            take: 1,
+            select: {
+              id: true,
+              questions: { select: { id: true } },
+            },
+          },
         },
       }),
       prisma.gameSession.findMany({
         where: {
+          status: { in: ["LOBBY", "RUNNING"] },
           testVersion: { test: { ownerUserId: teacher.id } },
         },
         orderBy: { createdAt: "desc" },
-        take: 5,
-        select: {
-          code: true,
-          status: true,
-          mode: true,
-          createdAt: true,
+        take: 6,
+        include: {
           testVersion: {
             select: {
-              test: {
-                select: { title: true },
+              questions: { select: { questionId: true } },
+              test: { select: { title: true } },
+            },
+          },
+          participants: {
+            select: {
+              id: true,
+              answers: { select: { questionId: true } },
+            },
+          },
+          _count: { select: { participants: true } },
+        },
+      }),
+      prisma.gameSession.findMany({
+        where: {
+          status: "FINISHED",
+          testVersion: { test: { ownerUserId: teacher.id } },
+        },
+        orderBy: { finishedAt: "desc" },
+        take: 5,
+        include: {
+          testVersion: {
+            select: {
+              questions: { select: { points: true } },
+              test: { select: { title: true } },
+            },
+          },
+          participants: {
+            select: {
+              id: true,
+              displayName: true,
+              teamId: true,
+              answers: {
+                select: {
+                  points: true,
+                  isCorrect: true,
+                  responseMs: true,
+                },
               },
             },
           },
-          _count: {
-            select: { participants: true, answers: true },
-          },
+          _count: { select: { participants: true, answers: true } },
         },
       }),
+      prisma.assignment.count({
+        where: { teacherId: teacher.id, status: "ASSIGNED" },
+      }).catch(() => 0),
+      countTeacherSeries(teacher.id),
     ]);
+  const classTitleById = new Map(classrooms.map((classroom) => [classroom.id, classroom.title]));
+  const liveGames = activeGames.flatMap((session) => {
+    const settings = parseSessionSettings(session.settingsJson);
+
+    if (settings.archived) {
+      return [];
+    }
+
+    const questionCount = session.testVersion.questions.length;
+    const submittedCount = session.participants.filter((participant) => {
+      const answered = new Set(participant.answers.map((answer) => answer.questionId)).size;
+
+      return questionCount > 0 && answered >= questionCount;
+    }).length;
+
+    return [
+      {
+        ...session,
+        settings,
+        submittedCount,
+        classTitle: settings.classId ? classTitleById.get(settings.classId) ?? messages.teacher.classOnly : null,
+      },
+    ];
+  });
+  const finishedGames = recentFinishedGames.flatMap((session) => {
+    const settings = parseSessionSettings(session.settingsJson);
+
+    if (settings.archived) {
+      return [];
+    }
+
+    const results = buildSessionResults({
+      mode: session.mode,
+      settings,
+      questions: session.testVersion.questions,
+      participants: session.participants,
+    });
+
+    return [
+      {
+        ...session,
+        settings,
+        averageScore: results.averageScore,
+        classTitle: settings.classId ? classTitleById.get(settings.classId) ?? messages.teacher.classOnly : null,
+      },
+    ];
+  });
+  const launchableQuizSets = quizSets.flatMap((test) => {
+    const version = test.versions[0];
+
+    if (!version) {
+      return [];
+    }
+
+    return [
+      {
+        testVersionId: version.id,
+        title: test.title,
+        questionCount: version.questions.length,
+      },
+    ];
+  });
+  const draftQuizSets = quizSets.filter((test) => test.versions.length === 0).slice(0, 4);
 
   return (
     <div className="grid gap-6">
-      <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
         <p className="text-sm font-semibold text-teal-800">{messages.teacherShell.subtitle}</p>
-        <h1 className="mt-1 text-3xl font-bold">{messages.teacher.dashboardTitle}</h1>
-        <p className="mt-2 text-slate-600">{messages.teacher.dashboardDescription}</p>
-      </section>
-
-      <section className="grid gap-4 md:grid-cols-6">
-        <MetricCard label={messages.teacher.myClasses} value={classCount} href="/teacher/classes" />
-        <MetricCard label={messages.teacher.myStudents} value={classStudentCount} href="/teacher/students" />
-        <MetricCard label="Quiz Sets" value={testCount} href="/teacher/sets" />
-        <MetricCard label={messages.teacher.myQuestions} value={questionCount} href="/teacher/questions" />
-        <MetricCard label={messages.series.title} value={seriesCount} href="/teacher/series" />
-        <MetricCard label={messages.teacher.myLiveSessions} value={liveSessions} href="/teacher/live" />
-      </section>
-
-      <section className="rounded-md border border-teal-200 bg-teal-50 p-5 shadow-sm">
-        <h2 className="text-xl font-bold">Start here</h2>
-        <div className="mt-4 grid gap-3 md:grid-cols-4">
-          <StepCard step="1" title="Create a class" href="/teacher/classes" />
-          <StepCard step="2" title="Invite students" href="/teacher/classes" />
-          <StepCard step="3" title="Create a quiz set" href="/teacher/sets/new" />
-          <StepCard step="4" title="Host or assign" href="/teacher/sets" />
+        <h1 className="mt-1 text-3xl font-bold">
+          Welcome, {teacher.name ?? teacher.email}
+        </h1>
+        <p className="mt-2 text-slate-600">
+          Choose a quiz set, choose a class, and launch a live game.
+        </p>
+        <div className="mt-5 flex flex-wrap gap-2">
+          <LinkButton href="/teacher/classes">{messages.teacher.createClass}</LinkButton>
+          <LinkButton href="/teacher/sets/new">Create Quiz Set</LinkButton>
+          <LinkButton href="/teacher/assignments/new">Create Assignment</LinkButton>
+          <LinkButton href="/teacher/classes">Invite Students</LinkButton>
         </div>
       </section>
 
       <section className="grid gap-4 md:grid-cols-4">
-        <ActionCard
-          title="Invite Students"
-          description="Open a class, share its QR code or join link, and let students create accounts."
-          href="/teacher/classes"
-        />
-        <ActionCard
-          title="Create Quiz Set"
-          description="Build questions directly inside a set without technical version tools."
-          href="/teacher/sets/new"
-        />
-        <ActionCard
-          title={messages.teacher.assignmentsTitle}
-          description={messages.teacher.assignmentsDescription}
-          href="/teacher/assignments"
-        />
-        <ActionCard
-          title={messages.series.title}
-          description="Create class leagues from published quiz sets and launch registered rounds."
-          href="/teacher/series"
-        />
-        <ActionCard
-          title="Host Live Game"
-          description="Launch Classic or Host-paced from a published quiz set."
-          href="/teacher/sets"
-        />
+        <MetricCard label={messages.teacher.myClasses} value={classrooms.length} href="/teacher/classes" />
+        <MetricCard label="Active Games" value={liveGames.length} href="/teacher/live" />
+        <MetricCard label="Quiz Sets" value={quizSets.length} href="/teacher/sets" />
+        <MetricCard label={messages.teacher.assignmentsTitle} value={assignmentCount} href="/teacher/assignments" />
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        <ActionCard
-          title={messages.teacher.resultsTitle}
-          description={messages.teacher.resultsDescription}
-          href="/teacher/results"
-        />
-        <ActionCard
-          title={messages.teacher.libraryTitle}
-          description={messages.teacher.libraryDescription}
-          href="/teacher/library"
-        />
-        <ActionCard
-          title="Question Bank"
-          description="Advanced direct question management for power users."
-          href="/teacher/questions"
-        />
-      </section>
-
-      <section className="grid gap-3 rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="text-xl font-semibold">{messages.dashboard.nextTitle}</h2>
-        <div className="flex flex-wrap gap-2">
-          <LinkButton href="/teacher/classes">{messages.teacher.createClass}</LinkButton>
-          <LinkButton href="/teacher/sets/new">Create Quiz Set</LinkButton>
-          <LinkButton href="/teacher/series">{messages.series.createButton}</LinkButton>
-          <LinkButton href="/teacher/library">{messages.teacher.browseLibrary}</LinkButton>
-        </div>
-      </section>
-
-      <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="grid gap-3">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="text-xl font-semibold">{messages.teacher.recentResults}</h2>
+          <h2 className="text-sm font-semibold uppercase text-slate-500">{messages.teacher.myClasses}</h2>
+          <Link href="/teacher/classes" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
+            {messages.common.view}
+          </Link>
+        </div>
+        {classrooms.length === 0 ? (
+          <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
+            {messages.teacher.noClasses} {messages.teacher.createClassFirst}
+          </p>
+        ) : (
+          <div className="grid gap-3 md:grid-cols-3">
+            {classrooms.slice(0, 6).map((classroom, index) => {
+              const activeCount = liveGames.filter((game) => game.settings.classId === classroom.id).length;
+
+              return (
+                <Link
+                  key={classroom.id}
+                  href={`/teacher/classes/${classroom.id}`}
+                  className="rounded-md border border-slate-200 bg-white p-5 shadow-sm transition hover:border-teal-200 hover:shadow-md"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className={`h-2.5 w-2.5 rounded-full ${classAccent(index)}`} />
+                      <h3 className="text-lg font-bold">{classroom.title}</h3>
+                    </div>
+                    <span className="text-sm text-slate-600">{classroom.memberships.length} students</span>
+                  </div>
+                  <div className="mt-4 h-1 overflow-hidden rounded-full bg-slate-100">
+                    <div
+                      className={`h-full rounded-full ${classAccent(index)}`}
+                      style={{ width: `${Math.min(100, 20 + classroom.memberships.length * 3)}%` }}
+                    />
+                  </div>
+                  <p className="mt-3 text-sm text-slate-600">
+                    {activeCount > 0 ? `${activeCount} active` : "No active games"}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      <TeacherQuickLaunchForm
+        quizSets={launchableQuizSets}
+        classrooms={classrooms.map((classroom) => ({ id: classroom.id, title: classroom.title }))}
+      />
+
+      <section className="grid gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold uppercase text-slate-500">Live Now</h2>
+          <Link href="/teacher/live" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
+            {messages.teacher.backToLiveGames}
+          </Link>
+        </div>
+        {liveGames.length === 0 ? (
+          <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
+            {messages.teacher.noLiveGamesNow}
+          </p>
+        ) : (
+          <div className="grid gap-3">
+            {liveGames.map((game) => (
+              <article
+                key={game.id}
+                className="grid gap-3 rounded-md border border-teal-200 bg-white p-4 shadow-sm md:grid-cols-[1fr_auto] md:items-center"
+              >
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="font-semibold">{game.testVersion.test.title}</h3>
+                    <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
+                      {game.status === "LOBBY" ? messages.host.waitingStatus : messages.host.liveStatus}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {game.classTitle ?? messages.sessions.audienceGuest} - {game._count.participants} students joined
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2 md:justify-end">
+                  <Link
+                    href={`/host/${game.code}`}
+                    className="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-700"
+                  >
+                    {messages.sessions.hostLink}
+                  </Link>
+                  <Link
+                    href={`/teacher/sessions/${game.code}/results`}
+                    className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
+                  >
+                    {messages.sessions.resultsLink}
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="grid gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold uppercase text-slate-500">Recent Tests</h2>
           <Link href="/teacher/results" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
             {messages.common.view}
           </Link>
         </div>
-        {recentSessions.length === 0 ? (
-          <p className="mt-4 text-sm text-slate-600">{messages.sessions.empty}</p>
+        {liveGames.length === 0 && finishedGames.length === 0 && draftQuizSets.length === 0 ? (
+          <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
+            {messages.sessions.empty}
+          </p>
         ) : (
-          <div className="mt-4 grid gap-2">
-            {recentSessions.map((session) => (
-              <div key={session.code} className="grid gap-2 rounded-md border border-slate-200 p-3 sm:grid-cols-[1fr_auto]">
+          <div className="grid gap-3">
+            {liveGames.slice(0, 4).map((game) => {
+              const progress =
+                game._count.participants === 0
+                  ? 0
+                  : Math.round((game.submittedCount / game._count.participants) * 100);
+
+              return (
+                <article
+                  key={`live-${game.id}`}
+                  className="grid gap-3 rounded-md border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-[1fr_auto] md:items-center"
+                >
+                  <div className="grid gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
+                        {messages.teacher.liveTestStatus}
+                      </span>
+                      <h3 className="font-semibold">{game.testVersion.test.title}</h3>
+                    </div>
+                    <p className="text-sm text-slate-600">
+                      {game.classTitle ?? messages.sessions.audienceGuest} - {game._count.participants} joined
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <div className="h-1.5 w-28 overflow-hidden rounded-full bg-slate-100">
+                        <div className="h-full rounded-full bg-teal-600" style={{ width: `${progress}%` }} />
+                      </div>
+                      <span className="text-sm font-semibold text-slate-700">
+                        {game.submittedCount}/{game._count.participants} submitted
+                      </span>
+                    </div>
+                  </div>
+                  <Link
+                    href={`/host/${game.code}`}
+                    className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
+                  >
+                    {messages.teacher.watchLive}
+                  </Link>
+                </article>
+              );
+            })}
+            {finishedGames.map((game) => (
+              <article
+                key={`finished-${game.id}`}
+                className="grid gap-3 rounded-md border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-[1fr_auto] md:items-center"
+              >
                 <div>
-                  <p className="font-semibold">{session.testVersion.test.title}</p>
-                  <p className="text-sm text-slate-600">
-                    {session.code} - {session.mode} - {session.status} -{" "}
-                    {session._count.participants} {messages.host.participants.toLowerCase()}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-md bg-violet-50 px-2 py-1 text-xs font-semibold text-violet-800">
+                      {messages.teacher.finishedTestStatus}
+                    </span>
+                    <h3 className="font-semibold">{game.testVersion.test.title}</h3>
+                  </div>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {game.classTitle ?? messages.sessions.audienceGuest} - {messages.teacher.averageScoreShort}{" "}
+                    {game.averageScore} -{" "}
+                    {game.finishedAt ? game.finishedAt.toLocaleString() : game.createdAt.toLocaleString()}
                   </p>
                 </div>
-                <Link href="/teacher/results" className="text-sm font-semibold text-teal-800">
+                <Link
+                  href={`/teacher/sessions/${game.code}/results`}
+                  className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
+                >
                   {messages.sessions.resultsLink}
                 </Link>
-              </div>
+              </article>
+            ))}
+            {draftQuizSets.map((test) => (
+              <article
+                key={`draft-${test.id}`}
+                className="grid gap-3 rounded-md border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-[1fr_auto] md:items-center"
+              >
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
+                      {messages.teacher.draftTestStatus}
+                    </span>
+                    <h3 className="font-semibold">{test.title}</h3>
+                  </div>
+                  <p className="mt-1 text-sm text-slate-600">Prepare this quiz set before launch.</p>
+                </div>
+                <Link
+                  href={`/teacher/sets/${test.id}/edit`}
+                  className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
+                >
+                  {messages.common.open}
+                </Link>
+              </article>
             ))}
           </div>
         )}
+      </section>
+
+      <section className="grid gap-3 md:grid-cols-3">
+        <ActionCard title={messages.series.title} description="Create class leagues and launch rounds." href="/teacher/series" value={seriesCount} />
+        <ActionCard title={messages.teacher.libraryTitle} description={messages.teacher.libraryDescription} href="/teacher/library" />
+        <ActionCard title="Question Bank" description="Advanced direct question management." href="/teacher/questions" />
       </section>
     </div>
   );
@@ -189,9 +423,12 @@ export default async function TeacherDashboardPage() {
 
 function MetricCard({ label, value, href }: { label: string; value: number; href: string }) {
   return (
-    <Link href={href} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm transition hover:border-teal-200 hover:shadow-md">
-      <p className="text-sm text-slate-500">{label}</p>
-      <p className="mt-2 text-3xl font-bold">{value}</p>
+    <Link
+      href={href}
+      className="rounded-md border border-slate-200 bg-white p-5 shadow-sm transition hover:border-teal-200 hover:shadow-md"
+    >
+      <p className="text-3xl font-bold">{value}</p>
+      <p className="mt-1 text-sm text-slate-600">{label}</p>
     </Link>
   );
 }
@@ -204,33 +441,26 @@ function LinkButton({ href, children }: { href: string; children: React.ReactNod
   );
 }
 
-function StepCard({ step, title, href }: { step: string; title: string; href: string }) {
-  return (
-    <Link
-      href={href}
-      className="rounded-md border border-teal-200 bg-white p-4 shadow-sm transition hover:border-teal-400 hover:shadow-md"
-    >
-      <p className="text-sm font-bold text-teal-800">Step {step}</p>
-      <p className="mt-1 font-semibold">{title}</p>
-    </Link>
-  );
-}
-
 function ActionCard({
   title,
   description,
   href,
+  value,
 }: {
   title: string;
   description: string;
   href: string;
+  value?: number;
 }) {
   return (
     <Link
       href={href}
       className="rounded-md border border-slate-200 bg-white p-5 shadow-sm transition hover:border-teal-200 hover:shadow-md"
     >
-      <h2 className="font-semibold">{title}</h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="font-semibold">{title}</h2>
+        {typeof value === "number" ? <span className="text-xl font-bold text-teal-800">{value}</span> : null}
+      </div>
       <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
     </Link>
   );

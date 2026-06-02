@@ -82,10 +82,13 @@ export async function POST(request: Request, { params }: RouteContext) {
     const parsedSettings = parseSessionSettings(round.settingsJson);
     const settings = sessionSettingsJson({
       ...parsedSettings,
+      audience: "SERIES",
       label: round.title,
       seriesId: round.seriesId,
       roundId: round.id,
       registeredOnly: true,
+      archived: false,
+      archivedAt: null,
       showStudentResults: true,
       showLeaderboard: true,
       showCorrectAnswers: false,

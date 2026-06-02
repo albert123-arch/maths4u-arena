@@ -1,7 +1,10 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { UnifiedLoginForm } from "@/components/unified-login-form";
+import { getCurrentUser } from "@/lib/auth";
 import { messages } from "@/lib/messages";
+import { getCurrentStudent } from "@/lib/student-auth";
 
 type PageProps = {
   searchParams: Promise<{ next?: string }>;
@@ -11,9 +14,30 @@ function safeNext(value?: string | null) {
   return value && value.startsWith("/") && !value.startsWith("//") ? value : null;
 }
 
+function dashboardForRole(role: "ADMIN" | "TEACHER" | "STUDENT") {
+  if (role === "ADMIN") {
+    return "/admin";
+  }
+
+  if (role === "TEACHER") {
+    return "/teacher";
+  }
+
+  return "/student";
+}
+
 export default async function LoginPage({ searchParams }: PageProps) {
   const { next } = await searchParams;
   const safeNextValue = safeNext(next);
+  const [user, student] = await Promise.all([getCurrentUser(), getCurrentStudent()]);
+
+  if (user) {
+    redirect(safeNextValue ?? dashboardForRole(user.role));
+  }
+
+  if (student) {
+    redirect(safeNextValue ?? dashboardForRole("STUDENT"));
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10 text-slate-950">

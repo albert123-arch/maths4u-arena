@@ -117,16 +117,30 @@ Admin and teacher accounts are created by an administrator. Students can self-re
 
 For a normal live lesson, use class games before series:
 
-1. Teacher opens `/teacher/classes` and creates or opens a class.
-2. Students join the class once from the class invite QR/link.
-3. Teacher opens the class page and clicks `Host live game for this class`.
-4. Teacher chooses a published quiz set and launches Classic or Host-paced.
-5. The launch modal defaults to the selected class. Guest games are still available as an advanced/open option.
-6. Students see the game under `Live Now` on `/student`, or scan the host QR code.
-7. `/play?code=CODE` requires student login for class games, checks class membership, creates/reuses the participant automatically, and sends the student to `/game/CODE`.
-8. Teacher finishes the game and opens results from the teacher area.
+1. Teacher logs in and lands on `/teacher`.
+2. Teacher creates a class and invites students once from the class QR/link.
+3. Teacher creates or opens a Quiz Set.
+4. Teacher uses Quick Launch on the dashboard: choose Quiz Set, choose Class, choose mode, launch.
+5. Students see the live game under `Live Now` on `/student`, or scan the host QR code.
+6. `/play?code=CODE` requires student login for class games, checks class membership, creates/reuses the participant automatically, and sends the student to `/game/CODE`.
+7. Teacher finishes the game from the host screen.
+8. The game moves from Active to Finished in `/teacher/live`.
+9. Teacher opens results, downloads CSV if needed, and archives old games when they no longer need to appear in daily lists.
 
 Use series when you want a multi-round league or long-running competition. You do not need series for a single class game.
+Use Guest mode only for open games without student tracking.
+
+## Simple Classroom Workflow
+
+1. Teacher logs in.
+2. Teacher opens the dashboard or `/teacher/live`.
+3. Teacher chooses a quiz set and class.
+4. Teacher launches Classic or Host-paced.
+5. Students see the game on their dashboard or scan the QR code.
+6. Teacher watches progress on the host screen.
+7. Teacher finishes the game.
+8. Results move to Finished.
+9. Teacher can run again or archive the old game.
 
 ## Manual MySQL Import With phpMyAdmin
 

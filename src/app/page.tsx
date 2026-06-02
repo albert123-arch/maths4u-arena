@@ -1,6 +1,10 @@
 import Link from "next/link";
 
+import { LogoutButton } from "@/components/logout-button";
+import { StudentLogoutButton } from "@/components/student-logout-button";
+import { getCurrentUser } from "@/lib/auth";
 import { messages } from "@/lib/messages";
+import { getCurrentStudent } from "@/lib/student-auth";
 
 const workflowSteps = [
   messages.home.workflowSteps.classes,
@@ -9,7 +13,27 @@ const workflowSteps = [
   messages.home.workflowSteps.launch,
 ];
 
-export default function Home() {
+export default async function Home() {
+  const [user, student] = await Promise.all([getCurrentUser(), getCurrentStudent()]);
+  const signedIn = user
+    ? {
+        title:
+          user.role === "ADMIN"
+            ? messages.home.continueToAdmin
+            : messages.home.continueToTeacher,
+        href: user.role === "ADMIN" ? "/admin" : "/teacher",
+        name: user.name ?? user.email,
+        logout: <LogoutButton />,
+      }
+    : student
+      ? {
+          title: messages.home.continueToStudent,
+          href: "/student",
+          name: student.displayName,
+          logout: <StudentLogoutButton />,
+        }
+      : null;
+
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
       <section className="mx-auto grid min-h-screen max-w-6xl content-center gap-8 px-4 py-12">
@@ -22,32 +46,51 @@ export default function Home() {
               <h1 className="text-4xl font-bold leading-tight sm:text-6xl">{messages.common.appName}</h1>
               <p className="max-w-2xl text-lg leading-8 text-slate-700">{messages.home.description}</p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:max-w-xl">
-              <Link
-                href="/login"
-                className="rounded-md bg-teal-700 px-5 py-3 text-center font-semibold text-white transition hover:bg-teal-800 active:scale-[0.99]"
-              >
-                {messages.home.loginCta}
-              </Link>
-              <Link
-                href="/play"
-                className="rounded-md border border-slate-300 bg-white px-5 py-3 text-center font-semibold text-slate-800 transition hover:border-teal-300 hover:bg-teal-50"
-              >
-                {messages.home.playCta}
-              </Link>
-              <Link
-                href="/join-class"
-                className="rounded-md border border-slate-300 bg-white px-5 py-3 text-center font-semibold text-slate-800 transition hover:border-teal-300 hover:bg-teal-50"
-              >
-                {messages.home.joinClassCta}
-              </Link>
-              <Link
-                href="/student/register"
-                className="rounded-md border border-slate-300 bg-white px-5 py-3 text-center font-semibold text-slate-800 transition hover:border-teal-300 hover:bg-teal-50"
-              >
-                {messages.home.createStudentCta}
-              </Link>
-            </div>
+            {signedIn ? (
+              <section className="grid gap-4 rounded-md border border-teal-200 bg-white p-5 shadow-sm lg:max-w-xl">
+                <div>
+                  <p className="text-sm font-semibold text-teal-800">{messages.home.signedInTitle}</p>
+                  <h2 className="mt-1 text-2xl font-bold">{signedIn.name}</h2>
+                  <p className="mt-2 text-sm text-slate-600">{messages.home.signedInDescription}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href={signedIn.href}
+                    className="rounded-md bg-teal-700 px-5 py-3 text-center font-semibold text-white transition hover:bg-teal-800 active:scale-[0.99]"
+                  >
+                    {signedIn.title}
+                  </Link>
+                  {signedIn.logout}
+                </div>
+              </section>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2 lg:max-w-xl">
+                <Link
+                  href="/login"
+                  className="rounded-md bg-teal-700 px-5 py-3 text-center font-semibold text-white transition hover:bg-teal-800 active:scale-[0.99]"
+                >
+                  {messages.home.loginCta}
+                </Link>
+                <Link
+                  href="/play"
+                  className="rounded-md border border-slate-300 bg-white px-5 py-3 text-center font-semibold text-slate-800 transition hover:border-teal-300 hover:bg-teal-50"
+                >
+                  {messages.home.playCta}
+                </Link>
+                <Link
+                  href="/join-class"
+                  className="rounded-md border border-slate-300 bg-white px-5 py-3 text-center font-semibold text-slate-800 transition hover:border-teal-300 hover:bg-teal-50"
+                >
+                  {messages.home.joinClassCta}
+                </Link>
+                <Link
+                  href="/student/register"
+                  className="rounded-md border border-slate-300 bg-white px-5 py-3 text-center font-semibold text-slate-800 transition hover:border-teal-300 hover:bg-teal-50"
+                >
+                  {messages.home.createStudentCta}
+                </Link>
+              </div>
+            )}
           </div>
 
           <div className="grid gap-4 rounded-md border border-slate-200 bg-white p-5 shadow-sm">

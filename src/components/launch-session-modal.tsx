@@ -31,6 +31,14 @@ const modeCards = [
   { mode: "CAROUSEL", label: "Carousel", available: false },
 ] as const;
 
+function friendlyLaunchError(error: string) {
+  if (error.includes("expected string") || error === messages.api.invalidInput) {
+    return messages.teacher.chooseClass;
+  }
+
+  return error;
+}
+
 export function LaunchSessionModal({
   testTitle,
   versionTitle,
@@ -85,54 +93,74 @@ export function LaunchSessionModal({
     setError("");
 
     try {
-      const selectedClassId = accessMode === "CLASS_ONLY" ? classId : null;
+      const selectedClassId = accessMode === "CLASS_ONLY" ? classId.trim() : "";
+
+      if (accessMode === "CLASS_ONLY" && !selectedClassId) {
+        setError(messages.teacher.chooseClass);
+        setPending(false);
+        return;
+      }
+
       const audience = selectedClassId ? "CLASS" : "GUEST";
+      const payload: {
+        testVersionId: string;
+        mode: "CLASSIC" | "HOST_PACED";
+        settingsJson: string;
+        showResults: boolean;
+        classId?: string;
+      } = {
+        testVersionId,
+        mode,
+        settingsJson: sessionSettingsJson({
+          ...DEFAULT_SESSION_SETTINGS,
+          label,
+          allowLateJoin,
+          showStudentResults,
+          showCorrectAnswers,
+          showLeaderboard,
+          autoSubmitOnFinish: mode === "HOST_PACED" ? false : autoSubmitOnFinish,
+          audience,
+          teamMode,
+          teamAssignMode: "manual",
+          teams,
+          teamScoring,
+          registeredOnly: audience === "CLASS",
+          classId: selectedClassId || null,
+          archived: false,
+          archivedAt: null,
+          ...(mode === "HOST_PACED"
+            ? {
+                questionTimeLimitSeconds,
+                speedBonus,
+                showQuestionOnStudent: true,
+                showQuestionOnHost: true,
+                autoAdvance: false,
+                phase: "LOBBY",
+                currentQuestionIndex: 0,
+                questionStartedAt: null,
+                questionEndsAt: null,
+                lastPhaseChangedAt: null,
+              }
+            : {}),
+        }),
+        showResults: true,
+      };
+
+      if (selectedClassId) {
+        payload.classId = selectedClassId;
+      }
+
       const response = await fetch(apiPath, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          testVersionId,
-          mode,
-          settingsJson: sessionSettingsJson({
-            ...DEFAULT_SESSION_SETTINGS,
-            label,
-            allowLateJoin,
-            showStudentResults,
-            showCorrectAnswers,
-            showLeaderboard,
-            autoSubmitOnFinish: mode === "HOST_PACED" ? false : autoSubmitOnFinish,
-            audience,
-            teamMode,
-            teamAssignMode: "manual",
-            teams,
-            teamScoring,
-            registeredOnly: audience === "CLASS",
-            classId: selectedClassId,
-            ...(mode === "HOST_PACED"
-              ? {
-                  questionTimeLimitSeconds,
-                  speedBonus,
-                  showQuestionOnStudent: true,
-                  showQuestionOnHost: true,
-                  autoAdvance: false,
-                  phase: "LOBBY",
-                  currentQuestionIndex: 0,
-                  questionStartedAt: null,
-                  questionEndsAt: null,
-                  lastPhaseChangedAt: null,
-                }
-              : {}),
-          }),
-          showResults: true,
-          classId: selectedClassId,
-        }),
+        body: JSON.stringify(payload),
       });
       const result = (await response.json()) as ApiResponse;
 
       if (!result.ok) {
-        setError(result.error);
+        setError(friendlyLaunchError(result.error));
         return;
       }
 
@@ -213,7 +241,7 @@ export function LaunchSessionModal({
                   </div>
                   <div>
                     <p className="text-xs font-semibold uppercase text-slate-500">
-                      {messages.tests.versionPrefix}
+                      Published quiz set
                     </p>
                     <p className="mt-1 font-semibold">{versionTitle}</p>
                   </div>
@@ -266,9 +294,13 @@ export function LaunchSessionModal({
                 </div>
                 <section className="grid gap-3 rounded-md border border-slate-200 p-4">
                   <h3 className="font-semibold">{messages.sessions.settingsTitle}</h3>
-                  {classrooms.length > 0 ? (
-                    <div className="grid gap-3 border-b border-slate-200 pb-3">
+                  <div className="grid gap-3 border-b border-slate-200 pb-3">
                       <p className="text-sm font-semibold text-slate-700">{messages.teacher.launchForClass}</p>
+                      {classrooms.length === 0 ? (
+                        <p className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm font-medium text-amber-900">
+                          {messages.teacher.createClassFirst}
+                        </p>
+                      ) : null}
                       <div className="grid gap-2 sm:grid-cols-2">
                         <button
                           type="button"
@@ -286,7 +318,11 @@ export function LaunchSessionModal({
                         </button>
                         <button
                           type="button"
+                          disabled={classrooms.length === 0}
                           onClick={() => {
+                            if (classrooms.length === 0) {
+                              return;
+                            }
                             setAccessMode("CLASS_ONLY");
                             if (!classId && initialClassId) {
                               setClassId(initialClassId);
@@ -295,7 +331,7 @@ export function LaunchSessionModal({
                           className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${
                             accessMode === "CLASS_ONLY"
                               ? "border-teal-500 bg-teal-50 text-teal-900"
-                              : "border-slate-300 hover:bg-slate-50"
+                            : "border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
                           }`}
                         >
                           <span className="block">{messages.teacher.classOnlyLink}</span>
@@ -304,7 +340,7 @@ export function LaunchSessionModal({
                           </span>
                         </button>
                       </div>
-                      {accessMode === "CLASS_ONLY" ? (
+                      {accessMode === "CLASS_ONLY" && classrooms.length > 0 ? (
                         <label className="grid gap-1 text-sm font-medium text-slate-700">
                           {messages.teacher.myClasses}
                           <select
@@ -322,7 +358,6 @@ export function LaunchSessionModal({
                         </label>
                       ) : null}
                     </div>
-                  ) : null}
                   {mode === "HOST_PACED" ? (
                     <label className="grid gap-1 text-sm font-medium text-slate-700">
                       {messages.sessions.questionTimeLimitSeconds}

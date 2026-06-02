@@ -9,6 +9,7 @@ import { messages } from "@/lib/messages";
 import { CopyButton } from "./copy-button";
 import { HostResultsPanel } from "./host-results-panel";
 import { RunAgainButton } from "./run-again-button";
+import { SessionArchiveButton } from "./session-archive-button";
 
 type ParticipantLive = {
   id: string;
@@ -87,6 +88,8 @@ export function HostControls({
   resultsApiPath,
   accessCheckPath = "/admin/sessions",
   runAgainApiPath = "/api/sessions",
+  backHref = "/admin/sessions",
+  archiveApiBase = "/api/admin/sessions",
 }: {
   initialLive: HostLiveSession;
   joinLink: string;
@@ -95,6 +98,8 @@ export function HostControls({
   resultsApiPath?: string;
   accessCheckPath?: string | null;
   runAgainApiPath?: string;
+  backHref?: string;
+  archiveApiBase?: string;
 }) {
   const [live, setLive] = useState(initialLive);
   const [pendingAction, setPendingAction] = useState<"START" | "FINISH" | null>(null);
@@ -481,6 +486,17 @@ export function HostControls({
               settingsJson={settingsJson}
               apiPath={runAgainApiPath}
             />
+          ) : null}
+          {live.status === "FINISHED" ? (
+            <>
+              <Link
+                href={backHref}
+                className="rounded-md border border-slate-600 px-4 py-2 font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98]"
+              >
+                {messages.teacher.backToLiveGames}
+              </Link>
+              <SessionArchiveButton code={live.code} action="archive" apiBase={archiveApiBase} />
+            </>
           ) : null}
         </div>
         {live.status === "FINISHED" ? (

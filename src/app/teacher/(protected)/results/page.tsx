@@ -7,9 +7,29 @@ import { parseSessionSettings } from "@/lib/session-settings";
 
 export const dynamic = "force-dynamic";
 
+function modeLabel(mode: string) {
+  return mode === "HOST_PACED" ? messages.sessions.modeHostPaced : messages.sessions.modeClassic;
+}
+
+function statusLabel(status: string) {
+  if (status === "LOBBY") {
+    return messages.host.waitingStatus;
+  }
+
+  if (status === "RUNNING") {
+    return messages.host.liveStatus;
+  }
+
+  if (status === "FINISHED") {
+    return messages.host.finishedStatus;
+  }
+
+  return status;
+}
+
 export default async function TeacherResultsPage() {
   const teacher = await requireTeacherUser();
-  const sessions = await prisma.gameSession.findMany({
+  const rawSessions = await prisma.gameSession.findMany({
     where: {
       testVersion: {
         test: {
@@ -33,6 +53,7 @@ export default async function TeacherResultsPage() {
       },
     },
   });
+  const sessions = rawSessions.filter((session) => !parseSessionSettings(session.settingsJson).archived);
 
   return (
     <div className="grid gap-6">
@@ -71,8 +92,8 @@ export default async function TeacherResultsPage() {
                         <div className="text-xs text-slate-500">{settings.label}</div>
                       ) : null}
                     </td>
-                    <td className="px-4 py-3">{session.mode}</td>
-                    <td className="px-4 py-3">{session.status}</td>
+                    <td className="px-4 py-3">{modeLabel(session.mode)}</td>
+                    <td className="px-4 py-3">{statusLabel(session.status)}</td>
                     <td className="px-4 py-3">{session._count.participants}</td>
                     <td className="px-4 py-3">{session._count.answers}</td>
                     <td className="px-4 py-3">

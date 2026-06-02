@@ -73,7 +73,7 @@ export async function GET() {
     const settings = parseSessionSettings(session.settingsJson);
     const isClassGame = settings.audience === "CLASS" || Boolean(settings.classId && !settings.seriesId);
 
-    if (!isClassGame || !settings.classId || !classIds.has(settings.classId)) {
+    if (settings.archived || !isClassGame || !settings.classId || !classIds.has(settings.classId)) {
       return [];
     }
 

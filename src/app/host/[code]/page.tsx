@@ -60,6 +60,8 @@ export default async function HostPage({ params }: PageProps) {
     : `/api/admin/sessions/${live.code}/results`;
   const accessCheckPath = isTeacherHost ? null : "/admin/sessions";
   const runAgainApiPath = isTeacherHost ? "/api/teacher/sessions" : "/api/sessions";
+  const backHref = isTeacherHost ? "/teacher/live" : "/admin/sessions";
+  const archiveApiBase = isTeacherHost ? "/api/teacher/sessions" : "/api/admin/sessions";
 
   if (live.mode === "HOST_PACED") {
     const hostPacedLive = await getHostPacedHostLiveData(live.code);
@@ -79,6 +81,8 @@ export default async function HostPage({ params }: PageProps) {
             resultsApiPath={resultsApiPath}
             accessCheckPath={accessCheckPath}
             runAgainApiPath={runAgainApiPath}
+            backHref={backHref}
+            archiveApiBase={archiveApiBase}
           />
         </section>
       </main>
@@ -96,6 +100,8 @@ export default async function HostPage({ params }: PageProps) {
           resultsApiPath={resultsApiPath}
           accessCheckPath={accessCheckPath}
           runAgainApiPath={runAgainApiPath}
+          backHref={backHref}
+          archiveApiBase={archiveApiBase}
         />
       </section>
     </main>

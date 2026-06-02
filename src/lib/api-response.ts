@@ -25,10 +25,7 @@ export function fail(error: string, status = 400) {
 
 export function errorResponse(error: unknown, fallback: string = messages.api.unknownError) {
   if (error instanceof ZodError) {
-    return fail(
-      error.issues.map((issue) => issue.message).join("; "),
-      422,
-    );
+    return fail(messages.api.invalidInput, 422);
   }
 
   if (error instanceof Error) {
