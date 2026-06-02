@@ -13,6 +13,7 @@ const navItems = [
   { href: "/admin/students", label: messages.adminShell.nav.students },
   { href: "/admin/series", label: messages.adminShell.nav.series },
   { href: "/admin/setup-check", label: messages.adminShell.nav.setupCheck },
+  { href: "/admin/qa", label: messages.adminShell.nav.qa },
 ];
 
 export function AdminShell({

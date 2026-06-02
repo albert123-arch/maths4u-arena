@@ -162,29 +162,38 @@ export function AdminSeriesDetail({
   }
 
   async function launchRound(roundId: string) {
+    if (pendingAction) {
+      return;
+    }
+
     setPendingAction(`launch-${roundId}`);
     setError("");
     setMessage("");
 
-    const response = await fetch(`/api/admin/series/rounds/${roundId}/launch`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        mode: roundLaunchModes[roundId] ?? "CLASSIC",
-      }),
-    });
-    const result = (await response.json()) as ApiResponse;
-    setPendingAction("");
+    try {
+      const response = await fetch(`/api/admin/series/rounds/${roundId}/launch`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mode: roundLaunchModes[roundId] ?? "CLASSIC",
+        }),
+      });
+      const result = (await response.json()) as ApiResponse;
 
-    if (!result.ok) {
-      setError(result.error);
-      return;
-    }
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
 
-    if (result.data.code) {
-      router.push(`/host/${result.data.code}`);
+      if (result.data.code) {
+        router.push(`/host/${result.data.code}`);
+      }
+    } catch {
+      setError(messages.api.unknownError);
+    } finally {
+      setPendingAction("");
     }
   }
 

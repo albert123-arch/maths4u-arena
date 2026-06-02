@@ -44,6 +44,12 @@ const cards = [
     description: messages.dashboard.cards.series.description,
     key: "series",
   },
+  {
+    label: messages.dashboard.cards.qa.label,
+    href: "/admin/qa",
+    description: messages.dashboard.cards.qa.description,
+    key: "qa",
+  },
 ];
 
 async function getDashboardCounts() {
@@ -83,6 +89,7 @@ async function getDashboardCounts() {
 export default async function AdminDashboardPage() {
   const result = await getDashboardCounts();
   const counts = result.counts as Record<string, number>;
+  const cardCount = (key: string) => (key === "qa" ? "QA" : counts[key] ?? 0);
 
   return (
     <div className="grid gap-6">
@@ -97,7 +104,7 @@ export default async function AdminDashboardPage() {
             href={card.href}
             className="rounded-md border border-slate-200 bg-white p-5 shadow-sm hover:border-teal-300"
           >
-            <div className="text-3xl font-bold text-teal-800">{counts[card.key] ?? 0}</div>
+            <div className="text-3xl font-bold text-teal-800">{cardCount(card.key)}</div>
             <h2 className="mt-3 text-lg font-semibold">{card.label}</h2>
             <p className="mt-1 text-sm leading-6 text-slate-600">{card.description}</p>
           </Link>

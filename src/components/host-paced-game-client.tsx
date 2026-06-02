@@ -337,6 +337,10 @@ export function HostPacedGameClient({
   }
 
   async function submitAnswer() {
+    if (pending) {
+      return;
+    }
+
     if (!participant || !live?.currentQuestionForStudent) {
       setError(messages.game.joinRequired);
       return;
@@ -392,7 +396,7 @@ export function HostPacedGameClient({
         <h2 className="text-2xl font-bold">{messages.game.joinRequiredTitle}</h2>
         <p className="mt-2 text-slate-600">{messages.game.joinRequiredDescription}</p>
         <Link href={`/play?code=${code}`} className="mt-4 inline-block font-semibold text-teal-800">
-          {messages.game.enterDifferentCode}
+          {messages.common.backToPlay}
         </Link>
       </section>
     );

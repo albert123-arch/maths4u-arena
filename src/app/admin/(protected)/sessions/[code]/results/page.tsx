@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import { SessionResultsTable } from "@/components/session-results-table";
 import { messages } from "@/lib/messages";
@@ -46,7 +45,28 @@ export default async function SessionResultsPage({ params }: PageProps) {
   });
 
   if (!session) {
-    notFound();
+    return (
+      <div className="grid gap-6">
+        <section className="grid gap-4 rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
+          <h1 className="text-2xl font-bold">{messages.host.notFoundTitle}</h1>
+          <p className="text-sm text-slate-600">{messages.results.unavailableDescription}</p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <Link
+              href="/admin/sessions"
+              className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+            >
+              {messages.results.back}
+            </Link>
+            <Link
+              href="/admin"
+              className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50"
+            >
+              {messages.common.backToAdmin}
+            </Link>
+          </div>
+        </section>
+      </div>
+    );
   }
 
   const settings = parseSessionSettings(session.settingsJson);

@@ -141,6 +141,10 @@ export function HostPacedHostControls({
   }
 
   async function runAction(action: string, body?: Record<string, unknown>) {
+    if (pendingAction) {
+      return;
+    }
+
     setPendingAction(action);
     setError("");
 

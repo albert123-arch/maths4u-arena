@@ -13,21 +13,37 @@ type PageProps = {
   params: Promise<{ code: string }>;
 };
 
+function notFoundContent() {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-center text-white">
+      <section className="grid gap-4 rounded-md border border-slate-800 bg-slate-900 p-6">
+        <h1 className="text-3xl font-bold">{messages.host.notFoundTitle}</h1>
+        <p className="text-sm text-slate-300">{messages.host.notFoundDescription}</p>
+        <div className="flex flex-wrap justify-center gap-2">
+          <Link
+            href="/admin/sessions"
+            className="rounded-md bg-teal-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-teal-400"
+          >
+            {messages.results.back}
+          </Link>
+          <Link
+            href="/admin"
+            className="rounded-md border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-800"
+          >
+            {messages.common.backToAdmin}
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 export default async function HostPage({ params }: PageProps) {
   const { code } = await params;
   const live = await getLiveSessionData(code);
 
   if (!live) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-center text-white">
-        <section className="grid gap-4">
-          <h1 className="text-3xl font-bold">{messages.host.notFoundTitle}</h1>
-          <Link href="/admin" className="font-semibold text-teal-300">
-            {messages.common.backToAdmin}
-          </Link>
-        </section>
-      </main>
-    );
+    return notFoundContent();
   }
 
   const appUrl = process.env.APP_URL?.replace(/\/$/, "") ?? "";
@@ -37,16 +53,7 @@ export default async function HostPage({ params }: PageProps) {
     const hostPacedLive = await getHostPacedHostLiveData(live.code);
 
     if (!hostPacedLive) {
-      return (
-        <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-center text-white">
-          <section className="grid gap-4">
-            <h1 className="text-3xl font-bold">{messages.host.notFoundTitle}</h1>
-            <Link href="/admin" className="font-semibold text-teal-300">
-              {messages.common.backToAdmin}
-            </Link>
-          </section>
-        </main>
-      );
+      return notFoundContent();
     }
 
     return (

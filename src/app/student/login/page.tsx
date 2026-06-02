@@ -20,6 +20,11 @@ export default async function StudentLoginPage({ searchParams }: PageProps) {
           <div className="mb-6 grid gap-2">
             <h1 className="text-3xl font-bold">{messages.student.loginTitle}</h1>
             <p className="text-sm leading-6 text-slate-600">{messages.student.loginSubtitle}</p>
+            {next ? (
+              <p className="rounded-md bg-teal-50 p-3 text-sm font-semibold text-teal-900">
+                {messages.student.loginRequired}
+              </p>
+            ) : null}
           </div>
           <StudentLoginForm next={next ?? "/student"} />
         </div>

@@ -54,6 +54,20 @@ export default async function PlayPage({ searchParams }: PageProps) {
             <p className="text-sm leading-6 text-slate-600">{messages.play.description}</p>
           </div>
           <PlayJoinForm initialCode={normalizedCode} registeredStudent={student} />
+          <div className="mt-5 flex flex-wrap gap-2 border-t border-slate-200 pt-4">
+            <Link
+              href="/"
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              {messages.common.home}
+            </Link>
+            <Link
+              href="/student/login"
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              {messages.student.loginTitle}
+            </Link>
+          </div>
         </div>
       </section>
     </main>

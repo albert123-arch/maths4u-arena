@@ -1,6 +1,8 @@
 "use client";
 
 import { messages } from "@/lib/messages";
+import { slugify } from "@/lib/slug";
+import { useState } from "react";
 
 type LeaderboardRound = {
   id: string;
@@ -42,7 +44,14 @@ export function SeriesLeaderboardTable({
   rounds: LeaderboardRound[];
   rows: LeaderboardRow[];
 }) {
+  const [exporting, setExporting] = useState(false);
+
   function downloadCsv() {
+    if (exporting) {
+      return;
+    }
+
+    setExporting(true);
     const header = [
       messages.results.rank,
       messages.results.participant,
@@ -72,9 +81,10 @@ export function SeriesLeaderboardTable({
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = `maths4u-series-${seriesTitle.toLowerCase().replaceAll(" ", "-")}.csv`;
+    link.download = `maths4u-arena-series-${slugify(seriesTitle) || "series"}-leaderboard.csv`;
     link.click();
     URL.revokeObjectURL(url);
+    window.setTimeout(() => setExporting(false), 300);
   }
 
   return (
@@ -84,9 +94,10 @@ export function SeriesLeaderboardTable({
         <button
           type="button"
           onClick={downloadCsv}
-          className="w-fit rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold transition hover:bg-slate-50 active:scale-[0.98]"
+          disabled={exporting}
+          className="w-fit rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold transition hover:bg-slate-50 active:scale-[0.98] disabled:opacity-60"
         >
-          {messages.series.downloadLeaderboard}
+          {exporting ? messages.common.exporting : messages.series.downloadLeaderboard}
         </button>
       </div>
       {rows.length === 0 ? (

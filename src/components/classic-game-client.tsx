@@ -425,6 +425,10 @@ export function ClassicGameClient({
   ]);
 
   async function submit(question: Question) {
+    if (pendingQuestionId) {
+      return;
+    }
+
     if (!participant) {
       setError(messages.game.joinRequired);
       return;
@@ -452,6 +456,10 @@ export function ClassicGameClient({
     return (
       <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
         <h2 className="text-2xl font-bold">{messages.game.finished}</h2>
+        <p className="mt-2 text-slate-600">{messages.game.joinRequiredDescription}</p>
+        <Link href={`/play?code=${code}`} className="mt-4 inline-block font-semibold text-teal-800 hover:text-teal-950">
+          {messages.common.backToPlay}
+        </Link>
       </section>
     );
   }
@@ -461,8 +469,8 @@ export function ClassicGameClient({
       <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
         <h2 className="text-2xl font-bold">{messages.game.joinRequiredTitle}</h2>
         <p className="mt-2 text-slate-600">{messages.game.joinRequiredDescription}</p>
-        <Link href="/play" className="mt-4 inline-block font-semibold text-teal-800 hover:text-teal-950">
-          {messages.game.enterDifferentCode}
+        <Link href={`/play?code=${code}`} className="mt-4 inline-block font-semibold text-teal-800 hover:text-teal-950">
+          {messages.common.backToPlay}
         </Link>
       </section>
     );

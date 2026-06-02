@@ -131,24 +131,34 @@ export function HostControls({
   }
 
   async function updateStatus(action: "START" | "FINISH") {
-    setPendingAction(action);
-    setError("");
-
-    const response = await fetch(`/api/sessions/${live.code}/${action === "START" ? "start" : "finish"}`, {
-      method: "POST",
-    });
-    const result = (await response.json()) as ApiResponse;
-    setPendingAction(null);
-
-    if (!result.ok) {
-      setError(result.error);
+    if (pendingAction) {
       return;
     }
 
-    setLive(result.data);
+    setPendingAction(action);
+    setError("");
 
-    if (action === "START") {
-      showStartCountdown();
+    try {
+      const response = await fetch(`/api/sessions/${live.code}/${action === "START" ? "start" : "finish"}`, {
+        method: "POST",
+        cache: "no-store",
+      });
+      const result = (await response.json()) as ApiResponse;
+
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+
+      setLive(result.data);
+
+      if (action === "START") {
+        showStartCountdown();
+      }
+    } catch {
+      setError(messages.api.unknownError);
+    } finally {
+      setPendingAction(null);
     }
   }
 

@@ -16,7 +16,10 @@ export const messages = {
     open: "Open",
     view: "View",
     downloadCsv: "Download CSV",
+    exporting: "Exporting...",
+    home: "Home",
     backToAdmin: "Back to admin",
+    backToPlay: "Back to play",
   },
   metadata: {
     description: "An educational platform for tests, math games, and live quizzes.",
@@ -45,6 +48,7 @@ export const messages = {
       students: "Students",
       series: "Series",
       setupCheck: "Setup Check",
+      qa: "QA",
     },
   },
   adminLogin: {
@@ -101,6 +105,10 @@ export const messages = {
       setup: {
         label: "Setup Check",
         description: "Database, tables, diagnostics, and launch readiness.",
+      },
+      qa: {
+        label: "Release QA",
+        description: "Manual checks before a live class.",
       },
     },
     nextTitle: "Next",
@@ -236,6 +244,7 @@ export const messages = {
   student: {
     loginTitle: "Student Login",
     loginSubtitle: "Use your username and password or PIN to join registered series rounds.",
+    loginRequired: "Please log in as a student to continue.",
     username: "Username",
     password: "Password or PIN",
     signIn: "Sign In",
@@ -249,6 +258,7 @@ export const messages = {
     resultsTitle: "My Results",
     noSeries: "No series registrations yet.",
     noResults: "No results yet.",
+    notRegisteredForSeries: "You are not registered for this series.",
     joinLiveRound: "Join live round",
     nextRound: "Next Round",
     recentResults: "Recent Results",
@@ -278,7 +288,7 @@ export const messages = {
     finished: "Game Finished",
     joinRequiredTitle: "Join First",
     joinRequiredDescription:
-      "This browser does not have a player token for this game. Join again from the play page.",
+      "Invalid or expired participant session. Join again from the play page.",
     joinRequired: "Join the game before submitting answers.",
     answerRequired: "Enter an answer before submitting.",
     submitAnswer: "Submit Answer",
@@ -304,10 +314,12 @@ export const messages = {
     answersLocked: "Answers are locked.",
     waitingForNextQuestion: "Waiting for the next question...",
     playAnotherGame: "Play another game",
+    notFoundDescription: "Session not found. Check the game code or return to the play page.",
   },
   host: {
     title: "Host screen",
     notFoundTitle: "Session Not Found",
+    notFoundDescription: "This host screen could not find a matching session.",
     status: "Status",
     waitingStatus: "Waiting for players",
     liveStatus: "Live",
@@ -348,7 +360,7 @@ export const messages = {
       timer: "Timer",
       answered: "Answered",
       lockQuestion: "Lock Question",
-      lockingQuestion: "Locking...",
+      lockingQuestion: "Locking answers...",
       reveal: "Reveal Answer",
       revealing: "Revealing...",
       showLeaderboard: "Show Leaderboard",
@@ -424,6 +436,7 @@ export const messages = {
   series: {
     title: "Series",
     description: "Create multi-day leagues, registrations, rounds, and leaderboards.",
+    notFoundDescription: "Series not found. Return to the series list and choose an existing series.",
     newTitle: "New Series",
     listTitle: "Series List",
     empty: "No series yet.",
@@ -500,6 +513,54 @@ export const messages = {
     details: "Details",
     ok: "OK",
   },
+  qa: {
+    title: "Release QA",
+    description: "Use this checklist before a live class or public deployment.",
+    openPage: "Open page",
+    checklist: "Checklist",
+    cards: {
+      classicGuest: {
+        title: "Classic guest flow",
+        description: "Launch a Classic session, join as a guest, answer, finish, and review results.",
+      },
+      hostPacedGuest: {
+        title: "Host-paced guest flow",
+        description: "Launch Host-paced, move through lobby, question, reveal, leaderboard, and finish.",
+      },
+      seriesClassic: {
+        title: "Series Classic flow",
+        description: "Register a student, launch a series round as Classic, finish, and confirm leaderboard points.",
+      },
+      seriesHostPaced: {
+        title: "Series Host-paced flow",
+        description: "Launch a series round as Host-paced and confirm score propagation into the series leaderboard.",
+      },
+      studentLogin: {
+        title: "Student login",
+        description: "Confirm a registered student can sign in, see their dashboard, and join live rounds.",
+      },
+      qrJoin: {
+        title: "QR join",
+        description: "Scan the host QR code on a phone and confirm the code is prefilled without closing the keyboard.",
+      },
+      presenter: {
+        title: "Presenter screen",
+        description: "Open presenter mode on a display and confirm it follows the host-paced session.",
+      },
+      csvExport: {
+        title: "CSV export",
+        description: "Download session results and series leaderboard CSV files with clean filenames.",
+      },
+      personalResults: {
+        title: "Personal results",
+        description: "Confirm a participant can open personal results after finish when student results are enabled.",
+      },
+      cache: {
+        title: "CDN/cache note",
+        description: "After deploy, purge CDN or browser cache if static assets look stale.",
+      },
+    },
+  },
   results: {
     title: "Session Results",
     back: "Back to sessions",
@@ -521,6 +582,7 @@ export const messages = {
     lastUpdated: "Last Updated",
     loadingPersonal: "Loading your results...",
     unavailable: "Results unavailable",
+    unavailableDescription: "Results are not available yet. The session may still be running or student results may be disabled.",
     reviewTitle: "Question Review",
     yourAnswer: "Your answer",
     correctAnswer: "Correct answer",

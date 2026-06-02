@@ -198,3 +198,20 @@ After importing `database/migrations/001_student_series.sql`, use this flow to c
 11. If deployed pages show old CSS or missing `_next/static` assets, clear Hostinger/browser cache or temporarily enable development mode in any CDN/proxy layer, then restart the Node.js app.
 
 Existing deployment target: `https://arena.maths4u.sbs`.
+
+## Release QA Before a Live Class
+
+Use this short checklist after every production deploy:
+
+1. Deploy the latest GitHub commit to Hostinger.
+2. Restart the Node.js app.
+3. Purge CDN/proxy/browser cache if pages show stale CSS or missing `_next/static` assets.
+4. Open `/api/ping` and `/api/health`.
+5. Log in as admin and open `/admin/qa`.
+6. Launch one Classic session and test the host screen.
+7. Launch one Host-paced session and test the presenter screen.
+8. Scan the QR code on a phone and confirm `/play?code=CODE` pre-fills the code.
+9. Join as one guest student and submit at least one answer.
+10. For registered rounds, log in as one student and confirm series access.
+11. Finish the session and confirm personal results.
+12. Download session results CSV and series leaderboard CSV.

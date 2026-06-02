@@ -53,52 +53,61 @@ export function LaunchSessionModal({
 
   async function launch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setPending(true);
-    setError("");
-
-    const response = await fetch("/api/sessions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        testVersionId,
-        mode,
-        settingsJson: sessionSettingsJson({
-          ...DEFAULT_SESSION_SETTINGS,
-          label,
-          allowLateJoin,
-          showStudentResults,
-          showCorrectAnswers,
-          showLeaderboard,
-          autoSubmitOnFinish: mode === "HOST_PACED" ? false : autoSubmitOnFinish,
-          ...(mode === "HOST_PACED"
-            ? {
-                questionTimeLimitSeconds,
-                speedBonus,
-                showQuestionOnStudent: true,
-                showQuestionOnHost: true,
-                autoAdvance: false,
-                phase: "LOBBY",
-                currentQuestionIndex: 0,
-                questionStartedAt: null,
-                questionEndsAt: null,
-                lastPhaseChangedAt: null,
-              }
-            : {}),
-        }),
-        showResults: true,
-      }),
-    });
-    const result = (await response.json()) as ApiResponse;
-    setPending(false);
-
-    if (!result.ok) {
-      setError(result.error);
+    if (pending) {
       return;
     }
 
-    setCode(result.data.code);
+    setPending(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/sessions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          testVersionId,
+          mode,
+          settingsJson: sessionSettingsJson({
+            ...DEFAULT_SESSION_SETTINGS,
+            label,
+            allowLateJoin,
+            showStudentResults,
+            showCorrectAnswers,
+            showLeaderboard,
+            autoSubmitOnFinish: mode === "HOST_PACED" ? false : autoSubmitOnFinish,
+            ...(mode === "HOST_PACED"
+              ? {
+                  questionTimeLimitSeconds,
+                  speedBonus,
+                  showQuestionOnStudent: true,
+                  showQuestionOnHost: true,
+                  autoAdvance: false,
+                  phase: "LOBBY",
+                  currentQuestionIndex: 0,
+                  questionStartedAt: null,
+                  questionEndsAt: null,
+                  lastPhaseChangedAt: null,
+                }
+              : {}),
+          }),
+          showResults: true,
+        }),
+      });
+      const result = (await response.json()) as ApiResponse;
+
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+
+      setCode(result.data.code);
+    } catch {
+      setError(messages.api.unknownError);
+    } finally {
+      setPending(false);
+    }
   }
 
   function close() {

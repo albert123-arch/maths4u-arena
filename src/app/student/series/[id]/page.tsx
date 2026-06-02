@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import { StudentShell } from "@/components/student-shell";
 import { messages } from "@/lib/messages";
@@ -46,7 +45,28 @@ export default async function StudentSeriesDetailPage({ params }: PageProps) {
   });
 
   if (!registration || registration.status !== "REGISTERED") {
-    notFound();
+    return (
+      <StudentShell student={student}>
+        <section className="grid gap-4 rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
+          <h1 className="text-2xl font-bold">{messages.student.notRegisteredForSeries}</h1>
+          <p className="text-sm text-slate-600">{messages.api.studentRegistrationRequired}</p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <Link
+              href="/student"
+              className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+            >
+              {messages.student.backToDashboard}
+            </Link>
+            <Link
+              href="/student/series"
+              className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50"
+            >
+              {messages.student.seriesTitle}
+            </Link>
+          </div>
+        </section>
+      </StudentShell>
+    );
   }
 
   const leaderboard = await getSeriesLeaderboard(id);
@@ -56,9 +76,14 @@ export default async function StudentSeriesDetailPage({ params }: PageProps) {
     <StudentShell student={student}>
       <div className="grid gap-6">
         <div>
-          <Link href="/student/series" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
-            {messages.common.back}
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/student" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
+              {messages.student.backToDashboard}
+            </Link>
+            <Link href="/student/series" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
+              {messages.common.back}
+            </Link>
+          </div>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <h1 className="text-3xl font-bold">{registration.series.title}</h1>
             <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">

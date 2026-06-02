@@ -30,30 +30,39 @@ export function RunAgainButton({
   const [error, setError] = useState("");
 
   async function runAgain() {
-    setPending(true);
-    setError("");
-
-    const response = await fetch("/api/sessions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        testVersionId,
-        mode,
-        settingsJson: settingsJson ?? null,
-        showResults: true,
-      }),
-    });
-    const result = (await response.json()) as ApiResponse;
-    setPending(false);
-
-    if (!result.ok) {
-      setError(result.error);
+    if (pending) {
       return;
     }
 
-    router.push(`/host/${result.data.code}`);
+    setPending(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/sessions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          testVersionId,
+          mode,
+          settingsJson: settingsJson ?? null,
+          showResults: true,
+        }),
+      });
+      const result = (await response.json()) as ApiResponse;
+
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+
+      router.push(`/host/${result.data.code}`);
+    } catch {
+      setError(messages.api.unknownError);
+    } finally {
+      setPending(false);
+    }
   }
 
   return (

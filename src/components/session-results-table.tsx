@@ -55,6 +55,7 @@ function csvCell(value: string | number | null) {
 export function SessionResultsTable({ initialData }: { initialData: ResultData }) {
   const [data, setData] = useState(initialData);
   const [pending, setPending] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const refreshResults = useCallback(async () => {
     setPending(true);
@@ -96,6 +97,11 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
   }, [data.status, refreshResults]);
 
   function downloadResults() {
+    if (exporting) {
+      return;
+    }
+
+    setExporting(true);
     const rows = [
       [
         messages.results.rank,
@@ -124,9 +130,10 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = `maths4u-results-${data.code}.csv`;
+    link.download = `maths4u-arena-session-${data.code}-results.csv`;
     link.click();
     URL.revokeObjectURL(url);
+    window.setTimeout(() => setExporting(false), 300);
   }
 
   return (
@@ -147,9 +154,10 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
             <button
               type="button"
               onClick={downloadResults}
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold transition hover:bg-slate-50 active:scale-[0.98]"
+              disabled={exporting}
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold transition hover:bg-slate-50 active:scale-[0.98] disabled:opacity-60"
             >
-              {messages.results.downloadResults}
+              {exporting ? messages.common.exporting : messages.results.downloadResults}
             </button>
             <button
               type="button"
