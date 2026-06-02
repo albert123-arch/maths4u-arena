@@ -51,6 +51,12 @@ function optionalNullableInt(min = 0) {
   );
 }
 
+function optionalNullableText(max = 191) {
+  return z
+    .preprocess((value) => (value === null ? undefined : value), z.string().trim().max(max).optional())
+    .transform((value) => (value ? value : null));
+}
+
 export const loginSchema = z.object({
   email: z.email().transform((value) => value.toLowerCase()),
   password: z.string().min(1),
@@ -212,18 +218,8 @@ export const sessionStatusUpdateSchema = z.object({
 
 export const participantJoinSchema = z.object({
   code: z.string().trim().min(4).max(16).transform((value) => value.toUpperCase()),
-  displayName: z
-    .string()
-    .trim()
-    .max(191)
-    .optional()
-    .transform((value) => (value ? value : null)),
-  teamId: z
-    .string()
-    .trim()
-    .max(191)
-    .optional()
-    .transform((value) => (value ? value : null)),
+  displayName: optionalNullableText(),
+  teamId: optionalNullableText(),
 });
 
 export const testVersionQuestionAddSchema = z.object({
