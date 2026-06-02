@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { verifyPassword } from "./password";
 
 export const STUDENT_SESSION_COOKIE_NAME = "student_session";
-const STUDENT_SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 14;
+const STUDENT_SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 180;
 
 export type StudentSessionUser = {
   id: string;

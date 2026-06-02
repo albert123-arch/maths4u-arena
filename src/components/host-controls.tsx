@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { messages } from "@/lib/messages";
 
 import { CopyButton } from "./copy-button";
+import { HostResultsPanel } from "./host-results-panel";
 import { RunAgainButton } from "./run-again-button";
 
 type ParticipantLive = {
@@ -83,6 +84,7 @@ export function HostControls({
   joinLink,
   settingsJson,
   resultsBasePath = "/admin/sessions",
+  resultsApiPath,
   accessCheckPath = "/admin/sessions",
   runAgainApiPath = "/api/sessions",
 }: {
@@ -90,6 +92,7 @@ export function HostControls({
   joinLink: string;
   settingsJson: string;
   resultsBasePath?: string;
+  resultsApiPath?: string;
   accessCheckPath?: string | null;
   runAgainApiPath?: string;
 }) {
@@ -98,6 +101,8 @@ export function HostControls({
   const [error, setError] = useState("");
   const [countdown, setCountdown] = useState<number | "started" | null>(null);
   const [qrLarge, setQrLarge] = useState(false);
+  const [resultsVisible, setResultsVisible] = useState(false);
+  const hostResultsApiPath = resultsApiPath ?? `/api/admin/sessions/${initialLive.code}/results`;
 
   async function fetchLive() {
     const response = await fetch(`/api/sessions/${live.code}/live`, {
@@ -447,6 +452,13 @@ export function HostControls({
           >
             {messages.sessions.resultsLink}
           </Link>
+          <button
+            type="button"
+            onClick={() => setResultsVisible((current) => !current)}
+            className="rounded-md border border-teal-500 px-4 py-2 font-semibold text-teal-100 transition hover:bg-teal-500/10 active:scale-[0.98]"
+          >
+            {resultsVisible ? messages.host.hideResultsOnScreen : messages.host.showResultsOnScreen}
+          </button>
           {accessCheckPath ? (
             <Link
               href={`${accessCheckPath}/${live.code}/access-check`}
@@ -478,6 +490,7 @@ export function HostControls({
         ) : null}
         {error ? <p className="text-sm font-medium text-red-300">{error}</p> : null}
       </section>
+      {resultsVisible ? <HostResultsPanel apiPath={hostResultsApiPath} /> : null}
     </div>
   );
 }

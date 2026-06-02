@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { messages } from "@/lib/messages";
 
 import { CopyButton } from "./copy-button";
+import { HostResultsPanel } from "./host-results-panel";
 import { RunAgainButton } from "./run-again-button";
 
 type HostPacedPhase =
@@ -135,6 +136,7 @@ export function HostPacedHostControls({
   joinLink,
   settingsJson,
   resultsBasePath = "/admin/sessions",
+  resultsApiPath,
   accessCheckPath = "/admin/sessions",
   runAgainApiPath = "/api/sessions",
   presenterMode = false,
@@ -143,6 +145,7 @@ export function HostPacedHostControls({
   joinLink: string;
   settingsJson: string;
   resultsBasePath?: string;
+  resultsApiPath?: string;
   accessCheckPath?: string | null;
   runAgainApiPath?: string;
   presenterMode?: boolean;
@@ -152,7 +155,9 @@ export function HostPacedHostControls({
   const [error, setError] = useState("");
   const [qrLarge, setQrLarge] = useState(false);
   const [startingCountdown, setStartingCountdown] = useState<number | "open" | null>(null);
+  const [resultsVisible, setResultsVisible] = useState(false);
   const autoOpenStarted = useRef(false);
+  const hostResultsApiPath = resultsApiPath ?? `/api/admin/sessions/${initialLive.code}/results`;
 
   async function fetchLive() {
     try {
@@ -577,6 +582,13 @@ export function HostPacedHostControls({
           >
             {messages.sessions.resultsLink}
           </Link>
+          <button
+            type="button"
+            onClick={() => setResultsVisible((current) => !current)}
+            className="rounded-md border border-teal-500 px-4 py-2 font-semibold text-teal-100 transition hover:bg-teal-500/10 active:scale-[0.98]"
+          >
+            {resultsVisible ? messages.host.hideResultsOnScreen : messages.host.showResultsOnScreen}
+          </button>
           {accessCheckPath ? (
             <Link
               href={`${accessCheckPath}/${live.code}/access-check`}
@@ -604,6 +616,7 @@ export function HostPacedHostControls({
         {error ? <p className="text-sm font-medium text-red-300">{error}</p> : null}
       </section>
       )}
+      {resultsVisible && !presenterMode ? <HostResultsPanel apiPath={hostResultsApiPath} /> : null}
     </div>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { messages } from "@/lib/messages";
@@ -187,7 +186,6 @@ export function ClassicGameClient({
   initialSettings: LiveSessionData["settings"];
   questions: Question[];
 }) {
-  const router = useRouter();
   const startedAt = useRef<number | null>(null);
   const lastLiveStatus = useRef<LiveSessionData["status"]>(initialStatus);
   const finishAutoSubmitStarted = useRef(false);
@@ -220,7 +218,7 @@ export function ClassicGameClient({
   const [submitted, setSubmitted] = useState<Record<string, boolean | null>>({});
   const [pendingQuestionId, setPendingQuestionId] = useState("");
   const [finishAutoSubmitStatus, setFinishAutoSubmitStatus] = useState<
-    "idle" | "submitting" | "redirecting"
+    "idle" | "submitting" | "saved"
   >("idle");
   const [error, setError] = useState("");
   const completedCount = Object.keys(submitted).length;
@@ -424,8 +422,7 @@ export function ClassicGameClient({
           return;
         }
 
-        setFinishAutoSubmitStatus("redirecting");
-        router.push(`/game/${code}/results`);
+        setFinishAutoSubmitStatus("saved");
       }
 
       void submitDraftAnswersAndOpenResults();
@@ -442,7 +439,6 @@ export function ClassicGameClient({
     live.status,
     orderedQuestions,
     participant,
-    router,
     sendAnswer,
     submitted,
   ]);
@@ -580,7 +576,7 @@ export function ClassicGameClient({
         <p className="rounded-md border border-teal-200 bg-teal-50 p-4 text-sm font-semibold text-teal-900">
           {finishAutoSubmitStatus === "submitting"
             ? messages.game.autoSubmittingOnFinish
-            : messages.game.openingResults}
+            : messages.game.draftAnswersSaved}
         </p>
       ) : null}
       {live.status === "FINISHED" ? (
@@ -613,7 +609,21 @@ export function ClassicGameClient({
           </p>
         </section>
       ) : null}
-      {!isComplete ? orderedQuestions.map((question, index) => {
+      {!isComplete && live.status === "FINISHED" ? (
+        <section className="rounded-md border border-teal-200 bg-white p-6 text-center shadow-sm">
+          <h2 className="text-2xl font-bold">{messages.game.finished}</h2>
+          <p className="mt-2 text-slate-600">{messages.game.resultsReady}</p>
+          {live.settings.showStudentResults ? (
+            <Link
+              href={`/game/${code}/results`}
+              className="mt-4 inline-flex rounded-md bg-teal-700 px-4 py-2 font-semibold text-white transition hover:bg-teal-800 active:scale-[0.98]"
+            >
+              {messages.game.viewResults}
+            </Link>
+          ) : null}
+        </section>
+      ) : null}
+      {!isComplete && live.status !== "FINISHED" ? orderedQuestions.map((question, index) => {
         const isSubmitted = question.id in submitted;
         const result = submitted[question.id];
 

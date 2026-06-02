@@ -55,6 +55,9 @@ export default async function HostPresenterPage({ params }: PageProps) {
     isClassGame || !live.settings.registeredOnly ? `/play?code=${live.code}` : `/student/join/${live.code}`;
   const joinLink = `${appUrl || ""}${joinPath}`;
   const resultsBasePath = isTeacherHost ? "/teacher/sessions" : "/admin/sessions";
+  const resultsApiPath = isTeacherHost
+    ? `/api/teacher/sessions/${live.code}/results`
+    : `/api/admin/sessions/${live.code}/results`;
   const accessCheckPath = isTeacherHost ? null : "/admin/sessions";
   const runAgainApiPath = isTeacherHost ? "/api/teacher/sessions" : "/api/sessions";
 
@@ -73,6 +76,7 @@ export default async function HostPresenterPage({ params }: PageProps) {
             joinLink={joinLink}
             settingsJson={sessionSettingsJson(hostPacedLive.settings)}
             resultsBasePath={resultsBasePath}
+            resultsApiPath={resultsApiPath}
             accessCheckPath={accessCheckPath}
             runAgainApiPath={runAgainApiPath}
             presenterMode
@@ -90,6 +94,7 @@ export default async function HostPresenterPage({ params }: PageProps) {
           joinLink={joinLink}
           settingsJson={sessionSettingsJson(live.settings)}
           resultsBasePath={resultsBasePath}
+          resultsApiPath={resultsApiPath}
           accessCheckPath={accessCheckPath}
           runAgainApiPath={runAgainApiPath}
         />
