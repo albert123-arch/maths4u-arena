@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { CopyLibraryTestButton } from "@/components/teacher-library-actions";
 import { requireTeacherUser } from "@/lib/auth";
 import { messages } from "@/lib/messages";
@@ -19,6 +17,7 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
   const difficultyFilter = Number.isFinite(parsedDifficulty) ? parsedDifficulty : null;
   const libraryVisibility: Array<"PUBLIC" | "CURATED"> = ["PUBLIC", "CURATED"];
   const testWhere = {
+    ownerUserId: { not: teacher.id },
     visibility: { in: libraryVisibility },
     status: { not: "ARCHIVED" as const },
     ...(subject ? { subject } : {}),
@@ -33,6 +32,7 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
       : {}),
   };
   const questionWhere = {
+    ownerUserId: { not: teacher.id },
     visibility: { in: libraryVisibility },
     ...(subject ? { subject } : {}),
     ...(difficultyFilter ? { difficulty: difficultyFilter } : {}),
@@ -86,6 +86,7 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
     }),
     prisma.test.findMany({
       where: {
+        ownerUserId: { not: teacher.id },
         visibility: { in: libraryVisibility },
         status: { not: "ARCHIVED" },
       },
@@ -95,6 +96,7 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
     }),
     prisma.question.findMany({
       where: {
+        ownerUserId: { not: teacher.id },
         visibility: { in: libraryVisibility },
       },
       distinct: ["subject"],
@@ -169,7 +171,6 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
           <div className="divide-y divide-slate-200 overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
             {tests.map((test) => {
               const published = test.versions[0];
-              const isOwnSet = test.ownerUserId === teacher.id;
 
               return (
                 <article key={test.id} className="grid gap-4 p-4 md:grid-cols-[1fr_auto] md:items-center">
@@ -179,16 +180,9 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
                       <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
                         {test.visibility}
                       </span>
-                      {isOwnSet ? (
-                        <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
-                          Your shared set
-                        </span>
-                      ) : null}
                     </div>
                     <p className="mt-1 text-sm text-slate-600">
-                      {test.subject} - {isOwnSet
-                        ? "You"
-                        : test.owner?.name ?? test.owner?.email ?? "Maths4U Arena"} -{" "}
+                      {test.subject} - {test.owner?.name ?? test.owner?.email ?? messages.results.hidden} -{" "}
                       {published?._count.questions ?? 0} {messages.tests.questionCount}
                     </p>
                     {test.description ? (
@@ -209,22 +203,7 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
                       </div>
                     ) : null}
                   </div>
-                  <div className="flex flex-wrap gap-2 md:justify-end">
-                    {isOwnSet ? (
-                      <Link
-                        href={`/teacher/sets/${test.id}/edit`}
-                        className="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-700"
-                      >
-                        Edit
-                      </Link>
-                    ) : published ? (
-                      <CopyLibraryTestButton id={test.id} />
-                    ) : (
-                      <span className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900">
-                        Publish required
-                      </span>
-                    )}
-                  </div>
+                  {published ? <CopyLibraryTestButton id={test.id} /> : null}
                 </article>
               );
             })}
@@ -250,17 +229,10 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
                   <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
                     {question.visibility}
                   </span>
-                  {question.ownerUserId === teacher.id ? (
-                    <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
-                      Your shared question
-                    </span>
-                  ) : null}
                 </div>
                 <p className="mt-1 text-sm text-slate-600">
                   {question.subject} - {messages.questions.fields.difficulty.toLowerCase()}{" "}
-                  {question.difficulty} - {question.ownerUserId === teacher.id
-                    ? "You"
-                    : question.owner?.name ?? question.owner?.email ?? "Maths4U Arena"}
+                  {question.difficulty} - {question.owner?.name ?? question.owner?.email ?? messages.results.hidden}
                 </p>
                 {question.explanation ? (
                   <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">
