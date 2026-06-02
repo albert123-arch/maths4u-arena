@@ -104,6 +104,7 @@ export async function POST(request: Request, { params }: RouteContext) {
                 points: true,
                 questionId: true,
                 isCorrect: true,
+                responseMs: true,
               },
             },
           },
@@ -165,7 +166,11 @@ export async function POST(request: Request, { params }: RouteContext) {
         (round.status === "SCHEDULED" || round.status === "LOBBY" || round.status === "RUNNING"),
     );
 
-    const totalPossible = session.testVersion.questions.reduce((sum, item) => sum + item.points, 0);
+    const totalPossible = session.testVersion.questions.reduce(
+      (sum, item) =>
+        sum + item.points + (session.mode === "HOST_PACED" && settings.speedBonus ? Math.round(item.points * 0.5) : 0),
+      0,
+    );
     const score = participant.answers.reduce((sum, answer) => sum + answer.points, 0);
     const correctCount = participant.answers.filter((answer) => answer.isCorrect === true).length;
     const answeredCount = participant.answers.length;
@@ -174,8 +179,20 @@ export async function POST(request: Request, { params }: RouteContext) {
       .map((item) => ({
         id: item.id,
         score: item.answers.reduce((sum, answer) => sum + answer.points, 0),
+        correctCount: item.answers.filter((answer) => answer.isCorrect === true).length,
+        totalResponseMs: item.answers.reduce((sum, answer) => sum + (answer.responseMs ?? 0), 0),
       }))
-      .sort((left, right) => right.score - left.score);
+      .sort((left, right) => {
+        if (right.score !== left.score) {
+          return right.score - left.score;
+        }
+
+        if (right.correctCount !== left.correctCount) {
+          return right.correctCount - left.correctCount;
+        }
+
+        return left.totalResponseMs - right.totalResponseMs;
+      });
     const rank = settings.showLeaderboard
       ? leaderboard.findIndex((item) => item.id === participant.id) + 1
       : null;

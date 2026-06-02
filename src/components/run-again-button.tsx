@@ -16,10 +16,12 @@ type ApiResponse =
 
 export function RunAgainButton({
   testVersionId,
+  mode = "CLASSIC",
   settingsJson,
   compact = false,
 }: {
   testVersionId: string;
+  mode?: string;
   settingsJson?: string | null;
   compact?: boolean;
 }) {
@@ -38,7 +40,7 @@ export function RunAgainButton({
       },
       body: JSON.stringify({
         testVersionId,
-        mode: "CLASSIC",
+        mode,
         settingsJson: settingsJson ?? null,
         showResults: true,
       }),

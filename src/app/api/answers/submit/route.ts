@@ -1,12 +1,16 @@
 import { ZodError } from "zod";
 
-import { errorResponse, fail, ok } from "@/lib/api-response";
 import type { GradingTypeValue } from "@/lib/constants";
 import { gradeAnswer } from "@/lib/grading";
+import {
+  gradeHostPacedAnswer,
+  validateHostPacedAnswerWindow,
+} from "@/lib/host-paced";
 import { messages } from "@/lib/messages";
 import { verifyPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 import { parseSessionSettings } from "@/lib/session-settings";
+import { noStoreJson } from "@/lib/session-live";
 import { recalculateSeriesRound } from "@/lib/series-scoring";
 import { answerSubmitSchema } from "@/lib/validation";
 
@@ -25,6 +29,14 @@ function submittedOptionId(answer: unknown) {
   return null;
 }
 
+function submitOk(data: unknown, status = 200) {
+  return noStoreJson({ ok: true, data }, status);
+}
+
+function submitFail(error: string, status = 400) {
+  return noStoreJson({ ok: false, error }, status);
+}
+
 export async function POST(request: Request) {
   try {
     const input = answerSubmitSchema.parse(await request.json());
@@ -38,41 +50,57 @@ export async function POST(request: Request) {
           select: {
             id: true,
             code: true,
+            mode: true,
             status: true,
             testVersionId: true,
             finishedAt: true,
             settingsJson: true,
+            testVersion: {
+              select: {
+                questions: {
+                  orderBy: { sortOrder: "asc" },
+                  select: {
+                    questionId: true,
+                    points: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
     });
 
     if (!participant) {
-      return fail(messages.api.participantNotFound, 404);
+      return submitFail(messages.api.participantNotFound, 404);
     }
 
     const tokenMatches = await verifyPassword(input.participantToken, participant.tokenHash);
 
     if (!tokenMatches) {
-      return fail(messages.api.invalidParticipantToken, 401);
+      return submitFail(messages.api.invalidParticipantToken, 401);
     }
 
     if (input.sessionId && participant.sessionId !== input.sessionId) {
-      return fail(messages.api.participantSessionMismatch, 400);
+      return submitFail(messages.api.participantSessionMismatch, 400);
     }
 
     if (input.code && participant.session.code !== input.code.toUpperCase()) {
-      return fail(messages.api.participantCodeMismatch, 400);
+      return submitFail(messages.api.participantCodeMismatch, 400);
     }
 
+    const settings = parseSessionSettings(participant.session.settingsJson);
+    const isHostPaced = participant.session.mode === "HOST_PACED";
+
     const canAutoSubmitAfterFinish =
+      !isHostPaced &&
       input.source === "AUTO_FINISH" &&
       participant.session.status === "FINISHED" &&
       participant.session.finishedAt !== null &&
       Date.now() - participant.session.finishedAt.getTime() <= FINISH_AUTO_SUBMIT_GRACE_MS;
 
     if (participant.session.status !== "RUNNING" && !canAutoSubmitAfterFinish) {
-      return fail(messages.api.answerOutsideRunningSession, 409);
+      return submitFail(messages.api.answerOutsideRunningSession, 409);
     }
 
     const question = await prisma.question.findUnique({
@@ -92,7 +120,7 @@ export async function POST(request: Request) {
     });
 
     if (!question) {
-      return fail(messages.api.questionNotFound, 404);
+      return submitFail(messages.api.questionNotFound, 404);
     }
 
     const versionQuestion = await prisma.testVersionQuestion.findUnique({
@@ -108,7 +136,24 @@ export async function POST(request: Request) {
     });
 
     if (!versionQuestion) {
-      return fail(messages.api.questionNotInSession, 400);
+      return submitFail(messages.api.questionNotInSession, 400);
+    }
+
+    const orderedVersionQuestions = participant.session.testVersion.questions;
+    const currentVersionQuestion =
+      orderedVersionQuestions[
+        Math.min(Math.max(settings.currentQuestionIndex, 0), Math.max(orderedVersionQuestions.length - 1, 0))
+      ] ?? null;
+    const hostPacedWindow = isHostPaced
+      ? validateHostPacedAnswerWindow({
+          settings,
+          questionId: question.id,
+          expectedQuestionId: currentVersionQuestion?.questionId ?? null,
+        })
+      : null;
+
+    if (hostPacedWindow && !hostPacedWindow.ok) {
+      return submitFail(hostPacedWindow.error, hostPacedWindow.status);
     }
 
     const existingAnswer = await prisma.answer.findFirst({
@@ -123,7 +168,7 @@ export async function POST(request: Request) {
     });
 
     if (existingAnswer) {
-      return fail(messages.api.answerAlreadySubmitted, 409);
+      return submitFail(messages.api.answerAlreadySubmitted, 409);
     }
 
     const optionId = submittedOptionId(input.answer);
@@ -133,17 +178,35 @@ export async function POST(request: Request) {
         : null;
 
     if (optionId && !selectedOption) {
-      return fail(messages.api.invalidAnswerOption, 400);
+      return submitFail(messages.api.invalidAnswerOption, 400);
     }
 
-    const graded = selectedOption
-      ? { isCorrect: selectedOption.isCorrect }
-      : gradeAnswer({
-          gradingType: question.gradingType as GradingTypeValue,
-          gradingRulesJson: question.gradingRulesJson,
-          answer: input.answer,
-        });
-    const points = graded.isCorrect === true ? versionQuestion.points : 0;
+    const hostPacedGrading =
+      isHostPaced && hostPacedWindow?.ok
+        ? gradeHostPacedAnswer({
+            question,
+            basePoints: versionQuestion.points,
+            selectedOptionId: optionId,
+            answer: input.answer,
+            settings,
+            timer: hostPacedWindow.timer,
+          })
+        : null;
+    const graded = hostPacedGrading
+      ? hostPacedGrading.graded
+      : selectedOption
+        ? { isCorrect: selectedOption.isCorrect }
+        : gradeAnswer({
+            gradingType: question.gradingType as GradingTypeValue,
+            gradingRulesJson: question.gradingRulesJson,
+            answer: input.answer,
+          });
+    const points = hostPacedGrading
+      ? hostPacedGrading.points
+      : graded.isCorrect === true
+        ? versionQuestion.points
+        : 0;
+    const responseMs = hostPacedGrading?.responseMs ?? input.responseMs;
 
     const answer = await prisma.answer.create({
       data: {
@@ -153,7 +216,7 @@ export async function POST(request: Request) {
         answerJson: JSON.stringify(input.answer),
         isCorrect: graded.isCorrect,
         points,
-        responseMs: input.responseMs,
+        responseMs,
       },
     });
 
@@ -164,26 +227,33 @@ export async function POST(request: Request) {
         questionId: question.id,
         eventType: "ANSWER_SUBMITTED",
         pointsDelta: points,
-        metaJson: JSON.stringify({ isCorrect: graded.isCorrect }),
+        metaJson: JSON.stringify({
+          isCorrect: graded.isCorrect,
+          mode: participant.session.mode,
+          basePoints: versionQuestion.points,
+          speedBonusPoints: hostPacedGrading?.speedBonusPoints ?? 0,
+          responseMs: responseMs ?? null,
+        }),
       },
     });
-
-    const settings = parseSessionSettings(participant.session.settingsJson);
 
     if (input.source === "AUTO_FINISH" && settings.roundId) {
       await recalculateSeriesRound(settings.roundId);
     }
 
-    return ok({
+    return submitOk({
       answer,
       grading: graded,
     });
   } catch (error) {
     if (error instanceof ZodError) {
-      return errorResponse(error);
+      return submitFail(
+        error.issues.map((issue) => issue.message).join("; "),
+        422,
+      );
     }
 
     console.error("Answer submission failed", error instanceof Error ? error.message : "Unknown error");
-    return fail(messages.api.answerSubmitFailed, 500);
+    return submitFail(messages.api.answerSubmitFailed, 500);
   }
 }

@@ -167,7 +167,7 @@ export function HostControls({
                 : messages.host.finishedStatus}
           </span>
           <span className="rounded-md border border-teal-700 bg-teal-500/15 px-3 py-1 text-sm font-bold text-teal-200">
-            {messages.sessions.modeClassic}
+            {live.mode === "HOST_PACED" ? messages.sessions.modeHostPaced : messages.sessions.modeClassic}
           </span>
         </div>
         <h1 className="text-5xl font-black tracking-[0.18em] sm:text-7xl">{live.code}</h1>
@@ -341,7 +341,7 @@ export function HostControls({
             {messages.host.refreshNow}
           </button>
           {live.status === "FINISHED" ? (
-            <RunAgainButton testVersionId={live.testVersionId} settingsJson={settingsJson} />
+            <RunAgainButton testVersionId={live.testVersionId} mode={live.mode} settingsJson={settingsJson} />
           ) : null}
         </div>
         {live.status === "FINISHED" ? (

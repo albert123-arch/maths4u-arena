@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import { parseSessionSettings } from "./session-settings";
 
 export async function recalculateSeriesRound(roundId: string) {
   const round = await prisma.seriesRound.findUnique({
@@ -42,7 +43,16 @@ export async function recalculateSeriesRound(roundId: string) {
     return null;
   }
 
-  const totalPossible = round.testVersion.questions.reduce((sum, item) => sum + item.points, 0);
+  const settings = parseSessionSettings(round.session.settingsJson);
+  const totalPossible = round.testVersion.questions.reduce(
+    (sum, item) =>
+      sum +
+      item.points +
+      (round.session?.mode === "HOST_PACED" && settings.speedBonus
+        ? Math.round(item.points * 0.5)
+        : 0),
+    0,
+  );
   const participantByStudentId = new Map(
     round.session.participants
       .filter((participant) => participant.studentAccountId)

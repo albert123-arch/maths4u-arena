@@ -17,13 +17,13 @@ type ApiResponse =
   | { ok: false; error: string };
 
 const modeCards = [
-  { mode: "CLASSIC", label: "Classic", available: true },
-  { mode: "HOST_PACED", label: "Host-paced", available: false },
+  { mode: "CLASSIC", label: messages.sessions.modeClassic, available: true },
+  { mode: "HOST_PACED", label: messages.sessions.modeHostPaced, available: true },
   { mode: "ACCURACY", label: "Accuracy", available: false },
   { mode: "TEAM", label: "Team", available: false },
   { mode: "PRACTICE", label: "Practice", available: false },
   { mode: "CAROUSEL", label: "Carousel", available: false },
-];
+] as const;
 
 export function LaunchSessionModal({
   testTitle,
@@ -39,6 +39,7 @@ export function LaunchSessionModal({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [label, setLabel] = useState("");
+  const [mode, setMode] = useState<"CLASSIC" | "HOST_PACED">("CLASSIC");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
@@ -55,10 +56,25 @@ export function LaunchSessionModal({
       },
       body: JSON.stringify({
         testVersionId,
-        mode: "CLASSIC",
+        mode,
         settingsJson: sessionSettingsJson({
           ...DEFAULT_SESSION_SETTINGS,
           label,
+          ...(mode === "HOST_PACED"
+            ? {
+                autoSubmitOnFinish: false,
+                questionTimeLimitSeconds: 30,
+                speedBonus: true,
+                showQuestionOnStudent: true,
+                showQuestionOnHost: true,
+                autoAdvance: false,
+                phase: "LOBBY",
+                currentQuestionIndex: 0,
+                questionStartedAt: null,
+                questionEndsAt: null,
+                lastPhaseChangedAt: null,
+              }
+            : {}),
         }),
         showResults: true,
       }),
@@ -173,9 +189,16 @@ export function LaunchSessionModal({
                         key={card.mode}
                         type="button"
                         disabled={!card.available}
+                        onClick={() => {
+                          if (card.mode === "CLASSIC" || card.mode === "HOST_PACED") {
+                            setMode(card.mode);
+                          }
+                        }}
                         className={`rounded-md border p-4 text-left transition ${
-                          card.available
-                            ? "border-teal-400 bg-teal-50 shadow-sm"
+                          card.available && card.mode === mode
+                            ? "border-teal-500 bg-teal-50 shadow-sm ring-2 ring-teal-100"
+                            : card.available
+                              ? "border-slate-300 bg-white hover:border-teal-300"
                             : "border-slate-200 bg-slate-50 opacity-70"
                         }`}
                       >
@@ -193,7 +216,13 @@ export function LaunchSessionModal({
                   disabled={pending}
                   className="rounded-md bg-teal-700 px-4 py-3 font-semibold text-white transition hover:bg-teal-800 active:scale-[0.99] disabled:opacity-60"
                 >
-                  {pending ? messages.sessions.launching : messages.sessions.launchClassic}
+                  {pending
+                    ? messages.sessions.launching
+                    : `${messages.sessions.launch} ${
+                        mode === "HOST_PACED"
+                          ? messages.sessions.modeHostPaced
+                          : messages.sessions.modeClassic
+                      }`}
                 </button>
               </form>
             )}

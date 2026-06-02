@@ -67,7 +67,15 @@ function statusBadge(status: SessionStatus) {
 }
 
 function modeLabel(mode: string) {
-  return mode === "CLASSIC" ? messages.sessions.modeClassic : mode;
+  if (mode === "CLASSIC") {
+    return messages.sessions.modeClassic;
+  }
+
+  if (mode === "HOST_PACED") {
+    return messages.sessions.modeHostPaced;
+  }
+
+  return mode;
 }
 
 export function AdminSessionsList({ initialSessions }: { initialSessions: AdminSession[] }) {
@@ -193,6 +201,7 @@ export function AdminSessionsList({ initialSessions }: { initialSessions: AdminS
                 </Link>
                 <RunAgainButton
                   testVersionId={session.testVersion.id}
+                  mode={session.mode}
                   settingsJson={session.settingsJson}
                   compact
                 />

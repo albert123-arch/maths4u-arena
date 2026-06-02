@@ -55,11 +55,12 @@ export async function GET(_request: Request, { params }: RouteContext) {
     return fail(messages.api.sessionNotFound, 404);
   }
 
+  const settings = parseSessionSettings(session.settingsJson);
   const totalPossible = session.testVersion.questions.reduce(
-    (sum, item) => sum + item.points,
+    (sum, item) =>
+      sum + item.points + (session.mode === "HOST_PACED" && settings.speedBonus ? Math.round(item.points * 0.5) : 0),
     0,
   );
-  const settings = parseSessionSettings(session.settingsJson);
   const questionCount = session.testVersion.questions.length;
   const participants = session.participants.map((participant) => {
     const totalScore = participant.answers.reduce(
@@ -69,6 +70,10 @@ export async function GET(_request: Request, { params }: RouteContext) {
     const correct = participant.answers.filter((answer) => answer.isCorrect === true).length;
     const answered = participant.answers.length;
     const lastAnswer = participant.answers.at(-1);
+    const totalResponseMs = participant.answers.reduce(
+      (sum, answer) => sum + (answer.responseMs ?? 0),
+      0,
+    );
 
     return {
       id: participant.id,
@@ -78,6 +83,7 @@ export async function GET(_request: Request, { params }: RouteContext) {
       correct,
       correctness: answered === 0 ? 0 : Math.round((correct / answered) * 100),
       percentage: totalPossible === 0 ? 0 : Math.round((totalScore / totalPossible) * 100),
+      totalResponseMs,
       status:
         questionCount > 0 && answered >= questionCount
           ? "Submitted"
@@ -95,6 +101,10 @@ export async function GET(_request: Request, { params }: RouteContext) {
 
       if (right.correct !== left.correct) {
         return right.correct - left.correct;
+      }
+
+      if (session.mode === "HOST_PACED" && left.totalResponseMs !== right.totalResponseMs) {
+        return left.totalResponseMs - right.totalResponseMs;
       }
 
       return left.displayName.localeCompare(right.displayName);
@@ -119,6 +129,7 @@ export async function GET(_request: Request, { params }: RouteContext) {
       data: {
         code: session.code,
         status: session.status,
+        mode: session.mode,
         testTitle: session.testVersion.test.title,
         sessionLabel: settings.label,
         totalPossible,

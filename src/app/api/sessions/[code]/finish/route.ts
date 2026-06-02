@@ -1,4 +1,5 @@
 import { requireAdminApi } from "@/lib/auth";
+import { finishHostPacedSession } from "@/lib/host-paced";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 import { getLiveSessionData, noStoreJson } from "@/lib/session-live";
@@ -22,11 +23,24 @@ export async function POST(_request: Request, { params }: RouteContext) {
   const normalizedCode = code.toUpperCase();
   const session = await prisma.gameSession.findUnique({
     where: { code: normalizedCode },
-    select: { id: true, status: true, settingsJson: true },
+    select: { id: true, mode: true, status: true, settingsJson: true },
   });
 
   if (!session) {
     return noStoreJson({ ok: false, error: messages.api.sessionNotFound }, 404);
+  }
+
+  if (session.mode === "HOST_PACED") {
+    const result = await finishHostPacedSession(normalizedCode);
+
+    if (!result.ok) {
+      return noStoreJson({ ok: false, error: result.error }, result.status);
+    }
+
+    return noStoreJson({
+      ok: true,
+      data: result.data,
+    });
   }
 
   if (session.status !== "FINISHED") {

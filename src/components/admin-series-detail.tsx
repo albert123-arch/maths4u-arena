@@ -288,6 +288,9 @@ export function AdminSeriesDetail({
             {messages.series.noPublishedTestsWarning}
           </p>
         ) : null}
+        <p className="mt-4 rounded-md border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
+          {messages.series.hostPacedComingSoon}
+        </p>
         <form onSubmit={addRound} className="mt-4 grid gap-3">
           <div className="grid gap-3 md:grid-cols-2">
             <label className="grid gap-1 text-sm font-medium text-slate-700">

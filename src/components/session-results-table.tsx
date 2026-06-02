@@ -22,6 +22,7 @@ type ResultParticipant = {
 type ResultData = {
   code: string;
   status: string;
+  mode: string;
   testTitle: string;
   sessionLabel: string;
   testVersionId: string;
@@ -138,6 +139,9 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
             <p className="mt-1 text-sm font-semibold text-teal-800">
               {messages.game.codeLabel}: {data.code}
             </p>
+            <p className="mt-1 text-sm text-slate-600">
+              {data.mode === "HOST_PACED" ? messages.sessions.modeHostPaced : messages.sessions.modeClassic}
+            </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <button
@@ -155,7 +159,12 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
             >
               {pending ? messages.host.refreshing : messages.host.refreshNow}
             </button>
-            <RunAgainButton testVersionId={data.testVersionId} settingsJson={data.settingsJson} compact />
+            <RunAgainButton
+              testVersionId={data.testVersionId}
+              mode={data.mode}
+              settingsJson={data.settingsJson}
+              compact
+            />
           </div>
         </div>
         <div className="mt-4 grid gap-4 sm:grid-cols-5">

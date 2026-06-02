@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ClassicGameClient } from "@/components/classic-game-client";
+import { HostPacedGameClient } from "@/components/host-paced-game-client";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 import { parseSessionSettings } from "@/lib/session-settings";
@@ -44,6 +45,27 @@ export default async function GamePage({ params }: PageProps) {
   }
 
   const settings = parseSessionSettings(session.settingsJson);
+
+  if (session.mode === "HOST_PACED") {
+    return (
+      <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-950">
+        <section className="mx-auto grid max-w-4xl gap-6">
+          <header className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-semibold text-teal-800">
+              {messages.game.codeLabel}: {session.code}
+            </p>
+            <h1 className="mt-2 text-3xl font-bold">{session.testVersion.test.title}</h1>
+            <p className="mt-2 text-sm text-slate-600">
+              {messages.sessions.modeHostPaced} - {session.status} - {messages.game.participantsLabel}{" "}
+              {session._count.participants}
+            </p>
+            {settings.label ? <p className="mt-2 text-sm font-semibold text-teal-800">{settings.label}</p> : null}
+          </header>
+          <HostPacedGameClient code={session.code} sessionId={session.id} initialLive={null} />
+        </section>
+      </main>
+    );
+  }
 
   const questions = await prisma.testVersionQuestion.findMany({
     where: { testVersionId: session.testVersionId },

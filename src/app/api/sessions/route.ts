@@ -122,12 +122,25 @@ export async function POST(request: Request) {
       return fail(messages.api.publishedVersionRequired, 409);
     }
 
+    const parsedSettings = parseSessionSettings(input.settingsJson);
+    const settings =
+      input.mode === "HOST_PACED"
+        ? {
+            ...parsedSettings,
+            autoSubmitOnFinish: false,
+            phase: "LOBBY" as const,
+            currentQuestionIndex: 0,
+            questionStartedAt: null,
+            questionEndsAt: null,
+            lastPhaseChangedAt: null,
+          }
+        : parsedSettings;
     const session = await prisma.gameSession.create({
       data: {
         testVersionId: input.testVersionId,
         code: await uniqueGameCode(),
         mode: input.mode,
-        settingsJson: sessionSettingsJson(parseSessionSettings(input.settingsJson)),
+        settingsJson: sessionSettingsJson(settings),
         showResults: input.showResults,
       },
       include: {
