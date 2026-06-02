@@ -23,6 +23,15 @@ const qaCards = [
     ],
   },
   {
+    title: messages.qa.cards.teamMode.title,
+    description: messages.qa.cards.teamMode.description,
+    links: [
+      { href: "/admin/tests", label: messages.adminShell.nav.tests },
+      { href: "/admin/sessions", label: messages.adminShell.nav.sessions },
+      { href: "/play", label: messages.sessions.playLink },
+    ],
+  },
+  {
     title: messages.qa.cards.seriesClassic.title,
     description: messages.qa.cards.seriesClassic.description,
     links: [

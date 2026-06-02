@@ -53,7 +53,7 @@ export default async function PlayPage({ searchParams }: PageProps) {
             <h1 className="text-3xl font-bold">{messages.play.title}</h1>
             <p className="text-sm leading-6 text-slate-600">{messages.play.description}</p>
           </div>
-          <PlayJoinForm initialCode={normalizedCode} registeredStudent={student} />
+          <PlayJoinForm initialCode={normalizedCode} initialSettings={settings} registeredStudent={student} />
           <div className="mt-5 flex flex-wrap gap-2 border-t border-slate-200 pt-4">
             <Link
               href="/"

@@ -4,11 +4,14 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 import { messages } from "@/lib/messages";
+import { DEFAULT_SESSION_SETTINGS, type SessionSettings } from "@/lib/session-settings";
 
 type StoredParticipant = {
   participantId: string;
   participantToken: string;
   displayName: string;
+  teamId?: string | null;
+  teamName?: string;
 };
 
 type ApiResponse =
@@ -18,11 +21,21 @@ type ApiResponse =
         participant: {
           id: string;
           displayName: string;
+          teamId: string | null;
         };
         participantToken: string;
         session: {
           code: string;
         };
+      };
+    }
+  | { ok: false; error: string };
+
+type LiveApiResponse =
+  | {
+      ok: true;
+      data: {
+        settings: SessionSettings;
       };
     }
   | { ok: false; error: string };
@@ -50,6 +63,8 @@ function readStoredParticipant(code: string): StoredParticipant | null {
         participantId: parsed.participantId,
         participantToken: parsed.participantToken,
         displayName: parsed.displayName,
+        teamId: typeof parsed.teamId === "string" ? parsed.teamId : null,
+        teamName: typeof parsed.teamName === "string" ? parsed.teamName : "",
       };
     }
   } catch {
@@ -61,9 +76,11 @@ function readStoredParticipant(code: string): StoredParticipant | null {
 
 export function PlayJoinForm({
   initialCode = "",
+  initialSettings,
   registeredStudent,
 }: {
   initialCode?: string;
+  initialSettings: SessionSettings;
   registeredStudent?: {
     displayName: string;
   } | null;
@@ -72,7 +89,9 @@ export function PlayJoinForm({
   const displayNameRef = useRef<HTMLInputElement>(null);
   const normalizedInitialCode = initialCode.toUpperCase();
   const [code, setCode] = useState(normalizedInitialCode);
+  const [settings, setSettings] = useState(initialSettings);
   const [displayName, setDisplayName] = useState(registeredStudent?.displayName ?? "");
+  const [teamId, setTeamId] = useState(initialSettings.teamMode ? initialSettings.teams[0]?.id ?? "" : "");
   const [existingParticipant, setExistingParticipant] = useState<StoredParticipant | null>(null);
   const [joinAsAnother, setJoinAsAnother] = useState(false);
   const [error, setError] = useState("");
@@ -91,42 +110,99 @@ export function PlayJoinForm({
     }
   }, [normalizedInitialCode, registeredStudent]);
 
+  useEffect(() => {
+    if (!code || code.length < 4 || code === normalizedInitialCode) {
+      return;
+    }
+
+    let stopped = false;
+    const timer = window.setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/sessions/${code}/live`, {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const result = (await response.json()) as LiveApiResponse;
+
+        if (!stopped && result.ok) {
+          setSettings(result.data.settings);
+          setTeamId(result.data.settings.teamMode ? result.data.settings.teams[0]?.id ?? "" : "");
+        }
+      } catch {
+        // Team settings lookup is best-effort and does not poll.
+      }
+    }, 350);
+
+    return () => {
+      stopped = true;
+      window.clearTimeout(timer);
+    };
+  }, [code, normalizedInitialCode]);
+
   function updateCode(value: string) {
     const nextCode = value.toUpperCase();
     setCode(nextCode);
     setJoinAsAnother(false);
     setExistingParticipant(readStoredParticipant(nextCode));
+    if (nextCode === normalizedInitialCode) {
+      setSettings(initialSettings);
+      setTeamId(initialSettings.teamMode ? initialSettings.teams[0]?.id ?? "" : "");
+    } else {
+      setSettings(DEFAULT_SESSION_SETTINGS);
+      setTeamId("");
+    }
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setPending(true);
-    setError("");
-
-    const response = await fetch("/api/participants/join", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-        body: JSON.stringify({ code, displayName: registeredStudent?.displayName ?? displayName }),
-    });
-    const result = (await response.json()) as ApiResponse;
-    setPending(false);
-
-    if (!result.ok) {
-      setError(result.error);
+    if (pending) {
       return;
     }
 
-    localStorage.setItem(
-      participantKey(result.data.session.code),
-      JSON.stringify({
-        participantId: result.data.participant.id,
-        participantToken: result.data.participantToken,
-        displayName: result.data.participant.displayName,
-      }),
-    );
-    router.push(`/game/${result.data.session.code}`);
+    setPending(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/participants/join", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code,
+          displayName: registeredStudent?.displayName ?? displayName,
+          teamId: settings.teamMode ? teamId : null,
+        }),
+      });
+      const result = (await response.json()) as ApiResponse;
+
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+
+      const selectedTeam = settings.teams.find((team) => team.id === result.data.participant.teamId);
+
+      localStorage.setItem(
+        participantKey(result.data.session.code),
+        JSON.stringify({
+          participantId: result.data.participant.id,
+          participantToken: result.data.participantToken,
+          displayName: result.data.participant.displayName,
+          teamId: result.data.participant.teamId,
+          teamName: selectedTeam?.name ?? "",
+        }),
+      );
+      router.push(`/game/${result.data.session.code}`);
+    } catch {
+      setError(messages.api.unknownError);
+    } finally {
+      setPending(false);
+    }
   }
 
   const showExisting = existingParticipant && !joinAsAnother;
@@ -138,6 +214,11 @@ export function PlayJoinForm({
           <p className="font-semibold text-teal-950">
             {messages.play.alreadyJoined} {existingParticipant.displayName}.
           </p>
+          {existingParticipant.teamName ? (
+            <p className="text-sm font-semibold text-teal-900">
+              {messages.play.team}: {existingParticipant.teamName}
+            </p>
+          ) : null}
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
@@ -193,6 +274,23 @@ export function PlayJoinForm({
             />
           </label>
         )}
+        {settings.teamMode ? (
+          <label className="grid gap-1 text-sm font-medium text-slate-700">
+            {messages.play.chooseTeam}
+            <select
+              value={teamId}
+              onChange={(event) => setTeamId(event.target.value)}
+              className="rounded-md border border-slate-300 px-3 py-3 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+              required
+            >
+              {settings.teams.map((team) => (
+                <option key={team.id} value={team.id}>
+                  {team.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
         {error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}
         <button
           type="submit"

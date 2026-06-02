@@ -10,6 +10,7 @@ import {
   type SessionSettings,
 } from "./session-settings";
 import { recalculateSeriesRound } from "./series-scoring";
+import { calculateTeamLeaderboard, teamName } from "./team-scoring";
 
 const TIMER_GRACE_MS = 2_000;
 
@@ -215,6 +216,7 @@ function leaderboardForParticipants(participants: HostPacedParticipant[]) {
       return {
         id: participant.id,
         displayName: participant.displayName,
+        teamId: participant.teamId,
         score: totalScore,
         correctCount,
         answeredCount,
@@ -240,6 +242,32 @@ function leaderboardForParticipants(participants: HostPacedParticipant[]) {
       ...participant,
       rank: index + 1,
     }));
+}
+
+function totalPossibleScore(session: HostPacedSession, settings: SessionSettings) {
+  return session.testVersion.questions.reduce(
+    (sum, item) => sum + item.points + (settings.speedBonus ? Math.round(item.points * 0.5) : 0),
+    0,
+  );
+}
+
+function teamParticipantsForLeaderboard(
+  session: HostPacedSession,
+  settings: SessionSettings,
+  leaderboard: ReturnType<typeof leaderboardForParticipants>,
+) {
+  const maxScore = totalPossibleScore(session, settings);
+
+  return leaderboard.map((participant) => ({
+    id: participant.id,
+    displayName: participant.displayName,
+    teamId: participant.teamId,
+    totalScore: participant.score,
+    correct: participant.correctCount,
+    answered: participant.answeredCount,
+    percentage: maxScore === 0 ? 0 : Math.round((participant.score / maxScore) * 100),
+    totalResponseMs: participant.totalResponseMs,
+  }));
 }
 
 function currentQuestionAnswers(session: HostPacedSession, currentQuestionId: string | null) {
@@ -364,6 +392,10 @@ export async function getHostPacedHostLiveData(code: string) {
     phase === "REVEAL" || phase === "LEADERBOARD" || phase === "FINISHED";
   const answers = currentQuestionAnswers(session, row?.question.id ?? null);
   const leaderboard = leaderboardForParticipants(session.participants);
+  const teamLeaderboard = calculateTeamLeaderboard(
+    settings,
+    teamParticipantsForLeaderboard(session, settings, leaderboard),
+  );
   const timer = getTimerState(settings);
 
   return {
@@ -389,12 +421,18 @@ export async function getHostPacedHostLiveData(code: string) {
     participantCount: session.participants.length,
     answeredCurrentQuestionCount: answers.length,
     answerDistribution: answerDistribution(row, answers, includeCorrect),
-    leaderboardTop: leaderboard.slice(0, 10),
+    leaderboardTop: leaderboard.slice(0, 10).map((participant) => ({
+      ...participant,
+      teamName: teamName(settings, participant.teamId),
+    })),
+    teamLeaderboardTop: teamLeaderboard.slice(0, 10),
     serverTime: new Date().toISOString(),
     settings,
     participants: session.participants.map((participant) => ({
       id: participant.id,
       displayName: participant.displayName,
+      teamId: participant.teamId,
+      teamName: teamName(settings, participant.teamId),
       joinedAt: participant.joinedAt.toISOString(),
       answeredCurrentQuestion: answers.some((answer) => answer.participantId === participant.id),
       answerCount: participant.answers.length,
@@ -450,6 +488,13 @@ export async function getHostPacedStudentLiveData({
     : null;
   const leaderboard = leaderboardForParticipants(session.participants);
   const ownLeaderboardRow = leaderboard.find((item) => item.id === participant.id);
+  const teamLeaderboard = calculateTeamLeaderboard(
+    settings,
+    teamParticipantsForLeaderboard(session, settings, leaderboard),
+  );
+  const ownTeamRow = participant.teamId
+    ? teamLeaderboard.find((team) => team.id === participant.teamId) ?? null
+    : null;
   const showCorrectAnswer =
     settings.showCorrectAnswers &&
     (phase === "REVEAL" || phase === "LEADERBOARD" || phase === "FINISHED");
@@ -470,6 +515,8 @@ export async function getHostPacedStudentLiveData({
       phase,
       testTitle: session.testVersion.test.title,
       sessionLabel: settings.label,
+      participantTeamId: participant.teamId,
+      participantTeamName: teamName(settings, participant.teamId),
       currentQuestionIndex: index,
       questionCount: questions.length,
       currentQuestionForStudent: canShowQuestion
@@ -500,10 +547,19 @@ export async function getHostPacedStudentLiveData({
         : null,
       leaderboardTopIfAllowed:
         settings.showLeaderboard && (phase === "LEADERBOARD" || phase === "FINISHED")
-          ? leaderboard.slice(0, 5)
+          ? leaderboard.slice(0, 5).map((item) => ({
+              ...item,
+              teamName: teamName(settings, item.teamId),
+            }))
+          : [],
+      teamLeaderboardTopIfAllowed:
+        settings.teamMode && settings.showLeaderboard && (phase === "LEADERBOARD" || phase === "FINISHED")
+          ? teamLeaderboard.slice(0, 5)
           : [],
       myRank: settings.showLeaderboard ? ownLeaderboardRow?.rank ?? null : null,
       myScore: ownLeaderboardRow?.score ?? 0,
+      myTeamRank: settings.showLeaderboard ? ownTeamRow?.rank ?? null : null,
+      myTeamScore: ownTeamRow?.score ?? null,
       participantCount: session.participants.length,
       serverTime: new Date().toISOString(),
     },

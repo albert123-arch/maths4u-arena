@@ -6,6 +6,7 @@ import { hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 import { parseSessionSettings } from "@/lib/session-settings";
 import { getCurrentStudent } from "@/lib/student-auth";
+import { smallestTeamId, validateTeamId } from "@/lib/team-scoring";
 import { participantJoinSchema } from "@/lib/validation";
 
 export async function POST(request: Request) {
@@ -18,6 +19,11 @@ export async function POST(request: Request) {
         code: true,
         status: true,
         settingsJson: true,
+        participants: {
+          select: {
+            teamId: true,
+          },
+        },
       },
     });
 
@@ -69,19 +75,39 @@ export async function POST(request: Request) {
           },
           select: {
             id: true,
+            teamId: true,
           },
         })
       : null;
+    const requestedTeamId = validateTeamId(settings, input.teamId);
+    const existingTeamId = existingParticipant?.teamId ?? null;
+    const teamId =
+      settings.teamMode && existingTeamId
+        ? existingTeamId
+        : settings.teamMode && settings.teamAssignMode === "auto"
+          ? smallestTeamId(settings, session.participants)
+          : requestedTeamId;
+
+    if (settings.teamMode && !teamId) {
+      return fail(messages.api.teamRequired, 422);
+    }
+
+    if (settings.teamMode && input.teamId && !requestedTeamId) {
+      return fail(messages.api.invalidTeam, 422);
+    }
+
     const participant = existingParticipant
       ? await prisma.participant.update({
           where: { id: existingParticipant.id },
           data: {
             displayName: currentStudent?.displayName ?? input.displayName,
             tokenHash,
+            teamId,
           },
           select: {
             id: true,
             displayName: true,
+            teamId: true,
             joinedAt: true,
           },
         })
@@ -91,10 +117,12 @@ export async function POST(request: Request) {
             studentAccountId: currentStudent?.id ?? null,
             displayName: currentStudent?.displayName ?? input.displayName,
             tokenHash,
+            teamId,
           },
           select: {
             id: true,
             displayName: true,
+            teamId: true,
             joinedAt: true,
           },
         });

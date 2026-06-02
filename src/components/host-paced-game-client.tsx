@@ -18,6 +18,8 @@ type ParticipantSession = {
   participantId: string;
   participantToken: string;
   displayName: string;
+  teamId?: string | null;
+  teamName?: string;
 };
 
 type StudentQuestion = {
@@ -42,6 +44,8 @@ type HostPacedStudentLive = {
   phase: HostPacedPhase;
   testTitle: string;
   sessionLabel: string;
+  participantTeamId: string | null;
+  participantTeamName: string;
   currentQuestionIndex: number;
   questionCount: number;
   currentQuestionForStudent: StudentQuestion | null;
@@ -59,11 +63,25 @@ type HostPacedStudentLive = {
     id: string;
     rank: number;
     displayName: string;
+    teamId: string | null;
+    teamName: string;
     score: number;
     correctCount: number;
   }>;
+  teamLeaderboardTopIfAllowed: Array<{
+    id: string;
+    rank: number;
+    name: string;
+    score: number;
+    memberCount: number;
+    correctCount: number;
+    answeredCount: number;
+    averagePercentage: number;
+  }>;
   myRank: number | null;
   myScore: number;
+  myTeamRank: number | null;
+  myTeamScore: number | null;
   participantCount: number;
   serverTime: string;
 };
@@ -107,6 +125,8 @@ function parseParticipantSession(stored: string): ParticipantSession | null {
         participantId: parsed.participantId,
         participantToken: parsed.participantToken,
         displayName: typeof parsed.displayName === "string" ? parsed.displayName : messages.play.player,
+        teamId: typeof parsed.teamId === "string" ? parsed.teamId : null,
+        teamName: typeof parsed.teamName === "string" ? parsed.teamName : "",
       };
     }
   } catch {
@@ -417,6 +437,11 @@ export function HostPacedGameClient({
         <p className="mt-2 text-slate-600">
           {messages.game.joinedAs} <span className="font-semibold">{participant.displayName}</span>
         </p>
+        {participant.teamName || live.participantTeamName ? (
+          <p className="mt-2 text-sm font-semibold text-teal-800">
+            {messages.play.team}: {participant.teamName || live.participantTeamName}
+          </p>
+        ) : null}
         <p className="mt-3 text-sm font-semibold text-teal-800">
           {messages.game.codeLabel}: {code}
         </p>
@@ -479,6 +504,13 @@ export function HostPacedGameClient({
         {messages.results.score}: {live.myScore}
         {live.myRank ? ` - ${messages.results.rank} ${live.myRank}` : ""}
       </p>
+      {live.participantTeamName ? (
+        <p className="mt-2 font-semibold text-slate-700">
+          {messages.play.team}: {live.participantTeamName}
+          {live.myTeamRank ? ` - ${messages.results.teamRank} ${live.myTeamRank}` : ""}
+          {live.myTeamScore !== null ? ` - ${messages.results.teamScore} ${live.myTeamScore}` : ""}
+        </p>
+      ) : null}
       <Link
         href={`/game/${code}/results`}
         className="mt-4 inline-flex rounded-md bg-teal-700 px-4 py-2 font-semibold text-white hover:bg-teal-800"
@@ -550,6 +582,11 @@ function QuestionScreen({
           />
         </div>
         <h2 className="mt-5 text-2xl font-bold">{question.prompt}</h2>
+        {live.participantTeamName ? (
+          <p className="mt-3 w-fit rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
+            {messages.play.team}: {live.participantTeamName}
+          </p>
+        ) : null}
       </div>
 
       {error ? (
@@ -678,16 +715,47 @@ function LeaderboardScreen({ live }: { live: HostPacedStudentLive }) {
           {messages.results.score}: {live.myScore}
           {live.myRank ? ` - ${messages.results.rank} ${live.myRank}` : ""}
         </p>
+        {live.participantTeamName ? (
+          <p className="mt-2 font-semibold text-slate-700">
+            {messages.play.team}: {live.participantTeamName}
+            {live.myTeamRank ? ` - ${messages.results.teamRank} ${live.myTeamRank}` : ""}
+            {live.myTeamScore !== null ? ` - ${messages.results.teamScore} ${live.myTeamScore}` : ""}
+          </p>
+        ) : null}
       </div>
+      {live.teamLeaderboardTopIfAllowed.length > 0 ? (
+        <div className="grid gap-2">
+          <h3 className="text-lg font-bold">{messages.results.teamLeaderboard}</h3>
+          {live.teamLeaderboardTopIfAllowed.map((row) => (
+            <div
+              key={row.id}
+              className="grid grid-cols-[48px_1fr_auto] items-center gap-3 rounded-md border border-teal-200 bg-white p-3 shadow-sm"
+            >
+              <span className="font-black text-teal-800">#{row.rank}</span>
+              <div>
+                <p className="font-semibold">{row.name}</p>
+                <p className="text-xs text-slate-500">
+                  {row.memberCount} {messages.results.members.toLowerCase()}
+                </p>
+              </div>
+              <span className="font-black">{row.score}</span>
+            </div>
+          ))}
+        </div>
+      ) : null}
       {live.leaderboardTopIfAllowed.length > 0 ? (
         <div className="grid gap-2">
+          <h3 className="text-lg font-bold">{messages.results.individualLeaderboard}</h3>
           {live.leaderboardTopIfAllowed.map((row) => (
             <div
               key={row.id}
               className="grid grid-cols-[48px_1fr_auto] items-center gap-3 rounded-md border border-slate-200 bg-white p-3 shadow-sm"
             >
               <span className="font-black text-teal-800">#{row.rank}</span>
-              <span className="font-semibold">{row.displayName}</span>
+              <div>
+                <p className="font-semibold">{row.displayName}</p>
+                {row.teamName ? <p className="text-xs text-slate-500">{row.teamName}</p> : null}
+              </div>
               <span className="font-black">{row.score}</span>
             </div>
           ))}

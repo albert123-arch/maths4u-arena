@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "./prisma";
 import { parseSessionSettings } from "./session-settings";
+import { teamName } from "./team-scoring";
 
 export type LiveSessionData = Awaited<ReturnType<typeof getLiveSessionData>>;
 
@@ -35,6 +36,7 @@ export async function getLiveSessionData(code: string) {
         select: {
           id: true,
           displayName: true,
+          teamId: true,
           joinedAt: true,
           answers: {
             select: {
@@ -57,6 +59,7 @@ export async function getLiveSessionData(code: string) {
   }
 
   const questionCount = session.testVersion.questions.length;
+  const settings = parseSessionSettings(session.settingsJson);
   const participants = session.participants.map((participant) => {
     const answeredQuestionCount = new Set(
       participant.answers.map((answer) => answer.questionId),
@@ -65,6 +68,8 @@ export async function getLiveSessionData(code: string) {
     return {
       id: participant.id,
       displayName: participant.displayName,
+      teamId: participant.teamId,
+      teamName: teamName(settings, participant.teamId),
       joinedAt: participant.joinedAt.toISOString(),
       answerCount: answeredQuestionCount,
       status:
@@ -78,7 +83,6 @@ export async function getLiveSessionData(code: string) {
   const submittedCount = participants.filter(
     (participant) => participant.status === "Submitted",
   ).length;
-  const settings = parseSessionSettings(session.settingsJson);
 
   return {
     code: session.code,

@@ -24,6 +24,9 @@ type PersonalResults = {
   answeredCount: number;
   rank: number | null;
   participantCount: number;
+  teamName: string;
+  teamRank: number | null;
+  teamScore: number | null;
   message: string;
   series: {
     id: string;
@@ -261,6 +264,22 @@ export function PersonalResultsClient({ code }: { code: string }) {
           </p>
         </div>
       </div>
+      {results.teamName ? (
+        <section className="rounded-md border border-teal-200 bg-white p-5 shadow-sm">
+          <p className="text-sm font-semibold text-teal-800">{messages.play.team}</p>
+          <h2 className="mt-1 text-2xl font-bold">{results.teamName}</h2>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div>
+              <p className="text-sm text-slate-500">{messages.results.teamRank}</p>
+              <p className="mt-1 text-2xl font-bold">{results.teamRank ?? messages.results.hidden}</p>
+            </div>
+            <div>
+              <p className="text-sm text-slate-500">{messages.results.teamScore}</p>
+              <p className="mt-1 text-2xl font-bold">{results.teamScore ?? messages.results.hidden}</p>
+            </div>
+          </div>
+        </section>
+      ) : null}
       {results.series ? (
         <section className="rounded-md border border-teal-200 bg-white p-5 shadow-sm">
           <div className="flex flex-col gap-2 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">

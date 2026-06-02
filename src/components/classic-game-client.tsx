@@ -52,6 +52,8 @@ type ParticipantSession = {
   participantId: string;
   participantToken: string;
   displayName: string;
+  teamId?: string | null;
+  teamName?: string;
 };
 
 type LiveApiResponse =
@@ -84,6 +86,8 @@ function parseParticipantSession(stored: string): ParticipantSession | null {
         participantId: parsed.participantId,
         participantToken: parsed.participantToken,
         displayName: typeof parsed.displayName === "string" ? parsed.displayName : messages.play.player,
+        teamId: typeof parsed.teamId === "string" ? parsed.teamId : null,
+        teamName: typeof parsed.teamName === "string" ? parsed.teamName : "",
       };
     }
   } catch {
@@ -483,6 +487,11 @@ export function ClassicGameClient({
         <p className="mt-2 text-slate-600">
           {messages.game.joinedAs} <span className="font-semibold">{participant.displayName}</span>
         </p>
+        {participant.teamName ? (
+          <p className="mt-2 text-sm font-semibold text-teal-800">
+            {messages.play.team}: {participant.teamName}
+          </p>
+        ) : null}
         <p className="mt-3 text-sm font-semibold text-teal-800">
           {messages.game.codeLabel}: {code}
         </p>
@@ -535,6 +544,11 @@ export function ClassicGameClient({
           <p className="text-sm text-slate-600">
             {completedCount} / {questions.length} {messages.game.completedLabel}
           </p>
+          {participant.teamName ? (
+            <p className="mt-1 text-sm font-semibold text-teal-800">
+              {messages.play.team}: {participant.teamName}
+            </p>
+          ) : null}
         </div>
       {isComplete ? (
         <span className="rounded-md bg-teal-100 px-3 py-2 text-sm font-semibold text-teal-900">
@@ -559,6 +573,11 @@ export function ClassicGameClient({
         <section className="rounded-md border border-teal-200 bg-white p-6 text-center shadow-sm">
           <h2 className="text-2xl font-bold">{messages.game.completeTitle}</h2>
           <p className="mt-2 text-slate-600">{messages.game.completeDescription}</p>
+          {participant.teamName ? (
+            <p className="mt-2 text-sm font-semibold text-teal-800">
+              {messages.play.team}: {participant.teamName}
+            </p>
+          ) : null}
           <p className="mt-2 text-sm font-semibold text-slate-700">
             {completedCount} / {questions.length} {messages.game.completedLabel}
           </p>

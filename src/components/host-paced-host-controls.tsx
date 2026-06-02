@@ -59,16 +59,35 @@ type HostPacedLive = {
     id: string;
     rank: number;
     displayName: string;
+    teamId: string | null;
+    teamName: string;
     score: number;
     correctCount: number;
+  }>;
+  teamLeaderboardTop: Array<{
+    id: string;
+    rank: number;
+    name: string;
+    score: number;
+    memberCount: number;
+    correctCount: number;
+    answeredCount: number;
+    averagePercentage: number;
   }>;
   serverTime: string;
   settings: {
     questionTimeLimitSeconds: number;
+    teamMode: boolean;
+    teams: Array<{
+      id: string;
+      name: string;
+    }>;
   };
   participants: Array<{
     id: string;
     displayName: string;
+    teamId: string | null;
+    teamName: string;
     joinedAt: string;
     answeredCurrentQuestion: boolean;
     answerCount: number;
@@ -294,6 +313,9 @@ export function HostPacedHostControls({
           <span className="rounded-md border border-teal-700 bg-teal-500/15 px-3 py-1 text-sm font-bold text-teal-200">
             {messages.host.hostPaced.modeBadge}
           </span>
+          <span className="rounded-md border border-slate-700 bg-slate-500/15 px-3 py-1 text-sm font-bold text-slate-200">
+            {live.settings.teamMode ? messages.sessions.teamBadge : messages.sessions.individualBadge}
+          </span>
         </div>
         <h1 className="text-5xl font-black tracking-[0.18em] sm:text-7xl">{live.code}</h1>
         <p className="text-xl text-slate-300">{live.testTitle}</p>
@@ -325,7 +347,7 @@ export function HostPacedHostControls({
               <MetricCard label={messages.host.questions} value={live.questionCount} />
               <MetricCard label={messages.host.status} value={messages.host.waitingStatus} />
             </div>
-            <ParticipantsPanel live={live} onRefresh={fetchLive} />
+            <ParticipantsPanel live={live} onRefresh={fetchLive} presenterMode={presenterMode} />
           </div>
         </section>
       ) : null}
@@ -384,6 +406,7 @@ export function HostPacedHostControls({
           <h2 className="text-2xl font-black">
             {live.phase === "FINISHED" ? messages.host.hostPaced.finalLeaderboard : messages.results.leaderboard}
           </h2>
+          {live.settings.teamMode ? <TeamLeaderboardPanel rows={live.teamLeaderboardTop} /> : null}
           <LeaderboardPanel rows={live.leaderboardTop} />
         </section>
       ) : null}
@@ -497,9 +520,11 @@ function MetricCard({ label, value }: { label: string; value: string | number })
 function ParticipantsPanel({
   live,
   onRefresh,
+  presenterMode,
 }: {
   live: HostPacedLive;
   onRefresh: () => void;
+  presenterMode: boolean;
 }) {
   return (
     <div className="rounded-md border border-slate-700 bg-slate-900 p-5">
@@ -517,11 +542,16 @@ function ParticipantsPanel({
         <p className="mt-4 rounded-md border border-dashed border-slate-700 p-4 text-sm text-slate-400">
           {messages.host.noPlayers}
         </p>
+      ) : live.settings.teamMode ? (
+        <TeamLobbyPanel live={live} presenterMode={presenterMode} />
       ) : (
         <div className="mt-4 grid gap-2 sm:grid-cols-2">
           {live.participants.map((participant) => (
             <div key={participant.id} className="rounded-md border border-slate-700 bg-slate-950 p-3">
               <p className="font-semibold">{participant.displayName}</p>
+              {participant.teamName ? (
+                <p className="text-xs font-semibold text-teal-200">{participant.teamName}</p>
+              ) : null}
               <p className="text-xs text-slate-400">
                 {participant.answeredCurrentQuestion ? messages.game.submitted : messages.game.joinedTitle}
               </p>
@@ -529,6 +559,61 @@ function ParticipantsPanel({
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function TeamLobbyPanel({
+  live,
+  presenterMode,
+}: {
+  live: HostPacedLive;
+  presenterMode: boolean;
+}) {
+  const unassigned = live.participants.filter((participant) => !participant.teamId);
+
+  return (
+    <div className={`mt-4 grid gap-3 ${presenterMode ? "lg:grid-cols-2" : "md:grid-cols-2"}`}>
+      {live.settings.teams.map((team) => {
+        const members = live.participants.filter((participant) => participant.teamId === team.id);
+
+        return (
+          <section key={team.id} className="rounded-md border border-slate-700 bg-slate-950 p-4">
+            <div className="flex items-center justify-between gap-3">
+              <h3 className={presenterMode ? "text-2xl font-black" : "font-bold"}>{team.name}</h3>
+              <span className="rounded-md bg-teal-400/15 px-2 py-1 text-sm font-bold text-teal-100">
+                {members.length}
+              </span>
+            </div>
+            {members.length === 0 ? (
+              <p className="mt-3 text-sm text-slate-500">{messages.host.noPlayers}</p>
+            ) : (
+              <div className="mt-3 grid gap-2">
+                {members.map((participant) => (
+                  <div key={participant.id} className="rounded-md border border-slate-800 bg-slate-900 p-3">
+                    <p className={presenterMode ? "text-xl font-bold" : "font-semibold"}>{participant.displayName}</p>
+                    <p className="text-xs text-slate-400">
+                      {participant.answeredCurrentQuestion ? messages.game.submitted : messages.game.joinedTitle}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        );
+      })}
+      {unassigned.length > 0 ? (
+        <section className="rounded-md border border-dashed border-slate-700 bg-slate-950 p-4">
+          <h3 className="font-bold">{messages.results.unassigned}</h3>
+          <div className="mt-3 grid gap-2">
+            {unassigned.map((participant) => (
+              <div key={participant.id} className="rounded-md border border-slate-800 bg-slate-900 p-3">
+                <p className="font-semibold">{participant.displayName}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }
@@ -656,7 +741,8 @@ function LeaderboardPanel({ rows }: { rows: HostPacedLive["leaderboardTop"] }) {
   }
 
   return (
-    <div className="grid gap-2">
+    <section className="grid gap-2">
+      <h3 className="text-lg font-bold">{messages.results.individualLeaderboard}</h3>
       {rows.map((row) => (
         <div
           key={row.id}
@@ -666,13 +752,42 @@ function LeaderboardPanel({ rows }: { rows: HostPacedLive["leaderboardTop"] }) {
           <div>
             <p className="font-semibold">{row.displayName}</p>
             <p className="text-xs text-slate-400">
+              {row.teamName ? `${row.teamName} - ` : ""}
               {row.correctCount} {messages.results.correct.toLowerCase()}
             </p>
           </div>
           <span className="text-lg font-black">{row.score}</span>
         </div>
       ))}
-    </div>
+    </section>
+  );
+}
+
+function TeamLeaderboardPanel({ rows }: { rows: HostPacedLive["teamLeaderboardTop"] }) {
+  if (rows.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="grid gap-2 rounded-md border border-teal-800 bg-slate-950 p-4">
+      <h3 className="text-lg font-bold text-teal-100">{messages.results.teamLeaderboard}</h3>
+      {rows.map((row) => (
+        <div
+          key={row.id}
+          className="grid grid-cols-[56px_1fr_auto] items-center gap-3 rounded-md border border-slate-700 bg-slate-900 p-3"
+        >
+          <span className="text-xl font-black text-teal-200">#{row.rank}</span>
+          <div>
+            <p className="font-semibold">{row.name}</p>
+            <p className="text-xs text-slate-400">
+              {row.memberCount} {messages.results.members.toLowerCase()} - {row.correctCount}{" "}
+              {messages.results.correct.toLowerCase()}
+            </p>
+          </div>
+          <span className="text-lg font-black">{row.score}</span>
+        </div>
+      ))}
+    </section>
   );
 }
 

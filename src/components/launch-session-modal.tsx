@@ -4,7 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-import { DEFAULT_SESSION_SETTINGS, sessionSettingsJson } from "@/lib/session-settings";
+import {
+  DEFAULT_SESSION_SETTINGS,
+  DEFAULT_SESSION_TEAMS,
+  sessionSettingsJson,
+  type SessionTeam,
+  type TeamScoringMode,
+} from "@/lib/session-settings";
 import { messages } from "@/lib/messages";
 
 type ApiResponse =
@@ -47,6 +53,9 @@ export function LaunchSessionModal({
   const [autoSubmitOnFinish, setAutoSubmitOnFinish] = useState(true);
   const [questionTimeLimitSeconds, setQuestionTimeLimitSeconds] = useState(30);
   const [speedBonus, setSpeedBonus] = useState(true);
+  const [teamMode, setTeamMode] = useState(false);
+  const [teams, setTeams] = useState<SessionTeam[]>(DEFAULT_SESSION_TEAMS);
+  const [teamScoring, setTeamScoring] = useState<TeamScoringMode>("sum");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
@@ -77,6 +86,10 @@ export function LaunchSessionModal({
             showCorrectAnswers,
             showLeaderboard,
             autoSubmitOnFinish: mode === "HOST_PACED" ? false : autoSubmitOnFinish,
+            teamMode,
+            teamAssignMode: "manual",
+            teams,
+            teamScoring,
             ...(mode === "HOST_PACED"
               ? {
                   questionTimeLimitSeconds,
@@ -279,6 +292,96 @@ export function LaunchSessionModal({
                         onChange={setAutoSubmitOnFinish}
                       />
                     )}
+                  </div>
+                  <div className="grid gap-3 border-t border-slate-200 pt-3">
+                    <p className="text-sm font-semibold text-slate-700">
+                      {messages.sessions.teamSettings}
+                    </p>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <button
+                        type="button"
+                        onClick={() => setTeamMode(false)}
+                        className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${
+                          !teamMode
+                            ? "border-teal-500 bg-teal-50 text-teal-900"
+                            : "border-slate-300 hover:bg-slate-50"
+                        }`}
+                      >
+                        {messages.sessions.individualMode}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTeamMode(true)}
+                        className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${
+                          teamMode
+                            ? "border-teal-500 bg-teal-50 text-teal-900"
+                            : "border-slate-300 hover:bg-slate-50"
+                        }`}
+                      >
+                        {messages.sessions.teamMode}
+                      </button>
+                    </div>
+                    {teamMode ? (
+                      <div className="grid gap-3 rounded-md border border-teal-100 bg-teal-50/50 p-3">
+                        <label className="grid gap-1 text-sm font-medium text-slate-700">
+                          {messages.sessions.teamScoring}
+                          <select
+                            value={teamScoring}
+                            onChange={(event) => setTeamScoring(event.target.value as TeamScoringMode)}
+                            className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                          >
+                            <option value="sum">{messages.sessions.teamScoringSum}</option>
+                            <option value="average">{messages.sessions.teamScoringAverage}</option>
+                            <option value="top3">{messages.sessions.teamScoringTop3}</option>
+                          </select>
+                        </label>
+                        <div className="grid gap-2">
+                          {teams.map((team) => (
+                            <div key={team.id} className="flex gap-2">
+                              <label className="grid flex-1 gap-1 text-sm font-medium text-slate-700">
+                                {messages.sessions.teamName}
+                                <input
+                                  value={team.name}
+                                  onChange={(event) =>
+                                    setTeams((current) =>
+                                      current.map((item) =>
+                                        item.id === team.id ? { ...item, name: event.target.value } : item,
+                                      ),
+                                    )
+                                  }
+                                  className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                                />
+                              </label>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setTeams((current) => current.filter((item) => item.id !== team.id))
+                                }
+                                disabled={teams.length <= 1}
+                                className="mt-6 rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-white disabled:opacity-50"
+                              >
+                                {messages.sessions.removeTeam}
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setTeams((current) => [
+                              ...current,
+                              {
+                                id: `team_${Date.now().toString(36)}`,
+                                name: `Team ${current.length + 1}`,
+                              },
+                            ])
+                          }
+                          className="w-fit rounded-md border border-teal-300 px-3 py-2 text-sm font-semibold text-teal-900 hover:bg-white"
+                        >
+                          {messages.sessions.addTeam}
+                        </button>
+                      </div>
+                    ) : null}
                   </div>
                 </section>
                 {error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}

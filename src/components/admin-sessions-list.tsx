@@ -21,6 +21,7 @@ type AdminSession = {
   questionCount: number;
   settings: {
     label: string;
+    teamMode: boolean;
   };
   testVersion: {
     id: string;
@@ -161,6 +162,9 @@ export function AdminSessionsList({ initialSessions }: { initialSessions: AdminS
                   </span>
                   <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
                     {modeLabel(session.mode)}
+                  </span>
+                  <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
+                    {session.settings.teamMode ? messages.sessions.teamBadge : messages.sessions.individualBadge}
                   </span>
                 </div>
                 <p className="mt-1 text-sm font-medium text-slate-700">

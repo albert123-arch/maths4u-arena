@@ -12,9 +12,16 @@ import { RunAgainButton } from "./run-again-button";
 type ParticipantLive = {
   id: string;
   displayName: string;
+  teamId: string | null;
+  teamName: string;
   joinedAt: string;
   answerCount: number;
   status: string;
+};
+
+type SessionTeam = {
+  id: string;
+  name: string;
 };
 
 type HostLiveSession = {
@@ -37,6 +44,8 @@ type HostLiveSession = {
     showCorrectAnswers: boolean;
     showLeaderboard: boolean;
     autoSubmitOnFinish: boolean;
+    teamMode: boolean;
+    teams: SessionTeam[];
   };
   participants: ParticipantLive[];
 };
@@ -179,6 +188,9 @@ export function HostControls({
           <span className="rounded-md border border-teal-700 bg-teal-500/15 px-3 py-1 text-sm font-bold text-teal-200">
             {live.mode === "HOST_PACED" ? messages.sessions.modeHostPaced : messages.sessions.modeClassic}
           </span>
+          <span className="rounded-md border border-slate-700 bg-slate-500/15 px-3 py-1 text-sm font-bold text-slate-200">
+            {live.settings.teamMode ? messages.sessions.teamBadge : messages.sessions.individualBadge}
+          </span>
         </div>
         <h1 className="text-5xl font-black tracking-[0.18em] sm:text-7xl">{live.code}</h1>
         <p className="text-xl text-slate-300">{live.testTitle}</p>
@@ -235,6 +247,8 @@ export function HostControls({
                 <p className="mt-4 rounded-md border border-dashed border-slate-700 p-4 text-sm text-slate-400">
                   {messages.host.noPlayers}
                 </p>
+              ) : live.settings.teamMode ? (
+                <TeamLobbyPanel participants={live.participants} teams={live.settings.teams} />
               ) : (
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">
                   {live.participants.map((participant) => (
@@ -297,7 +311,10 @@ export function HostControls({
                   className="grid gap-2 rounded-md border border-slate-700 bg-slate-950 p-3 sm:grid-cols-[1fr_auto]"
                 >
                   <span className="font-semibold">{participant.displayName}</span>
-                  <span className="text-sm text-slate-300">{participant.status}</span>
+                  <span className="text-sm text-slate-300">
+                    {participant.teamName ? `${participant.teamName} - ` : ""}
+                    {participant.status}
+                  </span>
                 </div>
               ))}
             </div>
@@ -361,6 +378,60 @@ export function HostControls({
         ) : null}
         {error ? <p className="text-sm font-medium text-red-300">{error}</p> : null}
       </section>
+    </div>
+  );
+}
+
+function TeamLobbyPanel({
+  participants,
+  teams,
+}: {
+  participants: ParticipantLive[];
+  teams: SessionTeam[];
+}) {
+  const unassigned = participants.filter((participant) => !participant.teamId);
+
+  return (
+    <div className="mt-4 grid gap-3 md:grid-cols-2">
+      {teams.map((team) => {
+        const members = participants.filter((participant) => participant.teamId === team.id);
+
+        return (
+          <section key={team.id} className="rounded-md border border-slate-700 bg-slate-950 p-3">
+            <div className="flex items-center justify-between gap-3">
+              <h3 className="font-bold">{team.name}</h3>
+              <span className="rounded-md bg-teal-400/15 px-2 py-1 text-xs font-bold text-teal-100">
+                {members.length}
+              </span>
+            </div>
+            {members.length === 0 ? (
+              <p className="mt-3 text-sm text-slate-500">{messages.host.noPlayers}</p>
+            ) : (
+              <div className="mt-3 grid gap-2">
+                {members.map((participant) => (
+                  <div key={participant.id} className="rounded-md border border-slate-800 bg-slate-900 p-2">
+                    <p className="font-semibold">{participant.displayName}</p>
+                    <p className="text-xs text-slate-400">{participant.status}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        );
+      })}
+      {unassigned.length > 0 ? (
+        <section className="rounded-md border border-dashed border-slate-700 bg-slate-950 p-3">
+          <h3 className="font-bold">{messages.results.unassigned}</h3>
+          <div className="mt-3 grid gap-2">
+            {unassigned.map((participant) => (
+              <div key={participant.id} className="rounded-md border border-slate-800 bg-slate-900 p-2">
+                <p className="font-semibold">{participant.displayName}</p>
+                <p className="text-xs text-slate-400">{participant.status}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { errorResponse, fail } from "@/lib/api-response";
 import { messages } from "@/lib/messages";
 import { verifyPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
+import { buildSessionResults } from "@/lib/session-results";
 import { parseSessionSettings } from "@/lib/session-settings";
 import { noStoreJson } from "@/lib/session-live";
 import { getSeriesLeaderboard } from "@/lib/series-scoring";
@@ -166,36 +167,23 @@ export async function POST(request: Request, { params }: RouteContext) {
         (round.status === "SCHEDULED" || round.status === "LOBBY" || round.status === "RUNNING"),
     );
 
-    const totalPossible = session.testVersion.questions.reduce(
-      (sum, item) =>
-        sum + item.points + (session.mode === "HOST_PACED" && settings.speedBonus ? Math.round(item.points * 0.5) : 0),
-      0,
-    );
+    const sessionResults = buildSessionResults({
+      mode: session.mode,
+      settings,
+      questions: session.testVersion.questions,
+      participants: session.participants,
+    });
+    const participantResult = sessionResults.participants.find((item) => item.id === participant.id) ?? null;
+    const teamResult =
+      participant.teamId && settings.showLeaderboard
+        ? sessionResults.teamLeaderboard.find((team) => team.id === participant.teamId) ?? null
+        : null;
+    const totalPossible = sessionResults.totalPossible;
     const score = participant.answers.reduce((sum, answer) => sum + answer.points, 0);
     const correctCount = participant.answers.filter((answer) => answer.isCorrect === true).length;
     const answeredCount = participant.answers.length;
     const percentage = totalPossible === 0 ? 0 : Math.round((score / totalPossible) * 100);
-    const leaderboard = session.participants
-      .map((item) => ({
-        id: item.id,
-        score: item.answers.reduce((sum, answer) => sum + answer.points, 0),
-        correctCount: item.answers.filter((answer) => answer.isCorrect === true).length,
-        totalResponseMs: item.answers.reduce((sum, answer) => sum + (answer.responseMs ?? 0), 0),
-      }))
-      .sort((left, right) => {
-        if (right.score !== left.score) {
-          return right.score - left.score;
-        }
-
-        if (right.correctCount !== left.correctCount) {
-          return right.correctCount - left.correctCount;
-        }
-
-        return left.totalResponseMs - right.totalResponseMs;
-      });
-    const rank = settings.showLeaderboard
-      ? leaderboard.findIndex((item) => item.id === participant.id) + 1
-      : null;
+    const rank = settings.showLeaderboard ? participantResult?.rank ?? null : null;
 
     return noStoreJson({
       ok: true,
@@ -212,6 +200,9 @@ export async function POST(request: Request, { params }: RouteContext) {
         answeredCount,
         rank: rank && rank > 0 ? rank : null,
         participantCount: session.participants.length,
+        teamName: participantResult?.teamName ?? "",
+        teamRank: teamResult?.rank ?? null,
+        teamScore: teamResult?.score ?? null,
         message: messageForPercentage(percentage),
         series:
           seriesLeaderboard && seriesRow

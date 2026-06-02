@@ -157,6 +157,16 @@ Additional manual migrations:
 8. Confirm student answers stay stable while the page polls.
 9. Confirm final leaderboard, personal results, and admin CSV download work.
 
+### Team Mode Session
+
+1. Launch a published test as `Classic` and choose `Team mode` in the launch modal.
+2. Rename or add teams if needed, then choose `sum`, `average`, or `top3` team scoring.
+3. Join from `/play?code=CODE`, choose a team, and confirm the host lobby shows team columns.
+4. Start, answer, finish, and confirm `/admin/sessions/CODE/results` shows individual and team leaderboards.
+5. Download the session CSV and confirm it includes team name, individual rank, team rank, score, correct count, and percentage.
+6. Repeat the same check with a `Host-paced` session and confirm presenter mode shows team cards.
+7. Series rounds can carry `teamMode` in round settings JSON; current series scoring remains individual. Full multi-round team league scoring is a TODO.
+
 ### Series Classic Round
 
 After importing `database/migrations/001_student_series.sql`, use this flow to confirm the registered student and series foundation:
