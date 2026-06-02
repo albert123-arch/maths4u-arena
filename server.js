@@ -1,3 +1,5 @@
+console.log("[Maths4U Arena] server.js loaded");
+
 process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
 process.env.PORT = process.env.PORT || "3000";
 
@@ -43,6 +45,8 @@ process.on("unhandledRejection", (error) => {
   console.error("Unhandled server rejection", safeServerError(error));
 });
 
-console.log("Starting Maths4U Arena on 0.0.0.0:3000");
+console.log(
+  "[Maths4U Arena] Starting root server on " + process.env.HOSTNAME + ":" + process.env.PORT,
+);
 
 void import("./.next/standalone/server.js");

@@ -60,7 +60,9 @@ if (!currentStandaloneServer.includes(wrapperMarker)) {
   fs.renameSync(standaloneServer, nextServer);
   fs.writeFileSync(
     standaloneServer,
-    `process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
+    `console.log("[Maths4U Arena] standalone wrapper loaded");
+
+process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
 process.env.PORT = process.env.PORT || "3000";
 process.env.KEEP_ALIVE_TIMEOUT = process.env.KEEP_ALIVE_TIMEOUT || "65000";
 
