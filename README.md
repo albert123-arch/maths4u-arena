@@ -133,6 +133,11 @@ Additional manual migrations:
 - Import `database/migrations/002_teacher_classes_library.sql` to add teacher classes, class memberships, and content ownership/library fields.
 - This migration is additive. It creates `Classroom` and `ClassMembership`, adds owner/visibility fields to tests and questions, and keeps existing data.
 - Run it after `database/migrations/001_student_series.sql` if you use class-only sessions with registered students.
+- Import `database/migrations/003_assignments.sql` to add assignments, submissions, and assignment answers.
+- This migration is additive. It creates `Assignment`, `AssignmentSubmission`, and `AssignmentAnswer`.
+- Run it after `database/migrations/002_teacher_classes_library.sql` before using homework or controlled assignments.
+
+Next planned feature: photo submissions with storage quotas. The current assignment UI includes placeholders only; uploads are not enabled yet.
 
 ## Manual Smoke Tests
 
@@ -224,6 +229,21 @@ After importing `database/migrations/002_teacher_classes_library.sql`, use this 
 10. Share a teacher test to the library from `/teacher/tests`.
 11. As admin, open `/admin/library` and mark shared content as curated or archive it.
 12. As another teacher, open `/teacher/library` and copy a public or curated test into private teacher content.
+
+### Teacher Assignment Flow
+
+After importing `database/migrations/003_assignments.sql`, use this flow to confirm homework and controlled assignments:
+
+1. Log in as an admin and create a teacher.
+2. Log in as that teacher and create a class.
+3. Have a student join the class from `/join-class/CODE`.
+4. Teacher creates or copies a test, attaches questions, and publishes a version.
+5. Teacher opens `/teacher/assignments/new` and creates an assignment from the class and published version.
+6. Teacher opens the assignment detail page and clicks `Assign`.
+7. Student opens `/student`, sees the active assignment, and starts it.
+8. Student answers questions and submits.
+9. Teacher opens `/teacher/assignments/ASSIGNMENT_ID/results`.
+10. Teacher reviews a submission, adds feedback or point overrides, and exports CSV.
 
 ## Hostinger Deployment Notes
 

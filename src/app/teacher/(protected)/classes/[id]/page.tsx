@@ -102,7 +102,15 @@ export default async function TeacherClassDetailPage({ params }: PageProps) {
 
       <section className="grid gap-3 rounded-md border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-xl font-semibold">{messages.teacherShell.nav.assignments}</h2>
-        <p className="text-sm text-slate-600">{messages.teacher.assignHomeworkPlaceholder}</p>
+        <p className="text-sm text-slate-600">
+          Create homework or controlled tests for this class from the assignments page.
+        </p>
+        <Link
+          href="/teacher/assignments/new"
+          className="w-fit rounded-md bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+        >
+          Create Assignment
+        </Link>
         <p className="text-sm text-slate-600">{messages.teacher.classResultsPlaceholder}</p>
         <p className="text-sm text-slate-600">{messages.teacher.launchLivePlaceholder}</p>
       </section>

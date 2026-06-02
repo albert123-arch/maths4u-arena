@@ -63,6 +63,18 @@ export const CONTENT_VISIBILITIES = [
   "ARCHIVED",
 ] as const;
 
+export const ASSIGNMENT_TYPES = ["HOMEWORK", "CONTROLLED_TEST", "PRACTICE"] as const;
+
+export const ASSIGNMENT_STATUSES = ["DRAFT", "ASSIGNED", "CLOSED", "ARCHIVED"] as const;
+
+export const ASSIGNMENT_SUBMISSION_STATUSES = [
+  "NOT_STARTED",
+  "IN_PROGRESS",
+  "SUBMITTED",
+  "GRADED",
+  "RETURNED",
+] as const;
+
 export type TestStatusValue = (typeof TEST_STATUSES)[number];
 export type QuestionTypeValue = (typeof QUESTION_TYPES)[number];
 export type GradingTypeValue = (typeof GRADING_TYPES)[number];
@@ -73,3 +85,6 @@ export type SeriesRoundStatusValue = (typeof SERIES_ROUND_STATUSES)[number];
 export type ClassroomStatusValue = (typeof CLASSROOM_STATUSES)[number];
 export type ClassMembershipStatusValue = (typeof CLASS_MEMBERSHIP_STATUSES)[number];
 export type ContentVisibilityValue = (typeof CONTENT_VISIBILITIES)[number];
+export type AssignmentTypeValue = (typeof ASSIGNMENT_TYPES)[number];
+export type AssignmentStatusValue = (typeof ASSIGNMENT_STATUSES)[number];
+export type AssignmentSubmissionStatusValue = (typeof ASSIGNMENT_SUBMISSION_STATUSES)[number];

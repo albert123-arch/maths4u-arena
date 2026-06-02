@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 import {
+  ASSIGNMENT_STATUSES,
+  ASSIGNMENT_TYPES,
   GAME_MODES,
   GRADING_TYPES,
   QUESTION_TYPES,
@@ -244,4 +246,50 @@ export const answerSubmitSchema = z.object({
   answer: z.unknown(),
   responseMs: z.coerce.number().int().min(0).optional(),
   source: z.enum(["MANUAL", "AUTO_FINISH"]).default("MANUAL"),
+});
+
+export const assignmentWriteSchema = z.object({
+  title: z.string().trim().min(2).max(191),
+  description: nullableText(),
+  classId: z.string().min(1),
+  testVersionId: z.string().min(1),
+  type: z.enum(ASSIGNMENT_TYPES).default("HOMEWORK"),
+  openAt: nullableText(),
+  dueAt: nullableText(),
+  timeLimitMinutes: optionalNullableInt(1),
+  attemptsAllowed: z.coerce.number().int().min(1).max(20).default(1),
+  showResultsToStudents: z.boolean().default(true),
+  showCorrectAnswers: z.boolean().default(false),
+  allowLateSubmission: z.boolean().default(false),
+  allowPhotoSolutions: z.boolean().default(false),
+  settingsJson: nullableJsonText(),
+});
+
+export const assignmentUpdateSchema = assignmentWriteSchema.partial().extend({
+  status: z.enum(ASSIGNMENT_STATUSES).optional(),
+});
+
+export const assignmentSubmitSchema = z.object({
+  answers: z
+    .array(
+      z.object({
+        questionId: z.string().min(1),
+        answer: z.unknown(),
+      }),
+    )
+    .default([]),
+});
+
+export const assignmentReviewSchema = z.object({
+  teacherFeedback: nullableText(),
+  status: z.enum(["GRADED", "RETURNED"]).default("GRADED"),
+  answers: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        points: z.coerce.number().int().min(0).max(1000),
+        feedback: nullableText(),
+      }),
+    )
+    .default([]),
 });

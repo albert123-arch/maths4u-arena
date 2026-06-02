@@ -1,3 +1,4 @@
+import { isAssignmentsMigrationError } from "@/lib/assignments";
 import { isStudentSeriesMigrationError } from "@/lib/migration-warning";
 import { messages } from "@/lib/messages";
 import { safeErrorMessage } from "@/lib/runtime-diagnostics";
@@ -21,6 +22,9 @@ const requiredSeriesTables = [
   "SeriesRound",
   "SeriesRegistration",
   "SeriesScore",
+  "Assignment",
+  "AssignmentSubmission",
+  "AssignmentAnswer",
 ];
 
 const diagnosticRoutes = [
@@ -109,9 +113,11 @@ async function getCountCheck(
       label,
       value: messages.setup.failed,
       tone: "bad",
-      detail: isStudentSeriesMigrationError(error)
-        ? messages.api.migrationRequired
-        : messages.api.unknownError,
+      detail: isAssignmentsMigrationError(error)
+        ? messages.api.assignmentMigrationRequired
+        : isStudentSeriesMigrationError(error)
+          ? messages.api.migrationRequired
+          : messages.api.unknownError,
     };
   }
 }
@@ -147,6 +153,7 @@ export default async function AdminSetupCheckPage() {
       ),
       getCountCheck(messages.setup.students, (client) => client.studentAccount.count()),
       getCountCheck(messages.setup.series, (client) => client.series.count()),
+      getCountCheck("Assignments", (client) => client.assignment.count()),
     ]),
   ]);
   const missingTables = tableChecks.filter((table) => !table.exists);
@@ -188,7 +195,9 @@ export default async function AdminSetupCheckPage() {
         </div>
         {missingTables.length > 0 ? (
           <p className="mt-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm font-medium text-amber-900">
-            {messages.api.migrationRequired}
+            {missingTables.some((table) => table.name.startsWith("Assignment"))
+              ? messages.api.assignmentMigrationRequired
+              : messages.api.migrationRequired}
           </p>
         ) : null}
         <div className="mt-4 grid gap-2 sm:grid-cols-2">

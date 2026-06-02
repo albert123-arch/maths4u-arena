@@ -104,6 +104,27 @@ enum ContentVisibility {
   ARCHIVED
 }
 
+enum AssignmentType {
+  HOMEWORK
+  CONTROLLED_TEST
+  PRACTICE
+}
+
+enum AssignmentStatus {
+  DRAFT
+  ASSIGNED
+  CLOSED
+  ARCHIVED
+}
+
+enum AssignmentSubmissionStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  SUBMITTED
+  GRADED
+  RETURNED
+}
+
 model User {
   id           String   @id @default(cuid()) @db.VarChar(191)
   email        String   @unique @db.VarChar(191)
@@ -117,6 +138,7 @@ model User {
   ownedTests   Test[]      @relation("TestOwner")
   questions    Question[]  @relation("QuestionOwner")
   classrooms   Classroom[]
+  assignments  Assignment[]
 }
 
 model Test {
@@ -165,6 +187,7 @@ model TestVersion {
   questions TestVersionQuestion[]
   sessions  GameSession[]
   seriesRounds SeriesRound[]
+  assignments Assignment[]
 
   @@unique([testId, versionNumber])
   @@index([status])
@@ -194,6 +217,7 @@ model Question {
   testVersions TestVersionQuestion[]
   answers      Answer[]
   scoreEvents  ScoreEvent[]
+  assignmentAnswers AssignmentAnswer[]
 
   @@index([ownerUserId])
   @@index([visibility])
@@ -329,6 +353,7 @@ model StudentAccount {
   classMemberships ClassMembership[]
   participants  Participant[]
   scores        SeriesScore[]
+  assignmentSubmissions AssignmentSubmission[]
 
   @@index([status])
   @@index([groupName])
@@ -346,6 +371,7 @@ model Classroom {
 
   teacher     User              @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   memberships ClassMembership[]
+  assignments Assignment[]
 
   @@index([teacherId])
   @@index([status])
@@ -365,6 +391,92 @@ model ClassMembership {
   @@index([studentId])
   @@index([status])
 }
+
+model Assignment {
+  id                    String           @id @default(cuid()) @db.VarChar(191)
+  teacherId             String           @db.VarChar(191)
+  classId               String           @db.VarChar(191)
+  testVersionId         String           @db.VarChar(191)
+  title                 String           @db.VarChar(191)
+  description           String?          @db.LongText
+  type                  AssignmentType   @default(HOMEWORK)
+  status                AssignmentStatus @default(DRAFT)
+  openAt                DateTime?
+  dueAt                 DateTime?
+  timeLimitMinutes      Int?
+  attemptsAllowed       Int              @default(1)
+  showResultsToStudents Boolean          @default(true)
+  showCorrectAnswers    Boolean          @default(false)
+  allowLateSubmission   Boolean          @default(false)
+  allowPhotoSolutions   Boolean          @default(false)
+  settingsJson          String?          @db.LongText
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+
+  teacher     User                   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  classroom   Classroom              @relation(fields: [classId], references: [id], onDelete: Cascade)
+  testVersion TestVersion            @relation(fields: [testVersionId], references: [id], onDelete: Restrict)
+  submissions AssignmentSubmission[]
+
+  @@index([teacherId])
+  @@index([classId])
+  @@index([testVersionId])
+  @@index([status])
+  @@index([type])
+  @@index([openAt])
+  @@index([dueAt])
+}
+
+model AssignmentSubmission {
+  id              String                     @id @default(cuid()) @db.VarChar(191)
+  assignmentId    String                     @db.VarChar(191)
+  studentId       String                     @db.VarChar(191)
+  attemptNumber   Int                        @default(1)
+  status          AssignmentSubmissionStatus @default(NOT_STARTED)
+  startedAt       DateTime?
+  submittedAt     DateTime?
+  gradedAt        DateTime?
+  score           Int                        @default(0)
+  maxScore        Int                        @default(0)
+  correctCount    Int                        @default(0)
+  answeredCount   Int                        @default(0)
+  percentage      Float                      @default(0)
+  teacherFeedback String?                    @db.LongText
+  aiFeedbackJson  String?                    @db.LongText
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+
+  assignment Assignment         @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student    StudentAccount     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  answers    AssignmentAnswer[]
+
+  @@unique([assignmentId, studentId, attemptNumber])
+  @@index([assignmentId])
+  @@index([studentId])
+  @@index([status])
+  @@index([submittedAt])
+}
+
+model AssignmentAnswer {
+  id           String   @id @default(cuid()) @db.VarChar(191)
+  submissionId String   @db.VarChar(191)
+  questionId   String   @db.VarChar(191)
+  answerJson   String   @db.LongText
+  isCorrect    Boolean?
+  points       Int      @default(0)
+  feedback     String?  @db.LongText
+  submittedAt  DateTime @default(now())
+
+  submission AssignmentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  question   Question             @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@unique([submissionId, questionId])
+  @@index([submissionId])
+  @@index([questionId])
+  @@index([isCorrect])
+}
+
+// TODO: Add SubmissionFile once photo solution uploads and storage quotas are implemented.
 
 model Series {
   id           String       @id @default(cuid()) @db.VarChar(191)

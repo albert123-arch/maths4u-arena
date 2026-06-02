@@ -7,6 +7,7 @@ import { StudentLogoutButton } from "./student-logout-button";
 
 const navItems = [
   { href: "/student", label: messages.student.dashboard },
+  { href: "/student/assignments", label: messages.student.assignmentsTitle },
   { href: "/student/series", label: messages.student.seriesTitle },
   { href: "/student/results", label: messages.student.resultsTitle },
 ];

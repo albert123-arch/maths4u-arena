@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { MigrationRequiredNotice } from "@/components/migration-required-notice";
+import { isAssignmentsMigrationError } from "@/lib/assignments";
 import { isStudentSeriesMigrationError } from "@/lib/migration-warning";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
@@ -25,6 +26,12 @@ const cards = [
     href: "/admin/sessions",
     description: messages.dashboard.cards.sessions.description,
     key: "sessions",
+  },
+  {
+    label: messages.dashboard.cards.assignments.label,
+    href: "/admin/assignments",
+    description: messages.dashboard.cards.assignments.description,
+    key: "assignments",
   },
   {
     label: messages.dashboard.cards.results.label,
@@ -54,10 +61,11 @@ const cards = [
 
 async function getDashboardCounts() {
   try {
-    const [tests, questions, sessions, answers, students, series] = await Promise.all([
+    const [tests, questions, sessions, assignments, answers, students, series] = await Promise.all([
       prisma.test.count(),
       prisma.question.count(),
       prisma.gameSession.count(),
+      prisma.assignment.count(),
       prisma.answer.count(),
       prisma.studentAccount.count(),
       prisma.series.count(),
@@ -69,13 +77,14 @@ async function getDashboardCounts() {
         tests,
         questions,
         sessions,
+        assignments,
         results: answers,
         students,
         series,
       },
     };
   } catch (error) {
-    if (isStudentSeriesMigrationError(error)) {
+    if (isStudentSeriesMigrationError(error) || isAssignmentsMigrationError(error)) {
       return {
         migrationRequired: true,
         counts: {},
