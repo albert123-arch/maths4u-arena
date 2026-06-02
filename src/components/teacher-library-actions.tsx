@@ -78,7 +78,7 @@ export function CopyLibraryTestButton({ id }: { id: string }) {
         return;
       }
 
-      router.push("/teacher/tests");
+      router.push("/teacher/sets");
       router.refresh();
     } catch {
       setError(messages.api.unknownError);
