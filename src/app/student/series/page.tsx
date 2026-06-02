@@ -18,7 +18,10 @@ export default async function StudentSeriesPage() {
     orderBy: { createdAt: "desc" },
     include: {
       series: {
-        include: {
+        select: {
+          id: true,
+          title: true,
+          status: true,
           rounds: {
             orderBy: { roundNumber: "asc" },
             include: {

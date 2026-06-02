@@ -11,6 +11,7 @@ const navItems = [
   { href: "/teacher/students", label: messages.teacherShell.nav.students },
   { href: "/teacher/sets", label: "Quiz Sets" },
   { href: "/teacher/assignments", label: messages.teacherShell.nav.assignments },
+  { href: "/teacher/series", label: messages.teacherShell.nav.series },
   { href: "/teacher/live", label: messages.teacherShell.nav.live },
   { href: "/teacher/results", label: messages.teacherShell.nav.results },
   { href: "/teacher/library", label: messages.teacherShell.nav.library },

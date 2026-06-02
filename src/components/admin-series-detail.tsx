@@ -23,6 +23,12 @@ type VersionOption = {
   };
 };
 
+type ClassroomOption = {
+  id: string;
+  title: string;
+  studentCount: number;
+};
+
 type RegistrationRow = {
   id: string;
   studentId: string;
@@ -66,15 +72,28 @@ export function AdminSeriesDetail({
   rounds,
   students,
   versions,
+  classrooms = [],
+  apiBase = "/api/admin/series",
+  seriesBasePath = "/admin/series",
+  roundApiBase = "/api/admin/series/rounds",
+  sessionResultsBasePath = "/admin/sessions",
+  showAccessCheck = true,
 }: {
   seriesId: string;
   registrations: RegistrationRow[];
   rounds: RoundRow[];
   students: StudentOption[];
   versions: VersionOption[];
+  classrooms?: ClassroomOption[];
+  apiBase?: string;
+  seriesBasePath?: string;
+  roundApiBase?: string;
+  sessionResultsBasePath?: string;
+  showAccessCheck?: boolean;
 }) {
   const router = useRouter();
   const [studentId, setStudentId] = useState(students[0]?.id ?? "");
+  const [classId, setClassId] = useState(classrooms[0]?.id ?? "");
   const [testVersionId, setTestVersionId] = useState(versions[0]?.id ?? "");
   const [roundTitle, setRoundTitle] = useState("");
   const [roundNumber, setRoundNumber] = useState(
@@ -108,7 +127,7 @@ export function AdminSeriesDetail({
     setError("");
     setMessage("");
 
-    const response = await fetch(`/api/admin/series/${seriesId}/registrations`, {
+    const response = await fetch(`${apiBase}/${seriesId}/registrations`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -120,15 +139,32 @@ export function AdminSeriesDetail({
     setPendingAction("");
   }
 
+  async function addClass(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setPendingAction("add-class");
+    setError("");
+    setMessage("");
+
+    const response = await fetch(`${apiBase}/${seriesId}/registrations`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ classId }),
+    });
+
+    await handleResponse(response, messages.series.updated);
+    setPendingAction("");
+  }
+
   async function removeStudent(removeStudentId: string) {
     setPendingAction(`remove-${removeStudentId}`);
     setError("");
     setMessage("");
 
-    const response = await fetch(
-      `/api/admin/series/${seriesId}/registrations/${removeStudentId}`,
-      { method: "DELETE" },
-    );
+    const response = await fetch(`${apiBase}/${seriesId}/registrations/${removeStudentId}`, {
+      method: "DELETE",
+    });
 
     await handleResponse(response, messages.series.updated);
     setPendingAction("");
@@ -140,7 +176,7 @@ export function AdminSeriesDetail({
     setError("");
     setMessage("");
 
-    const response = await fetch(`/api/admin/series/${seriesId}/rounds`, {
+    const response = await fetch(`${apiBase}/${seriesId}/rounds`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -175,7 +211,7 @@ export function AdminSeriesDetail({
     setMessage("");
 
     try {
-      const response = await fetch(`/api/admin/series/rounds/${roundId}/launch`, {
+      const response = await fetch(`${roundApiBase}/${roundId}/launch`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -206,7 +242,7 @@ export function AdminSeriesDetail({
     setError("");
     setMessage("");
 
-    const response = await fetch(`/api/admin/series/${seriesId}/recalculate`, {
+    const response = await fetch(`${apiBase}/${seriesId}/recalculate`, {
       method: "POST",
     });
 
@@ -250,6 +286,34 @@ export function AdminSeriesDetail({
             </button>
           </form>
         </div>
+        {classrooms.length > 0 ? (
+          <form
+            onSubmit={addClass}
+            className="mt-4 flex flex-wrap items-end gap-2 rounded-md border border-slate-200 bg-slate-50 p-3"
+          >
+            <label className="grid gap-1 text-sm font-medium text-slate-700">
+              {messages.series.registerClass}
+              <select
+                value={classId}
+                onChange={(event) => setClassId(event.target.value)}
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+              >
+                {classrooms.map((classroom) => (
+                  <option key={classroom.id} value={classroom.id}>
+                    {classroom.title} ({classroom.studentCount})
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button
+              type="submit"
+              disabled={!classId || pendingAction === "add-class"}
+              className="rounded-md border border-teal-700 px-3 py-2 text-sm font-semibold text-teal-800 hover:bg-teal-50 disabled:opacity-60"
+            >
+              {pendingAction === "add-class" ? messages.common.saving : messages.series.registerClass}
+            </button>
+          </form>
+        ) : null}
         {registrations.length === 0 ? (
           <div className="mt-4 rounded-md border border-dashed border-slate-300 p-4 text-sm text-slate-600">
             <p className="font-semibold text-slate-900">{messages.series.noRegisteredStudents}</p>
@@ -292,7 +356,7 @@ export function AdminSeriesDetail({
           </div>
           <div className="flex flex-wrap gap-2">
             <Link
-              href={`/admin/series/${seriesId}/leaderboard`}
+              href={`${seriesBasePath}/${seriesId}/leaderboard`}
               className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
             >
               {messages.series.leaderboard}
@@ -449,7 +513,7 @@ export function AdminSeriesDetail({
                           {messages.series.hostRound}
                         </Link>
                         <Link
-                          href={`/admin/sessions/${round.session.code}/results`}
+                          href={`${sessionResultsBasePath}/${round.session.code}/results`}
                           className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
                         >
                           {messages.series.roundResults}
@@ -460,12 +524,14 @@ export function AdminSeriesDetail({
                         >
                           {messages.series.studentJoinLink}
                         </Link>
-                        <Link
-                          href={`/admin/sessions/${round.session.code}/access-check`}
-                          className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
-                        >
-                          {messages.series.accessCheck}
-                        </Link>
+                        {showAccessCheck ? (
+                          <Link
+                            href={`${sessionResultsBasePath}/${round.session.code}/access-check`}
+                            className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
+                          >
+                            {messages.series.accessCheck}
+                          </Link>
+                        ) : null}
                       </>
                     ) : (
                       <>

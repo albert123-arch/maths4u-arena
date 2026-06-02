@@ -255,6 +255,18 @@ After importing `database/migrations/003_assignments.sql`, use this flow to conf
 9. Teacher opens `/teacher/assignments/ASSIGNMENT_ID/results`.
 10. Teacher reviews a submission, adds feedback or point overrides, and exports CSV.
 
+### Teacher Series Flow
+
+After importing `database/migrations/004_teacher_series.sql`, use this flow to confirm teacher-owned series:
+
+1. Log in as a teacher and open `/teacher/series`.
+2. Create a series.
+3. Open the series detail page and use `Register Class` to add all active students from one class.
+4. Add a round from one of the teacher's published quiz sets.
+5. Launch the round as Classic or Host-paced.
+6. Students open `/student/join/CODE`, log in, and play the registered round.
+7. Finish the session and open the teacher series leaderboard.
+
 ### Simple Teacher Workflow
 
 Use this shorter flow when preparing a real lesson:
@@ -265,8 +277,8 @@ Use this shorter flow when preparing a real lesson:
 4. Open `/teacher/sets/new` and create a Quiz Set.
 5. Add questions inline or paste a small question list into the Quiz Set editor.
 6. Publish the Quiz Set.
-7. Choose `Host Live` for a live Classic or Host-paced game, or choose `Assign Homework` for class work.
-8. Review live results from `/teacher/results` or assignment results from `/teacher/assignments`.
+7. Choose `Host Live` for a live Classic or Host-paced game, choose `Assign Homework` for class work, or create a `/teacher/series` league from published quiz sets.
+8. Review live results from `/teacher/results`, assignment results from `/teacher/assignments`, or series standings from `/teacher/series`.
 9. Share useful Quiz Sets to the teacher library so other teachers can copy them.
 
 ## Hostinger Deployment Notes

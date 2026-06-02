@@ -304,6 +304,7 @@ export const messages = {
       library: "Library",
       live: "Live Games",
       assignments: "Assignments",
+      series: "Series",
       results: "Results",
     },
   },
@@ -655,6 +656,7 @@ export const messages = {
     registrations: "Registrations",
     registeredStudents: "Registered Students",
     addStudent: "Add Student",
+    registerClass: "Register Class",
     removeStudent: "Remove",
     noRegisteredStudents: "No students are registered yet.",
     noRegisteredStudentsHelp:
@@ -877,7 +879,7 @@ export const messages = {
     seriesRegistrationNotFound: "Series registration not found.",
     leaderboardRecalculationFailed: "Leaderboard could not be recalculated.",
     migrationRequired:
-      "Database migration is required. Import database/migrations/001_student_series.sql in phpMyAdmin.",
+      "Database migration is required. Import the missing SQL file from database/migrations in phpMyAdmin. For teacher-owned series, import database/migrations/004_teacher_series.sql.",
   },
   validation: {
     jsonFieldInvalid: "JSON field must contain valid JSON.",

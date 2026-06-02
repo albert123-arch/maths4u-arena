@@ -24,7 +24,10 @@ export default async function StudentSeriesDetailPage({ params }: PageProps) {
     },
     include: {
       series: {
-        include: {
+        select: {
+          id: true,
+          title: true,
+          status: true,
           rounds: {
             orderBy: { roundNumber: "asc" },
             include: {

@@ -1,14 +1,29 @@
 import Link from "next/link";
 
 import { requireTeacherUser } from "@/lib/auth";
+import { isStudentSeriesMigrationError } from "@/lib/migration-warning";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
+async function countTeacherSeries(teacherId: string) {
+  try {
+    return await prisma.series.count({
+      where: { teacherId, status: { not: "ARCHIVED" } },
+    });
+  } catch (error) {
+    if (isStudentSeriesMigrationError(error)) {
+      return 0;
+    }
+
+    throw error;
+  }
+}
+
 export default async function TeacherDashboardPage() {
   const teacher = await requireTeacherUser();
-  const [classCount, classStudentCount, testCount, questionCount, liveSessions, recentSessions] =
+  const [classCount, classStudentCount, testCount, questionCount, seriesCount, liveSessions, recentSessions] =
     await Promise.all([
       prisma.classroom.count({
         where: { teacherId: teacher.id, status: "ACTIVE" },
@@ -25,6 +40,7 @@ export default async function TeacherDashboardPage() {
       prisma.question.count({
         where: { ownerUserId: teacher.id, visibility: { not: "ARCHIVED" } },
       }),
+      countTeacherSeries(teacher.id),
       prisma.gameSession.count({
         where: {
           status: { in: ["LOBBY", "RUNNING"] },
@@ -64,11 +80,12 @@ export default async function TeacherDashboardPage() {
         <p className="mt-2 text-slate-600">{messages.teacher.dashboardDescription}</p>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-5">
+      <section className="grid gap-4 md:grid-cols-6">
         <MetricCard label={messages.teacher.myClasses} value={classCount} href="/teacher/classes" />
         <MetricCard label={messages.teacher.myStudents} value={classStudentCount} href="/teacher/students" />
         <MetricCard label="Quiz Sets" value={testCount} href="/teacher/sets" />
         <MetricCard label={messages.teacher.myQuestions} value={questionCount} href="/teacher/questions" />
+        <MetricCard label={messages.series.title} value={seriesCount} href="/teacher/series" />
         <MetricCard label={messages.teacher.myLiveSessions} value={liveSessions} href="/teacher/live" />
       </section>
 
@@ -97,6 +114,11 @@ export default async function TeacherDashboardPage() {
           title={messages.teacher.assignmentsTitle}
           description={messages.teacher.assignmentsDescription}
           href="/teacher/assignments"
+        />
+        <ActionCard
+          title={messages.series.title}
+          description="Create class leagues from published quiz sets and launch registered rounds."
+          href="/teacher/series"
         />
         <ActionCard
           title="Host Live Game"
@@ -128,6 +150,7 @@ export default async function TeacherDashboardPage() {
         <div className="flex flex-wrap gap-2">
           <LinkButton href="/teacher/classes">{messages.teacher.createClass}</LinkButton>
           <LinkButton href="/teacher/sets/new">Create Quiz Set</LinkButton>
+          <LinkButton href="/teacher/series">{messages.series.createButton}</LinkButton>
           <LinkButton href="/teacher/library">{messages.teacher.browseLibrary}</LinkButton>
         </div>
       </section>

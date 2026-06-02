@@ -36,9 +36,13 @@ function datetimeInput(value?: string | null) {
 export function SeriesForm({
   initial,
   mode = "create",
+  apiBase = "/api/admin/series",
+  basePath = "/admin/series",
 }: {
   initial?: SeriesFormValues;
   mode?: "create" | "edit";
+  apiBase?: string;
+  basePath?: string;
 }) {
   const router = useRouter();
   const [title, setTitle] = useState(initial?.title ?? "");
@@ -57,23 +61,20 @@ export function SeriesForm({
     setError("");
     setMessage("");
 
-    const response = await fetch(
-      mode === "edit" && initial?.id ? `/api/admin/series/${initial.id}` : "/api/admin/series",
-      {
-        method: mode === "edit" ? "PATCH" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          description,
-          status,
-          startsAt,
-          endsAt,
-          settingsJson,
-        }),
+    const response = await fetch(mode === "edit" && initial?.id ? `${apiBase}/${initial.id}` : apiBase, {
+      method: mode === "edit" ? "PATCH" : "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        title,
+        description,
+        status,
+        startsAt,
+        endsAt,
+        settingsJson,
+      }),
+    });
     const result = (await response.json()) as ApiResponse;
     setPending(false);
 
@@ -85,7 +86,7 @@ export function SeriesForm({
     setMessage(mode === "create" ? messages.series.created : messages.series.updated);
 
     if (mode === "create") {
-      router.push(`/admin/series/${result.data.id}`);
+      router.push(`${basePath}/${result.data.id}`);
       return;
     }
 

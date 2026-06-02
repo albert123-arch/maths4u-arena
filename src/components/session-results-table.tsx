@@ -69,7 +69,15 @@ function csvCell(value: string | number | null) {
   return text;
 }
 
-export function SessionResultsTable({ initialData }: { initialData: ResultData }) {
+export function SessionResultsTable({
+  initialData,
+  apiPath,
+  accessCheckPath,
+}: {
+  initialData: ResultData;
+  apiPath?: string;
+  accessCheckPath?: string | null;
+}) {
   const [data, setData] = useState(initialData);
   const [pending, setPending] = useState(false);
   const [exporting, setExporting] = useState(false);
@@ -77,7 +85,7 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
   const refreshResults = useCallback(async () => {
     setPending(true);
     try {
-      const response = await fetch(`/api/admin/sessions/${data.code}/results`, {
+      const response = await fetch(apiPath ?? `/api/admin/sessions/${data.code}/results`, {
         cache: "no-store",
       });
 
@@ -99,7 +107,7 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
     } finally {
       setPending(false);
     }
-  }, [data.code]);
+  }, [apiPath, data.code]);
 
   useEffect(() => {
     if (data.status !== "RUNNING") {
@@ -215,12 +223,14 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
             >
               {pending ? messages.host.refreshing : messages.host.refreshNow}
             </button>
-            <Link
-              href={`/admin/sessions/${data.code}/access-check`}
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold transition hover:bg-slate-50 active:scale-[0.98]"
-            >
-              {messages.host.accessCheck}
-            </Link>
+            {accessCheckPath !== null ? (
+              <Link
+                href={accessCheckPath ?? `/admin/sessions/${data.code}/access-check`}
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold transition hover:bg-slate-50 active:scale-[0.98]"
+              >
+                {messages.host.accessCheck}
+              </Link>
+            ) : null}
             <RunAgainButton
               testVersionId={data.testVersionId}
               mode={data.mode}

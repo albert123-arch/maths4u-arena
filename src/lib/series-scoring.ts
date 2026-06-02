@@ -6,7 +6,7 @@ export async function recalculateSeriesRound(roundId: string) {
     where: { id: roundId },
     include: {
       series: {
-        include: {
+        select: {
           registrations: {
             where: { status: "REGISTERED" },
             include: { student: true },
@@ -161,7 +161,10 @@ export async function recalculateSeries(seriesId: string) {
 export async function getSeriesLeaderboard(seriesId: string) {
   const series = await prisma.series.findUnique({
     where: { id: seriesId },
-    include: {
+    select: {
+      id: true,
+      title: true,
+      status: true,
       rounds: {
         orderBy: { roundNumber: "asc" },
         select: {

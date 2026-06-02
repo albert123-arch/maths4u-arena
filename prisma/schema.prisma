@@ -139,6 +139,7 @@ model User {
   questions    Question[]  @relation("QuestionOwner")
   classrooms   Classroom[]
   assignments  Assignment[]
+  series        Series[]
 }
 
 model Test {
@@ -480,6 +481,7 @@ model AssignmentAnswer {
 
 model Series {
   id           String       @id @default(cuid()) @db.VarChar(191)
+  teacherId    String?      @db.VarChar(191)
   title        String       @db.VarChar(191)
   description  String?      @db.LongText
   status       SeriesStatus @default(DRAFT)
@@ -489,10 +491,12 @@ model Series {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
+  teacher       User?                @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   registrations SeriesRegistration[]
   rounds        SeriesRound[]
   scores        SeriesScore[]
 
+  @@index([teacherId])
   @@index([status])
   @@index([startsAt])
   @@index([endsAt])

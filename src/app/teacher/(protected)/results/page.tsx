@@ -76,8 +76,8 @@ export default async function TeacherResultsPage() {
                     <td className="px-4 py-3">{session._count.participants}</td>
                     <td className="px-4 py-3">{session._count.answers}</td>
                     <td className="px-4 py-3">
-                      <Link href={`/host/${session.code}`} className="font-semibold text-teal-800">
-                        {messages.sessions.hostLink}
+                      <Link href={`/teacher/sessions/${session.code}/results`} className="font-semibold text-teal-800">
+                        {messages.results.title}
                       </Link>
                     </td>
                   </tr>
