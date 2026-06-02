@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 import { messages } from "@/lib/messages";
@@ -214,6 +215,12 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
             >
               {pending ? messages.host.refreshing : messages.host.refreshNow}
             </button>
+            <Link
+              href={`/admin/sessions/${data.code}/access-check`}
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold transition hover:bg-slate-50 active:scale-[0.98]"
+            >
+              {messages.host.accessCheck}
+            </Link>
             <RunAgainButton
               testVersionId={data.testVersionId}
               mode={data.mode}

@@ -41,6 +41,11 @@ async function getSeriesDetailData(id: string) {
                   code: true,
                   mode: true,
                   status: true,
+                  _count: {
+                    select: {
+                      participants: true,
+                    },
+                  },
                 },
               },
               testVersion: {

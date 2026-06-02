@@ -76,7 +76,12 @@ export default async function GamePage({ params }: PageProps) {
             </p>
             {settings.label ? <p className="mt-2 text-sm font-semibold text-teal-800">{settings.label}</p> : null}
           </header>
-          <HostPacedGameClient code={session.code} sessionId={session.id} initialLive={null} />
+          <HostPacedGameClient
+            code={session.code}
+            sessionId={session.id}
+            initialLive={null}
+            registeredOnly={settings.registeredOnly}
+          />
         </section>
       </main>
     );
@@ -130,6 +135,7 @@ export default async function GamePage({ params }: PageProps) {
           initialParticipantCount={session._count.participants}
           initialAnswerCount={session._count.answers}
           initialSettings={{
+            registeredOnly: settings.registeredOnly,
             showStudentResults: settings.showStudentResults,
             showCorrectAnswers: settings.showCorrectAnswers,
             showLeaderboard: settings.showLeaderboard,

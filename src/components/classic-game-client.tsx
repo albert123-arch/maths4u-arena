@@ -42,6 +42,7 @@ type LiveSessionData = {
   questionCount: number;
   serverTime: string;
   settings: {
+    registeredOnly: boolean;
     showStudentResults: boolean;
     showCorrectAnswers: boolean;
     showLeaderboard: boolean;
@@ -54,6 +55,7 @@ type ParticipantSession = {
   displayName: string;
   teamId?: string | null;
   teamName?: string;
+  registeredOnly?: boolean;
 };
 
 type LiveApiResponse =
@@ -88,6 +90,7 @@ function parseParticipantSession(stored: string): ParticipantSession | null {
         displayName: typeof parsed.displayName === "string" ? parsed.displayName : messages.play.player,
         teamId: typeof parsed.teamId === "string" ? parsed.teamId : null,
         teamName: typeof parsed.teamName === "string" ? parsed.teamName : "",
+        registeredOnly: parsed.registeredOnly === true,
       };
     }
   } catch {
@@ -105,6 +108,15 @@ function subscribeParticipantSession(callback: () => void) {
   window.addEventListener("storage", callback);
 
   return () => window.removeEventListener("storage", callback);
+}
+
+function clearParticipantSession(code: string) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  localStorage.removeItem(`maths4u_participant_${code}`);
+  window.dispatchEvent(new Event("storage"));
 }
 
 function draftAnswerKey(code: string, participantId: string) {
@@ -217,6 +229,7 @@ export function ClassicGameClient({
     () => [...questions].sort((left, right) => left.sortOrder - right.sortOrder),
     [questions],
   );
+  const joinHref = live.settings.registeredOnly ? `/student/join/${code}` : `/play?code=${code}`;
 
   const showStartingCountdown = useCallback(() => {
     setStartingCountdown("now");
@@ -225,6 +238,12 @@ export function ClassicGameClient({
     window.setTimeout(() => setStartingCountdown(1), 1800);
     window.setTimeout(() => setStartingCountdown(null), 2500);
   }, []);
+
+  useEffect(() => {
+    if (live.settings.registeredOnly && participant && !participant.registeredOnly) {
+      clearParticipantSession(code);
+    }
+  }, [code, live.settings.registeredOnly, participant]);
 
   useEffect(() => {
     if (!participant) {
@@ -461,7 +480,7 @@ export function ClassicGameClient({
       <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
         <h2 className="text-2xl font-bold">{messages.game.finished}</h2>
         <p className="mt-2 text-slate-600">{messages.game.joinRequiredDescription}</p>
-        <Link href={`/play?code=${code}`} className="mt-4 inline-block font-semibold text-teal-800 hover:text-teal-950">
+        <Link href={joinHref} className="mt-4 inline-block font-semibold text-teal-800 hover:text-teal-950">
           {messages.common.backToPlay}
         </Link>
       </section>
@@ -473,7 +492,7 @@ export function ClassicGameClient({
       <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
         <h2 className="text-2xl font-bold">{messages.game.joinRequiredTitle}</h2>
         <p className="mt-2 text-slate-600">{messages.game.joinRequiredDescription}</p>
-        <Link href={`/play?code=${code}`} className="mt-4 inline-block font-semibold text-teal-800 hover:text-teal-950">
+        <Link href={joinHref} className="mt-4 inline-block font-semibold text-teal-800 hover:text-teal-950">
           {messages.common.backToPlay}
         </Link>
       </section>

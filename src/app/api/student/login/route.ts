@@ -3,6 +3,10 @@ import { messages } from "@/lib/messages";
 import { authenticateStudent, createStudentSession } from "@/lib/student-auth";
 import { studentLoginSchema } from "@/lib/validation";
 
+function safeNext(value?: string | null) {
+  return value && value.startsWith("/") && !value.startsWith("//") ? value : "/student";
+}
+
 export async function POST(request: Request) {
   try {
     const input = studentLoginSchema.parse(await request.json());
@@ -16,7 +20,7 @@ export async function POST(request: Request) {
 
     return ok({
       student,
-      next: input.next ?? "/student",
+      next: safeNext(input.next),
     });
   } catch (error) {
     console.error("Student login failed", error instanceof Error ? error.message : "Unknown error");

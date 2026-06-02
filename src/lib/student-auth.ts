@@ -131,7 +131,7 @@ export async function clearStudentSession() {
   });
 }
 
-export async function getCurrentStudent(): Promise<StudentSessionUser | null> {
+export async function getCurrentStudentAccount(): Promise<StudentSessionUser | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(STUDENT_SESSION_COOKIE_NAME)?.value;
 
@@ -156,6 +156,16 @@ export async function getCurrentStudent(): Promise<StudentSessionUser | null> {
       status: true,
     },
   });
+
+  if (!student) {
+    return null;
+  }
+
+  return student;
+}
+
+export async function getCurrentStudent(): Promise<StudentSessionUser | null> {
+  const student = await getCurrentStudentAccount();
 
   if (!student || student.status !== "ACTIVE") {
     return null;

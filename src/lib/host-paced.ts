@@ -397,6 +397,15 @@ export async function getHostPacedHostLiveData(code: string) {
     teamParticipantsForLeaderboard(session, settings, leaderboard),
   );
   const timer = getTimerState(settings);
+  const registeredStudentCount =
+    settings.registeredOnly && settings.seriesId
+      ? await prisma.seriesRegistration.count({
+          where: {
+            seriesId: settings.seriesId,
+            status: "REGISTERED",
+          },
+        })
+      : 0;
 
   return {
     code: session.code,
@@ -419,6 +428,7 @@ export async function getHostPacedHostLiveData(code: string) {
     questionEndsAt: timer.questionEndsAt,
     remainingSeconds: timer.remainingSeconds,
     participantCount: session.participants.length,
+    registeredStudentCount,
     answeredCurrentQuestionCount: answers.length,
     answerDistribution: answerDistribution(row, answers, includeCorrect),
     leaderboardTop: leaderboard.slice(0, 10).map((participant) => ({

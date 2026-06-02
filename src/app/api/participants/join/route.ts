@@ -5,7 +5,7 @@ import { messages } from "@/lib/messages";
 import { hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 import { parseSessionSettings } from "@/lib/session-settings";
-import { getCurrentStudent } from "@/lib/student-auth";
+import { getCurrentStudentAccount } from "@/lib/student-auth";
 import { smallestTeamId, validateTeamId } from "@/lib/team-scoring";
 import { participantJoinSchema } from "@/lib/validation";
 
@@ -41,10 +41,18 @@ export async function POST(request: Request) {
       return fail(messages.api.lateJoinClosed, 409);
     }
 
-    const currentStudent = settings.registeredOnly ? await getCurrentStudent() : null;
+    const currentStudent = settings.registeredOnly ? await getCurrentStudentAccount() : null;
 
     if (settings.registeredOnly && !currentStudent) {
       return fail(messages.api.registeredStudentRequired, 401);
+    }
+
+    if (settings.registeredOnly && currentStudent?.status !== "ACTIVE") {
+      return fail(messages.api.studentDisabled, 403);
+    }
+
+    if (settings.registeredOnly && !settings.seriesId) {
+      return fail(messages.api.seriesAccessCheckRequired, 409);
     }
 
     if (settings.registeredOnly && settings.seriesId && currentStudent) {
@@ -64,6 +72,12 @@ export async function POST(request: Request) {
         return fail(messages.api.studentRegistrationRequired, 403);
       }
     }
+
+    if (!settings.registeredOnly && !input.displayName) {
+      return fail(messages.api.displayNameRequired, 422);
+    }
+
+    const displayName = currentStudent?.displayName ?? input.displayName ?? messages.play.player;
 
     const participantToken = randomUUID();
     const tokenHash = await hashPassword(participantToken);
@@ -100,13 +114,14 @@ export async function POST(request: Request) {
       ? await prisma.participant.update({
           where: { id: existingParticipant.id },
           data: {
-            displayName: currentStudent?.displayName ?? input.displayName,
+            displayName,
             tokenHash,
             teamId,
           },
           select: {
             id: true,
             displayName: true,
+            studentAccountId: true,
             teamId: true,
             joinedAt: true,
           },
@@ -115,21 +130,27 @@ export async function POST(request: Request) {
           data: {
             sessionId: session.id,
             studentAccountId: currentStudent?.id ?? null,
-            displayName: currentStudent?.displayName ?? input.displayName,
+            displayName,
             tokenHash,
             teamId,
           },
           select: {
             id: true,
             displayName: true,
+            studentAccountId: true,
             teamId: true,
             joinedAt: true,
           },
         });
 
     const response = ok({
-      participant,
+      participantId: participant.id,
       participantToken,
+      displayName: participant.displayName,
+      code: session.code,
+      sessionStatus: session.status,
+      registeredOnly: settings.registeredOnly,
+      participant,
       session,
     });
 

@@ -20,6 +20,7 @@ type ParticipantSession = {
   displayName: string;
   teamId?: string | null;
   teamName?: string;
+  registeredOnly?: boolean;
 };
 
 type StudentQuestion = {
@@ -127,6 +128,7 @@ function parseParticipantSession(stored: string): ParticipantSession | null {
         displayName: typeof parsed.displayName === "string" ? parsed.displayName : messages.play.player,
         teamId: typeof parsed.teamId === "string" ? parsed.teamId : null,
         teamName: typeof parsed.teamName === "string" ? parsed.teamName : "",
+        registeredOnly: parsed.registeredOnly === true,
       };
     }
   } catch {
@@ -144,6 +146,15 @@ function subscribeParticipantSession(callback: () => void) {
   window.addEventListener("storage", callback);
 
   return () => window.removeEventListener("storage", callback);
+}
+
+function clearParticipantSession(code: string) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  localStorage.removeItem(`maths4u_participant_${code}`);
+  window.dispatchEvent(new Event("storage"));
 }
 
 function draftAnswerKey(code: string, participantId: string) {
@@ -191,10 +202,12 @@ export function HostPacedGameClient({
   code,
   sessionId,
   initialLive,
+  registeredOnly,
 }: {
   code: string;
   sessionId: string;
   initialLive: HostPacedStudentLive | null;
+  registeredOnly: boolean;
 }) {
   const participantRaw = useSyncExternalStore(
     subscribeParticipantSession,
@@ -212,6 +225,13 @@ export function HostPacedGameClient({
   const [startingCountdown, setStartingCountdown] = useState<number | null>(null);
   const startedAt = useRef<number | null>(null);
   const lastPhase = useRef<HostPacedPhase | null>(initialLive?.phase ?? null);
+  const joinHref = registeredOnly ? `/student/join/${code}` : `/play?code=${code}`;
+
+  useEffect(() => {
+    if (registeredOnly && participant && !participant.registeredOnly) {
+      clearParticipantSession(code);
+    }
+  }, [code, participant, registeredOnly]);
 
   async function fetchLive() {
     if (!participant) {
@@ -228,6 +248,9 @@ export function HostPacedGameClient({
       });
 
       if (!response.ok) {
+        if (response.status === 401 || response.status === 404) {
+          clearParticipantSession(code);
+        }
         return;
       }
 
@@ -247,6 +270,11 @@ export function HostPacedGameClient({
 
           return result.data;
         });
+      } else if (
+        result.error === messages.api.invalidParticipantToken ||
+        result.error === messages.api.participantNotFound
+      ) {
+        clearParticipantSession(code);
       }
     } catch {
       // Student live polling is intentionally silent.
@@ -276,25 +304,35 @@ export function HostPacedGameClient({
         });
 
         if (!response.ok) {
+          if (response.status === 401 || response.status === 404) {
+            clearParticipantSession(code);
+          }
           return;
         }
 
         const result = (await response.json()) as LiveApiResponse;
 
-        if (!stopped && result.ok) {
-          setLive((current) => {
-            if (
-              current &&
-              current.phase === result.data.phase &&
-              current.currentQuestionIndex === result.data.currentQuestionIndex &&
-              current.remainingSeconds === result.data.remainingSeconds &&
-              current.hasAnsweredCurrentQuestion === result.data.hasAnsweredCurrentQuestion
-            ) {
-              return current;
-            }
+        if (!stopped) {
+          if (result.ok) {
+            setLive((current) => {
+              if (
+                current &&
+                current.phase === result.data.phase &&
+                current.currentQuestionIndex === result.data.currentQuestionIndex &&
+                current.remainingSeconds === result.data.remainingSeconds &&
+                current.hasAnsweredCurrentQuestion === result.data.hasAnsweredCurrentQuestion
+              ) {
+                return current;
+              }
 
-            return result.data;
-          });
+              return result.data;
+            });
+          } else if (
+            result.error === messages.api.invalidParticipantToken ||
+            result.error === messages.api.participantNotFound
+          ) {
+            clearParticipantSession(code);
+          }
         }
       } catch {
         // Student live polling is intentionally silent.
@@ -415,7 +453,7 @@ export function HostPacedGameClient({
       <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
         <h2 className="text-2xl font-bold">{messages.game.joinRequiredTitle}</h2>
         <p className="mt-2 text-slate-600">{messages.game.joinRequiredDescription}</p>
-        <Link href={`/play?code=${code}`} className="mt-4 inline-block font-semibold text-teal-800">
+        <Link href={joinHref} className="mt-4 inline-block font-semibold text-teal-800">
           {messages.common.backToPlay}
         </Link>
       </section>

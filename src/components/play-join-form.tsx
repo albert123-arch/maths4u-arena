@@ -12,19 +12,25 @@ type StoredParticipant = {
   displayName: string;
   teamId?: string | null;
   teamName?: string;
+  registeredOnly?: boolean;
 };
 
 type ApiResponse =
   | {
       ok: true;
       data: {
-        participant: {
+        participantId?: string;
+        participantToken: string;
+        displayName?: string;
+        code?: string;
+        sessionStatus?: string;
+        registeredOnly?: boolean;
+        participant?: {
           id: string;
           displayName: string;
           teamId: string | null;
         };
-        participantToken: string;
-        session: {
+        session?: {
           code: string;
         };
       };
@@ -65,6 +71,7 @@ function readStoredParticipant(code: string): StoredParticipant | null {
         displayName: parsed.displayName,
         teamId: typeof parsed.teamId === "string" ? parsed.teamId : null,
         teamName: typeof parsed.teamName === "string" ? parsed.teamName : "",
+        registeredOnly: parsed.registeredOnly === true,
       };
     }
   } catch {
@@ -103,12 +110,20 @@ export function PlayJoinForm({
         displayNameRef.current?.focus();
       }
       const timer = window.setTimeout(() => {
-        setExistingParticipant(readStoredParticipant(normalizedInitialCode));
+        const stored = readStoredParticipant(normalizedInitialCode);
+
+        if (initialSettings.registeredOnly && stored && !stored.registeredOnly) {
+          localStorage.removeItem(participantKey(normalizedInitialCode));
+          setExistingParticipant(null);
+          return;
+        }
+
+        setExistingParticipant(stored);
       }, 0);
 
       return () => window.clearTimeout(timer);
     }
-  }, [normalizedInitialCode, registeredStudent]);
+  }, [initialSettings.registeredOnly, normalizedInitialCode, registeredStudent]);
 
   useEffect(() => {
     if (!code || code.length < 4 || code === normalizedInitialCode) {
@@ -185,19 +200,25 @@ export function PlayJoinForm({
         return;
       }
 
-      const selectedTeam = settings.teams.find((team) => team.id === result.data.participant.teamId);
+      const resultCode = result.data.code ?? result.data.session?.code ?? code;
+      const resultParticipantId = result.data.participantId ?? result.data.participant?.id ?? "";
+      const resultDisplayName =
+        result.data.displayName ?? result.data.participant?.displayName ?? registeredStudent?.displayName ?? displayName;
+      const resultTeamId = result.data.participant?.teamId ?? null;
+      const selectedTeam = settings.teams.find((team) => team.id === resultTeamId);
 
       localStorage.setItem(
-        participantKey(result.data.session.code),
+        participantKey(resultCode),
         JSON.stringify({
-          participantId: result.data.participant.id,
+          participantId: resultParticipantId,
           participantToken: result.data.participantToken,
-          displayName: result.data.participant.displayName,
-          teamId: result.data.participant.teamId,
+          displayName: resultDisplayName,
+          teamId: resultTeamId,
           teamName: selectedTeam?.name ?? "",
+          registeredOnly: Boolean(result.data.registeredOnly) || settings.registeredOnly,
         }),
       );
-      router.push(`/game/${result.data.session.code}`);
+      router.push(`/game/${resultCode}`);
     } catch {
       setError(messages.api.unknownError);
     } finally {
@@ -297,7 +318,11 @@ export function PlayJoinForm({
           disabled={pending || Boolean(showExisting)}
           className="rounded-md bg-teal-700 px-4 py-3 font-semibold text-white transition hover:bg-teal-800 active:scale-[0.99] disabled:opacity-60"
         >
-          {pending ? messages.play.pending : messages.play.submit}
+          {pending
+            ? messages.play.pending
+            : registeredStudent
+              ? messages.play.joinAsRegisteredStudent
+              : messages.play.submit}
         </button>
       </form>
     </div>

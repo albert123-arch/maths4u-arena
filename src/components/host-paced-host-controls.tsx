@@ -48,6 +48,7 @@ type HostPacedLive = {
   currentQuestion: HostPacedQuestion | null;
   remainingSeconds: number | null;
   participantCount: number;
+  registeredStudentCount: number;
   answeredCurrentQuestionCount: number;
   answerDistribution: Array<{
     id: string;
@@ -77,6 +78,7 @@ type HostPacedLive = {
   serverTime: string;
   settings: {
     questionTimeLimitSeconds: number;
+    registeredOnly: boolean;
     teamMode: boolean;
     teams: Array<{
       id: string;
@@ -291,6 +293,10 @@ export function HostPacedHostControls({
       : Math.max(0, Math.min(100, Math.round((live.remainingSeconds / timeLimit) * 100)));
   const distributionMax = Math.max(1, ...live.answerDistribution.map((item) => item.count));
   const isLastQuestion = live.currentQuestionIndex >= live.questionCount - 1;
+  const studentInstructions = `Join the Maths4U Arena round:
+1. Open: ${joinLink}
+2. Log in with your username and PIN.
+3. Wait for the host to start.`;
 
   return (
     <div className="grid gap-6">
@@ -333,6 +339,9 @@ export function HostPacedHostControls({
               <CopyButton value={joinLink} label={messages.host.copyJoinLink} />
               <CopyButton value={live.code} label={messages.host.copyGameCode} />
             </div>
+            {live.settings.registeredOnly ? (
+              <CopyButton value={studentInstructions} label={messages.host.copyStudentInstructions} />
+            ) : null}
             <button
               type="button"
               onClick={() => setQrLarge((current) => !current)}
@@ -342,6 +351,34 @@ export function HostPacedHostControls({
             </button>
           </div>
           <div className="grid gap-4">
+            {live.settings.registeredOnly ? (
+              <div className="rounded-md border border-teal-500/40 bg-teal-500/10 p-4 text-teal-50">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <h2 className="font-bold">{messages.host.registeredRound}</h2>
+                    <p className="mt-1 text-sm text-teal-100">{messages.host.registeredRoundHelp}</p>
+                  </div>
+                  {!presenterMode ? (
+                    <Link
+                      href={`/admin/sessions/${live.code}/access-check`}
+                      className="rounded-md border border-teal-300 px-3 py-2 text-sm font-semibold text-teal-50 transition hover:bg-teal-400/10"
+                    >
+                      {messages.host.accessCheck}
+                    </Link>
+                  ) : null}
+                </div>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-md bg-slate-950/40 p-3">
+                    <p className="text-xs text-teal-100">{messages.host.registeredStudentsCount}</p>
+                    <p className="mt-1 text-2xl font-bold">{live.registeredStudentCount}</p>
+                  </div>
+                  <div className="rounded-md bg-slate-950/40 p-3">
+                    <p className="text-xs text-teal-100">{messages.host.joinedParticipantsCount}</p>
+                    <p className="mt-1 text-2xl font-bold">{live.participantCount}</p>
+                  </div>
+                </div>
+              </div>
+            ) : null}
             <div className="grid gap-4 sm:grid-cols-3">
               <MetricCard label={messages.host.participants} value={live.participantCount} />
               <MetricCard label={messages.host.questions} value={live.questionCount} />
@@ -489,6 +526,12 @@ export function HostPacedHostControls({
             className="rounded-md border border-slate-600 px-4 py-2 font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98]"
           >
             {messages.sessions.resultsLink}
+          </Link>
+          <Link
+            href={`/admin/sessions/${live.code}/access-check`}
+            className="rounded-md border border-slate-600 px-4 py-2 font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98]"
+          >
+            {messages.host.accessCheck}
           </Link>
           <button
             type="button"

@@ -174,7 +174,12 @@ export const sessionStatusUpdateSchema = z.object({
 
 export const participantJoinSchema = z.object({
   code: z.string().trim().min(4).max(16).transform((value) => value.toUpperCase()),
-  displayName: z.string().trim().min(2).max(191),
+  displayName: z
+    .string()
+    .trim()
+    .max(191)
+    .optional()
+    .transform((value) => (value ? value : null)),
   teamId: z
     .string()
     .trim()

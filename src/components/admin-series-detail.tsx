@@ -42,6 +42,9 @@ type RoundRow = {
     code: string;
     status: string;
     mode?: string;
+    _count?: {
+      participants: number;
+    };
   } | null;
   testVersion: VersionOption;
 };
@@ -83,6 +86,7 @@ export function AdminSeriesDetail({
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [pendingAction, setPendingAction] = useState("");
+  const registeredCount = registrations.length;
 
   async function handleResponse(response: Response, successMessage: string) {
     const result = (await response.json()) as ApiResponse;
@@ -250,6 +254,7 @@ export function AdminSeriesDetail({
           <div className="mt-4 rounded-md border border-dashed border-slate-300 p-4 text-sm text-slate-600">
             <p className="font-semibold text-slate-900">{messages.series.noRegisteredStudents}</p>
             <p className="mt-1">{messages.series.noRegisteredStudentsHelp}</p>
+            <p className="mt-2 font-semibold text-amber-700">{messages.series.noRegisteredStudentsWarning}</p>
           </div>
         ) : (
           <div className="mt-4 grid gap-2 md:grid-cols-2">
@@ -408,6 +413,31 @@ export function AdminSeriesDetail({
                         {messages.series.scheduledAt}: {new Date(round.scheduledAt).toLocaleString()}
                       </p>
                     ) : null}
+                    {round.session ? (
+                      <div className="mt-3 grid gap-2 rounded-md border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 sm:grid-cols-2">
+                        <p>
+                          <span className="font-semibold">{messages.game.codeLabel}:</span>{" "}
+                          {round.session.code}
+                        </p>
+                        <p>
+                          <span className="font-semibold">{messages.host.registeredStudentsCount}:</span>{" "}
+                          {registeredCount}
+                        </p>
+                        <p>
+                          <span className="font-semibold">{messages.host.joinedParticipantsCount}:</span>{" "}
+                          {round.session._count?.participants ?? 0}
+                        </p>
+                        <p className="break-all">
+                          <span className="font-semibold">{messages.series.studentJoinLink}:</span>{" "}
+                          /student/join/{round.session.code}
+                        </p>
+                        {registeredCount === 0 ? (
+                          <p className="sm:col-span-2 font-semibold text-amber-700">
+                            {messages.series.noRegisteredStudentsWarning}
+                          </p>
+                        ) : null}
+                      </div>
+                    ) : null}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {round.session ? (
@@ -423,6 +453,18 @@ export function AdminSeriesDetail({
                           className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
                         >
                           {messages.series.roundResults}
+                        </Link>
+                        <Link
+                          href={`/student/join/${round.session.code}`}
+                          className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
+                        >
+                          {messages.series.studentJoinLink}
+                        </Link>
+                        <Link
+                          href={`/admin/sessions/${round.session.code}/access-check`}
+                          className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
+                        >
+                          {messages.series.accessCheck}
                         </Link>
                       </>
                     ) : (

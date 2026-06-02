@@ -47,7 +47,8 @@ export default async function HostPage({ params }: PageProps) {
   }
 
   const appUrl = process.env.APP_URL?.replace(/\/$/, "") ?? "";
-  const joinLink = `${appUrl || ""}/play?code=${live.code}`;
+  const joinPath = live.settings.registeredOnly ? `/student/join/${live.code}` : `/play?code=${live.code}`;
+  const joinLink = `${appUrl || ""}${joinPath}`;
 
   if (live.mode === "HOST_PACED") {
     const hostPacedLive = await getHostPacedHostLiveData(live.code);

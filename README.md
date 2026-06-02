@@ -193,6 +193,18 @@ After importing `database/migrations/001_student_series.sql`, use this flow to c
 6. Confirm `/admin/sessions/CODE/results`, the student personal results page, and the series leaderboard include the score.
 7. Use `Run again` only when you intentionally want the series round to point at a new session.
 
+### Registered Series Join Access
+
+1. Create or confirm an active student in `/admin/students`.
+2. Register that student on `/admin/series/SERIES_ID`.
+3. Launch a series round from the series detail page.
+4. Open `/admin/sessions/CODE/access-check` and confirm the series, round, registered count, and joined count are correct.
+5. Use the host QR or student link `/student/join/CODE`.
+6. If the student is not logged in, confirm `/student/login?next=/student/join/CODE` redirects back after login.
+7. Confirm the student joins as their registered display name, not as a guest.
+8. Confirm `/admin/sessions/CODE/access-check` changes that student from not joined to joined.
+9. If a student is missing, use the Access Check warnings before changing data in phpMyAdmin.
+
 ## Hostinger Deployment Notes
 
 1. Create a MySQL database and user in Hostinger hPanel.
