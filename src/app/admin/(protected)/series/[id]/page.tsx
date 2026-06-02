@@ -2,7 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AdminSeriesDetail } from "@/components/admin-series-detail";
+import { MigrationRequiredNotice } from "@/components/migration-required-notice";
 import { SeriesForm } from "@/components/series-form";
+import { isStudentSeriesMigrationError } from "@/lib/migration-warning";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 
@@ -12,80 +14,120 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default async function AdminSeriesDetailPage({ params }: PageProps) {
-  const { id } = await params;
-  const [series, students, versions] = await Promise.all([
-    prisma.series.findUnique({
-      where: { id },
-      include: {
-        registrations: {
-          where: { status: "REGISTERED" },
-          orderBy: { displayNameSnapshot: "asc" },
-          include: {
-            student: {
-              select: {
-                id: true,
-                username: true,
-                displayName: true,
-                groupName: true,
+async function getSeriesDetailData(id: string) {
+  try {
+    const [series, students, versions] = await Promise.all([
+      prisma.series.findUnique({
+        where: { id },
+        include: {
+          registrations: {
+            where: { status: "REGISTERED" },
+            orderBy: { displayNameSnapshot: "asc" },
+            include: {
+              student: {
+                select: {
+                  id: true,
+                  username: true,
+                  displayName: true,
+                  groupName: true,
+                },
               },
             },
           },
-        },
-        rounds: {
-          orderBy: { roundNumber: "asc" },
-          include: {
-            session: {
-              select: {
-                code: true,
-                status: true,
+          rounds: {
+            orderBy: { roundNumber: "asc" },
+            include: {
+              session: {
+                select: {
+                  code: true,
+                  status: true,
+                },
               },
-            },
-            testVersion: {
-              select: {
-                id: true,
-                title: true,
-                versionNumber: true,
-                test: {
-                  select: {
-                    title: true,
+              testVersion: {
+                select: {
+                  id: true,
+                  title: true,
+                  versionNumber: true,
+                  test: {
+                    select: {
+                      title: true,
+                    },
                   },
                 },
               },
             },
           },
         },
-      },
-    }),
-    prisma.studentAccount.findMany({
-      where: { status: "ACTIVE" },
-      orderBy: [{ groupName: "asc" }, { displayName: "asc" }],
-      select: {
-        id: true,
-        username: true,
-        displayName: true,
-        groupName: true,
-      },
-    }),
-    prisma.testVersion.findMany({
-      where: { status: "PUBLISHED" },
-      orderBy: [{ test: { title: "asc" } }, { versionNumber: "desc" }],
-      select: {
-        id: true,
-        title: true,
-        versionNumber: true,
-        test: {
-          select: {
-            title: true,
+      }),
+      prisma.studentAccount.findMany({
+        where: { status: "ACTIVE" },
+        orderBy: [{ groupName: "asc" }, { displayName: "asc" }],
+        select: {
+          id: true,
+          username: true,
+          displayName: true,
+          groupName: true,
+        },
+      }),
+      prisma.testVersion.findMany({
+        where: { status: "PUBLISHED" },
+        orderBy: [{ test: { title: "asc" } }, { versionNumber: "desc" }],
+        select: {
+          id: true,
+          title: true,
+          versionNumber: true,
+          test: {
+            select: {
+              title: true,
+            },
           },
         },
-      },
-    }),
-  ]);
+      }),
+    ]);
 
-  if (!series) {
+    return {
+      migrationRequired: false,
+      series,
+      students,
+      versions,
+    };
+  } catch (error) {
+    if (isStudentSeriesMigrationError(error)) {
+      return {
+        migrationRequired: true,
+        series: null,
+        students: [],
+        versions: [],
+      };
+    }
+
+    throw error;
+  }
+}
+
+export default async function AdminSeriesDetailPage({ params }: PageProps) {
+  const { id } = await params;
+  const result = await getSeriesDetailData(id);
+
+  if (result.migrationRequired) {
+    return (
+      <div className="grid gap-6">
+        <div>
+          <Link href="/admin/series" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
+            {messages.series.back}
+          </Link>
+          <h1 className="mt-3 text-3xl font-bold">{messages.series.title}</h1>
+        </div>
+        <MigrationRequiredNotice />
+      </div>
+    );
+  }
+
+  if (!result.series) {
     notFound();
   }
+
+  const { series, students, versions } = result;
 
   return (
     <div className="grid gap-6">

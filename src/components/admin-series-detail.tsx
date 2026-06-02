@@ -228,9 +228,10 @@ export function AdminSeriesDetail({
           </form>
         </div>
         {registrations.length === 0 ? (
-          <p className="mt-4 rounded-md border border-dashed border-slate-300 p-4 text-sm text-slate-600">
-            {messages.series.noRegisteredStudents}
-          </p>
+          <div className="mt-4 rounded-md border border-dashed border-slate-300 p-4 text-sm text-slate-600">
+            <p className="font-semibold text-slate-900">{messages.series.noRegisteredStudents}</p>
+            <p className="mt-1">{messages.series.noRegisteredStudentsHelp}</p>
+          </div>
         ) : (
           <div className="mt-4 grid gap-2 md:grid-cols-2">
             {registrations.map((registration) => (
@@ -282,6 +283,11 @@ export function AdminSeriesDetail({
             </button>
           </div>
         </div>
+        {versions.length === 0 ? (
+          <p className="mt-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm font-medium text-amber-900">
+            {messages.series.noPublishedTestsWarning}
+          </p>
+        ) : null}
         <form onSubmit={addRound} className="mt-4 grid gap-3">
           <div className="grid gap-3 md:grid-cols-2">
             <label className="grid gap-1 text-sm font-medium text-slate-700">
@@ -353,9 +359,10 @@ export function AdminSeriesDetail({
           </button>
         </form>
         {rounds.length === 0 ? (
-          <p className="mt-4 rounded-md border border-dashed border-slate-300 p-4 text-sm text-slate-600">
-            {messages.series.noRounds}
-          </p>
+          <div className="mt-4 rounded-md border border-dashed border-slate-300 p-4 text-sm text-slate-600">
+            <p className="font-semibold text-slate-900">{messages.series.noRounds}</p>
+            <p className="mt-1">{messages.series.noRoundsHelp}</p>
+          </div>
         ) : (
           <div className="mt-5 grid gap-3">
             {rounds.map((round) => (

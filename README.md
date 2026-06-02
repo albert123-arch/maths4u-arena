@@ -131,6 +131,22 @@ Additional manual migrations:
 - This migration is additive. It creates new tables and adds `Participant.studentAccountId`.
 - Run it only after `database/init_mysql.sql` has already created the base MVP tables.
 
+## Series Smoke Test
+
+After importing `database/migrations/001_student_series.sql`, use this flow to confirm the registered student and series foundation:
+
+1. Log in as an admin.
+2. Open `/admin/setup-check` and confirm the database connection, required tables, tests, published versions, students, and series checks.
+3. Open `/admin/students` and create a student account with a username, display name, group, and password or PIN.
+4. Open `/admin/series` and create a series.
+5. Open the series detail page and register the student.
+6. Make sure at least one test version is published from `/admin/tests`.
+7. Add a round to the series using the published test version.
+8. Launch the round and open the host screen.
+9. Have the student log in from `/student/login`, join the live round, and play.
+10. Finish the session from the host screen.
+11. Open the admin results and the series leaderboard to confirm scores are recorded.
+
 ## Hostinger Deployment Notes
 
 1. Create a MySQL database and user in Hostinger hPanel.
@@ -142,6 +158,6 @@ Additional manual migrations:
 7. Build with `npm run build`.
 8. Start with `npm run start` for a full project upload, or run `.next/standalone/server.js` if deploying the standalone build output.
 9. Keep `.env` private on the server. Commit only `.env.example`.
-10. Use `/api/health` and `/api/db-check` only for temporary deployment diagnostics, then remove or restrict them after the database is confirmed.
+10. Use `/api/ping` and `/api/health` for public deployment checks. Detailed diagnostics such as `/api/db-check`, `/api/env-check`, `/api/mysql-check`, `/api/prisma-check`, and `/api/runtime-check` are admin-only.
 
 Existing deployment target: `https://arena.maths4u.sbs`.

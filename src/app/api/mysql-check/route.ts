@@ -2,6 +2,10 @@ import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
 
 import {
+  noStoreHeaders,
+  requireAdminForDiagnostics,
+} from "@/lib/admin-diagnostics";
+import {
   getSafeMysqlErrorInfo,
   parseDatabaseUrlForConnection,
 } from "@/lib/runtime-diagnostics";
@@ -9,6 +13,12 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const unauthorized = await requireAdminForDiagnostics();
+
+  if (unauthorized) {
+    return unauthorized;
+  }
+
   let connection: mysql.Connection | null = null;
 
   try {
@@ -25,10 +35,13 @@ export async function GET() {
 
     await connection.query("SELECT 1 AS ok");
 
-    return NextResponse.json({
-      ok: true,
-      database: "mysql2 connected",
-    });
+    return NextResponse.json(
+      {
+        ok: true,
+        database: "mysql2 connected",
+      },
+      { headers: noStoreHeaders },
+    );
   } catch (error) {
     const safeError = getSafeMysqlErrorInfo(error);
 
@@ -40,7 +53,7 @@ export async function GET() {
         database: "mysql2 failed",
         ...safeError,
       },
-      { status: 500 },
+      { status: 500, headers: noStoreHeaders },
     );
   } finally {
     if (connection) {

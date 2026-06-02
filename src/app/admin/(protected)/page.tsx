@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { MigrationRequiredNotice } from "@/components/migration-required-notice";
+import { isStudentSeriesMigrationError } from "@/lib/migration-warning";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 
@@ -44,23 +46,43 @@ const cards = [
   },
 ];
 
+async function getDashboardCounts() {
+  try {
+    const [tests, questions, sessions, answers, students, series] = await Promise.all([
+      prisma.test.count(),
+      prisma.question.count(),
+      prisma.gameSession.count(),
+      prisma.answer.count(),
+      prisma.studentAccount.count(),
+      prisma.series.count(),
+    ]);
+
+    return {
+      migrationRequired: false,
+      counts: {
+        tests,
+        questions,
+        sessions,
+        results: answers,
+        students,
+        series,
+      },
+    };
+  } catch (error) {
+    if (isStudentSeriesMigrationError(error)) {
+      return {
+        migrationRequired: true,
+        counts: {},
+      };
+    }
+
+    throw error;
+  }
+}
+
 export default async function AdminDashboardPage() {
-  const [tests, questions, sessions, answers, students, series] = await Promise.all([
-    prisma.test.count(),
-    prisma.question.count(),
-    prisma.gameSession.count(),
-    prisma.answer.count(),
-    prisma.studentAccount.count(),
-    prisma.series.count(),
-  ]);
-  const counts: Record<string, number> = {
-    tests,
-    questions,
-    sessions,
-    results: answers,
-    students,
-    series,
-  };
+  const result = await getDashboardCounts();
+  const counts = result.counts as Record<string, number>;
 
   return (
     <div className="grid gap-6">
@@ -81,6 +103,7 @@ export default async function AdminDashboardPage() {
           </Link>
         ))}
       </div>
+      {result.migrationRequired ? <MigrationRequiredNotice /> : null}
       <section className="rounded-md border border-dashed border-slate-300 bg-white p-5">
         <h2 className="text-lg font-semibold">{messages.dashboard.nextTitle}</h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">

@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
 import {
+  noStoreHeaders,
+  requireAdminForDiagnostics,
+} from "@/lib/admin-diagnostics";
+import {
   checkPrismaConnection,
   getSafeErrorCode,
   safeErrorMessage,
@@ -9,13 +13,22 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const unauthorized = await requireAdminForDiagnostics();
+
+  if (unauthorized) {
+    return unauthorized;
+  }
+
   try {
     await checkPrismaConnection();
 
-    return NextResponse.json({
-      ok: true,
-      database: "prisma connected",
-    });
+    return NextResponse.json(
+      {
+        ok: true,
+        database: "prisma connected",
+      },
+      { headers: noStoreHeaders },
+    );
   } catch (error) {
     const safeError = {
       code: getSafeErrorCode(error),
@@ -30,7 +43,7 @@ export async function GET() {
         database: "prisma failed",
         ...safeError,
       },
-      { status: 500 },
+      { status: 500, headers: noStoreHeaders },
     );
   }
 }

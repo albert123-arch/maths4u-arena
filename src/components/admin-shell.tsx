@@ -12,6 +12,7 @@ const navItems = [
   { href: "/admin/sessions", label: messages.adminShell.nav.sessions },
   { href: "/admin/students", label: messages.adminShell.nav.students },
   { href: "/admin/series", label: messages.adminShell.nav.series },
+  { href: "/admin/setup-check", label: messages.adminShell.nav.setupCheck },
 ];
 
 export function AdminShell({

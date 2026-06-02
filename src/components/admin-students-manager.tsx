@@ -153,7 +153,10 @@ export function AdminStudentsManager({ students }: { students: StudentRow[] }) {
           <h2 className="text-xl font-semibold">{messages.students.listTitle}</h2>
         </div>
         {students.length === 0 ? (
-          <p className="p-5 text-sm text-slate-600">{messages.students.empty}</p>
+          <div className="grid gap-2 p-5 text-sm text-slate-600">
+            <p>{messages.students.empty}</p>
+            <p className="font-semibold text-slate-900">{messages.students.createFirst}</p>
+          </div>
         ) : (
           <div className="divide-y divide-slate-200">
             {students.map((student) => (
