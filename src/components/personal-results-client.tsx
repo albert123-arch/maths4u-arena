@@ -24,6 +24,19 @@ type PersonalResults = {
   rank: number | null;
   participantCount: number;
   message: string;
+  series: {
+    id: string;
+    title: string;
+    roundScore: number;
+    roundRank: number | null;
+    totalScore: number;
+    seriesRank: number;
+    nextRound: {
+      title: string;
+      scheduledAt: string | null;
+      status: string;
+    } | null;
+  } | null;
   showCorrectAnswers: boolean;
   answers: Array<{
     id: string;
@@ -195,6 +208,48 @@ export function PersonalResultsClient({ code }: { code: string }) {
           </p>
         </div>
       </div>
+      {results.series ? (
+        <section className="rounded-md border border-teal-200 bg-white p-5 shadow-sm">
+          <div className="flex flex-col gap-2 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-teal-800">{messages.student.seriesTitle}</p>
+              <h2 className="text-xl font-bold">{results.series.title}</h2>
+            </div>
+            <Link
+              href={`/student/series/${results.series.id}`}
+              className="text-sm font-semibold text-teal-800 hover:text-teal-950"
+            >
+              {messages.common.open}
+            </Link>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-4">
+            <div>
+              <p className="text-sm text-slate-500">{messages.student.roundScore}</p>
+              <p className="mt-1 text-2xl font-bold">{results.series.roundScore}</p>
+            </div>
+            <div>
+              <p className="text-sm text-slate-500">{messages.student.roundScore} {messages.results.rank}</p>
+              <p className="mt-1 text-2xl font-bold">{results.series.roundRank ?? messages.results.hidden}</p>
+            </div>
+            <div>
+              <p className="text-sm text-slate-500">{messages.student.totalScore}</p>
+              <p className="mt-1 text-2xl font-bold">{results.series.totalScore}</p>
+            </div>
+            <div>
+              <p className="text-sm text-slate-500">{messages.student.seriesRank}</p>
+              <p className="mt-1 text-2xl font-bold">{results.series.seriesRank}</p>
+            </div>
+          </div>
+          {results.series.nextRound ? (
+            <p className="mt-4 rounded-md bg-teal-50 p-3 text-sm font-medium text-teal-950">
+              {messages.student.nextRoundInfo}: {results.series.nextRound.title}
+              {results.series.nextRound.scheduledAt
+                ? ` - ${new Date(results.series.nextRound.scheduledAt).toLocaleString()}`
+                : ""}
+            </p>
+          ) : null}
+        </section>
+      ) : null}
       {results.showCorrectAnswers ? (
         <section className="grid gap-3">
           <h2 className="text-xl font-bold">{messages.results.reviewTitle}</h2>

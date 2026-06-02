@@ -5,6 +5,7 @@ import { messages } from "@/lib/messages";
 import { hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 import { parseSessionSettings } from "@/lib/session-settings";
+import { getCurrentStudent } from "@/lib/student-auth";
 import { participantJoinSchema } from "@/lib/validation";
 
 export async function POST(request: Request) {
@@ -28,23 +29,75 @@ export async function POST(request: Request) {
       return fail(messages.api.gameFinished, 409);
     }
 
-    if (session.status === "RUNNING" && !parseSessionSettings(session.settingsJson).allowLateJoin) {
+    const settings = parseSessionSettings(session.settingsJson);
+
+    if (session.status === "RUNNING" && !settings.allowLateJoin) {
       return fail(messages.api.lateJoinClosed, 409);
     }
 
+    const currentStudent = settings.registeredOnly ? await getCurrentStudent() : null;
+
+    if (settings.registeredOnly && !currentStudent) {
+      return fail(messages.api.registeredStudentRequired, 401);
+    }
+
+    if (settings.registeredOnly && settings.seriesId && currentStudent) {
+      const registration = await prisma.seriesRegistration.findUnique({
+        where: {
+          seriesId_studentId: {
+            seriesId: settings.seriesId,
+            studentId: currentStudent.id,
+          },
+        },
+        select: {
+          status: true,
+        },
+      });
+
+      if (!registration || registration.status !== "REGISTERED") {
+        return fail(messages.api.studentRegistrationRequired, 403);
+      }
+    }
+
     const participantToken = randomUUID();
-    const participant = await prisma.participant.create({
-      data: {
-        sessionId: session.id,
-        displayName: input.displayName,
-        tokenHash: await hashPassword(participantToken),
-      },
-      select: {
-        id: true,
-        displayName: true,
-        joinedAt: true,
-      },
-    });
+    const tokenHash = await hashPassword(participantToken);
+    const existingParticipant = currentStudent
+      ? await prisma.participant.findFirst({
+          where: {
+            sessionId: session.id,
+            studentAccountId: currentStudent.id,
+          },
+          select: {
+            id: true,
+          },
+        })
+      : null;
+    const participant = existingParticipant
+      ? await prisma.participant.update({
+          where: { id: existingParticipant.id },
+          data: {
+            displayName: currentStudent?.displayName ?? input.displayName,
+            tokenHash,
+          },
+          select: {
+            id: true,
+            displayName: true,
+            joinedAt: true,
+          },
+        })
+      : await prisma.participant.create({
+          data: {
+            sessionId: session.id,
+            studentAccountId: currentStudent?.id ?? null,
+            displayName: currentStudent?.displayName ?? input.displayName,
+            tokenHash,
+          },
+          select: {
+            id: true,
+            displayName: true,
+            joinedAt: true,
+          },
+        });
 
     const response = ok({
       participant,

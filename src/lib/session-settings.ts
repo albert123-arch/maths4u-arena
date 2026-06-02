@@ -5,6 +5,9 @@ export type SessionSettings = {
   showCorrectAnswers: boolean;
   showLeaderboard: boolean;
   autoSubmitOnFinish: boolean;
+  registeredOnly: boolean;
+  seriesId: string | null;
+  roundId: string | null;
 };
 
 export const DEFAULT_SESSION_SETTINGS: SessionSettings = {
@@ -14,6 +17,9 @@ export const DEFAULT_SESSION_SETTINGS: SessionSettings = {
   showCorrectAnswers: false,
   showLeaderboard: true,
   autoSubmitOnFinish: true,
+  registeredOnly: false,
+  seriesId: null,
+  roundId: null,
 };
 
 function booleanSetting(value: unknown, fallback: boolean) {
@@ -51,6 +57,9 @@ export function parseSessionSettings(settingsJson?: string | null): SessionSetti
         parsed.autoSubmitOnFinish,
         DEFAULT_SESSION_SETTINGS.autoSubmitOnFinish,
       ),
+      registeredOnly: booleanSetting(parsed.registeredOnly, DEFAULT_SESSION_SETTINGS.registeredOnly),
+      seriesId: typeof parsed.seriesId === "string" ? parsed.seriesId : DEFAULT_SESSION_SETTINGS.seriesId,
+      roundId: typeof parsed.roundId === "string" ? parsed.roundId : DEFAULT_SESSION_SETTINGS.roundId,
     };
   } catch {
     return DEFAULT_SESSION_SETTINGS;

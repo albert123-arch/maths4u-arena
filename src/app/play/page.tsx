@@ -1,7 +1,11 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { PlayJoinForm } from "@/components/play-join-form";
 import { messages } from "@/lib/messages";
+import { prisma } from "@/lib/prisma";
+import { parseSessionSettings } from "@/lib/session-settings";
+import { getCurrentStudent } from "@/lib/student-auth";
 
 type PageProps = {
   searchParams: Promise<{ code?: string }>;
@@ -9,6 +13,21 @@ type PageProps = {
 
 export default async function PlayPage({ searchParams }: PageProps) {
   const { code } = await searchParams;
+  const normalizedCode = code?.toUpperCase() ?? "";
+  const session = normalizedCode
+    ? await prisma.gameSession.findUnique({
+        where: { code: normalizedCode },
+        select: {
+          settingsJson: true,
+        },
+      })
+    : null;
+  const settings = parseSessionSettings(session?.settingsJson);
+  const student = settings.registeredOnly ? await getCurrentStudent() : null;
+
+  if (settings.registeredOnly && !student) {
+    redirect(`/student/login?next=${encodeURIComponent(`/play?code=${normalizedCode}`)}`);
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10 text-slate-950">
@@ -21,7 +40,7 @@ export default async function PlayPage({ searchParams }: PageProps) {
             <h1 className="text-3xl font-bold">{messages.play.title}</h1>
             <p className="text-sm leading-6 text-slate-600">{messages.play.description}</p>
           </div>
-          <PlayJoinForm initialCode={code ?? ""} />
+          <PlayJoinForm initialCode={normalizedCode} registeredStudent={student} />
         </div>
       </section>
     </main>

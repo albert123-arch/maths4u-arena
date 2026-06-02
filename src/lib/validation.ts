@@ -1,6 +1,14 @@
 import { z } from "zod";
 
-import { GAME_MODES, GRADING_TYPES, QUESTION_TYPES, TEST_STATUSES } from "./constants";
+import {
+  GAME_MODES,
+  GRADING_TYPES,
+  QUESTION_TYPES,
+  SERIES_ROUND_STATUSES,
+  SERIES_STATUSES,
+  STUDENT_STATUSES,
+  TEST_STATUSES,
+} from "./constants";
 import { messages } from "./messages";
 
 function nullableText() {
@@ -58,6 +66,27 @@ export const registerSchema = z.object({
     .transform((value) => (value ? value : null)),
 });
 
+export const studentLoginSchema = z.object({
+  username: z.string().trim().min(1).max(191).transform((value) => value.toLowerCase()),
+  password: z.string().min(1),
+  next: z.string().trim().max(500).optional(),
+});
+
+export const studentWriteSchema = z.object({
+  username: z.string().trim().min(2).max(191).transform((value) => value.toLowerCase()),
+  displayName: z.string().trim().min(2).max(191),
+  groupName: z
+    .string()
+    .trim()
+    .max(191)
+    .optional()
+    .transform((value) => (value ? value : null)),
+  password: z.string().min(4, messages.validation.pinTooShort).optional(),
+  status: z.enum(STUDENT_STATUSES).default("ACTIVE"),
+});
+
+export const studentUpdateSchema = studentWriteSchema.partial();
+
 export const testWriteSchema = z.object({
   title: z.string().trim().min(2).max(191),
   slug: z.string().trim().max(191).optional().default(""),
@@ -112,6 +141,32 @@ export const sessionCreateSchema = z.object({
   settingsJson: nullableJsonText(),
   showResults: z.boolean().default(true),
 });
+
+export const seriesWriteSchema = z.object({
+  title: z.string().trim().min(2).max(191),
+  description: nullableText(),
+  status: z.enum(SERIES_STATUSES).default("DRAFT"),
+  startsAt: nullableText(),
+  endsAt: nullableText(),
+  settingsJson: nullableJsonText(),
+});
+
+export const seriesUpdateSchema = seriesWriteSchema.partial();
+
+export const seriesRegistrationWriteSchema = z.object({
+  studentId: z.string().min(1),
+});
+
+export const seriesRoundWriteSchema = z.object({
+  testVersionId: z.string().min(1),
+  title: z.string().trim().min(2).max(191),
+  roundNumber: z.coerce.number().int().min(1).max(1000),
+  scheduledAt: nullableText(),
+  status: z.enum(SERIES_ROUND_STATUSES).default("DRAFT"),
+  settingsJson: nullableJsonText(),
+});
+
+export const seriesRoundUpdateSchema = seriesRoundWriteSchema.partial();
 
 export const sessionStatusUpdateSchema = z.object({
   action: z.enum(["START", "FINISH"]),

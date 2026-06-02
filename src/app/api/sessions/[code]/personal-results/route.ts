@@ -6,6 +6,7 @@ import { verifyPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 import { parseSessionSettings } from "@/lib/session-settings";
 import { noStoreJson } from "@/lib/session-live";
+import { getSeriesLeaderboard } from "@/lib/series-scoring";
 
 export const dynamic = "force-dynamic";
 
@@ -148,6 +149,22 @@ export async function POST(request: Request, { params }: RouteContext) {
       return fail(messages.api.invalidParticipantToken, 401);
     }
 
+    const seriesLeaderboard =
+      settings.seriesId && participant.studentAccountId
+        ? await getSeriesLeaderboard(settings.seriesId)
+        : null;
+    const seriesRow = seriesLeaderboard?.rows.find(
+      (row) => row.studentId === participant.studentAccountId,
+    );
+    const currentRoundScore = seriesRow?.roundScores.find(
+      (roundScore) => roundScore.roundId === settings.roundId,
+    );
+    const nextRound = seriesLeaderboard?.rounds.find(
+      (round) =>
+        round.id !== settings.roundId &&
+        (round.status === "SCHEDULED" || round.status === "LOBBY" || round.status === "RUNNING"),
+    );
+
     const totalPossible = session.testVersion.questions.reduce((sum, item) => sum + item.points, 0);
     const score = participant.answers.reduce((sum, answer) => sum + answer.points, 0);
     const correctCount = participant.answers.filter((answer) => answer.isCorrect === true).length;
@@ -178,6 +195,24 @@ export async function POST(request: Request, { params }: RouteContext) {
         rank: rank && rank > 0 ? rank : null,
         participantCount: session.participants.length,
         message: messageForPercentage(percentage),
+        series:
+          seriesLeaderboard && seriesRow
+            ? {
+                id: seriesLeaderboard.series.id,
+                title: seriesLeaderboard.series.title,
+                roundScore: currentRoundScore?.points ?? score,
+                roundRank: currentRoundScore?.rank ?? null,
+                totalScore: seriesRow.totalScore,
+                seriesRank: seriesRow.rank,
+                nextRound: nextRound
+                  ? {
+                      title: nextRound.title,
+                      scheduledAt: nextRound.scheduledAt?.toISOString() ?? null,
+                      status: nextRound.status,
+                    }
+                  : null,
+              }
+            : null,
         showCorrectAnswers: settings.showCorrectAnswers,
         answers: settings.showCorrectAnswers
           ? participant.answers.map((answer) => {

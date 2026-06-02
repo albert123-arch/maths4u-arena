@@ -31,7 +31,30 @@ export const GAME_MODES = [
   "CAROUSEL",
 ] as const;
 
+export const STUDENT_STATUSES = ["ACTIVE", "DISABLED"] as const;
+
+export const SERIES_STATUSES = [
+  "DRAFT",
+  "REGISTRATION_OPEN",
+  "ACTIVE",
+  "FINISHED",
+  "ARCHIVED",
+] as const;
+
+export const SERIES_REGISTRATION_STATUSES = ["REGISTERED", "REMOVED"] as const;
+
+export const SERIES_ROUND_STATUSES = [
+  "DRAFT",
+  "SCHEDULED",
+  "LOBBY",
+  "RUNNING",
+  "FINISHED",
+] as const;
+
 export type TestStatusValue = (typeof TEST_STATUSES)[number];
 export type QuestionTypeValue = (typeof QUESTION_TYPES)[number];
 export type GradingTypeValue = (typeof GRADING_TYPES)[number];
 export type GameModeValue = (typeof GAME_MODES)[number];
+export type StudentStatusValue = (typeof STUDENT_STATUSES)[number];
+export type SeriesStatusValue = (typeof SERIES_STATUSES)[number];
+export type SeriesRoundStatusValue = (typeof SERIES_ROUND_STATUSES)[number];

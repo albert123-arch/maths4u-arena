@@ -6,6 +6,8 @@ import { gradeAnswer } from "@/lib/grading";
 import { messages } from "@/lib/messages";
 import { verifyPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
+import { parseSessionSettings } from "@/lib/session-settings";
+import { recalculateSeriesRound } from "@/lib/series-scoring";
 import { answerSubmitSchema } from "@/lib/validation";
 
 const FINISH_AUTO_SUBMIT_GRACE_MS = 2 * 60 * 1000;
@@ -39,6 +41,7 @@ export async function POST(request: Request) {
             status: true,
             testVersionId: true,
             finishedAt: true,
+            settingsJson: true,
           },
         },
       },
@@ -164,6 +167,12 @@ export async function POST(request: Request) {
         metaJson: JSON.stringify({ isCorrect: graded.isCorrect }),
       },
     });
+
+    const settings = parseSessionSettings(participant.session.settingsJson);
+
+    if (input.source === "AUTO_FINISH" && settings.roundId) {
+      await recalculateSeriesRound(settings.roundId);
+    }
 
     return ok({
       answer,

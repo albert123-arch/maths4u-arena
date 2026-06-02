@@ -59,12 +59,20 @@ function readStoredParticipant(code: string): StoredParticipant | null {
   return null;
 }
 
-export function PlayJoinForm({ initialCode = "" }: { initialCode?: string }) {
+export function PlayJoinForm({
+  initialCode = "",
+  registeredStudent,
+}: {
+  initialCode?: string;
+  registeredStudent?: {
+    displayName: string;
+  } | null;
+}) {
   const router = useRouter();
   const displayNameRef = useRef<HTMLInputElement>(null);
   const normalizedInitialCode = initialCode.toUpperCase();
   const [code, setCode] = useState(normalizedInitialCode);
-  const [displayName, setDisplayName] = useState("");
+  const [displayName, setDisplayName] = useState(registeredStudent?.displayName ?? "");
   const [existingParticipant, setExistingParticipant] = useState<StoredParticipant | null>(null);
   const [joinAsAnother, setJoinAsAnother] = useState(false);
   const [error, setError] = useState("");
@@ -72,14 +80,16 @@ export function PlayJoinForm({ initialCode = "" }: { initialCode?: string }) {
 
   useEffect(() => {
     if (normalizedInitialCode) {
-      displayNameRef.current?.focus();
+      if (!registeredStudent) {
+        displayNameRef.current?.focus();
+      }
       const timer = window.setTimeout(() => {
         setExistingParticipant(readStoredParticipant(normalizedInitialCode));
       }, 0);
 
       return () => window.clearTimeout(timer);
     }
-  }, [normalizedInitialCode]);
+  }, [normalizedInitialCode, registeredStudent]);
 
   function updateCode(value: string) {
     const nextCode = value.toUpperCase();
@@ -98,7 +108,7 @@ export function PlayJoinForm({ initialCode = "" }: { initialCode?: string }) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ code, displayName }),
+        body: JSON.stringify({ code, displayName: registeredStudent?.displayName ?? displayName }),
     });
     const result = (await response.json()) as ApiResponse;
     setPending(false);
@@ -136,18 +146,20 @@ export function PlayJoinForm({ initialCode = "" }: { initialCode?: string }) {
             >
               {messages.play.continue}
             </button>
-            <button
-              type="button"
-              onClick={() => {
-                localStorage.removeItem(participantKey(code));
-                setExistingParticipant(null);
-                setJoinAsAnother(true);
-                window.setTimeout(() => displayNameRef.current?.focus(), 0);
-              }}
-              className="rounded-md border border-teal-300 px-4 py-2 font-semibold text-teal-950 transition hover:bg-white active:scale-[0.98]"
-            >
-              {messages.play.joinAnother}
-            </button>
+            {!registeredStudent ? (
+              <button
+                type="button"
+                onClick={() => {
+                  localStorage.removeItem(participantKey(code));
+                  setExistingParticipant(null);
+                  setJoinAsAnother(true);
+                  window.setTimeout(() => displayNameRef.current?.focus(), 0);
+                }}
+                className="rounded-md border border-teal-300 px-4 py-2 font-semibold text-teal-950 transition hover:bg-white active:scale-[0.98]"
+              >
+                {messages.play.joinAnother}
+              </button>
+            ) : null}
           </div>
         </section>
       ) : null}
@@ -162,16 +174,25 @@ export function PlayJoinForm({ initialCode = "" }: { initialCode?: string }) {
             required
           />
         </label>
-        <label className="grid gap-1 text-sm font-medium text-slate-700">
-          {messages.play.displayName}
-          <input
-            ref={displayNameRef}
-            value={displayName}
-            onChange={(event) => setDisplayName(event.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-            required
-          />
-        </label>
+        {registeredStudent ? (
+          <div className="rounded-md border border-teal-200 bg-teal-50 p-4 text-sm text-teal-950">
+            <p className="font-semibold">{messages.play.registeredSession}</p>
+            <p className="mt-1">
+              {messages.play.continueAs} {registeredStudent.displayName}
+            </p>
+          </div>
+        ) : (
+          <label className="grid gap-1 text-sm font-medium text-slate-700">
+            {messages.play.displayName}
+            <input
+              ref={displayNameRef}
+              value={displayName}
+              onChange={(event) => setDisplayName(event.target.value)}
+              className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+              required
+            />
+          </label>
+        )}
         {error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}
         <button
           type="submit"

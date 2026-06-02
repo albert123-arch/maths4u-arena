@@ -30,20 +30,36 @@ const cards = [
     description: messages.dashboard.cards.results.description,
     key: "results",
   },
+  {
+    label: messages.dashboard.cards.students.label,
+    href: "/admin/students",
+    description: messages.dashboard.cards.students.description,
+    key: "students",
+  },
+  {
+    label: messages.dashboard.cards.series.label,
+    href: "/admin/series",
+    description: messages.dashboard.cards.series.description,
+    key: "series",
+  },
 ];
 
 export default async function AdminDashboardPage() {
-  const [tests, questions, sessions, answers] = await Promise.all([
+  const [tests, questions, sessions, answers, students, series] = await Promise.all([
     prisma.test.count(),
     prisma.question.count(),
     prisma.gameSession.count(),
     prisma.answer.count(),
+    prisma.studentAccount.count(),
+    prisma.series.count(),
   ]);
   const counts: Record<string, number> = {
     tests,
     questions,
     sessions,
     results: answers,
+    students,
+    series,
   };
 
   return (
@@ -52,7 +68,7 @@ export default async function AdminDashboardPage() {
         <h1 className="text-3xl font-bold">{messages.dashboard.title}</h1>
         <p className="mt-2 text-slate-600">{messages.dashboard.description}</p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {cards.map((card) => (
           <Link
             key={card.key}

@@ -2,7 +2,7 @@
 
 Full-stack MVP foundation for the Maths4U Arena educational quiz/game platform.
 
-The current app includes the database schema, admin authentication, admin CRUD screens for tests and questions, classic student flow skeleton, host screen skeleton, and clean API route handlers. Advanced live game modes are intentionally left for later.
+The current app includes admin authentication, test/question management, classic guest sessions, QR join, host controls, student answering, results export, registered student accounts, and the first series/league workflow foundation. Advanced non-classic live modes are intentionally left for later.
 
 ## Stack
 
@@ -81,9 +81,10 @@ Open `http://localhost:3000`.
 ## Project Structure
 
 - `src/app/admin` - protected admin dashboard and CRUD pages
-- `src/app/play` - student join screen
-- `src/app/game/[code]` - student game skeleton
-- `src/app/host/[code]` - host screen skeleton
+- `src/app/play` - guest and registered student join screen
+- `src/app/student` - registered student login, dashboard, series, and results
+- `src/app/game/[code]` - classic student game screen
+- `src/app/host/[code]` - host lobby/live/results controls
 - `src/app/api` - App Router API route handlers
 - `src/components` - shared UI/client components
 - `src/lib` - auth, Prisma, validation, grading, slug, and game-code utilities
@@ -97,6 +98,8 @@ The schema is MySQL-compatible and includes:
 - tests and versioned tests
 - reusable question bank with options and grading rules
 - game sessions, participants, answers, and score events
+- registered student accounts
+- multi-day series, registrations, rounds, and series scores
 
 Flexible `LongText` JSON fields are used for future game modes and grading settings without requiring Redis, Docker, PostgreSQL, or paid external services.
 
@@ -122,14 +125,20 @@ Optional admin seed:
 
 Never put a real password or real bcrypt hash into Git.
 
+Additional manual migrations:
+
+- Import `database/migrations/001_student_series.sql` to add registered student accounts and series/league tables.
+- This migration is additive. It creates new tables and adds `Participant.studentAccountId`.
+- Run it only after `database/init_mysql.sql` has already created the base MVP tables.
+
 ## Hostinger Deployment Notes
 
 1. Create a MySQL database and user in Hostinger hPanel.
 2. Set database credentials as private server environment variables. You can use `DATABASE_URL`, or set `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`. If the `DB_*` variables are complete, the app uses them before `DATABASE_URL`.
 3. Use a Node.js runtime compatible with this Next.js version. Node.js 20 or newer is recommended.
 4. Install dependencies with `npm install`.
-5. Run `npm run db:push` or deploy migrations once migration files are introduced.
-6. Run `npm run prisma:seed` once to create the first admin.
+5. Apply database SQL manually in phpMyAdmin when production schema changes are needed.
+6. Run `npm run prisma:seed` once locally or seed manually to create the first admin.
 7. Build with `npm run build`.
 8. Start with `npm run start` for a full project upload, or run `.next/standalone/server.js` if deploying the standalone build output.
 9. Keep `.env` private on the server. Commit only `.env.example`.

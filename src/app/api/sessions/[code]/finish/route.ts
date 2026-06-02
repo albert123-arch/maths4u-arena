@@ -2,6 +2,8 @@ import { requireAdminApi } from "@/lib/auth";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 import { getLiveSessionData, noStoreJson } from "@/lib/session-live";
+import { parseSessionSettings } from "@/lib/session-settings";
+import { recalculateSeriesRound } from "@/lib/series-scoring";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +22,7 @@ export async function POST(_request: Request, { params }: RouteContext) {
   const normalizedCode = code.toUpperCase();
   const session = await prisma.gameSession.findUnique({
     where: { code: normalizedCode },
-    select: { id: true, status: true },
+    select: { id: true, status: true, settingsJson: true },
   });
 
   if (!session) {
@@ -35,6 +37,19 @@ export async function POST(_request: Request, { params }: RouteContext) {
         finishedAt: new Date(),
       },
     });
+  }
+
+  const settings = parseSessionSettings(session.settingsJson);
+
+  if (settings.roundId) {
+    await prisma.seriesRound.updateMany({
+      where: {
+        id: settings.roundId,
+        sessionId: session.id,
+      },
+      data: { status: "FINISHED" },
+    });
+    await recalculateSeriesRound(settings.roundId);
   }
 
   const data = await getLiveSessionData(normalizedCode);

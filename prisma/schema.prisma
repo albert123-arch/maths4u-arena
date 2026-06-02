@@ -59,6 +59,32 @@ enum GameSessionStatus {
   FINISHED
 }
 
+enum StudentStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum SeriesStatus {
+  DRAFT
+  REGISTRATION_OPEN
+  ACTIVE
+  FINISHED
+  ARCHIVED
+}
+
+enum SeriesRegistrationStatus {
+  REGISTERED
+  REMOVED
+}
+
+enum SeriesRoundStatus {
+  DRAFT
+  SCHEDULED
+  LOBBY
+  RUNNING
+  FINISHED
+}
+
 model User {
   id           String   @id @default(cuid()) @db.VarChar(191)
   email        String   @unique @db.VarChar(191)
@@ -106,6 +132,7 @@ model TestVersion {
   test      Test                  @relation(fields: [testId], references: [id], onDelete: Cascade)
   questions TestVersionQuestion[]
   sessions  GameSession[]
+  seriesRounds SeriesRound[]
 
   @@unique([testId, versionNumber])
   @@index([status])
@@ -180,6 +207,8 @@ model GameSession {
   participants Participant[]
   answers      Answer[]
   scoreEvents  ScoreEvent[]
+  seriesRounds SeriesRound[]
+  seriesScores SeriesScore[]
 
   @@index([testVersionId])
   @@index([status])
@@ -188,16 +217,19 @@ model GameSession {
 model Participant {
   id          String   @id @default(cuid()) @db.VarChar(191)
   sessionId   String   @db.VarChar(191)
+  studentAccountId String? @db.VarChar(191)
   displayName String   @db.VarChar(191)
   tokenHash   String   @db.VarChar(255)
   teamId      String?  @db.VarChar(191)
   joinedAt    DateTime @default(now())
 
-  session     GameSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  answers     Answer[]
-  scoreEvents ScoreEvent[]
+  session        GameSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  studentAccount StudentAccount? @relation(fields: [studentAccountId], references: [id], onDelete: SetNull)
+  answers        Answer[]
+  scoreEvents    ScoreEvent[]
 
   @@index([sessionId])
+  @@index([studentAccountId])
   @@index([teamId])
 }
 
@@ -239,4 +271,109 @@ model ScoreEvent {
   @@index([participantId])
   @@index([questionId])
   @@index([eventType])
+}
+
+model StudentAccount {
+  id           String        @id @default(cuid()) @db.VarChar(191)
+  username     String        @unique @db.VarChar(191)
+  displayName  String        @db.VarChar(191)
+  passwordHash String        @db.VarChar(255)
+  groupName    String?       @db.VarChar(191)
+  status       StudentStatus @default(ACTIVE)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  registrations SeriesRegistration[]
+  participants  Participant[]
+  scores        SeriesScore[]
+
+  @@index([status])
+  @@index([groupName])
+}
+
+model Series {
+  id           String       @id @default(cuid()) @db.VarChar(191)
+  title        String       @db.VarChar(191)
+  description  String?      @db.LongText
+  status       SeriesStatus @default(DRAFT)
+  startsAt     DateTime?
+  endsAt       DateTime?
+  settingsJson String?      @db.LongText
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  registrations SeriesRegistration[]
+  rounds        SeriesRound[]
+  scores        SeriesScore[]
+
+  @@index([status])
+  @@index([startsAt])
+  @@index([endsAt])
+}
+
+model SeriesRegistration {
+  id                  String                   @id @default(cuid()) @db.VarChar(191)
+  seriesId            String                   @db.VarChar(191)
+  studentId           String                   @db.VarChar(191)
+  displayNameSnapshot String                   @db.VarChar(191)
+  status              SeriesRegistrationStatus @default(REGISTERED)
+  createdAt           DateTime                 @default(now())
+
+  series  Series         @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  student StudentAccount @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([seriesId, studentId])
+  @@index([studentId])
+  @@index([status])
+}
+
+model SeriesRound {
+  id            String            @id @default(cuid()) @db.VarChar(191)
+  seriesId      String            @db.VarChar(191)
+  testVersionId String            @db.VarChar(191)
+  title         String            @db.VarChar(191)
+  roundNumber   Int
+  scheduledAt   DateTime?
+  status        SeriesRoundStatus @default(DRAFT)
+  sessionId     String?           @db.VarChar(191)
+  settingsJson  String?           @db.LongText
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  series      Series       @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  testVersion TestVersion  @relation(fields: [testVersionId], references: [id], onDelete: Restrict)
+  session     GameSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  scores      SeriesScore[]
+
+  @@unique([seriesId, roundNumber])
+  @@index([testVersionId])
+  @@index([sessionId])
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+model SeriesScore {
+  id            String   @id @default(cuid()) @db.VarChar(191)
+  seriesId      String   @db.VarChar(191)
+  studentId     String   @db.VarChar(191)
+  roundId       String?  @db.VarChar(191)
+  sessionId     String?  @db.VarChar(191)
+  points        Int      @default(0)
+  correctCount  Int      @default(0)
+  answeredCount Int      @default(0)
+  percentage    Float    @default(0)
+  rank          Int?
+  metaJson      String?  @db.LongText
+  createdAt     DateTime @default(now())
+
+  series  Series         @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  student StudentAccount @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  round   SeriesRound?   @relation(fields: [roundId], references: [id], onDelete: SetNull)
+  session GameSession?   @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  @@index([seriesId])
+  @@index([studentId])
+  @@index([roundId])
+  @@index([sessionId])
+  @@index([rank])
 }
