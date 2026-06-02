@@ -93,7 +93,7 @@ export default async function PlayPage({ searchParams }: PageProps) {
     redirect(`/student/login?next=${encodeURIComponent(`/play?code=${normalizedCode}`)}`);
   }
 
-  if (settings.registeredOnly && !settings.seriesId) {
+  if (settings.registeredOnly && !settings.seriesId && !settings.classId) {
     return messagePage(messages.student.joinRoundTitle, messages.api.seriesAccessCheckRequired);
   }
 
@@ -112,6 +112,24 @@ export default async function PlayPage({ searchParams }: PageProps) {
 
     if (!registration || registration.status !== "REGISTERED") {
       return messagePage(messages.student.notRegisteredForSeries, messages.play.notRegisteredForSeries);
+    }
+  }
+
+  if (settings.registeredOnly && settings.classId && student) {
+    const membership = await prisma.classMembership.findUnique({
+      where: {
+        classId_studentId: {
+          classId: settings.classId,
+          studentId: student.id,
+        },
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (!membership || membership.status !== "ACTIVE") {
+      return messagePage(messages.api.classMembershipRequired, messages.api.classMembershipRequired);
     }
   }
 

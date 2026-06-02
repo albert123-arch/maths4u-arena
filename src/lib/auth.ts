@@ -100,6 +100,37 @@ export async function authenticateAdmin(email: string, password: string) {
   } satisfies AuthUser;
 }
 
+export async function authenticateUser(email: string, password: string) {
+  const prisma = await getPrisma();
+  const user = await prisma.user.findUnique({
+    where: { email: email.trim().toLowerCase() },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      passwordHash: true,
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  const passwordMatches = await verifyPassword(password, user.passwordHash);
+
+  if (!passwordMatches) {
+    return null;
+  }
+
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+  } satisfies AuthUser;
+}
+
 export async function createAdminSession(user: AuthUser) {
   const cookieStore = await cookies();
 
@@ -178,4 +209,62 @@ export async function requireAdminApi() {
   }
 
   return user;
+}
+
+export async function requireTeacherUser() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/admin/login");
+  }
+
+  if (user.role === "ADMIN") {
+    redirect("/admin");
+  }
+
+  return user;
+}
+
+export async function requireTeacherApi() {
+  const user = await getCurrentUser();
+
+  if (!user || user.role !== "TEACHER") {
+    return null;
+  }
+
+  return user;
+}
+
+export async function requireSessionHostApi(code: string) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return null;
+  }
+
+  if (user.role === "ADMIN") {
+    return user;
+  }
+
+  const prisma = await getPrisma();
+  const session = await prisma.gameSession.findUnique({
+    where: { code: code.toUpperCase() },
+    select: {
+      testVersion: {
+        select: {
+          test: {
+            select: {
+              ownerUserId: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (session?.testVersion.test.ownerUserId === user.id) {
+    return user;
+  }
+
+  return null;
 }

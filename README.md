@@ -130,6 +130,9 @@ Additional manual migrations:
 - Import `database/migrations/001_student_series.sql` to add registered student accounts and series/league tables.
 - This migration is additive. It creates new tables and adds `Participant.studentAccountId`.
 - Run it only after `database/init_mysql.sql` has already created the base MVP tables.
+- Import `database/migrations/002_teacher_classes_library.sql` to add teacher classes, class memberships, and content ownership/library fields.
+- This migration is additive. It creates `Classroom` and `ClassMembership`, adds owner/visibility fields to tests and questions, and keeps existing data.
+- Run it after `database/migrations/001_student_series.sql` if you use class-only sessions with registered students.
 
 ## Manual Smoke Tests
 
@@ -204,6 +207,23 @@ After importing `database/migrations/001_student_series.sql`, use this flow to c
 7. Confirm the student joins as their registered display name, not as a guest.
 8. Confirm `/admin/sessions/CODE/access-check` changes that student from not joined to joined.
 9. If a student is missing, use the Access Check warnings before changing data in phpMyAdmin.
+
+### Teacher, Class, And Library Foundation
+
+After importing `database/migrations/002_teacher_classes_library.sql`, use this flow to confirm teacher access:
+
+1. Log in as an admin.
+2. Open `/admin/teachers` and create a teacher account with an email and temporary password.
+3. Sign out, then sign in with the teacher account. The login should redirect to `/teacher`.
+4. Open `/teacher/classes`, create a class, and copy or scan the join link from the class detail page.
+5. Have a registered student log in and open `/join-class/CODE`.
+6. Confirm the student appears on `/teacher/classes/CLASS_ID` and `/teacher/students`.
+7. Open `/teacher/tests`, create a test, add or create questions, publish a draft version, then launch it.
+8. Choose `Guest link` for an open session, or `Class-only link` and select a class for registered class access.
+9. Confirm class-only sessions only allow students with active class membership.
+10. Share a teacher test to the library from `/teacher/tests`.
+11. As admin, open `/admin/library` and mark shared content as curated or archive it.
+12. As another teacher, open `/teacher/library` and copy a public or curated test into private teacher content.
 
 ## Hostinger Deployment Notes
 

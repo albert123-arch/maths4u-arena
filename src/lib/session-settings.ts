@@ -27,6 +27,7 @@ export type SessionSettings = {
   registeredOnly: boolean;
   seriesId: string | null;
   roundId: string | null;
+  classId: string | null;
   questionTimeLimitSeconds: number;
   speedBonus: boolean;
   showQuestionOnStudent: boolean;
@@ -58,6 +59,7 @@ export const DEFAULT_SESSION_SETTINGS: SessionSettings = {
   registeredOnly: false,
   seriesId: null,
   roundId: null,
+  classId: null,
   questionTimeLimitSeconds: 30,
   speedBonus: true,
   showQuestionOnStudent: true,
@@ -182,6 +184,7 @@ export function parseSessionSettings(settingsJson?: string | null): SessionSetti
       registeredOnly: booleanSetting(parsed.registeredOnly, DEFAULT_SESSION_SETTINGS.registeredOnly),
       seriesId: typeof parsed.seriesId === "string" ? parsed.seriesId : DEFAULT_SESSION_SETTINGS.seriesId,
       roundId: typeof parsed.roundId === "string" ? parsed.roundId : DEFAULT_SESSION_SETTINGS.roundId,
+      classId: typeof parsed.classId === "string" ? parsed.classId : DEFAULT_SESSION_SETTINGS.classId,
       questionTimeLimitSeconds: numberSetting(
         parsed.questionTimeLimitSeconds,
         DEFAULT_SESSION_SETTINGS.questionTimeLimitSeconds,

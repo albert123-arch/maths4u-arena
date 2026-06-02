@@ -51,7 +51,7 @@ export async function POST(request: Request) {
       return fail(messages.api.studentDisabled, 403);
     }
 
-    if (settings.registeredOnly && !settings.seriesId) {
+    if (settings.registeredOnly && !settings.seriesId && !settings.classId) {
       return fail(messages.api.seriesAccessCheckRequired, 409);
     }
 
@@ -70,6 +70,24 @@ export async function POST(request: Request) {
 
       if (!registration || registration.status !== "REGISTERED") {
         return fail(messages.api.studentRegistrationRequired, 403);
+      }
+    }
+
+    if (settings.registeredOnly && settings.classId && currentStudent) {
+      const membership = await prisma.classMembership.findUnique({
+        where: {
+          classId_studentId: {
+            classId: settings.classId,
+            studentId: currentStudent.id,
+          },
+        },
+        select: {
+          status: true,
+        },
+      });
+
+      if (!membership || membership.status !== "ACTIVE") {
+        return fail(messages.api.classMembershipRequired, 403);
       }
     }
 

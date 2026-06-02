@@ -4,6 +4,7 @@ import {
   GAME_MODES,
   GRADING_TYPES,
   QUESTION_TYPES,
+  CONTENT_VISIBILITIES,
   SERIES_ROUND_STATUSES,
   SERIES_STATUSES,
   STUDENT_STATUSES,
@@ -64,6 +65,21 @@ export const registerSchema = z.object({
     .max(191)
     .optional()
     .transform((value) => (value ? value : null)),
+});
+
+export const teacherWriteSchema = z.object({
+  email: z.email().transform((value) => value.toLowerCase()),
+  name: z
+    .string()
+    .trim()
+    .max(191)
+    .optional()
+    .transform((value) => (value ? value : null)),
+  password: z.string().min(8, messages.validation.passwordTooShort),
+});
+
+export const teacherPasswordResetSchema = z.object({
+  password: z.string().min(8, messages.validation.passwordTooShort),
 });
 
 export const studentLoginSchema = z.object({
@@ -167,6 +183,28 @@ export const seriesRoundWriteSchema = z.object({
 });
 
 export const seriesRoundUpdateSchema = seriesRoundWriteSchema.partial();
+
+export const classroomWriteSchema = z.object({
+  title: z.string().trim().min(2).max(191),
+  description: nullableText(),
+});
+
+export const classroomUpdateSchema = classroomWriteSchema.partial().extend({
+  status: z.enum(["ACTIVE", "ARCHIVED"]).optional(),
+});
+
+export const contentVisibilityUpdateSchema = z.object({
+  visibility: z.enum(CONTENT_VISIBILITIES),
+});
+
+export const teacherSessionCreateSchema = sessionCreateSchema.extend({
+  classId: z
+    .string()
+    .trim()
+    .max(191)
+    .optional()
+    .transform((value) => (value ? value : null)),
+});
 
 export const sessionStatusUpdateSchema = z.object({
   action: z.enum(["START", "FINISH"]),

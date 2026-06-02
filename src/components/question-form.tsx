@@ -37,9 +37,11 @@ const trueFalseOptions = [
 export function QuestionForm({
   initial,
   mode = "create",
+  apiBase = "/api/admin/questions",
 }: {
   initial?: QuestionFormValues;
   mode?: "create" | "edit";
+  apiBase?: string;
 }) {
   const router = useRouter();
   const [subject, setSubject] = useState(initial?.subject ?? messages.questions.defaults.subject);
@@ -122,8 +124,8 @@ export function QuestionForm({
 
     const response = await fetch(
       mode === "edit" && initial?.id
-        ? `/api/admin/questions/${initial.id}`
-        : "/api/admin/questions",
+        ? `${apiBase}/${initial.id}`
+        : apiBase,
       {
         method: mode === "edit" ? "PATCH" : "POST",
         headers: {

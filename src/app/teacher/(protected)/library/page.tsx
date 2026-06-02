@@ -1,0 +1,113 @@
+import { CopyLibraryTestButton } from "@/components/teacher-library-actions";
+import { requireTeacherUser } from "@/lib/auth";
+import { messages } from "@/lib/messages";
+import { prisma } from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
+
+export default async function TeacherLibraryPage() {
+  const teacher = await requireTeacherUser();
+  const [tests, questions] = await Promise.all([
+    prisma.test.findMany({
+      where: {
+        ownerUserId: { not: teacher.id },
+        visibility: { in: ["PUBLIC", "CURATED"] },
+        status: { not: "ARCHIVED" },
+      },
+      orderBy: [{ visibility: "asc" }, { sharedAt: "desc" }, { updatedAt: "desc" }],
+      include: {
+        owner: { select: { name: true, email: true } },
+        versions: {
+          where: { status: "PUBLISHED" },
+          orderBy: { versionNumber: "desc" },
+          take: 1,
+          include: {
+            _count: { select: { questions: true } },
+          },
+        },
+      },
+    }),
+    prisma.question.findMany({
+      where: {
+        ownerUserId: { not: teacher.id },
+        visibility: { in: ["PUBLIC", "CURATED"] },
+      },
+      orderBy: [{ visibility: "asc" }, { updatedAt: "desc" }],
+      take: 40,
+      include: {
+        owner: { select: { name: true, email: true } },
+      },
+    }),
+  ]);
+
+  return (
+    <div className="grid gap-6">
+      <div>
+        <h1 className="text-3xl font-bold">{messages.teacher.libraryTitle}</h1>
+        <p className="mt-2 text-slate-600">{messages.teacher.libraryDescription}</p>
+      </div>
+
+      <section className="grid gap-3">
+        <h2 className="text-xl font-semibold">{messages.tests.title}</h2>
+        {tests.length === 0 ? (
+          <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
+            {messages.teacher.noLibraryContent}
+          </p>
+        ) : (
+          <div className="divide-y divide-slate-200 overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
+            {tests.map((test) => {
+              const published = test.versions[0];
+
+              return (
+                <article key={test.id} className="grid gap-4 p-4 md:grid-cols-[1fr_auto] md:items-center">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h2 className="font-semibold">{test.title}</h2>
+                      <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
+                        {test.visibility}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-sm text-slate-600">
+                      {test.subject} - {test.owner?.name ?? test.owner?.email ?? messages.results.hidden} -{" "}
+                      {published?._count.questions ?? 0} {messages.tests.questionCount}
+                    </p>
+                  </div>
+                  {published ? <CopyLibraryTestButton id={test.id} /> : null}
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      <section className="grid gap-3">
+        <h2 className="text-xl font-semibold">{messages.questions.title}</h2>
+        {questions.length === 0 ? (
+          <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
+            {messages.teacher.noLibraryContent}
+          </p>
+        ) : (
+          <div className="divide-y divide-slate-200 overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
+            {questions.map((question) => (
+              <article key={question.id} className="p-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="line-clamp-1 font-semibold">{question.prompt}</h3>
+                  <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
+                    {question.type}
+                  </span>
+                  <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
+                    {question.visibility}
+                  </span>
+                </div>
+                <p className="mt-1 text-sm text-slate-600">
+                  {question.subject} - {messages.questions.fields.difficulty.toLowerCase()}{" "}
+                  {question.difficulty} - {question.owner?.name ?? question.owner?.email ?? messages.results.hidden}
+                </p>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}

@@ -43,6 +43,27 @@ export default async function StudentDashboardPage() {
       round: { select: { title: true, roundNumber: true } },
     },
   });
+  const classMemberships = await prisma.classMembership.findMany({
+    where: {
+      studentId: student.id,
+      status: "ACTIVE",
+    },
+    orderBy: { joinedAt: "desc" },
+    include: {
+      classroom: {
+        select: {
+          title: true,
+          joinCode: true,
+          teacher: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
 
   return (
     <StudentShell student={student}>
@@ -55,6 +76,29 @@ export default async function StudentDashboardPage() {
               {messages.student.group}: {student.groupName}
             </p>
           ) : null}
+        </section>
+
+        <section className="grid gap-3">
+          <h2 className="text-xl font-semibold">{messages.student.classesTitle}</h2>
+          {classMemberships.length === 0 ? (
+            <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
+              {messages.student.noClasses}
+            </p>
+          ) : (
+            <div className="grid gap-3 md:grid-cols-2">
+              {classMemberships.map((membership) => (
+                <article key={membership.id} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
+                  <h3 className="font-semibold">{membership.classroom.title}</h3>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {membership.classroom.teacher.name ?? membership.classroom.teacher.email}
+                  </p>
+                  <p className="mt-3 text-sm font-semibold text-teal-800">
+                    {messages.teacher.joinCode}: {membership.classroom.joinCode}
+                  </p>
+                </article>
+              ))}
+            </div>
+          )}
         </section>
 
         <section className="grid gap-3">

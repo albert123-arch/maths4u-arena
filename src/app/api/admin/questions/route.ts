@@ -41,6 +41,7 @@ export async function POST(request: Request) {
         difficulty: input.difficulty,
         gradingType: input.gradingType,
         gradingRulesJson: input.gradingRulesJson,
+        ownerUserId: user.id,
         options: {
           create: input.options.map((option, index) => ({
             optionText: option.optionText,

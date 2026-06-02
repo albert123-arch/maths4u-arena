@@ -56,6 +56,7 @@ export async function POST(request: Request) {
         locale: input.locale,
         status: input.status,
         createdById: user.id,
+        ownerUserId: user.id,
         versions: {
           create: {
             versionNumber: 1,

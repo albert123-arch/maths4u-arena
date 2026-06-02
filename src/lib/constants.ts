@@ -51,6 +51,18 @@ export const SERIES_ROUND_STATUSES = [
   "FINISHED",
 ] as const;
 
+export const CLASSROOM_STATUSES = ["ACTIVE", "ARCHIVED"] as const;
+
+export const CLASS_MEMBERSHIP_STATUSES = ["ACTIVE", "PENDING", "REMOVED"] as const;
+
+export const CONTENT_VISIBILITIES = [
+  "PRIVATE",
+  "CLASS_ONLY",
+  "PUBLIC",
+  "CURATED",
+  "ARCHIVED",
+] as const;
+
 export type TestStatusValue = (typeof TEST_STATUSES)[number];
 export type QuestionTypeValue = (typeof QUESTION_TYPES)[number];
 export type GradingTypeValue = (typeof GRADING_TYPES)[number];
@@ -58,3 +70,6 @@ export type GameModeValue = (typeof GAME_MODES)[number];
 export type StudentStatusValue = (typeof STUDENT_STATUSES)[number];
 export type SeriesStatusValue = (typeof SERIES_STATUSES)[number];
 export type SeriesRoundStatusValue = (typeof SERIES_ROUND_STATUSES)[number];
+export type ClassroomStatusValue = (typeof CLASSROOM_STATUSES)[number];
+export type ClassMembershipStatusValue = (typeof CLASS_MEMBERSHIP_STATUSES)[number];
+export type ContentVisibilityValue = (typeof CONTENT_VISIBILITIES)[number];

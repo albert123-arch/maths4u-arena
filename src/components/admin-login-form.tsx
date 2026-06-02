@@ -6,7 +6,12 @@ import { FormEvent, useState } from "react";
 import { messages } from "@/lib/messages";
 
 type ApiResponse =
-  | { ok: true; data: unknown }
+  | {
+      ok: true;
+      data: {
+        redirectTo?: string;
+      };
+    }
   | { ok: false; error: string };
 
 export function AdminLoginForm() {
@@ -36,7 +41,7 @@ export function AdminLoginForm() {
         return;
       }
 
-      router.push("/admin");
+      router.push(result.data.redirectTo ?? "/admin");
       router.refresh();
     } catch {
       setError(messages.adminLogin.failed);

@@ -23,9 +23,11 @@ type ApiResponse =
 export function TestForm({
   initial,
   mode = "create",
+  apiBase = "/api/admin/tests",
 }: {
   initial?: TestFormValues;
   mode?: "create" | "edit";
+  apiBase?: string;
 }) {
   const router = useRouter();
   const [title, setTitle] = useState(initial?.title ?? "");
@@ -45,7 +47,7 @@ export function TestForm({
     setMessage("");
 
     const response = await fetch(
-      mode === "edit" && initial?.id ? `/api/admin/tests/${initial.id}` : "/api/admin/tests",
+      mode === "edit" && initial?.id ? `${apiBase}/${initial.id}` : apiBase,
       {
         method: mode === "edit" ? "PATCH" : "POST",
         headers: {

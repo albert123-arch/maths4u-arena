@@ -1,0 +1,183 @@
+-- Maths4U Arena manual migration 002
+-- Teacher accounts, classrooms, class membership, and content library metadata.
+-- Import this file in phpMyAdmin after database/migrations/001_student_series.sql.
+
+CREATE TABLE IF NOT EXISTS `Classroom` (
+  `id` VARCHAR(191) NOT NULL,
+  `teacherId` VARCHAR(191) NOT NULL,
+  `title` VARCHAR(191) NOT NULL,
+  `description` LONGTEXT NULL,
+  `joinCode` VARCHAR(16) NOT NULL,
+  `status` ENUM('ACTIVE', 'ARCHIVED') NOT NULL DEFAULT 'ACTIVE',
+  `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `Classroom_joinCode_key` (`joinCode`),
+  KEY `Classroom_teacherId_idx` (`teacherId`),
+  KEY `Classroom_status_idx` (`status`),
+  CONSTRAINT `Classroom_teacherId_fkey`
+    FOREIGN KEY (`teacherId`) REFERENCES `User` (`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `ClassMembership` (
+  `id` VARCHAR(191) NOT NULL,
+  `classId` VARCHAR(191) NOT NULL,
+  `studentId` VARCHAR(191) NOT NULL,
+  `status` ENUM('ACTIVE', 'PENDING', 'REMOVED') NOT NULL DEFAULT 'ACTIVE',
+  `joinedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ClassMembership_classId_studentId_key` (`classId`, `studentId`),
+  KEY `ClassMembership_studentId_idx` (`studentId`),
+  KEY `ClassMembership_status_idx` (`status`),
+  CONSTRAINT `ClassMembership_classId_fkey`
+    FOREIGN KEY (`classId`) REFERENCES `Classroom` (`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `ClassMembership_studentId_fkey`
+    FOREIGN KEY (`studentId`) REFERENCES `StudentAccount` (`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Test' AND COLUMN_NAME = 'ownerUserId') = 0,
+  'ALTER TABLE `Test` ADD COLUMN `ownerUserId` VARCHAR(191) NULL',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Test' AND COLUMN_NAME = 'visibility') = 0,
+  'ALTER TABLE `Test` ADD COLUMN `visibility` ENUM(''PRIVATE'', ''CLASS_ONLY'', ''PUBLIC'', ''CURATED'', ''ARCHIVED'') NOT NULL DEFAULT ''PRIVATE''',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Test' AND COLUMN_NAME = 'sourceId') = 0,
+  'ALTER TABLE `Test` ADD COLUMN `sourceId` VARCHAR(191) NULL',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Test' AND COLUMN_NAME = 'copiedFromId') = 0,
+  'ALTER TABLE `Test` ADD COLUMN `copiedFromId` VARCHAR(191) NULL',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Test' AND COLUMN_NAME = 'sharedAt') = 0,
+  'ALTER TABLE `Test` ADD COLUMN `sharedAt` DATETIME(3) NULL',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Question' AND COLUMN_NAME = 'ownerUserId') = 0,
+  'ALTER TABLE `Question` ADD COLUMN `ownerUserId` VARCHAR(191) NULL',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Question' AND COLUMN_NAME = 'visibility') = 0,
+  'ALTER TABLE `Question` ADD COLUMN `visibility` ENUM(''PRIVATE'', ''CLASS_ONLY'', ''PUBLIC'', ''CURATED'', ''ARCHIVED'') NOT NULL DEFAULT ''PRIVATE''',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Question' AND COLUMN_NAME = 'sourceId') = 0,
+  'ALTER TABLE `Question` ADD COLUMN `sourceId` VARCHAR(191) NULL',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Question' AND COLUMN_NAME = 'copiedFromId') = 0,
+  'ALTER TABLE `Question` ADD COLUMN `copiedFromId` VARCHAR(191) NULL',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Question' AND COLUMN_NAME = 'sharedAt') = 0,
+  'ALTER TABLE `Question` ADD COLUMN `sharedAt` DATETIME(3) NULL',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+UPDATE `Test`
+SET `ownerUserId` = `createdById`
+WHERE `ownerUserId` IS NULL AND `createdById` IS NOT NULL;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Test' AND INDEX_NAME = 'Test_ownerUserId_idx') = 0,
+  'CREATE INDEX `Test_ownerUserId_idx` ON `Test` (`ownerUserId`)',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Test' AND INDEX_NAME = 'Test_visibility_idx') = 0,
+  'CREATE INDEX `Test_visibility_idx` ON `Test` (`visibility`)',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Test' AND INDEX_NAME = 'Test_sourceId_idx') = 0,
+  'CREATE INDEX `Test_sourceId_idx` ON `Test` (`sourceId`)',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Test' AND INDEX_NAME = 'Test_copiedFromId_idx') = 0,
+  'CREATE INDEX `Test_copiedFromId_idx` ON `Test` (`copiedFromId`)',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Question' AND INDEX_NAME = 'Question_ownerUserId_idx') = 0,
+  'CREATE INDEX `Question_ownerUserId_idx` ON `Question` (`ownerUserId`)',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Question' AND INDEX_NAME = 'Question_visibility_idx') = 0,
+  'CREATE INDEX `Question_visibility_idx` ON `Question` (`visibility`)',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Question' AND INDEX_NAME = 'Question_sourceId_idx') = 0,
+  'CREATE INDEX `Question_sourceId_idx` ON `Question` (`sourceId`)',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Question' AND INDEX_NAME = 'Question_copiedFromId_idx') = 0,
+  'CREATE INDEX `Question_copiedFromId_idx` ON `Question` (`copiedFromId`)',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_SCHEMA = DATABASE() AND CONSTRAINT_NAME = 'Test_ownerUserId_fkey') = 0,
+  'ALTER TABLE `Test` ADD CONSTRAINT `Test_ownerUserId_fkey` FOREIGN KEY (`ownerUserId`) REFERENCES `User` (`id`) ON DELETE SET NULL ON UPDATE CASCADE',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql = IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_SCHEMA = DATABASE() AND CONSTRAINT_NAME = 'Question_ownerUserId_fkey') = 0,
+  'ALTER TABLE `Question` ADD CONSTRAINT `Question_ownerUserId_fkey` FOREIGN KEY (`ownerUserId`) REFERENCES `User` (`id`) ON DELETE SET NULL ON UPDATE CASCADE',
+  'SELECT 1'
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;

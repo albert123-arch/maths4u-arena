@@ -85,6 +85,25 @@ enum SeriesRoundStatus {
   FINISHED
 }
 
+enum ClassroomStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum ClassMembershipStatus {
+  ACTIVE
+  PENDING
+  REMOVED
+}
+
+enum ContentVisibility {
+  PRIVATE
+  CLASS_ONLY
+  PUBLIC
+  CURATED
+  ARCHIVED
+}
+
 model User {
   id           String   @id @default(cuid()) @db.VarChar(191)
   email        String   @unique @db.VarChar(191)
@@ -94,7 +113,10 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  tests Test[]
+  createdTests Test[]      @relation("TestCreatedBy")
+  ownedTests   Test[]      @relation("TestOwner")
+  questions    Question[]  @relation("QuestionOwner")
+  classrooms   Classroom[]
 }
 
 model Test {
@@ -106,15 +128,25 @@ model Test {
   locale      String     @default("ru") @db.VarChar(16)
   status      TestStatus @default(DRAFT)
   createdById String?    @db.VarChar(191)
+  ownerUserId String?    @db.VarChar(191)
+  visibility  ContentVisibility @default(PRIVATE)
+  sourceId    String?    @db.VarChar(191)
+  copiedFromId String?   @db.VarChar(191)
+  sharedAt    DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  createdBy User?         @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy User?         @relation("TestCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  owner     User?         @relation("TestOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
   versions  TestVersion[]
 
   @@index([createdById])
+  @@index([ownerUserId])
   @@index([status])
   @@index([subject])
+  @@index([visibility])
+  @@index([sourceId])
+  @@index([copiedFromId])
 }
 
 model TestVersion {
@@ -149,17 +181,27 @@ model Question {
   mediaJson        String?      @db.LongText
   gradingType      GradingType
   gradingRulesJson String?      @db.LongText
+  ownerUserId      String?      @db.VarChar(191)
+  visibility       ContentVisibility @default(PRIVATE)
+  sourceId         String?      @db.VarChar(191)
+  copiedFromId     String?      @db.VarChar(191)
+  sharedAt         DateTime?
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
 
+  owner        User?                 @relation("QuestionOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
   options      QuestionOption[]
   testVersions TestVersionQuestion[]
   answers      Answer[]
   scoreEvents  ScoreEvent[]
 
+  @@index([ownerUserId])
+  @@index([visibility])
   @@index([subject])
   @@index([type])
   @@index([difficulty])
+  @@index([sourceId])
+  @@index([copiedFromId])
 }
 
 model QuestionOption {
@@ -284,11 +326,44 @@ model StudentAccount {
   updatedAt    DateTime      @updatedAt
 
   registrations SeriesRegistration[]
+  classMemberships ClassMembership[]
   participants  Participant[]
   scores        SeriesScore[]
 
   @@index([status])
   @@index([groupName])
+}
+
+model Classroom {
+  id          String          @id @default(cuid()) @db.VarChar(191)
+  teacherId   String          @db.VarChar(191)
+  title       String          @db.VarChar(191)
+  description String?         @db.LongText
+  joinCode    String          @unique @db.VarChar(16)
+  status      ClassroomStatus @default(ACTIVE)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  teacher     User              @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  memberships ClassMembership[]
+
+  @@index([teacherId])
+  @@index([status])
+}
+
+model ClassMembership {
+  id        String                @id @default(cuid()) @db.VarChar(191)
+  classId   String                @db.VarChar(191)
+  studentId String                @db.VarChar(191)
+  status    ClassMembershipStatus @default(ACTIVE)
+  joinedAt  DateTime              @default(now())
+
+  classroom Classroom      @relation(fields: [classId], references: [id], onDelete: Cascade)
+  student   StudentAccount @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([classId, studentId])
+  @@index([studentId])
+  @@index([status])
 }
 
 model Series {

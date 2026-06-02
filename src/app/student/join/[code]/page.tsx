@@ -84,24 +84,44 @@ export default async function StudentJoinRoundPage({ params }: PageProps) {
     redirect(`/student/login?next=${encodeURIComponent(`/student/join/${session.code}`)}`);
   }
 
-  if (!settings.seriesId) {
+  if (!settings.seriesId && !settings.classId) {
     return messagePage(messages.student.joinRoundTitle, messages.api.seriesAccessCheckRequired, session.code);
   }
 
-  const registration = await prisma.seriesRegistration.findUnique({
-    where: {
-      seriesId_studentId: {
-        seriesId: settings.seriesId,
-        studentId: student.id,
+  if (settings.seriesId) {
+    const registration = await prisma.seriesRegistration.findUnique({
+      where: {
+        seriesId_studentId: {
+          seriesId: settings.seriesId,
+          studentId: student.id,
+        },
       },
-    },
-    select: {
-      status: true,
-    },
-  });
+      select: {
+        status: true,
+      },
+    });
 
-  if (!registration || registration.status !== "REGISTERED") {
-    return messagePage(messages.student.notRegisteredForSeries, messages.play.notRegisteredForSeries, session.code);
+    if (!registration || registration.status !== "REGISTERED") {
+      return messagePage(messages.student.notRegisteredForSeries, messages.play.notRegisteredForSeries, session.code);
+    }
+  }
+
+  if (settings.classId) {
+    const membership = await prisma.classMembership.findUnique({
+      where: {
+        classId_studentId: {
+          classId: settings.classId,
+          studentId: student.id,
+        },
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (!membership || membership.status !== "ACTIVE") {
+      return messagePage(messages.api.classMembershipRequired, messages.api.classMembershipRequired, session.code);
+    }
   }
 
   return (

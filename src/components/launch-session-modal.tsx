@@ -36,11 +36,18 @@ export function LaunchSessionModal({
   versionTitle,
   testVersionId,
   questionCount,
+  apiPath = "/api/sessions",
+  classrooms = [],
 }: {
   testTitle: string;
   versionTitle: string;
   testVersionId: string;
   questionCount: number;
+  apiPath?: string;
+  classrooms?: Array<{
+    id: string;
+    title: string;
+  }>;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -56,6 +63,8 @@ export function LaunchSessionModal({
   const [teamMode, setTeamMode] = useState(false);
   const [teams, setTeams] = useState<SessionTeam[]>(DEFAULT_SESSION_TEAMS);
   const [teamScoring, setTeamScoring] = useState<TeamScoringMode>("sum");
+  const [accessMode, setAccessMode] = useState<"GUEST" | "CLASS_ONLY">("GUEST");
+  const [classId, setClassId] = useState(classrooms[0]?.id ?? "");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
@@ -70,7 +79,8 @@ export function LaunchSessionModal({
     setError("");
 
     try {
-      const response = await fetch("/api/sessions", {
+      const selectedClassId = accessMode === "CLASS_ONLY" ? classId : null;
+      const response = await fetch(apiPath, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,6 +100,8 @@ export function LaunchSessionModal({
             teamAssignMode: "manual",
             teams,
             teamScoring,
+            registeredOnly: Boolean(selectedClassId),
+            classId: selectedClassId,
             ...(mode === "HOST_PACED"
               ? {
                   questionTimeLimitSeconds,
@@ -106,6 +118,7 @@ export function LaunchSessionModal({
               : {}),
           }),
           showResults: true,
+          classId: selectedClassId,
         }),
       });
       const result = (await response.json()) as ApiResponse;
@@ -245,6 +258,52 @@ export function LaunchSessionModal({
                 </div>
                 <section className="grid gap-3 rounded-md border border-slate-200 p-4">
                   <h3 className="font-semibold">{messages.sessions.settingsTitle}</h3>
+                  {classrooms.length > 0 ? (
+                    <div className="grid gap-3 border-b border-slate-200 pb-3">
+                      <p className="text-sm font-semibold text-slate-700">{messages.teacher.launchForClass}</p>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        <button
+                          type="button"
+                          onClick={() => setAccessMode("GUEST")}
+                          className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${
+                            accessMode === "GUEST"
+                              ? "border-teal-500 bg-teal-50 text-teal-900"
+                              : "border-slate-300 hover:bg-slate-50"
+                          }`}
+                        >
+                          {messages.teacher.guestLink}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setAccessMode("CLASS_ONLY")}
+                          className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${
+                            accessMode === "CLASS_ONLY"
+                              ? "border-teal-500 bg-teal-50 text-teal-900"
+                              : "border-slate-300 hover:bg-slate-50"
+                          }`}
+                        >
+                          {messages.teacher.classOnlyLink}
+                        </button>
+                      </div>
+                      {accessMode === "CLASS_ONLY" ? (
+                        <label className="grid gap-1 text-sm font-medium text-slate-700">
+                          {messages.teacher.myClasses}
+                          <select
+                            value={classId}
+                            onChange={(event) => setClassId(event.target.value)}
+                            className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                            required
+                          >
+                            {classrooms.map((classroom) => (
+                              <option key={classroom.id} value={classroom.id}>
+                                {classroom.title}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      ) : null}
+                    </div>
+                  ) : null}
                   {mode === "HOST_PACED" ? (
                     <label className="grid gap-1 text-sm font-medium text-slate-700">
                       {messages.sessions.questionTimeLimitSeconds}

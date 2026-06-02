@@ -61,12 +61,16 @@ export function TestVersionEditor({
   versions,
   draftVersion,
   questionBank,
+  apiBase = "/api/admin",
+  showLaunch = true,
 }: {
   testTitle: string;
   testId: string;
   versions: VersionSummary[];
   draftVersion: DraftVersion | null;
   questionBank: QuestionBankItem[];
+  apiBase?: string;
+  showLaunch?: boolean;
 }) {
   const router = useRouter();
   const [title, setTitle] = useState(draftVersion?.title ?? "");
@@ -102,7 +106,7 @@ export function TestVersionEditor({
     setMessage("");
 
     await handleResponse(
-      await fetch(`/api/admin/tests/${testId}/versions/draft`, { method: "POST" }),
+      await fetch(`${apiBase}/tests/${testId}/versions/draft`, { method: "POST" }),
       messages.tests.draftCreated,
     );
     setPending("");
@@ -120,7 +124,7 @@ export function TestVersionEditor({
     setMessage("");
 
     await handleResponse(
-      await fetch(`/api/admin/test-versions/${draftVersion.id}`, {
+      await fetch(`${apiBase}/test-versions/${draftVersion.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -148,7 +152,7 @@ export function TestVersionEditor({
     setMessage("");
 
     const added = await handleResponse(
-      await fetch(`/api/admin/test-versions/${draftVersion.id}/questions`, {
+      await fetch(`${apiBase}/test-versions/${draftVersion.id}/questions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -183,7 +187,7 @@ export function TestVersionEditor({
     setMessage("");
 
     await handleResponse(
-      await fetch(`/api/admin/test-versions/${draftVersion.id}/questions`, {
+      await fetch(`${apiBase}/test-versions/${draftVersion.id}/questions`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -201,7 +205,7 @@ export function TestVersionEditor({
     setMessage("");
 
     await handleResponse(
-      await fetch(`/api/admin/test-version-questions/${item.id}`, {
+      await fetch(`${apiBase}/test-version-questions/${item.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -222,7 +226,7 @@ export function TestVersionEditor({
     setMessage("");
 
     await handleResponse(
-      await fetch(`/api/admin/test-version-questions/${item.id}`, { method: "DELETE" }),
+      await fetch(`${apiBase}/test-version-questions/${item.id}`, { method: "DELETE" }),
       messages.tests.questionRemoved,
     );
     setPending("");
@@ -238,7 +242,7 @@ export function TestVersionEditor({
     setMessage("");
 
     await handleResponse(
-      await fetch(`/api/admin/test-versions/${draftVersion.id}/publish`, { method: "POST" }),
+      await fetch(`${apiBase}/test-versions/${draftVersion.id}/publish`, { method: "POST" }),
       messages.tests.versionPublished,
     );
     setPending("");
@@ -263,7 +267,7 @@ export function TestVersionEditor({
                   {versionDate(version.publishedAt)}
                 </p>
               </div>
-              {version.status === "PUBLISHED" ? (
+              {showLaunch && version.status === "PUBLISHED" ? (
                 <LaunchSessionModal
                   testTitle={testTitle}
                   versionTitle={`${messages.tests.versionPrefix} ${version.versionNumber}`}

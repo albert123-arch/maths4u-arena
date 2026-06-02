@@ -1,4 +1,4 @@
-import { requireAdminApi } from "@/lib/auth";
+import { requireSessionHostApi } from "@/lib/auth";
 import { startHostPacedSession } from "@/lib/host-paced";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
@@ -12,14 +12,14 @@ type RouteContext = {
 };
 
 export async function POST(_request: Request, { params }: RouteContext) {
-  const user = await requireAdminApi();
+  const { code } = await params;
+  const normalizedCode = code.toUpperCase();
+  const user = await requireSessionHostApi(normalizedCode);
 
   if (!user) {
     return noStoreJson({ ok: false, error: messages.api.unauthorized }, 401);
   }
 
-  const { code } = await params;
-  const normalizedCode = code.toUpperCase();
   const session = await prisma.gameSession.findUnique({
     where: { code: normalizedCode },
     select: { id: true, mode: true, status: true, settingsJson: true },

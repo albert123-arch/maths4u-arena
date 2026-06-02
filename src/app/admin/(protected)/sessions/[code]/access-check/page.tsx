@@ -119,10 +119,10 @@ export default async function SessionAccessCheckPage({ params }: PageProps) {
     (participant) => !participant.studentAccountId,
   );
   const warnings = [
-    settings.registeredOnly && !settings.seriesId
-      ? "This session is registered-only but has no seriesId in settingsJson."
+    settings.registeredOnly && !settings.seriesId && !settings.classId
+      ? "This session is registered-only but has no seriesId or classId in settingsJson."
       : "",
-    settings.registeredOnly && registeredStudents.length === 0
+    settings.registeredOnly && settings.seriesId && registeredStudents.length === 0
       ? "This session is registered-only but no students are registered for the series."
       : "",
     round && !round.sessionId ? "This round has no sessionId." : "",

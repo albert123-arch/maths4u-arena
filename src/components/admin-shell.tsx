@@ -12,6 +12,8 @@ const navItems = [
   { href: "/admin/sessions", label: messages.adminShell.nav.sessions },
   { href: "/admin/students", label: messages.adminShell.nav.students },
   { href: "/admin/series", label: messages.adminShell.nav.series },
+  { href: "/admin/teachers", label: messages.adminShell.nav.teachers },
+  { href: "/admin/library", label: messages.adminShell.nav.library },
   { href: "/admin/setup-check", label: messages.adminShell.nav.setupCheck },
   { href: "/admin/qa", label: messages.adminShell.nav.qa },
 ];
