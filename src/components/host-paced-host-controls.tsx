@@ -106,10 +106,12 @@ export function HostPacedHostControls({
   initialLive,
   joinLink,
   settingsJson,
+  presenterMode = false,
 }: {
   initialLive: HostPacedLive;
   joinLink: string;
   settingsJson: string;
+  presenterMode?: boolean;
 }) {
   const [live, setLive] = useState(initialLive);
   const [pendingAction, setPendingAction] = useState("");
@@ -203,6 +205,10 @@ export function HostPacedHostControls({
   }, [initialLive.code]);
 
   useEffect(() => {
+    if (presenterMode) {
+      return;
+    }
+
     if (live.phase !== "STARTING") {
       autoOpenStarted.current = false;
       return;
@@ -252,7 +258,7 @@ export function HostPacedHostControls({
     return () => {
       timers.forEach((timer) => window.clearTimeout(timer));
     };
-  }, [live.code, live.currentQuestionIndex, live.phase]);
+  }, [live.code, live.currentQuestionIndex, live.phase, presenterMode]);
 
   const currentQuestion = live.currentQuestion;
   const timeLimit = currentQuestion?.timeLimitSeconds ?? live.settings.questionTimeLimitSeconds;
@@ -265,6 +271,17 @@ export function HostPacedHostControls({
 
   return (
     <div className="grid gap-6">
+      <div className="flex justify-end">
+        <Link
+          href={presenterMode ? `/host/${live.code}` : `/host/${live.code}/present`}
+          className="rounded-md border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-900 active:scale-[0.98]"
+        >
+          {presenterMode
+            ? messages.host.hostPaced.exitPresenterMode
+            : messages.host.hostPaced.presenterMode}
+        </Link>
+      </div>
+
       <header className="grid gap-3 text-center">
         <div className="flex flex-wrap justify-center gap-2">
           <span className={`rounded-md border px-3 py-1 text-sm font-bold ${phaseBadgeClass(live.phase)}`}>
@@ -319,7 +336,7 @@ export function HostPacedHostControls({
       {live.phase === "STARTING" ? (
         <section className="rounded-md border border-teal-400 bg-teal-400/15 p-8 text-center text-teal-100">
           <p className="text-sm font-semibold uppercase tracking-[0.2em]">
-            {messages.host.hostPaced.startingGame}
+            {messages.host.hostPaced.getReady}
           </p>
           <p className="mt-4 text-7xl font-black">
             {startingCountdown === "open" ? messages.host.gameStarted : startingCountdown ?? 3}
@@ -337,6 +354,7 @@ export function HostPacedHostControls({
             <MetricCard label={messages.host.hostPaced.timer} value={live.remainingSeconds ?? "-"} />
             <MetricCard label={messages.host.participants} value={live.participantCount} />
           </div>
+          <DistributionPanel distribution={live.answerDistribution} max={distributionMax} />
         </section>
       ) : null}
 
@@ -366,6 +384,7 @@ export function HostPacedHostControls({
         </section>
       ) : null}
 
+      {presenterMode ? null : (
       <section className="grid gap-3 rounded-md border border-slate-700 bg-slate-900 p-5">
         <h2 className="text-lg font-semibold">{messages.host.controlsTitle}</h2>
         <div className="flex flex-wrap gap-3">
@@ -457,6 +476,7 @@ export function HostPacedHostControls({
         </div>
         {error ? <p className="text-sm font-medium text-red-300">{error}</p> : null}
       </section>
+      )}
     </div>
   );
 }

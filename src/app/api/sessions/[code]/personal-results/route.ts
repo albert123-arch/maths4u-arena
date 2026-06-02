@@ -201,6 +201,7 @@ export async function POST(request: Request, { params }: RouteContext) {
       ok: true,
       data: {
         code: session.code,
+        mode: session.mode,
         testTitle: session.testVersion.test.title,
         sessionLabel: settings.label,
         displayName: participant.displayName,

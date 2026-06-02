@@ -157,6 +157,19 @@ export async function POST(request: Request) {
       },
     });
 
+    if (settings.seriesId && settings.roundId) {
+      await prisma.seriesRound.updateMany({
+        where: {
+          id: settings.roundId,
+          seriesId: settings.seriesId,
+        },
+        data: {
+          sessionId: session.id,
+          status: "LOBBY",
+        },
+      });
+    }
+
     return ok(session, 201);
   } catch (error) {
     return errorResponse(error);

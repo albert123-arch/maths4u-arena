@@ -11,18 +11,31 @@ type PageProps = {
   searchParams: Promise<{ code?: string }>;
 };
 
+async function getSessionSettingsJson(code: string) {
+  if (!code) {
+    return null;
+  }
+
+  try {
+    const session = await prisma.gameSession.findUnique({
+      where: { code },
+      select: {
+        settingsJson: true,
+      },
+    });
+
+    return session?.settingsJson ?? null;
+  } catch (error) {
+    console.error("Play page session lookup failed", error instanceof Error ? error.message : "Unknown error");
+    return null;
+  }
+}
+
 export default async function PlayPage({ searchParams }: PageProps) {
   const { code } = await searchParams;
   const normalizedCode = code?.toUpperCase() ?? "";
-  const session = normalizedCode
-    ? await prisma.gameSession.findUnique({
-        where: { code: normalizedCode },
-        select: {
-          settingsJson: true,
-        },
-      })
-    : null;
-  const settings = parseSessionSettings(session?.settingsJson);
+  const settingsJson = await getSessionSettingsJson(normalizedCode);
+  const settings = parseSessionSettings(settingsJson);
   const student = settings.registeredOnly ? await getCurrentStudent() : null;
 
   if (settings.registeredOnly && !student) {

@@ -40,6 +40,7 @@ async function getSeriesDetailData(id: string) {
               session: {
                 select: {
                   code: true,
+                  mode: true,
                   status: true,
                 },
               },

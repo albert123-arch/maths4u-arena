@@ -131,7 +131,33 @@ Additional manual migrations:
 - This migration is additive. It creates new tables and adds `Participant.studentAccountId`.
 - Run it only after `database/init_mysql.sql` has already created the base MVP tables.
 
-## Series Smoke Test
+## Manual Smoke Tests
+
+### Classic Guest Session
+
+1. Log in as an admin.
+2. Open `/admin/tests` and make sure a test has a published version with questions.
+3. Launch the published version as `Classic`.
+4. Open the host screen and confirm the QR code and join link are visible.
+5. Join from `/play?code=CODE` in another browser or mobile device.
+6. Start the session, answer questions, and submit.
+7. Finish the session from the host screen.
+8. Open `/admin/sessions/CODE/results` and download the CSV.
+9. Open `/game/CODE/results` as the participant and confirm personal results appear when enabled.
+
+### Host-Paced Guest Session
+
+1. Log in as an admin.
+2. Open `/admin/tests` and launch a published version as `Host-paced`.
+3. Set a question time limit, speed bonus, leaderboard visibility, and student results visibility in the launch modal.
+4. Open `/host/CODE` and confirm the lobby, QR code, participant list, and `Presenter mode` link work.
+5. Open `/host/CODE/present` on a display screen.
+6. Join from `/play?code=CODE`.
+7. Start the host-paced session and move through: lobby, starting, question, locked, reveal, leaderboard, next question, finish.
+8. Confirm student answers stay stable while the page polls.
+9. Confirm final leaderboard, personal results, and admin CSV download work.
+
+### Series Classic Round
 
 After importing `database/migrations/001_student_series.sql`, use this flow to confirm the registered student and series foundation:
 
@@ -142,10 +168,20 @@ After importing `database/migrations/001_student_series.sql`, use this flow to c
 5. Open the series detail page and register the student.
 6. Make sure at least one test version is published from `/admin/tests`.
 7. Add a round to the series using the published test version.
-8. Launch the round and open the host screen.
+8. Launch the round as `Classic` and open the host screen.
 9. Have the student log in from `/student/login`, join the live round, and play.
 10. Finish the session from the host screen.
 11. Open the admin results and the series leaderboard to confirm scores are recorded.
+
+### Series Host-Paced Round
+
+1. Complete the Series Classic setup through the student registration and round creation steps.
+2. On the series detail page, choose `Host-paced` as the round launch mode.
+3. Launch the round and open `/host/CODE`.
+4. Have the registered student log in from `/student/login` and join the live round.
+5. Run the host-paced flow through finish.
+6. Confirm `/admin/sessions/CODE/results`, the student personal results page, and the series leaderboard include the score.
+7. Use `Run again` only when you intentionally want the series round to point at a new session.
 
 ## Hostinger Deployment Notes
 
@@ -159,5 +195,6 @@ After importing `database/migrations/001_student_series.sql`, use this flow to c
 8. Start with `npm run start` for a full project upload, or run `.next/standalone/server.js` if deploying the standalone build output.
 9. Keep `.env` private on the server. Commit only `.env.example`.
 10. Use `/api/ping` and `/api/health` for public deployment checks. Detailed diagnostics such as `/api/db-check`, `/api/env-check`, `/api/mysql-check`, `/api/prisma-check`, and `/api/runtime-check` are admin-only.
+11. If deployed pages show old CSS or missing `_next/static` assets, clear Hostinger/browser cache or temporarily enable development mode in any CDN/proxy layer, then restart the Node.js app.
 
 Existing deployment target: `https://arena.maths4u.sbs`.

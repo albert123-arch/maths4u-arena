@@ -25,6 +25,7 @@ type StudentQuestion = {
   type: string;
   prompt: string;
   points: number;
+  timeLimitSeconds: number | null;
   options: Array<{
     id: string;
     optionText: string;
@@ -470,6 +471,10 @@ export function HostPacedGameClient({
     <section className="rounded-md border border-teal-200 bg-white p-6 text-center shadow-sm">
       <h2 className="text-2xl font-bold">{messages.game.finished}</h2>
       <p className="mt-2 text-slate-600">{messages.game.resultsReady}</p>
+      <p className="mt-3 font-semibold text-teal-800">
+        {messages.results.score}: {live.myScore}
+        {live.myRank ? ` - ${messages.results.rank} ${live.myRank}` : ""}
+      </p>
       <Link
         href={`/game/${code}/results`}
         className="mt-4 inline-flex rounded-md bg-teal-700 px-4 py-2 font-semibold text-white hover:bg-teal-800"
@@ -508,6 +513,7 @@ function QuestionScreen({
   const question = live.currentQuestionForStudent;
   const answered = live.hasAnsweredCurrentQuestion;
   const timeIsUp = live.remainingSeconds !== null && live.remainingSeconds <= 0;
+  const timeLimit = Math.max(1, question?.timeLimitSeconds ?? 30);
 
   if (!question) {
     return (
@@ -535,7 +541,7 @@ function QuestionScreen({
               width:
                 live.remainingSeconds === null
                   ? "0%"
-                  : `${Math.max(0, Math.min(100, (live.remainingSeconds / 30) * 100))}%`,
+                  : `${Math.max(0, Math.min(100, (live.remainingSeconds / timeLimit) * 100))}%`,
             }}
           />
         </div>
@@ -593,7 +599,7 @@ function AnswerInput({
         {question.options.map((option) => (
           <label
             key={option.id}
-            className="flex items-center gap-3 rounded-md border border-slate-300 px-3 py-3 text-sm hover:bg-slate-50"
+            className="flex items-center gap-3 rounded-md border border-slate-300 px-4 py-4 text-base font-semibold transition hover:bg-slate-50 active:scale-[0.99]"
           >
             <input
               type="radio"

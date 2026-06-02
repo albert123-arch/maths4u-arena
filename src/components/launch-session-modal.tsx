@@ -40,6 +40,13 @@ export function LaunchSessionModal({
   const [open, setOpen] = useState(false);
   const [label, setLabel] = useState("");
   const [mode, setMode] = useState<"CLASSIC" | "HOST_PACED">("CLASSIC");
+  const [allowLateJoin, setAllowLateJoin] = useState(true);
+  const [showStudentResults, setShowStudentResults] = useState(true);
+  const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(true);
+  const [autoSubmitOnFinish, setAutoSubmitOnFinish] = useState(true);
+  const [questionTimeLimitSeconds, setQuestionTimeLimitSeconds] = useState(30);
+  const [speedBonus, setSpeedBonus] = useState(true);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
@@ -60,11 +67,15 @@ export function LaunchSessionModal({
         settingsJson: sessionSettingsJson({
           ...DEFAULT_SESSION_SETTINGS,
           label,
+          allowLateJoin,
+          showStudentResults,
+          showCorrectAnswers,
+          showLeaderboard,
+          autoSubmitOnFinish: mode === "HOST_PACED" ? false : autoSubmitOnFinish,
           ...(mode === "HOST_PACED"
             ? {
-                autoSubmitOnFinish: false,
-                questionTimeLimitSeconds: 30,
-                speedBonus: true,
+                questionTimeLimitSeconds,
+                speedBonus,
                 showQuestionOnStudent: true,
                 showQuestionOnHost: true,
                 autoAdvance: false,
@@ -210,6 +221,57 @@ export function LaunchSessionModal({
                     ))}
                   </div>
                 </div>
+                <section className="grid gap-3 rounded-md border border-slate-200 p-4">
+                  <h3 className="font-semibold">{messages.sessions.settingsTitle}</h3>
+                  {mode === "HOST_PACED" ? (
+                    <label className="grid gap-1 text-sm font-medium text-slate-700">
+                      {messages.sessions.questionTimeLimitSeconds}
+                      <input
+                        type="number"
+                        min={5}
+                        max={600}
+                        value={questionTimeLimitSeconds}
+                        onChange={(event) => setQuestionTimeLimitSeconds(Number(event.target.value))}
+                        className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                      />
+                    </label>
+                  ) : null}
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <SettingToggle
+                      label={messages.sessions.allowLateJoin}
+                      checked={allowLateJoin}
+                      onChange={setAllowLateJoin}
+                    />
+                    <SettingToggle
+                      label={messages.sessions.showStudentResults}
+                      checked={showStudentResults}
+                      onChange={setShowStudentResults}
+                    />
+                    <SettingToggle
+                      label={messages.sessions.showLeaderboard}
+                      checked={showLeaderboard}
+                      onChange={setShowLeaderboard}
+                    />
+                    <SettingToggle
+                      label={messages.sessions.showCorrectAnswers}
+                      checked={showCorrectAnswers}
+                      onChange={setShowCorrectAnswers}
+                    />
+                    {mode === "HOST_PACED" ? (
+                      <SettingToggle
+                        label={messages.sessions.speedBonus}
+                        checked={speedBonus}
+                        onChange={setSpeedBonus}
+                      />
+                    ) : (
+                      <SettingToggle
+                        label={messages.sessions.autoSubmitOnFinish}
+                        checked={autoSubmitOnFinish}
+                        onChange={setAutoSubmitOnFinish}
+                      />
+                    )}
+                  </div>
+                </section>
                 {error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}
                 <button
                   type="submit"
@@ -230,5 +292,27 @@ export function LaunchSessionModal({
         </div>
       ) : null}
     </>
+  );
+}
+
+function SettingToggle({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <label className="flex items-center justify-between gap-3 rounded-md border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700">
+      <span>{label}</span>
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(event) => onChange(event.target.checked)}
+        className="h-4 w-4 accent-teal-700"
+      />
+    </label>
   );
 }

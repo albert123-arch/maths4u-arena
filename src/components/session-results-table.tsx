@@ -139,7 +139,7 @@ export function SessionResultsTable({ initialData }: { initialData: ResultData }
             <p className="mt-1 text-sm font-semibold text-teal-800">
               {messages.game.codeLabel}: {data.code}
             </p>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-2 w-fit rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
               {data.mode === "HOST_PACED" ? messages.sessions.modeHostPaced : messages.sessions.modeClassic}
             </p>
           </div>

@@ -41,6 +41,7 @@ type RoundRow = {
   session: {
     code: string;
     status: string;
+    mode?: string;
   } | null;
   testVersion: VersionOption;
 };
@@ -53,6 +54,8 @@ type ApiResponse =
       };
     }
   | { ok: false; error: string };
+
+type LaunchMode = "CLASSIC" | "HOST_PACED";
 
 export function AdminSeriesDetail({
   seriesId,
@@ -76,6 +79,7 @@ export function AdminSeriesDetail({
   );
   const [scheduledAt, setScheduledAt] = useState("");
   const [roundStatus, setRoundStatus] = useState("DRAFT");
+  const [roundLaunchModes, setRoundLaunchModes] = useState<Record<string, LaunchMode>>({});
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [pendingAction, setPendingAction] = useState("");
@@ -164,6 +168,12 @@ export function AdminSeriesDetail({
 
     const response = await fetch(`/api/admin/series/rounds/${roundId}/launch`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        mode: roundLaunchModes[roundId] ?? "CLASSIC",
+      }),
     });
     const result = (await response.json()) as ApiResponse;
     setPendingAction("");
@@ -289,7 +299,7 @@ export function AdminSeriesDetail({
           </p>
         ) : null}
         <p className="mt-4 rounded-md border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
-          {messages.series.hostPacedComingSoon}
+          {messages.series.chooseRoundLaunchMode}
         </p>
         <form onSubmit={addRound} className="mt-4 grid gap-3">
           <div className="grid gap-3 md:grid-cols-2">
@@ -407,16 +417,34 @@ export function AdminSeriesDetail({
                         </Link>
                       </>
                     ) : (
-                      <button
-                        type="button"
-                        onClick={() => launchRound(round.id)}
-                        disabled={pendingAction === `launch-${round.id}`}
-                        className="rounded-md bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
-                      >
-                        {pendingAction === `launch-${round.id}`
-                          ? messages.series.launchingRound
-                          : messages.series.launchRound}
-                      </button>
+                      <>
+                        <label className="grid gap-1 text-xs font-semibold text-slate-600">
+                          {messages.series.launchMode}
+                          <select
+                            value={roundLaunchModes[round.id] ?? "CLASSIC"}
+                            onChange={(event) =>
+                              setRoundLaunchModes((current) => ({
+                                ...current,
+                                [round.id]: event.target.value as LaunchMode,
+                              }))
+                            }
+                            className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-800 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                          >
+                            <option value="CLASSIC">{messages.sessions.modeClassic}</option>
+                            <option value="HOST_PACED">{messages.sessions.modeHostPaced}</option>
+                          </select>
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => launchRound(round.id)}
+                          disabled={pendingAction === `launch-${round.id}`}
+                          className="rounded-md bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
+                        >
+                          {pendingAction === `launch-${round.id}`
+                            ? messages.series.launchingRound
+                            : messages.series.launchRound}
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>

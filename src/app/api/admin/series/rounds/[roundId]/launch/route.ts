@@ -1,5 +1,6 @@
-import { requireAdminApi } from "@/lib/auth";
 import { fail, ok } from "@/lib/api-response";
+import { requireAdminApi } from "@/lib/auth";
+import type { GameModeValue } from "@/lib/constants";
 import { createGameCode } from "@/lib/game-code";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
@@ -27,67 +28,112 @@ async function uniqueGameCode() {
   throw new Error(messages.api.uniqueGameCodeFailed);
 }
 
-export async function POST(_request: Request, { params }: RouteContext) {
+async function requestedMode(request: Request): Promise<Extract<GameModeValue, "CLASSIC" | "HOST_PACED">> {
+  try {
+    const body = (await request.json()) as { mode?: unknown };
+
+    return body.mode === "HOST_PACED" ? "HOST_PACED" : "CLASSIC";
+  } catch {
+    return "CLASSIC";
+  }
+}
+
+export async function POST(request: Request, { params }: RouteContext) {
   const user = await requireAdminApi();
 
   if (!user) {
     return fail(messages.api.unauthorized, 401);
   }
 
-  const { roundId } = await params;
-  const round = await prisma.seriesRound.findUnique({
-    where: { id: roundId },
-    include: {
-      testVersion: {
-        select: {
-          id: true,
-          status: true,
+  try {
+    const { roundId } = await params;
+    const mode = await requestedMode(request);
+    const round = await prisma.seriesRound.findUnique({
+      where: { id: roundId },
+      include: {
+        session: {
+          select: {
+            code: true,
+          },
+        },
+        testVersion: {
+          select: {
+            id: true,
+            status: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  if (!round) {
-    return fail(messages.api.seriesRoundNotFound, 404);
+    if (!round) {
+      return fail(messages.api.seriesRoundNotFound, 404);
+    }
+
+    if (round.session) {
+      return ok({
+        code: round.session.code,
+      });
+    }
+
+    if (round.testVersion.status !== "PUBLISHED") {
+      return fail(messages.api.publishedVersionRequired, 409);
+    }
+
+    const parsedSettings = parseSessionSettings(round.settingsJson);
+    const settings = sessionSettingsJson({
+      ...parsedSettings,
+      label: round.title,
+      seriesId: round.seriesId,
+      roundId: round.id,
+      registeredOnly: true,
+      showStudentResults: true,
+      showLeaderboard: true,
+      showCorrectAnswers: false,
+      ...(mode === "HOST_PACED"
+        ? {
+            allowLateJoin: parsedSettings.allowLateJoin,
+            autoSubmitOnFinish: false,
+            questionTimeLimitSeconds: parsedSettings.questionTimeLimitSeconds || 30,
+            speedBonus: parsedSettings.speedBonus,
+            showQuestionOnStudent: true,
+            showQuestionOnHost: true,
+            autoAdvance: false,
+            phase: "LOBBY" as const,
+            currentQuestionIndex: 0,
+            questionStartedAt: null,
+            questionEndsAt: null,
+            lastPhaseChangedAt: null,
+          }
+        : {}),
+    });
+    const session = await prisma.gameSession.create({
+      data: {
+        testVersionId: round.testVersionId,
+        code: await uniqueGameCode(),
+        mode,
+        status: "LOBBY",
+        settingsJson: settings,
+        showResults: true,
+      },
+      select: {
+        id: true,
+        code: true,
+      },
+    });
+
+    await prisma.seriesRound.update({
+      where: { id: round.id },
+      data: {
+        sessionId: session.id,
+        status: "LOBBY",
+      },
+    });
+
+    return ok({
+      code: session.code,
+    });
+  } catch (error) {
+    console.error("Series round launch failed", error instanceof Error ? error.message : "Unknown error");
+    return fail(messages.api.unknownError, 500);
   }
-
-  if (round.testVersion.status !== "PUBLISHED") {
-    return fail(messages.api.publishedVersionRequired, 409);
-  }
-
-  const settings = sessionSettingsJson({
-    ...parseSessionSettings(round.settingsJson),
-    label: round.title,
-    seriesId: round.seriesId,
-    roundId: round.id,
-    registeredOnly: true,
-    showStudentResults: true,
-    showLeaderboard: true,
-  });
-  const session = await prisma.gameSession.create({
-    data: {
-      testVersionId: round.testVersionId,
-      code: await uniqueGameCode(),
-      mode: "CLASSIC",
-      status: "LOBBY",
-      settingsJson: settings,
-      showResults: true,
-    },
-    select: {
-      id: true,
-      code: true,
-    },
-  });
-
-  await prisma.seriesRound.update({
-    where: { id: round.id },
-    data: {
-      sessionId: session.id,
-      status: "LOBBY",
-    },
-  });
-
-  return ok({
-    code: session.code,
-  });
 }
