@@ -6,6 +6,60 @@ import { teamName } from "./team-scoring";
 
 export type LiveSessionData = Awaited<ReturnType<typeof getLiveSessionData>>;
 
+export async function getRegisteredRoster(settings: ReturnType<typeof parseSessionSettings>) {
+  if (!settings.registeredOnly) {
+    return {
+      registeredStudentCount: 0,
+      classTitle: null as string | null,
+      missingStudents: [] as Array<{ id: string; displayName: string }>,
+    };
+  }
+
+  if (settings.seriesId) {
+    const registeredStudentCount = await prisma.seriesRegistration.count({
+      where: {
+        seriesId: settings.seriesId,
+        status: "REGISTERED",
+      },
+    });
+
+    return {
+      registeredStudentCount,
+      classTitle: null as string | null,
+      missingStudents: [] as Array<{ id: string; displayName: string }>,
+    };
+  }
+
+  if (!settings.classId) {
+    return {
+      registeredStudentCount: 0,
+      classTitle: null as string | null,
+      missingStudents: [] as Array<{ id: string; displayName: string }>,
+    };
+  }
+
+  const [classroom, registeredStudentCount] = await Promise.all([
+    prisma.classroom.findUnique({
+      where: { id: settings.classId },
+      select: {
+        title: true,
+      },
+    }),
+    prisma.classMembership.count({
+      where: {
+        classId: settings.classId,
+        status: "ACTIVE",
+      },
+    }),
+  ]);
+
+  return {
+    registeredStudentCount,
+    classTitle: classroom?.title ?? null,
+    missingStudents: [],
+  };
+}
+
 export async function getLiveSessionData(code: string) {
   const session = await prisma.gameSession.findUnique({
     where: { code: code.toUpperCase() },
@@ -36,6 +90,7 @@ export async function getLiveSessionData(code: string) {
         select: {
           id: true,
           displayName: true,
+          studentAccountId: true,
           teamId: true,
           joinedAt: true,
           answers: {
@@ -60,23 +115,7 @@ export async function getLiveSessionData(code: string) {
 
   const questionCount = session.testVersion.questions.length;
   const settings = parseSessionSettings(session.settingsJson);
-  let registeredStudentCount = 0;
-
-  if (settings.registeredOnly && settings.seriesId) {
-    registeredStudentCount = await prisma.seriesRegistration.count({
-      where: {
-        seriesId: settings.seriesId,
-        status: "REGISTERED",
-      },
-    });
-  } else if (settings.registeredOnly && settings.classId) {
-    registeredStudentCount = await prisma.classMembership.count({
-      where: {
-        classId: settings.classId,
-        status: "ACTIVE",
-      },
-    });
-  }
+  const roster = await getRegisteredRoster(settings);
   const participants = session.participants.map((participant) => {
     const answeredQuestionCount = new Set(
       participant.answers.map((answer) => answer.questionId),
@@ -112,7 +151,9 @@ export async function getLiveSessionData(code: string) {
     participantCount: session._count.participants,
     answerCount: session._count.answers,
     submittedCount,
-    registeredStudentCount,
+    registeredStudentCount: roster.registeredStudentCount,
+    classTitle: roster.classTitle,
+    missingStudents: roster.missingStudents,
     questionCount,
     serverTime: new Date().toISOString(),
     settings,

@@ -36,9 +36,15 @@ type HostLiveSession = {
   answerCount: number;
   submittedCount: number;
   registeredStudentCount: number;
+  classTitle: string | null;
+  missingStudents: Array<{
+    id: string;
+    displayName: string;
+  }>;
   questionCount: number;
   serverTime: string;
   settings: {
+    audience: "GUEST" | "CLASS" | "SERIES";
     label: string;
     allowLateJoin: boolean;
     showStudentResults: boolean;
@@ -46,6 +52,7 @@ type HostLiveSession = {
     showLeaderboard: boolean;
     autoSubmitOnFinish: boolean;
     registeredOnly: boolean;
+    classId: string | null;
     teamMode: boolean;
     teams: SessionTeam[];
   };
@@ -75,10 +82,16 @@ export function HostControls({
   initialLive,
   joinLink,
   settingsJson,
+  resultsBasePath = "/admin/sessions",
+  accessCheckPath = "/admin/sessions",
+  runAgainApiPath = "/api/sessions",
 }: {
   initialLive: HostLiveSession;
   joinLink: string;
   settingsJson: string;
+  resultsBasePath?: string;
+  accessCheckPath?: string | null;
+  runAgainApiPath?: string;
 }) {
   const [live, setLive] = useState(initialLive);
   const [pendingAction, setPendingAction] = useState<"START" | "FINISH" | null>(null);
@@ -175,7 +188,13 @@ export function HostControls({
 
   const progress =
     live.participantCount === 0 ? 0 : Math.round((live.submittedCount / live.participantCount) * 100);
-  const studentInstructions = `Join the Maths4U Arena round:
+  const isClassGame = live.settings.audience === "CLASS" || Boolean(live.settings.classId);
+  const studentInstructions = isClassGame
+    ? `Join the Maths4U Arena class game:
+1. Open: ${joinLink}
+2. Log in with your student username and PIN.
+3. You will join automatically as your class account.`
+    : `Join the Maths4U Arena round:
 1. Open: ${joinLink}
 2. Log in with your username and PIN.
 3. Wait for the host to start.`;
@@ -197,6 +216,11 @@ export function HostControls({
           <span className="rounded-md border border-slate-700 bg-slate-500/15 px-3 py-1 text-sm font-bold text-slate-200">
             {live.settings.teamMode ? messages.sessions.teamBadge : messages.sessions.individualBadge}
           </span>
+          {isClassGame ? (
+            <span className="rounded-md border border-teal-700 bg-teal-500/15 px-3 py-1 text-sm font-bold text-teal-200">
+              {messages.play.classGameBadge}
+            </span>
+          ) : null}
         </div>
         <h1 className="text-5xl font-black tracking-[0.18em] sm:text-7xl">{live.code}</h1>
         <p className="text-xl text-slate-300">{live.testTitle}</p>
@@ -231,15 +255,23 @@ export function HostControls({
               <div className="rounded-md border border-teal-500/40 bg-teal-500/10 p-4 text-teal-50">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <h2 className="font-bold">{messages.host.registeredRound}</h2>
-                    <p className="mt-1 text-sm text-teal-100">{messages.host.registeredRoundHelp}</p>
+                    <h2 className="font-bold">
+                      {isClassGame && live.classTitle
+                        ? `${messages.host.classGame}: ${live.classTitle}`
+                        : messages.host.registeredRound}
+                    </h2>
+                    <p className="mt-1 text-sm text-teal-100">
+                      {isClassGame ? messages.host.classGameHelp : messages.host.registeredRoundHelp}
+                    </p>
                   </div>
-                  <Link
-                    href={`/admin/sessions/${live.code}/access-check`}
-                    className="rounded-md border border-teal-300 px-3 py-2 text-sm font-semibold text-teal-50 transition hover:bg-teal-400/10"
-                  >
-                    {messages.host.accessCheck}
-                  </Link>
+                  {accessCheckPath ? (
+                    <Link
+                      href={`${accessCheckPath}/${live.code}/access-check`}
+                      className="rounded-md border border-teal-300 px-3 py-2 text-sm font-semibold text-teal-50 transition hover:bg-teal-400/10"
+                    >
+                      {messages.host.accessCheck}
+                    </Link>
+                  ) : null}
                 </div>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   <div className="rounded-md bg-slate-950/40 p-3">
@@ -251,6 +283,26 @@ export function HostControls({
                     <p className="mt-1 text-2xl font-bold">{live.participantCount}</p>
                   </div>
                 </div>
+                {isClassGame && live.missingStudents.length > 0 ? (
+                  <div className="mt-4 rounded-md bg-slate-950/40 p-3">
+                    <p className="text-xs font-semibold text-teal-100">{messages.host.notJoinedYet}</p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {live.missingStudents.slice(0, 12).map((student) => (
+                        <span
+                          key={student.id}
+                          className="rounded-md bg-slate-900 px-2 py-1 text-xs font-semibold text-slate-100"
+                        >
+                          {student.displayName}
+                        </span>
+                      ))}
+                      {live.missingStudents.length > 12 ? (
+                        <span className="rounded-md bg-slate-900 px-2 py-1 text-xs font-semibold text-slate-100">
+                          +{live.missingStudents.length - 12}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
               </div>
             ) : null}
             <div className="grid gap-4 sm:grid-cols-3">
@@ -390,17 +442,19 @@ export function HostControls({
             </button>
           ) : null}
           <Link
-            href={`/admin/sessions/${live.code}/results`}
+            href={`${resultsBasePath}/${live.code}/results`}
             className="rounded-md border border-slate-600 px-4 py-2 font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98]"
           >
             {messages.sessions.resultsLink}
           </Link>
-          <Link
-            href={`/admin/sessions/${live.code}/access-check`}
-            className="rounded-md border border-slate-600 px-4 py-2 font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98]"
-          >
-            {messages.host.accessCheck}
-          </Link>
+          {accessCheckPath ? (
+            <Link
+              href={`${accessCheckPath}/${live.code}/access-check`}
+              className="rounded-md border border-slate-600 px-4 py-2 font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98]"
+            >
+              {messages.host.accessCheck}
+            </Link>
+          ) : null}
           <button
             type="button"
             onClick={fetchLive}
@@ -409,7 +463,12 @@ export function HostControls({
             {messages.host.refreshNow}
           </button>
           {live.status === "FINISHED" ? (
-            <RunAgainButton testVersionId={live.testVersionId} mode={live.mode} settingsJson={settingsJson} />
+            <RunAgainButton
+              testVersionId={live.testVersionId}
+              mode={live.mode}
+              settingsJson={settingsJson}
+              apiPath={runAgainApiPath}
+            />
           ) : null}
         </div>
         {live.status === "FINISHED" ? (

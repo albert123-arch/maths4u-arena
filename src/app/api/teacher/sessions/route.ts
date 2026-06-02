@@ -47,7 +47,8 @@ export async function POST(request: Request) {
       return fail(messages.api.publishedVersionRequired, 409);
     }
 
-    const classId = input.classId;
+    const parsedSettings = parseSessionSettings(input.settingsJson);
+    const classId = input.classId ?? parsedSettings.classId;
 
     if (classId) {
       const classroom = await prisma.classroom.findFirst({
@@ -64,11 +65,11 @@ export async function POST(request: Request) {
       }
     }
 
-    const parsedSettings = parseSessionSettings(input.settingsJson);
     const settings =
       input.mode === "HOST_PACED"
         ? {
             ...parsedSettings,
+            audience: classId ? ("CLASS" as const) : ("GUEST" as const),
             registeredOnly: Boolean(classId),
             classId,
             autoSubmitOnFinish: false,
@@ -80,6 +81,7 @@ export async function POST(request: Request) {
           }
         : {
             ...parsedSettings,
+            audience: classId ? ("CLASS" as const) : ("GUEST" as const),
             registeredOnly: Boolean(classId),
             classId,
           };

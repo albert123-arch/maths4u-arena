@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { HostControls } from "@/components/host-controls";
 import { HostPacedHostControls } from "@/components/host-paced-host-controls";
+import { getCurrentUser } from "@/lib/auth";
 import { getHostPacedHostLiveData } from "@/lib/host-paced";
 import { messages } from "@/lib/messages";
 import { sessionSettingsJson } from "@/lib/session-settings";
@@ -46,9 +47,16 @@ export default async function HostPage({ params }: PageProps) {
     return notFoundContent();
   }
 
+  const currentUser = await getCurrentUser();
+  const isTeacherHost = currentUser?.role === "TEACHER";
   const appUrl = process.env.APP_URL?.replace(/\/$/, "") ?? "";
-  const joinPath = live.settings.registeredOnly ? `/student/join/${live.code}` : `/play?code=${live.code}`;
+  const isClassGame = live.settings.audience === "CLASS" || Boolean(live.settings.classId && !live.settings.seriesId);
+  const joinPath =
+    isClassGame || !live.settings.registeredOnly ? `/play?code=${live.code}` : `/student/join/${live.code}`;
   const joinLink = `${appUrl || ""}${joinPath}`;
+  const resultsBasePath = isTeacherHost ? "/teacher/sessions" : "/admin/sessions";
+  const accessCheckPath = isTeacherHost ? null : "/admin/sessions";
+  const runAgainApiPath = isTeacherHost ? "/api/teacher/sessions" : "/api/sessions";
 
   if (live.mode === "HOST_PACED") {
     const hostPacedLive = await getHostPacedHostLiveData(live.code);
@@ -64,6 +72,9 @@ export default async function HostPage({ params }: PageProps) {
             initialLive={hostPacedLive}
             joinLink={joinLink}
             settingsJson={sessionSettingsJson(hostPacedLive.settings)}
+            resultsBasePath={resultsBasePath}
+            accessCheckPath={accessCheckPath}
+            runAgainApiPath={runAgainApiPath}
           />
         </section>
       </main>
@@ -77,6 +88,9 @@ export default async function HostPage({ params }: PageProps) {
           initialLive={live}
           joinLink={joinLink}
           settingsJson={sessionSettingsJson(live.settings)}
+          resultsBasePath={resultsBasePath}
+          accessCheckPath={accessCheckPath}
+          runAgainApiPath={runAgainApiPath}
         />
       </section>
     </main>

@@ -5,11 +5,17 @@ import { LaunchSessionModal } from "@/components/launch-session-modal";
 import { PublishQuizSetButton } from "@/components/publish-quiz-set-button";
 import { QuizSetActions } from "@/components/quiz-set-actions";
 import { requireTeacherUser } from "@/lib/auth";
+import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-export default async function TeacherSetsPage() {
+type PageProps = {
+  searchParams: Promise<{ classId?: string }>;
+};
+
+export default async function TeacherSetsPage({ searchParams }: PageProps) {
+  const { classId = "" } = await searchParams;
   const teacher = await requireTeacherUser();
   const [sets, classrooms] = await Promise.all([
     prisma.test.findMany({
@@ -33,6 +39,8 @@ export default async function TeacherSetsPage() {
       select: { id: true, title: true },
     }),
   ]);
+  const defaultClassId = classrooms.some((classroom) => classroom.id === classId) ? classId : "";
+  const defaultClass = classrooms.find((classroom) => classroom.id === defaultClassId) ?? null;
 
   return (
     <div className="grid gap-6">
@@ -48,6 +56,14 @@ export default async function TeacherSetsPage() {
           Create Quiz Set
         </Link>
       </div>
+      {defaultClass ? (
+        <section className="rounded-md border border-teal-200 bg-teal-50 p-4 text-sm text-teal-950">
+          <p className="font-semibold">{messages.teacher.hostingForClass}</p>
+          <p className="mt-1">
+            {messages.teacher.hostingForClassHelp} <span className="font-semibold">{defaultClass.title}</span>.
+          </p>
+        </section>
+      ) : null}
       {sets.length === 0 ? (
         <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
           <h2 className="text-2xl font-bold">Create your first quiz set</h2>
@@ -104,6 +120,7 @@ export default async function TeacherSetsPage() {
                           questionCount={publishedVersion._count.questions}
                           apiPath="/api/teacher/sessions"
                           classrooms={classrooms}
+                          defaultClassId={defaultClassId}
                         />
                         <AssignHomeworkModal
                           quizSetId={set.id}

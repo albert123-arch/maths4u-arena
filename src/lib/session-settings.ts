@@ -9,6 +9,7 @@ export const HOST_PACED_PHASES = [
 ] as const;
 
 export type HostPacedPhase = (typeof HOST_PACED_PHASES)[number];
+export type SessionAudience = "GUEST" | "CLASS" | "SERIES";
 export type TeamAssignMode = "manual" | "auto";
 export type TeamScoringMode = "sum" | "average" | "top3";
 
@@ -18,6 +19,7 @@ export type SessionTeam = {
 };
 
 export type SessionSettings = {
+  audience: SessionAudience;
   label: string;
   allowLateJoin: boolean;
   showStudentResults: boolean;
@@ -50,6 +52,7 @@ export const DEFAULT_SESSION_TEAMS: SessionTeam[] = [
 ];
 
 export const DEFAULT_SESSION_SETTINGS: SessionSettings = {
+  audience: "GUEST",
   label: "",
   allowLateJoin: true,
   showStudentResults: true,
@@ -94,6 +97,22 @@ function phaseSetting(value: unknown) {
   return typeof value === "string" && HOST_PACED_PHASES.includes(value as HostPacedPhase)
     ? (value as HostPacedPhase)
     : DEFAULT_SESSION_SETTINGS.phase;
+}
+
+function audienceSetting(value: unknown, parsed: Partial<SessionSettings>): SessionAudience {
+  if (value === "CLASS" || value === "SERIES" || value === "GUEST") {
+    return value;
+  }
+
+  if (typeof parsed.classId === "string" && parsed.classId.trim()) {
+    return "CLASS";
+  }
+
+  if (typeof parsed.seriesId === "string" && parsed.seriesId.trim()) {
+    return "SERIES";
+  }
+
+  return DEFAULT_SESSION_SETTINGS.audience;
 }
 
 function textId(value: string) {
@@ -163,6 +182,7 @@ export function parseSessionSettings(settingsJson?: string | null): SessionSetti
     }
 
     return {
+      audience: audienceSetting(parsed.audience, parsed),
       label: typeof parsed.label === "string" ? parsed.label : DEFAULT_SESSION_SETTINGS.label,
       allowLateJoin: booleanSetting(parsed.allowLateJoin, DEFAULT_SESSION_SETTINGS.allowLateJoin),
       showStudentResults: booleanSetting(

@@ -38,6 +38,7 @@ export function LaunchSessionModal({
   questionCount,
   apiPath = "/api/sessions",
   classrooms = [],
+  defaultClassId = "",
 }: {
   testTitle: string;
   versionTitle: string;
@@ -48,8 +49,11 @@ export function LaunchSessionModal({
     id: string;
     title: string;
   }>;
+  defaultClassId?: string;
 }) {
   const router = useRouter();
+  const initialClassId =
+    classrooms.find((classroom) => classroom.id === defaultClassId)?.id ?? classrooms[0]?.id ?? "";
   const [open, setOpen] = useState(false);
   const [label, setLabel] = useState("");
   const [mode, setMode] = useState<"CLASSIC" | "HOST_PACED">("CLASSIC");
@@ -63,8 +67,10 @@ export function LaunchSessionModal({
   const [teamMode, setTeamMode] = useState(false);
   const [teams, setTeams] = useState<SessionTeam[]>(DEFAULT_SESSION_TEAMS);
   const [teamScoring, setTeamScoring] = useState<TeamScoringMode>("sum");
-  const [accessMode, setAccessMode] = useState<"GUEST" | "CLASS_ONLY">("GUEST");
-  const [classId, setClassId] = useState(classrooms[0]?.id ?? "");
+  const [accessMode, setAccessMode] = useState<"GUEST" | "CLASS_ONLY">(
+    initialClassId ? "CLASS_ONLY" : "GUEST",
+  );
+  const [classId, setClassId] = useState(initialClassId);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
@@ -80,6 +86,7 @@ export function LaunchSessionModal({
 
     try {
       const selectedClassId = accessMode === "CLASS_ONLY" ? classId : null;
+      const audience = selectedClassId ? "CLASS" : "GUEST";
       const response = await fetch(apiPath, {
         method: "POST",
         headers: {
@@ -96,11 +103,12 @@ export function LaunchSessionModal({
             showCorrectAnswers,
             showLeaderboard,
             autoSubmitOnFinish: mode === "HOST_PACED" ? false : autoSubmitOnFinish,
+            audience,
             teamMode,
             teamAssignMode: "manual",
             teams,
             teamScoring,
-            registeredOnly: Boolean(selectedClassId),
+            registeredOnly: audience === "CLASS",
             classId: selectedClassId,
             ...(mode === "HOST_PACED"
               ? {
@@ -271,18 +279,29 @@ export function LaunchSessionModal({
                               : "border-slate-300 hover:bg-slate-50"
                           }`}
                         >
-                          {messages.teacher.guestLink}
+                          <span className="block">{messages.teacher.guestLink}</span>
+                          <span className="mt-1 block text-xs font-medium text-slate-500">
+                            {messages.teacher.guestLinkHelp}
+                          </span>
                         </button>
                         <button
                           type="button"
-                          onClick={() => setAccessMode("CLASS_ONLY")}
+                          onClick={() => {
+                            setAccessMode("CLASS_ONLY");
+                            if (!classId && initialClassId) {
+                              setClassId(initialClassId);
+                            }
+                          }}
                           className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${
                             accessMode === "CLASS_ONLY"
                               ? "border-teal-500 bg-teal-50 text-teal-900"
                               : "border-slate-300 hover:bg-slate-50"
                           }`}
                         >
-                          {messages.teacher.classOnlyLink}
+                          <span className="block">{messages.teacher.classOnlyLink}</span>
+                          <span className="mt-1 block text-xs font-medium text-slate-500">
+                            {messages.teacher.classOnlyLinkHelp}
+                          </span>
                         </button>
                       </div>
                       {accessMode === "CLASS_ONLY" ? (

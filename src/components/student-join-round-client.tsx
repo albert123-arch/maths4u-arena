@@ -88,6 +88,7 @@ export function StudentJoinRoundClient({
       const resultTeamId = result.data.participant?.teamId ?? null;
       const selectedTeam = teams.find((team) => team.id === resultTeamId);
 
+      localStorage.removeItem(participantKey(resultCode));
       localStorage.setItem(
         participantKey(resultCode),
         JSON.stringify({

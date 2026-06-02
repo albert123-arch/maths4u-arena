@@ -20,10 +20,16 @@ export default async function StudentDashboardPage() {
     orderBy: { createdAt: "desc" },
     include: {
       series: {
-        include: {
+        select: {
+          id: true,
+          title: true,
+          status: true,
           rounds: {
             orderBy: { roundNumber: "asc" },
-            include: {
+            select: {
+              id: true,
+              title: true,
+              status: true,
               session: {
                 select: {
                   code: true,
@@ -67,6 +73,9 @@ export default async function StudentDashboardPage() {
     },
   });
   const classIds = classMemberships.map((membership) => membership.classId);
+  const classTitleById = new Map(
+    classMemberships.map((membership) => [membership.classId, membership.classroom.title]),
+  );
   const assignmentSubmissions = await prisma.assignmentSubmission
     .findMany({
       where: { studentId: student.id },
@@ -89,24 +98,39 @@ export default async function StudentDashboardPage() {
       throw error;
     });
   const liveClassSessions = classIds.length
-    ? (
-        await prisma.gameSession.findMany({
+    ? (await prisma.gameSession.findMany({
           where: { status: { in: ["LOBBY", "RUNNING"] } },
           orderBy: { createdAt: "desc" },
           take: 80,
-          include: {
+          select: {
+            id: true,
+            code: true,
+            mode: true,
+            status: true,
+            settingsJson: true,
+            createdAt: true,
             testVersion: {
               select: {
                 test: { select: { title: true } },
               },
             },
           },
-        })
-      ).filter((session) => {
-        const settings = parseSessionSettings(session.settingsJson);
+        })).flatMap((session) => {
+          const settings = parseSessionSettings(session.settingsJson);
+          const isClassGame = settings.audience === "CLASS" || Boolean(settings.classId && !settings.seriesId);
 
-        return Boolean(settings.classId && classIds.includes(settings.classId));
-      })
+          if (!isClassGame || !settings.classId || !classIds.includes(settings.classId)) {
+            return [];
+          }
+
+          return [
+            {
+              ...session,
+              classTitle: classTitleById.get(settings.classId) ?? messages.teacher.classOnly,
+              sessionLabel: settings.label,
+            },
+          ];
+        })
     : [];
 
   return (
@@ -120,6 +144,52 @@ export default async function StudentDashboardPage() {
               {messages.student.group}: {student.groupName}
             </p>
           ) : null}
+        </section>
+
+        <section className="grid gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-xl font-semibold">{messages.student.liveNow}</h2>
+            <Link href="/play" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
+              {messages.common.backToPlay}
+            </Link>
+          </div>
+          {liveClassSessions.length === 0 ? (
+            <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
+              {messages.student.noLiveClassGames}
+            </p>
+          ) : (
+            <div className="grid gap-3 md:grid-cols-2">
+              {liveClassSessions.map((session) => (
+                <article
+                  key={session.id}
+                  className="rounded-md border border-teal-200 bg-white p-5 shadow-sm ring-1 ring-teal-50"
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
+                      {session.status === "LOBBY" ? messages.host.waitingStatus : messages.host.liveStatus}
+                    </span>
+                    <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
+                      {session.mode === "HOST_PACED" ? messages.sessions.modeHostPaced : messages.sessions.modeClassic}
+                    </span>
+                  </div>
+                  <h3 className="mt-3 text-lg font-bold">{session.testVersion.test.title}</h3>
+                  {session.sessionLabel ? (
+                    <p className="mt-1 text-sm font-semibold text-teal-800">{session.sessionLabel}</p>
+                  ) : null}
+                  <p className="mt-2 text-sm text-slate-600">{session.classTitle}</p>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {messages.game.codeLabel}: <span className="font-semibold">{session.code}</span>
+                  </p>
+                  <Link
+                    href={`/play?code=${session.code}`}
+                    className="mt-4 inline-flex rounded-md bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+                  >
+                    {messages.student.joinLiveRound}
+                  </Link>
+                </article>
+              ))}
+            </div>
+          )}
         </section>
 
         <section className="grid gap-3">
@@ -191,33 +261,6 @@ export default async function StudentDashboardPage() {
             </div>
           )}
         </section>
-
-        {liveClassSessions.length > 0 ? (
-          <section className="grid gap-3">
-            <h2 className="text-xl font-semibold">{messages.teacher.myLiveSessions}</h2>
-            <div className="grid gap-3 md:grid-cols-2">
-              {liveClassSessions.map((session) => (
-                <article key={session.id} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="font-semibold">{session.testVersion.test.title}</h3>
-                    <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
-                      {session.status}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm text-slate-600">
-                    {messages.game.codeLabel}: <span className="font-semibold">{session.code}</span>
-                  </p>
-                  <Link
-                    href={`/student/join/${session.code}`}
-                    className="mt-4 inline-flex rounded-md bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
-                  >
-                    {messages.student.joinLiveRound}
-                  </Link>
-                </article>
-              ))}
-            </div>
-          </section>
-        ) : null}
 
         <section className="grid gap-3">
           <div className="flex items-center justify-between gap-3">

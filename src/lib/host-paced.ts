@@ -10,6 +10,7 @@ import {
   type SessionSettings,
 } from "./session-settings";
 import { recalculateSeriesRound } from "./series-scoring";
+import { getRegisteredRoster } from "./session-live";
 import { calculateTeamLeaderboard, teamName } from "./team-scoring";
 
 const TIMER_GRACE_MS = 2_000;
@@ -397,23 +398,7 @@ export async function getHostPacedHostLiveData(code: string) {
     teamParticipantsForLeaderboard(session, settings, leaderboard),
   );
   const timer = getTimerState(settings);
-  let registeredStudentCount = 0;
-
-  if (settings.registeredOnly && settings.seriesId) {
-    registeredStudentCount = await prisma.seriesRegistration.count({
-      where: {
-        seriesId: settings.seriesId,
-        status: "REGISTERED",
-      },
-    });
-  } else if (settings.registeredOnly && settings.classId) {
-    registeredStudentCount = await prisma.classMembership.count({
-      where: {
-        classId: settings.classId,
-        status: "ACTIVE",
-      },
-    });
-  }
+  const roster = await getRegisteredRoster(settings);
 
   return {
     code: session.code,
@@ -436,7 +421,9 @@ export async function getHostPacedHostLiveData(code: string) {
     questionEndsAt: timer.questionEndsAt,
     remainingSeconds: timer.remainingSeconds,
     participantCount: session.participants.length,
-    registeredStudentCount,
+    registeredStudentCount: roster.registeredStudentCount,
+    classTitle: roster.classTitle,
+    missingStudents: roster.missingStudents,
     answeredCurrentQuestionCount: answers.length,
     answerDistribution: answerDistribution(row, answers, includeCorrect),
     leaderboardTop: leaderboard.slice(0, 10).map((participant) => ({

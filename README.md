@@ -113,6 +113,21 @@ Flexible `LongText` JSON fields are used for future game modes and grading setti
 
 Admin and teacher accounts are created by an administrator. Students can self-register. After login, Maths4U Arena redirects by role: admins go to `/admin`, teachers go to `/teacher`, and students go to `/student`.
 
+## Class-First Live Games
+
+For a normal live lesson, use class games before series:
+
+1. Teacher opens `/teacher/classes` and creates or opens a class.
+2. Students join the class once from the class invite QR/link.
+3. Teacher opens the class page and clicks `Host live game for this class`.
+4. Teacher chooses a published quiz set and launches Classic or Host-paced.
+5. The launch modal defaults to the selected class. Guest games are still available as an advanced/open option.
+6. Students see the game under `Live Now` on `/student`, or scan the host QR code.
+7. `/play?code=CODE` requires student login for class games, checks class membership, creates/reuses the participant automatically, and sends the student to `/game/CODE`.
+8. Teacher finishes the game and opens results from the teacher area.
+
+Use series when you want a multi-round league or long-running competition. You do not need series for a single class game.
+
 ## Manual MySQL Import With phpMyAdmin
 
 If Hostinger cannot run Prisma commands during build, initialize the database manually:
@@ -277,9 +292,11 @@ Use this shorter flow when preparing a real lesson:
 4. Open `/teacher/sets/new` and create a Quiz Set.
 5. Add questions inline or paste a small question list into the Quiz Set editor.
 6. Publish the Quiz Set.
-7. Choose `Host Live` for a live Classic or Host-paced game, choose `Assign Homework` for class work, or create a `/teacher/series` league from published quiz sets.
-8. Review live results from `/teacher/results`, assignment results from `/teacher/assignments`, or series standings from `/teacher/series`.
-9. Share useful Quiz Sets to the teacher library so other teachers can copy them.
+7. Return to the class page and click `Host live game for this class`.
+8. Launch the published Quiz Set. The modal defaults to class access, so students log in and join automatically.
+9. Students open `/student` and click the `Live Now` game, or scan the host QR code.
+10. Review live results from `/teacher/results`, assignment results from `/teacher/assignments`, or series standings from `/teacher/series`.
+11. Share useful Quiz Sets to the teacher library so other teachers can copy them.
 
 ## Hostinger Deployment Notes
 

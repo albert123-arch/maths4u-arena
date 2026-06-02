@@ -18,11 +18,13 @@ export function RunAgainButton({
   testVersionId,
   mode = "CLASSIC",
   settingsJson,
+  apiPath = "/api/sessions",
   compact = false,
 }: {
   testVersionId: string;
   mode?: string;
   settingsJson?: string | null;
+  apiPath?: string;
   compact?: boolean;
 }) {
   const router = useRouter();
@@ -38,7 +40,7 @@ export function RunAgainButton({
     setError("");
 
     try {
-      const response = await fetch("/api/sessions", {
+      const response = await fetch(apiPath, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
