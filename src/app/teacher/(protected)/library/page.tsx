@@ -16,8 +16,11 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
   const parsedDifficulty = Number.parseInt(difficulty, 10);
   const difficultyFilter = Number.isFinite(parsedDifficulty) ? parsedDifficulty : null;
   const libraryVisibility: Array<"PUBLIC" | "CURATED"> = ["PUBLIC", "CURATED"];
+  const sharedOwnerFilter = {
+    OR: [{ ownerUserId: null }, { ownerUserId: { not: teacher.id } }],
+  };
   const testWhere = {
-    ownerUserId: { not: teacher.id },
+    ...sharedOwnerFilter,
     visibility: { in: libraryVisibility },
     status: { not: "ARCHIVED" as const },
     ...(subject ? { subject } : {}),
@@ -32,7 +35,7 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
       : {}),
   };
   const questionWhere = {
-    ownerUserId: { not: teacher.id },
+    ...sharedOwnerFilter,
     visibility: { in: libraryVisibility },
     ...(subject ? { subject } : {}),
     ...(difficultyFilter ? { difficulty: difficultyFilter } : {}),
@@ -86,7 +89,7 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
     }),
     prisma.test.findMany({
       where: {
-        ownerUserId: { not: teacher.id },
+        ...sharedOwnerFilter,
         visibility: { in: libraryVisibility },
         status: { not: "ARCHIVED" },
       },
@@ -96,7 +99,7 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
     }),
     prisma.question.findMany({
       where: {
-        ownerUserId: { not: teacher.id },
+        ...sharedOwnerFilter,
         visibility: { in: libraryVisibility },
       },
       distinct: ["subject"],
@@ -182,7 +185,7 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
                       </span>
                     </div>
                     <p className="mt-1 text-sm text-slate-600">
-                      {test.subject} - {test.owner?.name ?? test.owner?.email ?? messages.results.hidden} -{" "}
+                      {test.subject} - {test.owner?.name ?? test.owner?.email ?? "Maths4U Arena"} -{" "}
                       {published?._count.questions ?? 0} {messages.tests.questionCount}
                     </p>
                     {test.description ? (
@@ -232,7 +235,7 @@ export default async function TeacherLibraryPage({ searchParams }: PageProps) {
                 </div>
                 <p className="mt-1 text-sm text-slate-600">
                   {question.subject} - {messages.questions.fields.difficulty.toLowerCase()}{" "}
-                  {question.difficulty} - {question.owner?.name ?? question.owner?.email ?? messages.results.hidden}
+                  {question.difficulty} - {question.owner?.name ?? question.owner?.email ?? "Maths4U Arena"}
                 </p>
                 {question.explanation ? (
                   <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">
