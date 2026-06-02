@@ -81,7 +81,7 @@ export default async function StudentJoinRoundPage({ params }: PageProps) {
   const student = await getCurrentStudent();
 
   if (!student) {
-    redirect(`/student/login?next=${encodeURIComponent(`/student/join/${session.code}`)}`);
+    redirect(`/login?next=${encodeURIComponent(`/student/join/${session.code}`)}`);
   }
 
   if (!settings.seriesId && !settings.classId) {

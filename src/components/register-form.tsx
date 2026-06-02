@@ -93,7 +93,7 @@ export function RegisterForm() {
       >
         {pending ? messages.register.pending : messages.register.submit}
       </button>
-      <Link href="/admin/login" className="text-sm font-medium text-teal-800 hover:text-teal-900">
+      <Link href="/login?next=/admin" className="text-sm font-medium text-teal-800 hover:text-teal-900">
         {messages.register.loginLink}
       </Link>
     </form>

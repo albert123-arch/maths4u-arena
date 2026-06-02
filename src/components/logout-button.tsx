@@ -11,10 +11,10 @@ export function LogoutButton() {
 
   async function logout() {
     setPending(true);
-    await fetch("/api/admin/logout", {
+    await fetch("/api/auth/logout", {
       method: "POST",
     });
-    router.push("/admin/login");
+    router.push("/");
     router.refresh();
   }
 

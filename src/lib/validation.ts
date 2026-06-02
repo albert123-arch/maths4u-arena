@@ -64,6 +64,12 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+export const unifiedLoginSchema = z.object({
+  identifier: z.string().trim().min(1).max(191),
+  password: z.string().min(1),
+  next: z.string().trim().max(500).optional(),
+});
+
 export const registerSchema = z.object({
   email: z.email().transform((value) => value.toLowerCase()),
   password: z.string().min(8, messages.validation.passwordTooShort),

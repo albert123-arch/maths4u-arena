@@ -178,7 +178,7 @@ export async function requireStudent() {
   const student = await getCurrentStudent();
 
   if (!student) {
-    redirect("/student/login");
+    redirect("/login?next=/student");
   }
 
   return student;

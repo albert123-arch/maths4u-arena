@@ -1,26 +1,5 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import Link from "next/link";
-
-import { AdminLoginForm } from "@/components/admin-login-form";
-import { messages } from "@/lib/messages";
-
-export default function AdminLoginPage() {
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10 text-slate-950">
-      <section className="w-full max-w-md rounded-md border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="mb-6 grid gap-2">
-          <h1 className="text-2xl font-bold">{messages.adminLogin.title}</h1>
-          <p className="text-sm text-slate-600">{messages.adminLogin.subtitle}</p>
-        </div>
-        <AdminLoginForm />
-        <Link
-          href="/register"
-          className="mt-4 block text-sm font-medium text-teal-800 hover:text-teal-900"
-        >
-          {messages.adminLogin.registerLink}
-        </Link>
-      </section>
-    </main>
-  );
+export default function AdminLoginRedirectPage() {
+  redirect("/login?next=/admin");
 }

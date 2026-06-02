@@ -81,6 +81,7 @@ Open `http://localhost:3000`.
 ## Project Structure
 
 - `src/app/admin` - protected admin dashboard and CRUD pages
+- `src/app/login` - one public login page for admins, teachers, and students
 - `src/app/play` - guest and registered student join screen
 - `src/app/student` - registered student login, dashboard, series, and results
 - `src/app/game/[code]` - classic student game screen
@@ -102,6 +103,15 @@ The schema is MySQL-compatible and includes:
 - multi-day series, registrations, rounds, and series scores
 
 Flexible `LongText` JSON fields are used for future game modes and grading settings without requiring Redis, Docker, PostgreSQL, or paid external services.
+
+## User Entry Points
+
+- `/login` - one login page for admins, teachers, and students
+- `/student/register` - student self-registration with username and PIN/password
+- `/play` - join a guest game by code
+- `/join-class/[code]` - join a class from a teacher QR code or link
+
+Admin and teacher accounts are created by an administrator. Students can self-register. After login, Maths4U Arena redirects by role: admins go to `/admin`, teachers go to `/teacher`, and students go to `/student`.
 
 ## Manual MySQL Import With phpMyAdmin
 
@@ -187,7 +197,7 @@ After importing `database/migrations/001_student_series.sql`, use this flow to c
 6. Make sure at least one test version is published from `/admin/tests`.
 7. Add a round to the series using the published test version.
 8. Launch the round as `Classic` and open the host screen.
-9. Have the student log in from `/student/login`, join the live round, and play.
+9. Have the student log in from `/login`, join the live round, and play.
 10. Finish the session from the host screen.
 11. Open the admin results and the series leaderboard to confirm scores are recorded.
 
@@ -196,7 +206,7 @@ After importing `database/migrations/001_student_series.sql`, use this flow to c
 1. Complete the Series Classic setup through the student registration and round creation steps.
 2. On the series detail page, choose `Host-paced` as the round launch mode.
 3. Launch the round and open `/host/CODE`.
-4. Have the registered student log in from `/student/login` and join the live round.
+4. Have the registered student log in from `/login` and join the live round.
 5. Run the host-paced flow through finish.
 6. Confirm `/admin/sessions/CODE/results`, the student personal results page, and the series leaderboard include the score.
 7. Use `Run again` only when you intentionally want the series round to point at a new session.
@@ -208,7 +218,7 @@ After importing `database/migrations/001_student_series.sql`, use this flow to c
 3. Launch a series round from the series detail page.
 4. Open `/admin/sessions/CODE/access-check` and confirm the series, round, registered count, and joined count are correct.
 5. Use the host QR or student link `/student/join/CODE`.
-6. If the student is not logged in, confirm `/student/login?next=/student/join/CODE` redirects back after login.
+6. If the student is not logged in, confirm `/login?next=/student/join/CODE` redirects back after login.
 7. Confirm the student joins as their registered display name, not as a guest.
 8. Confirm `/admin/sessions/CODE/access-check` changes that student from not joined to joined.
 9. If a student is missing, use the Access Check warnings before changing data in phpMyAdmin.

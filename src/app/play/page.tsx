@@ -90,7 +90,7 @@ export default async function PlayPage({ searchParams }: PageProps) {
   const student = settings.registeredOnly ? await getCurrentStudent() : null;
 
   if (settings.registeredOnly && !student) {
-    redirect(`/student/login?next=${encodeURIComponent(`/play?code=${normalizedCode}`)}`);
+    redirect(`/login?next=${encodeURIComponent(`/play?code=${normalizedCode}`)}`);
   }
 
   if (settings.registeredOnly && !settings.seriesId && !settings.classId) {
@@ -156,10 +156,10 @@ export default async function PlayPage({ searchParams }: PageProps) {
               {messages.common.home}
             </Link>
             <Link
-              href="/student/login"
+              href="/login?next=/student"
               className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
             >
-              {messages.student.loginTitle}
+              {messages.login.submit}
             </Link>
           </div>
         </div>

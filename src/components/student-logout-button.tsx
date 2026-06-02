@@ -11,10 +11,10 @@ export function StudentLogoutButton() {
 
   async function signOut() {
     setPending(true);
-    await fetch("/api/student/logout", {
+    await fetch("/api/auth/logout", {
       method: "POST",
     });
-    router.push("/student/login");
+    router.push("/");
     router.refresh();
   }
 

@@ -37,7 +37,7 @@ const qaCards = [
     links: [
       { href: "/admin/series", label: messages.adminShell.nav.series },
       { href: "/admin/students", label: messages.adminShell.nav.students },
-      { href: "/student/login", label: messages.student.loginTitle },
+      { href: "/login?next=/student", label: messages.login.submit },
     ],
   },
   {
@@ -45,14 +45,14 @@ const qaCards = [
     description: messages.qa.cards.seriesHostPaced.description,
     links: [
       { href: "/admin/series", label: messages.adminShell.nav.series },
-      { href: "/student/login", label: messages.student.loginTitle },
+      { href: "/login?next=/student", label: messages.login.submit },
     ],
   },
   {
     title: messages.qa.cards.studentLogin.title,
     description: messages.qa.cards.studentLogin.description,
     links: [
-      { href: "/student/login", label: messages.student.loginTitle },
+      { href: "/login?next=/student", label: messages.login.submit },
       { href: "/student", label: messages.student.dashboard },
     ],
   },
