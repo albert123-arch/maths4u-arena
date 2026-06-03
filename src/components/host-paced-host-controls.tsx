@@ -459,8 +459,6 @@ export function HostPacedHostControls({
         void playSound("reveal");
       } else if (live.phase === "LEADERBOARD") {
         void playSound("leaderboard");
-      } else if (live.phase === "FINISHED") {
-        void playSound("game-finished");
       }
     } else if (live.phase === "QUESTION" && questionChanged) {
       void playSound("button-click");
