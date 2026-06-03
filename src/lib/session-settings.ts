@@ -12,6 +12,7 @@ export type HostPacedPhase = (typeof HOST_PACED_PHASES)[number];
 export type SessionAudience = "GUEST" | "CLASS" | "SERIES";
 export type TeamAssignMode = "manual" | "auto";
 export type TeamScoringMode = "sum" | "average" | "top3";
+export type HostPacedAutoAction = "LOCK" | "REVEAL" | "LEADERBOARD" | "NEXT" | "FINISH";
 
 export type SessionTeam = {
   id: string;
@@ -35,11 +36,21 @@ export type SessionSettings = {
   showQuestionOnStudent: boolean;
   showQuestionOnHost: boolean;
   autoAdvance: boolean;
+  autoFlow: boolean;
+  autoFlowPaused: boolean;
+  autoLockWhenAllAnswered: boolean;
+  autoRevealAfterLockSeconds: number;
+  autoLeaderboardAfterRevealSeconds: number;
+  autoNextAfterLeaderboardSeconds: number;
+  autoFinishAfterLastQuestion: boolean;
   phase: HostPacedPhase;
   currentQuestionIndex: number;
   questionStartedAt: string | null;
   questionEndsAt: string | null;
+  phaseChangedAt: string | null;
   lastPhaseChangedAt: string | null;
+  nextAutoActionAt: string | null;
+  autoAction: HostPacedAutoAction | null;
   teamMode: boolean;
   teamAssignMode: TeamAssignMode;
   teams: SessionTeam[];
@@ -72,11 +83,21 @@ export const DEFAULT_SESSION_SETTINGS: SessionSettings = {
   showQuestionOnStudent: true,
   showQuestionOnHost: true,
   autoAdvance: false,
+  autoFlow: false,
+  autoFlowPaused: false,
+  autoLockWhenAllAnswered: true,
+  autoRevealAfterLockSeconds: 2,
+  autoLeaderboardAfterRevealSeconds: 5,
+  autoNextAfterLeaderboardSeconds: 6,
+  autoFinishAfterLastQuestion: true,
   phase: "LOBBY",
   currentQuestionIndex: 0,
   questionStartedAt: null,
   questionEndsAt: null,
+  phaseChangedAt: null,
   lastPhaseChangedAt: null,
+  nextAutoActionAt: null,
+  autoAction: null,
   teamMode: false,
   teamAssignMode: "manual",
   teams: DEFAULT_SESSION_TEAMS,
@@ -105,6 +126,16 @@ function phaseSetting(value: unknown) {
   return typeof value === "string" && HOST_PACED_PHASES.includes(value as HostPacedPhase)
     ? (value as HostPacedPhase)
     : DEFAULT_SESSION_SETTINGS.phase;
+}
+
+function autoActionSetting(value: unknown): HostPacedAutoAction | null {
+  return value === "LOCK" ||
+    value === "REVEAL" ||
+    value === "LEADERBOARD" ||
+    value === "NEXT" ||
+    value === "FINISH"
+    ? (value as HostPacedAutoAction)
+    : DEFAULT_SESSION_SETTINGS.autoAction;
 }
 
 function audienceSetting(value: unknown, parsed: Partial<SessionSettings>): SessionAudience {
@@ -228,6 +259,34 @@ export function parseSessionSettings(settingsJson?: string | null): SessionSetti
         DEFAULT_SESSION_SETTINGS.showQuestionOnHost,
       ),
       autoAdvance: booleanSetting(parsed.autoAdvance, DEFAULT_SESSION_SETTINGS.autoAdvance),
+      autoFlow: booleanSetting(parsed.autoFlow, DEFAULT_SESSION_SETTINGS.autoFlow),
+      autoFlowPaused: booleanSetting(
+        parsed.autoFlowPaused,
+        DEFAULT_SESSION_SETTINGS.autoFlowPaused,
+      ),
+      autoLockWhenAllAnswered: booleanSetting(
+        parsed.autoLockWhenAllAnswered,
+        DEFAULT_SESSION_SETTINGS.autoLockWhenAllAnswered,
+      ),
+      autoRevealAfterLockSeconds: numberSetting(
+        parsed.autoRevealAfterLockSeconds,
+        DEFAULT_SESSION_SETTINGS.autoRevealAfterLockSeconds,
+        0,
+      ),
+      autoLeaderboardAfterRevealSeconds: numberSetting(
+        parsed.autoLeaderboardAfterRevealSeconds,
+        DEFAULT_SESSION_SETTINGS.autoLeaderboardAfterRevealSeconds,
+        0,
+      ),
+      autoNextAfterLeaderboardSeconds: numberSetting(
+        parsed.autoNextAfterLeaderboardSeconds,
+        DEFAULT_SESSION_SETTINGS.autoNextAfterLeaderboardSeconds,
+        0,
+      ),
+      autoFinishAfterLastQuestion: booleanSetting(
+        parsed.autoFinishAfterLastQuestion,
+        DEFAULT_SESSION_SETTINGS.autoFinishAfterLastQuestion,
+      ),
       phase: phaseSetting(parsed.phase),
       currentQuestionIndex: numberSetting(
         parsed.currentQuestionIndex,
@@ -236,7 +295,10 @@ export function parseSessionSettings(settingsJson?: string | null): SessionSetti
       ),
       questionStartedAt: nullableDateText(parsed.questionStartedAt),
       questionEndsAt: nullableDateText(parsed.questionEndsAt),
+      phaseChangedAt: nullableDateText(parsed.phaseChangedAt),
       lastPhaseChangedAt: nullableDateText(parsed.lastPhaseChangedAt),
+      nextAutoActionAt: nullableDateText(parsed.nextAutoActionAt),
+      autoAction: autoActionSetting(parsed.autoAction),
       teamMode: booleanSetting(parsed.teamMode, DEFAULT_SESSION_SETTINGS.teamMode),
       teamAssignMode: teamAssignModeSetting(parsed.teamAssignMode),
       teams: teamsSetting(parsed.teams),

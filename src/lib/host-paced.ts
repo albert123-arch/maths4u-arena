@@ -4,6 +4,7 @@ import { messages } from "./messages";
 import { verifyPassword } from "./password";
 import { prisma } from "./prisma";
 import {
+  type HostPacedAutoAction,
   type HostPacedPhase,
   parseSessionSettings,
   sessionSettingsJson,
@@ -85,6 +86,126 @@ function getTimerState(settings: SessionSettings, serverNow = Date.now()) {
     totalMs,
     expiredWithGrace: serverNow > endsAtMs + TIMER_GRACE_MS,
   };
+}
+
+function secondsFromNowIso(seconds: number, now = Date.now()) {
+  return new Date(now + Math.max(0, seconds) * 1000).toISOString();
+}
+
+function phaseTimestamp(settings: SessionSettings) {
+  return settings.phaseChangedAt ?? settings.lastPhaseChangedAt;
+}
+
+function autoFlowIsActive(settings: SessionSettings) {
+  return settings.autoFlow && !settings.autoFlowPaused;
+}
+
+function autoSchedule(
+  settings: SessionSettings,
+  phase: HostPacedPhase,
+  options: {
+    nowMs?: number;
+    isLastQuestion?: boolean;
+  } = {},
+): Pick<SessionSettings, "nextAutoActionAt" | "autoAction"> {
+  if (!autoFlowIsActive(settings)) {
+    return {
+      nextAutoActionAt: null,
+      autoAction: null,
+    };
+  }
+
+  const nowMs = options.nowMs ?? Date.now();
+
+  if (phase === "QUESTION_LOCKED") {
+    return {
+      nextAutoActionAt: secondsFromNowIso(settings.autoRevealAfterLockSeconds, nowMs),
+      autoAction: "REVEAL",
+    };
+  }
+
+  if (phase === "REVEAL") {
+    return {
+      nextAutoActionAt: secondsFromNowIso(settings.autoLeaderboardAfterRevealSeconds, nowMs),
+      autoAction: "LEADERBOARD",
+    };
+  }
+
+  if (phase === "LEADERBOARD") {
+    return {
+      nextAutoActionAt: secondsFromNowIso(settings.autoNextAfterLeaderboardSeconds, nowMs),
+      autoAction: options.isLastQuestion ? "FINISH" : "NEXT",
+    };
+  }
+
+  return {
+    nextAutoActionAt: null,
+    autoAction: null,
+  };
+}
+
+function autoActionIsDue(settings: SessionSettings, nowMs = Date.now()) {
+  const nextAutoActionAtMs = parseDateMs(settings.nextAutoActionAt);
+
+  return nextAutoActionAtMs !== null && nowMs >= nextAutoActionAtMs;
+}
+
+function activeAnswerStats(session: HostPacedSession, questionId: string | null) {
+  if (!questionId) {
+    return {
+      expectedAnswerCount: session.participants.length,
+      answeredCurrentQuestionCount: 0,
+    };
+  }
+
+  const answeredParticipantIds = new Set<string>();
+
+  for (const participant of session.participants) {
+    if (participant.answers.some((answer) => answer.questionId === questionId)) {
+      answeredParticipantIds.add(participant.id);
+    }
+  }
+
+  return {
+    expectedAnswerCount: session.participants.length,
+    answeredCurrentQuestionCount: answeredParticipantIds.size,
+  };
+}
+
+function questionWindow(
+  settings: SessionSettings,
+  row: HostPacedQuestionRow | null,
+  startedAt: Date,
+) {
+  const timeLimitSeconds = row?.timeLimitSeconds ?? settings.questionTimeLimitSeconds;
+  const endsAt = new Date(startedAt.getTime() + timeLimitSeconds * 1000);
+
+  return {
+    questionStartedAt: startedAt.toISOString(),
+    questionEndsAt: endsAt.toISOString(),
+  };
+}
+
+async function updateAutoFlowSettings(
+  session: HostPacedSession,
+  settings: SessionSettings,
+  data: {
+    status?: "LOBBY" | "RUNNING" | "PAUSED" | "FINISHED";
+    finishedAt?: Date;
+  } = {},
+) {
+  const updated = await prisma.gameSession.updateMany({
+    where: {
+      id: session.id,
+      settingsJson: session.settingsJson,
+    },
+    data: {
+      ...data,
+      settingsJson: sessionSettingsJson(settings),
+    },
+  });
+
+  return updated.count > 0;
 }
 
 function sortedQuestions(session: HostPacedSession) {
@@ -379,7 +500,164 @@ async function getHostPacedSession(code: string) {
   });
 }
 
+export async function advanceHostPacedAutoFlow(code: string) {
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    const session = await getHostPacedSession(code);
+
+    if (!session || session.mode !== "HOST_PACED" || session.status !== "RUNNING") {
+      return;
+    }
+
+    const settings = parseSessionSettings(session.settingsJson);
+
+    if (!autoFlowIsActive(settings)) {
+      return;
+    }
+
+    const { questions, index, row } = currentQuestion(session, settings);
+    const phase = settings.phase;
+    const nowMs = Date.now();
+    const now = new Date(nowMs);
+    const changedAt = now.toISOString();
+    const isLastQuestion = index >= questions.length - 1;
+    let nextSettings: SessionSettings | null = null;
+    let nextData: { status?: "RUNNING" | "FINISHED"; finishedAt?: Date } = {};
+
+    if (phase === "STARTING") {
+      const changedAtMs = parseDateMs(phaseTimestamp(settings));
+
+      if (changedAtMs === null || nowMs < changedAtMs + 3000) {
+        return;
+      }
+
+      nextSettings = {
+        ...settings,
+        phase: "QUESTION",
+        currentQuestionIndex: index,
+        ...questionWindow(settings, row, now),
+        phaseChangedAt: changedAt,
+        lastPhaseChangedAt: changedAt,
+        nextAutoActionAt: null,
+        autoAction: null,
+      };
+    } else if (phase === "QUESTION") {
+      const timerEndsAtMs = parseDateMs(settings.questionEndsAt);
+      const timerExpired = timerEndsAtMs !== null && nowMs >= timerEndsAtMs;
+      const { expectedAnswerCount, answeredCurrentQuestionCount } = activeAnswerStats(
+        session,
+        row?.question.id ?? null,
+      );
+      const everyoneAnswered =
+        settings.autoLockWhenAllAnswered &&
+        expectedAnswerCount > 0 &&
+        answeredCurrentQuestionCount >= expectedAnswerCount;
+
+      if (!timerExpired && !everyoneAnswered) {
+        return;
+      }
+
+      nextSettings = {
+        ...settings,
+        phase: "QUESTION_LOCKED",
+        phaseChangedAt: changedAt,
+        lastPhaseChangedAt: changedAt,
+        ...autoSchedule(settings, "QUESTION_LOCKED", { nowMs, isLastQuestion }),
+      };
+    } else if (phase === "QUESTION_LOCKED") {
+      if (settings.autoAction !== "REVEAL" || !autoActionIsDue(settings, nowMs)) {
+        return;
+      }
+
+      nextSettings = {
+        ...settings,
+        phase: "REVEAL",
+        phaseChangedAt: changedAt,
+        lastPhaseChangedAt: changedAt,
+        ...autoSchedule(settings, "REVEAL", { nowMs, isLastQuestion }),
+      };
+    } else if (phase === "REVEAL") {
+      if (settings.autoAction !== "LEADERBOARD" || !autoActionIsDue(settings, nowMs)) {
+        return;
+      }
+
+      nextSettings = {
+        ...settings,
+        phase: "LEADERBOARD",
+        phaseChangedAt: changedAt,
+        lastPhaseChangedAt: changedAt,
+        ...autoSchedule(settings, "LEADERBOARD", { nowMs, isLastQuestion }),
+      };
+    } else if (phase === "LEADERBOARD") {
+      if (
+        (settings.autoAction !== "NEXT" && settings.autoAction !== "FINISH") ||
+        !autoActionIsDue(settings, nowMs)
+      ) {
+        return;
+      }
+
+      if (isLastQuestion) {
+        if (!settings.autoFinishAfterLastQuestion) {
+          nextSettings = {
+            ...settings,
+            nextAutoActionAt: null,
+            autoAction: null,
+          };
+        } else {
+          nextSettings = {
+            ...settings,
+            phase: "FINISHED",
+            phaseChangedAt: changedAt,
+            lastPhaseChangedAt: changedAt,
+            nextAutoActionAt: null,
+            autoAction: null,
+          };
+          nextData = {
+            status: "FINISHED",
+            finishedAt: session.finishedAt ?? now,
+          };
+        }
+      } else {
+        const nextIndex = index + 1;
+        const nextRow = questions[nextIndex] ?? null;
+
+        nextSettings = {
+          ...settings,
+          phase: "QUESTION",
+          currentQuestionIndex: nextIndex,
+          ...questionWindow(settings, nextRow, now),
+          phaseChangedAt: changedAt,
+          lastPhaseChangedAt: changedAt,
+          nextAutoActionAt: null,
+          autoAction: null,
+        };
+      }
+    }
+
+    if (!nextSettings) {
+      return;
+    }
+
+    const updated = await updateAutoFlowSettings(session, nextSettings, nextData);
+
+    if (!updated) {
+      continue;
+    }
+
+    if (nextData.status === "FINISHED" && settings.roundId) {
+      await prisma.seriesRound.updateMany({
+        where: {
+          id: settings.roundId,
+          sessionId: session.id,
+        },
+        data: { status: "FINISHED" },
+      });
+      await recalculateSeriesRound(settings.roundId);
+    }
+  }
+}
+
 export async function getHostPacedHostLiveData(code: string) {
+  await advanceHostPacedAutoFlow(code);
   const session = await getHostPacedSession(code);
 
   if (!session || session.mode !== "HOST_PACED") {
@@ -454,6 +732,7 @@ export async function getHostPacedStudentLiveData({
   participantId: string;
   participantToken: string;
 }) {
+  await advanceHostPacedAutoFlow(code);
   const session = await getHostPacedSession(code);
 
   if (!session || session.mode !== "HOST_PACED") {
@@ -682,7 +961,10 @@ export async function startHostPacedSession(code: string): Promise<ActionResult>
         currentQuestionIndex: clampIndex(settings.currentQuestionIndex, session.testVersion.questions.length),
         questionStartedAt: null,
         questionEndsAt: null,
+        phaseChangedAt: changedAt,
         lastPhaseChangedAt: changedAt,
+        nextAutoActionAt: null,
+        autoAction: null,
       },
       {
         status: "RUNNING",
@@ -742,7 +1024,10 @@ export async function openHostPacedQuestion(
     currentQuestionIndex: index,
     questionStartedAt: changedAt,
     questionEndsAt: endsAt.toISOString(),
+    phaseChangedAt: changedAt,
     lastPhaseChangedAt: changedAt,
+    nextAutoActionAt: null,
+    autoAction: null,
   });
 
   return actionLive(code);
@@ -772,10 +1057,17 @@ export async function setHostPacedPhase(
     return actionLive(code);
   }
 
+  const nowMs = Date.now();
+  const changedAt = new Date(nowMs).toISOString();
+  const isLastQuestion =
+    settings.currentQuestionIndex >= Math.max(0, session.testVersion.questions.length - 1);
+
   await updateSettings(code, {
     ...settings,
     phase,
-    lastPhaseChangedAt: nowIso(),
+    phaseChangedAt: changedAt,
+    lastPhaseChangedAt: changedAt,
+    ...autoSchedule(settings, phase, { nowMs, isLastQuestion }),
   });
 
   return actionLive(code);
@@ -812,12 +1104,16 @@ export async function finishHostPacedSession(code: string): Promise<ActionResult
   const { session, settings } = loaded;
 
   if (session.status !== "FINISHED") {
+    const changedAt = nowIso();
     await updateSettings(
       code,
       {
         ...settings,
         phase: "FINISHED",
-        lastPhaseChangedAt: nowIso(),
+        phaseChangedAt: changedAt,
+        lastPhaseChangedAt: changedAt,
+        nextAutoActionAt: null,
+        autoAction: null,
       },
       {
         status: "FINISHED",
@@ -836,6 +1132,48 @@ export async function finishHostPacedSession(code: string): Promise<ActionResult
     });
     await recalculateSeriesRound(settings.roundId);
   }
+
+  return actionLive(code);
+}
+
+export async function setHostPacedAutoFlowPaused(
+  code: string,
+  paused: boolean,
+): Promise<ActionResult> {
+  const loaded = await getActionSession(code);
+
+  if (!loaded.ok) {
+    return loaded;
+  }
+
+  const { session, settings } = loaded;
+
+  if (session.status === "FINISHED") {
+    return actionLive(code);
+  }
+
+  const phase = settings.phase;
+  const isLastQuestion =
+    settings.currentQuestionIndex >= Math.max(0, session.testVersion.questions.length - 1);
+  const nextSettings = {
+    ...settings,
+    autoFlowPaused: paused,
+    ...(paused
+      ? {
+          nextAutoActionAt: null,
+          autoAction: null as HostPacedAutoAction | null,
+        }
+      : autoSchedule(
+          {
+            ...settings,
+            autoFlowPaused: false,
+          },
+          phase,
+          { isLastQuestion },
+        )),
+  };
+
+  await updateSettings(code, nextSettings);
 
   return actionLive(code);
 }

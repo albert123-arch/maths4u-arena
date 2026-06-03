@@ -93,6 +93,15 @@ type HostPacedLive = {
       id: string;
       name: string;
     }>;
+    autoFlow: boolean;
+    autoFlowPaused: boolean;
+    autoLockWhenAllAnswered: boolean;
+    autoRevealAfterLockSeconds: number;
+    autoLeaderboardAfterRevealSeconds: number;
+    autoNextAfterLeaderboardSeconds: number;
+    autoFinishAfterLastQuestion: boolean;
+    nextAutoActionAt: string | null;
+    autoAction: "LOCK" | "REVEAL" | "LEADERBOARD" | "NEXT" | "FINISH" | null;
   };
   participants: Array<{
     id: string;
@@ -130,6 +139,54 @@ function phaseBadgeClass(phase: HostPacedPhase) {
   }
 
   return "border-amber-300 bg-amber-400/15 text-amber-100";
+}
+
+function secondsUntil(target: string | null, serverTime: string) {
+  if (!target) {
+    return null;
+  }
+
+  const targetMs = Date.parse(target);
+  const serverMs = Date.parse(serverTime);
+
+  if (!Number.isFinite(targetMs) || !Number.isFinite(serverMs)) {
+    return null;
+  }
+
+  return Math.max(0, Math.ceil((targetMs - serverMs) / 1000));
+}
+
+function autoFlowMessage(live: HostPacedLive, isLastQuestion: boolean) {
+  const seconds = secondsUntil(live.settings.nextAutoActionAt, live.serverTime);
+  const suffix = seconds === null ? "" : ` in ${seconds}s`;
+
+  if (!live.settings.autoFlow) {
+    return messages.host.hostPaced.manualFlow;
+  }
+
+  if (live.settings.autoFlowPaused) {
+    return messages.host.hostPaced.autoFlowPaused;
+  }
+
+  if (live.phase === "QUESTION" && live.participantCount > 0 && live.answeredCurrentQuestionCount >= live.participantCount) {
+    return messages.host.hostPaced.everyoneAnsweredLocking;
+  }
+
+  if (live.phase === "QUESTION_LOCKED") {
+    return `${messages.host.hostPaced.revealingAnswer}${suffix}`;
+  }
+
+  if (live.phase === "REVEAL") {
+    return `${messages.host.hostPaced.showingLeaderboardSoon}${suffix}`;
+  }
+
+  if (live.phase === "LEADERBOARD") {
+    return isLastQuestion
+      ? `${messages.host.hostPaced.finishingGameSoon}${suffix}`
+      : `${messages.host.hostPaced.nextQuestionStarting}${suffix}`;
+  }
+
+  return messages.host.hostPaced.autoFlowOn;
 }
 
 export function HostPacedHostControls({
@@ -200,6 +257,38 @@ export function HostPacedHostControls({
         },
         cache: "no-store",
         body: body ? JSON.stringify(body) : undefined,
+      });
+      const result = (await response.json()) as ApiResponse;
+
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+
+      setLive(result.data);
+    } catch {
+      setError(messages.api.unknownError);
+    } finally {
+      setPendingAction("");
+    }
+  }
+
+  async function setAutoFlowPaused(paused: boolean) {
+    if (pendingAction) {
+      return;
+    }
+
+    setPendingAction(paused ? "pause-auto-flow" : "resume-auto-flow");
+    setError("");
+
+    try {
+      const response = await fetch(`/api/sessions/${live.code}/host-paced/auto-flow`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+        body: JSON.stringify({ paused }),
       });
       const result = (await response.json()) as ApiResponse;
 
@@ -349,6 +438,7 @@ export function HostPacedHostControls({
   const distributionMax = Math.max(1, ...live.answerDistribution.map((item) => item.count));
   const isLastQuestion = live.currentQuestionIndex >= live.questionCount - 1;
   const isClassGame = live.settings.audience === "CLASS" || Boolean(live.settings.classId);
+  const autoFlowStatus = autoFlowMessage(live, isLastQuestion);
   const studentInstructions = isClassGame
     ? `Join the Maths4U Arena class game:
 1. Open: ${joinLink}
@@ -393,6 +483,15 @@ export function HostPacedHostControls({
         <p className="text-xl text-slate-300">{live.testTitle}</p>
         {live.sessionLabel ? <p className="text-sm font-semibold text-teal-200">{live.sessionLabel}</p> : null}
       </header>
+
+      {live.phase !== "LOBBY" && live.phase !== "FINISHED" ? (
+        <section className="rounded-md border border-slate-700 bg-slate-900 p-4 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+            {messages.host.hostPaced.autoFlow}
+          </p>
+          <p className="mt-2 text-lg font-bold text-teal-100">{autoFlowStatus}</p>
+        </section>
+      ) : null}
 
       {live.phase === "LOBBY" ? (
         <section className="grid gap-4 lg:grid-cols-[320px_1fr]">
@@ -504,6 +603,14 @@ export function HostPacedHostControls({
           <QuestionHeader live={live} />
           <TimerBar remaining={live.remainingSeconds} percent={timerPercent} />
           <CurrentQuestionCard question={currentQuestion} />
+          {live.settings.autoFlow &&
+          !live.settings.autoFlowPaused &&
+          live.participantCount > 0 &&
+          live.answeredCurrentQuestionCount >= live.participantCount ? (
+            <p className="rounded-md border border-teal-400 bg-teal-400/10 p-3 text-sm font-bold text-teal-100">
+              {messages.host.hostPaced.everyoneAnsweredLocking}
+            </p>
+          ) : null}
           <div className="grid gap-4 sm:grid-cols-3">
             <MetricCard label={messages.host.hostPaced.answered} value={`${live.answeredCurrentQuestionCount} / ${live.participantCount}`} />
             <MetricCard label={messages.host.hostPaced.timer} value={live.remainingSeconds ?? "-"} />
@@ -516,6 +623,7 @@ export function HostPacedHostControls({
       {live.phase === "QUESTION_LOCKED" ? (
         <section className="grid gap-4 rounded-md border border-amber-300 bg-amber-400/10 p-6 text-amber-50">
           <h2 className="text-3xl font-black">{messages.host.hostPaced.answersLocked}</h2>
+          <p className="text-lg font-semibold">{autoFlowStatus}</p>
           <p className="text-lg">
             {live.answeredCurrentQuestionCount} / {live.participantCount} {messages.host.submitted.toLowerCase()}
           </p>
@@ -525,6 +633,9 @@ export function HostPacedHostControls({
       {live.phase === "REVEAL" ? (
         <section className="grid gap-4 rounded-md border border-slate-700 bg-slate-900 p-5">
           <QuestionHeader live={live} />
+          <p className="rounded-md border border-teal-500 bg-teal-500/10 p-3 text-sm font-bold text-teal-100">
+            {autoFlowStatus}
+          </p>
           <CurrentQuestionCard question={currentQuestion} reveal />
           <DistributionPanel distribution={live.answerDistribution} max={distributionMax} />
         </section>
@@ -535,6 +646,11 @@ export function HostPacedHostControls({
           <h2 className="text-2xl font-black">
             {live.phase === "FINISHED" ? messages.host.hostPaced.finalLeaderboard : messages.results.leaderboard}
           </h2>
+          {live.phase === "LEADERBOARD" ? (
+            <p className="rounded-md border border-teal-500 bg-teal-500/10 p-3 text-sm font-bold text-teal-100">
+              {autoFlowStatus}
+            </p>
+          ) : null}
           {live.settings.teamMode ? <TeamLeaderboardPanel rows={live.teamLeaderboardTop} /> : null}
           <LeaderboardPanel rows={live.leaderboardTop} />
         </section>
@@ -620,6 +736,25 @@ export function HostPacedHostControls({
               pending={pendingAction === "finish"}
               disabled={Boolean(pendingAction)}
               onClick={() => runAction("finish")}
+            />
+          ) : null}
+          {live.settings.autoFlow && live.phase !== "LOBBY" && live.phase !== "FINISHED" ? (
+            <ActionButton
+              label={
+                live.settings.autoFlowPaused
+                  ? messages.host.hostPaced.resumeAutoFlow
+                  : messages.host.hostPaced.pauseAutoFlow
+              }
+              loadingLabel={
+                live.settings.autoFlowPaused
+                  ? messages.host.hostPaced.resumingAutoFlow
+                  : messages.host.hostPaced.pausingAutoFlow
+              }
+              pending={
+                pendingAction === "pause-auto-flow" || pendingAction === "resume-auto-flow"
+              }
+              disabled={Boolean(pendingAction)}
+              onClick={() => setAutoFlowPaused(!live.settings.autoFlowPaused)}
             />
           ) : null}
           <Link

@@ -73,11 +73,15 @@ export async function POST(request: Request) {
             registeredOnly: Boolean(classId),
             classId,
             autoSubmitOnFinish: false,
+            autoFlowPaused: false,
             phase: "LOBBY" as const,
             currentQuestionIndex: 0,
             questionStartedAt: null,
             questionEndsAt: null,
+            phaseChangedAt: null,
             lastPhaseChangedAt: null,
+            nextAutoActionAt: null,
+            autoAction: null,
           }
         : {
             ...parsedSettings,

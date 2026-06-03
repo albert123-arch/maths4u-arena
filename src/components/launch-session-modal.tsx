@@ -72,6 +72,11 @@ export function LaunchSessionModal({
   const [autoSubmitOnFinish, setAutoSubmitOnFinish] = useState(true);
   const [questionTimeLimitSeconds, setQuestionTimeLimitSeconds] = useState(30);
   const [speedBonus, setSpeedBonus] = useState(true);
+  const [autoFlow, setAutoFlow] = useState(true);
+  const [autoLockWhenAllAnswered, setAutoLockWhenAllAnswered] = useState(true);
+  const [autoRevealAfterLockSeconds, setAutoRevealAfterLockSeconds] = useState(2);
+  const [autoLeaderboardAfterRevealSeconds, setAutoLeaderboardAfterRevealSeconds] = useState(5);
+  const [autoNextAfterLeaderboardSeconds, setAutoNextAfterLeaderboardSeconds] = useState(6);
   const [teamMode, setTeamMode] = useState(false);
   const [teams, setTeams] = useState<SessionTeam[]>(DEFAULT_SESSION_TEAMS);
   const [teamScoring, setTeamScoring] = useState<TeamScoringMode>("sum");
@@ -135,11 +140,21 @@ export function LaunchSessionModal({
                 showQuestionOnStudent: true,
                 showQuestionOnHost: true,
                 autoAdvance: false,
+                autoFlow,
+                autoFlowPaused: false,
+                autoLockWhenAllAnswered,
+                autoRevealAfterLockSeconds,
+                autoLeaderboardAfterRevealSeconds,
+                autoNextAfterLeaderboardSeconds,
+                autoFinishAfterLastQuestion: true,
                 phase: "LOBBY",
                 currentQuestionIndex: 0,
                 questionStartedAt: null,
                 questionEndsAt: null,
+                phaseChangedAt: null,
                 lastPhaseChangedAt: null,
+                nextAutoActionAt: null,
+                autoAction: null,
               }
             : {}),
         }),
@@ -359,17 +374,51 @@ export function LaunchSessionModal({
                       ) : null}
                     </div>
                   {mode === "HOST_PACED" ? (
-                    <label className="grid gap-1 text-sm font-medium text-slate-700">
-                      {messages.sessions.questionTimeLimitSeconds}
-                      <input
-                        type="number"
-                        min={5}
-                        max={600}
-                        value={questionTimeLimitSeconds}
-                        onChange={(event) => setQuestionTimeLimitSeconds(Number(event.target.value))}
-                        className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-                      />
-                    </label>
+                    <div className="grid gap-3 rounded-md border border-teal-100 bg-teal-50/40 p-3">
+                      <h4 className="text-sm font-semibold text-slate-700">
+                        {messages.sessions.hostPacedAutomation}
+                      </h4>
+                      <label className="grid gap-1 text-sm font-medium text-slate-700">
+                        {messages.sessions.questionTimeLimitSeconds}
+                        <input
+                          type="number"
+                          min={5}
+                          max={600}
+                          value={questionTimeLimitSeconds}
+                          onChange={(event) => setQuestionTimeLimitSeconds(Number(event.target.value))}
+                          className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                        />
+                      </label>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        <SettingToggle
+                          label={messages.sessions.autoFlow}
+                          checked={autoFlow}
+                          onChange={setAutoFlow}
+                        />
+                        <SettingToggle
+                          label={messages.sessions.autoLockWhenAllAnswered}
+                          checked={autoLockWhenAllAnswered}
+                          onChange={setAutoLockWhenAllAnswered}
+                        />
+                      </div>
+                      <div className="grid gap-3 sm:grid-cols-3">
+                        <NumberSetting
+                          label={messages.sessions.revealDelaySeconds}
+                          value={autoRevealAfterLockSeconds}
+                          onChange={setAutoRevealAfterLockSeconds}
+                        />
+                        <NumberSetting
+                          label={messages.sessions.leaderboardDelaySeconds}
+                          value={autoLeaderboardAfterRevealSeconds}
+                          onChange={setAutoLeaderboardAfterRevealSeconds}
+                        />
+                        <NumberSetting
+                          label={messages.sessions.nextQuestionDelaySeconds}
+                          value={autoNextAfterLeaderboardSeconds}
+                          onChange={setAutoNextAfterLeaderboardSeconds}
+                        />
+                      </div>
+                    </div>
                   ) : null}
                   <div className="grid gap-2 sm:grid-cols-2">
                     <SettingToggle
@@ -537,6 +586,30 @@ function SettingToggle({
         checked={checked}
         onChange={(event) => onChange(event.target.checked)}
         className="h-4 w-4 accent-teal-700"
+      />
+    </label>
+  );
+}
+
+function NumberSetting({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <label className="grid gap-1 text-sm font-medium text-slate-700">
+      {label}
+      <input
+        type="number"
+        min={0}
+        max={60}
+        value={value}
+        onChange={(event) => onChange(Number(event.target.value))}
+        className="rounded-md border border-slate-300 px-3 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
       />
     </label>
   );
