@@ -15,7 +15,6 @@ These local audio files were added from files downloaded by the project owner. V
 | `coin.wav` | `mixkit-winning-a-coin-video-game-2069.wav` | Mixkit | Mixkit License | downloaded by project owner; verify license before production release |
 | `bonus.wav` | `mixkit-final-level-bonus-2061.wav` | Mixkit | Mixkit License | downloaded by project owner; verify license before production release |
 | `fanfare.wav` | `mixkit-medieval-show-fanfare-announcement-226.wav` | Mixkit | Mixkit License | downloaded by project owner; verify license before production release |
-| `answer-submit.wav` | `mixkit-unlock-game-notification-253.wav` | Mixkit | Mixkit License | downloaded by project owner; verify license before production release |
 | `correct.wav` | `mixkit-bonus-earned-in-video-game-2058.wav` | Mixkit | Mixkit License | downloaded by project owner; verify license before production release |
 | `game-finished.wav` | `mixkit-game-level-completed-2059.wav` | Mixkit | Mixkit License | downloaded by project owner; verify license before production release |
 | `leaderboard.wav` | alias copy of `fanfare.wav` from `mixkit-medieval-show-fanfare-announcement-226.wav` | Mixkit | Mixkit License | downloaded by project owner; verify license before production release |

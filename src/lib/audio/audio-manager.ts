@@ -34,7 +34,7 @@ export const DEFAULT_ARENA_AUDIO_SETTINGS: ArenaAudioSettings = {
 };
 
 const SOUND_SOURCES: Record<ArenaSoundName, string> = {
-  "answer-submit": "/audio/answer-submit.wav",
+  "answer-submit": "/audio/button-click.wav",
   bonus: "/audio/bonus.wav",
   "button-click": "/audio/button-click.wav",
   coin: "/audio/coin.wav",
