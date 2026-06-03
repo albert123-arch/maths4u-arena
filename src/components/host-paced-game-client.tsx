@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
+import { useArenaAudio } from "@/hooks/useArenaAudio";
 import { messages } from "@/lib/messages";
+
+import { AudioControls } from "./audio-controls";
 
 type HostPacedPhase =
   | "LOBBY"
@@ -225,8 +228,12 @@ export function HostPacedGameClient({
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [startingCountdown, setStartingCountdown] = useState<number | null>(null);
+  const { playSound, startMusic, stopMusic } = useArenaAudio();
   const startedAt = useRef<number | null>(null);
   const lastPhase = useRef<HostPacedPhase | null>(initialLive?.phase ?? null);
+  const lastAudioPhase = useRef<HostPacedPhase | null>(initialLive?.phase ?? null);
+  const lastAudioQuestionIndex = useRef<number | null>(initialLive?.currentQuestionIndex ?? null);
+  const lastCountdownSound = useRef<number | null>(null);
   useEffect(() => {
     if (registeredOnly && participant && !participant.registeredOnly) {
       clearParticipantSession(code);
@@ -378,6 +385,57 @@ export function HostPacedGameClient({
     }
   }, [live?.phase]);
 
+  useEffect(() => {
+    if (live?.phase === "LOBBY") {
+      void startMusic();
+    } else {
+      stopMusic();
+    }
+  }, [live?.phase, startMusic, stopMusic]);
+
+  useEffect(() => () => stopMusic(), [stopMusic]);
+
+  useEffect(() => {
+    if (!live) {
+      return;
+    }
+
+    const phaseChanged = lastAudioPhase.current !== live.phase;
+    const questionChanged = lastAudioQuestionIndex.current !== live.currentQuestionIndex;
+
+    if (phaseChanged) {
+      if (live.phase === "QUESTION") {
+        void playSound("button-click");
+      } else if (live.phase === "QUESTION_LOCKED") {
+        void playSound("time-up");
+      } else if (live.phase === "REVEAL") {
+        void playSound("reveal");
+      } else if (live.phase === "LEADERBOARD") {
+        void playSound("leaderboard");
+      } else if (live.phase === "FINISHED") {
+        void playSound("game-finished");
+      }
+    } else if (live.phase === "QUESTION" && questionChanged) {
+      void playSound("button-click");
+    }
+
+    lastAudioPhase.current = live.phase;
+    lastAudioQuestionIndex.current = live.currentQuestionIndex;
+  }, [live, playSound]);
+
+  useEffect(() => {
+    if (startingCountdown === null) {
+      return;
+    }
+
+    if (lastCountdownSound.current === startingCountdown) {
+      return;
+    }
+
+    lastCountdownSound.current = startingCountdown;
+    void playSound(startingCountdown === 1 ? "countdown-final" : "countdown-tick");
+  }, [playSound, startingCountdown]);
+
   function setAnswer(questionId: string, value: string) {
     startedAt.current ??= Date.now();
     setAnswers((current) => {
@@ -440,6 +498,7 @@ export function HostPacedGameClient({
         return;
       }
 
+      void playSound("answer-submit");
       await fetchLive();
     } catch {
       setError(messages.api.answerSubmitFailed);
@@ -468,8 +527,19 @@ export function HostPacedGameClient({
     );
   }
 
-  if (live.phase === "LOBBY") {
+  function withAudioControls(content: ReactNode) {
     return (
+      <div className="grid gap-4">
+        <div className="flex justify-end">
+          <AudioControls compact />
+        </div>
+        {content}
+      </div>
+    );
+  }
+
+  if (live.phase === "LOBBY") {
+    return withAudioControls(
       <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
         <h2 className="text-2xl font-bold">{messages.game.joinedTitle}</h2>
         <p className="mt-2 text-slate-600">
@@ -489,23 +559,23 @@ export function HostPacedGameClient({
         <p className="mt-4 text-sm font-semibold text-teal-800">
           {live.participantCount} {messages.game.participantsLabel}
         </p>
-      </section>
+      </section>,
     );
   }
 
   if (live.phase === "STARTING") {
-    return (
+    return withAudioControls(
       <section className="rounded-md border border-teal-200 bg-white p-8 text-center shadow-sm">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-800">
           {messages.game.getReady}
         </p>
         <p className="mt-4 text-7xl font-black text-teal-800">{startingCountdown ?? 1}</p>
-      </section>
+      </section>,
     );
   }
 
   if (live.phase === "QUESTION") {
-    return (
+    return withAudioControls(
       <QuestionScreen
         live={live}
         answers={answers}
@@ -513,28 +583,28 @@ export function HostPacedGameClient({
         error={error}
         onAnswer={setAnswer}
         onSubmit={submitAnswer}
-      />
+      />,
     );
   }
 
   if (live.phase === "QUESTION_LOCKED") {
-    return (
+    return withAudioControls(
       <section className="rounded-md border border-amber-200 bg-white p-6 text-center shadow-sm">
         <h2 className="text-2xl font-bold">{messages.game.answersLocked}</h2>
         <p className="mt-2 text-slate-600">{messages.game.waitingForNextQuestion}</p>
-      </section>
+      </section>,
     );
   }
 
   if (live.phase === "REVEAL") {
-    return <RevealScreen live={live} />;
+    return withAudioControls(<RevealScreen live={live} />);
   }
 
   if (live.phase === "LEADERBOARD") {
-    return <LeaderboardScreen live={live} />;
+    return withAudioControls(<LeaderboardScreen live={live} />);
   }
 
-  return (
+  return withAudioControls(
     <section className="rounded-md border border-teal-200 bg-white p-6 text-center shadow-sm">
       <h2 className="text-2xl font-bold">{messages.game.finished}</h2>
       <p className="mt-2 text-slate-600">{messages.game.resultsReady}</p>
@@ -555,7 +625,7 @@ export function HostPacedGameClient({
       >
         {messages.game.viewResults}
       </Link>
-    </section>
+    </section>,
   );
 }
 

@@ -4,8 +4,10 @@ import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
 
+import { useArenaAudio } from "@/hooks/useArenaAudio";
 import { messages } from "@/lib/messages";
 
+import { AudioControls } from "./audio-controls";
 import { CopyButton } from "./copy-button";
 import { HostResultsPanel } from "./host-results-panel";
 import { RunAgainButton } from "./run-again-button";
@@ -218,7 +220,12 @@ export function HostPacedHostControls({
   const [qrLarge, setQrLarge] = useState(false);
   const [startingCountdown, setStartingCountdown] = useState<number | "open" | null>(null);
   const [resultsVisible, setResultsVisible] = useState(false);
+  const { playSound, startMusic, stopMusic } = useArenaAudio();
   const autoOpenStarted = useRef(false);
+  const lastAudioPhase = useRef<HostPacedPhase>(initialLive.phase);
+  const lastAudioQuestionIndex = useRef(initialLive.currentQuestionIndex);
+  const lastAllAnsweredKey = useRef("");
+  const lastCountdownSound = useRef<number | "open" | null>(null);
   const hostResultsApiPath = resultsApiPath ?? `/api/admin/sessions/${initialLive.code}/results`;
 
   async function fetchLive() {
@@ -429,6 +436,72 @@ export function HostPacedHostControls({
     };
   }, [live.code, live.currentQuestionIndex, live.phase, presenterMode]);
 
+  useEffect(() => {
+    if (live.phase === "LOBBY") {
+      void startMusic();
+    } else {
+      stopMusic();
+    }
+  }, [live.phase, startMusic, stopMusic]);
+
+  useEffect(() => () => stopMusic(), [stopMusic]);
+
+  useEffect(() => {
+    const phaseChanged = lastAudioPhase.current !== live.phase;
+    const questionChanged = lastAudioQuestionIndex.current !== live.currentQuestionIndex;
+
+    if (phaseChanged) {
+      if (live.phase === "QUESTION") {
+        void playSound("button-click");
+      } else if (live.phase === "QUESTION_LOCKED") {
+        void playSound("time-up");
+      } else if (live.phase === "REVEAL") {
+        void playSound("reveal");
+      } else if (live.phase === "LEADERBOARD") {
+        void playSound("leaderboard");
+      } else if (live.phase === "FINISHED") {
+        void playSound("game-finished");
+      }
+    } else if (live.phase === "QUESTION" && questionChanged) {
+      void playSound("button-click");
+    }
+
+    lastAudioPhase.current = live.phase;
+    lastAudioQuestionIndex.current = live.currentQuestionIndex;
+  }, [live.currentQuestionIndex, live.phase, playSound]);
+
+  useEffect(() => {
+    const allAnswered =
+      live.phase === "QUESTION" &&
+      live.participantCount > 0 &&
+      live.answeredCurrentQuestionCount >= live.participantCount;
+    const key = `${live.currentQuestionIndex}:${live.participantCount}`;
+
+    if (allAnswered && lastAllAnsweredKey.current !== key) {
+      lastAllAnsweredKey.current = key;
+      void playSound("bonus");
+    }
+  }, [
+    live.answeredCurrentQuestionCount,
+    live.currentQuestionIndex,
+    live.participantCount,
+    live.phase,
+    playSound,
+  ]);
+
+  useEffect(() => {
+    if (startingCountdown === null || startingCountdown === "open") {
+      return;
+    }
+
+    if (lastCountdownSound.current === startingCountdown) {
+      return;
+    }
+
+    lastCountdownSound.current = startingCountdown;
+    void playSound(startingCountdown === 1 ? "countdown-final" : "countdown-tick");
+  }, [playSound, startingCountdown]);
+
   const currentQuestion = live.currentQuestion;
   const timeLimit = currentQuestion?.timeLimitSeconds ?? live.settings.questionTimeLimitSeconds;
   const timerPercent =
@@ -451,7 +524,8 @@ export function HostPacedHostControls({
 
   return (
     <div className="grid gap-6">
-      <div className="flex justify-end">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <AudioControls dark compact={presenterMode} />
         <Link
           href={presenterMode ? `/host/${live.code}` : `/host/${live.code}/present`}
           className="rounded-md border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-900 active:scale-[0.98]"
