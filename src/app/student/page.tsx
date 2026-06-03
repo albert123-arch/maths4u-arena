@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { StudentShell } from "@/components/student-shell";
+import { SupportMaths4UCard } from "@/components/support-maths4u";
 import { isAssignmentsMigrationError } from "@/lib/assignments";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
@@ -371,6 +372,8 @@ export default async function StudentDashboardPage() {
             </div>
           )}
         </section>
+
+        <SupportMaths4UCard />
       </div>
     </StudentShell>
   );

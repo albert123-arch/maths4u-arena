@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { SessionArchiveButton } from "@/components/session-archive-button";
 import { SessionLifecycleButton } from "@/components/session-lifecycle-button";
+import { SupportMaths4UCard } from "@/components/support-maths4u";
 import { TeacherQuickLaunchForm } from "@/components/teacher-quick-launch-form";
 import { requireTeacherUser } from "@/lib/auth";
 import { isStudentSeriesMigrationError } from "@/lib/migration-warning";
@@ -367,6 +368,8 @@ export default async function TeacherDashboardPage() {
         <ActionCard title={messages.teacher.libraryTitle} description={messages.teacher.libraryDescription} href="/teacher/library" />
         <ActionCard title="Question Bank" description="Advanced direct question management." href="/teacher/questions" />
       </section>
+
+      <SupportMaths4UCard />
     </div>
   );
 }

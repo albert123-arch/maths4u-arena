@@ -4,6 +4,7 @@ import { messages } from "@/lib/messages";
 import type { StudentSessionUser } from "@/lib/student-auth";
 
 import { StudentLogoutButton } from "./student-logout-button";
+import { SupportMaths4UFooterLink } from "./support-maths4u";
 
 const navItems = [
   { href: "/student", label: messages.student.dashboard },
@@ -49,6 +50,9 @@ export function StudentShell({
         </nav>
         <main>{children}</main>
       </div>
+      <footer className="mx-auto flex max-w-6xl justify-center px-4 pb-6">
+        <SupportMaths4UFooterLink />
+      </footer>
     </div>
   );
 }

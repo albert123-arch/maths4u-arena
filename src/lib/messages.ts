@@ -26,6 +26,13 @@ export const messages = {
   metadata: {
     description: "An educational platform for tests, math games, and live quizzes.",
   },
+  support: {
+    title: "Support Maths4U",
+    description:
+      "Maths4U is an independent educational project. Your support helps cover hosting, domains, storage, and development.",
+    button: "Support",
+    footerLink: "Support Maths4U",
+  },
   home: {
     eyebrow: "Educational math arena",
     description:

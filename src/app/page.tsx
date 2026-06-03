@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { LogoutButton } from "@/components/logout-button";
 import { StudentLogoutButton } from "@/components/student-logout-button";
+import { SupportMaths4UCard, SupportMaths4UFooterLink } from "@/components/support-maths4u";
 import { getCurrentUser } from "@/lib/auth";
 import { messages } from "@/lib/messages";
 import { getCurrentStudent } from "@/lib/student-auth";
@@ -120,6 +121,12 @@ export default async function Home() {
           <InfoCard title={messages.home.teacherTitle} description="Teacher accounts are created by an administrator." />
           <InfoCard title={messages.home.adminTitle} description={messages.home.adminDescription} />
         </section>
+
+        <SupportMaths4UCard />
+
+        <footer className="flex justify-center">
+          <SupportMaths4UFooterLink />
+        </footer>
       </section>
     </main>
   );
