@@ -46,6 +46,8 @@ export type SessionSettings = {
   teamScoring: TeamScoringMode;
   archived: boolean;
   archivedAt: string | null;
+  closedWithoutStart: boolean;
+  closedAt: string | null;
 };
 
 export const DEFAULT_SESSION_TEAMS: SessionTeam[] = [
@@ -81,6 +83,8 @@ export const DEFAULT_SESSION_SETTINGS: SessionSettings = {
   teamScoring: "sum",
   archived: false,
   archivedAt: null,
+  closedWithoutStart: false,
+  closedAt: null,
 };
 
 function booleanSetting(value: unknown, fallback: boolean) {
@@ -239,6 +243,11 @@ export function parseSessionSettings(settingsJson?: string | null): SessionSetti
       teamScoring: teamScoringSetting(parsed.teamScoring),
       archived: booleanSetting(parsed.archived, DEFAULT_SESSION_SETTINGS.archived),
       archivedAt: nullableDateText(parsed.archivedAt),
+      closedWithoutStart: booleanSetting(
+        parsed.closedWithoutStart,
+        DEFAULT_SESSION_SETTINGS.closedWithoutStart,
+      ),
+      closedAt: nullableDateText(parsed.closedAt),
     };
   } catch {
     return DEFAULT_SESSION_SETTINGS;

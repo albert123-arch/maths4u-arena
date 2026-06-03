@@ -102,7 +102,7 @@ export function HostControls({
   archiveApiBase?: string;
 }) {
   const [live, setLive] = useState(initialLive);
-  const [pendingAction, setPendingAction] = useState<"START" | "FINISH" | null>(null);
+  const [pendingAction, setPendingAction] = useState<"START" | "FINISH" | "CLOSE" | null>(null);
   const [error, setError] = useState("");
   const [countdown, setCountdown] = useState<number | "started" | null>(null);
   const [qrLarge, setQrLarge] = useState(false);
@@ -164,8 +164,12 @@ export function HostControls({
     window.setTimeout(() => setCountdown(null), 3200);
   }
 
-  async function updateStatus(action: "START" | "FINISH") {
+  async function updateStatus(action: "START" | "FINISH" | "CLOSE") {
     if (pendingAction) {
+      return;
+    }
+
+    if (action === "CLOSE" && !window.confirm(messages.teacher.closeSessionConfirm)) {
       return;
     }
 
@@ -173,7 +177,13 @@ export function HostControls({
     setError("");
 
     try {
-      const response = await fetch(`/api/sessions/${live.code}/${action === "START" ? "start" : "finish"}`, {
+      const actionPath =
+        action === "START"
+          ? `/api/sessions/${live.code}/start`
+          : action === "FINISH"
+            ? `/api/sessions/${live.code}/finish`
+            : `${archiveApiBase}/${live.code}/close`;
+      const response = await fetch(actionPath, {
         method: "POST",
         cache: "no-store",
       });
@@ -432,14 +442,24 @@ export function HostControls({
         <h2 className="text-lg font-semibold">{messages.host.controlsTitle}</h2>
         <div className="flex flex-wrap gap-3">
           {live.status === "LOBBY" ? (
-            <button
-              type="button"
-              onClick={() => updateStatus("START")}
-              disabled={pendingAction !== null}
-              className="rounded-md bg-teal-500 px-4 py-2 font-semibold text-slate-950 transition hover:bg-teal-400 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {pendingAction === "START" ? messages.host.starting : messages.host.start}
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={() => updateStatus("START")}
+                disabled={pendingAction !== null}
+                className="rounded-md bg-teal-500 px-4 py-2 font-semibold text-slate-950 transition hover:bg-teal-400 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {pendingAction === "START" ? messages.host.starting : messages.host.start}
+              </button>
+              <button
+                type="button"
+                onClick={() => updateStatus("CLOSE")}
+                disabled={pendingAction !== null}
+                className="rounded-md border border-slate-600 px-4 py-2 font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {pendingAction === "CLOSE" ? messages.teacher.closingSession : messages.teacher.closeSession}
+              </button>
+            </>
           ) : null}
           {live.status === "RUNNING" ? (
             <button

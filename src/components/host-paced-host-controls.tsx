@@ -216,6 +216,38 @@ export function HostPacedHostControls({
     }
   }
 
+  async function closeWaitingSession() {
+    if (pendingAction) {
+      return;
+    }
+
+    if (!window.confirm(messages.teacher.closeSessionConfirm)) {
+      return;
+    }
+
+    setPendingAction("close");
+    setError("");
+
+    try {
+      const response = await fetch(`${archiveApiBase}/${live.code}/close`, {
+        method: "POST",
+        cache: "no-store",
+      });
+      const result = (await response.json()) as { ok: boolean; error?: string };
+
+      if (!result.ok) {
+        setError(result.error ?? messages.api.unknownError);
+        return;
+      }
+
+      await fetchLive();
+    } catch {
+      setError(messages.api.unknownError);
+    } finally {
+      setPendingAction("");
+    }
+  }
+
   useEffect(() => {
     let stopped = false;
     const code = initialLive.code;
@@ -513,14 +545,23 @@ export function HostPacedHostControls({
         <h2 className="text-lg font-semibold">{messages.host.controlsTitle}</h2>
         <div className="flex flex-wrap gap-3">
           {live.phase === "LOBBY" ? (
-            <ActionButton
-              label={messages.host.start}
-              loadingLabel={messages.host.starting}
-              pending={pendingAction === "start"}
-              disabled={Boolean(pendingAction)}
-              onClick={() => runAction("start")}
-              primary
-            />
+            <>
+              <ActionButton
+                label={messages.host.start}
+                loadingLabel={messages.host.starting}
+                pending={pendingAction === "start"}
+                disabled={Boolean(pendingAction)}
+                onClick={() => runAction("start")}
+                primary
+              />
+              <ActionButton
+                label={messages.teacher.closeSession}
+                loadingLabel={messages.teacher.closingSession}
+                pending={pendingAction === "close"}
+                disabled={Boolean(pendingAction)}
+                onClick={closeWaitingSession}
+              />
+            </>
           ) : null}
           {live.phase === "STARTING" ? (
             <ActionButton
@@ -572,7 +613,7 @@ export function HostPacedHostControls({
               primary
             />
           ) : null}
-          {(live.phase === "LEADERBOARD" && isLastQuestion) || live.phase === "QUESTION_LOCKED" || live.phase === "REVEAL" ? (
+          {live.phase !== "LOBBY" && live.phase !== "FINISHED" ? (
             <ActionButton
               label={messages.host.finish}
               loadingLabel={messages.host.finishing}
