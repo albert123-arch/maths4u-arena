@@ -88,7 +88,13 @@ function readParticipant(code: string): StoredParticipant | null {
   return null;
 }
 
-export function PersonalResultsClient({ code }: { code: string }) {
+export function PersonalResultsClient({
+  code,
+  allowAccountLookup = false,
+}: {
+  code: string;
+  allowAccountLookup?: boolean;
+}) {
   const [participant, setParticipant] = useState<StoredParticipant | null>(null);
   const [results, setResults] = useState<PersonalResults | null>(null);
   const [error, setError] = useState("");
@@ -97,18 +103,21 @@ export function PersonalResultsClient({ code }: { code: string }) {
   useEffect(() => {
     let stopped = false;
 
-    async function loadResults(storedParticipant: StoredParticipant) {
+    async function loadResults(storedParticipant: StoredParticipant | null) {
       try {
+        const body = storedParticipant
+          ? {
+              participantId: storedParticipant.participantId,
+              participantToken: storedParticipant.participantToken,
+            }
+          : {};
         const response = await fetch(`/api/sessions/${code}/personal-results`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           cache: "no-store",
-          body: JSON.stringify({
-            participantId: storedParticipant.participantId,
-            participantToken: storedParticipant.participantToken,
-          }),
+          body: JSON.stringify(body),
         });
         const result = (await response.json()) as ApiResponse;
 
@@ -140,7 +149,7 @@ export function PersonalResultsClient({ code }: { code: string }) {
 
       setParticipant(storedParticipant);
 
-      if (!storedParticipant) {
+      if (!storedParticipant && !allowAccountLookup) {
         setPending(false);
         return;
       }
@@ -152,7 +161,7 @@ export function PersonalResultsClient({ code }: { code: string }) {
       stopped = true;
       window.clearTimeout(timer);
     };
-  }, [code]);
+  }, [allowAccountLookup, code]);
 
   if (pending) {
     return (
@@ -162,30 +171,30 @@ export function PersonalResultsClient({ code }: { code: string }) {
     );
   }
 
-  if (!participant) {
-    return (
-      <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
-        <h1 className="text-2xl font-bold">{messages.game.joinRequiredTitle}</h1>
-        <p className="mt-2 text-sm text-slate-600">{messages.game.joinRequiredDescription}</p>
-        <div className="mt-4 flex flex-wrap justify-center gap-2">
-          <Link
-            href={`/play?code=${code}`}
-            className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
-          >
-            {messages.common.backToPlay}
-          </Link>
-          <Link
-            href="/"
-            className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50"
-          >
-            {messages.common.home}
-          </Link>
-        </div>
-      </section>
-    );
-  }
-
   if (error || !results) {
+    if (!participant && !allowAccountLookup) {
+      return (
+        <section className="rounded-md border border-slate-200 bg-white p-6 text-center shadow-sm">
+          <h1 className="text-2xl font-bold">{messages.game.joinRequiredTitle}</h1>
+          <p className="mt-2 text-sm text-slate-600">{messages.game.joinRequiredDescription}</p>
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <Link
+              href="/student"
+              className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+            >
+              {messages.student.backToDashboard}
+            </Link>
+            <Link
+              href="/"
+              className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50"
+            >
+              {messages.common.home}
+            </Link>
+          </div>
+        </section>
+      );
+    }
+
     return (
       <section className="rounded-md border border-red-200 bg-white p-6 text-center shadow-sm">
         <h1 className="text-2xl font-bold">{messages.results.unavailable}</h1>
@@ -194,16 +203,16 @@ export function PersonalResultsClient({ code }: { code: string }) {
         </p>
         <div className="mt-4 flex flex-wrap justify-center gap-2">
           <Link
-            href={`/game/${code}`}
+            href="/student"
             className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
           >
-            {messages.game.backToGame}
+            {messages.student.backToDashboard}
           </Link>
           <Link
-            href="/play"
+            href="/"
             className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50"
           >
-            {messages.common.backToPlay}
+            {messages.common.home}
           </Link>
         </div>
       </section>
@@ -227,10 +236,10 @@ export function PersonalResultsClient({ code }: { code: string }) {
         <p className="mt-2 text-lg font-semibold text-slate-700">{results.message}</p>
         <div className="mt-4 flex flex-wrap justify-center gap-2">
           <Link
-            href="/play"
+            href="/student"
             className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
           >
-            {messages.game.playAnotherGame}
+            {messages.student.backToDashboard}
           </Link>
           {results.series ? (
             <Link

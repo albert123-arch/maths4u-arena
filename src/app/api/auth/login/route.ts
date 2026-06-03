@@ -30,6 +30,30 @@ function defaultRedirect(role: "ADMIN" | "TEACHER" | "STUDENT") {
   return "/student";
 }
 
+function allowedNextForRole(value: string | null, role: "ADMIN" | "TEACHER" | "STUDENT") {
+  if (!value) {
+    return null;
+  }
+
+  if (role === "ADMIN") {
+    return value.startsWith("/admin") || value.startsWith("/host") ? value : null;
+  }
+
+  if (role === "TEACHER") {
+    return value.startsWith("/teacher") || value.startsWith("/host") ? value : null;
+  }
+
+  return (
+    value.startsWith("/student") ||
+    value.startsWith("/play") ||
+    value.startsWith("/game") ||
+    value.startsWith("/join-class") ||
+    value.startsWith("/series")
+  )
+    ? value
+    : null;
+}
+
 export async function POST(request: Request) {
   try {
     const input = unifiedLoginSchema.parse(await request.json());
@@ -45,7 +69,7 @@ export async function POST(request: Request) {
 
         return ok({
           role: user.role,
-          redirectTo: next ?? defaultRedirect(user.role),
+          redirectTo: allowedNextForRole(next, user.role) ?? defaultRedirect(user.role),
         });
       }
     }
@@ -58,7 +82,7 @@ export async function POST(request: Request) {
 
       return ok({
         role: "STUDENT" as const,
-        redirectTo: next ?? defaultRedirect("STUDENT"),
+        redirectTo: allowedNextForRole(next, "STUDENT") ?? defaultRedirect("STUDENT"),
       });
     }
 

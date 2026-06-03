@@ -203,11 +203,13 @@ export function HostPacedGameClient({
   sessionId,
   initialLive,
   registeredOnly,
+  joinHref,
 }: {
   code: string;
   sessionId: string;
   initialLive: HostPacedStudentLive | null;
   registeredOnly: boolean;
+  joinHref: string;
 }) {
   const participantRaw = useSyncExternalStore(
     subscribeParticipantSession,
@@ -225,8 +227,6 @@ export function HostPacedGameClient({
   const [startingCountdown, setStartingCountdown] = useState<number | null>(null);
   const startedAt = useRef<number | null>(null);
   const lastPhase = useRef<HostPacedPhase | null>(initialLive?.phase ?? null);
-  const joinHref = registeredOnly ? `/student/join/${code}` : `/play?code=${code}`;
-
   useEffect(() => {
     if (registeredOnly && participant && !participant.registeredOnly) {
       clearParticipantSession(code);

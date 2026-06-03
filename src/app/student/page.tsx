@@ -1,57 +1,32 @@
 import Link from "next/link";
 
-import { StudentLiveGameWatcher } from "@/components/student-live-game-watcher";
 import { StudentShell } from "@/components/student-shell";
 import { isAssignmentsMigrationError } from "@/lib/assignments";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
-import { getSeriesLeaderboard } from "@/lib/series-scoring";
 import { parseSessionSettings } from "@/lib/session-settings";
 import { requireStudent } from "@/lib/student-auth";
 
 export const dynamic = "force-dynamic";
 
+function classAccent(index: number) {
+  return ["bg-blue-600", "bg-teal-600", "bg-orange-600", "bg-violet-600"][index % 4];
+}
+
+function modeLabel(mode: string) {
+  return mode === "HOST_PACED" ? messages.sessions.modeHostPaced : messages.sessions.modeClassic;
+}
+
+function statusLabel(status: string) {
+  return status === "RUNNING" ? messages.host.liveStatus : messages.host.waitingStatus;
+}
+
+function scoreSummary(score: number, maxScore: number) {
+  return `${score} / ${maxScore}`;
+}
+
 export default async function StudentDashboardPage() {
   const student = await requireStudent();
-  const registrations = await prisma.seriesRegistration.findMany({
-    where: {
-      studentId: student.id,
-      status: "REGISTERED",
-    },
-    orderBy: { createdAt: "desc" },
-    include: {
-      series: {
-        select: {
-          id: true,
-          title: true,
-          status: true,
-          rounds: {
-            orderBy: { roundNumber: "asc" },
-            select: {
-              id: true,
-              title: true,
-              status: true,
-              session: {
-                select: {
-                  code: true,
-                  status: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-  const recentScores = await prisma.seriesScore.findMany({
-    where: { studentId: student.id },
-    orderBy: { createdAt: "desc" },
-    take: 5,
-    include: {
-      series: { select: { title: true } },
-      round: { select: { title: true, roundNumber: true } },
-    },
-  });
   const classMemberships = await prisma.classMembership.findMany({
     where: {
       studentId: student.id,
@@ -61,6 +36,7 @@ export default async function StudentDashboardPage() {
     include: {
       classroom: {
         select: {
+          id: true,
           title: true,
           joinCode: true,
           teacher: {
@@ -77,11 +53,58 @@ export default async function StudentDashboardPage() {
   const classTitleById = new Map(
     classMemberships.map((membership) => [membership.classId, membership.classroom.title]),
   );
+  const liveClassSessions = classIds.length
+    ? (await prisma.gameSession.findMany({
+        where: { status: { in: ["LOBBY", "RUNNING"] } },
+        orderBy: { createdAt: "desc" },
+        take: 100,
+        select: {
+          id: true,
+          code: true,
+          mode: true,
+          status: true,
+          settingsJson: true,
+          createdAt: true,
+          testVersion: {
+            select: {
+              test: { select: { title: true } },
+              questions: { select: { id: true } },
+            },
+          },
+        },
+      })).flatMap((session) => {
+        const settings = parseSessionSettings(session.settingsJson);
+        const isClassGame = settings.audience === "CLASS" || Boolean(settings.classId && !settings.seriesId);
+
+        if (settings.archived || !isClassGame || !settings.classId || !classIds.includes(settings.classId)) {
+          return [];
+        }
+
+        return [
+          {
+            ...session,
+            classTitle: classTitleById.get(settings.classId) ?? messages.teacher.classOnly,
+            sessionLabel: settings.label,
+            questionCount: session.testVersion.questions.length,
+          },
+        ];
+      }).sort((left, right) => {
+        if (left.status !== right.status) {
+          return left.status === "RUNNING" ? -1 : 1;
+        }
+
+        return right.createdAt.getTime() - left.createdAt.getTime();
+      })
+    : [];
   const assignmentSubmissions = await prisma.assignmentSubmission
     .findMany({
-      where: { studentId: student.id },
+      where: {
+        studentId: student.id,
+        status: { in: ["NOT_STARTED", "IN_PROGRESS"] },
+        assignment: { status: "ASSIGNED" },
+      },
       orderBy: { assignment: { dueAt: "asc" } },
-      take: 8,
+      take: 6,
       include: {
         assignment: {
           include: {
@@ -98,43 +121,7 @@ export default async function StudentDashboardPage() {
 
       throw error;
     });
-  const liveClassSessions = classIds.length
-    ? (await prisma.gameSession.findMany({
-          where: { status: { in: ["LOBBY", "RUNNING"] } },
-          orderBy: { createdAt: "desc" },
-          take: 80,
-          select: {
-            id: true,
-            code: true,
-            mode: true,
-            status: true,
-            settingsJson: true,
-            createdAt: true,
-            testVersion: {
-              select: {
-                test: { select: { title: true } },
-              },
-            },
-          },
-        })).flatMap((session) => {
-          const settings = parseSessionSettings(session.settingsJson);
-          const isClassGame = settings.audience === "CLASS" || Boolean(settings.classId && !settings.seriesId);
-
-          if (settings.archived || !isClassGame || !settings.classId || !classIds.includes(settings.classId)) {
-            return [];
-          }
-
-          return [
-            {
-              ...session,
-              classTitle: classTitleById.get(settings.classId) ?? messages.teacher.classOnly,
-              sessionLabel: settings.label,
-              createdAt: session.createdAt.toISOString(),
-            },
-          ];
-        })
-    : [];
-  const recentLiveResultsRaw = await prisma.participant.findMany({
+  const recentParticipantsRaw = await prisma.participant.findMany({
     where: {
       studentAccountId: student.id,
       session: {
@@ -142,10 +129,9 @@ export default async function StudentDashboardPage() {
       },
     },
     orderBy: { joinedAt: "desc" },
-    take: 8,
+    take: 50,
     select: {
       id: true,
-      displayName: true,
       answers: {
         select: {
           points: true,
@@ -156,87 +142,77 @@ export default async function StudentDashboardPage() {
         select: {
           code: true,
           mode: true,
-          status: true,
           finishedAt: true,
           settingsJson: true,
           testVersion: {
             select: {
-              test: {
-                select: {
-                  title: true,
-                },
-              },
+              questions: { select: { points: true } },
+              test: { select: { title: true } },
             },
           },
         },
       },
     },
   });
-  const recentLiveResults = recentLiveResultsRaw.filter((participant) => {
+  const recentResults = recentParticipantsRaw.flatMap((participant) => {
     const settings = parseSessionSettings(participant.session.settingsJson);
 
-    return !settings.archived;
+    if (settings.archived) {
+      return [];
+    }
+
+    const score = participant.answers.reduce((sum, answer) => sum + answer.points, 0);
+    const maxScore = participant.session.testVersion.questions.reduce(
+      (sum, question) => sum + question.points,
+      0,
+    );
+    const percentage = maxScore === 0 ? 0 : Math.round((score / maxScore) * 100);
+    const correct = participant.answers.filter((answer) => answer.isCorrect === true).length;
+
+    return [
+      {
+        ...participant,
+        settings,
+        score,
+        maxScore,
+        percentage,
+        correct,
+        classTitle: settings.classId ? classTitleById.get(settings.classId) ?? messages.teacher.classOnly : "",
+      },
+    ];
   });
-  const primaryLiveSession = liveClassSessions[0] ?? null;
+  const completedTests = recentResults.length;
+  const averagePercentage =
+    completedTests === 0
+      ? null
+      : Math.round(recentResults.reduce((sum, result) => sum + result.percentage, 0) / completedTests);
 
   return (
     <StudentShell student={student}>
-      <StudentLiveGameWatcher
-        initialSessions={liveClassSessions.map((session) => ({
-          code: session.code,
-          status: session.status === "RUNNING" ? "RUNNING" : "LOBBY",
-          mode: session.mode,
-          testTitle: session.testVersion.test.title,
-          sessionLabel: session.sessionLabel,
-          classTitle: session.classTitle,
-          createdAt: session.createdAt,
-        }))}
-      />
       <div className="grid gap-6">
-        <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
+        <section className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
           <p className="text-sm font-semibold text-teal-800">{messages.student.welcome}</p>
           <h1 className="mt-1 text-3xl font-bold">{student.displayName}</h1>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <MetricCard label={messages.student.classesTitle} value={classMemberships.length} />
+            <MetricCard label={messages.student.completedTests} value={completedTests} />
+            <MetricCard
+              label={messages.results.averageScore}
+              value={averagePercentage === null ? "-" : `${averagePercentage}%`}
+            />
+          </div>
           {student.groupName ? (
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-4 text-sm text-slate-600">
               {messages.student.group}: {student.groupName}
             </p>
           ) : null}
         </section>
 
-        {primaryLiveSession ? (
-          <section className="grid gap-4 rounded-md border border-blue-200 bg-blue-50 p-5 shadow-sm sm:grid-cols-[1fr_auto] sm:items-center">
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-blue-800">
-                  {primaryLiveSession.status === "LOBBY" ? messages.host.waitingStatus : messages.host.liveStatus}
-                </span>
-                <span className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-slate-700">
-                  {primaryLiveSession.mode === "HOST_PACED"
-                    ? messages.sessions.modeHostPaced
-                    : messages.sessions.modeClassic}
-                </span>
-              </div>
-              <h2 className="mt-3 text-xl font-bold text-blue-950">
-                {primaryLiveSession.testVersion.test.title}
-              </h2>
-              <p className="mt-1 text-sm text-blue-900">
-                {primaryLiveSession.classTitle} - {messages.game.codeLabel}: {primaryLiveSession.code}
-              </p>
-            </div>
-            <Link
-              href={`/play?code=${primaryLiveSession.code}`}
-              className="rounded-md border border-blue-300 bg-white px-5 py-3 text-center font-semibold text-blue-950 shadow-sm hover:bg-blue-100"
-            >
-              {messages.student.joinLiveRound}
-            </Link>
-          </section>
-        ) : null}
-
         <section className="grid gap-3">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-xl font-semibold">{messages.student.liveNow}</h2>
             <Link href="/play" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
-              {messages.common.backToPlay}
+              {messages.play.joinAnotherGame}
             </Link>
           </div>
           {liveClassSessions.length === 0 ? (
@@ -244,31 +220,35 @@ export default async function StudentDashboardPage() {
               {messages.student.noLiveClassGames}
             </p>
           ) : (
-            <div className="grid gap-3 md:grid-cols-2">
+            <div className="grid gap-3">
               {liveClassSessions.map((session) => (
                 <article
                   key={session.id}
-                  className="rounded-md border border-teal-200 bg-white p-5 shadow-sm ring-1 ring-teal-50"
+                  className="grid gap-4 rounded-md border border-blue-200 bg-blue-50 p-5 shadow-sm md:grid-cols-[1fr_auto] md:items-center"
                 >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-800">
-                      {session.status === "LOBBY" ? messages.host.waitingStatus : messages.host.liveStatus}
-                    </span>
-                    <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
-                      {session.mode === "HOST_PACED" ? messages.sessions.modeHostPaced : messages.sessions.modeClassic}
-                    </span>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-blue-800">
+                        {statusLabel(session.status)}
+                      </span>
+                      <span className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-slate-700">
+                        {modeLabel(session.mode)}
+                      </span>
+                    </div>
+                    <h3 className="mt-3 text-xl font-bold text-blue-950">
+                      {session.testVersion.test.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-blue-900">
+                      {session.classTitle}
+                      {session.questionCount > 0 ? ` - ${session.questionCount} questions` : ""}
+                    </p>
+                    {session.sessionLabel ? (
+                      <p className="mt-1 text-sm font-semibold text-blue-900">{session.sessionLabel}</p>
+                    ) : null}
                   </div>
-                  <h3 className="mt-3 text-lg font-bold">{session.testVersion.test.title}</h3>
-                  {session.sessionLabel ? (
-                    <p className="mt-1 text-sm font-semibold text-teal-800">{session.sessionLabel}</p>
-                  ) : null}
-                  <p className="mt-2 text-sm text-slate-600">{session.classTitle}</p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    {messages.game.codeLabel}: <span className="font-semibold">{session.code}</span>
-                  </p>
                   <Link
                     href={`/play?code=${session.code}`}
-                    className="mt-4 inline-flex rounded-md bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+                    className="rounded-md border border-blue-300 bg-white px-5 py-3 text-center font-semibold text-blue-950 shadow-sm hover:bg-blue-100"
                   >
                     {messages.student.joinLiveRound}
                   </Link>
@@ -279,91 +259,8 @@ export default async function StudentDashboardPage() {
         </section>
 
         <section className="grid gap-3">
-          <h2 className="text-xl font-semibold">{messages.student.classesTitle}</h2>
-          {classMemberships.length === 0 ? (
-            <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
-              {messages.student.noClasses}
-            </p>
-          ) : (
-            <div className="grid gap-3 md:grid-cols-2">
-              {classMemberships.map((membership) => (
-                <article key={membership.id} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-teal-600" />
-                    <h3 className="font-semibold">{membership.classroom.title}</h3>
-                  </div>
-                  <p className="mt-1 text-sm text-slate-600">
-                    {membership.classroom.teacher.name ?? membership.classroom.teacher.email}
-                  </p>
-                  <p className="mt-3 text-sm font-semibold text-teal-800">
-                    {messages.teacher.joinCode}: {membership.classroom.joinCode}
-                  </p>
-                  <div className="mt-4 grid gap-2 border-t border-slate-200 pt-4 text-sm text-slate-600">
-                    <p>{messages.student.classLiveGamesPlaceholder}</p>
-                    <p>{messages.student.classAssignmentsPlaceholder}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section className="grid gap-3">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-xl font-semibold">{messages.student.recentLiveResults}</h2>
-            <Link href="/student/results" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
-              {messages.common.view}
-            </Link>
-          </div>
-          {recentLiveResults.length === 0 ? (
-            <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
-              {messages.student.noLiveResults}
-            </p>
-          ) : (
-            <div className="grid gap-3 md:grid-cols-2">
-              {recentLiveResults.slice(0, 4).map((participant) => {
-                const settings = parseSessionSettings(participant.session.settingsJson);
-                const score = participant.answers.reduce((sum, answer) => sum + answer.points, 0);
-                const correct = participant.answers.filter((answer) => answer.isCorrect === true).length;
-
-                return (
-                  <article key={participant.id} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-semibold">{participant.session.testVersion.test.title}</h3>
-                      <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
-                        {participant.session.mode === "HOST_PACED"
-                          ? messages.sessions.modeHostPaced
-                          : messages.sessions.modeClassic}
-                      </span>
-                    </div>
-                    {settings.label ? (
-                      <p className="mt-2 text-sm font-semibold text-teal-800">{settings.label}</p>
-                    ) : null}
-                    <p className="mt-2 text-sm text-slate-600">
-                      {messages.results.score}: <span className="font-semibold">{score}</span> -{" "}
-                      {messages.results.correct}: <span className="font-semibold">{correct}</span>
-                    </p>
-                    <p className="mt-1 text-sm text-slate-600">
-                      {participant.session.finishedAt
-                        ? participant.session.finishedAt.toLocaleString()
-                        : messages.game.finished}
-                    </p>
-                    <Link
-                      href={`/game/${participant.session.code}/results`}
-                      className="mt-4 inline-flex rounded-md bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
-                    >
-                      {messages.student.viewLiveResult}
-                    </Link>
-                  </article>
-                );
-              })}
-            </div>
-          )}
-        </section>
-
-        <section className="grid gap-3">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-xl font-semibold">{messages.student.activeAssignments}</h2>
+            <h2 className="text-xl font-semibold">{messages.student.assignmentsTitle}</h2>
             <Link href="/student/assignments" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
               {messages.common.view}
             </Link>
@@ -374,11 +271,11 @@ export default async function StudentDashboardPage() {
             </p>
           ) : assignmentSubmissions.length === 0 ? (
             <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
-              {messages.student.noAssignments}
+              {messages.student.noActiveAssignments}
             </p>
           ) : (
             <div className="grid gap-3 md:grid-cols-2">
-              {assignmentSubmissions.slice(0, 4).map((submission) => (
+              {assignmentSubmissions.map((submission) => (
                 <article key={submission.id} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
                   <div className="flex flex-wrap items-center gap-2">
                     <h3 className="font-semibold">{submission.assignment.title}</h3>
@@ -405,93 +302,85 @@ export default async function StudentDashboardPage() {
         </section>
 
         <section className="grid gap-3">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-xl font-semibold">{messages.student.seriesTitle}</h2>
-            <Link href="/student/series" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
-              {messages.common.view}
-            </Link>
-          </div>
-          {registrations.length === 0 ? (
+          <h2 className="text-xl font-semibold">{messages.student.classesTitle}</h2>
+          {classMemberships.length === 0 ? (
             <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
-              {messages.student.noSeries}
+              {messages.student.noClasses}
             </p>
           ) : (
-            <div className="grid gap-3 md:grid-cols-2">
-              {await Promise.all(
-                registrations.slice(0, 4).map(async (registration) => {
-                  const leaderboard = await getSeriesLeaderboard(registration.seriesId);
-                  const row = leaderboard?.rows.find((item) => item.studentId === student.id);
-                  const liveRound = registration.series.rounds.find(
-                    (round) => round.session && (round.session.status === "LOBBY" || round.session.status === "RUNNING"),
-                  );
-                  const nextRound = registration.series.rounds.find(
-                    (round) => round.status === "SCHEDULED" || round.status === "LOBBY",
-                  );
-
-                  return (
-                    <article key={registration.id} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="font-semibold">{registration.series.title}</h3>
-                        <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
-                          {registration.series.status}
-                        </span>
-                      </div>
-                      <p className="mt-3 text-sm text-slate-600">
-                        {messages.student.totalScore}: {row?.totalScore ?? 0}
-                      </p>
-                      <p className="mt-1 text-sm text-slate-600">
-                        {messages.student.currentRank}: {row?.rank ?? messages.results.hidden}
-                      </p>
-                      {nextRound ? (
-                        <p className="mt-3 rounded-md bg-teal-50 p-3 text-sm font-medium text-teal-950">
-                          {messages.student.nextRound}: {nextRound.title}
-                        </p>
-                      ) : null}
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        <Link
-                          href={`/student/series/${registration.seriesId}`}
-                          className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50"
-                        >
-                          {messages.common.open}
-                        </Link>
-                        {liveRound?.session ? (
-                          <Link
-                            href={`/play?code=${liveRound.session.code}`}
-                            className="rounded-md bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
-                          >
-                            {messages.student.joinLiveRound}
-                          </Link>
-                        ) : null}
-                      </div>
-                    </article>
-                  );
-                }),
-              )}
+            <div className="grid gap-3 md:grid-cols-3">
+              {classMemberships.map((membership, index) => (
+                <article key={membership.id} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <span className={`h-2.5 w-2.5 rounded-full ${classAccent(index)}`} />
+                    <h3 className="font-semibold">{membership.classroom.title}</h3>
+                  </div>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {membership.classroom.teacher.name ?? membership.classroom.teacher.email}
+                  </p>
+                  <p className="mt-3 text-sm font-semibold text-teal-800">
+                    {messages.teacher.joinCode}: {membership.classroom.joinCode}
+                  </p>
+                </article>
+              ))}
             </div>
           )}
         </section>
 
-        <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-xl font-semibold">{messages.student.recentResults}</h2>
-          {recentScores.length === 0 ? (
-            <p className="mt-3 text-sm text-slate-600">{messages.student.noResults}</p>
+        <section className="grid gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-xl font-semibold">{messages.student.recentResults}</h2>
+            <Link href="/student/results" className="text-sm font-semibold text-teal-800 hover:text-teal-950">
+              {messages.common.view}
+            </Link>
+          </div>
+          {recentResults.length === 0 ? (
+            <p className="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
+              {messages.student.noResults}
+            </p>
           ) : (
-            <div className="mt-4 grid gap-2">
-              {recentScores.map((score) => (
-                <div key={score.id} className="grid gap-1 rounded-md border border-slate-200 p-3 sm:grid-cols-[1fr_auto]">
-                  <div>
-                    <p className="font-semibold">{score.series.title}</p>
-                    <p className="text-sm text-slate-600">
-                      {score.round ? `${score.round.roundNumber}. ${score.round.title}` : messages.series.total}
-                    </p>
+            <div className="grid gap-3 md:grid-cols-2">
+              {recentResults.slice(0, 6).map((result) => (
+                <article key={result.id} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="font-semibold">{result.session.testVersion.test.title}</h3>
+                    <span className="rounded-md bg-violet-50 px-2 py-1 text-xs font-semibold text-violet-800">
+                      {modeLabel(result.session.mode)}
+                    </span>
                   </div>
-                  <p className="font-bold text-teal-800">{score.points}</p>
-                </div>
+                  <p className="mt-2 text-sm text-slate-600">
+                    {result.classTitle || result.settings.label || messages.sessions.audienceGuest}
+                  </p>
+                  <p className="mt-2 text-sm text-slate-600">
+                    {messages.results.score}:{" "}
+                    <span className="font-semibold">{scoreSummary(result.score, result.maxScore)}</span> -{" "}
+                    {messages.results.percentage}: <span className="font-semibold">{result.percentage}%</span>
+                  </p>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {messages.results.correct}: <span className="font-semibold">{result.correct}</span>
+                    {result.session.finishedAt ? ` - ${result.session.finishedAt.toLocaleString()}` : ""}
+                  </p>
+                  <Link
+                    href={`/game/${result.session.code}/results`}
+                    className="mt-4 inline-flex rounded-md bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+                  >
+                    {messages.student.viewLiveResult}
+                  </Link>
+                </article>
               ))}
             </div>
           )}
         </section>
       </div>
     </StudentShell>
+  );
+}
+
+function MetricCard({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
+      <p className="text-2xl font-bold">{value}</p>
+      <p className="mt-1 text-sm text-slate-600">{label}</p>
+    </div>
   );
 }

@@ -80,25 +80,39 @@ function messagePage(title: string, description: string, extraAction?: ReactNode
 export default async function PlayPage({ searchParams }: PageProps) {
   const { code } = await searchParams;
   const normalizedCode = code?.toUpperCase() ?? "";
-  const session = await getPlaySession(normalizedCode);
+  const [session, currentStudent] = await Promise.all([
+    getPlaySession(normalizedCode),
+    getCurrentStudent(),
+  ]);
 
   if (normalizedCode && !session) {
     return messagePage(messages.game.notFoundTitle, messages.play.sessionNotFound);
   }
 
   if (session?.status === "FINISHED") {
+    const accountParticipant = currentStudent
+      ? await prisma.participant.findFirst({
+          where: {
+            sessionId: session.id,
+            studentAccountId: currentStudent.id,
+          },
+          select: { id: true },
+        })
+      : null;
+
     return messagePage(
       messages.game.finished,
-      messages.play.finishedNoResultAccess,
-      <FinishedGameActions code={session.code} />,
+      messages.play.sessionFinished,
+      <FinishedGameActions code={session.code} hasAccountResult={Boolean(accountParticipant)} />,
     );
   }
 
   const settings = parseSessionSettings(session?.settingsJson ?? null);
   const isClassGame = settings.audience === "CLASS" || Boolean(settings.classId && !settings.seriesId);
-  const student = settings.registeredOnly ? await getCurrentStudent() : null;
+  const needsStudent = settings.registeredOnly || isClassGame;
+  const student = needsStudent ? currentStudent : null;
 
-  if (settings.registeredOnly && !student) {
+  if (needsStudent && !student) {
     redirect(`/login?next=${encodeURIComponent(`/play?code=${normalizedCode}`)}`);
   }
 
@@ -126,7 +140,11 @@ export default async function PlayPage({ searchParams }: PageProps) {
 
   let classTitle: string | null = null;
 
-  if (settings.registeredOnly && settings.classId && student) {
+  if (isClassGame && !settings.classId) {
+    return messagePage(messages.play.joinClassGame, messages.api.classMembershipRequired);
+  }
+
+  if ((settings.registeredOnly || isClassGame) && settings.classId && student) {
     const membership = await prisma.classMembership.findUnique({
       where: {
         classId_studentId: {
@@ -217,7 +235,12 @@ export default async function PlayPage({ searchParams }: PageProps) {
               <p className="text-sm font-semibold text-teal-800">{session.testVersion.test.title}</p>
             ) : null}
           </div>
-          <PlayJoinForm initialCode={normalizedCode} initialSettings={settings} registeredStudent={student} />
+          <PlayJoinForm
+            initialCode={normalizedCode}
+            initialSettings={settings}
+            registeredStudent={student}
+            loggedInStudent={currentStudent}
+          />
           <div className="mt-5 flex flex-wrap gap-2 border-t border-slate-200 pt-4">
             <Link
               href="/"
@@ -225,12 +248,21 @@ export default async function PlayPage({ searchParams }: PageProps) {
             >
               {messages.common.home}
             </Link>
-            <Link
-              href="/login?next=/student"
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-            >
-              {messages.login.submit}
-            </Link>
+            {currentStudent ? (
+              <Link
+                href="/student"
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                {messages.student.backToDashboard}
+              </Link>
+            ) : (
+              <Link
+                href="/login?next=/student"
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                {messages.login.submit}
+              </Link>
+            )}
           </div>
         </div>
       </section>

@@ -57,6 +57,9 @@ export default async function GamePage({ params }: PageProps) {
   }
 
   const settings = parseSessionSettings(session.settingsJson);
+  const isClassGame = settings.audience === "CLASS" || Boolean(settings.classId && !settings.seriesId);
+  const requiresStudentParticipant = settings.registeredOnly || isClassGame;
+  const joinHref = settings.seriesId ? `/student/join/${session.code}` : `/play?code=${session.code}`;
 
   if (session.mode === "HOST_PACED") {
     return (
@@ -80,7 +83,8 @@ export default async function GamePage({ params }: PageProps) {
             code={session.code}
             sessionId={session.id}
             initialLive={null}
-            registeredOnly={settings.registeredOnly}
+            registeredOnly={requiresStudentParticipant}
+            joinHref={joinHref}
           />
         </section>
       </main>
@@ -135,11 +139,12 @@ export default async function GamePage({ params }: PageProps) {
           initialParticipantCount={session._count.participants}
           initialAnswerCount={session._count.answers}
           initialSettings={{
-            registeredOnly: settings.registeredOnly,
+            registeredOnly: requiresStudentParticipant,
             showStudentResults: settings.showStudentResults,
             showCorrectAnswers: settings.showCorrectAnswers,
             showLeaderboard: settings.showLeaderboard,
           }}
+          joinHref={joinHref}
           questions={questions.map((item) => ({
             id: item.question.id,
             type: item.question.type,

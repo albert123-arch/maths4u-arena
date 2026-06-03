@@ -36,22 +36,24 @@ export async function POST(request: Request) {
     }
 
     const settings = parseSessionSettings(session.settingsJson);
+    const isClassGame = settings.audience === "CLASS" || Boolean(settings.classId && !settings.seriesId);
+    const requiresStudent = settings.registeredOnly || isClassGame;
 
     if (session.status === "RUNNING" && !settings.allowLateJoin) {
       return fail(messages.api.lateJoinClosed, 409);
     }
 
-    const currentStudent = settings.registeredOnly ? await getCurrentStudentAccount() : null;
+    const currentStudent = requiresStudent ? await getCurrentStudentAccount() : null;
 
-    if (settings.registeredOnly && !currentStudent) {
+    if (requiresStudent && !currentStudent) {
       return fail(messages.api.registeredStudentRequired, 401);
     }
 
-    if (settings.registeredOnly && currentStudent?.status !== "ACTIVE") {
+    if (requiresStudent && currentStudent?.status !== "ACTIVE") {
       return fail(messages.api.studentDisabled, 403);
     }
 
-    if (settings.registeredOnly && !settings.seriesId && !settings.classId) {
+    if (settings.registeredOnly && !settings.seriesId && !settings.classId && !isClassGame) {
       return fail(messages.api.seriesAccessCheckRequired, 409);
     }
 
@@ -73,7 +75,11 @@ export async function POST(request: Request) {
       }
     }
 
-    if (settings.registeredOnly && settings.classId && currentStudent) {
+    if (isClassGame && !settings.classId) {
+      return fail(messages.api.classMembershipRequired, 403);
+    }
+
+    if ((settings.registeredOnly || isClassGame) && settings.classId && currentStudent) {
       const membership = await prisma.classMembership.findUnique({
         where: {
           classId_studentId: {
@@ -91,7 +97,7 @@ export async function POST(request: Request) {
       }
     }
 
-    if (!settings.registeredOnly && !input.displayName) {
+    if (!requiresStudent && !input.displayName) {
       return fail(messages.api.displayNameRequired, 422);
     }
 
@@ -167,7 +173,7 @@ export async function POST(request: Request) {
       displayName: participant.displayName,
       code: session.code,
       sessionStatus: session.status,
-      registeredOnly: settings.registeredOnly,
+      registeredOnly: requiresStudent,
       participant,
       session,
     });

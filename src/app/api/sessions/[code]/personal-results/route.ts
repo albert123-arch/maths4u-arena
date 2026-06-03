@@ -8,6 +8,7 @@ import { buildSessionResults } from "@/lib/session-results";
 import { parseSessionSettings } from "@/lib/session-settings";
 import { noStoreJson } from "@/lib/session-live";
 import { getSeriesLeaderboard } from "@/lib/series-scoring";
+import { getCurrentStudentAccount } from "@/lib/student-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -16,8 +17,8 @@ type RouteContext = {
 };
 
 const personalResultsSchema = z.object({
-  participantId: z.string().min(1),
-  participantToken: z.string().min(1),
+  participantId: z.string().min(1).optional(),
+  participantToken: z.string().min(1).optional(),
 });
 
 function parseAnswerJson(answerJson: string) {
@@ -83,7 +84,7 @@ function messageForPercentage(percentage: number) {
 export async function POST(request: Request, { params }: RouteContext) {
   try {
     const { code } = await params;
-    const input = personalResultsSchema.parse(await request.json());
+    const input = personalResultsSchema.parse(await request.json().catch(() => ({})));
     const session = await prisma.gameSession.findUnique({
       where: { code: code.toUpperCase() },
       include: {
@@ -123,31 +124,60 @@ export async function POST(request: Request, { params }: RouteContext) {
       return fail(messages.api.studentResultsDisabled, 403);
     }
 
-    const participant = await prisma.participant.findUnique({
-      where: { id: input.participantId },
-      include: {
-        answers: {
-          orderBy: { submittedAt: "asc" },
-          include: {
-            question: {
-              include: {
-                options: {
-                  orderBy: { sortOrder: "asc" },
+    const currentStudent = await getCurrentStudentAccount();
+    const participant =
+      input.participantId && input.participantToken
+        ? await prisma.participant.findUnique({
+            where: { id: input.participantId },
+            include: {
+              answers: {
+                orderBy: { submittedAt: "asc" },
+                include: {
+                  question: {
+                    include: {
+                      options: {
+                        orderBy: { sortOrder: "asc" },
+                      },
+                    },
+                  },
                 },
               },
             },
-          },
-        },
-      },
-    });
+          })
+        : currentStudent
+          ? await prisma.participant.findFirst({
+              where: {
+                sessionId: session.id,
+                studentAccountId: currentStudent.id,
+              },
+              include: {
+                answers: {
+                  orderBy: { submittedAt: "asc" },
+                  include: {
+                    question: {
+                      include: {
+                        options: {
+                          orderBy: { sortOrder: "asc" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            })
+          : null;
 
     if (!participant || participant.sessionId !== session.id) {
       return fail(messages.api.participantNotFound, 404);
     }
 
-    const tokenMatches = await verifyPassword(input.participantToken, participant.tokenHash);
+    if (input.participantId && input.participantToken) {
+      const tokenMatches = await verifyPassword(input.participantToken, participant.tokenHash);
 
-    if (!tokenMatches) {
+      if (!tokenMatches) {
+        return fail(messages.api.invalidParticipantToken, 401);
+      }
+    } else if (!currentStudent || participant.studentAccountId !== currentStudent.id) {
       return fail(messages.api.invalidParticipantToken, 401);
     }
 

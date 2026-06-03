@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { StudentLiveGameWatcher } from "@/components/student-live-game-watcher";
 import { StudentShell } from "@/components/student-shell";
 import { messages } from "@/lib/messages";
 import { prisma } from "@/lib/prisma";
@@ -64,7 +63,6 @@ export default async function StudentResultsPage() {
 
   return (
     <StudentShell student={student}>
-      <StudentLiveGameWatcher initialSessions={[]} />
       <div className="grid gap-6">
         <div>
           <h1 className="text-3xl font-bold">{messages.student.resultsTitle}</h1>

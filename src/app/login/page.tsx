@@ -14,7 +14,9 @@ function safeNext(value?: string | null) {
   return value && value.startsWith("/") && !value.startsWith("//") ? value : null;
 }
 
-function dashboardForRole(role: "ADMIN" | "TEACHER" | "STUDENT") {
+type LoginRole = "ADMIN" | "TEACHER" | "STUDENT";
+
+function dashboardForRole(role: LoginRole) {
   if (role === "ADMIN") {
     return "/admin";
   }
@@ -26,17 +28,41 @@ function dashboardForRole(role: "ADMIN" | "TEACHER" | "STUDENT") {
   return "/student";
 }
 
+function allowedNextForRole(value: string | null, role: LoginRole) {
+  if (!value) {
+    return null;
+  }
+
+  if (role === "ADMIN") {
+    return value.startsWith("/admin") || value.startsWith("/host") ? value : null;
+  }
+
+  if (role === "TEACHER") {
+    return value.startsWith("/teacher") || value.startsWith("/host") ? value : null;
+  }
+
+  return (
+    value.startsWith("/student") ||
+    value.startsWith("/play") ||
+    value.startsWith("/game") ||
+    value.startsWith("/join-class") ||
+    value.startsWith("/series")
+  )
+    ? value
+    : null;
+}
+
 export default async function LoginPage({ searchParams }: PageProps) {
   const { next } = await searchParams;
   const safeNextValue = safeNext(next);
   const [user, student] = await Promise.all([getCurrentUser(), getCurrentStudent()]);
 
   if (user) {
-    redirect(safeNextValue ?? dashboardForRole(user.role));
+    redirect(allowedNextForRole(safeNextValue, user.role) ?? dashboardForRole(user.role));
   }
 
   if (student) {
-    redirect(safeNextValue ?? dashboardForRole("STUDENT"));
+    redirect(allowedNextForRole(safeNextValue, "STUDENT") ?? dashboardForRole("STUDENT"));
   }
 
   return (

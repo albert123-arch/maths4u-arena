@@ -174,6 +174,7 @@ export function ClassicGameClient({
   initialParticipantCount,
   initialAnswerCount,
   initialSettings,
+  joinHref,
   questions,
 }: {
   code: string;
@@ -184,6 +185,7 @@ export function ClassicGameClient({
   initialParticipantCount: number;
   initialAnswerCount: number;
   initialSettings: LiveSessionData["settings"];
+  joinHref: string;
   questions: Question[];
 }) {
   const startedAt = useRef<number | null>(null);
@@ -227,8 +229,6 @@ export function ClassicGameClient({
     () => [...questions].sort((left, right) => left.sortOrder - right.sortOrder),
     [questions],
   );
-  const joinHref = live.settings.registeredOnly ? `/student/join/${code}` : `/play?code=${code}`;
-
   const showStartingCountdown = useCallback(() => {
     setStartingCountdown("now");
     window.setTimeout(() => setStartingCountdown(3), 400);

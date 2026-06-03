@@ -25,16 +25,28 @@ function hasStoredParticipant(code: string) {
   }
 }
 
-export function FinishedGameActions({ code }: { code: string }) {
-  const [canViewResults, setCanViewResults] = useState(false);
+export function FinishedGameActions({
+  code,
+  hasAccountResult = false,
+}: {
+  code: string;
+  hasAccountResult?: boolean;
+}) {
+  const [canViewResults, setCanViewResults] = useState(hasAccountResult);
 
   useEffect(() => {
+    if (hasAccountResult) {
+      const timer = window.setTimeout(() => setCanViewResults(true), 0);
+
+      return () => window.clearTimeout(timer);
+    }
+
     const timer = window.setTimeout(() => {
       setCanViewResults(hasStoredParticipant(code));
     }, 0);
 
     return () => window.clearTimeout(timer);
-  }, [code]);
+  }, [code, hasAccountResult]);
 
   return (
     <>

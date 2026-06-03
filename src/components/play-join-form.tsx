@@ -85,24 +85,37 @@ export function PlayJoinForm({
   initialCode = "",
   initialSettings,
   registeredStudent,
+  loggedInStudent,
 }: {
   initialCode?: string;
   initialSettings: SessionSettings;
   registeredStudent?: {
     displayName: string;
   } | null;
+  loggedInStudent?: {
+    displayName: string;
+  } | null;
 }) {
   const router = useRouter();
   const displayNameRef = useRef<HTMLInputElement>(null);
   const normalizedInitialCode = initialCode.toUpperCase();
+  const classOrRegisteredGame =
+    initialSettings.registeredOnly ||
+    initialSettings.audience === "CLASS" ||
+    Boolean(initialSettings.classId && !initialSettings.seriesId);
   const [code, setCode] = useState(normalizedInitialCode);
   const [settings, setSettings] = useState(initialSettings);
-  const [displayName, setDisplayName] = useState(registeredStudent?.displayName ?? "");
+  const [useStudentIdentity, setUseStudentIdentity] = useState(Boolean(registeredStudent || loggedInStudent));
+  const [displayName, setDisplayName] = useState(
+    registeredStudent?.displayName ?? loggedInStudent?.displayName ?? "",
+  );
   const [teamId, setTeamId] = useState(initialSettings.teamMode ? initialSettings.teams[0]?.id ?? "" : "");
   const [existingParticipant, setExistingParticipant] = useState<StoredParticipant | null>(null);
   const [joinAsAnother, setJoinAsAnother] = useState(false);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const currentClassOrRegisteredGame =
+    settings.registeredOnly || settings.audience === "CLASS" || Boolean(settings.classId && !settings.seriesId);
 
   useEffect(() => {
     if (normalizedInitialCode) {
@@ -112,7 +125,7 @@ export function PlayJoinForm({
       const timer = window.setTimeout(() => {
         const stored = readStoredParticipant(normalizedInitialCode);
 
-        if (initialSettings.registeredOnly && stored && !stored.registeredOnly) {
+        if (classOrRegisteredGame && stored && !stored.registeredOnly) {
           localStorage.removeItem(participantKey(normalizedInitialCode));
           setExistingParticipant(null);
           return;
@@ -123,7 +136,18 @@ export function PlayJoinForm({
 
       return () => window.clearTimeout(timer);
     }
-  }, [initialSettings.registeredOnly, normalizedInitialCode, registeredStudent]);
+  }, [classOrRegisteredGame, normalizedInitialCode, registeredStudent]);
+
+  useEffect(() => {
+    if (!currentClassOrRegisteredGame || !existingParticipant || existingParticipant.registeredOnly) {
+      return;
+    }
+
+    localStorage.removeItem(participantKey(code));
+    const timer = window.setTimeout(() => setExistingParticipant(null), 0);
+
+    return () => window.clearTimeout(timer);
+  }, [code, currentClassOrRegisteredGame, existingParticipant]);
 
   useEffect(() => {
     if (!code || code.length < 4 || code === normalizedInitialCode) {
@@ -162,6 +186,7 @@ export function PlayJoinForm({
     const nextCode = value.toUpperCase();
     setCode(nextCode);
     setJoinAsAnother(false);
+    setUseStudentIdentity(Boolean(registeredStudent || loggedInStudent));
     setExistingParticipant(readStoredParticipant(nextCode));
     if (nextCode === normalizedInitialCode) {
       setSettings(initialSettings);
@@ -189,7 +214,10 @@ export function PlayJoinForm({
         },
         body: JSON.stringify({
           code,
-          displayName: registeredStudent?.displayName ?? displayName,
+          displayName:
+            registeredStudent?.displayName ??
+            (useStudentIdentity ? loggedInStudent?.displayName : displayName) ??
+            displayName,
           teamId: settings.teamMode ? teamId : null,
         }),
       });
@@ -203,7 +231,11 @@ export function PlayJoinForm({
       const resultCode = result.data.code ?? result.data.session?.code ?? code;
       const resultParticipantId = result.data.participantId ?? result.data.participant?.id ?? "";
       const resultDisplayName =
-        result.data.displayName ?? result.data.participant?.displayName ?? registeredStudent?.displayName ?? displayName;
+        result.data.displayName ??
+        result.data.participant?.displayName ??
+        registeredStudent?.displayName ??
+        (useStudentIdentity ? loggedInStudent?.displayName : displayName) ??
+        displayName;
       const resultTeamId = result.data.participant?.teamId ?? null;
       const selectedTeam = settings.teams.find((team) => team.id === resultTeamId);
 
@@ -283,7 +315,50 @@ export function PlayJoinForm({
               {messages.play.continueAs} {registeredStudent.displayName}
             </p>
           </div>
-        ) : (
+        ) : loggedInStudent ? (
+          <section className="grid gap-3 rounded-md border border-teal-200 bg-teal-50 p-4 text-sm text-teal-950">
+            <div>
+              <p className="font-semibold">
+                {useStudentIdentity
+                  ? `${messages.play.continueAs} ${loggedInStudent.displayName}`
+                  : messages.play.joinAsGuest}
+              </p>
+              <p className="mt-1 text-teal-900">{messages.play.guestSessionChoice}</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setUseStudentIdentity(true);
+                  setDisplayName(loggedInStudent.displayName);
+                }}
+                className={`rounded-md px-3 py-2 font-semibold transition ${
+                  useStudentIdentity
+                    ? "bg-teal-700 text-white"
+                    : "border border-teal-300 bg-white text-teal-950 hover:bg-teal-100"
+                }`}
+              >
+                {messages.play.continueAs} {loggedInStudent.displayName}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setUseStudentIdentity(false);
+                  setDisplayName("");
+                  window.setTimeout(() => displayNameRef.current?.focus(), 0);
+                }}
+                className={`rounded-md px-3 py-2 font-semibold transition ${
+                  !useStudentIdentity
+                    ? "bg-teal-700 text-white"
+                    : "border border-teal-300 bg-white text-teal-950 hover:bg-teal-100"
+                }`}
+              >
+                {messages.play.joinAsGuest}
+              </button>
+            </div>
+          </section>
+        ) : null}
+        {!registeredStudent && (!loggedInStudent || !useStudentIdentity) ? (
           <label className="grid gap-1 text-sm font-medium text-slate-700">
             {messages.play.displayName}
             <input
@@ -294,6 +369,8 @@ export function PlayJoinForm({
               required
             />
           </label>
+        ) : (
+          null
         )}
         {settings.teamMode ? (
           <label className="grid gap-1 text-sm font-medium text-slate-700">
