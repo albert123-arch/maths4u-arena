@@ -12,7 +12,9 @@ if (!fs.existsSync(path.join(standalone, "server.js"))) throw new Error("Standal
 fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output);
 for (const name of [".next", "public"]) {
-  if (fs.existsSync(path.join(standalone, name))) fs.cpSync(path.join(standalone, name), path.join(output, name), { recursive: true });
+  // Next may emit links to traced files on Linux. Materialize them so the
+  // deployment cannot retain references to the builder's checkout.
+  if (fs.existsSync(path.join(standalone, name))) fs.cpSync(path.join(standalone, name), path.join(output, name), { recursive: true, dereference: true });
 }
 fs.copyFileSync(path.join(standalone, "server.js"), path.join(output, "next-server.cjs"));
 fs.copyFileSync("scripts/hostinger/server.js", path.join(output, "server.js"));

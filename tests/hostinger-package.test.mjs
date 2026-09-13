@@ -29,7 +29,24 @@ async function walk(directory, prefix = "") {
   return files;
 }
 
+async function assertInternalSymlinks(artifact) {
+  const root = await fs.realpath(artifact);
+  async function visit(directory) {
+    for (const entry of await fs.readdir(directory, { withFileTypes: true })) {
+      const entryPath = path.join(directory, entry.name);
+      if (entry.isSymbolicLink()) {
+        const target = await fs.realpath(entryPath);
+        const relative = path.relative(root, target);
+        assert.ok(relative && relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative),
+          "Every artifact symlink must resolve strictly inside this artifact, including after relocation.");
+      } else if (entry.isDirectory()) await visit(entryPath);
+    }
+  }
+  await visit(root);
+}
+
 test("Hostinger package includes its runtime and excludes local configuration and test data", async () => {
+  await assertInternalSymlinks(builtArtifact);
   const files = await walk(builtArtifact);
   for (const required of [
     "server.js", "next-server.cjs", "runtime/setup.cjs", "runtime/prisma.config.ts",
@@ -169,7 +186,10 @@ async function replaceArtifact(temporaryRoot, artifact) {
   const relative = path.relative(await fs.realpath(temporaryRoot), path.resolve(artifact));
   assert.ok(relative && !relative.startsWith("..") && !path.isAbsolute(relative), "Artifact replacement must stay inside this test's temporary directory.");
   await fs.rm(artifact, { recursive: true, force: true });
-  await fs.cp(builtArtifact, artifact, { recursive: true });
+  // npm's Linux .bin links are relative to their package. Preserve that text so
+  // moving the deployment cannot point them back at the original build folder.
+  await fs.cp(builtArtifact, artifact, { recursive: true, verbatimSymlinks: true });
+  await assertInternalSymlinks(artifact);
 }
 
 test("Hostinger artifact migrates once, preserves administrator and files across redeployment, and honors PORT", {

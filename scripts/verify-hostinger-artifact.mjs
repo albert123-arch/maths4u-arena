@@ -25,7 +25,7 @@ export function auditArtifact(directory) {
       }
       if (entry.isSymbolicLink()) {
         const target = fs.realpathSync(filename);
-        if (!target.startsWith(path.resolve(directory) + path.sep)) throw new Error("Artifact symlink escapes the package.");
+        if (!target.startsWith(path.resolve(directory) + path.sep)) throw new Error("Artifact symlink escapes the package: " + relative);
       } else if (entry.isDirectory()) visit(filename);
       else {
         files++;
