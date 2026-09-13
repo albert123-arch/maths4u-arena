@@ -6,6 +6,7 @@ import mysql, { type RowDataPacket } from "mysql2/promise";
 import { databaseConfig } from "../../src/lib/database-url";
 import { privateStorageRoot } from "../../src/lib/storage-config";
 import { firstAdministrator, disconnectBootstrap } from "../../src/lib/bootstrap-admin";
+import { childDiagnostic, errorCode } from "./diagnostics";
 
 export { databaseConfig };
 
@@ -69,12 +70,37 @@ export async function prepareRuntime(root: string) {
       const migrationEnv: NodeJS.ProcessEnv = { ...process.env, PRISMA_HIDE_UPDATE_MESSAGE: "1", CHECKPOINT_DISABLE: "1",
         PRISMA_SCHEMA_ENGINE_BINARY: path.join(root, manifest.engine) };
       delete migrationEnv.NEW_ADMIN_PASSWORD;
-      const migration = spawnSync(process.execPath, [path.join(root, "node_modules/prisma/build/index.js"), "migrate", "deploy",
-        "--config", path.join(root, "runtime/prisma.config.ts")], { cwd: root, env: migrationEnv, encoding: "utf8", timeout: 120000, maxBuffer: 2 * 1024 * 1024 });
-      if (migration.status !== 0) {
-        // Prisma's raw connection errors can contain private values. Emit only its code.
-        const code = (migration.stderr + migration.stdout).match(/\bP\d{4}\b/)?.[0];
-        if (code) stage += " (" + code + ")";
+      delete migrationEnv.NEW_ADMIN_USERNAME;
+      delete migrationEnv.NEW_ADMIN_NAME;
+      let probe = "files";
+      try {
+        for (const file of ["node_modules/prisma/build/index.js", "node_modules/prisma/build/cli.js", "runtime/prisma.config.ts", "runtime/prisma-child.cjs", "runtime/diagnostics.cjs"])
+          fs.accessSync(path.join(root, file), fs.constants.R_OK);
+        fs.accessSync(process.execPath, fs.constants.X_OK);
+        fs.accessSync(path.join(root, manifest.engine), fs.constants.R_OK | fs.constants.X_OK);
+        const run = (command: string, args: string[], timeout: number) => {
+          let result;
+          try { result = spawnSync(command, args, { cwd: root, env: migrationEnv, encoding: "utf8", timeout,
+            windowsHide: true, maxBuffer: 2 * 1024 * 1024 }); }
+          catch (error) {
+            console.error("[Maths4U] Prisma diagnostic " + JSON.stringify({ phase: probe, ...childDiagnostic({ error }, true) }));
+            throw new Error();
+          }
+          console.log("[Maths4U] Prisma diagnostic " + JSON.stringify({ phase: probe, ...childDiagnostic(result) }));
+          if (result.error || result.status !== 0 || result.signal) throw new Error();
+          return result;
+        };
+        console.log("[Maths4U] Prisma preflight " + JSON.stringify({ files: "readable", engine: "executable", cwd: "release",
+          nodeVersion: process.versions.node, opensslVersion: process.versions.openssl, platform: process.platform, arch: process.arch,
+          runtimeLoader: Boolean(process.env.LSNODE_ROOT), nodeOptionsPresent: Boolean(process.env.NODE_OPTIONS) }));
+        probe = "engine-version";
+        const engine = run(path.join(root, manifest.engine), ["--version"], 10000);
+        if (!engine.stdout?.includes("schema-engine")) throw new Error();
+        probe = "migrate-deploy";
+        run(process.execPath, [path.join(root, "runtime/prisma-child.cjs"), "migrate", "deploy",
+          "--config", path.join(root, "runtime/prisma.config.ts")], 120000);
+      } catch (error) {
+        if (probe === "files") console.error("[Maths4U] Prisma diagnostic " + JSON.stringify({ phase: probe, system: errorCode(error) }));
         throw new Error();
       }
       console.log("[Maths4U] Prisma migrations applied; existing data retained.");

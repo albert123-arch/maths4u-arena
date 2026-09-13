@@ -36,7 +36,7 @@ export function auditArtifact(directory) {
     }
   }
   visit(directory);
-  for (const required of ["server.js", "next-server.cjs", "runtime/setup.cjs", "runtime/prisma.config.ts", "prisma/migrations/migration_lock.toml", "node_modules/prisma/build/index.js"]) {
+  for (const required of ["server.js", "next-server.cjs", "runtime/setup.cjs", "runtime/prisma.config.ts", "runtime/prisma-child.cjs", "runtime/diagnostics.cjs", "prisma/migrations/migration_lock.toml", "node_modules/prisma/build/index.js"]) {
     if (!fs.existsSync(path.join(directory, required))) throw new Error("Incomplete deployment artifact: " + required);
   }
   console.log("Artifact audit passed: " + files + " files; no local environment files, application fixtures or detected credentials.");

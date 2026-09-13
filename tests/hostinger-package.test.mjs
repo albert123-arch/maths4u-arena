@@ -50,6 +50,7 @@ test("Hostinger package includes its runtime and excludes local configuration an
   const files = await walk(builtArtifact);
   for (const required of [
     "server.js", "next-server.cjs", "runtime/setup.cjs", "runtime/prisma.config.ts",
+    "runtime/prisma-child.cjs", "runtime/diagnostics.cjs",
     "prisma/schema.prisma", "prisma/migrations/migration_lock.toml",
     "node_modules/prisma/build/index.js", "node_modules/next/package.json",
     ".next/BUILD_ID",
@@ -206,7 +207,7 @@ test("Hostinger artifact migrates once, preserves administrator and files across
     assert.equal(tables.length, 0, "The allocated package-test database must be empty; no existing data will be reset.");
     await fs.mkdir(localTestRoot, { recursive: true });
     temporaryRoot = await fs.mkdtemp(path.join(localTestRoot, "hostinger-package-"));
-    const artifact = path.join(temporaryRoot, "deployment");
+    const artifact = path.join(temporaryRoot, "hbuilds", "current", "nodejs", "dist");
     const privateStorage = path.join(temporaryRoot, "private-files");
     await replaceArtifact(temporaryRoot, artifact);
     const port = await unusedPort();

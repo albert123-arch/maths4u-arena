@@ -21,6 +21,9 @@ fs.copyFileSync(path.join(standalone, "server.js"), path.join(output, "next-serv
 fs.copyFileSync("scripts/hostinger/server.js", path.join(output, "server.js"));
 fs.mkdirSync(path.join(output, "runtime"));
 fs.copyFileSync("scripts/hostinger/prisma.config.ts", path.join(output, "runtime/prisma.config.ts"));
+fs.copyFileSync("scripts/hostinger/prisma-child.cjs", path.join(output, "runtime/prisma-child.cjs"));
+await build({ entryPoints: ["scripts/hostinger/diagnostics.ts"], outfile: path.join(output, "runtime/diagnostics.cjs"),
+  bundle: true, platform: "node", target: "node22", format: "cjs", sourcemap: false, logLevel: "warning" });
 fs.mkdirSync(path.join(output, "prisma"));
 fs.copyFileSync("prisma/schema.prisma", path.join(output, "prisma/schema.prisma"));
 fs.cpSync("prisma/migrations", path.join(output, "prisma/migrations"), { recursive: true });

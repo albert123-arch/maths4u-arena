@@ -47,9 +47,11 @@ jobs:
         run: npm run typecheck
       - name: Check portable dependency aliases
         run: node --test tests/package-links.test.mjs
+      - name: Check safe startup diagnostics
+        run: npx tsx --test tests/hostinger-diagnostics.test.ts
       - name: Build without database configuration
         # No production secrets or database variables are available to this step.
-        run: npm run build:hostinger
+        run: npm run build
       - name: Test standalone startup, migrations and repeat deployment
         run: node --test tests/hostinger-package.test.mjs
         env:
