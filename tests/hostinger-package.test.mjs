@@ -104,10 +104,20 @@ async function unusedPort() {
 }
 
 function launch(artifact, environment) {
-  const entry = pathToFileURL(path.join(artifact, "server.js")).href;
+  // Hostinger selects nodejs/server.js; that wrapper must enter nodejs/dist.
+  const entry = pathToFileURL(path.join(path.dirname(artifact), "server.js")).href;
   const script = `
     process.on('message', () => process.exit(0));
     process.channel?.unref();
+    const http = await import('node:http');
+    const originalListen = http.Server.prototype.listen;
+    let listened = false;
+    let entryStarted = 0;
+    http.Server.prototype.listen = function(...args) {
+      if (listened || Date.now() - entryStarted > 3000) process.exit(79);
+      listened = true;
+      return originalListen.apply(this, args);
+    };
     const { createRequire } = await import('node:module');
     const { realpathSync } = await import('node:fs');
     const path = await import('node:path');
@@ -118,6 +128,8 @@ function launch(artifact, environment) {
         throw new Error('Packaged runtime dependency unexpectedly resolves outside the artifact.');
       }
     }
+    entryStarted = Date.now();
+    setTimeout(() => { if (!listened) process.exit(78); }, 3000).unref();
     await import(${JSON.stringify(entry)});
   `;
   const childEnvironment = { ...process.env };
@@ -126,7 +138,7 @@ function launch(artifact, environment) {
       ["DATABASE_URL", "APP_URL", "PRIVATE_STORAGE_PATH", "NODE_PATH"].includes(key)) delete childEnvironment[key];
   }
   const child = spawn(process.execPath, ["--input-type=module", "-e", script], {
-    cwd: artifact,
+    cwd: path.dirname(artifact),
     windowsHide: true,
     env: { ...childEnvironment, NODE_PATH: "", ...environment },
     stdio: ["ignore", "pipe", "pipe", "ipc"],
@@ -190,7 +202,44 @@ async function replaceArtifact(temporaryRoot, artifact) {
   // npm's Linux .bin links are relative to their package. Preserve that text so
   // moving the deployment cannot point them back at the original build folder.
   await fs.cp(builtArtifact, artifact, { recursive: true, verbatimSymlinks: true });
+  await fs.copyFile(path.join(projectRoot, "server.js"), path.join(path.dirname(artifact), "server.js"));
+  if (process.platform !== "win32") {
+    const manifest = JSON.parse(await fs.readFile(path.join(artifact, "hostinger-build.json"), "utf8"));
+    // Reproduce the actual Hostinger failure on every replacement of the release.
+    await fs.chmod(path.join(artifact, manifest.engine), 0o644);
+  }
   await assertInternalSymlinks(artifact);
+}
+
+async function waitForReadinessGate(server, port) {
+  // The child enforces the literal listen() deadline from entry loading. Allow
+  // extra time here for Windows process creation and dependency-resolution checks.
+  const deadline = Date.now() + 10000;
+  while (Date.now() < deadline) {
+    assert.ok(server.child.exitCode === null, "Startup must remain alive while waiting for the migration lock.");
+    try {
+      const response = await fetch(`http://127.0.0.1:${port}/api/health`, { signal: AbortSignal.timeout(400) });
+      if (response.status === 503) {
+        assert.equal(response.headers.get("cache-control"), "no-store");
+        assert.deepEqual(await response.json(), { status: "starting" });
+        return;
+      }
+    } catch { /* Wait only for the initial HTTP bind, never for database setup. */ }
+    await new Promise(resolve => setTimeout(resolve, 30));
+  }
+  assert.fail("HTTP must bind before Hostinger's three-second deadline and report 503 until ready.");
+}
+
+async function verifyAdministratorLogin(port, username, password) {
+  const response = await fetch(`http://127.0.0.1:${port}/api/auth/login`, { method: "POST",
+    headers: { "content-type": "application/json", origin: targetOrigin }, body: JSON.stringify({ username, password }) });
+  assert.equal(response.status, 200, "The supplied first-administrator credentials must work over HTTP.");
+  const cookie = response.headers.get("set-cookie")?.split(";")[0];
+  assert.ok(cookie, "Login must issue a session cookie.");
+  const profile = await fetch(`http://127.0.0.1:${port}/api/auth/me`, { headers: { cookie } });
+  assert.equal(profile.status, 200);
+  const body = await profile.json();
+  assert.ok(body.user?.username === username && body.user.roles.some(role => role.role === "ADMIN"), "The session must belong to the existing administrator.");
 }
 
 test("Hostinger artifact migrates once, preserves administrator and files across redeployment, and honors PORT", {
@@ -221,8 +270,22 @@ test("Hostinger artifact migrates once, preserves administrator and files across
       MATHS4U_RUN_MIGRATIONS: "1", MATHS4U_BOOTSTRAP_ADMIN: "1",
       NEW_ADMIN_USERNAME: username, NEW_ADMIN_PASSWORD: password, NEW_ADMIN_NAME: "Package test administrator",
     };
+    const deploymentLock = "maths4u-deploy-" + digest(configuration.database).slice(0, 40);
+    const [held] = await connection.query("SELECT GET_LOCK(?, 0) AS acquired", [deploymentLock]);
+    assert.equal(Number(held[0].acquired), 1);
     server = launch(artifact, environment);
+    try {
+      await waitForReadinessGate(server, port);
+      await new Promise(resolve => setTimeout(resolve, 3200));
+      for (const pathname of ["/", "/api/health", "/api/auth/login"]) {
+        const response = await fetch(`http://127.0.0.1:${port}${pathname}`);
+        assert.equal(response.status, 503, "No application API may be available before database preparation.");
+      }
+      const [beforeMigration] = await connection.query("SHOW TABLES");
+      assert.equal(beforeMigration.length, 0, "Preparation cannot bypass the held migration lock.");
+    } finally { await connection.query("SELECT RELEASE_LOCK(?)", [deploymentLock]); }
     await waitForHealth(server, port);
+    await verifyAdministratorLogin(port, username, password);
     const homepage = await fetch(`http://127.0.0.1:${port}/`);
     assert.equal(homepage.status, 200, "Homepage must load on the supplied hosting port.");
     assert.match(await homepage.text(), /Maths4U/);
@@ -288,6 +351,7 @@ test("Hostinger artifact migrates once, preserves administrator and files across
     delete steadyEnvironment.NEW_ADMIN_NAME;
     server = launch(artifact, steadyEnvironment);
     await waitForHealth(server, port);
+    await verifyAdministratorLogin(port, username, password);
   } catch (error) {
     if (error?.code === "ERR_ASSERTION") throw error;
     // Driver and subprocess errors can contain connection strings or SQL values.

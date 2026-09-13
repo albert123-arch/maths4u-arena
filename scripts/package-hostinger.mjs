@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { build } from "esbuild";
 import prismaPlatform from "@prisma/get-platform";
 import { auditArtifact } from "./verify-hostinger-artifact.mjs";
@@ -17,7 +18,7 @@ for (const name of [".next", "public"]) {
   // deployment cannot retain references to the builder's checkout.
   if (fs.existsSync(path.join(standalone, name))) fs.cpSync(path.join(standalone, name), path.join(output, name), { recursive: true, dereference: true });
 }
-fs.copyFileSync(path.join(standalone, "server.js"), path.join(output, "next-server.cjs"));
+fs.copyFileSync("scripts/hostinger/next-server.cjs", path.join(output, "next-server.cjs"));
 fs.copyFileSync("scripts/hostinger/server.js", path.join(output, "server.js"));
 fs.mkdirSync(path.join(output, "runtime"));
 fs.copyFileSync("scripts/hostinger/prisma.config.ts", path.join(output, "runtime/prisma.config.ts"));
@@ -55,6 +56,8 @@ delete appPackage.devDependencies;
 fs.writeFileSync(path.join(output, "package.json"), JSON.stringify(appPackage, null, 2) + "\n");
 fs.unlinkSync(path.join(output, "package-lock.json"));
 fs.writeFileSync(path.join(output, "hostinger-build.json"), JSON.stringify({ platform: process.platform, arch: process.arch,
-  node: process.versions.node, target: "Node.js 22", engine: engineRelative, builtAt: new Date().toISOString(), databaseAccessDuringBuild: false }, null, 2) + "\n");
+  node: process.versions.node, target: "Node.js 22", engine: engineRelative,
+  engineSha256: createHash("sha256").update(fs.readFileSync(enginePath)).digest("hex"),
+  builtAt: new Date().toISOString(), databaseAccessDuringBuild: false }, null, 2) + "\n");
 auditArtifact(output);
 console.log("Hostinger artifact ready: dist/server.js. Deploy source via Git so native dependencies are built on Linux.");

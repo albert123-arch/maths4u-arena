@@ -7,6 +7,8 @@ import { databaseConfig } from "../../src/lib/database-url";
 import { privateStorageRoot } from "../../src/lib/storage-config";
 import { firstAdministrator, disconnectBootstrap } from "../../src/lib/bootstrap-admin";
 import { childDiagnostic, errorCode } from "./diagnostics";
+import { prepareEngine } from "./engine-access";
+import { migrationChild } from "./child-process";
 
 export { databaseConfig };
 
@@ -82,7 +84,8 @@ export async function prepareRuntime(root: string) {
         probe = "access-node-executable";
         fs.accessSync(process.execPath, fs.constants.X_OK);
         probe = "access-schema-engine";
-        fs.accessSync(path.join(root, manifest.engine), fs.constants.R_OK | fs.constants.X_OK);
+        const engineAccess = prepareEngine(root, manifest.engine, manifest.engineSha256);
+        console.log("[Maths4U] Prisma engine permissions " + JSON.stringify(engineAccess));
         const run = (command: string, args: string[], timeout: number) => {
           let result;
           try { result = spawnSync(command, args, { cwd: root, env: migrationEnv, encoding: "utf8", timeout,
@@ -102,8 +105,10 @@ export async function prepareRuntime(root: string) {
         const engine = run(path.join(root, manifest.engine), ["--version"], 10000);
         if (!engine.stdout?.includes("schema-engine")) throw new Error();
         probe = "migrate-deploy";
-        run(process.execPath, [path.join(root, "runtime/prisma-child.cjs"), "migrate", "deploy",
-          "--config", path.join(root, "runtime/prisma.config.ts")], 120000);
+        const migration = await migrationChild(process.execPath, [path.join(root, "runtime/prisma-child.cjs"), "migrate", "deploy",
+          "--config", path.join(root, "runtime/prisma.config.ts")], root, migrationEnv);
+        console.log("[Maths4U] Prisma diagnostic " + JSON.stringify({ phase: probe, ...childDiagnostic(migration, migration.thrown) }));
+        if (migration.error || migration.status !== 0 || migration.signal) throw new Error();
       } catch (error) {
         if (probe.startsWith("access-")) console.error("[Maths4U] Prisma diagnostic " + JSON.stringify({ phase: probe, system: errorCode(error) }));
         throw new Error();

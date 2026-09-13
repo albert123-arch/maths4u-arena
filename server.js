@@ -1,4 +1,4 @@
-// Ordinary Node entrypoint for Hostinger. The generated standalone server owns HTTP.
+// Hostinger entrypoint delegates production startup to the gated dist server.
 async function start() {
   const { existsSync } = await import("node:fs");
   if (process.env.MATHS4U_ENV === "production" || process.env.NODE_ENV === "production") {
