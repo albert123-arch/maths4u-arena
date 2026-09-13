@@ -226,6 +226,11 @@ export async function publishResults(actor: Actor, id: string) {
   const work = await ownWork(actor, id);
   const version = await db().workVersion.findFirstOrThrow({ where: { workId: id } });
   ensure(work.kind !== "OLYMPIAD" || version.dueAt <= new Date(), 409, "ROUND_NOT_FINISHED");
+  const expired = await db().attempt.findMany({ where: { workVersionId: version.id, status: "IN_PROGRESS", expiresAt: { lte: new Date() } }, select: { id: true } });
+  for (const attempt of expired) await transaction(async tx => {
+    const row = await lockAttempt(tx, attempt.id);
+    if (row?.status === "IN_PROGRESS" && row.expiresAt <= new Date()) await finalize(tx, row, true);
+  });
   return db().work.update({ where: { id }, data: { resultsPublishedAt: new Date() } });
 }
 export async function workSummary(actor: Actor, id: string) {

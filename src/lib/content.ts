@@ -34,7 +34,7 @@ export const taskSchema = z.object({
 });
 export type TaskInput = z.infer<typeof taskSchema>;
 export const versionInclude = {
-  texts: true, source: true, assets: true,
+  texts: true, source: true, assets: { include: { file: { select: { mimeType: true } } } },
   parts: { orderBy: { position: "asc" }, include: { texts: true, acceptedAnswers: true, options: { orderBy: { position: "asc" }, include: { texts: true } } } },
 } satisfies Prisma.TaskVersionInclude;
 export type Version = Prisma.TaskVersionGetPayload<{ include: typeof versionInclude }>;
@@ -60,7 +60,7 @@ export function publicVersion(v: Version, lang: string, solutions = false) {
   return { id: v.id, taskId: v.taskId, title: t.title, locale: t.locale, statement: renderContent(t.statement),
     ...(solutions ? { hint: renderContent(t.hint), solution: renderContent(t.solution) } : {}),
     source: v.source?.name, syllabus: v.syllabus, year: v.year, examSession: v.examSession, paper: v.paper, questionNumber: v.questionNumber,
-    assets: v.assets.filter(a => a.role === "STATEMENT" || (solutions && ["HINT", "SOLUTION"].includes(a.role))).map(a => ({ id: a.fileId, caption: a.caption, role: a.role })),
+    assets: v.assets.filter(a => a.role === "STATEMENT" || (solutions && ["HINT", "SOLUTION"].includes(a.role))).map(a => ({ id: a.fileId, caption: a.caption, role: a.role, mimeType: a.file.mimeType })),
     parts: v.parts.map(p => {
       const pt = localized(p.texts, lang);
       return { id: p.id, kind: p.kind, maxPoints: p.maxPoints, prompt: renderContent(pt.prompt),
@@ -119,4 +119,3 @@ export async function editorTask(actor: Actor, id: string) {
   ensure(t && (t.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
   return t;
 }
-
