@@ -4,6 +4,7 @@ import { parse } from "dotenv";
 import { fileURLToPath } from "node:url";
 
 export function auditArtifact(directory) {
+  directory = fs.realpathSync(directory);
   const privateValues = [];
   const environments = [process.env];
   for (const filename of [".env", ".env.local", ".local/test.env"]) {

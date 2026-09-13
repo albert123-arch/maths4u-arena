@@ -4,6 +4,7 @@ import { spawnSync } from "node:child_process";
 import { build } from "esbuild";
 import prismaPlatform from "@prisma/get-platform";
 import { auditArtifact } from "./verify-hostinger-artifact.mjs";
+import { materializeNextAliases } from "./repair-package-links.mjs";
 const root = process.cwd(), output = path.resolve(root, "dist");
 if (path.dirname(output) !== root || path.basename(output) !== "dist") throw new Error("Invalid output directory.");
 const standalone = path.join(root, ".next/standalone");
@@ -32,6 +33,8 @@ if (!npmCli || !fs.existsSync(npmCli)) throw new Error("Run packaging through np
 const install = spawnSync(process.execPath, [npmCli, "ci", "--include=prod", "--omit=dev", "--ignore-scripts", "--no-audit", "--no-fund"],
   { cwd: output, env: process.env, stdio: "inherit" });
 if (install.status !== 0) throw new Error("Production dependency installation failed.");
+const aliases = materializeNextAliases(output, [path.join(root, "node_modules"), path.join(standalone, "node_modules")]);
+console.log("Materialized " + aliases + " Next.js dependency aliases inside the release.");
 // npm ci at the source root already prepared the native engine. Copy that exact
 // locked version; do not rely on a silent postinstall download in the artifact.
 const binaryTarget = await prismaPlatform.getBinaryTargetForCurrentPlatform();
