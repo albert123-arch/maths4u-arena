@@ -89,7 +89,8 @@ test("desktop and mobile: register → class → assignment → autosave → sub
   await student.screenshot({ path: "test-results/screenshots/mobile-result.png", fullPage: true });
   await student.goto("/courses");
   await student.locator(`a[href="/courses/ui-${run}"]`).click();
-  await student.getByRole('link',{name:/Открыть тему/}).click();
+  await expect(student).toHaveURL(new RegExp(`/courses/ui-${run}$`));
+  await student.locator(`a[href^="/courses/ui-${run}/topics/"]`).click();
   await student.locator('.topic-theory summary').filter({hasText:/^Теория$/}).click();
   await expect(student.locator(".katex").last()).toBeVisible();
   expect(await student.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
