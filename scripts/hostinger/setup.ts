@@ -72,11 +72,16 @@ export async function prepareRuntime(root: string) {
       delete migrationEnv.NEW_ADMIN_PASSWORD;
       delete migrationEnv.NEW_ADMIN_USERNAME;
       delete migrationEnv.NEW_ADMIN_NAME;
-      let probe = "files";
+      let probe = "access-cli-entry";
       try {
-        for (const file of ["node_modules/prisma/build/index.js", "node_modules/prisma/build/cli.js", "runtime/prisma.config.ts", "runtime/prisma-child.cjs", "runtime/diagnostics.cjs"])
+        for (const [role, file] of [["cli-entry", "node_modules/prisma/build/index.js"], ["cli-implementation", "node_modules/prisma/build/cli.js"],
+          ["config", "runtime/prisma.config.ts"], ["child-entry", "runtime/prisma-child.cjs"], ["diagnostics", "runtime/diagnostics.cjs"]]) {
+          probe = "access-" + role;
           fs.accessSync(path.join(root, file), fs.constants.R_OK);
+        }
+        probe = "access-node-executable";
         fs.accessSync(process.execPath, fs.constants.X_OK);
+        probe = "access-schema-engine";
         fs.accessSync(path.join(root, manifest.engine), fs.constants.R_OK | fs.constants.X_OK);
         const run = (command: string, args: string[], timeout: number) => {
           let result;
@@ -100,7 +105,7 @@ export async function prepareRuntime(root: string) {
         run(process.execPath, [path.join(root, "runtime/prisma-child.cjs"), "migrate", "deploy",
           "--config", path.join(root, "runtime/prisma.config.ts")], 120000);
       } catch (error) {
-        if (probe === "files") console.error("[Maths4U] Prisma diagnostic " + JSON.stringify({ phase: probe, system: errorCode(error) }));
+        if (probe.startsWith("access-")) console.error("[Maths4U] Prisma diagnostic " + JSON.stringify({ phase: probe, system: errorCode(error) }));
         throw new Error();
       }
       console.log("[Maths4U] Prisma migrations applied; existing data retained.");
