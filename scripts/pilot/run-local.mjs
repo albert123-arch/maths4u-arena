@@ -26,7 +26,9 @@ try {
   console.log('Migrations passed; running real-content checks on Node ' + process.versions.node + '.');
   await fs.mkdir(pilot, { recursive: true });
   await fs.writeFile(path.join(pilot, 'runtime.json'), JSON.stringify(Object.fromEntries(['MATHS4U_ENV', 'MATHS4U_DATABASE_URL', 'MATHS4U_DATABASE_NAME', 'PRIVATE_STORAGE_PATH', 'APP_URL'].map(k => [k, env[k]]))));
-  await run(['--import', 'tsx', '--test', process.argv.includes('--publication') ? 'tests/pilot-publication.test.ts' : 'tests/pilot-import.test.ts']);
+  if (process.argv.includes('--ux')) {
+    for (const test of ['review-ux', 'catalog-ux', 'study-ux']) await run(['--import', 'tsx', '--test', `tests/${test}.test.ts`]);
+  } else await run(['--import', 'tsx', '--test', process.argv.includes('--review') ? 'tests/review-ux.test.ts' : process.argv.includes('--publication') ? 'tests/pilot-publication.test.ts' : 'tests/pilot-import.test.ts']);
 } catch (error) {
   console.error(/^PILOT_[A-Z_]+$/.test(error.message) ? error.message : 'PILOT_LOCAL_SETUP_FAILED'); process.exitCode = 1;
 } finally { if (connection) await connection.end().catch(() => undefined); }

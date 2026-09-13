@@ -2,7 +2,7 @@ import { z } from "zod";
 import { db } from "./prisma";
 import { AppError, ensure } from "./errors";
 import { type Actor, isAdmin, isTeacher, teacher, transaction, lockUser } from "./security";
-import { publicVersion, versionInclude, localized, renderContent } from "./content";
+import { publicVersion, versionInclude, localized, renderContent, availableHelp } from "./content";
 import { hasFeature } from "./subscriptions";
 import type { Prisma } from "../generated/prisma/client";
 
@@ -50,6 +50,7 @@ export async function createWork(tx: Prisma.TransactionClient, actor: Actor, dat
   for (const task of tasks) {
     ensure(task.visibility === "PUBLIC" || task.ownerId === actor.id || isAdmin(actor), 403, "TASK_UNAVAILABLE");
     if (data.kind === "PRACTICE" && task.featureKey) ensure(await hasFeature(actor, task.featureKey), 403, "SUBSCRIPTION_REQUIRED");
+    if (data.kind === "OLYMPIAD") ensure(!await tx.lessonTask.count({ where: { taskId: task.id, lessonId: "pilot_f2da4f4d6de9a3f01df74fffaacdbcf3792b3e29" } }), 409, "PROVISIONAL_OLYMPIAD_SCORE");
   }
   const work = await tx.work.create({ data: { title: data.title, ownerId: actor.id, kind: data.kind, classId: data.classId,
     versions: { create: { opensAt: data.opensAt, dueAt: data.dueAt, timeLimitSeconds: data.timeLimitSeconds, attemptsAllowed: data.attemptsAllowed,
@@ -81,8 +82,9 @@ export async function practice(actor: Actor, taskId: string) {
   });
 }
 export const attemptInclude = {
+  study: { include: { lesson: { include: { topic: { include: { course: { select: { slug: true } } } } } } } },
   workVersion: { include: { work: { include: contextInclude }, items: { orderBy: { position: "asc" }, include: { taskVersion: { include: versionInclude } } } } },
-  answers: { include: { review: true, files: { include: { file: { select: { id: true, originalName: true, size: true } } } } } },
+  answers: { include: { review: true, files: { include: { file: { select: { id: true, originalName: true, size: true, mimeType: true, width: true, height: true, previewError: true, derivatives: { select: { kind: true } } } } } } } },
 } satisfies Prisma.AttemptInclude;
 export type FullAttempt = Prisma.AttemptGetPayload<{ include: typeof attemptInclude }>;
 export async function lockAttempt(tx: Prisma.TransactionClient, id: string) {
@@ -175,7 +177,16 @@ export function maySeeResult(a: FullAttempt, now = new Date()) {
   return v.resultPolicy === "AFTER_SUBMIT" || (v.resultPolicy === "AFTER_DEADLINE" && now >= v.dueAt) || (v.resultPolicy === "MANUAL" && !!v.work.resultsPublishedAt);
 }
 export function maySeeSolutions(a: FullAttempt, now = new Date()) {
+  if (a.study) return false; // Independent practice uses explicit, per-material reveals.
   return maySeeResult(a, now) && a.workVersion.revealSolutions && (a.number >= a.workVersion.attemptsAllowed || now >= a.workVersion.dueAt);
+}
+export function studyHelp(a: FullAttempt) { return { hint: !!a.study?.hintAt, answer: !!a.study?.answerAt, solution: !!a.study?.solutionAt, markScheme: !!a.study?.markSchemeAt }; }
+export function maySeeMaterialFile(a: FullAttempt, role: string) {
+  if (role === "STATEMENT") return true;
+  if (role === "TEACHER") return false;
+  if (!a.study) return maySeeSolutions(a);
+  const flags = studyHelp(a);
+  return (role === "HINT" && flags.hint) || (role === "SOLUTION" && flags.solution) || (role === "MARK_SCHEME" && flags.markScheme);
 }
 export async function getAttempt(actor: Actor, id: string, lang = "ru") {
   const a = await transaction(async tx => {
@@ -187,21 +198,25 @@ export async function getAttempt(actor: Actor, id: string, lang = "ru") {
   });
   const manager = isAdmin(actor) || (isTeacher(actor) && a.workVersion.work.ownerId === actor.id && a.userId !== actor.id);
   const resultVisible = manager || maySeeResult(a), solutions = manager || maySeeSolutions(a);
+  const revealed = a.study && !manager ? studyHelp(a) : undefined;
   const maxPoints = a.workVersion.items.reduce((s, i) => s + i.maxPoints, 0);
   const score = a.answers.reduce((s, r) => s + (r.review?.points ?? r.autoPoints ?? 0), 0);
-  return { id: a.id, userId: a.userId, workId: a.workVersion.workId, title: a.workVersion.work.title, number: a.number, status: a.status,
+  return { id: a.id, userId: a.userId, workId: a.workVersion.workId, title: a.study ? localized(a.workVersion.items[0].taskVersion.texts, lang).title : a.workVersion.work.title, number: a.number, status: a.status,
     startedAt: a.startedAt, expiresAt: a.expiresAt, submittedAt: a.submittedAt, timedOut: a.timedOut, revision: a.revision,
-    serverTime: new Date(), allowFiles: a.workVersion.allowFiles, resultVisible, solutionsVisible: solutions,
-    ...(resultVisible ? { score, maxPoints, pendingReview: a.answers.some(r => r.autoPoints === null && !r.review) } : {}),
-    questions: a.workVersion.items.map(i => ({ ...publicVersion(i.taskVersion, lang, solutions),
+    serverTime: new Date(), allowFiles: a.workVersion.allowFiles, resultVisible, solutionsVisible: solutions, manager,
+    study: a.study ? { taskId: a.study.taskId, lessonId: a.study.lessonId, courseSlug: a.study.lesson?.topic.course.slug, help: studyHelp(a), selfCheckedAt: a.study.selfCheckedAt, needsRepeat: a.study.needsRepeat } : null,
+    ...(resultVisible ? { score, maxPoints, pendingReview: a.answers.some(r => r.autoPoints === null && r.review?.points == null) } : {}),
+    questions: a.workVersion.items.map(i => ({ ...publicVersion(i.taskVersion, lang, solutions || !!revealed, revealed),
+      ...(a.study ? { availableHelp: availableHelp(i.taskVersion, lang) } : {}),
       ...(manager ? { teacherNote: renderContent(localized(i.taskVersion.texts, lang).teacherNote) } : {}) })),
     answers: a.answers.map(r => ({ id: r.id, partId: r.partId, response: r.response, savedAt: r.savedAt, files: r.files.map(f => f.file),
-      ...(resultVisible ? { points: r.review?.points ?? r.autoPoints, comment: r.review?.comment ?? "", ...(manager ? { autoPoints: r.autoPoints } : {}) } : {}) })),
+      ...(resultVisible ? { points: r.review?.points ?? r.autoPoints, comment: r.review?.comment ?? "", ...(manager ? { autoPoints: r.autoPoints, reviewRevision: r.review?.revision ?? 0 } : {}) } : {}) })),
   };
 }
 export async function gradeAttempt(actor: Actor, id: string, input: unknown) {
   teacher(actor);
-  const data = z.object({ reviews: z.array(z.object({ partId: z.string(), points: z.number().min(0), comment: z.string().max(10000).default("") })).min(1).max(1500) }).parse(input);
+  const data = z.object({ reviews: z.array(z.object({ partId: z.string(), points: z.number().finite().min(0).nullable(), comment: z.string().max(10000).default(""), revision: z.number().int().nonnegative().optional() })).min(1).max(1500) }).parse(input);
+  ensure(new Set(data.reviews.map(r => r.partId)).size === data.reviews.length, 400, "DUPLICATE_REVIEW");
   return transaction(async tx => {
     const a = await lockAttempt(tx, id);
     ensure(a && (isAdmin(actor) || a.workVersion.work.ownerId === actor.id), 404, "NOT_FOUND");
@@ -212,11 +227,12 @@ export async function gradeAttempt(actor: Actor, id: string, input: unknown) {
     for (const review of data.reviews) {
       const part = parts.find(p => p.id === review.partId);
       const answer = current.answers.find(r => r.partId === review.partId);
-      ensure(part && answer && review.points <= part.maxPoints, 400, "INVALID_POINTS");
-      await tx.review.upsert({ where: { answerId: answer.id }, create: { answerId: answer.id, reviewerId: actor.id, points: review.points, comment: review.comment },
-        update: { reviewerId: actor.id, points: review.points, comment: review.comment, reviewedAt: new Date() } });
+      ensure(part && answer && (review.points === null || review.points <= part.maxPoints), 400, "INVALID_POINTS");
+      ensure(review.revision === undefined || review.revision === (answer.review?.revision ?? 0), 409, "STALE_REVIEW");
+      await tx.review.upsert({ where: { answerId: answer.id }, create: { answerId: answer.id, reviewerId: actor.id, points: review.points, comment: review.comment, revision: 1 },
+        update: { reviewerId: actor.id, points: review.points, comment: review.comment, reviewedAt: new Date(), revision: { increment: 1 } } });
     }
-    const pending = await tx.answer.count({ where: { attemptId: id, autoPoints: null, review: null } });
+    const pending = await tx.answer.count({ where: { attemptId: id, autoPoints: null, OR: [{ review: null }, { review: { points: null } }] } });
     await tx.attempt.update({ where: { id }, data: { status: pending ? "SUBMITTED" : "GRADED", gradedAt: pending ? null : new Date() } });
     await tx.auditEvent.create({ data: { actorId: actor.id, action: "ATTEMPT_REVIEWED", targetId: id } });
     return { id, pending };

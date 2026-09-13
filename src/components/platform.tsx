@@ -5,9 +5,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Actor } from "@/lib/security";
 import { api, LocaleContext, ActorContext, useLocale, Form, Field, str, Heading, ErrorNotice, Loading } from "./ui";
-import { Dashboard, Classes, ClassDetail, Library, Courses, Olympiads, WorkPage, ResultsPage, MyAccess } from "./screens";
-import { WorkEditor, TaskEditor, OlympiadEditor, CourseEditor } from "./editors";
+import { Dashboard, Classes, ClassDetail, Olympiads, WorkPage, ResultsPage, MyAccess } from "./screens";
+import { WorkEditor, TaskEditor, OlympiadEditor } from "./editors";
 import { AttemptScreen } from "./attempt-screen";
+import { TaskBasketProvider } from "./task-basket";
+import { CatalogScreen, CourseCatalogScreen, TopicScreen } from "./catalog-screen";
+import { StructureEditor } from "./structure-editor";
 import { AdminScreen } from "./admin-screen";
 
 export function Platform() {
@@ -30,8 +33,8 @@ export function Platform() {
   else if (parts[0] === "admin" && !admin || parts[0] === "teacher" && !teacher) content = <div className="notice error">{t("Этот раздел недоступен вашему аккаунту.", "This section is not available to your account.")}</div>;
   else if (!parts.length) content = <Home actor={actor} teacher={!!teacher} />;
   else if (["login", "register", "recover"].includes(parts[0])) content = <Auth mode={parts[0]} />;
-  else if (parts[0] === "library") content = <Library />;
-  else if (parts[0] === "courses") content = <Courses slug={parts[1]} />;
+  else if (parts[0] === "library") content = <CatalogScreen />;
+  else if (parts[0] === "courses") content = parts[2] === "topics" && parts[3] ? <TopicScreen id={parts[3]} /> : <CourseCatalogScreen slug={parts[1]} />;
   else if (parts[0] === "attempts" && parts[1]) content = <AttemptScreen id={parts[1]} review={parts[2] === "review"} />;
   else if (parts[0] === "works" && parts[1]) content = parts[2] === "results" ? <ResultsPage id={parts[1]} /> : <WorkPage id={parts[1]} />;
   else if (parts[0] === "join-class") content = <Classes invite={parts[1]} />;
@@ -41,11 +44,11 @@ export function Platform() {
   else if (parts[0] === "teacher" && parts[1] === "works" && parts[2] === "new") content = <WorkEditor />;
   else if (parts[0] === "teacher" && parts[1] === "tasks") content = <TaskEditor id={parts[2] === "new" ? undefined : parts[2]} />;
   else if (parts[0] === "teacher" && parts[1] === "olympiads") content = <OlympiadEditor />;
-  else if (parts[0] === "admin" && parts[1] === "courses") content = <CourseEditor />;
+  else if (parts[0] === "admin" && parts[1] === "courses") content = <StructureEditor />;
   else if (parts[0] === "admin") content = <AdminScreen section={parts[1] ?? "overview"} />;
   else if (["student", "teacher"].includes(parts[0])) content = <Dashboard manage={parts[0] === "teacher"} />;
   else content = <div className="card"><h1>404</h1><Link href="/">{t("На главную", "Go home")}</Link></div>;
-  return <LocaleContext.Provider value={lang}><ActorContext.Provider value={actor}>
+  return <LocaleContext.Provider value={lang}><ActorContext.Provider value={actor}><TaskBasketProvider key={actor?.id ?? "guest"}>
     <header className="topbar"><div className="topbar-inner">
       <Link className="brand" href="/"><span className="brand-symbol">m</span>Maths4U<span className="badge gray">BETA</span></Link>
       <nav className="nav" aria-label={t("Основная навигация", "Main navigation")}>
@@ -64,7 +67,7 @@ export function Platform() {
     </div></header>
     <main className="container" key={path}>{content}</main>
     <footer className="footer"><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
-  </ActorContext.Provider></LocaleContext.Provider>;
+  </TaskBasketProvider></ActorContext.Provider></LocaleContext.Provider>;
 }
 function Home({ actor, teacher }: { actor: Actor | null; teacher: boolean }) {
   const { t } = useLocale();

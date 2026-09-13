@@ -4,6 +4,7 @@ import { ensure } from "./errors";
 import { type Actor, admin, isAdmin, transaction, lockUser } from "./security";
 import { localized, renderContent } from "./content";
 import { hasFeature } from "./subscriptions";
+import { taskPermission } from "./catalog";
 
 export async function saveCourse(actor: Actor, input: unknown) {
   admin(actor);
@@ -38,7 +39,7 @@ export async function courses(actor: Actor | null, lang: string, slug?: string) 
   const rows = await db().course.findMany({ where: { archivedAt: null, ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) },
     include: { texts: true, topics: { orderBy: { position: "asc" }, include: { texts: true, lessons: { where: { archivedAt: null }, include: {
       versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } },
-      tasks: { where: { task: { archivedAt: null, ...(actor && isAdmin(actor) ? {} : { visibility: "PUBLIC" }) } }, orderBy: { position: "asc" },
+      tasks: { where: { task: await taskPermission(actor) }, orderBy: { position: "asc" },
         include: { task: { include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } } } } } },
       progress: actor ? { where: { userId: actor.id } } : false,
     } } } } } });

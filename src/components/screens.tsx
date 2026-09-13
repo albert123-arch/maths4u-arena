@@ -3,15 +3,15 @@ import Link from "next/link";
 import { useContext, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { CopyButton } from "./copy-button";
-import { ActorContext, useLocale, useResource, Heading, Loading, Empty, ErrorNotice, DateLabel, Status, ActionButton, Form, Field, str, num, api, MathContent, MaterialAsset } from "./ui";
+import { ActorContext, useLocale, useResource, Heading, Loading, Empty, ErrorNotice, DateLabel, Status, ActionButton, Form, Field, str, num, api } from "./ui";
 import type { listWorks, workSummary, workResults } from "@/lib/works";
-import type { library } from "@/lib/content";
+
 import type { courses } from "@/lib/courses";
 import type { listOlympiads } from "@/lib/olympiads";
 import type { classDetail, listClasses } from "@/lib/classrooms";
 type Works = Awaited<ReturnType<typeof listWorks>>;
 type CourseList = Awaited<ReturnType<typeof courses>>;
-export type TaskList = Awaited<ReturnType<typeof library>>;
+
 export type ClassList = Awaited<ReturnType<typeof listClasses>>;
 const go = (path: string) => window.location.assign(path);
 
@@ -82,24 +82,6 @@ export function ClassDetail({ id }: { id: string }) {
     <aside className="card tint"><p className="eyebrow">{t("Приглашение", "Invitation")}</p><h2>{t("Учимся вместе", "Let's learn together")}</h2><div style={{ background: "white", padding: 20, width: "fit-content", margin: "16px auto", borderRadius: 12 }}><QRCodeSVG value={link} size={180} /></div>
       <p style={{ textAlign: "center", letterSpacing: 2, fontSize: 16, overflowWrap: "anywhere" }}>{c.joinCode}</p><p className="muted">{t("Чтобы вступить, ученику нужен свой аккаунт.", "Students need their own account to join.")}</p><CopyButton value={link} label={t("Скопировать ссылку", "Copy invite link")} /></aside>
   </div></>;
-}
-export function Library() {
-  const { t } = useLocale(), actor = useContext(ActorContext), [query, setQuery] = useState(() => typeof window === "undefined" ? "" : new URLSearchParams(window.location.search).get("q") || "");
-  const r = useResource<TaskList>("library?q=" + encodeURIComponent(query)), manage = actor?.roles.some(r => ["TEACHER", "ADMIN"].includes(r.role));
-  return <><Heading title={t("Банк задач", "Problem bank")} subtitle={t("Практика, экзамены и олимпиадная подготовка.", "Practice, exams and olympiad preparation.")}>{manage && <Link className="button" href="/teacher/tasks/new">{t("+ Добавить задачу", "+ Add a problem")}</Link>}</Heading>
-    <label style={{ maxWidth: 460, marginBottom: 24 }}>{t("Поиск по названию", "Search by title")}<input type="search" value={query} onChange={e => setQuery(e.target.value)} /></label><ErrorNotice error={r.error} />
-    {!r.data ? <Loading /> : !r.data.length ? <Empty>{t("Материалы появятся после публикации администратором.", "Materials will appear once published by an administrator.")}</Empty> : <div className="grid two">{r.data.map(task => <article className="card" key={task.id}><div className="row spread"><span className="badge">{task.locked ? t("По тарифу", "Subscription") : t("Практика", "Practice")}</span>{task.editable && <Link className="muted" href={"/teacher/tasks/" + task.id}>{t("Изменить", "Edit")}</Link>}</div><h2 style={{ marginTop: 18 }}>{task.title}</h2>
-      {!!task.topics.length && <p className="muted">{task.topics.join(" · ")}</p>}
-      {task.version ? <><MathContent html={task.version.statement} />{task.version.assets.map(a => <MaterialAsset key={a.id} asset={a} />)}<p className="muted" style={{ fontSize: 12, marginTop: 16 }}>{[task.version.source, task.version.syllabus, task.version.year, task.version.examSession, task.version.paper, task.version.questionNumber].filter(Boolean).join(" · ")}</p></> : <p className="muted">{t("Доступ к самостоятельному обучению выдаёт администратор.", "An administrator can grant independent learning access.")}</p>}
-      <div className="row" style={{ marginTop: 20 }}>{manage ? <Link className="button secondary" href={"/teacher/works/new?task=" + task.id}>{t("Добавить в работу", "Assign this problem")} →</Link> : actor ? !task.locked && <ActionButton label={t("Решать", "Practise")} action={async () => { const w = await api<{ id: string }>("tasks/" + task.id + "/practice", "POST"); go("/works/" + w.id); }} /> : <Link className="button secondary" href="/register">{t("Войти и решать", "Sign in to practise")} →</Link>}</div>
-    </article>)}</div>}</>;
-}
-export function Courses({ slug }: { slug?: string }) {
-  const { t } = useLocale(), actor = useContext(ActorContext), r = useResource<CourseList>("courses" + (slug ? "?slug=" + encodeURIComponent(slug) : ""));
-  return <><Heading title={t("Курсы", "Courses")} subtitle={t("Разобраться в идее. Увидеть пример. Попробовать самому.", "Understand the idea. See an example. Try it yourself.")} />
-    <ErrorNotice error={r.error} />{!r.data ? <Loading /> : !r.data.length ? <Empty /> : <div className="stack">{r.data.map(c => <section className="card" key={c.id}><div className="row spread"><h2>{c.title}</h2>{c.locked && <span className="badge gold">{t("Доступ по тарифу", "Subscription access")}</span>}</div><p className="muted">{c.description}</p>
-      {c.topics.map(topic => <div key={topic.id}><h3>{topic.title}</h3>{topic.lessons.map(l => <details key={l.id} id={"lesson-" + l.id} className="item"><summary>{l.title} {l.completed ? "✓" : ""}</summary>{l.body !== undefined ? <><MathContent html={l.body} />{!!l.tasks?.length && <ol>{l.tasks.map(task => <li key={task.id}><Link href={"/library?q=" + encodeURIComponent(task.title)}>{task.title}</Link></li>)}</ol>}{actor && <div className="row" style={{ marginTop: 16 }}><ActionButton label={l.completed ? t("Повторить позже", "Review later") : t("Отметить изученным", "Mark as complete")} secondary action={() => api("lessons/" + l.id + "/progress", "POST", { completed: !l.completed })} onDone={r.refresh} /><ActionButton label={t("Продолжить позже", "Continue later")} secondary action={() => api("lessons/" + l.id + "/progress", "POST", { completed: false })} onDone={r.refresh} /></div>}</> : <p>{t("Обратитесь к администратору для получения доступа.", "Ask an administrator for access.")}</p>}</details>)}</div>)}
-    </section>)}</div>}</>;
 }
 export function WorkPage({ id }: { id: string }) {
   const { t } = useLocale(), r = useResource<Awaited<ReturnType<typeof workSummary>>>("works/" + id);

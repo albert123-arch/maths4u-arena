@@ -52,13 +52,14 @@ export function mathsRecords(html, legacyRows) {
     if (!parsedHeader) throw new Error('PILOT_EXAM_METADATA_CHANGED');
     const nestedImages = new Set([...(solution ? images(solution) : []), ...(marks ? images(marks) : []), ...images(statementNode)]);
     const statement = inner(statementNode, html) + images(card).filter(n => !nestedImages.has(n)).map(n => outer(n, html)).join('');
-    const solutionHtml = inner(solutionText, html) + (marks ? '<h3>Mark scheme</h3>' + images(marks).map(n => outer(n, html)).join('') : '');
+    const solutionHtml = inner(solutionText, html);
+    const markScheme = marks ? images(marks).map(n => outer(n, html)).join('') : '';
     return { id, position, sourceUrl: sources['maths4u-problems'] + '#card-' + id,
       metadata: { sourceHeader: header, localStatementMatches: inner(statementNode, html) === legacy.body_html.trim(), localSolutionMatches: inner(solutionText, html) === (legacy.solution_html || '').trim(),
         originalTitle: legacy.title, localMetadataSource: 'club-import-work/existing-problems.json', grading: 'MANUAL', marksSource: 'live page heading' },
-      material: { visibility: 'PRIVATE', source: legacy.exam_board || 'Cambridge', syllabus: parsedHeader[1], examBoard: legacy.exam_board || 'Cambridge',
+      material: { visibility: 'PRIVATE', materialCategory: 'EXAM', source: legacy.exam_board || 'Cambridge', syllabus: parsedHeader[1], examBoard: legacy.exam_board || 'Cambridge',
         year: Number(parsedHeader[4]), examSession: parsedHeader[3], paper: parsedHeader[2], questionNumber: parsedHeader[5],
-        texts: [{ locale: 'en', title: legacy.title, statement, solution: solutionHtml, hint: '', teacherNote: '' }],
+        texts: [{ locale: 'en', title: legacy.title, statement, solution: solutionHtml, markScheme, markSchemeSource: marks ? sources['maths4u-problems'] + '#mk-' + id : '', hint: '', teacherNote: '' }],
         parts: [{ kind: 'MANUAL', maxPoints: Number(parsedHeader[6]), texts: [{ locale: 'en', answer: '', rubric: '' }] }], assets: [] } };
   });
 }
@@ -76,13 +77,13 @@ export function olympRecords(english, russian) {
       const n = list[position], html = htmls[i];
       const part = role => { const section = byId(n, `problem-${id}-${role}`); return section ? inner(one(section, n => hasClass(n, 'content-html')), html) : ''; };
       return { locale: i ? 'ru' : 'en', title: cleanText(one(n, n => n.name === 'h3')), statement: inner(one(n, n => hasClass(n, 'reader-statement')), html),
-        hint: part('hint'), solution: part('solution'), teacherNote: '' };
+        hint: part('hint'), solution: part('solution'), markScheme: '', markSchemeSource: '', teacherNote: '' };
     });
     const level = one(card, n => hasClass(n, 'reader-difficulty')).attribs['aria-label'].match(/Level (\d) of 5/);
     if (!level) throw new Error('PILOT_DIFFICULTY_MISSING');
     return { id, position, sourceUrl: href, metadata: { code, originalDetails: cleanText(one(card, n => hasClass(n, 'reader-details-body'))),
       tags: all(card, n => hasClass(n, 'reader-tag-chip')).map(cleanText), teacherNote: 'not exposed by public source', grading: 'MANUAL', provisionalMaxPoints: 1, marksSource: 'not specified; one provisional manual point, not source scoring' },
-      material: { visibility: 'PRIVATE', source: 'Olymp / Book 2. Olympiad Number Theory Methods', difficulty: Number(level[1]), questionNumber: code,
+      material: { visibility: 'PRIVATE', materialCategory: 'OLYMPIAD', difficultyKnown: true, source: 'Olymp / Book 2. Olympiad Number Theory Methods', difficulty: Number(level[1]), questionNumber: code,
         texts, parts: [{ kind: 'MANUAL', maxPoints: 1, texts: texts.map(t => ({ locale: t.locale, answer: '', rubric: '' })) }], assets: [] } };
   });
 }
@@ -105,7 +106,8 @@ export function assetUrl(raw, page) {
   return url;
 }
 
-export async function prepare(root = path.resolve('.local/content-pilot')) {
+export async function prepare(root = path.resolve('.local/content-pilot-v2')) {
+  if (path.resolve(root) === path.resolve('.local/content-pilot')) throw new Error('PILOT_FROZEN_BASELINE');
   await fs.mkdir(path.join(root, 'source'), { recursive: true });
   await fs.mkdir(path.join(root, 'assets'), { recursive: true });
   const pages = {};
@@ -135,7 +137,7 @@ export async function prepare(root = path.resolve('.local/content-pilot')) {
     if (!fragments.length) throw new Error('PILOT_THEORY_MISSING');
     const examples = byId(doc, 'examples');
     const extra = examples ? all(examples, n => hasClass(n, 'content-html')) : [];
-    return { locale, title: cleanText(one(doc, n => n.name === 'h1')), body: [...fragments, ...extra].map(n => inner(n, html)).join('\n') };
+    return { locale, title: cleanText(one(doc, n => n.name === 'h1')), body: fragments.map(n => inner(n, html)).join('\n'), examples: extra.map(n => inner(n, html)).join('\n') };
   });
   const sections = [
     { project: 'maths4u', key: 'subchapter-576', sourceUrl: sources['maths4u-576'],
@@ -149,8 +151,8 @@ export async function prepare(root = path.resolve('.local/content-pilot')) {
   const assets = [], audit = { tasks: 56, taskTranslations: 76, formulas: 0, formulaErrors: [], images: 0, sourceComparisons: maths.map(r => ({ id: r.id, statementMatchesLocal: r.metadata.localStatementMatches, solutionMatchesLocal: r.metadata.localSolutionMatches })) };
   for (const section of sections) {
     for (const record of section.records) {
-      for (const text of record.material.texts) for (const [field, role] of Object.entries({ statement: 'STATEMENT', hint: 'HINT', solution: 'SOLUTION', teacherNote: 'TEACHER' })) {
-        let html = text[field];
+      for (const text of record.material.texts) for (const [field, role] of Object.entries({ statement: 'STATEMENT', hint: 'HINT', solution: 'SOLUTION', markScheme: 'MARK_SCHEME', teacherNote: 'TEACHER' })) {
+        let html = text[field] || '';
         const doc = parse(html);
         // Replace from right to left so original offsets remain valid.
         for (const img of images(doc).reverse()) {
@@ -159,7 +161,7 @@ export async function prepare(root = path.resolve('.local/content-pilot')) {
           if (!response.ok || Number(response.headers.get('content-length') || 0) > 8 * 1024 * 1024) throw new Error('PILOT_IMAGE_DOWNLOAD_FAILED');
           const bytes = Buffer.from(await response.arrayBuffer());
           if (bytes.length > 8 * 1024 * 1024 || !bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))) throw new Error('PILOT_IMAGE_NOT_PNG');
-          const sha256 = hash(bytes), key = hash(section.project + ':' + record.id + ':' + role + ':' + text.locale + ':' + url.href + ':' + sha256).slice(0, 40);
+          const sha256 = hash(bytes), key = hash(section.project + ':' + record.id + ':' + (role === 'MARK_SCHEME' ? 'SOLUTION' : role) + ':' + text.locale + ':' + url.href + ':' + sha256).slice(0, 40);
           const relative = `assets/${sha256}.png`;
           await fs.writeFile(path.join(root, relative), bytes);
           const localPath = path.join('D:/www/AS&A level maths/AS-Alevel', decodeURIComponent(url.pathname));
@@ -175,11 +177,11 @@ export async function prepare(root = path.resolve('.local/content-pilot')) {
         if (checked.errors.length || checked.unpairedDelimiter) audit.formulaErrors.push({ project: section.project, id: record.id, locale: text.locale, field, ...checked });
       }
     }
-    for (const text of section.lesson.texts) { const checked = formulaAudit(text.body); audit.formulas += checked.count; if (checked.errors.length || checked.unpairedDelimiter) audit.formulaErrors.push({ project: section.project, field: 'theory', locale: text.locale, ...checked }); }
+    for (const text of section.lesson.texts) for (const field of ['body', 'examples']) { const checked = formulaAudit(text[field] || ''); audit.formulas += checked.count; if (checked.errors.length || checked.unpairedDelimiter) audit.formulaErrors.push({ project: section.project, field, locale: text.locale, ...checked }); }
   }
   audit.images = assets.length;
   const snapshot = await Promise.all(Object.entries(pages).map(async ([name, html]) => ({ name, url: sources[name], sha256: hash(html), savedAt: (await fs.stat(path.join(root, 'source', name + '.html'))).mtime.toISOString() })));
-  const bundle = { format: 'maths4u-pilot-v1', selection: 'maths4u-576_olymp-nt-b2-m01', capturedAt: new Date().toISOString(),
+  const bundle = { format: 'maths4u-pilot-v2', selection: 'maths4u-576_olymp-nt-b2-m01', capturedAt: new Date().toISOString(),
     sources: snapshot, localMetadataSha256: hash(legacyBytes), sections, assets, audit };
   await fs.writeFile(path.join(root, 'bundle.json'), JSON.stringify(bundle, null, 2) + '\n');
   await fs.writeFile(path.join(root, 'audit.json'), JSON.stringify(audit, null, 2) + '\n');

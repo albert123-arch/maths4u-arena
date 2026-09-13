@@ -12,6 +12,7 @@ export async function writePilot(actor: Actor, bundle: PilotBundle, fileData: Ma
   await mkdir(storage, {recursive:true});
   return transaction(async tx => {
     await lockUser(tx, actor.id);
+    ensure(bundle.format === "maths4u-pilot-v2" || !await tx.auditEvent.count({ where: { action: "PILOT_CORRECTED" } }), 409, "PILOT_LEGACY_PACKAGE_REQUIRES_CORRECTION");
     const receipt = publicationKey ? await tx.auditEvent.findFirst({ where: { action: "PILOT_PUBLISHED", targetId: publicationKey } }) : null;
     if (publicationKey && !receipt) {
       const ids = bundle.sections.flatMap(s => s.records.map(r => ({ sourceProject: s.project, legacyId: r.id })));
@@ -46,8 +47,8 @@ export async function writePilot(actor: Actor, bundle: PilotBundle, fileData: Ma
       for (const { locale, title } of section.topic.texts) await tx.topicText.upsert({ where: { topicId_locale: { topicId, locale } }, create: { topicId, locale, title }, update: { title } });
       await tx.lesson.upsert({ where: { id: lessonId }, create: { id: lessonId, topicId }, update: {} });
       const previous = await tx.lessonVersion.findFirst({ where: { lessonId }, orderBy: { number: "desc" }, include: { texts: true } });
-      const lessonTexts = section.lesson.texts.map(({ locale, title, body }) => ({ locale, title, body })).sort((a, b) => a.locale.localeCompare(b.locale));
-      const oldTexts = previous?.texts.map(({ locale, title, body }) => ({ locale, title, body })).sort((a, b) => a.locale.localeCompare(b.locale));
+      const lessonTexts = section.lesson.texts.map(({ locale, title, body, examples }) => ({ locale, title, body, examples: examples ?? "" })).sort((a, b) => a.locale.localeCompare(b.locale));
+      const oldTexts = previous?.texts.map(({ locale, title, body, examples }) => ({ locale, title, body, examples: examples ?? "" })).sort((a, b) => a.locale.localeCompare(b.locale));
       if (JSON.stringify(oldTexts) !== JSON.stringify(lessonTexts)) { await tx.lessonVersion.create({ data: { lessonId, number: (previous?.number || 0) + 1, texts: { create: lessonTexts } } }); stats.lessonVersionsCreated++; }
       const taskIds = [];
       for (const row of section.records) {

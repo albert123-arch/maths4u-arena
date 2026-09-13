@@ -32,8 +32,8 @@ function normalize(project: string, row: Record<string, unknown>): TaskInput {
   }
   return taskSchema.parse({ visibility: "PRIVATE", source: str(row.exam_board, "Maths4U archive"), syllabus: row.syllabus, examBoard: row.exam_board,
     year: row.exam_year ? Number(row.exam_year) : undefined, examSession: row.exam_session, paper: row.component, questionNumber: row.question_no,
-    texts: [{ locale: "en", title: str(row.title, "Exam question"), statement: str(row.body_html), solution: str(row.solution_html) }],
-    parts: [{ kind: "MANUAL", maxPoints: Number(row.marks ?? 5), texts: [{ locale: "en", rubric: str(row.mark_scheme) }] }],
+    texts: [{ locale: "en", title: str(row.title, "Exam question"), statement: str(row.body_html), solution: str(row.solution_html), markScheme: str(row.mark_scheme), markSchemeSource: str(row.mark_scheme_source) }],
+    parts: [{ kind: "MANUAL", maxPoints: Number(row.marks ?? 5), texts: [{ locale: "en", rubric: str(row.rubric) }] }],
   });
 }
 export async function importMaterials(actor: Actor, input: unknown) {
@@ -52,6 +52,9 @@ export async function importMaterials(actor: Actor, input: unknown) {
       const contentHash = digest(JSON.stringify(row.material));
       const key = { sourceProject: data.project, legacyId: row.legacyId };
       const existing = await tx.importRecord.findUnique({ where: { sourceProject_legacyId: key } });
+      // Course-bound pilot records have a source-verified version correction path.
+      // Generic exports must never erase their order, publication or split MS.
+      if (existing) ensure(!await tx.lessonTask.count({ where: { taskId: existing.taskId, lessonId: { startsWith: "pilot_" } } }), 409, "PILOT_USE_CORRECTION_ROUTE");
       if (existing?.contentHash === contentHash) { skipped++; continue; }
       const v = await createTaskVersion(tx, actor, row.material, existing?.taskId);
       await tx.importRecord.upsert({ where: { sourceProject_legacyId: key }, create: { ...key, taskId: v.taskId, contentHash },

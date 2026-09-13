@@ -6,6 +6,23 @@ export const LocaleContext = createContext<"ru" | "en">("ru");
 export const ActorContext = createContext<Actor | null>(null);
 export function useLocale() { const lang = useContext(LocaleContext); return { lang, t: (ru: string, en: string) => lang === "ru" ? ru : en }; }
 export const errorLabels: Record<string, [string, string]> = {
+  STUDY_ONLY: ["Это действие доступно только в вашей самостоятельной практике.", "This action is only available in your independent practice."],
+  HELP_NOT_PROVIDED: ["Этот материал не предоставлен источником.", "This material was not provided by the source."],
+  SUBMIT_BEFORE_SELF_CHECK: ["Сначала отправьте свой ответ, затем отметьте самопроверку.", "Submit your answer before recording a self-check."],
+  PROVISIONAL_OLYMPIAD_SCORE: ["Баллы пилотных задач olymp предварительные. Используйте их в учебных работах; для официальной олимпиады нужна проверенная шкала.", "Pilot olymp scores are provisional. Use these tasks for learning; official olympiads require a verified scoring scale."],
+  UNSAVED_ANSWERS: ["Ответ пока не сохранён. Дождитесь сохранения или повторите попытку; введённый текст остаётся на экране.", "Your answer is not saved yet. Wait or retry; your text remains on screen."],
+  STALE_BASKET: ["Набор изменён в другой вкладке. Обновите страницу, прежде чем продолжить.", "The task set changed in another tab. Reload before continuing."],
+  BASKET_LIMIT: ["В одном наборе может быть до 50 задач.", "A set can contain up to 50 tasks."],
+  TASK_UNAVAILABLE: ["Набор пуст или содержит недоступные задачи. Проверьте его перед назначением.", "The set is empty or contains unavailable tasks. Review it before assigning."],
+  STALE_REVIEW: ["Оценка изменена в другой вкладке. Скопируйте свой комментарий и обновите страницу.", "This review changed in another tab. Copy your feedback and reload."],
+  INVALID_POINTS: ["Укажите баллы в пределах части задачи или оставьте поле пустым.", "Enter points within the part limit or leave the field blank."],
+  IMAGE_PIXEL_LIMIT: ["Изображение превышает предел пикселей. Подготовьте уменьшенную копию и проверьте её перед отправкой.", "Image exceeds the pixel limit. Prepare and check a smaller copy before uploading."],
+  INVALID_IMAGE: ["Не удалось прочитать изображение. Выберите исправный PNG или JPEG.", "Cannot read this image. Choose a valid PNG or JPEG."],
+  IMAGE_DECODE_FAILED: ["Изображение повреждено или не может быть обработано в отведённое время.", "Image is damaged or could not be processed within the time limit."],
+  IMAGE_PROCESSOR_BUSY: ["Сейчас обрабатываются другие фото. Повторите отправку через несколько секунд.", "Other photos are being processed. Retry in a few seconds."],
+  ANIMATED_IMAGE_UNSUPPORTED: ["Выберите обычное изображение без анимации.", "Choose a still image without animation."],
+  UPLOAD_CONNECTION_FAILED: ["Связь прервалась. Обновите список вложений перед повторной отправкой.", "Connection interrupted. Refresh attachments before uploading again."],
+  REPLACEMENT_MISSING: ["Заменяемый файл уже изменён. Обновите список вложений.", "The replacement target changed. Refresh the attachment list."],
   LOGIN_REQUIRED: ["Войдите в свой аккаунт.", "Please sign in."], INVALID_CREDENTIALS: ["Неверный логин или пароль.", "Invalid login or password."],
   TOO_MANY_REQUESTS: ["Слишком много попыток. Попробуйте позже.", "Too many requests. Try again later."],
   ALREADY_EXISTS: ["Такая запись уже существует. Выберите другой логин или название.", "This record already exists. Choose another login or name."],
@@ -35,13 +52,15 @@ export async function api<T = unknown>(url: string, method = "GET", body?: unkno
 export function useResource<T>(path: string | null) {
   const { lang } = useLocale();
   const [data, setData] = useState<T | null>(null), [error, setError] = useState<unknown>(null), [tick, setTick] = useState(0);
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const requestKey = `${path}|${lang}|${tick}`;
   useEffect(() => {
     if (!path) return;
     let live = true;
-    api<T>(path + (path.includes("?") ? "&" : "?") + "lang=" + lang).then(v => { if (live) { setData(v); setError(null); } }).catch(e => { if (live) setError(e); });
+    api<T>(path + (path.includes("?") ? "&" : "?") + "lang=" + lang).then(v => { if (live) { setData(v); setError(null); setLoadedKey(`${path}|${lang}|${tick}`); } }).catch(e => { if (live) { setError(e); setLoadedKey(`${path}|${lang}|${tick}`); } });
     return () => { live = false; };
   }, [path, lang, tick]);
-  return { data, error, refresh: () => setTick(v => v + 1) };
+  return { data, error, isLoading: !!path && loadedKey !== requestKey, refresh: () => setTick(v => v + 1) };
 }
 export function ErrorNotice({ error }: { error: unknown }) {
   const { lang, t } = useLocale();

@@ -66,7 +66,15 @@ enum FileRole {
   STATEMENT
   HINT
   SOLUTION
+  MARK_SCHEME
   TEACHER
+}
+
+enum MaterialCategory {
+  UNKNOWN
+  EXAM
+  TRAINING
+  OLYMPIAD
 }
 
 model User {
@@ -97,6 +105,7 @@ model User {
   usage                UsageEvent[]
   audits               AuditEvent[]
   progress             LearningProgress[]
+  taskBasket           TaskBasket?
 
   @@index([status])
 }
@@ -179,6 +188,7 @@ model ClassMembership {
 }
 
 model Course {
+  position Int @default(0)
   id         String       @id @default(cuid())
   slug       String       @unique @db.VarChar(120)
   published  Boolean      @default(false)
@@ -222,6 +232,8 @@ model TopicText {
 }
 
 model Lesson {
+  practiceStudies PracticeStudy[]
+  position Int @default(0)
   id         String             @id @default(cuid())
   topicId    String
   archivedAt DateTime?
@@ -262,6 +274,7 @@ model LessonText {
   locale    Locale
   title     String        @db.VarChar(191)
   body      String        @db.LongText
+  examples  String?       @db.LongText
   version   LessonVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
 
   @@id([versionId, locale])
@@ -287,6 +300,7 @@ model Source {
 }
 
 model Task {
+  practiceStudies PracticeStudy[]
   id         String         @id @default(cuid())
   ownerId    String
   lessons    LessonTask[]
@@ -319,6 +333,8 @@ model TaskVersion {
   taskId         String
   number         Int
   difficulty     Int         @default(1)
+  difficultyKnown Boolean @default(false)
+  materialCategory MaterialCategory @default(UNKNOWN)
   sourceId       String?
   syllabus       String?     @db.VarChar(50)
   examBoard      String?     @db.VarChar(80)
@@ -346,6 +362,8 @@ model TaskText {
   statement   String      @db.LongText
   hint        String      @db.LongText
   solution    String      @db.LongText
+  markScheme  String?     @db.LongText
+  markSchemeSource String? @db.VarChar(500)
   teacherNote String      @db.LongText
   version     TaskVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
 
@@ -419,11 +437,32 @@ model StoredFile {
   size         Int
   sha256       String       @db.Char(64)
   createdAt    DateTime     @default(now())
+  width        Int?
+  height       Int?
+  previewError String?      @db.VarChar(40)
+  deletedAt    DateTime?
+  derivatives FileDerivative[]
   owner        User         @relation(fields: [ownerId], references: [id], onDelete: Restrict)
   submissions  AnswerFile[]
   assets       TaskAsset[]
 
   @@index([ownerId])
+}
+
+// Original bytes alone count towards the user's quota. Every physical derivative
+// is recorded here, so explicit deletion can clean up the complete upload.
+model FileDerivative {
+  fileId     String
+  kind       String     @db.VarChar(20)
+  storageKey String     @unique @db.VarChar(100)
+  mimeType   String     @db.VarChar(100)
+  size       Int
+  width      Int
+  height     Int
+  sha256     String     @db.Char(64)
+  file       StoredFile @relation(fields: [fileId], references: [id], onDelete: Restrict)
+
+  @@id([fileId, kind])
 }
 
 model TaskAsset {
@@ -493,6 +532,7 @@ model WorkItem {
 }
 
 model Attempt {
+  study PracticeStudy?
   id            String        @id @default(cuid())
   workVersionId String
   userId        String
@@ -534,7 +574,8 @@ model Review {
   id         String   @id @default(cuid())
   answerId   String   @unique
   reviewerId String
-  points     Float
+  points     Float?
+  revision   Int      @default(0)
   comment    String   @db.Text
   reviewedAt DateTime @default(now())
   answer     Answer   @relation(fields: [answerId], references: [id], onDelete: Restrict)
@@ -741,4 +782,30 @@ model AuditEvent {
 
   @@index([actorId, createdAt])
   @@index([targetId])
+}
+
+model TaskBasket {
+  userId String @id
+  taskIds Json
+  revision Int @default(0)
+  updatedAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+}
+
+model PracticeStudy {
+  attemptId String @id
+  taskId String
+  lessonId String?
+  hintAt DateTime?
+  answerAt DateTime?
+  solutionAt DateTime?
+  markSchemeAt DateTime?
+  selfCheckedAt DateTime?
+  needsRepeat Boolean @default(false)
+  updatedAt DateTime @default(now())
+  attempt Attempt @relation(fields: [attemptId], references: [id], onDelete: Restrict)
+  task Task @relation(fields: [taskId], references: [id], onDelete: Restrict)
+  lesson Lesson? @relation(fields: [lessonId], references: [id], onDelete: Restrict)
+  @@index([lessonId, taskId])
+  @@index([taskId])
 }

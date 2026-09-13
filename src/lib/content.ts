@@ -10,7 +10,7 @@ import type { Prisma } from "../generated/prisma/client";
 const locale = z.enum(["ru", "en"]);
 const text = z.string().max(100000);
 const uniqueLocales = <T extends { locale: string }>(rows: T[]) => new Set(rows.map(r => r.locale)).size === rows.length;
-const taskText = z.object({ locale, title: z.string().min(1).max(191), statement: text.min(1), hint: text.default(""), solution: text.default(""), teacherNote: text.default("") });
+const taskText = z.object({ locale, title: z.string().min(1).max(191), statement: text.min(1), hint: text.default(""), solution: text.default(""), markScheme: text.default(""), markSchemeSource: z.string().max(500).default(""), teacherNote: text.default("") });
 const partText = z.object({ locale, prompt: text.default(""), answer: text.default(""), rubric: text.default("") });
 const option = z.object({ correct: z.boolean(), texts: z.array(z.object({ locale, text: z.string().min(1).max(5000) })).min(1).max(2).refine(uniqueLocales) });
 const part = z.object({
@@ -26,11 +26,12 @@ const part = z.object({
 export const taskSchema = z.object({
   visibility: z.enum(["PRIVATE", "PUBLIC"]).default("PRIVATE"), featureKey: z.string().max(100).nullable().default(null),
   difficulty: z.number().int().min(1).max(5).default(1), source: z.string().max(191).optional(),
+  difficultyKnown: z.boolean().default(false), materialCategory: z.enum(["UNKNOWN", "EXAM", "TRAINING", "OLYMPIAD"]).default("UNKNOWN"),
   syllabus: z.string().max(50).optional(), examBoard: z.string().max(80).optional(), year: z.number().int().min(1900).max(2200).optional(),
   examSession: z.string().max(50).optional(), paper: z.string().max(50).optional(), questionNumber: z.string().max(50).optional(),
   topicIds: z.array(z.string()).max(20).default([]),
   texts: z.array(taskText).min(1).max(2).refine(uniqueLocales), parts: z.array(part).min(1).max(30),
-  assets: z.array(z.object({ fileId: z.string(), role: z.enum(["STATEMENT", "HINT", "SOLUTION", "TEACHER"]), locale: locale.optional(), caption: z.string().max(500).default("") })).max(20).default([]),
+  assets: z.array(z.object({ fileId: z.string(), role: z.enum(["STATEMENT", "HINT", "SOLUTION", "MARK_SCHEME", "TEACHER"]), locale: locale.optional(), caption: z.string().max(500).default("") })).max(20).default([]),
 });
 export type TaskInput = z.infer<typeof taskSchema>;
 export const versionInclude = {
@@ -55,30 +56,43 @@ export function renderContent(raw: string) {
     }),
   });
 }
-export function publicVersion(v: Version, lang: string, solutions = false) {
+export type HelpVisibility = { hint: boolean; answer: boolean; solution: boolean; markScheme: boolean };
+export function availableHelp(v: Version, lang: string): HelpVisibility {
   const t = localized(v.texts, lang);
-  const visibleHtml = [t.statement, ...(solutions ? [t.hint, t.solution] : [])].join("\n");
+  const asset = (role: string) => v.assets.some(a => a.role === role && (!a.locale || a.locale === t.locale));
+  return { hint: !!t.hint || asset("HINT"), solution: !!t.solution || asset("SOLUTION"),
+    markScheme: !!t.markScheme || asset("MARK_SCHEME") || v.parts.some(p => !!localized(p.texts, lang).rubric),
+    answer: v.parts.some(p => !!localized(p.texts, lang).answer || p.options.some(o => o.correct) || p.kind === "NUMERIC" || p.acceptedAnswers.length > 0) };
+}
+export function publicVersion(v: Version, lang: string, solutions = false, revealed?: HelpVisibility) {
+  const t = localized(v.texts, lang);
+  const show = (key: keyof HelpVisibility) => solutions && (!revealed || revealed[key]);
+  const visibleHtml = [t.statement, ...(show("hint") ? [t.hint] : []), ...(show("solution") ? [t.solution] : []), ...(show("markScheme") ? [t.markScheme] : [])].join("\n");
   return { id: v.id, taskId: v.taskId, title: t.title, locale: t.locale, statement: renderContent(t.statement),
-    ...(solutions ? { hint: renderContent(t.hint), solution: renderContent(t.solution) } : {}),
+    ...(show("hint") ? { hint: renderContent(t.hint) } : {}), ...(show("solution") ? { solution: renderContent(t.solution) } : {}),
+    ...(show("markScheme") ? { markScheme: renderContent(t.markScheme ?? ""), markSchemeSource: t.markSchemeSource } : {}),
     source: v.source?.name, syllabus: v.syllabus, year: v.year, examSession: v.examSession, paper: v.paper, questionNumber: v.questionNumber,
-    assets: v.assets.filter(a => (!a.locale || a.locale === t.locale) && (a.role === "STATEMENT" || (solutions && ["HINT", "SOLUTION"].includes(a.role)))
+    assets: v.assets.filter(a => (!a.locale || a.locale === t.locale) && (a.role === "STATEMENT" || (a.role === "HINT" && show("hint")) || (a.role === "SOLUTION" && show("solution")) || (a.role === "MARK_SCHEME" && show("markScheme")))
       && !(a.file.mimeType.startsWith("image/") && ["\"", "'"].some(q => visibleHtml.includes(`src=${q}/api/files/${a.fileId}${q}`))))
       .map(a => ({ id: a.fileId, caption: a.caption, role: a.role, mimeType: a.file.mimeType })),
     parts: v.parts.map(p => {
       const pt = localized(p.texts, lang);
+      const plainAnswer = p.kind === "NUMERIC" ? String(p.numericAnswer) : p.acceptedAnswers.map(a => a.value).join(" / ");
+      const answer = pt.answer || plainAnswer.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
       return { id: p.id, kind: p.kind, maxPoints: p.maxPoints, prompt: renderContent(pt.prompt),
-        ...(solutions ? { answer: renderContent(pt.answer), rubric: renderContent(pt.rubric) } : {}),
-        options: p.options.map(o => ({ id: o.id, text: renderContent(localized(o.texts, lang).text), ...(solutions ? { correct: o.correct } : {}) })) };
+        ...(show("answer") ? { answer: renderContent(answer) } : {}), ...(show("markScheme") ? { rubric: renderContent(pt.rubric) } : {}),
+        options: p.options.map(o => ({ id: o.id, text: renderContent(localized(o.texts, lang).text), ...(show("answer") ? { correct: o.correct } : {}) })) };
     }) };
 }
 export async function createTaskVersion(tx: Prisma.TransactionClient, actor: Actor, data: TaskInput, taskId?: string) {
   if (taskId) {
+    await tx.$queryRaw`SELECT id FROM Task WHERE id = ${taskId} FOR UPDATE`;
     const task = await tx.task.findUnique({ where: { id: taskId } });
     ensure(task && (task.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
   }
   for (const asset of data.assets) {
     const file = await tx.storedFile.findUnique({ where: { id: asset.fileId } });
-    ensure(file && (file.ownerId === actor.id || isAdmin(actor)), 400, "INVALID_FILE");
+    ensure(file && !file.deletedAt && (file.ownerId === actor.id || isAdmin(actor)), 400, "INVALID_FILE");
     ensure(!await tx.answerFile.findUnique({ where: { fileId: asset.fileId } }), 400, "SUBMISSION_FILE_IS_PRIVATE");
   }
   const source = data.source ? await tx.source.upsert({ where: { name: data.source }, create: { name: data.source }, update: {} }) : null;
@@ -89,6 +103,7 @@ export async function createTaskVersion(tx: Prisma.TransactionClient, actor: Act
   await tx.taskTopic.createMany({ data: [...new Set(data.topicIds)].map(topicId => ({ taskId: task.id, topicId })) });
   return tx.taskVersion.create({ data: {
     taskId: task.id, number: (last._max.number ?? 0) + 1, difficulty: data.difficulty, sourceId: source?.id,
+    difficultyKnown: data.difficultyKnown, materialCategory: data.materialCategory,
     syllabus: data.syllabus, examBoard: data.examBoard, year: data.year, examSession: data.examSession, paper: data.paper, questionNumber: data.questionNumber,
     texts: { create: data.texts }, assets: { create: data.assets },
     parts: { create: data.parts.map((p, position) => ({ position, kind: p.kind, maxPoints: p.maxPoints, caseSensitive: p.caseSensitive,
@@ -116,9 +131,22 @@ export async function library(actor: Actor | null, lang: string, query = "") {
       topics: t.topics.map(x => localized(x.topic.texts, lang).title), version: allowed ? publicVersion(v, lang) : null };
   }));
 }
+export function editableVersion(v: Version) {
+  return { difficulty: v.difficulty, difficultyKnown: v.difficultyKnown, materialCategory: v.materialCategory, source: v.source?.name, syllabus: v.syllabus ?? undefined, examBoard: v.examBoard ?? undefined, year: v.year ?? undefined,
+    examSession: v.examSession ?? undefined, paper: v.paper ?? undefined, questionNumber: v.questionNumber ?? undefined,
+    texts: v.texts.map(t => ({ ...t, markScheme: t.markScheme ?? "", markSchemeSource: t.markSchemeSource ?? "" })),
+    assets: v.assets.map(a => ({ fileId: a.fileId, locale: a.locale ?? undefined, role: a.role, caption: a.caption })),
+    parts: v.parts.map(p => ({ ...p, numericAnswer: p.numericAnswer ?? undefined, acceptedAnswers: p.acceptedAnswers.map(a => a.value), options: p.options.map(o => ({ correct: o.correct, texts: o.texts })) })) };
+}
+
 export async function editorTask(actor: Actor, id: string) {
   teacher(actor);
   const t = await db().task.findUnique({ where: { id }, include: { topics: true, versions: { take: 1, orderBy: { number: "desc" }, include: versionInclude } } });
   ensure(t && (t.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
   return t;
+}
+
+export async function exportTask(actor: Actor, id: string) {
+  const task = await editorTask(actor,id), version = task.versions[0];
+  return { project: "arena", records: [{ id: task.id, version: version.number, material: taskSchema.parse({ ...editableVersion(version), visibility:task.visibility, featureKey:task.featureKey, topicIds:task.topics.map(t=>t.topicId) }) }] };
 }

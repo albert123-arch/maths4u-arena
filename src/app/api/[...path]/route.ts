@@ -2,15 +2,20 @@ import { z, ZodError } from "zod";
 import { db } from "@/lib/prisma";
 import { AppError, ensure } from "@/lib/errors";
 import { actorForToken, tokenFrom, register, login, logout, sessionCookie, requireActor, admin, changeUser, issueRecovery, recover, rateLimit, userSelect } from "@/lib/security";
-import { library, saveTask, editorTask } from "@/lib/content";
+import { library, saveTask, editorTask, exportTask } from "@/lib/content";
 import { createClass, listClasses, classDetail, joinClass, editClass } from "@/lib/classrooms";
 import { listWorks, publishWork, workSummary, startAttempt, getAttempt, mutateAttempt, gradeAttempt, workResults, publishResults, ownWork, practice } from "@/lib/works";
 import { createOlympiad, listOlympiads, registerOlympiad, olympiadResults } from "@/lib/olympiads";
 import { savePlan, grantSubscription, revokeSubscription } from "@/lib/subscriptions";
 import { courses, saveCourse, progress } from "@/lib/courses";
 import { importMaterials, importStatus } from "@/lib/importer";
-import { upload, download, MAX_FILE_BYTES } from "@/lib/files";
+import { upload, download, removeAnswerFile, MAX_FILE_BYTES } from "@/lib/files";
 import { checkPilotPublication, stagePilotAsset, publishPilot } from "@/lib/pilot-publish";
+import { checkPilotCorrection, applyPilotCorrection } from "@/lib/pilot-correction";
+import { catalog, courseCatalog, topicContent, basket, saveBasket } from "@/lib/catalog";
+import { structure, saveStructure } from "@/lib/structure";
+import { beginStudy, revealStudyHelp, selfCheckStudy, topicStudy } from "@/lib/study";
+import { auditStorage, retryDeletedCleanup } from "@/lib/storage-maintenance";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -70,16 +75,38 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
       await logout(tokenFrom(request)); return json({ ok: true }, 200, { "Set-Cookie": sessionCookie("", true) });
     }
     if (method === "GET" && route === "auth/me") return json({ user: await actorForToken(tokenFrom(request)) });
+    if (method === "GET" && route === "catalog") return json(await catalog(await actorForToken(tokenFrom(request)), lang, Object.fromEntries(url.searchParams)));
+    if (method === "GET" && route === "catalog/courses") return json(await courseCatalog(await actorForToken(tokenFrom(request)), lang, url.searchParams.get("slug") || undefined));
+    if (method === "GET" && parts[0] === "catalog" && parts[1] === "topics" && parts.length === 3) return json(await topicContent(await actorForToken(tokenFrom(request)), parts[2], lang));
     if (method === "GET" && route === "library") return json(await library(await actorForToken(tokenFrom(request)), lang, (url.searchParams.get("q") ?? "").slice(0, 100)));
     if (method === "GET" && route === "courses") return json(await courses(await actorForToken(tokenFrom(request)), lang, url.searchParams.get("slug") || undefined));
     if (method === "GET" && parts[0] === "files" && parts.length === 2) {
-      const result = await download(await actorForToken(tokenFrom(request)), parts[1]);
-      // PDFs always download; no active document is embedded in the application origin.
-      return new Response(new Uint8Array(result.data), { headers: { ...headers, "Content-Type": result.file.mimeType,
+      const result = await download(await actorForToken(tokenFrom(request)), parts[1], url.searchParams.get("variant") ?? "original");
+      const range = request.headers.get("range");
+      let start = 0, end = result.data.length - 1;
+      if (range) {
+        const match = /^bytes=(\d+)-(\d*)$/.exec(range);
+        ensure(match, 416, "INVALID_RANGE");
+        start = Number(match[1]); end = match[2] ? Math.min(Number(match[2]), end) : end;
+        ensure(Number.isSafeInteger(start) && start >= 0 && start <= end, 416, "INVALID_RANGE");
+      }
+      return new Response(new Uint8Array(result.data.subarray(start, end + 1)), { status: range ? 206 : 200, headers: { ...headers, "Content-Type": result.file.mimeType,
+        "Accept-Ranges": "bytes", "Content-Length": String(end - start + 1), ...(range ? { "Content-Range": `bytes ${start}-${end}/${result.data.length}` } : {}),
         "Content-Disposition": (result.file.mimeType === "application/pdf" ? "attachment" : "inline") + "; filename*=UTF-8''" + encodeURIComponent(result.file.originalName),
         "Content-Security-Policy": "sandbox; default-src 'none'", "Cross-Origin-Resource-Policy": "same-origin" } });
     }
     const actor = await requireActor(request);
+    if (route === "study/start" && method === "POST") { await rateLimit("practice:" + actor.id, 60, 3600); return json(await beginStudy(actor, input, lang), 201); }
+    if (parts[0] === "study" && parts[1] === "topics" && parts.length === 3 && method === "GET") return json(await topicStudy(actor, parts[2], lang, Number(url.searchParams.get("page") ?? 1)));
+    if (parts[0] === "attempts" && parts[2] === "help" && method === "POST") { await revealStudyHelp(actor, parts[1], input, lang); return json(await getAttempt(actor, parts[1], lang)); }
+    if (parts[0] === "attempts" && parts[2] === "self-check" && method === "POST") { await selfCheckStudy(actor, parts[1], input); return json(await getAttempt(actor, parts[1], lang)); }
+    if (route === "admin/structure" && method === "GET") return json(await structure(actor));
+    if (route === "admin/structure" && method === "POST") return json(await saveStructure(actor, input));
+    if (route === "basket" && method === "GET") return json(await basket(actor, lang));
+    if (route === "basket" && method === "POST") return json(await saveBasket(actor, input, lang));
+    if (route === "admin/import/pilot/correction/check" && method === "POST") return json(await checkPilotCorrection(actor, input));
+    if (route === "admin/import/pilot/correction/apply" && method === "POST") return json(await applyPilotCorrection(actor, input));
+    if (method === "DELETE" && parts[0] === "files" && parts.length === 2) return json(await removeAnswerFile(actor, parts[1], url.searchParams.get("attemptId") ?? ""));
     if (route === "profile" && method === "PATCH") {
       const data = z.object({ locale: z.enum(["ru", "en"]) }).parse(input);
       return json(await db().profile.upsert({ where: { userId: actor.id }, create: { userId: actor.id, ...data }, update: data }));
@@ -91,6 +118,12 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
       if (method === "GET") return json(await classDetail(actor, parts[1]));
       if (method === "PATCH") return json(await editClass(actor, parts[1], input));
     }
+    if (parts[0] === "tasks" && parts.length === 3 && parts[2] === "export" && method === "GET") {
+      const exported = await exportTask(actor, parts[1]);
+      return new Response(JSON.stringify(exported, null, 2), {headers:{"content-type":"application/json; charset=utf-8","content-disposition":"attachment; filename=maths4u-task.json","cache-control":"private, no-store"}});
+    }
+    if (route === "admin/storage" && method === "GET") { admin(actor); return json(await auditStorage()); }
+    if (route === "admin/storage/retry-deleted" && method === "POST") { admin(actor); await rateLimit("storage-cleanup:"+actor.id,5,3600); return json(await retryDeletedCleanup()); }
     if (route === "tasks" && method === "POST") return json(await saveTask(actor, input), 201);
     if (parts[0] === "tasks" && parts.length === 2) {
       if (method === "GET") return json(await editorTask(actor, parts[1]));
@@ -131,13 +164,15 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
     }
     if (parts[0] === "attempts" && parts[2] === "review" && method === "POST") return json(await gradeAttempt(actor, parts[1], input));
     if (route === "files" && method === "POST") {
+      await rateLimit("file-upload:" + actor.id, 30, 60);
       await rateLimit("upload:" + actor.id, 30, 60);
       const data = await boundedBody(request, MAX_FILE_BYTES + 64000);
       const form = await new Request(request.url, { method: "POST", headers: { "Content-Type": request.headers.get("content-type") || "" }, body: new Uint8Array(data) }).formData();
       const file = form.get("file");
       ensure(file instanceof File, 400, "FILE_REQUIRED");
       return json(await upload(actor, file, typeof form.get("attemptId") === "string" ? String(form.get("attemptId")) : undefined,
-        typeof form.get("partId") === "string" ? String(form.get("partId")) : undefined), 201);
+        typeof form.get("partId") === "string" ? String(form.get("partId")) : undefined,
+        typeof form.get("replaceId") === "string" ? String(form.get("replaceId")) : undefined), 201);
     }
     if (route === "olympiads" && method === "GET") return json(await listOlympiads(actor));
     if (route === "olympiads" && method === "POST") return json(await createOlympiad(actor, input), 201);
@@ -184,3 +219,4 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
 export const GET = handler;
 export const POST = handler;
 export const PATCH = handler;
+export const DELETE = handler;

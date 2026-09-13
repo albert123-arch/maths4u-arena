@@ -18,6 +18,7 @@ const eslintConfig = defineConfig([
     "src/generated/**",
     "test-results/**",
     "dist/**",
+    "public/pdfjs/**", // Generated, version-pinned third-party renderer assets.
   ]),
 ]);
 

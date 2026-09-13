@@ -1,18 +1,12 @@
 "use client";
 import { useContext, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ActorContext, useLocale, useResource, Heading, Form, Field, str, num, api, ErrorNotice, Loading, localDate } from "./ui";
+import { ActorContext, useLocale, useResource, Heading, Form, Field, str, num, api, ErrorNotice, Loading, localDate, ApiError } from "./ui";
 import type { TaskInput, editorTask } from "@/lib/content";
 import type { courses } from "@/lib/courses";
-import type { TaskList, ClassList } from "./screens";
+import { BasketPanel, useTaskBasket } from "./task-basket";
+import type { ClassList } from "./screens";
 
-function TaskPicker({ tasks, chosen, setChosen }: { tasks: TaskList; chosen: string[]; setChosen: (ids: string[]) => void }) {
-  const { t } = useLocale();
-  return <section><h2>{t("1. Выберите задачи", "1. Choose problems")}</h2><div className="grid two">{tasks.filter(t => t.version).map(task =>
-    <label className="check choice" key={task.id}><input type="checkbox" checked={chosen.includes(task.id)} onChange={e => setChosen(e.target.checked ? [...chosen, task.id] : chosen.filter(id => id !== task.id))} /><span>{task.title}<span className="muted" style={{ display: "block", fontSize: 11 }}>{task.version?.source}</span></span></label>)}</div>
-    {!tasks.length && <p><Link href="/teacher/tasks/new">{t("Сначала добавьте задачу.", "Add your first problem.")}</Link></p>}<p className="muted" style={{ marginTop: 12 }}>{t("Выбрано: ", "Selected: ")}{chosen.length}</p></section>;
-}
 function WorkFields({ classes, olymp = false }: { classes: ClassList; olymp?: boolean }) {
   const { t } = useLocale();
   const [createdAt] = useState(() => Date.now());
@@ -34,34 +28,34 @@ function workData(f: FormData, ids: string[], olymp = false) {
     resultPolicy: olymp ? "MANUAL" : str(f, "resultPolicy"), revealSolutions: f.has("revealSolutions"), allowFiles: f.has("allowFiles") };
 }
 export function WorkEditor() {
-  const router = useRouter();
-  const { t } = useLocale(), tasks = useResource<TaskList>("library"), classes = useResource<ClassList>("classes?manage=1");
-  const [chosen, setChosen] = useState<string[]>(() => { if (typeof window === "undefined") return []; const id = new URLSearchParams(window.location.search).get("task"); return id ? [id] : []; });
-  return <><Heading title={t("Назначить работу", "Assign work")} subtitle={t("Выберите задачи, класс и время выполнения.", "Choose problems, a class and a schedule.")} /><ErrorNotice error={tasks.error || classes.error} />
-    {!tasks.data || !classes.data ? <Loading /> : <div className="card"><Form label={t("Назначить ученикам", "Assign to students")} submit={async f => { const w = await api<{ id: string }>("works", "POST", workData(f, chosen)); router.push("/works/" + w.id + "/results"); }}>
-      <TaskPicker tasks={tasks.data} chosen={chosen} setChosen={setChosen} /><WorkFields classes={classes.data} />
-    </Form></div>}</>;
+  const router = useRouter(), { t } = useLocale(), basket = useTaskBasket(), classes = useResource<ClassList>("classes?manage=1");
+  return <><Heading title={t("Назначить работу", "Assign work")} subtitle={t("Проверьте набор, выберите класс и время выполнения.", "Review the task set, choose a class and schedule.")} /><ErrorNotice error={classes.error} />
+    {!basket.data || !classes.data ? <Loading /> : <div className="card"><Form label={t("Назначить ученикам", "Assign to students")} submit={async f => {
+      const saved = await basket.flush(); if (!saved?.items.length || saved.items.some(i => !i.available)) throw new ApiError("TASK_UNAVAILABLE", 400);
+      const w = await api<{ id: string }>("works", "POST", workData(f, saved.taskIds)); router.push("/works/" + w.id + "/results");
+    }}><BasketPanel /><WorkFields classes={classes.data} /></Form></div>}</>;
 }
 export function OlympiadEditor() {
   const router = useRouter();
-  const { t } = useLocale(), tasks = useResource<TaskList>("library"), [chosen, setChosen] = useState<string[]>([]);
+  const { t } = useLocale(), basket = useTaskBasket();
   const [createdAt] = useState(() => Date.now());
-  return <><Heading title={t("Новая олимпиада", "New olympiad")} subtitle={t("Одна возрастная группа и один тур. Результаты публикует организатор.", "One age group and one round. The organizer publishes results.")} /><ErrorNotice error={tasks.error} />
-    {!tasks.data ? <Loading /> : <div className="card"><Form label={t("Создать олимпиаду", "Create olympiad")} submit={async f => {
+  return <><Heading title={t("Новая олимпиада", "New olympiad")} subtitle={t("Одна возрастная группа и один тур. Результаты публикует организатор.", "One age group and one round. The organizer publishes results.")} /><ErrorNotice error={basket.error} />
+    {!basket.data ? <Loading /> : <div className="card"><Form label={t("Создать олимпиаду", "Create olympiad")} submit={async f => {
+      const saved = await basket.flush(); if (!saved?.items.length || saved.items.some(i => !i.available)) throw new ApiError("TASK_UNAVAILABLE", 400);
       await api("olympiads", "POST", { title: str(f, "olympiadTitle"), registrationOpensAt: new Date(str(f, "registrationOpensAt")).toISOString(),
-        registrationClosesAt: new Date(str(f, "registrationClosesAt")).toISOString(), groupTitle: str(f, "groupTitle"), minAge: num(f, "minAge"), maxAge: num(f, "maxAge"), work: workData(f, chosen, true) });
+        registrationClosesAt: new Date(str(f, "registrationClosesAt")).toISOString(), groupTitle: str(f, "groupTitle"), minAge: num(f, "minAge"), maxAge: num(f, "maxAge"), work: workData(f, saved.taskIds, true) });
       router.push("/olympiads");
     }}><div className="field-grid"><Field name="olympiadTitle" label={t("Название олимпиады", "Olympiad title")} /><Field name="groupTitle" label={t("Название группы", "Age group title")} value={t("Младшая группа", "Junior group")} />
       <Field name="minAge" label={t("Возраст от", "Minimum age")} type="number" value={10} min={5} max={99} /><Field name="maxAge" label={t("Возраст до", "Maximum age")} type="number" value={14} min={5} max={99} />
       <Field name="registrationOpensAt" label={t("Начало регистрации", "Registration opens")} type="datetime-local" value={localDate(new Date(createdAt))} />
       <Field name="registrationClosesAt" label={t("Конец регистрации", "Registration closes")} type="datetime-local" value={localDate(new Date(createdAt + 3600000))} /></div>
-      <TaskPicker tasks={tasks.data} chosen={chosen} setChosen={setChosen} /><WorkFields classes={[]} olymp />
+      <BasketPanel /><WorkFields classes={[]} olymp />
     </Form></div>}</>;
 }
-const blankText = (locale: "ru" | "en") => ({ locale, title: "", statement: "", hint: "", solution: "", teacherNote: "" });
+const blankText = (locale: "ru" | "en") => ({ locale, title: "", statement: "", hint: "", solution: "", markScheme: "", markSchemeSource: "", teacherNote: "" });
 const blankPart = (): TaskInput["parts"][number] => ({ kind: "SHORT", maxPoints: 1, caseSensitive: false, tolerance: 0, acceptedAnswers: [],
   texts: [{ locale: "ru", prompt: "", answer: "", rubric: "" }, { locale: "en", prompt: "", answer: "", rubric: "" }], options: [] });
-const initialTask: TaskInput = { visibility: "PRIVATE", featureKey: null, difficulty: 1, topicIds: [], texts: [blankText("ru"), blankText("en")], parts: [blankPart()], assets: [] };
+const initialTask: TaskInput = { visibility: "PRIVATE", featureKey: null, difficulty: 1, difficultyKnown: false, materialCategory: "UNKNOWN", topicIds: [], texts: [blankText("ru"), blankText("en")], parts: [blankPart()], assets: [] };
 export function TaskEditor({ id }: { id?: string }) {
   const r = useResource<Awaited<ReturnType<typeof editorTask>>>(id ? "tasks/" + id : null);
   if (r.error) return <ErrorNotice error={r.error} />;
@@ -69,9 +63,9 @@ export function TaskEditor({ id }: { id?: string }) {
   let initial = initialTask;
   if (r.data) {
     const task = r.data, v = task.versions[0];
-    initial = { visibility: task.visibility, featureKey: task.featureKey, difficulty: v.difficulty, source: v.source?.name, syllabus: v.syllabus ?? undefined,
+    initial = { visibility: task.visibility, featureKey: task.featureKey, difficulty: v.difficulty, difficultyKnown: v.difficultyKnown, materialCategory: v.materialCategory, source: v.source?.name, syllabus: v.syllabus ?? undefined,
       examBoard: v.examBoard ?? undefined, year: v.year ?? undefined, examSession: v.examSession ?? undefined, paper: v.paper ?? undefined, questionNumber: v.questionNumber ?? undefined,
-      topicIds: task.topics.map(t => t.topicId), texts: (["ru", "en"] as const).map(locale => v.texts.find(t => t.locale === locale) ?? blankText(locale)),
+      topicIds: task.topics.map(t => t.topicId), texts: (["ru", "en"] as const).map(locale => (() => { const t = v.texts.find(t => t.locale === locale); return t ? { ...t, markScheme: t.markScheme ?? "", markSchemeSource: t.markSchemeSource ?? "" } : blankText(locale); })()),
       parts: v.parts.map(p => ({ ...p, numericAnswer: p.numericAnswer ?? undefined, acceptedAnswers: p.acceptedAnswers.map(a => a.value),
         texts: (["ru", "en"] as const).map(locale => p.texts.find(t => t.locale === locale) ?? { locale, prompt: "", answer: "", rubric: "" }),
         options: p.options.map(o => ({ correct: o.correct, texts: o.texts })) })), assets: v.assets.map(a => ({ fileId: a.fileId, role: a.role, caption: a.caption, locale: a.locale ?? undefined })) };
@@ -85,6 +79,7 @@ function TaskEditorForm({ initial, id }: { initial: TaskInput; id?: string }) {
   const availableCourses = useResource<Awaited<ReturnType<typeof courses>>>("courses");
   const update = (fn: (draft: TaskInput) => void) => setTask(old => { const draft = structuredClone(old); fn(draft); return draft; });
   return <><Heading title={id ? t("Редактировать задачу", "Edit problem") : t("Новая задача", "New problem")} subtitle={t("Формулы: \\(x^2\\) или $$x^2$$. Поддерживаются безопасный HTML и таблицы.", "Formulas: \\(x^2\\) or $$x^2$$. Safe HTML and tables are supported.")} />
+    {id && <p><a className="button secondary" href={"/api/tasks/" + id + "/export"}>{t("Скачать JSON сохранённой версии", "Download saved version JSON")}</a></p>}
     <div className="card"><Form label={t("Сохранить задачу", "Save problem")} submit={async () => {
       const texts = task.texts.filter(t => t.title.trim() && t.statement.trim());
       const locales = texts.map(t => t.locale);
@@ -92,10 +87,12 @@ function TaskEditorForm({ initial, id }: { initial: TaskInput; id?: string }) {
       router.push("/library");
     }}>
       <div className="grid two">{task.texts.map((text, ti) => <section className="stack" key={text.locale}><h2>{text.locale === "ru" ? "Русский" : "English"}</h2>
-        {(["title", "statement", "hint", "solution", "teacherNote"] as const).map(key => <label key={key}>{({ title: t("Название", "Title"), statement: t("Условие", "Statement"), hint: t("Подсказка", "Hint"), solution: t("Решение", "Solution"), teacherNote: t("Заметка учителю", "Teacher note") })[key]}
+        {(["title", "statement", "hint", "solution", "markScheme", "markSchemeSource", "teacherNote"] as const).map(key => <label key={key}>{({ title: t("Название", "Title"), statement: t("Условие", "Statement"), hint: t("Подсказка", "Hint"), solution: t("Подробное решение", "Detailed solution"), markScheme: t("MS — схема оценивания", "MS — mark scheme"), markSchemeSource: t("Происхождение MS (документ / URL)", "MS provenance (document / URL)"), teacherNote: t("Заметка учителю", "Teacher note") })[key]}
           {key === "title" ? <input value={text[key]} maxLength={191} onChange={e => update(d => { d.texts[ti][key] = e.target.value; })} /> : <textarea value={text[key]} onChange={e => update(d => { d.texts[ti][key] = e.target.value; })} />}</label>)}
       </section>)}</div>
       <h2>{t("Ответы и оценивание", "Answers & marking")}</h2>
+      <label>{t("Тип материала (независим от типа работы)", "Material type (independent of work mode)")}<select value={task.materialCategory} onChange={e => update(d => { d.materialCategory = e.target.value as TaskInput["materialCategory"]; })}><option value="UNKNOWN">{t("Не указан", "Unspecified")}</option><option value="EXAM">{t("Экзамен", "Exam")}</option><option value="TRAINING">{t("Тренировочная задача", "Training")}</option><option value="OLYMPIAD">{t("Олимпиадная задача", "Olympiad")}</option></select></label>
+      <label className="check"><input type="checkbox" checked={task.difficultyKnown} onChange={e => update(d => { d.difficultyKnown = e.target.checked; })} />{t("Сложность подтверждена источником / автором", "Difficulty is confirmed by source / author")}</label>
       {task.parts.map((part, pi) => <section className="card" key={pi}><div className="row spread"><h3>{t("Часть ", "Part ")}{pi + 1}</h3>{task.parts.length > 1 && <button type="button" className="quiet" onClick={() => update(d => { d.parts.splice(pi, 1); })}>{t("Убрать", "Remove")}</button>}</div>
         <div className="field-grid"><label>{t("Тип ответа", "Answer type")}<select value={part.kind} onChange={e => update(d => { d.parts[pi].kind = e.target.value as typeof part.kind; })}>
           <option value="SHORT">{t("Короткий ответ", "Short answer")}</option><option value="NUMERIC">{t("Число", "Numeric")}</option><option value="CHOICE">{t("Выбор варианта", "Multiple choice")}</option><option value="MANUAL">{t("Развёрнутое решение", "Written solution")}</option></select></label>
@@ -115,7 +112,7 @@ function TaskEditorForm({ initial, id }: { initial: TaskInput; id?: string }) {
       <details><summary>{t("Рисунки и файлы", "Figures & files")}</summary><ErrorNotice error={uploadError} /><label>{t("Загрузить PNG, JPEG или PDF (до 8 МБ)", "Upload PNG, JPEG or PDF (up to 8 MB)")}<input type="file" accept=".png,.jpg,.jpeg,.pdf" onChange={async e => {
         const file = e.target.files?.[0]; if (!file) return; const form = new FormData(); form.set("file", file);
         try { const saved = await api<{ id: string; originalName: string }>("files", "POST", form); update(d => { d.assets.push({ fileId: saved.id, caption: saved.originalName, role: "STATEMENT" }); }); setUploadError(null); } catch (e) { setUploadError(e); }
-      }} /></label>{task.assets.map((a, i) => <div className="field-grid item" key={i}><label>{t("Подпись", "Caption")}<input value={a.caption} onChange={e => update(d => { d.assets[i].caption = e.target.value; })} /></label><label>{t("Назначение", "Purpose")}<select value={a.role} onChange={e => update(d => { d.assets[i].role = e.target.value as typeof a.role; })}><option value="STATEMENT">{t("Условие", "Statement")}</option><option value="SOLUTION">{t("Решение", "Solution")}</option><option value="HINT">{t("Подсказка", "Hint")}</option><option value="TEACHER">{t("Учителю", "Teacher only")}</option></select></label></div>)}</details>
+      }} /></label>{task.assets.map((a, i) => <div className="field-grid item" key={i}><label>{t("Подпись", "Caption")}<input value={a.caption} onChange={e => update(d => { d.assets[i].caption = e.target.value; })} /></label><label>{t("Назначение", "Purpose")}<select value={a.role} onChange={e => update(d => { d.assets[i].role = e.target.value as typeof a.role; })}><option value="STATEMENT">{t("Условие", "Statement")}</option><option value="SOLUTION">{t("Решение", "Solution")}</option><option value="MARK_SCHEME">MS</option><option value="HINT">{t("Подсказка", "Hint")}</option><option value="TEACHER">{t("Учителю", "Teacher only")}</option></select></label></div>)}</details>
       {administrator && <div className="field-grid"><label>{t("Публикация", "Visibility")}<select value={task.visibility} onChange={e => update(d => { d.visibility = e.target.value as typeof task.visibility; })}><option value="PRIVATE">{t("Только владельцу", "Owner only")}</option><option value="PUBLIC">{t("Общий банк задач", "Shared problem bank")}</option></select></label><label>{t("Код платного доступа (необязательно)", "Access feature key (optional)")}<input value={task.featureKey ?? ""} onChange={e => update(d => { d.featureKey = e.target.value || null; })} /></label></div>}
     </Form></div></>;
 }

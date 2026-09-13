@@ -14,7 +14,7 @@ test("desktop and mobile: register → class → assignment → autosave → sub
   const run = randomBytes(4).toString("hex"), password = randomBytes(24).toString("base64url");
   const teacherUser = await db().user.create({ data: { username: "ui_teacher_" + run, displayName: "Учитель Мария", passwordHash: await hashPassword(password),
     roles: { create: [{ role: "TEACHER" }, { role: "ADMIN" }] }, profile: { create: {} } }, select: userSelect });
-  const task = await saveTask(teacherUser, { visibility: "PUBLIC", texts: [
+  await saveTask(teacherUser, { visibility: "PUBLIC", texts: [
     { locale: "ru", title: "Сумма и доказательство " + run, statement: "<p>Вычислите \\(8+7\\).</p><table><tr><th>Число</th><th>Слагаемое</th></tr><tr><td>8</td><td>7</td></tr></table>", solution: "Получаем \\(15\\).", teacherNote: "Hidden teacher note" },
     { locale: "en", title: "Sum and proof " + run, statement: "<p>Calculate \\(8+7\\).</p>", solution: "We get \\(15\\)." },
   ], parts: [
@@ -49,7 +49,10 @@ test("desktop and mobile: register → class → assignment → autosave → sub
   await student.goto("/join-class/" + classroom.joinCode);
   await student.getByRole("button", { name: "Вступить", exact: true }).click();
   await expect(student).toHaveURL(/\/student$/);
-  await teacher.goto("/teacher/works/new?class=" + classId + "&task=" + task.taskId);
+  await teacher.goto("/library?q=" + run);
+  await teacher.locator('.task-select input').first().check();
+  await expect(teacher.getByRole('region',{name:'Набор задач',exact:true})).toContainText('1 задач');
+  await teacher.goto("/teacher/works/new?class=" + classId);
   await teacher.getByLabel("Название работы").fill("Домашняя работа " + run);
   await teacher.getByRole("button", { name: "Назначить ученикам", exact: true }).click();
   await expect(teacher).toHaveURL(/\/works\/[a-z0-9]+\/results$/);
@@ -72,10 +75,11 @@ test("desktop and mobile: register → class → assignment → autosave → sub
   await student.getByRole("button", { name: "Отправить работу", exact: true }).click();
   await expect(student.getByText("Работа принята.", { exact: false })).toBeVisible();
   await teacher.goto("/attempts/" + attemptId + "/review");
-  await teacher.locator('input[name^="points-"]').nth(1).fill("5.5");
-  await teacher.locator('textarea[name^="comment-"]').nth(1).fill("Верно! Подробное объяснение.");
-  await teacher.getByRole("button", { name: "Сохранить оценку и комментарии", exact: true }).click();
-  await expect(teacher.getByText("Готово.", { exact: true })).toBeVisible();
+  await teacher.getByLabel('Часть задачи',{exact:true}).selectOption('1');
+  await teacher.getByLabel('Баллы',{exact:true}).fill("5.5");
+  await teacher.getByLabel('Комментарий ученику',{exact:true}).fill("Верно! Подробное объяснение.");
+  await teacher.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(teacher.getByRole('status').filter({hasText:/^Сохранено$/})).toBeVisible();
   await teacher.goto("/works/" + workId + "/results");
   await teacher.getByRole("button", { name: "Опубликовать результаты", exact: true }).click();
   await expect(teacher.getByRole("button", { name: "Результаты опубликованы", exact: true })).toBeVisible();
@@ -84,11 +88,13 @@ test("desktop and mobile: register → class → assignment → autosave → sub
   await expect(student.getByText("Hidden teacher note")).toHaveCount(0);
   await student.screenshot({ path: "test-results/screenshots/mobile-result.png", fullPage: true });
   await student.goto("/courses");
-  await student.getByText("Сложение", { exact: true }).last().click();
+  await student.locator(`a[href="/courses/ui-${run}"]`).click();
+  await student.getByRole('link',{name:/Открыть тему/}).click();
+  await student.locator('.topic-theory summary').filter({hasText:/^Теория$/}).click();
   await expect(student.locator(".katex").last()).toBeVisible();
   expect(await student.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await student.getByRole("button", { name: "EN", exact: true }).click();
-  await expect(student.getByRole("heading", { name: "Courses", exact: true })).toBeVisible();
+  await expect(student.getByRole("heading", { name: "Addition", exact: true })).toBeVisible();
   await teacher.goto("/teacher");
   await expect(teacher.getByRole("heading", { name: "Здравствуйте, Учитель." })).toBeVisible();
   await teacher.screenshot({ path: "test-results/screenshots/teacher-dashboard.png", fullPage: true });

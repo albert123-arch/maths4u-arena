@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { PilotPublish } from "./pilot-publish";
+import { PilotCorrection } from "./pilot-correction";
+import { StorageStatus } from "./storage-status";
 import type { Actor } from "@/lib/security";
 import { useLocale, useResource, Heading, Loading, ErrorNotice, Form, Field, ActionButton, api, str, DateLabel, localDate } from "./ui";
 type Plan = { id: string; name: string; active: boolean; features: { featureKey: string; usageLimit: number | null; feature: { title: string } }[] };
@@ -11,7 +13,7 @@ export function AdminScreen({ section }: { section: string }) {
     ["overview", t("Обзор", "Overview")], ["users", t("Пользователи", "Users")], ["materials", t("Материалы", "Materials")],
     ["access", t("Тарифы и доступ", "Plans & access")], ["import", t("Импорт и состояние", "Import & status")],
   ].map(([key, title]) => <Link className={section === key ? "active" : ""} key={key} href={"/admin/" + key}>{title}</Link>)}</nav>
-    {section === "users" ? <Users /> : section === "access" ? <Access /> : section === "import" ? <><PilotPublish /><Import /></> : section === "materials" ? <div className="grid three">{[
+    {section === "users" ? <Users /> : section === "access" ? <Access /> : section === "import" ? <><PilotCorrection /><PilotPublish /><Import /><StorageStatus /></> : section === "materials" ? <div className="grid three">{[
       ["/library", t("Банк задач", "Problem bank")], ["/admin/courses", t("Курсы и теория", "Courses & theory")], ["/olympiads", t("Олимпиады", "Olympiads")],
     ].map(([href, title]) => <Link className="card" href={href} key={href}><h2>{title} ↗</h2></Link>)}</div> : <Overview />}
   </>;
