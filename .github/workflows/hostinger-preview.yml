@@ -1,0 +1,56 @@
+name: Hostinger preview package
+
+on:
+  push:
+    branches: [hostinger-preview]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hostinger-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-node22:
+    # Manual runs also stay on the preview branch. This workflow never deploys.
+    if: github.ref == 'refs/heads/hostinger-preview'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          # Disposable runner service, exposed only on loopback. The test creates
+          # random application credentials with access to one new test database.
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+          MYSQL_ROOT_HOST: "%"
+        ports:
+          - 127.0.0.1:3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Type check
+        run: npm run typecheck
+      - name: Build without database configuration
+        # No production secrets or database variables are available to this step.
+        run: npm run build:hostinger
+      - name: Test standalone startup, migrations and repeat deployment
+        run: node --test tests/hostinger-package.test.mjs
+        env:
+          HOSTINGER_TEST_CREATE_DATABASE: '1'
+          HOSTINGER_TEST_MYSQL_HOST: 127.0.0.1
+          HOSTINGER_TEST_MYSQL_PORT: '3306'
