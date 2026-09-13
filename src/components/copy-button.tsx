@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 
-import { messages } from "@/lib/messages";
 
 export function CopyButton({
   value,
   label,
-  copiedLabel = messages.common.copied,
+  copiedLabel = "✓",
   className = "",
 }: {
   value: string;

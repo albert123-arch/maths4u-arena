@@ -1,52 +1,25 @@
-import "dotenv/config";
-
+import { config } from "dotenv";
+import { db } from "../src/lib/prisma";
 import { hashPassword } from "../src/lib/password";
-import { prisma } from "../src/lib/prisma";
-import { readNewAdminInput } from "./admin-input";
+import { passwordSchema, usernameSchema, transaction } from "../src/lib/security";
+import { ensure } from "../src/lib/errors";
+config({ path: ".env.local", quiet: true });
 
 async function main() {
-  const input = readNewAdminInput();
-  const passwordHash = await hashPassword(input.password);
-  const existingUser = await prisma.user.findUnique({
-    where: { email: input.email },
-    select: { id: true, role: true },
+  const username = usernameSchema.parse(process.env.NEW_ADMIN_USERNAME);
+  const password = passwordSchema.parse(process.env.NEW_ADMIN_PASSWORD);
+  const displayName = process.env.NEW_ADMIN_NAME?.trim() || "Maths4U Administrator";
+  ensure(displayName.length <= 160, 400, "INVALID_NAME");
+  const passwordHash = await hashPassword(password);
+  await transaction(async tx => {
+    const rows = await tx.$queryRawUnsafe<Array<{ acquired: number }>>("SELECT GET_LOCK('maths4u_first_admin', 5) AS acquired");
+    ensure(Number(rows[0].acquired) === 1, 409, "ADMIN_SETUP_BUSY");
+    try {
+      ensure(await tx.userRole.count({ where: { role: "ADMIN" } }) === 0, 409, "ADMIN_ALREADY_EXISTS_USE_ADMIN_PANEL");
+      await tx.user.create({ data: { username, displayName, passwordHash, roles: { create: { role: "ADMIN" } }, profile: { create: { locale: "ru" } } } });
+    } finally { await tx.$queryRawUnsafe("SELECT RELEASE_LOCK('maths4u_first_admin')"); }
   });
-
-  if (existingUser) {
-    await prisma.user.update({
-      where: { id: existingUser.id },
-      data: {
-        name: input.name,
-        passwordHash,
-        role: "ADMIN",
-      },
-    });
-
-    const adminCount = await prisma.user.count({ where: { role: "ADMIN" } });
-    console.log(`Admin account updated: ${input.email}`);
-    console.log(`Total admin accounts: ${adminCount}`);
-    return;
-  }
-
-  await prisma.user.create({
-    data: {
-      email: input.email,
-      name: input.name,
-      passwordHash,
-      role: "ADMIN",
-    },
-  });
-
-  const adminCount = await prisma.user.count({ where: { role: "ADMIN" } });
-  console.log(`Admin account created: ${input.email}`);
-  console.log(`Total admin accounts: ${adminCount}`);
+  console.log("First administrator created. No credentials printed. Remove NEW_ADMIN_PASSWORD from your environment.");
 }
-
-main()
-  .catch((error) => {
-    console.error(error instanceof Error ? error.message : "Admin creation failed.");
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().catch(e => { console.error(e?.code || "Admin creation failed: check private environment and database configuration."); process.exitCode = 1; })
+  .finally(() => db().$disconnect());

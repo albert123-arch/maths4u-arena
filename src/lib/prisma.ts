@@ -1,29 +1,15 @@
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
-
 import { PrismaClient } from "../generated/prisma/client";
-import { getConfiguredDatabaseConnectionConfig } from "./database-url";
+import { databaseConfig } from "./database-url";
 
-const globalForPrisma = globalThis as unknown as {
-  prisma?: PrismaClient;
-};
-
-function createPrismaClient() {
-  const databaseConfig = getConfiguredDatabaseConnectionConfig();
-
-  if (!databaseConfig) {
-    throw new Error("Database connection settings are required.");
+const globalDb = globalThis as unknown as { maths4uDb?: PrismaClient };
+export function db(): PrismaClient {
+  if (!globalDb.maths4uDb) {
+    const config = databaseConfig();
+    globalDb.maths4uDb = new PrismaClient({ adapter: new PrismaMariaDb({
+      host: config.host, port: config.port, user: config.user, password: config.password, database: config.database,
+      connectionLimit: config.connectionLimit, connectTimeout: config.connectTimeout, acquireTimeout: config.acquireTimeout,
+    }) });
   }
-
-  const adapter = new PrismaMariaDb(databaseConfig);
-
-  return new PrismaClient({
-    adapter,
-    log: process.env.NODE_ENV === "development" ? ["warn", "error"] : [],
-  });
-}
-
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+  return globalDb.maths4uDb;
 }

@@ -1,6 +1,3 @@
-// Prisma schema for Maths4U Arena.
-// This MVP foundation keeps flexible JSON text fields for future quiz modes.
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,561 +7,722 @@ datasource db {
   provider = "mysql"
 }
 
-enum UserRole {
-  ADMIN
+enum Role {
+  STUDENT
   TEACHER
+  ADMIN
 }
 
-enum TestStatus {
-  DRAFT
-  PUBLISHED
+enum AccountStatus {
+  ACTIVE
+  BLOCKED
   ARCHIVED
 }
 
-enum QuestionType {
-  MULTIPLE_CHOICE
-  MULTI_SELECT
-  SHORT_TEXT
-  NUMERIC
-  TRUE_FALSE
-  FILL_BLANK
-  MATCHING
-  ORDERING
-  MANUAL_REVIEW
+enum Locale {
+  ru
+  en
 }
 
-enum GradingType {
-  EXACT
-  ACCEPTED_ANSWERS
-  KEYWORDS
-  REGEX
-  NUMERIC_TOLERANCE
-  MANUAL
-  FORMULA
-}
-
-enum GameMode {
-  CLASSIC
-  ACCURACY
-  HOST_PACED
-  TEAM
-  PRACTICE
-  CAROUSEL
-}
-
-enum GameSessionStatus {
-  LOBBY
-  RUNNING
-  PAUSED
-  FINISHED
-}
-
-enum StudentStatus {
-  ACTIVE
-  DISABLED
-}
-
-enum SeriesStatus {
-  DRAFT
-  REGISTRATION_OPEN
-  ACTIVE
-  FINISHED
-  ARCHIVED
-}
-
-enum SeriesRegistrationStatus {
-  REGISTERED
-  REMOVED
-}
-
-enum SeriesRoundStatus {
-  DRAFT
-  SCHEDULED
-  LOBBY
-  RUNNING
-  FINISHED
-}
-
-enum ClassroomStatus {
-  ACTIVE
-  ARCHIVED
-}
-
-enum ClassMembershipStatus {
-  ACTIVE
-  PENDING
-  REMOVED
-}
-
-enum ContentVisibility {
+enum Visibility {
   PRIVATE
-  CLASS_ONLY
   PUBLIC
-  CURATED
-  ARCHIVED
 }
 
-enum AssignmentType {
+enum TaskKind {
+  SHORT
+  NUMERIC
+  CHOICE
+  MANUAL
+}
+
+enum WorkKind {
   HOMEWORK
-  CONTROLLED_TEST
+  TEST
   PRACTICE
+  OLYMPIAD
 }
 
-enum AssignmentStatus {
-  DRAFT
-  ASSIGNED
-  CLOSED
-  ARCHIVED
+enum ResultPolicy {
+  AFTER_SUBMIT
+  AFTER_DEADLINE
+  MANUAL
 }
 
-enum AssignmentSubmissionStatus {
-  NOT_STARTED
+enum AttemptStatus {
   IN_PROGRESS
   SUBMITTED
   GRADED
-  RETURNED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+}
+
+enum FileRole {
+  STATEMENT
+  HINT
+  SOLUTION
+  TEACHER
 }
 
 model User {
-  id           String   @id @default(cuid()) @db.VarChar(191)
-  email        String   @unique @db.VarChar(191)
-  passwordHash String   @db.VarChar(255)
-  name         String?  @db.VarChar(191)
-  role         UserRole @default(TEACHER)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  createdTests Test[]      @relation("TestCreatedBy")
-  ownedTests   Test[]      @relation("TestOwner")
-  questions    Question[]  @relation("QuestionOwner")
-  classrooms   Classroom[]
-  assignments  Assignment[]
-  series        Series[]
-}
-
-model Test {
-  id          String     @id @default(cuid()) @db.VarChar(191)
-  title       String     @db.VarChar(191)
-  slug        String     @unique @db.VarChar(191)
-  subject     String     @db.VarChar(191)
-  description String?    @db.Text
-  locale      String     @default("ru") @db.VarChar(16)
-  status      TestStatus @default(DRAFT)
-  createdById String?    @db.VarChar(191)
-  ownerUserId String?    @db.VarChar(191)
-  visibility  ContentVisibility @default(PRIVATE)
-  sourceId    String?    @db.VarChar(191)
-  copiedFromId String?   @db.VarChar(191)
-  sharedAt    DateTime?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  createdBy User?         @relation("TestCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-  owner     User?         @relation("TestOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
-  versions  TestVersion[]
-
-  @@index([createdById])
-  @@index([ownerUserId])
-  @@index([status])
-  @@index([subject])
-  @@index([visibility])
-  @@index([sourceId])
-  @@index([copiedFromId])
-}
-
-model TestVersion {
-  id            String     @id @default(cuid()) @db.VarChar(191)
-  testId        String     @db.VarChar(191)
-  versionNumber Int
-  title         String     @db.VarChar(191)
-  instructions  String?    @db.LongText
-  settingsJson  String?    @db.LongText
-  status        TestStatus @default(DRAFT)
-  publishedAt   DateTime?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-
-  test      Test                  @relation(fields: [testId], references: [id], onDelete: Cascade)
-  questions TestVersionQuestion[]
-  sessions  GameSession[]
-  seriesRounds SeriesRound[]
-  assignments Assignment[]
-
-  @@unique([testId, versionNumber])
-  @@index([status])
-}
-
-model Question {
-  id               String       @id @default(cuid()) @db.VarChar(191)
-  subject          String       @db.VarChar(191)
-  type             QuestionType
-  prompt           String       @db.LongText
-  explanation      String?      @db.LongText
-  difficulty       Int          @default(1)
-  tagsJson         String?      @db.LongText
-  mediaJson        String?      @db.LongText
-  gradingType      GradingType
-  gradingRulesJson String?      @db.LongText
-  ownerUserId      String?      @db.VarChar(191)
-  visibility       ContentVisibility @default(PRIVATE)
-  sourceId         String?      @db.VarChar(191)
-  copiedFromId     String?      @db.VarChar(191)
-  sharedAt         DateTime?
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
-
-  owner        User?                 @relation("QuestionOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
-  options      QuestionOption[]
-  testVersions TestVersionQuestion[]
-  answers      Answer[]
-  scoreEvents  ScoreEvent[]
-  assignmentAnswers AssignmentAnswer[]
-
-  @@index([ownerUserId])
-  @@index([visibility])
-  @@index([subject])
-  @@index([type])
-  @@index([difficulty])
-  @@index([sourceId])
-  @@index([copiedFromId])
-}
-
-model QuestionOption {
-  id         String  @id @default(cuid()) @db.VarChar(191)
-  questionId String  @db.VarChar(191)
-  optionText String  @db.LongText
-  isCorrect  Boolean @default(false)
-  sortOrder  Int     @default(0)
-
-  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-
-  @@index([questionId])
-}
-
-model TestVersionQuestion {
-  id               String  @id @default(cuid()) @db.VarChar(191)
-  testVersionId    String  @db.VarChar(191)
-  questionId       String  @db.VarChar(191)
-  sortOrder        Int
-  points           Int     @default(1)
-  timeLimitSeconds Int?
-  settingsJson     String? @db.LongText
-
-  testVersion TestVersion @relation(fields: [testVersionId], references: [id], onDelete: Cascade)
-  question    Question    @relation(fields: [questionId], references: [id], onDelete: Restrict)
-
-  @@unique([testVersionId, questionId])
-  @@index([questionId])
-}
-
-model GameSession {
-  id            String            @id @default(cuid()) @db.VarChar(191)
-  testVersionId String            @db.VarChar(191)
-  code          String            @unique @db.VarChar(16)
-  mode          GameMode          @default(CLASSIC)
-  status        GameSessionStatus @default(LOBBY)
-  settingsJson  String?           @db.LongText
-  showResults   Boolean           @default(true)
-  startedAt     DateTime?
-  finishedAt    DateTime?
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
-
-  testVersion  TestVersion   @relation(fields: [testVersionId], references: [id], onDelete: Restrict)
-  participants Participant[]
-  answers      Answer[]
-  scoreEvents  ScoreEvent[]
-  seriesRounds SeriesRound[]
-  seriesScores SeriesScore[]
-
-  @@index([testVersionId])
-  @@index([status])
-}
-
-model Participant {
-  id          String   @id @default(cuid()) @db.VarChar(191)
-  sessionId   String   @db.VarChar(191)
-  studentAccountId String? @db.VarChar(191)
-  displayName String   @db.VarChar(191)
-  tokenHash   String   @db.VarChar(255)
-  teamId      String?  @db.VarChar(191)
-  joinedAt    DateTime @default(now())
-
-  session        GameSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  studentAccount StudentAccount? @relation(fields: [studentAccountId], references: [id], onDelete: SetNull)
-  answers        Answer[]
-  scoreEvents    ScoreEvent[]
-
-  @@index([sessionId])
-  @@index([studentAccountId])
-  @@index([teamId])
-}
-
-model Answer {
-  id            String   @id @default(cuid()) @db.VarChar(191)
-  sessionId     String   @db.VarChar(191)
-  participantId String   @db.VarChar(191)
-  questionId    String   @db.VarChar(191)
-  answerJson    String   @db.LongText
-  isCorrect     Boolean?
-  points        Int      @default(0)
-  responseMs    Int?
-  submittedAt   DateTime @default(now())
-
-  session     GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
-  question    Question    @relation(fields: [questionId], references: [id], onDelete: Restrict)
-
-  @@index([sessionId])
-  @@index([participantId])
-  @@index([questionId])
-}
-
-model ScoreEvent {
-  id            String   @id @default(cuid()) @db.VarChar(191)
-  sessionId     String   @db.VarChar(191)
-  participantId String?  @db.VarChar(191)
-  questionId    String?  @db.VarChar(191)
-  eventType     String   @db.VarChar(64)
-  pointsDelta   Int      @default(0)
-  metaJson      String?  @db.LongText
-  createdAt     DateTime @default(now())
-
-  session     GameSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  participant Participant? @relation(fields: [participantId], references: [id], onDelete: SetNull)
-  question    Question?    @relation(fields: [questionId], references: [id], onDelete: SetNull)
-
-  @@index([sessionId])
-  @@index([participantId])
-  @@index([questionId])
-  @@index([eventType])
-}
-
-model StudentAccount {
-  id           String        @id @default(cuid()) @db.VarChar(191)
-  username     String        @unique @db.VarChar(191)
-  displayName  String        @db.VarChar(191)
-  passwordHash String        @db.VarChar(255)
-  groupName    String?       @db.VarChar(191)
-  status       StudentStatus @default(ACTIVE)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-
-  registrations SeriesRegistration[]
-  classMemberships ClassMembership[]
-  participants  Participant[]
-  scores        SeriesScore[]
-  assignmentSubmissions AssignmentSubmission[]
+  id                   String                 @id @default(cuid())
+  username             String                 @unique @db.VarChar(64)
+  email                String?                @unique @db.VarChar(191)
+  passwordHash         String                 @db.VarChar(255)
+  displayName          String                 @db.VarChar(160)
+  status               AccountStatus          @default(ACTIVE)
+  createdAt            DateTime               @default(now())
+  roles                UserRole[]
+  profile              Profile?
+  sessions             Session[]
+  recoveries           RecoveryToken[]        @relation("RecoveryUser")
+  issuedRecoveries     RecoveryToken[]        @relation("RecoveryIssuer")
+  classes              Classroom[]
+  memberships          ClassMembership[]
+  tasks                Task[]
+  works                Work[]
+  attempts             Attempt[]
+  reviews              Review[]
+  olympiads            Olympiad[]
+  registrations        OlympiadRegistration[]
+  subscriptions        Subscription[]         @relation("Subscriber")
+  grantedSubscriptions Subscription[]         @relation("GrantIssuer")
+  files                StoredFile[]
+  payments             Payment[]
+  usage                UsageEvent[]
+  audits               AuditEvent[]
+  progress             LearningProgress[]
 
   @@index([status])
-  @@index([groupName])
+}
+
+model UserRole {
+  userId String
+  role   Role
+  user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@id([userId, role])
+}
+
+model Profile {
+  userId String  @id
+  locale Locale  @default(ru)
+  school String? @db.VarChar(191)
+  grade  Int?
+  user   User    @relation(fields: [userId], references: [id], onDelete: Restrict)
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique @db.Char(64)
+  userId    String
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId, revokedAt])
+  @@index([expiresAt])
+}
+
+model RateLimit {
+  key       String   @id @db.Char(64)
+  count     Int      @default(0)
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
+model RecoveryToken {
+  id         String    @id @default(cuid())
+  userId     String
+  issuedById String
+  tokenHash  String    @unique @db.Char(64)
+  expiresAt  DateTime
+  usedAt     DateTime?
+  user       User      @relation("RecoveryUser", fields: [userId], references: [id], onDelete: Restrict)
+  issuer     User      @relation("RecoveryIssuer", fields: [issuedById], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@index([issuedById])
 }
 
 model Classroom {
-  id          String          @id @default(cuid()) @db.VarChar(191)
-  teacherId   String          @db.VarChar(191)
-  title       String          @db.VarChar(191)
-  description String?         @db.LongText
-  joinCode    String          @unique @db.VarChar(16)
-  status      ClassroomStatus @default(ACTIVE)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  id         String            @id @default(cuid())
+  teacherId  String
+  title      String            @db.VarChar(191)
+  joinCode   String            @unique @db.VarChar(24)
+  archivedAt DateTime?
+  createdAt  DateTime          @default(now())
+  teacher    User              @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+  members    ClassMembership[]
+  works      Work[]
 
-  teacher     User              @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  memberships ClassMembership[]
-  assignments Assignment[]
-
-  @@index([teacherId])
-  @@index([status])
+  @@index([teacherId, archivedAt])
 }
 
 model ClassMembership {
-  id        String                @id @default(cuid()) @db.VarChar(191)
-  classId   String                @db.VarChar(191)
-  studentId String                @db.VarChar(191)
-  status    ClassMembershipStatus @default(ACTIVE)
-  joinedAt  DateTime              @default(now())
+  classId   String
+  userId    String
+  joinedAt  DateTime  @default(now())
+  removedAt DateTime?
+  classroom Classroom @relation(fields: [classId], references: [id], onDelete: Restrict)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Restrict)
 
-  classroom Classroom      @relation(fields: [classId], references: [id], onDelete: Cascade)
-  student   StudentAccount @relation(fields: [studentId], references: [id], onDelete: Cascade)
-
-  @@unique([classId, studentId])
-  @@index([studentId])
-  @@index([status])
+  @@id([classId, userId])
+  @@index([userId, removedAt])
 }
 
-model Assignment {
-  id                    String           @id @default(cuid()) @db.VarChar(191)
-  teacherId             String           @db.VarChar(191)
-  classId               String           @db.VarChar(191)
-  testVersionId         String           @db.VarChar(191)
-  title                 String           @db.VarChar(191)
-  description           String?          @db.LongText
-  type                  AssignmentType   @default(HOMEWORK)
-  status                AssignmentStatus @default(DRAFT)
-  openAt                DateTime?
-  dueAt                 DateTime?
-  timeLimitMinutes      Int?
-  attemptsAllowed       Int              @default(1)
-  showResultsToStudents Boolean          @default(true)
-  showCorrectAnswers    Boolean          @default(false)
-  allowLateSubmission   Boolean          @default(false)
-  allowPhotoSolutions   Boolean          @default(false)
-  settingsJson          String?          @db.LongText
-  createdAt             DateTime         @default(now())
-  updatedAt             DateTime         @updatedAt
+model Course {
+  id         String       @id @default(cuid())
+  slug       String       @unique @db.VarChar(120)
+  published  Boolean      @default(false)
+  featureKey String?      @db.VarChar(100)
+  archivedAt DateTime?
+  texts      CourseText[]
+  topics     Topic[]
+  feature    Feature?     @relation(fields: [featureKey], references: [key], onDelete: Restrict)
+}
 
-  teacher     User                   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  classroom   Classroom              @relation(fields: [classId], references: [id], onDelete: Cascade)
-  testVersion TestVersion            @relation(fields: [testVersionId], references: [id], onDelete: Restrict)
-  submissions AssignmentSubmission[]
+model CourseText {
+  courseId    String
+  locale      Locale
+  title       String @db.VarChar(191)
+  description String @db.Text
+  course      Course @relation(fields: [courseId], references: [id], onDelete: Restrict)
 
-  @@index([teacherId])
+  @@id([courseId, locale])
+}
+
+model Topic {
+  id       String      @id @default(cuid())
+  courseId String
+  slug     String      @db.VarChar(120)
+  position Int         @default(0)
+  course   Course      @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  texts    TopicText[]
+  tasks    TaskTopic[]
+  lessons  Lesson[]
+
+  @@unique([courseId, slug])
+}
+
+model TopicText {
+  topicId String
+  locale  Locale
+  title   String @db.VarChar(191)
+  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Restrict)
+
+  @@id([topicId, locale])
+}
+
+model Lesson {
+  id         String             @id @default(cuid())
+  topicId    String
+  archivedAt DateTime?
+  topic      Topic              @relation(fields: [topicId], references: [id], onDelete: Restrict)
+  versions   LessonVersion[]
+  progress   LearningProgress[]
+
+  @@index([topicId])
+}
+
+model LessonVersion {
+  id        String       @id @default(cuid())
+  lessonId  String
+  number    Int
+  createdAt DateTime     @default(now())
+  lesson    Lesson       @relation(fields: [lessonId], references: [id], onDelete: Restrict)
+  texts     LessonText[]
+
+  @@unique([lessonId, number])
+}
+
+model LessonText {
+  versionId String
+  locale    Locale
+  title     String        @db.VarChar(191)
+  body      String        @db.LongText
+  version   LessonVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
+
+  @@id([versionId, locale])
+}
+
+model LearningProgress {
+  userId    String
+  lessonId  String
+  completed Boolean  @default(false)
+  openedAt  DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Restrict)
+
+  @@id([userId, lessonId])
+  @@index([lessonId])
+}
+
+model Source {
+  id    String        @id @default(cuid())
+  name  String        @unique @db.VarChar(191)
+  url   String?       @db.VarChar(500)
+  tasks TaskVersion[]
+}
+
+model Task {
+  id         String         @id @default(cuid())
+  ownerId    String
+  visibility Visibility     @default(PRIVATE)
+  featureKey String?        @db.VarChar(100)
+  archivedAt DateTime?
+  createdAt  DateTime       @default(now())
+  owner      User           @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  feature    Feature?       @relation(fields: [featureKey], references: [key], onDelete: Restrict)
+  versions   TaskVersion[]
+  topics     TaskTopic[]
+  imports    ImportRecord[]
+
+  @@index([ownerId])
+  @@index([visibility, archivedAt])
+}
+
+model TaskTopic {
+  taskId  String
+  topicId String
+  task    Task   @relation(fields: [taskId], references: [id], onDelete: Restrict)
+  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Restrict)
+
+  @@id([taskId, topicId])
+  @@index([topicId])
+}
+
+model TaskVersion {
+  id             String      @id @default(cuid())
+  taskId         String
+  number         Int
+  difficulty     Int         @default(1)
+  sourceId       String?
+  syllabus       String?     @db.VarChar(50)
+  examBoard      String?     @db.VarChar(80)
+  year           Int?
+  examSession    String?     @db.VarChar(50)
+  paper          String?     @db.VarChar(50)
+  questionNumber String?     @db.VarChar(50)
+  createdAt      DateTime    @default(now())
+  task           Task        @relation(fields: [taskId], references: [id], onDelete: Restrict)
+  source         Source?     @relation(fields: [sourceId], references: [id], onDelete: Restrict)
+  texts          TaskText[]
+  parts          TaskPart[]
+  assets         TaskAsset[]
+  items          WorkItem[]
+
+  @@unique([taskId, number])
+  @@index([sourceId])
+  @@index([syllabus, year, examSession, paper])
+}
+
+model TaskText {
+  versionId   String
+  locale      Locale
+  title       String      @db.VarChar(191)
+  statement   String      @db.LongText
+  hint        String      @db.LongText
+  solution    String      @db.LongText
+  teacherNote String      @db.LongText
+  version     TaskVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
+
+  @@id([versionId, locale])
+}
+
+model TaskPart {
+  id              String           @id @default(cuid())
+  versionId       String
+  position        Int
+  kind            TaskKind
+  maxPoints       Float
+  caseSensitive   Boolean          @default(false)
+  numericAnswer   Float?
+  tolerance       Float            @default(0)
+  version         TaskVersion      @relation(fields: [versionId], references: [id], onDelete: Restrict)
+  texts           PartText[]
+  acceptedAnswers AcceptedAnswer[]
+  options         TaskOption[]
+  answers         Answer[]
+
+  @@unique([versionId, position])
+}
+
+model PartText {
+  partId String
+  locale Locale
+  prompt String   @db.LongText
+  answer String   @db.Text
+  rubric String   @db.LongText
+  part   TaskPart @relation(fields: [partId], references: [id], onDelete: Restrict)
+
+  @@id([partId, locale])
+}
+
+model AcceptedAnswer {
+  id     String   @id @default(cuid())
+  partId String
+  value  String   @db.VarChar(1000)
+  part   TaskPart @relation(fields: [partId], references: [id], onDelete: Restrict)
+
+  @@index([partId])
+}
+
+model TaskOption {
+  id       String       @id @default(cuid())
+  partId   String
+  position Int
+  correct  Boolean
+  part     TaskPart     @relation(fields: [partId], references: [id], onDelete: Restrict)
+  texts    OptionText[]
+
+  @@unique([partId, position])
+}
+
+model OptionText {
+  optionId String
+  locale   Locale
+  text     String     @db.Text
+  option   TaskOption @relation(fields: [optionId], references: [id], onDelete: Restrict)
+
+  @@id([optionId, locale])
+}
+
+model StoredFile {
+  id           String       @id @default(cuid())
+  ownerId      String
+  storageKey   String       @unique @db.VarChar(100)
+  originalName String       @db.VarChar(191)
+  mimeType     String       @db.VarChar(100)
+  size         Int
+  sha256       String       @db.Char(64)
+  createdAt    DateTime     @default(now())
+  owner        User         @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  submissions  AnswerFile[]
+  assets       TaskAsset[]
+
+  @@index([ownerId])
+}
+
+model TaskAsset {
+  id        String      @id @default(cuid())
+  versionId String
+  fileId    String
+  role      FileRole
+  locale    Locale?
+  caption   String      @db.VarChar(500)
+  version   TaskVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
+  file      StoredFile  @relation(fields: [fileId], references: [id], onDelete: Restrict)
+
+  @@index([versionId])
+  @@index([fileId])
+}
+
+model Work {
+  id                 String         @id @default(cuid())
+  ownerId            String
+  classId            String?
+  title              String         @db.VarChar(191)
+  kind               WorkKind
+  archivedAt         DateTime?
+  resultsPublishedAt DateTime?
+  createdAt          DateTime       @default(now())
+  owner              User           @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  classroom          Classroom?     @relation(fields: [classId], references: [id], onDelete: Restrict)
+  versions           WorkVersion[]
+  round              OlympiadRound?
+
+  @@index([ownerId, archivedAt])
   @@index([classId])
-  @@index([testVersionId])
-  @@index([status])
-  @@index([type])
-  @@index([openAt])
+}
+
+model WorkVersion {
+  id               String       @id @default(cuid())
+  workId           String
+  number           Int          @default(1)
+  opensAt          DateTime
+  dueAt            DateTime
+  timeLimitSeconds Int?
+  attemptsAllowed  Int          @default(1)
+  resultPolicy     ResultPolicy @default(MANUAL)
+  revealSolutions  Boolean      @default(false)
+  allowFiles       Boolean      @default(true)
+  publishedAt      DateTime     @default(now())
+  work             Work         @relation(fields: [workId], references: [id], onDelete: Restrict)
+  items            WorkItem[]
+  attempts         Attempt[]
+
+  @@unique([workId, number])
   @@index([dueAt])
 }
 
-model AssignmentSubmission {
-  id              String                     @id @default(cuid()) @db.VarChar(191)
-  assignmentId    String                     @db.VarChar(191)
-  studentId       String                     @db.VarChar(191)
-  attemptNumber   Int                        @default(1)
-  status          AssignmentSubmissionStatus @default(NOT_STARTED)
-  startedAt       DateTime?
-  submittedAt     DateTime?
-  gradedAt        DateTime?
-  score           Int                        @default(0)
-  maxScore        Int                        @default(0)
-  correctCount    Int                        @default(0)
-  answeredCount   Int                        @default(0)
-  percentage      Float                      @default(0)
-  teacherFeedback String?                    @db.LongText
-  aiFeedbackJson  String?                    @db.LongText
-  createdAt       DateTime                   @default(now())
-  updatedAt       DateTime                   @updatedAt
+model WorkItem {
+  id            String      @id @default(cuid())
+  workVersionId String
+  taskVersionId String
+  position      Int
+  maxPoints     Float
+  workVersion   WorkVersion @relation(fields: [workVersionId], references: [id], onDelete: Restrict)
+  taskVersion   TaskVersion @relation(fields: [taskVersionId], references: [id], onDelete: Restrict)
 
-  assignment Assignment         @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
-  student    StudentAccount     @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  answers    AssignmentAnswer[]
-
-  @@unique([assignmentId, studentId, attemptNumber])
-  @@index([assignmentId])
-  @@index([studentId])
-  @@index([status])
-  @@index([submittedAt])
+  @@unique([workVersionId, taskVersionId])
+  @@unique([workVersionId, position])
+  @@index([taskVersionId])
 }
 
-model AssignmentAnswer {
-  id           String   @id @default(cuid()) @db.VarChar(191)
-  submissionId String   @db.VarChar(191)
-  questionId   String   @db.VarChar(191)
-  answerJson   String   @db.LongText
-  isCorrect    Boolean?
-  points       Int      @default(0)
-  feedback     String?  @db.LongText
-  submittedAt  DateTime @default(now())
+model Attempt {
+  id            String        @id @default(cuid())
+  workVersionId String
+  userId        String
+  number        Int
+  status        AttemptStatus @default(IN_PROGRESS)
+  startedAt     DateTime      @default(now())
+  expiresAt     DateTime
+  submittedAt   DateTime?
+  gradedAt      DateTime?
+  timedOut      Boolean       @default(false)
+  revision      Int           @default(0)
+  workVersion   WorkVersion   @relation(fields: [workVersionId], references: [id], onDelete: Restrict)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  answers       Answer[]
 
-  submission AssignmentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
-  question   Question             @relation(fields: [questionId], references: [id], onDelete: Restrict)
-
-  @@unique([submissionId, questionId])
-  @@index([submissionId])
-  @@index([questionId])
-  @@index([isCorrect])
+  @@unique([workVersionId, userId, number])
+  @@index([userId, status])
+  @@index([status, expiresAt])
 }
 
-// TODO: Add SubmissionFile once photo solution uploads and storage quotas are implemented.
+model Answer {
+  id            String         @id @default(cuid())
+  attemptId     String
+  partId        String
+  response      Json
+  autoPoints    Float?
+  savedAt       DateTime       @default(now())
+  attempt       Attempt        @relation(fields: [attemptId], references: [id], onDelete: Restrict)
+  part          TaskPart       @relation(fields: [partId], references: [id], onDelete: Restrict)
+  review        Review?
+  aiSuggestions AiSuggestion[]
+  files         AnswerFile[]
 
-model Series {
-  id           String       @id @default(cuid()) @db.VarChar(191)
-  teacherId    String?      @db.VarChar(191)
-  title        String       @db.VarChar(191)
-  description  String?      @db.LongText
-  status       SeriesStatus @default(DRAFT)
-  startsAt     DateTime?
-  endsAt       DateTime?
-  settingsJson String?      @db.LongText
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-
-  teacher       User?                @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  registrations SeriesRegistration[]
-  rounds        SeriesRound[]
-  scores        SeriesScore[]
-
-  @@index([teacherId])
-  @@index([status])
-  @@index([startsAt])
-  @@index([endsAt])
+  @@unique([attemptId, partId])
+  @@index([partId])
 }
 
-model SeriesRegistration {
-  id                  String                   @id @default(cuid()) @db.VarChar(191)
-  seriesId            String                   @db.VarChar(191)
-  studentId           String                   @db.VarChar(191)
-  displayNameSnapshot String                   @db.VarChar(191)
-  status              SeriesRegistrationStatus @default(REGISTERED)
-  createdAt           DateTime                 @default(now())
+model Review {
+  id         String   @id @default(cuid())
+  answerId   String   @unique
+  reviewerId String
+  points     Float
+  comment    String   @db.Text
+  reviewedAt DateTime @default(now())
+  answer     Answer   @relation(fields: [answerId], references: [id], onDelete: Restrict)
+  reviewer   User     @relation(fields: [reviewerId], references: [id], onDelete: Restrict)
 
-  series  Series         @relation(fields: [seriesId], references: [id], onDelete: Cascade)
-  student StudentAccount @relation(fields: [studentId], references: [id], onDelete: Cascade)
-
-  @@unique([seriesId, studentId])
-  @@index([studentId])
-  @@index([status])
+  @@index([reviewerId])
 }
 
-model SeriesRound {
-  id            String            @id @default(cuid()) @db.VarChar(191)
-  seriesId      String            @db.VarChar(191)
-  testVersionId String            @db.VarChar(191)
-  title         String            @db.VarChar(191)
-  roundNumber   Int
-  scheduledAt   DateTime?
-  status        SeriesRoundStatus @default(DRAFT)
-  sessionId     String?           @db.VarChar(191)
-  settingsJson  String?           @db.LongText
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+model AnswerFile {
+  answerId String
+  fileId   String     @unique
+  answer   Answer     @relation(fields: [answerId], references: [id], onDelete: Restrict)
+  file     StoredFile @relation(fields: [fileId], references: [id], onDelete: Restrict)
 
-  series      Series       @relation(fields: [seriesId], references: [id], onDelete: Cascade)
-  testVersion TestVersion  @relation(fields: [testVersionId], references: [id], onDelete: Restrict)
-  session     GameSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
-  scores      SeriesScore[]
-
-  @@unique([seriesId, roundNumber])
-  @@index([testVersionId])
-  @@index([sessionId])
-  @@index([status])
-  @@index([scheduledAt])
+  @@id([answerId, fileId])
 }
 
-model SeriesScore {
-  id            String   @id @default(cuid()) @db.VarChar(191)
-  seriesId      String   @db.VarChar(191)
-  studentId     String   @db.VarChar(191)
-  roundId       String?  @db.VarChar(191)
-  sessionId     String?  @db.VarChar(191)
-  points        Int      @default(0)
-  correctCount  Int      @default(0)
-  answeredCount Int      @default(0)
-  percentage    Float    @default(0)
-  rank          Int?
-  metaJson      String?  @db.LongText
-  createdAt     DateTime @default(now())
+model AiSuggestion {
+  id             String   @id @default(cuid())
+  answerId       String
+  provider       String   @db.VarChar(100)
+  model          String   @db.VarChar(100)
+  proposedPoints Float?
+  feedback       String   @db.Text
+  externalData   Json?
+  createdAt      DateTime @default(now())
+  answer         Answer   @relation(fields: [answerId], references: [id], onDelete: Restrict)
 
-  series  Series         @relation(fields: [seriesId], references: [id], onDelete: Cascade)
-  student StudentAccount @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  round   SeriesRound?   @relation(fields: [roundId], references: [id], onDelete: SetNull)
-  session GameSession?   @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  @@index([answerId])
+}
 
-  @@index([seriesId])
-  @@index([studentId])
-  @@index([roundId])
-  @@index([sessionId])
-  @@index([rank])
+model Olympiad {
+  id                   String                 @id @default(cuid())
+  organizerId          String
+  title                String                 @db.VarChar(191)
+  registrationOpensAt  DateTime
+  registrationClosesAt DateTime
+  archivedAt           DateTime?
+  organizer            User                   @relation(fields: [organizerId], references: [id], onDelete: Restrict)
+  groups               AgeGroup[]
+  rounds               OlympiadRound[]
+  registrations        OlympiadRegistration[]
+
+  @@index([organizerId])
+}
+
+model AgeGroup {
+  id            String                 @id @default(cuid())
+  olympiadId    String
+  title         String                 @db.VarChar(100)
+  minAge        Int
+  maxAge        Int
+  olympiad      Olympiad               @relation(fields: [olympiadId], references: [id], onDelete: Restrict)
+  registrations OlympiadRegistration[]
+  rounds        OlympiadRound[]
+
+  @@unique([olympiadId, title])
+}
+
+model OlympiadRegistration {
+  olympiadId   String
+  userId       String
+  groupId      String
+  age          Int
+  registeredAt DateTime  @default(now())
+  withdrawnAt  DateTime?
+  olympiad     Olympiad  @relation(fields: [olympiadId], references: [id], onDelete: Restrict)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  group        AgeGroup  @relation(fields: [groupId], references: [id], onDelete: Restrict)
+
+  @@id([olympiadId, userId])
+  @@index([userId])
+  @@index([groupId])
+}
+
+model OlympiadRound {
+  id         String   @id @default(cuid())
+  olympiadId String
+  groupId    String
+  workId     String   @unique
+  number     Int
+  olympiad   Olympiad @relation(fields: [olympiadId], references: [id], onDelete: Restrict)
+  group      AgeGroup @relation(fields: [groupId], references: [id], onDelete: Restrict)
+  work       Work     @relation(fields: [workId], references: [id], onDelete: Restrict)
+
+  @@unique([olympiadId, groupId, number])
+  @@index([groupId])
+}
+
+model Feature {
+  key     String        @id @db.VarChar(100)
+  title   String        @db.VarChar(191)
+  plans   PlanFeature[]
+  courses Course[]
+  tasks   Task[]
+  usage   UsageEvent[]
+}
+
+model Plan {
+  id            String         @id @default(cuid())
+  name          String         @unique @db.VarChar(100)
+  active        Boolean        @default(true)
+  features      PlanFeature[]
+  subscriptions Subscription[]
+}
+
+model PlanFeature {
+  planId     String
+  featureKey String  @db.VarChar(100)
+  usageLimit Int?
+  plan       Plan    @relation(fields: [planId], references: [id], onDelete: Restrict)
+  feature    Feature @relation(fields: [featureKey], references: [key], onDelete: Restrict)
+
+  @@id([planId, featureKey])
+  @@index([featureKey])
+}
+
+model Subscription {
+  id          String             @id @default(cuid())
+  userId      String
+  planId      String
+  grantedById String?
+  status      SubscriptionStatus @default(ACTIVE)
+  startsAt    DateTime
+  endsAt      DateTime
+  reason      String             @db.VarChar(500)
+  user        User               @relation("Subscriber", fields: [userId], references: [id], onDelete: Restrict)
+  plan        Plan               @relation(fields: [planId], references: [id], onDelete: Restrict)
+  grantedBy   User?              @relation("GrantIssuer", fields: [grantedById], references: [id], onDelete: Restrict)
+  payments    Payment[]
+
+  @@index([userId, status, endsAt])
+  @@index([planId])
+  @@index([grantedById])
+}
+
+model Payment {
+  id             String         @id @default(cuid())
+  userId         String
+  subscriptionId String?
+  provider       String         @db.VarChar(100)
+  externalId     String         @db.VarChar(191)
+  amountMinor    Int
+  currency       String         @db.Char(3)
+  status         String         @db.VarChar(40)
+  createdAt      DateTime       @default(now())
+  user           User           @relation(fields: [userId], references: [id], onDelete: Restrict)
+  subscription   Subscription?  @relation(fields: [subscriptionId], references: [id], onDelete: Restrict)
+  events         PaymentEvent[]
+
+  @@unique([provider, externalId])
+  @@index([userId])
+  @@index([subscriptionId])
+}
+
+model PaymentEvent {
+  id              String    @id @default(cuid())
+  provider        String    @db.VarChar(100)
+  externalEventId String    @db.VarChar(191)
+  paymentId       String?
+  payload         Json
+  processedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  payment         Payment?  @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+
+  @@unique([provider, externalEventId])
+  @@index([paymentId])
+}
+
+model UsageEvent {
+  id         String   @id @default(cuid())
+  userId     String
+  featureKey String   @db.VarChar(100)
+  units      Int
+  requestKey String   @unique @db.VarChar(191)
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  feature    Feature  @relation(fields: [featureKey], references: [key], onDelete: Restrict)
+
+  @@index([userId, featureKey, createdAt])
+  @@index([featureKey])
+}
+
+model ImportRecord {
+  id            String   @id @default(cuid())
+  sourceProject String   @db.VarChar(50)
+  legacyId      String   @db.VarChar(191)
+  taskId        String
+  contentHash   String   @db.Char(64)
+  importedAt    DateTime @default(now())
+  task          Task     @relation(fields: [taskId], references: [id], onDelete: Restrict)
+
+  @@unique([sourceProject, legacyId])
+  @@index([taskId])
+}
+
+model AuditEvent {
+  id        String   @id @default(cuid())
+  actorId   String
+  action    String   @db.VarChar(100)
+  targetId  String   @db.VarChar(191)
+  createdAt DateTime @default(now())
+  actor     User     @relation(fields: [actorId], references: [id], onDelete: Restrict)
+
+  @@index([actorId, createdAt])
+  @@index([targetId])
 }
