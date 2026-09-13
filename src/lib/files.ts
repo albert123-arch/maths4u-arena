@@ -5,14 +5,11 @@ import { ensure, AppError } from "./errors";
 import { type Actor, digest, secret, isAdmin, isTeacher, transaction, lockUser } from "./security";
 import { lockAttempt, finalize, workAccess, maySeeSolutions, attemptInclude } from "./works";
 import { hasFeature } from "./subscriptions";
+import { privateStorageRoot } from "./storage-config";
 
 export const MAX_FILE_BYTES = 8 * 1024 * 1024;
 function storageRoot() {
-  const root = process.env.PRIVATE_STORAGE_PATH;
-  ensure(root && path.isAbsolute(root), 503, "STORAGE_NOT_CONFIGURED");
-  const resolved = path.resolve(root);
-  ensure(!resolved.startsWith(path.resolve("public") + path.sep) && resolved !== path.resolve("public"), 503, "STORAGE_MUST_BE_PRIVATE");
-  return resolved;
+  return privateStorageRoot();
 }
 function storagePath(key: string) {
   ensure(/^[A-Za-z0-9_-]{43}$/.test(key), 404, "NOT_FOUND");

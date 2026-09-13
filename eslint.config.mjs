@@ -17,6 +17,7 @@ const eslintConfig = defineConfig([
     "legacy/**",
     "src/generated/**",
     "test-results/**",
+    "dist/**",
   ]),
 ]);
 

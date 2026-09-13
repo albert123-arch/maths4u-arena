@@ -1,5 +1,8 @@
 // Deliberately do not fall back to legacy DATABASE_URL or DB_*.
 export function databaseConfig() {
+  if (!["development", "test", "production"].includes(process.env.MATHS4U_ENV || "")) {
+    throw new Error("Set MATHS4U_ENV explicitly to development, test or production.");
+  }
   const raw = process.env.MATHS4U_DATABASE_URL;
   const expected = process.env.MATHS4U_DATABASE_NAME;
   if (!raw || !expected) throw new Error("Configure MATHS4U_DATABASE_URL and MATHS4U_DATABASE_NAME explicitly.");
@@ -14,7 +17,7 @@ export function databaseConfig() {
     // URL/URI errors may include their raw input; never attach private values.
     throw new Error("Invalid Maths4U database connection format.");
   }
-  if (url.protocol !== "mysql:" || name !== expected || !/^[a-zA-Z0-9_]+$/.test(name)) {
+  if (url.protocol !== "mysql:" || name !== expected || !/^[a-zA-Z0-9_]+$/.test(name) || url.search || url.hash) {
     throw new Error("Database target does not match the explicit Maths4U database name.");
   }
   if (process.env.MATHS4U_ENV !== "production" && (!/^maths4u_(dev|test)(_|$)/.test(name) || !["127.0.0.1", "localhost"].includes(url.hostname))) {

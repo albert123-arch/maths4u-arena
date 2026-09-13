@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import { defineConfig } from "prisma/config";
 
 import { databaseConfig } from "./src/lib/database-url";
-config({ path: ".env.local", quiet: true });
+if (process.env.MATHS4U_BUILD !== "1" && process.env.MATHS4U_ENV !== "production") config({ path: ".env.local", quiet: true });
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -12,6 +12,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env.MATHS4U_DATABASE_URL ? databaseConfig().raw : undefined,
+    url: process.env.MATHS4U_BUILD !== "1" && process.env.MATHS4U_DATABASE_URL ? databaseConfig().raw : undefined,
   },
 });
