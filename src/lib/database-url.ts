@@ -3,8 +3,17 @@ export function databaseConfig() {
   const raw = process.env.MATHS4U_DATABASE_URL;
   const expected = process.env.MATHS4U_DATABASE_NAME;
   if (!raw || !expected) throw new Error("Configure MATHS4U_DATABASE_URL and MATHS4U_DATABASE_NAME explicitly.");
-  const url = new URL(raw);
-  const name = decodeURIComponent(url.pathname.slice(1));
+  let url: URL;
+  let name: string;
+  try {
+    url = new URL(raw);
+    name = decodeURIComponent(url.pathname.slice(1));
+    decodeURIComponent(url.username);
+    decodeURIComponent(url.password);
+  } catch {
+    // URL/URI errors may include their raw input; never attach private values.
+    throw new Error("Invalid Maths4U database connection format.");
+  }
   if (url.protocol !== "mysql:" || name !== expected || !/^[a-zA-Z0-9_]+$/.test(name)) {
     throw new Error("Database target does not match the explicit Maths4U database name.");
   }
