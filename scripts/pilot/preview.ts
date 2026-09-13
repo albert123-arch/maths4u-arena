@@ -1,0 +1,30 @@
+import { cp, mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
+import { readPilot } from "./import";
+import { renderContent } from "../../src/lib/content";
+
+export async function previewPilot(root = path.resolve(".local/content-pilot")) {
+  const { bundle } = await readPilot(root);
+  const escape = (s: string) => s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;");
+  const rendered = (raw: string) => {
+    let html = renderContent(raw);
+    for (const a of bundle.assets) html = html.replaceAll("/api/files/pilot_" + a.key, a.file);
+    return html;
+  };
+  const sections = bundle.sections.map(s => {
+    const theory = s.lesson.texts.filter(t => t.body).map(t => `<div class="translation" data-locale="${t.locale}">${rendered(t.body)}</div>`).join("");
+    const records = s.records.map(r => `<article id="${s.project}-${r.id}"><header><span>${r.position + 1} / ${s.records.length}</span><a href="${escape(r.sourceUrl)}" target="_blank" rel="noreferrer">Original · ${escape(r.id)}</a></header>${r.material.texts.map(t => `<div class="translation" data-locale="${t.locale}"><h3>${escape(t.title)}</h3><div class="statement">${rendered(t.statement)}</div>${t.hint ? `<details><summary>${t.locale === "ru" ? "Подсказка" : "Hint"}</summary>${rendered(t.hint)}</details>` : ""}${t.solution ? `<details class="solution"><summary>${t.locale === "ru" ? "Решение и схема оценивания" : "Solution and mark scheme"}</summary>${rendered(t.solution)}</details>` : ""}</div>`).join("")}</article>`).join("");
+    const headings = s.lesson.texts.map(t => `<div class="translation" data-locale="${t.locale}"><p class="path">${escape(s.course.texts.find(c => c.locale === t.locale)!.title)} → ${escape(s.topic.texts.find(c => c.locale === t.locale)!.title)}</p><h2>${escape(t.title)} <small>${s.records.length} ${t.locale === "ru" ? "задач" : "tasks"}</small></h2></div>`).join("");
+    return `<section id="${s.project}" data-project="${s.project}">${headings}${theory ? `<details class="theory"><summary>Theory and 8 worked examples · Теория и 8 примеров</summary>${theory}</details>` : ""}${records}</section>`;
+  }).join("");
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Maths4U · Content pilot</title><link rel="stylesheet" href="katex/katex.min.css"><style>
+  :root{color-scheme:light;font-family:system-ui,sans-serif;color:#172f37;background:#f1f5f2}body{margin:0}main{max-width:1000px;margin:auto;padding:32px 22px}h1{font-size:42px;letter-spacing:-1px;margin:12px 0}h2{font-size:29px}h3{font-size:21px}p{line-height:1.65}nav{display:flex;gap:10px;flex-wrap:wrap;position:sticky;top:0;background:#f1f5f2;padding:14px 0;z-index:2}button,nav a{font:inherit;padding:10px 16px;border:1px solid #bed0c8;border-radius:9px;background:white;color:#174e43;text-decoration:none;cursor:pointer}button[aria-pressed=true]{background:#174e43;color:white}.path,header,small{color:#587068}small{font-size:17px;font-weight:400}section{scroll-margin-top:85px;margin-top:40px}article,.theory{background:white;border:1px solid #d6e1dc;border-radius:15px;padding:25px;margin:18px 0;box-shadow:0 3px 14px #17352a06}article header{display:flex;justify-content:space-between;font-size:13px}a{color:#216954}details{border-top:1px solid #e0e8e4;padding:14px 0;margin-top:18px}summary{cursor:pointer;font-weight:600;color:#1b6856}.theory{padding:22px}.katex-display{overflow-x:auto;padding:8px 0}img{max-width:100%;height:auto;display:block;margin:18px auto;border:1px solid #e0e8e4}table{border-collapse:collapse}td,th{border:1px solid #d8e1dc;padding:7px}.translation[data-locale=ru]{display:none}body[data-lang=ru] [data-project=olymp] .translation[data-locale=en]{display:none}body[data-lang=ru] [data-project=olymp] .translation[data-locale=ru]{display:block}.note{padding:15px;border-left:3px solid #408a74;background:#e3efe9}.statement{margin-top:20px}article{scroll-margin-top:90px} @media(max-width:600px){main{padding:18px 12px}h1{font-size:30px}article{padding:16px}.katex{font-size:1.05em}}
+  </style></head><body data-lang="en"><main><p class="path">Maths4U / Arena · Local content pilot</p><h1>Two sections, preserved in context</h1><p>56 tasks · 76 task translations · 37 images · 1,788 formulas</p><p class="note">Локальный предпросмотр на движке отображения Arena. Порядок, формулы и изображения перенесены из выбранных разделов. Maths4u — EN; olymp — EN/RU. Публикация на Hostinger не выполнялась. Баллы olymp предварительные: 1 балл с ручной проверкой, исходник шкалу не задаёт. Закрытые заметки учителя не доступны в публичной выгрузке.</p><nav><a href="#maths4u">Tangents and normals · 36</a><a href="#olymp">Advanced GCD · 20</a><button data-language="en" aria-pressed="true">EN</button><button data-language="ru" aria-pressed="false">RU</button></nav>${sections}</main><script>document.querySelectorAll('[data-language]').forEach(b=>b.addEventListener('click',()=>{document.body.dataset.lang=b.dataset.language;document.documentElement.lang=b.dataset.language;document.querySelectorAll('[data-language]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));}));</script></body></html>`;
+  await mkdir(path.join(root, "katex"), { recursive: true });
+  await cp("node_modules/katex/dist/katex.min.css", path.join(root, "katex/katex.min.css"));
+  await cp("node_modules/katex/dist/fonts", path.join(root, "katex/fonts"), { recursive: true });
+  await writeFile(path.join(root, "preview.html"), html);
+  return { preview: "preview.html", bytes: Buffer.byteLength(html) };
+}
+
+if (process.argv[1]?.endsWith("preview.ts")) previewPilot().then(console.log).catch(() => { console.error("PILOT_PREVIEW_FAILED"); process.exitCode = 1; });

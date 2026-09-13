@@ -228,8 +228,22 @@ model Lesson {
   topic      Topic              @relation(fields: [topicId], references: [id], onDelete: Restrict)
   versions   LessonVersion[]
   progress   LearningProgress[]
+  tasks      LessonTask[]
 
   @@index([topicId])
+}
+
+// Keep the source order within a lesson, independently of the global library.
+model LessonTask {
+  lessonId String
+  taskId   String
+  position Int
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Restrict)
+  task     Task   @relation(fields: [taskId], references: [id], onDelete: Restrict)
+
+  @@id([lessonId, taskId])
+  @@index([lessonId, position])
+  @@index([taskId])
 }
 
 model LessonVersion {
@@ -275,6 +289,7 @@ model Source {
 model Task {
   id         String         @id @default(cuid())
   ownerId    String
+  lessons    LessonTask[]
   visibility Visibility     @default(PRIVATE)
   featureKey String?        @db.VarChar(100)
   archivedAt DateTime?

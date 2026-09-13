@@ -10,6 +10,7 @@ import { savePlan, grantSubscription, revokeSubscription } from "@/lib/subscript
 import { courses, saveCourse, progress } from "@/lib/courses";
 import { importMaterials, importStatus } from "@/lib/importer";
 import { upload, download, MAX_FILE_BYTES } from "@/lib/files";
+import { checkPilotPublication, stagePilotAsset, publishPilot } from "@/lib/pilot-publish";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -70,7 +71,7 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
     }
     if (method === "GET" && route === "auth/me") return json({ user: await actorForToken(tokenFrom(request)) });
     if (method === "GET" && route === "library") return json(await library(await actorForToken(tokenFrom(request)), lang, (url.searchParams.get("q") ?? "").slice(0, 100)));
-    if (method === "GET" && route === "courses") return json(await courses(await actorForToken(tokenFrom(request)), lang));
+    if (method === "GET" && route === "courses") return json(await courses(await actorForToken(tokenFrom(request)), lang, url.searchParams.get("slug") || undefined));
     if (method === "GET" && parts[0] === "files" && parts.length === 2) {
       const result = await download(await actorForToken(tokenFrom(request)), parts[1]);
       // PDFs always download; no active document is embedded in the application origin.
@@ -147,6 +148,9 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
     if (route === "subscriptions" && method === "GET") return json(await db().subscription.findMany({ where: { userId: actor.id }, include: { plan: { include: { features: { include: { feature: true } } } } }, orderBy: { endsAt: "desc" } }));
     if (parts[0] === "admin") {
       admin(actor);
+      if (route === "admin/import/pilot/check" && method === "POST") return json(await checkPilotPublication(actor, input));
+      if (route === "admin/import/pilot/asset" && method === "POST") return json(await stagePilotAsset(actor, input));
+      if (route === "admin/import/pilot/publish" && method === "POST") return json(await publishPilot(actor, input));
       if (route === "admin/users" && method === "GET") return json(await db().user.findMany({ where: { OR: [
         { username: { contains: (url.searchParams.get("q") ?? "").slice(0, 100) } }, { displayName: { contains: (url.searchParams.get("q") ?? "").slice(0, 100) } },
       ] }, select: userSelect, orderBy: { createdAt: "desc" }, take: 100 }));

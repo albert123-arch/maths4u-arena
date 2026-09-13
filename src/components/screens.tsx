@@ -84,7 +84,7 @@ export function ClassDetail({ id }: { id: string }) {
   </div></>;
 }
 export function Library() {
-  const { t } = useLocale(), actor = useContext(ActorContext), [query, setQuery] = useState("");
+  const { t } = useLocale(), actor = useContext(ActorContext), [query, setQuery] = useState(() => typeof window === "undefined" ? "" : new URLSearchParams(window.location.search).get("q") || "");
   const r = useResource<TaskList>("library?q=" + encodeURIComponent(query)), manage = actor?.roles.some(r => ["TEACHER", "ADMIN"].includes(r.role));
   return <><Heading title={t("Банк задач", "Problem bank")} subtitle={t("Практика, экзамены и олимпиадная подготовка.", "Practice, exams and olympiad preparation.")}>{manage && <Link className="button" href="/teacher/tasks/new">{t("+ Добавить задачу", "+ Add a problem")}</Link>}</Heading>
     <label style={{ maxWidth: 460, marginBottom: 24 }}>{t("Поиск по названию", "Search by title")}<input type="search" value={query} onChange={e => setQuery(e.target.value)} /></label><ErrorNotice error={r.error} />
@@ -94,11 +94,11 @@ export function Library() {
       <div className="row" style={{ marginTop: 20 }}>{manage ? <Link className="button secondary" href={"/teacher/works/new?task=" + task.id}>{t("Добавить в работу", "Assign this problem")} →</Link> : actor ? !task.locked && <ActionButton label={t("Решать", "Practise")} action={async () => { const w = await api<{ id: string }>("tasks/" + task.id + "/practice", "POST"); go("/works/" + w.id); }} /> : <Link className="button secondary" href="/register">{t("Войти и решать", "Sign in to practise")} →</Link>}</div>
     </article>)}</div>}</>;
 }
-export function Courses() {
-  const { t } = useLocale(), actor = useContext(ActorContext), r = useResource<CourseList>("courses");
+export function Courses({ slug }: { slug?: string }) {
+  const { t } = useLocale(), actor = useContext(ActorContext), r = useResource<CourseList>("courses" + (slug ? "?slug=" + encodeURIComponent(slug) : ""));
   return <><Heading title={t("Курсы", "Courses")} subtitle={t("Разобраться в идее. Увидеть пример. Попробовать самому.", "Understand the idea. See an example. Try it yourself.")} />
     <ErrorNotice error={r.error} />{!r.data ? <Loading /> : !r.data.length ? <Empty /> : <div className="stack">{r.data.map(c => <section className="card" key={c.id}><div className="row spread"><h2>{c.title}</h2>{c.locked && <span className="badge gold">{t("Доступ по тарифу", "Subscription access")}</span>}</div><p className="muted">{c.description}</p>
-      {c.topics.map(topic => <div key={topic.id}>{topic.lessons.map(l => <details key={l.id} id={"lesson-" + l.id} className="item"><summary>{l.title} {l.completed ? "✓" : ""}</summary>{l.body ? <><MathContent html={l.body} />{actor && <div className="row" style={{ marginTop: 16 }}><ActionButton label={l.completed ? t("Повторить позже", "Review later") : t("Отметить изученным", "Mark as complete")} secondary action={() => api("lessons/" + l.id + "/progress", "POST", { completed: !l.completed })} onDone={r.refresh} /><ActionButton label={t("Продолжить позже", "Continue later")} secondary action={() => api("lessons/" + l.id + "/progress", "POST", { completed: false })} onDone={r.refresh} /></div>}</> : <p>{t("Обратитесь к администратору для получения доступа.", "Ask an administrator for access.")}</p>}</details>)}</div>)}
+      {c.topics.map(topic => <div key={topic.id}><h3>{topic.title}</h3>{topic.lessons.map(l => <details key={l.id} id={"lesson-" + l.id} className="item"><summary>{l.title} {l.completed ? "✓" : ""}</summary>{l.body !== undefined ? <><MathContent html={l.body} />{!!l.tasks?.length && <ol>{l.tasks.map(task => <li key={task.id}><Link href={"/library?q=" + encodeURIComponent(task.title)}>{task.title}</Link></li>)}</ol>}{actor && <div className="row" style={{ marginTop: 16 }}><ActionButton label={l.completed ? t("Повторить позже", "Review later") : t("Отметить изученным", "Mark as complete")} secondary action={() => api("lessons/" + l.id + "/progress", "POST", { completed: !l.completed })} onDone={r.refresh} /><ActionButton label={t("Продолжить позже", "Continue later")} secondary action={() => api("lessons/" + l.id + "/progress", "POST", { completed: false })} onDone={r.refresh} /></div>}</> : <p>{t("Обратитесь к администратору для получения доступа.", "Ask an administrator for access.")}</p>}</details>)}</div>)}
     </section>)}</div>}</>;
 }
 export function WorkPage({ id }: { id: string }) {

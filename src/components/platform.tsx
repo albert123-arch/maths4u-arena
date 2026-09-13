@@ -31,7 +31,7 @@ export function Platform() {
   else if (!parts.length) content = <Home actor={actor} teacher={!!teacher} />;
   else if (["login", "register", "recover"].includes(parts[0])) content = <Auth mode={parts[0]} />;
   else if (parts[0] === "library") content = <Library />;
-  else if (parts[0] === "courses") content = <Courses />;
+  else if (parts[0] === "courses") content = <Courses slug={parts[1]} />;
   else if (parts[0] === "attempts" && parts[1]) content = <AttemptScreen id={parts[1]} review={parts[2] === "review"} />;
   else if (parts[0] === "works" && parts[1]) content = parts[2] === "results" ? <ResultsPage id={parts[1]} /> : <WorkPage id={parts[1]} />;
   else if (parts[0] === "join-class") content = <Classes invite={parts[1]} />;

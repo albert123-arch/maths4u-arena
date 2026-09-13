@@ -49,6 +49,10 @@ jobs:
         run: node --test tests/package-links.test.mjs
       - name: Check safe startup diagnostics
         run: npx tsx --test tests/hostinger-diagnostics.test.ts tests/hostinger-runtime.test.ts
+      - name: Verify populated database migration and pilot publication
+        run: npx tsx --test tests/pilot-migration.test.ts
+        env:
+          HOSTINGER_TEST_CREATE_DATABASE: '1'
       - name: Build without database configuration
         # No production secrets or database variables are available to this step.
         run: npm run build

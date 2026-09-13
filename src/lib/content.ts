@@ -57,10 +57,13 @@ export function renderContent(raw: string) {
 }
 export function publicVersion(v: Version, lang: string, solutions = false) {
   const t = localized(v.texts, lang);
+  const visibleHtml = [t.statement, ...(solutions ? [t.hint, t.solution] : [])].join("\n");
   return { id: v.id, taskId: v.taskId, title: t.title, locale: t.locale, statement: renderContent(t.statement),
     ...(solutions ? { hint: renderContent(t.hint), solution: renderContent(t.solution) } : {}),
     source: v.source?.name, syllabus: v.syllabus, year: v.year, examSession: v.examSession, paper: v.paper, questionNumber: v.questionNumber,
-    assets: v.assets.filter(a => a.role === "STATEMENT" || (solutions && ["HINT", "SOLUTION"].includes(a.role))).map(a => ({ id: a.fileId, caption: a.caption, role: a.role, mimeType: a.file.mimeType })),
+    assets: v.assets.filter(a => (!a.locale || a.locale === t.locale) && (a.role === "STATEMENT" || (solutions && ["HINT", "SOLUTION"].includes(a.role)))
+      && !(a.file.mimeType.startsWith("image/") && ["\"", "'"].some(q => visibleHtml.includes(`src=${q}/api/files/${a.fileId}${q}`))))
+      .map(a => ({ id: a.fileId, caption: a.caption, role: a.role, mimeType: a.file.mimeType })),
     parts: v.parts.map(p => {
       const pt = localized(p.texts, lang);
       return { id: p.id, kind: p.kind, maxPoints: p.maxPoints, prompt: renderContent(pt.prompt),

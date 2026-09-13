@@ -34,20 +34,23 @@ export async function saveCourse(actor: Actor, input: unknown) {
     return course;
   });
 }
-export async function courses(actor: Actor | null, lang: string) {
-  const rows = await db().course.findMany({ where: { archivedAt: null, ...(actor && isAdmin(actor) ? {} : { published: true }) },
+export async function courses(actor: Actor | null, lang: string, slug?: string) {
+  const rows = await db().course.findMany({ where: { archivedAt: null, ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) },
     include: { texts: true, topics: { orderBy: { position: "asc" }, include: { texts: true, lessons: { where: { archivedAt: null }, include: {
       versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } },
+      tasks: { where: { task: { archivedAt: null, ...(actor && isAdmin(actor) ? {} : { visibility: "PUBLIC" }) } }, orderBy: { position: "asc" },
+        include: { task: { include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } } } } } },
       progress: actor ? { where: { userId: actor.id } } : false,
     } } } } } });
   return Promise.all(rows.map(async c => {
-    const allowed = !c.featureKey || (actor && await hasFeature(actor, c.featureKey));
+    const allowed = !!(actor && isAdmin(actor)) || !c.featureKey || (actor && await hasFeature(actor, c.featureKey));
     const t = localized(c.texts, lang);
     return { id: c.id, slug: c.slug, title: t.title, description: t.description, locked: !allowed, featureKey: c.featureKey,
       topics: c.topics.map(topic => ({ id: topic.id, title: localized(topic.texts, lang).title,
         lessons: topic.lessons.map(lesson => { const l = localized(lesson.versions[0].texts, lang); return {
           id: lesson.id, title: l.title, completed: lesson.progress?.[0]?.completed ?? false,
-          openedAt: lesson.progress?.[0]?.openedAt ?? null, ...(allowed ? { body: renderContent(l.body) } : {}),
+          openedAt: lesson.progress?.[0]?.openedAt ?? null, ...(allowed ? { body: renderContent(l.body),
+            tasks: lesson.tasks.map(({ task, position }) => ({ id: task.id, position, title: localized(task.versions[0].texts, lang).title })) } : {}),
         }; }) })) };
   }));
 }
