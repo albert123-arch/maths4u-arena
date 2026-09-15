@@ -9,6 +9,7 @@ import { spawn } from "node:child_process";
 import { once } from "node:events";
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
+import { canonicalJson } from "../src/lib/canonical-json.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const builtArtifact = path.join(projectRoot, "dist");
@@ -240,6 +241,29 @@ async function verifyAdministratorLogin(port, username, password) {
   assert.equal(profile.status, 200);
   const body = await profile.json();
   assert.ok(body.user?.username === username && body.user.roles.some(role => role.role === "ADMIN"), "The session must belong to the existing administrator.");
+  return cookie;
+}
+
+async function verifyPackagedBankStage(port, cookie) {
+  const request = async (route, body) => {
+    const response = await fetch(`http://127.0.0.1:${port}/api/${route}`, { method: body ? 'POST' : 'GET',
+      headers: { cookie, origin: targetOrigin, 'content-type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+    const result = await response.json();
+    assert.equal(response.status, 200, 'Packaged bank API must accept Unicode/HTML/JSON; safe diagnostic: ' + (result.diagnostic || result.error || 'none'));
+    return result;
+  };
+  await request('admin/users');
+  const payload = [{table:'problems',id:'99990001',sourceUrl:'https://maths4u.sbs/',sourcePublished:true,
+    links:[{courseKey:'0606',chapterKey:'chapter-9999',lessonKey:'subchapter-9999',position:0}],
+    material:{visibility:'PRIVATE',texts:[{locale:'en',title:'Unicode test',statement:'<p>Find \\(x^2\\). Схема → ∑</p>',solution:'<p>Solution</p>',markSchemeText:'M1: criterion',markSchemeStatus:'SOURCE_TEXT'}],
+      parts:[{kind:'MANUAL',maxPoints:1,texts:[{locale:'en',prompt:'Result'}]}]}}];
+  const courses=['0606','9231-fp1','9231-fp2','9231-mechanics','9231-statistics'].map((key,position)=>({key,sourceId:String(position+1),title:key,description:'',position,groupLabel:null,chapterCount:1}));
+  const manifest={format:'maths4u-bank-v1',selection:'0606-9231-five-courses',courses,tasks:1,files:0,bytes:0,
+    batches:[{key:'tasks-0001',kind:'tasks',sha256:digest(canonicalJson(payload)),count:1}]};
+  const {runId}=await request('admin/bank/start',{manifest,publishNew:true});
+  await request('admin/bank/stage',{runId,key:'tasks-0001',payload});
+  const plan=await request('admin/bank/check',{runId,key:'tasks-0001'});
+  assert.equal(plan.created,1);
 }
 
 test("Hostinger artifact migrates once, preserves administrator and files across redeployment, and honors PORT", {
@@ -285,7 +309,8 @@ test("Hostinger artifact migrates once, preserves administrator and files across
       assert.equal(beforeMigration.length, 0, "Preparation cannot bypass the held migration lock.");
     } finally { await connection.query("SELECT RELEASE_LOCK(?)", [deploymentLock]); }
     await waitForHealth(server, port);
-    await verifyAdministratorLogin(port, username, password);
+    const cookie = await verifyAdministratorLogin(port, username, password);
+    await verifyPackagedBankStage(port, cookie);
     const homepage = await fetch(`http://127.0.0.1:${port}/`);
     assert.equal(homepage.status, 200, "Homepage must load on the supplied hosting port.");
     assert.match(await homepage.text(), /Maths4U/);

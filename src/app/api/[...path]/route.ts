@@ -17,6 +17,7 @@ import { structure, saveStructure } from "@/lib/structure";
 import { beginStudy, revealStudyHelp, selfCheckStudy, topicStudy } from "@/lib/study";
 import { auditStorage, retryDeletedCleanup } from "@/lib/storage-maintenance";
 import { checkBankStructure, beginBank, bankStatus, stageBankBatch, bankAssetStatus, stageBankFile, checkBankTasks, applyBankTasks, applyBankStructure } from "@/lib/bank-import";
+import { requestDiagnostic } from "@/lib/request-diagnostic";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -42,6 +43,7 @@ function csvCell(value: unknown) {
   return '"' + (/^[=+\-@\t\r]/.test(s) ? "'" : "") + s.replace(/"/g, '""') + '"';
 }
 async function handler(request: Request, context: { params: Promise<{ path: string[] }> }) {
+  let administrative = false;
   try {
     const parts = (await context.params).path, route = parts.join("/"), method = request.method;
     const url = new URL(request.url), lang = url.searchParams.get("lang") === "en" ? "en" : "ru";
@@ -184,6 +186,7 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
     if (route === "subscriptions" && method === "GET") return json(await db().subscription.findMany({ where: { userId: actor.id }, include: { plan: { include: { features: { include: { feature: true } } } } }, orderBy: { endsAt: "desc" } }));
     if (parts[0] === "admin") {
       admin(actor);
+      administrative = true;
       if (route === "admin/import/pilot/check" && method === "POST") return json(await checkPilotPublication(actor, input));
       if (route === "admin/import/pilot/asset" && method === "POST") return json(await stagePilotAsset(actor, input));
       if (route === "admin/import/pilot/publish" && method === "POST") return json(await publishPilot(actor, input));
@@ -222,8 +225,9 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
     if (code === "P2025") return json({ error: "NOT_FOUND" }, 404);
     if (code === "P2003") return json({ error: "INVALID_REFERENCE" }, 400);
     // No raw driver messages, URLs, passwords, answer payloads or environment values in logs.
-    console.error("Maths4U request failed", e instanceof Error ? e.name : "UnknownError");
-    return json({ error: "SERVICE_UNAVAILABLE" }, 503);
+    const diagnostic = requestDiagnostic(e);
+    console.error("Maths4U request failed", diagnostic);
+    return json({ error: "SERVICE_UNAVAILABLE", ...(administrative ? { diagnostic } : {}) }, 503);
   }
 }
 export const GET = handler;

@@ -41,12 +41,12 @@ export const errorLabels: Record<string, [string, string]> = {
   CANNOT_CHANGE_OWN_ACCESS: ["Нельзя менять собственные права.", "You cannot change your own access."],
   CLASS_NOT_FOUND: ["Класс с таким кодом не найден.", "Class code not found."], MEMBERSHIP_REMOVED: ["Обратитесь к учителю для восстановления доступа в класс.", "Ask your teacher to restore your class membership."],
 };
-export class ApiError extends Error { constructor(public code: string, public status: number, public fields?: { path: string; message: string }[]) { super(code); } }
+export class ApiError extends Error { constructor(public code: string, public status: number, public fields?: { path: string; message: string }[], public diagnostic?: string) { super(code); } }
 export async function api<T = unknown>(url: string, method = "GET", body?: unknown): Promise<T> {
   const response = await fetch("/api/" + url, { method, credentials: "same-origin", cache: "no-store",
     ...(method !== "GET" ? { headers: body instanceof FormData ? {} : { "Content-Type": "application/json" }, body: body instanceof FormData ? body : JSON.stringify(body ?? {}) } : {}) });
   const data = await response.json();
-  if (!response.ok) throw new ApiError(data.error ?? "SERVICE_UNAVAILABLE", response.status, data.fields);
+  if (!response.ok) throw new ApiError(data.error ?? "SERVICE_UNAVAILABLE", response.status, data.fields, data.diagnostic);
   return data;
 }
 export function useResource<T>(path: string | null) {
@@ -67,6 +67,7 @@ export function ErrorNotice({ error }: { error: unknown }) {
   if (!error) return null;
   const code = error instanceof ApiError ? error.code : "SERVICE_UNAVAILABLE";
   return <div className="notice error" role="alert">{errorLabels[code]?.[lang === "ru" ? 0 : 1] ?? t("Не удалось выполнить действие.", "Could not complete the action.")}
+    {error instanceof ApiError && error.diagnostic && /^[A-Za-z0-9_. /]{1,500}$/.test(error.diagnostic) ? <div className="muted">{t("Диагностика", "Diagnostic")}: {error.diagnostic}</div> : null}
     {error instanceof ApiError && error.fields?.length ? <div className="muted">{error.fields.map(f => f.path).join(", ")}</div> : null}</div>;
 }
 export function Loading() { const { t } = useLocale(); return <div className="skeleton" role="status">{t("Загрузка…", "Loading…")}</div>; }

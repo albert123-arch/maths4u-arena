@@ -14,6 +14,8 @@ import { verifyBankSvg } from "./bank-svg.mjs";
 import { parseDocument } from "htmlparser2";
 import { findAll } from "domutils";
 import {canonicalJson} from './canonical-json.mjs';
+import { BankStageError } from './request-diagnostic';
+import { AppError } from './errors';
 
 const runSchema=z.object({manifest:bankManifestSchema,publishNew:z.boolean().default(false)});
 const requestSchema=z.object({runId:bankHash,key:bankKey});
@@ -30,17 +32,26 @@ export async function bankStatus(actor:Actor,id:string) {
   return {runId:id,publishNew:r.publishNew,missingBatches:r.manifest.batches.filter(m=>!batches.some(b=>b.key===m.key)).map(b=>b.key),applied:batches.filter(b=>b.appliedAt).map(b=>b.key),tasks:r.manifest.tasks,files:r.manifest.files,bytes:r.manifest.bytes};
 }
 export async function stageBankBatch(actor:Actor,input:unknown) {
+  let stage: BankStageError['stage'] = 'manifest';
+  try {
   admin(actor);const d=requestSchema.extend({payload:z.unknown()}).parse(input),r=await run(d.runId),meta=r.manifest.batches.find(m=>m.key===d.key);
   ensure(meta && Buffer.byteLength(JSON.stringify(d.payload))<=512*1024 && digest(canonicalJson(d.payload))===meta.sha256,400,"BANK_BATCH_HASH");
+  stage = 'schema';
   const parsed=meta.kind==="assets"?bankAssetsSchema.parse(d.payload):meta.kind==="tasks"?bankTasksSchema.parse(d.payload):bankStructureSchema.parse(d.payload);
   ensure(parsed.length===meta.count,400,"BANK_BATCH_COUNT");
+  stage = 'html';
   if(meta.kind==="tasks")for(const row of bankTasksSchema.parse(d.payload)) {
     const fields={statement:"STATEMENT",answer:"ANSWER",hint:"HINT",solution:"SOLUTION",markScheme:"MARK_SCHEME",markSchemeText:"MARK_SCHEME",teacherNote:"TEACHER"} as const;
     for(const text of row.material.texts)for(const [field,role] of Object.entries(fields))for(const img of findAll(n=>n.name==="img",parseDocument(text[field as keyof typeof fields]??"").children))ensure(row.material.assets.some(a=>img.attribs.src==="/api/files/"+a.fileId&&a.role===role&&(!a.locale||a.locale===text.locale)),400,"BANK_INLINE_FILE_ROLE");
     ensure(row.material.visibility==="PRIVATE",400,"BANK_SOURCE_ACCESS_FIELDS");
   }
+  stage = 'write';
   await db().bankBatch.upsert({where:{runId_key:{runId:d.runId,key:d.key}},create:{runId:d.runId,key:d.key,payload:d.payload as Prisma.InputJsonValue},update:{}});
   return {staged:true};
+  } catch (error) {
+    if (error instanceof AppError || error instanceof z.ZodError) throw error;
+    throw new BankStageError(stage, error);
+  }
 }
 async function storedAsset(a:BankAsset,checkDisk=true) {
   const f=await db().storedFile.findUnique({where:{id:a.id}});if(!f)return null;
