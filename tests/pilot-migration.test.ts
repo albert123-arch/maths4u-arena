@@ -46,6 +46,8 @@ test("populated migration and publication preserve existing accounts, tasks, att
   }
   migrate(configFile);
   const client = db();
+  const session = await client.$queryRawUnsafe<Array<{ collation: string }>>("SELECT @@collation_connection AS collation");
+  assert.equal(session[0].collation, "utf8mb4_unicode_ci", "Application connections must match the existing schema's collation");
   const sql = await mysql.createConnection({ host: "127.0.0.1", port, user: username, password: appPassword, database });
   try {
     const admin = await client.user.create({ data: { username: "preserve_admin", displayName: "Migration administrator", passwordHash: await hashPassword(randomBytes(24).toString("hex")), roles: { create: { role: "ADMIN" } }, profile: { create: {} } }, select: userSelect });

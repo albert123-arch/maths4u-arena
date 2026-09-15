@@ -9,6 +9,8 @@ export function db(): PrismaClient {
     const config = databaseConfig();
     globalDb.maths4uDb = new PrismaClient({ adapter: new PrismaMariaDb({
       host: config.host, port: config.port, user: config.user, password: config.password, database: config.database,
+      // Match the existing migrations, independent of Hostinger's server default.
+      collation: "UTF8MB4_UNICODE_CI",
       connectionLimit: config.connectionLimit, connectTimeout: config.connectTimeout, acquireTimeout: config.acquireTimeout,
     }) });
   }
