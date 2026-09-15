@@ -6,6 +6,7 @@ import { api, ErrorNotice, useLocale } from "./ui";
 
 type Plan=Awaited<ReturnType<typeof checkBankTasks>>;
 async function sha(value:string|ArrayBuffer) {const bytes=typeof value==="string"?new TextEncoder().encode(value):value;return [...new Uint8Array(await crypto.subtle.digest("SHA-256",bytes))].map(n=>n.toString(16).padStart(2,"0")).join("");}
+function base64(bytes:Uint8Array){let text="";for(const byte of bytes)text+=String.fromCharCode(byte);return btoa(text);}
 export function BankImport() {
   const {t}=useLocale(),[files,setFiles]=useState<File[]>([]),[publishNew,setPublishNew]=useState(false),[busy,setBusy]=useState(false),[status,setStatus]=useState(""),[error,setError]=useState<unknown>(null),[plans,setPlans]=useState<Record<string,Plan>>({}),[runId,setRunId]=useState("");
   const structures=useRef<Record<string,Awaited<ReturnType<typeof checkBankStructure>>>>({});
@@ -16,7 +17,9 @@ export function BankImport() {
   async function prepare() {
     const source=file("manifest.json");if(source.size>1024*1024)throw new Error("BANK_MANIFEST_SIZE");const manifest=JSON.parse(await source.text()) as BankManifest;manifestRef.current=manifest;
     const started=await api<{runId:string;missingBatches:string[]}>("admin/bank/start","POST",{manifest,publishNew});setRunId(started.runId);
-    let done=0;for(const key of started.missingBatches){if(stop.current)return;setStatus(t("Проверка пакетов: ","Checking batches: ")+(++done)+" / "+started.missingBatches.length);await api("admin/bank/stage","POST",{runId:started.runId,key,payload:await payload(key)});}
+    let done=0;for(const key of started.missingBatches){if(stop.current)return;setStatus(t("Проверка пакетов: ","Checking batches: ")+(++done)+" / "+started.missingBatches.length);
+      const encoded=base64(new TextEncoder().encode(JSON.stringify(await payload(key))));
+      await api("admin/bank/stage","POST",{runId:started.runId,key,payloadBase64:encoded});}
     structures.current={};for(const b of manifest.batches.filter(b=>b.kind==="structure")){if(stop.current)return;structures.current[b.key]=await api("admin/bank/structure/check","POST",{runId:started.runId,key:b.key});}
     const next:Record<string,Plan>={};for(const b of manifest.batches.filter(b=>b.kind==="tasks")){if(stop.current)return;next[b.key]=await api<Plan>("admin/bank/check","POST",{runId:started.runId,key:b.key});setStatus(t("Dry-run: проверено задач ","Dry run: tasks checked ")+Object.values(next).reduce((n,p)=>n+p.items.length,0));}
     setPlans(next);setStatus(t("Проверка завершена. Изменения учебных материалов ещё не применены.","Check complete. Learning materials have not been changed yet."));
@@ -25,7 +28,7 @@ export function BankImport() {
     const manifest=manifestRef.current!;let uploaded=0;
     for(const b of manifest.batches.filter(b=>b.kind==="assets")) {
       if(stop.current)return;const p=await payload(b.key) as BankAsset[],checked=await api<{missing:string[]}>("admin/bank/files/check","POST",{runId,key:b.key});
-      for(const a of p){if(stop.current)return;if(checked.missing.includes(a.id)){const f=file(a.file);if(f.size!==a.size)throw new Error("BANK_FILE_SIZE");const bytes=await f.arrayBuffer();if(await sha(bytes)!==a.sha256)throw new Error("BANK_FILE_HASH");let text="";for(const byte of new Uint8Array(bytes))text+=String.fromCharCode(byte);await api("admin/bank/files","POST",{runId,key:b.key,id:a.id,base64:btoa(text)});}setStatus(t("Файлы: ","Files: ")+(++uploaded)+" / "+manifest.files);}
+      for(const a of p){if(stop.current)return;if(checked.missing.includes(a.id)){const f=file(a.file);if(f.size!==a.size)throw new Error("BANK_FILE_SIZE");const bytes=await f.arrayBuffer();if(await sha(bytes)!==a.sha256)throw new Error("BANK_FILE_HASH");await api("admin/bank/files","POST",{runId,key:b.key,id:a.id,base64:base64(new Uint8Array(bytes))});}setStatus(t("Файлы: ","Files: ")+(++uploaded)+" / "+manifest.files);}
     }
     for(const b of manifest.batches.filter(b=>b.kind==="structure")){if(stop.current)return;await api("admin/bank/structure","POST",{runId,key:b.key});}
     let done=0;for(const b of manifest.batches.filter(b=>b.kind==="tasks")){if(stop.current)return;await api("admin/bank/apply","POST",{runId,key:b.key,fingerprint:plans[b.key].fingerprint});done+=b.count;setStatus(t("Задачи: ","Tasks: ")+done+" / "+manifest.tasks);}

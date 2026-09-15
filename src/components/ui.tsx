@@ -28,6 +28,7 @@ export const errorLabels: Record<string, [string, string]> = {
   ALREADY_EXISTS: ["Такая запись уже существует. Выберите другой логин или название.", "This record already exists. Choose another login or name."],
   FORBIDDEN: ["Недостаточно прав.", "Access denied."], NOT_FOUND: ["Запись не найдена или недоступна.", "Not found or unavailable."],
   INVALID_INPUT: ["Проверьте заполнение полей.", "Check the form fields."], SERVICE_UNAVAILABLE: ["Сервис временно недоступен. Попробуйте позже.", "Service unavailable. Please try again later."],
+  UNEXPECTED_SERVER_RESPONSE: ["Сервер отклонил запрос или вернул неожиданный ответ. Передайте администратору код ниже.", "The server rejected the request or returned an unexpected response. Share the code below with an administrator."],
   STALE_REVISION: ["Ответы изменены в другой вкладке. Обновите страницу перед продолжением.", "Answers changed in another tab. Reload before continuing."],
   TIME_EXPIRED: ["Время закончилось. Сохранённые ответы отправлены.", "Time is up. Saved answers were submitted."],
   ATTEMPT_FINISHED: ["Работа уже отправлена.", "This attempt has already been submitted."], ATTEMPT_LIMIT: ["Все попытки использованы.", "No attempts remaining."],
@@ -45,7 +46,7 @@ export class ApiError extends Error { constructor(public code: string, public st
 export async function api<T = unknown>(url: string, method = "GET", body?: unknown): Promise<T> {
   const response = await fetch("/api/" + url, { method, credentials: "same-origin", cache: "no-store",
     ...(method !== "GET" ? { headers: body instanceof FormData ? {} : { "Content-Type": "application/json" }, body: body instanceof FormData ? body : JSON.stringify(body ?? {}) } : {}) });
-  const data = await response.json();
+  const data = await response.json().catch(() => { throw new ApiError("UNEXPECTED_SERVER_RESPONSE", response.status, undefined, "HTTP_" + response.status + " / NON_JSON"); });
   if (!response.ok) throw new ApiError(data.error ?? "SERVICE_UNAVAILABLE", response.status, data.fields, data.diagnostic);
   return data;
 }

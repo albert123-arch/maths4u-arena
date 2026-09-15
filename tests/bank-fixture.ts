@@ -15,7 +15,11 @@ export async function verifyBankFixture(admin:Actor,student:Actor){
   const setup=async()=>{const batches=[...structures.map((p,i)=>({key:'structure-000'+(i+1),kind:'structure',sha256:digest(canonicalJson(p)),count:1})),{key:'tasks-0001',kind:'tasks',sha256:digest(canonicalJson(rows)),count:rows.length}];
     const manifest=bankManifestSchema.parse({format:'maths4u-bank-v1',selection:'0606-9231-five-courses',courses:structures.map(([{chapters,...c}])=>({...c,chapterCount:chapters.length})),tasks:rows.length,files:0,bytes:0,batches});
     await assert.rejects(beginBank(student,{manifest}),/FORBIDDEN/);const {runId}=await beginBank(admin,{manifest,publishNew:true});
-    for(const [i,payload]of structures.entries())await stageBankBatch(admin,{runId,key:batches[i].key,payload});await stageBankBatch(admin,{runId,key:'tasks-0001',payload:rows});return {runId,key:'tasks-0001'};};
+    for(const [i,payload]of structures.entries())await stageBankBatch(admin,{runId,key:batches[i].key,payload});
+    await assert.rejects(stageBankBatch(admin,{runId,key:'tasks-0001',payloadBase64:'not-base64'}),/BANK_BATCH_ENCODING/);
+    await assert.rejects(stageBankBatch(admin,{runId,key:'tasks-0001',payloadBase64:Buffer.from('{bad json').toString('base64')}),/BANK_BATCH_ENCODING/);
+    await assert.rejects(stageBankBatch(admin,{runId,key:'tasks-0001',payloadBase64:Buffer.from('[]').toString('base64')}),/BANK_BATCH_HASH/);
+    await stageBankBatch(admin,{runId,key:'tasks-0001',payloadBase64:Buffer.from(canonicalJson(rows)).toString('base64')});return {runId,key:'tasks-0001'};};
   const first=await setup();const plan=await checkBankTasks(admin,first);assert.equal(plan.created,2);
   assert.equal(await db().course.count({where:{id:pilotId('course','maths4u','0606')}}),0);
   for(let i=1;i<=5;i++){const request={runId:first.runId,key:'structure-000'+i};const dry=await checkBankStructure(admin,request);assert.equal(dry.items.length,3);await applyBankStructure(admin,request);}

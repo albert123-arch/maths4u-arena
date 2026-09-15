@@ -261,7 +261,8 @@ async function verifyPackagedBankStage(port, cookie) {
   const manifest={format:'maths4u-bank-v1',selection:'0606-9231-five-courses',courses,tasks:1,files:0,bytes:0,
     batches:[{key:'tasks-0001',kind:'tasks',sha256:digest(canonicalJson(payload)),count:1}]};
   const {runId}=await request('admin/bank/start',{manifest,publishNew:true});
-  await request('admin/bank/stage',{runId,key:'tasks-0001',payload});
+  await request('admin/bank/stage',{runId,key:'tasks-0001',payloadBase64:Buffer.from(canonicalJson(payload)).toString('base64')});
+  await request('admin/bank/stage',{runId,key:'tasks-0001',payload}); // Previous clients remain compatible.
   const plan=await request('admin/bank/check',{runId,key:'tasks-0001'});
   assert.equal(plan.created,1);
 }

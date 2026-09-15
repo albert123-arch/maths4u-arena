@@ -19,6 +19,8 @@ import { AppError } from './errors';
 
 const runSchema=z.object({manifest:bankManifestSchema,publishNew:z.boolean().default(false)});
 const requestSchema=z.object({runId:bankHash,key:bankKey});
+const stageSchema=requestSchema.extend({payload:z.unknown().optional(),payloadBase64:z.string().max(699052).optional()})
+  .refine(d=>(d.payload!==undefined)!==(d.payloadBase64!==undefined),'Provide exactly one payload format');
 type Tx=Prisma.TransactionClient;
 async function run(id:string) {const r=await db().bankRun.findUnique({where:{id}});ensure(r,404,"BANK_RUN_NOT_FOUND");return runSchema.parse(r.manifest);}
 async function batch(runId:string,key:string) {const r=await run(runId),meta=r.manifest.batches.find(b=>b.key===key);ensure(meta,404,"BANK_BATCH_NOT_FOUND");const b=await db().bankBatch.findUnique({where:{runId_key:{runId,key}}});ensure(b&&digest(canonicalJson(b.payload))===meta.sha256,409,"BANK_BATCH_NOT_STAGED");return {meta,payload:b.payload,publishNew:r.publishNew};}
@@ -34,19 +36,24 @@ export async function bankStatus(actor:Actor,id:string) {
 export async function stageBankBatch(actor:Actor,input:unknown) {
   let stage: BankStageError['stage'] = 'manifest';
   try {
-  admin(actor);const d=requestSchema.extend({payload:z.unknown()}).parse(input),r=await run(d.runId),meta=r.manifest.batches.find(m=>m.key===d.key);
-  ensure(meta && Buffer.byteLength(JSON.stringify(d.payload))<=512*1024 && digest(canonicalJson(d.payload))===meta.sha256,400,"BANK_BATCH_HASH");
+  admin(actor);const d=stageSchema.parse(input),r=await run(d.runId),meta=r.manifest.batches.find(m=>m.key===d.key);
+  // Hostinger rejects raw HTML in JSON before the request reaches this handler.
+  // Transfer file bytes as Base64, then enforce the same size/hash/schema checks.
+  let payload=d.payload;
+  if(d.payloadBase64!==undefined){const bytes=Buffer.from(d.payloadBase64,'base64');ensure(bytes.length<=512*1024&&bytes.toString('base64')===d.payloadBase64,400,'BANK_BATCH_ENCODING');
+    try{payload=JSON.parse(bytes.toString('utf8'));}catch{ensure(false,400,'BANK_BATCH_ENCODING');}}
+  ensure(meta && payload!==undefined && Buffer.byteLength(JSON.stringify(payload))<=512*1024 && digest(canonicalJson(payload))===meta.sha256,400,"BANK_BATCH_HASH");
   stage = 'schema';
-  const parsed=meta.kind==="assets"?bankAssetsSchema.parse(d.payload):meta.kind==="tasks"?bankTasksSchema.parse(d.payload):bankStructureSchema.parse(d.payload);
+  const parsed=meta.kind==="assets"?bankAssetsSchema.parse(payload):meta.kind==="tasks"?bankTasksSchema.parse(payload):bankStructureSchema.parse(payload);
   ensure(parsed.length===meta.count,400,"BANK_BATCH_COUNT");
   stage = 'html';
-  if(meta.kind==="tasks")for(const row of bankTasksSchema.parse(d.payload)) {
+  if(meta.kind==="tasks")for(const row of bankTasksSchema.parse(payload)) {
     const fields={statement:"STATEMENT",answer:"ANSWER",hint:"HINT",solution:"SOLUTION",markScheme:"MARK_SCHEME",markSchemeText:"MARK_SCHEME",teacherNote:"TEACHER"} as const;
     for(const text of row.material.texts)for(const [field,role] of Object.entries(fields))for(const img of findAll(n=>n.name==="img",parseDocument(text[field as keyof typeof fields]??"").children))ensure(row.material.assets.some(a=>img.attribs.src==="/api/files/"+a.fileId&&a.role===role&&(!a.locale||a.locale===text.locale)),400,"BANK_INLINE_FILE_ROLE");
     ensure(row.material.visibility==="PRIVATE",400,"BANK_SOURCE_ACCESS_FIELDS");
   }
   stage = 'write';
-  await db().bankBatch.upsert({where:{runId_key:{runId:d.runId,key:d.key}},create:{runId:d.runId,key:d.key,payload:d.payload as Prisma.InputJsonValue},update:{}});
+  await db().bankBatch.upsert({where:{runId_key:{runId:d.runId,key:d.key}},create:{runId:d.runId,key:d.key,payload:payload as Prisma.InputJsonValue},update:{}});
   return {staged:true};
   } catch (error) {
     if (error instanceof AppError || error instanceof z.ZodError) throw error;
