@@ -1,0 +1,33 @@
+-- Additive only. Historical task versions and assignment snapshots are untouched.
+ALTER TABLE `Course` ADD COLUMN `groupLabel` VARCHAR(100) NULL;
+ALTER TABLE `TaskVersion`
+  ADD COLUMN `sourceReference` VARCHAR(500) NULL,
+  ADD COLUMN `sourceUid` VARCHAR(191) NULL,
+  ADD COLUMN `component` VARCHAR(50) NULL,
+  ADD COLUMN `seriesCode` VARCHAR(50) NULL,
+  ADD COLUMN `qualification` VARCHAR(191) NULL;
+ALTER TABLE `TaskText`
+  ADD COLUMN `answer` LONGTEXT NULL,
+  ADD COLUMN `markSchemeText` LONGTEXT NULL,
+  ADD COLUMN `markSchemeStatus` ENUM('NONE','SOURCE_TEXT','OCR_UNVERIFIED','DRAFT','VERIFIED') NOT NULL DEFAULT 'NONE';
+ALTER TABLE `PartText`
+  ADD COLUMN `markScheme` LONGTEXT NULL,
+  ADD COLUMN `markSchemeSource` VARCHAR(500) NULL,
+  ADD COLUMN `markSchemeText` LONGTEXT NULL,
+  ADD COLUMN `markSchemeStatus` ENUM('NONE','SOURCE_TEXT','OCR_UNVERIFIED','DRAFT','VERIFIED') NOT NULL DEFAULT 'NONE';
+ALTER TABLE `TaskAsset` ADD COLUMN `partPosition` INTEGER NULL;
+ALTER TABLE `TaskAsset` MODIFY COLUMN `role` ENUM('STATEMENT','HINT','SOLUTION','MARK_SCHEME','TEACHER','ANSWER') NOT NULL;
+CREATE TABLE `BankRun` (
+  `id` CHAR(64) NOT NULL,
+  `manifest` JSON NOT NULL,
+  `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE TABLE `BankBatch` (
+  `runId` CHAR(64) NOT NULL,
+  `key` VARCHAR(80) NOT NULL,
+  `payload` JSON NOT NULL,
+  `appliedAt` DATETIME(3) NULL,
+  PRIMARY KEY (`runId`,`key`),
+  CONSTRAINT `BankBatch_runId_fkey` FOREIGN KEY (`runId`) REFERENCES `BankRun` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

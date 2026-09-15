@@ -12,6 +12,7 @@ export async function writePilot(actor: Actor, bundle: PilotBundle, fileData: Ma
   await mkdir(storage, {recursive:true});
   return transaction(async tx => {
     await lockUser(tx, actor.id);
+    if(bundle.sections.some(s=>s.project==="maths4u"))ensure(!await tx.importRecord.count({where:{sourceProject:"maths4u",legacyId:{startsWith:"problems:"}}}),409,"PILOT_SUPERSEDED_BY_COURSE_BANK");
     ensure(bundle.format === "maths4u-pilot-v2" || !await tx.auditEvent.count({ where: { action: "PILOT_CORRECTED" } }), 409, "PILOT_LEGACY_PACKAGE_REQUIRES_CORRECTION");
     const receipt = publicationKey ? await tx.auditEvent.findFirst({ where: { action: "PILOT_PUBLISHED", targetId: publicationKey } }) : null;
     if (publicationKey && !receipt) {

@@ -64,6 +64,7 @@ enum SubscriptionStatus {
 
 enum FileRole {
   STATEMENT
+  ANSWER
   HINT
   SOLUTION
   MARK_SCHEME
@@ -75,6 +76,14 @@ enum MaterialCategory {
   EXAM
   TRAINING
   OLYMPIAD
+}
+
+enum TranscriptionStatus {
+  NONE
+  SOURCE_TEXT
+  OCR_UNVERIFIED
+  DRAFT
+  VERIFIED
 }
 
 model User {
@@ -188,6 +197,7 @@ model ClassMembership {
 }
 
 model Course {
+  groupLabel String? @db.VarChar(100)
   position Int @default(0)
   id         String       @id @default(cuid())
   slug       String       @unique @db.VarChar(120)
@@ -299,6 +309,24 @@ model Source {
   tasks TaskVersion[]
 }
 
+// Authenticated, resumable bank transfer; content remains in the private DB.
+model BankRun {
+  id String @id @db.Char(64)
+  manifest Json
+  createdAt DateTime @default(now())
+  batches BankBatch[]
+}
+
+model BankBatch {
+  runId String @db.Char(64)
+  key String @db.VarChar(80)
+  payload Json
+  appliedAt DateTime?
+  run BankRun @relation(fields:[runId], references:[id], onDelete:Restrict)
+  @@id([runId,key])
+}
+
+
 model Task {
   practiceStudies PracticeStudy[]
   id         String         @id @default(cuid())
@@ -329,6 +357,11 @@ model TaskTopic {
 }
 
 model TaskVersion {
+  sourceReference String? @db.VarChar(500)
+  sourceUid String? @db.VarChar(191)
+  component String? @db.VarChar(50)
+  seriesCode String? @db.VarChar(50)
+  qualification String? @db.VarChar(191)
   id             String      @id @default(cuid())
   taskId         String
   number         Int
@@ -356,6 +389,9 @@ model TaskVersion {
 }
 
 model TaskText {
+  answer String? @db.LongText
+  markSchemeText String? @db.LongText
+  markSchemeStatus TranscriptionStatus @default(NONE)
   versionId   String
   locale      Locale
   title       String      @db.VarChar(191)
@@ -389,6 +425,10 @@ model TaskPart {
 }
 
 model PartText {
+  markScheme String? @db.LongText
+  markSchemeSource String? @db.VarChar(500)
+  markSchemeText String? @db.LongText
+  markSchemeStatus TranscriptionStatus @default(NONE)
   partId String
   locale Locale
   prompt String   @db.LongText
@@ -466,6 +506,7 @@ model FileDerivative {
 }
 
 model TaskAsset {
+  partPosition Int?
   id        String      @id @default(cuid())
   versionId String
   fileId    String

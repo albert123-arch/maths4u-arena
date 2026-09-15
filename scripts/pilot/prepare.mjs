@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { parseDocument } from 'htmlparser2';
 import { findAll, textContent } from 'domutils';
 import katex from 'katex';
+import { mathPattern, protectMathHtml } from '../../src/lib/math-markup.mjs';
 
 export const sources = {
   'maths4u-576': 'https://maths4u.sbs/subchapter.php?id=576',
@@ -89,14 +90,14 @@ export function olympRecords(english, russian) {
 }
 
 export function formulaAudit(html) {
-  const text = textContent(parse(html));
-  const expressions = [...text.matchAll(/\\\(([\s\S]*?)\\\)|\\\[([\s\S]*?)\\\]|\$\$([\s\S]*?)\$\$|\$([^$\n]+)\$/g)];
+  const text = textContent(parse(protectMathHtml(html)));
+  const expressions = [...text.matchAll(mathPattern)];
   const errors = [];
   for (const [full, inline, display, double, single] of expressions) {
     try { katex.renderToString(inline ?? display ?? double ?? single, { displayMode: display !== undefined || double !== undefined, throwOnError: true, trust: false, strict: 'ignore', maxExpand: 1000, maxSize: 20 }); }
     catch { errors.push(full); }
   }
-  const rest = text.replace(/\\\(([\s\S]*?)\\\)|\\\[([\s\S]*?)\\\]|\$\$([\s\S]*?)\$\$|\$([^$\n]+)\$/g, '');
+  const rest = text.replace(mathPattern, '');
   return { count: expressions.length, errors, unpairedDelimiter: /\\[()[\]]/.test(rest) };
 }
 

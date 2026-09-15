@@ -2,7 +2,7 @@ name: Hostinger preview package
 
 on:
   push:
-    branches: [hostinger-preview, codex/learning-review-ux]
+    branches: [hostinger-preview, codex/learning-review-ux, codex/five-course-import]
   workflow_dispatch:
 
 permissions:
@@ -15,7 +15,7 @@ concurrency:
 jobs:
   linux-node22:
     # Preview verification only. This workflow never deploys or uses production secrets.
-    if: github.ref == 'refs/heads/hostinger-preview' || github.ref == 'refs/heads/codex/learning-review-ux'
+    if: github.ref == 'refs/heads/hostinger-preview' || github.ref == 'refs/heads/codex/learning-review-ux' || github.ref == 'refs/heads/codex/five-course-import'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     services:
@@ -48,7 +48,7 @@ jobs:
       - name: Check portable dependency aliases
         run: node --test tests/package-links.test.mjs
       - name: Check safe startup diagnostics
-        run: npx tsx --test tests/hostinger-diagnostics.test.ts tests/hostinger-runtime.test.ts tests/image-previews.test.ts
+        run: npx tsx --test tests/hostinger-diagnostics.test.ts tests/hostinger-runtime.test.ts tests/image-previews.test.ts tests/bank-materials.test.ts
       - name: Verify populated database migration and pilot publication
         run: npx tsx --test tests/pilot-migration.test.ts
         env:

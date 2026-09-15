@@ -17,6 +17,7 @@ import { GET, POST } from "../src/app/api/[...path]/route";
 import { beginStudy, revealStudyHelp, selfCheckStudy, topicStudy } from "../src/lib/study";
 import { getAttempt, mutateAttempt } from "../src/lib/works";
 import { exportTask, taskSchema } from "../src/lib/content";
+import {verifyBankFixture} from './bank-fixture';
 
 test("populated migration and publication preserve existing accounts, tasks, attempts and grades", { timeout: 180000 }, async () => {
   const ci = process.env.CI === "true" && process.env.HOSTINGER_TEST_CREATE_DATABASE === "1";
@@ -118,5 +119,7 @@ test("populated migration and publication preserve existing accounts, tasks, att
       assert.equal(response.status, 401);
     }
     assert.equal((await GET(new Request(process.env.APP_URL + "/api/health"), { params: Promise.resolve({ path: ["health"] }) })).status, 200);
+    await verifyBankFixture(admin,student);
+    const finalSnapshot=await snapshot();for(const [table,hashes]of Object.entries(before))for(const hash of hashes)assert.ok(finalSnapshot[table].includes(hash),`Historical ${table} row survives bank import`);
   } finally { await sql.end(); await client.$disconnect(); }
 });

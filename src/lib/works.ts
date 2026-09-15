@@ -186,7 +186,7 @@ export function maySeeMaterialFile(a: FullAttempt, role: string) {
   if (role === "TEACHER") return false;
   if (!a.study) return maySeeSolutions(a);
   const flags = studyHelp(a);
-  return (role === "HINT" && flags.hint) || (role === "SOLUTION" && flags.solution) || (role === "MARK_SCHEME" && flags.markScheme);
+  return (role === "ANSWER" && flags.answer) || (role === "HINT" && flags.hint) || (role === "SOLUTION" && flags.solution) || (role === "MARK_SCHEME" && flags.markScheme);
 }
 export async function getAttempt(actor: Actor, id: string, lang = "ru") {
   const a = await transaction(async tx => {

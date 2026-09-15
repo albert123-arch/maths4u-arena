@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import type { AttemptDto, workResults } from "@/lib/works";
 import { api, ApiError, ErrorNotice, Heading, MathContent, useLocale, useResource } from "./ui";
 import { FileViewer, type ViewFile } from "./file-viewer";
+import { MarkSchemeText } from "./mark-scheme-text";
 
 type Draft = { points: string; comment: string; revision: number };
 function Reference({ html, files }: { html: string; files: ViewFile[] }) {
@@ -61,9 +62,9 @@ export function ReviewScreen({ initial }: { initial: AttemptDto }) {
   if (!dto.manager) return <ErrorNotice error={new ApiError("FORBIDDEN", 403)} />;
   const q = dto.questions[question], p = q.parts[part], answer = dto.answers.find(a => a.partId === p.id), draft = values[p.id] ?? { points: "", comment: "", revision: 0 };
   const peers = results.data?.filter(a => a.status !== "IN_PROGRESS") ?? [], peer = peers.findIndex(a => a.id === dto.id), next = peer >= 0 ? peers[peer + 1] : undefined;
-  const referenceFiles = q.assets.filter(a => a.role === (reference === "ms" ? "MARK_SCHEME" : "SOLUTION")).map(a => ({ ...a, originalName: a.caption || a.role }));
+  const referenceFiles = q.assets.filter(a => a.role === (reference === "ms" ? "MARK_SCHEME" : "SOLUTION")&&(a.partPosition==null||a.partPosition===part)).map(a => ({ ...a, originalName: a.caption || a.role }));
   const labels = { answer: t("Ответ", "Answer"), ms: "MS", grade: t("Оценка", "Grade") };
-  const tabs = [{ id: "ms", label: "MS", exists: !!q.markScheme || q.assets.some(a => a.role === "MARK_SCHEME") }, { id: "solution", label: t("Подробное решение", "Detailed solution"), exists: !!q.solution || q.assets.some(a => a.role === "SOLUTION") }, { id: "criteria", label: t("Критерии", "Criteria"), exists: !!p.rubric || !!p.answer }];
+  const tabs = [{ id: "ms", label: "MS", exists: !!q.markScheme || !!q.markSchemeText || !!p.markScheme || !!p.markSchemeText || q.assets.some(a => a.role === "MARK_SCHEME") }, { id: "solution", label: t("Подробное решение", "Detailed solution"), exists: !!q.solution || q.assets.some(a => a.role === "SOLUTION") }, { id: "criteria", label: t("Критерии", "Criteria"), exists: !!p.rubric || !!p.answer }];
   return <div className="review-screen"><Heading title={dto.title} subtitle={t("Проверка работы", "Review submission")}><button className="secondary" onClick={() => void leave(`/works/${dto.workId}/results`)}>{t("К результатам", "Results")}</button></Heading>
     <div className="review-nav row spread"><div className="row"><button className="secondary" disabled={!question} onClick={() => void selectQuestion(question - 1)}>←</button><span>{t("Задача", "Problem")} {question + 1} / {dto.questions.length}</span><button className="secondary" disabled={question + 1 >= dto.questions.length} onClick={() => void selectQuestion(question + 1)}>→</button>
       <select aria-label={t("Часть задачи", "Question part")} value={part} onChange={e => { const index = Number(e.target.value); void flush().then(ok => { if (ok) setPart(index); }); }}>{q.parts.map((p, i) => <option key={p.id} value={i}>{t("Часть", "Part")} {i + 1} · {p.maxPoints} {t("балл.", "pts")}</option>)}</select></div>
@@ -80,6 +81,8 @@ export function ReviewScreen({ initial }: { initial: AttemptDto }) {
       <section className="card review-reference"><div className="reference-tabs row">{tabs.map(tab => <button key={tab.id} className={reference === tab.id ? "" : "secondary"} onClick={() => setReference(tab.id)} aria-pressed={reference === tab.id}>{tab.label}</button>)}</div>
         {!tabs.find(tab => tab.id === reference)?.exists ? <p className="empty">{t("Этот материал не предоставлен источником.", "This material was not provided by the source.")}</p> : reference === "criteria" ? <><MathContent html={p.answer ?? ""} /><MathContent html={p.rubric ?? ""} /></> : <Reference html={(reference === "ms" ? q.markScheme : q.solution) ?? ""} files={referenceFiles} />}
         {reference === "ms" && q.markSchemeSource && <p className="muted">{t("Источник: ", "Source: ")}{q.markSchemeSource}</p>}
+        {reference==="ms"&&<><MathContent html={p.markScheme??""}/><MarkSchemeText html={p.markSchemeText} status={p.markSchemeStatus}/><MarkSchemeText html={q.markSchemeText} status={q.markSchemeStatus}/></>}
+        {reference==="criteria"&&<MathContent html={q.answer??""}/>}
         {q.teacherNote && <details><summary>{t("Заметка учителю", "Teacher note")}</summary><MathContent html={q.teacherNote} /></details>}</section>
       <section className="card review-grade"><h2>{t("Оценка и комментарий", "Marks & feedback")}</h2><div className="field-grid">
         <label>{t("Баллы (пусто — не проверено)", "Points (blank means ungraded)")} · 0–{p.maxPoints}<input aria-label={t("Баллы", "Points")} type="number" min={0} max={p.maxPoints} step="any" value={draft.points} disabled={dto.status === "IN_PROGRESS"} onChange={e => update(p.id, { points: e.target.value })} /></label>

@@ -6,6 +6,7 @@ import { useLocale, useResource, Heading, Loading, ErrorNotice, MathContent, Mat
 import { ReviewScreen } from "./review-screen";
 import { StudyActions } from "./study-panel";
 import { AnswerAttachments } from "./answer-attachments";
+import { MarkSchemeText } from "./mark-scheme-text";
 type ResponseValue = { value: string; optionId?: string };
 
 export function AttemptScreen({ id, review }: { id: string; review: boolean }) {
@@ -99,8 +100,10 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
         {(dto.allowFiles || !!answer?.files.length) && <AnswerAttachments files={answer?.files ?? []} attemptId={dto.id} partId={p.id} readOnly={readOnly || !dto.allowFiles} mutate={mutateFiles} />}
         {dto.resultVisible && answer && <div className="notice" style={{ marginTop: 16 }}><strong>{t("Баллы: ", "Points: ")}{answer.points ?? t("ожидает проверки", "pending")} / {p.maxPoints}</strong>{answer.comment && <p style={{ whiteSpace: "pre-wrap", marginTop: 8 }}>{answer.comment}</p>}</div>}
         {p.answer && <details open={!!dto.study} style={{ marginTop: 16 }}><summary>{t("Краткий ответ", "Short answer")}</summary><MathContent html={p.answer} /></details>}{p.rubric && <details open={!!dto.study} style={{ marginTop: 16 }}><summary>{t("Критерии части", "Part criteria")}</summary><MathContent html={p.rubric} /></details>}
+        {p.markScheme&&<MathContent html={p.markScheme}/>}<MarkSchemeText html={p.markSchemeText} status={p.markSchemeStatus}/>{q.assets.filter(a=>a.partPosition===pi&&a.role!=="STATEMENT").map(a=><MaterialAsset key={a.id} asset={a}/>)}
       </section>; })}
-      {([{ html: q.hint, label: t("Подсказка", "Hint"), role: "HINT" }, { html: q.solution, label: t("Подробное решение", "Detailed solution"), role: "SOLUTION" }, { html: q.markScheme, label: "MS", role: "MARK_SCHEME" }]).filter(m => m.html || q.assets.some(a => a.role === m.role)).map(m => <details className="part" key={m.role} open={!!dto.study}><summary>{m.label}</summary><MathContent html={m.html ?? ""} />{q.assets.filter(a => a.role === m.role).map(a => <MaterialAsset key={a.id} asset={a} />)}</details>)}
+      {([{html:q.answer,label:t("Краткий ответ", "Short answer"),role:"ANSWER"},{ html: q.hint, label: t("Подсказка", "Hint"), role: "HINT" }, { html: q.solution, label: t("Подробное решение", "Detailed solution"), role: "SOLUTION" }, { html: q.markScheme, label: "MS", role: "MARK_SCHEME" }]).filter(m => m.html || q.assets.some(a => a.role === m.role&&a.partPosition==null)).map(m => <details className="part" key={m.role} open={!!dto.study}><summary>{m.label}</summary><MathContent html={m.html ?? ""} />{q.assets.filter(a => a.role === m.role&&a.partPosition==null).map(a => <MaterialAsset key={a.id} asset={a} />)}</details>)}
+      <MarkSchemeText html={q.markSchemeText} status={q.markSchemeStatus}/>
 
       {review && q.teacherNote && <div className="notice" style={{ marginTop: 16 }}><strong>{t("Заметка учителю", "Teacher note")}</strong><MathContent html={q.teacherNote} /></div>}
     </article>)}</div>

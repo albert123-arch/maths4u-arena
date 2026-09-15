@@ -6,12 +6,16 @@ import { ensure } from "./errors";
 import { type Actor, isAdmin, isTeacher, teacher, transaction, lockUser } from "./security";
 import { hasFeature } from "./subscriptions";
 import type { Prisma } from "../generated/prisma/client";
+import { mathPattern, protectMathHtml } from "./math-markup.mjs";
+import { parseDocument } from "htmlparser2";
+import { findAll, textContent } from "domutils";
 
 const locale = z.enum(["ru", "en"]);
 const text = z.string().max(100000);
 const uniqueLocales = <T extends { locale: string }>(rows: T[]) => new Set(rows.map(r => r.locale)).size === rows.length;
-const taskText = z.object({ locale, title: z.string().min(1).max(191), statement: text.min(1), hint: text.default(""), solution: text.default(""), markScheme: text.default(""), markSchemeSource: z.string().max(500).default(""), teacherNote: text.default("") });
-const partText = z.object({ locale, prompt: text.default(""), answer: text.default(""), rubric: text.default("") });
+const transcription = { markSchemeText: text.nullish(), markSchemeStatus: z.enum(["NONE", "SOURCE_TEXT", "OCR_UNVERIFIED", "DRAFT", "VERIFIED"]).optional() };
+const taskText = z.object({ locale, title: z.string().min(1).max(191), statement: text.min(1), answer: text.nullish(), hint: text.default(""), solution: text.default(""), markScheme: text.default(""), markSchemeSource: z.string().max(500).default(""), ...transcription, teacherNote: text.default("") });
+const partText = z.object({ locale, prompt: text.default(""), answer: text.default(""), rubric: text.default(""), markScheme: text.nullish(), markSchemeSource: z.string().max(500).nullish(), ...transcription });
 const option = z.object({ correct: z.boolean(), texts: z.array(z.object({ locale, text: z.string().min(1).max(5000) })).min(1).max(2).refine(uniqueLocales) });
 const part = z.object({
   kind: z.enum(["SHORT", "NUMERIC", "CHOICE", "MANUAL"]), maxPoints: z.number().positive().max(100),
@@ -29,9 +33,13 @@ export const taskSchema = z.object({
   difficultyKnown: z.boolean().default(false), materialCategory: z.enum(["UNKNOWN", "EXAM", "TRAINING", "OLYMPIAD"]).default("UNKNOWN"),
   syllabus: z.string().max(50).optional(), examBoard: z.string().max(80).optional(), year: z.number().int().min(1900).max(2200).optional(),
   examSession: z.string().max(50).optional(), paper: z.string().max(50).optional(), questionNumber: z.string().max(50).optional(),
+  sourceReference: z.string().max(500).optional(), sourceUid: z.string().max(191).optional(), component: z.string().max(50).optional(), seriesCode: z.string().max(50).optional(), qualification: z.string().max(191).optional(),
   topicIds: z.array(z.string()).max(20).default([]),
   texts: z.array(taskText).min(1).max(2).refine(uniqueLocales), parts: z.array(part).min(1).max(30),
-  assets: z.array(z.object({ fileId: z.string(), role: z.enum(["STATEMENT", "HINT", "SOLUTION", "MARK_SCHEME", "TEACHER"]), locale: locale.optional(), caption: z.string().max(500).default("") })).max(20).default([]),
+  assets: z.array(z.object({ fileId: z.string(), role: z.enum(["STATEMENT", "ANSWER", "HINT", "SOLUTION", "MARK_SCHEME", "TEACHER"]), locale: locale.optional(), caption: z.string().max(500).default(""), partPosition: z.number().int().min(0).max(29).nullable().optional() })).max(20).default([]),
+}).superRefine((v, ctx) => {
+  if(v.assets.some(a => a.partPosition != null && a.partPosition >= v.parts.length)) ctx.addIssue({code:"custom", message:"Unknown asset part"});
+  for(const t of [...v.texts, ...v.parts.flatMap(p=>p.texts)]) if(t.markSchemeStatus && t.markSchemeStatus !== "NONE" && !t.markSchemeText?.trim()) ctx.addIssue({code:"custom",message:"Transcription status requires text"});
 });
 export type TaskInput = z.infer<typeof taskSchema>;
 export const versionInclude = {
@@ -42,45 +50,55 @@ export type Version = Prisma.TaskVersionGetPayload<{ include: typeof versionIncl
 export function localized<T extends { locale: string }>(rows: T[], lang: string): T {
   return rows.find(r => r.locale === lang) ?? rows.find(r => r.locale === "en") ?? rows[0];
 }
-function decodeMath(s: string) {
-  return s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
-}
 export function renderContent(raw: string) {
-  return sanitizeHtml(raw, {
+  // HTML parsers emit separate text chunks around entities. Extract complete
+  // expressions first so an inequality cannot split a matrix or cases block.
+  let prefix="MATHS4UFORMULA";while(raw.includes(prefix))prefix+="X";
+  const formulas:string[]=[];
+  const protectedHtml:string=protectMathHtml(raw);
+  const prepared=protectedHtml.replace(mathPattern,(_m,inline,display,double,single)=>{
+    const value=textContent(parseDocument(inline??display??double??single));
+    const rendered=katex.renderToString(value,{displayMode:display!==undefined||double!==undefined,throwOnError:false,trust:false,strict:"ignore",maxExpand:1000,maxSize:20});
+    return prefix+(formulas.push(rendered)-1)+"END";
+  });
+  const html=sanitizeHtml(prepared, {
     allowedTags: ["p", "br", "strong", "em", "b", "i", "u", "sub", "sup", "ul", "ol", "li", "blockquote", "h2", "h3", "h4", "table", "thead", "tbody", "tr", "th", "td", "img"],
     allowedAttributes: { img: ["src", "alt", "width", "height"], td: ["colspan", "rowspan"], th: ["colspan", "rowspan"] },
     allowedSchemes: [], allowProtocolRelative: false,
     exclusiveFilter: frame => frame.tag === "img" && !/^\/api\/files\/[a-zA-Z0-9_-]+$/.test(frame.attribs.src || ""),
-    textFilter: escaped => escaped.replace(/\\\(([\s\S]*?)\\\)|\\\[([\s\S]*?)\\\]|\$\$([\s\S]*?)\$\$|\$([^$\n]+)\$/g, (_m, inline, display, double, single) => {
-      return katex.renderToString(decodeMath(inline ?? display ?? double ?? single), { displayMode: display !== undefined || double !== undefined, throwOnError: false, trust: false, strict: "ignore", maxExpand: 1000, maxSize: 20 });
-    }),
+    textFilter: escaped=>escaped.replace(new RegExp(prefix+"(\\d+)END","g"),(_m,index)=>formulas[Number(index)]??""),
   });
+  return html;
 }
 export type HelpVisibility = { hint: boolean; answer: boolean; solution: boolean; markScheme: boolean };
 export function availableHelp(v: Version, lang: string): HelpVisibility {
   const t = localized(v.texts, lang);
   const asset = (role: string) => v.assets.some(a => a.role === role && (!a.locale || a.locale === t.locale));
   return { hint: !!t.hint || asset("HINT"), solution: !!t.solution || asset("SOLUTION"),
-    markScheme: !!t.markScheme || asset("MARK_SCHEME") || v.parts.some(p => !!localized(p.texts, lang).rubric),
-    answer: v.parts.some(p => !!localized(p.texts, lang).answer || p.options.some(o => o.correct) || p.kind === "NUMERIC" || p.acceptedAnswers.length > 0) };
+    markScheme: !!t.markScheme || !!t.markSchemeText || asset("MARK_SCHEME") || v.parts.some(p => {const t=localized(p.texts,lang);return !!t.rubric || !!t.markScheme || !!t.markSchemeText;}),
+    answer: !!t.answer || asset("ANSWER") || v.parts.some(p => !!localized(p.texts, lang).answer || p.options.some(o => o.correct) || p.kind === "NUMERIC" || p.acceptedAnswers.length > 0) };
 }
 export function publicVersion(v: Version, lang: string, solutions = false, revealed?: HelpVisibility) {
   const t = localized(v.texts, lang);
   const show = (key: keyof HelpVisibility) => solutions && (!revealed || revealed[key]);
-  const visibleHtml = [t.statement, ...(show("hint") ? [t.hint] : []), ...(show("solution") ? [t.solution] : []), ...(show("markScheme") ? [t.markScheme] : [])].join("\n");
+  const whole = (html:string|null) => {let result=protectMathHtml(html??"");const doc=parseDocument(result,{withStartIndices:true,withEndIndices:true});
+    for(const n of findAll(n=>n.name==="img"&&v.assets.some(a=>a.partPosition!=null&&n.attribs.src==="/api/files/"+a.fileId),doc.children).reverse())result=result.slice(0,n.startIndex!)+result.slice(n.endIndex!+1);return result;};
+  const visibleHtml = [t.statement, ...(show("answer") ? [whole(t.answer)] : []), ...(show("hint") ? [t.hint] : []), ...(show("solution") ? [whole(t.solution)] : []), ...(show("markScheme") ? [whole(t.markScheme)] : [])].join("\n");
   return { id: v.id, taskId: v.taskId, title: t.title, locale: t.locale, statement: renderContent(t.statement),
-    ...(show("hint") ? { hint: renderContent(t.hint) } : {}), ...(show("solution") ? { solution: renderContent(t.solution) } : {}),
-    ...(show("markScheme") ? { markScheme: renderContent(t.markScheme ?? ""), markSchemeSource: t.markSchemeSource } : {}),
+    ...(show("hint") ? { hint: renderContent(t.hint) } : {}), ...(show("solution") ? { solution: renderContent(whole(t.solution)) } : {}),
+    ...(show("answer") ? {answer:renderContent(whole(t.answer))} : {}),
+    ...(show("markScheme") ? { markScheme: renderContent(whole(t.markScheme)), markSchemeSource: t.markSchemeSource, markSchemeText: renderContent(t.markSchemeText ?? ""), markSchemeStatus:t.markSchemeStatus } : {}),
     source: v.source?.name, syllabus: v.syllabus, year: v.year, examSession: v.examSession, paper: v.paper, questionNumber: v.questionNumber,
-    assets: v.assets.filter(a => (!a.locale || a.locale === t.locale) && (a.role === "STATEMENT" || (a.role === "HINT" && show("hint")) || (a.role === "SOLUTION" && show("solution")) || (a.role === "MARK_SCHEME" && show("markScheme")))
+    assets: v.assets.filter(a => (!a.locale || a.locale === t.locale) && (a.role === "STATEMENT" || (a.role === "ANSWER" && show("answer")) || (a.role === "HINT" && show("hint")) || (a.role === "SOLUTION" && show("solution")) || (a.role === "MARK_SCHEME" && show("markScheme")))
       && !(a.file.mimeType.startsWith("image/") && ["\"", "'"].some(q => visibleHtml.includes(`src=${q}/api/files/${a.fileId}${q}`))))
-      .map(a => ({ id: a.fileId, caption: a.caption, role: a.role, mimeType: a.file.mimeType })),
+      .map(a => ({ id: a.fileId, caption: a.caption, role: a.role, mimeType: a.file.mimeType, partPosition:a.partPosition })),
     parts: v.parts.map(p => {
       const pt = localized(p.texts, lang);
       const plainAnswer = p.kind === "NUMERIC" ? String(p.numericAnswer) : p.acceptedAnswers.map(a => a.value).join(" / ");
       const answer = pt.answer || plainAnswer.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
       return { id: p.id, kind: p.kind, maxPoints: p.maxPoints, prompt: renderContent(pt.prompt),
         ...(show("answer") ? { answer: renderContent(answer) } : {}), ...(show("markScheme") ? { rubric: renderContent(pt.rubric) } : {}),
+        ...(show("markScheme") ? {markScheme:renderContent(pt.markScheme ?? ""),markSchemeText:renderContent(pt.markSchemeText ?? ""),markSchemeSource:pt.markSchemeSource,markSchemeStatus:pt.markSchemeStatus} : {}),
         options: p.options.map(o => ({ id: o.id, text: renderContent(localized(o.texts, lang).text), ...(show("answer") ? { correct: o.correct } : {}) })) };
     }) };
 }
@@ -105,6 +123,7 @@ export async function createTaskVersion(tx: Prisma.TransactionClient, actor: Act
     taskId: task.id, number: (last._max.number ?? 0) + 1, difficulty: data.difficulty, sourceId: source?.id,
     difficultyKnown: data.difficultyKnown, materialCategory: data.materialCategory,
     syllabus: data.syllabus, examBoard: data.examBoard, year: data.year, examSession: data.examSession, paper: data.paper, questionNumber: data.questionNumber,
+    sourceReference:data.sourceReference, sourceUid:data.sourceUid, component:data.component, seriesCode:data.seriesCode, qualification:data.qualification,
     texts: { create: data.texts }, assets: { create: data.assets },
     parts: { create: data.parts.map((p, position) => ({ position, kind: p.kind, maxPoints: p.maxPoints, caseSensitive: p.caseSensitive,
       numericAnswer: p.numericAnswer, tolerance: p.tolerance, texts: { create: p.texts }, acceptedAnswers: { create: p.acceptedAnswers.map(value => ({ value })) },
@@ -134,9 +153,10 @@ export async function library(actor: Actor | null, lang: string, query = "") {
 export function editableVersion(v: Version) {
   return { difficulty: v.difficulty, difficultyKnown: v.difficultyKnown, materialCategory: v.materialCategory, source: v.source?.name, syllabus: v.syllabus ?? undefined, examBoard: v.examBoard ?? undefined, year: v.year ?? undefined,
     examSession: v.examSession ?? undefined, paper: v.paper ?? undefined, questionNumber: v.questionNumber ?? undefined,
-    texts: v.texts.map(t => ({ ...t, markScheme: t.markScheme ?? "", markSchemeSource: t.markSchemeSource ?? "" })),
-    assets: v.assets.map(a => ({ fileId: a.fileId, locale: a.locale ?? undefined, role: a.role, caption: a.caption })),
-    parts: v.parts.map(p => ({ ...p, numericAnswer: p.numericAnswer ?? undefined, acceptedAnswers: p.acceptedAnswers.map(a => a.value), options: p.options.map(o => ({ correct: o.correct, texts: o.texts })) })) };
+    sourceReference:v.sourceReference ?? undefined, sourceUid:v.sourceUid ?? undefined, component:v.component ?? undefined, seriesCode:v.seriesCode ?? undefined, qualification:v.qualification ?? undefined,
+    texts: v.texts.map(t => ({ ...t, answer:t.answer ?? "", markScheme: t.markScheme ?? "", markSchemeSource: t.markSchemeSource ?? "",markSchemeText:t.markSchemeText ?? "" })),
+    assets: v.assets.map(a => ({ fileId: a.fileId, locale: a.locale ?? undefined, role: a.role, caption: a.caption,partPosition:a.partPosition })),
+    parts: v.parts.map(p => ({ ...p, texts:p.texts.map(t=>({...t,markScheme:t.markScheme ?? "",markSchemeSource:t.markSchemeSource ?? "",markSchemeText:t.markSchemeText ?? ""})), numericAnswer: p.numericAnswer ?? undefined, acceptedAnswers: p.acceptedAnswers.map(a => a.value), options: p.options.map(o => ({ correct: o.correct, texts: o.texts })) })) };
 }
 
 export async function editorTask(actor: Actor, id: string) {

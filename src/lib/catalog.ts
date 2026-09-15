@@ -72,7 +72,7 @@ export async function courseCatalog(actor: Actor | null, lang: string, slug?: st
     const chapters = await Promise.all(c.topics.map(async ch => ({ id: ch.id, title: localized(ch.texts, lang).title, position: ch.position,
       count: allowed ? await db().task.count({ where: { AND: [permission, { lessons: { some: { lesson: { archivedAt: null, topicId: ch.id } } } }] } }) : 0,
       topics: ch.lessons.filter(l => l.versions.length).map(l => ({ id: l.id, title: localized(l.versions[0].texts, lang).title, count: allowed ? l._count.tasks : 0 })) })));
-    return { id: c.id, slug: c.slug, title: localized(c.texts, lang).title, description: localized(c.texts, lang).description, locked: !allowed,
+    return { id: c.id, slug: c.slug, groupLabel:c.groupLabel, title: localized(c.texts, lang).title, description: localized(c.texts, lang).description, locked: !allowed,
       count: allowed ? await db().task.count({ where: { AND: [permission, { lessons: { some: { lesson: { archivedAt: null, topic: { courseId: c.id } } } } }] } }) : 0, chapters };
   }));
 }

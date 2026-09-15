@@ -16,6 +16,7 @@ import { catalog, courseCatalog, topicContent, basket, saveBasket } from "@/lib/
 import { structure, saveStructure } from "@/lib/structure";
 import { beginStudy, revealStudyHelp, selfCheckStudy, topicStudy } from "@/lib/study";
 import { auditStorage, retryDeletedCleanup } from "@/lib/storage-maintenance";
+import { checkBankStructure, beginBank, bankStatus, stageBankBatch, bankAssetStatus, stageBankFile, checkBankTasks, applyBankTasks, applyBankStructure } from "@/lib/bank-import";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -198,6 +199,15 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
         include: { plan: true, user: { select: { username: true, displayName: true } } } }));
       if (parts[1] === "subscriptions" && parts[3] === "revoke" && method === "POST") return json(await revokeSubscription(actor, parts[2]));
       if (route === "admin/import" && method === "POST") return json(await importMaterials(actor, input));
+      if (route === "admin/bank/start" && method === "POST") return json(await beginBank(actor,input));
+      if (route === "admin/bank/status" && method === "GET") return json(await bankStatus(actor,url.searchParams.get("runId")??""));
+      if (route === "admin/bank/stage" && method === "POST") return json(await stageBankBatch(actor,input));
+      if (route === "admin/bank/files/check" && method === "POST") return json(await bankAssetStatus(actor,input));
+      if (route === "admin/bank/files" && method === "POST") return json(await stageBankFile(actor,input));
+      if (route === "admin/bank/check" && method === "POST") return json(await checkBankTasks(actor,input));
+      if (route === "admin/bank/apply" && method === "POST") return json(await applyBankTasks(actor,input));
+      if (route === "admin/bank/structure/check" && method === "POST") return json(await checkBankStructure(actor,input));
+      if (route === "admin/bank/structure" && method === "POST") return json(await applyBankStructure(actor,input));
       if (route === "admin/import" && method === "GET") return json(await importStatus(actor));
       if (route === "admin/status" && method === "GET") return json({ users: await db().user.count(), tasks: await db().task.count(), attempts: await db().attempt.count(),
         pendingReview: await db().attempt.count({ where: { status: "SUBMITTED" } }), paymentsEnabled: false, aiEnabled: false,
