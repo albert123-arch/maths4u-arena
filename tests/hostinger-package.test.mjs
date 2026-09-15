@@ -253,6 +253,8 @@ async function verifyPackagedBankStage(port, cookie) {
     return result;
   };
   await request('admin/users');
+  const search = await request('admin/users?q=' + encodeURIComponent("' OR 1=1 -- Проверка ∑"));
+  assert.deepEqual(search, [], 'Driver-bound search text must stay data, including quotes and Unicode');
   const payload = [{table:'problems',id:'99990001',sourceUrl:'https://maths4u.sbs/',sourcePublished:true,
     links:[{courseKey:'0606',chapterKey:'chapter-9999',lessonKey:'subchapter-9999',position:0}],
     material:{visibility:'PRIVATE',texts:[{locale:'en',title:'Unicode test',statement:'<p>Find \\(x^2\\). Схема → ∑</p>',solution:'<p>Solution</p>',markSchemeText:'M1: criterion',markSchemeStatus:'SOURCE_TEXT'}],

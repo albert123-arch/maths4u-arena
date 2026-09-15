@@ -80,7 +80,7 @@ npm run bank:package
 
 ## Проверки этой подготовки
 
-Соединения Prisma явно используют `UTF8MB4_UNICODE_CI`, как существующие миграции Arena. Это устраняет зависимость поиска от другой collation по умолчанию на Hostinger (`DB_1267`); таблицы не перекодируются. Параметр `collation` поддерживается [MariaDB Connector/Node.js](https://mariadb.com/docs/connectors/mariadb-connector-nodejs/node-js-connection-options).
+Соединения Prisma явно используют `UTF8MB4_UNICODE_CI`, как существующие миграции Arena. На Hostinger одного этого параметра оказалось недостаточно: поиск пользователей через `LIKE CONCAT` в binary protocol возвращал `DB_1267`. Адаптер настроен на поддерживаемый `useTextProtocol`: значения по-прежнему передаются отдельно от SQL и экранируются драйвером. Таблицы не перекодируются. Параметры документированы в [MariaDB Connector/Node.js](https://mariadb.com/docs/connectors/mariadb-connector-nodejs/node-js-connection-options) и [Prisma changelog](https://www.prisma.io/changelog/2026-03-27). Проверка пакета включает поиск с Unicode, кавычками и SQL-подобным текстом.
 
 - Полный локальный импорт 2654 задач и всех 3003 записей файлов; повтор, продолжение после прерывания; сравнение хешей исторических контрольных данных.
 - Проверка 24067 HTML-полей реальным рендерером; отсутствие KaTeX ошибок, целостность файлов, ролей и связей. HTML/SVG не исполняют активное содержимое.

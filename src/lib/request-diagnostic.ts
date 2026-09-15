@@ -8,6 +8,7 @@ const hints: Array<[RegExp, string]> = [
   [/invalid json|json_valid/i, "DB_JSON"], [/not a function/i, "JS_NOT_CALLABLE"],
   [/cannot read properties|cannot read property/i, "JS_PROPERTY"], [/unknown column/i, "DB_COLUMN"],
 ];
+const collations = ["utf8mb4_unicode_ci", "utf8mb4_general_ci", "utf8mb4_uca1400_ai_ci", "utf8mb4_0900_ai_ci", "utf8mb4_bin", "utf8mb3_general_ci", "utf8mb3_unicode_ci", "latin1_swedish_ci"];
 export class BankStageError extends Error {
   constructor(public stage: "manifest" | "schema" | "html" | "write", cause: unknown) { super("Bank staging failed", { cause }); }
 }
@@ -24,7 +25,10 @@ export function requestDiagnostic(error: unknown): string {
       if (typeof code === "string" && (/^P\d{4}$/.test(code) || systemCodes.has(code))) tokens.add(code);
       if ((typeof code === "number" && Number.isInteger(code) || typeof code === "string" && /^\d{4}$/.test(code)) && Number(code) >= 1000 && Number(code) <= 9999) tokens.add("DB_" + code);
     }
-    for (const key of ["message", "originalMessage"]) if (typeof e[key] === "string") for (const [pattern, hint] of hints) if (pattern.test(e[key])) tokens.add(hint);
+    for (const key of ["message", "originalMessage"]) if (typeof e[key] === "string") {
+      for (const [pattern, hint] of hints) if (pattern.test(e[key])) tokens.add(hint);
+      if (/illegal mix of collations/i.test(e[key])) for (const collation of collations) if (e[key].includes(collation)) tokens.add(collation);
+    }
     for (const key of ["cause", "meta", "driverAdapterError"]) visit(e[key], depth + 1);
   }
   visit(error, 0);

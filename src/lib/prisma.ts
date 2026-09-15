@@ -12,6 +12,10 @@ export function db(): PrismaClient {
       // Match the existing migrations, independent of Hostinger's server default.
       collation: "UTF8MB4_UNICODE_CI",
       connectionLimit: config.connectionLimit, connectTimeout: config.connectTimeout, acquireTimeout: config.acquireTimeout,
+    }, {
+      // Hostinger rejects binary-protocol LIKE/CONCAT searches with error 1267.
+      // The adapter's supported text protocol keeps parameter escaping in the driver.
+      useTextProtocol: true,
     }) });
   }
   return globalDb.maths4uDb;
