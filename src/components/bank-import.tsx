@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import type { BankManifest, BankAsset } from "@/lib/bank-schema";
 import type { checkBankTasks, checkBankStructure } from "@/lib/bank-import";
 import { api, ErrorNotice, useLocale } from "./ui";
+import { bankUploadQueue } from "@/lib/bank-upload-queue";
 
 type Plan=Awaited<ReturnType<typeof checkBankTasks>>;
 async function sha(value:string|ArrayBuffer) {const bytes=typeof value==="string"?new TextEncoder().encode(value):value;return [...new Uint8Array(await crypto.subtle.digest("SHA-256",bytes))].map(n=>n.toString(16).padStart(2,"0")).join("");}
@@ -28,7 +29,8 @@ export function BankImport() {
     const manifest=manifestRef.current!;let uploaded=0;
     for(const b of manifest.batches.filter(b=>b.kind==="assets")) {
       if(stop.current)return;const p=await payload(b.key) as BankAsset[],checked=await api<{missing:string[]}>("admin/bank/files/check","POST",{runId,key:b.key});
-      for(const a of p){if(stop.current)return;if(checked.missing.includes(a.id)){const f=file(a.file);if(f.size!==a.size)throw new Error("BANK_FILE_SIZE");const bytes=await f.arrayBuffer();if(await sha(bytes)!==a.sha256)throw new Error("BANK_FILE_HASH");await api("admin/bank/files","POST",{runId,key:b.key,id:a.id,base64:base64(new Uint8Array(bytes))});}setStatus(t("Файлы: ","Files: ")+(++uploaded)+" / "+manifest.files);}
+      const completed=await bankUploadQueue(p,async a=>{if(checked.missing.includes(a.id)){const f=file(a.file);if(f.size!==a.size)throw new Error("BANK_FILE_SIZE");const bytes=await f.arrayBuffer();if(await sha(bytes)!==a.sha256)throw new Error("BANK_FILE_HASH");await api("admin/bank/files","POST",{runId,key:b.key,id:a.id,base64:base64(new Uint8Array(bytes))});}setStatus(t("Файлы: ","Files: ")+(++uploaded)+" / "+manifest.files);},()=>stop.current);
+      if(!completed)return;
     }
     for(const b of manifest.batches.filter(b=>b.kind==="structure")){if(stop.current)return;await api("admin/bank/structure","POST",{runId,key:b.key});}
     let done=0;for(const b of manifest.batches.filter(b=>b.kind==="tasks")){if(stop.current)return;await api("admin/bank/apply","POST",{runId,key:b.key,fingerprint:plans[b.key].fingerprint});done+=b.count;setStatus(t("Задачи: ","Tasks: ")+done+" / "+manifest.tasks);}
