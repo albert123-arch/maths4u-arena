@@ -17,7 +17,7 @@ test('formula rendering preserves the HTML security boundary',()=>{
 });
 test('bank SVG accepts static original vectors and rejects active or external content',()=>{
   verifyBankSvg(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><marker id="a"><path d="M0 0 L1 1"/></marker></defs><line x1="0" y1="0" x2="10" y2="10" marker-end="url(#a)"/></svg>'));
-  for(const fragment of ['<script/>','<foreignObject/>','<image href="https://example.com/a"/>','<path onclick="alert(1)"/>','<path style="fill:url(https://example.com/a)"/>','<path fill="url(https://example.com/a)"/>'])assert.throws(()=>verifyBankSvg(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg">'+fragment+'</svg>')));
+  for(const fragment of ['<script/>','<foreignObject/>','<image href="https://example.com/a"/>','<path onclick="alert(1)"/>','<path style="fill:url(https://example.com/a)"/>','<path fill="url(https://example.com/a)"/>','<path fill="URL(//example.com/a)"/>',String.raw`<path fill="u\72l(//example.com/a)"/>`])assert.throws(()=>verifyBankSvg(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg">'+fragment+'</svg>')));
 });
 test('changing an image from solution to MS moves its inline reference only',()=>{
   const t=taskSchema.parse({texts:[{locale:'en',title:'T',statement:'Statement',solution:'<p>Derivation</p><img src="/api/files/a" alt="diagram">',markScheme:'<p>MS</p>'}],parts:[{kind:'MANUAL',maxPoints:1,texts:[{locale:'en'}]}],assets:[{fileId:'a',role:'SOLUTION'}]});

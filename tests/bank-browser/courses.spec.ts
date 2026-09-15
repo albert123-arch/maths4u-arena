@@ -1,5 +1,6 @@
 import {test,expect,type Page} from '@playwright/test';
 import {readFile} from 'node:fs/promises';
+import path from 'node:path';
 type Representative={slug:string;title:string;sourceId:string;taskId:string;lessonId:string};
 async function login(page:Page,role:'admin'|'student'|'teacher') {const f=JSON.parse(await readFile('.local/content-bank/preview.json','utf8'));await page.goto('/login');await page.locator('[name=username]').fill(f.users[role]);await page.locator('[name=password]').fill(f.password);await page.locator('form button[type=submit]').click();await expect(page.locator('[name=password]')).toHaveCount(0);await page.getByRole('button',{name:'EN',exact:true}).click();return f;}
 async function images(page:Page){await expect.poll(()=>page.locator('.math-content img:visible').evaluateAll(nodes=>nodes.every(n=>(n as HTMLImageElement).complete&&(n as HTMLImageElement).naturalWidth>0))).toBe(true);}
@@ -22,4 +23,11 @@ test('teacher assigns real bank tasks; administrator can review the resumable im
   for(const row of rows.slice(0,2)){await page.goto(`/courses/${row.slug}/topics/${row.lessonId}?q=${encodeURIComponent(row.title)}`);await page.locator('.task-select input').first().check();}
   await page.goto('/teacher/works/new');await page.locator('[name=title]').fill('Five-course browser validation');await page.locator('[name=classId]').selectOption(f.classId);const request=page.waitForResponse(r=>r.url().endsWith('/api/works')&&r.request().method()==='POST');await page.getByRole('button',{name:'Assign to students',exact:true}).click();expect((await request).status()).toBe(201);
   await page.context().clearCookies();await login(page,'admin');await page.goto('/admin/import');await expect(page.getByRole('heading',{name:'0606 / 9231 course transfer',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Check / resume (dry run)',exact:true})).toBeDisabled();
+});
+test('administrator repeats the complete package through the browser importer without duplicates',async({page})=>{
+  await login(page,'admin');await page.goto('/admin/import');await page.locator('input[webkitdirectory]').setInputFiles(path.resolve('.local/content-bank/publish'));
+  await page.getByLabel('Publish new materials that are public in the source. Keep existing material visibility.').check();
+  await page.getByRole('button',{name:'Check / resume (dry run)',exact:true}).click();await expect(page.getByRole('button',{name:'Apply reviewed import',exact:true})).toBeVisible({timeout:180000});
+  await expect(page.getByText('New: 0 · New versions: 0 · Unchanged: 2654',{exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Apply reviewed import',exact:true}).click();await expect(page.getByText('Import complete. Repeat the dry run: all tasks should be unchanged.',{exact:true})).toBeVisible({timeout:180000});
 });

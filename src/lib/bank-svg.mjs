@@ -13,7 +13,7 @@ export function verifyBankSvg(bytes) {
   for(const n of [roots[0],...findAll(n=>!!n.name,roots[0].children)]) {
     if(!tags.has(n.name))throw new Error('BANK_SVG_TAG');
     for(const [key,value]of Object.entries(n.attribs||{})) {
-      if(!attributes.has(key)||/javascript:|data:|https?:|@import|expression\s*\(/i.test(value)&&key!=='xmlns'||/url\((?!#[\w-]+\))/.test(value))throw new Error('BANK_SVG_ATTRIBUTE');
+      if(!attributes.has(key)||value.includes('\\')||/javascript:|data:|https?:|@import|expression\s*\(/i.test(value)&&key!=='xmlns'||/url\s*\((?!#[\w-]+\))/i.test(value))throw new Error('BANK_SVG_ATTRIBUTE');
       if(key==='xmlns'&&value!=='http://www.w3.org/2000/svg')throw new Error('BANK_SVG_NAMESPACE');
     }
   }
