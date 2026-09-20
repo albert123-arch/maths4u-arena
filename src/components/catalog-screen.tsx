@@ -7,6 +7,7 @@ import { TopicStudyPanel, StudyStatus } from "./study-panel";
 import type { CatalogDto, courseCatalog, topicContent } from "@/lib/catalog";
 import { ActorContext, api, ActionButton, Empty, ErrorNotice, Heading, Loading, MaterialAsset, MathContent, useLocale, useResource } from "./ui";
 import { BasketPanel, useTaskBasket } from "./task-basket";
+import { LessonPresentations } from "./lesson-presentations";
 
 export function CatalogTasks({ topicId, courseId, chapterId, embedded = false }: { topicId?: string; courseId?:string; chapterId?:string; embedded?: boolean }) {
   const { t, lang } = useLocale(), actor = useContext(ActorContext), basket = useTaskBasket(), router = useRouter();
@@ -64,6 +65,7 @@ export function TopicScreen({ id }: { id: string }) {
   return <><nav className="breadcrumbs"><Link href="/courses">{t("Курсы", "Courses")}</Link><span> / </span><Link href={`/courses/${topic.course.slug}?chapter=${topic.chapter.id}`}>{topic.course.title}</Link>{topic.chapter.title !== topic.title && <><span> / </span><Link href={`/courses/${topic.course.slug}?chapter=${topic.chapter.id}`}>{topic.chapter.title}</Link></>}</nav>
     <Heading title={topic.title} /><div className="row spread topic-neighbours">{topic.previous ? <Link href={`/courses/${topic.course.slug}/topics/${topic.previous.id}`}>← {topic.previous.title}</Link> : <span />}{topic.next && <Link href={`/courses/${topic.course.slug}/topics/${topic.next.id}`}>{topic.next.title} →</Link>}</div>
     <section className="card topic-theory"><details><summary>{t("Теория", "Theory")}</summary>{topic.body ? <MathContent html={topic.body} /> : <p className="muted">{t("В источнике нет теории для этой темы.", "The source provides no theory for this topic.")}</p>}</details><details><summary>{t("Разобранные примеры", "Worked examples")}</summary>{topic.examples ? <MathContent html={topic.examples} /> : <p className="muted">{t("Разобранные примеры не предоставлены.", "No worked examples were provided.")}</p>}</details></section>
+    {manage && <LessonPresentations key={id} lessonId={id} />}
     {actor && !manage && <TopicStudyPanel lessonId={id} />}
     <div className={manage ? "catalog-with-basket" : ""}><section className="card"><h2>{t("Задачи темы", "Topic tasks")}</h2><CatalogTasks key={id} topicId={id} embedded /></section>{manage && <aside><BasketPanel compact /></aside>}</div></>;
 }

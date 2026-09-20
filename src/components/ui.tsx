@@ -6,6 +6,10 @@ export const LocaleContext = createContext<"ru" | "en">("ru");
 export const ActorContext = createContext<Actor | null>(null);
 export function useLocale() { const lang = useContext(LocaleContext); return { lang, t: (ru: string, en: string) => lang === "ru" ? ru : en }; }
 export const errorLabels: Record<string, [string, string]> = {
+  INVALID_PRESENTATION_URL: ["Нужна ссылка на презентацию Google Slides или файл Google Drive.", "Use a Google Slides presentation or Google Drive file link."],
+  DUPLICATE_PRESENTATION: ["Эта презентация уже прикреплена к теме.", "This presentation is already attached to this topic."],
+  PRESENTATION_LIMIT: ["В теме уже 50 презентаций. Уберите ненужную ссылку.", "This topic already has 50 presentations. Remove an unused link."],
+  STALE_PRESENTATION: ["Ссылка или её порядок изменились. Закройте форму и откройте её заново.", "The link or its order changed. Close the form and open it again."],
   STUDY_ONLY: ["Это действие доступно только в вашей самостоятельной практике.", "This action is only available in your independent practice."],
   HELP_NOT_PROVIDED: ["Этот материал не предоставлен источником.", "This material was not provided by the source."],
   SUBMIT_BEFORE_SELF_CHECK: ["Сначала отправьте свой ответ, затем отметьте самопроверку.", "Submit your answer before recording a self-check."],

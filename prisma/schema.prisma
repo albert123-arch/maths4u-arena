@@ -115,6 +115,7 @@ model User {
   audits               AuditEvent[]
   progress             LearningProgress[]
   taskBasket           TaskBasket?
+  presentations        LessonPresentation[]
 
   @@index([status])
 }
@@ -242,6 +243,7 @@ model TopicText {
 }
 
 model Lesson {
+  presentations LessonPresentation[]
   practiceStudies PracticeStudy[]
   position Int @default(0)
   id         String             @id @default(cuid())
@@ -253,6 +255,25 @@ model Lesson {
   tasks      LessonTask[]
 
   @@index([topicId])
+}
+
+// Teaching resources are never included in student/public course responses.
+model LessonPresentation {
+  id         String   @id @default(cuid())
+  lessonId   String
+  ownerId    String
+  title      String   @db.VarChar(191)
+  url        String   @db.VarChar(2048)
+  sourceKey  String   @db.VarChar(220)
+  position   Int
+  revision   Int      @default(0)
+  createdAt  DateTime @default(now())
+  archivedAt DateTime?
+  lesson     Lesson   @relation(fields: [lessonId], references: [id], onDelete: Restrict)
+  owner      User     @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+
+  @@index([lessonId, archivedAt, position])
+  @@index([ownerId])
 }
 
 // Keep the source order within a lesson, independently of the global library.

@@ -12,6 +12,7 @@ import { TaskBasketProvider } from "./task-basket";
 import { CatalogScreen, CourseCatalogScreen, TopicScreen } from "./catalog-screen";
 import { StructureEditor } from "./structure-editor";
 import { AdminScreen } from "./admin-screen";
+import { SmartBoard } from "./smart-board";
 
 export function Platform() {
   const path = usePathname(), parts = path.split("/").filter(Boolean);
@@ -26,6 +27,7 @@ export function Platform() {
   const t = (ru: string, en: string) => lang === "ru" ? ru : en;
   const admin = actor?.roles.some(r => r.role === "ADMIN"), teacher = admin || actor?.roles.some(r => r.role === "TEACHER");
   const publicPage = !parts.length || ["login", "register", "recover", "library", "courses"].includes(parts[0]);
+  const boardPage = ready && teacher && parts[0] === "teacher" && parts[1] === "board" && !!parts[2];
   let content;
   if (!ready) content = <Loading />;
   else if (error) content = <ErrorNotice error={error} />;
@@ -40,6 +42,7 @@ export function Platform() {
   else if (parts[0] === "join-class") content = <Classes invite={parts[1]} />;
   else if (parts[0] === "olympiads") content = <Olympiads />;
   else if (parts[0] === "access") content = <MyAccess />;
+  else if (parts[0] === "teacher" && parts[1] === "board" && parts[2]) content = <SmartBoard lessonId={parts[2]} presentationId={parts[3]} />;
   else if (parts[0] === "teacher" && parts[1] === "classes") content = parts[2] ? <ClassDetail id={parts[2]} /> : <Classes manage />;
   else if (parts[0] === "teacher" && parts[1] === "works" && parts[2] === "new") content = <WorkEditor />;
   else if (parts[0] === "teacher" && parts[1] === "tasks") content = <TaskEditor id={parts[2] === "new" ? undefined : parts[2]} />;
@@ -49,7 +52,7 @@ export function Platform() {
   else if (["student", "teacher"].includes(parts[0])) content = <Dashboard manage={parts[0] === "teacher"} />;
   else content = <div className="card"><h1>404</h1><Link href="/">{t("На главную", "Go home")}</Link></div>;
   return <LocaleContext.Provider value={lang}><ActorContext.Provider value={actor}><TaskBasketProvider key={actor?.id ?? "guest"}>
-    <header className="topbar"><div className="topbar-inner">
+    <header className="topbar" hidden={!!boardPage}><div className="topbar-inner">
       <Link className="brand" href="/"><span className="brand-symbol">m</span>Maths4U<span className="badge gray">BETA</span></Link>
       <nav className="nav" aria-label={t("Основная навигация", "Main navigation")}>
         {actor && <Link className={path === "/student" ? "active" : ""} href="/student">{t("Моё обучение", "My learning")}</Link>}
@@ -66,7 +69,7 @@ export function Platform() {
       {actor ? <><Link className="account-name" href="/access">{actor.displayName}</Link><button className="quiet" onClick={async () => { await api("auth/logout", "POST"); window.location.assign("/login"); }}>{t("Выйти", "Sign out")}</button></> : <Link href="/login">{t("Войти", "Sign in")} ↗</Link>}</div>
     </div></header>
     <main className="container" key={path}>{content}</main>
-    <footer className="footer"><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
+    <footer className="footer" hidden={!!boardPage}><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
   </TaskBasketProvider></ActorContext.Provider></LocaleContext.Provider>;
 }
 function Home({ actor, teacher }: { actor: Actor | null; teacher: boolean }) {

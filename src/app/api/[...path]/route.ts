@@ -18,6 +18,7 @@ import { beginStudy, revealStudyHelp, selfCheckStudy, topicStudy } from "@/lib/s
 import { auditStorage, retryDeletedCleanup } from "@/lib/storage-maintenance";
 import { checkBankStructure, beginBank, bankStatus, stageBankBatch, bankAssetStatus, stageBankFile, checkBankTasks, applyBankTasks, applyBankStructure } from "@/lib/bank-import";
 import { requestDiagnostic } from "@/lib/request-diagnostic";
+import { lessonPresentations, changePresentation } from "@/lib/presentations";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -99,6 +100,10 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
         "Content-Security-Policy": "sandbox; default-src 'none'", "Cross-Origin-Resource-Policy": "same-origin" } });
     }
     const actor = await requireActor(request);
+    if (parts[0] === "teaching" && parts[1] === "topics" && parts[3] === "presentations" && parts.length === 4) {
+      if (method === "GET") return json(await lessonPresentations(actor, parts[2], lang));
+      if (method === "POST") return json(await changePresentation(actor, parts[2], input));
+    }
     if (route === "study/start" && method === "POST") { await rateLimit("practice:" + actor.id, 60, 3600); return json(await beginStudy(actor, input, lang), 201); }
     if (parts[0] === "study" && parts[1] === "topics" && parts.length === 3 && method === "GET") return json(await topicStudy(actor, parts[2], lang, Number(url.searchParams.get("page") ?? 1)));
     if (parts[0] === "attempts" && parts[2] === "help" && method === "POST") { await revealStudyHelp(actor, parts[1], input, lang); return json(await getAttempt(actor, parts[1], lang)); }
