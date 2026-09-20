@@ -50,7 +50,7 @@ export type Version = Prisma.TaskVersionGetPayload<{ include: typeof versionIncl
 export function localized<T extends { locale: string }>(rows: T[], lang: string): T {
   return rows.find(r => r.locale === lang) ?? rows.find(r => r.locale === "en") ?? rows[0];
 }
-export function renderContent(raw: string) {
+export function renderContent(raw: string, anonymousImages = false) {
   // HTML parsers emit separate text chunks around entities. Extract complete
   // expressions first so an inequality cannot split a matrix or cases block.
   let prefix="MATHS4UFORMULA";while(raw.includes(prefix))prefix+="X";
@@ -65,6 +65,9 @@ export function renderContent(raw: string) {
     allowedTags: ["p", "br", "strong", "em", "b", "i", "u", "sub", "sup", "ul", "ol", "li", "blockquote", "h2", "h3", "h4", "table", "thead", "tbody", "tr", "th", "td", "img"],
     allowedAttributes: { img: ["src", "alt", "width", "height"], td: ["colspan", "rowspan"], th: ["colspan", "rowspan"] },
     allowedSchemes: [], allowProtocolRelative: false,
+    // Imported alt text may contain the paper/session reference. Keep the image,
+    // dimensions and mathematical content, but omit that description in a live assessment.
+    ...(anonymousImages ? { transformTags: { img: (tagName: string, attribs: Record<string, string>) => ({ tagName, attribs: { ...attribs, alt: "" } }) } } : {}),
     exclusiveFilter: frame => frame.tag === "img" && !/^\/api\/files\/[a-zA-Z0-9_-]+$/.test(frame.attribs.src || ""),
     textFilter: escaped=>escaped.replace(new RegExp(prefix+"(\\d+)END","g"),(_m,index)=>formulas[Number(index)]??""),
   });
@@ -78,28 +81,31 @@ export function availableHelp(v: Version, lang: string): HelpVisibility {
     markScheme: !!t.markScheme || !!t.markSchemeText || asset("MARK_SCHEME") || v.parts.some(p => {const t=localized(p.texts,lang);return !!t.rubric || !!t.markScheme || !!t.markSchemeText;}),
     answer: !!t.answer || asset("ANSWER") || v.parts.some(p => !!localized(p.texts, lang).answer || p.options.some(o => o.correct) || p.kind === "NUMERIC" || p.acceptedAnswers.length > 0) };
 }
-export function publicVersion(v: Version, lang: string, solutions = false, revealed?: HelpVisibility) {
+export function publicVersion(v: Version, lang: string, solutions = false, revealed?: HelpVisibility, anonymousTitle?: string) {
   const t = localized(v.texts, lang);
+  const render = (raw: string) => renderContent(raw, anonymousTitle !== undefined);
   const show = (key: keyof HelpVisibility) => solutions && (!revealed || revealed[key]);
   const whole = (html:string|null) => {let result=protectMathHtml(html??"");const doc=parseDocument(result,{withStartIndices:true,withEndIndices:true});
     for(const n of findAll(n=>n.name==="img"&&v.assets.some(a=>a.partPosition!=null&&n.attribs.src==="/api/files/"+a.fileId),doc.children).reverse())result=result.slice(0,n.startIndex!)+result.slice(n.endIndex!+1);return result;};
   const visibleHtml = [t.statement, ...(show("answer") ? [whole(t.answer)] : []), ...(show("hint") ? [t.hint] : []), ...(show("solution") ? [whole(t.solution)] : []), ...(show("markScheme") ? [whole(t.markScheme)] : [])].join("\n");
-  return { id: v.id, taskId: v.taskId, title: t.title, locale: t.locale, statement: renderContent(t.statement),
-    ...(show("hint") ? { hint: renderContent(t.hint) } : {}), ...(show("solution") ? { solution: renderContent(whole(t.solution)) } : {}),
-    ...(show("answer") ? {answer:renderContent(whole(t.answer))} : {}),
-    ...(show("markScheme") ? { markScheme: renderContent(whole(t.markScheme)), markSchemeSource: t.markSchemeSource, markSchemeText: renderContent(t.markSchemeText ?? ""), markSchemeStatus:t.markSchemeStatus } : {}),
-    source: v.source?.name, syllabus: v.syllabus, year: v.year, examSession: v.examSession, paper: v.paper, questionNumber: v.questionNumber,
+  return { id: v.id, title: anonymousTitle ?? t.title, locale: t.locale, statement: render(t.statement),
+    ...(show("hint") ? { hint: render(t.hint) } : {}), ...(show("solution") ? { solution: render(whole(t.solution)) } : {}),
+    ...(show("answer") ? {answer:render(whole(t.answer))} : {}),
+    ...(show("markScheme") ? { markScheme: render(whole(t.markScheme)), markSchemeSource: anonymousTitle === undefined ? t.markSchemeSource : undefined, markSchemeText: render(t.markSchemeText ?? ""), markSchemeStatus:t.markSchemeStatus } : {}),
+    // Keep all source metadata inside this boundary: hiding it only in JSX still
+    // exposes the exam reference in GET, autosave and submit responses.
+    ...(anonymousTitle === undefined ? { taskId: v.taskId, source: v.source?.name, syllabus: v.syllabus, year: v.year, examSession: v.examSession, paper: v.paper, questionNumber: v.questionNumber } : {}),
     assets: v.assets.filter(a => (!a.locale || a.locale === t.locale) && (a.role === "STATEMENT" || (a.role === "ANSWER" && show("answer")) || (a.role === "HINT" && show("hint")) || (a.role === "SOLUTION" && show("solution")) || (a.role === "MARK_SCHEME" && show("markScheme")))
       && !(a.file.mimeType.startsWith("image/") && ["\"", "'"].some(q => visibleHtml.includes(`src=${q}/api/files/${a.fileId}${q}`))))
-      .map(a => ({ id: a.fileId, caption: a.caption, role: a.role, mimeType: a.file.mimeType, partPosition:a.partPosition })),
+      .map((a, index) => ({ id: a.fileId, caption: anonymousTitle === undefined ? a.caption : (lang === "en" ? "Question attachment " : "Вложение к условию ") + (index + 1), role: a.role, mimeType: a.file.mimeType, partPosition:a.partPosition })),
     parts: v.parts.map(p => {
       const pt = localized(p.texts, lang);
       const plainAnswer = p.kind === "NUMERIC" ? String(p.numericAnswer) : p.acceptedAnswers.map(a => a.value).join(" / ");
       const answer = pt.answer || plainAnswer.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-      return { id: p.id, kind: p.kind, maxPoints: p.maxPoints, prompt: renderContent(pt.prompt),
-        ...(show("answer") ? { answer: renderContent(answer) } : {}), ...(show("markScheme") ? { rubric: renderContent(pt.rubric) } : {}),
-        ...(show("markScheme") ? {markScheme:renderContent(pt.markScheme ?? ""),markSchemeText:renderContent(pt.markSchemeText ?? ""),markSchemeSource:pt.markSchemeSource,markSchemeStatus:pt.markSchemeStatus} : {}),
-        options: p.options.map(o => ({ id: o.id, text: renderContent(localized(o.texts, lang).text), ...(show("answer") ? { correct: o.correct } : {}) })) };
+      return { id: p.id, kind: p.kind, maxPoints: p.maxPoints, prompt: render(pt.prompt),
+        ...(show("answer") ? { answer: render(answer) } : {}), ...(show("markScheme") ? { rubric: render(pt.rubric) } : {}),
+        ...(show("markScheme") ? {markScheme:render(pt.markScheme ?? ""),markSchemeText:render(pt.markSchemeText ?? ""),markSchemeSource:anonymousTitle === undefined ? pt.markSchemeSource : undefined,markSchemeStatus:pt.markSchemeStatus} : {}),
+        options: p.options.map(o => ({ id: o.id, text: render(localized(o.texts, lang).text), ...(show("answer") ? { correct: o.correct } : {}) })) };
     }) };
 }
 export async function createTaskVersion(tx: Prisma.TransactionClient, actor: Actor, data: TaskInput, taskId?: string) {

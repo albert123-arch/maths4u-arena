@@ -199,14 +199,16 @@ export async function getAttempt(actor: Actor, id: string, lang = "ru") {
   const manager = isAdmin(actor) || (isTeacher(actor) && a.workVersion.work.ownerId === actor.id && a.userId !== actor.id);
   const resultVisible = manager || maySeeResult(a), solutions = manager || maySeeSolutions(a);
   const revealed = a.study && !manager ? studyHelp(a) : undefined;
+  const sourcesHidden = !manager && a.status === "IN_PROGRESS" && ["HOMEWORK", "TEST"].includes(a.workVersion.work.kind);
   const maxPoints = a.workVersion.items.reduce((s, i) => s + i.maxPoints, 0);
   const score = a.answers.reduce((s, r) => s + (r.review?.points ?? r.autoPoints ?? 0), 0);
   return { id: a.id, userId: a.userId, workId: a.workVersion.workId, title: a.study ? localized(a.workVersion.items[0].taskVersion.texts, lang).title : a.workVersion.work.title, number: a.number, status: a.status,
     startedAt: a.startedAt, expiresAt: a.expiresAt, submittedAt: a.submittedAt, timedOut: a.timedOut, revision: a.revision,
-    serverTime: new Date(), allowFiles: a.workVersion.allowFiles, resultVisible, solutionsVisible: solutions, manager,
+    serverTime: new Date(), allowFiles: a.workVersion.allowFiles, resultVisible, solutionsVisible: solutions, manager, sourcesHidden,
     study: a.study ? { taskId: a.study.taskId, lessonId: a.study.lessonId, courseSlug: a.study.lesson?.topic.course.slug, help: studyHelp(a), selfCheckedAt: a.study.selfCheckedAt, needsRepeat: a.study.needsRepeat } : null,
     ...(resultVisible ? { score, maxPoints, pendingReview: a.answers.some(r => r.autoPoints === null && r.review?.points == null) } : {}),
-    questions: a.workVersion.items.map(i => ({ ...publicVersion(i.taskVersion, lang, solutions || !!revealed, revealed),
+    questions: a.workVersion.items.map((i, index) => ({ ...publicVersion(i.taskVersion, lang, solutions || !!revealed, revealed,
+      sourcesHidden ? (lang === "en" ? "Problem " : "Задача ") + (index + 1) : undefined),
       ...(a.study ? { availableHelp: availableHelp(i.taskVersion, lang) } : {}),
       ...(manager ? { teacherNote: renderContent(localized(i.taskVersion.texts, lang).teacherNote) } : {}) })),
     answers: a.answers.map(r => ({ id: r.id, partId: r.partId, response: r.response, savedAt: r.savedAt, files: r.files.map(f => f.file),

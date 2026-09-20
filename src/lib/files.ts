@@ -95,7 +95,12 @@ export async function download(actor: Actor | null, id: string, variant = "origi
   const derivative = file.derivatives.find(d => d.kind === variant);
   // Legacy uploads remain readable without any migration-time image conversion.
   const selected = derivative ? { ...file, ...derivative } : file;
-  return { file: selected, data: await readFile(storagePath(selected.storageKey)) };
+  // The same material URL is usable outside an attempt, so a query parameter
+  // cannot protect the source filename. Learner/public material downloads always
+  // use a neutral name; their own uploaded answers keep their original names.
+  const anonymous = file.assets.length > 0 && !(actor && isTeacher(actor));
+  const extension = ({ "application/pdf": ".pdf", "image/png": ".png", "image/jpeg": ".jpg", "image/webp": ".webp" } as Record<string, string>)[selected.mimeType] ?? "";
+  return { file: anonymous ? { ...selected, originalName: "material" + extension } : selected, data: await readFile(storagePath(selected.storageKey)) };
 }
 
 export async function removeAnswerFile(actor: Actor, id: string, attemptId: string) {
