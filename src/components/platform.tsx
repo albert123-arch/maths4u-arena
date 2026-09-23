@@ -13,6 +13,7 @@ import { CatalogScreen, CourseCatalogScreen, TopicScreen } from "./catalog-scree
 import { StructureEditor } from "./structure-editor";
 import { AdminScreen } from "./admin-screen";
 import { SmartBoard } from "./smart-board";
+import { StudentProgress } from "./student-progress";
 
 export function Platform() {
   const path = usePathname(), parts = path.split("/").filter(Boolean);
@@ -43,6 +44,9 @@ export function Platform() {
   else if (parts[0] === "olympiads") content = <Olympiads />;
   else if (parts[0] === "access") content = <MyAccess />;
   else if (parts[0] === "teacher" && parts[1] === "board" && parts[2]) content = <SmartBoard lessonId={parts[2]} presentationId={parts[3]} />;
+  else if (parts[0] === "teacher" && parts[1] === "classes" && parts[2] && parts[3] === "students" && parts[4]) content = parts[5] === "attempts" && parts[6]
+    ? <AttemptScreen key={parts[6]} id={parts[6]} review backHref={`/teacher/classes/${parts[2]}/students/${parts[4]}`} />
+    : <StudentProgress key={`${parts[2]}/${parts[4]}`} classId={parts[2]} studentId={parts[4]} />;
   else if (parts[0] === "teacher" && parts[1] === "classes") content = parts[2] ? <ClassDetail id={parts[2]} /> : <Classes manage />;
   else if (parts[0] === "teacher" && parts[1] === "works" && parts[2] === "new") content = <WorkEditor />;
   else if (parts[0] === "teacher" && parts[1] === "tasks") content = <TaskEditor id={parts[2] === "new" ? undefined : parts[2]} />;

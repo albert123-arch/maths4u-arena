@@ -14,7 +14,7 @@ function Reference({ html, files }: { html: string; files: ViewFile[] }) {
   });
   return <><MathContent html={text} /><FileViewer key={[...inline, ...files].map(f => f.id).join()} files={[...inline, ...files]} /></>;
 }
-export function ReviewScreen({ initial }: { initial: AttemptDto }) {
+export function ReviewScreen({ initial, backHref }: { initial: AttemptDto; backHref?: string }) {
   const { t, lang } = useLocale(), router = useRouter();
   const [dto, setDto] = useState(initial), [question, setQuestion] = useState(0), [part, setPart] = useState(0);
   const [panel, setPanel] = useState("answer"), [reference, setReference] = useState("ms");
@@ -59,13 +59,17 @@ export function ReviewScreen({ initial }: { initial: AttemptDto }) {
   function update(id: string, patch: Partial<Draft>) { drafts.current = { ...drafts.current, [id]: { ...drafts.current[id], ...patch } }; dirty.current.add(id); setValues(drafts.current); setState("dirty"); }
   async function leave(url: string) { if (await flush()) { if (dirty.current.size && !await flush()) return; router.push(url); } }
   async function selectQuestion(index: number) { if (await flush()) { setQuestion(index); setPart(0); } }
-  if (!dto.manager) return <ErrorNotice error={new ApiError("FORBIDDEN", 403)} />;
+  if (!dto.manager && !dto.practiceReview) return <ErrorNotice error={new ApiError("FORBIDDEN", 403)} />;
   const q = dto.questions[question], p = q.parts[part], answer = dto.answers.find(a => a.partId === p.id), draft = values[p.id] ?? { points: "", comment: "", revision: 0 };
   const peers = results.data?.filter(a => a.status !== "IN_PROGRESS") ?? [], peer = peers.findIndex(a => a.id === dto.id), next = peer >= 0 ? peers[peer + 1] : undefined;
   const referenceFiles = q.assets.filter(a => a.role === (reference === "ms" ? "MARK_SCHEME" : "SOLUTION")&&(a.partPosition==null||a.partPosition===part)).map(a => ({ ...a, originalName: a.caption || a.role }));
   const labels = { answer: t("Ответ", "Answer"), ms: "MS", grade: t("Оценка", "Grade") };
+  const helpLabels = { hint: t("подсказка", "hint"), answer: t("краткий ответ", "short answer"), solution: t("решение", "solution"), markScheme: "MS" };
+  const usedHelp = dto.study ? (Object.keys(helpLabels) as (keyof typeof helpLabels)[]).filter(kind => dto.study!.help[kind]).map(kind => helpLabels[kind]) : [];
   const tabs = [{ id: "ms", label: "MS", exists: !!q.markScheme || !!q.markSchemeText || !!p.markScheme || !!p.markSchemeText || q.assets.some(a => a.role === "MARK_SCHEME") }, { id: "solution", label: t("Подробное решение", "Detailed solution"), exists: !!q.solution || q.assets.some(a => a.role === "SOLUTION") }, { id: "criteria", label: t("Критерии", "Criteria"), exists: !!p.rubric || !!p.answer }];
-  return <div className="review-screen"><Heading title={dto.title} subtitle={t("Проверка работы", "Review submission")}><button className="secondary" onClick={() => void leave(`/works/${dto.workId}/results`)}>{t("К результатам", "Results")}</button></Heading>
+  return <div className="review-screen"><Heading title={dto.title} subtitle={t("Проверка работы", "Review submission") + (dto.reviewStudent ? ` · ${dto.reviewStudent.displayName} (${dto.reviewStudent.username})` : "")}><button className="secondary" onClick={() => void leave(backHref ?? (dto.practiceReview ? "/teacher/classes" : `/works/${dto.workId}/results`))}>{backHref ? t("К прогрессу ученика", "Student progress") : dto.practiceReview ? t("Мои классы", "My classes") : t("К результатам", "Results")}</button></Heading>
+    {dto.kind === "PRACTICE" && <p className="notice">{t("Самостоятельная практика. Сохранённые баллы и комментарии видны ученику сразу. Самопроверка и использование помощи учитываются отдельно.", "Independent practice. Saved marks and feedback are visible to the student immediately. Self-checking and help usage are tracked separately.")}</p>}
+    {dto.study && <p className="muted">{usedHelp.length ? t("Раскрытая помощь: ", "Help revealed: ") + usedHelp.join(", ") : t("Помощь не раскрывалась", "No help revealed")}{dto.study.selfCheckedAt && t(" · Самопроверка выполнена", " · Self-check recorded")}{dto.study.needsRepeat && t(" · Ученик отметил: нужно повторить", " · Student marked: needs another look")}</p>}
     <div className="review-nav row spread"><div className="row"><button className="secondary" disabled={!question} onClick={() => void selectQuestion(question - 1)}>←</button><span>{t("Задача", "Problem")} {question + 1} / {dto.questions.length}</span><button className="secondary" disabled={question + 1 >= dto.questions.length} onClick={() => void selectQuestion(question + 1)}>→</button>
       <select aria-label={t("Часть задачи", "Question part")} value={part} onChange={e => { const index = Number(e.target.value); void flush().then(ok => { if (ok) setPart(index); }); }}>{q.parts.map((p, i) => <option key={p.id} value={i}>{t("Часть", "Part")} {i + 1} · {p.maxPoints} {t("балл.", "pts")}</option>)}</select></div>
       <span role="status">{state === "saved" ? t("Сохранено", "Saved") : state === "saving" ? t("Сохраняется…", "Saving…") : state === "error" ? t("Ошибка сохранения", "Save failed") : t("Есть изменения", "Unsaved changes")}</span>
@@ -87,6 +91,6 @@ export function ReviewScreen({ initial }: { initial: AttemptDto }) {
       <section className="card review-grade"><h2>{t("Оценка и комментарий", "Marks & feedback")}</h2><div className="field-grid">
         <label>{t("Баллы (пусто — не проверено)", "Points (blank means ungraded)")} · 0–{p.maxPoints}<input aria-label={t("Баллы", "Points")} type="number" min={0} max={p.maxPoints} step="any" value={draft.points} disabled={dto.status === "IN_PROGRESS"} onChange={e => update(p.id, { points: e.target.value })} /></label>
         <label>{t("Комментарий ученику", "Feedback for student")}<textarea aria-label={t("Комментарий ученику", "Feedback for student")} value={draft.comment} maxLength={10000} disabled={dto.status === "IN_PROGRESS"} onChange={e => update(p.id, { comment: e.target.value })} /></label></div>
-        <button disabled={state === "saving" || dto.status === "IN_PROGRESS"} onClick={() => void flush()}>{t("Сохранить", "Save")}</button><p className="muted">{t("Публикация результатов выполняется отдельно в настройках работы.", "Result release is controlled separately by the work settings.")}</p></section>
+        <button disabled={state === "saving" || dto.status === "IN_PROGRESS"} onClick={() => void flush()}>{t("Сохранить", "Save")}</button><p className="muted">{dto.kind === "PRACTICE" ? t("Ученик увидит отзыв в своей попытке.", "The student can read your feedback in this attempt.") : t("Публикация результатов выполняется отдельно в настройках работы.", "Result release is controlled separately by the work settings.")}</p></section>
     </div></div>;
 }

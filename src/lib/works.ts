@@ -5,6 +5,7 @@ import { type Actor, isAdmin, isTeacher, teacher, transaction, lockUser } from "
 import { publicVersion, versionInclude, localized, renderContent, availableHelp } from "./content";
 import { hasFeature } from "./subscriptions";
 import type { Prisma } from "../generated/prisma/client";
+import { mayReviewPractice } from "./practice-access";
 
 const contextInclude = { classroom: true, round: { include: { olympiad: true } } } satisfies Prisma.WorkInclude;
 type Context = Prisma.WorkGetPayload<{ include: typeof contextInclude }>;
@@ -189,30 +190,33 @@ export function maySeeMaterialFile(a: FullAttempt, role: string) {
   return (role === "ANSWER" && flags.answer) || (role === "HINT" && flags.hint) || (role === "SOLUTION" && flags.solution) || (role === "MARK_SCHEME" && flags.markScheme);
 }
 export async function getAttempt(actor: Actor, id: string, lang = "ru") {
-  const a = await transaction(async tx => {
+  const { a, practiceReview } = await transaction(async tx => {
     let row = await lockAttempt(tx, id);
-    ensure(row && (row.userId === actor.id || isAdmin(actor) || (isTeacher(actor) && row.workVersion.work.ownerId === actor.id)), 404, "NOT_FOUND");
+    const practiceReview = !!row && await mayReviewPractice(actor, id, tx);
+    ensure(row && (row.userId === actor.id || isAdmin(actor) || (isTeacher(actor) && row.workVersion.work.ownerId === actor.id) || practiceReview), 404, "NOT_FOUND");
     if (row.status === "IN_PROGRESS" && row.expiresAt > new Date() && row.userId === actor.id) await workAccess(actor, row.workVersion.work, tx);
     if (row.status === "IN_PROGRESS" && row.expiresAt <= new Date()) { await finalize(tx, row, true); row = (await tx.attempt.findUnique({ where: { id }, include: attemptInclude }))!; }
-    return row;
+    return { a: row, practiceReview };
   });
   const manager = isAdmin(actor) || (isTeacher(actor) && a.workVersion.work.ownerId === actor.id && a.userId !== actor.id);
-  const resultVisible = manager || maySeeResult(a), solutions = manager || maySeeSolutions(a);
-  const revealed = a.study && !manager ? studyHelp(a) : undefined;
+  const reviewer = manager || practiceReview;
+  const reviewStudent = reviewer ? await db().user.findUniqueOrThrow({ where: { id: a.userId }, select: { displayName: true, username: true } }) : null;
+  const resultVisible = reviewer || maySeeResult(a), solutions = reviewer || maySeeSolutions(a);
+  const revealed = a.study && !reviewer ? studyHelp(a) : undefined;
   const sourcesHidden = !manager && a.status === "IN_PROGRESS" && ["HOMEWORK", "TEST"].includes(a.workVersion.work.kind);
   const maxPoints = a.workVersion.items.reduce((s, i) => s + i.maxPoints, 0);
   const score = a.answers.reduce((s, r) => s + (r.review?.points ?? r.autoPoints ?? 0), 0);
   return { id: a.id, userId: a.userId, workId: a.workVersion.workId, title: a.study ? localized(a.workVersion.items[0].taskVersion.texts, lang).title : a.workVersion.work.title, number: a.number, status: a.status,
     startedAt: a.startedAt, expiresAt: a.expiresAt, submittedAt: a.submittedAt, timedOut: a.timedOut, revision: a.revision,
-    serverTime: new Date(), allowFiles: a.workVersion.allowFiles, resultVisible, solutionsVisible: solutions, manager, sourcesHidden,
+    serverTime: new Date(), allowFiles: a.workVersion.allowFiles, resultVisible, solutionsVisible: solutions, manager, practiceReview, reviewStudent, sourcesHidden, kind: a.workVersion.work.kind,
     study: a.study ? { taskId: a.study.taskId, lessonId: a.study.lessonId, courseSlug: a.study.lesson?.topic.course.slug, help: studyHelp(a), selfCheckedAt: a.study.selfCheckedAt, needsRepeat: a.study.needsRepeat } : null,
     ...(resultVisible ? { score, maxPoints, pendingReview: a.answers.some(r => r.autoPoints === null && r.review?.points == null) } : {}),
     questions: a.workVersion.items.map((i, index) => ({ ...publicVersion(i.taskVersion, lang, solutions || !!revealed, revealed,
       sourcesHidden ? (lang === "en" ? "Problem " : "Задача ") + (index + 1) : undefined),
       ...(a.study ? { availableHelp: availableHelp(i.taskVersion, lang) } : {}),
-      ...(manager ? { teacherNote: renderContent(localized(i.taskVersion.texts, lang).teacherNote) } : {}) })),
+      ...(reviewer ? { teacherNote: renderContent(localized(i.taskVersion.texts, lang).teacherNote) } : {}) })),
     answers: a.answers.map(r => ({ id: r.id, partId: r.partId, response: r.response, savedAt: r.savedAt, files: r.files.map(f => f.file),
-      ...(resultVisible ? { points: r.review?.points ?? r.autoPoints, comment: r.review?.comment ?? "", ...(manager ? { autoPoints: r.autoPoints, reviewRevision: r.review?.revision ?? 0 } : {}) } : {}) })),
+      ...(resultVisible ? { points: r.review?.points ?? r.autoPoints, comment: r.review?.comment ?? "", ...(reviewer ? { autoPoints: r.autoPoints, reviewRevision: r.review?.revision ?? 0 } : {}) } : {}) })),
   };
 }
 export async function gradeAttempt(actor: Actor, id: string, input: unknown) {
@@ -221,7 +225,7 @@ export async function gradeAttempt(actor: Actor, id: string, input: unknown) {
   ensure(new Set(data.reviews.map(r => r.partId)).size === data.reviews.length, 400, "DUPLICATE_REVIEW");
   return transaction(async tx => {
     const a = await lockAttempt(tx, id);
-    ensure(a && (isAdmin(actor) || a.workVersion.work.ownerId === actor.id), 404, "NOT_FOUND");
+    ensure(a && (isAdmin(actor) || (a.workVersion.work.ownerId === actor.id && a.userId !== actor.id) || await mayReviewPractice(actor, id, tx)), 404, "NOT_FOUND");
     if (a.status === "IN_PROGRESS" && a.expiresAt <= new Date()) await finalize(tx, a, true);
     else ensure(a.status !== "IN_PROGRESS", 409, "NOT_SUBMITTED");
     const current = (await tx.attempt.findUnique({ where: { id }, include: attemptInclude }))!;

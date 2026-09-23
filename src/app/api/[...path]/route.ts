@@ -19,6 +19,7 @@ import { auditStorage, retryDeletedCleanup } from "@/lib/storage-maintenance";
 import { checkBankStructure, beginBank, bankStatus, stageBankBatch, bankAssetStatus, stageBankFile, checkBankTasks, applyBankTasks, applyBankStructure } from "@/lib/bank-import";
 import { requestDiagnostic } from "@/lib/request-diagnostic";
 import { lessonPresentations, changePresentation } from "@/lib/presentations";
+import { studentProgress } from "@/lib/student-progress";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -122,6 +123,9 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
     if (route === "classes" && method === "GET") return json(await listClasses(actor, url.searchParams.get("manage") === "1"));
     if (route === "classes" && method === "POST") return json(await createClass(actor, input), 201);
     if (route === "classes/join" && method === "POST") { await rateLimit("class-join:" + actor.id, 20, 60); return json(await joinClass(actor, input)); }
+    if (parts[0] === "classes" && parts[2] === "students" && parts[4] === "progress" && parts.length === 5 && method === "GET") {
+      return json(await studentProgress(actor, parts[1], parts[3], lang, Object.fromEntries(url.searchParams)));
+    }
     if (parts[0] === "classes" && parts.length === 2) {
       if (method === "GET") return json(await classDetail(actor, parts[1]));
       if (method === "PATCH") return json(await editClass(actor, parts[1], input));

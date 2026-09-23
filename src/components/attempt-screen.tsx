@@ -9,11 +9,11 @@ import { AnswerAttachments } from "./answer-attachments";
 import { MarkSchemeText } from "./mark-scheme-text";
 type ResponseValue = { value: string; optionId?: string };
 
-export function AttemptScreen({ id, review }: { id: string; review: boolean }) {
+export function AttemptScreen({ id, review, backHref }: { id: string; review: boolean; backHref?: string }) {
   const r = useResource<AttemptDto>("attempts/" + id);
   if (r.error) return <ErrorNotice error={r.error} />;
   if (!r.data) return <Loading />;
-  if (review) return <ReviewScreen key={id} initial={r.data} />;
+  if (review) return <ReviewScreen key={id} initial={r.data} backHref={backHref} />;
   return <AttemptForm key={id + String(review)} initial={r.data} review={review} />;
 }
 function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean }) {

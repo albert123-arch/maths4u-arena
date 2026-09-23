@@ -7,6 +7,7 @@ import { lockAttempt, finalize, workAccess, maySeeMaterialFile, attemptInclude }
 import { hasFeature } from "./subscriptions";
 import { privateStorageRoot } from "./storage-config";
 import { imagePreviews } from "./image-previews";
+import { mayReviewPractice, mentoredPracticeWhere } from "./practice-access";
 
 export const MAX_FILE_BYTES = 8 * 1024 * 1024;
 function storageRoot() {
@@ -79,11 +80,16 @@ export async function download(actor: Actor | null, id: string, variant = "origi
   ensure(file && !file.deletedAt, 404, "NOT_FOUND");
   let allowed = !!actor && (file.ownerId === actor.id || isAdmin(actor));
   if (!allowed && actor) allowed = file.submissions.some(s => s.answer.attempt.userId === actor.id || (isTeacher(actor) && s.answer.attempt.workVersion.work.ownerId === actor.id));
+  if (!allowed && actor && isTeacher(actor)) for (const submission of file.submissions) {
+    if (await mayReviewPractice(actor, submission.answer.attemptId)) { allowed = true; break; }
+  }
   if (!allowed && !file.submissions.length) {
     for (const asset of file.assets) {
       const task = asset.version.task;
       if (actor && isTeacher(actor) && task.ownerId === actor.id) { allowed = true; break; }
       if (actor && isTeacher(actor) && await db().workItem.count({ where: { taskVersionId: asset.versionId, workVersion: { work: { ownerId: actor.id } } } })) { allowed = true; break; }
+      if (actor && isTeacher(actor) && asset.role !== "TEACHER" && await db().attempt.findFirst({ where: { AND: [mentoredPracticeWhere(actor),
+        { workVersion: { items: { some: { taskVersionId: asset.versionId } } } }] }, select: { id: true } })) { allowed = true; break; }
       if (asset.role === "STATEMENT" && task.visibility === "PUBLIC" && !task.archivedAt && (!task.featureKey || (actor && await hasFeature(actor, task.featureKey)))) { allowed = true; break; }
       if (actor && asset.role !== "TEACHER") {
         const attempts = await db().attempt.findMany({ where: { userId: actor.id, workVersion: { items: { some: { taskVersionId: asset.versionId } } } }, include: attemptInclude });

@@ -20,6 +20,7 @@ import { exportTask, taskSchema } from "../src/lib/content";
 import {verifyBankFixture} from './bank-fixture';
 import { verifyPresentations } from './presentations-fixture';
 import { verifyAssessmentSources } from './assessment-sources-fixture';
+import { verifyStudentProgress } from './student-progress-fixture';
 
 test("populated migration and publication preserve existing accounts, tasks, attempts and grades", { timeout: 180000 }, async () => {
   const ci = process.env.CI === "true" && process.env.HOSTINGER_TEST_CREATE_DATABASE === "1";
@@ -126,6 +127,7 @@ test("populated migration and publication preserve existing accounts, tasks, att
     await verifyBankFixture(admin,student);
     await verifyPresentations(admin,student);
     await verifyAssessmentSources(admin,student);
+    await verifyStudentProgress(admin);
     const finalSnapshot=await snapshot();for(const [table,hashes]of Object.entries(before))for(const hash of hashes)assert.ok(finalSnapshot[table].includes(hash),`Historical ${table} row survives bank import`);
   } finally { await sql.end(); await client.$disconnect(); }
 });

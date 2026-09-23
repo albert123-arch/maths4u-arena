@@ -50,7 +50,7 @@ export async function selfCheckStudy(actor: Actor, attemptId: string, input: unk
     return { ok: true };
   });
 }
-const progressInclude = {
+export const progressInclude = {
   attempt: { include: {
     answers: { select: { autoPoints: true, review: { select: { points: true } } } },
     workVersion: { include: { items: { select: {
@@ -59,7 +59,7 @@ const progressInclude = {
   } },
 } satisfies Prisma.PracticeStudyInclude;
 type ProgressRow = Prisma.PracticeStudyGetPayload<{ include: typeof progressInclude }>;
-function status(row: ProgressRow) {
+export function studyProgressStatus(row: ProgressRow) {
   const a = row.attempt;
   const state = row.needsRepeat ? "NEEDS_REPEAT" : row.selfCheckedAt ? "SELF_CHECKED" : a.status === "IN_PROGRESS" && a.expiresAt <= new Date() ? "SUBMITTED" : a.status;
   const help = [row.hintAt, row.answerAt, row.solutionAt, row.markSchemeAt].filter((d): d is Date => !!d);
@@ -76,11 +76,11 @@ export async function topicStudy(actor: Actor, lessonId: string, lang: string, h
       AND (a2.startedAt > a.startedAt OR (a2.startedAt=a.startedAt AND a2.id > a.id)))`);
   const rows = await db().practiceStudy.findMany({ where: { attemptId: { in: ids.map(r => r.attemptId) } }, include: progressInclude });
   const items = tasks.map(link => { const row = rows.find(r => r.taskId === link.taskId); return { taskId: link.taskId, title: localized(link.task.versions[0].texts, lang).title, position: link.position, attemptId: row?.attemptId ?? null,
-    ...(row ? status(row) : { state: "NOT_STARTED", helpUsed: false, checkedWithoutHelp: false, score: null, maximum: null }) }; });
+    ...(row ? studyProgressStatus(row) : { state: "NOT_STARTED", helpUsed: false, checkedWithoutHelp: false, score: null, maximum: null }) }; });
   const historyCount = await db().practiceStudy.count({ where: { lessonId, attempt: { userId: actor.id } } });
   const history = await db().practiceStudy.findMany({ where: { lessonId, attempt: { userId: actor.id } }, orderBy: [{ attempt: { startedAt: "desc" } }, { attemptId: "desc" }], take: 20, skip: (historyPage - 1) * 20, include: progressInclude });
   const theory = await db().learningProgress.findUnique({ where: { userId_lessonId: { userId: actor.id, lessonId } } });
   return { lessonId, items, theoryRead: theory?.completed ?? false, completedWithoutHelp: items.filter(i => i.checkedWithoutHelp).length,
-    historyPage, historyPages: Math.max(1, Math.ceil(historyCount / 20)), history: history.map(r => ({ id: r.attemptId, taskId: r.taskId, title: localized(r.attempt.workVersion.items[0].taskVersion.texts, lang).title, startedAt: r.attempt.startedAt, ...status(r) })) };
+    historyPage, historyPages: Math.max(1, Math.ceil(historyCount / 20)), history: history.map(r => ({ id: r.attemptId, taskId: r.taskId, title: localized(r.attempt.workVersion.items[0].taskVersion.texts, lang).title, startedAt: r.attempt.startedAt, ...studyProgressStatus(r) })) };
 }
 export type TopicStudyDto = Awaited<ReturnType<typeof topicStudy>>;
