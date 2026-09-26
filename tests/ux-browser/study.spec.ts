@@ -15,7 +15,7 @@ test("student saves reasoning and attachments, reveals help, self-checks and res
   await page.locator("textarea").first().fill("Моё решение: НОД и тождество Безу.");
   const attachments = page.locator(".answer-attachments").first();
   async function upload(file:string, expected:number) {
-    await attachments.locator('input[type="file"]').setInputFiles(`.local/content-pilot-correction/fixtures/${file}`);
+    await attachments.getByLabel("Прикрепить фото / PDF", { exact: true }).setInputFiles(`.local/content-pilot-correction/fixtures/${file}`);
     await expect(attachments.getByRole("heading",{name:"Перед отправкой",exact:true})).toBeVisible();
     const response=page.waitForResponse(r=>r.url().endsWith("/api/files")&&r.request().method()==="POST");
     await attachments.getByRole("button",{name:"Отправить файл",exact:true}).click(); expect((await response).status()).toBe(201);

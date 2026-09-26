@@ -16,7 +16,7 @@ function uploadWithProgress(form: FormData, progress: (value: number) => void) {
     request.send(form);
   });
 }
-export function AnswerAttachments({ files, attemptId, partId, readOnly, mutate }: { files: ViewFile[]; attemptId: string; partId: string; readOnly: boolean; mutate: (operation: () => Promise<unknown>) => Promise<void> }) {
+export function AnswerAttachments({ files, attemptId, partId, readOnly, disabledByTeacher, mutate }: { files: ViewFile[]; attemptId: string; partId: string; readOnly: boolean; disabledByTeacher?: boolean; mutate: (operation: () => Promise<unknown>) => Promise<void> }) {
   const { t } = useLocale();
   const [selected, setSelected] = useState<File | null>(null), [localUrl, setLocalUrl] = useState<string | null>(null), [replace, setReplace] = useState("");
   const [error, setError] = useState<unknown>(null), [busy, setBusy] = useState(false), [progress, setProgress] = useState(0);
@@ -39,18 +39,36 @@ export function AnswerAttachments({ files, attemptId, partId, readOnly, mutate }
       selectFile(new File([blob], selected.name.replace(/\.[^.]+$/, "") + "-copy.jpg", { type: "image/jpeg" })); setError(null);
     } catch { setError(new ApiError("INVALID_IMAGE", 415)); } finally { setBusy(false); }
   }
-  return <div className="answer-attachments"><FileViewer key={files.map(f => f.id).join()} files={files} />
-    {!readOnly && <><p className="muted upload-limits">{t("PNG, JPEG или PDF · 8 МиБ на файл · 5 файлов на часть · 250 МиБ на аккаунт. Новые фото: до 40 Мп по умолчанию.", "PNG, JPEG or PDF · 8 MiB per file · 5 files per part · 250 MiB per account. New photos: 40 MP by default.")} <strong>{files.length} / 5</strong></p>
-      <div className="stack">{files.map((f, i) => <div key={f.id} className="row spread"><span className="filename">{i + 1}. {f.originalName}</span><div className="row"><button className="secondary" disabled={busy} onClick={() => setReplace(f.id)}>{replace === f.id ? t("Выберите новый файл ниже", "Choose a replacement below") : t("Заменить", "Replace")}</button><button className="secondary" disabled={busy} onClick={() => void act(() => api(`files/${f.id}?attemptId=${attemptId}`, "DELETE"))}>{t("Удалить", "Delete")}</button></div></div>)}</div>
-      <label>{replace ? t("Новый файл взамен выбранного", "Replacement file") : t("Добавить фото / PDF", "Add photo / PDF")}<input type="file" accept=".png,.jpg,.jpeg,.pdf" disabled={busy || (!replace && files.length >= 5)} onChange={e => {
-        const f = e.target.files?.[0]; if (!f) return; selectFile(f); setError(f.size > 8 * 1024 * 1024 ? new ApiError("FILE_TOO_LARGE", 413) : null); e.target.value = "";
-      }} /></label>
-      {selected && <div className="upload-preview"><h3>{t("Перед отправкой", "Before uploading")}</h3><p className="filename">{selected.name} · {(selected.size / 1024 / 1024).toFixed(2)} {t("МиБ", "MiB")}</p>
+  const pickerDisabled = busy || (!replace && files.length >= 5);
+  function choose(file: File | undefined) {
+    if (!file) return;
+    selectFile(file); setError(file.size > 8 * 1024 * 1024 ? new ApiError("FILE_TOO_LARGE", 413) : null);
+  }
+  return <div className="answer-attachments"><h3>{t("Фото или PDF решения", "Solution photos or PDF")}</h3>
+    {readOnly ? <p className="muted">{disabledByTeacher
+      ? t("Учитель отключил вложения для этой работы. Введите ответ в поле выше.", "Attachments are disabled for this work. Enter your answer above.")
+      : t("Работа уже отправлена. Добавить файлы к этой попытке нельзя.", "This work has been submitted. You cannot add files to this attempt.")}</p>
+      : <><p className="muted">{t("Выберите файл или сделайте фото, затем нажмите «Отправить файл». Прикрепите все файлы до отправки работы.", "Choose a file or take a photo, then tap Upload file. Attach all files before submitting your work.")}</p>
+        {replace && <p className="notice">{t("Выберите файл взамен выбранного вложения.", "Choose a file to replace the selected attachment.")}</p>}
+        <div className="attachment-pickers">
+          <label className="button attachment-picker" data-disabled={pickerDisabled}>{t("Прикрепить фото / PDF", "Attach photo / PDF")}
+            <input type="file" aria-label={t("Прикрепить фото / PDF", "Attach photo / PDF")} accept="image/jpeg,image/png,application/pdf,.jpg,.jpeg,.png,.pdf" disabled={pickerDisabled} onChange={e => { choose(e.target.files?.[0]); e.target.value = ""; }} />
+          </label>
+          <label className="button secondary attachment-picker" data-disabled={pickerDisabled}>{t("Сделать фото", "Take a photo")}
+            <input type="file" aria-label={t("Сделать фото", "Take a photo")} accept="image/jpeg,image/png" capture="environment" disabled={pickerDisabled} onChange={e => { choose(e.target.files?.[0]); e.target.value = ""; }} />
+          </label>
+        </div>
+        {files.length >= 5 && !replace && <p className="notice">{t("Уже прикреплено 5 файлов. Чтобы добавить другой, замените или удалите одно из вложений.", "Five files are attached. Replace or remove an attachment to add another.")}</p>}
+      </>}
+    {!readOnly && <>{selected && <div className="upload-preview"><h3>{t("Перед отправкой", "Before uploading")}</h3><p className="filename">{selected.name} · {(selected.size / 1024 / 1024).toFixed(2)} {t("МиБ", "MiB")}</p>
         {localUrl && <FileViewer key={localUrl} files={[{ id: "local", originalName: selected.name, mimeType: selected.type, localUrl }]} />}
         {selected.type.startsWith("image/") && <button className="secondary" disabled={busy} onClick={() => void reduce()}>{t("Подготовить уменьшенную копию (до 2560 px)", "Prepare a smaller copy (up to 2560 px)")}</button>}
         <div className="row"><button disabled={busy || selected.size > 8 * 1024 * 1024} onClick={() => { setProgress(0); void act(() => { const form = new FormData(); form.set("file", selected); form.set("attemptId", attemptId); form.set("partId", partId); if (replace) form.set("replaceId", replace); return uploadWithProgress(form, setProgress); }); }}>{t("Отправить файл", "Upload file")}</button><button className="secondary" disabled={busy} onClick={() => { selectFile(null); setReplace(""); }}>{t("Отмена", "Cancel")}</button></div>
       </div>}
       {busy && <div role="status"><progress max={100} value={progress} /> {progress}% · {progress === 100 ? t("Проверка и сохранение…", "Validating and saving…") : t("Загрузка…", "Uploading…")}</div>}
       <ErrorNotice error={error} /></>}
+    <FileViewer key={files.map(f => f.id).join()} files={files} />
+    {!readOnly && <><p className="muted upload-limits">{t("PNG, JPEG или PDF · 8 МиБ на файл · 5 файлов на часть · 250 МиБ на аккаунт. Новые фото: до 40 Мп по умолчанию.", "PNG, JPEG or PDF · 8 MiB per file · 5 files per part · 250 MiB per account. New photos: 40 MP by default.")} <strong>{files.length} / 5</strong></p>
+      <div className="stack">{files.map((f, i) => <div key={f.id} className="row spread"><span className="filename">{i + 1}. {f.originalName}</span><div className="row"><button className="secondary" disabled={busy} onClick={() => setReplace(f.id)}>{replace === f.id ? t("Выберите новый файл выше", "Choose a replacement above") : t("Заменить", "Replace")}</button><button className="secondary" disabled={busy} onClick={() => void act(() => api(`files/${f.id}?attemptId=${attemptId}`, "DELETE"))}>{t("Удалить", "Delete")}</button></div></div>)}</div></>}
   </div>;
 }
