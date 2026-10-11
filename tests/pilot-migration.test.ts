@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdir, readFile, cp, writeFile } from "node:fs/promises";
+import { mkdir, readFile, cp, writeFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
@@ -21,6 +21,8 @@ import {verifyBankFixture} from './bank-fixture';
 import { verifyPresentations } from './presentations-fixture';
 import { verifyAssessmentSources } from './assessment-sources-fixture';
 import { verifyStudentProgress } from './student-progress-fixture';
+import { verifyLearningMechanics } from './learning-mechanics-fixture';
+import { verifyPersonalLearning } from './personal-learning-fixture';
 
 test("populated migration and publication preserve existing accounts, tasks, attempts and grades", { timeout: 180000 }, async () => {
   const ci = process.env.CI === "true" && process.env.HOSTINGER_TEST_CREATE_DATABASE === "1";
@@ -39,7 +41,8 @@ test("populated migration and publication preserve existing accounts, tasks, att
   Object.assign(process.env, { MATHS4U_ENV: "test", MATHS4U_DATABASE_URL: `mysql://${username}:${appPassword}@127.0.0.1:${port}/${database}`,
     MATHS4U_DATABASE_NAME: database, PRIVATE_STORAGE_PATH: path.join(directory, "storage"), APP_URL: "http://127.0.0.1:3101" });
   await mkdir(path.join(directory, "migrations"), { recursive: true });
-  await cp("prisma/migrations/202609130001_platform", path.join(directory, "migrations/202609130001_platform"), { recursive: true });
+  for (const name of await readdir("prisma/migrations")) if (name !== "202610110001_personal_learning" && name !== "migration_lock.toml")
+    await cp(path.join("prisma/migrations", name), path.join(directory, "migrations", name), { recursive: true });
   await cp("prisma/migrations/migration_lock.toml", path.join(directory, "migrations/migration_lock.toml"));
   const configFile = path.join(directory, "prisma.config.ts");
   await writeFile(configFile, `import { defineConfig } from 'prisma/config'; export default defineConfig({schema:${JSON.stringify(path.resolve("prisma/schema.prisma"))}, migrations:{path:${JSON.stringify(path.join(directory, "migrations"))}}, datasource:{url:process.env.MATHS4U_DATABASE_URL}});`);
@@ -66,6 +69,7 @@ test("populated migration and publication preserve existing accounts, tasks, att
     const work = await client.work.create({ data: { ownerId: admin.id, title: "Existing assessment", kind: "TEST", versions: { create: { opensAt: new Date(), dueAt: new Date(Date.now() + 60000), items: { create: { taskVersionId: version.id, position: 0, maxPoints: 4 } } } } }, include: { versions: true } });
     const attempt = await client.attempt.create({ data: { userId: student.id, workVersionId: work.versions[0].id, number: 1, status: "GRADED", expiresAt: new Date(), submittedAt: new Date(), gradedAt: new Date(), answers: { create: { partId: part.id, response: { text: "Student work" } } } },include:{answers:true} });
     await sql.execute("INSERT INTO Review (id,answerId,reviewerId,points,comment,reviewedAt) VALUES ('preserve_review',?,?,3,'Preserve this grade',CURRENT_TIMESTAMP(3))",[attempt.answers[0].id,admin.id]);
+    await sql.execute("INSERT INTO PracticeStudy (attemptId,taskId,selfCheckedAt,needsRepeat) VALUES (?,?,CURRENT_TIMESTAMP(3),true)", [attempt.id, "preserve_task"]);
     const [baselineTables] = await sql.query<mysql.RowDataPacket[]>("SHOW TABLES");
     const columns = new Map<string,string[]>();
     for (const row of baselineTables) {
@@ -83,17 +87,19 @@ test("populated migration and publication preserve existing accounts, tasks, att
       return result;
     }
     const before = await snapshot();
-    assert.equal(before.lessontask, undefined);
+    assert.deepEqual(before.lessontask, []);
     migrate();
     let after = await snapshot();
     assert.equal(await client.lessonTask.count(), 0);
-    assert.equal(await client.practiceStudy.count(), 0);
+    assert.equal(await client.practiceStudy.count(), 1);
+    const historicalStudy = await client.practiceStudy.findUniqueOrThrow({ where: { attemptId: attempt.id } });
+    assert.equal(historicalStudy.selfDirected, false); assert.equal(historicalStudy.selfSolved, null); assert.equal(historicalStudy.selfPoints, null);
     assert.equal(await client.fileDerivative.count(), 0);
     const upgraded = await client.taskVersion.findUniqueOrThrow({where:{id:version.id},include:{texts:true}});
     assert.equal(upgraded.texts[0].markScheme, null); assert.equal(upgraded.difficultyKnown,false);
     assert.deepEqual(after, before, "Every pre-existing row, including passwords, roles and grades, must remain byte-equivalent");
     migrate();
-    after = await snapshot(); delete after.lessontask;
+    after = await snapshot();
     assert.deepEqual(after, before, "Repeated migration must preserve every existing row");
     const bundle = validatePilot({ format: "maths4u-pilot-v1", selection: "synthetic-ci", assets: [], sections: [{ project: "olymp", key: "ci", sourceUrl: "https://olymp.maths4u.sbs/", course: { key: "ci", texts: [{ locale: "en", title: "CI course" }] }, topic: { key: "topic", position: 7, texts: [{ locale: "en", title: "CI topic" }] }, lesson: { key: "lesson", texts: [{ locale: "en", title: "CI lesson", body: "\\(a+b\\)" }] }, records: [{ id: "ci-record", position: 3, sourceUrl: "https://olymp.maths4u.sbs/", metadata: {}, material: { visibility: "PRIVATE", texts: [{ locale: "en", title: "CI task", statement: "\\(x^2\\)", solution: "Private solution", hint: "Hint" }], parts: [{ kind: "MANUAL", maxPoints: 1, texts: [{ locale: "en", prompt: "Explain", answer: "Answer", rubric: "Rubric" }] }] } }] }] });
     await assert.rejects(checkPilotPublication(admin, bundle), /PILOT_PACKAGE_NOT_APPROVED/);
@@ -115,7 +121,7 @@ test("populated migration and publication preserve existing accounts, tasks, att
     let dto=await getAttempt(student,study.id,"en"); assert.equal(dto.questions[0].solution,undefined);
     await revealStudyHelp(student,study.id,{kind:"hint"},"en");
     dto=await getAttempt(student,study.id,"en"); assert.equal(dto.questions[0].hint,"Hint");assert.equal(dto.questions[0].solution,undefined);
-    await mutateAttempt(student,study.id,{revision:dto.revision,answers:[{partId:dto.questions[0].parts[0].id,response:{value:"Explain"}}]},true);
+    await assert.rejects(mutateAttempt(student,study.id,{revision:dto.revision,answers:[{partId:dto.questions[0].parts[0].id,response:{value:"Explain"}}]},true), /ASSIGNMENT_REQUIRED/);
     await selfCheckStudy(student,study.id,{state:"SELF_CHECKED"});
     assert.equal((await getAttempt(student,study.id)).status,"SUBMITTED");
     assert.equal((await topicStudy(student,published.sections[0].lessonId,"en")).items[0].state,"SELF_CHECKED");
@@ -128,6 +134,8 @@ test("populated migration and publication preserve existing accounts, tasks, att
     await verifyPresentations(admin,student);
     await verifyAssessmentSources(admin,student);
     await verifyStudentProgress(admin);
+    await verifyLearningMechanics(admin);
+    await verifyPersonalLearning(admin);
     const finalSnapshot=await snapshot();for(const [table,hashes]of Object.entries(before))for(const hash of hashes)assert.ok(finalSnapshot[table].includes(hash),`Historical ${table} row survives bank import`);
   } finally { await sql.end(); await client.$disconnect(); }
 });

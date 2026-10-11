@@ -19,7 +19,9 @@ import { auditStorage, retryDeletedCleanup } from "@/lib/storage-maintenance";
 import { checkBankStructure, beginBank, bankStatus, stageBankBatch, bankAssetStatus, stageBankFile, checkBankTasks, applyBankTasks, applyBankStructure } from "@/lib/bank-import";
 import { requestDiagnostic } from "@/lib/request-diagnostic";
 import { lessonPresentations, changePresentation } from "@/lib/presentations";
-import { studentProgress } from "@/lib/student-progress";
+import { studentProgress, myProgress } from "@/lib/student-progress";
+import { classProgress } from "@/lib/class-progress";
+import { bookmarkTask, followCourse } from "@/lib/personal-learning";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -48,7 +50,7 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
   let administrative = false;
   try {
     const parts = (await context.params).path, route = parts.join("/"), method = request.method;
-    const url = new URL(request.url), lang = url.searchParams.get("lang") === "en" ? "en" : "ru";
+    const url = new URL(request.url), lang = url.searchParams.get("lang") === "ru" ? "ru" : "en";
     let input: unknown = {};
     if (method !== "GET") {
       const expectedOrigin = new URL(process.env.APP_URL || "http://localhost:3000").origin;
@@ -101,6 +103,10 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
         "Content-Security-Policy": "sandbox; default-src 'none'", "Cross-Origin-Resource-Policy": "same-origin" } });
     }
     const actor = await requireActor(request);
+    if (parts[0] === "learning" && parts[1] === "bookmarks" && parts.length === 3 && method === "POST") return json(await bookmarkTask(actor, parts[2], input));
+    if (parts[0] === "learning" && parts[1] === "courses" && parts.length === 3 && method === "POST") return json(await followCourse(actor, parts[2], input));
+    if (route === "learning/progress" && method === "GET") return json(await myProgress(actor, lang, Object.fromEntries(url.searchParams)));
+    if (parts[0] === "classes" && parts[2] === "progress" && parts.length === 3 && method === "GET") return json(await classProgress(actor, parts[1]));
     if (parts[0] === "teaching" && parts[1] === "topics" && parts[3] === "presentations" && parts.length === 4) {
       if (method === "GET") return json(await lessonPresentations(actor, parts[2], lang));
       if (method === "POST") return json(await changePresentation(actor, parts[2], input));

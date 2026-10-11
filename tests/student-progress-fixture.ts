@@ -6,8 +6,8 @@ import { db } from "../src/lib/prisma";
 import { type Actor, COOKIE, digest, userSelect, transaction } from "../src/lib/security";
 import { saveTask } from "../src/lib/content";
 import { studentProgress } from "../src/lib/student-progress";
-import { beginStudy, revealStudyHelp, selfCheckStudy } from "../src/lib/study";
-import { createWork, workSchema, getAttempt, mutateAttempt, gradeAttempt, publishWork, startAttempt, workResults, publishResults } from "../src/lib/works";
+import { revealStudyHelp, selfCheckStudy } from "../src/lib/study";
+import { createWork, workSchema, getAttempt, mutateAttempt, gradeAttempt, publishWork, startAttempt, workResults, publishResults, lockAttempt, finalize } from "../src/lib/works";
 import { download, upload } from "../src/lib/files";
 import { editClass } from "../src/lib/classrooms";
 import { GET, POST } from "../src/app/api/[...path]/route";
@@ -35,12 +35,23 @@ export async function verifyStudentProgress(admin: Actor) {
     parts: [{ kind: "MANUAL", maxPoints: 5, texts: [{ locale: "en", prompt: "Explain your reasoning.", answer: "2 and 3", rubric: "Show the steps." }] }], assets: [{ fileId: solutionFile.id, role: "SOLUTION", caption: "Worked solution" }] });
   await db().lessonTask.create({ data: { lessonId: lesson.id, taskId: task.taskId, position: 0 } });
   await db().learningProgress.create({ data: { userId: student.id, lessonId: lesson.id, completed: true } });
-  const attempt = await beginStudy(student, { taskId: task.taskId, lessonId: lesson.id }, "en");
+  // Historical records emulate work submitted before self-directed practice existed.
+  // Seed them directly in this isolated DB; production endpoints must deny new uploads.
+  const historicalStart = async () => {
+    const w = await transaction(tx => createWork(tx, student, workSchema.parse({ kind: "PRACTICE", title: "Historical independent practice", taskIds: [task.taskId], opensAt: new Date(Date.now() - 1000), dueAt: new Date(Date.now() + 3600000), resultPolicy: "AFTER_SUBMIT" })));
+    const a = await startAttempt(student, w.id);
+    await db().practiceStudy.create({ data: { attemptId: a.id, taskId: task.taskId, lessonId: lesson.id } });
+    return a;
+  };
+  const historicalSubmit = (id: string) => transaction(async tx => { await finalize(tx, (await lockAttempt(tx, id))!, false); });
+  const attempt = await historicalStart();
   let dto = await getAttempt(student, attempt.id, "en");
   const partId = dto.questions[0].parts[0].id;
-  const answerFile = await upload(student, new File([new Uint8Array(pixels)], "my-working.png", { type: "image/png" }), attempt.id, partId);
+  const answerFile = await upload(admin, new File([new Uint8Array(pixels)], "my-working.png", { type: "image/png" }));
+  await db().storedFile.update({ where: { id: answerFile.id }, data: { ownerId: student.id } });
+  await db().answer.create({ data: { attemptId: attempt.id, partId, response: { value: "(x-2)(x-3)=0, so x=2 or x=3." }, files: { create: { fileId: answerFile.id } } } });
   dto = await getAttempt(student, attempt.id, "en");
-  await mutateAttempt(student, attempt.id, { revision: dto.revision, answers: [{ partId, response: { value: "(x-2)(x-3)=0, so x=2 or x=3." } }] });
+  await assert.rejects(mutateAttempt(student, attempt.id, { revision: dto.revision, answers: [] }), /ASSIGNMENT_REQUIRED/);
   await assert.rejects(getAttempt(mentor, attempt.id), /NOT_FOUND/);
   await assert.rejects(download(mentor, answerFile.id), /NOT_FOUND/);
   let progress = await studentProgress(mentor, classroom.id, student.id, "en");
@@ -52,7 +63,7 @@ export async function verifyStudentProgress(admin: Actor) {
   await assert.rejects(studentProgress(mentor, classroom.id, stranger.id, "en"), /NOT_FOUND/);
   await revealStudyHelp(student, attempt.id, { kind: "hint" }, "en");
   dto = await getAttempt(student, attempt.id);
-  await mutateAttempt(student, attempt.id, { revision: dto.revision, answers: [] }, true);
+  await historicalSubmit(attempt.id);
   await selfCheckStudy(student, attempt.id, { state: "NEEDS_REPEAT" });
   const reviewed = await getAttempt(mentor, attempt.id, "en");
   assert.equal(reviewed.manager, false); assert.equal(reviewed.practiceReview, true);
@@ -83,7 +94,7 @@ export async function verifyStudentProgress(admin: Actor) {
   const work = await publishWork(mentor, { classId: classroom.id, title: "Class assignment", taskIds: [task.taskId], opensAt: new Date(Date.now() - 1000), dueAt: new Date(Date.now() + 3600000) });
   const assignedAttempt = await startAttempt(student, work.id);
   assert.equal((await getAttempt(student, assignedAttempt.id)).sourcesHidden, true);
-  const repeat = await beginStudy(student, { taskId: task.taskId, lessonId: lesson.id }, "en");
+  const repeat = await historicalStart();
   progress = await studentProgress(mentor, classroom.id, student.id, "en");
   assert.equal(progress.topics[0].practised, 1); assert.equal(progress.topics[0].completed, 0); assert.equal(progress.summary.needsRepeat, 0);
   assert.equal(progress.total, 3); assert.ok(!progress.attempts.some(a => a.id === privateAttempt.id));
@@ -91,7 +102,7 @@ export async function verifyStudentProgress(admin: Actor) {
   assert.equal((await getAttempt(mentor, repeat.id)).timedOut, true);
   for (let n = 0; n < 21; n++) {
     const w = await transaction(tx => createWork(tx, student, workSchema.parse({ kind: "PRACTICE", title: "Problem-bank practice " + (n + 1), taskIds: [task.taskId], opensAt: new Date(Date.now() - 1000), dueAt: new Date(Date.now() + 3600000), resultPolicy: "AFTER_SUBMIT" })));
-    const a = await startAttempt(student, w.id); await mutateAttempt(student, a.id, { revision: 0, answers: [] }, true);
+    const a = await startAttempt(student, w.id); await historicalSubmit(a.id);
   }
   const p1 = await studentProgress(mentor, classroom.id, student.id, "en", { kind: "PRACTICE", page: 1 });
   const p2 = await studentProgress(mentor, classroom.id, student.id, "ru", { kind: "PRACTICE", page: 2 });

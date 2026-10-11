@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { AttemptDto } from "@/lib/works";
-import { useLocale, useResource, Heading, Loading, ErrorNotice, MathContent, MaterialAsset, Status, api, ApiError, DateLabel } from "./ui";
+import { useLocale, useResource, Heading, Loading, ErrorNotice, MathContent, MaterialAsset, Status, api, ApiError, DateLabel, ActionButton } from "./ui";
 import { ReviewScreen } from "./review-screen";
 import { StudyActions } from "./study-panel";
 import { AnswerAttachments } from "./answer-attachments";
@@ -14,10 +15,11 @@ export function AttemptScreen({ id, review, backHref }: { id: string; review: bo
   if (r.error) return <ErrorNotice error={r.error} />;
   if (!r.data) return <Loading />;
   if (review) return <ReviewScreen key={id} initial={r.data} backHref={backHref} />;
+  if (r.data.study?.selfDirected) return <SelfStudyScreen key={id} initial={r.data} />;
   return <AttemptForm key={id + String(review)} initial={r.data} review={review} />;
 }
 function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean }) {
-  const { t, lang } = useLocale();
+  const { t, lang } = useLocale(), router = useRouter();
   const [dto, setDto] = useState(initial), dtoRef = useRef(initial);
   const [responses, setResponses] = useState<Record<string, ResponseValue>>(() => Object.fromEntries(initial.answers.map(a => [a.partId, a.response as ResponseValue])));
   const drafts = useRef(responses), dirty = useRef(new Set<string>()), busy = useRef<Promise<void> | null>(null), blocked = useRef(false);
@@ -25,13 +27,14 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
   const [now, setNow] = useState(() => Date.now()), [offset] = useState(() => new Date(initial.serverTime).getTime() - Date.now());
   const [conflict, setConflict] = useState(false);
   const alive = useRef(true);
-  const finished = dto.status !== "IN_PROGRESS", readOnly = finished || review;
+  const independentWritten = dto.independent && dto.questions.some(q => q.parts.some(p => p.kind === "MANUAL"));
+  const finished = dto.status !== "IN_PROGRESS", readOnly = finished || review || independentWritten;
   const remaining = Math.max(0, Math.ceil((new Date(dto.expiresAt).getTime() - now - offset) / 1000));
   const apply = (next: AttemptDto) => { if (next.revision < dtoRef.current.revision) return; dtoRef.current = next; if (alive.current) setDto(next); };
   async function refresh() { const next = await api<AttemptDto>("attempts/" + initial.id + "?lang=" + lang); apply(next); }
   async function flush(submit: boolean) {
     if (busy.current) { await busy.current; return flush(submit); }
-    if (blocked.current || dtoRef.current.status !== "IN_PROGRESS" || review || (!submit && !dirty.current.size)) return;
+    if (blocked.current || independentWritten || dtoRef.current.status !== "IN_PROGRESS" || review || (!submit && !dirty.current.size)) return;
     const snapshot = Object.fromEntries([...dirty.current].map(id => [id, drafts.current[id]]));
     setSaving(true);
     const operation = (async () => {
@@ -82,11 +85,16 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
   function change(partId: string, value: ResponseValue) {
     drafts.current = { ...drafts.current, [partId]: value }; dirty.current.add(partId); setSavedAt(null); setResponses(drafts.current);
   }
-  return <><Heading title={dto.title} subtitle={t("Попытка ", "Attempt ") + dto.number}><Link className="button secondary" href={"/works/" + dto.workId + (review ? "/results" : "")}>{t("К работе", "Back to work")}</Link></Heading>
+  const topicHref = dto.study?.lessonId && dto.study.courseSlug ? `/courses/${dto.study.courseSlug}/topics/${dto.study.lessonId}` : "/library";
+  const requestedReturn = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("returnTo");
+  const returnHref = requestedReturn && /^\/(?:courses|library)(?:\/|\?|$)/.test(requestedReturn) && !requestedReturn.includes("\\") ? requestedReturn : topicHref;
+  return <><Heading title={dto.title} subtitle={t("Попытка ", "Attempt ") + dto.number}><Link className="button secondary" href={dto.study ? returnHref : "/works/" + dto.workId + (review ? "/results" : "")}>{dto.study ? t("К вопросам темы", "Back to questions") : t("К работе", "Back to work")}</Link></Heading>
     <div className="work-toolbar row spread"><div className="row"><Status value={dto.status} />{!readOnly && !dto.study && <span className="timer" aria-label={t("Осталось времени", "Time remaining")}>{Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}</span>}</div><div className="row"><span className="muted" role="status">{saving ? t("Сохранение…", "Saving…") : savedAt ? t("Сохранено ", "Saved ") + savedAt.toLocaleTimeString() : !finished ? t("Ответы сохраняются автоматически", "Answers save automatically") : dto.timedOut ? t("Время истекло", "Time expired") : ""}</span>
-      {!readOnly && <button onClick={() => void flush(true)} disabled={saving || conflict}>{t("Отправить работу", "Submit work")}</button>}
+      {!readOnly && <button onClick={() => void flush(true)} disabled={saving || conflict}>{dto.independent ? t("Проверить ответ", "Check answer") : t("Отправить работу", "Submit work")}</button>}
       {finished && <button className="secondary" onClick={() => void refresh()}>{t("Обновить результат", "Refresh result")}</button>}</div></div>
     <ErrorNotice error={error} />
+    {independentWritten && <div className="notice"><p>{t("Ранее сохранённые ответы остаются в истории. Новые самостоятельные решения проверяются на бумаге; отправка доступна только в задании учителя.", "Previously saved answers remain in your history. Check new independent written work on paper; submit solutions in teacher assignments.")}</p>
+      <ActionButton secondary label={t("Открыть самопроверку", "Open self-check")} action={async () => { const a = await api<{ id: string }>("study/start", "POST", { taskId: dto.study?.taskId ?? dto.questions[0].taskId, lessonId: dto.study?.lessonId }); router.push(`/attempts/${a.id}`); }} /></div>}
     {dto.study && <StudyActions dto={dto} apply={apply} save={async () => { await flush(false); if (blocked.current || dirty.current.size) throw new ApiError("STALE_REVISION", 409); }} />}
     {finished && !dto.resultVisible && <p className="notice">{t("Работа принята. Баллы, решения и комментарии станут доступны после публикации результатов.", "Your work was received. Marks, solutions and comments will be available when results are released.")}</p>}
     {dto.resultVisible && <div className="card tint" style={{ margin: "20px 0" }}><p className="eyebrow">{t("Результат", "Result")}</p><div className="metric">{dto.study && dto.pendingReview ? t("Без оценки", "Ungraded") : dto.score} {!(dto.study && dto.pendingReview) && <span className="muted" style={{ fontSize: 20 }}>/ {dto.maxPoints}</span>}</div>{dto.pendingReview && <p className="muted">{dto.study ? t("Ручная задача: автоматическая оценка не выставляется. Самопроверка хранится отдельно.", "Written solution: no automatic mark is awarded. Self-checking is recorded separately.") : t("Часть ответов ещё ожидает проверки. Баллы пока предварительные.", "Some answers are awaiting review. This score is provisional.")}</p>}{dto.submittedAt && <p className="muted"><DateLabel value={dto.submittedAt} /></p>}</div>}
@@ -97,7 +105,7 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
         <MathContent html={p.prompt} />
         {p.kind === "CHOICE" ? <div className="stack" style={{ marginTop: 14 }}>{p.options.map(o => <label className="check choice" key={o.id}><input type="radio" name={p.id} checked={response.optionId === o.id} disabled={readOnly} onChange={() => change(p.id, { value: "", optionId: o.id })} /><MathContent html={o.text} />{o.correct !== undefined && o.correct && <span>✓</span>}</label>)}</div> :
           <label style={{ marginTop: 14 }}>{t("Ваш ответ", "Your answer")}{p.kind === "MANUAL" ? <textarea aria-label={t("Ваш ответ", "Your answer")} value={response.value} readOnly={readOnly} onChange={e => change(p.id, { value: e.target.value })} placeholder={t("Запишите рассуждение или приложите файл решения…", "Write your reasoning or attach your solution…")} rows={5} /> : <input aria-label={t("Ваш ответ", "Your answer")} value={response.value} readOnly={readOnly} inputMode={p.kind === "NUMERIC" ? "decimal" : "text"} onChange={e => change(p.id, { value: e.target.value })} />}</label>}
-        <AnswerAttachments files={answer?.files ?? []} attemptId={dto.id} partId={p.id} readOnly={readOnly || !dto.allowFiles} disabledByTeacher={!readOnly && !dto.allowFiles} mutate={mutateFiles} />
+        {(!dto.independent || !!answer?.files.length) && <AnswerAttachments files={answer?.files ?? []} attemptId={dto.id} partId={p.id} readOnly={readOnly || !dto.allowFiles} disabledByTeacher={!readOnly && !dto.allowFiles} mutate={mutateFiles} />}
         {dto.resultVisible && answer && <div className="notice" style={{ marginTop: 16 }}><strong>{t("Баллы: ", "Points: ")}{answer.points ?? t("ожидает проверки", "pending")} / {p.maxPoints}</strong>{answer.comment && <p style={{ whiteSpace: "pre-wrap", marginTop: 8 }}>{answer.comment}</p>}</div>}
         {p.answer && <details open={!!dto.study} style={{ marginTop: 16 }}><summary>{t("Краткий ответ", "Short answer")}</summary><MathContent html={p.answer} /></details>}{p.rubric && <details open={!!dto.study} style={{ marginTop: 16 }}><summary>{t("Критерии части", "Part criteria")}</summary><MathContent html={p.rubric} /></details>}
         {p.markScheme&&<MathContent html={p.markScheme}/>}<MarkSchemeText html={p.markSchemeText} status={p.markSchemeStatus}/>{q.assets.filter(a=>a.partPosition===pi&&a.role!=="STATEMENT").map(a=><MaterialAsset key={a.id} asset={a}/>)}
@@ -107,5 +115,22 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
 
       {review && q.teacherNote && <div className="notice" style={{ marginTop: 16 }}><strong>{t("Заметка учителю", "Teacher note")}</strong><MathContent html={q.teacherNote} /></div>}
     </article>)}</div>
+  </>;
+}
+
+function SelfStudyScreen({ initial }: { initial: AttemptDto }) {
+  const { t } = useLocale(), [dto, setDto] = useState(initial);
+  const s = dto.study!, back = s.lessonId && s.courseSlug ? `/courses/${s.courseSlug}/topics/${s.lessonId}?mode=WRITTEN` : "/library";
+  return <><Heading title={dto.title} subtitle={t("Самостоятельная практика на бумаге", "Independent practice on paper")}><Link className="button secondary" href={back}>{t("К вопросам", "Back to questions")}</Link></Heading>
+    <StudyActions dto={dto} apply={setDto} save={async () => {}} />
+    {dto.questions.map(q => <article className="card self-study-question" key={q.id}><h2>{q.title}</h2><MathContent html={q.statement} />
+      {q.assets.filter(a => a.role === "STATEMENT").map(a => <MaterialAsset key={a.id} asset={a} />)}
+      {q.parts.map((p, i) => <section className="part" key={p.id}><div className="row spread"><strong>{t("Часть", "Part")} {i + 1}</strong><span>{p.maxPoints} {t("б.", "pts")}</span></div><MathContent html={p.prompt} />
+        {p.answer && <MathContent html={p.answer} />}{p.rubric && <MathContent html={p.rubric} />}{p.markScheme && <MathContent html={p.markScheme} />}<MarkSchemeText html={p.markSchemeText} status={p.markSchemeStatus} />
+        {q.assets.filter(a => a.role !== "STATEMENT" && a.partPosition === i).map(a => <MaterialAsset key={a.id} asset={a} />)}
+      </section>)}
+      {[{ html: q.answer, label: t("Краткий ответ", "Short answer"), role: "ANSWER" }, { html: q.hint, label: t("Подсказка", "Hint"), role: "HINT" }, { html: q.solution, label: t("Решение", "Solution"), role: "SOLUTION" }, { html: q.markScheme, label: "MS", role: "MARK_SCHEME" }].filter(m => m.html || q.assets.some(a => a.role === m.role && a.partPosition == null)).map(m => <section className="part" key={m.role}><h3>{m.label}</h3><MathContent html={m.html ?? ""} />{q.assets.filter(a => a.role === m.role && a.partPosition == null).map(a => <MaterialAsset key={a.id} asset={a} />)}</section>)}
+      <MarkSchemeText html={q.markSchemeText} status={q.markSchemeStatus} />
+    </article>)}
   </>;
 }

@@ -3,7 +3,7 @@ import path from "node:path";
 import { db } from "./prisma";
 import { ensure, AppError } from "./errors";
 import { type Actor, digest, secret, isAdmin, isTeacher, transaction, lockUser } from "./security";
-import { lockAttempt, finalize, workAccess, maySeeMaterialFile, attemptInclude } from "./works";
+import { lockAttempt, finalize, workAccess, maySeeMaterialFile, attemptInclude, independentPractice } from "./works";
 import { hasFeature } from "./subscriptions";
 import { privateStorageRoot } from "./storage-config";
 import { imagePreviews } from "./image-previews";
@@ -44,6 +44,7 @@ export async function upload(actor: Actor, file: File, attemptId?: string, partI
       if (attemptId) {
         const a = await lockAttempt(tx, attemptId);
         ensure(a && a.userId === actor.id, 404, "NOT_FOUND");
+        ensure(!independentPractice(a), 403, "ASSIGNMENT_REQUIRED");
         await workAccess(actor, a.workVersion.work, tx);
         ensure(a.status === "IN_PROGRESS", 409, "ATTEMPT_FINISHED");
         if (a.expiresAt <= new Date()) { await finalize(tx, a, true); return { expired: true as const }; }

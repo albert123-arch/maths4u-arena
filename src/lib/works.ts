@@ -88,6 +88,7 @@ export const attemptInclude = {
   answers: { include: { review: true, files: { include: { file: { select: { id: true, originalName: true, size: true, mimeType: true, width: true, height: true, previewError: true, derivatives: { select: { kind: true } } } } } } } },
 } satisfies Prisma.AttemptInclude;
 export type FullAttempt = Prisma.AttemptGetPayload<{ include: typeof attemptInclude }>;
+export function independentPractice(a: FullAttempt) { return a.workVersion.work.kind === "PRACTICE" && a.workVersion.work.ownerId === a.userId && !a.workVersion.work.classId && !a.workVersion.work.round; }
 export async function lockAttempt(tx: Prisma.TransactionClient, id: string) {
   await tx.$queryRawUnsafe("SELECT id FROM Attempt WHERE id = ? FOR UPDATE", id);
   return tx.attempt.findUnique({ where: { id }, include: attemptInclude });
@@ -110,6 +111,7 @@ export function automaticPoints(part: FullAttempt["workVersion"]["items"][number
 }
 export async function finalize(tx: Prisma.TransactionClient, attempt: FullAttempt, timedOut: boolean) {
   if (attempt.status !== "IN_PROGRESS") return;
+  if (attempt.study?.selfDirected) return; // No fabricated submissions or grades for paper self-study.
   let manual = false;
   for (const item of attempt.workVersion.items) for (const part of item.taskVersion.parts) {
     const answer = attempt.answers.find(a => a.partId === part.id);
@@ -148,6 +150,7 @@ export async function mutateAttempt(actor: Actor, id: string, input: unknown, su
   const outcome = await transaction(async tx => {
     const a = await lockAttempt(tx, id);
     ensure(a && a.userId === actor.id, 404, "NOT_FOUND");
+    ensure(!independentPractice(a) || (!a.study?.selfDirected && !a.workVersion.items.some(i => i.taskVersion.parts.some(p => p.kind === "MANUAL"))), 403, "ASSIGNMENT_REQUIRED");
     // Repeated submissions cannot change a finished attempt, even with stale revisions.
     if (a.status !== "IN_PROGRESS") { ensure(submit, 409, "ATTEMPT_FINISHED"); return { id }; }
     await workAccess(actor, a.workVersion.work, tx);
@@ -171,7 +174,7 @@ export async function mutateAttempt(actor: Actor, id: string, input: unknown, su
   if (outcome.expired) throw new AppError(409, "TIME_EXPIRED");
   return outcome;
 }
-export function maySeeResult(a: FullAttempt, now = new Date()) {
+export function maySeeResult(a: { status: string; workVersion: { dueAt: Date; resultPolicy: string; work: { kind: string; resultsPublishedAt: Date | null } } }, now = new Date()) {
   if (a.status === "IN_PROGRESS") return false;
   const v = a.workVersion;
   if (v.work.kind === "OLYMPIAD") return !!v.work.resultsPublishedAt && now >= v.dueAt;
@@ -208,9 +211,10 @@ export async function getAttempt(actor: Actor, id: string, lang = "ru") {
   const score = a.answers.reduce((s, r) => s + (r.review?.points ?? r.autoPoints ?? 0), 0);
   return { id: a.id, userId: a.userId, workId: a.workVersion.workId, title: a.study ? localized(a.workVersion.items[0].taskVersion.texts, lang).title : a.workVersion.work.title, number: a.number, status: a.status,
     startedAt: a.startedAt, expiresAt: a.expiresAt, submittedAt: a.submittedAt, timedOut: a.timedOut, revision: a.revision,
-    serverTime: new Date(), allowFiles: a.workVersion.allowFiles, resultVisible, solutionsVisible: solutions, manager, practiceReview, reviewStudent, sourcesHidden, kind: a.workVersion.work.kind,
-    study: a.study ? { taskId: a.study.taskId, lessonId: a.study.lessonId, courseSlug: a.study.lesson?.topic.course.slug, help: studyHelp(a), selfCheckedAt: a.study.selfCheckedAt, needsRepeat: a.study.needsRepeat } : null,
-    ...(resultVisible ? { score, maxPoints, pendingReview: a.answers.some(r => r.autoPoints === null && r.review?.points == null) } : {}),
+    serverTime: new Date(), allowFiles: a.workVersion.allowFiles && !independentPractice(a), independent: independentPractice(a), resultVisible, solutionsVisible: solutions, manager, practiceReview, reviewStudent, sourcesHidden, kind: a.workVersion.work.kind,
+    study: a.study ? { taskId: a.study.taskId, lessonId: a.study.lessonId, courseSlug: a.study.lesson?.topic.course.slug, help: studyHelp(a), selfCheckedAt: a.study.selfCheckedAt, needsRepeat: a.study.needsRepeat,
+      selfDirected: a.study.selfDirected, selfSolved: a.study.selfSolved, selfPoints: a.study.selfPoints, maximum: maxPoints } : null,
+    ...(resultVisible && !a.study?.selfDirected ? { score, maxPoints, pendingReview: a.answers.some(r => r.autoPoints === null && r.review?.points == null) } : {}),
     questions: a.workVersion.items.map((i, index) => ({ ...publicVersion(i.taskVersion, lang, solutions || !!revealed, revealed,
       sourcesHidden ? (lang === "en" ? "Problem " : "Задача ") + (index + 1) : undefined),
       ...(a.study ? { availableHelp: availableHelp(i.taskVersion, lang) } : {}),
@@ -226,6 +230,7 @@ export async function gradeAttempt(actor: Actor, id: string, input: unknown) {
   return transaction(async tx => {
     const a = await lockAttempt(tx, id);
     ensure(a && (isAdmin(actor) || (a.workVersion.work.ownerId === actor.id && a.userId !== actor.id) || await mayReviewPractice(actor, id, tx)), 404, "NOT_FOUND");
+    ensure(!a.study?.selfDirected, 403, "SELF_STUDY_NOT_GRADED");
     if (a.status === "IN_PROGRESS" && a.expiresAt <= new Date()) await finalize(tx, a, true);
     else ensure(a.status !== "IN_PROGRESS", 409, "NOT_SUBMITTED");
     const current = (await tx.attempt.findUnique({ where: { id }, include: attemptInclude }))!;

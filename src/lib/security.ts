@@ -18,7 +18,7 @@ export const passwordSchema = z.string().min(10).max(72).refine(v => Buffer.byte
 export const usernameSchema = z.string().trim().toLowerCase().regex(/^[a-z0-9_.-]{3,64}$/);
 export const registrationSchema = z.object({
   username: usernameSchema, password: passwordSchema, displayName: z.string().trim().min(2).max(160),
-  email: z.email().max(191).optional(), locale: z.enum(["ru", "en"]).default("ru"),
+  email: z.email().max(191).optional(), locale: z.enum(["ru", "en"]).default("en"),
 });
 // Roles supplied by clients are discarded; only STUDENT is inserted.
 export async function register(input: unknown) {

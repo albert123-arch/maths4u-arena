@@ -2,10 +2,11 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
 import type { Actor } from "@/lib/security";
-export const LocaleContext = createContext<"ru" | "en">("ru");
+export const LocaleContext = createContext<"ru" | "en">("en");
 export const ActorContext = createContext<Actor | null>(null);
 export function useLocale() { const lang = useContext(LocaleContext); return { lang, t: (ru: string, en: string) => lang === "ru" ? ru : en }; }
 export const errorLabels: Record<string, [string, string]> = {
+  QUESTION_CHANGED: ["Вопрос обновлён. Откройте сохранённую попытку, чтобы продолжить.", "This question has changed. Open the saved attempt to continue."],
   INVALID_PRESENTATION_URL: ["Нужна ссылка на презентацию Google Slides или файл Google Drive.", "Use a Google Slides presentation or Google Drive file link."],
   DUPLICATE_PRESENTATION: ["Эта презентация уже прикреплена к теме.", "This presentation is already attached to this topic."],
   PRESENTATION_LIMIT: ["В теме уже 50 презентаций. Уберите ненужную ссылку.", "This topic already has 50 presentations. Remove an unused link."],
@@ -34,6 +35,8 @@ export const errorLabels: Record<string, [string, string]> = {
   INVALID_INPUT: ["Проверьте заполнение полей.", "Check the form fields."], SERVICE_UNAVAILABLE: ["Сервис временно недоступен. Попробуйте позже.", "Service unavailable. Please try again later."],
   UNEXPECTED_SERVER_RESPONSE: ["Сервер отклонил запрос или вернул неожиданный ответ. Передайте администратору код ниже.", "The server rejected the request or returned an unexpected response. Share the code below with an administrator."],
   STALE_REVISION: ["Ответы изменены в другой вкладке. Обновите страницу перед продолжением.", "Answers changed in another tab. Reload before continuing."],
+  ASSIGNMENT_REQUIRED: ["Отправка решения доступна только в работе, заданной учителем. Для практики используйте самопроверку.", "Submit solutions only in your teacher’s assignments. Use self-checking for independent practice."],
+  CHECK_ANSWER_FIRST: ["Сначала проверьте короткий ответ.", "Check your answer first."],
   TIME_EXPIRED: ["Время закончилось. Сохранённые ответы отправлены.", "Time is up. Saved answers were submitted."],
   ATTEMPT_FINISHED: ["Работа уже отправлена.", "This attempt has already been submitted."], ATTEMPT_LIMIT: ["Все попытки использованы.", "No attempts remaining."],
   WORK_NOT_OPEN: ["Работа ещё не открыта.", "This work is not open yet."], WORK_CLOSED: ["Приём ответов завершён.", "This work is closed."],
@@ -91,7 +94,7 @@ export function DateLabel({ value }: { value: string | Date }) {
 }
 export function Status({ value }: { value: string }) {
   const { t } = useLocale();
-  const names: Record<string, [string, string]> = { IN_PROGRESS: ["В работе", "In progress"], SUBMITTED: ["На проверке", "Awaiting review"], GRADED: ["Проверено", "Reviewed"], HOMEWORK: ["Домашняя работа", "Homework"], TEST: ["Тест", "Test"], PRACTICE: ["Практика", "Practice"], OLYMPIAD: ["Олимпиада", "Olympiad"] };
+  const names: Record<string, [string, string]> = { SELF_CHECKED: ["Самопроверка", "Self-checked"], NEEDS_REPEAT: ["Повторить", "Another look"], IN_PROGRESS: ["В работе", "In progress"], SUBMITTED: ["На проверке", "Awaiting review"], GRADED: ["Проверено", "Reviewed"], HOMEWORK: ["Домашняя работа", "Homework"], TEST: ["Тест", "Test"], PRACTICE: ["Практика", "Practice"], OLYMPIAD: ["Олимпиада", "Olympiad"] };
   return <span className={"badge " + (value === "SUBMITTED" ? "gold" : "")}>{names[value] ? t(...names[value]) : value}</span>;
 }
 export function ActionButton({ label, action, onDone, secondary = false }: { label: string; action: () => Promise<unknown>; onDone?: () => void; secondary?: boolean }) {

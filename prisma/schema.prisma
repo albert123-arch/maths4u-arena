@@ -116,6 +116,8 @@ model User {
   progress             LearningProgress[]
   taskBasket           TaskBasket?
   presentations        LessonPresentation[]
+  bookmarks            TaskBookmark[]
+  followedCourses      CourseFollow[]
 
   @@index([status])
 }
@@ -198,6 +200,7 @@ model ClassMembership {
 }
 
 model Course {
+  followers CourseFollow[]
   groupLabel String? @db.VarChar(100)
   position Int @default(0)
   id         String       @id @default(cuid())
@@ -349,6 +352,7 @@ model BankBatch {
 
 
 model Task {
+  bookmarks TaskBookmark[]
   practiceStudies PracticeStudy[]
   id         String         @id @default(cuid())
   ownerId    String
@@ -863,11 +867,36 @@ model PracticeStudy {
   solutionAt DateTime?
   markSchemeAt DateTime?
   selfCheckedAt DateTime?
+  selfDirected Boolean @default(false)
+  selfSolved Boolean?
+  selfPoints Float?
   needsRepeat Boolean @default(false)
   updatedAt DateTime @default(now())
   attempt Attempt @relation(fields: [attemptId], references: [id], onDelete: Restrict)
   task Task @relation(fields: [taskId], references: [id], onDelete: Restrict)
   lesson Lesson? @relation(fields: [lessonId], references: [id], onDelete: Restrict)
   @@index([lessonId, taskId])
+  @@index([taskId])
+}
+
+// Personal course selection is independent of paid access entitlements.
+model CourseFollow {
+  userId String
+  courseId String
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  @@id([userId, courseId])
+  @@index([courseId])
+}
+
+// Use the stable task identity so imports/new versions retain the bookmark.
+model TaskBookmark {
+  userId String
+  taskId String
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  task Task @relation(fields: [taskId], references: [id], onDelete: Restrict)
+  @@id([userId, taskId])
   @@index([taskId])
 }

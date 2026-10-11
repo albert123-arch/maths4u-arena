@@ -7,12 +7,14 @@ import { availableHelp, localized } from "./content";
 import { createWork, workSchema, lockAttempt, studyHelp } from "./works";
 import { topicContent, taskPermission } from "./catalog";
 import { hasFeature } from "./subscriptions";
+import { progressInclude, studyProgressStatus } from "./practice-progress";
+export { progressInclude, studyProgressStatus } from "./practice-progress";
 
 export async function beginStudy(actor: Actor, input: unknown, lang: string) {
   const data = z.object({ taskId: z.string(), lessonId: z.string().nullable().optional() }).parse(input);
   return transaction(async tx => {
     await lockUser(tx, actor.id);
-    const task = await tx.task.findUnique({ where: { id: data.taskId }, include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } } } });
+    const task = await tx.task.findUnique({ where: { id: data.taskId }, include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true, parts: true } } } });
     ensure(task && !task.archivedAt && task.versions.length && (task.visibility === "PUBLIC" || task.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
     if (data.lessonId) {
       const link = await tx.lessonTask.findUnique({ where: { lessonId_taskId: { lessonId: data.lessonId, taskId: data.taskId } }, include: { lesson: { include: { topic: { include: { course: true } } } } } });
@@ -20,11 +22,13 @@ export async function beginStudy(actor: Actor, input: unknown, lang: string) {
       const key = link.lesson.topic.course.featureKey;
       ensure(!key || await hasFeature(actor, key), 403, "SUBSCRIPTION_REQUIRED");
     }
-    const existing = await tx.practiceStudy.findFirst({ where: { taskId: data.taskId, lessonId: data.lessonId ?? null, attempt: { userId: actor.id, status: "IN_PROGRESS", expiresAt: { gt: new Date() } } }, orderBy: { updatedAt: "desc" } });
+    const selfDirected = task.versions[0].parts.some(p => p.kind === "MANUAL");
+    const existing = await tx.practiceStudy.findFirst({ where: { taskId: data.taskId, lessonId: data.lessonId ?? null, selfDirected,
+      attempt: { userId: actor.id, ...(selfDirected ? { workVersion: { items: { some: { taskVersionId: task.versions[0].id } } } } : { status: "IN_PROGRESS", expiresAt: { gt: new Date() } }) } }, orderBy: { updatedAt: "desc" } });
     if (existing) return { id: existing.attemptId, resumed: true };
-    const work = await createWork(tx, actor, workSchema.parse({ title: localized(task.versions[0].texts, lang).title, kind: "PRACTICE", taskIds: [data.taskId], opensAt: new Date(), dueAt: new Date(Date.now() + 30 * 86400000), resultPolicy: "AFTER_SUBMIT", revealSolutions: false }));
+    const work = await createWork(tx, actor, workSchema.parse({ title: localized(task.versions[0].texts, lang).title, kind: "PRACTICE", taskIds: [data.taskId], opensAt: new Date(), dueAt: new Date(Date.now() + 30 * 86400000), resultPolicy: "AFTER_SUBMIT", revealSolutions: false, allowFiles: false }));
     const attempt = await tx.attempt.create({ data: { userId: actor.id, workVersionId: work.versions[0].id, number: 1, expiresAt: work.versions[0].dueAt,
-      study: { create: { taskId: data.taskId, lessonId: data.lessonId ?? null } } } });
+      study: { create: { taskId: data.taskId, lessonId: data.lessonId ?? null, selfDirected } } } });
     return { id: attempt.id, resumed: false };
   });
 }
@@ -40,31 +44,19 @@ export async function revealStudyHelp(actor: Actor, attemptId: string, input: un
   });
 }
 export async function selfCheckStudy(actor: Actor, attemptId: string, input: unknown) {
-  const { state } = z.object({ state: z.enum(["SELF_CHECKED", "NEEDS_REPEAT"]) }).parse(input);
+  const data = z.object({ state: z.enum(["SELF_CHECKED", "NEEDS_REPEAT"]), solved: z.boolean().optional(), points: z.number().finite().min(0).nullable().optional() }).strict().parse(input);
   return transaction(async tx => {
     const a = await lockAttempt(tx, attemptId);
     ensure(a && a.userId === actor.id && a.study && a.workVersion.work.kind === "PRACTICE", 404, "STUDY_ONLY");
-    ensure(a.status !== "IN_PROGRESS", 409, "SUBMIT_BEFORE_SELF_CHECK");
-    await tx.practiceStudy.update({ where: { attemptId }, data: { selfCheckedAt: new Date(), needsRepeat: state === "NEEDS_REPEAT", updatedAt: new Date() } });
-    // A self-check records the learner's reflection, never a mark or teacher review.
+    const maximum = a.workVersion.items.reduce((n, i) => n + i.maxPoints, 0);
+    ensure(data.points == null || data.points <= maximum, 400, "INVALID_POINTS");
+    if (!a.study.selfDirected) ensure(a.status !== "IN_PROGRESS", 409, "CHECK_ANSWER_FIRST");
+    await tx.practiceStudy.update({ where: { attemptId }, data: { selfCheckedAt: new Date(), needsRepeat: data.state === "NEEDS_REPEAT", updatedAt: new Date(),
+      ...(a.study.selfDirected ? { selfSolved: data.solved ?? data.state === "SELF_CHECKED", selfPoints: data.points ?? null } : {}) } });
+    if (a.study.selfDirected && a.status === "IN_PROGRESS") await tx.attempt.update({ where: { id: attemptId }, data: { status: "SUBMITTED", revision: { increment: 1 } } });
+    // Self-awarded points are never written to Answer, Review or official grades.
     return { ok: true };
   });
-}
-export const progressInclude = {
-  attempt: { include: {
-    answers: { select: { autoPoints: true, review: { select: { points: true } } } },
-    workVersion: { include: { items: { select: {
-      maxPoints: true, taskVersion: { select: { texts: { select: { locale: true, title: true } } } },
-    } } } },
-  } },
-} satisfies Prisma.PracticeStudyInclude;
-type ProgressRow = Prisma.PracticeStudyGetPayload<{ include: typeof progressInclude }>;
-export function studyProgressStatus(row: ProgressRow) {
-  const a = row.attempt;
-  const state = row.needsRepeat ? "NEEDS_REPEAT" : row.selfCheckedAt ? "SELF_CHECKED" : a.status === "IN_PROGRESS" && a.expiresAt <= new Date() ? "SUBMITTED" : a.status;
-  const help = [row.hintAt, row.answerAt, row.solutionAt, row.markSchemeAt].filter((d): d is Date => !!d);
-  const score = a.answers.reduce((n, a) => n + (a.review?.points ?? a.autoPoints ?? 0), 0), maximum = a.workVersion.items.reduce((n, i) => n + i.maxPoints, 0);
-  return { state, helpUsed: help.length > 0, checkedWithoutHelp: a.status === "GRADED" && score === maximum && !!a.submittedAt && !help.some(d => d <= a.submittedAt!), score: a.status === "GRADED" ? score : null, maximum };
 }
 export async function topicStudy(actor: Actor, lessonId: string, lang: string, historyPage = 1) {
   await topicContent(actor, lessonId, lang);

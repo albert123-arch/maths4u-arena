@@ -9,6 +9,7 @@ export function mentoredPracticeWhere(actor: Actor): Prisma.AttemptWhereInput {
     userId: { not: actor.id },
     user: { memberships: { some: { removedAt: null, classroom: { teacherId: actor.id, archivedAt: null } } } },
     workVersion: { work: { kind: "PRACTICE" } },
+    NOT: { study: { selfDirected: true } },
     OR: [{ status: { not: "IN_PROGRESS" } }, { expiresAt: { lte: new Date() } }],
   };
 }

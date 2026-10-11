@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AttemptDto } from "@/lib/works";
 import type { TopicStudyDto } from "@/lib/study";
-import { api, ActionButton, DateLabel, ErrorNotice, useLocale, useResource } from "./ui";
+import { api, ActionButton, DateLabel, ErrorNotice, Form, useLocale, useResource } from "./ui";
 
 export function StudyStatus({ state, helpUsed = false }: { state: string; helpUsed?: boolean }) {
   const { t } = useLocale();
@@ -32,13 +32,26 @@ export function StudyActions({ dto, save, apply }: { dto: AttemptDto; save: () =
   const index = progress.data?.items.findIndex(i => i.taskId === s.taskId) ?? -1, next = index >= 0 ? progress.data?.items[index + 1] : undefined;
   return <section className="card study-actions"><p className="eyebrow">{t("Самостоятельная практика", "Independent practice")}</p>
     <p className="muted">{t("Помощь раскрывается по вашему выбору. Просмотр решения и самопроверка не выставляют оценку.", "Reveal help when you choose. Viewing a solution or self-checking does not award marks.")}</p>
-    {dto.status === "IN_PROGRESS" && <p className="muted">{t("Ответ можно продолжать до ", "You can continue this answer until ")}<DateLabel value={dto.expiresAt} /></p>}
+    {dto.status === "IN_PROGRESS" && !s.selfDirected && <p className="muted">{t("Ответ можно продолжать до ", "You can continue this answer until ")}<DateLabel value={dto.expiresAt} /></p>}
     <div className="row">{(Object.keys(labels) as (keyof typeof labels)[]).filter(kind => available?.[kind]).map(kind => <ActionButton key={kind} secondary label={labels[kind] + (s.help[kind] ? " ✓" : "")} action={async () => { await save(); apply(await api<AttemptDto>(`attempts/${dto.id}/help?lang=${lang}`, "POST", { kind })); }} />)}</div>
     {!!Object.values(s.help).some(Boolean) && <p className="notice">{t("Использование помощи отмечено в истории. Раскрытые материалы находятся под ответом.", "Help usage is recorded in your history. Revealed materials appear below your answer.")}</p>}
-    {dto.status !== "IN_PROGRESS" && <><h3>{t("После сравнения с материалами", "After comparing with the materials")}</h3><div className="row"><ActionButton secondary label={t("Самопроверка выполнена", "Self-check complete")} action={async () => apply(await api<AttemptDto>(`attempts/${dto.id}/self-check?lang=${lang}`, "POST", { state: "SELF_CHECKED" }))} />
+    {s.selfDirected ? <SelfAssessment key={dto.id} dto={dto} apply={apply} /> : dto.status !== "IN_PROGRESS" && <><h3>{t("После сравнения с материалами", "After comparing with the materials")}</h3><div className="row"><ActionButton secondary label={t("Самопроверка выполнена", "Self-check complete")} action={async () => apply(await api<AttemptDto>(`attempts/${dto.id}/self-check?lang=${lang}`, "POST", { state: "SELF_CHECKED" }))} />
       <ActionButton secondary label={t("Мне нужно повторить", "I need to review this")} action={async () => apply(await api<AttemptDto>(`attempts/${dto.id}/self-check?lang=${lang}`, "POST", { state: "NEEDS_REPEAT" }))} /></div>
       {(s.selfCheckedAt || s.needsRepeat) && <StudyStatus state={s.needsRepeat ? "NEEDS_REPEAT" : "SELF_CHECKED"} helpUsed={Object.values(s.help).some(Boolean)} />}</>}
     <div className="row study-next">{s.lessonId && s.courseSlug && <ActionButton secondary label={t("К теме и истории", "Topic & history")} action={async()=>{ await save(); router.push(`/courses/${s.courseSlug}/topics/${s.lessonId}`); }} />}
       {next && <ActionButton label={t("Следующая задача", "Next task") + " →"} action={async () => { await save(); const a = await api<{ id: string }>(`study/start?lang=${lang}`, "POST", { taskId: next.taskId, lessonId: s.lessonId }); router.push(`/attempts/${a.id}`); }} />}</div>
   </section>;
+}
+
+function SelfAssessment({ dto, apply }: { dto: AttemptDto; apply: (next: AttemptDto) => void }) {
+  const { t, lang } = useLocale(), s = dto.study!;
+  const [points, setPoints] = useState(s.selfPoints == null ? "" : String(s.selfPoints));
+  const record = async (solved: boolean, score: number | null = null) => { apply(await api<AttemptDto>(`attempts/${dto.id}/self-check?lang=${lang}`, "POST", { state: solved ? "SELF_CHECKED" : "NEEDS_REPEAT", solved, points: score })); setPoints(score == null ? "" : String(score)); };
+  return <div className="self-assessment"><h3>{t("После сравнения с решением и MS", "After comparing with the solution & MS")}</h3>
+    <p className="muted">{t("Решайте на бумаге. Отправка решения учителю доступна в назначенных им работах. Здесь сохраняется ваша самооценка.", "Work on paper. Submit solutions in your teacher’s assignments. Here you record your own assessment.")}</p>
+    <div className="row"><ActionButton secondary label={t("Решено", "Solved")} action={() => record(true)} /><ActionButton secondary label={t("Не решено / повторить", "Not solved / another look")} action={() => record(false)} /></div>
+    <Form label={t("Сохранить свои баллы", "Save self-awarded points")} submit={async () => { const n = Number(points); await record(n === s.maximum, n); }}>
+      <label>{t("Мои баллы", "My points")}<input aria-label={t("Мои баллы", "My points")} type="number" inputMode="decimal" required min="0" max={s.maximum} step="any" value={points} onChange={e => setPoints(e.target.value)} /><span className="muted">/ {s.maximum} · {t("самооценка, не оценка учителя", "self-assessed, not teacher graded")}</span></label>
+    </Form>{s.selfCheckedAt && <p className="notice" role="status">{s.selfSolved ? t("Отмечено вами: решено", "You marked: solved") : t("Отмечено вами: нужно повторить", "You marked: needs another look")}{s.selfPoints != null && ` · ${s.selfPoints} / ${s.maximum}`} · {t("Самооценка", "Self-assessed")}</p>}
+  </div>;
 }

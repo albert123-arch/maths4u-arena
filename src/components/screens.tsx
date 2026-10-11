@@ -6,11 +6,11 @@ import { CopyButton } from "./copy-button";
 import { ActorContext, useLocale, useResource, Heading, Loading, Empty, ErrorNotice, DateLabel, Status, ActionButton, Form, Field, str, num, api } from "./ui";
 import type { listWorks, workSummary, workResults } from "@/lib/works";
 
-import type { courses } from "@/lib/courses";
+import type { MyProgressDto } from "@/lib/student-progress";
 import type { listOlympiads } from "@/lib/olympiads";
 import type { classDetail, listClasses } from "@/lib/classrooms";
+import { MyCourses } from "./my-courses";
 type Works = Awaited<ReturnType<typeof listWorks>>;
-type CourseList = Awaited<ReturnType<typeof courses>>;
 
 export type ClassList = Awaited<ReturnType<typeof listClasses>>;
 const go = (path: string) => window.location.assign(path);
@@ -31,29 +31,33 @@ export function Dashboard({ manage = false }: { manage?: boolean }) {
   const { t } = useLocale(), actor = useContext(ActorContext);
   const work = useResource<Works>("works" + (manage ? "?manage=1" : ""));
   const classes = useResource<ClassList>("classes" + (manage ? "?manage=1" : ""));
-  const learned = useResource<CourseList>(manage ? null : "courses");
+  const learned = useResource<MyProgressDto>(manage ? null : "learning/progress");
   const olymp = useResource<Awaited<ReturnType<typeof listOlympiads>>>(manage ? null : "olympiads");
   const [all, setAll] = useState(false);
   if (work.error || classes.error) return <ErrorNotice error={work.error || classes.error} />;
   if (!work.data || !classes.data) return <Loading />;
-  const upcoming = work.data.filter(w => !w.archived && new Date(w.dueAt) > new Date());
-  const pending = work.data.flatMap(w => w.attempts).filter(a => a.status === "SUBMITTED").length;
-  return <><Heading title={t("Здравствуйте, ", "Hello, ") + actor?.displayName.split(" ")[0] + "."} subtitle={manage ? t("Классы, задания и обратная связь — всё под рукой.", "Your classes, assignments and feedback in one place.") : t("Небольшие шаги сегодня. Большие открытия завтра.", "Small steps today. Big discoveries tomorrow.")}>
-    <Link className="button" href={manage ? "/teacher/works/new" : "/library"}>{manage ? t("+ Назначить работу", "+ Assign work") : t("Перейти к практике", "Start practising")} →</Link>
+  const assignments = work.data.filter(w => w.kind !== "PRACTICE" || !!w.classTitle);
+  const upcoming = assignments.filter(w => !w.archived && new Date(w.dueAt) > new Date());
+  const pending = assignments.flatMap(w => w.attempts).filter(a => a.status === "SUBMITTED").length;
+  return <><Heading title={manage ? t("Кабинет учителя", "Teacher dashboard") : t("Кабинет ученика", "Student dashboard")} subtitle={manage ? t("Классы, задания и обратная связь — всё под рукой.", "Your classes, assignments and feedback in one place. Hello, " + actor?.displayName.split(" ")[0] + ".") : t("Небольшие шаги сегодня. Большие открытия завтра.", "Courses, practice, assignments and your progress. Hello, " + actor?.displayName.split(" ")[0] + ".")}>
+    <Link className="button" href={manage ? "/teacher/works/new" : "/courses"}>{manage ? t("+ Назначить работу", "+ Assign work") : t("Перейти к практике", "Start practising")} →</Link>
   </Heading>
     <div className="grid three" style={{ marginBottom: 28 }}>{[
       [String(upcoming.length).padStart(2, "0"), t("Текущие работы", "Active assignments")],
       [String(classes.data.filter(c => !c.archivedAt).length).padStart(2, "0"), t("Мои классы", "My classes")],
-      [String(pending).padStart(2, "0"), t("Ожидают проверки", "Awaiting review")],
+      [String(manage ? pending : learned.data?.summary.solved ?? 0).padStart(2, "0"), manage ? t("Ожидают проверки", "Awaiting review") : t("Практика: решено", "Practice questions solved")],
     ].map(([value, title]) => <div className="card" key={title}><p className="muted" style={{ fontSize: 12 }}>{title}</p><div className="metric">{value}<span style={{ color: "#a9cbbb", fontSize: 22, float: "right" }}>↗</span></div></div>)}</div>
+    <MyCourses />
     <div className="dashboard-grid"><section className="card"><div className="row spread"><h2>{manage ? t("Работы класса", "Class assignments") : t("Ближайшие задания", "Upcoming assignments")}</h2><button className="quiet" onClick={() => setAll(!all)}>{all ? t("Текущие", "Active") : t("Все и архив", "All & archive")}</button></div>
-      <WorkRows rows={all ? work.data : upcoming} manage={manage} />
-      {!all && !manage && !!work.data.filter(w => w.attempts.some(a => a.status !== "IN_PROGRESS")).length && <><h2 style={{ marginTop: 32 }}>{t("Результаты и комментарии", "Results & feedback")}</h2><WorkRows rows={work.data.filter(w => w.attempts.some(a => a.status !== "IN_PROGRESS")).slice(0, 5)} /></>}
+      <WorkRows rows={all ? assignments : upcoming} manage={manage} />
+      {!all && !manage && !!assignments.filter(w => w.attempts.some(a => a.status !== "IN_PROGRESS")).length && <><h2 style={{ marginTop: 32 }}>{t("Результаты и комментарии", "Results & feedback")}</h2><WorkRows rows={assignments.filter(w => w.attempts.some(a => a.status !== "IN_PROGRESS")).slice(0, 5)} /></>}
     </section><aside className="stack"><section className="card tint"><p className="eyebrow">{t("Учимся вместе", "Learning together")}</p><h2>{t("Мои классы", "My classes")}</h2>
-      {!classes.data.length ? <Empty /> : classes.data.map(c => <div className="item" key={c.id}><Link href={manage ? "/teacher/classes/" + c.id : "/student"}>{c.title}</Link><div className="muted">{c._count.members} {t("учеников", "students")}</div></div>)}
+      {!classes.data.length ? <Empty /> : classes.data.map(c => <div className="item" key={c.id}><Link href={manage ? "/teacher/classes/" + c.id + (c.archivedAt ? "" : "/progress") : "/student/progress"}>{c.title}</Link><div className="muted">{c._count.members} {t("учеников", "students")}</div></div>)}
       <Link className="button secondary" href={manage ? "/teacher/classes" : "/join-class"} style={{ marginTop: 20 }}>{manage ? t("Управлять классами", "Manage classes") : t("Вступить по коду", "Join with a code")}</Link></section>
       {manage ? <section className="card"><h2>{t("Подготовить урок", "Prepare a lesson")}</h2><p className="muted">{t("Добавьте свои задачи или выберите материалы из банка.", "Add your own problems or use the shared library.")}</p><div className="stack"><Link href="/teacher/tasks/new">{t("+ Новая задача", "+ New problem")}</Link><Link href="/library">{t("Открыть банк задач", "Browse the problem bank")} →</Link><Link href="/teacher/olympiads/new">{t("Создать олимпиаду", "Create an olympiad")} →</Link></div></section> :
-        <section className="card"><h2>{t("Продолжить обучение", "Continue learning")}</h2>{learned.data?.flatMap(c => c.topics.flatMap(topic => topic.lessons.filter(l => l.openedAt && !l.completed).map(l => <p key={l.id}><Link href={"/courses#lesson-" + l.id}>{l.title} →</Link></p>))).slice(0, 3)}
+        <section className="card"><h2>{t("Продолжить обучение", "Continue learning")}</h2>{learned.data?.attempts.filter(a => a.kind === "PRACTICE" && a.status === "IN_PROGRESS").slice(0, 3).map(a => <p key={a.id}><Link href={`/attempts/${a.id}`}>{a.title} →</Link></p>)}
+          <p><Link href="/student/progress">{t("Мой прогресс и ответы", "My progress & answers")} →</Link></p>
+          <p className="muted">{learned.data?.summary.withoutHelp ?? 0} {t("задач на полный балл без помощи", "questions at full marks without help")} · {learned.data?.summary.needsRepeat ?? 0} {t("нужно повторить", "need another look")}</p>
           <Link className="button quiet" href="/courses">{t("Все курсы", "All courses")} →</Link></section>}
       {!manage && <section className="card"><h2>{t("Олимпиады", "Olympiads")}</h2>{olymp.data?.slice(0, 2).map(o => <p key={o.id}><Link href="/olympiads">{o.title} →</Link></p>)}<Link className="button quiet" href="/olympiads">{t("Расписание и участие", "Schedule & participation")} →</Link></section>}
     </aside></div></>;
@@ -66,14 +70,14 @@ export function Classes({ manage = false, invite }: { manage?: boolean; invite?:
         const result = await api<{ id: string }>(manage ? "classes" : "classes/join", "POST", manage ? { title: str(f, "title") } : { code: str(f, "code").trim() });
         go(manage ? "/teacher/classes/" + result.id : "/student");
       }}><Field name={manage ? "title" : "code"} label={manage ? t("Название класса", "Class name") : t("Код от учителя", "Teacher's code")} value={invite} /></Form>
-    </div><div className="card"><h2>{t("Мои классы", "My classes")}</h2><ErrorNotice error={r.error} />{r.data?.map(c => <div className="item" key={c.id}><Link href={manage ? "/teacher/classes/" + c.id : "/student"}>{c.title} →</Link>{c.archivedAt && <span className="badge gray">{t("Архив", "Archived")}</span>}</div>)}</div>
+    </div><div className="card"><h2>{t("Мои классы", "My classes")}</h2><ErrorNotice error={r.error} />{r.data?.map(c => <div className="item" key={c.id}><Link href={manage ? "/teacher/classes/" + c.id + (c.archivedAt ? "" : "/progress") : "/student/progress"}>{c.title} →</Link>{c.archivedAt && <span className="badge gray">{t("Архив", "Archived")}</span>}</div>)}</div>
   </div></>;
 }
 export function ClassDetail({ id }: { id: string }) {
   const { t } = useLocale(), r = useResource<Awaited<ReturnType<typeof classDetail>>>("classes/" + id);
   if (r.error) return <ErrorNotice error={r.error} />; if (!r.data) return <Loading />;
   const c = r.data, link = typeof window === "undefined" ? "" : window.location.origin + "/join-class/" + c.joinCode;
-  return <><Heading title={c.title} subtitle={t("Пригласите учеников и назначьте первую работу.", "Invite your students and assign their first work.")}><Link className="button" href={"/teacher/works/new?class=" + id}>{t("+ Назначить работу", "+ Assign work")}</Link></Heading><div className="dashboard-grid">
+  return <><Heading title={c.title} subtitle={t("Пригласите учеников и назначьте первую работу.", "Invite your students and assign their first work.")}>{!c.archivedAt && <Link className="button secondary" href={`/teacher/classes/${id}/progress`}>{t("Прогресс класса", "Class progress")}</Link>}<Link className="button" href={"/teacher/works/new?class=" + id}>{t("+ Назначить работу", "+ Assign work")}</Link></Heading><div className="dashboard-grid">
     <section className="card"><h2>{t("Ученики", "Students")} · {c.members.length}</h2>{!c.members.length && <Empty>{t("Передайте ученикам ссылку или QR-код справа.", "Share the link or QR code with your students.")}</Empty>}
       {c.members.map(m => <div className="item row spread" key={m.user.id}><div><strong>{m.user.displayName}</strong><p className="muted">{m.user.username}</p></div><div className="row">{!c.archivedAt && <Link className="button secondary" href={`/teacher/classes/${id}/students/${m.user.id}`}>{t("Прогресс и ответы", "Progress & answers")} →</Link>}<ActionButton label={t("Исключить", "Remove")} secondary action={() => api("classes/" + id, "PATCH", { userId: m.user.id, remove: true })} onDone={r.refresh} /></div></div>)}
       <details style={{ marginTop: 24 }}><summary>{t("Настройки класса", "Class settings")}</summary><Form label={t("Переименовать", "Rename")} done={r.refresh} submit={f => api("classes/" + id, "PATCH", { title: str(f, "title") })}><Field label={t("Название", "Name")} name="title" value={c.title} /></Form>

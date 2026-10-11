@@ -13,18 +13,20 @@ import { CatalogScreen, CourseCatalogScreen, TopicScreen } from "./catalog-scree
 import { StructureEditor } from "./structure-editor";
 import { AdminScreen } from "./admin-screen";
 import { SmartBoard } from "./smart-board";
-import { StudentProgress } from "./student-progress";
+import { StudentProgress, MyProgress } from "./student-progress";
+import { ClassProgress } from "./class-progress";
 
 export function Platform() {
   const path = usePathname(), parts = path.split("/").filter(Boolean);
-  const [actor, setActor] = useState<Actor | null>(null), [ready, setReady] = useState(false), [lang, setLang] = useState<"ru" | "en">("ru");
+  const [actor, setActor] = useState<Actor | null>(null), [ready, setReady] = useState(false), [lang, setLang] = useState<"ru" | "en">("en");
   const [error, setError] = useState<unknown>(null);
   useEffect(() => {
     api<{ user: Actor | null }>("auth/me").then(({ user }) => {
       setActor(user); const stored = localStorage.getItem("maths4u_locale");
-      setLang(stored === "en" || stored === "ru" ? stored : user?.profile?.locale ?? "ru");
+      setLang(stored === "en" || stored === "ru" ? stored : user?.profile?.locale ?? "en");
     }).catch(setError).finally(() => setReady(true));
   }, []);
+  useEffect(() => { document.documentElement.lang = lang; }, [lang]);
   const t = (ru: string, en: string) => lang === "ru" ? ru : en;
   const admin = actor?.roles.some(r => r.role === "ADMIN"), teacher = admin || actor?.roles.some(r => r.role === "TEACHER");
   const publicPage = !parts.length || ["login", "register", "recover", "library", "courses"].includes(parts[0]);
@@ -34,9 +36,10 @@ export function Platform() {
   else if (error) content = <ErrorNotice error={error} />;
   else if (!publicPage && !actor) content = <Auth mode="login" next={path} />;
   else if (parts[0] === "admin" && !admin || parts[0] === "teacher" && !teacher) content = <div className="notice error">{t("Этот раздел недоступен вашему аккаунту.", "This section is not available to your account.")}</div>;
-  else if (!parts.length) content = <Home actor={actor} teacher={!!teacher} />;
+  else if (!parts.length) content = <CourseCatalogScreen home />;
   else if (["login", "register", "recover"].includes(parts[0])) content = <Auth mode={parts[0]} />;
   else if (parts[0] === "library") content = <CatalogScreen />;
+  else if (parts[0] === "bookmarks") content = <CatalogScreen bookmarksOnly />;
   else if (parts[0] === "courses") content = parts[2] === "topics" && parts[3] ? <TopicScreen id={parts[3]} /> : <CourseCatalogScreen slug={parts[1]} />;
   else if (parts[0] === "attempts" && parts[1]) content = <AttemptScreen id={parts[1]} review={parts[2] === "review"} />;
   else if (parts[0] === "works" && parts[1]) content = parts[2] === "results" ? <ResultsPage id={parts[1]} /> : <WorkPage id={parts[1]} />;
@@ -44,6 +47,8 @@ export function Platform() {
   else if (parts[0] === "olympiads") content = <Olympiads />;
   else if (parts[0] === "access") content = <MyAccess />;
   else if (parts[0] === "teacher" && parts[1] === "board" && parts[2]) content = <SmartBoard lessonId={parts[2]} presentationId={parts[3]} />;
+  else if (parts[0] === "student" && parts[1] === "progress") content = <MyProgress />;
+  else if (parts[0] === "teacher" && parts[1] === "classes" && parts[2] && parts[3] === "progress") content = <ClassProgress classId={parts[2]} />;
   else if (parts[0] === "teacher" && parts[1] === "classes" && parts[2] && parts[3] === "students" && parts[4]) content = parts[5] === "attempts" && parts[6]
     ? <AttemptScreen key={parts[6]} id={parts[6]} review backHref={`/teacher/classes/${parts[2]}/students/${parts[4]}`} />
     : <StudentProgress key={`${parts[2]}/${parts[4]}`} classId={parts[2]} studentId={parts[4]} />;
@@ -59,11 +64,14 @@ export function Platform() {
     <header className="topbar" hidden={!!boardPage}><div className="topbar-inner">
       <Link className="brand" href="/"><span className="brand-symbol">m</span>Maths4U<span className="badge gray">BETA</span></Link>
       <nav className="nav" aria-label={t("Основная навигация", "Main navigation")}>
-        {actor && <Link className={path === "/student" ? "active" : ""} href="/student">{t("Моё обучение", "My learning")}</Link>}
-        <Link className={path === "/courses" ? "active" : ""} href="/courses">{t("Курсы", "Courses")}</Link>
-        <Link className={path === "/library" ? "active" : ""} href="/library">{t("Задачи", "Problems")}</Link>
+        {actor && <Link className={!parts.length ? "active" : ""} href="/">{t("Мои курсы", "My courses")}</Link>}
+        <Link className={parts[0] === "courses" ? "active" : ""} href="/courses">{t("Все курсы", "All courses")}</Link>
+        <Link className={parts[0] === "library" ? "active" : ""} href="/library">{t("Практика", "Practice")}</Link>
         <Link href="/olympiads">{t("Олимпиады", "Olympiads")}</Link>
-        {teacher && <Link className={parts[0] === "teacher" ? "active" : ""} href="/teacher">{t("Учителю", "Teaching")}</Link>}
+        {actor && <Link className={parts[0] === "bookmarks" ? "active" : ""} href="/bookmarks">{t("Закладки", "Bookmarks")}</Link>}
+        {actor && !teacher && <Link className={path === "/student" ? "active" : ""} href="/student">{t("Кабинет ученика", "Student dashboard")}</Link>}
+        {actor && !teacher && <Link className={path === "/student/progress" ? "active" : ""} href="/student/progress">{t("Мой прогресс", "My progress")}</Link>}
+        {teacher && <Link className={parts[0] === "teacher" ? "active" : ""} href="/teacher">{t("Кабинет учителя", "Teacher dashboard")}</Link>}
         {admin && <Link className={parts[0] === "admin" ? "active" : ""} href="/admin">{t("Управление", "Admin")}</Link>}
       </nav>
       <div className="account"><div className="locale">{(["ru", "en"] as const).map(l => <button key={l} className={lang === l ? "selected" : ""} aria-pressed={lang === l} onClick={() => {
@@ -75,20 +83,6 @@ export function Platform() {
     <main className="container" key={path}>{content}</main>
     <footer className="footer" hidden={!!boardPage}><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
   </TaskBasketProvider></ActorContext.Provider></LocaleContext.Provider>;
-}
-function Home({ actor, teacher }: { actor: Actor | null; teacher: boolean }) {
-  const { t } = useLocale();
-  return <><section className="hero"><div className="hero-copy"><p className="eyebrow">{t("Каждая задача — шаг вперёд", "Every problem is a step forward")}</p>
-    <h1>{t("Математика,\nкоторая понятна.", "Mathematics.\nMade understandable.")}</h1>
-    <p className="muted">{t("От первого доказательства до олимпиадной задачи. Учитесь, практикуйтесь и получайте обратную связь в одном месте.", "From your first proof to an olympiad challenge. Learn, practise and receive feedback in one place.")}</p>
-    <div className="row"><Link className="button" href={actor ? teacher ? "/teacher" : "/student" : "/register"}>{actor ? t("Открыть кабинет", "Open dashboard") : t("Начать обучение", "Start learning")} →</Link><Link className="button secondary" href="/courses">{t("Посмотреть курсы", "Explore courses")}</Link></div>
-    </div><div className="math-art" aria-hidden="true"><span className="hero-number">∞</span><div className="math-orbit"><div className="formula">a² + b² = c²</div></div><span className="hero-note">EXPLORE · THINK · UNDERSTAND</span></div></section>
-    <div className="grid three">{[
-      [t("01 / Учиться", "01 / Learn"), t("Теория с примерами", "Theory with examples"), t("Курсы, формулы и материалы на русском и английском.", "Courses, formulas and materials in Russian and English."), "/courses"],
-      [t("02 / Решать", "02 / Solve"), t("Практика каждый день", "Everyday practice"), t("Общий банк задач для самостоятельной работы и уроков.", "A shared problem bank for independent learning and classroom work."), "/library"],
-      [t("03 / Расти", "03 / Grow"), t("Обратная связь", "Feedback that helps"), t("Задания учителя, проверка решений и участие в олимпиадах.", "Teacher assignments, reviewed solutions and olympiad participation."), "/student"],
-    ].map(([label, title, desc, href]) => <Link className="card" href={href} key={href}><p className="eyebrow">{label}</p><h2>{title} ↗</h2><p className="muted">{desc}</p></Link>)}</div>
-  </>;
 }
 function Auth({ mode, next }: { mode: string; next?: string }) {
   const { t, lang } = useLocale();

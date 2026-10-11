@@ -21,8 +21,9 @@ async function fixture(page: Page, mode: "open" | "disabled" | "submitted" | "fu
   };
   // Inspect real HTTP bytes: WebKit's interception payload omits file contents.
   const receiveErrors: unknown[] = [];
+  const previewOrigin = new URL(String(test.info().project.use.baseURL)).origin;
   const receiver = createServer(async (request, response) => {
-    response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:3107");
+    response.setHeader("Access-Control-Allow-Origin", previewOrigin);
     response.setHeader("Access-Control-Allow-Credentials", "true");
     response.setHeader("Access-Control-Allow-Headers", "Content-Type");
     if (request.method === "OPTIONS") { response.writeHead(204).end(); return; }
