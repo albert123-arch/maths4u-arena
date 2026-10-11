@@ -30,6 +30,8 @@ Hostinger Business поддерживает серверные Node.js-прил�
 
 Приложение читает `PORT`, предоставленный хостингом, и слушает `0.0.0.0`. Если `PORT` не задан, используется `3000`; не подставляйте публичные порты 80/443. Hostinger указывает 3000 в своей диагностике. [Проверка параметров](https://www.hostinger.com/support/fix-failed-to-build-application-error-hostinger-node-js/).
 
+Production-сборка внутри `build-hostinger.mjs` запускает `next build --webpack`. В runner Hostinger Turbopack завершал CSS-worker до установления IPC-соединения при обработке KaTeX; Webpack позволяет сохранить CSS, формулы и текущие версии зависимостей. Настройки hPanel и итоговый `dist/server.js` остаются прежними. Флаг поддерживается [Next.js CLI](https://nextjs.org/docs/app/api-reference/cli/next#next-build-options).
+
 ## Переменные приложения
 
 Вводите секретные значения только в приватные поля Environment Variables hPanel. Не переносите старый `.env`, весь файл с внешними секретами или локальную тестовую конфигурацию. Переменные hPanel не записываются в GitHub. [Настройка переменных](https://www.hostinger.com/support/how-to-add-environment-variables-during-node-js-application-deployment/).
