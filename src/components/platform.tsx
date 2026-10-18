@@ -15,6 +15,7 @@ import { AdminScreen } from "./admin-screen";
 import { SmartBoard } from "./smart-board";
 import { StudentProgress, MyProgress } from "./student-progress";
 import { ClassProgress } from "./class-progress";
+import { VisitorStatistics } from "./visitor-statistics";
 
 export function Platform() {
   const path = usePathname(), parts = path.split("/").filter(Boolean);
@@ -82,6 +83,7 @@ export function Platform() {
     </div></header>
     <main className="container" key={path}>{content}</main>
     <footer className="footer" hidden={!!boardPage}><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
+    <VisitorStatistics path={path} eligible={ready && !actor && !error} language={lang} />
   </TaskBasketProvider></ActorContext.Provider></LocaleContext.Provider>;
 }
 function Auth({ mode, next }: { mode: string; next?: string }) {
