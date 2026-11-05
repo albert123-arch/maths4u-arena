@@ -10,6 +10,7 @@ import "./globals.css";
 import "./discovery.css";
 import "./learning.css";
 import "./components.css";
+import "./topic.css";
 import "../../public/platform-statistics.css";
 import "katex/dist/katex.min.css";
 export const metadata: Metadata = { title: "Maths4U — Learn, practise, progress", description: "Mathematics courses, practice, class assignments and progress in one place.", icons: { icon: "/favicon.svg" } };

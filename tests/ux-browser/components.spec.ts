@@ -1,6 +1,6 @@
 import { test, expect, type Browser, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
-const root="test-results/components-20261105", lesson="/courses/maths4u-9709-p1/topics/orig_quadratics_completing_square";
+const root=process.env.UX_REPORT_ROOT ?? "test-results/components-20261105", lesson="/courses/maths4u-9709-p1/topics/orig_quadratics_completing_square";
 test.setTimeout(240000);
 async function roleContext(browser: Browser, role: string) {
   const file=`.local/components-20261105/${role}-session.json`;
@@ -73,10 +73,10 @@ test('components: keyboard menu, focus, language and account controls',async({pa
   await page.locator('#discovery-q').focus();await page.keyboard.type('quadratic');await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/search\?q=quadratic/);
   await ready(page,lesson+'#practice');
-  const check=page.getByRole('button',{name:'Check full answer',exact:true});await expect(check).toBeEnabled();
+  const check=page.getByRole('button',{name:'Check answer',exact:true});await expect(check).toBeEnabled();
   await page.locator('.square-choice input').first().focus();await page.keyboard.press('ArrowDown');
   await expect(page.locator('.square-choice input').nth(1)).toBeChecked();
-  await page.keyboard.press('Tab');await expect(page.locator('.square-format summary')).toBeFocused();
+  await expect(page.locator('.square-format')).toHaveCount(0);
   await page.keyboard.press('Tab');await expect(check).toBeFocused();expect(await check.evaluate(e=>getComputedStyle(e).outlineWidth)).toBe('3px');
   await page.keyboard.press('Space');await expect(page.locator('.square-question .feedback--again').last()).toContainText('Look again');
 });
@@ -100,24 +100,24 @@ test('components: theme picker persists System, Light, Dark and synchronizes tab
 test('components: answer states, single-line actions and editable drafts survive',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   for(const theme of ['light','dark'] as const){
-    await page.emulateMedia({colorScheme:theme});await ready(page,lesson+'#practice');
-    const form=page.locator('.square-question'),primary=form.getByRole('button',{name:'Check full answer',exact:true});
-    const diagnostic=await page.locator('.square-select optgroup[label="Start here"] option').first().getAttribute('value');
-    await page.locator('.square-select select').selectOption(diagnostic!);
+    await page.emulateMedia({colorScheme:theme});await ready(page,lesson+'?item=M4U-9709-Q26-D02#practice');
+    const form=page.locator('.square-question'),primary=form.getByRole('button',{name:'Check answer',exact:true});
+    await expect(form.locator('h3')).toHaveText('Recognise the completed square');
     await expect(primary).toBeEnabled();
     await form.locator('.square-choice input').first().check();await primary.click();await expect(form.locator('.feedback--again').last()).toContainText('Look again');
     await expect(form.locator('.feedback--format')).toHaveCount(0);await page.screenshot({path:`${root}/after/answer-again-${theme}.png`,fullPage:false});
+    await form.locator('.square-choice[data-state=again]').screenshot({path:`${root}/after/selected-wrong-option-${theme}.png`});
     for(const button of await form.locator('.square-form-actions button').all())expect(await button.evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);
     const buttonWidth=await primary.evaluate(e=>e.getBoundingClientRect().width),rowWidth=await form.locator('.square-form-actions').evaluate(e=>e.getBoundingClientRect().width);expect(Math.abs(buttonWidth-rowWidth)).toBeLessThan(1);
     const radio=await form.locator('.square-choice input').last().evaluate(e=>({appearance:getComputedStyle(e).appearance,background:getComputedStyle(e).backgroundColor,before:getComputedStyle(e,'::before').transform,scheme:getComputedStyle(e).colorScheme}));
     expect(radio.appearance).toBe('none');expect(radio.before).toContain('0');expect(radio.scheme).toBe(theme);
     await form.getByRole('button',{name:'Hint',exact:true}).click();await expect(form.locator('.feedback--hint')).toContainText('Hint');await page.screenshot({path:`${root}/after/answer-hint-${theme}.png`,fullPage:false});
     await form.locator('.square-choice input').nth(2).check();await primary.click();await expect(form.locator('.feedback--correct').last()).toContainText('Correct');await page.screenshot({path:`${root}/after/answer-correct-${theme}.png`,fullPage:false});
-    const uid=await page.locator('.square-select optgroup[label="Core practice"] option').first().getAttribute('value');await page.locator('.square-select select').selectOption(uid!);
+    await page.locator('.square-question-list summary').click();await page.locator('.square-question-list').getByRole('button',{name:'1. Unit coefficient',exact:true}).click();
     const inputs=form.locator('input:not([type=radio])');await expect(inputs.first()).toBeEnabled();for(const input of await inputs.all())await input.fill('0');await inputs.first().fill('not-math');await primary.click();
     await expect(form.locator('.feedback--format').last()).toContainText('Check the format');await expect(inputs.first()).toHaveAttribute('aria-invalid','true');await page.screenshot({path:`${root}/after/answer-format-${theme}.png`,fullPage:false});
     expect(await inputs.first().evaluate(e=>getComputedStyle(e).borderColor)).toBe(await form.locator('.feedback--format').last().evaluate(e=>getComputedStyle(e).borderColor));
-    for(const input of (await inputs.all()).slice(1))await expect(input).not.toHaveAttribute('aria-invalid','true');
+    for(const input of (await inputs.all()).slice(1))await expect(input).toHaveAttribute('aria-invalid','true');
     await page.reload();await expect(inputs.first()).toHaveValue('not-math');
   }
 });

@@ -28,6 +28,8 @@ for(const state of ['success','warning','hint','danger']){
   pair(state+'-text',state+'-bg',4.5);pair(state,state+'-bg',3,'status icon');
   pair(state+'-text','surface',4.5);
 }
+// Selected answer options retain the ordinary mathematical text colour.
+for(const state of ['success','warning'])pair('text',state+'-bg',4.5,'selected answer text');
 for(const fg of ['on-header','header-link']){pair(fg,'header',4.5);pair(fg,'header-selected',4.5);}
 pair('header-border','header',3,'header control boundary');
 pair('board-text','board',4.5);pair('board-muted','board-toolbar',4.5);
@@ -41,7 +43,7 @@ assert.ok(automatic,'System dark theme missing');
 const auto=Object.fromEntries(automatic.nodes.filter(n=>n.type==='decl').map(d=>[d.prop,d.value]));
 for(const [name,value]of Object.entries(auto))assert.equal(value,themes.dark[name],`Dark theme mismatch: ${name}`);
 // Source audit ignores authored question SVG data and generated/vendor CSS.
-const sourceFiles=['src/app/globals.css','src/app/discovery.css','src/app/learning.css','src/app/components.css','public/platform-statistics.css','public/favicon.svg'];
+const sourceFiles=['src/app/globals.css','src/app/discovery.css','src/app/learning.css','src/app/components.css','src/app/topic.css','public/platform-statistics.css','public/favicon.svg'];
 for(const name of await fs.readdir('src/components'))if(name.endsWith('.tsx'))sourceFiles.push('src/components/'+name);
 const violations=[];
 for(const file of sourceFiles){const text=await fs.readFile(file,'utf8');

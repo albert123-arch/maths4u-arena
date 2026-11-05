@@ -51,12 +51,35 @@ export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): Sq
   const teaching = topic.code === "CS" ? { notes, examples } : quadraticsTeaching[topic.key];
   return { topic, version: topic.version, title: topic.title, notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, prompt: renderContent(q.prompt_html).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>'), fields: q.fields.map(f => ({ key: f.key, label: topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
 }
+// Feedback describes an identifiable answer pattern, not an assumed thought process.
+// This is server-only: none of the expected values are added to the public DTO.
+function matchesFeedbackPattern(f: ExactField, input: string) {
+  try { return checkExact(f, input); } catch { return false; }
+}
+function retryMessage(q: SourceQuestion, f: ExactField, input: string) {
+  const multiplier = q.fields.find(x => /^(a|form_a)$/.test(x.key));
+  const centre = q.fields.find(x => /^(h|form_h)$/.test(x.key));
+  if (multiplier && /^(h|form_h)$/.test(f.key)) {
+    if (matchesFeedbackPattern(f, `-(${input})`)) return "This is the opposite centre. The form uses x − h; check the sign of h.";
+    return "Halve the coefficient of x inside the bracket, then match the form x − h.";
+  }
+  if (multiplier && centre && /^(k|form_k)$/.test(f.key)) {
+    const a = multiplier.expected, h = centre.expected, k = f.expected;
+    if (typeof a === "string" && typeof h === "string" && typeof k === "string" && !matchesFeedbackPattern(multiplier, "1") && !matchesFeedbackPattern(centre, "0")) {
+      // Original constant = k + a*h². Subtracting h² instead of a*h² gives this value.
+      const missingMultiplier = `(${k})+((${a})-1)*(${h})^2`;
+      if (matchesFeedbackPattern({ ...f, expected: missingMultiplier }, input)) return "This matches a correction without the outside multiplier. Multiply the square correction by that coefficient.";
+    }
+    return "Subtract the square you added inside the bracket, then simplify the outside constant.";
+  }
+  return ["set", "integers"].includes(f.type) ? "Recheck all values, both roots and included or excluded endpoints." : "Recheck this complete answer.";
+}
 export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): CheckResult {
   const fields: CheckResult["fields"] = {};
   if (Object.keys(answers).length !== q.fields.length || Object.keys(answers).some(k => !q.fields.some(f => f.key === k))) return { valid: false, correct: false, fields, error: "Complete every labelled field." };
   let valid = true;
   for (const f of q.fields) {
-    try { const correct = checkExact(f, answers[f.key]); fields[f.key] = { correct, message: correct ? "Correct." : ["set", "integers"].includes(f.type) ? "Recheck all values, both roots and included or excluded endpoints." : /^(h|form_h)$/.test(f.key) && q.fields.some(f=>f.key==="form_a" || f.key==="a") ? "The form uses x − centre. Check the sign of the centre." : /^(k|form_k)$/.test(f.key) && q.fields.some(f=>f.key==="form_a" || f.key==="a") ? "Multiply the square correction by the outside coefficient." : "Recheck this complete answer." }; }
+    try { const correct = checkExact(f, answers[f.key]); fields[f.key] = { correct, message: correct ? "Correct." : retryMessage(q, f, answers[f.key]) }; }
     catch { valid = false; fields[f.key] = { correct: false, formatError: true, message: "Check the format. Use fractions, sqrt(...), intervals such as (1,5], or coordinate pairs/triples separated by semicolons. Factors and ratios also use semicolons. Complete every field." }; }
     if (f.key === "expanded" && fields[f.key].correct && !isExpandedPolynomial(answers[f.key], f.variables ?? [])) fields[f.key] = { correct: false, message: "This is equivalent, but this field asks for expanded form. Multiply out the brackets." };
   }

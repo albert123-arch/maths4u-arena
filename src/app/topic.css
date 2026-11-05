@@ -1,0 +1,70 @@
+/* Stage 3: the existing lesson engine, with a readable, stable practice surface. */
+body:has(.square-lesson) .topbar { position:sticky;top:0;z-index:40; }
+body:has(.square-lesson) { overflow-anchor:none; }
+.square-lesson { --lesson-header-height:76px;--lesson-nav-height:60px; }
+.square-heading { padding:var(--sp-4) 0; }
+.square-heading h1 { margin:var(--sp-2) 0 var(--sp-3); }
+.square-heading p { margin:0 0 var(--sp-2); }
+.square-heading .muted { font-size:var(--fs-small);margin-left:var(--sp-2); }
+.square-topic-mobile { display:none; }
+.quadratics-topics { flex-wrap:nowrap;overflow-x:auto;padding:var(--sp-1);margin:0 0 var(--sp-3); }
+.quadratics-topics a { flex:1 0 150px; }
+.quadratics-topics a[aria-current=page] { color:var(--c-on-primary); }
+.square-lesson .square-nav {
+  position:sticky;top:var(--lesson-header-height);z-index:30;display:flex;flex-wrap:nowrap;gap:var(--sp-1);
+  overflow-x:auto;background:var(--c-surface);border-bottom:1px solid var(--c-border-strong);
+  padding:var(--sp-2) var(--sp-1);margin:0 0 var(--sp-4);max-width:100%;
+}
+.square-nav a { flex:none;background:transparent;white-space:nowrap;padding:var(--sp-2) var(--sp-3); }
+.square-nav a[aria-current=location] { color:var(--c-primary);background:var(--c-surface-muted);text-decoration:underline;text-underline-offset:var(--sp-2); }
+.square-lesson [id] { scroll-margin-top:calc(var(--lesson-header-height) + var(--lesson-nav-height) + var(--sp-3)); }
+.square-reading .math-content,.square-reading > h2 { max-width:var(--w-reading); }
+.square-reading .math-content { line-height:var(--lh-body); }
+.square-reading .math-content h2 { margin:0 0 var(--sp-4); }
+.square-reading .math-content h3 { margin:var(--sp-5) 0 var(--sp-3);font-size:var(--fs-h3); }
+.square-reading .math-content ol { list-style:decimal;padding-left:var(--sp-5); }
+.square-reading .math-content ul { list-style:disc;padding-left:var(--sp-5); }
+.square-reading .math-content li { padding-left:var(--sp-2);margin:var(--sp-3) 0; }
+.square-reading .math-content li::marker { color:var(--c-primary);font-weight:700; }
+.square-lesson .katex-display { display:block;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:var(--sp-2) 0; }
+.square-lesson .katex-display > .katex { white-space:nowrap; }
+.square-question-nav { border-bottom:1px solid var(--c-border);padding:var(--sp-4) 0;margin-bottom:var(--sp-5); }
+.square-collection,.square-progress-label,.square-field-format { font-size:var(--fs-small);color:var(--c-text-muted); }
+.square-question-position { margin:var(--sp-1) 0;font-weight:600; }
+.square-question-nav progress { appearance:none;display:block;width:100%;height:var(--sp-2);margin:var(--sp-3) 0 0;border:0;border-radius:var(--radius-control);background:var(--c-surface-muted);accent-color:var(--c-primary); }
+.square-question-nav progress::-webkit-progress-bar { background:var(--c-surface-muted);border-radius:var(--radius-control); }
+.square-question-nav progress::-webkit-progress-value { background:var(--c-primary);border-radius:var(--radius-control); }
+.square-progress-label { margin:var(--sp-1) 0; }
+.square-question-list summary,.square-topic-mobile summary { cursor:pointer;min-height:var(--h-control);padding:var(--sp-3) 0;font-size:var(--fs-small); }
+.square-question-list > div { margin-top:var(--sp-3); }
+.square-question-list h3 { font-size:var(--fs-small);margin:var(--sp-3) 0 var(--sp-1); }
+.square-question-list ol { list-style:none;padding:0;margin:0; }
+.square-question-list .ui-button { width:100%;justify-content:space-between;text-align:left;white-space:normal; }
+.square-question-list [aria-current=step] { background:var(--c-surface-muted);border-color:var(--c-primary); }
+.square-list-checked { flex:none;font-size:var(--fs-meta);color:var(--c-text-muted); }
+.square-practice { overflow-anchor:none; }
+.square-question h3 { margin:var(--sp-2) 0; }
+.square-field-format { margin:var(--sp-2) 0 0;line-height:var(--lh-body); }
+.square-field-status .feedback { margin:var(--sp-2) 0 0; }
+.square-answer .ui-input.ui-input[aria-invalid=true] { border-color:var(--c-warning); }
+.square-answer:has(.feedback--format) .ui-input.ui-input[aria-invalid=true] { border-color:var(--c-danger); }
+.square-choice[data-state=again] { border-color:var(--c-warning);background:var(--c-warning-bg); }
+.square-choice[data-state=correct] { border-color:var(--c-success);background:var(--c-success-bg); }
+.square-choice-status { display:grid;place-items:center;flex:0 0 24px;min-height:24px;border:1px solid currentColor;border-radius:50%;color:var(--c-warning-text);margin-left:auto;font-weight:700; }
+.square-choice[data-state=correct] .square-choice-status { color:var(--c-success-text); }
+.square-question .square-answer-grid { margin-bottom:0; }
+.square-challenges .ui-button.ui-button { justify-content:space-between;gap:var(--sp-4); }
+@media(max-width:768px) {
+  .quadratics-topics { display:none; }
+  .square-topic-mobile { display:block;position:relative;margin-bottom:var(--sp-3);border:1px solid var(--c-border-strong);border-radius:var(--radius-control);background:var(--c-surface); }
+  .square-topic-mobile summary { display:flex;justify-content:space-between;padding:var(--sp-3) var(--sp-4);font-weight:600;list-style:none; }
+  .square-topic-mobile summary::-webkit-details-marker { display:none; }
+  .square-topic-mobile nav { position:absolute;left:0;right:0;top:100%;z-index:35;padding:var(--sp-2);background:var(--c-surface);box-shadow:var(--shadow-menu);border:1px solid var(--c-border-strong);border-radius:var(--radius-control); }
+  .square-topic-mobile nav a { display:flex;align-items:center;min-height:var(--h-control);padding:var(--sp-2);font-size:var(--fs-small); }
+  .square-topic-mobile [aria-current=page] { background:var(--c-surface-muted);font-weight:600; }
+  .square-heading .muted { display:inline;margin:0 0 0 var(--sp-2); }
+  .square-lesson .square-nav { gap:0;padding:var(--sp-1) 0; }
+  .square-nav a { padding:var(--sp-2) var(--sp-1); }
+  .square-question-nav > .row > .row { gap:var(--sp-2); }
+  .square-question-nav .ui-button { padding:var(--sp-2); }
+}
