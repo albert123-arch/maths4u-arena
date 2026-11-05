@@ -7,7 +7,7 @@ export function PilotCorrection() {
   const { t } = useLocale();
   const [input, setInput] = useState<unknown>(null), [report, setReport] = useState<Awaited<ReturnType<typeof checkPilotCorrection>> | null>(null);
   const [error, setError] = useState<unknown>(null), [busy, setBusy] = useState(false), [done, setDone] = useState(false);
-  return <section className="card" style={{ marginBottom: 24 }}><h2>{t("Исправление пилота: MS и решения", "Pilot correction: MS and solutions")}</h2>
+  return <section className="card space-bottom-24" ><h2>{t("Исправление пилота: MS и решения", "Pilot correction: MS and solutions")}</h2>
     <p className="muted">{t("Создаёт новые версии 36 задач и отделяет примеры olymp от теории. Задачи, файлы и снимки выданных работ сохраняются. Сначала проверьте dry-run.", "Creates new versions of 36 tasks and separates olymp examples from theory. Task IDs, files and assigned work snapshots are preserved. Review the dry run first.")}</p>
     <label>{t("Проверенный correction.json", "Verified correction.json")}<input type="file" accept=".json" disabled={busy} onChange={async e => {
       const file = e.target.files?.[0]; if (!file) return; setBusy(true); setReport(null); setDone(false); setError(null);

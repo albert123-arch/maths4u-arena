@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-location-assign-relative-destination -- Authentication changes discard account-specific client state with a full navigation. */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import type { Actor } from "@/lib/security";
 import { api, LocaleContext, ActorContext, useLocale, Form, Field, str, Heading, ErrorNotice, Loading } from "./ui";
 import { Dashboard, Classes, ClassDetail, Olympiads, WorkPage, ResultsPage, MyAccess } from "./screens";
@@ -20,17 +20,20 @@ import { DiscoveryHome, type DiscoveryProps } from "./discovery-home";
 import { SquareLessonView } from "./square-lesson";
 import type { SquareLesson } from "@/lib/square-model";
 import { CourseSelection, MyLearning } from "./learning-home";
+import { storedLocale, rememberLocale } from "@/lib/locale";
 
 export function Platform({ discovery, square }: { discovery?: DiscoveryProps; square?: SquareLesson }) {
   const path = usePathname(), parts = path.split("/").filter(Boolean);
-  const [actor, setActor] = useState<Actor | null>(null), [ready, setReady] = useState(false), [lang, setLang] = useState<"ru" | "en">("en");
+  const initialLocale = useContext(LocaleContext);
+  const [actor, setActor] = useState<Actor | null>(null), [ready, setReady] = useState(false), [lang, setLang] = useState<"ru" | "en">(initialLocale);
   const [error, setError] = useState<unknown>(null);
   useEffect(() => {
     api<{ user: Actor | null }>("auth/me").then(({ user }) => {
-      setActor(user); const stored = localStorage.getItem("maths4u_locale");
-      setLang(stored === "en" || stored === "ru" ? stored : user?.profile?.locale ?? "en");
+      setActor(user);
+      const preferred = storedLocale() ?? user?.profile?.locale ?? initialLocale;
+      setLang(preferred); rememberLocale(preferred);
     }).catch(setError).finally(() => setReady(true));
-  }, []);
+  }, [initialLocale]);
   useEffect(() => { document.documentElement.lang = lang; }, [lang]);
   const t = (ru: string, en: string) => lang === "ru" ? ru : en;
   const admin = actor?.roles.some(r => r.role === "ADMIN"), teacher = admin || actor?.roles.some(r => r.role === "TEACHER");
@@ -78,7 +81,7 @@ export function Platform({ discovery, square }: { discovery?: DiscoveryProps; sq
         <Link className={parts[0] === "teacher" ? "active" : ""} href={teacher ? "/teacher" : "/for-teachers"}>{t("Учителю", "For teachers")}</Link>
       </nav>
       <div className="account"><div className="locale">{(["ru", "en"] as const).map(l => <button key={l} className={lang === l ? "selected" : ""} aria-pressed={lang === l} onClick={() => {
-        setLang(l); localStorage.setItem("maths4u_locale", l); document.documentElement.lang = l;
+        setLang(l); rememberLocale(l);
         if (actor) void api("profile", "PATCH", { locale: l }).catch(() => {});
       }}>{l.toUpperCase()}</button>)}</div>
       <details className="discovery-account"><summary>{actor ? actor.displayName.split(" ")[0] : t("Аккаунт", "Account")} <span aria-hidden="true">⌄</span></summary><div className="discovery-account-links">
@@ -112,6 +115,6 @@ function Auth({ mode, next }: { mode: string; next?: string }) {
       {register && <Field name="email" label={t("Почта (необязательно)", "Email (optional)")} type="email" required={false} />}
       {register && <CourseSelection selected={courseSlugs} onChange={setCourseSlugs} />}
     </Form>
-    <div className="row spread" style={{ marginTop: 22 }}><Link className="button quiet" href={register ? "/login" : "/register"}>{register ? t("Уже есть аккаунт", "Already have an account") : t("Зарегистрироваться", "Create an account")}</Link>{!recovery && <Link href="/recover" className="muted">{t("Забыли пароль?", "Forgot password?")}</Link>}</div>
+    <div className="row spread space-top-22" ><Link className="button quiet" href={register ? "/login" : "/register"}>{register ? t("Уже есть аккаунт", "Already have an account") : t("Зарегистрироваться", "Create an account")}</Link>{!recovery && <Link href="/recover" className="muted">{t("Забыли пароль?", "Forgot password?")}</Link>}</div>
   </div></section>;
 }

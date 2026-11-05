@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 import { useLocale } from "./ui";
 
@@ -63,12 +63,12 @@ export function FileViewer({ files }: { files: ViewFile[] }) {
       <button className="secondary" onClick={() => setRotation(r => (r + 90) % 360)}>{t("Повернуть", "Rotate")} ↻</button><button className="secondary" onClick={reset}>{t("Вписать", "Fit")}</button>
       <a href={url} target="_blank" rel="noopener noreferrer">{t("Оригинал", "Original")} ↗</a></div>
     <div className="viewer-viewport" ref={viewport} onPointerDown={e => { if (zoom === 1 || (e.target as HTMLElement).closest("button,input,a")) return; e.currentTarget.setPointerCapture(e.pointerId); drag.current = { x: e.clientX, y: e.clientY, left: e.currentTarget.scrollLeft, top: e.currentTarget.scrollTop }; }}
-      onPointerMove={e => { const d = drag.current; if (d) { e.currentTarget.scrollLeft = d.left - e.clientX + d.x; e.currentTarget.scrollTop = d.top - e.clientY + d.y; } }} onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }} style={{ touchAction: zoom > 1 ? "none" : "auto" }}>
+      onPointerMove={e => { const d = drag.current; if (d) { e.currentTarget.scrollLeft = d.left - e.clientX + d.x; e.currentTarget.scrollTop = d.top - e.clientY + d.y; } }} onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }} data-zoomed={zoom > 1}>
       {f.mimeType === "application/pdf" ? <PdfPage key={f.id} url={url} zoom={zoom} rotation={rotation} /> : failed ? <p className="notice">{t("Предпросмотр недоступен. Откройте оригинал.", "Preview unavailable. Open the original.")}</p> :
-        <div className="viewer-image-space" style={{ width: `${zoom * 100}%`, aspectRatio: rotation % 180 ? 1 / aspect : aspect, position: "relative" }}>
+        <div className="viewer-image-space" style={{ "--viewer-space-width": `${zoom * 100}%`, "--viewer-aspect": rotation % 180 ? 1 / aspect : aspect } as CSSProperties}>
           {/* Original dimensions vary; authenticated image URLs must bypass image optimizers. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img key={f.id} src={preview} alt={f.originalName} draggable={false} onError={() => setFailed(true)} onLoad={e => setAspect(e.currentTarget.naturalWidth / e.currentTarget.naturalHeight)} style={{ position: "absolute", left: "50%", top: "50%", transform: `translate(-50%, -50%) rotate(${rotation}deg)`, maxWidth: "none", width: rotation % 180 ? `${aspect * 100}%` : "100%" }} />
+          <img key={f.id} src={preview} alt={f.originalName} draggable={false} onError={() => setFailed(true)} onLoad={e => setAspect(e.currentTarget.naturalWidth / e.currentTarget.naturalHeight)} style={{ "--viewer-rotation": `${rotation}deg`, "--viewer-image-width": rotation % 180 ? `${aspect * 100}%` : "100%" } as CSSProperties} />
         </div>}
     </div>
     <div className="viewer-thumbnails">{files.map((file, i) => <button key={file.id} className={i === selected ? "selected" : "secondary"} aria-label={`${i + 1}. ${file.originalName}`} aria-pressed={i === selected} onClick={() => { setSelected(i); reset(); }}>

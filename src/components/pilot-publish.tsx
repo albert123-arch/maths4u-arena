@@ -6,7 +6,7 @@ import { api, Form, useLocale } from "./ui";
 type Report = { created: number; updated: number; skipped: number; courses: string[] };
 export function PilotPublish() {
   const { t } = useLocale(), [progress, setProgress] = useState(""), [report, setReport] = useState<Report | null>(null);
-  return <section className="card" style={{ marginBottom: 24 }}><h2>{t("Публикация проверенного пилота", "Publish the reviewed pilot")}</h2>
+  return <section className="card space-bottom-24" ><h2>{t("Публикация проверенного пилота", "Publish the reviewed pilot")}</h2>
     <p>{t("36 задач maths4u, 20 задач olymp RU/EN, теория и 37 изображений. Баллы olymp предварительные: материалы предназначены для обучения.", "36 maths4u problems, 20 olymp problems in RU/EN, theory and 37 images. Olymp scores are provisional; these materials are for learning.")}</p>
     <p className="muted">{t("Распакуйте maths4u-pilot.zip и выберите bundle.json и изображения из assets. Принимается только проверенная версия пакета. Перед публикацией должна быть готова резервная копия базы и приватных файлов.", "Extract maths4u-pilot.zip, then select bundle.json and the images in assets. Only the reviewed package is accepted. Back up the database and private files before publishing.")}</p>
     <Form label={t("Проверить и опубликовать пилот", "Verify and publish pilot")} submit={async f => {

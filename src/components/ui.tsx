@@ -3,6 +3,9 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import Image from "next/image";
 import type { Actor } from "@/lib/security";
 export const LocaleContext = createContext<"ru" | "en">("en");
+export function InitialLocale({ locale, children }: { locale: "ru" | "en"; children: ReactNode }) {
+  return <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>;
+}
 export const ActorContext = createContext<Actor | null>(null);
 export function useLocale() { const lang = useContext(LocaleContext); return { lang, t: (ru: string, en: string) => lang === "ru" ? ru : en }; }
 export const errorLabels: Record<string, [string, string]> = {
@@ -82,7 +85,7 @@ export function Loading() { const { t } = useLocale(); return <div className="sk
 export function Empty({ children }: { children?: ReactNode }) { const { t } = useLocale(); return <p className="empty">{children ?? t("Пока ничего нет.", "Nothing here yet.")}</p>; }
 export function MathContent({ html }: { html: string }) { return <div className="math-content" dangerouslySetInnerHTML={{ __html: html }} />; }
 export function MaterialAsset({ asset }: { asset: { id: string; caption: string; mimeType: string } }) {
-  return <figure style={{ margin: "16px 0" }}>{asset.mimeType.startsWith("image/") && <Image src={"/api/files/" + asset.id} alt={asset.caption} unoptimized width={1000} height={750} style={{ width: "100%", height: "auto", maxHeight: 600, objectFit: "contain" }} />}
+  return <figure className="material-asset">{asset.mimeType.startsWith("image/") && <Image src={"/api/files/" + asset.id} alt={asset.caption} unoptimized width={1000} height={750} className="material-asset-image" />}
     <figcaption><a className="attachment" href={"/api/files/" + asset.id} target="_blank" rel="noopener noreferrer">{asset.caption} ↗</a></figcaption></figure>;
 }
 export function Heading({ title, subtitle, children }: { title: string; subtitle?: string; children?: ReactNode }) {
