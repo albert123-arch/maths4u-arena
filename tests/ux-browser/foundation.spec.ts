@@ -66,26 +66,18 @@ test("foundation: existing student, teacher, administrator and access boundaries
   await fs.writeFile(`${folder}/roles.json`, JSON.stringify(results, null, 2));
 });
 
-test("foundation: language cookie determines the initial server HTML", async ({ browser }) => {
-  test.skip(phase === "before", "New stage-1 behavior");
-  for (const lang of ["ru", "en"]) {
-    const context = await browser.newContext({ baseURL: "http://127.0.0.1:3102" });
-    await context.addInitScript(() => localStorage.setItem("maths4u_locale", "invalid-old-value"));
-    await context.addCookies([{ name: "maths4u_locale", value: lang, url: "http://127.0.0.1:3102" }]);
-    const response = await context.request.get("/");
-    expect(await response.text()).toMatch(new RegExp(`<html[^>]*lang="${lang}"`));
-    const page = await context.newPage(); await page.goto("/");
-    await expect(page.locator("html")).toHaveAttribute("lang", lang);
-    const next = lang === "ru" ? "en" : "ru";
-    await page.getByRole("button", { name: next.toUpperCase(), exact: true }).click();
-    await expect.poll(async () => (await context.cookies()).find(c => c.name === "maths4u_locale")?.value).toBe(next);
-    expect(await page.evaluate(() => localStorage.getItem("maths4u_locale"))).toBe(next);
-    await page.reload(); await expect(page.locator("html")).toHaveAttribute("lang", next);
-    expect(await (await context.request.get(lesson)).text()).toMatch(new RegExp(`<html[^>]*lang="${next}"`));
-    await context.close();
-  }
+test("foundation: public language follows the URL and private language is an account setting", async ({ browser }) => {
+  const context = await browser.newContext({ baseURL: "http://127.0.0.1:3102" });
+  await context.addCookies([{ name: "maths4u_locale", value: "ru", url: "http://127.0.0.1:3102" }]);
+  expect(await (await context.request.get("/")).text()).toMatch(/<html[^>]*lang="en"/);
+  const page = await context.newPage(); await page.goto("/"); await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.locator('.locale')).toHaveCount(0);
+  await page.goto('/login'); await expect(page.locator('html')).toHaveAttribute('lang','ru');
+  await page.locator('.discovery-account summary').click(); await page.getByRole('radio',{name:'English',exact:true}).check();
+  await expect(page.locator('html')).toHaveAttribute('lang','en');
+  await page.reload(); await expect(page.locator('html')).toHaveAttribute('lang','en');
+  await context.close();
 });
-
 test("foundation: explicit themes override the system and local fonts stay local", async ({ browser }) => {
   test.skip(phase === "before", "New stage-1 behavior");
   const context = await browser.newContext({ baseURL: "http://127.0.0.1:3102", colorScheme: "dark" });

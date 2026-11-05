@@ -6,6 +6,8 @@ import { ensure } from "./errors";
 import { hasFeature } from "./subscriptions";
 import { localized, publicVersion, renderContent, versionInclude } from "./content";
 import { latestPracticeProgress } from "./practice-progress";
+import { displayMarkup, displayTitle } from "./public-presentation";
+import { publicLanguages } from "./public-language";
 
 const filterSchema = z.object({ q: z.string().max(100).default(""), course: z.string().max(191).default(""), chapter: z.string().max(191).default(""), topic: z.string().max(191).default(""),
   bookmarks: z.enum(["", "1"]).default(""),
@@ -36,6 +38,7 @@ const categorySql = Prisma.sql`CASE WHEN v.materialCategory <> 'UNKNOWN' THEN v.
   WHEN EXISTS(SELECT 1 FROM ImportRecord ir WHERE ir.taskId=t.id AND ir.sourceProject='olymp') THEN 'OLYMPIAD' ELSE 'UNKNOWN' END`;
 const difficultySql = Prisma.sql`CASE WHEN v.difficultyKnown OR EXISTS(SELECT 1 FROM ImportRecord ir WHERE ir.taskId=t.id AND ir.sourceProject='olymp') THEN v.difficulty ELSE NULL END`;
 const fromSql = Prisma.sql`FROM Task t JOIN TaskVersion v ON v.taskId=t.id AND v.number=(SELECT MAX(v2.number) FROM TaskVersion v2 WHERE v2.taskId=t.id)`;
+const russianTaskSql = Prisma.sql`(EXISTS(SELECT 1 FROM TaskText ruText WHERE ruText.versionId=v.id AND ruText.locale='ru' AND ruText.statement REGEXP '[А-Яа-яЁё]{2}') OR EXISTS(SELECT 1 FROM TaskPart rp JOIN PartText rt ON rt.partId=rp.id WHERE rp.versionId=v.id AND rt.locale='ru' AND rt.prompt REGEXP '[А-Яа-яЁё]{2}'))`;
 // Classify the complete question, not just one part of a mixed exam question.
 const modeSql = Prisma.sql`CASE
   WHEN EXISTS(SELECT 1 FROM TaskPart p WHERE p.versionId=v.id AND p.kind='CHOICE')
@@ -45,7 +48,7 @@ const modeSql = Prisma.sql`CASE
   ELSE 'WRITTEN' END`;
 export type PracticeMode = "MC" | "SHORT" | "WRITTEN";
 
-export async function catalog(actor: Actor | null, lang: string, input: unknown) {
+export async function catalog(actor: Actor | null, lang: string, input: unknown, strictLocale = false) {
   const f = filterSchema.parse(input), base = await sqlPermission(actor);
   ensure(!f.bookmarks || actor, 401, "LOGIN_REQUIRED");
   if (f.bookmarks && actor) base.push(Prisma.sql`EXISTS(SELECT 1 FROM TaskBookmark b WHERE b.taskId=t.id AND b.userId=${actor.id})`);
@@ -60,6 +63,7 @@ export async function catalog(actor: Actor | null, lang: string, input: unknown)
     for (const c of selected) ensure(!c.featureKey || !!(actor && isTeacher(actor)) || !!(actor && await hasFeature(actor, c.featureKey)), 403, "SUBSCRIPTION_REQUIRED");
   }
   const where = [...base];
+  if (strictLocale && lang === "ru") where.push(russianTaskSql);
   if (f.mode) { const clause = Prisma.sql`${modeSql}=${f.mode}`; base.push(clause); where.push(clause); }
   ensure(!f.progress || actor, 401, "LOGIN_REQUIRED");
   const progress = actor ? await latestPracticeProgress(actor.id, f.topic || undefined) : [];
@@ -87,43 +91,52 @@ export async function catalog(actor: Actor | null, lang: string, input: unknown)
 }
 export type CatalogDto = Awaited<ReturnType<typeof catalog>>;
 
-export async function courseCatalog(actor: Actor | null, lang: string, slug?: string) {
+export async function courseCatalog(actor: Actor | null, lang: string, slug?: string, strictLocale = false) {
   const permission = await taskPermission(actor);
   const follows = actor ? await db().courseFollow.findMany({ where: { userId: actor.id }, select: { courseId: true } }) : [];
   const progress = actor ? await latestPracticeProgress(actor.id) : [];
-  const modeRows = await db().$queryRaw<{ lessonId: string; taskId: string; mode: PracticeMode }[]>(Prisma.sql`SELECT lt.lessonId, t.id AS taskId, ${modeSql} AS mode ${fromSql}
+  const modeRows = await db().$queryRaw<{ lessonId: string; taskId: string; mode: PracticeMode; original: number; category: string }[]>(Prisma.sql`SELECT lt.lessonId, t.id AS taskId, ${modeSql} AS mode, ${categorySql} AS category, EXISTS(SELECT 1 FROM Source os WHERE os.id=v.sourceId AND os.name LIKE 'Maths4U Original%') AS original ${fromSql}
     JOIN LessonTask lt ON lt.taskId=t.id JOIN Lesson l ON l.id=lt.lessonId JOIN Topic ch ON ch.id=l.topicId JOIN Course c ON c.id=ch.courseId
     WHERE ${Prisma.join(await sqlPermission(actor), " AND ")} AND l.archivedAt IS NULL AND c.archivedAt IS NULL
+    AND ${strictLocale && lang === "ru" ? russianTaskSql : Prisma.sql`TRUE`}
     ${slug ? Prisma.sql`AND c.slug=${slug}` : Prisma.empty} ${actor && isAdmin(actor) ? Prisma.empty : Prisma.sql`AND c.published=true`}`);
   const questionCounts = (lessonIds: string[], allowed: boolean) => {
     const sets = { MC: new Set<string>(), SHORT: new Set<string>(), WRITTEN: new Set<string>() };
     if (allowed) for (const row of modeRows) if (lessonIds.includes(row.lessonId)) sets[row.mode].add(row.taskId);
     return { MC: sets.MC.size, SHORT: sets.SHORT.size, WRITTEN: sets.WRITTEN.size };
   };
+  const taskCount = (lessonIds: string[], allowed: boolean) => allowed ? new Set(modeRows.filter(r => lessonIds.includes(r.lessonId)).map(r => r.taskId)).size : 0;
   const rows = await db().course.findMany({ orderBy: [{ position: "asc" }, { id: "asc" }], where: { archivedAt: null, ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) }, include: { texts: true, topics: { orderBy: [{ position: "asc" }, { id: "asc" }], include: { texts: true, lessons: { where: { archivedAt: null }, orderBy: [{ position: "asc" }, { id: "asc" }], include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: { select: { locale: true, title: true } } } }, _count: { select: { tasks: { where: { task: permission } } } } } } } } } });
-  return Promise.all(rows.map(async c => {
+  const russian = strictLocale && lang === "ru" ? await publicLanguages() : null;
+  return Promise.all(rows.filter(c => !russian || russian.courses.includes(c.slug)).map(async c => {
     const allowed = !c.featureKey || !!(actor && isTeacher(actor)) || !!(actor && await hasFeature(actor, c.featureKey));
-    const chapters = await Promise.all(c.topics.map(async ch => ({ id: ch.id, title: localized(ch.texts, lang).title, position: ch.position,
-      count: allowed ? await db().task.count({ where: { AND: [permission, { lessons: { some: { lesson: { archivedAt: null, topicId: ch.id } } } }] } }) : 0,
+    const chapters = await Promise.all(c.topics.filter(ch => !russian || ch.lessons.some(l => russian.lessons.some(r => r.id === l.id))).map(async ch => ({ id: ch.id, title: displayTitle(localized(ch.texts, lang).title), position: ch.position,
+      original: modeRows.some(r => ch.lessons.some(l => l.id === r.lessonId) && !!r.original),
+      writtenLabel: modeRows.some(r => ch.lessons.some(l => l.id === r.lessonId) && !!r.original) ? "exam-style" : modeRows.some(r => ch.lessons.some(l => l.id === r.lessonId) && r.category === "EXAM") ? "exam" : "written",
+      count: taskCount(ch.lessons.map(l => l.id), allowed),
       questionCounts: questionCounts(ch.lessons.map(l => l.id), allowed),
-      topics: ch.lessons.filter(l => l.versions.length).map(l => ({ id: l.id, title: localized(l.versions[0].texts, lang).title, count: allowed ? l._count.tasks : 0, questionCounts: questionCounts([l.id], allowed) })) })));
-    return { id: c.id, slug: c.slug, groupLabel:c.groupLabel, title: localized(c.texts, lang).title, description: localized(c.texts, lang).description, locked: !allowed,
+      topics: ch.lessons.filter(l => l.versions.length && (!russian || russian.lessons.some(r => r.id === l.id))).map(l => ({ id: l.id, title: displayTitle(localized(l.versions[0].texts, lang).title), count: taskCount([l.id], allowed), questionCounts: questionCounts([l.id], allowed) })) })));
+    return { id: c.id, slug: c.slug, groupLabel:c.groupLabel, title: displayTitle(localized(c.texts, lang).title), description: russian ? c.texts.find(t => t.locale === "ru")?.description ?? "" : localized(c.texts, lang).description, locked: !allowed,
+      original: modeRows.some(r => c.topics.some(ch => ch.lessons.some(l => l.id === r.lessonId)) && !!r.original),
       followed: follows.some(f => f.courseId === c.id),
-      progress: allowed ? { solved: progress.filter(p => p.solved && modeRows.some(r => r.taskId === p.taskId && c.topics.some(ch => ch.lessons.some(l => l.id === r.lessonId)))).length,
+      progress: actor && allowed ? { solved: progress.filter(p => p.solved && modeRows.some(r => r.taskId === p.taskId && c.topics.some(ch => ch.lessons.some(l => l.id === r.lessonId)))).length,
         selfSolved: progress.filter(p => p.selfSolved && modeRows.some(r => r.taskId === p.taskId && c.topics.some(ch => ch.lessons.some(l => l.id === r.lessonId)))).length } : null,
       questionCounts: questionCounts(c.topics.flatMap(ch => ch.lessons.map(l => l.id)), allowed),
-      count: allowed ? await db().task.count({ where: { AND: [permission, { lessons: { some: { lesson: { archivedAt: null, topic: { courseId: c.id } } } } }] } }) : 0, chapters };
+      count: taskCount(c.topics.flatMap(ch => ch.lessons.map(l => l.id)), allowed), chapters };
   }));
 }
-export async function topicContent(actor: Actor | null, id: string, lang: string) {
+export async function topicContent(actor: Actor | null, id: string, lang: string, strictLocale = false) {
   const l = await db().lesson.findUnique({ where: { id }, include: { topic: { include: { texts: true, course: { include: { texts: true } } } }, versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } } } });
   ensure(l && !l.archivedAt && !l.topic.course.archivedAt && (l.topic.course.published || !!(actor && isAdmin(actor))) && l.versions.length, 404, "NOT_FOUND");
   const c = l.topic.course;
   ensure(!c.featureKey || !!(actor && isTeacher(actor)) || !!(actor && await hasFeature(actor, c.featureKey)), 403, "SUBSCRIPTION_REQUIRED");
-  const text = localized(l.versions[0].texts, lang), hierarchy = (await courseCatalog(actor, lang, c.slug))[0];
+  const ru = strictLocale && lang === "ru";
+  if (ru) ensure((await publicLanguages()).lessons.some(l => l.id === id), 404, "NOT_FOUND");
+  const text = ru ? l.versions[0].texts.find(t => t.locale === "ru") ?? { locale: "ru", title: localized(l.versions[0].texts, "en").title, body: "", examples: "" } : localized(l.versions[0].texts, lang), hierarchy = (await courseCatalog(actor, lang, c.slug, strictLocale))[0];
   const topics = hierarchy.chapters.flatMap(ch => ch.topics), i = topics.findIndex(t => t.id === id);
-  return { id, title: text.title, locale: text.locale, body: renderContent(text.body), examples: renderContent(text.examples ?? ""), questionCounts: topics[i].questionCounts,
-    course: { id: c.id, slug: c.slug, title: localized(c.texts, lang).title }, chapter: { id: l.topicId, title: localized(l.topic.texts, lang).title }, previous: topics[i - 1] ?? null, next: topics[i + 1] ?? null };
+  return { id, title: displayTitle(text.title), locale: text.locale, body: displayMarkup(renderContent(text.body)), examples: displayMarkup(renderContent(text.examples ?? "")), questionCounts: topics[i].questionCounts,
+    original: hierarchy.chapters.find(ch => ch.id === l.topicId)?.original ?? false, writtenLabel: hierarchy.chapters.find(ch => ch.id === l.topicId)?.writtenLabel ?? "written",
+    course: { id: c.id, slug: c.slug, title: displayTitle(localized(c.texts, lang).title) }, chapter: { id: l.topicId, title: displayTitle(localized(l.topic.texts, lang).title) }, previous: topics[i - 1] ?? null, next: topics[i + 1] ?? null };
 }
 
 export async function basket(actor: Actor, lang: string) {

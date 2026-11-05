@@ -14,14 +14,15 @@ async function roleContext(browser: Browser, role: string) {
   return context;
 }
 async function ready(page: Page,url: string){await page.goto(url);await expect(page.locator('.skeleton')).toHaveCount(0);await page.evaluate(()=>document.fonts.ready);}
-async function openLanguages(page: Page){if(await page.locator('.mobile-nav-toggle').isVisible())await page.locator('.mobile-nav-toggle').click();}
 
 test('components: public pages and dashboards in both themes, four widths',async({browser})=>{
   await fs.mkdir(`${root}/after`,{recursive:true});const checks=[];
   for(const role of ['guest','student','teacher','admin']){
     const context=role==='guest'?await browser.newContext({baseURL:'http://127.0.0.1:3102'}):await roleContext(browser,role);
-    const page=await context.newPage(),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
-    const routes=role==='guest'?[['home','/'],['courses','/courses'],['library','/library'],['square',lesson]]:[[role,'/'+role]];
+    const page=await context.newPage(),errors:string[]=[],httpErrors:string[]=[],cancelledRequests:{path:string;error:string|undefined;rsc:boolean}[]=[];page.on('pageerror',e=>errors.push(e.message));
+    page.on('response',r=>{if(r.status()>=500)httpErrors.push(new URL(r.url()).pathname+':'+r.status());});
+    page.on('requestfailed',r=>{const u=new URL(r.url());cancelledRequests.push({path:u.pathname,error:r.failure()?.errorText,rsc:u.searchParams.has('_rsc')});});
+    const routes=role==='guest'?[['home','/'],['courses','/courses'],['library','/library'],['square',lesson],['pure1','/courses/maths4u-9709-p1'],['additional','/courses/maths4u-0606']]:[[role,'/'+role]];
     for(const theme of ['light','dark'] as const){await page.emulateMedia({colorScheme:theme});
       for(const width of [390,1280,360,768]){await page.setViewportSize({width,height:width<800?844:900});
         for(const[name,url]of routes){await ready(page,url);
@@ -35,9 +36,11 @@ test('components: public pages and dashboards in both themes, four widths',async
             const wrongArrows=[...document.querySelectorAll<HTMLAnchorElement>('a[href]')].filter(a=>{const u=new URL(a.href,location.href);return u.origin===location.origin&&a.textContent?.includes('↗');}).map(a=>a.pathname);
             const kickers=[...document.querySelectorAll('.eyebrow')].filter(visible).length;
             const controls=[...document.querySelectorAll('button,input,select,textarea')].filter(e=>!e.classList.contains('ui-button')&&!e.classList.contains('ui-input')&&!e.classList.contains('ui-select')&&!e.classList.contains('ui-textarea')&&!e.closest('.m4u-statistics')).map(e=>e.tagName);
-            return {short,primary,wrongArrows,kickers,controls};
+            const textOverflow=[...document.querySelectorAll<HTMLElement>('main *,header *,footer *')].filter(e=>visible(e)&&e.clientWidth>0&&e.scrollWidth>e.clientWidth+1&&e.textContent?.trim()&&!e.closest('.katex,.katex-display,.square-nav,.quadratics-topics,.question-index')&&getComputedStyle(e).textOverflow!=='ellipsis').map(e=>({tag:e.tagName,cls:e.className,text:e.textContent?.trim().slice(0,90),width:e.clientWidth,scroll:e.scrollWidth}));
+            return {short,primary,wrongArrows,kickers,controls,textOverflow};
           });
           expect(audit.short).toEqual([]);expect(audit.primary).toBeLessThanOrEqual(1);expect(audit.wrongArrows).toEqual([]);expect(audit.controls).toEqual([]);
+          expect(audit.textOverflow).toEqual([]);
           if(name!=='home')expect(audit.kickers).toBe(0);
           checks.push({role,name,theme,width,...audit});
           if([390,1280].includes(width))await page.screenshot({path:`${root}/after/${name}-${width}-${theme}.png`,fullPage:true});
@@ -45,7 +48,8 @@ test('components: public pages and dashboards in both themes, four widths',async
       }
     }
     const status=(await context.request.get('/api/admin/users')).status();expect(status).toBe(role==='admin'?200:role==='guest'?401:403);
-    expect(errors).toEqual([]);await context.close();
+    expect(errors).toEqual([]);expect(httpErrors).toEqual([]);await context.close();
+    await fs.writeFile(`${root}/network-${role}.json`,JSON.stringify({errors,httpErrors,cancelledRequests},null,2));
   }
   await fs.writeFile(`${root}/responsive-and-roles.json`,JSON.stringify(checks,null,2));
 });
@@ -66,9 +70,8 @@ test('components: keyboard menu, focus, language and account controls',async({pa
   await expect(page.locator('.discovery-account')).not.toHaveAttribute('open');
   await page.keyboard.press('Enter');await page.getByRole('radio',{name:'System',exact:true}).focus();
   await page.keyboard.press('Tab');await expect(page.locator('.discovery-account')).not.toHaveAttribute('open');
-  await openLanguages(page);await page.getByRole('button',{name:'RU',exact:true}).click();await expect(page.locator('html')).toHaveAttribute('lang','ru');
-  await page.getByRole('button',{name:'EN',exact:true}).click();await expect(page.locator('html')).toHaveAttribute('lang','en');
-  await page.keyboard.press('Escape');await page.reload();await expect(page.locator('html')).toHaveAttribute('lang','en');
+  await expect(page.locator('.locale')).toHaveCount(0);
+  await page.reload();await expect(page.locator('html')).toHaveAttribute('lang','en');
   const html=await (await page.request.get('/')).text();expect(html).toMatch(/<html[^>]*lang="en"/);
   await page.locator('#discovery-q').focus();await page.keyboard.type('quadratic');await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/search\?q=quadratic/);
@@ -93,7 +96,8 @@ test('components: theme picker persists System, Light, Dark and synchronizes tab
     else{await expect(page.locator('html')).toHaveAttribute('data-theme',value);await expect(second.locator('html')).toHaveAttribute('data-theme',value);}
   }
   await page.getByRole('radio',{name:'Dark',exact:true}).check();await page.reload();await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
-  expect(await (await page.request.get(lesson)).text()).toMatch(/<html[^>]*data-theme="dark"/);
+  expect(await (await page.request.get(lesson)).text()).not.toMatch(/<html[^>]*data-theme=/);
+  expect(await (await page.request.get(lesson)).text()).toContain('theme-before-paint');
   await page.locator('.discovery-account summary').click();await page.screenshot({path:`${root}/after/account-dark.png`,fullPage:false});
 });
 

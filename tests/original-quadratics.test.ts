@@ -28,7 +28,7 @@ test("original Quadratics: complete criteria, immutable IDs, local fence and no 
     const hidden=publicVersion(v,"en",false);assert.equal("solution" in hidden,false);assert.equal("markScheme" in hidden,false);
     assert.ok(hidden.parts.every(p=>!("answer" in p)&&!("rubric" in p)));
     const shown=publicVersion(v,"en",true);assert.ok(shown.solution);assert.ok(shown.markScheme?.includes("not an official"));
-    assert.equal(shown.markSchemeStatus,"DRAFT");
+    assert.equal(shown.markSchemeStatus,undefined);assert.equal(v.texts[0].markSchemeStatus,"DRAFT");
     for(const [i,a] of p.parts.entries()){
       assert.equal(v.parts[i].kind,"MANUAL");assert.equal(v.parts[i].maxPoints,a.marks);
       assert.ok(shown.parts[i].answer);assert.ok(shown.parts[i].rubric?.includes(a.criteria[0].id));

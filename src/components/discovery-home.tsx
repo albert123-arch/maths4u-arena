@@ -26,10 +26,10 @@ export function DiscoveryHome({ data, view, direction, query = "", sessionReady 
   </form>;
   const directionCards = <section className="discovery-section" id="learning-directions" aria-labelledby="directions-title">
     <div className="discovery-section-heading"><div><p className="eyebrow">{t("От школы до углублённой математики", "From foundations to further mathematics")}</p><h2 id="directions-title">{t("Выберите своё направление", "Find your course")}</h2></div><Link href="/courses">{t("Все доступные курсы", "All available courses")} →</Link></div>
-    <div className="discovery-directions">{learningDirections.map((d, index) => { const available = data.courses.filter(c => c.direction === d.key); return <Link className="discovery-direction" href={"/learn/" + d.key} key={d.key}>
-      <div className="discovery-card-top"><span className="discovery-direction-number" aria-hidden="true">0{index + 1}</span><span className="discovery-course-code">{d.code}</span><Arrow /></div>
+    <div className="discovery-directions">{learningDirections.map(d => { return <Link className="discovery-direction" href={"/learn/" + d.key} key={d.key}>
+      <div className="discovery-card-top"><span className="discovery-course-code">{d.code}</span><Arrow /></div>
       <h3>{local(d)}</h3><p>{lang === "ru" ? d.descriptionRu : d.description}</p>
-      <span className="discovery-card-bottom">{available.length ? t(`${available.length} ${available.length === 1 ? "курс" : "курса"} в платформе`, `${available.length} ${available.length === 1 ? "course" : "courses"} available here`) : t("Открыть материалы Maths4U", "Explore Maths4U resources")} <span aria-hidden="true">→</span></span>
+      <span className="discovery-card-bottom">{t("Открыть курс", "Open course")} <span aria-hidden="true">→</span></span>
     </Link>; })}</div>
   </section>;
   return <div className="discovery">
@@ -54,7 +54,7 @@ export function DiscoveryHome({ data, view, direction, query = "", sessionReady 
       <nav className="discovery-breadcrumb" aria-label="Breadcrumb"><Link href="/">Maths4U</Link><span aria-hidden="true">/</span><span>{local(active)}</span></nav>
       <header className="discovery-page-heading"><p className="eyebrow">{active.code}</p><h1>{local(active)}</h1><p>{lang === "ru" ? active.descriptionRu : active.description}</p></header>
       <nav className="discovery-switcher" aria-label={t("Сменить направление", "Switch learning direction")}>{learningDirections.map(d => <Link key={d.key} href={"/learn/" + d.key} aria-current={d.key === direction ? "page" : undefined}>{local(d)}</Link>)}</nav>
-      {courses.length > 0 && <section className="discovery-section"><h2>{t("Доступные курсы", "Choose a course")}</h2><div className="discovery-course-grid">{courses.map(c => <Link className="discovery-course" href={"/courses/" + encodeURIComponent(c.slug)} key={c.slug}><h3>{local(c)} <Arrow /></h3><p>{c.description}</p><span>{c.chapters} {t("глав", "chapters")} · {c.topics} {t("тем", "topics")}</span></Link>)}</div></section>}
+      {courses.length > 0 && <section className="discovery-section"><h2>{t("Доступные курсы", "Choose a course")}</h2><div className="discovery-course-grid">{courses.map(c => <Link className="discovery-course" href={(lang === "ru" ? "/ru" : "") + "/courses/" + encodeURIComponent(c.slug)} key={c.slug}><h3>{local(c)} <Arrow /></h3>{c.description && <p>{c.description}</p>}<span>{c.chapters} {t("глав", "chapters")} · {c.topics} {t("тем", "topics")}</span></Link>)}</div></section>}
       {!courses.length && !data.unavailable && <section className="discovery-bridge"><h2>{t("Продолжите на основном сайте Maths4U", "Explore this course on Maths4U")}</h2><p>{t("Материалы этого направления пока находятся на основном сайте. Ссылка ведёт к существующим темам и сохраняет доступ к вашим ресурсам.", "This direction is currently available on the main Maths4U site. Open the existing topics and learning resources there.")}</p><ButtonLink className="button" href={active.key === "olympiad" ? "https://maths4u.sbs/chapter.php?id=126" : "https://maths4u.sbs/program.php?key=" + active.legacy}>{t("Открыть материалы", "Open the resources")} <Arrow external /></ButtonLink></section>}
       {searchForm}
     </>}

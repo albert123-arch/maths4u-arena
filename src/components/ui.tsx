@@ -8,6 +8,7 @@ export function InitialLocale({ locale, children }: { locale: "ru" | "en"; child
   return <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>;
 }
 export const ActorContext = createContext<Actor | null>(null);
+export const PublicLocaleContext = createContext<"en" | "ru" | null>(null);
 export function useLocale() { const lang = useContext(LocaleContext); return { lang, t: (ru: string, en: string) => lang === "ru" ? ru : en }; }
 export const errorLabels: Record<string, [string, string]> = {
   QUESTION_CHANGED: ["Вопрос обновлён. Откройте сохранённую попытку, чтобы продолжить.", "This question has changed. Open the saved attempt to continue."],
@@ -61,17 +62,18 @@ export async function api<T = unknown>(url: string, method = "GET", body?: unkno
   if (!response.ok) throw new ApiError(data.error ?? "SERVICE_UNAVAILABLE", response.status, data.fields, data.diagnostic);
   return data;
 }
-export function useResource<T>(path: string | null) {
+export function useResource<T>(path: string | null, initial?: T) {
   const { lang } = useLocale();
-  const [data, setData] = useState<T | null>(null), [error, setError] = useState<unknown>(null), [tick, setTick] = useState(0);
+  const actor = useContext(ActorContext), publicLocale = useContext(PublicLocaleContext);
+  const [data, setData] = useState<T | null>(initial ?? null), [error, setError] = useState<unknown>(null), [tick, setTick] = useState(0);
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
-  const requestKey = `${path}|${lang}|${tick}`;
+  const requestKey = `${path}|${lang}|${actor?.id ?? "guest"}|${tick}`;
   useEffect(() => {
     if (!path) return;
     let live = true;
-    api<T>(path + (path.includes("?") ? "&" : "?") + "lang=" + lang).then(v => { if (live) { setData(v); setError(null); setLoadedKey(`${path}|${lang}|${tick}`); } }).catch(e => { if (live) { setError(e); setLoadedKey(`${path}|${lang}|${tick}`); } });
+    api<T>(path + (path.includes("?") ? "&" : "?") + "lang=" + lang + (publicLocale === "ru" ? "&publicLocale=ru" : "")).then(v => { if (live) { setData(v); setError(null); setLoadedKey(requestKey); } }).catch(e => { if (live) { setError(e); setLoadedKey(requestKey); } });
     return () => { live = false; };
-  }, [path, lang, tick]);
+  }, [path, lang, tick, actor?.id, publicLocale, requestKey]);
   return { data, error, isLoading: !!path && loadedKey !== requestKey, refresh: () => setTick(v => v + 1) };
 }
 export function ErrorNotice({ error }: { error: unknown }) {

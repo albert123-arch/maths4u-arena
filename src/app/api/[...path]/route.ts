@@ -97,9 +97,9 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
       return json(await checkSquare(user, input, topic));
     }
     if ((route === "learning/square/help" || action === "help") && method === "POST") return json(await helpSquare(input, topic));
-    if (method === "GET" && route === "catalog") return json(await catalog(await actorForToken(tokenFrom(request)), lang, Object.fromEntries(url.searchParams)));
-    if (method === "GET" && route === "catalog/courses") return json(await courseCatalog(await actorForToken(tokenFrom(request)), lang, url.searchParams.get("slug") || undefined));
-    if (method === "GET" && parts[0] === "catalog" && parts[1] === "topics" && parts.length === 3) return json(await topicContent(await actorForToken(tokenFrom(request)), parts[2], lang));
+    if (method === "GET" && route === "catalog") return json(await catalog(await actorForToken(tokenFrom(request)), lang, Object.fromEntries(url.searchParams), url.searchParams.get("publicLocale") === "ru"));
+    if (method === "GET" && route === "catalog/courses") return json(await courseCatalog(await actorForToken(tokenFrom(request)), lang, url.searchParams.get("slug") || undefined, url.searchParams.get("publicLocale") === "ru"));
+    if (method === "GET" && parts[0] === "catalog" && parts[1] === "topics" && parts.length === 3) return json(await topicContent(await actorForToken(tokenFrom(request)), parts[2], lang, url.searchParams.get("publicLocale") === "ru"));
     if (method === "GET" && route === "library") return json(await library(await actorForToken(tokenFrom(request)), lang, (url.searchParams.get("q") ?? "").slice(0, 100)));
     if (method === "GET" && route === "courses") return json(await courses(await actorForToken(tokenFrom(request)), lang, url.searchParams.get("slug") || undefined));
     if (method === "GET" && parts[0] === "files" && parts.length === 2) {

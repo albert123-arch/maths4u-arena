@@ -5,7 +5,7 @@ const reportRoot=process.env.FOUNDATION_REPORT_ROOT ?? "test-results/foundation-
 const origin=phase === "before" ? "http://127.0.0.1:3110" : "http://127.0.0.1:3102";
 test("foundation: local production mobile performance samples",async({browser})=>{
   const results=[];
-  for(const route of ["/","/courses/maths4u-9709-p1/topics/orig_quadratics_completing_square"]){
+  for(const route of ["/","/courses","/library","/courses/maths4u-9709-p1","/courses/maths4u-0606","/courses/maths4u-9709-p1/topics/orig_quadratics_completing_square"]){
     for(let run=1;run<=3;run++){
       const context=await browser.newContext({viewport:{width:390,height:844},colorScheme:"light"});
       await context.addInitScript(()=>{
@@ -19,8 +19,14 @@ test("foundation: local production mobile performance samples",async({browser})=
       await expect(page.locator(".brand")).toBeVisible();
       const font=await page.locator("body").evaluate(e=>getComputedStyle(e).fontFamily);
       expect(font).toContain(phase === "before" ? "Arial" : "Inter");
-      if(await page.locator('.mobile-nav-toggle').isVisible())await page.locator('.mobile-nav-toggle').click();
-      await page.getByRole("button",{name:"RU",exact:true}).click();await page.getByRole("button",{name:"EN",exact:true}).click();await page.waitForTimeout(200);
+      if(phase === 'before') {
+        if(await page.locator('.mobile-nav-toggle').isVisible())await page.locator('.mobile-nav-toggle').click();
+        await page.getByRole("button",{name:"RU",exact:true}).click();await page.getByRole("button",{name:"EN",exact:true}).click();
+      } else {
+        await page.locator('.mobile-nav-toggle').click();await page.locator('.mobile-nav-toggle').click();
+        await page.locator('.discovery-account summary').click();await page.getByRole('radio',{name:'Dark',exact:true}).check();await page.getByRole('radio',{name:'Light',exact:true}).check();
+      }
+      await page.waitForTimeout(200);
       const measurement=await page.evaluate(()=>{
         const m=(window as unknown as {foundationMetrics:{lcp:number;cls:number;interactions:number[];shifts:unknown[]}}).foundationMetrics;
         return {lcp_ms:Math.round(m.lcp),cls:Number(m.cls.toFixed(4)),interaction_sample_ms:Math.max(0,...m.interactions),shifts:m.shifts};

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { Prisma } from "../generated/prisma/client";
 import { db } from "./prisma";
+import { displayTitle } from "./public-presentation";
 import { ensure } from "./errors";
 import { type Actor, isAdmin } from "./security";
 import { ownClass } from "./works";
@@ -66,7 +67,7 @@ async function progressReport(studentId: string, student: { id: string; displayN
   const topics = [...lessons.values()].map(l => {
     const rows = latest.filter(r => r.lessonId === l.id), states = rows.map(studyProgressStatus);
     return { id: l.id, title: localized(l.versions[0]?.texts ?? [], lang)?.title ?? "—", courseId: l.topic.courseId,
-      courseSlug: l.topic.course.slug, course: localized(l.topic.course.texts, lang).title, chapter: localized(l.topic.texts, lang).title,
+      courseSlug: l.topic.course.slug, course: displayTitle(localized(l.topic.course.texts, lang).title), chapter: displayTitle(localized(l.topic.texts, lang).title),
       totalTasks: l._count.tasks, practised: rows.length, completed: rows.filter(r => r.attempt.status !== "IN_PROGRESS" || r.attempt.expiresAt <= now).length,
       graded: rows.filter(r => r.attempt.status === "GRADED").length, withoutHelp: states.filter(s => s.checkedWithoutHelp).length,
       needsRepeat: rows.filter(r => r.needsRepeat).length, selfChecked: rows.filter(r => r.selfCheckedAt).length, selfSolved: rows.filter(r => r.selfDirected && r.selfSolved).length,

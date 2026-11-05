@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable react-hooks/set-state-in-effect -- Restore versioned drafts after authentication/hydration. */
 import Link from "next/link";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button, ButtonLink, Input } from "./controls";
 import { ActorContext, api, ErrorNotice, MathContent, useLocale } from "./ui";
 import { Feedback } from "./feedback";
@@ -73,7 +73,6 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
     document.getElementById("practice")?.scrollIntoView({ behavior: "instant", block: "start" });
   }
   const teacher = actor?.roles.some(r => r.role === "TEACHER" || r.role === "ADMIN");
-  const completed = primary.filter(q => state.snapshot.states[q.family]?.correct && !state.snapshot.states[q.family]?.helpUsed).length;
   const checked = group.questions.filter(q => state.snapshot.seen[q.uid]).length;
   const next = primary.find(q => !state.snapshot.states[q.family]?.correct) ?? lesson.questions.find(q => q.collection === "mixed")!;
   return <div className="square-lesson" ref={root}>
@@ -84,7 +83,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
     <nav className="square-nav" ref={sectionNav} aria-label={t("Разделы урока", "Lesson sections")}>{[t("Конспект", "Notes"), t("Примеры", "Examples"), t("Практика", "Practice"), t("Задачи", "Exam-style"), t("Повторение", "Review")].map((label, i) => <a key={sectionIds[i]} href={"#" + sectionIds[i]} aria-current={active === sectionIds[i] ? "location" : undefined}>{label}</a>)}</nav>
     <section className="card square-reading" id="notes"><MathContent html={lesson.notes} />{actor && <Button disabled={!state.ready || !!state.snapshot.notesRead} onClick={() => void state.markRead()}>{state.snapshot.notesRead ? t("✓ Конспект прочитан", "✓ Notes marked as read") : t("Отметить прочитанным", "Mark notes as read")}</Button>}</section>
     <section className="card square-reading" id="examples"><h2>{t("Разобранные примеры", "Worked examples")}</h2>{lesson.examples.map(e => <article className="square-example" key={e.title}><h3>{e.title}</h3><MathContent html={e.question} /><details><summary>{t("Посмотреть решение", "Follow the solution")}</summary><MathContent html={e.solution} /></details></article>)}</section>
-    <section id="practice" className="card square-practice"><div className="row spread"><h2>{t("Практика метода", "Practise the method")}</h2><span className="muted">{completed} / {primary.length} {t("решено без помощи", "correct without help")}</span></div>
+    <section id="practice" className="card square-practice"><h2>{t("Практика метода", "Practise the method")}</h2>
       <div className="square-question-nav" aria-label={t("Навигация по вопросам", "Question navigation")}>
         <div className="row spread"><div><span className="square-collection">{collectionLabel(current.collection)}</span><p className="square-question-position" aria-live="polite">{t("Вопрос", "Question")} {group.questions.findIndex(q => q.uid === uid) + 1} {t("из", "of")} {group.questions.length}</p></div><div className="row"><Button disabled={index === 0} onClick={() => choose(ordered[index - 1])}>{t("← Назад", "← Previous")}</Button><Button disabled={index === ordered.length - 1} onClick={() => choose(ordered[index + 1])}>{t("Далее →", "Next →")}</Button></div></div>
         <progress max={group.questions.length} value={checked} aria-label={t("Проверено в этой подборке", "Questions checked in this collection")} /><p className="square-progress-label">{checked} / {group.questions.length} {t("проверено в этой подборке", "checked in this collection")}</p>
@@ -97,15 +96,22 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
     <section id="challenge" className="card"><h2>{t("Примените метод · авторские экзаменационные задачи", "Apply it · original exam-style problems")}</h2><p>{t("Соединяйте навыки и записывайте рассуждения на бумаге. Проверяются итоговые ответы; сравните метод с критериями.", "Combine skills and show your reasoning on paper. The checker verifies final answers; compare your method with the indicative criteria.")}</p><div className="square-challenges">{lesson.questions.filter(q => q.collection === "exam" || q.collection === "mixed").map(q => <Button key={q.uid} onClick={() => choose(q)}><strong>{questionTitle(q)}</strong><span>{q.marks} {t("баллов за письменное решение →", "written marks →")}</span></Button>)}</div></section>
     <section id="review" className="card"><h2>{t("Вернитесь к тому, что требует практики", "Come back to what needs practice")}</h2>{!Object.keys(state.snapshot.states).length ? <p>{t("План повторения появится после первой проверки.", "Your review plan starts after your first check.")}</p> : <><p>{queue.length ? t("Навыков для повторения сейчас: " + queue.length + ".", queue.length + (queue.length === 1 ? " skill is" : " skills are") + " ready for review.") : t("Пока всё повторено. Вернитесь после перерыва, чтобы проверить, что запомнилось.", "You are up to date for now. Return after a break to check what you remember.")}</p>{queue.length > 0 && <Button onClick={() => choose(queue[0])}>{t("Повторить на новом варианте →", "Review with a fresh variant →")}</Button>}<p className="muted">{t("После верного ответа без помощи: через 1, 3, 7 и 14 дней. Повторы в тот же день не увеличивают интервал. Ошибки возвращаются сегодня; ответы с помощью — раньше.", "After a correct answer without help: 1, 3, 7, then 14 days. Same-day retries do not advance the interval. Mistakes return today; answers with help return sooner.")}</p></>}</section>
     {teacher && <LessonPresentations lessonId={topic.lessonId} />}
-    <details className="square-source"><summary>{t("Об этих материалах и сохранённой работе", "About these materials and your existing work")}</summary><p>{t("Задачи взяты из авторской коллекции Maths4U Quadratics. В этом уроке нет экзаменационных вопросов или рисунков Cambridge. Автоматические математические проверки выполнены; независимая редакторская проверка преподавателем ещё ожидается.", "Questions come from the independently authored Maths4U Quadratics collection. No Cambridge examination questions or graphics are included in this lesson. Automated mathematical checks completed; independent teacher editorial review remains pending.")}</p><p><Link href={topic.path + "?view=legacy"}>{t("Прежние конспекты, банк и попытки", "Earlier notes, bank and saved attempts")}</Link> · <Link href="/student/progress">{t("Прогресс класса и прежние ответы", "Class progress and previous answers")}</Link></p></details>
+    <details className="square-source"><summary>{t("Об этих материалах и сохранённой работе", "About these materials and your existing work")}</summary><p>{t("Задачи взяты из авторской коллекции Maths4U Quadratics. В этом уроке нет экзаменационных вопросов или рисунков Cambridge.", "Questions come from the independently authored Maths4U Quadratics collection. No Cambridge examination questions or graphics are included in this lesson.")}</p><p><Link href={topic.path + "?view=legacy"}>{t("Прежние конспекты, банк и попытки", "Earlier notes, bank and saved attempts")}</Link> · <Link href="/student/progress">{t("Прогресс класса и прежние ответы", "Class progress and previous answers")}</Link></p></details>
   </div>;
 }
 
 function SquareQuestionForm({ q, enabled, onResult, topic }: { topic: QuadraticTopic; q: SquareQuestion; enabled: boolean; onResult: (event: CheckEvent, result: CheckResult) => Promise<void> }) {
   const { t } = useLocale(), actor = useContext(ActorContext), form = useRef<HTMLFormElement>(null);
+  const pendingFocus = useRef<HTMLElement | null>(null);
   const [helpKind, setHelpKind] = useState<"hint" | "solution" | null>(null), [attempted, setAttempted] = useState(false), [stuck, setStuck] = useState(false);
   const [answers, setAnswers] = useState<Record<string, string>>({}), [helpUsed, setHelpUsed] = useState(false), [help, setHelp] = useState(""), [result, setResult] = useState<CheckResult | null>(null), [error, setError] = useState<unknown>(null), [busy, setBusy] = useState(false), [storageIssue, setStorageIssue] = useState(false);
   const draftKey = topic.storage + ".draft." + (actor?.id ?? "guest") + "." + topic.version + "." + q.uid;
+  // Restore after React has re-enabled the controls, rather than racing that commit.
+  useLayoutEffect(() => {
+    if (busy || !pendingFocus.current) return;
+    const focused = pendingFocus.current; pendingFocus.current = null;
+    if (focused.isConnected && form.current?.contains(focused) && (document.activeElement === document.body || document.activeElement === focused)) focused.focus({ preventScroll: true });
+  });
   useEffect(() => {
     if (!enabled) return;
     try {
@@ -119,9 +125,7 @@ function SquareQuestionForm({ q, enabled, onResult, topic }: { topic: QuadraticT
   function change(k: string, value: string) { const next = { ...answers, [k]: value }; setAnswers(next); setResult(null); save(next, helpUsed); }
   function preserveFocus() {
     const focused = document.activeElement;
-    return () => requestAnimationFrame(() => {
-      if (focused instanceof HTMLElement && focused.isConnected && form.current?.contains(focused) && document.activeElement === document.body) focused.focus({ preventScroll: true });
-    });
+    return () => { pendingFocus.current = focused instanceof HTMLElement ? focused : null; };
   }
   async function reveal(kind: "hint" | "solution") { const restoreFocus = preserveFocus(); setBusy(true); setError(null); setHelpUsed(true); save(answers, true); try { const r = await api<{ html: string }>(topic.api + "/help", "POST", { uid: q.uid, kind, version: topic.version }); setHelp(r.html); setHelpKind(kind); } catch (e) { setError(e); } finally { setBusy(false); restoreFocus(); } }
   return <article className="square-question"><div className="row spread"><h3>{questionTitle(q)}</h3><span className="badge">{q.marks} {q.marks === 1 ? t("балл", "mark") : t("баллов", "marks")}</span></div><MathContent html={q.prompt} />

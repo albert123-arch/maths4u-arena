@@ -5,6 +5,7 @@ import { type Actor, admin, isAdmin, transaction, lockUser } from "./security";
 import { localized, renderContent } from "./content";
 import { hasFeature } from "./subscriptions";
 import { taskPermission } from "./catalog";
+import { displayDescription, displayMarkup, displayTitle } from "./public-presentation";
 
 export async function saveCourse(actor: Actor, input: unknown) {
   admin(actor);
@@ -46,12 +47,12 @@ export async function courses(actor: Actor | null, lang: string, slug?: string) 
   return Promise.all(rows.map(async c => {
     const allowed = !!(actor && isAdmin(actor)) || !c.featureKey || (actor && await hasFeature(actor, c.featureKey));
     const t = localized(c.texts, lang);
-    return { id: c.id, slug: c.slug, title: t.title, description: t.description, locked: !allowed, featureKey: c.featureKey,
-      topics: c.topics.map(topic => ({ id: topic.id, title: localized(topic.texts, lang).title,
+    return { id: c.id, slug: c.slug, title: displayTitle(t.title), description: displayDescription(t.description), locked: !allowed, featureKey: c.featureKey,
+      topics: c.topics.map(topic => ({ id: topic.id, title: displayTitle(localized(topic.texts, lang).title),
         lessons: topic.lessons.map(lesson => { const l = localized(lesson.versions[0].texts, lang); return {
-          id: lesson.id, title: l.title, completed: lesson.progress?.[0]?.completed ?? false,
-          openedAt: lesson.progress?.[0]?.openedAt ?? null, ...(allowed ? { body: renderContent(l.body),
-            tasks: lesson.tasks.map(({ task, position }) => ({ id: task.id, position, title: localized(task.versions[0].texts, lang).title })) } : {}),
+          id: lesson.id, title: displayTitle(l.title), completed: lesson.progress?.[0]?.completed ?? false,
+          openedAt: lesson.progress?.[0]?.openedAt ?? null, ...(allowed ? { body: displayMarkup(renderContent(l.body)),
+            tasks: lesson.tasks.map(({ task, position }) => ({ id: task.id, position, title: displayTitle(localized(task.versions[0].texts, lang).title) })) } : {}),
         }; }) })) };
   }));
 }

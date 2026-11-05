@@ -7,6 +7,7 @@ import { hasFeature } from "./subscriptions";
 import type { Prisma } from "../generated/prisma/client";
 import { mayReviewPractice } from "./practice-access";
 import { isPure1ShortUid, pure1PracticeNumber } from "./pure1-practice-number";
+import { displayTeacherNote } from "./public-presentation";
 
 const contextInclude = { classroom: true, round: { include: { olympiad: true } } } satisfies Prisma.WorkInclude;
 type Context = Prisma.WorkGetPayload<{ include: typeof contextInclude }>;
@@ -221,9 +222,9 @@ export async function getAttempt(actor: Actor, id: string, lang = "ru") {
       selfDirected: a.study.selfDirected, selfSolved: a.study.selfSolved, selfPoints: a.study.selfPoints, maximum: maxPoints } : null,
     ...(resultVisible && !a.study?.selfDirected ? { score, maxPoints, pendingReview: a.answers.some(r => r.autoPoints === null && r.review?.points == null) } : {}),
     questions: a.workVersion.items.map((i, index) => ({ ...publicVersion(i.taskVersion, lang, solutions || !!revealed, revealed,
-      sourcesHidden ? (lang === "en" ? "Problem " : "Задача ") + (index + 1) : undefined),
+      sourcesHidden ? (lang === "en" ? "Problem " : "Задача ") + (index + 1) : undefined, isAdmin(actor)),
       ...(a.study ? { availableHelp: availableHelp(i.taskVersion, lang) } : {}),
-      ...(reviewer ? { teacherNote: renderContent(localized(i.taskVersion.texts, lang).teacherNote) } : {}) })),
+      ...(reviewer ? { teacherNote: renderContent(displayTeacherNote(localized(i.taskVersion.texts, lang).teacherNote, isAdmin(actor))) } : {}) })),
     answers: a.answers.map(r => ({ id: r.id, partId: r.partId, response: r.response, savedAt: r.savedAt, files: r.files.map(f => f.file),
       ...(resultVisible ? { points: r.review?.points ?? r.autoPoints, comment: r.review?.comment ?? "", ...(reviewer ? { autoPoints: r.autoPoints, reviewRevision: r.review?.revision ?? 0 } : {}) } : {}) })),
   };

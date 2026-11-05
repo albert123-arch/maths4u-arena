@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import type { Actor } from "@/lib/security";
-import { api, LocaleContext, ActorContext, useLocale, Form, Field, str, Heading, ErrorNotice, Loading } from "./ui";
+import { api, LocaleContext, ActorContext, PublicLocaleContext, useLocale, Form, Field, str, Heading, ErrorNotice, Loading } from "./ui";
 import { Dashboard, Classes, ClassDetail, Olympiads, WorkPage, ResultsPage, MyAccess } from "./screens";
 import { WorkEditor, TaskEditor, OlympiadEditor } from "./editors";
 import { AttemptScreen } from "./attempt-screen";
@@ -23,36 +23,40 @@ import type { SquareLesson } from "@/lib/square-model";
 import { CourseSelection, MyLearning } from "./learning-home";
 import { SiteHeader } from "./site-header";
 import { storedLocale, rememberLocale } from "@/lib/locale";
+import { isPublicLearningPath, publicPath } from "@/lib/public-presentation";
+import type { LanguagePair, PublicPageData } from "@/lib/public-page-model";
 
-export function Platform({ discovery, square }: { discovery?: DiscoveryProps; square?: SquareLesson }) {
-  const path = usePathname(), parts = path.split("/").filter(Boolean);
+export function Platform({ discovery, square, publicData, languagePair }: { discovery?: DiscoveryProps; square?: SquareLesson; publicData?: PublicPageData; languagePair?: LanguagePair }) {
+  const rawPath = usePathname(), path = publicPath(rawPath), parts = path.split("/").filter(Boolean), publicLearning = isPublicLearningPath(path);
   const initialLocale = useContext(LocaleContext);
   const [actor, setActor] = useState<Actor | null>(null), [ready, setReady] = useState(false), [lang, setLang] = useState<"ru" | "en">(initialLocale);
   const [error, setError] = useState<unknown>(null);
+  const [accountLanguage, setAccountLanguage] = useState<"ru" | "en">("en");
   useEffect(() => {
     api<{ user: Actor | null }>("auth/me").then(({ user }) => {
       setActor(user);
-      const preferred = storedLocale() ?? user?.profile?.locale ?? initialLocale;
-      setLang(preferred); rememberLocale(preferred);
+      const preferred = user?.profile?.locale ?? (!publicLearning ? storedLocale() : undefined) ?? initialLocale;
+      setAccountLanguage(preferred);
+      if (!publicLearning) { setLang(preferred); rememberLocale(preferred); } else setLang(initialLocale);
     }).catch(setError).finally(() => setReady(true));
-  }, [initialLocale]);
+  }, [initialLocale, publicLearning]);
   useEffect(() => { document.documentElement.lang = lang; }, [lang]);
   const t = (ru: string, en: string) => lang === "ru" ? ru : en;
   const admin = actor?.roles.some(r => r.role === "ADMIN"), teacher = admin || actor?.roles.some(r => r.role === "TEACHER");
   const publicPage = !parts.length || ["login", "register", "recover", "library", "courses", "learn", "search", "for-teachers"].includes(parts[0]);
   const boardPage = ready && teacher && parts[0] === "teacher" && parts[1] === "board" && !!parts[2];
   let content;
-  if (!ready && !discovery && !square) content = <Loading />;
-  else if (error && !discovery && !square) content = <ErrorNotice error={error} />;
+  if (!ready && !discovery && !square && !publicData) content = <Loading />;
+  else if (error && !discovery && !square && !publicData) content = <ErrorNotice error={error} />;
   else if (!publicPage && !actor) content = <Auth mode="login" next={path} />;
   else if (parts[0] === "admin" && !admin || parts[0] === "teacher" && !teacher) content = <div className="notice error">{t("Этот раздел недоступен вашему аккаунту.", "This section is not available to your account.")}</div>;
   else if (square) content = <SquareLessonView lesson={square} sessionReady={ready && !error} />;
   else if (discovery) content = discovery.view === "home" && actor ? <MyLearning sessionReady={ready} /> : <DiscoveryHome {...discovery} sessionReady={ready && !error} />;
   else if (!parts.length) content = <CourseCatalogScreen home />;
   else if (["login", "register", "recover"].includes(parts[0])) content = <Auth mode={parts[0]} />;
-  else if (parts[0] === "library") content = <CatalogScreen />;
+  else if (parts[0] === "library") content = <CatalogScreen initial={publicData} />;
   else if (parts[0] === "bookmarks") content = <CatalogScreen bookmarksOnly />;
-  else if (parts[0] === "courses") content = parts[2] === "topics" && parts[3] ? <TopicScreen id={parts[3]} /> : <CourseCatalogScreen slug={parts[1]} />;
+  else if (parts[0] === "courses") content = parts[2] === "topics" && parts[3] ? <TopicScreen id={parts[3]} initial={publicData} /> : <CourseCatalogScreen slug={parts[1]} initial={publicData} />;
   else if (parts[0] === "attempts" && parts[1]) content = <AttemptScreen id={parts[1]} review={parts[2] === "review"} />;
   else if (parts[0] === "works" && parts[1]) content = parts[2] === "results" ? <ResultsPage id={parts[1]} /> : <WorkPage id={parts[1]} />;
   else if (parts[0] === "join-class") content = <Classes invite={parts[1]} />;
@@ -73,12 +77,12 @@ export function Platform({ discovery, square }: { discovery?: DiscoveryProps; sq
   else if (parts[0] === "admin") content = <AdminScreen section={parts[1] ?? "overview"} />;
   else if (["student", "teacher"].includes(parts[0])) content = <Dashboard manage={parts[0] === "teacher"} />;
   else content = <div className="card"><h1>404</h1><Link href="/">{t("На главную", "Go home")}</Link></div>;
-  return <LocaleContext.Provider value={lang}><ActorContext.Provider value={actor}><TaskBasketProvider key={actor?.id ?? "guest"}>
-    <SiteHeader key={path} actor={actor} path={path} hidden={!!boardPage} changeLanguage={value => { setLang(value); rememberLocale(value); if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
+  return <LocaleContext.Provider value={lang}><ActorContext.Provider value={actor}><PublicLocaleContext.Provider value={publicLearning ? initialLocale : null}><TaskBasketProvider key={actor?.id ?? "guest"}>
+    <SiteHeader key={rawPath} actor={actor} path={path} hidden={!!boardPage} publicPage={publicLearning} languagePair={languagePair} accountLanguage={accountLanguage} changeLanguage={value => { setAccountLanguage(value); if (!publicLearning) setLang(value); rememberLocale(value); if (publicLearning) document.documentElement.lang = initialLocale; if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
     <main className="container" id="main-content" data-home={!parts.length && !actor} key={path}>{(discovery || square) && !!error && <ErrorNotice error={error} />}{content}</main>
     <footer className="footer" hidden={!!boardPage}><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
     <VisitorStatistics path={path} eligible={ready && !actor && !error} language={lang} />
-  </TaskBasketProvider></ActorContext.Provider></LocaleContext.Provider>;
+  </TaskBasketProvider></PublicLocaleContext.Provider></ActorContext.Provider></LocaleContext.Provider>;
 }
 function Auth({ mode, next }: { mode: string; next?: string }) {
   const { t, lang } = useLocale();
