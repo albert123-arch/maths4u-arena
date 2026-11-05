@@ -4,7 +4,7 @@ import { db } from "./prisma";
 import { ensure } from "./errors";
 import { digest, lockUser, transaction, type Actor } from "./security";
 import { taskSchema, createTaskVersion, versionInclude } from "./content";
-import { questionsForTopic, squareQuestion, gradeSquare, squareHelp, questionCriteria, type SourceQuestion } from "./square-content";
+import { questionsForTopic, squareQuestion, gradeSquare, squareHelp, squareMarkingRows, questionCriteria, type SourceQuestion } from "./square-content";
 import { quadraticTopic, squareSnapshot, type Evidence, type QuadraticTopic } from "./square-model";
 import { databaseConfig } from "./database-url";
 
@@ -85,9 +85,13 @@ export async function checkSquare(actor: Actor | null, input: unknown, topic: Qu
   return result;
 }
 export async function helpSquare(input: unknown, topic: QuadraticTopic = quadraticTopic()) {
-  const { uid, kind, version } = z.object({ uid: z.string().max(80), kind: z.enum(["hint", "solution"]), version: z.literal(topic.version) }).strict().parse(input);
+  const { uid, kind, version, access, answers } = z.object({ uid: z.string().max(80), kind: z.enum(["hint", "solution", "guidance"]), version: z.literal(topic.version), access: z.enum(["attempt", "stuck", "paper"]).optional(), answers: z.record(z.string().max(50),z.string().max(400)).optional() }).strict().parse(input);
   ensure(version === topic.version && (await squareMappings(topic.key)).has(uid), 404, "NOT_FOUND");
-  return { html: squareHelp(squareQuestion(uid, topic.key), kind) };
+  const q = squareQuestion(uid, topic.key);
+  ensure(kind === "hint" || !!access, 403, "CHECK_ANSWER_FIRST");
+  ensure(kind === "hint" || access !== "attempt" || (answers && Object.keys(answers).length === q.fields.length && q.fields.every(f => Object.hasOwn(answers,f.key)) && Object.values(answers).some(v => v.trim())), 403, "CHECK_ANSWER_FIRST");
+  ensure(access !== "paper" || q.collection === "exam" || q.collection === "mixed" || /sketch|explain|justify/i.test(q.prompt_html), 400, "INVALID_INPUT");
+  return kind === "guidance" ? { rows: squareMarkingRows(q), total: q.marks } : { html: squareHelp(q, kind) };
 }
 export async function squareProgress(actor: Actor, topic: QuadraticTopic = quadraticTopic()) {
   const mappings = await squareMappings(topic.key), uids = new Map([...mappings].map(([uid,v]) => [v,uid]));

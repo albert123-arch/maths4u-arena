@@ -59,7 +59,7 @@ test('topic: truthful feedback, retained focus, drafts and solution gate', async
   await open(page, 'M4U-9709-Q26-S-CS01', '#practice');
   const form = page.locator('.square-question'), check = form.getByRole('button', { name: 'Check answer', exact: true });
   await expect(form.locator('h3')).toHaveText('Unit coefficient');
-  await expect(form.getByRole('button', { name: 'Show worked solution', exact: true })).toHaveCount(0);
+  await expect(form.getByRole('button', { name: 'Worked solution', exact: true })).toBeDisabled();
   await form.locator('input[name=a]').fill('1'); await form.locator('input[name=h]').fill('5'); await form.locator('input[name=k]').fill('2');
   await check.scrollIntoViewIfNeeded();
   const geometry = () => page.evaluate(() => ({ y: scrollY, button: document.querySelector('.square-form-actions')!.getBoundingClientRect().toJSON(), fields: [...document.querySelectorAll('.square-field-status')].map(e => e.getBoundingClientRect().toJSON()) }));
@@ -72,7 +72,7 @@ test('topic: truthful feedback, retained focus, drafts and solution gate', async
   await fs.writeFile(root + '/feedback-layout.json', JSON.stringify({ before: beforeGeometry, after: await geometry() }, null, 2));
   await expect(check).toBeFocused();
   const hint = form.getByRole('button', { name: 'Hint', exact: true }); await hint.click();
-  await expect(form.locator('.feedback--hint')).toBeVisible(); await expect(hint).toBeFocused();
+  await expect(form.locator('.support-hint')).toBeVisible(); await expect(hint).toBeFocused();
   await expect(form.locator('input[name=h]')).toHaveValue('5');
   await page.screenshot({ path: root + '/after/feedback-and-hint-390.png', fullPage: false });
   await form.locator('input[name=h]').fill('7'); await form.locator('input[name=k]').fill('-9');
@@ -82,12 +82,12 @@ test('topic: truthful feedback, retained focus, drafts and solution gate', async
   await expect(form.locator('input[aria-invalid=true]')).toHaveCount(0);
   await expect(page.locator('.square-question-nav progress')).toHaveAttribute('value', '1');
   await page.reload(); await expect(form.locator('input[name=h]')).toHaveValue('7');
-  await expect(form.getByRole('button', { name: 'Show worked solution', exact: true })).toBeEnabled();
-  await form.getByRole('button', { name: 'Show worked solution', exact: true }).click(); await expect(form.locator('.square-help')).toContainText('Indicative Maths4U marking guidance');
+  await expect(form.getByRole('button', { name: 'Worked solution', exact: true })).toBeEnabled();
+  await form.getByRole('button', { name: 'Worked solution', exact: true }).click(); await expect(form.locator('.support-solution')).toBeVisible();await expect(form.locator('.support-solution')).not.toContainText('marking guidance');
   await choose(page, '2. A fractional shift');
-  await expect(form.getByRole('button', { name: 'Show worked solution', exact: true })).toHaveCount(0);
+  await expect(form.getByRole('button', { name: 'Worked solution', exact: true })).toBeDisabled();
   await form.getByRole('button', { name: 'I’m stuck', exact: true }).click();
-  await form.getByRole('button', { name: 'Show worked solution', exact: true }).click(); await expect(form.locator('.square-help')).toBeVisible();
+  await form.getByRole('button', { name: 'Worked solution', exact: true }).click(); await expect(form.locator('.support-solution')).toBeVisible();
   const draft = await page.evaluate(() => JSON.parse(localStorage.getItem('maths4u.square.draft.guest.2026-11-05.1.M4U-9709-Q26-S-CS02')!)); expect(draft.helpUsed).toBe(true);
   await choose(page, '5. A fractional leading coefficient'); await expect(form.locator('.square-field-format')).toContainText('Enter (x, y)');
   await choose(page, '8. Vertex inside a closed domain'); await expect(form.locator('.square-field-format')).toContainText('Use intervals');
@@ -120,7 +120,7 @@ test('topic: a complete mobile retry keeps the answer and focus', async ({ page 
   await input.evaluate(e => { const top = e.getBoundingClientRect().top + scrollY; const header = document.querySelector('.topbar')!.getBoundingClientRect().height + document.querySelector('.square-nav')!.getBoundingClientRect().height; scrollTo(0, top - header - 24); });
   await expect(input).toBeInViewport(); await expect(check).toBeInViewport();
   await check.click(); await expect(form.locator('#feedback-point')).toContainText('Look again');
-  await form.getByRole('button', { name: 'Hint', exact: true }).click(); await expect(form.locator('.feedback--hint')).toBeInViewport();
+  await form.getByRole('button', { name: 'Hint', exact: true }).click(); await expect(form.locator('.support-hint')).toBeInViewport();
   await expect(form.getByRole('button', { name: 'Hint', exact: true })).toBeFocused(); await expect(input).toHaveValue('(0,0)');
   await input.fill('(3,7/2)'); await check.click(); await expect(form.locator('.square-result')).toContainText('All final answers are correct');
   await expect(check).toBeFocused(); await expect(input).toHaveValue('(3,7/2)');

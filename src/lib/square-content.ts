@@ -5,8 +5,9 @@ import pack from "../../content/original/completing-square-20261105-v1.json";
 import { checkExact, isExpandedPolynomial, type ExactField } from "./exact-answer";
 import { renderContent } from "./content";
 import { type SquareLesson, type CheckResult, squareVersion, quadraticTopic, type QuadraticTopic } from "./square-model";
+import type { MarkingRow, SupportKind } from "./question-support-model";
 
-type Criterion = { marks: number; code: string; description_html: string };
+type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
 export type SourceQuestion = { id: string; family_uid: string; title: string; collection: string; prompt_html: string; hint_html: string; solution_html: string; answer_html: string; marks: number; difficulty: number; fields: ExactField[]; marking_criteria?: Criterion[]; parts?: { label: string; marking_criteria: Criterion[] }[]; provenance?: { type: string; past_paper_reference: unknown } };
 export function questionCriteria(q: SourceQuestion) { return q.marking_criteria ?? q.parts?.flatMap(p=>p.marking_criteria.map(c=>({...c,code:p.label + " · " + c.code}))) ?? []; }
 export const squareQuestions = pack.questions as SourceQuestion[];
@@ -85,7 +86,11 @@ export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): 
   }
   return { valid, correct: valid && Object.values(fields).every(f => f.correct), fields, ...(!valid ? { error: "Some answers could not be read; no result has been recorded yet." } : {}) };
 }
-export function squareHelp(q: SourceQuestion, kind: "hint" | "solution") {
+export function squareMarkingRows(q: SourceQuestion): MarkingRow[] {
+  const parts = q.parts?.length ? q.parts : [{ label: "", marking_criteria: q.marking_criteria ?? [] }];
+  return parts.flatMap((p, i) => p.marking_criteria.map((c, j) => ({ id: `${i}-${j}`, part: p.label, code: c.code, marks: c.marks, html: renderContent(c.description_html), ...(c.guidance_html ? { guidance: renderContent(c.guidance_html) } : {}) })));
+}
+export function squareHelp(q: SourceQuestion, kind: SupportKind) {
   if (kind === "hint") return renderContent(q.hint_html);
-  return renderContent(q.answer_html + q.solution_html + "<h3>Indicative Maths4U marking guidance</h3><ul>" + questionCriteria(q).map(c => `<li><strong>${c.code} · ${c.marks}</strong> ${c.description_html}</li>`).join("") + "</ul><p>Check your reasoning and sketches as well as your final answers. This is Maths4U guidance, not an official examination-board mark scheme.</p>");
+  return kind === "solution" ? renderContent(q.answer_html + q.solution_html) : "";
 }

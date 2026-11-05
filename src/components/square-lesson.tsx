@@ -5,6 +5,8 @@ import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { Button, ButtonLink, Input } from "./controls";
 import { ActorContext, api, ErrorNotice, MathContent, useLocale } from "./ui";
 import { Feedback } from "./feedback";
+import { QuestionSupport } from "./question-support";
+import type { SupportContent } from "@/lib/question-support-model";
 import { LessonPresentations } from "./lesson-presentations";
 import { useSquareProgress, SquareSaveNotice } from "./square-progress";
 import { answerFormat, questionTitle } from "@/lib/square-presentation";
@@ -103,8 +105,8 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
 function SquareQuestionForm({ q, enabled, onResult, topic }: { topic: QuadraticTopic; q: SquareQuestion; enabled: boolean; onResult: (event: CheckEvent, result: CheckResult) => Promise<void> }) {
   const { t } = useLocale(), actor = useContext(ActorContext), form = useRef<HTMLFormElement>(null);
   const pendingFocus = useRef<HTMLElement | null>(null);
-  const [helpKind, setHelpKind] = useState<"hint" | "solution" | null>(null), [attempted, setAttempted] = useState(false), [stuck, setStuck] = useState(false);
-  const [answers, setAnswers] = useState<Record<string, string>>({}), [helpUsed, setHelpUsed] = useState(false), [help, setHelp] = useState(""), [result, setResult] = useState<CheckResult | null>(null), [error, setError] = useState<unknown>(null), [busy, setBusy] = useState(false), [storageIssue, setStorageIssue] = useState(false);
+  const [attempted, setAttempted] = useState(false), [paper, setPaper] = useState(false);
+  const [answers, setAnswers] = useState<Record<string, string>>({}), [helpUsed, setHelpUsed] = useState(false), [result, setResult] = useState<CheckResult | null>(null), [error, setError] = useState<unknown>(null), [busy, setBusy] = useState(false), [storageIssue, setStorageIssue] = useState(false);
   const draftKey = topic.storage + ".draft." + (actor?.id ?? "guest") + "." + topic.version + "." + q.uid;
   // Restore after React has re-enabled the controls, rather than racing that commit.
   useLayoutEffect(() => {
@@ -127,7 +129,6 @@ function SquareQuestionForm({ q, enabled, onResult, topic }: { topic: QuadraticT
     const focused = document.activeElement;
     return () => { pendingFocus.current = focused instanceof HTMLElement ? focused : null; };
   }
-  async function reveal(kind: "hint" | "solution") { const restoreFocus = preserveFocus(); setBusy(true); setError(null); setHelpUsed(true); save(answers, true); try { const r = await api<{ html: string }>(topic.api + "/help", "POST", { uid: q.uid, kind, version: topic.version }); setHelp(r.html); setHelpKind(kind); } catch (e) { setError(e); } finally { setBusy(false); restoreFocus(); } }
   return <article className="square-question"><div className="row spread"><h3>{questionTitle(q)}</h3><span className="badge">{q.marks} {q.marks === 1 ? t("балл", "mark") : t("баллов", "marks")}</span></div><MathContent html={q.prompt} />
     {q.fields.some(f => /^(a|form_a)$/.test(f.key)) && <p className="square-template">{t("Введите полную форму во всех трёх полях:", "Enter the complete form using all three fields:")} <strong>{q.fields.some(f => f.key === "form_a") ? "A(x − H)² + C" : "a(x − h)² + c"}</strong>.</p>}
     <form ref={form} onSubmit={async e => {
@@ -143,12 +144,12 @@ function SquareQuestionForm({ q, enabled, onResult, topic }: { topic: QuadraticT
         </div>;
       })}</div>
       {q.fields.some(f => f.type !== "choice") && <details className="square-format"><summary>{t("Полная справка по вводу ответов", "Full answer-format guide")}</summary><p>{t("Точные числа: 3/2, sqrt(5), 2-sqrt(3). Множества: {1,4}. Интервалы: (3,5]; круглая скобка исключает границу. Бесконечность: inf, объединение: U, нет решений: empty. Пары и тройки координат разделяйте точкой с запятой. Выражения: 2x^2+3x-1; уравнения: x^2=3x+1 или многочлен, равный нулю. Множители: x-1 ; x+2. Дробь с параметром: числитель ; знаменатель. Целые числа перечисляйте списком.", "Exact numbers: 3/2, sqrt(5), 2-sqrt(3). Sets: {1,4}. Intervals: (3,5]; a round bracket excludes the endpoint. Infinity: inf; union: U; no solutions: empty. Separate coordinate pairs or triples with semicolons. Expressions: 2x^2+3x-1; equations: x^2=3x+1 or the polynomial equal to zero. Factors: x-1 ; x+2. Parameter fraction: numerator ; denominator. List integer answers individually.")}</p></details>}
-      <div className="row square-form-actions"><Button variant="primary" type="submit" disabled={!enabled || busy}>{busy ? t("Проверка…", "Checking…") : t("Проверить ответ", "Check answer")}</Button><Button type="button" disabled={!enabled || busy} onClick={() => void reveal("hint")}>{t("Подсказка", "Hint")}</Button>{attempted || stuck ? <Button type="button" variant="text" disabled={!enabled || busy} onClick={() => void reveal("solution")}>{t("Показать разобранное решение", "Show worked solution")}</Button> : <Button type="button" variant="text" disabled={!enabled || busy} onClick={() => setStuck(true)}>{t("Я не знаю, как решить", "I’m stuck")}</Button>}</div>
+      <div className="row square-form-actions"><Button variant="primary" type="submit" disabled={!enabled || busy || paper}>{busy ? t("Проверка…", "Checking…") : t("Проверить ответ", "Check answer")}</Button></div>
     </form>
     <ErrorNotice error={error} />
     <div className="square-result">{result && <Feedback kind={result.correct ? "correct" : result.valid ? "again" : "format"}>{result.correct ? t("Все итоговые ответы верны.", "All final answers are correct.") + (helpUsed ? t(" Теперь попробуйте новый вариант без помощи.", " Now try a fresh variant without help.") : t(" Переходите дальше или вернитесь позже для повторения.", " Try the next step or return later for review.")) : result.valid ? t("Проверьте поля с отметкой «Попробуйте ещё».", "Look at the fields marked ‘Look again’, then try again.") : t("Некоторые ответы не удалось прочитать. Проверьте формат в отмеченных полях; результат ещё не записан.", "Some answers could not be read. Check the marked fields; no result has been recorded yet.")}</Feedback>}</div>
     {q.manual && <p className="muted">{t("Проверяются только итоговые ответы. Сравните объяснение, рисунок и метод с разобранным решением; баллы за метод требуют проверки.", "The checker checks final answers only. Compare your explanation, sketch and method with the worked solution; method marks need review.")}</p>}
-    {help && (helpKind === "hint" ? <Feedback kind="hint"><MathContent html={help} /></Feedback> : <section className="square-help" aria-label={t("Разобранное решение", "Worked solution")}><MathContent html={help} /></section>)}
+    <QuestionSupport storageKey={draftKey+'.support'} manual={q.manual} maximum={q.marks} enabled={enabled} attempted={attempted} onPaperFinished={()=>setPaper(true)} onHelp={()=>{setHelpUsed(true);save(answers,true);}} request={(kind,access)=>api<SupportContent>(topic.api+'/help','POST',{uid:q.uid,kind,version:topic.version,...(access?{access}:{}),...(access==='attempt'?{answers}:{})})} assess={actor?points=>api(topic.api+'/self-assess','POST',{uid:q.uid,version:topic.version,points}):undefined}/>
     {storageIssue && <p role="alert">{t("Не удалось сохранить черновик в браузере. Не закрывайте страницу до окончания работы.", "This draft could not be saved in your browser. Keep the page open until you finish.")}</p>}
   </article>;
 }

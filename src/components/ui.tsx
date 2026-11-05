@@ -87,9 +87,10 @@ export function ErrorNotice({ error }: { error: unknown }) {
 export function Loading() { const { t } = useLocale(); return <div className="skeleton" role="status">{t("Загрузка…", "Loading…")}</div>; }
 export function Empty({ children }: { children?: ReactNode }) { const { t } = useLocale(); return <p className="empty">{children ?? t("Пока ничего нет.", "Nothing here yet.")}</p>; }
 export function MathContent({ html }: { html: string }) { return <div className="math-content" dangerouslySetInnerHTML={{ __html: html }} />; }
-export function MaterialAsset({ asset }: { asset: { id: string; caption: string; mimeType: string } }) {
-  return <figure className="material-asset">{asset.mimeType.startsWith("image/") && <Image src={"/api/files/" + asset.id} alt={asset.caption} unoptimized width={1000} height={750} className="material-asset-image" />}
-    <figcaption><a className="attachment" href={"/api/files/" + asset.id} target="_blank" rel="noopener noreferrer">{asset.caption} →</a></figcaption></figure>;
+export function MaterialAsset({ asset }: { asset: { id: string; caption: string; mimeType: string; accessToken?:string; embedded?:boolean } }) {
+  const url="/api/files/"+asset.id+(asset.accessToken?"?support="+encodeURIComponent(asset.accessToken):"");
+  return <figure className="material-asset">{!asset.embedded && asset.mimeType.startsWith("image/") && <Image src={url} alt={asset.caption} unoptimized width={1000} height={750} className="material-asset-image" />}
+    <figcaption><a className="attachment" href={url} target="_blank" rel="noopener noreferrer">{asset.caption} →</a></figcaption></figure>;
 }
 export function Heading({ title, subtitle, children }: { title: string; subtitle?: string; children?: ReactNode }) {
   return <div className="page-heading"><div><p className="eyebrow">Maths4U · Learning together</p><h1>{title}</h1>{subtitle && <p className="muted">{subtitle}</p>}</div>{children}</div>;

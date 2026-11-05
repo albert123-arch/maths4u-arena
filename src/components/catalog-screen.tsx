@@ -1,7 +1,6 @@
 "use client";
 import { Button, ButtonLink, Input, Select } from "./controls";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useContext, useState, useEffect, useRef } from "react";
 import { TopicStudyPanel, StudyStatus } from "./study-panel";
 import type { CatalogDto, PracticeMode, courseCatalog, topicContent } from "@/lib/catalog";
@@ -17,12 +16,12 @@ function OriginalQuestionParts({ version }: { version: { separatePartPrompts?: b
   if (!version.separatePartPrompts) return null;
   return <div className="original-question-parts">{version.parts.map(part => <section key={part.id}><MathContent html={part.prompt} /><p className="muted">[{part.maxPoints}]</p></section>)}</div>;
 }
-import { QuickPractice } from "./quick-practice";
+import { CatalogQuestionLearning } from "./catalog-question-learning";
 import { Pure1Review } from "./pure1-review";
 export function CatalogSkeleton() { return <div className="catalog-skeleton" role="status" aria-label="Loading materials"><span /><span /><span /></div>; }
 
 export function CatalogTasks({ topicId, courseId, chapterId, mode, embedded = false, practice = false, bookmarksOnly = false, initial }: { topicId?: string; courseId?:string; chapterId?:string; mode?: PracticeMode; embedded?: boolean; practice?: boolean; bookmarksOnly?: boolean; initial?: PublicPageData }) {
-  const { t, lang } = useLocale(), actor = useContext(ActorContext), publicLocale = useContext(PublicLocaleContext), basket = useTaskBasket(), router = useRouter();
+  const { t, lang } = useLocale(), actor = useContext(ActorContext), publicLocale = useContext(PublicLocaleContext), basket = useTaskBasket();
   const manage = actor?.roles.some(r => ["TEACHER", "ADMIN"].includes(r.role));
   const [reviewTask]=useState(()=>{if(typeof window==="undefined"||!practice)return "";const id=new URLSearchParams(window.location.search).get("reviewTask")??"";return /^[a-z0-9_]{1,100}$/.test(id)?id:"";});
   const reviewScrolled=useRef(false);
@@ -61,7 +60,7 @@ export function CatalogTasks({ topicId, courseId, chapterId, mode, embedded = fa
         <details className="task-content" open={practice}><summary><strong>{displayTitle(task.version.title)}</strong><span className="task-meta">{[/^Maths4U Original/.test(task.version.source ?? "") ? "" : task.version.source, task.version.year, task.version.examSession, task.version.paper ? "P" + task.version.paper : "", task.version.questionNumber ? "Q" + task.version.questionNumber : ""].filter(Boolean).join(" · ")}</span>{!manage && task.progress && (task.progress.solved ? <span className="badge">{t("Решено", "Solved")}{task.progress.helpUsed ? t(" · с помощью", " · with help") : ""}</span> : <StudyStatus state={task.progress.state} helpUsed={task.progress.helpUsed} />)}</summary>
           {task.version.locale!==lang&&<p className="muted">{t("Перевод RU отсутствует. Показан оригинал EN.","An English translation is unavailable. Showing the original.")}</p>}<MathContent html={task.version.statement} /><OriginalQuestionParts version={task.version} />{task.version.assets.map(a => <MaterialAsset key={a.id} asset={a} />)}
           {task.editable && <Link href={`/teacher/tasks/${task.id}`}>{t("Редактировать", "Edit")}</Link>}
-          {!manage && (actor ? task.mode !== "WRITTEN" ? <QuickPractice task={task} lessonId={topicId} changed={result.refresh} /> : <ActionButton label={t("Решение, MS и самооценка", "Solution, MS & self-check")} action={async () => { const a = await api<{ id: string }>("study/start", "POST", { taskId: task.id, lessonId: topicId }); router.push(`/attempts/${a.id}?returnTo=${encodeURIComponent(window.location.pathname + window.location.search)}`); }} /> : <ButtonLink className="button" href={"/login?next="+encodeURIComponent(typeof window==="undefined"?"/courses":window.location.pathname+window.location.search)}>{t("Войти и решать", "Sign in to practise")}</ButtonLink>)}
+          <CatalogQuestionLearning task={task} lessonId={topicId} changed={result.refresh}/>
         </details><span className="task-category">{categories[task.category]}</span><span className="task-points">{task.points} {t("б.", "pts")}</span>
         {actor ? <ActionButton secondary label={task.bookmarked ? t("★ Убрать закладку", "★ Remove bookmark") : t("☆ В закладки", "☆ Bookmark")} action={() => api(`learning/bookmarks/${task.id}`, "POST", { selected: !task.bookmarked })} onDone={result.refresh} /> : <ButtonLink className="button quiet" href="/login">{t("☆ Войти для закладки", "☆ Sign in to bookmark")}</ButtonLink>}
         {manage && <label className="task-select"><Input aria-label={t("В набор: ", "Select: ") + task.version.title} type="checkbox" disabled={!basket.data || basket.busy} checked={basket.selection.includes(task.id)} onChange={e => { const checked = e.target.checked; void basket.change(ids => checked ? [...ids.filter(id => id !== task.id), task.id] : ids.filter(id => id !== task.id)).catch(() => {}); }} /><span>{t("В набор", "Select")}</span></label>}</div></li>)}</ol>

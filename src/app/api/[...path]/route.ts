@@ -3,6 +3,7 @@ import { db } from "@/lib/prisma";
 import { AppError, ensure } from "@/lib/errors";
 import { actorForToken, tokenFrom, register, login, logout, sessionCookie, requireActor, admin, changeUser, issueRecovery, recover, rateLimit, userSelect } from "@/lib/security";
 import { library, saveTask, editorTask, exportTask } from "@/lib/content";
+import { catalogSupport, saveSelfMarks, squareSelfMarks } from "@/lib/question-support";
 import { createClass, listClasses, classDetail, joinClass, editClass } from "@/lib/classrooms";
 import { listWorks, publishWork, workSummary, startAttempt, getAttempt, mutateAttempt, gradeAttempt, workResults, publishResults, ownWork, practice } from "@/lib/works";
 import { createOlympiad, listOlympiads, registerOlympiad, olympiadResults } from "@/lib/olympiads";
@@ -97,13 +98,19 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
       return json(await checkSquare(user, input, topic));
     }
     if ((route === "learning/square/help" || action === "help") && method === "POST") return json(await helpSquare(input, topic));
+    if ((route === "learning/square/self-assess" || action === "self-assess") && method === "POST") return json(await squareSelfMarks(await actorForToken(tokenFrom(request)), input, topic));
+    if (parts[0] === "catalog" && parts[1] === "tasks" && parts.length === 4 && method === "POST") {
+      const actor = await actorForToken(tokenFrom(request));
+      if (parts[3] === "support") return json(await catalogSupport(actor, parts[2], input, lang));
+      if (parts[3] === "self-assess") return json(await saveSelfMarks(actor, parts[2], input, lang));
+    }
     if (method === "GET" && route === "catalog") return json(await catalog(await actorForToken(tokenFrom(request)), lang, Object.fromEntries(url.searchParams), url.searchParams.get("publicLocale") === "ru"));
     if (method === "GET" && route === "catalog/courses") return json(await courseCatalog(await actorForToken(tokenFrom(request)), lang, url.searchParams.get("slug") || undefined, url.searchParams.get("publicLocale") === "ru"));
     if (method === "GET" && parts[0] === "catalog" && parts[1] === "topics" && parts.length === 3) return json(await topicContent(await actorForToken(tokenFrom(request)), parts[2], lang, url.searchParams.get("publicLocale") === "ru"));
     if (method === "GET" && route === "library") return json(await library(await actorForToken(tokenFrom(request)), lang, (url.searchParams.get("q") ?? "").slice(0, 100)));
     if (method === "GET" && route === "courses") return json(await courses(await actorForToken(tokenFrom(request)), lang, url.searchParams.get("slug") || undefined));
     if (method === "GET" && parts[0] === "files" && parts.length === 2) {
-      const result = await download(await actorForToken(tokenFrom(request)), parts[1], url.searchParams.get("variant") ?? "original");
+      const result = await download(await actorForToken(tokenFrom(request)), parts[1], url.searchParams.get("variant") ?? "original", url.searchParams.get("support") ?? undefined);
       const range = request.headers.get("range");
       let start = 0, end = result.data.length - 1;
       if (range) {

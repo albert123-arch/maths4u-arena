@@ -8,6 +8,8 @@ import { hasFeature } from "./subscriptions";
 import { privateStorageRoot } from "./storage-config";
 import { imagePreviews } from "./image-previews";
 import { mayReviewPractice, mentoredPracticeWhere } from "./practice-access";
+import { readMaterialGrant } from "./material-grant";
+import { taskPermission } from "./catalog";
 
 export const MAX_FILE_BYTES = 8 * 1024 * 1024;
 function storageRoot() {
@@ -74,12 +76,19 @@ export async function upload(actor: Actor, file: File, attemptId?: string, partI
     return result;
   } catch (e) { await Promise.all([key, ...derivatives.map(d => d.storageKey)].map(k => unlink(storagePath(k)).catch(() => {}))); throw e; }
 }
-export async function download(actor: Actor | null, id: string, variant = "original") {
+export async function download(actor: Actor | null, id: string, variant = "original", support?:string) {
   ensure(["original", "preview", "thumbnail"].includes(variant), 404, "NOT_FOUND");
   const file = await db().storedFile.findUnique({ where: { id }, include: { derivatives: true, submissions: { include: { answer: { include: { attempt: { include: attemptInclude } } } } },
     assets: { include: { version: { include: { task: true } } } } } });
   ensure(file && !file.deletedAt, 404, "NOT_FOUND");
   let allowed = !!actor && (file.ownerId === actor.id || isAdmin(actor));
+  if (!allowed && !file.submissions.length) {
+    const grant=readMaterialGrant(support);
+    if(grant&&grant.fileId===id&&grant.actorId===(actor?.id??null)&&grant.role!=="TEACHER"){
+      const asset=file.assets.find(a=>a.versionId===grant.versionId&&a.role===grant.role);
+      if(asset)allowed=!!await db().task.findFirst({where:{AND:[{id:asset.version.taskId},await taskPermission(actor)]},select:{id:true}});
+    }
+  }
   if (!allowed && actor) allowed = file.submissions.some(s => s.answer.attempt.userId === actor.id || (isTeacher(actor) && s.answer.attempt.workVersion.work.ownerId === actor.id));
   if (!allowed && actor && isTeacher(actor)) for (const submission of file.submissions) {
     if (await mayReviewPractice(actor, submission.answer.attemptId)) { allowed = true; break; }
