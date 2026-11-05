@@ -1,0 +1,997 @@
+{
+  "schema_version": 1,
+  "key": "maths4u-original-integration",
+  "version": "2026-10-30.1",
+  "language": "en",
+  "title": "Integration — Maths4U Original",
+  "syllabus": "9709",
+  "component": "Pure Mathematics 1",
+  "provenance": {
+    "classification": "original",
+    "prepared_by": "AI-assisted preparation for Maths4U",
+    "basis": "Independent skill briefs; no examination question supplied for paraphrasing.",
+    "third_party_question_text": false,
+    "teacher_review": "pending",
+    "verification": "See docs/integration-original-20261030.md for checks actually performed."
+  },
+  "marking_policy": "Maths4U indicative marking guidance, not an official examination-board mark scheme. Award stated criteria once each, up to the part maximum. Accept valid equivalent methods. Follow-through applies only where explicitly stated; do not award an accuracy criterion for an incorrect final result.",
+  "lessons": [
+    {
+      "key": "power-integrals",
+      "php_subchapter_id": 84,
+      "title": "Power integrals, constants and limits",
+      "objective": "Find an antiderivative, retain its domain and evaluate a definite integral in the correct order.",
+      "notes_html": "<p><strong>Before you start:</strong> differentiate powers, simplify indices and substitute into an expression.</p>\n <p>An antiderivative F satisfies F′=f on the interval being considered. The indefinite integral describes the family F+C, because differentiating a constant gives zero. On a connected interval any two antiderivatives differ by a constant; separate intervals of a disconnected domain need not share one constant.</p>\n <p>\\[\\int x^n\\,dx=\\frac{x^{n+1}}{n+1}+C\\qquad(n\\ne-1).\\]</p>\n <p>Increase the power and divide by the new power. Integrate sums term by term and keep constant multipliers. Negative powers require x≠0; fractional-power examples here use positive bases. The n=−1 case cannot use this formula: it would divide by zero and requires a logarithmic antiderivative.</p><p><img src=\"/assets/original/integration/family-of-curves.svg\" alt=\"The curves x²−2, x² and x²+2 have the same derivative 2x. An indefinite integral includes an arbitrary vertical constant.\" width=\"520\" height=\"440\"></p><p>For a nonzero constant a and n≠−1, reverse the linear-inner-function chain rule:</p>\n <p>\\[\\int(ax+b)^n\\,dx=\\frac{(ax+b)^{n+1}}{a(n+1)}+C.\\]</p>\n <p>Check by differentiating. If a=0 and the integrand is defined, integrate the resulting constant instead of dividing by a. For a continuous integrand on [u,v] with antiderivative F throughout the interval,</p>\n <p>\\[\\int_u^v f(x)\\,dx=F(v)-F(u).\\]</p>\n <p>Upper limit first, lower limit second. A constant cancels, so a definite integral is a number without an arbitrary +C. Reversing limits changes its sign. Check the entire interval: endpoint subtraction alone does not justify crossing a singularity.</p>\n <h3>Recall later</h3><p>\\(\\int 3x^2\\,dx=x^3+C\\), while \\(\\int_0^2 3x^2\\,dx=8\\). The two requests have different types of answer.</p>",
+      "examples": [
+        {
+          "question_html": "Find \\(\\int(4x^3-6x+5)\\,dx\\).",
+          "solution_html": "<p>Integrating each term gives \\(x^4-3x^2+5x+C\\). Differentiation recovers all three original terms, including the constant integrand 5.</p>"
+        },
+        {
+          "question_html": "Find \\(\\int(3x+2)^2\\,dx\\).",
+          "solution_html": "<p>The result is \\((3x+2)^3/9+C\\). Differentiating multiplies by 3 from the cube and by 3 from the inner function, cancelling the denominator 9. Expanding first gives an equivalent answer differing only by a constant.</p>"
+        },
+        {
+          "question_html": "Evaluate \\(\\int_1^4(\\sqrt{x}+2x^{-2})\\,dx\\).",
+          "solution_html": "<p>On [1,4] the integrand is continuous. An antiderivative is \\((2/3)x^{3/2}-2/x\\). The endpoint values are 29/6 and −4/3, so the integral is \\(29/6-(-4/3)=37/6\\).</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Using the differentiation power rule instead of increasing the exponent.",
+        "Omitting an indefinite constant or adding an arbitrary constant to a definite answer.",
+        "Forgetting the inner-function divisor, using the n=−1 formula or crossing a zero denominator."
+      ]
+    },
+    {
+      "key": "curve-equations",
+      "php_subchapter_id": 85,
+      "title": "Recover a curve from its gradient",
+      "objective": "Use point and slope data to determine each integration constant.",
+      "notes_html": "<p><strong>Before you start:</strong> integrate powers and substitute a point into a curve equation.</p>\n <p>If dy/dx is known, integrate once to obtain y=F(x)+C. A point (a,b) gives b=F(a)+C and selects one curve from the family. Substitute into the curve, not into the given gradient, to determine C.</p><p><img src=\"/assets/original/integration/initial-condition.svg\" alt=\"For gradient 2x, the family is y=x²+C. The point (1,3) selects C=2 and the curve y=x²+2.\" width=\"520\" height=\"440\"></p><p>If the second derivative is given, two integrations introduce two independent constants. Use slope data to determine the first and point data to determine the second. Do not reuse one symbol as if the constants must be equal.</p>\n <p>After recovering the curve, check every original condition: differentiate once or twice, test the supplied slope and substitute the point. A tangent or normal then uses the recovered ordinate and the appropriate derivative. All checks must stay inside the stated domain.</p>\n <h3>Recall later</h3><p>If y′=2x and y(1)=3, then y=x²+2. Knowing the gradient alone would leave C undetermined.</p>",
+      "examples": [
+        {
+          "question_html": "A curve has y′=2x and passes through (1,3). Find its equation.",
+          "solution_html": "<p>Integrate to y=x²+C. Substituting (1,3) gives 3=1+C, so C=2 and y=x²+2. Its derivative is 2x as required.</p>"
+        },
+        {
+          "question_html": "A curve has y′=4x−3 and passes through (2,7). Find y.",
+          "solution_html": "<p>Integrate to y=2x²−3x+C. At x=2 this is 2+C, so C=5. The equation is \\(y=2x^2-3x+5\\).</p>"
+        },
+        {
+          "question_html": "Given y″=6x, y′(0)=−2 and y(1)=4, find y.",
+          "solution_html": "<p>First, y′=3x²+A and A=−2. Next, y=x³−2x+B. The point condition gives 4=1−2+B, so B=5. Thus y=x³−2x+5; differentiation and both conditions check.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Using a point condition in the derivative instead of the curve equation.",
+        "Losing the second independent constant when integrating twice.",
+        "Giving a family of curves when the supplied conditions determine a single member."
+      ]
+    },
+    {
+      "key": "areas",
+      "php_subchapter_id": 86,
+      "title": "Signed integrals and geometric areas",
+      "objective": "Split at crossings and subtract the lower curve from the upper curve.",
+      "notes_html": "<p><strong>Before you start:</strong> find roots and intersections, determine signs and evaluate definite integrals.</p>\n <p>A definite integral measures signed accumulation. Above-axis contributions are positive and below-axis contributions negative. Geometric area is nonnegative: split at each sign-changing crossing and add the magnitudes of the pieces. Taking the absolute value only after all pieces have cancelled can give the wrong area.</p><p><img src=\"/assets/original/integration/signed-area.svg\" alt=\"For y=x²−1 on [−2,2], the signed integral is 4/3 but the total geometric area is 4. Split at the roots −1 and 1.\" width=\"520\" height=\"440\"></p><p>Between two curves, solve their intersection equation to find the relevant boundaries. On an interval where U is the upper curve and L the lower curve,</p>\n <p>\\[A=\\int_a^b\\{U(x)-L(x)\\}\\,dx.\\]</p>\n <p>Check which curve is above rather than using the order in which they were named. Split again if that order changes. Axis crossings alone do not force a split for U−L if the same curve stays upper: vertical separation is the quantity being integrated.</p><p><img src=\"/assets/original/integration/between-curves.svg\" alt=\"The line y=2x is above y=x² between intersections x=0 and x=2. The enclosed area is the integral of 2x−x², equal to 4/3.\" width=\"520\" height=\"440\"></p><h3>Recall later</h3><p>If an integral is zero, positive and negative contributions may cancel. The graph need not lie on the axis and its geometric area need not be zero.</p>",
+      "examples": [
+        {
+          "question_html": "Compare the signed integral and total area for y=x²−1 on [−2,2].",
+          "solution_html": "<p>An antiderivative is x³/3−x. The signed integral is 4/3. The middle piece from −1 to 1 has signed value −4/3; the two outer pieces total 8/3. The geometric area is 8/3+4/3=4.</p>"
+        },
+        {
+          "question_html": "Find the area enclosed by y=2x and y=x².",
+          "solution_html": "<p>The intersections solve x²=2x, giving x=0 and 2. On (0,2), 2x&gt;x². The area is \\(\\int_0^2(2x-x^2)\\,dx=[x^2-x^3/3]_0^2=4/3\\).</p>"
+        },
+        {
+          "question_html": "Find the total area between y=2−x and the x-axis for 0≤x≤5.",
+          "solution_html": "<p>The crossing is x=2. The positive piece has area 2 and the below-axis piece has area 9/2, so the total is 13/2. The signed integral is −5/2, whose absolute value 5/2 is not the total area.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Treating a negative integral as a negative geometric area.",
+        "Taking one absolute value after cancellation instead of splitting the region.",
+        "Using lower minus upper or forgetting an intersection inside the interval."
+      ]
+    },
+    {
+      "key": "volumes",
+      "php_subchapter_id": 87,
+      "title": "Volumes of revolution: disks and washers",
+      "objective": "Choose the axis, radii and integration variable before squaring the radius.",
+      "notes_html": "<p><strong>Before you start:</strong> evaluate definite integrals, rearrange a curve and interpret cross-sections.</p>\n <p>Rotating a region between a curve and the x-axis gives circular cross-sections perpendicular to that axis. The radius is the distance to the axis, |y|, so a disk has area πy². Its thin-slice volume is approximately πy²Δx; adding slices and taking the limit gives</p>\n <p>\\[V=\\pi\\int_a^b y(x)^2\\,dx.\\]</p><p><img src=\"/assets/original/integration/disk-volume.svg\" alt=\"For y=1+x and 0≤x≤2, rotation about the x-axis uses disk radius y, disk area πy² and volume 26π/3. A circular cross-section is drawn separately from the profile graph.\" width=\"520\" height=\"440\"></p><p>About the y-axis, use horizontal disks: express the radius as x(y), integrate with respect to y and use y-limits. For a first-quadrant region touching the y-axis, \\(V=\\pi\\int_c^d x(y)^2\\,dy\\).</p>\n <p>If a cross-section has a hole, it is a washer with area \\(\\pi(R^2-r^2)\\), where 0≤r≤R are distances from the rotation axis. Draw the region to decide whether a hole exists; subtract the squares, not the radii. If the region crosses the axis, simple subtraction of signed ordinates may not describe the cross-section.</p>\n <p>Lengths squared give cross-sectional area; integrating over a length gives cubic units. π is a factor outside the integral, not part of the radius. Reversing integration limits would produce the wrong sign for a physical volume.</p>\n <h3>Recall later</h3><p>For y=x over 0≤x≤3, the x-axis volume is \\(\\pi\\int_0^3x^2\\,dx=9\\pi\\), not \\(\\pi\\int_0^3x\\,dx\\).</p>",
+      "examples": [
+        {
+          "question_html": "The region under y=x on 0≤x≤3 is rotated about the x-axis. Find the volume.",
+          "solution_html": "<p>The disk radius is x, so \\(V=\\pi\\int_0^3x^2\\,dx=\\pi[x^3/3]_0^3=9\\pi\\) cubic units.</p>"
+        },
+        {
+          "question_html": "The region between x=0 and x=√y for 0≤y≤9 is rotated about the y-axis. Find the volume.",
+          "solution_html": "<p>Horizontal disks have radius √y and area πy. Thus \\(V=\\pi\\int_0^9y\\,dy=81\\pi/2\\) cubic units. The upper integration limit is 9, a y-coordinate.</p>"
+        },
+        {
+          "question_html": "The region between y=3 and y=x on 0≤x≤2 is rotated about the x-axis. Find the volume.",
+          "solution_html": "<p>Each washer has outer radius 3 and inner radius x. Hence \\(V=\\pi\\int_0^2(9-x^2)\\,dx=\\pi[9x-x^3/3]_0^2=46\\pi/3\\) cubic units.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Integrating the radius instead of its square.",
+        "Mixing x-limits with an integral in y or rotating about the wrong axis.",
+        "Using (R−r)² in place of R²−r² or inventing a hole where the region touches the axis."
+      ]
+    },
+    {
+      "key": "accumulation",
+      "php_subchapter_id": 88,
+      "title": "Accumulation and mixed calculus review",
+      "objective": "Recover an amount from its rate and connect a variable-limit integral with differentiation.",
+      "notes_html": "<p><strong>Before you start:</strong> use definite integrals, an initial condition and derivative signs.</p>\n <p>If a quantity Q changes smoothly at rate q(t), its net change from a to b is \\(\\int_a^b q(t)\\,dt\\). Add the starting amount to obtain the final amount. A negative rate represents removal or decrease, not a negative amount by itself. Rate units multiplied by time give amount units.</p><p><img src=\"/assets/original/integration/accumulation.svg\" alt=\"With Q(0)=10 and rate q(t)=4−t on [0,6], positive accumulation is 8, negative accumulation is −2, net change is 6 and Q(6)=16. The amount is largest at t=4, when the rate changes sign.\" width=\"520\" height=\"440\"></p><p>For a continuous integrand f, define \\(H(x)=\\int_a^x f(t)\\,dt\\). At interior points of its domain, H′(x)=f(x). The letter t inside the integral is a dummy variable; x is the variable upper limit. Distinguish the integral H from its integrand f.</p>\n <p>Derivative signs of H describe whether accumulated value rises or falls. H=0 need not mean zero geometric area. For one-dimensional motion, integrating velocity gives displacement; integrating its absolute value gives distance. Split at direction changes when calculating distance.</p>\n <h3>Recall later</h3><p>If Q(0)=10 and the net change is 6, the final amount is 16. The integral alone gives the change, not the starting amount.</p>",
+      "examples": [
+        {
+          "question_html": "An amount starts at 10 units and has rate 4−t units/s on 0≤t≤6. Find the final amount and its maximum.",
+          "solution_html": "<p>\\(Q(t)=10+4t-t^2/2\\). The final amount is Q(6)=16 units. The rate is positive before t=4 and negative afterwards, so the maximum is Q(4)=18 units. Positive change 8 and negative change −2 give net change 6.</p>"
+        },
+        {
+          "question_html": "A particle has velocity 3t−6 m/s on 0≤t≤4 and initial position 5 m. Find displacement, final position and total distance.",
+          "solution_html": "<p>The displacement is \\(\\int_0^4(3t-6)\\,dt=0\\), so the final position is 5 m. Velocity changes sign at t=2. Each side contributes a distance of 6 m, giving total distance 12 m, despite zero net displacement.</p>"
+        },
+        {
+          "question_html": "For x≥0, let \\(J(x)=\\int_0^x(2t+1)\\,dt\\). Solve J(x)=12.",
+          "solution_html": "<p>J(x)=x²+x, so x²+x−12=(x+4)(x−3)=0. Only x=3 is permitted. Also J′(x)=2x+1&gt;0 for x&gt;0, so J is strictly increasing on the nonnegative domain and the solution is unique.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Reporting the integral of a rate as the final amount without adding the initial value.",
+        "Confusing an accumulated quantity with its derivative.",
+        "Equating displacement with distance when the velocity changes sign."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "uid": "M4U-ORIG-INT-001",
+      "version": 1,
+      "skill": "power-integrals",
+      "title": "A family, a definite value and reversed limits",
+      "objective": "Distinguish an arbitrary integration constant from a definite result and interpret orientation.",
+      "difficulty": 3,
+      "stem_html": "<p>Let \\(f(x)=6x^2-4x+3\\), for real x.</p>",
+      "hint_html": "<p>Increase each power for the indefinite integral. In a definite integral, subtract the lower endpoint value from the upper one.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find \\(\\int f(x)\\,dx\\).",
+          "answer_html": "\\(2x^3-2x^2+3x+C\\).",
+          "solution_html": "<p>Integrating term by term gives \\(6x^3/3-4x^2/2+3x+C=2x^3-2x^2+3x+C\\). Differentiation recovers 6x²−4x+3.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-001:a:C1",
+              "marks": 1,
+              "requirement": "Integrate the quadratic term as 2x³."
+            },
+            {
+              "id": "M4U-ORIG-INT-001:a:C2",
+              "marks": 1,
+              "requirement": "Integrate the remaining terms as −2x²+3x."
+            },
+            {
+              "id": "M4U-ORIG-INT-001:a:C3",
+              "marks": 1,
+              "requirement": "Include an arbitrary additive constant in the indefinite result."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Any algebraically equivalent antiderivative plus an arbitrary constant is accepted.",
+          "common_error": "Differentiating instead of integrating, or omitting the constant.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Evaluate \\(\\int_0^2 f(x)\\,dx\\).",
+          "answer_html": "14.",
+          "solution_html": "<p>With F(x)=2x³−2x²+3x, the result is F(2)−F(0)=16−8+6=14. The constant cancels.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-001:b:C1",
+              "marks": 1,
+              "requirement": "Evaluate a correct antiderivative at both limits in the correct order."
+            },
+            {
+              "id": "M4U-ORIG-INT-001:b:C2",
+              "marks": 1,
+              "requirement": "Give the definite value 14 without an arbitrary constant."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Expanding or simplifying before integration is accepted.",
+          "common_error": "Adding a free +C to a definite integral.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Evaluate \\(\\int_2^0 f(x)\\,dx\\) and explain its sign.",
+          "answer_html": "−14; reversing the limits negates the integral.",
+          "solution_html": "<p>Reversing the limits gives −14. In fact f(x)=6(x−1/3)²+7/3&gt;0, so the negative value here comes from the reversed orientation, not from a negative geometric area.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-001:c:C1",
+              "marks": 1,
+              "requirement": "Give −14."
+            },
+            {
+              "id": "M4U-ORIG-INT-001:c:C2",
+              "marks": 1,
+              "requirement": "Explain that reversing the integration limits changes the sign."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Direct evaluation F(0)−F(2) is accepted with the same orientation explanation.",
+          "common_error": "Changing the answer to +14 because geometric areas are nonnegative.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-INT-002",
+      "version": 1,
+      "skill": "power-integrals",
+      "title": "A linear inner function and a fractional power",
+      "objective": "Apply two reverse power rules on a positive domain and verify the antiderivative.",
+      "difficulty": 3,
+      "stem_html": "<p>For x&gt;0, let \\(g(x)=(3x+1)^2+4x^{-1/2}\\).</p>",
+      "hint_html": "<p>The first part needs the inner-function divisor 3; the second has new exponent 1/2.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find \\(\\int g(x)\\,dx\\).",
+          "answer_html": "\\((3x+1)^3/9+8\\sqrt{x}+C\\).",
+          "solution_html": "<p>The first term integrates to (3x+1)³/[3·3]. The second gives \\(4x^{1/2}/(1/2)=8\\sqrt{x}\\). Thus an antiderivative is \\((3x+1)^3/9+8\\sqrt{x}+C\\), for x&gt;0.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-002:a:C1",
+              "marks": 1,
+              "requirement": "Integrate the linear-inner-function square as (3x+1)³/9."
+            },
+            {
+              "id": "M4U-ORIG-INT-002:a:C2",
+              "marks": 1,
+              "requirement": "Integrate 4x⁻¹ᐟ² as 8√x."
+            },
+            {
+              "id": "M4U-ORIG-INT-002:a:C3",
+              "marks": 1,
+              "requirement": "Include the arbitrary constant on the stated positive domain."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Expand the polynomial part first; equivalent constant terms can be absorbed into C.",
+          "common_error": "Omitting the inner divisor or dividing 4 by the old exponent −1/2.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Verify your result by differentiation.",
+          "answer_html": "\\(\\frac d{dx}\\{(3x+1)^3/9+8\\sqrt{x}+C\\}=(3x+1)^2+4x^{-1/2}\\).",
+          "solution_html": "<p>The cubic term differentiates to (1/9)·3·3(3x+1)²=(3x+1)². The root term differentiates to 8·(1/2)x⁻¹ᐟ²=4x⁻¹ᐟ² and C differentiates to zero. The given integrand is recovered.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-002:b:C1",
+              "marks": 1,
+              "requirement": "Differentiate the composite cubic with both multipliers to recover (3x+1)²."
+            },
+            {
+              "id": "M4U-ORIG-INT-002:b:C2",
+              "marks": 1,
+              "requirement": "Recover 4x⁻¹ᐟ² and the complete integrand, with the constant differentiating to zero."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Differentiating an expanded equivalent antiderivative is accepted.",
+          "common_error": "Checking only one summand or treating the arbitrary constant as a nonzero derivative.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Evaluate \\(\\int_1^4 g(x)\\,dx\\) exactly.",
+          "answer_html": "245.",
+          "solution_html": "<p>The polynomial part contributes (13³−4³)/9=(2197−64)/9=237. The root part contributes 8(2−1)=8. Their total is 245; the integrand is continuous throughout [1,4].</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-002:c:C1",
+              "marks": 1,
+              "requirement": "Use both endpoints correctly in the composite-cubic part."
+            },
+            {
+              "id": "M4U-ORIG-INT-002:c:C2",
+              "marks": 1,
+              "requirement": "Evaluate the root contribution as 8."
+            },
+            {
+              "id": "M4U-ORIG-INT-002:c:C3",
+              "marks": 1,
+              "requirement": "Give the exact total 245."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "An expanded polynomial antiderivative with exact endpoint evaluation is accepted.",
+          "common_error": "Using x=0 as a lower limit or substituting into the integrand instead of the antiderivative.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-INT-003",
+      "version": 1,
+      "skill": "curve-equations",
+      "title": "From a gradient to a tangent",
+      "objective": "Determine the missing constant and combine integration with a tangent equation.",
+      "difficulty": 3,
+      "stem_html": "<p>A curve satisfies \\(dy/dx=3x^2-4x+2\\) for real x and passes through (1,5).</p>",
+      "hint_html": "<p>First recover the family of curves. The supplied point selects the constant; the gradient still comes from the given derivative.</p>",
+      "parts": [
+        {
+          "prompt_html": "Integrate the gradient to obtain a family of curve equations.",
+          "answer_html": "\\(y=x^3-2x^2+2x+C\\).",
+          "solution_html": "<p>Integrating 3x²−4x+2 term by term gives y=x³−2x²+2x+C.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-003:a:C1",
+              "marks": 1,
+              "requirement": "Integrate the cubic-producing term as x³."
+            },
+            {
+              "id": "M4U-ORIG-INT-003:a:C2",
+              "marks": 1,
+              "requirement": "Integrate the remaining terms as −2x²+2x."
+            },
+            {
+              "id": "M4U-ORIG-INT-003:a:C3",
+              "marks": 1,
+              "requirement": "Retain the arbitrary constant C."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Any equivalent antiderivative family is accepted.",
+          "common_error": "Writing the derivative itself as the curve equation.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the equation of the specified curve.",
+          "answer_html": "\\(y=x^3-2x^2+2x+4\\).",
+          "solution_html": "<p>At (1,5), 5=1−2+2+C=1+C, so C=4. The curve is y=x³−2x²+2x+4, whose derivative is the original gradient.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-003:b:C1",
+              "marks": 1,
+              "requirement": "Use the supplied point to obtain C=4."
+            },
+            {
+              "id": "M4U-ORIG-INT-003:b:C2",
+              "marks": 1,
+              "requirement": "Give the complete curve equation."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An equivalent curve equation satisfying both conditions is accepted.",
+          "common_error": "Substituting the point ordinate into dy/dx to find C.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the tangent to this curve at x=2.",
+          "answer_html": "\\(y=6x-4\\).",
+          "solution_html": "<p>The point has ordinate 8−8+4+4=8. The given derivative at x=2 is 12−8+2=6. Thus y−8=6(x−2), giving y=6x−4.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-003:c:C1",
+              "marks": 1,
+              "requirement": "Find the point (2,8) on the recovered curve."
+            },
+            {
+              "id": "M4U-ORIG-INT-003:c:C2",
+              "marks": 1,
+              "requirement": "Find tangent slope 6."
+            },
+            {
+              "id": "M4U-ORIG-INT-003:c:C3",
+              "marks": 1,
+              "requirement": "Give the correct tangent line through that point."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "The exact point–slope equation is accepted.",
+          "common_error": "Using the initial point (1,5) for a tangent requested at x=2.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-INT-004",
+      "version": 1,
+      "skill": "curve-equations",
+      "title": "Two integrations need two conditions",
+      "objective": "Recover a curve from curvature, slope data and a point, then construct a normal.",
+      "difficulty": 3,
+      "stem_html": "<p>For x&gt;0, a curve has \\(d^2y/dx^2=12x-4\\). Its gradient at x=1 is 5, and it passes through (2,10).</p>",
+      "hint_html": "<p>Use a separate constant after each integration. The slope condition determines the first constant.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find dy/dx.",
+          "answer_html": "\\(dy/dx=6x^2-4x+3\\).",
+          "solution_html": "<p>Integrate once to dy/dx=6x²−4x+A. At x=1 the slope condition gives 5=6−4+A, hence A=3.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-004:a:C1",
+              "marks": 1,
+              "requirement": "Integrate the second derivative correctly."
+            },
+            {
+              "id": "M4U-ORIG-INT-004:a:C2",
+              "marks": 1,
+              "requirement": "Introduce and determine the constant A=3 from the slope condition."
+            },
+            {
+              "id": "M4U-ORIG-INT-004:a:C3",
+              "marks": 1,
+              "requirement": "Give the complete first derivative 6x²−4x+3."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Any equivalent correct first derivative satisfying the gradient condition is accepted.",
+          "common_error": "Applying the curve point to the first derivative.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the equation of the curve.",
+          "answer_html": "\\(y=2x^3-2x^2+3x-4\\).",
+          "solution_html": "<p>Integrate again to y=2x³−2x²+3x+B. At (2,10), 10=16−8+6+B=14+B, so B=−4. The two constants are independent.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-004:b:C1",
+              "marks": 1,
+              "requirement": "Integrate the complete first derivative correctly and introduce B."
+            },
+            {
+              "id": "M4U-ORIG-INT-004:b:C2",
+              "marks": 1,
+              "requirement": "Use (2,10) to obtain B=−4."
+            },
+            {
+              "id": "M4U-ORIG-INT-004:b:C3",
+              "marks": 1,
+              "requirement": "Give the specified curve equation."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Equivalent algebraic forms that satisfy all three original conditions are accepted.",
+          "common_error": "Reusing the value A=3 as the second integration constant.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the normal to the curve at x=1.",
+          "answer_html": "\\(y+1=-\\tfrac15(x-1)\\), equivalently \\(y=-x/5-4/5\\).",
+          "solution_html": "<p>At x=1 the curve ordinate is 2−2+3−4=−1 and the tangent slope is the given value 5. The normal slope is −1/5, giving y+1=−(x−1)/5.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-004:c:C1",
+              "marks": 1,
+              "requirement": "Use the recovered point (1,−1) and normal slope −1/5."
+            },
+            {
+              "id": "M4U-ORIG-INT-004:c:C2",
+              "marks": 1,
+              "requirement": "Give the correct normal equation."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Any equivalent exact line equation is accepted.",
+          "common_error": "Using slope 5 for the normal or taking the point ordinate as 5.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-INT-005",
+      "version": 1,
+      "skill": "areas",
+      "title": "A negative integral and a positive area",
+      "objective": "Separate signed accumulation from geometric area across a root.",
+      "difficulty": 3,
+      "stem_html": "<p>Consider the curve \\(y=x^2-4\\) on the interval 0≤x≤3.</p>",
+      "hint_html": "<p>Locate any axis crossing inside the interval before calculating geometric area.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find the x-axis crossing in this interval and state where the curve is above and below the axis.",
+          "answer_html": "Crossing x=2; below for 0≤x&lt;2, above for 2&lt;x≤3.",
+          "solution_html": "<p>x²−4=0 gives x=±2, but only x=2 is in [0,3]. The expression is negative on [0,2) and positive on (2,3]. It equals zero at the crossing.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-005:a:C1",
+              "marks": 1,
+              "requirement": "Give the only in-interval crossing x=2."
+            },
+            {
+              "id": "M4U-ORIG-INT-005:a:C2",
+              "marks": 1,
+              "requirement": "Give both correct sign intervals."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "A labelled sketch with correct endpoint status is accepted.",
+          "common_error": "Using the out-of-interval root −2 as a boundary.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Evaluate \\(\\int_0^3(x^2-4)\\,dx\\).",
+          "answer_html": "−3.",
+          "solution_html": "<p>Using F(x)=x³/3−4x gives F(3)−F(0)=9−12=−3. This is a signed integral.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-005:b:C1",
+              "marks": 1,
+              "requirement": "Use the correct antiderivative and endpoint order."
+            },
+            {
+              "id": "M4U-ORIG-INT-005:b:C2",
+              "marks": 1,
+              "requirement": "Give −3."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Any equivalent exact endpoint calculation is accepted.",
+          "common_error": "Changing the integral to a positive number because an area is anticipated.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the total geometric area between the curve and the x-axis on this interval.",
+          "answer_html": "\\(23/3\\) square units.",
+          "solution_html": "<p>F(2)=−16/3 and F(3)=−3. The below-axis piece has area −[F(2)−F(0)]=16/3, while the above-axis piece has area F(3)−F(2)=7/3. Their sum is 23/3 square units, not |−3|.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-005:c:C1",
+              "marks": 1,
+              "requirement": "Split at x=2 and reverse the sign of the below-axis contribution."
+            },
+            {
+              "id": "M4U-ORIG-INT-005:c:C2",
+              "marks": 1,
+              "requirement": "Obtain the two positive areas 16/3 and 7/3."
+            },
+            {
+              "id": "M4U-ORIG-INT-005:c:C3",
+              "marks": 1,
+              "requirement": "Give total area 23/3 square units."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Integrating 4−x² on [0,2] and x²−4 on [2,3] is accepted.",
+          "common_error": "Taking the absolute value only after the two signed contributions cancel.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-INT-006",
+      "version": 1,
+      "skill": "areas",
+      "title": "One vertical line divides an enclosed region",
+      "objective": "Find intersections, establish the upper curve and verify a unique equal-area cut.",
+      "difficulty": 4,
+      "stem_html": "<p>The line y=3x and the curve y=x² enclose a bounded region.</p>",
+      "hint_html": "<p>Integrate their vertical separation. The accumulated area increases strictly between the intersections.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find the intersection points and identify the upper curve between them.",
+          "answer_html": "\\((0,0)\\) and \\((3,9)\\); y=3x is upper for 0&lt;x&lt;3.",
+          "solution_html": "<p>x²=3x gives x(x−3)=0. The points are (0,0) and (3,9). On (0,3), 3x−x²=x(3−x)&gt;0, so the line is above the parabola.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-006:a:C1",
+              "marks": 1,
+              "requirement": "Solve for both intersection inputs 0 and 3."
+            },
+            {
+              "id": "M4U-ORIG-INT-006:a:C2",
+              "marks": 1,
+              "requirement": "Give both complete intersection points."
+            },
+            {
+              "id": "M4U-ORIG-INT-006:a:C3",
+              "marks": 1,
+              "requirement": "Identify the line as upper with a valid sign or test-point argument."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "A correctly labelled graph is accepted.",
+          "common_error": "Using only one intersection or assuming the parabola is upper from its formula.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the enclosed area.",
+          "answer_html": "\\(9/2\\) square units.",
+          "solution_html": "<p>\\(A=\\int_0^3(3x-x^2)\\,dx=[3x^2/2-x^3/3]_0^3=27/2-9=9/2\\) square units.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-006:b:C1",
+              "marks": 1,
+              "requirement": "Set up and integrate upper minus lower over [0,3]."
+            },
+            {
+              "id": "M4U-ORIG-INT-006:b:C2",
+              "marks": 1,
+              "requirement": "Give 9/2 square units."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Subtracting two correctly evaluated under-curve integrals is accepted.",
+          "common_error": "Reversing the upper and lower functions.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Show that x=3/2 divides the enclosed region into equal areas, and explain why no other vertical line between the intersections does so.",
+          "answer_html": "Each area is 9/4; the split is unique since \\(a(3-a)>0\\) for 0&lt;a&lt;3.",
+          "solution_html": "<p>The area from 0 to a is \\(L(a)=3a^2/2-a^3/3\\). At a=3/2 this is 27/8−9/8=9/4, half of 9/2. Also L′(a)=3a−a²=a(3−a)&gt;0 on (0,3). The accumulated area is strictly increasing there, so it reaches half the total at only one cut.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-006:c:C1",
+              "marks": 1,
+              "requirement": "Use the correct accumulated-area expression."
+            },
+            {
+              "id": "M4U-ORIG-INT-006:c:C2",
+              "marks": 1,
+              "requirement": "Evaluate 9/4 at a=3/2 and compare with the total area."
+            },
+            {
+              "id": "M4U-ORIG-INT-006:c:C3",
+              "marks": 1,
+              "requirement": "Justify uniqueness by positive vertical separation or a positive derivative throughout the open interval."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Symmetry about x=3/2 plus a valid strict-increase argument is accepted.",
+          "common_error": "Verifying the proposed cut without addressing uniqueness.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-INT-007",
+      "version": 1,
+      "skill": "volumes",
+      "title": "A sloping profile inside a cylinder",
+      "objective": "Use disks for an x-axis rotation and compare with a containing cylinder.",
+      "difficulty": 3,
+      "stem_html": "<p>Coordinates x and y are measured in cm. The region bounded by y=x+2, the x-axis and the lines x=0 and x=2 is rotated through one full turn about the x-axis.</p>",
+      "hint_html": "<p>The radius at x is x+2. The comparison cylinder has the largest radius of the solid throughout its length.</p>",
+      "parts": [
+        {
+          "prompt_html": "Write a definite integral for the volume V.",
+          "answer_html": "\\(V=\\pi\\int_0^2(x+2)^2\\,dx\\).",
+          "solution_html": "<p>Each cross-section is a disk of radius x+2, hence area π(x+2)². Integrate over the x interval from 0 to 2 to obtain the displayed volume.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-007:a:C1",
+              "marks": 1,
+              "requirement": "Identify the correct radius x+2."
+            },
+            {
+              "id": "M4U-ORIG-INT-007:a:C2",
+              "marks": 1,
+              "requirement": "Square the radius and include π."
+            },
+            {
+              "id": "M4U-ORIG-INT-007:a:C3",
+              "marks": 1,
+              "requirement": "Use x-limits 0 and 2 with respect to x."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "An expanded squared integrand is accepted.",
+          "common_error": "Integrating the unsquared radius or using y-limits in an x integral.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Evaluate V exactly.",
+          "answer_html": "\\(56\\pi/3\\) cm³.",
+          "solution_html": "<p>\\(V=\\pi[(x+2)^3/3]_0^2=\\pi(64-8)/3=56\\pi/3\\) cm³.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-007:b:C1",
+              "marks": 1,
+              "requirement": "Use a correct antiderivative of the squared profile."
+            },
+            {
+              "id": "M4U-ORIG-INT-007:b:C2",
+              "marks": 1,
+              "requirement": "Give the exact volume 56π/3 cm³."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Expanding x²+4x+4 before integration is accepted.",
+          "common_error": "Losing π or reporting square units for a volume.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "A cylinder has radius 4 cm and length 2 cm. What fraction of its volume is V?",
+          "answer_html": "\\(7/12\\).",
+          "solution_html": "<p>The cylinder volume is π(4²)(2)=32π cm³. Therefore \\(V/(32\\pi)=(56\\pi/3)/(32\\pi)=7/12\\). The fraction is dimensionless and less than one.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-007:c:C1",
+              "marks": 1,
+              "requirement": "Find the comparison-cylinder volume 32π cm³."
+            },
+            {
+              "id": "M4U-ORIG-INT-007:c:C2",
+              "marks": 1,
+              "requirement": "Give the fraction 7/12 in the requested order."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An equivalent simplified exact ratio is accepted.",
+          "common_error": "Reversing the fraction or using the smaller end radius for the comparison cylinder.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-INT-008",
+      "version": 1,
+      "skill": "volumes",
+      "title": "The same region about two axes",
+      "objective": "Choose disks or washers from the actual region and use consistent limits.",
+      "difficulty": 4,
+      "stem_html": "<p>A first-quadrant region is bounded by the y-axis, the curve y=x² and the horizontal line y=4. Coordinates are in cm.</p>",
+      "hint_html": "<p>A horizontal slice runs from x=0 to x=√y. A vertical slice runs from y=x² to y=4.</p>",
+      "parts": [
+        {
+          "prompt_html": "Write a definite integral for its volume when rotated about the y-axis.",
+          "answer_html": "\\(V_y=\\pi\\int_0^4 y\\,dy\\).",
+          "solution_html": "<p>For horizontal disks, x=√y is the radius, and x²=y. Thus the cross-sectional area is πy. The y-limits are 0 and 4, giving \\(V_y=\\pi\\int_0^4y\\,dy\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-008:a:C1",
+              "marks": 1,
+              "requirement": "Express the disk radius as √y."
+            },
+            {
+              "id": "M4U-ORIG-INT-008:a:C2",
+              "marks": 1,
+              "requirement": "Square it to obtain cross-sectional area πy."
+            },
+            {
+              "id": "M4U-ORIG-INT-008:a:C3",
+              "marks": 1,
+              "requirement": "Use y-limits 0 and 4 with respect to y."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "An equivalent integral containing (√y)² is accepted.",
+          "common_error": "Using x² as the radius while integrating with respect to y.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Evaluate this y-axis volume.",
+          "answer_html": "\\(8\\pi\\) cm³.",
+          "solution_html": "<p>\\(V_y=\\pi[y^2/2]_0^4=8\\pi\\) cm³.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-008:b:C1",
+              "marks": 1,
+              "requirement": "Evaluate the correct y integral."
+            },
+            {
+              "id": "M4U-ORIG-INT-008:b:C2",
+              "marks": 1,
+              "requirement": "Give 8π cm³."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An equivalent exact endpoint calculation is accepted.",
+          "common_error": "Using upper limit 2, an x-coordinate, in the y integral.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Instead rotate the same region about the x-axis. Set up and evaluate its volume.",
+          "answer_html": "\\(V_x=\\pi\\int_0^2(16-x^4)\\,dx=128\\pi/5\\) cm³.",
+          "solution_html": "<p>Vertical cross-sections are washers with outer radius 4 and inner radius x². The x-limits are 0 and 2. Thus \\(V_x=\\pi\\int_0^2(4^2-(x^2)^2)\\,dx=\\pi[16x-x^5/5]_0^2=128\\pi/5\\) cm³.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-008:c:C1",
+              "marks": 1,
+              "requirement": "Identify outer radius 4 and inner radius x²."
+            },
+            {
+              "id": "M4U-ORIG-INT-008:c:C2",
+              "marks": 1,
+              "requirement": "Set up π times the integral of 16−x⁴ from 0 to 2."
+            },
+            {
+              "id": "M4U-ORIG-INT-008:c:C3",
+              "marks": 1,
+              "requirement": "Give the exact volume 128π/5 cm³."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Subtracting the inner solid volume from the outer cylinder volume is accepted.",
+          "common_error": "Using disks below y=x², which rotates a different region, or squaring the radius difference.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-INT-009",
+      "version": 1,
+      "skill": "accumulation",
+      "title": "A changing volume with a maximum",
+      "objective": "Integrate a signed rate, use the initial amount and locate an absolute maximum in time.",
+      "difficulty": 3,
+      "stem_html": "<p>A tank contains 20 litres at t=0. On 0≤t≤5 minutes its volume V changes smoothly at rate \\(dV/dt=6-2t\\) litres/minute. This ideal model applies throughout the stated interval.</p>",
+      "hint_html": "<p>The integral gives net change. Add the initial 20 litres, then use the rate sign to find when the volume stops increasing.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find V in terms of t.",
+          "answer_html": "\\(V(t)=20+6t-t^2\\) litres.",
+          "solution_html": "<p>Integrate the rate to obtain V=6t−t²+C. The initial condition V(0)=20 gives C=20, hence V(t)=20+6t−t².</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-009:a:C1",
+              "marks": 1,
+              "requirement": "Integrate the time rate correctly."
+            },
+            {
+              "id": "M4U-ORIG-INT-009:a:C2",
+              "marks": 1,
+              "requirement": "Determine the constant from V(0)=20."
+            },
+            {
+              "id": "M4U-ORIG-INT-009:a:C3",
+              "marks": 1,
+              "requirement": "Give the complete volume function."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Writing V(t)=20 plus a definite integral from 0 to t is accepted when evaluated correctly.",
+          "common_error": "Reporting only the net change 6t−t² as the total amount.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the volume and the net change at t=5.",
+          "answer_html": "Volume 25 litres; net change +5 litres.",
+          "solution_html": "<p>V(5)=20+30−25=25 litres. The net change is 25−20=+5 litres, equal to the integral of the rate from 0 to 5.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-009:b:C1",
+              "marks": 1,
+              "requirement": "Give the final volume 25 litres."
+            },
+            {
+              "id": "M4U-ORIG-INT-009:b:C2",
+              "marks": 1,
+              "requirement": "Give the distinct net change +5 litres."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Evaluating the net change first and adding the initial amount is accepted.",
+          "common_error": "Confusing a negative final rate with a negative net change over the whole interval.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the greatest volume on the stated time interval and when it occurs. Justify the result.",
+          "answer_html": "29 litres at t=3 minutes.",
+          "solution_html": "<p>The rate 6−2t is zero at t=3, positive before and negative afterwards. Thus V increases to V(3)=20+18−9=29 litres and then decreases over the rest of [0,5]. This proves the absolute maximum; the endpoint volumes are 20 and 25 litres.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-009:c:C1",
+              "marks": 1,
+              "requirement": "Find the in-interval candidate t=3."
+            },
+            {
+              "id": "M4U-ORIG-INT-009:c:C2",
+              "marks": 1,
+              "requirement": "Give greatest volume 29 litres with the time units."
+            },
+            {
+              "id": "M4U-ORIG-INT-009:c:C3",
+              "marks": 1,
+              "requirement": "Justify global maximality by the complete rate-sign pattern or an equivalent closed-interval comparison."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Complete the square: V=29−(t−3)², with equality at feasible t=3.",
+          "common_error": "Giving the maximum rate 6 litres/minute instead of the maximum volume.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-INT-010",
+      "version": 1,
+      "skill": "accumulation",
+      "title": "An accumulated function and a cancelling integral",
+      "objective": "Connect a variable-limit integral to its derivative and distinguish zero net value from zero area.",
+      "difficulty": 4,
+      "stem_html": "<p>For 0≤x≤3, define \\(F(x)=\\int_0^x(t^2-2t)\\,dt\\).</p>",
+      "hint_html": "<p>The derivative of F at an interior x is the integrand evaluated at x. Area still requires absolute contributions after a sign change.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find an explicit expression for F(x).",
+          "answer_html": "\\(F(x)=x^3/3-x^2\\).",
+          "solution_html": "<p>An antiderivative in t is t³/3−t². Evaluation at x and 0 gives F(x)=x³/3−x², with no arbitrary constant because the lower limit fixes F(0)=0.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-010:a:C1",
+              "marks": 1,
+              "requirement": "Find the correct antiderivative in the dummy variable t."
+            },
+            {
+              "id": "M4U-ORIG-INT-010:a:C2",
+              "marks": 1,
+              "requirement": "Evaluate the variable limits to give x³/3−x² without a free constant."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An equivalent expression satisfying both F′ and F(0)=0 is accepted.",
+          "common_error": "Leaving a free +C after the defining definite integral has fixed the function.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find and classify the interior stationary point of the graph of F.",
+          "answer_html": "\\((2,-4/3)\\), a local minimum.",
+          "solution_html": "<p>F′(x)=x²−2x=x(x−2). Of its roots 0 and 2, only 2 is interior to [0,3]. F(2)=8/3−4=−4/3. Since F″(2)=2&gt;0, or because F′ changes from negative to positive, this is a local minimum.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-010:b:C1",
+              "marks": 1,
+              "requirement": "Obtain F′ and select the only interior stationary input x=2."
+            },
+            {
+              "id": "M4U-ORIG-INT-010:b:C2",
+              "marks": 1,
+              "requirement": "Give the point (2,−4/3)."
+            },
+            {
+              "id": "M4U-ORIG-INT-010:b:C3",
+              "marks": 1,
+              "requirement": "Classify a minimum with valid derivative reasoning."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "A complete sign-chart classification is accepted.",
+          "common_error": "Treating the endpoint x=0 as an interior stationary input or differentiating the integrand instead of F.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Although F(3)=0, the area between y=t²−2t and the t-axis on [0,3] is nonzero. Explain and find that area.",
+          "answer_html": "\\(8/3\\) square units; equal signed pieces cancel in F(3).",
+          "solution_html": "<p>The integrand is negative for 0&lt;t&lt;2 and positive for 2&lt;t≤3. The first signed contribution is F(2)=−4/3; the second is F(3)−F(2)=4/3. They cancel in the definite integral, but their positive areas add to 8/3 square units.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-INT-010:c:C1",
+              "marks": 1,
+              "requirement": "Explain the sign change and cancellation at t=2."
+            },
+            {
+              "id": "M4U-ORIG-INT-010:c:C2",
+              "marks": 1,
+              "requirement": "Find both piece magnitudes 4/3."
+            },
+            {
+              "id": "M4U-ORIG-INT-010:c:C3",
+              "marks": 1,
+              "requirement": "Give nonzero total geometric area 8/3 square units."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Integrating the absolute value piecewise gives the same result.",
+          "common_error": "Claiming a zero integral means the curve has zero geometric area.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    }
+  ]
+}

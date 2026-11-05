@@ -19,12 +19,17 @@ export const usernameSchema = z.string().trim().toLowerCase().regex(/^[a-z0-9_.-
 export const registrationSchema = z.object({
   username: usernameSchema, password: passwordSchema, displayName: z.string().trim().min(2).max(160),
   email: z.email().max(191).optional(), locale: z.enum(["ru", "en"]).default("en"),
+  courseSlugs: z.array(z.string().regex(/^[a-z0-9-]{2,120}$/)).max(12).default([]),
 });
 // Roles supplied by clients are discarded; only STUDENT is inserted.
 export async function register(input: unknown) {
   const data = registrationSchema.parse(input);
   const passwordHash = await hashPassword(data.password);
+  const slugs = [...new Set(data.courseSlugs)];
+  const courses = await db().course.findMany({ where: { slug: { in: slugs }, published: true, archivedAt: null, featureKey: null }, select: { id: true } });
+  ensure(courses.length === slugs.length, 400, "INVALID_COURSE_SELECTION");
   return db().user.create({ data: { username: data.username, passwordHash, displayName: data.displayName,
+    followedCourses: { create: courses.map(c => ({ courseId: c.id })) },
     email: data.email?.toLowerCase(), roles: { create: { role: "STUDENT" } }, profile: { create: { locale: data.locale } } }, select: userSelect });
 }
 export async function transaction<T>(fn: (tx: Prisma.TransactionClient) => Promise<T>): Promise<T> {

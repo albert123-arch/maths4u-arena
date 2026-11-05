@@ -6,6 +6,7 @@ import { publicVersion, versionInclude, localized, renderContent, availableHelp 
 import { hasFeature } from "./subscriptions";
 import type { Prisma } from "../generated/prisma/client";
 import { mayReviewPractice } from "./practice-access";
+import { isPure1ShortUid, pure1PracticeNumber } from "./pure1-practice-number";
 
 const contextInclude = { classroom: true, round: { include: { olympiad: true } } } satisfies Prisma.WorkInclude;
 type Context = Prisma.WorkGetPayload<{ include: typeof contextInclude }>;
@@ -95,12 +96,16 @@ export async function lockAttempt(tx: Prisma.TransactionClient, id: string) {
 }
 export const responseSchema = z.object({ value: z.string().max(30000).default(""), optionId: z.string().max(100).optional() }).strict();
 const saveSchema = z.object({ revision: z.number().int().min(0), answers: z.array(z.object({ partId: z.string(), response: responseSchema })).max(1500) }).strict();
-export function automaticPoints(part: FullAttempt["workVersion"]["items"][number]["taskVersion"]["parts"][number], response: z.infer<typeof responseSchema>) {
+export function automaticPoints(part: FullAttempt["workVersion"]["items"][number]["taskVersion"]["parts"][number], response: z.infer<typeof responseSchema>, sourceUid?: string | null) {
   if (part.kind === "MANUAL") return null;
   if (part.kind === "CHOICE") return part.options.some(o => o.id === response.optionId && o.correct) ? part.maxPoints : 0;
   const value = response.value.trim();
   if (!value) return 0;
   if (part.kind === "NUMERIC") {
+    if (isPure1ShortUid(sourceUid)) {
+      const actual=pure1PracticeNumber(value);
+      return actual!==null && part.numericAnswer!==null && Math.abs(actual-part.numericAnswer)<=part.tolerance ? part.maxPoints : 0;
+    }
     // Decimal notation only, with optional scientific exponent; no eval or blank-to-zero.
     if (!/^[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:[eE][+-]?\d+)?$/.test(value)) return 0;
     const actual = Number(value.replace(",", "."));
@@ -116,7 +121,7 @@ export async function finalize(tx: Prisma.TransactionClient, attempt: FullAttemp
   for (const item of attempt.workVersion.items) for (const part of item.taskVersion.parts) {
     const answer = attempt.answers.find(a => a.partId === part.id);
     const response = responseSchema.parse(answer?.response ?? { value: "" });
-    const autoPoints = automaticPoints(part, response);
+    const autoPoints = automaticPoints(part, response, item.taskVersion.sourceUid);
     if (autoPoints === null) manual = true;
     await tx.answer.upsert({ where: { attemptId_partId: { attemptId: attempt.id, partId: part.id } },
       create: { attemptId: attempt.id, partId: part.id, response, autoPoints }, update: { autoPoints } });

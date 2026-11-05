@@ -35,7 +35,7 @@ export function QuickPractice({ task, lessonId, changed }: { task: Task; lessonI
     {task.version.parts.map((p, index) => <fieldset key={p.id} disabled={busy || !!result}><legend>{t("Ваш ответ", "Your answer")}{task.version.parts.length > 1 ? ` · ${index + 1}` : ""}</legend>
       {p.prompt && <MathContent html={p.prompt} />}
       {p.kind === "CHOICE" ? p.options.map(o => <label className="quick-choice" key={o.id}><input required type="radio" name={`choice-${p.id}`} value={o.id} checked={responses[p.id]?.optionId === o.id} onChange={() => update(p.id, "", o.id)} /><MathContent html={o.text} /></label>)
-        : <label>{t("Короткий ответ", "Short answer")}<input required type="text" inputMode={p.kind === "NUMERIC" ? "decimal" : "text"} value={responses[p.id]?.value ?? ""} onChange={e => update(p.id, e.target.value)} /></label>}
+        : <label>{p.answerFormat ? t("Число или дробь", "Number or fraction") : t("Короткий ответ", "Short answer")}<input required type="text" inputMode={p.kind === "NUMERIC" && !p.answerFormat ? "decimal" : "text"} value={responses[p.id]?.value ?? ""} onChange={e => update(p.id, e.target.value)} /></label>}
     </fieldset>)}
     {!result && <><p className="muted">{t("Ответ сохранится после проверки.", "Your answer is saved when you check it.")}</p><button type="submit" disabled={busy}>{busy ? t("Проверка…", "Checking…") : t("Проверить ответ", "Check answer")}</button></>}
   </form><ErrorNotice error={error} />{!!error && attemptId && <Link href={`/attempts/${attemptId}`}>{t("Открыть сохранённую попытку", "Open saved attempt")} →</Link>}
@@ -44,6 +44,7 @@ export function QuickPractice({ task, lessonId, changed }: { task: Task; lessonI
         {result.questions[0].availableHelp?.answer && <button className="secondary" disabled={busy} onClick={() => void reveal("answer")}>{t("Показать ответ", "Show answer")}</button>}
         {result.questions[0].availableHelp?.solution && <button className="secondary" disabled={busy} onClick={() => void reveal("solution")}>{t("Показать решение", "Show solution")}</button>}
         <Link href={`/attempts/${result.id}`}>{t("Мой ответ и подробности", "My answer & details")} →</Link>
+        <Link href="/#pure1-review">{t("План повторения", "My review plan")} →</Link>
       </div>{result.questions[0].answer && <MathContent html={result.questions[0].answer} />}{result.questions[0].parts.map(p => p.answer ? <MathContent key={p.id} html={p.answer} /> : null)}{result.questions[0].solution && <MathContent html={result.questions[0].solution} />}
     </div>}
   </div>;

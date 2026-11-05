@@ -9,6 +9,7 @@ import type { Prisma } from "../generated/prisma/client";
 import { mathPattern, protectMathHtml } from "./math-markup.mjs";
 import { parseDocument } from "htmlparser2";
 import { findAll, textContent } from "domutils";
+import { isPure1ShortUid } from "./pure1-practice-number";
 
 const locale = z.enum(["ru", "en"]);
 const text = z.string().max(100000);
@@ -68,7 +69,10 @@ export function renderContent(raw: string, anonymousImages = false) {
     // Imported alt text may contain the paper/session reference. Keep the image,
     // dimensions and mathematical content, but omit that description in a live assessment.
     ...(anonymousImages ? { transformTags: { img: (tagName: string, attribs: Record<string, string>) => ({ tagName, attribs: { ...attribs, alt: "" } }) } } : {}),
-    exclusiveFilter: frame => frame.tag === "img" && !/^\/api\/files\/[a-zA-Z0-9_-]+$/.test(frame.attribs.src || ""),
+    // Reviewed first-party diagrams are static, same-origin assets. Retain the
+    // private-file boundary and reject arbitrary paths, URLs and query strings.
+    exclusiveFilter: frame => frame.tag === "img" && !/^\/api\/files\/[a-zA-Z0-9_-]+$/.test(frame.attribs.src || "") &&
+      !/^\/assets\/original\/(coordinate-geometry\/(segment|perpendicular|line-intercepts|circle|line-circle)|circular-measure\/(radian|arc-length|sector-area|segment|annular-sector|composite-boundary)|trigonometry\/(unit-circle|wave-graphs|tangent-graph|sine-solutions|identity-triangle|quadratic-levels)|series\/(arithmetic-terms|geometric-terms|partial-sums|arithmetic-condition|geometric-condition|rebound-heights)|binomial-expansion\/(pascal-triangle|term-index|laurent-powers|coefficient-pairs|parameter-branches|approximation-error)|differentiation\/(secant-to-tangent|tangent-normal|stationary-sign-chart|stationary-inflection|related-rates|optimisation-interval)|integration\/(family-of-curves|initial-condition|signed-area|between-curves|disk-volume|accumulation)|cross-topic-revision\/(restricted-inverse|shared-tangent|distance-squared|sector-segment|coefficient-ratio-tail|area-washers))\.svg$/.test(frame.attribs.src || ""),
     textFilter: escaped=>escaped.replace(new RegExp(prefix+"(\\d+)END","g"),(_m,index)=>formulas[Number(index)]??""),
   });
   return html;
@@ -103,6 +107,7 @@ export function publicVersion(v: Version, lang: string, solutions = false, revea
       const plainAnswer = p.kind === "NUMERIC" ? String(p.numericAnswer) : p.acceptedAnswers.map(a => a.value).join(" / ");
       const answer = pt.answer || plainAnswer.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
       return { id: p.id, kind: p.kind, maxPoints: p.maxPoints, prompt: render(pt.prompt),
+        ...(p.kind === "NUMERIC" && isPure1ShortUid(v.sourceUid) ? {answerFormat:"number-or-fraction" as const} : {}),
         ...(show("answer") ? { answer: render(answer) } : {}), ...(show("markScheme") ? { rubric: render(pt.rubric) } : {}),
         ...(show("markScheme") ? {markScheme:render(pt.markScheme ?? ""),markSchemeText:render(pt.markSchemeText ?? ""),markSchemeSource:anonymousTitle === undefined ? pt.markSchemeSource : undefined,markSchemeStatus:pt.markSchemeStatus} : {}),
         options: p.options.map(o => ({ id: o.id, text: render(localized(o.texts, lang).text), ...(show("answer") ? { correct: o.correct } : {}) })) };

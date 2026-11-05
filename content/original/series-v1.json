@@ -1,0 +1,987 @@
+{
+  "schema_version": 1,
+  "key": "maths4u-original-series",
+  "version": "2026-10-30.1",
+  "language": "en",
+  "title": "Series — Maths4U Original",
+  "syllabus": "9709",
+  "component": "Pure Mathematics 1",
+  "provenance": {
+    "classification": "original",
+    "prepared_by": "AI-assisted preparation for Maths4U",
+    "basis": "Independent skill briefs; no examination question supplied for paraphrasing.",
+    "third_party_question_text": false,
+    "teacher_review": "pending",
+    "verification": "See docs/series-original-20261030.md for checks actually performed."
+  },
+  "marking_policy": "Maths4U indicative marking guidance, not an official examination-board mark scheme. Award stated criteria once each, up to the part maximum. Accept valid equivalent methods. Follow-through applies only where explicitly stated; do not award an accuracy criterion for an incorrect final result.",
+  "lessons": [
+    {
+      "key": "arithmetic",
+      "php_subchapter_id": 69,
+      "title": "Arithmetic progressions: terms, sums and integer thresholds",
+      "objective": "Find terms and finite sums, then interpret an inequality with an integer index.",
+      "notes_html": "<p><strong>Before you start:</strong> solve linear equations and inequalities, and distinguish an individual value from a total.</p>\n <p>A sequence is an ordered list of terms. A series adds terms. In an arithmetic progression (AP), each term is obtained by adding the same real number d. If the first term is a and n is a positive integer,</p>\n <p>\\[u_n=a+(n-1)d,\\qquad S_n=\\sum_{j=1}^n u_j=\\frac n2\\{2a+(n-1)d\\}=\\frac n2(a+u_n).\\]</p>\n <p>There are n−1 steps from term 1 to term n. Two known terms give \\(u_q-u_p=(q-p)d\\); their index gap matters. The sum formula follows by pairing first with last, second with second-last, and so on.</p><p><img src=\"/assets/original/series/arithmetic-terms.svg\" alt=\"Discrete terms u_n=3+2(n−1), for integer indices 1 to 8. Equal index steps give equal value increases.\" width=\"520\" height=\"440\"></p><p>A strict threshold, such as u_n&gt;T, must be solved and then checked at adjacent integer indices. Negative differences can make later terms zero or negative. For a largest partial sum, compare integer n values: a continuous quadratic vertex alone is insufficient.</p>\n <h3>Recall later</h3><p>For a=4 and d=3, u_7=22 and S_7=91. Seven terms contain six differences.</p>",
+      "examples": [
+        {
+          "question_html": "An AP has a=7 and d=4. Find u_12 and S_12.",
+          "solution_html": "<p>\\(u_{12}=7+11(4)=51\\). Then \\(S_{12}=12(7+51)/2=348\\). The last term is not the total.</p>"
+        },
+        {
+          "question_html": "An AP has u_5=19 and u_10=39. Find a and d.",
+          "solution_html": "<p>Subtract: \\(5d=39-19=20\\), so d=4. Then \\(a+4d=19\\) gives a=3. Substitution checks both given terms.</p>"
+        },
+        {
+          "question_html": "For a=20 and d=−3, find the sum of all strictly positive terms.",
+          "solution_html": "<p>\\(u_n=23-3n&gt;0\\) means n&lt;23/3, so n=1,…,7. The seventh term is 2 and the eighth is −1. The required total is \\(7(20+2)/2=77\\).</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Using nd instead of (n−1)d for the nth term.",
+        "Confusing a term inequality with a partial-sum inequality.",
+        "Rounding an index without checking the strict inequality at neighbouring integers."
+      ]
+    },
+    {
+      "key": "geometric",
+      "php_subchapter_id": 70,
+      "title": "Geometric progressions: finite sums and convergence",
+      "objective": "Use a common ratio, distinguish finite and infinite sums, and bound a remainder.",
+      "notes_html": "<p><strong>Before you start:</strong> use powers, simplify fractions and recognise absolute value.</p>\n <p>A geometric progression (GP) obeys \\(u_{n+1}=ru_n\\) for a fixed finite real ratio r. With first term a, \\(u_n=ar^{n-1}\\) for r≠0. For r=0, write the sequence directly as a,0,0,…; its first term is a, without evaluating 0⁰. The finite sums are</p>\n <p>\\[S_n=\\frac{a(1-r^n)}{1-r}\\quad(r\\ne1),\\qquad S_n=na\\quad(r=1).\\]</p>\n <p>Subtracting rS_n from S_n leaves a−arⁿ. Negative ratios alternate signs, so partial sums need not increase. Do not use an infinite-sum formula merely because many terms are present.</p><p><img src=\"/assets/original/series/geometric-terms.svg\" alt=\"The discrete GP 6, −3, 1.5, −0.75, … alternates across zero with ratio −1/2.\" width=\"520\" height=\"440\"></p><p>For a≠0, the infinite series converges exactly when |r|&lt;1, in which case \\(S_\\infty=a/(1-r)\\). This includes r=0. The trivial a=0 recurrence is all zero and sums to zero for any finite r. If a≠0 and |r|≥1, terms do not tend to zero, so the series cannot converge.</p>\n <p>When |r|&lt;1, the signed remainder is \\(R_n=S_\\infty-S_n=ar^n/(1-r)\\). Use |R_n| for an error tolerance. A negative remainder means the partial sum overshoots the limit.</p><p><img src=\"/assets/original/series/partial-sums.svg\" alt=\"For first term 8 and ratio 1/2, the partial sums 8,12,14,… approach 16; no finite partial sum reaches the limit.\" width=\"520\" height=\"440\"></p><h3>Recall later</h3><p>For a=5, r=1, S_8=40; the fraction with denominator 1−r is not available. For a=5, r=−1, partial sums alternate between 5 and 0 and have no limit.</p>",
+      "examples": [
+        {
+          "question_html": "For a=5 and r=2, find u_6 and S_6.",
+          "solution_html": "<p>\\(u_6=5(2^5)=160\\). The finite sum is \\(5(2^6-1)/(2-1)=315\\). There is no infinite sum because r=2.</p>"
+        },
+        {
+          "question_html": "For a=6 and r=−1/2, find u_4, S_4 and S_∞.",
+          "solution_html": "<p>The terms are 6,−3,3/2,−3/4,… . Thus \\(u_4=-3/4\\) and \\(S_4=15/4\\). Since |r|=1/2&lt;1, \\(S_\\infty=6/(1+1/2)=4\\). The third partial sum is 9/2, showing an overshoot.</p>"
+        },
+        {
+          "question_html": "For a=8 and r=1/4, find S_∞ and the remainder after four terms.",
+          "solution_html": "<p>\\(S_\\infty=8/(3/4)=32/3\\). The remainder is \\(R_4=(32/3)(1/4)^4=1/24\\). The finite total is \\(S_4=32/3-1/24=85/8\\).</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Using a/(1−r) without checking convergence.",
+        "Forgetting that negative ratios can give alternating partial sums.",
+        "Dividing by 1−r when r=1, or treating a zero first term by an undefined ratio quotient."
+      ]
+    },
+    {
+      "key": "trig-arithmetic",
+      "php_subchapter_id": 71,
+      "title": "Trigonometric terms in an arithmetic progression",
+      "objective": "Translate equal differences into an equation and recover every permitted angle.",
+      "notes_html": "<p><strong>Before you start:</strong> use sin²x+cos²x=1, exact values, quadrants and radian intervals.</p>\n <p>Three real numbers u,v,w are consecutive AP terms exactly when v−u=w−v, or \\(2v=u+w\\). This works even when a term or the common difference is zero.</p><p><img src=\"/assets/original/series/arithmetic-condition.svg\" alt=\"Three terms −2,1,4 have equal differences 3, and twice the middle term equals the sum of the outer terms.\" width=\"520\" height=\"440\"></p><p>Substitute the given trigonometric expressions into this condition before simplifying. Retain any stated angle interval. If division by sin x or cos x is helpful, test its zero cases in the original equation first.</p>\n <p>After solving for an angle, use d=v−u to find the common difference. The AP condition by itself does not mean the terms are positive or increasing. A principal inverse value can miss another branch.</p>\n <h3>Recall later</h3><p>For consecutive terms sin²x,k,cos²x, the AP condition gives 2k=1, so k=1/2 independently of x.</p>",
+      "examples": [
+        {
+          "question_html": "Show that cos x, 0, −cos x are consecutive AP terms for every real x.",
+          "solution_html": "<p>The differences are both −cos x. Equivalently \\(2(0)=\\cos x-\\cos x\\). At cosine-zero angles all three terms and the difference are zero, which is still an AP.</p>"
+        },
+        {
+          "question_html": "Find x in 0≤x&lt;2π when sin x, cos x, 0 are consecutive AP terms.",
+          "solution_html": "<p>The condition is \\(2\\cos x=\\sin x\\). If cos x=0, sine is ±1 and the equation fails. Otherwise tan x=2. Hence \\(x=\\arctan(2)\\) or \\(\\pi+\\arctan(2)\\), approximately 1.11 and 4.25 rad to 3 significant figures.</p>"
+        },
+        {
+          "question_html": "For consecutive AP terms sin²x,k,cos²x, find k and d.",
+          "solution_html": "<p>\\(2k=\\sin^2x+\\cos^2x=1\\) gives k=1/2. Then \\(d=1/2-\\sin^2x=\\cos^2x-1/2\\). Its sign depends on the angle.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Setting a product condition instead of equal differences for an AP.",
+        "Dividing by cosine without checking cosine-zero cases.",
+        "Assuming the difference is positive or omitting a second quadrant branch."
+      ]
+    },
+    {
+      "key": "trig-geometric",
+      "php_subchapter_id": 72,
+      "title": "Trigonometric terms in a geometric progression",
+      "objective": "Use the product condition with its domain and zero-term qualifications.",
+      "notes_html": "<p><strong>Before you start:</strong> solve trigonometric equations and use the GP recurrence.</p>\n <p>For consecutive nonzero real GP terms u,v,w, \\(v/u=w/v=r\\), so \\(v^2=uw\\). Conversely, when the terms are nonzero, the product condition guarantees the common ratio r=v/u. It does not by itself test every zero case.</p><p><img src=\"/assets/original/series/geometric-condition.svg\" alt=\"The terms 1,2,4 have common ratio 2. The triple 0,0,5 passes the squared test but has no finite common ratio.\" width=\"520\" height=\"440\"></p><p>When zero terms are allowed, return to \\(v=ru\\) and \\(w=rv\\) with a finite real r. For example, (0,0,5) cannot satisfy the second equation. If the convention allows r=0, (2,0,0) is valid. An exercise involving zero terms must state the convention; check it before dividing.</p>\n <p>Substitute the trigonometric terms, use identities to obtain one ratio, and keep signs, positivity and the angle interval. Squaring may remove sign information. Verify each candidate in the original recurrence. An infinite sum needs the additional condition |r|&lt;1 for a nonzero first term.</p>\n <h3>Recall later</h3><p>Positive consecutive GP terms 1,t,1/4 have t²=1/4, so t=1/2. Positivity removes t=−1/2.</p>",
+      "examples": [
+        {
+          "question_html": "Positive consecutive GP terms are 1, cos x, 1/4, with 0&lt;x&lt;π/2. Find x and r.",
+          "solution_html": "<p>\\(\\cos^2x=1/4\\). Acuteness gives cos x=1/2, so x=π/3 and r=1/2. The recurrence verifies the third term. The infinite sum starting at 1 would be 2.</p>"
+        },
+        {
+          "question_html": "Positive consecutive GP terms are 2, sin x, 1/8, with 0&lt;x&lt;π/2. Find x and r.",
+          "solution_html": "<p>\\(\\sin^2x=2(1/8)=1/4\\). Thus sine=1/2, x=π/6 and \\(r=(1/2)/2=1/4\\). Then (1/2)(1/4)=1/8 as required.</p>"
+        },
+        {
+          "question_html": "Is the condition v²=uw sufficient for (u,v,w)=(0,0,5) to be a GP with a finite real ratio?",
+          "solution_html": "<p>No. The equality 0²=0·5 holds, but a recurrence would require 5=r·0=0, a contradiction. The divided-ratio argument was invalid because its denominators vanished.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Treating the squared condition as sufficient without checking zero terms.",
+        "Keeping the wrong sign after squaring despite a positivity condition.",
+        "Finding an infinite sum before testing the ratio magnitude."
+      ]
+    },
+    {
+      "key": "applications",
+      "php_subchapter_id": 73,
+      "title": "Series models: accumulation, decay and repeated motion",
+      "objective": "Choose the correct progression, index the first event and test integer thresholds.",
+      "notes_html": "<p><strong>Before you start:</strong> use AP/GP formulas and identify what a quantity measures.</p>\n <p>A fixed additive change suggests an AP; a fixed multiplicative factor suggests a GP. State which event has index 1 (or index 0), and whether the question asks for one amount, a running total or a tail. Check the units of every result.</p>\n <p>For an integer threshold, derive a term or sum formula and test the proposed first successful index together with its predecessor. A rounded continuous root need not satisfy the requested strict or inclusive inequality.</p>\n <p>In an ideal vertical rebound model, an object released from height H first falls H once. If each rebound reaches a fraction r of the previous peak, 0&lt;r&lt;1, the upward heights are Hr,Hr²,… . Every rebound height is travelled twice, upwards and downwards, giving total distance \\(H+2Hr/(1-r)\\). This is a distance model, not a statement about elapsed time.</p><p><img src=\"/assets/original/series/rebound-heights.svg\" alt=\"Initial release height 3 m at index 0, then rebound peak heights 1.5,0.75,… . The horizontal axis is rebound number, not time.\" width=\"520\" height=\"440\"></p><h3>Recall later</h3><p>If a process starts with 60 at stage 0 and retains 80% per step, the amount at stage n is 60(0.8)ⁿ, not 60(0.8)ⁿ⁻¹. The description sets the index origin.</p>",
+      "examples": [
+        {
+          "question_html": "A club collects 25 tokens in week 1 and five more each successive week. Find the week-10 amount and first-ten-week total.",
+          "solution_html": "<p>The weekly amounts form an AP: \\(u_{10}=25+9(5)=70\\). The cumulative amount is \\(S_{10}=10(25+70)/2=475\\) tokens.</p>"
+        },
+        {
+          "question_html": "An ideal ball falls from 3 m and each rebound peak is half the preceding peak. Find its total vertical distance over all rebounds.",
+          "solution_html": "<p>Upward heights sum to \\(1.5/(1-1/2)=3\\) m. There is one initial fall and two journeys for each rebound height, so the distance is 3+2(3)=9 m. The height series converges since |r|=1/2&lt;1.</p>"
+        },
+        {
+          "question_html": "An amount starts at 60 at stage 0 and is multiplied by 0.8 at each step. Find the first stage with an amount strictly below 20.",
+          "solution_html": "<p>The model is \\(V_n=60(0.8)^n\\). Consecutive checks give V_4=24.576 and V_5=19.6608. Since the positive amounts decrease, the first successful stage is n=5.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Summing weekly amounts when only a single week is asked for, or doing the reverse.",
+        "Counting the initial drop twice in a rebound-distance model.",
+        "Changing the index origin silently or ignoring whether a threshold is strict."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "uid": "M4U-ORIG-SER-001",
+      "version": 1,
+      "skill": "arithmetic",
+      "title": "Two observations and a strict term threshold",
+      "objective": "Recover an AP from two nonconsecutive terms, then distinguish a sum from a term threshold.",
+      "difficulty": 3,
+      "stem_html": "<p>An arithmetic progression has fourth term 14 and ninth term 34. Its first term is a and common difference is d.</p>",
+      "hint_html": "<p>Subtract the two term equations. For the final part, test the integer immediately before your proposed answer.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find a and d.",
+          "answer_html": "\\(a=2,\\ d=4\\).",
+          "solution_html": "<p>\\(a+3d=14\\) and \\(a+8d=34\\). Subtracting gives 5d=20, so d=4 and a=14−12=2.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-001:a:C1",
+              "marks": 1,
+              "requirement": "Write the two correctly indexed term equations."
+            },
+            {
+              "id": "M4U-ORIG-SER-001:a:C2",
+              "marks": 1,
+              "requirement": "Subtract to obtain d=4."
+            },
+            {
+              "id": "M4U-ORIG-SER-001:a:C3",
+              "marks": 1,
+              "requirement": "Substitute to obtain a=2."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Elimination using any equivalent pair of valid equations is accepted.",
+          "common_error": "Using four differences to reach the fourth term.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the sum of the first 20 terms.",
+          "answer_html": "800.",
+          "solution_html": "<p>\\(u_{20}=2+19(4)=78\\). Hence \\(S_{20}=20(2+78)/2=800\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-001:b:C1",
+              "marks": 1,
+              "requirement": "Use a correct AP sum formula with 20 terms."
+            },
+            {
+              "id": "M4U-ORIG-SER-001:b:C2",
+              "marks": 1,
+              "requirement": "Evaluate the total as 800."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Pairing the 20 terms into ten pairs of sum 80 is accepted.",
+          "common_error": "Giving the twentieth term instead of the sum.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the least positive integer n for which u_n&gt;100.",
+          "answer_html": "\\(n=26\\).",
+          "solution_html": "<p>\\(u_n=2+4(n-1)=4n-2\\). Thus 4n−2&gt;100 means n&gt;25.5. The least integer is 26: u_25=98≤100 and u_26=102&gt;100. Since d&gt;0, no earlier index succeeds.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-001:c:C1",
+              "marks": 1,
+              "requirement": "Obtain the correct strict inequality in n."
+            },
+            {
+              "id": "M4U-ORIG-SER-001:c:C2",
+              "marks": 1,
+              "requirement": "Select the integer 26."
+            },
+            {
+              "id": "M4U-ORIG-SER-001:c:C3",
+              "marks": 1,
+              "requirement": "Verify the threshold and predecessor, or give an equivalent complete integer-inequality argument."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "A correctly justified comparison of consecutive terms is accepted.",
+          "common_error": "Rounding 25.5 down or treating it as an allowed index.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-SER-002",
+      "version": 1,
+      "skill": "arithmetic",
+      "title": "When the largest partial sum occurs twice",
+      "objective": "Handle strictly positive terms, a zero term and an integer maximum.",
+      "difficulty": 4,
+      "stem_html": "<p>An arithmetic progression starts at 18 and has common difference −2. Write S_n for its first-n-term sum, where n is a positive integer.</p>",
+      "hint_html": "<p>The next term changes S_n by exactly that term. A zero term can leave the partial sum unchanged.</p>",
+      "parts": [
+        {
+          "prompt_html": "Express u_n in terms of n.",
+          "answer_html": "\\(u_n=20-2n\\).",
+          "solution_html": "<p>\\(u_n=18+(n-1)(-2)=20-2n\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-002:a:C1",
+              "marks": 1,
+              "requirement": "Use first term plus (n−1) differences."
+            },
+            {
+              "id": "M4U-ORIG-SER-002:a:C2",
+              "marks": 1,
+              "requirement": "Simplify to 20−2n."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An equivalent expression 18−2(n−1) is accepted.",
+          "common_error": "Writing 18−2n.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "How many terms are strictly positive, and what is their sum?",
+          "answer_html": "Nine terms; sum 90.",
+          "solution_html": "<p>20−2n&gt;0 gives n&lt;10. There are nine strictly positive terms, ending at u_9=2. Their sum is \\(9(18+2)/2=90\\); u_10=0 is excluded.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-002:b:C1",
+              "marks": 1,
+              "requirement": "Find exactly nine strictly positive terms."
+            },
+            {
+              "id": "M4U-ORIG-SER-002:b:C2",
+              "marks": 1,
+              "requirement": "Use the correct finite-sum calculation."
+            },
+            {
+              "id": "M4U-ORIG-SER-002:b:C3",
+              "marks": 1,
+              "requirement": "Give 90 and distinguish the zero tenth term from a positive term."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Adding 18+16+…+2 directly is accepted.",
+          "common_error": "Including zero as a strictly positive term.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the greatest possible value of S_n and every positive integer n at which it occurs.",
+          "answer_html": "90 at \\(n=9\\) and \\(n=10\\).",
+          "solution_html": "<p>\\(S_n=n\\{36-2(n-1)\\}/2=n(19-n)=90.25-(n-9.5)^2\\). Among integers the nearest indices to 9.5 are 9 and 10; both give 90. Equivalently, S_n increases through the ninth term, is unchanged by the zero tenth term, and decreases thereafter.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-002:c:C1",
+              "marks": 1,
+              "requirement": "Obtain S_n=n(19−n), or compare signs of successive terms correctly."
+            },
+            {
+              "id": "M4U-ORIG-SER-002:c:C2",
+              "marks": 1,
+              "requirement": "Give the greatest attainable sum 90."
+            },
+            {
+              "id": "M4U-ORIG-SER-002:c:C3",
+              "marks": 1,
+              "requirement": "Identify both and only n=9 and n=10 with an integer or term-sign justification."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "The sign of S_(n+1)−S_n=u_(n+1) gives a complete alternative proof.",
+          "common_error": "Reporting the continuous maximum 90.25 or only one of the two indices.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-SER-003",
+      "version": 1,
+      "skill": "geometric",
+      "title": "A growing finite total",
+      "objective": "Use finite GP formulas and justify a least integer from powers.",
+      "difficulty": 3,
+      "stem_html": "<p>A geometric progression has first term 3 and common ratio 2.</p>",
+      "hint_html": "<p>There are n−1 multiplications in u_n but a power of n in the finite-sum formula.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find the eighth term.",
+          "answer_html": "384.",
+          "solution_html": "<p>\\(u_8=3\\cdot2^7=384\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-003:a:C1",
+              "marks": 1,
+              "requirement": "Use the power 7 for the eighth term."
+            },
+            {
+              "id": "M4U-ORIG-SER-003:a:C2",
+              "marks": 1,
+              "requirement": "Evaluate 384."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Repeated multiplication for eight correctly indexed terms is accepted.",
+          "common_error": "Using 2⁸ in the eighth term.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the sum of the first eight terms.",
+          "answer_html": "765.",
+          "solution_html": "<p>\\(S_8=3(2^8-1)/(2-1)=765\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-003:b:C1",
+              "marks": 1,
+              "requirement": "Use the finite GP sum with eight terms."
+            },
+            {
+              "id": "M4U-ORIG-SER-003:b:C2",
+              "marks": 1,
+              "requirement": "Evaluate 765."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Direct addition of the eight terms is accepted.",
+          "common_error": "Trying to use an infinite sum despite ratio 2.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the least positive integer n with S_n&gt;3000.",
+          "answer_html": "\\(n=10\\).",
+          "solution_html": "<p>\\(3(2^n-1)&gt;3000\\) gives \\(2^n&gt;1001\\). Since 2⁹=512 and 2¹⁰=1024, the least index is 10. In fact S_9=1533 and S_10=3069; the positive terms make the partial sums increase.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-003:c:C1",
+              "marks": 1,
+              "requirement": "Form 2ⁿ&gt;1001 or an equivalent correct sum inequality."
+            },
+            {
+              "id": "M4U-ORIG-SER-003:c:C2",
+              "marks": 1,
+              "requirement": "Identify n=10."
+            },
+            {
+              "id": "M4U-ORIG-SER-003:c:C3",
+              "marks": 1,
+              "requirement": "Justify minimality with the neighbouring powers/totals and increasing sums."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "A logarithm calculation followed by the correct integer check is accepted.",
+          "common_error": "Solving a term threshold rather than a total threshold.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-SER-004",
+      "version": 1,
+      "skill": "geometric",
+      "title": "Recovering a convergent progression",
+      "objective": "Determine a positive ratio from two sums and bound the omitted tail.",
+      "difficulty": 3,
+      "stem_html": "<p>A GP has first term a&gt;0 and ratio 0&lt;r&lt;1. Its infinite sum is 24 and its first-two-term sum is 18.</p>",
+      "hint_html": "<p>Relate S_2 to S_∞ through 1−r². The requested error is the tail, not the last retained term.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find a and r.",
+          "answer_html": "\\(a=12,\\ r=1/2\\).",
+          "solution_html": "<p>\\(a/(1-r)=24\\) and \\(a(1+r)=18\\). Therefore \\(24(1-r^2)=18\\), giving r²=1/4. The stated positive ratio selects r=1/2; then a=24(1−r)=12.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-004:a:C1",
+              "marks": 1,
+              "requirement": "Relate the two sums using correct GP formulas."
+            },
+            {
+              "id": "M4U-ORIG-SER-004:a:C2",
+              "marks": 1,
+              "requirement": "Obtain r=1/2, choosing the stated positive root."
+            },
+            {
+              "id": "M4U-ORIG-SER-004:a:C3",
+              "marks": 1,
+              "requirement": "Obtain a=12."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Elimination from a+ar=18 and a=24(1−r) is accepted.",
+          "common_error": "Keeping r=−1/2 despite 0&lt;r&lt;1.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Write S_n and the remainder R_n=S_∞−S_n in terms of n.",
+          "answer_html": "\\(S_n=24(1-2^{-n}),\\ R_n=24\\cdot2^{-n}\\).",
+          "solution_html": "<p>The finite sum is \\(12(1-(1/2)^n)/(1/2)=24(1-2^{-n})\\). Subtracting it from 24 leaves \\(R_n=24\\cdot2^{-n}\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-004:b:C1",
+              "marks": 1,
+              "requirement": "Give the correct expression for S_n."
+            },
+            {
+              "id": "M4U-ORIG-SER-004:b:C2",
+              "marks": 1,
+              "requirement": "Give the correct expression for R_n."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Writing the tail as the first omitted term divided by 1−r is accepted.",
+          "common_error": "Using the nth term itself for the whole omitted tail.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the least positive integer n for which the remainder is less than 0.1.",
+          "answer_html": "\\(n=8\\).",
+          "solution_html": "<p>24·2⁻ⁿ&lt;0.1 means 2ⁿ&gt;240. The powers 2⁷=128 and 2⁸=256 straddle this bound. R_7=0.1875 and R_8=0.09375. Since R_n decreases, 8 is the first successful index.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-004:c:C1",
+              "marks": 1,
+              "requirement": "Obtain 2ⁿ&gt;240 or an equivalent inequality."
+            },
+            {
+              "id": "M4U-ORIG-SER-004:c:C2",
+              "marks": 1,
+              "requirement": "Give n=8."
+            },
+            {
+              "id": "M4U-ORIG-SER-004:c:C3",
+              "marks": 1,
+              "requirement": "Check the strict bound and minimality using consecutive values/powers."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "A logarithm calculation with a valid strict integer check is accepted.",
+          "common_error": "Reversing the inequality or accepting a remainder equal to the tolerance.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-SER-005",
+      "version": 1,
+      "skill": "trig-arithmetic",
+      "title": "One AP condition, two differences",
+      "objective": "Find all trigonometric AP angles and match an exact difference to each.",
+      "difficulty": 3,
+      "stem_html": "<p>The numbers cos x, sin x and 2cos x, in that order, are consecutive AP terms. The angle satisfies 0≤x&lt;2π and is measured in radians.</p>",
+      "hint_html": "<p>Twice the middle term equals the outer-term sum. Check cosine-zero angles before forming tangent.</p>",
+      "parts": [
+        {
+          "prompt_html": "Form an equation involving sin x and cos x.",
+          "answer_html": "\\(2\\sin x=3\\cos x\\).",
+          "solution_html": "<p>The differences satisfy sin x−cos x=2cos x−sin x. Rearranging gives \\(2\\sin x=3\\cos x\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-005:a:C1",
+              "marks": 1,
+              "requirement": "Use equality of the two successive differences, or twice the middle equals the outer sum."
+            },
+            {
+              "id": "M4U-ORIG-SER-005:a:C2",
+              "marks": 1,
+              "requirement": "Obtain 2sin x=3cos x."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "The equation sin x−cos x=2cos x−sin x is an equivalent answer.",
+          "common_error": "Applying the GP product test instead of the AP condition.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find all permitted x, giving exact inverse-function forms and values to 3 significant figures.",
+          "answer_html": "\\(x=\\alpha,\\pi+\\alpha\\), where \\(\\alpha=\\arctan(3/2)\\); 0.983 and 4.12 rad.",
+          "solution_html": "<p>If cos x=0, sine is ±1 and the equation fails. Otherwise tan x=3/2. Tangent is positive in quadrants I and III, so x=α or π+α, with α=arctan(3/2)≈0.982793723. The other angle is approximately 4.124386377. To 3 significant figures these are 0.983 and 4.12 rad.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-005:b:C1",
+              "marks": 1,
+              "requirement": "Check the cosine-zero case and reduce valid cases to tan x=3/2."
+            },
+            {
+              "id": "M4U-ORIG-SER-005:b:C2",
+              "marks": 1,
+              "requirement": "Give both exact angle branches on the interval."
+            },
+            {
+              "id": "M4U-ORIG-SER-005:b:C3",
+              "marks": 1,
+              "requirement": "Round both radian values correctly to 3 significant figures."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "A complete sine/cosine quadrant argument gives the same two branches.",
+          "common_error": "Giving only the principal tangent inverse.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the exact common difference for each angle found in (b).",
+          "answer_html": "\\(1/\\sqrt{13}\\) at α; \\(-1/\\sqrt{13}\\) at π+α.",
+          "solution_html": "<p>In quadrant I, (cos x,sin x)=(2/√13,3/√13); in quadrant III both signs reverse. Thus d=sin x−cos x is 1/√13 at α and −1/√13 at π+α. The second difference has the same value in each case.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-005:c:C1",
+              "marks": 1,
+              "requirement": "Obtain the exact sine and cosine magnitudes from tan x=3/2."
+            },
+            {
+              "id": "M4U-ORIG-SER-005:c:C2",
+              "marks": 1,
+              "requirement": "Find both possible signed differences."
+            },
+            {
+              "id": "M4U-ORIG-SER-005:c:C3",
+              "marks": 1,
+              "requirement": "Match each sign to its correct angle/quadrant."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Using sin x=(3/2)cos x and the Pythagorean identity is accepted.",
+          "common_error": "Giving only a positive difference for both angles.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-SER-006",
+      "version": 1,
+      "skill": "trig-arithmetic",
+      "title": "A fixed middle term and a selected difference",
+      "objective": "Combine a parameter condition, exact angles and an AP sum.",
+      "difficulty": 3,
+      "stem_html": "<p>The numbers 1+cos x, k and 1−cos x are consecutive AP terms. The angle is in 0≤x&lt;2π and is measured in radians.</p>",
+      "hint_html": "<p>The two outer terms have a constant sum. Only part (b) selects particular angles.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find k.",
+          "answer_html": "\\(k=1\\).",
+          "solution_html": "<p>\\(2k=(1+\\cos x)+(1-\\cos x)=2\\), so k=1, for every real x.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-006:a:C1",
+              "marks": 1,
+              "requirement": "Use 2k equal to the sum of the outer terms."
+            },
+            {
+              "id": "M4U-ORIG-SER-006:a:C2",
+              "marks": 1,
+              "requirement": "Obtain k=1."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Equality of differences is accepted.",
+          "common_error": "Assuming k depends on x after the cosines cancel.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find all x for which the common difference is 1/2.",
+          "answer_html": "\\(x=2\\pi/3,4\\pi/3\\).",
+          "solution_html": "<p>The common difference is k−(1+cos x)=−cos x. Requiring d=1/2 gives cos x=−1/2. The permitted angles are 2π/3 and 4π/3.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-006:b:C1",
+              "marks": 1,
+              "requirement": "Reduce the condition to cos x=−1/2."
+            },
+            {
+              "id": "M4U-ORIG-SER-006:b:C2",
+              "marks": 1,
+              "requirement": "Give both exact permitted angles."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "A unit-circle or reference-angle argument is accepted.",
+          "common_error": "Using cos x=1/2 instead of −1/2.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "For either angle from (b), continue the AP and find the sum of its first 12 terms.",
+          "answer_html": "39.",
+          "solution_html": "<p>Now a=1+cos x=1/2 and d=1/2. The twelfth term is 1/2+11/2=6. Therefore \\(S_{12}=12(1/2+6)/2=39\\). Both angles produce the same first term and difference.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-006:c:C1",
+              "marks": 1,
+              "requirement": "Use a=1/2 and d=1/2 for the continued progression."
+            },
+            {
+              "id": "M4U-ORIG-SER-006:c:C2",
+              "marks": 1,
+              "requirement": "Apply a valid 12-term sum calculation."
+            },
+            {
+              "id": "M4U-ORIG-SER-006:c:C3",
+              "marks": 1,
+              "requirement": "Evaluate 39."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "The terms are 1/2,1,…,6, so half the sum of integers 1 to 12 is accepted.",
+          "common_error": "Summing only the three originally displayed terms.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-SER-007",
+      "version": 1,
+      "skill": "trig-geometric",
+      "title": "An acute angle gives a convergent GP",
+      "objective": "Use positivity and an angle interval to select a ratio before summing.",
+      "difficulty": 3,
+      "stem_html": "<p>The three positive numbers 1, sin x and 3cos²x are consecutive GP terms, in that order, with 0&lt;x&lt;π/2. Angles are in radians.</p>",
+      "hint_html": "<p>The square of the middle term is the outer product. Use sin²x+cos²x=1 and the acute-angle signs.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find x exactly.",
+          "answer_html": "\\(x=\\pi/3\\).",
+          "solution_html": "<p>\\(\\sin^2x=3\\cos^2x\\). Since cos x&gt;0 in the interval, tan²x=3. Acuteness selects tan x=√3, so x=π/3. Equivalently, 1−cos²x=3cos²x gives cos x=1/2 with the correct sign.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-007:a:C1",
+              "marks": 1,
+              "requirement": "Form sin²x=3cos²x."
+            },
+            {
+              "id": "M4U-ORIG-SER-007:a:C2",
+              "marks": 1,
+              "requirement": "Use an identity or a valid division to obtain the correct ratio value and sign."
+            },
+            {
+              "id": "M4U-ORIG-SER-007:a:C3",
+              "marks": 1,
+              "requirement": "Give the unique permitted angle π/3."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Solving for cos²x=1/4 and using the acute interval is accepted.",
+          "common_error": "Keeping the negative square root or an angle outside the stated interval.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the common ratio exactly.",
+          "answer_html": "\\(r=\\sqrt3/2\\).",
+          "solution_html": "<p>The ratio is the second term divided by the first: r=sin(π/3)=√3/2. Multiplying the second term by r gives 3/4, equal to 3cos²(π/3).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-007:b:C1",
+              "marks": 1,
+              "requirement": "Use the ratio of consecutive terms."
+            },
+            {
+              "id": "M4U-ORIG-SER-007:b:C2",
+              "marks": 1,
+              "requirement": "Give √3/2 and verify consistency with the third term."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "A correct recurrence check with the exact terms is accepted.",
+          "common_error": "Using sin²x rather than sin x as the common ratio.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Continue this GP indefinitely. Show that its infinite sum exists and find it exactly.",
+          "answer_html": "\\(4+2\\sqrt3\\).",
+          "solution_html": "<p>The nonzero first term is 1 and 0&lt;√3/2&lt;1, so the infinite series converges. Its sum is \\(1/(1-\\sqrt3/2)=2/(2-\\sqrt3)=4+2\\sqrt3\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-007:c:C1",
+              "marks": 1,
+              "requirement": "Explicitly justify convergence by |r|&lt;1."
+            },
+            {
+              "id": "M4U-ORIG-SER-007:c:C2",
+              "marks": 1,
+              "requirement": "Use 1/(1−√3/2)."
+            },
+            {
+              "id": "M4U-ORIG-SER-007:c:C3",
+              "marks": 1,
+              "requirement": "Evaluate the exact sum, equivalently 4+2√3."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "The unrationalised exact form is acceptable if algebraically correct; rationalisation supplies the displayed form.",
+          "common_error": "Assuming convergence merely because the three given terms are positive.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-SER-008",
+      "version": 1,
+      "skill": "trig-geometric",
+      "title": "The squared test has an exceptional angle",
+      "objective": "Identify when a product identity fails to guarantee an actual GP recurrence.",
+      "difficulty": 4,
+      "stem_html": "<p>Consider the ordered terms \\(1+\\sin x,\\cos x,1-\\sin x\\), for 0≤x&lt;2π, with angles in radians.</p>\n <p>In this problem the terms form a GP exactly when a finite real number r satisfies second=r·first and third=r·second. The value r=0 is permitted.</p>",
+      "hint_html": "<p>First prove the product identity. Then test angles where the first or middle term vanishes using the original recurrence.</p>",
+      "parts": [
+        {
+          "prompt_html": "Show that the square of the middle term equals the product of the outer terms for every real x.",
+          "answer_html": "\\(\\cos^2x=(1+\\sin x)(1-\\sin x)\\).",
+          "solution_html": "<p>\\((1+\\sin x)(1-\\sin x)=1-\\sin^2x=\\cos^2x\\). No division is used, so this identity holds for every real x.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-008:a:C1",
+              "marks": 1,
+              "requirement": "Expand the product as 1−sin²x."
+            },
+            {
+              "id": "M4U-ORIG-SER-008:a:C2",
+              "marks": 1,
+              "requirement": "Use the Pythagorean identity to obtain cos²x."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Starting from cos²x and factorising 1−sin²x is accepted.",
+          "common_error": "Dividing by a trigonometric term during an identity that must include zero cases.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find every x in the stated interval for which the three terms fail to form a GP under the given definition.",
+          "answer_html": "Only \\(x=3\\pi/2\\).",
+          "solution_html": "<p>At x=3π/2 the terms are (0,0,2), which would require 2=r·0, impossible. At every other permitted x, 1+sin x&gt;0. Set r=cos x/(1+sin x); the product identity gives r cos x=cos²x/(1+sin x)=1−sin x. Both recurrence equations hold, including x=π/2, where (2,0,0) has ratio zero. Thus there are no other failures.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-008:b:C1",
+              "marks": 1,
+              "requirement": "Identify the exceptional angle 3π/2."
+            },
+            {
+              "id": "M4U-ORIG-SER-008:b:C2",
+              "marks": 1,
+              "requirement": "Explain why (0,0,2) has no finite ratio."
+            },
+            {
+              "id": "M4U-ORIG-SER-008:b:C3",
+              "marks": 1,
+              "requirement": "Prove all other angles work, retaining the valid zero-ratio case."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "A complete case split between nonzero cosine and its two zero angles is accepted.",
+          "common_error": "Claiming all angles work from the squared identity alone, or rejecting the permitted zero ratio.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "At x=π/2, find the ratio and the sum of the first five terms of the continued GP.",
+          "answer_html": "\\(r=0\\); sum 2.",
+          "solution_html": "<p>The first three terms are 2,0,0, so the recurrence has r=0. Continuing gives 2,0,0,0,0 and S_5=2. There is no need to evaluate 0⁰.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-008:c:C1",
+              "marks": 1,
+              "requirement": "Give the permitted ratio r=0."
+            },
+            {
+              "id": "M4U-ORIG-SER-008:c:C2",
+              "marks": 1,
+              "requirement": "Give the first-five-term sum 2 from the continued recurrence."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "The finite-sum formula at r=0 gives the same result for n=5.",
+          "common_error": "Treating 0/0 as a valid way to find the ratio.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-SER-009",
+      "version": 1,
+      "skill": "applications",
+      "title": "A collection grows by a fixed amount",
+      "objective": "Separate a weekly amount from a cumulative threshold.",
+      "difficulty": 3,
+      "stem_html": "<p>A club collects 40 tokens in week 1 and five more tokens in each successive week than in the preceding week. All tokens are kept.</p>",
+      "hint_html": "<p>The weekly amounts form an AP, but the threshold in part (c) concerns their running total.</p>",
+      "parts": [
+        {
+          "prompt_html": "How many tokens are collected in week 12?",
+          "answer_html": "95 tokens.",
+          "solution_html": "<p>\\(u_{12}=40+11(5)=95\\) tokens.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-009:a:C1",
+              "marks": 1,
+              "requirement": "Use eleven increases after week 1."
+            },
+            {
+              "id": "M4U-ORIG-SER-009:a:C2",
+              "marks": 1,
+              "requirement": "Give 95 tokens."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Listing correctly indexed weekly amounts is accepted.",
+          "common_error": "Counting twelve increases after the initial amount.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "How many tokens are collected in total over the first 12 weeks?",
+          "answer_html": "810 tokens.",
+          "solution_html": "<p>\\(S_{12}=12(40+95)/2=810\\) tokens.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-009:b:C1",
+              "marks": 1,
+              "requirement": "Use the AP sum over twelve weekly amounts."
+            },
+            {
+              "id": "M4U-ORIG-SER-009:b:C2",
+              "marks": 1,
+              "requirement": "Give 810 tokens."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Adding the weekly amounts directly is accepted.",
+          "common_error": "Reporting only the week-12 collection.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "At the end of which week does the cumulative total first reach at least 1000 tokens?",
+          "answer_html": "Week 14.",
+          "solution_html": "<p>\\(S_n=n\\{80+5(n-1)\\}/2=(5/2)n(n+15)\\). Then S_13=910&lt;1000, while S_14=1015≥1000. Since every weekly amount is positive, the totals strictly increase. The first qualifying week is 14.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-009:c:C1",
+              "marks": 1,
+              "requirement": "Form the correct cumulative-sum expression or equivalent increasing totals."
+            },
+            {
+              "id": "M4U-ORIG-SER-009:c:C2",
+              "marks": 1,
+              "requirement": "Identify week 14."
+            },
+            {
+              "id": "M4U-ORIG-SER-009:c:C3",
+              "marks": 1,
+              "requirement": "Check both adjacent totals and justify that no earlier week qualifies."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Solving the quadratic inequality and selecting the correct integer with a neighbour check is accepted.",
+          "common_error": "Using the single-week amount for the cumulative threshold.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-SER-010",
+      "version": 1,
+      "skill": "applications",
+      "title": "Distance in an ideal rebound model",
+      "objective": "Index rebound heights correctly and count upward and downward journeys.",
+      "difficulty": 3,
+      "stem_html": "<p>An ideal ball is released from rest 2 m above level ground. After each ground impact it rebounds vertically to three quarters of the preceding peak height. The release height counts as the peak preceding the first rebound. Assume this height rule continues indefinitely.</p>",
+      "hint_html": "<p>The first upward height is 2(3/4), not 2. The initial fall occurs once; each rebound height is travelled twice.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find the height of the third rebound exactly.",
+          "answer_html": "\\(27/32\\) m.",
+          "solution_html": "<p>The first rebound is 2(3/4), so the third is \\(2(3/4)^3=27/32\\) m.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-010:a:C1",
+              "marks": 1,
+              "requirement": "Use three factors of 3/4 after the release height."
+            },
+            {
+              "id": "M4U-ORIG-SER-010:a:C2",
+              "marks": 1,
+              "requirement": "Give 27/32 m."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Successive peak calculations 3/2,9/8,27/32 are accepted.",
+          "common_error": "Counting the release height as the first rebound.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the total upward distance over all rebounds.",
+          "answer_html": "6 m.",
+          "solution_html": "<p>The upward distances form a GP with first term 3/2 m and ratio 3/4. Its sum is \\((3/2)/(1-3/4)=6\\) m, valid since |3/4|&lt;1.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-010:b:C1",
+              "marks": 1,
+              "requirement": "Use the correct first upward term and convergent GP sum."
+            },
+            {
+              "id": "M4U-ORIG-SER-010:b:C2",
+              "marks": 1,
+              "requirement": "Give 6 m."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Summing the height series as 2r/(1−r) with r=3/4 is accepted.",
+          "common_error": "Starting the upward series with the release height 2 m.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the total vertical distance travelled, including the initial fall, and explain why the distance series converges.",
+          "answer_html": "14 m; the rebound-height ratio has magnitude less than one.",
+          "solution_html": "<p>There is one initial fall of 2 m. Every rebound contributes its upward height and the same downward height, so the distance is 2+2(6)=14 m. The nonzero geometric height series has |r|=3/4&lt;1; doubling it and adding one finite initial distance preserve convergence. No elapsed-time claim is needed.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-SER-010:c:C1",
+              "marks": 1,
+              "requirement": "Count the initial fall once and all rebound heights twice."
+            },
+            {
+              "id": "M4U-ORIG-SER-010:c:C2",
+              "marks": 1,
+              "requirement": "Give 14 m."
+            },
+            {
+              "id": "M4U-ORIG-SER-010:c:C3",
+              "marks": 1,
+              "requirement": "Justify convergence using |r|=3/4&lt;1."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Separate sums of all downward and all upward distances are accepted.",
+          "common_error": "Doubling the initial fall or asserting an infinite distance just because there are infinitely many rebounds.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    }
+  ]
+}

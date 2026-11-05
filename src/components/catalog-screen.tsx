@@ -1,24 +1,35 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { TopicStudyPanel, StudyStatus } from "./study-panel";
 import type { CatalogDto, PracticeMode, courseCatalog, topicContent } from "@/lib/catalog";
 import { ActorContext, api, ActionButton, Empty, ErrorNotice, Heading, Loading, MaterialAsset, MathContent, useLocale, useResource } from "./ui";
 import { BasketPanel, useTaskBasket } from "./task-basket";
 import { LessonPresentations } from "./lesson-presentations";
+
+// Original imports store a shared stem and independent per-part prompts. Legacy
+// imports already contain the complete question in statement; keep that display.
+function OriginalQuestionParts({ version }: { version: { source?: string; parts: { id: string; prompt: string; maxPoints: number }[] } }) {
+  if (version.source !== "Maths4U Original (AI-assisted)") return null;
+  return <div className="original-question-parts">{version.parts.map(part => <section key={part.id}><MathContent html={part.prompt} /><p className="muted">[{part.maxPoints}]</p></section>)}</div>;
+}
 import { QuickPractice } from "./quick-practice";
+import { Pure1Review } from "./pure1-review";
 
 export function CatalogTasks({ topicId, courseId, chapterId, mode, embedded = false, practice = false, bookmarksOnly = false }: { topicId?: string; courseId?:string; chapterId?:string; mode?: PracticeMode; embedded?: boolean; practice?: boolean; bookmarksOnly?: boolean }) {
   const { t, lang } = useLocale(), actor = useContext(ActorContext), basket = useTaskBasket(), router = useRouter();
   const manage = actor?.roles.some(r => ["TEACHER", "ADMIN"].includes(r.role));
+  const [reviewTask]=useState(()=>{if(typeof window==="undefined"||!practice)return "";const id=new URLSearchParams(window.location.search).get("reviewTask")??"";return /^[a-z0-9_]{1,100}$/.test(id)?id:"";});
+  const reviewScrolled=useRef(false);
   const [filters, setFilters] = useState<Record<string, string>>(() => {
     const allowed=["q","course","chapter","topic","category","year","session","paper","language","difficulty","page","pageSize","mode","progress","bookmarks"];
     let saved:Record<string,string>={};if(typeof window!=="undefined"){const url=new URLSearchParams(window.location.search);try{saved=JSON.parse(sessionStorage.getItem(`catalog:${actor?.id??"guest"}:${window.location.pathname}:${mode ?? "ALL"}`)??"{}");}catch{}for(const k of allowed)if(url.has(k))saved[k]=url.get(k)!;}
-    return {q:"",page:"1",pageSize:"25",...Object.fromEntries(Object.entries(saved).filter(([k,v])=>allowed.includes(k)&&typeof v==="string")),...(courseId?{course:courseId}:{}),...(chapterId?{chapter:chapterId}:{}),...(topicId?{topic:topicId}:{}),...(mode?{mode}:{}),...(bookmarksOnly?{bookmarks:"1"}:{}),...(!actor?{progress:"",bookmarks:""}:{})};
+    return {q:"",page:"1",pageSize:"25",...Object.fromEntries(Object.entries(saved).filter(([k,v])=>allowed.includes(k)&&typeof v==="string")),...(courseId?{course:courseId}:{}),...(chapterId?{chapter:chapterId}:{}),...(topicId?{topic:topicId}:{}),...(mode?{mode}:{}),...(bookmarksOnly?{bookmarks:"1"}:{}),...(reviewTask?{q:"",page:"1",progress:"",bookmarks:"",category:"",year:"",session:"",paper:"",difficulty:"",language:""}:{}),...(!actor?{progress:"",bookmarks:""}:{})};
   });
-  useEffect(()=>{sessionStorage.setItem(`catalog:${actor?.id??"guest"}:${window.location.pathname}:${mode ?? "ALL"}`,JSON.stringify(filters));const q=new URLSearchParams(filters);window.history.replaceState(null,"",window.location.pathname+"?"+q.toString());},[filters,actor?.id,mode]);
+  useEffect(()=>{sessionStorage.setItem(`catalog:${actor?.id??"guest"}:${window.location.pathname}:${mode ?? "ALL"}`,JSON.stringify(filters));const q=new URLSearchParams(filters);if(reviewTask)q.set("reviewTask",reviewTask);window.history.replaceState(null,"",window.location.pathname+"?"+q.toString()+window.location.hash);},[filters,actor?.id,mode,reviewTask]);
   const result = useResource<CatalogDto>("catalog?" + new URLSearchParams(filters)), courses = useResource<Awaited<ReturnType<typeof courseCatalog>>>(embedded ? null : "catalog/courses");
+  useEffect(()=>{if(reviewTask&&result.data&&!reviewScrolled.current){const el=document.getElementById("question-"+reviewTask);if(el){el.scrollIntoView({block:"start"});reviewScrolled.current=true;}}},[reviewTask,result.data]);
   const update = (key: string, value: string) => setFilters(old => ({ ...old, [key]: value, page: "1", ...(["course", "chapter", "topic"].includes(key) ? { category: "", year: "", session: "", paper: "", difficulty: "", language: "" } : {}), ...(key === "course" ? { chapter: "", topic: "" } : key === "chapter" ? { topic: "" } : {}) }));
   const chapters = courses.data?.filter(c => !filters.course || c.id === filters.course).flatMap(c => c.chapters) ?? [];
   const topics = chapters.filter(c => !filters.chapter || c.id === filters.chapter).flatMap(ch => ch.topics);
@@ -38,12 +49,13 @@ export function CatalogTasks({ topicId, courseId, chapterId, mode, embedded = fa
       {result.data.facets.difficulties.length > 0 && select("difficulty", t("Сложность", "Difficulty"), result.data.facets.difficulties.map(v => ({ id: String(v), title: String(v) })))}
       {select("language", t("Язык материала", "Material language"), result.data.facets.languages.map(v => ({ id: String(v), title: String(v).toUpperCase() })))}</>}
   </div></details><ErrorNotice error={result.error || courses.error || basket.error} />
+    {reviewTask&&<p className="notice">{t("Начните с выделенной проверки для повторения. Остальные вопросы темы доступны ниже.","Start with the highlighted review check. Other questions in this topic remain available below.")}</p>}
     {!result.data ? <Loading /> : <><p className="catalog-total" role="status">{t("Доступно задач: ", "Available tasks: ")}{result.data.total}</p>
       {!result.data.total && <Empty>{filters.progress ? t("Нет вопросов с таким статусом. Попробуйте другой фильтр.", "No questions match this progress filter. Try another filter.") : mode ? t("В этой теме пока нет вопросов выбранного типа.", "This topic has no questions of this answer type yet.") : t("Нет вопросов по выбранным условиям.", "No questions match these filters.")}</Empty>}
       {practice && result.data.items.length > 0 && <nav className="question-index" aria-label={t("Список вопросов", "Question list")}>{result.data.items.map(task => <a key={task.id} href={`#question-${task.id}`} aria-label={`${t("Вопрос", "Question")} ${task.number}`} className={task.progress?.solved ? "solved" : ""}>{task.number}</a>)}</nav>}
-      <ol className="catalog-tasks" aria-busy={result.isLoading}>{result.data.items.map(task => <li key={task.id} id={`question-${task.id}`} className="catalog-task"><div className="task-summary"><span className="task-number">{task.number}</span>
+      <ol className="catalog-tasks" aria-busy={result.isLoading}>{result.data.items.map(task => <li key={task.id} id={`question-${task.id}`} data-review-target={task.id===reviewTask?"true":undefined} className="catalog-task"><div className="task-summary"><span className="task-number">{task.number}</span>
         <details className="task-content" open={practice}><summary><strong>{task.version.title}</strong><span className="task-meta">{[task.version.source, task.version.year, task.version.examSession, task.version.paper ? "P" + task.version.paper : "", task.version.questionNumber ? "Q" + task.version.questionNumber : ""].filter(Boolean).join(" · ")}</span>{!manage && task.progress && (task.progress.solved ? <span className="badge">{t("Решено", "Solved")}{task.progress.helpUsed ? t(" · с помощью", " · with help") : ""}</span> : <StudyStatus state={task.progress.state} helpUsed={task.progress.helpUsed} />)}</summary>
-          {task.version.locale!==lang&&<p className="muted">{t("Перевод RU отсутствует. Показан оригинал EN.","An English translation is unavailable. Showing the original.")}</p>}<MathContent html={task.version.statement} />{task.version.assets.map(a => <MaterialAsset key={a.id} asset={a} />)}
+          {task.version.locale!==lang&&<p className="muted">{t("Перевод RU отсутствует. Показан оригинал EN.","An English translation is unavailable. Showing the original.")}</p>}<MathContent html={task.version.statement} /><OriginalQuestionParts version={task.version} />{task.version.assets.map(a => <MaterialAsset key={a.id} asset={a} />)}
           {task.editable && <Link href={`/teacher/tasks/${task.id}`}>{t("Редактировать", "Edit")}</Link>}
           {!manage && (actor ? task.mode !== "WRITTEN" ? <QuickPractice task={task} lessonId={topicId} changed={result.refresh} /> : <ActionButton label={t("Решение, MS и самооценка", "Solution, MS & self-check")} action={async () => { const a = await api<{ id: string }>("study/start", "POST", { taskId: task.id, lessonId: topicId }); router.push(`/attempts/${a.id}?returnTo=${encodeURIComponent(window.location.pathname + window.location.search)}`); }} /> : <Link className="button" href={"/login?next="+encodeURIComponent(typeof window==="undefined"?"/courses":window.location.pathname+window.location.search)}>{t("Войти и решать", "Sign in to practise")}</Link>)}
         </details><span className="task-category">{categories[task.category]}</span><span className="task-points">{task.points} {t("б.", "pts")}</span>
@@ -70,6 +82,7 @@ export function CourseCatalogScreen({ slug, home = false }: { slug?: string; hom
     {actor && !slug && <Link className="button secondary" href={home ? "/courses" : "/"}>{home ? t("Выбрать курсы", "Choose courses") : t("Мои курсы", "My courses")}</Link>}
     {home && actor && <Link className="button secondary" href={teacher ? "/teacher" : "/student"}>{teacher ? t("Кабинет учителя", "Teacher dashboard") : t("Кабинет ученика", "Student dashboard")} →</Link>}
   </Heading>{!actor && <p className="notice">{t("Материалы можно просматривать без регистрации. Войдите, чтобы отвечать на вопросы и сохранять прогресс.", "Browse the materials as a guest. Sign in to answer questions and save your progress.")} <Link href="/login">{t("Войти", "Sign in")} →</Link></p>}
+    {home && <Pure1Review/>}
     {slug && <Link href="/courses">← {t("Все курсы", "All courses")}</Link>}<ErrorNotice error={r.error} />
     {!r.data ? <Loading /> : !visible?.length ? <Empty>{home && actor ? <Link href="/courses">{t("Выберите курсы для обучения", "Choose the courses you want to study")} →</Link> : t("Курсов пока нет", "No courses yet")}</Empty> : !slug ? groups.map(group => <section className="course-group" key={group}>{group && <h2>{group}</h2>}<div className="course-catalog">{visible!.filter(c => (c.groupLabel || "") === group).map(c => <section className="card compact-course" key={c.id}>
       <h2><Link href={`/courses/${c.slug}`}>{c.title} →</Link></h2><p className="muted">{c.description}</p><p className="course-count">{c.count} {t("вопросов", "questions")} · {c.chapters.length} {t("глав", "chapters")}</p>

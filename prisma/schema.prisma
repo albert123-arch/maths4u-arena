@@ -118,6 +118,7 @@ model User {
   presentations        LessonPresentation[]
   bookmarks            TaskBookmark[]
   followedCourses      CourseFollow[]
+  independentChecks    IndependentCheck[]
 
   @@index([status])
 }
@@ -382,6 +383,7 @@ model TaskTopic {
 }
 
 model TaskVersion {
+  independentChecks IndependentCheck[]
   sourceReference String? @db.VarChar(500)
   sourceUid String? @db.VarChar(191)
   component String? @db.VarChar(50)
@@ -899,4 +901,23 @@ model TaskBookmark {
   task Task @relation(fields: [taskId], references: [id], onDelete: Restrict)
   @@id([userId, taskId])
   @@index([taskId])
+}
+
+// Self-study evidence is distinct from graded work/Answer/Review. Immutable task version.
+model IndependentCheck {
+  id            String @id @default(cuid())
+  userId        String
+  taskVersionId String
+  eventKey      String @db.VarChar(64)
+  contentVersion String @db.VarChar(40)
+  answers       Json
+  correct       Boolean
+  helpUsed      Boolean
+  imported      Boolean @default(false)
+  checkedAt     DateTime @default(now())
+  user          User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  taskVersion   TaskVersion @relation(fields: [taskVersionId], references: [id], onDelete: Restrict)
+  @@unique([userId, eventKey])
+  @@index([userId, contentVersion, checkedAt])
+  @@index([taskVersionId])
 }

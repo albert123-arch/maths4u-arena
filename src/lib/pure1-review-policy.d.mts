@@ -1,0 +1,10 @@
+export type ReviewState={checkedAt:number;dueAt:number;streak:number;correct:boolean;helpUsed:boolean;hadError:boolean};
+export type ReviewItem={uid:string;family_uid?:string;block:string;skill:string;title:string;href:string;notesHref:string};
+export type ReviewSkill={block:string;skill:string;title:string;href:string;notesHref:string;attempted:number;due:number;weak:number;failed:number;nextDue:number;uids:string[]};
+export const reviewIntervals:number[];
+export function validReview(value:unknown):value is ReviewState;
+export function nextReview(previous:ReviewState|null|undefined,event:{correct:boolean;helpUsed:boolean;at:number}):ReviewState;
+export function withReviewHelp(state:unknown):ReviewState|null;
+export function familyReviewItems(items:ReviewItem[],seen:Record<string,{checkedAt:number}>):(ReviewItem&{family_uid:string;variant_uid:string})[];
+export function restoreFamilyReviews(items:ReviewItem[],states:Record<string,ReviewState>,cached?:Record<string,ReviewState>):Record<string,ReviewState>;
+export function reviewQueue(items:ReviewItem[],states:Record<string,ReviewState>,now?:number):ReviewSkill[];

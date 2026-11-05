@@ -22,6 +22,11 @@ import { lessonPresentations, changePresentation } from "@/lib/presentations";
 import { studentProgress, myProgress } from "@/lib/student-progress";
 import { classProgress } from "@/lib/class-progress";
 import { bookmarkTask, followCourse } from "@/lib/personal-learning";
+import { pure1Review } from "@/lib/pure1-review";
+import { checkSquare, helpSquare, squareProgress, importSquareProgress, squareMappings } from "@/lib/square-learning";
+import { courseChoices, learningHome, openSquareLesson } from "@/lib/learning-home";
+
+import { quadraticTopics } from "@/lib/square-model";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -50,6 +55,8 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
   let administrative = false;
   try {
     const parts = (await context.params).path, route = parts.join("/"), method = request.method;
+    const topic = parts[0] === "learning" && parts[1] === "quadratics" && parts.length === 4 ? quadraticTopics.find(t => t.key === parts[2]) : undefined;
+    const action = topic ? parts[3] : "";
     const url = new URL(request.url), lang = url.searchParams.get("lang") === "ru" ? "ru" : "en";
     let input: unknown = {};
     if (method !== "GET") {
@@ -82,6 +89,14 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
       await logout(tokenFrom(request)); return json({ ok: true }, 200, { "Set-Cookie": sessionCookie("", true) });
     }
     if (method === "GET" && route === "auth/me") return json({ user: await actorForToken(tokenFrom(request)) });
+    if (method === "GET" && route === "learning/course-choices") return json(await courseChoices());
+    if ((route === "learning/square/check" || action === "check") && method === "POST") {
+      const user = await actorForToken(tokenFrom(request));
+      // Bounded algebra and payload. Guest checks do not create accounts or assessment attempts.
+      ensure(JSON.stringify(input).length <= 6000, 413, "BODY_TOO_LARGE");
+      return json(await checkSquare(user, input, topic));
+    }
+    if ((route === "learning/square/help" || action === "help") && method === "POST") return json(await helpSquare(input, topic));
     if (method === "GET" && route === "catalog") return json(await catalog(await actorForToken(tokenFrom(request)), lang, Object.fromEntries(url.searchParams)));
     if (method === "GET" && route === "catalog/courses") return json(await courseCatalog(await actorForToken(tokenFrom(request)), lang, url.searchParams.get("slug") || undefined));
     if (method === "GET" && parts[0] === "catalog" && parts[1] === "topics" && parts.length === 3) return json(await topicContent(await actorForToken(tokenFrom(request)), parts[2], lang));
@@ -103,6 +118,10 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
         "Content-Security-Policy": "sandbox; default-src 'none'", "Cross-Origin-Resource-Policy": "same-origin" } });
     }
     const actor = await requireActor(request);
+    if (route === "learning/home" && method === "GET") return json(await learningHome(actor, lang));
+    if ((route === "learning/square/progress" || action === "progress") && method === "GET") return json(await squareProgress(actor, topic));
+    if ((route === "learning/square/import" || action === "import") && method === "POST") { await rateLimit("square-import:" + actor.id, 30, 3600); return json(await importSquareProgress(actor, input, topic)); }
+    if ((route === "learning/square/open" || action === "open") && method === "POST") { await squareMappings(topic?.key); await openSquareLesson(actor, topic); return json({ ok: true }); }
     if (parts[0] === "learning" && parts[1] === "bookmarks" && parts.length === 3 && method === "POST") return json(await bookmarkTask(actor, parts[2], input));
     if (parts[0] === "learning" && parts[1] === "courses" && parts.length === 3 && method === "POST") return json(await followCourse(actor, parts[2], input));
     if (route === "learning/progress" && method === "GET") return json(await myProgress(actor, lang, Object.fromEntries(url.searchParams)));
@@ -111,6 +130,7 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
       if (method === "GET") return json(await lessonPresentations(actor, parts[2], lang));
       if (method === "POST") return json(await changePresentation(actor, parts[2], input));
     }
+    if (route === "learning/pure1-review" && method === "GET") return json(await pure1Review(actor));
     if (route === "study/start" && method === "POST") { await rateLimit("practice:" + actor.id, 60, 3600); return json(await beginStudy(actor, input, lang), 201); }
     if (parts[0] === "study" && parts[1] === "topics" && parts.length === 3 && method === "GET") return json(await topicStudy(actor, parts[2], lang, Number(url.searchParams.get("page") ?? 1)));
     if (parts[0] === "attempts" && parts[2] === "help" && method === "POST") { await revealStudyHelp(actor, parts[1], input, lang); return json(await getAttempt(actor, parts[1], lang)); }

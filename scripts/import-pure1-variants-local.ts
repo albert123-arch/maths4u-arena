@@ -1,0 +1,5 @@
+import {mkdir,writeFile} from "node:fs/promises";
+import {db} from "../src/lib/prisma";import {databaseConfig} from "../src/lib/database-url";import {userSelect} from "../src/lib/security";
+import {importPure1VariantsLocal,pure1VariantsPack} from "../src/lib/pure1-variants";
+async function main(){const cfg=databaseConfig();if(process.env.MATHS4U_ENV!=="test"||cfg.host!=="127.0.0.1"||!cfg.database.startsWith("maths4u_test_bank_"))throw Error("P1_SHORT_LOCAL_ONLY");const actor=await db().user.findFirstOrThrow({where:{status:"ACTIVE",roles:{some:{role:"ADMIN"}}},select:userSelect});const result=await importPure1VariantsLocal(actor,pure1VariantsPack);await mkdir(".local/pure1-variants",{recursive:true});await writeFile(".local/pure1-variants/import.json",JSON.stringify(result,null,2));console.log(JSON.stringify({created:result.created,skipped:result.skipped,skills:result.skills}));}
+main().catch(e=>{console.error(e instanceof Error&&/^P1_SHORT_[A-Z_]+$/.test(e.message)?e.message:"P1_VARIANTS_IMPORT_FAILED");process.exitCode=1;}).finally(()=>db().$disconnect());

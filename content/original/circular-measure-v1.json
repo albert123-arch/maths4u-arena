@@ -1,0 +1,967 @@
+{
+  "schema_version": 1,
+  "key": "maths4u-original-circular-measure",
+  "version": "2026-10-30.1",
+  "language": "en",
+  "title": "Circular Measure — Maths4U Original",
+  "syllabus": "9709",
+  "component": "Pure Mathematics 1",
+  "provenance": {
+    "classification": "original",
+    "prepared_by": "AI-assisted preparation for Maths4U",
+    "basis": "Independent skill briefs; no examination question supplied for paraphrasing.",
+    "third_party_question_text": false,
+    "teacher_review": "pending",
+    "verification": "See docs/circular-measure-original-20261030.md for checks actually performed."
+  },
+  "marking_policy": "Maths4U indicative marking guidance, not an official examination-board mark scheme. Award stated criteria once each, up to the part maximum. Accept valid equivalent methods. Follow-through applies only where explicitly stated; do not award an accuracy criterion for an incorrect final result.",
+  "lessons": [
+    {
+      "key": "radians",
+      "php_subchapter_id": 52,
+      "title": "Radians, degrees and complete rotations",
+      "objective": "Convert angle units and distinguish a swept rotation from the final direction.",
+      "notes_html": "<p><strong>Before you start:</strong> work with fractions of a full turn and keep exact multiples of π.</p>\n <p>One radian is the central angle subtended by an arc whose length equals the radius. In general \\(\\theta=s/r\\), so \\(2\\pi\\) radians make one complete turn and \\(\\pi\\) radians equal \\(180^\\circ\\).</p>\n \\[\\theta_{\\mathrm{rad}}=\\theta_{\\mathrm{deg}}\\frac{\\pi}{180},\\qquad\n \\theta_{\\mathrm{deg}}=\\theta_{\\mathrm{rad}}\\frac{180}{\\pi}.\\]\n <p>A minor positive angle is less than π; a reflex angle is between π and 2π. The minor and reflex angles between the same two radii add to 2π. A physical rotation can exceed 2π: for distance travelled, retain every full revolution rather than reducing the angle to the final orientation.</p>\n <p>Radian formulae require radian inputs. Keep π exact until the last numerical step and use radians in a calculator when evaluating trigonometric functions of radian angles.</p><p><img src=\"/assets/original/circular-measure/radian.svg\" alt=\"A unit radian at O: an arc of length r subtends angle 1 radian in a circle of radius r.\" width=\"520\" height=\"440\"></p><h3>Recall later</h3><p>\\(\\pi/3\\) rad = \\(60^\\circ\\); \\(450^\\circ=5\\pi/2\\) rad is one full turn plus a quarter turn.</p>",
+      "examples": [
+        {
+          "question_html": "Convert \\(150^\\circ\\) to radians exactly.",
+          "solution_html": "<p>Multiply by π/180: \\(150\\pi/180=5\\pi/6\\) rad. This is less than π, as expected for an angle below 180°.</p>"
+        },
+        {
+          "question_html": "Convert \\(7\\pi/4\\) radians to degrees.",
+          "solution_html": "<p>\\((7\\pi/4)(180/\\pi)=315^\\circ\\). It is a reflex angle, between 180° and 360°.</p>"
+        },
+        {
+          "question_html": "Two angles around a point are in the ratio 3:5 and sum to a full turn. Find both in radians.",
+          "solution_html": "<p>Eight parts make 2π, so one part is π/4. The angles are \\(3\\pi/4\\) and \\(5\\pi/4\\), equivalent to 135° and 225°.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Multiplying by 180/π when converting degrees to radians.",
+        "Using the minor angle when a reflex arc is specified.",
+        "Discarding complete turns in a travelled-distance calculation."
+      ]
+    },
+    {
+      "key": "arc-length",
+      "php_subchapter_id": 53,
+      "title": "Arc length, sector perimeter and rolling distance",
+      "objective": "Choose the correct arc and count every part of the required boundary.",
+      "notes_html": "<p><strong>Before you start:</strong> convert degrees to radians and distinguish radius from diameter.</p>\n <p>For radius r and an angle θ in radians, the arc length is \\(s=r\\theta\\). For a proper sector, \\(0<\\theta<2\\pi\\), its boundary consists of the arc and two radii:</p>\n \\[P=2r+r\\theta=r(2+\\theta).\\]\n <p>At a full circle the radial edges are not part of the outside boundary: its circumference is 2πr, not 2r+2πr. A chord is a straight segment; it cannot replace an arc in these formulae.</p>\n <p>A wheel rolling without slipping travels one circumference per revolution. More generally, travelled distance is radius times total swept angle. With constant angular speed ω in rad/s, distance after t seconds is \\(r\\omega t\\). Check that all lengths use compatible units.</p><p><img src=\"/assets/original/circular-measure/arc-length.svg\" alt=\"A proper sector with two radii r and angle θ; the curved boundary has length rθ.\" width=\"520\" height=\"440\"></p><h3>Recall later</h3><p>An arc of length 2.4 cm on a radius of 4 cm subtends \\(\\theta=2.4/4=0.6\\) rad.</p>",
+      "examples": [
+        {
+          "question_html": "For a sector of radius 6 cm and angle 0.8 rad, find arc length and perimeter.",
+          "solution_html": "<p>The arc is \\(6(0.8)=4.8\\) cm. Its complete perimeter is \\(4.8+2(6)=16.8\\) cm.</p>"
+        },
+        {
+          "question_html": "An arc has length 9 m on a circle of radius 3 m. Find its central angle.",
+          "solution_html": "<p>\\(\\theta=s/r=9/3=3\\) rad. The angle is not 3 degrees; the quotient of two compatible lengths defines radians.</p>"
+        },
+        {
+          "question_html": "A wheel of radius 0.4 m rolls five complete revolutions without slipping. Find its travelled distance.",
+          "solution_html": "<p>The total angle is \\(10\\pi\\) rad, so distance \\(=0.4(10\\pi)=4\\pi\\) m, approximately 12.6 m to 3 significant figures.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Giving only rθ when the question asks for sector perimeter.",
+        "Including two radii in the outside boundary of a full disk.",
+        "Using wheel diameter in place of radius in rθ."
+      ]
+    },
+    {
+      "key": "sector-area",
+      "php_subchapter_id": 53,
+      "title": "Sector area and a fixed-perimeter constraint",
+      "objective": "Use arc length and area together, then check a geometric maximum.",
+      "notes_html": "<p><strong>Before you start:</strong> rearrange an equation and complete a quadratic square.</p>\n <p>A sector takes the fraction θ/(2π) of a disk, giving</p>\n \\[A=\\frac12r^2\\theta=\\frac12rs,\\qquad s=r\\theta.\\]\n <p>Use radians and squared length units. The formula gives the ordinary sector area for angles up to one turn. For a sweep beyond 2π it counts repeated coverage, not the distinct area of the disk.</p>\n <p>If a proper sector has fixed perimeter L, then \\(\\theta=L/r-2\\) and \\(A=Lr/2-r^2\\). Complete the square to locate a maximum, then check that its radius is positive and its angle lies strictly between 0 and 2π.</p><p><img src=\"/assets/original/circular-measure/sector-area.svg\" alt=\"The area of the highlighted sector of radius r and angle θ is one half r squared times θ.\" width=\"520\" height=\"440\"></p><h3>Recall later</h3><p>A sector with r=4 cm and θ=0.75 rad has area \\(\\frac12(16)(0.75)=6\\text{ cm}^2\\).</p>",
+      "examples": [
+        {
+          "question_html": "Find the area of a sector with radius 5 cm and angle 1.2 rad.",
+          "solution_html": "<p>\\(A=\\frac12(5^2)(1.2)=15\\text{ cm}^2\\). The square is on the radius, not on the angle.</p>"
+        },
+        {
+          "question_html": "A sector has area 30 cm² and arc length 10 cm. Find r and θ.",
+          "solution_html": "<p>From \\(A=rs/2\\), \\(r=2A/s=6\\) cm. Then \\(\\theta=s/r=5/3\\) rad.</p>"
+        },
+        {
+          "question_html": "A proper sector has perimeter 20 cm. Find its largest area.",
+          "solution_html": "<p>\\(A=10r-r^2=25-(r-5)^2\\), so the maximum is 25 cm² at r=5 cm. Its angle is \\(20/5-2=2\\) rad, which is permitted.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Using radius rather than radius squared in the area formula.",
+        "Reporting square centimetres as centimetres.",
+        "Accepting an algebraic maximum without checking the sector angle."
+      ]
+    },
+    {
+      "key": "segments",
+      "php_subchapter_id": 55,
+      "title": "Chords, minor segments and major segments",
+      "objective": "Subtract a triangle from a sector and identify the required curved region.",
+      "notes_html": "<p><strong>Before you start:</strong> use basic triangle trigonometry and set the calculator to radians.</p>\n <p>A segment is bounded by a chord and an arc. For the minor central angle \\(0<\\theta\\le\\pi\\), its area is sector minus triangle:</p>\n \\[A_{\\mathrm{minor}}=\\frac12r^2(\\theta-\\sin\\theta).\\]\n <p>The chord length is \\(c=2r\\sin(\\theta/2)\\). A minor segment perimeter is the minor arc plus the chord, not two radii plus an arc. The major segment area is \\(\\pi r^2-A_{\\mathrm{minor}}\\).</p>\n <p>If a chord is perpendicular distance d from the centre, its half-length is \\(\\sqrt{r^2-d^2}\\), and its minor angle is \\(2\\arccos(d/r)\\). Keep the unrounded angle in later area calculations. Check that the requested region is minor or major before subtracting.</p><p><img src=\"/assets/original/circular-measure/segment.svg\" alt=\"For a right-angle sector, the highlighted minor segment lies between chord AB and the quarter-circle arc; the triangle OAB is excluded.\" width=\"520\" height=\"440\"></p><h3>Recall later</h3><p>For a diameter chord, θ=π and the triangle area is zero; either segment is a semicircle of area \\(\\pi r^2/2\\).</p>",
+      "examples": [
+        {
+          "question_html": "Find the minor segment area for r=4 cm and θ=π/2.",
+          "solution_html": "<p>The sector area is 4π cm² and the triangle area is 8 cm². The segment area is \\(4\\pi-8\\text{ cm}^2\\). Its boundary length is \\(2\\pi+4\\sqrt2\\) cm.</p>"
+        },
+        {
+          "question_html": "Find the minor segment area for r=6 cm and θ=0.9 rad.",
+          "solution_html": "<p>\\(A=18(0.9-\\sin0.9)\\text{ cm}^2\\), approximately \\(2.10\\text{ cm}^2\\) to 3 significant figures. The sine must be evaluated in radians.</p>"
+        },
+        {
+          "question_html": "Find the major segment area when r=3 cm and the minor angle is 2π/3.",
+          "solution_html": "<p>The minor sector area is 3π and its triangle area is \\(9\\sqrt3/4\\). Subtract the minor segment from the disk to obtain \\(6\\pi+9\\sqrt3/4\\text{ cm}^2\\).</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Subtracting a triangle from the wrong sector.",
+        "Using the minor angle but reporting its area as the major segment.",
+        "Using degrees in sin θ after substituting a radian angle."
+      ]
+    },
+    {
+      "key": "composite-sectors",
+      "php_subchapter_id": 55,
+      "title": "Annular sectors and composite boundaries",
+      "objective": "Add areas and trace only the exposed boundary of a composite region.",
+      "notes_html": "<p><strong>Before you start:</strong> find sector and rectangle areas, and distinguish an internal join from an outside edge.</p>\n <p>An annular sector lies between radii R and r, with \\(0<r<R\\) and \\(0<\\theta<2\\pi\\). Subtract the inner sector for its area, and count two arcs plus two radial connectors for its perimeter:</p>\n \\[A=\\frac12(R^2-r^2)\\theta,\\qquad P=(R+r)\\theta+2(R-r).\\]\n <p>A complete annulus has no exposed radial connectors. For a rectangle topped by a semicircle, the shared diameter is internal: count the bottom, two vertical sides and semicircular arc. Its area still includes both pieces.</p><p><img src=\"/assets/original/circular-measure/annular-sector.svg\" alt=\"An annular sector has inner radius r, outer radius R, two curved edges, and two straight edges of length R minus r.\" width=\"520\" height=\"440\"></p><p><img src=\"/assets/original/circular-measure/composite-boundary.svg\" alt=\"A rectangle of width 2r and height h is topped by a semicircle of radius r. The dashed shared diameter is internal, not part of the outside perimeter.\" width=\"520\" height=\"440\"></p><p>Under an enlargement of factor k&gt;0, all lengths and perimeters multiply by k, areas multiply by k², and angles do not change.</p><h3>Recall later</h3><p>For R=5 cm, r=3 cm and θ=1 rad, annular-sector area is 8 cm² and perimeter is 12 cm.</p>",
+      "examples": [
+        {
+          "question_html": "Find area and perimeter for an annular sector with R=6 cm, r=2 cm and θ=0.7 rad.",
+          "solution_html": "<p>The area is \\(\\frac12(36-4)(0.7)=11.2\\text{ cm}^2\\). The perimeter is \\((6+2)(0.7)+2(6-2)=13.6\\) cm.</p>"
+        },
+        {
+          "question_html": "A rectangle of width 6 cm and height 4 cm is topped by a semicircle of radius 3 cm. Find outside perimeter and total area.",
+          "solution_html": "<p>The exposed perimeter is \\(2(4)+6+3\\pi=14+3\\pi\\) cm. The shared diameter is not counted again. The area is \\(6(4)+\\frac12\\pi(3^2)=24+9\\pi/2\\text{ cm}^2\\).</p>"
+        },
+        {
+          "question_html": "The annular sector in example 1 is enlarged by factor 3. Find its new area, perimeter and angle.",
+          "solution_html": "<p>The area becomes \\(9(11.2)=100.8\\text{ cm}^2\\), and the perimeter becomes \\(3(13.6)=40.8\\) cm. Its angle remains 0.7 rad.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Counting the shared diameter as an outside edge.",
+        "Using two full outer radii for the straight edges of an annular sector.",
+        "Multiplying area by k instead of k² under enlargement."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "uid": "M4U-ORIG-CIRC-001",
+      "version": 1,
+      "skill": "radians",
+      "title": "A reflex arc followed by an extra turn",
+      "objective": "Convert exact angles and retain a complete revolution in a travelled distance.",
+      "difficulty": 3,
+      "stem_html": "<p>A circle has centre O and radius 5 cm. The minor angle AOB is \\(144^\\circ\\).</p>",
+      "hint_html": "<p>The reflex angle is 360° minus the minor angle. An additional revolution adds 2π radians to the swept angle.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find the minor and reflex angles AOB in radians, exactly.",
+          "answer_html": "Minor \\(4\\pi/5\\); reflex \\(6\\pi/5\\).",
+          "solution_html": "<p>The minor angle is 144π/180=4π/5. The reflex angle is 2π−4π/5=6π/5 rad.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-001:a:C1",
+              "marks": 1,
+              "requirement": "Convert the minor angle to 4π/5 rad."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-001:a:C2",
+              "marks": 1,
+              "requirement": "Give the reflex angle 6π/5 rad."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Converting the reflex angle 216° directly is accepted.",
+          "common_error": "Using 144 as a radian angle.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the length of the minor arc AB.",
+          "answer_html": "\\(4\\pi\\text{ cm}\\).",
+          "solution_html": "<p>Use the minor angle: s=rθ=5(4π/5)=4π cm.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-001:b:C1",
+              "marks": 1,
+              "requirement": "Use arc length rθ with the minor angle in radians."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-001:b:C2",
+              "marks": 1,
+              "requirement": "Obtain exactly 4π cm."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Taking 144/360 of the circumference is accepted.",
+          "common_error": "Using the reflex angle for the minor arc.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "A bead follows the reflex arc from A to B and then makes one additional complete revolution in the same direction. Find its total swept angle and travelled distance.",
+          "answer_html": "\\(16\\pi/5\\) rad; \\(16\\pi\\text{ cm}\\).",
+          "solution_html": "<p>The swept angle is 6π/5+2π=16π/5, which exceeds one full turn. The travelled distance is 5(16π/5)=16π cm. Reducing the angle to its final direction would lose one revolution of travel.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-001:c:C1",
+              "marks": 1,
+              "requirement": "Include the additional full turn in the total angle."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-001:c:C2",
+              "marks": 1,
+              "requirement": "Obtain total angle 16π/5 rad."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-001:c:C3",
+              "marks": 1,
+              "requirement": "Obtain distance 16π cm."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Adding the reflex arc length 6π cm to the circumference 10π cm is accepted, with the swept angle stated.",
+          "common_error": "Reducing the swept angle modulo 2π before finding travelled distance.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-CIRC-002",
+      "version": 1,
+      "skill": "radians",
+      "title": "Three angles around a point",
+      "objective": "Solve a radian-angle equation and interpret a reflex angle in degrees.",
+      "difficulty": 3,
+      "stem_html": "<p>Three non-overlapping angles around a point are \\(\\alpha=(3k+1)\\) rad, \\(\\beta=(k-1)\\) rad and \\(\\pi/3\\) rad, where k is real. Together they make one complete turn.</p>",
+      "hint_html": "<p>The total is 2π radians. The constant terms in α+β cancel.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find k exactly.",
+          "answer_html": "\\(k=5\\pi/12\\).",
+          "solution_html": "<p>(3k+1)+(k−1)+π/3=2π, so 4k=5π/3 and k=5π/12.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-002:a:C1",
+              "marks": 1,
+              "requirement": "Set the sum equal to 2π."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-002:a:C2",
+              "marks": 1,
+              "requirement": "Simplify to 4k=5π/3."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-002:a:C3",
+              "marks": 1,
+              "requirement": "Give k=5π/12."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "A correct rearrangement of the angle-sum equation is accepted.",
+          "common_error": "Setting the sum equal to 360 while retaining radian expressions.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find α and β exactly in radians, and verify that β is positive.",
+          "answer_html": "\\(\\alpha=5\\pi/4+1\\); \\(\\beta=5\\pi/12-1>0\\).",
+          "solution_html": "<p>Substitution gives α=5π/4+1 and β=5π/12−1. Since 5π/12≈1.309, β≈0.309 rad is positive. Both are valid angle sizes in the partition.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-002:b:C1",
+              "marks": 1,
+              "requirement": "Give both exact angle expressions."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-002:b:C2",
+              "marks": 1,
+              "requirement": "Justify that β>0, for example with a controlled numerical comparison."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An exact comparison 5π>12 is accepted.",
+          "common_error": "Accepting a negative angle in the specified non-overlapping partition.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Convert α to degrees to 3 significant figures, and classify it.",
+          "answer_html": "\\(282^\\circ\\), a reflex angle.",
+          "solution_html": "<p>α in degrees is (5π/4+1)(180/π)=225+180/π≈282.296°. To 3 significant figures this is 282°. It lies between 180° and 360°, so it is reflex.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-002:c:C1",
+              "marks": 1,
+              "requirement": "Convert to 282° to 3 significant figures."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-002:c:C2",
+              "marks": 1,
+              "requirement": "Classify it as reflex using the appropriate interval."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "The unrounded degree expression followed by correct rounding is accepted.",
+          "common_error": "Calling every positive angle below 360° a minor angle.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-CIRC-003",
+      "version": 1,
+      "skill": "arc-length",
+      "title": "Changing the complete sector perimeter",
+      "objective": "Distinguish arc length from perimeter when applying a percentage change.",
+      "difficulty": 3,
+      "stem_html": "<p>A proper sector has radius 9 cm and angle 1.2 rad.</p>",
+      "hint_html": "<p>The two straight radii do not change when only the angle changes.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find its arc length.",
+          "answer_html": "\\(10.8\\text{ cm}\\).",
+          "solution_html": "<p>s=rθ=9(1.2)=10.8 cm.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-003:a:C1",
+              "marks": 1,
+              "requirement": "Use s=rθ with the given radian angle."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-003:a:C2",
+              "marks": 1,
+              "requirement": "Obtain 10.8 cm."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "A correct fraction-of-circumference method is accepted.",
+          "common_error": "Multiplying by another π/180 despite the angle already being in radians.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find its complete perimeter.",
+          "answer_html": "\\(28.8\\text{ cm}\\).",
+          "solution_html": "<p>P=10.8+2(9)=28.8 cm.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-003:b:C1",
+              "marks": 1,
+              "requirement": "Include both radii as well as the arc."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-003:b:C2",
+              "marks": 1,
+              "requirement": "Obtain 28.8 cm."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Tracing the three boundary pieces is accepted.",
+          "common_error": "Counting only the curved edge.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "The radius stays fixed, and the complete perimeter increases by 25%. Find the new angle.",
+          "answer_html": "\\(2\\text{ rad}\\).",
+          "solution_html": "<p>The new perimeter is 1.25(28.8)=36 cm. The new arc length is 36−18=18 cm, so the angle is 18/9=2 rad. It is a valid proper-sector angle.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-003:c:C1",
+              "marks": 1,
+              "requirement": "Calculate the new full perimeter 36 cm."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-003:c:C2",
+              "marks": 1,
+              "requirement": "Remove the two fixed radii to obtain the new arc length."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-003:c:C3",
+              "marks": 1,
+              "requirement": "Give the permitted angle 2 rad."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Solving 9(2+θ)=36 directly is accepted.",
+          "common_error": "Increasing the angle by 25%, which would not increase the whole perimeter by 25%.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-CIRC-004",
+      "version": 1,
+      "skill": "arc-length",
+      "title": "A wheel rolling at a constant rate",
+      "objective": "Connect degree rate, swept radians, distance and whole revolutions.",
+      "difficulty": 3,
+      "stem_html": "<p>A wheel of radius 0.35 m rolls without slipping at a constant rate of \\(120^\\circ\\) per second.</p>",
+      "hint_html": "<p>Convert the angular rate to radians per second before using distance=r×angle.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find its angular speed in radians per second, exactly.",
+          "answer_html": "\\(2\\pi/3\\text{ rad s}^{-1}\\).",
+          "solution_html": "<p>120π/180=2π/3 rad per second.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-004:a:C1",
+              "marks": 1,
+              "requirement": "Apply the correct degrees-to-radians conversion."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-004:a:C2",
+              "marks": 1,
+              "requirement": "Give angular speed 2π/3 rad/s."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Using one third of a revolution per second is accepted.",
+          "common_error": "Giving a numerical angular speed with degree units after conversion.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the distance travelled in 18 seconds, exactly and to 3 significant figures.",
+          "answer_html": "\\(4.2\\pi\\text{ m}\\), approximately \\(13.2\\text{ m}\\).",
+          "solution_html": "<p>The swept angle is (2π/3)(18)=12π rad. Distance=0.35(12π)=4.2π m≈13.2 m to 3 significant figures.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-004:b:C1",
+              "marks": 1,
+              "requirement": "Use the total swept angle to obtain exact distance 4.2π m."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-004:b:C2",
+              "marks": 1,
+              "requirement": "Give 13.2 m to 3 significant figures."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Six revolutions each of circumference 0.7π m is accepted.",
+          "common_error": "Using the final orientation after 18 seconds, which returns to its starting direction.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "How long does the wheel take to travel \\(28\\pi\\) m, and how many complete revolutions is this?",
+          "answer_html": "\\(120\\text{ s}\\); 40 revolutions.",
+          "solution_html": "<p>The circumference is 0.7π m, so the number of turns is 28π/(0.7π)=40. At one turn every 3 seconds the time is 120 s. Equivalently solve 0.35(2π/3)t=28π.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-004:c:C1",
+              "marks": 1,
+              "requirement": "Use circumference or constant linear speed correctly."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-004:c:C2",
+              "marks": 1,
+              "requirement": "Obtain time 120 s."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-004:c:C3",
+              "marks": 1,
+              "requirement": "Obtain exactly 40 complete revolutions."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Either distance/speed or revolutions/rate is accepted.",
+          "common_error": "Using 0.35π as the circumference.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-CIRC-005",
+      "version": 1,
+      "skill": "sector-area",
+      "title": "Recovering a sector from its area and arc",
+      "objective": "Eliminate the angle and recover radius, perimeter and the disk fraction.",
+      "difficulty": 3,
+      "stem_html": "<p>A proper sector has area 54 cm² and arc length 12 cm.</p>",
+      "hint_html": "<p>Combine A=r²θ/2 and s=rθ to obtain A=rs/2.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find its radius.",
+          "answer_html": "\\(9\\text{ cm}\\).",
+          "solution_html": "<p>Since A=rs/2, 54=r(12)/2=6r. Hence r=9 cm.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-005:a:C1",
+              "marks": 1,
+              "requirement": "Relate area and arc length using A=rs/2 or equivalent elimination."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-005:a:C2",
+              "marks": 1,
+              "requirement": "Set up and solve 54=6r."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-005:a:C3",
+              "marks": 1,
+              "requirement": "Give radius 9 cm."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "A simultaneous solution of the two standard sector equations is accepted.",
+          "common_error": "Using the arc length as a perimeter or a diameter.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find its angle in radians.",
+          "answer_html": "\\(4/3\\text{ rad}\\).",
+          "solution_html": "<p>θ=s/r=12/9=4/3 rad, which is between 0 and 2π.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-005:b:C1",
+              "marks": 1,
+              "requirement": "Use θ=s/r with the recovered radius."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-005:b:C2",
+              "marks": 1,
+              "requirement": "Give exact angle 4/3 rad."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Substitution into the sector-area formula is accepted.",
+          "common_error": "Using θ=r/s.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find its complete perimeter and the fraction of its full disk occupied by the sector.",
+          "answer_html": "Perimeter 30 cm; fraction \\(2/(3\\pi)\\).",
+          "solution_html": "<p>The perimeter is 12+2(9)=30 cm. The full disk area is 81π cm², so the fraction is 54/(81π)=2/(3π). This also equals θ/(2π).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-005:c:C1",
+              "marks": 1,
+              "requirement": "Give complete perimeter 30 cm."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-005:c:C2",
+              "marks": 1,
+              "requirement": "Give the dimensionless disk fraction 2/(3π)."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Using the angle fraction θ/(2π) is accepted.",
+          "common_error": "Dividing the arc by radius and treating that radian angle as the fraction of a full disk.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-CIRC-006",
+      "version": 1,
+      "skill": "sector-area",
+      "title": "The greatest area with a fixed boundary",
+      "objective": "Build a quadratic area model and check the angle at its maximum.",
+      "difficulty": 4,
+      "stem_html": "<p>A proper sector has radius r cm, angle θ radians with \\(0<\\theta<2\\pi\\), and complete perimeter 24 cm.</p>",
+      "hint_html": "<p>The boundary includes two radii. Substitute the resulting angle into the area formula, then complete the square.</p>",
+      "parts": [
+        {
+          "prompt_html": "Express θ in terms of r and show that the area is \\(A=12r-r^2\\) cm².",
+          "answer_html": "\\(\\theta=24/r-2\\); \\(A=12r-r^2\\).",
+          "solution_html": "<p>From 2r+rθ=24, θ=24/r−2. Then A=(1/2)r²(24/r−2)=12r−r².</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-006:a:C1",
+              "marks": 1,
+              "requirement": "Use the complete-perimeter equation 2r+rθ=24."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-006:a:C2",
+              "marks": 1,
+              "requirement": "Obtain θ=24/r−2."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-006:a:C3",
+              "marks": 1,
+              "requirement": "Derive A=12r−r²."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Eliminating arc length first is accepted.",
+          "common_error": "Setting the arc length alone equal to 24.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the maximum possible area and the corresponding radius.",
+          "answer_html": "Maximum \\(36\\text{ cm}^2\\), at r=6 cm.",
+          "solution_html": "<p>A=36−(r−6)². The square is nonnegative, so no area exceeds 36 cm²; equality occurs at r=6 cm.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-006:b:C1",
+              "marks": 1,
+              "requirement": "Use a valid quadratic maximum method."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-006:b:C2",
+              "marks": 1,
+              "requirement": "Obtain the corresponding radius 6 cm."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-006:b:C3",
+              "marks": 1,
+              "requirement": "Obtain maximum area 36 cm²."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Differentiation with a maximum justification is accepted.",
+          "common_error": "Finding the vertex radius but reporting it as the maximum area.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the angle at this maximum and verify that it satisfies the geometric conditions.",
+          "answer_html": "\\(\\theta=2\\text{ rad}\\), with r>0 and \\(0<2<2\\pi\\).",
+          "solution_html": "<p>At r=6, θ=24/6−2=2 rad. The radius is positive and 0&lt;2&lt;2π, so the algebraic maximum is attained by a proper sector.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-006:c:C1",
+              "marks": 1,
+              "requirement": "Calculate θ=2 rad."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-006:c:C2",
+              "marks": 1,
+              "requirement": "Check positive radius and a proper-sector angle strictly between 0 and 2π."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An equivalent explicit domain check is accepted.",
+          "common_error": "Assuming every algebraic vertex is a valid geometric region.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-CIRC-007",
+      "version": 1,
+      "skill": "segments",
+      "title": "A segment with an exact central angle",
+      "objective": "Distinguish a segment area and boundary from those of its sector.",
+      "difficulty": 3,
+      "stem_html": "<p>A chord AB subtends the minor angle \\(\\pi/3\\) at the centre of a circle of radius 8 cm.</p>",
+      "hint_html": "<p>The chord has length 2r sin(θ/2). The segment is the sector with its central triangle removed.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find the minor arc length AB and the chord length AB exactly.",
+          "answer_html": "Arc \\(8\\pi/3\\text{ cm}\\); chord 8 cm.",
+          "solution_html": "<p>The arc is 8(π/3)=8π/3 cm. The chord is 16 sin(π/6)=8 cm.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-007:a:C1",
+              "marks": 1,
+              "requirement": "Give minor arc length 8π/3 cm."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-007:a:C2",
+              "marks": 1,
+              "requirement": "Give chord length 8 cm using a correct triangle method."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "The central triangle is equilateral, so the chord equals the radius; this is accepted.",
+          "common_error": "Treating the chord and arc as equal lengths.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the minor segment area exactly, and then to 3 significant figures.",
+          "answer_html": "\\(32\\pi/3-16\\sqrt3\\text{ cm}^2\\), approximately \\(5.80\\text{ cm}^2\\).",
+          "solution_html": "<p>The sector area is (1/2)(64)(π/3)=32π/3 cm². The triangle area is (1/2)(64)sin(π/3)=16√3 cm². Subtracting gives 32π/3−16√3≈5.79751 cm², or 5.80 cm² to 3 significant figures.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-007:b:C1",
+              "marks": 1,
+              "requirement": "Obtain the correct sector and triangle areas."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-007:b:C2",
+              "marks": 1,
+              "requirement": "Subtract to give the exact segment area 32π/3−16√3."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-007:b:C3",
+              "marks": 1,
+              "requirement": "Give 5.80 cm² to 3 significant figures without premature rounding."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "The direct minor-segment formula gives full credit when the exact expression and rounding are correct.",
+          "common_error": "Subtracting the triangle from the full disk instead of the minor sector.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the perimeter of this minor segment exactly.",
+          "answer_html": "\\(8+8\\pi/3\\text{ cm}\\).",
+          "solution_html": "<p>The segment is bounded by the chord and the minor arc. Its perimeter is 8+8π/3 cm; the two radii are internal to this description and are not its boundary.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-007:c:C1",
+              "marks": 1,
+              "requirement": "Use chord plus minor arc."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-007:c:C2",
+              "marks": 1,
+              "requirement": "Give exact perimeter 8+8π/3 cm."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "A clear boundary trace is accepted.",
+          "common_error": "Adding two radii as though the region were a sector.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-CIRC-008",
+      "version": 1,
+      "skill": "segments",
+      "title": "From chord distance to a major segment",
+      "objective": "Recover a minor angle from a chord and take the correct area complement.",
+      "difficulty": 4,
+      "stem_html": "<p>A circle has radius 5 cm. A chord is perpendicular distance 3 cm from its centre. Let θ be the minor central angle subtended by the chord.</p>",
+      "hint_html": "<p>The perpendicular from the centre bisects the chord. Compute the minor segment first, then subtract it from the disk.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find the chord length.",
+          "answer_html": "8 cm.",
+          "solution_html": "<p>The half-chord is √(5²−3²)=4 cm, so the chord length is 8 cm.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-008:a:C1",
+              "marks": 1,
+              "requirement": "Use Pythagoras to obtain half-chord 4 cm."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-008:a:C2",
+              "marks": 1,
+              "requirement": "Double it to obtain chord length 8 cm."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An equivalent right-triangle calculation is accepted.",
+          "common_error": "Reporting the half-chord as the full chord.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find θ in radians to 3 significant figures.",
+          "answer_html": "\\(1.85\\text{ rad}\\).",
+          "solution_html": "<p>cos(θ/2)=3/5, so θ=2 arccos(3/5)≈1.854590436 rad. To 3 significant figures θ=1.85 rad; retain the unrounded value for part (c).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-008:b:C1",
+              "marks": 1,
+              "requirement": "Use a correct half-angle trigonometric equation."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-008:b:C2",
+              "marks": 1,
+              "requirement": "Give θ=1.85 rad to 3 significant figures."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Using θ=2 arcsin(4/5) is accepted.",
+          "common_error": "Returning only the half-angle or leaving a degree result labelled radians.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the major segment area to 3 significant figures.",
+          "answer_html": "\\(67.4\\text{ cm}^2\\).",
+          "solution_html": "<p>The central triangle has area (1/2)(8)(3)=12 cm². The minor segment area is (25/2)θ−12. The major segment area is therefore 25π−(25/2)θ+12≈67.3574 cm², or 67.4 cm² to 3 significant figures.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-008:c:C1",
+              "marks": 1,
+              "requirement": "Find the minor segment area by subtracting the triangle from its sector."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-008:c:C2",
+              "marks": 1,
+              "requirement": "Take the complement in the full disk."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-008:c:C3",
+              "marks": 1,
+              "requirement": "Obtain 67.4 cm² to 3 significant figures."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "A correctly derived major-angle segment formula is accepted.",
+          "common_error": "Reporting the minor segment area as the requested major area.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-CIRC-009",
+      "version": 1,
+      "skill": "composite-sectors",
+      "title": "Enlarging an annular sector",
+      "objective": "Count both arcs and radial connectors, then use area scale to find length scale.",
+      "difficulty": 3,
+      "stem_html": "<p>An annular sector has inner radius 4 cm, outer radius 7 cm and angle 1.5 rad.</p>",
+      "hint_html": "<p>Subtract the two sector areas. The two straight edges each have length 7−4.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find its area.",
+          "answer_html": "\\(24.75\\text{ cm}^2\\).",
+          "solution_html": "<p>A=(1/2)(7²−4²)(1.5)=(1/2)(33)(1.5)=24.75 cm².</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-009:a:C1",
+              "marks": 1,
+              "requirement": "Subtract the inner-sector area from the outer-sector area."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-009:a:C2",
+              "marks": 1,
+              "requirement": "Obtain 24.75 cm²."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "The equivalent factorised expression (1/2)(R−r)(R+r)θ is accepted.",
+          "common_error": "Subtracting radii before squaring rather than subtracting their squares.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find its complete perimeter.",
+          "answer_html": "22.5 cm.",
+          "solution_html": "<p>The arcs total (7+4)(1.5)=16.5 cm. The straight edges total 2(7−4)=6 cm. The complete perimeter is 22.5 cm.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-009:b:C1",
+              "marks": 1,
+              "requirement": "Include both arcs and two thickness-length connectors."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-009:b:C2",
+              "marks": 1,
+              "requirement": "Obtain 22.5 cm."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Adding all four boundary pieces individually is accepted.",
+          "common_error": "Counting only the outer arc or using two whole outer radii.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "A similar enlarged annular sector has area 99 cm². Find the enlargement factor, its perimeter and its angle.",
+          "answer_html": "Factor 2; perimeter 45 cm; angle 1.5 rad.",
+          "solution_html": "<p>The area ratio is 99/24.75=4, so the positive length scale is √4=2. Its perimeter is 2(22.5)=45 cm. Similarity preserves the angle, which remains 1.5 rad.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-009:c:C1",
+              "marks": 1,
+              "requirement": "Obtain length scale 2 from the area ratio."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-009:c:C2",
+              "marks": 1,
+              "requirement": "Give perimeter 45 cm."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-009:c:C3",
+              "marks": 1,
+              "requirement": "State unchanged angle 1.5 rad."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "An equivalent radius-based similarity argument is accepted.",
+          "common_error": "Multiplying the perimeter or the angle by the area ratio 4.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-CIRC-010",
+      "version": 1,
+      "skill": "composite-sectors",
+      "title": "A rectangle topped by a semicircle",
+      "objective": "Model an exposed boundary and change its height while keeping the curved top fixed.",
+      "difficulty": 4,
+      "stem_html": "<p>A rectangle of width 2r cm and height 6 cm is topped by a semicircle of radius r cm along its upper edge. The shared diameter is internal. The complete outside perimeter is \\((20+4\\pi)\\) cm.</p>",
+      "hint_html": "<p>Count the bottom, two vertical sides and semicircular arc. The shared diameter is not an extra outside edge.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find r.",
+          "answer_html": "\\(r=4\\text{ cm}\\).",
+          "solution_html": "<p>The exposed perimeter is 12+2r+πr. Thus (2+π)r=8+4π=4(2+π), giving r=4 cm.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-010:a:C1",
+              "marks": 1,
+              "requirement": "Use outside perimeter 12+2r+πr."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-010:a:C2",
+              "marks": 1,
+              "requirement": "Solve to r=4 cm."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An explicitly labelled boundary sum is accepted.",
+          "common_error": "Counting the shared diameter in addition to the rectangle bottom.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the total area exactly.",
+          "answer_html": "\\(48+8\\pi\\text{ cm}^2\\).",
+          "solution_html": "<p>The rectangle area is 8(6)=48 cm² and the semicircle area is (1/2)π(4²)=8π cm². Total area is 48+8π cm².</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-010:b:C1",
+              "marks": 1,
+              "requirement": "Add the correct rectangle and semicircle areas."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-010:b:C2",
+              "marks": 1,
+              "requirement": "Give exact area 48+8π cm²."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An equivalent factorised exact expression is accepted.",
+          "common_error": "Using a full-circle area for the curved top.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "The radius stays fixed and the outside perimeter increases by 10% by changing only the rectangle height. Find the new height and new total area exactly.",
+          "answer_html": "Height \\(7+\\pi/5\\text{ cm}\\); area \\(56+48\\pi/5\\text{ cm}^2\\).",
+          "solution_html": "<p>The perimeter increase is (20+4π)/10=2+2π/5 cm. It is shared between the two vertical sides, so the height increases by 1+π/5. The new height is 7+π/5 cm. The area is then 8(7+π/5)+8π=56+48π/5 cm².</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-CIRC-010:c:C1",
+              "marks": 1,
+              "requirement": "Relate the perimeter increase to twice the height increase."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-010:c:C2",
+              "marks": 1,
+              "requirement": "Obtain new height 7+π/5 cm."
+            },
+            {
+              "id": "M4U-ORIG-CIRC-010:c:C3",
+              "marks": 1,
+              "requirement": "Obtain new area 56+48π/5 cm²."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Solving the new perimeter equation directly is accepted.",
+          "common_error": "Increasing every length by 10% even though the radius must remain fixed.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    }
+  ]
+}

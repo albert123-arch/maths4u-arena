@@ -1,0 +1,987 @@
+{
+  "schema_version": 1,
+  "key": "maths4u-original-binomial-expansion",
+  "version": "2026-10-30.1",
+  "language": "en",
+  "title": "Binomial Expansion — Maths4U Original",
+  "syllabus": "9709",
+  "component": "Pure Mathematics 1",
+  "provenance": {
+    "classification": "original",
+    "prepared_by": "AI-assisted preparation for Maths4U",
+    "basis": "Independent skill briefs; no examination question supplied for paraphrasing.",
+    "third_party_question_text": false,
+    "teacher_review": "pending",
+    "verification": "See docs/binomial-expansion-original-20261030.md for checks actually performed."
+  },
+  "marking_policy": "Maths4U indicative marking guidance, not an official examination-board mark scheme. Award stated criteria once each, up to the part maximum. Accept valid equivalent methods. Follow-through applies only where explicitly stated; do not award an accuracy criterion for an incorrect final result.",
+  "lessons": [
+    {
+      "key": "expansion",
+      "php_subchapter_id": 74,
+      "title": "Finite binomial expansions and signs",
+      "objective": "Expand a binomial with a nonnegative integer power, keeping coefficients and signs correct.",
+      "notes_html": "<p><strong>Before you start:</strong> multiply brackets, use integer powers and collect like terms.</p>\n <p>For a nonnegative integer n, the binomial theorem is the exact finite identity</p>\n <p>\\[(a+b)^n=\\sum_{r=0}^n\\binom nr a^{n-r}b^r,\\qquad \\binom nr=\\frac{n!}{r!(n-r)!}.\\]</p>\n <p>Here 0!=1 and the index r runs through integers 0,…,n. For n=0 the expansion is the constant 1 as a polynomial identity. This block uses finite expansions only: it does not apply an infinite-series rule to a negative or fractional exponent.</p>\n <p>In \\((a+bx)^n\\), choose the second term from r of the n factors. There are \\(\\binom nr\\) such choices. The powers of a decrease as the powers of bx increase. In \\((a-bx)^n\\), odd r gives a minus sign and even r a plus sign; the Pascal coefficient itself remains nonnegative.</p><p><img src=\"/assets/original/binomial-expansion/pascal-triangle.svg\" alt=\"Pascal rows n=0 to n=5 give the coefficients of (1+x)^n. Each interior entry is the sum of the two above.\" width=\"520\" height=\"440\"></p><p>“First three terms in ascending powers of x” means the constant, x and x² terms, when present. Keep the power of the constant a: the x² coefficient is \\(\\binom n2 a^{n-2}b^2\\), not just the Pascal number.</p>\n <h3>Recall later</h3><p>\\((1-2x)^3=1-6x+12x^2-8x^3\\). The coefficients of the even powers are positive, while those of the odd powers are negative.</p>",
+      "examples": [
+        {
+          "question_html": "Expand \\((1+3x)^4\\) completely.",
+          "solution_html": "<p>The Pascal row is 1,4,6,4,1. Multiplying by successive powers of 3x gives \\(1+12x+54x^2+108x^3+81x^4\\). Check at x=0: both sides equal 1.</p>"
+        },
+        {
+          "question_html": "Find the first three terms of \\((2-x)^5\\) in ascending powers of x.",
+          "solution_html": "<p>The terms are \\(2^5+5(2^4)(-x)+10(2^3)(-x)^2=32-80x+80x^2\\). In particular, the third term still contains a factor 2³.</p>"
+        },
+        {
+          "question_html": "Simplify \\((1+x)^4+(1-x)^4\\).",
+          "solution_html": "<p>The expansions differ only in the signs of the odd powers. Adding cancels those terms and doubles the even ones, giving \\(2+12x^2+2x^4\\).</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Dropping the power of the constant part.",
+        "Alternating the signs of Pascal numbers instead of applying the power to the entire negative term.",
+        "Using a finite integer-power formula for a negative or fractional exponent."
+      ]
+    },
+    {
+      "key": "general-term",
+      "php_subchapter_id": 75,
+      "title": "The general term and powers of x",
+      "objective": "Translate a requested power into an integer index and distinguish a coefficient from a term.",
+      "notes_html": "<p><strong>Before you start:</strong> use the binomial theorem and the laws of indices, including negative powers.</p>\n <p>For \\((a+bx)^n\\), the general term in binomial order is \\(T_{r+1}=\\binom nr a^{n-r}b^r x^r\\), for integers 0≤r≤n. The first term uses r=0, so the fourth term uses r=3. A coefficient is the factor multiplying a power of x; a term includes that power.</p><p><img src=\"/assets/original/binomial-expansion/term-index.svg\" alt=\"For (a+bx)^5, term number is r+1, while the x power is r. The first term is indexed by r=0.\" width=\"520\" height=\"440\"></p><p>For integer p and q in \\((Ax^p+Bx^q)^n\\), combine the powers before solving for an index:</p>\n <p>\\[T_{r+1}=\\binom nr A^{n-r}B^r x^{p(n-r)+qr}.\\]</p>\n <p>Set the exponent equal to the requested power. A solution contributes only when r is an integer in [0,n]. If no such r exists, that coefficient is zero. For negative powers, x≠0; a “constant term” has exponent zero and is not found by substituting x=0 into an undefined expression.</p><p><img src=\"/assets/original/binomial-expansion/laurent-powers.svg\" alt=\"For (x²+x⁻¹)^6, the successive x powers are 12,9,6,3,0,−3,−6. The constant term occurs at r=4, the fifth term.\" width=\"520\" height=\"440\"></p><h3>Recall later</h3><p>The coefficient of x² in \\((1+2x)^5\\) is 40; its third term is 40x². These are different answers to different requests.</p>",
+      "examples": [
+        {
+          "question_html": "Find the coefficient of x³ in \\((3-2x)^5\\).",
+          "solution_html": "<p>Use r=3: \\(\\binom53 3^2(-2)^3=10(9)(-8)=-720\\). The term is −720x³, but the requested coefficient is −720.</p>"
+        },
+        {
+          "question_html": "Find the constant term in \\((x^2+x^{-1})^6\\), with x≠0.",
+          "solution_html": "<p>The exponent is 2(6−r)−r=12−3r. Set it to zero, obtaining r=4. The coefficient is \\(\\binom64=15\\). It is the fifth term, not the fourth.</p>"
+        },
+        {
+          "question_html": "Find the fourth and last terms in binomial order for \\((1+2x)^5\\).",
+          "solution_html": "<p>The fourth uses r=3 and equals \\(\\binom53(2x)^3=80x^3\\). The last uses r=5 and equals \\((2x)^5=32x^5\\).</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Confusing the index r with the term number r+1.",
+        "Accepting a fractional or out-of-range index as a contributing term.",
+        "Substituting zero to find a constant term when negative powers make the expression undefined there."
+      ]
+    },
+    {
+      "key": "products",
+      "php_subchapter_id": 75,
+      "title": "Coefficients in products and parity",
+      "objective": "Collect every contributing power pair and use identities to simplify coefficient questions.",
+      "notes_html": "<p><strong>Before you start:</strong> find a binomial coefficient and multiply polynomials.</p>\n <p>If \\(A(x)=\\sum a_i x^i\\) and \\(B(x)=\\sum b_j x^j\\) are polynomials in nonnegative powers, the coefficient of xᵐ in A(x)B(x) is \\(\\sum_{i=0}^m a_i b_{m-i}\\). List all power pairs that add to m. For m=2 these are (0,2), (1,1) and (2,0); the middle product is easy to miss.</p><p><img src=\"/assets/original/binomial-expansion/coefficient-pairs.svg\" alt=\"The x² coefficient of (1+x)^4(1+3x)^2 has three contributions: 1 times 9, 4 times 6, and 6 times 1, totalling 39.\" width=\"520\" height=\"440\"></p><p>For ordinary polynomials, powers higher than m cannot contribute to xᵐ, so it is safe to truncate each factor above that degree. This shortcut needs care with negative powers: a high positive power can combine with a negative one to give the target.</p>\n <p>Before multiplying, look for \\((1+x)^n(1-x)^n=(1-x^2)^n\\). This contains only even powers. More generally, if F is a polynomial, its even- and odd-power coefficient sums are \\((F(1)+F(-1))/2\\) and \\((F(1)-F(-1))/2\\). This follows because (−1) to an even power is 1 and to an odd power is −1.</p>\n <h3>Recall later</h3><p>The coefficient of x² in \\((1+2x)(1+3x)\\) is 6, from the pair (1,1). Adding the separate x² coefficients would give the wrong answer.</p>",
+      "examples": [
+        {
+          "question_html": "Find the x² coefficient in \\((1+x)^4(1+3x)^2\\).",
+          "solution_html": "<p>Relevant terms are \\(1+4x+6x^2\\) and \\(1+6x+9x^2\\). The coefficient is \\(1(9)+4(6)+6(1)=39\\).</p>"
+        },
+        {
+          "question_html": "Find the coefficient of x⁶ in \\((1+x)^5(1-x)^5\\).",
+          "solution_html": "<p>Rewrite the product as \\((1-x^2)^5\\). The target uses r=3, giving \\(\\binom53(-1)^3=-10\\). All odd-power coefficients are zero.</p>"
+        },
+        {
+          "question_html": "Let \\(F(x)=(2+x)^3(1-x)^2\\). Find the sum of its odd-power coefficients.",
+          "solution_html": "<p>\\(F(1)=0\\) and \\(F(-1)=4\\). If E and O are the even and odd coefficient sums, then E+O=0 and E−O=4. Thus \\(O=(0-4)/2=-2\\). This is a coefficient sum, not the coefficient of a single power.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Missing the cross-product when collecting a coefficient.",
+        "Keeping only same-degree terms instead of pairs whose powers add to the target.",
+        "Applying polynomial truncation to factors with negative powers without checking other possible pairs."
+      ]
+    },
+    {
+      "key": "parameters",
+      "php_subchapter_id": 76,
+      "title": "Unknown constants and an unknown exponent",
+      "objective": "Turn coefficient information into equations and retain every admissible parameter value.",
+      "notes_html": "<p><strong>Before you start:</strong> solve linear and quadratic equations, and use the first coefficients of a binomial expansion.</p>\n <p>For \\((1+ax)^n\\), the x and x² coefficients are \\(c_1=na\\) and \\(c_2=n(n-1)a^2/2\\). With n≥2 and a≠0,</p>\n <p>\\[\\frac{c_2}{c_1^2}=\\frac{n-1}{2n}.\\]</p>\n <p>The ratio can recover n before a. State why any division is valid. The exponent must still be a nonnegative integer in this finite-expansion setting; do not accept an algebraic value that violates the question.</p>\n <p>An even-power coefficient may determine a² without choosing a sign. If no additional information selects a branch, both values must be retained. An odd-power coefficient or a stated sign condition can distinguish them.</p><p><img src=\"/assets/original/binomial-expansion/parameter-branches.svg\" alt=\"For (1+kx)^6, an x² coefficient of 60 gives k=−2 or 2. The x³ coefficients are −160 and 160, so an additional negative-sign condition chooses k=−2.\" width=\"520\" height=\"440\"></p><h3>Recall later</h3><p>From k²=4 alone, k=−2 or k=2. Reporting only the positive root loses an admissible parameter.</p>",
+      "examples": [
+        {
+          "question_html": "The coefficient of x in \\((1+cx)^5\\) is 20. Find c and the x² coefficient.",
+          "solution_html": "<p>5c=20 gives c=4. Then \\(\\binom52c^2=10(16)=160\\).</p>"
+        },
+        {
+          "question_html": "The coefficient of x² in \\((1+kx)^6\\) is 60. Find all real k.",
+          "solution_html": "<p>\\(15k^2=60\\), so k²=4 and k=±2. Neither sign is excluded by the given information.</p>"
+        },
+        {
+          "question_html": "In \\((1+ax)^n\\), n is an integer at least 2 and a≠0. The x and x² coefficients are 15 and 90. Find n and a.",
+          "solution_html": "<p>\\(na=15\\) and \\(n(n-1)a^2/2=90\\). Divide the second equation by the square of the first: \\((n-1)/(2n)=90/225=2/5\\). Hence 5n−5=4n, so n=5 and a=3. Checking gives 5(3)=15 and 10(9)=90.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Discarding the negative parameter root without a reason.",
+        "Treating n as an unrestricted real number in a finite binomial formula.",
+        "Dividing by a coefficient or parameter without checking that it is nonzero."
+      ]
+    },
+    {
+      "key": "approximations",
+      "php_subchapter_id": 77,
+      "title": "Finite expansions as approximations: keep the remainder",
+      "objective": "Choose a substitution, evaluate a truncated expansion and determine its actual error.",
+      "notes_html": "<p><strong>Before you start:</strong> expand integer powers, substitute decimals accurately and use units for modelled quantities.</p>\n <p>A finite binomial expansion is exact. An approximation is introduced only when terms are omitted. Write \\(F(x)=P(x)+R(x)\\), where P is the retained polynomial and R is the exact omitted remainder. If R&gt;0, P underestimates F; if R&lt;0, it overestimates F. The absolute error is |R|.</p>\n <p>For a positive integer n, the first terms of \\((1+x)^n\\) are \\(1+nx+\\binom n2x^2+\\cdots\\). A small |x| often makes later terms less important, but it does not on its own prove a requested error bound. Check the actual remainder and the stated substitution. A finite expansion has no |x|&lt;1 convergence requirement.</p><p><img src=\"/assets/original/binomial-expansion/approximation-error.svg\" alt=\"For (1+x)^4 truncated after x², the exact omitted remainder is 4x³+x⁴. It is positive for 0<x≤0.2, so the retained polynomial underestimates the value.\" width=\"520\" height=\"440\"></p><p>For a relative change t in the side of a cube, the volume factor is \\((1+t)^3\\). First-order volume growth is approximately 3t, while 3t²+t³ is the discarded factor. Keep a percentage such as 2% as t=0.02, and distinguish an error in volume units from a percentage error.</p>\n <h3>Recall later</h3><p>Using 1+3x+3x² for \\((1+x)^3\\) leaves the exact remainder x³. Its sign changes when x changes sign.</p>",
+      "examples": [
+        {
+          "question_html": "Use terms through x² to estimate \\(1.01^4\\), and find the exact error.",
+          "solution_html": "<p>Put x=0.01 into \\(1+4x+6x^2\\), giving 1.0406. The omitted remainder is \\(4x^3+x^4=0.00000401\\). Thus the estimate is low and the exact value is 1.04060401.</p>"
+        },
+        {
+          "question_html": "Use the first three terms of \\((1-x)^6\\) to estimate \\(0.98^6\\).",
+          "solution_html": "<p>The retained polynomial is \\(1-6x+15x^2\\). Put x=0.02 to obtain 0.886. The exact remainder is \\(-20x^3+15x^4-6x^5+x^6=-0.000157619136\\). It is negative here, so the estimate is high; the exact value is 0.885842380864.</p>"
+        },
+        {
+          "question_html": "Approximate \\(0.96^3\\) by the first three terms of \\((1-x)^3\\), and identify the error direction.",
+          "solution_html": "<p>With x=0.04, \\(1-3x+3x^2=0.8848\\). The remainder is −x³=−0.000064. Therefore the approximation overestimates the exact value 0.884736 by 0.000064.</p>"
+        }
+      ],
+      "common_mistakes": [
+        "Claiming the full finite expansion is only an approximation.",
+        "Assuming the sign of an omitted sum from its first term without checking the rest.",
+        "Using 2 instead of 0.02 for a 2% change or mixing relative and absolute error."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "uid": "M4U-ORIG-BIN-001",
+      "version": 1,
+      "skill": "expansion",
+      "title": "Coefficients from a non-unit constant",
+      "objective": "Keep the constant powers and use evaluation to check a coefficient sum.",
+      "difficulty": 3,
+      "stem_html": "<p>Let \\(P(x)=(2-3x)^4\\).</p>",
+      "hint_html": "<p>Use the whole term (−3x) in each power. The sum of all coefficients is P(1).</p>",
+      "parts": [
+        {
+          "prompt_html": "Find the first three terms in ascending powers of x.",
+          "answer_html": "\\(16-96x+216x^2\\).",
+          "solution_html": "<p>The first terms are \\(2^4+4(2^3)(-3x)+6(2^2)(-3x)^2\\), giving \\(16-96x+216x^2\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-001:a:C1",
+              "marks": 1,
+              "requirement": "Give the constant term 16."
+            },
+            {
+              "id": "M4U-ORIG-BIN-001:a:C2",
+              "marks": 1,
+              "requirement": "Give the linear term −96x."
+            },
+            {
+              "id": "M4U-ORIG-BIN-001:a:C3",
+              "marks": 1,
+              "requirement": "Give the quadratic term 216x²."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Repeated bracket multiplication with the same correctly ordered terms is accepted.",
+          "common_error": "Omitting the powers of 2 or keeping a negative sign in the squared term.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the coefficient of x³.",
+          "answer_html": "−216.",
+          "solution_html": "<p>The coefficient is \\(\\binom43 2(-3)^3=4(2)(-27)=-216\\). The term would be −216x³.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-001:b:C1",
+              "marks": 1,
+              "requirement": "Select the r=3 contribution with its correct constant power and sign."
+            },
+            {
+              "id": "M4U-ORIG-BIN-001:b:C2",
+              "marks": 1,
+              "requirement": "Evaluate the coefficient −216."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Full expansion and correct extraction of the coefficient is accepted.",
+          "common_error": "Giving a term including x³ when only its coefficient is requested.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the sum of all coefficients of P.",
+          "answer_html": "1.",
+          "solution_html": "<p>Substituting x=1 adds every coefficient. Thus the sum is \\(P(1)=(2-3)^4=1\\). The full coefficient list is 16,−96,216,−216,81, which also sums to 1.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-001:c:C1",
+              "marks": 1,
+              "requirement": "Use P(1), or add every coefficient of the full correct expansion."
+            },
+            {
+              "id": "M4U-ORIG-BIN-001:c:C2",
+              "marks": 1,
+              "requirement": "Give 1."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Direct coefficient addition from a correct complete expansion is accepted.",
+          "common_error": "Adding only the first three coefficients from part (a).",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-BIN-002",
+      "version": 1,
+      "skill": "expansion",
+      "title": "Odd terms cancel and reappear",
+      "objective": "Use paired finite expansions and a product identity to distinguish sum and product coefficients.",
+      "difficulty": 3,
+      "stem_html": "<p>Define \\(A(x)=(1+x)^5\\) and \\(B(x)=(1-x)^5\\).</p>",
+      "hint_html": "<p>The odd-power signs change in B. For the product, combine corresponding factors before expanding.</p>",
+      "parts": [
+        {
+          "prompt_html": "Expand A and B completely.",
+          "answer_html": "\\(A=1+5x+10x^2+10x^3+5x^4+x^5\\); \\(B=1-5x+10x^2-10x^3+5x^4-x^5\\).",
+          "solution_html": "<p>The Pascal row is 1,5,10,10,5,1. All terms of A have positive coefficients. In B, the odd powers acquire minus signs and the even powers retain plus signs, giving the displayed expansions.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-002:a:C1",
+              "marks": 1,
+              "requirement": "Use the complete correct Pascal row through degree 5."
+            },
+            {
+              "id": "M4U-ORIG-BIN-002:a:C2",
+              "marks": 1,
+              "requirement": "Give the correct complete expansion of A."
+            },
+            {
+              "id": "M4U-ORIG-BIN-002:a:C3",
+              "marks": 1,
+              "requirement": "Give the correct complete expansion of B, including every odd-power sign."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Repeated multiplication of brackets is accepted.",
+          "common_error": "Stopping after three terms when the full expansion is requested.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Simplify \\((A(x)-B(x))/2\\).",
+          "answer_html": "\\(5x+10x^3+x^5\\).",
+          "solution_html": "<p>Subtracting cancels the even powers and doubles the odd powers. Division by 2 gives \\(5x+10x^3+x^5\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-002:b:C1",
+              "marks": 1,
+              "requirement": "Cancel the even powers and retain the odd powers with doubled coefficients before division."
+            },
+            {
+              "id": "M4U-ORIG-BIN-002:b:C2",
+              "marks": 1,
+              "requirement": "Give 5x+10x³+x⁵."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Using the odd-part identity for a polynomial is accepted.",
+          "common_error": "Cancelling the odd terms as if the two expressions were being added.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the coefficient of x² in \\(A(x)B(x)\\).",
+          "answer_html": "−5.",
+          "solution_html": "<p>\\(A(x)B(x)=\\{(1+x)(1-x)\\}^5=(1-x^2)^5\\). Its x² term is \\(5(-x^2)=-5x^2\\), so the coefficient is −5. Directly, 10−25+10=−5, including the cross-product.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-002:c:C1",
+              "marks": 1,
+              "requirement": "Use the product identity (1−x²)⁵ or list all contributing power pairs."
+            },
+            {
+              "id": "M4U-ORIG-BIN-002:c:C2",
+              "marks": 1,
+              "requirement": "Obtain the x² contribution with its correct sign."
+            },
+            {
+              "id": "M4U-ORIG-BIN-002:c:C3",
+              "marks": 1,
+              "requirement": "Give the coefficient −5."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Multiplying only the necessary terms of A and B gives the same coefficient.",
+          "common_error": "Adding the x² coefficients 10+10 and missing the product of the linear terms.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-BIN-003",
+      "version": 1,
+      "skill": "general-term",
+      "title": "A constant hidden among negative powers",
+      "objective": "Build a general term, solve the exponent equation and reject a noninteger index.",
+      "difficulty": 3,
+      "stem_html": "<p>Consider \\((2x-x^{-2})^6\\), where x≠0. Terms are ordered by selecting the second part r times, with r=0,…,6.</p>",
+      "hint_html": "<p>The exponent is the sum of 6−r copies of the first x power and r copies of the second.</p>",
+      "parts": [
+        {
+          "prompt_html": "Write the general term \\(T_{r+1}\\) in the form of a coefficient times a power of x.",
+          "answer_html": "\\(T_{r+1}=\\binom6r2^{6-r}(-1)^r x^{6-3r}\\), for integer 0≤r≤6.",
+          "solution_html": "<p>Choose r copies of −x⁻²: \\(\\binom6r(2x)^{6-r}(-x^{-2})^r\\). The numerical factor is \\(\\binom6r2^{6-r}(-1)^r\\), and the x exponent is 6−r−2r=6−3r.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-003:a:C1",
+              "marks": 1,
+              "requirement": "Include the choice factor and constant factor C(6,r)2^(6−r)."
+            },
+            {
+              "id": "M4U-ORIG-BIN-003:a:C2",
+              "marks": 1,
+              "requirement": "Keep the factor (−1)^r."
+            },
+            {
+              "id": "M4U-ORIG-BIN-003:a:C3",
+              "marks": 1,
+              "requirement": "Give exponent 6−3r and the permitted integer range."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "The unsimplified product is accepted if the combined exponent and valid index range are clear.",
+          "common_error": "Treating the negative power as −2x instead of x⁻².",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the constant term.",
+          "answer_html": "240.",
+          "solution_html": "<p>Set 6−3r=0, giving r=2. The constant term is \\(\\binom62 2^4(-1)^2=15(16)=240\\). It occurs as the third term in binomial order.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-003:b:C1",
+              "marks": 1,
+              "requirement": "Select r=2 from the zero exponent."
+            },
+            {
+              "id": "M4U-ORIG-BIN-003:b:C2",
+              "marks": 1,
+              "requirement": "Evaluate the constant term 240."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Direct expansion with all powers correctly collected is accepted.",
+          "common_error": "Setting x=0 even though the original expression is undefined there.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the coefficient of x⁴ and justify your answer.",
+          "answer_html": "0; the required index would be r=2/3.",
+          "solution_html": "<p>The target equation is 6−3r=4, so r=2/3. This is not an allowed integer index, hence no term has power x⁴ and its coefficient is zero.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-003:c:C1",
+              "marks": 1,
+              "requirement": "Set the exponent equal to 4."
+            },
+            {
+              "id": "M4U-ORIG-BIN-003:c:C2",
+              "marks": 1,
+              "requirement": "Obtain the inadmissible noninteger index 2/3."
+            },
+            {
+              "id": "M4U-ORIG-BIN-003:c:C3",
+              "marks": 1,
+              "requirement": "Conclude that the coefficient is zero with an integer-index justification."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Listing the actual powers 6,3,0,−3,−6,−9,−12 is accepted.",
+          "common_error": "Using a fractional binomial index to create a nonexistent term.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-BIN-004",
+      "version": 1,
+      "skill": "general-term",
+      "title": "Which terms have negative powers?",
+      "objective": "Extract a coefficient and count admissible indices in a Laurent expansion.",
+      "difficulty": 3,
+      "stem_html": "<p>Consider \\((x^2+2x^{-1})^7\\), where x≠0, with binomial index r=0,…,7.</p>",
+      "hint_html": "<p>Combine x powers before looking for the target. Negative-power terms are allowed, but only integer indices occur.</p>",
+      "parts": [
+        {
+          "prompt_html": "Write the general term in binomial order.",
+          "answer_html": "\\(T_{r+1}=\\binom7r2^r x^{14-3r}\\), for integer 0≤r≤7.",
+          "solution_html": "<p>\\(\\binom7r(x^2)^{7-r}(2x^{-1})^r=\\binom7r2^r x^{14-2r-r}=\\binom7r2^r x^{14-3r}\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-004:a:C1",
+              "marks": 1,
+              "requirement": "Give the coefficient factor C(7,r)2^r."
+            },
+            {
+              "id": "M4U-ORIG-BIN-004:a:C2",
+              "marks": 1,
+              "requirement": "Give power 14−3r with the correct integer range."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "A correct equivalent unsimplified general term is accepted.",
+          "common_error": "Multiplying exponents instead of adding them when multiplying powers of x.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the coefficient of x⁵.",
+          "answer_html": "280.",
+          "solution_html": "<p>14−3r=5 gives r=3. The coefficient is \\(\\binom73 2^3=35(8)=280\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-004:b:C1",
+              "marks": 1,
+              "requirement": "Select r=3 from the exponent equation."
+            },
+            {
+              "id": "M4U-ORIG-BIN-004:b:C2",
+              "marks": 1,
+              "requirement": "Evaluate 280."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "A full correct Laurent expansion is accepted.",
+          "common_error": "Using the fifth term rather than finding the term with power x⁵.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "How many terms have strictly negative powers of x? State those powers.",
+          "answer_html": "Three terms; powers −1, −4 and −7.",
+          "solution_html": "<p>14−3r&lt;0 requires r&gt;14/3. Within 0≤r≤7, the allowed indices are 5,6,7. Their powers are −1,−4,−7. All coefficients are nonzero, so there are exactly three such terms.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-004:c:C1",
+              "marks": 1,
+              "requirement": "Solve the strict exponent inequality with the index range."
+            },
+            {
+              "id": "M4U-ORIG-BIN-004:c:C2",
+              "marks": 1,
+              "requirement": "Give the three indices or all three powers correctly."
+            },
+            {
+              "id": "M4U-ORIG-BIN-004:c:C3",
+              "marks": 1,
+              "requirement": "State exactly three terms and the powers −1,−4,−7."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Listing all eight descending powers and selecting the negative ones is accepted.",
+          "common_error": "Counting the term number as its power or treating a fractional threshold as an index.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-BIN-005",
+      "version": 1,
+      "skill": "products",
+      "title": "Three contributions are needed",
+      "objective": "Collect coefficients from every pair of powers in a polynomial product.",
+      "difficulty": 3,
+      "stem_html": "<p>Let \\(F(x)=(1+2x)^4(1-x)^3\\).</p>",
+      "hint_html": "<p>For a target degree m, list the pairs of nonnegative powers that add to m. Expand no further than needed.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find the terms through x² in each factor.",
+          "answer_html": "\\((1+2x)^4:1+8x+24x^2\\); \\((1-x)^3:1-3x+3x^2\\).",
+          "solution_html": "<p>The first factor begins \\(1+4(2x)+6(2x)^2=1+8x+24x^2\\). The second begins \\(1-3x+3x^2\\). Higher terms exist; these are truncated lists, not equalities to the full factors.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-005:a:C1",
+              "marks": 1,
+              "requirement": "Give the first-factor linear coefficient 8."
+            },
+            {
+              "id": "M4U-ORIG-BIN-005:a:C2",
+              "marks": 1,
+              "requirement": "Give the first-factor quadratic coefficient 24 and constant 1."
+            },
+            {
+              "id": "M4U-ORIG-BIN-005:a:C3",
+              "marks": 1,
+              "requirement": "Give the second-factor terms 1−3x+3x²."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Repeated multiplication with correct truncation is accepted.",
+          "common_error": "Claiming the truncated expression equals the whole polynomial.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the coefficient of x² in F.",
+          "answer_html": "3.",
+          "solution_html": "<p>The pairs (0,2),(1,1),(2,0) contribute \\(1(3)+8(-3)+24(1)=3-24+24=3\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-005:b:C1",
+              "marks": 1,
+              "requirement": "Include all three contributions with the correct signs."
+            },
+            {
+              "id": "M4U-ORIG-BIN-005:b:C2",
+              "marks": 1,
+              "requirement": "Give 3."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Expanding the complete product and extracting its x² coefficient is accepted.",
+          "common_error": "Omitting the cross-product −24.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the coefficient of x³ in F.",
+          "answer_html": "−17.",
+          "solution_html": "<p>The x³ coefficients of the factors are 32 and −1. The four contributions are \\(1(-1)+8(3)+24(-3)+32(1)=-1+24-72+32=-17\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-005:c:C1",
+              "marks": 1,
+              "requirement": "Obtain the necessary cubic coefficients 32 and −1."
+            },
+            {
+              "id": "M4U-ORIG-BIN-005:c:C2",
+              "marks": 1,
+              "requirement": "Include every pair (0,3),(1,2),(2,1),(3,0) correctly."
+            },
+            {
+              "id": "M4U-ORIG-BIN-005:c:C3",
+              "marks": 1,
+              "requirement": "Give −17."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Any correct complete multiplication is accepted.",
+          "common_error": "Using only the two cubic terms and missing the mixed-degree pairs.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-BIN-006",
+      "version": 1,
+      "skill": "products",
+      "title": "A product with an even core",
+      "objective": "Use a structural identity, extract an odd coefficient and recover a coefficient sum.",
+      "difficulty": 4,
+      "stem_html": "<p>Let \\(G(x)=(1+x)^6(1-x)^4\\).</p>",
+      "hint_html": "<p>Pair four of the (1+x) factors with the four (1−x) factors. Evaluations at ±1 separate even and odd coefficients.</p>",
+      "parts": [
+        {
+          "prompt_html": "Show that \\(G(x)=(1+x)^2(1-x^2)^4\\).",
+          "answer_html": "\\(G(x)=(1+x)^2\\{(1+x)(1-x)\\}^4=(1+x)^2(1-x^2)^4\\).",
+          "solution_html": "<p>Split (1+x)⁶ into (1+x)²(1+x)⁴. Then combine the two fourth powers using (1+x)(1−x)=1−x². This is a polynomial identity, so no division or excluded x is introduced.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-006:a:C1",
+              "marks": 1,
+              "requirement": "Separate two factors of (1+x) from its sixth power."
+            },
+            {
+              "id": "M4U-ORIG-BIN-006:a:C2",
+              "marks": 1,
+              "requirement": "Use the difference-of-squares identity for the remaining fourth powers."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Multiplying both sides to the same polynomial is accepted.",
+          "common_error": "Replacing the entire product by (1−x²)⁶ and losing the exponent imbalance.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find the coefficient of x⁵ in G.",
+          "answer_html": "12.",
+          "solution_html": "<p>The even core begins \\((1-x^2)^4=1-4x^2+6x^4-4x^6+x^8\\). Multiplying by 1+2x+x², an x⁵ contribution can only come from (2x)(6x⁴), so the coefficient is 12.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-006:b:C1",
+              "marks": 1,
+              "requirement": "Obtain the core x⁴ coefficient 6."
+            },
+            {
+              "id": "M4U-ORIG-BIN-006:b:C2",
+              "marks": 1,
+              "requirement": "Identify 2x times 6x⁴ as the only contributing pair."
+            },
+            {
+              "id": "M4U-ORIG-BIN-006:b:C3",
+              "marks": 1,
+              "requirement": "Give 12."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Convolution from the original two factors is accepted if all contributions are included.",
+          "common_error": "Assuming the whole product has only even powers because its core does.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the sum of all odd-power coefficients of G.",
+          "answer_html": "0.",
+          "solution_html": "<p>Let E and O be the even and odd coefficient sums. G(1)=E+O=0 and G(−1)=E−O=0, because the original product has a zero factor at each input. Thus \\(O=(G(1)-G(-1))/2=0\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-006:c:C1",
+              "marks": 1,
+              "requirement": "Relate the odd coefficient sum to (G(1)−G(−1))/2."
+            },
+            {
+              "id": "M4U-ORIG-BIN-006:c:C2",
+              "marks": 1,
+              "requirement": "Evaluate both endpoint values as zero."
+            },
+            {
+              "id": "M4U-ORIG-BIN-006:c:C3",
+              "marks": 1,
+              "requirement": "Conclude that the odd coefficient sum is zero."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Adding all odd coefficients of a full correct expansion is accepted.",
+          "common_error": "Using G(0), which gives only the constant coefficient.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-BIN-007",
+      "version": 1,
+      "skill": "parameters",
+      "title": "An even coefficient leaves a sign choice",
+      "objective": "Retain both real parameters until an odd coefficient selects one.",
+      "difficulty": 3,
+      "stem_html": "<p>In \\((1+kx)^8\\), k is real and the coefficient of x² is 112.</p>",
+      "hint_html": "<p>An equation in k² does not by itself choose a sign. Use the additional information only when it is introduced.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find all possible k.",
+          "answer_html": "\\(k=-2\\) or \\(k=2\\).",
+          "solution_html": "<p>The coefficient is \\(\\binom82k^2=28k^2\\). Hence 28k²=112, giving k²=4 and both real values k=±2.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-007:a:C1",
+              "marks": 1,
+              "requirement": "Set 28k²=112."
+            },
+            {
+              "id": "M4U-ORIG-BIN-007:a:C2",
+              "marks": 1,
+              "requirement": "Obtain k²=4."
+            },
+            {
+              "id": "M4U-ORIG-BIN-007:a:C3",
+              "marks": 1,
+              "requirement": "Retain both k=−2 and k=2."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "A correct factorisation of k²−4 is accepted.",
+          "common_error": "Selecting the positive root without any stated sign condition.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "It is now given that the x³ coefficient is negative. Determine k and that coefficient.",
+          "answer_html": "\\(k=-2\\); coefficient −448.",
+          "solution_html": "<p>The coefficient is \\(\\binom83 k^3=56k^3\\). Its sign is the sign of k, so the additional condition selects k=−2. The coefficient is 56(−8)=−448.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-007:b:C1",
+              "marks": 1,
+              "requirement": "Select k=−2 using the sign of the odd-power coefficient."
+            },
+            {
+              "id": "M4U-ORIG-BIN-007:b:C2",
+              "marks": 1,
+              "requirement": "Evaluate the x³ coefficient as −448."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Comparing the two candidate cubic coefficients directly is accepted.",
+          "common_error": "Using the negative sign of a squared quantity to select a branch.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "For this selected k, find the x⁴ coefficient.",
+          "answer_html": "1120.",
+          "solution_html": "<p>\\(\\binom84(-2)^4=70(16)=1120\\). An even power makes this coefficient positive.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-007:c:C1",
+              "marks": 1,
+              "requirement": "Use C(8,4)k⁴ with the selected parameter."
+            },
+            {
+              "id": "M4U-ORIG-BIN-007:c:C2",
+              "marks": 1,
+              "requirement": "Give 1120."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "A full expansion using k=−2 is accepted.",
+          "common_error": "Making every coefficient negative because k is negative.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-BIN-008",
+      "version": 1,
+      "skill": "parameters",
+      "title": "Recovering an integer exponent",
+      "objective": "Infer two parameters from adjacent coefficients and then find another coefficient ratio.",
+      "difficulty": 3,
+      "stem_html": "<p>In \\((1+ax)^n\\), n is an integer at least 2 and a is a nonzero real number. The coefficients of x and x² are 12 and 60 respectively.</p>",
+      "hint_html": "<p>Divide the quadratic-coefficient equation by the square of the linear-coefficient equation to eliminate a.</p>",
+      "parts": [
+        {
+          "prompt_html": "Write two equations linking n and a.",
+          "answer_html": "\\(na=12\\) and \\(n(n-1)a^2/2=60\\).",
+          "solution_html": "<p>The linear coefficient is na. The quadratic coefficient is \\(\\binom n2a^2=n(n-1)a^2/2\\). Equating these with the supplied values gives the two equations.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-008:a:C1",
+              "marks": 1,
+              "requirement": "Give na=12."
+            },
+            {
+              "id": "M4U-ORIG-BIN-008:a:C2",
+              "marks": 1,
+              "requirement": "Give n(n−1)a²/2=60."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Equivalent equations using binomial notation are accepted.",
+          "common_error": "Using n²a² for the quadratic coefficient.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Find n and a.",
+          "answer_html": "\\(n=6,\\ a=2\\).",
+          "solution_html": "<p>Since na=12≠0, division is valid. It gives \\((n-1)/(2n)=60/144=5/12\\). Thus 6(n−1)=5n, so n=6 and a=12/6=2. The integer condition holds and the coefficients check as 12 and 15(4)=60.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-008:b:C1",
+              "marks": 1,
+              "requirement": "Eliminate a using a valid division or substitution."
+            },
+            {
+              "id": "M4U-ORIG-BIN-008:b:C2",
+              "marks": 1,
+              "requirement": "Obtain the admissible integer n=6."
+            },
+            {
+              "id": "M4U-ORIG-BIN-008:b:C3",
+              "marks": 1,
+              "requirement": "Obtain a=2 and check consistency."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Substitute a=12/n into the second equation; n≥2 ensures division by n is valid.",
+          "common_error": "Accepting a value of n without checking the integer and lower-bound conditions.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the ratio of the x⁴ coefficient to the x³ coefficient.",
+          "answer_html": "\\(3/2\\).",
+          "solution_html": "<p>The coefficients are \\(\\binom64 2^4=240\\) and \\(\\binom63 2^3=160\\). Their ratio in the requested order is 240/160=3/2.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-008:c:C1",
+              "marks": 1,
+              "requirement": "Obtain the two correct coefficients, or their correct consecutive-coefficient ratio."
+            },
+            {
+              "id": "M4U-ORIG-BIN-008:c:C2",
+              "marks": 1,
+              "requirement": "Give 3/2 in the requested order."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Use C(n,4)/C(n,3)=(n−3)/4 and multiply by a, giving 3·2/4.",
+          "common_error": "Reversing the requested ratio.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    },
+    {
+      "uid": "M4U-ORIG-BIN-009",
+      "version": 1,
+      "skill": "approximations",
+      "title": "A small error with a known direction",
+      "objective": "Use a finite truncation and verify its absolute error exactly.",
+      "difficulty": 3,
+      "stem_html": "<p>Let \\(H(x)=(1-2x)^5\\).</p>",
+      "hint_html": "<p>For 0.98, choose x=0.01. The final two terms of the exact expansion determine the error, not a guessed convergence rule.</p>",
+      "parts": [
+        {
+          "prompt_html": "Find the terms through x³ in ascending powers of x.",
+          "answer_html": "\\(1-10x+40x^2-80x^3\\).",
+          "solution_html": "<p>The first four terms are \\(1+5(-2x)+10(-2x)^2+10(-2x)^3=1-10x+40x^2-80x^3\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-009:a:C1",
+              "marks": 1,
+              "requirement": "Give constant and linear terms 1−10x."
+            },
+            {
+              "id": "M4U-ORIG-BIN-009:a:C2",
+              "marks": 1,
+              "requirement": "Give the quadratic term 40x²."
+            },
+            {
+              "id": "M4U-ORIG-BIN-009:a:C3",
+              "marks": 1,
+              "requirement": "Give the cubic term −80x³."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Repeated multiplication with the correct retained terms is accepted.",
+          "common_error": "Forgetting the factor 2 in higher powers.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Use these terms to estimate \\(0.98^5\\).",
+          "answer_html": "0.90392.",
+          "solution_html": "<p>Set x=0.01, so 1−2x=0.98. The retained polynomial gives \\(1-0.1+0.004-0.00008=0.90392\\).</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-009:b:C1",
+              "marks": 1,
+              "requirement": "Use the correct substitution x=0.01."
+            },
+            {
+              "id": "M4U-ORIG-BIN-009:b:C2",
+              "marks": 1,
+              "requirement": "Evaluate the stated truncated estimate 0.90392."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An equivalent exact decimal/fraction evaluation of the retained terms is accepted.",
+          "common_error": "Substituting x=0.02 into 1−2x.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Show that this estimate is an underestimate with absolute error less than \\(10^{-6}\\).",
+          "answer_html": "The exact error is \\(0.0000007968=7.968\\times10^{-7}\\), positive and less than \\(10^{-6}\\).",
+          "solution_html": "<p>The exact omitted remainder is \\(80x^4-32x^5\\). At x=0.01 it equals \\(0.0000008-0.0000000032=0.0000007968\\). It is positive, so the estimate is low, and 7.968×10⁻⁷&lt;10⁻⁶. The exact value is 0.9039207968.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-009:c:C1",
+              "marks": 1,
+              "requirement": "Obtain the exact omitted remainder 80x⁴−32x⁵."
+            },
+            {
+              "id": "M4U-ORIG-BIN-009:c:C2",
+              "marks": 1,
+              "requirement": "Evaluate its positive value 7.968×10⁻⁷ and identify an underestimate."
+            },
+            {
+              "id": "M4U-ORIG-BIN-009:c:C3",
+              "marks": 1,
+              "requirement": "Verify that its magnitude is strictly below 10⁻⁶."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Compare the retained result with the exact finite expansion or an exact rational power.",
+          "common_error": "Assuming the leading omitted term alone equals the exact error.",
+          "label": "c"
+        }
+      ],
+      "marks": 8
+    },
+    {
+      "uid": "M4U-ORIG-BIN-010",
+      "version": 1,
+      "skill": "approximations",
+      "title": "A change in side length is not the same volume change",
+      "objective": "Model a cube with a relative change and measure the error of a first-order estimate.",
+      "difficulty": 3,
+      "stem_html": "<p>A cube initially has side length 5 cm. Its side length is increased by a fraction t, so the new side is \\(5(1+t)\\) cm. In parts (b) and (c), t=0.02.</p>",
+      "hint_html": "<p>The original volume is 125 cm³. Expand the volume factor and separate the retained linear term from the discarded terms.</p>",
+      "parts": [
+        {
+          "prompt_html": "Expand \\((1+t)^3\\) completely.",
+          "answer_html": "\\(1+3t+3t^2+t^3\\).",
+          "solution_html": "<p>The cubic Pascal row is 1,3,3,1, so \\((1+t)^3=1+3t+3t^2+t^3\\), exactly.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-010:a:C1",
+              "marks": 1,
+              "requirement": "Give the correct linear and quadratic coefficients 3."
+            },
+            {
+              "id": "M4U-ORIG-BIN-010:a:C2",
+              "marks": 1,
+              "requirement": "Give the complete expansion including the constant and cubic term."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "Direct multiplication of three factors is accepted.",
+          "common_error": "Using 1+t³ in place of the full expansion.",
+          "label": "a"
+        },
+        {
+          "prompt_html": "Using only the constant and linear terms, estimate the new volume and its percentage increase.",
+          "answer_html": "132.5 cm³; approximately 6% increase.",
+          "solution_html": "<p>The first-order volume estimate is \\(125(1+3t)\\). At t=0.02 it gives 125(1.06)=132.5 cm³. The estimated relative increase is 0.06, or 6%.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-010:b:C1",
+              "marks": 1,
+              "requirement": "Give the first-order volume estimate 132.5 cm³."
+            },
+            {
+              "id": "M4U-ORIG-BIN-010:b:C2",
+              "marks": 1,
+              "requirement": "Give the corresponding estimated increase 6%."
+            }
+          ],
+          "marks": 2,
+          "alternative_methods": "An estimated increase of 7.5 cm³ added to 125 cm³ is accepted.",
+          "common_error": "Applying the side-length percentage directly to the volume.",
+          "label": "b"
+        },
+        {
+          "prompt_html": "Find the absolute error of this volume estimate and state whether it is high or low.",
+          "answer_html": "0.151 cm³; the estimate is low.",
+          "solution_html": "<p>The discarded volume is \\(125(3t^2+t^3)\\). At t=0.02 this is 125(0.0012+0.000008)=0.151 cm³. It is positive, so the estimate is low. The exact volume is 132.651 cm³, agreeing with 5.1³.</p>",
+          "criteria": [
+            {
+              "id": "M4U-ORIG-BIN-010:c:C1",
+              "marks": 1,
+              "requirement": "Use the discarded terms 125(3t²+t³) or compare with the exact volume."
+            },
+            {
+              "id": "M4U-ORIG-BIN-010:c:C2",
+              "marks": 1,
+              "requirement": "Give absolute error 0.151 cm³."
+            },
+            {
+              "id": "M4U-ORIG-BIN-010:c:C3",
+              "marks": 1,
+              "requirement": "Identify an underestimate with the sign of the remainder or an exact comparison."
+            }
+          ],
+          "marks": 3,
+          "alternative_methods": "Compute 5.1³ and subtract 132.5, with the correct units and direction.",
+          "common_error": "Reporting a relative error as a volume or omitting the original-volume multiplier.",
+          "label": "c"
+        }
+      ],
+      "marks": 7
+    }
+  ]
+}
