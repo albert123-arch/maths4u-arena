@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "./controls";
 import Link from "next/link";
 import { useState } from "react";
 import { api, Form, useLocale } from "./ui";
@@ -33,8 +34,8 @@ export function PilotPublish() {
       setReport(await api<Report>("admin/import/pilot/publish", "POST", bundle));
       setProgress(t("Пилот опубликован. Повторное применение сохраняет импорт без дубликатов.", "Pilot published. Reapplying the package preserves the import without duplicates."));
     }}>
-      <label>{t("Пакет пилота bundle.json", "Pilot bundle.json")}<input name="pilotBundle" type="file" accept=".json,application/json" required /></label>
-      <label>{t("Изображения пилота (assets)", "Pilot images (assets)")}<input name="pilotAssets" type="file" accept=".png,image/png" multiple /></label>
+      <label>{t("Пакет пилота bundle.json", "Pilot bundle.json")}<Input name="pilotBundle" type="file" accept=".json,application/json" required /></label>
+      <label>{t("Изображения пилота (assets)", "Pilot images (assets)")}<Input name="pilotAssets" type="file" accept=".png,image/png" multiple /></label>
     </Form>
     {progress && <p role="status">{progress}</p>}
     {report && <div className="notice"><p>{t("Добавлено", "Created")}: {report.created} · {t("Обновлено", "Updated")}: {report.updated} · {t("Без изменений", "Unchanged")}: {report.skipped}</p>

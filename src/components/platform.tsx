@@ -1,4 +1,5 @@
 "use client";
+import { ButtonLink, Input } from "./controls";
 /* eslint-disable @next/next/no-location-assign-relative-destination -- Authentication changes discard account-specific client state with a full navigation. */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -20,6 +21,7 @@ import { DiscoveryHome, type DiscoveryProps } from "./discovery-home";
 import { SquareLessonView } from "./square-lesson";
 import type { SquareLesson } from "@/lib/square-model";
 import { CourseSelection, MyLearning } from "./learning-home";
+import { SiteHeader } from "./site-header";
 import { storedLocale, rememberLocale } from "@/lib/locale";
 
 export function Platform({ discovery, square }: { discovery?: DiscoveryProps; square?: SquareLesson }) {
@@ -72,24 +74,8 @@ export function Platform({ discovery, square }: { discovery?: DiscoveryProps; sq
   else if (["student", "teacher"].includes(parts[0])) content = <Dashboard manage={parts[0] === "teacher"} />;
   else content = <div className="card"><h1>404</h1><Link href="/">{t("На главную", "Go home")}</Link></div>;
   return <LocaleContext.Provider value={lang}><ActorContext.Provider value={actor}><TaskBasketProvider key={actor?.id ?? "guest"}>
-    <header className="topbar" hidden={!!boardPage}><div className="topbar-inner">
-      <Link className="brand" href="/"><span className="brand-symbol">m</span>Maths4U<span className="badge gray">BETA</span></Link>
-      <nav className="nav" aria-label={t("Основная навигация", "Main navigation")}>
-        <Link className={parts[0] === "courses" ? "active" : ""} href="/courses">{t("Все курсы", "All courses")}</Link>
-        <Link className={parts[0] === "library" ? "active" : ""} href="/library">{t("Практика", "Practice")}</Link>
-        <Link href="/search">{t("Поиск", "Search")}</Link>
-        <Link className={parts[0] === "teacher" ? "active" : ""} href={teacher ? "/teacher" : "/for-teachers"}>{t("Учителю", "For teachers")}</Link>
-      </nav>
-      <div className="account"><div className="locale">{(["ru", "en"] as const).map(l => <button key={l} className={lang === l ? "selected" : ""} aria-pressed={lang === l} onClick={() => {
-        setLang(l); rememberLocale(l);
-        if (actor) void api("profile", "PATCH", { locale: l }).catch(() => {});
-      }}>{l.toUpperCase()}</button>)}</div>
-      <details className="discovery-account"><summary>{actor ? actor.displayName.split(" ")[0] : t("Аккаунт", "Account")} <span aria-hidden="true">⌄</span></summary><div className="discovery-account-links">
-        {actor ? <><Link href="/">{t("Моё обучение", "My learning")}</Link><Link href={teacher ? "/teacher" : "/student"}>{t("Мой кабинет", "My dashboard")}</Link><Link href="/student/progress">{t("Мой прогресс", "My progress")}</Link><Link href="/bookmarks">{t("Закладки", "Bookmarks")}</Link><Link href="/access">{t("Мой доступ", "My access")}</Link>{admin && <Link href="/admin">{t("Управление", "Admin")}</Link>}<button type="button" className="quiet" onClick={async () => { await api("auth/logout", "POST"); window.location.assign("/login"); }}>{t("Выйти", "Sign out")}</button></> : <><Link href="/login">{t("Войти", "Sign in")}</Link><Link href="/register">{t("Создать аккаунт", "Create an account")}</Link></>}
-        <Link href="/olympiads">{t("Олимпиады и соревнования", "Olympiads & competitions")}</Link>
-      </div></details></div>
-    </div></header>
-    <main className="container" id="main-content" key={path}>{(discovery || square) && !!error && <ErrorNotice error={error} />}{content}</main>
+    <SiteHeader key={path} actor={actor} path={path} hidden={!!boardPage} changeLanguage={value => { setLang(value); rememberLocale(value); if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
+    <main className="container" id="main-content" data-home={!parts.length && !actor} key={path}>{(discovery || square) && !!error && <ErrorNotice error={error} />}{content}</main>
     <footer className="footer" hidden={!!boardPage}><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
     <VisitorStatistics path={path} eligible={ready && !actor && !error} language={lang} />
   </TaskBasketProvider></ActorContext.Provider></LocaleContext.Provider>;
@@ -101,7 +87,7 @@ function Auth({ mode, next }: { mode: string; next?: string }) {
   return <section className="form-narrow"><Heading title={recovery ? t("Восстановить доступ", "Recover your account") : register ? t("Добро пожаловать", "Welcome to Maths4U") : t("С возвращением", "Welcome back")}
     subtitle={t("Один аккаунт для всего обучения.", "One account for all your learning.")} /><div className="card">
     {recovery && <p className="notice">{t("Сообщите школьному администратору свой логин. После проверки личности он выдаст одноразовый код на 60 минут. Личная почта не нужна.", "Tell your school administrator your login. After verifying your identity, they will issue a one-time code valid for 60 minutes. No personal email is required.")}</p>}
-    <Form label={recovery ? t("Сменить пароль", "Reset password") : register ? t("Создать аккаунт", "Create account") : t("Войти", "Sign in")} submit={async f => {
+    <Form primary label={recovery ? t("Сменить пароль", "Reset password") : register ? t("Создать аккаунт", "Create account") : t("Войти", "Sign in")} submit={async f => {
       if (recovery) { await api("auth/recover", "POST", { token: str(f, "token"), password: str(f, "password") }); window.location.assign("/login"); return; }
       if (register) await api("auth/register", "POST", { username: str(f, "username"), password: str(f, "password"), displayName: str(f, "displayName"), locale: lang, courseSlugs, ...(str(f, "email") ? { email: str(f, "email") } : {}) });
       const user = await api<Actor>("auth/login", "POST", { username: str(f, "username"), password: str(f, "password") });
@@ -110,11 +96,11 @@ function Auth({ mode, next }: { mode: string; next?: string }) {
       window.location.assign(safe);
     }}>
       {register && <Field name="displayName" label={t("Имя и фамилия", "Full name")} />}
-      {recovery ? <Field name="token" label={t("Код от администратора", "Administrator recovery code")} /> : <label>{t("Логин", "Login")}<input aria-label={t("Логин", "Login")} name="username" autoComplete="username" required pattern="[a-zA-Z0-9_.\-]{3,64}" /><span className="muted">{t("От 3 символов: латинские буквы, цифры, точка, дефис.", "3 or more characters: letters, numbers, dots or hyphens.")}</span></label>}
-      <label>{recovery ? t("Новый пароль", "New password") : t("Пароль", "Password")}<input aria-label={recovery ? t("Новый пароль", "New password") : t("Пароль", "Password")} name="password" type="password" required minLength={register || recovery ? 10 : 1} maxLength={72} autoComplete={register || recovery ? "new-password" : "current-password"} />{(register || recovery) && <span className="muted">{t("Не менее 10 символов.", "At least 10 characters.")}</span>}</label>
+      {recovery ? <Field name="token" label={t("Код от администратора", "Administrator recovery code")} /> : <label>{t("Логин", "Login")}<Input aria-label={t("Логин", "Login")} name="username" autoComplete="username" required pattern="[a-zA-Z0-9_.\-]{3,64}" /><span className="muted">{t("От 3 символов: латинские буквы, цифры, точка, дефис.", "3 or more characters: letters, numbers, dots or hyphens.")}</span></label>}
+      <label>{recovery ? t("Новый пароль", "New password") : t("Пароль", "Password")}<Input aria-label={recovery ? t("Новый пароль", "New password") : t("Пароль", "Password")} name="password" type="password" required minLength={register || recovery ? 10 : 1} maxLength={72} autoComplete={register || recovery ? "new-password" : "current-password"} />{(register || recovery) && <span className="muted">{t("Не менее 10 символов.", "At least 10 characters.")}</span>}</label>
       {register && <Field name="email" label={t("Почта (необязательно)", "Email (optional)")} type="email" required={false} />}
       {register && <CourseSelection selected={courseSlugs} onChange={setCourseSlugs} />}
     </Form>
-    <div className="row spread space-top-22" ><Link className="button quiet" href={register ? "/login" : "/register"}>{register ? t("Уже есть аккаунт", "Already have an account") : t("Зарегистрироваться", "Create an account")}</Link>{!recovery && <Link href="/recover" className="muted">{t("Забыли пароль?", "Forgot password?")}</Link>}</div>
+    <div className="row spread space-top-22" ><ButtonLink className="button quiet" href={register ? "/login" : "/register"}>{register ? t("Уже есть аккаунт", "Already have an account") : t("Зарегистрироваться", "Create an account")}</ButtonLink>{!recovery && <Link href="/recover" className="muted">{t("Забыли пароль?", "Forgot password?")}</Link>}</div>
   </div></section>;
 }

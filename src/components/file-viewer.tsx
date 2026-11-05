@@ -1,4 +1,5 @@
 "use client";
+import { Button, Input } from "./controls";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 import { useLocale } from "./ui";
@@ -41,9 +42,9 @@ function PdfPage({ url, zoom, rotation }: { url: string; zoom: number; rotation:
     return () => { closed = true; render?.cancel(); };
   }, [document, page, width, zoom, rotation]);
   return <div ref={container} className="pdf-document">
-    {document && <div className="row pdf-pages"><button className="secondary" disabled={page === 1} onClick={() => setPage(p => p - 1)}>←</button>
-      <label>{t("Страница", "Page")} <input aria-label={t("Страница PDF", "PDF page")} type="number" min={1} max={document.numPages} value={page} onChange={e => setPage(Math.min(document.numPages, Math.max(1, Number(e.target.value) || 1)))} /></label>
-      <span>/ {document.numPages}</span><button className="secondary" disabled={page === document.numPages} onClick={() => setPage(p => p + 1)}>→</button></div>}
+    {document && <div className="row pdf-pages"><Button className="secondary" disabled={page === 1} onClick={() => setPage(p => p - 1)}>←</Button>
+      <label>{t("Страница", "Page")} <Input aria-label={t("Страница PDF", "PDF page")} type="number" min={1} max={document.numPages} value={page} onChange={e => setPage(Math.min(document.numPages, Math.max(1, Number(e.target.value) || 1)))} /></label>
+      <span>/ {document.numPages}</span><Button className="secondary" disabled={page === document.numPages} onClick={() => setPage(p => p + 1)}>→</Button></div>}
     {error ? <p className="notice">{t("Предпросмотр PDF недоступен. Оригинал можно скачать.", "PDF preview is unavailable. You can download the original.")}</p> : <canvas ref={canvas} aria-label={t("Страница работы ученика", "Student document page")} />}
   </div>;
 }
@@ -58,10 +59,10 @@ export function FileViewer({ files }: { files: ViewFile[] }) {
   const preview = f.localUrl ?? (f.derivatives?.some(d => d.kind === "preview") ? url + "?variant=preview" : url);
   function reset() { setZoom(1); setRotation(0); setFailed(false); viewport.current?.scrollTo(0, 0); }
   return <section className="file-viewer" aria-label={t("Просмотр вложений", "Attachment viewer")}>
-    <div className="viewer-tools row"><button className="secondary" aria-label={t("Уменьшить", "Zoom out")} disabled={zoom <= 1} onClick={() => setZoom(z => Math.max(1, z - .5))}>−</button>
-      <span>{Math.round(zoom * 100)}%</span><button className="secondary" aria-label={t("Увеличить", "Zoom in")} disabled={zoom >= 4} onClick={() => setZoom(z => Math.min(4, z + .5))}>+</button>
-      <button className="secondary" onClick={() => setRotation(r => (r + 90) % 360)}>{t("Повернуть", "Rotate")} ↻</button><button className="secondary" onClick={reset}>{t("Вписать", "Fit")}</button>
-      <a href={url} target="_blank" rel="noopener noreferrer">{t("Оригинал", "Original")} ↗</a></div>
+    <div className="viewer-tools row"><Button className="secondary" aria-label={t("Уменьшить", "Zoom out")} disabled={zoom <= 1} onClick={() => setZoom(z => Math.max(1, z - .5))}>−</Button>
+      <span>{Math.round(zoom * 100)}%</span><Button className="secondary" aria-label={t("Увеличить", "Zoom in")} disabled={zoom >= 4} onClick={() => setZoom(z => Math.min(4, z + .5))}>+</Button>
+      <Button className="secondary" onClick={() => setRotation(r => (r + 90) % 360)}>{t("Повернуть", "Rotate")} ↻</Button><Button className="secondary" onClick={reset}>{t("Вписать", "Fit")}</Button>
+      <a href={url} target="_blank" rel="noopener noreferrer">{t("Оригинал", "Original")} →</a></div>
     <div className="viewer-viewport" ref={viewport} onPointerDown={e => { if (zoom === 1 || (e.target as HTMLElement).closest("button,input,a")) return; e.currentTarget.setPointerCapture(e.pointerId); drag.current = { x: e.clientX, y: e.clientY, left: e.currentTarget.scrollLeft, top: e.currentTarget.scrollTop }; }}
       onPointerMove={e => { const d = drag.current; if (d) { e.currentTarget.scrollLeft = d.left - e.clientX + d.x; e.currentTarget.scrollTop = d.top - e.clientY + d.y; } }} onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }} data-zoomed={zoom > 1}>
       {f.mimeType === "application/pdf" ? <PdfPage key={f.id} url={url} zoom={zoom} rotation={rotation} /> : failed ? <p className="notice">{t("Предпросмотр недоступен. Откройте оригинал.", "Preview unavailable. Open the original.")}</p> :
@@ -71,10 +72,10 @@ export function FileViewer({ files }: { files: ViewFile[] }) {
           <img key={f.id} src={preview} alt={f.originalName} draggable={false} onError={() => setFailed(true)} onLoad={e => setAspect(e.currentTarget.naturalWidth / e.currentTarget.naturalHeight)} style={{ "--viewer-rotation": `${rotation}deg`, "--viewer-image-width": rotation % 180 ? `${aspect * 100}%` : "100%" } as CSSProperties} />
         </div>}
     </div>
-    <div className="viewer-thumbnails">{files.map((file, i) => <button key={file.id} className={i === selected ? "selected" : "secondary"} aria-label={`${i + 1}. ${file.originalName}`} aria-pressed={i === selected} onClick={() => { setSelected(i); reset(); }}>
+    <div className="viewer-thumbnails">{files.map((file, i) => <Button key={file.id} className={i === selected ? "selected" : "secondary"} aria-label={`${i + 1}. ${file.originalName}`} aria-pressed={i === selected} onClick={() => { setSelected(i); reset(); }}>
       {file.mimeType.startsWith("image/") && (file.localUrl || file.derivatives?.some(d => d.kind === "thumbnail")) ?
         /* eslint-disable-next-line @next/next/no-img-element */
-        <img src={file.localUrl ?? `/api/files/${file.id}?variant=thumbnail`} alt="" loading="lazy" /> : <span>{file.mimeType === "application/pdf" ? "PDF" : t("Фото", "Photo")}</span>}<small>{i + 1}</small></button>)}</div>
+        <img src={file.localUrl ?? `/api/files/${file.id}?variant=thumbnail`} alt="" loading="lazy" /> : <span>{file.mimeType === "application/pdf" ? "PDF" : t("Фото", "Photo")}</span>}<small>{i + 1}</small></Button>)}</div>
     <p className="muted viewer-caption">{Math.min(selected + 1, files.length)} / {files.length} · {f.originalName}</p>
     {f.previewError && <p className="notice">{t("Миниатюра не создана; оригинал сохранён.", "Thumbnail unavailable; the original is preserved.")}</p>}
   </section>;

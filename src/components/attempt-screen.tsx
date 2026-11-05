@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import { Button, ButtonLink, Input, Textarea } from "./controls";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { AttemptDto } from "@/lib/works";
@@ -88,10 +88,10 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
   const topicHref = dto.study?.lessonId && dto.study.courseSlug ? `/courses/${dto.study.courseSlug}/topics/${dto.study.lessonId}` : "/library";
   const requestedReturn = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("returnTo");
   const returnHref = requestedReturn && /^\/(?:courses|library)(?:\/|\?|$)/.test(requestedReturn) && !requestedReturn.includes("\\") ? requestedReturn : topicHref;
-  return <><Heading title={dto.title} subtitle={t("Попытка ", "Attempt ") + dto.number}><Link className="button secondary" href={dto.study ? returnHref : "/works/" + dto.workId + (review ? "/results" : "")}>{dto.study ? t("К вопросам темы", "Back to questions") : t("К работе", "Back to work")}</Link></Heading>
+  return <><Heading title={dto.title} subtitle={t("Попытка ", "Attempt ") + dto.number}><ButtonLink className="button secondary" href={dto.study ? returnHref : "/works/" + dto.workId + (review ? "/results" : "")}>{dto.study ? t("К вопросам темы", "Back to questions") : t("К работе", "Back to work")}</ButtonLink></Heading>
     <div className="work-toolbar row spread"><div className="row"><Status value={dto.status} />{!readOnly && !dto.study && <span className="timer" aria-label={t("Осталось времени", "Time remaining")}>{Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}</span>}</div><div className="row"><span className="muted" role="status">{saving ? t("Сохранение…", "Saving…") : savedAt ? t("Сохранено ", "Saved ") + savedAt.toLocaleTimeString() : !finished ? t("Ответы сохраняются автоматически", "Answers save automatically") : dto.timedOut ? t("Время истекло", "Time expired") : ""}</span>
-      {!readOnly && <button onClick={() => void flush(true)} disabled={saving || conflict}>{dto.independent ? t("Проверить ответ", "Check answer") : t("Отправить работу", "Submit work")}</button>}
-      {finished && <button className="secondary" onClick={() => void refresh()}>{t("Обновить результат", "Refresh result")}</button>}</div></div>
+      {!readOnly && <Button onClick={() => void flush(true)} disabled={saving || conflict}>{dto.independent ? t("Проверить ответ", "Check answer") : t("Отправить работу", "Submit work")}</Button>}
+      {finished && <Button className="secondary" onClick={() => void refresh()}>{t("Обновить результат", "Refresh result")}</Button>}</div></div>
     <ErrorNotice error={error} />
     {independentWritten && <div className="notice"><p>{t("Ранее сохранённые ответы остаются в истории. Новые самостоятельные решения проверяются на бумаге; отправка доступна только в задании учителя.", "Previously saved answers remain in your history. Check new independent written work on paper; submit solutions in teacher assignments.")}</p>
       <ActionButton secondary label={t("Открыть самопроверку", "Open self-check")} action={async () => { const a = await api<{ id: string }>("study/start", "POST", { taskId: dto.study?.taskId ?? dto.questions[0].taskId, lessonId: dto.study?.lessonId }); router.push(`/attempts/${a.id}`); }} /></div>}
@@ -103,8 +103,8 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
       {q.parts.map((p, pi) => { const answer = dto.answers.find(a => a.partId === p.id), response = responses[p.id] ?? { value: "" }; return <section className="part" key={p.id}>
         <div className="row spread"><strong>{t("Часть ", "Part ")}{pi + 1}</strong><span className="muted">{p.maxPoints} {t("балл.", "pts")}</span></div>
         <MathContent html={p.prompt} />
-        {p.kind === "CHOICE" ? <div className="stack space-top-14" >{p.options.map(o => <label className="check choice" key={o.id}><input type="radio" name={p.id} checked={response.optionId === o.id} disabled={readOnly} onChange={() => change(p.id, { value: "", optionId: o.id })} /><MathContent html={o.text} />{o.correct !== undefined && o.correct && <span>✓</span>}</label>)}</div> :
-          <label className="space-top-14">{p.answerFormat ? t("Число или дробь", "Number or fraction") : t("Ваш ответ", "Your answer")}{p.kind === "MANUAL" ? <textarea aria-label={t("Ваш ответ", "Your answer")} value={response.value} readOnly={readOnly} onChange={e => change(p.id, { value: e.target.value })} placeholder={t("Запишите рассуждение или приложите файл решения…", "Write your reasoning or attach your solution…")} rows={5} /> : <input aria-label={t("Ваш ответ", "Your answer")} value={response.value} readOnly={readOnly} inputMode={p.kind === "NUMERIC" && !p.answerFormat ? "decimal" : "text"} onChange={e => change(p.id, { value: e.target.value })} />}</label>}
+        {p.kind === "CHOICE" ? <div className="stack space-top-14" >{p.options.map(o => <label className="check choice" key={o.id}><Input type="radio" name={p.id} checked={response.optionId === o.id} disabled={readOnly} onChange={() => change(p.id, { value: "", optionId: o.id })} /><MathContent html={o.text} />{o.correct !== undefined && o.correct && <span>✓</span>}</label>)}</div> :
+          <label className="space-top-14">{p.answerFormat ? t("Число или дробь", "Number or fraction") : t("Ваш ответ", "Your answer")}{p.kind === "MANUAL" ? <Textarea aria-label={t("Ваш ответ", "Your answer")} value={response.value} readOnly={readOnly} onChange={e => change(p.id, { value: e.target.value })} placeholder={t("Запишите рассуждение или приложите файл решения…", "Write your reasoning or attach your solution…")} rows={5} /> : <Input aria-label={t("Ваш ответ", "Your answer")} value={response.value} readOnly={readOnly} inputMode={p.kind === "NUMERIC" && !p.answerFormat ? "decimal" : "text"} onChange={e => change(p.id, { value: e.target.value })} />}</label>}
         {(!dto.independent || !!answer?.files.length) && <AnswerAttachments files={answer?.files ?? []} attemptId={dto.id} partId={p.id} readOnly={readOnly || !dto.allowFiles} disabledByTeacher={!readOnly && !dto.allowFiles} mutate={mutateFiles} />}
         {dto.resultVisible && answer && <div className="notice space-top-16" ><strong>{t("Баллы: ", "Points: ")}{answer.points ?? t("ожидает проверки", "pending")} / {p.maxPoints}</strong>{answer.comment && <p className="answer-comment">{answer.comment}</p>}</div>}
         {p.answer && <details open={!!dto.study} className="space-top-16"><summary>{t("Краткий ответ", "Short answer")}</summary><MathContent html={p.answer} /></details>}{p.rubric && <details open={!!dto.study} className="space-top-16"><summary>{t("Критерии части", "Part criteria")}</summary><MathContent html={p.rubric} /></details>}
@@ -121,7 +121,7 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
 function SelfStudyScreen({ initial }: { initial: AttemptDto }) {
   const { t } = useLocale(), [dto, setDto] = useState(initial);
   const s = dto.study!, back = s.lessonId && s.courseSlug ? `/courses/${s.courseSlug}/topics/${s.lessonId}?mode=WRITTEN` : "/library";
-  return <><Heading title={dto.title} subtitle={t("Самостоятельная практика на бумаге", "Independent practice on paper")}><Link className="button secondary" href={back}>{t("К вопросам", "Back to questions")}</Link></Heading>
+  return <><Heading title={dto.title} subtitle={t("Самостоятельная практика на бумаге", "Independent practice on paper")}><ButtonLink className="button secondary" href={back}>{t("К вопросам", "Back to questions")}</ButtonLink></Heading>
     <StudyActions dto={dto} apply={setDto} save={async () => {}} />
     {dto.questions.map(q => <article className="card self-study-question" key={q.id}><h2>{q.title}</h2><MathContent html={q.statement} />
       {q.assets.filter(a => a.role === "STATEMENT").map(a => <MaterialAsset key={a.id} asset={a} />)}

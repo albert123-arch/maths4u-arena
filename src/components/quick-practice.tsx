@@ -1,5 +1,7 @@
 "use client";
+import { Button, ButtonLink, Input } from "./controls";
 import Link from "next/link";
+import { Feedback } from "./feedback";
 import { useState } from "react";
 import type { CatalogDto } from "@/lib/catalog";
 import type { AttemptDto } from "@/lib/works";
@@ -30,19 +32,19 @@ export function QuickPractice({ task, lessonId, changed }: { task: Task; lessonI
     try { setResult(await api<AttemptDto>(`attempts/${result.id}/help?lang=${lang}`, "POST", { kind })); changed(); }
     catch (e) { setError(e); } finally { setBusy(false); }
   }
-  if (task.progress?.state === "IN_PROGRESS" && !attemptId) return <Link className="button" href={`/attempts/${task.progress.attemptId}`}>{t("Продолжить сохранённый ответ", "Continue saved answer")} →</Link>;
+  if (task.progress?.state === "IN_PROGRESS" && !attemptId) return <ButtonLink className="button" href={`/attempts/${task.progress.attemptId}`}>{t("Продолжить сохранённый ответ", "Continue saved answer")} →</ButtonLink>;
   return <div className="quick-practice"><form onSubmit={e => { e.preventDefault(); void check(); }}>
     {task.version.parts.map((p, index) => <fieldset key={p.id} disabled={busy || !!result}><legend>{t("Ваш ответ", "Your answer")}{task.version.parts.length > 1 ? ` · ${index + 1}` : ""}</legend>
       {p.prompt && <MathContent html={p.prompt} />}
-      {p.kind === "CHOICE" ? p.options.map(o => <label className="quick-choice" key={o.id}><input required type="radio" name={`choice-${p.id}`} value={o.id} checked={responses[p.id]?.optionId === o.id} onChange={() => update(p.id, "", o.id)} /><MathContent html={o.text} /></label>)
-        : <label>{p.answerFormat ? t("Число или дробь", "Number or fraction") : t("Короткий ответ", "Short answer")}<input required type="text" inputMode={p.kind === "NUMERIC" && !p.answerFormat ? "decimal" : "text"} value={responses[p.id]?.value ?? ""} onChange={e => update(p.id, e.target.value)} /></label>}
+      {p.kind === "CHOICE" ? p.options.map(o => <label className="quick-choice" key={o.id}><Input required type="radio" name={`choice-${p.id}`} value={o.id} checked={responses[p.id]?.optionId === o.id} onChange={() => update(p.id, "", o.id)} /><MathContent html={o.text} /></label>)
+        : <label>{p.answerFormat ? t("Число или дробь", "Number or fraction") : t("Короткий ответ", "Short answer")}<Input required type="text" inputMode={p.kind === "NUMERIC" && !p.answerFormat ? "decimal" : "text"} value={responses[p.id]?.value ?? ""} onChange={e => update(p.id, e.target.value)} /></label>}
     </fieldset>)}
-    {!result && <><p className="muted">{t("Ответ сохранится после проверки.", "Your answer is saved when you check it.")}</p><button type="submit" disabled={busy}>{busy ? t("Проверка…", "Checking…") : t("Проверить ответ", "Check answer")}</button></>}
+    {!result && <><p className="muted">{t("Ответ сохранится после проверки.", "Your answer is saved when you check it.")}</p><Button type="submit" disabled={busy}>{busy ? t("Проверка…", "Checking…") : t("Проверить ответ", "Check answer")}</Button></>}
   </form><ErrorNotice error={error} />{!!error && attemptId && <Link href={`/attempts/${attemptId}`}>{t("Открыть сохранённую попытку", "Open saved attempt")} →</Link>}
-    {result && <div className="quick-result" role="status"><strong>{result.resultVisible && result.score !== undefined ? `${result.score === result.maxPoints ? t("Верно", "Correct") : t("Попробуйте ещё раз", "Have another go")} · ${result.score} / ${result.maxPoints}` : t("Ответ отправлен", "Answer submitted")}</strong>
-      <div className="row"><button className="secondary" disabled={busy} onClick={() => { setResult(null); setAttemptId(null); setResponses({}); }}>{t("Новая попытка", "Try again")}</button>
-        {result.questions[0].availableHelp?.answer && <button className="secondary" disabled={busy} onClick={() => void reveal("answer")}>{t("Показать ответ", "Show answer")}</button>}
-        {result.questions[0].availableHelp?.solution && <button className="secondary" disabled={busy} onClick={() => void reveal("solution")}>{t("Показать решение", "Show solution")}</button>}
+    {result && <div className="quick-result">{result.resultVisible && result.score !== undefined ? <Feedback kind={result.score === result.maxPoints ? "correct" : "again"}>{result.score} / {result.maxPoints}</Feedback> : <div className="notice" role="status">{t("Ответ отправлен", "Answer submitted")}</div>}
+      <div className="row"><Button className="secondary" disabled={busy} onClick={() => { setResult(null); setAttemptId(null); setResponses({}); }}>{t("Новая попытка", "Try again")}</Button>
+        {result.questions[0].availableHelp?.answer && <Button className="secondary" disabled={busy} onClick={() => void reveal("answer")}>{t("Показать ответ", "Show answer")}</Button>}
+        {result.questions[0].availableHelp?.solution && <Button className="secondary" disabled={busy} onClick={() => void reveal("solution")}>{t("Показать решение", "Show solution")}</Button>}
         <Link href={`/attempts/${result.id}`}>{t("Мой ответ и подробности", "My answer & details")} →</Link>
         <Link href="/#pure1-review">{t("План повторения", "My review plan")} →</Link>
       </div>{result.questions[0].answer && <MathContent html={result.questions[0].answer} />}{result.questions[0].parts.map(p => p.answer ? <MathContent key={p.id} html={p.answer} /> : null)}{result.questions[0].solution && <MathContent html={result.questions[0].solution} />}

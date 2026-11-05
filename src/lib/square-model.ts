@@ -15,7 +15,7 @@ export type SquareField = { key: string; label: string; type: string; variables?
 export type SquareQuestion = { uid: string; family: string; title: string; collection: string; prompt: string; fields: SquareField[]; marks: number; manual: boolean };
 export type SquareLesson = { version: string; topic: QuadraticTopic; title: string; notes: string; examples: { title: string; question: string; solution: string }[]; questions: SquareQuestion[] };
 export type CheckEvent = { eventKey: string; uid: string; answers: Record<string, string>; helpUsed: boolean; at: number };
-export type CheckResult = { valid: boolean; correct: boolean; fields: Record<string, { correct: boolean; message: string }>; error?: string };
+export type CheckResult = { valid: boolean; correct: boolean; fields: Record<string, { correct: boolean; message: string; formatError?: true }>; error?: string };
 export type Evidence = { eventKey: string; uid: string; family: string; correct: boolean; helpUsed: boolean; at: number; imported?: boolean };
 export type SquareSnapshot = { states: Record<string, ReviewState>; seen: Record<string, number>; evidence: Evidence[]; notesRead?: boolean };
 export function squareSnapshot(evidence: Evidence[]): SquareSnapshot {

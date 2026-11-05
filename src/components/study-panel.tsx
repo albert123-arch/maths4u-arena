@@ -1,4 +1,5 @@
 "use client";
+import { Button, ButtonLink, Input } from "./controls";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -17,10 +18,10 @@ export function TopicStudyPanel({ lessonId }: { lessonId: string }) {
   return <section className="card study-panel"><h2>{t("Моя работа по теме", "My topic progress")}</h2><ErrorNotice error={r.error} />{r.data && <>
     <p>{t("Проверено на полный балл без предварительного раскрытия помощи: ", "Full marks without revealing help before submission: ")}{r.data.completedWithoutHelp} / {r.data.items.length}</p>
     <p className="muted">{t("Самопроверка и чтение теории учитываются отдельно от проверенных ответов.", "Self-checking and reading theory are tracked separately from graded answers.")}</p>
-    <div className="row">{continuing && <Link className="button" href={`/attempts/${continuing.attemptId}`}>{t("Продолжить", "Continue")} →</Link>}
+    <div className="row">{continuing && <ButtonLink className="button" href={`/attempts/${continuing.attemptId}`}>{t("Продолжить", "Continue")} →</ButtonLink>}
       <ActionButton secondary label={r.data.theoryRead ? t("Теория прочитана ✓", "Theory read ✓") : t("Отметить теорию прочитанной", "Mark theory as read")} action={() => api(`lessons/${lessonId}/progress`, "POST", { completed: !r.data!.theoryRead })} onDone={r.refresh} /></div>
     <details className="study-history"><summary>{t("История по теме", "Topic history")}</summary>{r.data.history.length ? <ol>{r.data.history.map(row => <li key={row.id}><Link href={`/attempts/${row.id}`}>{row.title}</Link><StudyStatus state={row.state} helpUsed={row.helpUsed} /><DateLabel value={row.startedAt} /></li>)}</ol> : <p className="muted">{t("Практика ещё не начата.", "No practice started yet.")}</p>}
-      {r.data.historyPages > 1 && <div className="row"><button className="secondary" disabled={page === 1} onClick={() => setPage(p => p - 1)}>←</button><span>{page} / {r.data.historyPages}</span><button className="secondary" disabled={page >= r.data.historyPages} onClick={() => setPage(p => p + 1)}>→</button></div>}</details>
+      {r.data.historyPages > 1 && <div className="row"><Button className="secondary" disabled={page === 1} onClick={() => setPage(p => p - 1)}>←</Button><span>{page} / {r.data.historyPages}</span><Button className="secondary" disabled={page >= r.data.historyPages} onClick={() => setPage(p => p + 1)}>→</Button></div>}</details>
   </>}</section>;
 }
 export function StudyActions({ dto, save, apply }: { dto: AttemptDto; save: () => Promise<void>; apply: (next: AttemptDto) => void }) {
@@ -51,7 +52,7 @@ function SelfAssessment({ dto, apply }: { dto: AttemptDto; apply: (next: Attempt
     <p className="muted">{t("Решайте на бумаге. Отправка решения учителю доступна в назначенных им работах. Здесь сохраняется ваша самооценка.", "Work on paper. Submit solutions in your teacher’s assignments. Here you record your own assessment.")}</p>
     <div className="row"><ActionButton secondary label={t("Решено", "Solved")} action={() => record(true)} /><ActionButton secondary label={t("Не решено / повторить", "Not solved / another look")} action={() => record(false)} /></div>
     <Form label={t("Сохранить свои баллы", "Save self-awarded points")} submit={async () => { const n = Number(points); await record(n === s.maximum, n); }}>
-      <label>{t("Мои баллы", "My points")}<input aria-label={t("Мои баллы", "My points")} type="number" inputMode="decimal" required min="0" max={s.maximum} step="any" value={points} onChange={e => setPoints(e.target.value)} /><span className="muted">/ {s.maximum} · {t("самооценка, не оценка учителя", "self-assessed, not teacher graded")}</span></label>
+      <label>{t("Мои баллы", "My points")}<Input aria-label={t("Мои баллы", "My points")} type="number" inputMode="decimal" required min="0" max={s.maximum} step="any" value={points} onChange={e => setPoints(e.target.value)} /><span className="muted">/ {s.maximum} · {t("самооценка, не оценка учителя", "self-assessed, not teacher graded")}</span></label>
     </Form>{s.selfCheckedAt && <p className="notice" role="status">{s.selfSolved ? t("Отмечено вами: решено", "You marked: solved") : t("Отмечено вами: нужно повторить", "You marked: needs another look")}{s.selfPoints != null && ` · ${s.selfPoints} / ${s.maximum}`} · {t("Самооценка", "Self-assessed")}</p>}
   </div>;
 }

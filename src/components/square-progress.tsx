@@ -1,4 +1,5 @@
 "use client";
+import { Button, ButtonLink } from "./controls";
 /* eslint-disable react-hooks/set-state-in-effect -- Restore device/account state after hydration; never read localStorage during SSR. */
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
@@ -69,7 +70,7 @@ export function SquareSaveNotice({ state }: { state: ReturnType<typeof useSquare
   const actor = useContext(ActorContext);
   return <div className="square-save"><ErrorNotice error={state.error} />
     {state.storageIssue && <p role="alert">Device storage is unavailable or could not be read. Your result is shown here, but may not survive closing this page. Existing stored data has not been erased.</p>}
-    {!actor ? <p>Progress stays in this browser. <Link href={"/register?next=" + encodeURIComponent(state.topic.path)}>Create an account to save it</Link> or <Link href={"/login?next=" + encodeURIComponent(state.topic.path)}>sign in</Link>.</p> : state.pending ? <p>{state.pending} guest checks are stored on this device. <button className="secondary" disabled={state.syncing} onClick={() => void state.sync()}>{state.syncing ? "Saving…" : "Save these guest results to my account"}</button> <small>Use this only for your own work on a shared device.</small></p> : <p>New checks are saved to your account. These are practice results, not class grades.</p>}
+    {!actor ? <p>Progress stays in this browser. <Link href={"/register?next=" + encodeURIComponent(state.topic.path)}>Create an account to save it</Link> or <Link href={"/login?next=" + encodeURIComponent(state.topic.path)}>sign in</Link>.</p> : state.pending ? <p>{state.pending} guest checks are stored on this device. <Button className="secondary" disabled={state.syncing} onClick={() => void state.sync()}>{state.syncing ? "Saving…" : "Save these guest results to my account"}</Button> <small>Use this only for your own work on a shared device.</small></p> : <p>New checks are saved to your account. These are practice results, not class grades.</p>}
   </div>;
 }
 export function SquareReviewCard({ sessionReady, topic = quadraticTopic(), hideUntouched = false }: { sessionReady: boolean; topic?: QuadraticTopic; hideUntouched?: boolean }) {
@@ -78,7 +79,7 @@ export function SquareReviewCard({ sessionReady, topic = quadraticTopic(), hideU
   if ((!actor || hideUntouched) && !state.snapshot.evidence.length && !state.storageIssue) return null;
   return <section className="card square-review-card"><p className="eyebrow">9709 · Pure Mathematics 1</p><h2>Review · {topic.title}</h2>
     <p>{!states.length ? "Start with a quick check. Your review plan will use your own answers." : due ? `${due} check ${due === 1 ? "family is" : "families are"} ready to review. Try a fresh variant.` : "Nothing is due now. Your next review is " + new Date(Math.min(...states.map(s => s.dueAt))).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) + "."}</p>
-    <Link className="button" href={topic.path + (due ? "?review=1#practice" : "#practice")}>{due ? "Review now" : "Continue practice"} →</Link><SquareSaveNotice state={state} />
+    <ButtonLink className="button" href={topic.path + (due ? "?review=1#practice" : "#practice")}>{due ? "Review now" : "Continue practice"} →</ButtonLink><SquareSaveNotice state={state} />
   </section>;
 }
 

@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "./controls";
 
 import { useState } from "react";
 
@@ -27,12 +28,12 @@ export function CopyButton({
   }
 
   return (
-    <button
+    <Button
       type="button"
       onClick={copy}
       className={`rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold transition hover:bg-slate-50 active:scale-[0.98] ${className}`}
     >
       {copied ? copiedLabel : label}
-    </button>
+    </Button>
   );
 }

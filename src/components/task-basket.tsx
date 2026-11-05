@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import { Button, ButtonLink } from "./controls";
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import type { BasketDto } from "@/lib/catalog";
 import { ActorContext, api, ApiError, ErrorNotice, MathContent, useLocale } from "./ui";
@@ -44,12 +44,12 @@ export function BasketPanel({ compact = false }: { compact?: boolean }) {
     {missing && <p className="notice error">{t("Некоторые задачи больше недоступны. Удалите их из набора перед назначением.", "Some tasks are no longer available. Remove them before assigning the work.")}</p>}
     {b.data?.items.some(i => i.public) && <p className="notice">{t("В наборе есть публичные учебные задачи. Их помощь доступна в самостоятельной практике; настройки теста не делают эти материалы секретными.", "This set includes public learning tasks. Their help is available in independent practice; test settings do not make this material secret.")}</p>}
     <ol className="basket-list">{b.data?.items.map((item, index) => <li key={item.id}><div className="row spread"><strong>{index + 1}. {item.available ? item.title : t("Задача недоступна", "Task unavailable")}</strong><span>{item.available ? item.points : "—"}</span></div>
-      <div className="row"><button type="button" className="secondary" aria-label={t("Выше: ", "Move up: ") + item.title} disabled={b.busy || index === 0} onClick={() => change(ids => { const next = [...ids]; [next[index - 1], next[index]] = [next[index], next[index - 1]]; return next; })}>↑</button>
-        <button type="button" className="secondary" aria-label={t("Ниже: ", "Move down: ") + item.title} disabled={b.busy || index + 1 === b.data?.items.length} onClick={() => change(ids => { const next = [...ids]; [next[index + 1], next[index]] = [next[index], next[index + 1]]; return next; })}>↓</button>
-        <button type="button" className="quiet" disabled={b.busy} onClick={() => change(ids => ids.filter(id => id !== item.id))}>{t("Убрать", "Remove")}</button>
+      <div className="row"><Button type="button" className="secondary" aria-label={t("Выше: ", "Move up: ") + item.title} disabled={b.busy || index === 0} onClick={() => change(ids => { const next = [...ids]; [next[index - 1], next[index]] = [next[index], next[index - 1]]; return next; })}>↑</Button>
+        <Button type="button" className="secondary" aria-label={t("Ниже: ", "Move down: ") + item.title} disabled={b.busy || index + 1 === b.data?.items.length} onClick={() => change(ids => { const next = [...ids]; [next[index + 1], next[index]] = [next[index], next[index + 1]]; return next; })}>↓</Button>
+        <Button type="button" className="quiet" disabled={b.busy} onClick={() => change(ids => ids.filter(id => id !== item.id))}>{t("Убрать", "Remove")}</Button>
         {item.version && <details className="basket-preview"><summary>{t("Условие", "Statement")}</summary><MathContent html={item.version.statement} /></details>}</div></li>)}</ol>
     {!b.data?.items.length && <p className="empty">{t("Выберите задачи в каталоге или на странице темы.", "Choose tasks in the catalog or on a topic page.")}</p>}
-    <div className="row"><Link className="button secondary" href="/library">{t("Подобрать задачи", "Choose tasks")}</Link>{compact && !!b.data?.items.length && !missing && <Link className="button" href="/teacher/works/new">{t("Создать ДЗ / тест", "Create homework / test")}</Link>}
-      {!!b.data?.items.length && <button type="button" className="quiet" disabled={b.busy} onClick={() => change(() => [])}>{t("Очистить", "Clear")}</button>}</div>
+    <div className="row"><ButtonLink className="button secondary" href="/library">{t("Подобрать задачи", "Choose tasks")}</ButtonLink>{compact && !!b.data?.items.length && !missing && <ButtonLink className="button" href="/teacher/works/new">{t("Создать ДЗ / тест", "Create homework / test")}</ButtonLink>}
+      {!!b.data?.items.length && <Button type="button" className="quiet" disabled={b.busy} onClick={() => change(() => [])}>{t("Очистить", "Clear")}</Button>}</div>
   </section>;
 }

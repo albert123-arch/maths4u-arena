@@ -57,7 +57,7 @@ export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): 
   let valid = true;
   for (const f of q.fields) {
     try { const correct = checkExact(f, answers[f.key]); fields[f.key] = { correct, message: correct ? "Correct." : ["set", "integers"].includes(f.type) ? "Recheck all values, both roots and included or excluded endpoints." : /^(h|form_h)$/.test(f.key) && q.fields.some(f=>f.key==="form_a" || f.key==="a") ? "The form uses x − centre. Check the sign of the centre." : /^(k|form_k)$/.test(f.key) && q.fields.some(f=>f.key==="form_a" || f.key==="a") ? "Multiply the square correction by the outside coefficient." : "Recheck this complete answer." }; }
-    catch { valid = false; fields[f.key] = { correct: false, message: "Check the format. Use fractions, sqrt(...), intervals such as (1,5], or coordinate pairs/triples separated by semicolons. Factors and ratios also use semicolons. Complete every field." }; }
+    catch { valid = false; fields[f.key] = { correct: false, formatError: true, message: "Check the format. Use fractions, sqrt(...), intervals such as (1,5], or coordinate pairs/triples separated by semicolons. Factors and ratios also use semicolons. Complete every field." }; }
     if (f.key === "expanded" && fields[f.key].correct && !isExpandedPolynomial(answers[f.key], f.variables ?? [])) fields[f.key] = { correct: false, message: "This is equivalent, but this field asks for expanded form. Multiply out the brackets." };
   }
   return { valid, correct: valid && Object.values(fields).every(f => f.correct), fields, ...(!valid ? { error: "Some answers could not be read; no result has been recorded yet." } : {}) };

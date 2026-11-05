@@ -1,4 +1,5 @@
 "use client";
+import { Button, Input } from "./controls";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
 import type { Actor } from "@/lib/security";
@@ -86,7 +87,7 @@ export function Empty({ children }: { children?: ReactNode }) { const { t } = us
 export function MathContent({ html }: { html: string }) { return <div className="math-content" dangerouslySetInnerHTML={{ __html: html }} />; }
 export function MaterialAsset({ asset }: { asset: { id: string; caption: string; mimeType: string } }) {
   return <figure className="material-asset">{asset.mimeType.startsWith("image/") && <Image src={"/api/files/" + asset.id} alt={asset.caption} unoptimized width={1000} height={750} className="material-asset-image" />}
-    <figcaption><a className="attachment" href={"/api/files/" + asset.id} target="_blank" rel="noopener noreferrer">{asset.caption} ↗</a></figcaption></figure>;
+    <figcaption><a className="attachment" href={"/api/files/" + asset.id} target="_blank" rel="noopener noreferrer">{asset.caption} →</a></figcaption></figure>;
 }
 export function Heading({ title, subtitle, children }: { title: string; subtitle?: string; children?: ReactNode }) {
   return <div className="page-heading"><div><p className="eyebrow">Maths4U · Learning together</p><h1>{title}</h1>{subtitle && <p className="muted">{subtitle}</p>}</div>{children}</div>;
@@ -102,19 +103,19 @@ export function Status({ value }: { value: string }) {
 }
 export function ActionButton({ label, action, onDone, secondary = false }: { label: string; action: () => Promise<unknown>; onDone?: () => void; secondary?: boolean }) {
   const [busy, setBusy] = useState(false), [error, setError] = useState<unknown>(null);
-  return <div><button disabled={busy} className={secondary ? "secondary" : ""} onClick={async () => { setBusy(true); setError(null); try { await action(); onDone?.(); } catch (e) { setError(e); } finally { setBusy(false); } }}>{busy ? "…" : label}</button><ErrorNotice error={error} /></div>;
+  return <div><Button disabled={busy} className={secondary ? "secondary" : ""} onClick={async () => { setBusy(true); setError(null); try { await action(); onDone?.(); } catch (e) { setError(e); } finally { setBusy(false); } }}>{busy ? "…" : label}</Button><ErrorNotice error={error} /></div>;
 }
-export function Form({ children, submit, label, done }: { children: ReactNode; submit: (data: FormData) => Promise<unknown>; label: string; done?: () => void }) {
+export function Form({ children, submit, label, done, primary = false }: { children: ReactNode; submit: (data: FormData) => Promise<unknown>; label: string; done?: () => void; primary?: boolean }) {
   const [busy, setBusy] = useState(false), [error, setError] = useState<unknown>(null), [success, setSuccess] = useState(false);
   const { t } = useLocale();
   return <form className="form" onSubmit={async event => {
     event.preventDefault(); setBusy(true); setError(null); setSuccess(false);
     const data = new FormData(event.currentTarget);
     try { await submit(data); setSuccess(true); done?.(); } catch (e) { setError(e); } finally { setBusy(false); }
-  }}>{children}<ErrorNotice error={error} />{success && <div className="notice" role="status">{t("Готово.", "Done.")}</div>}<button disabled={busy} type="submit">{busy ? t("Сохранение…", "Saving…") : label}</button></form>;
+  }}>{children}<ErrorNotice error={error} />{success && <div className="notice" role="status">{t("Готово.", "Done.")}</div>}<Button variant={primary ? "primary" : "outline"} disabled={busy} type="submit">{busy ? t("Сохранение…", "Saving…") : label}</Button></form>;
 }
 export function Field({ name, label, type = "text", required = true, value, min, max }: { name: string; label: string; type?: string; required?: boolean; value?: string | number; min?: number; max?: number }) {
-  return <label>{label}<input name={name} type={type} required={required} defaultValue={value} min={min} max={max} /></label>;
+  return <label>{label}<Input name={name} type={type} required={required} defaultValue={value} min={min} max={max} /></label>;
 }
 export const str = (data: FormData, key: string) => String(data.get(key) ?? "");
 export const num = (data: FormData, key: string) => Number(data.get(key));

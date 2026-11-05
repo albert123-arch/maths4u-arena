@@ -16,7 +16,7 @@ test("foundation: public pages, both themes and responsive widths", async ({ pag
     for (const width of [390, 1280, 360, 768]) {
       await page.setViewportSize({ width, height: width < 800 ? 844 : 900 });
       for (const [name, url] of routes) {
-        await page.goto(url); await expect(page.locator(".locale")).toBeVisible();
+        await page.goto(url); await expect(page.locator(".brand")).toBeVisible();
         await expect(page.locator(".skeleton")).toHaveCount(0);
         await page.evaluate(() => document.fonts.ready); await page.waitForTimeout(150);
         if (phase === "after") await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
