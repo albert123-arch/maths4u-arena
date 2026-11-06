@@ -2,10 +2,11 @@
 import roots from "../../content/original/9231-fp1/roots-v1.json";
 import rational from "../../content/original/9231-fp1/rational-v1.json";
 import summation from "../../content/original/9231-fp1/summation-v1.json";
+import polar from "../../content/original/9231-fp1/polar-v1.json";
 import matrices1 from "../../content/original/9231-fp1/matrices1-v1.json";
 import { contentPackageSchema, type ContentPackage } from "./content-package-schema";
 import type { QuadraticTopic } from "./square-model";
-export const contentPackages: ContentPackage[] = [contentPackageSchema.parse(roots),contentPackageSchema.parse(rational),contentPackageSchema.parse(summation),contentPackageSchema.parse(matrices1)];
+export const contentPackages: ContentPackage[] = [contentPackageSchema.parse(roots),contentPackageSchema.parse(rational),contentPackageSchema.parse(summation),contentPackageSchema.parse(matrices1),contentPackageSchema.parse(polar)];
 export function contentPackage(key:string) {
   const p=contentPackages.find(p=>p.key===key);if(!p)throw Error("UNKNOWN_CONTENT_PACKAGE");return p;
 }

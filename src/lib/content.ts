@@ -67,8 +67,9 @@ export function renderContent(raw: string, anonymousImages = false) {
     return prefix+(formulas.push(rendered)-1)+"END";
   });
   const html=sanitizeHtml(prepared, {
-    allowedTags: ["p", "br", "strong", "em", "b", "i", "u", "sub", "sup", "ul", "ol", "li", "blockquote", "h2", "h3", "h4", "table", "thead", "tbody", "tr", "th", "td", "img"],
-    allowedAttributes: { img: ["src", "alt", "width", "height"], td: ["colspan", "rowspan"], th: ["colspan", "rowspan"] },
+    allowedTags: ["p", "br", "strong", "em", "b", "i", "u", "sub", "sup", "ul", "ol", "li", "span", "blockquote", "h2", "h3", "h4", "table", "thead", "tbody", "tr", "th", "td", "img"],
+    allowedAttributes: { img: ["src", "alt", "width", "height"], td: ["colspan", "rowspan"], th: ["colspan", "rowspan"], ol: ["type", "start", "class"], span: ["class"] },
+    allowedClasses: { ol: ["parts"], span: ["marks"] },
     allowedSchemes: [], allowProtocolRelative: false,
     // Imported alt text may contain the paper/session reference. Keep the image,
     // dimensions and mathematical content, but omit that description in a live assessment.
@@ -79,7 +80,20 @@ export function renderContent(raw: string, anonymousImages = false) {
       !/^\/assets\/original\/(coordinate-geometry\/(segment|perpendicular|line-intercepts|circle|line-circle)|circular-measure\/(radian|arc-length|sector-area|segment|annular-sector|composite-boundary)|trigonometry\/(unit-circle|wave-graphs|tangent-graph|sine-solutions|identity-triangle|quadratic-levels)|series\/(arithmetic-terms|geometric-terms|partial-sums|arithmetic-condition|geometric-condition|rebound-heights)|binomial-expansion\/(pascal-triangle|term-index|laurent-powers|coefficient-pairs|parameter-branches|approximation-error)|differentiation\/(secant-to-tangent|tangent-normal|stationary-sign-chart|stationary-inflection|related-rates|optimisation-interval)|integration\/(family-of-curves|initial-condition|signed-area|between-curves|disk-volume|accumulation)|cross-topic-revision\/(restricted-inverse|shared-tangent|distance-squared|sector-segment|coefficient-ratio-tail|area-washers))\.svg$/.test(frame.attribs.src || ""),
     textFilter: escaped=>escaped.replace(new RegExp(prefix+"(\\d+)END","g"),(_m,index)=>formulas[Number(index)]??""),
   });
-  return html;
+  // Legacy alphabetical questions put marks in a final text node. Restore only
+  // that presentational wrapper; keep stored statements and mathematics intact.
+  if(!/<ol\b[^>]*(?:type="a"|class="parts")/.test(html))return html;
+  let formatted=html;
+  const doc=parseDocument(html,{withStartIndices:true,withEndIndices:true});
+  for(const item of findAll(n=>n.name==="li",doc.children).reverse()){
+    const list=item.parent;
+    if(list?.type!=="tag"||list.name!=="ol"||(list.attribs.type!=="a"&&list.attribs.class!=="parts"))continue;
+    const last=item.children.filter(n=>n.type!=="text"||n.data.trim()).at(-1);
+    if(last?.type!=="text")continue;
+    const mark=last.data.match(/\[(\d{1,2})\]\s*$/);
+    if(mark)formatted=formatted.slice(0,last.startIndex!+mark.index!)+`<span class="marks">[${mark[1]}]</span>`+formatted.slice(last.endIndex!+1);
+  }
+  return formatted;
 }
 export type HelpVisibility = { hint: boolean; answer: boolean; solution: boolean; markScheme: boolean };
 export function availableHelp(v: Version, lang: string): HelpVisibility {

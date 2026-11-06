@@ -180,3 +180,40 @@ All four FP1 packages are PUBLISHED locally. The Matrices lifecycle and browser
 publication tests preserve the three older packages, but intentionally restore
 Matrices to DRAFT. Do not run them against the owner's published preview
 unless that temporary state change is intended.
+
+## C2: Polar coordinates
+
+`9231-fp1-polar` adds chapter 5 through the same append-only package mechanism.
+Five lessons follow the mathematical sequence of sections 5.1–5.2: coordinates,
+sketches, intersections, areas and extrema. Teaching and 20 worked examples
+are independently written. All 63 owner questions retain their keys, hints,
+solutions, marks and criteria; all 63 archive mappings are administrative only.
+There are 40 complete-answer quick checks with fresh variants and review.
+
+The exact parser now accepts `pi`, Unicode π and LaTeX pi, retaining bounded
+polynomial algebra, fractions and surds. It does not implement arbitrary
+functions, square roots of pi or division by expressions containing pi.
+Existing pi-free answer keys and progress identities remain unchanged.
+
+The source JSON refers to solution SVGs but its images directory is absent.
+The owner's companion teacher-review HTML contains all 64 embedded model SVGs.
+The media preparer verifies article identity, title, filename and solution-only
+placement, then generates private hash-addressed PNGs. It never rasterises
+inline formula SVGs. The source files are read only.
+
+```powershell
+node scripts/content/prepare-fp1-polar-media.mjs --source 'E:\my folder\questions_data\original\Pure1 9231\05_Polar_coordinates_9231_revised.json' --html 'E:\my folder\questions_data\original\Pure1 9231\9231_Chapter_05_Teacher_Review.html' --metadata .local/c2-polar-20261106/assets.json
+python scripts/content/prepare-fp1-polar.py --source 'E:\my folder\questions_data\original\Pure1 9231\05_Polar_coordinates_9231_revised.json' --mapping docs/ARENA-C2-POLAR-SOURCE-AUDIT-20261106.json --assets .local/c2-polar-20261106/assets.json
+python scripts/content/verify-fp1-polar.py --report .local/c2-polar-20261106/math.json
+```
+
+CI uses content-bound fixtures without owner drives. Optional `--owner` also
+checks the source SHA and compares the supplied fields directly. Symbolic
+identities, numerical diagnostics and reviewed completeness arguments are
+reported separately. There is no new database migration or source-copy import.
+Images require the existing solution grant; raw URLs remain 404.
+
+The Polar lifecycle/browser tests temporarily publish, archive and restore
+only Polar to DRAFT. They preserve all four older published packages. Run
+these only against the explicitly guarded local test database. Final local
+publication is a separate action after those tests.

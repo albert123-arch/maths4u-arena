@@ -102,3 +102,37 @@ label.check { min-height:var(--h-control); }
 @media(max-width:640px) {
   .task-summary { grid-template-columns:18px minmax(0,1fr) 55px; }
 }
+
+/* An expanded question uses the full card width below its header controls. */
+.task-summary > .task-number { grid-column:1;grid-row:1; }
+.task-summary > .task-category { grid-column:3;grid-row:1; }
+.task-summary > .task-points { grid-column:4;grid-row:1; }
+.task-summary > .task-bookmark { grid-column:5;grid-row:1;min-width:0; }
+.task-summary > .task-select { grid-column:6;grid-row:1; }
+.task-content[open] { display:block;grid-column:2 / -1;grid-row:2; }
+@supports selector(details::details-content) {
+  .task-content[open] { display:grid;grid-row:1 / span 2;grid-template-columns:subgrid;grid-template-rows:subgrid; }
+  .task-content[open]::details-content { display:contents; }
+}
+.task-content[open] > summary { grid-column:1;grid-row:1; }
+.task-body { grid-column:1 / -1;grid-row:2;min-width:0; }
+@media(min-width:641px) {
+  .task-summary:has(> .task-select) { grid-template-columns:24px minmax(0,1fr) 85px 45px auto auto; }
+}
+@media(max-width:640px) {
+  .task-summary > .task-category { grid-column:2;grid-row:2; }
+  .task-summary > .task-points { grid-column:3;grid-row:2; }
+  .task-summary > .task-select { grid-column:3;grid-row:1; }
+  .task-summary > .task-bookmark { grid-column:2 / -1;grid-row:3; }
+  .task-content[open] { grid-row:4; }
+  @supports selector(details::details-content) {
+    .task-content[open] { grid-row:1 / span 4; }
+  }
+  .task-body { grid-row:4; }
+}
+
+/* Preserve exam part letters and put each mark beside its own prompt. */
+.math-content ol.parts,.math-content ol[type="a"],.original-question-parts { list-style:lower-alpha;padding-left:1.5em;margin-block:var(--sp-4); }
+.math-content ol.parts > li,.math-content ol[type="a"] > li,.original-question-parts > li { position:relative;min-width:0;padding-right:3rem;margin-block:var(--sp-3); }
+.math-content ol.parts > li > p,.math-content ol[type="a"] > li > p,.original-question-parts > li > .math-content > p { margin-block:0; }
+.math-content .marks,.original-question-parts > li > .marks { position:absolute;right:0;top:0;font-size:var(--fs-small);font-weight:650;color:var(--c-text-muted);white-space:nowrap; }

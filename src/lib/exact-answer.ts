@@ -1,7 +1,7 @@
 /** Bounded exact algebra for independent practice; never eval user input. */
 type Rat = [bigint, bigint];
 type Scalar = Map<number, Rat>; // square-free radical -> rational coefficient
-type Poly = Map<number, Scalar>; // base-7 exponents for up to two declared variables
+type Poly = Map<number, Scalar>; // base-7 exponents: two declared variables, then the exact constant pi
 const fail = (): never => { throw new Error("Use numbers, fractions, sqrt(...), brackets and powers up to 6. Check the answer format."); };
 const gcd = (a: bigint, b: bigint): bigint => b ? gcd(b, a % b) : a < BigInt(0) ? -a : a;
 function rat(a: bigint, b = BigInt(1)): Rat {
@@ -37,16 +37,16 @@ function inv(s: Scalar, depth = 0): Scalar {
 }
 const constant = (s: Scalar): Poly => s.size ? new Map([[0, s]]) : new Map();
 function padd(a: Poly, b: Poly, sign = BigInt(1)): Poly { const p = new Map(a); for (const [k, s] of b) { const n = add(p.get(k) ?? new Map(), s, sign); if (n.size) p.set(k, n); else p.delete(k); } return p; }
-function pmul(a: Poly, b: Poly): Poly { let p: Poly = new Map(); for (const [i, x] of a) for (const [j, y] of b) { const first = i % 7 + j % 7, second = Math.floor(i / 7) + Math.floor(j / 7); if (first + second > 6) fail(); p = padd(p, new Map([[first + 7 * second, mul(x, y)]])); if (p.size > 28) fail(); } return p; }
+function pmul(a: Poly, b: Poly): Poly { let p: Poly = new Map(); for (const [i, x] of a) for (const [j, y] of b) { const first = i % 7 + j % 7, second = Math.floor(i / 7) % 7 + Math.floor(j / 7) % 7, pi = Math.floor(i / 49) + Math.floor(j / 49); if (first + second + pi > 6) fail(); p = padd(p, new Map([[first + 7 * second + 49 * pi, mul(x, y)]])); if (p.size > 28) fail(); } return p; }
 function pscalar(p: Poly) { if ([...p.keys()].some(k => k !== 0)) fail(); return p.get(0) ?? new Map<number, Rat>(); }
 function normalize(raw: string) {
   if (raw.length > 400) fail();
-  let s = raw.trim().replace(/[−–]/g, "-").replace(/[×·]/g, "*").replace(/÷/g, "/").replace(/²/g, "^2").replace(/³/g, "^3").replace(/\\(?:left|right)/g, "").replace(/\\(?:cdot|times)/g, "*");
+  let s = raw.trim().replace(/[−–]/g, "-").replace(/[×·]/g, "*").replace(/÷/g, "/").replace(/²/g, "^2").replace(/³/g, "^3").replace(/π|\\pi(?![a-z])/g, "pi").replace(/\\(?:left|right)/g, "").replace(/\\(?:cdot|times)/g, "*");
   for (let i = 0; i < 4; i++) s = s.replace(/\\(?:d?frac)\{([^{}]+)\}\{([^{}]+)\}/g, "(($1)/($2))").replace(/\\sqrt\{([^{}]+)\}/g, "sqrt($1)");
   return s.replace(/√\(([^()]*)\)/g, "sqrt($1)").replace(/√(\d+)/g, "sqrt($1)").replace(/\*\*/g, "^").replace(/\s+/g, "");
 }
 export function polynomialKey(raw: string, variables: string[] = []): [number, [number, string, string][]][] {
-  const s = normalize(raw), tokens = s.match(/sqrt|\d+(?:\.\d*)?|\.\d+|[a-z]|[()+*/^\-]/g) ?? [];
+  const s = normalize(raw), tokens = s.match(/sqrt|pi|\d+(?:\.\d*)?|\.\d+|[a-z]|[()+*/^\-]/g) ?? [];
   if (!s || tokens.join("") !== s || tokens.length > 120 || variables.length > 2 || new Set(variables).size !== variables.length || variables.some(v=>!/^\w$/.test(v))) fail();
   let at = 0, depth = 0;
   const take = (t: string) => tokens[at] === t ? (at++, true) : false;
@@ -70,6 +70,7 @@ export function polynomialKey(raw: string, variables: string[] = []): [number, [
     if (++depth > 24) fail();
     try {
       if (take("(")) { const p = expr(); if (!take(")")) fail(); return p; }
+      if (take("pi")) return new Map([[49,scalar(BigInt(1))]]);
       if (take("sqrt")) {
         if (!take("(")) fail(); const v = pscalar(expr()); if (!take(")") || [...v.keys()].some(k => k !== 1)) fail();
         const [n, d] = v.get(1) ?? [BigInt(0), BigInt(1)]; if (n < 0 || n * d > BigInt(1000000)) fail();
@@ -101,7 +102,7 @@ export function isExpandedPolynomial(raw: string, variables: string[]) {
   terms.push(s.slice(start));
   return terms.every(term=>polynomialKey(term,variables).length<=1);
 }
-function numeric(s: string) { return polynomialKey(s).reduce((sum, [, terms]) => sum + (terms as [number, string, string][]).reduce((n, [d, a, b]) => n + Number(a) / Number(b) * Math.sqrt(d), 0), 0); }
+function numeric(s: string) { return polynomialKey(s).reduce((sum, [power, terms]) => sum + Math.PI ** Math.floor(power / 49) * (terms as [number, string, string][]).reduce((n, [d, a, b]) => n + Number(a) / Number(b) * Math.sqrt(d), 0), 0); }
 /** Split at separators only outside round/square/curly brackets. */
 function split(s: string, separator: string) {
   const out: string[] = []; let depth = 0, start = 0;
@@ -181,7 +182,7 @@ export function checkExact(field: ExactField, input: string): boolean {
     const parts=split(input,";"), vars=field.variables??[], index=vars.indexOf(field.factor_variable??vars[0]);
     if(parts.length!==2 || index<0)fail();
     const factors=parts.map(p=>poly(p,vars));
-    if(factors.some(p=>Math.max(...[...p.keys()].map(k=>index===0?k%7:Math.floor(k/7)))!==1))return false;
+    if(factors.some(p=>Math.max(...[...p.keys()].map(k=>index===0?k%7:Math.floor(k/7)%7))!==1))return false;
     return same(pmul(factors[0],factors[1]),poly(expected,vars));
   }
   if (field.type === "polynomial" || field.type === "number") return JSON.stringify(polynomialKey(input, field.variables)) === JSON.stringify(polynomialKey(expected, field.variables));
