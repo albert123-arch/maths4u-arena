@@ -441,3 +441,44 @@ packages and restore only this one to DRAFT. Use the guarded loopback runtime.
 Final local publication is separate; repeating the import skips 67 tasks with
 zero writes. No assets, new dependencies or schema migrations are introduced.
 Production operations and the remaining Statistics chapters are not included.
+
+## C5: Further Probability & Statistics — Non-parametric tests
+
+`9231-stats-nonparam` 1.0.0 adds chapter `stats_nonparam` to the existing
+Statistics course. Four lessons follow the mathematical sequence of sections
+11.1–11.6: assumptions and sign tests (including paired changes), one-sample
+signed ranks, matched-pairs signed ranks, and independent-sample rank sums.
+Notes and 16 examples are independently authored; no book exercise, wording
+or diagram is reproduced.
+
+All 27 owner tasks retain their 52 parts, 227 marks, keys, hints, solutions and
+criteria. Archive mappings remain administrator-only. Prompt wrappers use the
+existing ol.parts layout, with letters and right-hand marks. Each lesson has
+six SHORT and two MC checks, including fresh variants and weak-skill review.
+The sign-test lesson contains only two supplied written tasks; that shortage
+is documented instead of duplicating tasks. Written reasoning stays MANUAL
+paper self-study with indicative DRAFT guidance, separate from automatic scores.
+
+```powershell
+python scripts/content/prepare-stats-nonparam.py --source 'E:\my folder\questions_data\original\Statistics 9231\04_Non_parametric_tests_9231_revised.json' --mapping docs/ARENA-C5-NONPARAM-SOURCE-AUDIT-20261106.json
+python scripts/content/verify-stats-nonparam.py --source 'E:\my folder\questions_data\original\Statistics 9231\04_Non_parametric_tests_9231_revised.json'
+python scripts/content/verify-stats-nonparam.py --report .local/c5-nonparam-20261106/ci-math.json
+```
+
+The independent verifier reads the actual data/ranking tables, recomputes
+exact decimal deviations and ranks, binomial probabilities, signed-rank subset
+distributions and rank-sum allocation distributions. Independent exhaustive
+sign/combination enumeration cross-checks the exact recurrences. Directional
+normal tails, continuity corrections, recording corrections, reranking, pooled
+t comparison and adjacent attainable integer boundaries are checked. The
+normal moments belong to directional sums, not their folded minima; MF19's
+same-sample reflection is distinguished from min(RA,RB) for unequal samples.
+Teaching models bind all example/quick-check answers to content hashes. The
+CI mode requires no E: drive. Optional --source also checks unchanged owner
+texts, criteria and SHA-256. No owner answer or mark was corrected.
+
+The guarded lifecycle/browser tests preserve all ten older published packages
+and restore only this one to DRAFT. Final local publication is separate;
+repeat application skips 59 tasks with zero writes. No assets, dependencies
+or schema migrations are introduced. Use only the guarded loopback test runtime.
+Production operations and Probability generating functions are outside this work.
