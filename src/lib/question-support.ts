@@ -10,6 +10,7 @@ import { questionsForTopic, squareHelp, squareMarkingRows } from "./square-conte
 import { squareMappings } from "./square-learning";
 import type { SupportContent } from "./question-support-model";
 import { materialGrant } from "./material-grant";
+import { rolePreview } from "./request-view";
 
 const access = z.enum(["attempt", "stuck", "paper"]);
 async function readable(actor: Actor | null, id: string) {
@@ -21,9 +22,9 @@ export async function catalogSupport(actor: Actor | null, id: string, input: unk
   const v = await readable(actor, id), manual = v.parts.some(p => p.kind === "MANUAL");
   ensure(data.kind === "hint" || data.access, 403, "CHECK_ANSWER_FIRST");
   const existing = actor ? await db().practiceStudy.findFirst({ where: { taskId: id, attempt: { userId: actor.id, ...(data.access === "attempt" ? { status: { not: "IN_PROGRESS" as const } } : {}), workVersion: { items: { some: { taskVersionId: v.id } } } } }, orderBy: { updatedAt: "desc" }, select: { attemptId: true } }) : null;
-  if (data.kind !== "hint" && data.access === "attempt") ensure(existing, 403, "CHECK_ANSWER_FIRST");
+  if (data.kind !== "hint" && data.access === "attempt" && !rolePreview()) ensure(existing, 403, "CHECK_ANSWER_FIRST");
   ensure(data.access !== "paper" || manual, 400, "INVALID_INPUT");
-  if (actor) {
+  if (actor && !rolePreview()) {
     const study = existing ? { id: existing.attemptId } : await beginStudy(actor, { taskId: id, lessonId: data.lessonId }, lang);
     if (data.kind !== "guidance" || data.access !== "paper") {
       const kind = data.kind === "guidance" ? "markScheme" : data.kind;

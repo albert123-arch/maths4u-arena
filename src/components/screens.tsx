@@ -11,13 +11,15 @@ import type { MyProgressDto } from "@/lib/student-progress";
 import type { listOlympiads } from "@/lib/olympiads";
 import type { classDetail, listClasses } from "@/lib/classrooms";
 import { MyCourses } from "./my-courses";
+import { ViewButton } from "./view-controls";
+import { useReviewNow } from "./square-progress";
 type Works = Awaited<ReturnType<typeof listWorks>>;
 
 export type ClassList = Awaited<ReturnType<typeof listClasses>>;
 const go = (path: string) => window.location.assign(path);
 
 export function WorkRows({ rows, manage = false }: { rows: Works; manage?: boolean }) {
-  const { t } = useLocale();
+  const { t } = useLocale(), clock = useReviewNow();
   if (!rows.length) return <Empty>{t("Новые задания появятся здесь.", "New assignments will appear here.")}</Empty>;
   return <div>{rows.map(w => <div className="item" key={w.id}><div className="row spread"><div>
     <div className="row"><Status value={w.kind} />{w.archived && <span className="badge gray">{t("Архив", "Archived")}</span>}</div>
@@ -25,7 +27,7 @@ export function WorkRows({ rows, manage = false }: { rows: Works; manage?: boole
     <div className="muted text-meta" >{w.classTitle && <>{w.classTitle} · </>}{t("Сдать до ", "Due ")}<DateLabel value={w.dueAt} /></div>
   </div><ButtonLink className="button secondary" href={"/works/" + w.id + (manage ? "/results" : "")}>{manage ? t("Результаты", "Results") : t("Открыть", "Open")} →</ButtonLink></div>
     {!!w.attempts.length && <div className="row space-top-10" >{manage ? <span className="muted">{w.attempts.length} {t("попыток", "attempts")} · {w.attempts.filter(a => a.status === "SUBMITTED").length} {t("на проверке", "awaiting review")}</span>
-      : w.attempts.map(a => <Link key={a.id} href={"/attempts/" + a.id}><Status value={a.status} /></Link>)}</div>}
+      : w.attempts.map(a => <Link key={a.id} href={"/attempts/" + a.id}><Status value={a.status === "IN_PROGRESS" && new Date(a.expiresAt).getTime() <= clock ? "EXPIRED" : a.status} /></Link>)}</div>}
   </div>)}</div>;
 }
 export function Dashboard({ manage = false }: { manage?: boolean }) {
@@ -97,7 +99,7 @@ export function WorkPage({ id }: { id: string }) {
       <div><p className="muted">{t("Задач", "Problems")}</p><strong>{v._count.items}</strong></div><div><p className="muted">{t("Время / попытки", "Time / attempts")}</p><strong>{v.timeLimitSeconds ? v.timeLimitSeconds / 60 + t(" мин.", " min.") : t("До дедлайна", "Until the deadline")} / {v.attemptsAllowed}</strong></div></div>
     <p className="notice">{t("После начала время отсчитывается на сервере. Ответы сохраняются автоматически. После завершения времени будут учтены только сохранённые ответы.", "The server timer starts when you begin. Answers are saved automatically. When time expires, only saved answers are counted.")}</p>
     <p className="muted">{t("Результаты: ", "Results: ")}{v.resultPolicy === "MANUAL" ? t("после публикации учителем", "after the teacher publishes them") : v.resultPolicy === "AFTER_DEADLINE" ? t("после дедлайна", "after the deadline") : t("после сдачи", "after submission")}</p>
-    {w.manager ? <ButtonLink className="button" href={"/works/" + id + "/results"}>{t("Результаты и проверка", "Results & review")}</ButtonLink> : <div className="stack">
+    {w.manager ? <div className="row"><ButtonLink className="button" href={"/works/" + id + "/results"}>{t("Результаты и проверка", "Results & review")}</ButtonLink><ViewButton role="STUDENT" next={"/preview/works/" + id}>Preview as student</ViewButton></div> : <div className="stack">
       {v.attempts.map(a => <div className="row spread item" key={a.id}><div>{t("Попытка ", "Attempt ")}{a.number} · <Status value={a.status} /></div><ButtonLink className="button secondary" href={"/attempts/" + a.id}>{a.status === "IN_PROGRESS" ? t("Продолжить", "Continue") : t("Открыть результат", "View result")}</ButtonLink></div>)}
       {!w.archived && !v.attempts.some(a => a.status === "IN_PROGRESS") && v.attempts.length < v.attemptsAllowed && <ActionButton label={v.attempts.length ? t("Новая попытка", "New attempt") : t("Начать работу", "Start work")} action={async () => { const a = await api<{ id: string }>("works/" + id + "/start", "POST", { newAttempt: v.attempts.length > 0 }); go("/attempts/" + a.id); }} />}
     </div>}

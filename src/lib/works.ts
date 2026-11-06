@@ -8,6 +8,7 @@ import type { Prisma } from "../generated/prisma/client";
 import { mayReviewPractice } from "./practice-access";
 import { isPure1ShortUid, pure1PracticeNumber } from "./pure1-practice-number";
 import { displayTeacherNote } from "./public-presentation";
+import { requestView, userViewTeacher, lensAttemptScope } from "./request-view";
 
 const contextInclude = { classroom: true, round: { include: { olympiad: true } } } satisfies Prisma.WorkInclude;
 type Context = Prisma.WorkGetPayload<{ include: typeof contextInclude }>;
@@ -32,6 +33,8 @@ export async function ownWork(actor: Actor, id: string, tx: Prisma.TransactionCl
   return work;
 }
 export async function workAccess(actor: Actor, work: Context, tx: Prisma.TransactionClient = db()) {
+  const viewer = userViewTeacher();
+  if (viewer && work.kind !== "PRACTICE") ensure(work.ownerId === viewer.id, 404, "NOT_FOUND");
   if (work.kind === "PRACTICE") { ensure(work.ownerId === actor.id || isAdmin(actor), 404, "NOT_FOUND"); return; }
   if (work.classId) {
     const membership = await tx.classMembership.findUnique({ where: { classId_userId: { classId: work.classId, userId: actor.id } } });
@@ -203,8 +206,9 @@ export async function getAttempt(actor: Actor, id: string, lang = "ru") {
     let row = await lockAttempt(tx, id);
     const practiceReview = !!row && await mayReviewPractice(actor, id, tx);
     ensure(row && (row.userId === actor.id || isAdmin(actor) || (isTeacher(actor) && row.workVersion.work.ownerId === actor.id) || practiceReview), 404, "NOT_FOUND");
+    if (userViewTeacher()) ensure(await tx.attempt.count({ where: { id, AND: [lensAttemptScope()] } }), 404, "NOT_FOUND");
     if (row.status === "IN_PROGRESS" && row.expiresAt > new Date() && row.userId === actor.id) await workAccess(actor, row.workVersion.work, tx);
-    if (row.status === "IN_PROGRESS" && row.expiresAt <= new Date()) { await finalize(tx, row, true); row = (await tx.attempt.findUnique({ where: { id }, include: attemptInclude }))!; }
+    if (!requestView()?.lens && row.status === "IN_PROGRESS" && row.expiresAt <= new Date()) { await finalize(tx, row, true); row = (await tx.attempt.findUnique({ where: { id }, include: attemptInclude }))!; }
     return { a: row, practiceReview };
   });
   const manager = isAdmin(actor) || (isTeacher(actor) && a.workVersion.work.ownerId === actor.id && a.userId !== actor.id);
@@ -268,22 +272,24 @@ export async function publishResults(actor: Actor, id: string) {
 }
 export async function workSummary(actor: Actor, id: string) {
   const work = await db().work.findUnique({ where: { id }, include: { ...contextInclude, versions: { orderBy: { number: "desc" }, take: 1, include: {
-    attempts: { where: { userId: actor.id }, select: { id: true, number: true, status: true }, orderBy: { number: "desc" } },
+    attempts: { where: { userId: actor.id, AND: [lensAttemptScope()] }, select: { id: true, number: true, status: true }, orderBy: { number: "desc" } },
     _count: { select: { items: true } },
   } } } });
   ensure(work, 404, "NOT_FOUND");
+  const viewer = userViewTeacher();
+  if (viewer) ensure(work.ownerId === viewer.id || work.kind === "PRACTICE" && await db().attempt.count({ where: { userId: actor.id, workVersion: { workId: id }, AND: [lensAttemptScope()] } }), 404, "NOT_FOUND");
   const manager = isAdmin(actor) || (isTeacher(actor) && work.ownerId === actor.id);
   if (!manager && !work.versions[0].attempts.length) await workAccess(actor, work);
   return { id, title: work.title, kind: work.kind, classTitle: work.classroom?.title, version: work.versions[0], manager, archived: !!work.archivedAt, resultsPublished: !!work.resultsPublishedAt };
 }
 export async function listWorks(actor: Actor, manage = false) {
   if (manage) teacher(actor);
-  const rows = await db().work.findMany({ where: manage ? { ownerId: isAdmin(actor) ? undefined : actor.id, kind: { not: "PRACTICE" } } : { OR: [
+  const rows = await db().work.findMany({ where: manage ? { ownerId: isAdmin(actor) ? undefined : actor.id, kind: { not: "PRACTICE" } } : { ...(userViewTeacher() ? { AND: [{ OR: [{ ownerId: userViewTeacher()!.id, kind: { not: "PRACTICE" } }, { kind: "PRACTICE", versions: { some: { attempts: { some: { userId: actor.id, AND: [lensAttemptScope()] } } } } }] }] } : {}), OR: [
     { classId: { not: null }, archivedAt: null, classroom: { archivedAt: null, members: { some: { userId: actor.id, removedAt: null } } } },
     { versions: { some: { attempts: { some: { userId: actor.id } } } } },
     { round: { olympiad: { registrations: { some: { userId: actor.id, withdrawnAt: null } } } }, archivedAt: null },
   ] }, take: 100, orderBy: { createdAt: "desc" }, include: { classroom: true, versions: { take: 1, orderBy: { number: "desc" }, include: { attempts: {
-    where: manage ? undefined : { userId: actor.id }, select: { id: true, status: true, number: true, user: { select: { displayName: true } } } },
+    where: manage ? undefined : { userId: actor.id, AND: [lensAttemptScope()] }, select: { id: true, status: true, expiresAt: true, number: true, user: { select: { displayName: true } } } },
   } } } });
   return rows.map(w => ({ id: w.id, title: w.title, kind: w.kind, archived: !!w.archivedAt, classTitle: w.classroom?.title,
     opensAt: w.versions[0].opensAt, dueAt: w.versions[0].dueAt, attempts: w.versions[0].attempts, resultsPublished: !!w.resultsPublishedAt }));

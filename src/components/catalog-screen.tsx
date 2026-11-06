@@ -1,4 +1,5 @@
 "use client";
+import { useView } from "./view-state";
 import { Button, ButtonLink, Input, Select } from "./controls";
 import Link from "next/link";
 import { useContext, useState, useEffect, useRef } from "react";
@@ -21,16 +22,17 @@ import { Pure1Review } from "./pure1-review";
 export function CatalogSkeleton() { return <div className="catalog-skeleton" role="status" aria-label="Loading materials"><span /><span /><span /></div>; }
 
 export function CatalogTasks({ topicId, courseId, chapterId, mode, embedded = false, practice = false, bookmarksOnly = false, initial }: { topicId?: string; courseId?:string; chapterId?:string; mode?: PracticeMode; embedded?: boolean; practice?: boolean; bookmarksOnly?: boolean; initial?: PublicPageData }) {
+  const lens = useView();
   const { t, lang } = useLocale(), actor = useContext(ActorContext), publicLocale = useContext(PublicLocaleContext), basket = useTaskBasket();
   const manage = actor?.roles.some(r => ["TEACHER", "ADMIN"].includes(r.role));
   const [reviewTask]=useState(()=>{if(typeof window==="undefined"||!practice)return "";const id=new URLSearchParams(window.location.search).get("reviewTask")??"";return /^[a-z0-9_]{1,100}$/.test(id)?id:"";});
   const reviewScrolled=useRef(false);
   const [filters, setFilters] = useState<Record<string, string>>(() => {
     const allowed=["q","course","chapter","topic","category","year","session","paper","language","difficulty","page","pageSize","mode","progress","bookmarks"];
-    let saved:Record<string,string>={...initial?.filters};if(!initial&&typeof window!=="undefined"){const url=new URLSearchParams(window.location.search);try{saved=JSON.parse(sessionStorage.getItem(`catalog:${actor?.id??"guest"}:${window.location.pathname}:${mode ?? "ALL"}`)??"{}");}catch{}for(const k of allowed)if(url.has(k))saved[k]=url.get(k)!;}
+    let saved:Record<string,string>={...initial?.filters};if(!initial&&typeof window!=="undefined"){const url=new URLSearchParams(window.location.search);try{if(!lens)saved=JSON.parse(sessionStorage.getItem(`catalog:${actor?.id??"guest"}:${window.location.pathname}:${mode ?? "ALL"}`)??"{}");}catch{}for(const k of allowed)if(url.has(k))saved[k]=url.get(k)!;}
     return {q:"",page:"1",pageSize:"25",...Object.fromEntries(Object.entries(saved).filter(([k,v])=>allowed.includes(k)&&typeof v==="string")),...(courseId?{course:courseId}:{}),...(chapterId?{chapter:chapterId}:{}),...(topicId?{topic:topicId}:{}),...(mode?{mode}:{}),...(bookmarksOnly?{bookmarks:"1"}:{}),...(reviewTask?{q:"",page:"1",progress:"",bookmarks:"",category:"",year:"",session:"",paper:"",difficulty:"",language:""}:{}),...(!actor?{progress:"",bookmarks:""}:{})};
   });
-  useEffect(()=>{sessionStorage.setItem(`catalog:${actor?.id??"guest"}:${window.location.pathname}:${mode ?? "ALL"}`,JSON.stringify(filters));const q=new URLSearchParams(filters);if(reviewTask)q.set("reviewTask",reviewTask);window.history.replaceState(null,"",window.location.pathname+"?"+q.toString()+window.location.hash);},[filters,actor?.id,mode,reviewTask]);
+  useEffect(()=>{if(!lens)sessionStorage.setItem(`catalog:${actor?.id??"guest"}:${window.location.pathname}:${mode ?? "ALL"}`,JSON.stringify(filters));const q=new URLSearchParams(filters);if(reviewTask)q.set("reviewTask",reviewTask);window.history.replaceState(null,"",window.location.pathname+"?"+q.toString()+window.location.hash);},[filters,actor?.id,mode,reviewTask,lens]);
   const result = useResource<CatalogDto>("catalog?" + new URLSearchParams({ ...filters, ...(publicLocale === "ru" ? { language: "ru" } : {}) }), initial?.catalog), courses = useResource<Awaited<ReturnType<typeof courseCatalog>>>(embedded ? null : "catalog/courses", initial?.courses);
   useEffect(()=>{if(reviewTask&&result.data&&!reviewScrolled.current){const el=document.getElementById("question-"+reviewTask);if(el){el.scrollIntoView({block:"start"});reviewScrolled.current=true;}}},[reviewTask,result.data]);
   const update = (key: string, value: string) => setFilters(old => ({ ...old, [key]: value, page: "1", ...(["course", "chapter", "topic"].includes(key) ? { category: "", year: "", session: "", paper: "", difficulty: "", language: "" } : {}), ...(key === "course" ? { chapter: "", topic: "" } : key === "chapter" ? { topic: "" } : {}) }));
@@ -138,7 +140,7 @@ export function TopicScreen({ id, initial }: { id: string; initial?: PublicPageD
     { id: "WRITTEN" as const, title: topic.writtenLabel === "exam-style" ? t("Авторские задачи", "Exam-style") : topic.writtenLabel === "exam" ? t("Экзаменационные задачи", "Exam questions") : t("Письменные задачи", "Written problems"), count: topic.questionCounts.WRITTEN }];
   const choose = (value: typeof mode) => { setMode(value); window.history.replaceState(null, "", path + (value === "NOTES" ? "" : "?mode=" + value)); };
   return <><nav className="breadcrumbs"><Link href="/courses">{t("Курсы", "Courses")}</Link><span> / </span><Link href={`${prefix}/courses/${topic.course.slug}`}>{topic.course.title}</Link><span> / </span><Link href={`${prefix}/courses/${topic.course.slug}?chapter=${topic.chapter.id}`}>{topic.chapter.title}</Link></nav>
-    <Heading title={topic.title} /><div className="row spread topic-neighbours">{topic.previous ? <Link href={`${prefix}/courses/${topic.course.slug}/topics/${topic.previous.id}`}>← {topic.previous.title}</Link> : <span />}{topic.next && <Link href={`${prefix}/courses/${topic.course.slug}/topics/${topic.next.id}`}>{topic.next.title} →</Link>}</div>
+    <Heading title={topic.title}>{manage && <ButtonLink href={"/teacher/works/new?topic=" + topic.id}>{t("Задание из темы", "Assign from this topic")} →</ButtonLink>}</Heading><div className="row spread topic-neighbours">{topic.previous ? <Link href={`${prefix}/courses/${topic.course.slug}/topics/${topic.previous.id}`}>← {topic.previous.title}</Link> : <span />}{topic.next && <Link href={`${prefix}/courses/${topic.course.slug}/topics/${topic.next.id}`}>{topic.next.title} →</Link>}</div>
     <nav className="practice-tabs topic-tabs" aria-label={t("Материалы темы", "Topic activities")}>{tabs.map(tab => <Button key={tab.id} aria-pressed={mode === tab.id} className={mode === tab.id ? "selected" : "secondary"} onClick={() => choose(tab.id)}>{tab.title}{tab.count !== null && <span className="tab-count">{tab.count}</span>}</Button>)}</nav>
     {mode === "NOTES" ? <><section className="card topic-theory"><h2>{t("Материалы", "Notes")}</h2>{topic.body ? <MathContent html={topic.body} /> : <p className="muted">{t("В источнике нет теории для этой темы.", "The source provides no notes for this topic.")}</p>}
       <h2>{t("Разобранные примеры", "Worked examples")}</h2>{topic.examples ? <MathContent html={topic.examples} /> : <p className="muted">{t("Разобранные примеры не предоставлены.", "No worked examples were provided.")}</p>}

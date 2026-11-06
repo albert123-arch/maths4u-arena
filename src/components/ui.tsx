@@ -3,6 +3,7 @@ import { Button, Input } from "./controls";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
 import type { Actor } from "@/lib/security";
+import { useView, viewNonce } from "./view-state";
 export const LocaleContext = createContext<"ru" | "en">("en");
 export function InitialLocale({ locale, children }: { locale: "ru" | "en"; children: ReactNode }) {
   return <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>;
@@ -11,6 +12,11 @@ export const ActorContext = createContext<Actor | null>(null);
 export const PublicLocaleContext = createContext<"en" | "ru" | null>(null);
 export function useLocale() { const lang = useContext(LocaleContext); return { lang, t: (ru: string, en: string) => lang === "ru" ? ru : en }; }
 export const errorLabels: Record<string, [string, string]> = {
+  VIEW_CHANGED: ["Режим просмотра изменился или истёк. Обновите страницу.", "The viewing mode changed or expired. Reload this page."],
+  VIEW_READ_ONLY: ["В режиме просмотра пользователя изменения запрещены.", "User view is read only. Changes are disabled."],
+  PREVIEW_NO_WRITES: ["В предпросмотре изменения не сохраняются.", "Changes cannot be saved in role preview."],
+  VIEW_NOT_ALLOWED: ["Этот режим просмотра недоступен.", "This viewing mode is not available."],
+  EXIT_VIEW_FIRST: ["Сначала выйдите из текущего режима просмотра.", "Exit the current view first."],
   QUESTION_CHANGED: ["Вопрос обновлён. Откройте сохранённую попытку, чтобы продолжить.", "This question has changed. Open the saved attempt to continue."],
   INVALID_PRESENTATION_URL: ["Нужна ссылка на презентацию Google Slides или файл Google Drive.", "Use a Google Slides presentation or Google Drive file link."],
   DUPLICATE_PRESENTATION: ["Эта презентация уже прикреплена к теме.", "This presentation is already attached to this topic."],
@@ -57,7 +63,8 @@ export const errorLabels: Record<string, [string, string]> = {
 export class ApiError extends Error { constructor(public code: string, public status: number, public fields?: { path: string; message: string }[], public diagnostic?: string) { super(code); } }
 export async function api<T = unknown>(url: string, method = "GET", body?: unknown): Promise<T> {
   const response = await fetch("/api/" + url, { method, credentials: "same-origin", cache: "no-store",
-    ...(method !== "GET" ? { headers: body instanceof FormData ? {} : { "Content-Type": "application/json" }, body: body instanceof FormData ? body : JSON.stringify(body ?? {}) } : {}) });
+    headers: { "X-Arena-View": viewNonce(), ...(method !== "GET" && !(body instanceof FormData) ? { "Content-Type": "application/json" } : {}) },
+    ...(method !== "GET" ? { body: body instanceof FormData ? body : JSON.stringify(body ?? {}) } : {}) });
   const data = await response.json().catch(() => { throw new ApiError("UNEXPECTED_SERVER_RESPONSE", response.status, undefined, "HTTP_" + response.status + " / NON_JSON"); });
   if (!response.ok) throw new ApiError(data.error ?? "SERVICE_UNAVAILABLE", response.status, data.fields, data.diagnostic);
   return data;
@@ -101,21 +108,23 @@ export function DateLabel({ value }: { value: string | Date }) {
 }
 export function Status({ value }: { value: string }) {
   const { t } = useLocale();
-  const names: Record<string, [string, string]> = { SELF_CHECKED: ["Самопроверка", "Self-checked"], NEEDS_REPEAT: ["Повторить", "Another look"], IN_PROGRESS: ["В работе", "In progress"], SUBMITTED: ["На проверке", "Awaiting review"], GRADED: ["Проверено", "Reviewed"], HOMEWORK: ["Домашняя работа", "Homework"], TEST: ["Тест", "Test"], PRACTICE: ["Практика", "Practice"], OLYMPIAD: ["Олимпиада", "Olympiad"] };
+  const names: Record<string, [string, string]> = { EXPIRED: ["Время истекло", "Time expired"], SELF_CHECKED: ["Самопроверка", "Self-checked"], NEEDS_REPEAT: ["Повторить", "Another look"], IN_PROGRESS: ["В работе", "In progress"], SUBMITTED: ["На проверке", "Awaiting review"], GRADED: ["Проверено", "Reviewed"], HOMEWORK: ["Домашняя работа", "Homework"], TEST: ["Тест", "Test"], PRACTICE: ["Практика", "Practice"], OLYMPIAD: ["Олимпиада", "Olympiad"] };
   return <span className={"badge " + (value === "SUBMITTED" ? "gold" : "")}>{names[value] ? t(...names[value]) : value}</span>;
 }
 export function ActionButton({ label, action, onDone, secondary = false }: { label: string; action: () => Promise<unknown>; onDone?: () => void; secondary?: boolean }) {
+  const lens = useView();
   const [busy, setBusy] = useState(false), [error, setError] = useState<unknown>(null);
-  return <div><Button disabled={busy} className={secondary ? "secondary" : ""} onClick={async () => { setBusy(true); setError(null); try { await action(); onDone?.(); } catch (e) { setError(e); } finally { setBusy(false); } }}>{busy ? "…" : label}</Button><ErrorNotice error={error} /></div>;
+  return <div><Button disabled={busy || !!lens} className={secondary ? "secondary" : ""} onClick={async () => { setBusy(true); setError(null); try { await action(); onDone?.(); } catch (e) { setError(e); } finally { setBusy(false); } }}>{busy ? "…" : label}</Button><ErrorNotice error={error} /></div>;
 }
 export function Form({ children, submit, label, done, primary = false }: { children: ReactNode; submit: (data: FormData) => Promise<unknown>; label: string; done?: () => void; primary?: boolean }) {
+  const lens = useView();
   const [busy, setBusy] = useState(false), [error, setError] = useState<unknown>(null), [success, setSuccess] = useState(false);
   const { t } = useLocale();
   return <form className="form" onSubmit={async event => {
-    event.preventDefault(); setBusy(true); setError(null); setSuccess(false);
+    event.preventDefault(); if (lens) return; setBusy(true); setError(null); setSuccess(false);
     const data = new FormData(event.currentTarget);
     try { await submit(data); setSuccess(true); done?.(); } catch (e) { setError(e); } finally { setBusy(false); }
-  }}>{children}<ErrorNotice error={error} />{success && <div className="notice" role="status">{t("Готово.", "Done.")}</div>}<Button variant={primary ? "primary" : "outline"} disabled={busy} type="submit">{busy ? t("Сохранение…", "Saving…") : label}</Button></form>;
+  }}><fieldset className="view-form-fields" disabled={!!lens}>{children}</fieldset><ErrorNotice error={error} />{success && <div className="notice" role="status">{t("Готово.", "Done.")}</div>}<Button variant={primary ? "primary" : "outline"} disabled={busy || !!lens} type="submit">{busy ? t("Сохранение…", "Saving…") : label}</Button></form>;
 }
 export function Field({ name, label, type = "text", required = true, value, min, max }: { name: string; label: string; type?: string; required?: boolean; value?: string | number; min?: number; max?: number }) {
   return <label>{label}<Input name={name} type={type} required={required} defaultValue={value} min={min} max={max} /></label>;

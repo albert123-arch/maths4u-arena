@@ -7,17 +7,19 @@ import { PilotCorrection } from "./pilot-correction";
 import { StorageStatus } from "./storage-status";
 import { BankImport } from "./bank-import";
 import type { Actor } from "@/lib/security";
+import { AdminAudit } from "./dashboards";
+import { ViewButton } from "./view-controls";
 import { useLocale, useResource, Heading, Loading, ErrorNotice, Form, Field, ActionButton, api, str, DateLabel, localDate } from "./ui";
 type Plan = { id: string; name: string; active: boolean; features: { featureKey: string; usageLimit: number | null; feature: { title: string } }[] };
 export function AdminScreen({ section }: { section: string }) {
   const { t } = useLocale();
   return <><Heading title={t("Управление платформой", "Platform administration")} subtitle={t("Люди, материалы и доступ к обучению.", "People, materials and learning access.")} /><nav className="tabs">{[
-    ["overview", t("Обзор", "Overview")], ["users", t("Пользователи", "Users")], ["materials", t("Материалы", "Materials")],
+    ["audit", t("Журнал аудита", "Audit log")], ["overview", t("Обзор", "Overview")], ["users", t("Пользователи", "Users")], ["materials", t("Материалы", "Materials")],
     ["access", t("Тарифы и доступ", "Plans & access")], ["import", t("Импорт и состояние", "Import & status")],
   ].map(([key, title]) => <Link className={section === key ? "active" : ""} key={key} href={"/admin/" + key}>{title}</Link>)}</nav>
-    {section === "users" ? <Users /> : section === "access" ? <Access /> : section === "import" ? <><BankImport/><PilotCorrection /><PilotPublish /><Import /><StorageStatus /></> : section === "materials" ? <div className="grid three">{[
+    {section === "audit" ? <AdminAudit auditOnly /> : section === "users" ? <Users /> : section === "access" ? <Access /> : section === "import" ? <><BankImport/><PilotCorrection /><PilotPublish /><Import /><StorageStatus /></> : section === "materials" ? <div className="grid three">{[
       ["/library", t("Банк задач", "Problem bank")], ["/admin/courses", t("Курсы и теория", "Courses & theory")], ["/olympiads", t("Олимпиады", "Olympiads")],
-    ].map(([href, title]) => <Link className="card" href={href} key={href}><h2>{title} →</h2></Link>)}</div> : <Overview />}
+    ].map(([href, title]) => <Link className="card" href={href} key={href}><h2>{title} →</h2></Link>)}</div> : <><Overview /><AdminAudit /></>}
   </>;
 }
 function Overview() {
@@ -33,6 +35,7 @@ function Users() {
   return <div className="stack"><label>{t("Поиск по имени или логину", "Search by name or login")}<Input value={q} onChange={e => setQ(e.target.value)} /></label><ErrorNotice error={r.error} />
     {recovery && <div className="notice"><strong>{t("Одноразовый код для ", "One-time code for ")}{recovery.username}</strong><p className="recovery-code">{recovery.token}</p><p>{t("Передайте его ученику после проверки личности. Код действует 60 минут и показывается только сейчас.", "Share it after verifying the student's identity. It is valid for 60 minutes and shown only now.")}</p><Button className="secondary" onClick={() => setRecovery(null)}>{t("Скрыть код", "Hide code")}</Button></div>}
     {r.data?.map(user => <section className="card" key={user.id}><div className="row spread"><div><h2>{user.displayName}</h2><p className="muted">{user.username}</p></div><ActionButton label={t("Восстановить доступ", "Recover access")} secondary action={async () => { const result = await api<{ token: string }>("admin/users/" + user.id + "/recovery", "POST"); setRecovery({ token: result.token, username: user.username }); }} /></div>
+      <div className="row">{!user.roles.some(r => r.role === "ADMIN") && user.status === "ACTIVE" && <>{user.roles.some(r => r.role === "TEACHER") && <ViewButton role="TEACHER" targetId={user.id}>View as teacher · read only</ViewButton>}{user.roles.some(r => r.role === "STUDENT") && <ViewButton role="STUDENT" targetId={user.id}>View as student · read only</ViewButton>}</>}</div>
       <Form label={t("Сохранить права", "Save access")} done={r.refresh} submit={f => api("admin/users/" + user.id, "PATCH", { roles: f.getAll("roles"), status: str(f, "status") })}>
         <div className="row">{(["STUDENT", "TEACHER", "ADMIN"] as const).map(role => <label className="check" key={role}><Input type="checkbox" name="roles" value={role} defaultChecked={user.roles.some(r => r.role === role)} />{role === "STUDENT" ? t("Ученик", "Student") : role === "TEACHER" ? t("Учитель", "Teacher") : t("Администратор", "Administrator")}</label>)}</div>
         <label>{t("Состояние аккаунта", "Account status")}<Select name="status" defaultValue={user.status}><option value="ACTIVE">{t("Активен", "Active")}</option><option value="BLOCKED">{t("Заблокирован", "Blocked")}</option><option value="ARCHIVED">{t("Архив", "Archived")}</option></Select></label>

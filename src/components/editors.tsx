@@ -32,11 +32,21 @@ function workData(f: FormData, ids: string[], olymp = false) {
 }
 export function WorkEditor() {
   const router = useRouter(), { t } = useLocale(), basket = useTaskBasket(), classes = useResource<ClassList>("classes?manage=1");
+  const [topicId] = useState(() => typeof window === "undefined" ? "" : new URLSearchParams(window.location.search).get("topic") ?? "");
+  if (topicId) return <TopicAssignmentEditor topicId={topicId} />;
   return <><Heading title={t("Назначить работу", "Assign work")} subtitle={t("Проверьте набор, выберите класс и время выполнения.", "Review the task set, choose a class and schedule.")} /><ErrorNotice error={classes.error} />
     {!basket.data || !classes.data ? <Loading /> : <div className="card"><Form primary label={t("Назначить ученикам", "Assign to students")} submit={async f => {
       const saved = await basket.flush(); if (!saved?.items.length || saved.items.some(i => !i.available)) throw new ApiError("TASK_UNAVAILABLE", 400);
       const w = await api<{ id: string }>("works", "POST", workData(f, saved.taskIds)); router.push("/works/" + w.id + "/results");
     }}><BasketPanel /><WorkFields classes={classes.data} /></Form></div>}</>;
+}
+function TopicAssignmentEditor({ topicId }: { topicId: string }) {
+  const router = useRouter(), { t } = useLocale(), classes = useResource<ClassList>("classes?manage=1"), tasks = useResource<import("@/lib/catalog").CatalogDto>("catalog?topic=" + encodeURIComponent(topicId) + "&pageSize=50");
+  const [selected, setSelected] = useState<string[]>([]);
+  return <><Heading title={t("Задание из темы", "Assignment from a topic")} subtitle={t("Выберите до 50 задач. Ваш предыдущий набор задач сохранится.", "Choose up to 50 questions. Your previous question set is preserved.")} /><ErrorNotice error={tasks.error || classes.error} />{!tasks.data || !classes.data ? <Loading /> : <section className="card"><Form primary label={t("Назначить классу", "Assign to class")} submit={async f => {
+    if (!selected.length) throw new ApiError("TASK_UNAVAILABLE", 400);
+    const w = await api<{id:string}>("works", "POST", workData(f, selected)); router.push("/works/" + w.id + "/results");
+  }}><p>{t("Первые 50 доступных задач темы. Для другой подборки используйте общий банк.", "The first 50 available questions in this topic. Use the library for a different selection.")}</p><div className="dashboard-topic-list">{tasks.data.items.map(q => <label className="check" key={q.id}><Input type="checkbox" checked={selected.includes(q.id)} onChange={e => setSelected(s => e.target.checked ? [...s, q.id] : s.filter(id => id !== q.id))} /><span>{q.version.title} · {q.points} marks</span></label>)}</div><WorkFields classes={classes.data} /></Form></section>}</>;
 }
 export function OlympiadEditor() {
   const router = useRouter();

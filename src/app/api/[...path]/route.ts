@@ -28,6 +28,10 @@ import { checkSquare, helpSquare, squareProgress, importSquareProgress, squareMa
 import { courseChoices, learningHome, openSquareLesson } from "@/lib/learning-home";
 
 import { quadraticTopics } from "@/lib/square-model";
+import { inRequestView, requestView, rolePreview } from "@/lib/request-view";
+import { resolveRequestView, guardViewRequest, enterView, exitView, touchView } from "@/lib/view-lens";
+import { previewMaterial, checkPreview } from "@/lib/view-preview";
+import { studentDashboard, teacherDashboard, adminDashboard } from "@/lib/dashboards";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -52,10 +56,11 @@ function csvCell(value: unknown) {
   const s = String(value ?? "");
   return '"' + (/^[=+\-@\t\r]/.test(s) ? "'" : "") + s.replace(/"/g, '""') + '"';
 }
-async function handler(request: Request, context: { params: Promise<{ path: string[] }> }) {
+async function dispatch(request: Request, context: { params: Promise<{ path: string[] }> }) {
   let administrative = false;
   try {
     const parts = (await context.params).path, route = parts.join("/"), method = request.method;
+    guardViewRequest(request, route);
     const topic = parts[0] === "learning" && parts[1] === "quadratics" && parts.length === 4 ? quadraticTopics.find(t => t.key === parts[2]) : undefined;
     const action = topic ? parts[3] : "";
     const url = new URL(request.url), lang = url.searchParams.get("lang") === "ru" ? "ru" : "en";
@@ -87,15 +92,23 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
       await recover(input); return json({ ok: true });
     }
     if (route === "auth/logout" && method === "POST") {
+      if (requestView()?.lens) await exitView("EXIT_LOGOUT");
       await logout(tokenFrom(request)); return json({ ok: true }, 200, { "Set-Cookie": sessionCookie("", true) });
     }
-    if (method === "GET" && route === "auth/me") return json({ user: await actorForToken(tokenFrom(request)) });
+    if (method === "GET" && route === "auth/me") return json({ user: await actorForToken(tokenFrom(request)), lens: requestView()?.lens ?? null });
+    if (route === "view/enter" && method === "POST") return json(await enterView(input));
+    if (route === "view/exit" && method === "POST") return json(await exitView());
+    if (route === "view/touch" && method === "POST") return json(await touchView());
+    if (parts[0] === "view" && parts[1] === "preview" && ["tasks", "works"].includes(parts[2])) {
+      if (parts.length === 4 && method === "GET") return json(await previewMaterial(parts[2], parts[3], lang));
+      if (parts.length === 5 && parts[4] === "check" && method === "POST") return json(await checkPreview(parts[2], parts[3], input, lang));
+    }
     if (method === "GET" && route === "learning/course-choices") return json(await courseChoices());
     if ((route === "learning/square/check" || action === "check") && method === "POST") {
       const user = await actorForToken(tokenFrom(request));
       // Bounded algebra and payload. Guest checks do not create accounts or assessment attempts.
       ensure(JSON.stringify(input).length <= 6000, 413, "BODY_TOO_LARGE");
-      return json(await checkSquare(user, input, topic));
+      return json(await checkSquare(rolePreview() ? null : user, input, topic));
     }
     if ((route === "learning/square/help" || action === "help") && method === "POST") return json(await helpSquare(input, topic));
     if ((route === "learning/square/self-assess" || action === "self-assess") && method === "POST") return json(await squareSelfMarks(await actorForToken(tokenFrom(request)), input, topic));
@@ -125,10 +138,13 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
         "Content-Security-Policy": "sandbox; default-src 'none'", "Cross-Origin-Resource-Policy": "same-origin" } });
     }
     const actor = await requireActor(request);
+    if (route === "dashboard/student" && method === "GET") return json(await studentDashboard(actor, lang));
+    if (route === "dashboard/teacher" && method === "GET") return json(await teacherDashboard(actor));
+    if (route === "dashboard/admin" && method === "GET") return json(await adminDashboard(actor));
     if (route === "learning/home" && method === "GET") return json(await learningHome(actor, lang));
     if ((route === "learning/square/progress" || action === "progress") && method === "GET") return json(await squareProgress(actor, topic));
     if ((route === "learning/square/import" || action === "import") && method === "POST") { await rateLimit("square-import:" + actor.id, 30, 3600); return json(await importSquareProgress(actor, input, topic)); }
-    if ((route === "learning/square/open" || action === "open") && method === "POST") { await squareMappings(topic?.key); await openSquareLesson(actor, topic); return json({ ok: true }); }
+    if ((route === "learning/square/open" || action === "open") && method === "POST") { if (!rolePreview()) { await squareMappings(topic?.key); await openSquareLesson(actor, topic); } return json({ ok: true }); }
     if (parts[0] === "learning" && parts[1] === "bookmarks" && parts.length === 3 && method === "POST") return json(await bookmarkTask(actor, parts[2], input));
     if (parts[0] === "learning" && parts[1] === "courses" && parts.length === 3 && method === "POST") return json(await followCourse(actor, parts[2], input));
     if (route === "learning/progress" && method === "GET") return json(await myProgress(actor, lang, Object.fromEntries(url.searchParams)));
@@ -270,6 +286,14 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
     const diagnostic = requestDiagnostic(e);
     console.error("Maths4U request failed", diagnostic);
     return json({ error: "SERVICE_UNAVAILABLE", ...(administrative ? { diagnostic } : {}) }, 503);
+  }
+}
+async function handler(request: Request, context: { params: Promise<{ path: string[] }> }) {
+  try { return await inRequestView(await resolveRequestView(tokenFrom(request)), () => dispatch(request, context)); }
+  catch (e) {
+    if (e instanceof AppError) return json({ error: e.code }, e.status);
+    console.error("Maths4U view session failed", requestDiagnostic(e));
+    return json({ error: "SERVICE_UNAVAILABLE" }, 503);
   }
 }
 export const GET = handler;

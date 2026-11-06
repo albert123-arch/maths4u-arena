@@ -3,6 +3,7 @@ import { db } from "./prisma";
 import { ensure } from "./errors";
 import { type Actor, isAdmin, teacher, secret, transaction } from "./security";
 import { ownClass } from "./works";
+import { userViewTeacher } from "./request-view";
 export async function createClass(actor: Actor, input: unknown) {
   teacher(actor);
   const data = z.object({ title: z.string().trim().min(2).max(191) }).parse(input);
@@ -11,7 +12,7 @@ export async function createClass(actor: Actor, input: unknown) {
 export async function listClasses(actor: Actor, manage = false) {
   if (manage) teacher(actor);
   return db().classroom.findMany({ where: manage ? { teacherId: isAdmin(actor) ? undefined : actor.id }
-    : { members: { some: { userId: actor.id, removedAt: null } }, archivedAt: null },
+    : { members: { some: { userId: actor.id, removedAt: null } }, archivedAt: null, ...(userViewTeacher() ? { teacherId: userViewTeacher()!.id } : {}) },
     select: { id: true, title: true, archivedAt: true, ...(manage ? { joinCode: true } : {}), _count: { select: { members: { where: { removedAt: null } } } } }, orderBy: { createdAt: "desc" } });
 }
 export async function classDetail(actor: Actor, id: string) {

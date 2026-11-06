@@ -2,11 +2,12 @@
 import { Button, ButtonLink } from "./controls";
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import type { BasketDto } from "@/lib/catalog";
+import { useView } from "./view-state";
 import { ActorContext, api, ApiError, ErrorNotice, MathContent, useLocale } from "./ui";
 
 const BasketContext = createContext<{ data: BasketDto | null; selection: string[]; busy: boolean; error: unknown; change: (fn: (ids: string[]) => string[]) => Promise<void>; flush: () => Promise<BasketDto | null> } | null>(null);
 export function TaskBasketProvider({ children }: { children: ReactNode }) {
-  const actor = useContext(ActorContext), { lang } = useLocale();
+  const lens = useView(), actor = useContext(ActorContext), { lang } = useLocale();
   const allowed = actor?.roles.some(r => ["TEACHER", "ADMIN"].includes(r.role));
   const [data, setData] = useState<BasketDto | null>(null), [busy, setBusy] = useState(false), [error, setError] = useState<unknown>(null);
   const current = useRef(data), pending = useRef<Promise<void>>(Promise.resolve());
@@ -18,6 +19,7 @@ export function TaskBasketProvider({ children }: { children: ReactNode }) {
   }, [allowed, lang]);
   function change(fn: (ids: string[]) => string[]) {
     const operation = pending.current.then(async () => {
+      if (lens) throw new ApiError(lens.mode === "USER" ? "VIEW_READ_ONLY" : "PREVIEW_NO_WRITES", 403);
       if (!current.current) throw new ApiError("SERVICE_UNAVAILABLE", 503);
       setBusy(true); setError(null); failure.current = null;
       try {
@@ -31,7 +33,7 @@ export function TaskBasketProvider({ children }: { children: ReactNode }) {
     pending.current = operation.catch(() => {});
     return operation;
   }
-  return <BasketContext.Provider value={{ data, selection: selection ?? data?.taskIds ?? [], busy, error, change, flush: () => pending.current.then(() => { if (failure.current) throw failure.current; return current.current; }) }}>{children}</BasketContext.Provider>;
+  return <BasketContext.Provider value={{ data, selection: selection ?? data?.taskIds ?? [], busy: busy || !!lens, error, change, flush: () => pending.current.then(() => { if (failure.current) throw failure.current; return current.current; }) }}>{children}</BasketContext.Provider>;
 }
 export function useTaskBasket() { const value = useContext(BasketContext); if (!value) throw new Error("BASKET_PROVIDER_REQUIRED"); return value; }
 export function BasketPanel({ compact = false }: { compact?: boolean }) {

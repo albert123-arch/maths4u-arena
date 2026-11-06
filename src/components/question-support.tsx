@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/set-state-in-effect -- Restore the existing browser's help and self-assessment draft. */
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Button, Input, Select } from "./controls";
+import { useView } from "./view-state";
 import { ErrorNotice, MaterialAsset, MathContent, useLocale } from "./ui";
 import { markingCodes, selfMarkTotal, type MarkingRow, type SupportAccess, type SupportContent, type SupportKind } from "@/lib/question-support-model";
 
@@ -27,12 +28,13 @@ function Guidance({ data, manual, values, change }: { data: SupportContent; manu
 }
 type Draft={access?:SupportAccess;marks:Record<string,number>;points?:number;helpUsed?:boolean};
 export function QuestionSupport({ storageKey, manual, maximum, enabled=true, attempted=false, request, onHelp, onPaperFinished, assess }: { storageKey:string;manual:boolean;maximum:number;enabled?:boolean;attempted?:boolean;request:(kind:SupportKind,access?:SupportAccess)=>Promise<SupportContent>;onHelp?:()=>void;onPaperFinished?:()=>void;assess?:(points:number)=>Promise<unknown> }) {
+  const lens=useView();
   const {t}=useLocale(),id=useId(),[draft,setDraft]=useState<Draft>({marks:{}}),[ready,setReady]=useState(false),[panels,setPanels]=useState<Partial<Record<SupportKind,SupportContent>>>({}),[open,setOpen]=useState<Partial<Record<SupportKind,boolean>>>({}),[busy,setBusy]=useState(false),[error,setError]=useState<unknown>(null),[saved,setSaved]=useState(false),queue=useRef(Promise.resolve());
   const pendingFocus=useRef<HTMLElement|null>(null);
   useLayoutEffect(()=>{if(!busy&&pendingFocus.current){const button=pendingFocus.current;pendingFocus.current=null;if(button.isConnected&&(document.activeElement===document.body||document.activeElement===button))button.focus({preventScroll:true});}});
-  useEffect(()=>{setOpen({});setPanels({});setDraft({marks:{}});try{const d=JSON.parse(localStorage.getItem(storageKey)??'null');if(d&&typeof d.marks==='object'){setDraft(d);if(d.access==='paper')onPaperFinished?.();}}catch(e){setError(e);}setReady(true);},[storageKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(()=>{setOpen({});setPanels({});setDraft({marks:{}});try{const d=lens?null:JSON.parse(localStorage.getItem(storageKey)??'null');if(d&&typeof d.marks==='object'){setDraft(d);if(d.access==='paper')onPaperFinished?.();}}catch(e){setError(e);}setReady(true);},[storageKey]); // eslint-disable-line react-hooks/exhaustive-deps
   const access=draft.access??(attempted?'attempt':undefined);
-  function store(next:Draft){setDraft(next);try{localStorage.setItem(storageKey,JSON.stringify(next));}catch(e){setError(e);}}
+  function store(next:Draft){setDraft(next);if(lens)return;try{localStorage.setItem(storageKey,JSON.stringify(next));}catch(e){setError(e);}}
   const labels={hint:t('Подсказка','Hint'),solution:t('Разобранное решение','Worked solution'),guidance:t('Критерии оценивания','Marking guidance')};
   async function reveal(kind:SupportKind){if(open[kind]){setOpen(o=>({...o,[kind]:false}));return;}pendingFocus.current=document.activeElement instanceof HTMLElement?document.activeElement:null;setError(null);setBusy(true);if(kind!=='guidance'||access!=='paper'){onHelp?.();store({...draft,helpUsed:true});}try{const data=await request(kind,access);setPanels(p=>({...p,[kind]:data}));setOpen(o=>({...o,[kind]:true}));}catch(e){setError(e);}finally{setBusy(false);}}
   function score(marks:Record<string,number>,points:number){store({...draft,marks,points});setSaved(!assess);if(assess){queue.current=queue.current.catch(()=>{}).then(async()=>{try{await assess(points);setSaved(true);}catch(e){setError(e);}});}}

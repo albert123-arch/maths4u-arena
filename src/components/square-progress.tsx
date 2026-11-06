@@ -4,6 +4,7 @@ import { Button, ButtonLink } from "./controls";
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { ActorContext, api, ErrorNotice } from "./ui";
+import { useView } from "./view-state";
 import { quadraticTopic, quadraticTopics, type QuadraticTopic, squareSnapshot, type SquareSnapshot, type CheckEvent, type CheckResult, type Evidence } from "@/lib/square-model";
 
 
@@ -23,6 +24,7 @@ function read(topic: QuadraticTopic): Device {
   return d;
 }
 export function useSquareProgress(sessionReady: boolean, topic: QuadraticTopic = quadraticTopic()) {
+  const lens = useView();
   const key = topic.storage + ".guest.v1", squareVersion = topic.version;
   const actor = useContext(ActorContext), [snapshot, setSnapshot] = useState<SquareSnapshot>(empty), [ready, setReady] = useState(false), [error, setError] = useState<unknown>(null), [storageIssue, setStorageIssue] = useState(false), [pending, setPending] = useState(0), [syncing, setSyncing] = useState(false);
   useEffect(() => {
@@ -30,22 +32,23 @@ export function useSquareProgress(sessionReady: boolean, topic: QuadraticTopic =
     let live = true; setReady(false); setError(null);
     async function load() {
       let device: Device = { version: squareVersion, events: [] };
-      try { device = read(topic); } catch { if (live) setStorageIssue(true); }
+      try { if (!lens) device = read(topic); } catch { if (live) setStorageIssue(true); }
       if (live) setPending(actor ? device.events.filter(e => !e.claimedBy).length : 0);
-      try { const s = actor ? await api<SquareSnapshot>(topic.api + "/progress") : squareSnapshot(device.events.map(e => e.result)); if (live) setSnapshot(s); }
+      try { const s = lens?.mode === "ROLE" ? empty() : actor ? await api<SquareSnapshot>(topic.api + "/progress") : squareSnapshot(device.events.map(e => e.result)); if (live) setSnapshot(s); }
       catch(e) { if (live) setError(e); } finally { if (live) setReady(true); }
     }
     void load(); return () => { live = false; };
   }, [actor?.id, sessionReady, topic.key]); // eslint-disable-line react-hooks/exhaustive-deps
   async function record(event: CheckEvent, family: string, result: CheckResult) {
-    if (actor) { setSnapshot(await api<SquareSnapshot>(topic.api + "/progress")); return; }
+    if (actor && !lens) { setSnapshot(await api<SquareSnapshot>(topic.api + "/progress")); return; }
     const evidence = { eventKey: event.eventKey, uid: event.uid, family, correct: result.correct, helpUsed: event.helpUsed, at: event.at };
     setSnapshot(s => squareSnapshot([...s.evidence.filter(e => e.eventKey !== event.eventKey), evidence]));
+    if (lens) return;
     try { const d = read(topic); if (d.events.length >= 5000) throw Error("Device full"); if (!d.events.some(e => e.eventKey === event.eventKey)) d.events.push({ ...event, result: evidence }); localStorage.setItem(key, JSON.stringify(d)); }
     catch { setStorageIssue(true); }
   }
   async function sync() {
-    if (!actor) return; setSyncing(true); setError(null);
+    if (!actor || lens) return; setSyncing(true); setError(null);
     try {
       const d = read(topic), pending = d.events.filter(e => !e.claimedBy);
       let s = snapshot;
@@ -60,6 +63,7 @@ export function useSquareProgress(sessionReady: boolean, topic: QuadraticTopic =
     } catch(e) { setError(e); } finally { setSyncing(false); }
   }
   async function markRead() {
+    if (lens) return;
     setError(null);
     try { await api("lessons/" + topic.lessonId + "/progress", "POST", { completed: true }); setSnapshot(s=>({...s,notesRead:true})); }
     catch(e) { setError(e); }
@@ -67,7 +71,9 @@ export function useSquareProgress(sessionReady: boolean, topic: QuadraticTopic =
   return { topic, snapshot, ready, record, error, storageIssue, pending, sync, syncing, markRead };
 }
 export function SquareSaveNotice({ state }: { state: ReturnType<typeof useSquareProgress> }) {
+  const lens = useView();
   const actor = useContext(ActorContext);
+  if (lens) return <p className="notice">{lens.mode === "ROLE" ? "Preview only. Answers and progress are not saved." : "Read only. This is the user’s saved learning history."}</p>;
   return <div className="square-save"><ErrorNotice error={state.error} />
     {state.storageIssue && <p role="alert">Device storage is unavailable or could not be read. Your result is shown here, but may not survive closing this page. Existing stored data has not been erased.</p>}
     {!actor ? <p>Progress stays in this browser. <Link href={"/register?next=" + encodeURIComponent(state.topic.path)}>Create an account to save it</Link> or <Link href={"/login?next=" + encodeURIComponent(state.topic.path)}>sign in</Link>.</p> : state.pending ? <p>{state.pending} guest checks are stored on this device. <Button className="secondary" disabled={state.syncing} onClick={() => void state.sync()}>{state.syncing ? "Saving…" : "Save these guest results to my account"}</Button> <small>Use this only for your own work on a shared device.</small></p> : <p>New checks are saved to your account. These are practice results, not class grades.</p>}

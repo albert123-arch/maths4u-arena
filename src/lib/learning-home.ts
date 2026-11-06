@@ -3,6 +3,7 @@ import { localized } from "./content";
 import { type Actor } from "./security";
 import { hasFeature } from "./subscriptions";
 import { squareLessonId, squarePath, type QuadraticTopic, quadraticTopic } from "./square-model";
+import { lensAttemptScope } from "./request-view";
 
 export async function courseChoices() {
   const rows = await db().course.findMany({ where: { published: true, archivedAt: null, featureKey: null }, orderBy: [{ position: "asc" }, { id: "asc" }], select: { id: true, slug: true, texts: { select: { locale: true, title: true } } } });
@@ -14,7 +15,7 @@ export async function learningHome(actor: Actor, lang: string) {
     const c = f.course, lessonIds = c.topics.flatMap(t => t.lessons.map(l => l.id)), allowed = !c.featureKey || await hasFeature(actor, c.featureKey);
     if (!allowed) return { id: c.id, slug: c.slug, title: localized(c.texts, lang).title, locked: true, read: 0, lessons: 0, resume: null };
     const opened = await db().learningProgress.findFirst({ where: { userId: actor.id, lessonId: { in: lessonIds } }, orderBy: { openedAt: "desc" }, include: { lesson: { include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } } } } } });
-    const study = await db().practiceStudy.findFirst({ where: { lessonId: { in: lessonIds }, attempt: { userId: actor.id } }, orderBy: { updatedAt: "desc" }, include: { lesson: { include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } } } }, attempt: { select: { id: true, status: true } } } });
+    const study = await db().practiceStudy.findFirst({ where: { lessonId: { in: lessonIds }, attempt: { userId: actor.id, AND: [lensAttemptScope()] } }, orderBy: { updatedAt: "desc" }, include: { lesson: { include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } } } }, attempt: { select: { id: true, status: true } } } });
     const candidates = [
       ...(opened ? [{ at: opened.openedAt.getTime(), title: localized(opened.lesson.versions[0].texts, lang).title, href: `/courses/${c.slug}/topics/${opened.lessonId}` }] : []),
       ...(study?.lesson ? [{ at: study.updatedAt.getTime(), title: localized(study.lesson.versions[0].texts, lang).title, href: study.attempt.status === "IN_PROGRESS" ? `/attempts/${study.attempt.id}` : `/courses/${c.slug}/topics/${study.lessonId}` }] : []),

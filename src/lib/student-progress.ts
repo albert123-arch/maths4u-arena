@@ -9,6 +9,7 @@ import { localized } from "./content";
 import { progressInclude, studyProgressStatus } from "./practice-progress";
 import { maySeeResult } from "./works";
 import { taskPermission } from "./catalog";
+import { lensAttemptScope } from "./request-view";
 
 const lessonInclude = {
   versions: { take: 1, orderBy: { number: "desc" }, select: { texts: { select: { locale: true, title: true } } } },
@@ -39,7 +40,7 @@ async function progressReport(studentId: string, student: { id: string; displayN
   practice: Prisma.AttemptWhereInput, assigned: Prisma.AttemptWhereInput, self: boolean) {
   const { page, kind, lessonId } = z.object({ page: z.coerce.number().int().min(1).max(100000).default(1),
     kind: z.enum(["ALL", "PRACTICE", "ASSIGNED"]).default("ALL"), lessonId: z.string().max(100).optional() }).parse(input);
-  const scope: Prisma.AttemptWhereInput = { userId: studentId, OR: [practice, assigned] };
+  const scope: Prisma.AttemptWhereInput = { userId: studentId, OR: [practice, assigned], AND: [lensAttemptScope()] };
   const where: Prisma.AttemptWhereInput = { AND: [scope, ...(kind === "ALL" ? [] : [kind === "PRACTICE" ? practice : assigned]),
     ...(lessonId ? [{ study: { lessonId } }] : [])] };
   const now = new Date();
@@ -61,7 +62,7 @@ async function progressReport(studentId: string, student: { id: string; displayN
         WHERE s2.taskId=s.taskId AND s2.lessonId <=> s.lessonId AND a2.userId=a.userId
         AND (a2.startedAt>a.startedAt OR (a2.startedAt=a.startedAt AND a2.id>a.id)))`),
   ]);
-  const latest = await db().practiceStudy.findMany({ where: { attemptId: { in: latestIds.map(r => r.attemptId) } },
+  const latest = await db().practiceStudy.findMany({ where: { attemptId: { in: latestIds.map(r => r.attemptId) }, attempt: lensAttemptScope() },
     include: { ...progressInclude, lesson: { include: lessonInclude } } });
   const lessons = new Map([...theory.map(r => r.lesson), ...latest.flatMap(r => r.lesson ? [r.lesson] : [])].map(l => [l.id, l]));
   const topics = [...lessons.values()].map(l => {

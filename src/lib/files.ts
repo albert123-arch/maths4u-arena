@@ -8,6 +8,7 @@ import { hasFeature } from "./subscriptions";
 import { privateStorageRoot } from "./storage-config";
 import { imagePreviews } from "./image-previews";
 import { mayReviewPractice, mentoredPracticeWhere } from "./practice-access";
+import { requestView, userViewTeacher, lensAttemptScope } from "./request-view";
 import { readMaterialGrant } from "./material-grant";
 import { taskPermission } from "./catalog";
 
@@ -81,7 +82,16 @@ export async function download(actor: Actor | null, id: string, variant = "origi
   const file = await db().storedFile.findUnique({ where: { id }, include: { derivatives: true, submissions: { include: { answer: { include: { attempt: { include: attemptInclude } } } } },
     assets: { include: { version: { include: { task: true } } } } } });
   ensure(file && !file.deletedAt, 404, "NOT_FOUND");
+  const view = requestView();
+  if (view?.lens && file.submissions.length) {
+    // Never expose a target's unrelated uploads through a borrowed owner check.
+    ensure(view.lens.mode === "USER" && file.submissions.some(s => s.answer.attempt.userId === actor?.id), 404, "NOT_FOUND");
+    if (userViewTeacher()) ensure(await db().attempt.count({ where: { id: { in: file.submissions.map(s => s.answer.attemptId) }, userId: actor?.id, AND: [lensAttemptScope()] } }), 404, "NOT_FOUND");
+  } else if (userViewTeacher() && file.ownerId === actor?.id && !file.assets.length) ensure(false, 404, "NOT_FOUND");
   let allowed = !!actor && (file.ownerId === actor.id || isAdmin(actor));
+  if (!allowed && view?.lens?.mode === "ROLE" && view.real && !file.submissions.length) {
+    for (const asset of file.assets) if (asset.role !== "TEACHER" && await db().workItem.count({ where: { taskVersionId: asset.versionId, workVersion: { work: { ownerId: view.real.id } } } })) { allowed = true; break; }
+  }
   if (!allowed && !file.submissions.length) {
     const grant=readMaterialGrant(support);
     if(grant&&grant.fileId===id&&grant.actorId===(actor?.id??null)&&grant.role!=="TEACHER"){
@@ -102,7 +112,7 @@ export async function download(actor: Actor | null, id: string, variant = "origi
         { workVersion: { items: { some: { taskVersionId: asset.versionId } } } }] }, select: { id: true } })) { allowed = true; break; }
       if (asset.role === "STATEMENT" && task.visibility === "PUBLIC" && !task.archivedAt && (!task.featureKey || (actor && await hasFeature(actor, task.featureKey)))) { allowed = true; break; }
       if (actor && asset.role !== "TEACHER") {
-        const attempts = await db().attempt.findMany({ where: { userId: actor.id, workVersion: { items: { some: { taskVersionId: asset.versionId } } } }, include: attemptInclude });
+        const attempts = await db().attempt.findMany({ where: { userId: actor.id, AND: [lensAttemptScope()], workVersion: { items: { some: { taskVersionId: asset.versionId } } } }, include: attemptInclude });
         if (attempts.some(a => maySeeMaterialFile(a, asset.role))) { allowed = true; break; }
       }
     }

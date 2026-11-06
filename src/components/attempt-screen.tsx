@@ -1,4 +1,5 @@
 "use client";
+import { useView } from "./view-state";
 import { Button, ButtonLink, Input, Textarea } from "./controls";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -19,6 +20,7 @@ export function AttemptScreen({ id, review, backHref }: { id: string; review: bo
   return <AttemptForm key={id + String(review)} initial={r.data} review={review} />;
 }
 function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean }) {
+  const lens = useView();
   const { t, lang } = useLocale(), router = useRouter();
   const [dto, setDto] = useState(initial), dtoRef = useRef(initial);
   const [responses, setResponses] = useState<Record<string, ResponseValue>>(() => Object.fromEntries(initial.answers.map(a => [a.partId, a.response as ResponseValue])));
@@ -28,13 +30,13 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
   const [conflict, setConflict] = useState(false);
   const alive = useRef(true);
   const independentWritten = dto.independent && dto.questions.some(q => q.parts.some(p => p.kind === "MANUAL"));
-  const finished = dto.status !== "IN_PROGRESS", readOnly = finished || review || independentWritten;
+  const finished = dto.status !== "IN_PROGRESS", readOnly = !!lens || finished || review || independentWritten;
   const remaining = Math.max(0, Math.ceil((new Date(dto.expiresAt).getTime() - now - offset) / 1000));
   const apply = (next: AttemptDto) => { if (next.revision < dtoRef.current.revision) return; dtoRef.current = next; if (alive.current) setDto(next); };
   async function refresh() { const next = await api<AttemptDto>("attempts/" + initial.id + "?lang=" + lang); apply(next); }
   async function flush(submit: boolean) {
     if (busy.current) { await busy.current; return flush(submit); }
-    if (blocked.current || independentWritten || dtoRef.current.status !== "IN_PROGRESS" || review || (!submit && !dirty.current.size)) return;
+    if (lens || blocked.current || independentWritten || dtoRef.current.status !== "IN_PROGRESS" || review || (!submit && !dirty.current.size)) return;
     const snapshot = Object.fromEntries([...dirty.current].map(id => [id, drafts.current[id]]));
     setSaving(true);
     const operation = (async () => {
@@ -89,13 +91,13 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
   const requestedReturn = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("returnTo");
   const returnHref = requestedReturn && /^\/(?:courses|library)(?:\/|\?|$)/.test(requestedReturn) && !requestedReturn.includes("\\") ? requestedReturn : topicHref;
   return <><Heading title={dto.title} subtitle={t("Попытка ", "Attempt ") + dto.number}><ButtonLink className="button secondary" href={dto.study ? returnHref : "/works/" + dto.workId + (review ? "/results" : "")}>{dto.study ? t("К вопросам темы", "Back to questions") : t("К работе", "Back to work")}</ButtonLink></Heading>
-    <div className="work-toolbar row spread"><div className="row"><Status value={dto.status} />{!readOnly && !dto.study && <span className="timer" aria-label={t("Осталось времени", "Time remaining")}>{Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}</span>}</div><div className="row"><span className="muted" role="status">{saving ? t("Сохранение…", "Saving…") : savedAt ? t("Сохранено ", "Saved ") + savedAt.toLocaleTimeString() : !finished ? t("Ответы сохраняются автоматически", "Answers save automatically") : dto.timedOut ? t("Время истекло", "Time expired") : ""}</span>
+    <div className="work-toolbar row spread"><div className="row"><Status value={dto.status} />{!readOnly && !dto.study && <span className="timer" aria-label={t("Осталось времени", "Time remaining")}>{Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}</span>}</div><div className="row"><span className="muted" role="status">{saving ? t("Сохранение…", "Saving…") : savedAt ? t("Сохранено ", "Saved ") + savedAt.toLocaleTimeString() : !finished && !lens ? t("Ответы сохраняются автоматически", "Answers save automatically") : dto.timedOut ? t("Время истекло", "Time expired") : ""}</span>
       {!readOnly && <Button onClick={() => void flush(true)} disabled={saving || conflict}>{dto.independent ? t("Проверить ответ", "Check answer") : t("Отправить работу", "Submit work")}</Button>}
       {finished && <Button className="secondary" onClick={() => void refresh()}>{t("Обновить результат", "Refresh result")}</Button>}</div></div>
     <ErrorNotice error={error} />
     {independentWritten && <div className="notice"><p>{t("Ранее сохранённые ответы остаются в истории. Новые самостоятельные решения проверяются на бумаге; отправка доступна только в задании учителя.", "Previously saved answers remain in your history. Check new independent written work on paper; submit solutions in teacher assignments.")}</p>
       <ActionButton secondary label={t("Открыть самопроверку", "Open self-check")} action={async () => { const a = await api<{ id: string }>("study/start", "POST", { taskId: dto.study?.taskId ?? dto.questions[0].taskId, lessonId: dto.study?.lessonId }); router.push(`/attempts/${a.id}`); }} /></div>}
-    {dto.study && <StudyActions dto={dto} apply={apply} save={async () => { await flush(false); if (blocked.current || dirty.current.size) throw new ApiError("STALE_REVISION", 409); }} />}
+    {dto.study && !lens && <StudyActions dto={dto} apply={apply} save={async () => { await flush(false); if (blocked.current || dirty.current.size) throw new ApiError("STALE_REVISION", 409); }} />}
     {finished && !dto.resultVisible && <p className="notice">{t("Работа принята. Баллы, решения и комментарии станут доступны после публикации результатов.", "Your work was received. Marks, solutions and comments will be available when results are released.")}</p>}
     {dto.resultVisible && <div className="card tint space-block-20" ><p className="eyebrow">{t("Результат", "Result")}</p><div className="metric">{dto.study && dto.pendingReview ? t("Без оценки", "Ungraded") : dto.score} {!(dto.study && dto.pendingReview) && <span className="muted text-size-20" >/ {dto.maxPoints}</span>}</div>{dto.pendingReview && <p className="muted">{dto.study ? t("Ручная задача: автоматическая оценка не выставляется. Самопроверка хранится отдельно.", "Written solution: no automatic mark is awarded. Self-checking is recorded separately.") : t("Часть ответов ещё ожидает проверки. Баллы пока предварительные.", "Some answers are awaiting review. This score is provisional.")}</p>}{dto.submittedAt && <p className="muted"><DateLabel value={dto.submittedAt} /></p>}</div>}
     <div className="stack">{dto.questions.map((q, qi) => <article className="card" key={q.id}>{!dto.sourcesHidden && <p className="eyebrow">{t("Задача ", "Problem ")}{qi + 1}</p>}<h2>{q.title}</h2><MathContent html={q.statement} />

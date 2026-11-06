@@ -146,6 +146,11 @@ model Session {
   expiresAt DateTime
   revokedAt DateTime?
   createdAt DateTime  @default(now())
+  lensMode String? @db.VarChar(8)
+  lensRole Role?
+  lensTargetId String? @db.VarChar(191)
+  lensTouchedAt DateTime?
+  lensNonce String? @db.VarChar(64)
   user      User      @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   @@index([userId, revokedAt])

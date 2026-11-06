@@ -4,6 +4,7 @@ import { db } from "./prisma";
 import { hashPassword, verifyPassword } from "./password";
 import { ensure } from "./errors";
 import type { Prisma } from "../generated/prisma/client";
+import { requestView } from "./request-view";
 
 export const COOKIE = "maths4u_session";
 export const userSelect = { id: true, username: true, displayName: true, status: true, roles: true, profile: true } satisfies Prisma.UserSelect;
@@ -76,6 +77,8 @@ export function tokenFrom(request: Request) {
   return (request.headers.get("cookie") ?? "").split(";").map(x => x.trim()).find(x => x.startsWith(COOKIE + "="))?.slice(COOKIE.length + 1);
 }
 export async function actorForToken(token?: string): Promise<Actor | null> {
+  const view = requestView();
+  if (view) return view.actor;
   if (!token || token.length > 200) return null;
   const session = await db().session.findUnique({ where: { tokenHash: digest(token) }, include: { user: { select: userSelect } } });
   if (!session || session.revokedAt || session.expiresAt <= new Date() || session.user.status !== "ACTIVE") return null;

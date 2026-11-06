@@ -43,7 +43,7 @@ assert.ok(automatic,'System dark theme missing');
 const auto=Object.fromEntries(automatic.nodes.filter(n=>n.type==='decl').map(d=>[d.prop,d.value]));
 for(const [name,value]of Object.entries(auto))assert.equal(value,themes.dark[name],`Dark theme mismatch: ${name}`);
 // Source audit ignores authored question SVG data and generated/vendor CSS.
-const sourceFiles=['src/app/globals.css','src/app/discovery.css','src/app/learning.css','src/app/components.css','src/app/topic.css','src/app/public-catalog.css','src/app/question-support.css','public/platform-statistics.css','public/favicon.svg'];
+const sourceFiles=['src/app/globals.css','src/app/discovery.css','src/app/learning.css','src/app/components.css','src/app/topic.css','src/app/public-catalog.css','src/app/question-support.css','src/app/dashboards.css','public/platform-statistics.css','public/favicon.svg'];
 for(const name of await fs.readdir('src/components'))if(name.endsWith('.tsx'))sourceFiles.push('src/components/'+name);
 const violations=[];
 for(const file of sourceFiles){const text=await fs.readFile(file,'utf8');

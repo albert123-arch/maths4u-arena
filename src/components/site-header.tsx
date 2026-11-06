@@ -8,8 +8,12 @@ import { api, useLocale } from "./ui";
 import { Button, Input } from "./controls";
 import { ThemePicker } from "./theme-picker";
 import type { LanguagePair } from "@/lib/public-page-model";
+import { ViewBanner } from "./view-controls";
+import { useView } from "./view-state";
+import type { ViewLens } from "@/lib/request-view";
 
-export function SiteHeader({ actor, path, hidden, publicPage, languagePair, accountLanguage, changeLanguage }: { actor: Actor | null; path: string; hidden: boolean; publicPage: boolean; languagePair?: LanguagePair; accountLanguage: Locale; changeLanguage: (lang: Locale) => void }) {
+export function SiteHeader({ actor, path, hidden, publicPage, languagePair, accountLanguage, changeLanguage, viewChanged }: { actor: Actor | null; path: string; hidden: boolean; publicPage: boolean; languagePair?: LanguagePair; accountLanguage: Locale; changeLanguage: (lang: Locale) => void; viewChanged: (lens: ViewLens | null) => void }) {
+  const lens = useView();
   const { lang, t } = useLocale(), [open, setOpen] = useState(false);
   const root = useRef<HTMLElement>(null), toggle = useRef<HTMLButtonElement>(null), account = useRef<HTMLDetailsElement>(null);
   const admin = actor?.roles.some(r => r.role === "ADMIN"), teacher = admin || actor?.roles.some(r => r.role === "TEACHER");
@@ -21,7 +25,7 @@ export function SiteHeader({ actor, path, hidden, publicPage, languagePair, acco
     return () => { document.removeEventListener("keydown", key); document.removeEventListener("pointerdown", outside); };
   }, []);
   function languages(className: string) { return publicPage && languagePair ? <div className={`locale ${className}`} aria-label={t("Язык страницы", "Page language")}>{(["en", "ru"] as const).map(value => <Link key={value} href={languagePair[value]} aria-current={lang === value ? "page" : undefined}>{value.toUpperCase()}</Link>)}</div> : null; }
-  return <header className="topbar" hidden={hidden} ref={root}><div className="topbar-inner">
+  return <header className="topbar" hidden={hidden} ref={root}><ViewBanner changed={viewChanged} /><div className="topbar-inner">
     <Link className="brand" href="/" onClick={close}><span className="brand-symbol" aria-hidden="true">m</span>Maths4U<span className="badge beta-badge">BETA</span></Link>
     <Button variant="text" className="mobile-nav-toggle" ref={toggle} aria-expanded={open} aria-controls="site-navigation" onClick={() => { setOpen(v => !v); if (account.current) account.current.open = false; }}><span aria-hidden="true">{open ? "×" : "☰"}</span>{t("Меню", "Menu")}</Button>
     <nav id="site-navigation" className="nav" data-open={open} aria-label={t("Основная навигация", "Main navigation")}>
@@ -36,8 +40,8 @@ export function SiteHeader({ actor, path, hidden, publicPage, languagePair, acco
       <div className="discovery-account-links" onClick={e => { if ((e.target as HTMLElement).closest("a")) close(); }}>
         {actor ? <><Link href="/">{t("Моё обучение", "My learning")}</Link><Link href={teacher ? "/teacher" : "/student"}>{t("Мой кабинет", "My dashboard")}</Link><Link href="/student/progress">{t("Мой прогресс", "My progress")}</Link><Link href="/bookmarks">{t("Закладки", "Bookmarks")}</Link><Link href="/access">{t("Мой доступ", "My access")}</Link>{admin && <Link href="/admin">{t("Управление", "Admin")}</Link>}<Button variant="text" onClick={async () => { await api("auth/logout", "POST"); window.location.assign("/login"); }}>{t("Выйти", "Sign out")}</Button></> : <><Link href="/login">{t("Войти", "Sign in")}</Link><Link href="/register">{t("Создать аккаунт", "Create an account")}</Link></>}
         <Link href="/olympiads">{t("Олимпиады и соревнования", "Olympiads & competitions")}</Link>
-        {(actor || !publicPage) && <fieldset className="account-language"><legend>{t("Язык личного кабинета", "Dashboard language")}</legend>{(["en", "ru"] as const).map(value => <label key={value}><Input type="radio" name="account-language" value={value} checked={accountLanguage === value} onChange={() => changeLanguage(value)} /><span>{value === "en" ? "English" : "Русский"}</span></label>)}</fieldset>}
-        <ThemePicker />
+        {(actor || !publicPage) && <fieldset className="account-language" disabled={!!lens}><legend>{t("Язык личного кабинета", "Dashboard language")}</legend>{(["en", "ru"] as const).map(value => <label key={value}><Input type="radio" name="account-language" value={value} checked={accountLanguage === value} onChange={() => changeLanguage(value)} /><span>{value === "en" ? "English" : "Русский"}</span></label>)}</fieldset>}
+        <fieldset className="view-form-fields" disabled={!!lens}><ThemePicker /></fieldset>
       </div>
     </details></div>
   </div></header>;

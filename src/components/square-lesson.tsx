@@ -1,4 +1,5 @@
 "use client";
+import { useView } from "./view-state";
 /* eslint-disable react-hooks/set-state-in-effect -- Restore versioned drafts after authentication/hydration. */
 import Link from "next/link";
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -17,6 +18,7 @@ const collectionOrder = ["diagnostic", "short", "variant", "exam", "mixed"];
 
 export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesson; sessionReady: boolean }) {
   const { t } = useLocale(), root = useRef<HTMLDivElement>(null), sectionNav = useRef<HTMLElement>(null);
+  const lens = useView();
   const topic = lesson.topic, actor = useContext(ActorContext), state = useSquareProgress(sessionReady, topic);
   const diagnostic = lesson.questions.find(q => q.collection === "diagnostic")!, primary = lesson.questions.filter(q => q.collection === "short");
   const [uid, setUid] = useState(diagnostic.uid), [restored, setRestored] = useState(false), [active, setActive] = useState("notes");
@@ -30,11 +32,11 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
     if (!sessionReady || !state.ready || restored) return;
     const params = new URLSearchParams(location.search), requested = params.get("item");
     let next = requested && lesson.questions.some(q => q.uid === requested) ? requested : params.get("review") && queue.length ? queue[0].uid : "";
-    if (!next) { try { const stored = localStorage.getItem(storageKey); if (lesson.questions.some(q => q.uid === stored)) next = stored!; } catch { /* draft writer shows failure */ } }
+    if (!next && !lens) { try { const stored = localStorage.getItem(storageKey); if (lesson.questions.some(q => q.uid === stored)) next = stored!; } catch { /* draft writer shows failure */ } }
     if (!next && state.snapshot.evidence.length) next = (queue[0] ?? primary.find(q => !state.snapshot.states[q.family]?.correct) ?? lesson.questions.find(q => q.collection === "mixed"))?.uid ?? "";
-    if (next) { setUid(next); try { localStorage.setItem(storageKey, next); } catch { /* draft writer shows failure */ } } setRestored(true);
-  }, [sessionReady, state.ready, restored, lesson.questions, queue, storageKey, primary, state.snapshot]);
-  useEffect(() => { if (actor && sessionReady) void api(topic.api + "/open", "POST").catch(() => {}); }, [actor?.id, sessionReady, topic.api]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (next) { setUid(next); try { if (!lens) localStorage.setItem(storageKey, next); } catch { /* draft writer shows failure */ } } setRestored(true);
+  }, [sessionReady, state.ready, restored, lesson.questions, queue, storageKey, primary, state.snapshot, lens]);
+  useEffect(() => { if (actor && sessionReady && !lens) void api(topic.api + "/open", "POST").catch(() => {}); }, [actor?.id, sessionReady, topic.api]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const header = document.querySelector<HTMLElement>(".topbar"), nav = sectionNav.current, lessonRoot = root.current;
@@ -69,7 +71,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
 
   function choose(q: SquareQuestion) {
     setUid(q.uid);
-    try { localStorage.setItem(storageKey, q.uid); } catch { /* draft writer shows failure */ }
+    try { if (!lens) localStorage.setItem(storageKey, q.uid); } catch { /* draft writer shows failure */ }
     const url = new URL(location.href); url.searchParams.set("item", q.uid); url.hash = "practice";
     history.replaceState(history.state, "", url);
     document.getElementById("practice")?.scrollIntoView({ behavior: "instant", block: "start" });
@@ -79,11 +81,11 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
   const next = primary.find(q => !state.snapshot.states[q.family]?.correct) ?? lesson.questions.find(q => q.collection === "mixed")!;
   return <div className="square-lesson" ref={root}>
     <nav className="square-crumbs" aria-label={t("Путь", "Breadcrumb")}><Link href="/learn/a-level">AS & A Level</Link><span> / </span><Link href="/courses/maths4u-9709-p1">Pure 1 · 9709</Link><span> / Quadratics</span></nav>
-    <header className="square-heading"><h1>{topic.title}</h1><p>{topic.summary}</p><ButtonLink variant="text" href="#practice">{t("Начать с короткой проверки →", "Try the quick check →")}</ButtonLink><span className="muted">{t("Без регистрации", "No account needed")}</span></header>
+    <header className="square-heading"><h1>{topic.title}</h1><p>{topic.summary}</p><ButtonLink variant="text" href="#practice">{t("Начать с короткой проверки →", "Try the quick check →")}</ButtonLink><span className="muted">{t("Без регистрации", "No account needed")}</span>{teacher && <ButtonLink href={"/teacher/works/new?topic=" + topic.lessonId}>{t("Задание из темы", "Assign from this topic")} →</ButtonLink>}</header>
     <details className="square-topic-mobile"><summary>Quadratics · {quadraticTopics.findIndex(q => q.key === topic.key) + 1} {t("из", "of")} {quadraticTopics.length}<span aria-hidden="true">▾</span></summary><nav aria-label={t("Выбрать тему Quadratics", "Choose a Quadratics topic")}>{quadraticTopics.map(q => <Link key={q.key} href={q.path} aria-current={q.key === topic.key ? "page" : undefined}>{q.title}</Link>)}</nav></details>
     <nav className="quadratics-topics" aria-label={t("Темы Quadratics", "Quadratics topics")}>{quadraticTopics.map(q => <Link key={q.key} href={q.path} aria-current={q.key === topic.key ? "page" : undefined}>{q.title}</Link>)}</nav>
     <nav className="square-nav" ref={sectionNav} aria-label={t("Разделы урока", "Lesson sections")}>{[t("Конспект", "Notes"), t("Примеры", "Examples"), t("Практика", "Practice"), t("Задачи", "Exam-style"), t("Повторение", "Review")].map((label, i) => <a key={sectionIds[i]} href={"#" + sectionIds[i]} aria-current={active === sectionIds[i] ? "location" : undefined}>{label}</a>)}</nav>
-    <section className="card square-reading" id="notes"><MathContent html={lesson.notes} />{actor && <Button disabled={!state.ready || !!state.snapshot.notesRead} onClick={() => void state.markRead()}>{state.snapshot.notesRead ? t("✓ Конспект прочитан", "✓ Notes marked as read") : t("Отметить прочитанным", "Mark notes as read")}</Button>}</section>
+    <section className="card square-reading" id="notes"><MathContent html={lesson.notes} />{actor && <Button disabled={!!lens || !state.ready || !!state.snapshot.notesRead} onClick={() => void state.markRead()}>{state.snapshot.notesRead ? t("✓ Конспект прочитан", "✓ Notes marked as read") : t("Отметить прочитанным", "Mark notes as read")}</Button>}</section>
     <section className="card square-reading" id="examples"><h2>{t("Разобранные примеры", "Worked examples")}</h2>{lesson.examples.map(e => <article className="square-example" key={e.title}><h3>{e.title}</h3><MathContent html={e.question} /><details><summary>{t("Посмотреть решение", "Follow the solution")}</summary><MathContent html={e.solution} /></details></article>)}</section>
     <section id="practice" className="card square-practice"><h2>{t("Практика метода", "Practise the method")}</h2>
       <div className="square-question-nav" aria-label={t("Навигация по вопросам", "Question navigation")}>
@@ -91,7 +93,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
         <progress max={group.questions.length} value={checked} aria-label={t("Проверено в этой подборке", "Questions checked in this collection")} /><p className="square-progress-label">{checked} / {group.questions.length} {t("проверено в этой подборке", "checked in this collection")}</p>
         <details className="square-question-list"><summary>{t("Все вопросы", "Question list")}</summary>{groups.map(g => <div key={g.key}><h3>{collectionLabel(g.key)}</h3><ol>{g.questions.map((q, i) => <li key={q.uid}><Button variant="text" aria-current={q.uid === uid ? "step" : undefined} onClick={e => { const disclosure = e.currentTarget.closest("details"); if (disclosure) { disclosure.open = false; disclosure.querySelector("summary")?.focus({ preventScroll: true }); } choose(q); }}><span>{i + 1}. {questionTitle(q)}</span>{!!state.snapshot.seen[q.uid] && <span className="square-list-checked">{t("Проверено", "Checked")}</span>}</Button></li>)}</ol></div>)}</details>
       </div>
-      <SquareQuestionForm topic={topic} key={uid + (actor?.id ?? "guest")} q={current} enabled={sessionReady && state.ready && !state.error} onResult={async (event, result) => { await state.record(event, current.family, result); }} />
+      <SquareQuestionForm topic={topic} key={uid + (actor?.id ?? "guest")} q={current} enabled={sessionReady && state.ready && !state.error && lens?.mode !== "USER"} onResult={async (event, result) => { await state.record(event, current.family, result); }} />
       <div className="square-next row"><Button onClick={() => choose(next)}>{t("Следующий шаг →", "Next step →")}</Button>{lesson.questions.some(q => q.family === current.family && q.uid !== current.uid) && <Button onClick={() => choose(lesson.questions.filter(q => q.family === current.family && q.uid !== current.uid).sort((a, b) => (state.snapshot.seen[a.uid] ?? 0) - (state.snapshot.seen[b.uid] ?? 0))[0])}>{t("Новый вариант", "Try a fresh variant")}</Button>}<a href="#examples">{t("Повторить метод", "Review the method")}</a></div>
       <SquareSaveNotice state={state} />
     </section>
@@ -103,6 +105,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
 }
 
 function SquareQuestionForm({ q, enabled, onResult, topic }: { topic: QuadraticTopic; q: SquareQuestion; enabled: boolean; onResult: (event: CheckEvent, result: CheckResult) => Promise<void> }) {
+  const lens = useView();
   const { t } = useLocale(), actor = useContext(ActorContext), form = useRef<HTMLFormElement>(null);
   const pendingFocus = useRef<HTMLElement | null>(null);
   const [attempted, setAttempted] = useState(false), [paper, setPaper] = useState(false);
@@ -115,15 +118,15 @@ function SquareQuestionForm({ q, enabled, onResult, topic }: { topic: QuadraticT
     if (focused.isConnected && form.current?.contains(focused) && (document.activeElement === document.body || document.activeElement === focused)) focused.focus({ preventScroll: true });
   });
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || lens) return;
     try {
       const d = JSON.parse(localStorage.getItem(draftKey) ?? "null");
       if (d && typeof d.answers === "object" && !(Number.isFinite(d.checkedAt) && Date.now() - d.checkedAt >= 86400000)) {
         setAnswers(Object.fromEntries(q.fields.map(f => [f.key, typeof d.answers[f.key] === "string" ? d.answers[f.key].slice(0, 400) : ""]))); setHelpUsed(d.helpUsed === true); setAttempted(d.attempted === true || Number.isFinite(d.checkedAt));
       }
     } catch { setStorageIssue(true); }
-  }, [enabled, draftKey, q.fields]);
-  function save(values: Record<string, string>, used: boolean, checkedAt?: number, didAttempt = attempted) { try { localStorage.setItem(draftKey, JSON.stringify({ answers: values, helpUsed: used, checkedAt, attempted: didAttempt })); } catch { setStorageIssue(true); } }
+  }, [enabled, draftKey, q.fields, lens]);
+  function save(values: Record<string, string>, used: boolean, checkedAt?: number, didAttempt = attempted) { if (lens) return; try { localStorage.setItem(draftKey, JSON.stringify({ answers: values, helpUsed: used, checkedAt, attempted: didAttempt })); } catch { setStorageIssue(true); } }
   function change(k: string, value: string) { const next = { ...answers, [k]: value }; setAnswers(next); setResult(null); save(next, helpUsed); }
   function preserveFocus() {
     const focused = document.activeElement;
@@ -149,7 +152,7 @@ function SquareQuestionForm({ q, enabled, onResult, topic }: { topic: QuadraticT
     <ErrorNotice error={error} />
     <div className="square-result">{result && <Feedback kind={result.correct ? "correct" : result.valid ? "again" : "format"}>{result.correct ? t("Все итоговые ответы верны.", "All final answers are correct.") + (helpUsed ? t(" Теперь попробуйте новый вариант без помощи.", " Now try a fresh variant without help.") : t(" Переходите дальше или вернитесь позже для повторения.", " Try the next step or return later for review.")) : result.valid ? t("Проверьте поля с отметкой «Попробуйте ещё».", "Look at the fields marked ‘Look again’, then try again.") : t("Некоторые ответы не удалось прочитать. Проверьте формат в отмеченных полях; результат ещё не записан.", "Some answers could not be read. Check the marked fields; no result has been recorded yet.")}</Feedback>}</div>
     {q.manual && <p className="muted">{t("Проверяются только итоговые ответы. Сравните объяснение, рисунок и метод с разобранным решением; баллы за метод требуют проверки.", "The checker checks final answers only. Compare your explanation, sketch and method with the worked solution; method marks need review.")}</p>}
-    <QuestionSupport storageKey={draftKey+'.support'} manual={q.manual} maximum={q.marks} enabled={enabled} attempted={attempted} onPaperFinished={()=>setPaper(true)} onHelp={()=>{setHelpUsed(true);save(answers,true);}} request={(kind,access)=>api<SupportContent>(topic.api+'/help','POST',{uid:q.uid,kind,version:topic.version,...(access?{access}:{}),...(access==='attempt'?{answers}:{})})} assess={actor?points=>api(topic.api+'/self-assess','POST',{uid:q.uid,version:topic.version,points}):undefined}/>
+    <QuestionSupport storageKey={draftKey+'.support'} manual={q.manual} maximum={q.marks} enabled={enabled} attempted={attempted} onPaperFinished={()=>setPaper(true)} onHelp={()=>{setHelpUsed(true);save(answers,true);}} request={(kind,access)=>api<SupportContent>(topic.api+'/help','POST',{uid:q.uid,kind,version:topic.version,...(access?{access}:{}),...(access==='attempt'?{answers}:{})})} assess={actor&&!lens?points=>api(topic.api+'/self-assess','POST',{uid:q.uid,version:topic.version,points}):undefined}/>
     {storageIssue && <p role="alert">{t("Не удалось сохранить черновик в браузере. Не закрывайте страницу до окончания работы.", "This draft could not be saved in your browser. Keep the page open until you finish.")}</p>}
   </article>;
 }

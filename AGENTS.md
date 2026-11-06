@@ -24,6 +24,14 @@ Before changing educational content, read
   Do not delete, unpublish, hide, restrict, redirect or bulk-noindex existing
   materials because of the redesign or the move toward original content. Later
   retirement requires a separate owner decision, even after the new bank is ready.
+- **Owner decision, 6 November 2026 (this is that separate decision):** material
+  classified as Cambridge examination content is archived, not deleted. Archived
+  tasks, their versions and files are visible only to administrators; guests,
+  students and teachers do not see them anywhere (catalogue, search, practice,
+  assignments, files, sitemap). Records, IDs, versions, attempts, answers and
+  reviews are preserved, and archiving must be reversible. Material that cannot
+  be classified automatically stays as it is until the owner reviews it. Follow
+  Stage 6 of `docs/CODEX-ARENA-ROADMAP-20261105.md`.
 - Preserve task identities, sources, immutable versions, import mappings, work
   assignments, files, answers and reviews. Do not relabel imported tasks as original
   or put a new original problem over an unrelated existing Task identity.
