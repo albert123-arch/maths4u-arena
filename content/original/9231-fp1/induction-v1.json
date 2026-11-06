@@ -1,0 +1,4200 @@
+{
+  "schema_version": 1,
+  "key": "9231-fp1-induction",
+  "version": "1.0.2",
+  "course": {
+    "slug": "maths4u-9231-fp1",
+    "title": "Further Pure Mathematics 1 (9231)",
+    "code": "9231",
+    "direction": "further"
+  },
+  "chapter": {
+    "id": "fp1_induction",
+    "slug": "proof-by-induction",
+    "title": "Proof by induction",
+    "position": 6
+  },
+  "source": {
+    "sha256": "981628a1fc096cc7f530f1085c49d251a80721ae167252923b213708ecf83cb6",
+    "supplied": 0,
+    "held": []
+  },
+  "lessons": [
+    {
+      "key": "sums",
+      "id": "fp1_induction_sums",
+      "title": "Building an induction proof",
+      "summary": "Connect a verified starting case to every later integer, rather than extrapolating a pattern.",
+      "objective": "Prove finite-sum identities by a valid base case, hypothesis and forward implication.",
+      "before": "<p>Review <a href=\"/courses/maths4u-9231-fp1/topics/fp1_series_power_sums\">finite sums</a> and polynomial factorisation. You need to distinguish an identity, a conjecture and a conditional statement.</p>",
+      "ideas": "<h3>What must travel from one integer to the next?</h3><p>Let P(n) be a precise statement for integers \\(n\\ge n_0\\). Checking P at several values is evidence for a conjecture, not a proof for infinitely many values. Induction needs two logically separate facts:</p>\n <ol><li>\\(P(n_{0})\\) is true by a direct calculation.</li><li>For an arbitrary integer \\(k\\ge n_0\\), if P(k) is true, then P(k+1) is true.</li></ol>\n <p>The second fact is a conditional implication: temporarily use P(k), never P(k+1). The starting case then triggers every successive implication. Without a starting case, a perfectly valid implication might never begin.</p>\n <h3>Name the target before doing the algebra</h3><p>For \\(S_n=\\sum_{r=a}^{n}t_r\\), define P(n) as \\(S_n=F(n)\\), with \\(n\\ge a\\). At n=a the sum has one term. At the next stage, only the new upper term is added:</p>\n \\[S_{k+1}=S_k+t_{k+1}=F(k)+t_{k+1}.\\]\n <p>Use algebra to reach F(k+1). You may write F(k+1) separately as your target, but cannot assume it equals the new sum. A useful independent check is \\(F(k+1)-F(k)=t_{k+1}\\), together with the correct starting value.</p>\n <h3>Scope and conclusion</h3><p>State that \\(P(n_{0})\\) and the implication prove P(n) for every integer \\(n\\ge n_{0}\\). A start at 3 proves nothing about 1 or 2. A step of two requires a base in each parity class you intend to cover, or a conclusion restricted to one parity. Finite examples can disprove a statement: one counterexample is enough.</p>",
+      "method": "<ol><li>State P(n) and its integer domain.</li><li>Evaluate both sides at the actual starting index.</li><li>Assume P(k) for one arbitrary admissible k.</li><li>Add the new term and simplify to the exact k+1 target.</li><li>Conclude with the base case, implication and full domain.</li></ol>",
+      "mistakes": [
+        "Several successful substitutions do not establish an infinite claim.",
+        "Do not assume the target P(k+1) in your working.",
+        "The added term is t(k+1), not t(k).",
+        "A sum starting at a has one term when n=a."
+      ],
+      "examples": [
+        {
+          "title": "1 · A starting index that is not 1",
+          "question": "<p>Prove \\(\\sum_{r=3}^{n}(2r+1)=(n+1)^2-9\\) for every integer \\(n\\ge 3\\).</p>",
+          "solution": "<p>Let P(n) be this identity. At n=3 the left side is 7 and the right side is 16−9=7. Assume P(k) for an arbitrary \\(k\\ge 3\\). Then</p>\\[\\sum_{r=3}^{k+1}(2r+1)=(k+1)^2-9+2k+3=(k+2)^2-9.\\]<p>This is P(k+1). The verified base and implication prove the identity for all integers \\(n\\ge 3\\).</p>",
+          "verification": "E-S1"
+        },
+        {
+          "title": "2 · Keep the new term visible",
+          "question": "<p>Prove \\(\\sum_{r=1}^{n}r(2r+3)=n(n+1)(4n+11)/6\\), \\(n\\ge 1\\).</p>",
+          "solution": "<p>At n=1 both sides equal 5. Assume the identity for \\(k\\ge 1\\). Adding the new term gives</p>\\[\\frac{k(k+1)(4k+11)}6+(k+1)(2k+5)=\\frac{(k+1)(k+2)(4k+15)}6.\\]<p>Since 4k+15=4(k+1)+11, this is exactly the k+1 formula. With the base case, induction proves the stated identity for every integer \\(n\\ge 1\\).</p>",
+          "verification": "E-S2"
+        },
+        {
+          "title": "3 · A bound needs its own algebraic bridge",
+          "question": "<p>Prove \\(3^n\\ge n^2\\) for every integer \\(n\\ge 2\\).</p>",
+          "solution": "<p>At n=2, \\(9\\ge 4\\). Assume \\(3^{k}\\ge k^{2}\\) for \\(k\\ge 2\\). Multiplication by 3 preserves the inequality. Also</p>\\[3k^2-(k+1)^2=2(k-2)^2+6(k-2)+3\\ge3>0.\\]<p>Thus \\(3^{k+1}\\ge 3k^{2}\\ge (k+1)^{2}\\). The base and implication establish the bound for all integers \\(n\\ge 2\\). Merely replacing k by k+1 in the assumption would not prove this step.</p>",
+          "verification": "E-S3"
+        },
+        {
+          "title": "4 · Three matches can still conceal a false formula",
+          "question": "<p>A proposed formula for \\(\\sum_{r=1}^{n}(2r-1)\\) is \\(n^2+(n-1)(n-2)(n-3)\\). Find the first failure, then prove the correct formula.</p>",
+          "solution": "<p>The extra factor vanishes at 1, 2 and 3. At n=4 the actual sum is 16, but the proposal gives 22. The correct statement is \\(S_{n}=n^{2}\\). Its base n=1 gives 1=1. Assuming \\(S_{k}=k^{2}\\),</p>\\[S_{k+1}=k^2+2k+1=(k+1)^2.\\]<p>Hence \\(S_{n}=n^{2}\\) for every integer \\(n\\ge 1\\) by induction. The counterexample rejects the proposal; the separate induction establishes its replacement.</p>",
+          "verification": "E-S4"
+        }
+      ]
+    },
+    {
+      "key": "derivatives",
+      "id": "fp1_induction_derivatives",
+      "title": "Induction through repeated differentiation",
+      "summary": "Track the derivative order, signs and factorials through an explicit next step.",
+      "objective": "Prove derivative formulae with the correct order increment and domain.",
+      "before": "<p>Complete <a href=\"/courses/maths4u-9231-fp1/topics/fp1_induction_sums\">the induction framework</a>. Review the product and chain rules, factorials, and derivatives of exponential, rational and trigonometric functions.</p>",
+      "ideas": "<h3>The index counts an operation</h3><p>Write \\(D^n y=d^ny/dx^n\\). For an ordinary nth-derivative formula, differentiate the assumed kth formula once. Keep n fixed while differentiating in x: factorials and powers depending only on k are constants.</p>\n <p>You may start at n=0 if \\(D^{0}y\\) means y itself and the proposed formula is defined there. A formula involving (n−1)! usually starts at 1; do not invent (−1)! to force an earlier base.</p>\n <h3>An even-order statement moves by two derivatives</h3><p>If P(n) describes \\(D^{2n}y\\), then P(k+1) describes \\(D^{2k+2}y\\). Differentiate the assumed formula twice. A one-derivative step reaches an odd order instead. For a formula repeating every four derivatives, use four derivatives per step.</p>\n <h3>Show the coefficient update</h3><p>A claimed formula is not justified by spotting the first few derivatives. Use the chain rule, signs and factorial relation explicitly; for example \\((k+1)k!=(k+1)!\\). For a product of a polynomial and an exponential, differentiate both factors and collect the result into the exact proposed next polynomial.</p>\n <p>Retain the x-domain where the original function and all required derivatives exist. State both quantifiers: every allowed derivative index and every x in that domain.</p>",
+      "method": "<ol><li>Define the derivative-order statement and domain.</li><li>Check the starting derivative directly.</li><li>Assume the exact kth formula.</li><li>Differentiate the number of times that advances the index once.</li><li>Collect coefficients into the k+1 formula and conclude.</li></ol>",
+      "mistakes": [
+        "An index increment is not always one differentiation.",
+        "The sign from differentiating a reciprocal must be retained.",
+        "Treat k as a constant when differentiating in x.",
+        "Check that the factorial is defined at the base case."
+      ],
+      "examples": [
+        {
+          "title": "1 · A one-derivative bridge",
+          "question": "<p>Prove \\(D^n(e^{5x-1})=5^ne^{5x-1}\\) for every integer \\(n\\ge 0\\) and real x.</p>",
+          "solution": "<p>For n=0 the identity is the original function. Assume the kth formula. Differentiating once, with \\(5^{k}\\) constant, gives</p>\\[D^{k+1}(e^{5x-1})=5^k\\cdot5e^{5x-1}=5^{k+1}e^{5x-1}.\\]<p>Therefore the identity holds for all integers \\(n\\ge 0\\) and all real x by induction.</p>",
+          "verification": "E-D1"
+        },
+        {
+          "title": "2 · A factorial and a chain-rule factor",
+          "question": "<p>For x&gt;2/3 prove \\(D^n(3x-2)^{-1}=(-1)^n n!3^n(3x-2)^{-n-1}\\), \\(n\\ge 0\\).</p>",
+          "solution": "<p>At n=0 the expression is the original function. Suppose the formula holds for k. Differentiate the x-dependent factor:</p>\\[D^{k+1}y=(-1)^kk!3^k(-k-1)3(3x-2)^{-k-2}=(-1)^{k+1}(k+1)!3^{k+1}(3x-2)^{-(k+1)-1}.\\]<p>This is the required next formula, so induction proves the result for all \\(n\\ge 0\\) on x&gt;2/3. The excluded pole is never reintroduced.</p>",
+          "verification": "E-D2"
+        },
+        {
+          "title": "3 · Four differentiations advance one index",
+          "question": "<p>Let \\(y=e^x\\cos x\\). Prove \\(D^{4n}y=(-4)^ny\\), \\(n\\ge 0\\).</p>",
+          "solution": "<p>Direct differentiation gives \\(y'=e^{x}(cos\\) x−sin x), \\(y''=-2e^{x}sin\\) x, \\(y'''=-2e^{x}(sin\\) x+cos x), and \\(y^{(4)}=-4y\\). P(0) is y=y. If \\(D^{4k}y=(-4)^{k}y\\), differentiating four times gives</p>\\[D^{4k+4}y=(-4)^kD^4y=(-4)^{k+1}y.\\]<p>The base and implication establish the formula for every integer \\(n\\ge 0\\). Differentiating only once would not reach P(k+1).</p>",
+          "verification": "E-D3"
+        },
+        {
+          "title": "4 · Use both terms of the product rule",
+          "question": "<p>For \\(y=(x-2)e^{2x}\\), prove \\(D^ny=2^ne^{2x}(x-2+n/2)\\), \\(n\\ge 0\\).</p>",
+          "solution": "<p>The n=0 case is immediate. Assume the kth expression. Differentiating both factors gives</p>\\[D^{k+1}y=2^ke^{2x}\\bigl(2(x-2+k/2)+1\\bigr)=2^{k+1}e^{2x}\\bigl(x-2+(k+1)/2\\bigr).\\]<p>This reaches the exact next formula. Hence it is valid for every integer \\(n\\ge 0\\) and real x.</p>",
+          "verification": "E-D4"
+        }
+      ]
+    },
+    {
+      "key": "recurrences",
+      "id": "fp1_induction_recurrences",
+      "title": "Recursive formulae and invariant bounds",
+      "summary": "Use the recurrence to carry a formula or an interval forward, with enough initial cases.",
+      "objective": "Prove explicit sequence formulae and bounds without assuming a denominator sign or a missing initial case.",
+      "before": "<p>Review <a href=\"/courses/maths4u-9231-fp1/topics/fp1_induction_sums\">the forward implication</a>, inequalities and recurrence notation. An invariant interval is an interval the recurrence maps back into itself.</p>",
+      "ideas": "<h3>The recurrence supplies the implication</h3><p>For \\(u_{n+1}=g(u_n,n)\\), substitute the induction hypothesis into g and simplify. Verify the actual first index, which may be 0. An explicit formula guessed from numerical terms still needs this argument.</p>\n <h3>A second-order recurrence needs two starting values</h3><p>If \\(u_{n+2}=a u_{n+1}+b u_n\\), prove the proposed formula at both 0 and 1. Assume it at k and k+1, then derive it at k+2. Equivalently, induct on the paired statement that both consecutive cases hold. One initial check cannot determine a two-initial-value sequence.</p>\n <h3>Bounds must survive the actual map</h3><p>To prove \\(L&lt;u_n&lt;U\\), first check the starting value. Assuming both inequalities at k, establish that the next term is defined, then show both new inequalities. In a rational recurrence the denominator's positivity must follow from the assumed interval before an inequality is multiplied through it.</p>\n <p>For a square-root recurrence, check the radicand and the non-negative branch before squaring a proposed bound. A bounded sequence need not converge; a monotone bounded sequence does. If a limit is requested, justify convergence first, then use continuity of the recurrence on its interval and select an admissible fixed point.</p>",
+      "method": "<ol><li>Record the starting index and all initial values.</li><li>State a formula or invariant interval precisely.</li><li>Check the needed base cases.</li><li>Apply the recurrence to the assumed case(s), justifying domains and signs.</li><li>Conclude induction; prove monotonicity separately if a limit is needed.</li></ol>",
+      "mistakes": [
+        "One base case is insufficient for a general second-order recurrence.",
+        "Do not reverse the implication by assuming the next formula.",
+        "A denominator may change the direction of an inequality.",
+        "Boundedness alone does not justify taking a limit."
+      ],
+      "examples": [
+        {
+          "title": "1 · An affine recurrence with index 0",
+          "question": "<p>If \\(u_{0}=4\\) and \\(u_{n+1}=2u_n+3\\), prove \\(u_n=7\\cdot2^n-3\\), \\(n\\ge 0\\).</p>",
+          "solution": "<p>At n=0, \\(7-3=4=u_{0}\\). Assume \\(u_{k}=7\\cdot 2^{k}-3\\). The recurrence gives</p>\\[u_{k+1}=2(7\\cdot2^k-3)+3=7\\cdot2^{k+1}-3.\\]<p>Thus the formula holds for all integers \\(n\\ge 0\\) by induction. Starting at 1 would have left the supplied first term outside the conclusion.</p>",
+          "verification": "E-R1"
+        },
+        {
+          "title": "2 · Prove a denominator sign before using a bound",
+          "question": "<p>Let \\(v_{0}=1/2\\) and \\(v_{n+1}=(2v_n+3)/(v_n+4)\\). Prove 0&lt;\\(v_{n}\\)&lt;1 for all \\(n\\ge 0\\).</p>",
+          "solution": "<p>The base lies in (0,1). Suppose 0&lt;\\(v_{k}\\)&lt;1. Then \\(v_{k}+4\\)&gt;0 and \\(2v_{k}+3\\)&gt;0, so \\(v_{k+1}\\)&gt;0. Also</p>\\[1-v_{k+1}=\\frac{1-v_k}{v_k+4}>0.\\]<p>Both next inequalities hold and the next term is defined. By induction all terms belong to (0,1); neither endpoint is attained.</p>",
+          "verification": "E-R2"
+        },
+        {
+          "title": "3 · Carry two consecutive cases",
+          "question": "<p>Given \\(w_{0}=1\\), \\(w_{1}=4\\) and \\(w_{n+2}=4w_{n+1}-3w_n\\), prove \\(w_n=(3^{n+1}-1)/2\\).</p>",
+          "solution": "<p>The formula gives 1 at n=0 and 4 at n=1. Assume it holds at k and k+1. Then</p>\\[w_{k+2}=\\frac{4(3^{k+2}-1)-3(3^{k+1}-1)}2=\\frac{3^{k+3}-1}2.\\]<p>This proves the next case while retaining the k+1 case. Induction on the pair of consecutive statements establishes the formula for all \\(n\\ge 0\\).</p>",
+          "verification": "E-R3"
+        },
+        {
+          "title": "4 · A square-root map preserves an interval",
+          "question": "<p>If \\(u_{0}=2\\) and \\(u_{n+1}=\\sqrt{6+u_n}\\), prove \\(2\\le u_{n}\\)&lt;3 for all \\(n\\ge 0\\).</p>",
+          "solution": "<p>The base satisfies both bounds. Suppose \\(2\\le u_{k}\\)&lt;3. Then \\(8\\le 6+u_{k}\\)&lt;9. The radicand is positive, and the non-negative square-root function is increasing, so</p>\\[2<\\sqrt8\\le u_{k+1}<3.\\]<p>In particular \\(2\\le u_{k+1}\\)&lt;3. Induction proves the claimed interval for every \\(n\\ge 0\\); strictness of the upper bound is preserved.</p>",
+          "verification": "E-R4"
+        }
+      ]
+    },
+    {
+      "key": "matrices",
+      "id": "fp1_induction_matrices",
+      "title": "Induction for matrix powers",
+      "summary": "Multiply the assumed matrix formula in the correct order and verify every entry.",
+      "objective": "Prove matrix-power identities, including parity patterns and nilpotent corrections.",
+      "before": "<p>Review <a href=\"/courses/maths4u-9231-fp1/topics/fp1_matrices_operations\">matrix multiplication</a> and <a href=\"/courses/maths4u-9231-fp1/topics/fp1_induction_sums\">the induction framework</a>. Use the identity matrix I, with \\(A^{0}=I\\) for any square A.</p>",
+      "ideas": "<h3>An entrywise claim about a whole matrix</h3><p>To prove \\(A^{n}=F(n)\\), check every entry at the base. Assuming \\(A^{k}=F(k)\\), calculate \\(A^{k+1}=F(k)A\\). It is also valid to multiply A on the left, but write the resulting order consistently. General matrices do not commute; identities for \\((AB)^{n}\\) require their own justification.</p>\n <h3>Use a small algebraic structure</h3><p>If \\(N^{2}=0\\), multiplication shows \\((I+cN)^n=I+ncN\\). The proof uses \\(N^{2}=0\\) at the transition; checking a few powers only suggests the formula. If \\(N^{3}=0\\), a second correction survives:</p>\n \\[(I+N)^n=I+nN+\\frac{n(n-1)}2N^2.\\]\n <p>Multiplying by I+N updates the \\(N^{2}\\) coefficient from k(k−1)/2 to k(k+1)/2, while the \\(N^{3}\\) term vanishes. Establish the nilpotent identity for the actual matrix first.</p>\n <h3>Parity and special parameter values</h3><p>When \\(A^{2}=cI\\), prove the even and odd powers together: \\(A^{2n}=c^nI\\) and \\(A^{2n+1}=c^nA\\). A step in n multiplies by \\(A^{2}\\). Do not use an even-only base and then conclude every exponent has the even formula. Parameter-dependent formulae must remain defined at exceptional values; check those separately if your derivation divides by a parameter.</p>",
+      "method": "<ol><li>Specify \\(n\\ge 0\\) or the true starting exponent.</li><li>Check the identity matrix or first power entry by entry.</li><li>Assume the complete matrix formula.</li><li>Multiply in the stated order and simplify every entry.</li><li>Identify the exact next formula and conclude on its stated domain.</li></ol>",
+      "mistakes": [
+        "\\(A^{0}\\) is the identity matrix, not the zero matrix.",
+        "Do not replace matrix multiplication with entrywise multiplication.",
+        "An even-power formula does not automatically cover odd powers.",
+        "A proof for a generic parameter must not discard a zero-parameter case."
+      ],
+      "examples": [
+        {
+          "title": "1 · A non-triangular matrix with a simple correction",
+          "question": "<p>For \\(A=\\begin{pmatrix}3&-2\\\\2&-1\\end{pmatrix}\\), prove \\(A^n=I+2nN\\), where \\(N=\\begin{pmatrix}1&-1\\\\1&-1\\end{pmatrix}\\), \\(n\\ge 0\\).</p>",
+          "solution": "<p>Direct multiplication gives \\(N^{2}=0\\) and A=I+2N. The base n=0 is \\(A^{0}=I\\). Assuming \\(A^{k}=I+2kN\\),</p>\\[A^{k+1}=(I+2kN)(I+2N)=I+2(k+1)N+4kN^2=I+2(k+1)N.\\]<p>Thus the complete matrix identity holds for every \\(n\\ge 0\\) by induction, even though A itself is not triangular.</p>",
+          "verification": "E-M1"
+        },
+        {
+          "title": "2 · Opposite signs on a diagonal",
+          "question": "<p>Prove \\(\\operatorname{diag}(2,-3)^n=\\operatorname{diag}(2^n,(-3)^n)\\), \\(n\\ge 0\\).</p>",
+          "solution": "<p>At n=0 both matrices are I. Assume the kth formula. Multiplying by diag(2,−3) multiplies the first diagonal entry by 2 and the second by −3; both off-diagonal entries remain zero. The result is \\(diag(2^{k+1}\\),\\((-3)^{k+1})\\), proving P(k+1). Hence induction establishes all non-negative powers, including the alternating sign.</p>",
+          "verification": "E-M2"
+        },
+        {
+          "title": "3 · Prove both parity cases",
+          "question": "<p>For \\(C=\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}\\), prove \\(C^{2n}=I\\) and \\(C^{2n+1}=C\\) for \\(n\\ge 0\\).</p>",
+          "solution": "<p>Compute \\(C^{2}=I\\). At n=0 the paired claims are \\(C^{0}=I\\) and \\(C^{1}=C\\). Assume both claims for k. Multiplying each by \\(C^{2}=I\\) yields \\(C^{2k+2}=I\\) and \\(C^{2k+3}=C\\). These are exactly the pair at k+1. Therefore both claims hold for all \\(n\\ge 0\\) by induction.</p>",
+          "verification": "E-M3"
+        },
+        {
+          "title": "4 · A quadratic correction in a 3 by 3 matrix",
+          "question": "<p>Let \\(J=\\begin{pmatrix}0&2&0\\\\0&0&1\\\\0&0&0\\end{pmatrix}\\). Prove \\((I+J)^n=I+nJ+n(n-1)J^2/2\\), \\(n\\ge 0\\).</p>",
+          "solution": "<p>\\(J^{2}\\) has only its top-right entry non-zero, equal to 2, and \\(J^{3}=0\\). The formula is I at n=0. Assuming it for k, multiplication by I+J gives</p>\\[I+(k+1)J+\\left(k+\\frac{k(k-1)}2\\right)J^2=I+(k+1)J+\\frac{k(k+1)}2J^2.\\]<p>The discarded term is a multiple of \\(J^{3}=0\\). This proves the k+1 formula and completes induction for all \\(n\\ge 0\\).</p>",
+          "verification": "E-M4"
+        }
+      ]
+    },
+    {
+      "key": "divisibility",
+      "id": "fp1_induction_divisibility",
+      "title": "Divisibility and a complete inductive argument",
+      "summary": "Carry an integer multiple or a residue forward, and conclude on the correct index set.",
+      "objective": "Prove divisibility statements by an explicit integer bridge and handle restricted indices precisely.",
+      "before": "<p>Complete <a href=\"/courses/maths4u-9231-fp1/topics/fp1_induction_sums\">the induction framework</a>. Review factors, integer multiples, residues and products of consecutive integers.</p>",
+      "ideas": "<h3>Keep the integer witness visible</h3><p>To prove d divides f(n), with a fixed non-zero integer d, assume f(k)=dq for an integer q. Try to express</p>\n \\[f(k+1)=a f(k)+dR(k),\\]\n <p>where a is an integer and R(k) is an integer for every admissible k. The next value is then d(aq+R(k)), an integer multiple of d. The base case must also be divisible by d. Simply saying that an expression looks even or divisible does not establish an integer witness.</p>\n <h3>Two useful transitions</h3><p>For polynomial f, factor the difference f(k+1)−f(k). For exponential f, a multiple a f(k) may cancel a difficult exponential term. If a remaining product needs an extra factor, justify it: consecutive integers have an even product, and a residue check may establish a factor of 3.</p>\n <h3>Congruences state the same integer fact</h3><p>The statement f(n)≡r(n) (mod d) means d divides f(n)−r(n). It may be easier to prove this stronger residue statement first, then identify every n for which the residue is zero. A statement for odd indices requires an odd-index transition, or a re-indexed variable; do not silently conclude it for even integers too.</p>\n <p>For a complete proof, record the allowed starting integer, use the hypothesis explicitly, justify the remaining integer multiple, and give the exact final domain. Short checks below practise those ingredients; a correct fragment is not certification of a complete written proof.</p>",
+      "method": "<ol><li>State the divisor, function and integer domain.</li><li>Check the actual first case.</li><li>Write the hypothesis as an integer multiple or congruence.</li><li>Produce a transition with an explicitly divisible remainder.</li><li>Conclude with the base, implication and precise set of indices.</li></ol>",
+      "mistakes": [
+        "A rational quotient is not necessarily an integer.",
+        "Changing a residue without justification can invalidate the step.",
+        "For an odd-index claim the next admissible index is k+2.",
+        "A valid transition cannot replace a missing base case."
+      ],
+      "examples": [
+        {
+          "title": "1 · Use a multiple of the previous expression",
+          "question": "<p>Prove 4 divides \\(5^{n}-1\\) for every integer \\(n\\ge 0\\).</p>",
+          "solution": "<p>At n=0 the expression is 0, a multiple of 4. Assume \\(5^{k}-1=4q\\) with integer q. Then</p>\\[5^{k+1}-1=5(5^k-1)+4=4(5q+1).\\]<p>The bracket is an integer, proving the next case. By induction the claim holds for every integer \\(n\\ge 0\\).</p>",
+          "verification": "E-V1"
+        },
+        {
+          "title": "2 · Factor a polynomial difference",
+          "question": "<p>Prove 6 divides (n+1)(n+2)(n+3) for every integer \\(n\\ge 0\\).</p>",
+          "solution": "<p>For n=0 the product is 6. Put f(n)=(n+1)(n+2)(n+3) and assume f(k)=6q. Then</p>\\[f(k+1)-f(k)=3(k+2)(k+3).\\]<p>One of k+2 and k+3 is even, so (k+2)(k+3)/2 is an integer. Thus f(k+1)=6(q+(k+2)(k+3)/2), an integer multiple of 6. The base and implication prove the result for all \\(n\\ge 0\\).</p>",
+          "verification": "E-V2"
+        },
+        {
+          "title": "3 · Match one of two exponential growth factors",
+          "question": "<p>Prove 7 divides \\(9^{n}+6\\cdot 2^{n}\\) for all integers \\(n\\ge 0\\).</p>",
+          "solution": "<p>The n=0 value is 7. Put \\(f(n)=9^{n}+6\\cdot 2^{n}\\) and assume f(k)=7q. Then</p>\\[f(k+1)=2f(k)+7\\cdot9^k=7(2q+9^k).\\]<p>Because q and \\(9^{k}\\) are integers, this establishes P(k+1). The base and implication prove divisibility by 7 for every \\(n\\ge 0\\).</p>",
+          "verification": "E-V3"
+        },
+        {
+          "title": "4 · An odd-index conclusion uses a step of two",
+          "question": "<p>Prove 8 divides \\(n^{2}-1\\) for every positive odd integer n.</p>",
+          "solution": "<p>The base n=1 gives 0. Assume k is a positive odd integer and \\(k^{2}-1=8q\\). The next odd integer is k+2, and</p>\\[(k+2)^2-1=(k^2-1)+4(k+1)=8\\left(q+\\frac{k+1}2\\right).\\]<p>Since k is odd, (k+1)/2 is an integer. The base and step of two cover every positive odd integer. The conclusion does not include even integers: n=2 gives 3.</p>",
+          "verification": "E-V4"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "M4U-9231-IN-E-S01",
+      "family_uid": "M4U-9231-IN-E-S01",
+      "lesson": "sums",
+      "title": "An offset quadratic summand",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(S_{n}\\) denote the sum below.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by mathematical induction, for every integer \\(n\\ge 1\\),</p>\\[\\sum_{r=1}^{n}r \\left(r + 2\\right)=\\frac{n \\left(n + 1\\right) \\left(2 n + 7\\right)}{6}\\]<span class=\"marks\">[5]</span></li><li><p>Hence evaluate \\(\\sum_{r=4}^{15}r(r+2)\\).</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[\\sum_{r=1}^{n}r \\left(r + 2\\right)=\\frac{n \\left(n + 1\\right) \\left(2 n + 7\\right)}{6}\\]",
+      "solution_html": "<h4>(a)</h4><p>Let P(n) be the stated identity. At n=1 both sides equal 3. Assume P(k) for an arbitrary integer \\(k\\ge 1\\). Adding the new term gives</p>\\[S_{k+1}=\\frac{k \\left(k + 1\\right) \\left(2 k + 7\\right)}{6}+\\left(k + 1\\right) \\left(k + 3\\right)=\\frac{\\left(k + 1\\right) \\left(k + 2\\right) \\left(2 k + 9\\right)}{6}\\]<p>The last expression is F(k+1), with F the proposed right side. Thus P(k) implies P(k+1). The base case and implication establish the identity for all integers \\(n\\ge 1\\).</p><h4>(b)</h4><p>Subtract \\(S_{3}\\) from \\(S_{15}\\): 1480−26=1454.</p>",
+      "hint_html": "<p>Add the term with r=k+1 to the assumed kth sum. A tail sum is the difference of two complete sums.</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=1, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression F(k+1) from the stated identity.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Subtract \\(S_{3}\\) from \\(S_{15}\\): 1480−26=1454.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-S01"
+    },
+    {
+      "id": "M4U-9231-IN-E-S02",
+      "family_uid": "M4U-9231-IN-E-S02",
+      "lesson": "sums",
+      "title": "When a running total first crosses a threshold",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(S_{n}\\) denote the sum below.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by mathematical induction, for every integer \\(n\\ge 1\\),</p>\\[\\sum_{r=1}^{n}4 r - 1=n \\left(2 n + 1\\right)\\]<span class=\"marks\">[5]</span></li><li><p>Find the least positive integer n for which the sum exceeds 400.</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[\\sum_{r=1}^{n}4 r - 1=n \\left(2 n + 1\\right)\\]",
+      "solution_html": "<h4>(a)</h4><p>Let P(n) be the stated identity. At n=1 both sides equal 3. Assume P(k) for an arbitrary integer \\(k\\ge 1\\). Adding the new term gives</p>\\[S_{k+1}=k \\left(2 k + 1\\right)+4 k + 3=\\left(k + 1\\right) \\left(2 k + 3\\right)\\]<p>The last expression is F(k+1), with F the proposed right side. Thus P(k) implies P(k+1). The base case and implication establish the identity for all integers \\(n\\ge 1\\).</p><h4>(b)</h4><p>\\(S_{13}=351\\) and \\(S_{14}=406\\). Every added term 4r−1 is positive, so the least index is 14.</p>",
+      "hint_html": "<p>Add the term with r=k+1 to the assumed kth sum. A tail sum is the difference of two complete sums.</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=1, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression F(k+1) from the stated identity.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>\\(S_{13}=351\\) and \\(S_{14}=406\\). Every added term 4r−1 is positive, so the least index is 14.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-S02"
+    },
+    {
+      "id": "M4U-9231-IN-E-S03",
+      "family_uid": "M4U-9231-IN-E-S03",
+      "lesson": "sums",
+      "title": "A finite reciprocal sum and its remainder",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(S_{n}\\) denote the sum below.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by mathematical induction, for every integer \\(n\\ge 1\\),</p>\\[\\sum_{r=1}^{n}\\frac{1}{\\left(r + 1\\right) \\left(r + 2\\right)}=\\frac{n}{2 n + 4}\\]<span class=\"marks\">[5]</span></li><li><p>Find the least \\(n\\ge 1\\) for which \\(1/2-S_n&lt;1/50\\).</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[\\sum_{r=1}^{n}\\frac{1}{\\left(r + 1\\right) \\left(r + 2\\right)}=\\frac{n}{2 n + 4}\\]",
+      "solution_html": "<h4>(a)</h4><p>Let P(n) be the stated identity. At n=1 both sides equal \\frac{1}{6}. Assume P(k) for an arbitrary integer \\(k\\ge 1\\). Adding the new term gives</p>\\[S_{k+1}=\\frac{k}{2 k + 4}+\\frac{1}{\\left(k + 2\\right) \\left(k + 3\\right)}=\\frac{k + 1}{2 \\left(k + 3\\right)}\\]<p>The last expression is F(k+1), with F the proposed right side. Thus P(k) implies P(k+1). The base case and implication establish the identity for all integers \\(n\\ge 1\\).</p><h4>(b)</h4><p>The remainder is 1/(n+2). The strict inequality gives n+2&gt;50, so \\(n\\ge 49\\) and the least value is 49.</p>",
+      "hint_html": "<p>Add the term with r=k+1 to the assumed kth sum. A tail sum is the difference of two complete sums.</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=1, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression F(k+1) from the stated identity.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>The remainder is 1/(n+2). The strict inequality gives n+2&gt;50, so \\(n\\ge 49\\) and the least value is 49.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-S03"
+    },
+    {
+      "id": "M4U-9231-IN-E-S04",
+      "family_uid": "M4U-9231-IN-E-S04",
+      "lesson": "sums",
+      "title": "Cubes along an odd-index progression",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(S_{n}\\) denote the sum below.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by mathematical induction, for every integer \\(n\\ge 1\\),</p>\\[\\sum_{r=1}^{n}\\left(2 r - 1\\right)^{3}=n^{2} \\left(2 n^{2} - 1\\right)\\]<span class=\"marks\">[5]</span></li><li><p>Evaluate \\(\\sum_{r=6}^{12}(2r-1)^3\\).</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[\\sum_{r=1}^{n}\\left(2 r - 1\\right)^{3}=n^{2} \\left(2 n^{2} - 1\\right)\\]",
+      "solution_html": "<h4>(a)</h4><p>Let P(n) be the stated identity. At n=1 both sides equal 1. Assume P(k) for an arbitrary integer \\(k\\ge 1\\). Adding the new term gives</p>\\[S_{k+1}=k^{2} \\left(2 k^{2} - 1\\right)+\\left(2 k + 1\\right)^{3}=\\left(k + 1\\right)^{2} \\left(2 k^{2} + 4 k + 1\\right)\\]<p>The last expression is F(k+1), with F the proposed right side. Thus P(k) implies P(k+1). The base case and implication establish the identity for all integers \\(n\\ge 1\\).</p><h4>(b)</h4><p>\\(S_{12}=41328\\) and \\(S_{5}=1225\\), so the required total is 40103.</p>",
+      "hint_html": "<p>Add the term with r=k+1 to the assumed kth sum. A tail sum is the difference of two complete sums.</p>",
+      "marks": 7,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=1, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression F(k+1) from the stated identity.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>\\(S_{12}=41328\\) and \\(S_{5}=1225\\), so the required total is 40103.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-S04"
+    },
+    {
+      "id": "M4U-9231-IN-E-S05",
+      "family_uid": "M4U-9231-IN-E-S05",
+      "lesson": "sums",
+      "title": "A weighted exponential total",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(S_{n}\\) denote the sum below.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by mathematical induction, for every integer \\(n\\ge 1\\),</p>\\[\\sum_{r=1}^{n}2^{r - 1} \\left(3 r + 1\\right)=2^{n} \\left(3 n - 2\\right) + 2\\]<span class=\"marks\">[5]</span></li><li><p>Find n if the total is 418.</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[\\sum_{r=1}^{n}2^{r - 1} \\left(3 r + 1\\right)=2^{n} \\left(3 n - 2\\right) + 2\\]",
+      "solution_html": "<h4>(a)</h4><p>Let P(n) be the stated identity. At n=1 both sides equal 4. Assume P(k) for an arbitrary integer \\(k\\ge 1\\). Adding the new term gives</p>\\[S_{k+1}=2^{k} \\left(3 k - 2\\right) + 2+2^{k} \\left(3 k + 4\\right)=2 \\left(3 \\cdot 2^{k} k + 2^{k} + 1\\right)\\]<p>The last expression is F(k+1), with F the proposed right side. Thus P(k) implies P(k+1). The base case and implication establish the identity for all integers \\(n\\ge 1\\).</p><h4>(b)</h4><p>At n=5 the total is (15−2)·32+2=418. Every summand is positive, so the totals strictly increase and no other positive integer n works.</p>",
+      "hint_html": "<p>Add the term with r=k+1 to the assumed kth sum. A tail sum is the difference of two complete sums.</p>",
+      "marks": 7,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=1, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression F(k+1) from the stated identity.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>At n=5 the total is (15−2)·32+2=418. Every summand is positive, so the totals strictly increase and no other positive integer n works.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-S05"
+    },
+    {
+      "id": "M4U-9231-IN-E-S06",
+      "family_uid": "M4U-9231-IN-E-S06",
+      "lesson": "sums",
+      "title": "A convincing pattern with a missing implication",
+      "collection": "exam",
+      "prompt_html": "<p>A proposed formula is \\(\\sum_{r=1}^{n}(3r^2-3r+2)=n^3+n+(n-1)(n-2)(n-3)\\). A student checks n=1,2,3 and then writes “replace n by n+1, so the formula is true”.</p><ol class=\"parts\" type=\"a\"><li><p>Find the first positive integer where the formula fails and explain the logical error.</p><span class=\"marks\">[2]</span></li><li><p>Prove by induction the correct identity \\(\\sum_{r=1}^{n}(3r^2-3r+2)=n^3+n\\), \\(n\\ge 1\\).</p><span class=\"marks\">[5]</span></li></ol>",
+      "answer_html": "<p>First failure: n=4 (68≠74). The corrected sum is \\(n^{3}+n\\).</p>",
+      "solution_html": "<h4>(a)</h4><p>The correct totals at 1,2,3 are 2,10,30 and the extra factor is zero. At n=4 the total is 68 but the proposed value is 74. The student has not proved a conditional implication; substituting into the desired formula assumes the conclusion.</p><h4>(b)</h4><p>At n=1 both sides equal 2. Assume \\(S_{k}=k^{3}+k\\) for \\(k\\ge 1\\). The next summand is \\(3(k+1)^{2}-3(k+1)+2=3k^{2}+3k+2\\). Hence \\(S_{k+1}=k^{3}+3k^{2}+4k+2=(k+1)^{3}+(k+1)\\). This is the next formula, so the base and implication prove the identity for all integers \\(n\\ge 1\\).</p>",
+      "hint_html": "<p>A product of consecutive shifted factors can vanish at several early indices. Separate rejecting the false formula from proving its replacement.</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>First failure n=4, with actual 68 and proposed 74.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Explain that checking examples or assuming the next claim does not prove \\(P(k)\\Rightarrow P(k+1)\\).</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=1, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression \\((k+1)^{3}+(k+1)\\).</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-S06"
+    },
+    {
+      "id": "M4U-9231-IN-E-D01",
+      "family_uid": "M4U-9231-IN-E-D01",
+      "lesson": "derivatives",
+      "title": "A linear factor carried through every derivative",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(\\left(2 x + 1\\right) e^{3 x}\\) be the function y. Work where the displayed original function is defined.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by mathematical induction for integers \\(n\\ge 1\\) that</p>\\[D^{n}y=\\left(3^{n} \\left(2 x + 1\\right) + 2 \\cdot 3^{n - 1} n\\right) e^{3 x}\\]<span class=\"marks\">[5]</span></li><li><p>Evaluate \\(y^{(5)}(0)\\).</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[D^{n}y=\\left(3^{n} \\left(2 x + 1\\right) + 2 \\cdot 3^{n - 1} n\\right) e^{3 x}\\]",
+      "solution_html": "<h4>(a)</h4><p>Define P(n) as the displayed formula on the given x-domain. At n=1 direct differentiation gives \\(\\left(6 x + 5\\right) e^{3 x}\\), agreeing with the proposed formula. Assume P(k) for an arbitrary \\(k\\ge 1\\). Differentiate the assumed expression once, keeping k constant:</p>\\[D^{k+1}y=2 \\cdot 3^{k} e^{3 x} + 3 \\left(3^{k} \\left(2 x + 1\\right) + 2 \\cdot 3^{k - 1} k\\right) e^{3 x}=\\left(2 \\cdot 3^{k} \\left(k + 1\\right) + 3^{k + 1} \\left(2 x + 1\\right)\\right) e^{3 x}\\]<p>This is exactly P(k+1). The base and implication prove the formula for every stated integer n and every x in the given domain.</p><h4>(b)</h4><p>The value is \\(3^{5}+10\\cdot 3^{4}=243+810=1053\\).</p>",
+      "hint_html": "<p>Match the derivative order in P(k+1). Retain all chain-rule and product-rule terms before collecting.</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=1, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression The stated derivative formula with n replaced by k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>The value is \\(3^{5}+10\\cdot 3^{4}=243+810=1053\\).</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-D01"
+    },
+    {
+      "id": "M4U-9231-IN-E-D02",
+      "family_uid": "M4U-9231-IN-E-D02",
+      "lesson": "derivatives",
+      "title": "Logarithmic derivatives and the first valid index",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(\\log{\\left(2 x + 5 \\right)}\\) be the function y. Work where the displayed original function is defined.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by mathematical induction for integers \\(n\\ge 1\\) that</p>\\[D^{n}y=\\left(-1\\right)^{n - 1} \\cdot 2^{n} \\left(2 x + 5\\right)^{- n} \\left(n - 1\\right)!\\]<span class=\"marks\">[5]</span></li><li><p>Evaluate \\(y^{(4)}(-2)\\), stating whether −2 lies in the real domain.</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[D^{n}y=\\left(-1\\right)^{n - 1} \\cdot 2^{n} \\left(2 x + 5\\right)^{- n} \\left(n - 1\\right)!\\]",
+      "solution_html": "<h4>(a)</h4><p>Define P(n) as the displayed formula on the given x-domain. At n=1 direct differentiation gives \\(\\frac{2}{2 x + 5}\\), agreeing with the proposed formula. Assume P(k) for an arbitrary \\(k\\ge 1\\). Differentiate the assumed expression once, keeping k constant:</p>\\[D^{k+1}y=- \\frac{2 \\left(-1\\right)^{k - 1} \\cdot 2^{k} k \\left(2 x + 5\\right)^{- k} \\left(k - 1\\right)!}{2 x + 5}=\\left(-1\\right)^{k} 2^{k + 1} \\left(2 x + 5\\right)^{- k - 1} k!\\]<p>This is exactly P(k+1). The base and implication prove the formula for every stated integer n and every x in the given domain.</p><h4>(b)</h4><p>The real domain is x&gt;−5/2, which contains −2. The fourth derivative is \\(-3!\\cdot 2^{4}/(2x+5)^{4}\\), giving −96.</p>",
+      "hint_html": "<p>Match the derivative order in P(k+1). Retain all chain-rule and product-rule terms before collecting.</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=1, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression The stated derivative formula with n replaced by k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>The real domain is x&gt;−5/2, which contains −2. The fourth derivative is \\(-3!\\cdot 2^{4}/(2x+5)^{4}\\), giving −96.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-D02"
+    },
+    {
+      "id": "M4U-9231-IN-E-D03",
+      "family_uid": "M4U-9231-IN-E-D03",
+      "lesson": "derivatives",
+      "title": "A reciprocal square and its series coefficient",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(\\frac{1}{\\left(1 - 3 x\\right)^{2}}\\) be the function y. Work where the displayed original function is defined.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by mathematical induction for integers \\(n\\ge 0\\) that</p>\\[D^{n}y=3^{n} \\left(1 - 3 x\\right)^{- n - 2} \\left(n + 1\\right)!\\]<span class=\"marks\">[5]</span></li><li><p>Hence find the coefficient of \\(x^{5}\\) in the Maclaurin expansion.</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[D^{n}y=3^{n} \\left(1 - 3 x\\right)^{- n - 2} \\left(n + 1\\right)!\\]",
+      "solution_html": "<h4>(a)</h4><p>Define P(n) as the displayed formula on the given x-domain. At n=0 direct differentiation gives \\(\\frac{1}{\\left(3 x - 1\\right)^{2}}\\), agreeing with the proposed formula. Assume P(k) for an arbitrary \\(k\\ge 0\\). Differentiate the assumed expression once, keeping k constant:</p>\\[D^{k+1}y=\\frac{3^{k} \\left(1 - 3 x\\right)^{- k - 2} \\left(3 k + 6\\right) \\left(k + 1\\right)!}{1 - 3 x}=3^{k + 1} \\left(1 - 3 x\\right)^{- k - 3} \\left(k + 2\\right)!\\]<p>This is exactly P(k+1). The base and implication prove the formula for every stated integer n and every x in the given domain.</p><h4>(b)</h4><p>The coefficient is \\(y^{(5)}(0)/5!=6!\\cdot 3^{5}/5!=1458\\).</p>",
+      "hint_html": "<p>Match the derivative order in P(k+1). Retain all chain-rule and product-rule terms before collecting.</p>",
+      "marks": 7,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression The stated derivative formula with n replaced by k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>The coefficient is \\(y^{(5)}(0)/5!=6!\\cdot 3^{5}/5!=1458\\).</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-D03"
+    },
+    {
+      "id": "M4U-9231-IN-E-D04",
+      "family_uid": "M4U-9231-IN-E-D04",
+      "lesson": "derivatives",
+      "title": "Even orders and the missing odd derivative",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(\\sin{\\left(4 x + \\frac{\\pi}{7} \\right)}\\) be the function y. Work where the displayed original function is defined.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by mathematical induction for integers \\(n\\ge 0\\) that</p>\\[D^{2n}y=\\left(-16\\right)^{n} \\sin{\\left(4 x + \\frac{\\pi}{7} \\right)}\\]<span class=\"marks\">[5]</span></li><li><p>Find \\(y^{(7)}(x)\\) exactly.</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[D^{2n}y=\\left(-16\\right)^{n} \\sin{\\left(4 x + \\frac{\\pi}{7} \\right)}\\]",
+      "solution_html": "<h4>(a)</h4><p>Define P(n) as the displayed formula on the given x-domain. At n=0 direct differentiation gives \\(\\sin{\\left(4 x + \\frac{\\pi}{7} \\right)}\\), agreeing with the proposed formula. Assume P(k) for an arbitrary \\(k\\ge 0\\). Differentiate the assumed expression 2 times, keeping k constant:</p>\\[D^{2k+2}y=- 16 \\left(-16\\right)^{k} \\sin{\\left(4 x + \\frac{\\pi}{7} \\right)}=\\left(-16\\right)^{k + 1} \\sin{\\left(4 x + \\frac{\\pi}{7} \\right)}\\]<p>This is exactly P(k+1). The base and implication prove the formula for every stated integer n and every x in the given domain.</p><h4>(b)</h4><p>Differentiate the even-order result with n=3 once: \\(y^{(7)}=-16384\\cos(4x+\\pi/7)\\).</p>",
+      "hint_html": "<p>Match the derivative order in P(k+1). Retain all chain-rule and product-rule terms before collecting.</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression The stated derivative formula with n replaced by k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Differentiate the even-order result with n=3 once: \\(y^{(7)}=-16384\\cos(4x+\\pi/7)\\).</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-D04"
+    },
+    {
+      "id": "M4U-9231-IN-E-D05",
+      "family_uid": "M4U-9231-IN-E-D05",
+      "lesson": "derivatives",
+      "title": "A quadratic factor under the product rule",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(\\left(x^{2} + 1\\right) e^{- 2 x}\\) be the function y. Work where the displayed original function is defined.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by mathematical induction for integers \\(n\\ge 0\\) that</p>\\[D^{n}y=\\left(-2\\right)^{n} \\left(- n x + \\frac{n \\left(n - 1\\right)}{4} + x^{2} + 1\\right) e^{- 2 x}\\]<span class=\"marks\">[5]</span></li><li><p>Evaluate \\(y'''(1)\\).</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[D^{n}y=\\left(-2\\right)^{n} \\left(- n x + \\frac{n \\left(n - 1\\right)}{4} + x^{2} + 1\\right) e^{- 2 x}\\]",
+      "solution_html": "<h4>(a)</h4><p>Define P(n) as the displayed formula on the given x-domain. At n=0 direct differentiation gives \\(\\left(x^{2} + 1\\right) e^{- 2 x}\\), agreeing with the proposed formula. Assume P(k) for an arbitrary \\(k\\ge 0\\). Differentiate the assumed expression once, keeping k constant:</p>\\[D^{k+1}y=\\left(-2\\right)^{k} \\left(- k + 2 x\\right) e^{- 2 x} - 2 \\left(-2\\right)^{k} \\left(- k x + \\frac{k \\left(k - 1\\right)}{4} + x^{2} + 1\\right) e^{- 2 x}=\\left(-2\\right)^{k + 1} \\left(\\frac{k \\left(k + 1\\right)}{4} + x^{2} - x \\left(k + 1\\right) + 1\\right) e^{- 2 x}\\]<p>This is exactly P(k+1). The base and implication prove the formula for every stated integer n and every x in the given domain.</p><h4>(b)</h4><p>The bracket is 1−3+1+3·2/4=1/2, so \\(y^{(3)}(1)=-4e^{-2}\\).</p>",
+      "hint_html": "<p>Match the derivative order in P(k+1). Retain all chain-rule and product-rule terms before collecting.</p>",
+      "marks": 7,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression The stated derivative formula with n replaced by k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>The bracket is 1−3+1+3·2/4=1/2, so \\(y^{(3)}(1)=-4e^{-2}\\).</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-D05"
+    },
+    {
+      "id": "M4U-9231-IN-E-D06",
+      "family_uid": "M4U-9231-IN-E-D06",
+      "lesson": "derivatives",
+      "title": "A proved formula applied to a related rational function",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(\\frac{1}{x + 4}\\) be the function y. Work where the displayed original function is defined.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by mathematical induction for integers \\(n\\ge 0\\) that</p>\\[D^{n}y=\\left(-1\\right)^{n} \\left(x + 4\\right)^{- n - 1} n!\\]<span class=\"marks\">[5]</span></li><li><p>Let z=x/(x+4). Use the proved result to find \\(z^{(4)}(0)\\).</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[D^{n}y=\\left(-1\\right)^{n} \\left(x + 4\\right)^{- n - 1} n!\\]",
+      "solution_html": "<h4>(a)</h4><p>Define P(n) as the displayed formula on the given x-domain. At n=0 direct differentiation gives \\(\\frac{1}{x + 4}\\), agreeing with the proposed formula. Assume P(k) for an arbitrary \\(k\\ge 0\\). Differentiate the assumed expression once, keeping k constant:</p>\\[D^{k+1}y=\\frac{\\left(-1\\right)^{k} \\left(- k - 1\\right) \\left(x + 4\\right)^{- k - 1} k!}{x + 4}=\\left(-1\\right)^{k + 1} \\left(x + 4\\right)^{- k - 2} \\left(k + 1\\right)!\\]<p>This is exactly P(k+1). The base and implication prove the formula for every stated integer n and every x in the given domain.</p><h4>(b)</h4><p>Write z=1−4/(x+4). For \\(n\\ge 1\\) its nth derivative is −4 times the formula for y. Therefore \\(z^{(4)}(0)=-4\\cdot 4!/4^{5}=-3/32\\).</p>",
+      "hint_html": "<p>Match the derivative order in P(k+1). Retain all chain-rule and product-rule terms before collecting.</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression The stated derivative formula with n replaced by k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Write z=1−4/(x+4). For \\(n\\ge 1\\) its nth derivative is −4 times the formula for y. Therefore \\(z^{(4)}(0)=-4\\cdot 4!/4^{5}=-3/32\\).</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-D06"
+    },
+    {
+      "id": "M4U-9231-IN-E-R01",
+      "family_uid": "M4U-9231-IN-E-R01",
+      "lesson": "recurrences",
+      "title": "An affine update and its first threshold",
+      "collection": "exam",
+      "prompt_html": "<p>A sequence has \\(u_{0}=5\\) and \\[u_{n+1}=3 u - 4\\]for \\(n\\ge 0\\).</p><ol class=\"parts\" type=\"a\"><li><p>Prove by induction that \\(3^{n + 1} + 2\\) equals \\(u_{n}\\) for every integer \\(n\\ge 0\\).</p><span class=\"marks\">[5]</span></li><li><p>Find the first index n for which \\(u_{n}\\)&gt;700.</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[u_n=3^{n + 1} + 2\\]",
+      "solution_html": "<h4>(a)</h4><p>At n=0 the formula gives 5, the specified initial value. Assume it holds at an arbitrary \\(k\\ge 0\\). Substitution into the recurrence gives</p>\\[u_{k+1}=3 \\cdot 3^{k + 1} + 2=9 \\cdot 3^{k} + 2\\]<p>This is the proposed formula at k+1. The verified base and implication establish it for all integers \\(n\\ge 0\\).</p><h4>(b)</h4><p>The formula is strictly increasing. \\(u_{4}=245\\le 700\\) and \\(u_{5}=731\\)&gt;700, so the first index is 5.</p>",
+      "hint_html": "<p>Use the given recurrence after stating the kth formula. Check the least index using monotonicity, not one isolated substitution.</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression The proposed formula at k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>The formula is strictly increasing. \\(u_{4}=245\\le 700\\) and \\(u_{5}=731\\)&gt;700, so the first index is 5.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-R01"
+    },
+    {
+      "id": "M4U-9231-IN-E-R02",
+      "family_uid": "M4U-9231-IN-E-R02",
+      "lesson": "recurrences",
+      "title": "An irrational invariant boundary",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(u_{1}=4\\) and \\(u_{n+1}=(3u_n+8)/(u_n+3)\\), \\(n\\ge 1\\).</p><ol class=\"parts\" type=\"a\"><li><p>Prove by induction that \\(u_n&gt;\\sqrt8\\) for every \\(n\\ge 1\\).</p><span class=\"marks\">[5]</span></li><li><p>Show that the sequence converges and find its limit.</p><span class=\"marks\">[3]</span></li></ol>",
+      "answer_html": "<p>\\(u_{n}\\)&gt;\\(\\sqrt{8}\\) for all \\(n\\ge 1\\); the sequence decreases to \\(\\sqrt{8}\\).</p>",
+      "solution_html": "<h4>(a)</h4><p>The base 4&gt;\\(\\sqrt{8}\\) is true. Assuming \\(u_{k}\\)&gt;\\(\\sqrt{8}\\) gives \\(u_{k}+3\\)&gt;0. With \\(L=\\sqrt{8}\\),</p>\\[u_{k+1}-L=\\frac{(3-L)(u_k-L)}{u_k+3}>0,\\]<p>because \\(3-\\sqrt{8}\\)&gt;0. The next term is defined and exceeds L. Induction proves the bound for all \\(n\\ge 1\\).</p><h4>(b)</h4><p>Since \\(u_{n+1}-u_n=(8-u_n^2)/(u_n+3)&lt;0\\), it decreases and is bounded below. It therefore converges. Continuity gives \\(\\ell ^{2}=8\\); the bound \\(\\ell \\ge \\sqrt{8}\\) selects \\(\\ell =\\sqrt{8}\\).</p>",
+      "hint_html": "<p>Subtract \\(\\sqrt{8}\\) from the recurrence and factor. Justify convergence before solving a fixed-point equation.</p>",
+      "marks": 8,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=1, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression \\(u_{k+1}\\)&gt;\\(\\sqrt{8}\\) with a positive denominator.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A2",
+              "marks": 2,
+              "description_html": "<p>Since \\(u_{n+1}-u_n=(8-u_n^2)/(u_n+3)&lt;0\\), it decreases and is bounded below. It therefore converges. Continuity gives \\(\\ell ^{2}=8\\); the bound \\(\\ell \\ge \\sqrt{8}\\) selects \\(\\ell =\\sqrt{8}\\).</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-R02"
+    },
+    {
+      "id": "M4U-9231-IN-E-R03",
+      "family_uid": "M4U-9231-IN-E-R03",
+      "lesson": "recurrences",
+      "title": "Two initial values determine the solution",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(u_{0}=2\\), \\(u_{1}=7\\) and \\(u_{n+2}=5u_{n+1}-6u_n\\), \\(n\\ge 0\\).</p><ol class=\"parts\" type=\"a\"><li><p>Prove by induction that \\(u_n=3^{n+1}-2^n\\) for all \\(n\\ge 0\\).</p><span class=\"marks\">[6]</span></li><li><p>Find the least n with \\(u_{n}\\)&gt;600.</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "<p>\\(u_{n}=3^{n+1}-2^{n}\\); the least index is 5.</p>",
+      "solution_html": "<h4>(a)</h4><p>The formula gives 2 and 7 at n=0 and 1. Assume it at k and k+1. Then</p>\\[u_{k+2}=5(3^{k+2}-2^{k+1})-6(3^{k+1}-2^k)=3^{k+3}-2^{k+2}.\\]<p>Both consecutive cases propagate, so paired induction proves the result for all \\(n\\ge 0\\).</p><h4>(b)</h4><p>The difference \\(u_{n+1}-u_{n}=2\\cdot 3^{n+1}-2^{n}\\) is positive. Since \\(u_{4}=227\\) and \\(u_{5}=697\\), the least index is 5.</p>",
+      "hint_html": "<p>A second-order recurrence needs two base cases. Treat the consecutive pair as the induction statement.</p>",
+      "marks": 8,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A2",
+              "marks": 2,
+              "description_html": "<p>Verify both n=0 and n=1 against the supplied initial values.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Assume the formula at k and k+1.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Substitute both formulae into the second-order recurrence.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain \\(3^{k+3}-2^{k+2}\\).</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude for all \\(n\\ge 0\\) by paired induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>The difference \\(u_{n+1}-u_{n}=2\\cdot 3^{n+1}-2^{n}\\) is positive. Since \\(u_{4}=227\\) and \\(u_{5}=697\\), the least index is 5.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-R03"
+    },
+    {
+      "id": "M4U-9231-IN-E-R04",
+      "family_uid": "M4U-9231-IN-E-R04",
+      "lesson": "recurrences",
+      "title": "A changing increment produces a square",
+      "collection": "exam",
+      "prompt_html": "<p>A sequence has \\(u_{0}=1\\) and \\[u_{n+1}=2 n + u + 3\\]for \\(n\\ge 0\\).</p><ol class=\"parts\" type=\"a\"><li><p>Prove by induction that \\(\\left(n + 1\\right)^{2}\\) equals \\(u_{n}\\) for every integer \\(n\\ge 0\\).</p><span class=\"marks\">[5]</span></li><li><p>Find the least n for which \\(u_{n}\\)&gt;225.</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[u_n=\\left(n + 1\\right)^{2}\\]",
+      "solution_html": "<h4>(a)</h4><p>At n=0 the formula gives 1, the specified initial value. Assume it holds at an arbitrary \\(k\\ge 0\\). Substitution into the recurrence gives</p>\\[u_{k+1}=2 k + \\left(k + 1\\right)^{2} + 3=\\left(k + 2\\right)^{2}\\]<p>This is the proposed formula at k+1. The verified base and implication establish it for all integers \\(n\\ge 0\\).</p><h4>(b)</h4><p>The terms \\((n+1)^{2}\\) increase for \\(n\\ge 0\\). \\(u_{14}=225\\) and \\(u_{15}=256\\), so the strict inequality first holds at n=15.</p>",
+      "hint_html": "<p>Use the given recurrence after stating the kth formula. Check the least index using monotonicity, not one isolated substitution.</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression The proposed formula at k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>The terms \\((n+1)^{2}\\) increase for \\(n\\ge 0\\). \\(u_{14}=225\\) and \\(u_{15}=256\\), so the strict inequality first holds at n=15.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-R04"
+    },
+    {
+      "id": "M4U-9231-IN-E-R05",
+      "family_uid": "M4U-9231-IN-E-R05",
+      "lesson": "recurrences",
+      "title": "A bounded increasing rational sequence",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(v_{1}=1\\) and \\(v_{n+1}=(4v_n+6)/(v_n+5)\\), \\(n\\ge 1\\).</p><ol class=\"parts\" type=\"a\"><li><p>Prove by induction that \\(1\\le v_n&lt;2\\) for every \\(n\\ge 1\\).</p><span class=\"marks\">[5]</span></li><li><p>Prove convergence and find the limit.</p><span class=\"marks\">[3]</span></li></ol>",
+      "answer_html": "<p>\\(1\\le v_{n}\\)&lt;2 for all \\(n\\ge 1\\); \\(v_{n}\\) increases to 2.</p>",
+      "solution_html": "<h4>(a)</h4><p>The base is 1. Assume \\(1\\le v_{k}\\)&lt;2. The denominator is positive, and</p>\\[v_{k+1}-1=\\frac{3v_k+1}{v_k+5}>0,\\qquad 2-v_{k+1}=\\frac{2(2-v_k)}{v_k+5}>0.\\]<p>The next term is defined and satisfies both bounds. Induction establishes the interval for all \\(n\\ge 1\\).</p><h4>(b)</h4><p>\\(v_{n+1}-v_n=(2-v_n)(v_n+3)/(v_n+5)&gt;0\\). The sequence increases and is bounded above, so it converges. Its limit satisfies \\(\\ell ^{2}+\\ell -6=0\\). Since \\(\\ell \\ge 1\\), the limit is 2 rather than −3.</p>",
+      "hint_html": "<p>Prove each side of the interval and the denominator sign. Solve the fixed-point equation only after establishing convergence.</p>",
+      "marks": 8,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=1, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression Both \\(1\\le v_{k+1}\\) and \\(v_{k+1}\\)&lt;2.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A2",
+              "marks": 2,
+              "description_html": "<p>\\(v_{n+1}-v_n=(2-v_n)(v_n+3)/(v_n+5)&gt;0\\). The sequence increases and is bounded above, so it converges. Its limit satisfies \\(\\ell ^{2}+\\ell -6=0\\). Since \\(\\ell \\ge 1\\), the limit is 2 rather than −3.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-R05"
+    },
+    {
+      "id": "M4U-9231-IN-E-R06",
+      "family_uid": "M4U-9231-IN-E-R06",
+      "lesson": "recurrences",
+      "title": "Factorials and a second identity",
+      "collection": "exam",
+      "prompt_html": "<p>A sequence has \\(u_{0}=1\\) and \\[u_{n+1}=u \\left(n + 2\\right)\\]for \\(n\\ge 0\\).</p><ol class=\"parts\" type=\"a\"><li><p>Prove by induction that \\(\\left(n + 1\\right)!\\) equals \\(u_{n}\\) for every integer \\(n\\ge 0\\).</p><span class=\"marks\">[5]</span></li><li><p>Prove, also by induction, \\(\\sum_{r=0}^{n}(r+1)u_r=(n+2)!-1\\), \\(n\\ge 0\\).</p><span class=\"marks\">[5]</span></li></ol>",
+      "answer_html": "\\[u_n=\\left(n + 1\\right)!\\]",
+      "solution_html": "<h4>(a)</h4><p>At n=0 the formula gives 1, the specified initial value. Assume it holds at an arbitrary \\(k\\ge 0\\). Substitution into the recurrence gives</p>\\[u_{k+1}=\\left(k + 2\\right) \\left(k + 1\\right)!=\\left(k + 2\\right)!\\]<p>This is the proposed formula at k+1. The verified base and implication establish it for all integers \\(n\\ge 0\\).</p><h4>(b)</h4><p>At n=0 the sum is 1=2!−1. Assume the identity at k. The next added term is \\((k+2)u_{k+1}=(k+2)(k+2)!\\). The new total is (k+2)!−1+(k+2)(k+2)!=(k+3)!−1. The base and implication prove the identity for every \\(n\\ge 0\\).</p>",
+      "hint_html": "<p>Use the given recurrence after stating the kth formula. Check the least index using monotonicity, not one isolated substitution.</p>",
+      "marks": 10,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression The proposed formula at k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression (k+3)!−1 after adding \\((k+2)u_{k+1}\\).</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-R06"
+    },
+    {
+      "id": "M4U-9231-IN-E-M01",
+      "family_uid": "M4U-9231-IN-E-M01",
+      "lesson": "matrices",
+      "title": "A shear reaches a specified point",
+      "collection": "exam",
+      "prompt_html": "\\[A=\\left[\\begin{matrix}1 & 4\\\\0 & 1\\end{matrix}\\right]\\]<ol class=\"parts\" type=\"a\"><li><p>Prove by induction for \\(n\\ge 0\\) that</p>\\[A^n=\\left[\\begin{matrix}1 & 4 n\\\\0 & 1\\end{matrix}\\right]\\]<span class=\"marks\">[5]</span></li><li><p>Find the non-negative integer n for which \\(A^n(2,-1)^T=(-26,-1)^T\\).</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[A^n=\\left[\\begin{matrix}1 & 4 n\\\\0 & 1\\end{matrix}\\right]\\]",
+      "solution_html": "<h4>(a)</h4><p>At n=0 the proposed matrix is \\(I=A^{0}\\). Assume the complete matrix formula at \\(k\\ge 0\\). Multiplying on the right by A gives</p>\\[A^{k+1}=\\left[\\begin{matrix}1 & 4 k\\\\0 & 1\\end{matrix}\\right]\\left[\\begin{matrix}1 & 4\\\\0 & 1\\end{matrix}\\right]=\\left[\\begin{matrix}1 & 4 k + 4\\\\0 & 1\\end{matrix}\\right]\\]<p>Entrywise multiplication gives the displayed matrix, which is F(k+1). Therefore the base and implication prove the identity for every integer \\(n\\ge 0\\). An equivalent left-multiplication proof is accepted.</p><h4>(b)</h4><p>The image is (2−4n,−1)ᵀ, so 2−4n=−26 gives n=7. The second coordinate agrees.</p>",
+      "hint_html": "<p>Check \\(A^{0}=I\\). Multiply the complete kth matrix by A, rather than taking powers of entries.</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression Every entry of the proposed matrix at k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>The image is (2−4n,−1)ᵀ, so 2−4n=−26 gives n=7. The second coordinate agrees.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-M01"
+    },
+    {
+      "id": "M4U-9231-IN-E-M02",
+      "family_uid": "M4U-9231-IN-E-M02",
+      "lesson": "matrices",
+      "title": "A three-dimensional power with a quadratic entry",
+      "collection": "exam",
+      "prompt_html": "\\[A=\\left[\\begin{matrix}1 & 1 & 0\\\\0 & 1 & 2\\\\0 & 0 & 1\\end{matrix}\\right]\\]<ol class=\"parts\" type=\"a\"><li><p>Prove by induction for \\(n\\ge 0\\) that</p>\\[A^n=\\left[\\begin{matrix}1 & n & n \\left(n - 1\\right)\\\\0 & 1 & 2 n\\\\0 & 0 & 1\\end{matrix}\\right]\\]<span class=\"marks\">[5]</span></li><li><p>Find all non-negative integers n for which the top-right entry of \\(A^{n}\\) is 72.</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[A^n=\\left[\\begin{matrix}1 & n & n \\left(n - 1\\right)\\\\0 & 1 & 2 n\\\\0 & 0 & 1\\end{matrix}\\right]\\]",
+      "solution_html": "<h4>(a)</h4><p>At n=0 the proposed matrix is \\(I=A^{0}\\). Assume the complete matrix formula at \\(k\\ge 0\\). Multiplying on the right by A gives</p>\\[A^{k+1}=\\left[\\begin{matrix}1 & k & k \\left(k - 1\\right)\\\\0 & 1 & 2 k\\\\0 & 0 & 1\\end{matrix}\\right]\\left[\\begin{matrix}1 & 1 & 0\\\\0 & 1 & 2\\\\0 & 0 & 1\\end{matrix}\\right]=\\left[\\begin{matrix}1 & k + 1 & k \\left(k + 1\\right)\\\\0 & 1 & 2 k + 2\\\\0 & 0 & 1\\end{matrix}\\right]\\]<p>Entrywise multiplication gives the displayed matrix, which is F(k+1). Therefore the base and implication prove the identity for every integer \\(n\\ge 0\\). An equivalent left-multiplication proof is accepted.</p><h4>(b)</h4><p>n(n−1)=72 gives n=9 or −8. Only n=9 lies in the stipulated domain.</p>",
+      "hint_html": "<p>Check \\(A^{0}=I\\). Multiply the complete kth matrix by A, rather than taking powers of entries.</p>",
+      "marks": 7,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression Every entry of the proposed matrix at k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>n(n−1)=72 gives n=9 or −8. Only n=9 lies in the stipulated domain.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-M02"
+    },
+    {
+      "id": "M4U-9231-IN-E-M03",
+      "family_uid": "M4U-9231-IN-E-M03",
+      "lesson": "matrices",
+      "title": "A symmetric matrix and a complete image",
+      "collection": "exam",
+      "prompt_html": "\\[A=\\left[\\begin{matrix}2 & 1\\\\1 & 2\\end{matrix}\\right]\\]<ol class=\"parts\" type=\"a\"><li><p>Prove by induction for \\(n\\ge 0\\) that</p>\\[A^n=\\left[\\begin{matrix}\\frac{3^{n}}{2} + \\frac{1}{2} & \\frac{3^{n}}{2} - \\frac{1}{2}\\\\\\frac{3^{n}}{2} - \\frac{1}{2} & \\frac{3^{n}}{2} + \\frac{1}{2}\\end{matrix}\\right]\\]<span class=\"marks\">[5]</span></li><li><p>Evaluate \\(A^4(5,1)^T\\).</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "\\[A^n=\\left[\\begin{matrix}\\frac{3^{n}}{2} + \\frac{1}{2} & \\frac{3^{n}}{2} - \\frac{1}{2}\\\\\\frac{3^{n}}{2} - \\frac{1}{2} & \\frac{3^{n}}{2} + \\frac{1}{2}\\end{matrix}\\right]\\]",
+      "solution_html": "<h4>(a)</h4><p>At n=0 the proposed matrix is \\(I=A^{0}\\). Assume the complete matrix formula at \\(k\\ge 0\\). Multiplying on the right by A gives</p>\\[A^{k+1}=\\left[\\begin{matrix}\\frac{3^{k}}{2} + \\frac{1}{2} & \\frac{3^{k}}{2} - \\frac{1}{2}\\\\\\frac{3^{k}}{2} - \\frac{1}{2} & \\frac{3^{k}}{2} + \\frac{1}{2}\\end{matrix}\\right]\\left[\\begin{matrix}2 & 1\\\\1 & 2\\end{matrix}\\right]=\\left[\\begin{matrix}\\frac{3 \\cdot 3^{k}}{2} + \\frac{1}{2} & \\frac{3 \\cdot 3^{k}}{2} - \\frac{1}{2}\\\\\\frac{3 \\cdot 3^{k}}{2} - \\frac{1}{2} & \\frac{3 \\cdot 3^{k}}{2} + \\frac{1}{2}\\end{matrix}\\right]\\]<p>Entrywise multiplication gives the displayed matrix, which is F(k+1). Therefore the base and implication prove the identity for every integer \\(n\\ge 0\\). An equivalent left-multiplication proof is accepted.</p><h4>(b)</h4><p>\\(A^{4}\\) has diagonal entries 41 and off-diagonal entries 40. The image is (245,241)ᵀ.</p>",
+      "hint_html": "<p>Check \\(A^{0}=I\\). Multiply the complete kth matrix by A, rather than taking powers of entries.</p>",
+      "marks": 7,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression Every entry of the proposed matrix at k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>\\(A^{4}\\) has diagonal entries 41 and off-diagonal entries 40. The image is (245,241)ᵀ.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-M03"
+    },
+    {
+      "id": "M4U-9231-IN-E-M04",
+      "family_uid": "M4U-9231-IN-E-M04",
+      "lesson": "matrices",
+      "title": "Paired powers rather than a missing parity class",
+      "collection": "exam",
+      "prompt_html": "\\[Q=\\begin{pmatrix}0&-2\\\\1&0\\end{pmatrix}.\\]<ol class=\"parts\" type=\"a\"><li><p>Prove by induction that \\(Q^{2n}=(-2)^{n}I\\) and \\(Q^{2n+1}=(-2)^{n}Q\\) for \\(n\\ge 0\\).</p><span class=\"marks\">[5]</span></li><li><p>Find \\(Q^{13}\\).</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "<p>\\(Q^{2n}=(-2)^{n}I\\), \\(Q^{2n+1}=(-2)^{n}Q\\).</p>",
+      "solution_html": "<h4>(a)</h4><p>Direct multiplication gives \\(Q^{2}=-2I\\). At n=0 the claims are \\(Q^{0}=I\\) and \\(Q^{1}=Q\\). Assume both claims for k. Multiplication by \\(Q^{2}=-2I\\) gives \\(Q^{2k+2}=(-2)^{k+1}I\\) and \\(Q^{2k+3}=(-2)^{k+1}Q\\), the pair at k+1. Thus both formulae hold for every \\(n\\ge 0\\) by induction.</p><h4>(b)</h4>\\[Q^{13}=(-2)^6Q=\\begin{pmatrix}0&-128\\\\64&0\\end{pmatrix}.\\]",
+      "hint_html": "<p>Make the even and odd formulae one paired statement. One increment of n multiplies by \\(Q^{2}\\).</p>",
+      "marks": 7,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression Both the even and odd formulae at k+1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "\\[Q^{13}=(-2)^6Q=\\begin{pmatrix}0&-128\\\\64&0\\end{pmatrix}.\\]"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-M04"
+    },
+    {
+      "id": "M4U-9231-IN-E-M05",
+      "family_uid": "M4U-9231-IN-E-M05",
+      "lesson": "matrices",
+      "title": "A projector controls every power",
+      "collection": "exam",
+      "prompt_html": "\\[P=\\frac15\\begin{pmatrix}1&2\\\\2&4\\end{pmatrix},\\qquad T=I+2P.\\]<ol class=\"parts\" type=\"a\"><li><p>Verify \\(P^{2}=P\\), then prove by induction that \\(T^{n}=I+(3^{n}-1)P\\) for \\(n\\ge 0\\).</p><span class=\"marks\">[6]</span></li><li><p>Describe all vectors fixed by T, and find \\(T^{n}(1\\),2)ᵀ.</p><span class=\"marks\">[3]</span></li></ol>",
+      "answer_html": "<p>\\(T^{n}=I+(3^{n}-1)P\\); fixed vectors t(2,−1)ᵀ; \\(T^{n}(1\\),2)ᵀ\\(=3^{n}(1\\),2)ᵀ.</p>",
+      "solution_html": "<h4>(a)</h4><p>The square of the integer matrix is five times itself, so \\(P^{2}=P\\). At n=0 the formula gives I. Assuming \\(T^{k}=I+(3^{k}-1)P\\),</p>\\[T^{k+1}=(I+(3^k-1)P)(I+2P)=I+\\bigl(2+3(3^k-1)\\bigr)P=I+(3^{k+1}-1)P.\\]<p>The base and implication prove the formula for all \\(n\\ge 0\\).</p><h4>(b)</h4><p>Tv=v means Pv=0, giving x+2y=0, or v=t(2,−1)ᵀ with t real. Since P(1,2)ᵀ=(1,2)ᵀ, its image under \\(T^{n}\\) is \\(3^{n}(1\\),2)ᵀ.</p>",
+      "hint_html": "<p>Compute \\(P^{2}\\) first and use it to simplify the product. Fixed vectors and the projected direction behave differently.</p>",
+      "marks": 9,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Compute \\(P^{2}=P\\).</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression \\(I+(3^{k+1}-1)P\\) using \\(P^{2}=P\\).</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A2",
+              "marks": 2,
+              "description_html": "<p>Tv=v means Pv=0, giving x+2y=0, or v=t(2,−1)ᵀ with t real. Since P(1,2)ᵀ=(1,2)ᵀ, its image under \\(T^{n}\\) is \\(3^{n}(1\\),2)ᵀ.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-M05"
+    },
+    {
+      "id": "M4U-9231-IN-E-M06",
+      "family_uid": "M4U-9231-IN-E-M06",
+      "lesson": "matrices",
+      "title": "A parameter that may vanish",
+      "collection": "exam",
+      "prompt_html": "\\[N=\\begin{pmatrix}0&t\\\\0&0\\end{pmatrix},\\qquad B=2I+N,\\qquad t\\in\\mathbb R.\\]<ol class=\"parts\" type=\"a\"><li><p>Prove by induction that \\(B^{n}=2^{n}I+n2^{n-1}N\\) for every integer \\(n\\ge 1\\) and every real t. Explain the case t=0.</p><span class=\"marks\">[5]</span></li><li><p>The top-right entry of \\(B^{5}\\) is 240. Find t.</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "<p>\\(B^{n}=2^{n}I+n2^{n-1}N\\) for \\(n\\ge 1\\); t=3.</p>",
+      "solution_html": "<h4>(a)</h4><p>\\(N^{2}=0\\) for every t. At n=1 the formula is B=2I+N. Assume it for \\(k\\ge 1\\). Then</p>\\[B^{k+1}=(2^kI+k2^{k-1}N)(2I+N)=2^{k+1}I+(k+1)2^kN.\\]<p>No division by t was used. At t=0 it gives \\((2I)^{n}=2^{n}I\\), so the exceptional parameter is included. The base and implication prove the identity for all \\(n\\ge 1\\) and all real t.</p><h4>(b)</h4><p>The entry is \\(5\\cdot 2^{4}t=80t\\), so t=3.</p>",
+      "hint_html": "<p>\\(N^{2}\\) vanishes even when t=0. Do not divide by t in a proof that must cover all real parameters.</p>",
+      "marks": 7,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=1, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression \\(2^{k+1}I+(k+1)2^{k}N\\), including t=0.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>The entry is \\(5\\cdot 2^{4}t=80t\\), so t=3.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-M06"
+    },
+    {
+      "id": "M4U-9231-IN-E-V01",
+      "family_uid": "M4U-9231-IN-E-V01",
+      "lesson": "divisibility",
+      "title": "An integer quotient has its own recurrence",
+      "collection": "exam",
+      "prompt_html": "<p>All indices below are non-negative integers.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by induction that 5 divides \\(- 2^{n} + 7^{n}\\).</p><span class=\"marks\">[5]</span></li><li><p>Define \\(q_{n}=(7^{n}-2^{n})/5\\). Derive its recurrence and use it to find \\(q_{3}\\).</p><span class=\"marks\">[3]</span></li></ol>",
+      "answer_html": "<p>5 divides \\(- 2^{n} + 7^{n}\\) for every \\(n\\ge 0\\).</p>",
+      "solution_html": "<h4>(a)</h4><p>Put f(n)=\\(- 2^{n} + 7^{n}\\). At n=0 its value is 0, a multiple of 5. Assume f(k)=5q for an integer q. Then</p>\\[f(k+1)=7f(k)+5 \\cdot 2^{k}\\]<p>The remainder \\(5 \\cdot 2^{n}\\) is divisible by 5 for every non-negative integer n. Thus f(k+1) is 5 times an integer. The base and implication establish the claim for every \\(n\\ge 0\\).</p><h4>(b)</h4><p>\\(q_{0}=0\\) and \\(q_{n+1}=7q_{n}+2^{n}\\). This gives \\(q_{1}=1\\), \\(q_{2}=9\\) and \\(q_{3}=67\\).</p>",
+      "hint_html": "<p>Express f(k+1) as an integer multiple of f(k), plus a remainder whose divisibility you justify.</p>",
+      "marks": 8,
+      "difficulty": 3,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression An explicit integer multiple of 5.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A2",
+              "marks": 2,
+              "description_html": "<p>\\(q_{0}=0\\) and \\(q_{n+1}=7q_{n}+2^{n}\\). This gives \\(q_{1}=1\\), \\(q_{2}=9\\) and \\(q_{3}=67\\).</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-V01"
+    },
+    {
+      "id": "M4U-9231-IN-E-V02",
+      "family_uid": "M4U-9231-IN-E-V02",
+      "lesson": "divisibility",
+      "title": "A consecutive-product factor in a polynomial step",
+      "collection": "exam",
+      "prompt_html": "<p>All indices below are non-negative integers.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by induction that 6 divides \\(n^{3} + 5 n\\).</p><span class=\"marks\">[5]</span></li><li><p>Can \\(n^{3}+5n+2\\) be divisible by 6 for any non-negative integer n? Justify your answer.</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "<p>6 divides \\(n^{3} + 5 n\\) for every \\(n\\ge 0\\).</p>",
+      "solution_html": "<h4>(a)</h4><p>Put f(n)=\\(n^{3} + 5 n\\). At n=0 its value is 0, a multiple of 6. Assume f(k)=6q for an integer q. Then</p>\\[f(k+1)=1f(k)+3 k \\left(k + 1\\right) + 6\\]<p>The product k(k+1) is even because one of two consecutive integers is even. Consequently 3k(k+1) is divisible by 6, as is 6. The remainder \\(3 n \\left(n + 1\\right) + 6\\) is divisible by 6 for every non-negative integer n. Thus f(k+1) is 6 times an integer. The base and implication establish the claim for every \\(n\\ge 0\\).</p><h4>(b)</h4><p>No. The proved result shows \\(n^{3}+5n+2\\) has residue 2 modulo 6 for every \\(n\\ge 0\\), so it is never divisible by 6.</p>",
+      "hint_html": "<p>Express f(k+1) as an integer multiple of f(k), plus a remainder whose divisibility you justify.</p>",
+      "marks": 7,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression An explicit integer multiple of 6.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>No. The proved result shows \\(n^{3}+5n+2\\) has residue 2 modulo 6 for every \\(n\\ge 0\\), so it is never divisible by 6.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-V02"
+    },
+    {
+      "id": "M4U-9231-IN-E-V03",
+      "family_uid": "M4U-9231-IN-E-V03",
+      "lesson": "divisibility",
+      "title": "An exponential quotient stays odd",
+      "collection": "exam",
+      "prompt_html": "<p>All indices below are non-negative integers.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by induction that 13 divides \\(3^{n + 2} + 4^{2 n + 1}\\).</p><span class=\"marks\">[5]</span></li><li><p>Show that the integer \\(q_{n}=(4^{2n+1}+3^{n+2})/13\\) is odd for every \\(n\\ge 0\\).</p><span class=\"marks\">[4]</span></li></ol>",
+      "answer_html": "<p>13 divides \\(3^{n + 2} + 4^{2 n + 1}\\) for every \\(n\\ge 0\\).</p>",
+      "solution_html": "<h4>(a)</h4><p>Put f(n)=\\(3^{n + 2} + 4^{2 n + 1}\\). At n=0 its value is 13, a multiple of 13. Assume f(k)=13q for an integer q. Then</p>\\[f(k+1)=3f(k)+13 \\cdot 4^{2 k + 1}\\]<p>The remainder \\(13 \\cdot 4^{2 n + 1}\\) is divisible by 13 for every non-negative integer n. Thus f(k+1) is 13 times an integer. The base and implication establish the claim for every \\(n\\ge 0\\).</p><h4>(b)</h4><p>\\(q_{0}=1\\). The transition gives \\(q_{n+1}=3q_{n}+4^{2n+1}\\). If \\(q_{k}\\) is odd, \\(3q_{k}\\) is odd and \\(4^{2k+1}\\) is even, so \\(q_{k+1}\\) is odd. The base and implication prove the claim for all \\(n\\ge 0\\).</p>",
+      "hint_html": "<p>Express f(k+1) as an integer multiple of f(k), plus a remainder whose divisibility you justify.</p>",
+      "marks": 9,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression An explicit integer multiple of 13.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>\\(q_{0}=1\\) is odd.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use \\(q_{k+1}=3q_{k}+4^{2k+1}\\) under the hypothesis that \\(q_{k}\\) is odd.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Explain odd plus even is odd, including \\(4^{2k+1}\\) even for \\(k\\ge 0\\).</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude by induction for every \\(n\\ge 0\\).</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-V03"
+    },
+    {
+      "id": "M4U-9231-IN-E-V04",
+      "family_uid": "M4U-9231-IN-E-V04",
+      "lesson": "divisibility",
+      "title": "All three prime factors must be justified",
+      "collection": "exam",
+      "prompt_html": "<p>All indices below are non-negative integers.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by induction that 30 divides \\(n^{5} - n\\).</p><span class=\"marks\">[5]</span></li><li><p>Show that \\((n^{5}+29n)/30\\) is an integer for every \\(n\\ge 0\\).</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "<p>30 divides \\(n^{5} - n\\) for every \\(n\\ge 0\\).</p>",
+      "solution_html": "<h4>(a)</h4><p>Put f(n)=\\(n^{5} - n\\). At n=0 its value is 0, a multiple of 30. Assume f(k)=30q for an integer q. Then</p>\\[f(k+1)=1f(k)+5 k \\left(k + 1\\right) \\left(k^{2} + k + 1\\right)\\]<p>The product k(k+1) is even. Modulo 3, if k is 0 or 2 then k(k+1) supplies a factor of 3; if k is 1 then \\(k^{2}+k+1\\) supplies it. Thus \\(k(k+1)(k^{2}+k+1)\\) is divisible by 6, and five times it is divisible by 30. The remainder \\(5 n \\left(n + 1\\right) \\left(n^{2} + n + 1\\right)\\) is divisible by 30 for every non-negative integer n. Thus f(k+1) is 30 times an integer. The base and implication establish the claim for every \\(n\\ge 0\\).</p><h4>(b)</h4><p>\\((n^{5}+29n)/30=(n^{5}-n)/30+n\\). Both summands are integers by the proved result.</p>",
+      "hint_html": "<p>Express f(k+1) as an integer multiple of f(k), plus a remainder whose divisibility you justify.</p>",
+      "marks": 7,
+      "difficulty": 5,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression An explicit integer multiple of 30.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>\\((n^{5}+29n)/30=(n^{5}-n)/30+n\\). Both summands are integers by the proved result.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-V04"
+    },
+    {
+      "id": "M4U-9231-IN-E-V05",
+      "family_uid": "M4U-9231-IN-E-V05",
+      "lesson": "divisibility",
+      "title": "An exponential correction follows triangular-number parity",
+      "collection": "exam",
+      "prompt_html": "<p>All indices below are non-negative integers.</p><ol class=\"parts\" type=\"a\"><li><p>Prove by induction that 16 divides \\(5^{n} - 4 n - 1\\).</p><span class=\"marks\">[5]</span></li><li><p>For \\(q_{n}=(5^{n}-1-4n)/16\\) prove that \\(q_{n}\\) has the same parity as n(n−1)/2.</p><span class=\"marks\">[4]</span></li></ol>",
+      "answer_html": "<p>16 divides \\(5^{n} - 4 n - 1\\) for every \\(n\\ge 0\\).</p>",
+      "solution_html": "<h4>(a)</h4><p>Put f(n)=\\(5^{n} - 4 n - 1\\). At n=0 its value is 0, a multiple of 16. Assume f(k)=16q for an integer q. Then</p>\\[f(k+1)=5f(k)+16 k\\]<p>The remainder \\(16 n\\) is divisible by 16 for every non-negative integer n. Thus f(k+1) is 16 times an integer. The base and implication establish the claim for every \\(n\\ge 0\\).</p><h4>(b)</h4><p>Both are integers: n(n−1) is even. At n=0 both are 0. The quotient recurrence is \\(q_{n+1}=5q_{n}+n\\). Put \\(T_{n}=n(n-1)/2\\), so \\(T_{n+1}=T_{n}+n\\). If \\(q_{k}-T_{k}\\) is even, then \\(q_{k+1}-T_{k+1}=5(q_{k}-T_{k})+4T_{k}\\) is even. Induction proves equal parity for all \\(n\\ge 0\\).</p>",
+      "hint_html": "<p>Express f(k+1) as an integer multiple of f(k), plus a remainder whose divisibility you justify.</p>",
+      "marks": 9,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression An explicit integer multiple of 16.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check \\(q_{0}=T_{0}=0\\) and the integrality of \\(T_{n}=n(n-1)/2\\).</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Derive \\(q_{k+1}=5q_{k}+k\\) and \\(T_{k+1}=T_{k}+k\\).</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Use \\(q_{k+1}-T_{k+1}=5(q_{k}-T_{k})+4T_{k}\\), which is even under the hypothesis.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude by induction for all \\(n\\ge 0\\).</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-V05"
+    },
+    {
+      "id": "M4U-9231-IN-E-V06",
+      "family_uid": "M4U-9231-IN-E-V06",
+      "lesson": "divisibility",
+      "title": "A residue identifies exactly which indices work",
+      "collection": "exam",
+      "prompt_html": "<p>Consider the claim that 25 divides \\(6^{n}-1\\) for every positive integer n.</p><ol class=\"parts\" type=\"a\"><li><p>Disprove the claim, then prove by induction that \\(6^{n}\\)≡1+5n (mod 25) for all \\(n\\ge 0\\).</p><span class=\"marks\">[6]</span></li><li><p>Determine every \\(n\\ge 0\\) for which 25 divides \\(6^{n}-1\\).</p><span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "<p>The original claim fails at n=1. Precisely n≡0 (mod 5) works.</p>",
+      "solution_html": "<h4>(a)</h4><p>At n=1, 6−1=5 is not divisible by 25. The corrected residue statement has base \\(6^{0}=1\\). Assume \\(6^{k}=1+5k+25q\\) for integer q. Then</p>\\[6^{k+1}=6+30k+150q=1+5(k+1)+25(k+6q).\\]<p>The remainder is an integer multiple of 25, so the next residue holds. Induction establishes the residue for all \\(n\\ge 0\\).</p><h4>(b)</h4><p>The residue is 5n modulo 25. Thus 25 divides \\(6^{n}-1\\) exactly when 5 divides n, including n=0.</p>",
+      "hint_html": "<p>Prove a residue statement rather than a false universal divisibility claim. Keep the integer witness in the transition.</p>",
+      "marks": 8,
+      "difficulty": 4,
+      "fields": [],
+      "parts": [
+        {
+          "label": "a",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Counterexample n=1 gives 5, not divisible by 25.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Check both sides at n=0, with the stated domain.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>State the formula at an arbitrary admissible k as the induction hypothesis.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the hypothesis in the actual next sum, derivative, recurrence or matrix product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete next expression 1+5(k+1)+25 times an integer.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Conclude from the verified base and implication for every integer in the stated domain. Accept a valid equivalent induction.</p>"
+            }
+          ]
+        },
+        {
+          "label": "b",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply the proved identity to the requested values or range, retaining the stated domain.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>The residue is 5n modulo 25. Thus 25 divides \\(6^{n}-1\\) exactly when 5 divides n, including n=0.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-E-V06"
+    },
+    {
+      "id": "M4U-9231-IN-Q-S11",
+      "family_uid": "M4U-9231-IN-Q-S1",
+      "lesson": "sums",
+      "title": "The whole next target",
+      "collection": "short",
+      "prompt_html": "<p>For \\(S_n=\\sum_{r=1}^n(5r-2)\\), the proposed formula is \\(\\frac{n \\left(5 n + 1\\right)}{2}\\). Enter the new term and the complete right side for P(k+1), as polynomials in k.</p>",
+      "answer_html": "<p>New term: \\(5 k + 3\\); Next right side: \\(\\frac{5 k^{2}}{2} + \\frac{11 k}{2} + 3\\)</p>",
+      "solution_html": "<p>Replace r by k+1 only in the added term, and replace every n in F(n) by k+1. Their roles are different.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 2,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "term",
+          "label": "New term",
+          "type": "polynomial",
+          "expected": "5*k + 3",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "target",
+          "label": "Next right side",
+          "type": "polynomial",
+          "expected": "5*k**2/2 + 11*k/2 + 3",
+          "variables": [
+            "k"
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct new term.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct next right side.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-S11"
+    },
+    {
+      "id": "M4U-9231-IN-Q-S12",
+      "family_uid": "M4U-9231-IN-Q-S1",
+      "lesson": "sums",
+      "title": "The whole next target",
+      "collection": "variant",
+      "prompt_html": "<p>For \\(S_n=\\sum_{r=1}^n(3r+2)\\), the proposed formula is \\(\\frac{n \\left(3 n + 7\\right)}{2}\\). Enter the new term and the complete right side for P(k+1), as polynomials in k.</p>",
+      "answer_html": "<p>New term: \\(3 k + 5\\); Next right side: \\(\\frac{3 k^{2}}{2} + \\frac{13 k}{2} + 5\\)</p>",
+      "solution_html": "<p>Replace r by k+1 only in the added term, and replace every n in F(n) by k+1. Their roles are different.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 2,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "term",
+          "label": "New term",
+          "type": "polynomial",
+          "expected": "3*k + 5",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "target",
+          "label": "Next right side",
+          "type": "polynomial",
+          "expected": "3*k**2/2 + 13*k/2 + 5",
+          "variables": [
+            "k"
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct new term.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct next right side.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-S12"
+    },
+    {
+      "id": "M4U-9231-IN-Q-S21",
+      "family_uid": "M4U-9231-IN-Q-S2",
+      "lesson": "sums",
+      "title": "Start where the sum starts",
+      "collection": "short",
+      "prompt_html": "<p>Consider \\(\\sum_{r=2}^n(2r+5)=n^{2} + 6 n - 7\\), for \\(n\\ge 2\\). Give the base index, the common value of both sides there, and F(k+1)−F(k).</p>",
+      "answer_html": "<p>Base index: \\(2\\); Common base value: \\(9\\); Difference polynomial: \\(2 k + 7\\)</p>",
+      "solution_html": "<p>The base sum has one term. Subtract the two right-side formulae to recover the next added term.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "base",
+          "label": "Base index",
+          "type": "number",
+          "expected": "2"
+        },
+        {
+          "key": "value",
+          "label": "Common base value",
+          "type": "number",
+          "expected": "9"
+        },
+        {
+          "key": "difference",
+          "label": "Difference polynomial",
+          "type": "polynomial",
+          "expected": "2*k + 7",
+          "variables": [
+            "k"
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct base index.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct common base value.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct difference polynomial.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-S21"
+    },
+    {
+      "id": "M4U-9231-IN-Q-S22",
+      "family_uid": "M4U-9231-IN-Q-S2",
+      "lesson": "sums",
+      "title": "Start where the sum starts",
+      "collection": "variant",
+      "prompt_html": "<p>Consider \\(\\sum_{r=3}^n(2r+1)=n^{2} + 2 n - 8\\), for \\(n\\ge 3\\). Give the base index, the common value of both sides there, and F(k+1)−F(k).</p>",
+      "answer_html": "<p>Base index: \\(3\\); Common base value: \\(7\\); Difference polynomial: \\(2 k + 3\\)</p>",
+      "solution_html": "<p>The base sum has one term. Subtract the two right-side formulae to recover the next added term.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "base",
+          "label": "Base index",
+          "type": "number",
+          "expected": "3"
+        },
+        {
+          "key": "value",
+          "label": "Common base value",
+          "type": "number",
+          "expected": "7"
+        },
+        {
+          "key": "difference",
+          "label": "Difference polynomial",
+          "type": "polynomial",
+          "expected": "2*k + 3",
+          "variables": [
+            "k"
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct base index.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct common base value.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct difference polynomial.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-S22"
+    },
+    {
+      "id": "M4U-9231-IN-Q-S31",
+      "family_uid": "M4U-9231-IN-Q-S3",
+      "lesson": "sums",
+      "title": "A first counterexample",
+      "collection": "short",
+      "prompt_html": "<p>A proposed formula for \\(\\sum_{r=1}^n(2r-1)\\) is \\(n^{2} + \\left(n - 2\\right) \\left(n - 1\\right)\\). Give the first failing positive index, the actual sum there, and the proposed value.</p>",
+      "answer_html": "<p>First failing index: \\(3\\); Actual sum: \\(9\\); Proposed value: \\(11\\)</p>",
+      "solution_html": "<p>The extra product vanishes at every earlier positive index. At the next index it is non-zero; compare both values.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "first",
+          "label": "First failing index",
+          "type": "number",
+          "expected": "3"
+        },
+        {
+          "key": "actual",
+          "label": "Actual sum",
+          "type": "number",
+          "expected": "9"
+        },
+        {
+          "key": "claimed",
+          "label": "Proposed value",
+          "type": "number",
+          "expected": "11"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct first failing index.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct actual sum.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct proposed value.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-S31"
+    },
+    {
+      "id": "M4U-9231-IN-Q-S32",
+      "family_uid": "M4U-9231-IN-Q-S3",
+      "lesson": "sums",
+      "title": "A first counterexample",
+      "collection": "variant",
+      "prompt_html": "<p>A proposed formula for \\(\\sum_{r=1}^n(2r-1)\\) is \\(n^{2} + \\left(n - 3\\right) \\left(n - 2\\right) \\left(n - 1\\right)\\). Give the first failing positive index, the actual sum there, and the proposed value.</p>",
+      "answer_html": "<p>First failing index: \\(4\\); Actual sum: \\(16\\); Proposed value: \\(22\\)</p>",
+      "solution_html": "<p>The extra product vanishes at every earlier positive index. At the next index it is non-zero; compare both values.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "first",
+          "label": "First failing index",
+          "type": "number",
+          "expected": "4"
+        },
+        {
+          "key": "actual",
+          "label": "Actual sum",
+          "type": "number",
+          "expected": "16"
+        },
+        {
+          "key": "claimed",
+          "label": "Proposed value",
+          "type": "number",
+          "expected": "22"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct first failing index.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct actual sum.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct proposed value.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-S32"
+    },
+    {
+      "id": "M4U-9231-IN-Q-D11",
+      "family_uid": "M4U-9231-IN-Q-D1",
+      "lesson": "derivatives",
+      "title": "All coefficients in a product-rule formula",
+      "collection": "short",
+      "prompt_html": "<p>For \\(y=(3x+6)e^{2x}\\), write \\(D^ky=2^ke^{2x}(Ax+Bk+C)\\). Give all three constants.</p>",
+      "answer_html": "<p>Coefficient A: \\(3\\); Coefficient B: \\(\\frac{3}{2}\\); Constant C: \\(6\\)</p>",
+      "solution_html": "<p>The product rule adds a/c to the bracket at each derivative. The original polynomial supplies A and C.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "A",
+          "label": "Coefficient A",
+          "type": "number",
+          "expected": "3"
+        },
+        {
+          "key": "B",
+          "label": "Coefficient B",
+          "type": "number",
+          "expected": "3/2"
+        },
+        {
+          "key": "C",
+          "label": "Constant C",
+          "type": "number",
+          "expected": "6"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct coefficient a.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct coefficient b.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct constant c.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-D11"
+    },
+    {
+      "id": "M4U-9231-IN-Q-D12",
+      "family_uid": "M4U-9231-IN-Q-D1",
+      "lesson": "derivatives",
+      "title": "All coefficients in a product-rule formula",
+      "collection": "variant",
+      "prompt_html": "<p>For \\(y=(2x-3)e^{5x}\\), write \\(D^ky=5^ke^{5x}(Ax+Bk+C)\\). Give all three constants.</p>",
+      "answer_html": "<p>Coefficient A: \\(2\\); Coefficient B: \\(\\frac{2}{5}\\); Constant C: \\(-3\\)</p>",
+      "solution_html": "<p>The product rule adds a/c to the bracket at each derivative. The original polynomial supplies A and C.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "A",
+          "label": "Coefficient A",
+          "type": "number",
+          "expected": "2"
+        },
+        {
+          "key": "B",
+          "label": "Coefficient B",
+          "type": "number",
+          "expected": "2/5"
+        },
+        {
+          "key": "C",
+          "label": "Constant C",
+          "type": "number",
+          "expected": "-3"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct coefficient a.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct coefficient b.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct constant c.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-D12"
+    },
+    {
+      "id": "M4U-9231-IN-Q-D21",
+      "family_uid": "M4U-9231-IN-Q-D2",
+      "lesson": "derivatives",
+      "title": "A complete reciprocal derivative",
+      "collection": "short",
+      "prompt_html": "<p>For \\(y=1/(2x+3)\\), write \\(D^{3}y=C/(2x+3)^p\\). Give the signed coefficient C and the power p.</p>",
+      "answer_html": "<p>Signed coefficient C: \\(-48\\); Denominator power p: \\(4\\)</p>",
+      "solution_html": "<p>Each differentiation contributes the current negative exponent and the inner coefficient. Retain the full signed numerator.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 2,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "coef",
+          "label": "Signed coefficient C",
+          "type": "number",
+          "expected": "-48"
+        },
+        {
+          "key": "power",
+          "label": "Denominator power p",
+          "type": "number",
+          "expected": "4"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct signed coefficient c.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct denominator power p.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-D21"
+    },
+    {
+      "id": "M4U-9231-IN-Q-D22",
+      "family_uid": "M4U-9231-IN-Q-D2",
+      "lesson": "derivatives",
+      "title": "A complete reciprocal derivative",
+      "collection": "variant",
+      "prompt_html": "<p>For \\(y=1/(3x-1)\\), write \\(D^{4}y=C/(3x-1)^p\\). Give the signed coefficient C and the power p.</p>",
+      "answer_html": "<p>Signed coefficient C: \\(1944\\); Denominator power p: \\(5\\)</p>",
+      "solution_html": "<p>Each differentiation contributes the current negative exponent and the inner coefficient. Retain the full signed numerator.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 2,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "coef",
+          "label": "Signed coefficient C",
+          "type": "number",
+          "expected": "1944"
+        },
+        {
+          "key": "power",
+          "label": "Denominator power p",
+          "type": "number",
+          "expected": "5"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct signed coefficient c.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct denominator power p.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-D22"
+    },
+    {
+      "id": "M4U-9231-IN-Q-D31",
+      "family_uid": "M4U-9231-IN-Q-D3",
+      "lesson": "derivatives",
+      "title": "Advance an even-order statement",
+      "collection": "short",
+      "prompt_html": "<p>Let \\(y=cos(3x)\\). In \\(D^{2k}y=A^ky\\), give A and the number of differentiations that advances k to k+1.</p>",
+      "answer_html": "<p>Multiplier A: \\(-9\\); Number of differentiations: \\(2\\)</p>",
+      "solution_html": "<p>Two derivatives contribute the negative square of the frequency. The next index is order 2k+2.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 2,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "factor",
+          "label": "Multiplier A",
+          "type": "number",
+          "expected": "-9"
+        },
+        {
+          "key": "count",
+          "label": "Number of differentiations",
+          "type": "number",
+          "expected": "2"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct multiplier a.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct number of differentiations.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-D31"
+    },
+    {
+      "id": "M4U-9231-IN-Q-D32",
+      "family_uid": "M4U-9231-IN-Q-D3",
+      "lesson": "derivatives",
+      "title": "Advance an even-order statement",
+      "collection": "variant",
+      "prompt_html": "<p>Let \\(y=sin(5x)\\). In \\(D^{2k}y=A^ky\\), give A and the number of differentiations that advances k to k+1.</p>",
+      "answer_html": "<p>Multiplier A: \\(-25\\); Number of differentiations: \\(2\\)</p>",
+      "solution_html": "<p>Two derivatives contribute the negative square of the frequency. The next index is order 2k+2.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 2,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "factor",
+          "label": "Multiplier A",
+          "type": "number",
+          "expected": "-25"
+        },
+        {
+          "key": "count",
+          "label": "Number of differentiations",
+          "type": "number",
+          "expected": "2"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct multiplier a.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct number of differentiations.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-D32"
+    },
+    {
+      "id": "M4U-9231-IN-Q-R11",
+      "family_uid": "M4U-9231-IN-Q-R1",
+      "lesson": "recurrences",
+      "title": "The complete affine closed form",
+      "collection": "short",
+      "prompt_html": "<p>Let \\(u_{0}=3\\) and \\(u_{n+1}=4u_{n}+6\\). In the formula \\(u_{n}=L+C\\cdot 4^{n}\\), give both constants L and C.</p>",
+      "answer_html": "<p>Constant L: \\(-2\\); Coefficient C: \\(5\\)</p>",
+      "solution_html": "<p>Match the constant part L=aL+b, then use \\(L+C=u_{0}\\). This supplies a candidate for an induction proof.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 2,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "limit",
+          "label": "Constant L",
+          "type": "number",
+          "expected": "-2"
+        },
+        {
+          "key": "coefficient",
+          "label": "Coefficient C",
+          "type": "number",
+          "expected": "5"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct constant l.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct coefficient c.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-R11"
+    },
+    {
+      "id": "M4U-9231-IN-Q-R12",
+      "family_uid": "M4U-9231-IN-Q-R1",
+      "lesson": "recurrences",
+      "title": "The complete affine closed form",
+      "collection": "variant",
+      "prompt_html": "<p>Let \\(u_{0}=2\\) and \\(u_{n+1}=3u_{n}+8\\). In the formula \\(u_{n}=L+C\\cdot 3^{n}\\), give both constants L and C.</p>",
+      "answer_html": "<p>Constant L: \\(-4\\); Coefficient C: \\(6\\)</p>",
+      "solution_html": "<p>Match the constant part L=aL+b, then use \\(L+C=u_{0}\\). This supplies a candidate for an induction proof.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 2,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "limit",
+          "label": "Constant L",
+          "type": "number",
+          "expected": "-4"
+        },
+        {
+          "key": "coefficient",
+          "label": "Coefficient C",
+          "type": "number",
+          "expected": "6"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct constant l.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct coefficient c.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-R12"
+    },
+    {
+      "id": "M4U-9231-IN-Q-R21",
+      "family_uid": "M4U-9231-IN-Q-R2",
+      "lesson": "recurrences",
+      "title": "Expose the invariant gap",
+      "collection": "short",
+      "prompt_html": "<p>For \\(f(u)=(3u+6)/(u+4)\\), write \\(2-f(u)=(Au+B)/(u+C)\\). Give all constants; these support the upper bound when 0&lt;u&lt;2.</p>",
+      "answer_html": "<p>Coefficient A: \\(-1\\); Constant B: \\(2\\); Denominator shift C: \\(4\\)</p>",
+      "solution_html": "<p>Use the same denominator and subtract the numerator. On the stated interval the resulting numerator and denominator are positive.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "A",
+          "label": "Coefficient A",
+          "type": "number",
+          "expected": "-1"
+        },
+        {
+          "key": "B",
+          "label": "Constant B",
+          "type": "number",
+          "expected": "2"
+        },
+        {
+          "key": "C",
+          "label": "Denominator shift C",
+          "type": "number",
+          "expected": "4"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct coefficient a.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct constant b.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct denominator shift c.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-R21"
+    },
+    {
+      "id": "M4U-9231-IN-Q-R22",
+      "family_uid": "M4U-9231-IN-Q-R2",
+      "lesson": "recurrences",
+      "title": "Expose the invariant gap",
+      "collection": "variant",
+      "prompt_html": "<p>For \\(f(u)=(4u+12)/(u+5)\\), write \\(3-f(u)=(Au+B)/(u+C)\\). Give all constants; these support the upper bound when 0&lt;u&lt;3.</p>",
+      "answer_html": "<p>Coefficient A: \\(-1\\); Constant B: \\(3\\); Denominator shift C: \\(5\\)</p>",
+      "solution_html": "<p>Use the same denominator and subtract the numerator. On the stated interval the resulting numerator and denominator are positive.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "A",
+          "label": "Coefficient A",
+          "type": "number",
+          "expected": "-1"
+        },
+        {
+          "key": "B",
+          "label": "Constant B",
+          "type": "number",
+          "expected": "3"
+        },
+        {
+          "key": "C",
+          "label": "Denominator shift C",
+          "type": "number",
+          "expected": "5"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct coefficient a.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct constant b.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct denominator shift c.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-R22"
+    },
+    {
+      "id": "M4U-9231-IN-Q-R31",
+      "family_uid": "M4U-9231-IN-Q-R3",
+      "lesson": "recurrences",
+      "title": "Supply both initial cases and both recurrence coefficients",
+      "collection": "short",
+      "prompt_html": "<p>The candidate \\(u_n=2^n+3^n\\) satisfies \\(u_{n+2}=Au_{n+1}+Bu_n\\). Give \\(u_{0}\\), \\(u_{1}\\), A and B.</p>",
+      "answer_html": "<p>Initial value u0: \\(2\\); Initial value u1: \\(5\\); Recurrence coefficient A: \\(5\\); Recurrence coefficient B: \\(-6\\)</p>",
+      "solution_html": "<p>Check indices 0 and 1. Each exponential base must satisfy \\(z^{2}=Az+B\\), giving A=a+b and B=−ab.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 4,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "u0",
+          "label": "Initial value u0",
+          "type": "number",
+          "expected": "2"
+        },
+        {
+          "key": "u1",
+          "label": "Initial value u1",
+          "type": "number",
+          "expected": "5"
+        },
+        {
+          "key": "A",
+          "label": "Recurrence coefficient A",
+          "type": "number",
+          "expected": "5"
+        },
+        {
+          "key": "B",
+          "label": "Recurrence coefficient B",
+          "type": "number",
+          "expected": "-6"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct initial value u0.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct initial value u1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct recurrence coefficient a.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct recurrence coefficient b.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-R31"
+    },
+    {
+      "id": "M4U-9231-IN-Q-R32",
+      "family_uid": "M4U-9231-IN-Q-R3",
+      "lesson": "recurrences",
+      "title": "Supply both initial cases and both recurrence coefficients",
+      "collection": "variant",
+      "prompt_html": "<p>The candidate \\(u_n=2^n+5^n\\) satisfies \\(u_{n+2}=Au_{n+1}+Bu_n\\). Give \\(u_{0}\\), \\(u_{1}\\), A and B.</p>",
+      "answer_html": "<p>Initial value u0: \\(2\\); Initial value u1: \\(7\\); Recurrence coefficient A: \\(7\\); Recurrence coefficient B: \\(-10\\)</p>",
+      "solution_html": "<p>Check indices 0 and 1. Each exponential base must satisfy \\(z^{2}=Az+B\\), giving A=a+b and B=−ab.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 4,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "u0",
+          "label": "Initial value u0",
+          "type": "number",
+          "expected": "2"
+        },
+        {
+          "key": "u1",
+          "label": "Initial value u1",
+          "type": "number",
+          "expected": "7"
+        },
+        {
+          "key": "A",
+          "label": "Recurrence coefficient A",
+          "type": "number",
+          "expected": "7"
+        },
+        {
+          "key": "B",
+          "label": "Recurrence coefficient B",
+          "type": "number",
+          "expected": "-10"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct initial value u0.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct initial value u1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct recurrence coefficient a.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct recurrence coefficient b.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-R32"
+    },
+    {
+      "id": "M4U-9231-IN-Q-M11",
+      "family_uid": "M4U-9231-IN-Q-M1",
+      "lesson": "matrices",
+      "title": "Every entry of a nilpotent power",
+      "collection": "short",
+      "prompt_html": "\\[N=\\left[\\begin{matrix}1 & -1\\\\1 & -1\\end{matrix}\\right],\\quad A=I+3N,\\quad N^2=0.\\]<p>Enter all four entries of \\(A^{k}\\) as polynomials in k, for \\(k\\ge 0\\).</p>",
+      "answer_html": "<p>Entry 1,1: \\(3 k + 1\\); Entry 1,2: \\(- 3 k\\); Entry 2,1: \\(3 k\\); Entry 2,2: \\(1 - 3 k\\)</p>",
+      "solution_html": "<p>Use \\(A^{k}=I+ckN\\). Add the identity only on the diagonal; preserve every sign.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 4,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "m00",
+          "label": "Entry 1,1",
+          "type": "polynomial",
+          "expected": "3*k + 1",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "m01",
+          "label": "Entry 1,2",
+          "type": "polynomial",
+          "expected": "-3*k",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "m10",
+          "label": "Entry 2,1",
+          "type": "polynomial",
+          "expected": "3*k",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "m11",
+          "label": "Entry 2,2",
+          "type": "polynomial",
+          "expected": "1 - 3*k",
+          "variables": [
+            "k"
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,2.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 2,1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 2,2.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-M11"
+    },
+    {
+      "id": "M4U-9231-IN-Q-M12",
+      "family_uid": "M4U-9231-IN-Q-M1",
+      "lesson": "matrices",
+      "title": "Every entry of a nilpotent power",
+      "collection": "variant",
+      "prompt_html": "\\[N=\\left[\\begin{matrix}2 & -4\\\\1 & -2\\end{matrix}\\right],\\quad A=I+2N,\\quad N^2=0.\\]<p>Enter all four entries of \\(A^{k}\\) as polynomials in k, for \\(k\\ge 0\\).</p>",
+      "answer_html": "<p>Entry 1,1: \\(4 k + 1\\); Entry 1,2: \\(- 8 k\\); Entry 2,1: \\(2 k\\); Entry 2,2: \\(1 - 4 k\\)</p>",
+      "solution_html": "<p>Use \\(A^{k}=I+ckN\\). Add the identity only on the diagonal; preserve every sign.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 4,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "m00",
+          "label": "Entry 1,1",
+          "type": "polynomial",
+          "expected": "4*k + 1",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "m01",
+          "label": "Entry 1,2",
+          "type": "polynomial",
+          "expected": "-8*k",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "m10",
+          "label": "Entry 2,1",
+          "type": "polynomial",
+          "expected": "2*k",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "m11",
+          "label": "Entry 2,2",
+          "type": "polynomial",
+          "expected": "1 - 4*k",
+          "variables": [
+            "k"
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,2.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 2,1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 2,2.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-M12"
+    },
+    {
+      "id": "M4U-9231-IN-Q-M21",
+      "family_uid": "M4U-9231-IN-Q-M2",
+      "lesson": "matrices",
+      "title": "All changing entries of a 3 by 3 power",
+      "collection": "short",
+      "prompt_html": "\\[A=\\begin{pmatrix}1&2&0\\\\0&1&3\\\\0&0&1\\end{pmatrix}.\\]<p>\\(A^{k}\\) has diagonal entries 1 and entries below the diagonal 0. Give its three entries above the diagonal as polynomials in k.</p>",
+      "answer_html": "<p>Entry 1,2: \\(2 k\\); Entry 1,3: \\(3 k \\left(k - 1\\right)\\); Entry 2,3: \\(3 k\\)</p>",
+      "solution_html": "<p>The two adjacent entries grow linearly; their interaction contributes ab·k(k−1)/2 to the top-right entry.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "a12",
+          "label": "Entry 1,2",
+          "type": "polynomial",
+          "expected": "2*k",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "a13",
+          "label": "Entry 1,3",
+          "type": "polynomial",
+          "expected": "3*k*(k - 1)",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "a23",
+          "label": "Entry 2,3",
+          "type": "polynomial",
+          "expected": "3*k",
+          "variables": [
+            "k"
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,2.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,3.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 2,3.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-M21"
+    },
+    {
+      "id": "M4U-9231-IN-Q-M22",
+      "family_uid": "M4U-9231-IN-Q-M2",
+      "lesson": "matrices",
+      "title": "All changing entries of a 3 by 3 power",
+      "collection": "variant",
+      "prompt_html": "\\[A=\\begin{pmatrix}1&3&0\\\\0&1&2\\\\0&0&1\\end{pmatrix}.\\]<p>\\(A^{k}\\) has diagonal entries 1 and entries below the diagonal 0. Give its three entries above the diagonal as polynomials in k.</p>",
+      "answer_html": "<p>Entry 1,2: \\(3 k\\); Entry 1,3: \\(3 k \\left(k - 1\\right)\\); Entry 2,3: \\(2 k\\)</p>",
+      "solution_html": "<p>The two adjacent entries grow linearly; their interaction contributes ab·k(k−1)/2 to the top-right entry.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "a12",
+          "label": "Entry 1,2",
+          "type": "polynomial",
+          "expected": "3*k",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "a13",
+          "label": "Entry 1,3",
+          "type": "polynomial",
+          "expected": "3*k*(k - 1)",
+          "variables": [
+            "k"
+          ]
+        },
+        {
+          "key": "a23",
+          "label": "Entry 2,3",
+          "type": "polynomial",
+          "expected": "2*k",
+          "variables": [
+            "k"
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,2.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,3.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 2,3.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-M22"
+    },
+    {
+      "id": "M4U-9231-IN-Q-M31",
+      "family_uid": "M4U-9231-IN-Q-M3",
+      "lesson": "matrices",
+      "title": "A full odd power from a scalar square",
+      "collection": "short",
+      "prompt_html": "\\[A=\\left[\\begin{matrix}0 & -3\\\\2 & 0\\end{matrix}\\right]\\]<p>Give all four entries of A<sup>5</sup>.</p>",
+      "answer_html": "<p>Entry 1,1: \\(0\\); Entry 1,2: \\(-108\\); Entry 2,1: \\(72\\); Entry 2,2: \\(0\\)</p>",
+      "solution_html": "<p>Calculate \\(A^{2}=cI\\), then write the odd exponent as 2q+1. The result is cᑫA, not cᑫI.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 4,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "m00",
+          "label": "Entry 1,1",
+          "type": "number",
+          "expected": "0"
+        },
+        {
+          "key": "m01",
+          "label": "Entry 1,2",
+          "type": "number",
+          "expected": "-108"
+        },
+        {
+          "key": "m10",
+          "label": "Entry 2,1",
+          "type": "number",
+          "expected": "72"
+        },
+        {
+          "key": "m11",
+          "label": "Entry 2,2",
+          "type": "number",
+          "expected": "0"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,2.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 2,1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 2,2.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-M31"
+    },
+    {
+      "id": "M4U-9231-IN-Q-M32",
+      "family_uid": "M4U-9231-IN-Q-M3",
+      "lesson": "matrices",
+      "title": "A full odd power from a scalar square",
+      "collection": "variant",
+      "prompt_html": "\\[A=\\left[\\begin{matrix}0 & 2\\\\-1 & 0\\end{matrix}\\right]\\]<p>Give all four entries of A<sup>7</sup>.</p>",
+      "answer_html": "<p>Entry 1,1: \\(0\\); Entry 1,2: \\(-16\\); Entry 2,1: \\(8\\); Entry 2,2: \\(0\\)</p>",
+      "solution_html": "<p>Calculate \\(A^{2}=cI\\), then write the odd exponent as 2q+1. The result is cᑫA, not cᑫI.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 4,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "m00",
+          "label": "Entry 1,1",
+          "type": "number",
+          "expected": "0"
+        },
+        {
+          "key": "m01",
+          "label": "Entry 1,2",
+          "type": "number",
+          "expected": "-16"
+        },
+        {
+          "key": "m10",
+          "label": "Entry 2,1",
+          "type": "number",
+          "expected": "8"
+        },
+        {
+          "key": "m11",
+          "label": "Entry 2,2",
+          "type": "number",
+          "expected": "0"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 1,2.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 2,1.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct entry 2,2.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-M32"
+    },
+    {
+      "id": "M4U-9231-IN-Q-V11",
+      "family_uid": "M4U-9231-IN-Q-V1",
+      "lesson": "divisibility",
+      "title": "An integer bridge for exponential differences",
+      "collection": "short",
+      "prompt_html": "<p>Let \\(f(n)=7^n-3^n\\). Write \\(f(k+1)=Af(k)+B\\cdot3^k\\). Give A, B and f(0).</p>",
+      "answer_html": "<p>Multiplier A: \\(7\\); Remainder coefficient B: \\(4\\); Base value f0: \\(0\\)</p>",
+      "solution_html": "<p>Multiply f(k) by the first exponential base; subtract to expose the second exponential and its integer coefficient.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "A",
+          "label": "Multiplier A",
+          "type": "number",
+          "expected": "7"
+        },
+        {
+          "key": "B",
+          "label": "Remainder coefficient B",
+          "type": "number",
+          "expected": "4"
+        },
+        {
+          "key": "base",
+          "label": "Base value f0",
+          "type": "number",
+          "expected": "0"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct multiplier a.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct remainder coefficient b.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct base value f0.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-V11"
+    },
+    {
+      "id": "M4U-9231-IN-Q-V12",
+      "family_uid": "M4U-9231-IN-Q-V1",
+      "lesson": "divisibility",
+      "title": "An integer bridge for exponential differences",
+      "collection": "variant",
+      "prompt_html": "<p>Let \\(f(n)=5^n-2^n\\). Write \\(f(k+1)=Af(k)+B\\cdot2^k\\). Give A, B and f(0).</p>",
+      "answer_html": "<p>Multiplier A: \\(5\\); Remainder coefficient B: \\(3\\); Base value f0: \\(0\\)</p>",
+      "solution_html": "<p>Multiply f(k) by the first exponential base; subtract to expose the second exponential and its integer coefficient.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 3,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "A",
+          "label": "Multiplier A",
+          "type": "number",
+          "expected": "5"
+        },
+        {
+          "key": "B",
+          "label": "Remainder coefficient B",
+          "type": "number",
+          "expected": "3"
+        },
+        {
+          "key": "base",
+          "label": "Base value f0",
+          "type": "number",
+          "expected": "0"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct multiplier a.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct remainder coefficient b.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct base value f0.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-V12"
+    },
+    {
+      "id": "M4U-9231-IN-Q-V21",
+      "family_uid": "M4U-9231-IN-Q-V2",
+      "lesson": "divisibility",
+      "title": "The whole quotient in a polynomial step",
+      "collection": "short",
+      "prompt_html": "<p>For \\(f(n)=\\left(n + 1\\right) \\left(n + 2\\right) \\left(n + 3\\right)\\), find Q(k) in \\(f(k+1)-f(k)=6Q(k)\\). Enter the complete polynomial in k.</p>",
+      "answer_html": "<p>Quotient polynomial: \\(\\frac{k^{2}}{2} + \\frac{5 k}{2} + 3\\)</p>",
+      "solution_html": "<p>Expand the difference before dividing by the stated divisor. A product of consecutive integers supplies the factor 2 when needed.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "quotient",
+          "label": "Quotient polynomial",
+          "type": "polynomial",
+          "expected": "k**2/2 + 5*k/2 + 3",
+          "variables": [
+            "k"
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct quotient polynomial.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-V21"
+    },
+    {
+      "id": "M4U-9231-IN-Q-V22",
+      "family_uid": "M4U-9231-IN-Q-V2",
+      "lesson": "divisibility",
+      "title": "The whole quotient in a polynomial step",
+      "collection": "variant",
+      "prompt_html": "<p>For \\(f(n)=2 n^{3} + n\\), find Q(k) in \\(f(k+1)-f(k)=3Q(k)\\). Enter the complete polynomial in k.</p>",
+      "answer_html": "<p>Quotient polynomial: \\(2 k^{2} + 2 k + 1\\)</p>",
+      "solution_html": "<p>Expand the difference before dividing by the stated divisor. A product of consecutive integers supplies the factor 2 when needed.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "quotient",
+          "label": "Quotient polynomial",
+          "type": "polynomial",
+          "expected": "2*k**2 + 2*k + 1",
+          "variables": [
+            "k"
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct quotient polynomial.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-V22"
+    },
+    {
+      "id": "M4U-9231-IN-Q-V31",
+      "family_uid": "M4U-9231-IN-Q-V3",
+      "lesson": "divisibility",
+      "title": "The first zero residue",
+      "collection": "short",
+      "prompt_html": "<p>Induction gives \\(4^n\\equiv1+3n\\pmod{9}\\). Find the least positive n with 9 dividing \\(4^{n}-1\\), and the integer quotient at that n.</p>",
+      "answer_html": "<p>Least positive index: \\(3\\); Integer quotient: \\(7\\)</p>",
+      "solution_html": "<p>The residue is 3n, so n must be a multiple of 3. Use the first positive such n and evaluate the complete quotient.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 2,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "index",
+          "label": "Least positive index",
+          "type": "number",
+          "expected": "3"
+        },
+        {
+          "key": "quotient",
+          "label": "Integer quotient",
+          "type": "number",
+          "expected": "7"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct least positive index.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct integer quotient.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-V31"
+    },
+    {
+      "id": "M4U-9231-IN-Q-V32",
+      "family_uid": "M4U-9231-IN-Q-V3",
+      "lesson": "divisibility",
+      "title": "The first zero residue",
+      "collection": "variant",
+      "prompt_html": "<p>Induction gives \\(6^n\\equiv1+5n\\pmod{25}\\). Find the least positive n with 25 dividing \\(6^{n}-1\\), and the integer quotient at that n.</p>",
+      "answer_html": "<p>Least positive index: \\(5\\); Integer quotient: \\(311\\)</p>",
+      "solution_html": "<p>The residue is 5n, so n must be a multiple of 5. Use the first positive such n and evaluate the complete quotient.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 2,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "index",
+          "label": "Least positive index",
+          "type": "number",
+          "expected": "5"
+        },
+        {
+          "key": "quotient",
+          "label": "Integer quotient",
+          "type": "number",
+          "expected": "311"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct least positive index.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct integer quotient.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-V32"
+    },
+    {
+      "id": "M4U-9231-IN-Q-S41",
+      "family_uid": "M4U-9231-IN-Q-S4",
+      "lesson": "sums",
+      "title": "A valid forward implication",
+      "collection": "short",
+      "prompt_html": "<p>Which completes the step for \\(S_{n}=F(n)\\)?</p>",
+      "answer_html": "<p>Reason: Assume S(k)=F(k), then show F(k)+t(k+1)=F(k+1).</p>",
+      "solution_html": "<p>Only A derives the next claim from the stated hypothesis and the new term.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "reason",
+          "label": "Reason",
+          "type": "choice",
+          "expected": "A",
+          "options": {
+            "A": "Assume S(k)=F(k), then show F(k)+t(k+1)=F(k+1).",
+            "B": "Assume S(k+1)=F(k+1), then rearrange it.",
+            "C": "Check another twenty values.",
+            "D": "Replace every k in the hypothesis by k+1 and declare it proved."
+          }
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct reason.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-S41"
+    },
+    {
+      "id": "M4U-9231-IN-Q-S42",
+      "family_uid": "M4U-9231-IN-Q-S4",
+      "lesson": "sums",
+      "title": "A base case is still needed",
+      "collection": "variant",
+      "prompt_html": "<p>A valid implication \\(P(k)\\Rightarrow P(k+1)\\) is established for \\(k\\ge 4\\). Which additional fact proves P(n) for every \\(n\\ge 4\\)?</p>",
+      "answer_html": "<p>Reason: P(4) is true.</p>",
+      "solution_html": "<p>P(4) starts the chain at its permitted first transition; a later isolated case does not establish earlier cases.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "reason",
+          "label": "Reason",
+          "type": "choice",
+          "expected": "B",
+          "options": {
+            "A": "P(3) is false.",
+            "B": "P(4) is true.",
+            "C": "P(100) is true.",
+            "D": "No extra fact is needed."
+          }
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct reason.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-S42"
+    },
+    {
+      "id": "M4U-9231-IN-Q-D41",
+      "family_uid": "M4U-9231-IN-Q-D4",
+      "lesson": "derivatives",
+      "title": "Count the operations",
+      "collection": "short",
+      "prompt_html": "<p>P(k) describes the derivative of order 2k. How is the derivative in P(k+1) reached?</p>",
+      "answer_html": "<p>Reason: Differentiate twice.</p>",
+      "solution_html": "<p>2(k+1)−2k=2, so two differentiations are required.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "reason",
+          "label": "Reason",
+          "type": "choice",
+          "expected": "C",
+          "options": {
+            "A": "Differentiate once.",
+            "B": "Integrate once.",
+            "C": "Differentiate twice.",
+            "D": "Replace x by x+1."
+          }
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct reason.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-D41"
+    },
+    {
+      "id": "M4U-9231-IN-Q-D42",
+      "family_uid": "M4U-9231-IN-Q-D4",
+      "lesson": "derivatives",
+      "title": "Choose a defined starting case",
+      "collection": "variant",
+      "prompt_html": "<p>A proposed nth derivative contains (n−1)!. Which is the earliest usual base index for integer derivative orders?</p>",
+      "answer_html": "<p>Reason: n=1</p>",
+      "solution_html": "<p>(n−1)! is defined in the usual factorial notation at n=1; n=0 would introduce (−1)!.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "reason",
+          "label": "Reason",
+          "type": "choice",
+          "expected": "D",
+          "options": {
+            "A": "n=−1",
+            "B": "n=0 without changing the formula",
+            "C": "Any real n",
+            "D": "n=1"
+          }
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct reason.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-D42"
+    },
+    {
+      "id": "M4U-9231-IN-Q-R41",
+      "family_uid": "M4U-9231-IN-Q-R4",
+      "lesson": "recurrences",
+      "title": "Enough initial information",
+      "collection": "short",
+      "prompt_html": "<p>A general second-order recurrence uses \\(u_{n}\\) and \\(u_{n+1}\\) to obtain \\(u_{n+2}\\). Which proof scheme is sufficient?</p>",
+      "answer_html": "<p>Reason: Check u0 and u1, assume the k and k+1 cases, derive k+2.</p>",
+      "solution_html": "<p>Both initial cases and the paired implication carry every later term.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "reason",
+          "label": "Reason",
+          "type": "choice",
+          "expected": "B",
+          "options": {
+            "A": "Check only u0, then assume only the k case.",
+            "B": "Check u0 and u1, assume the k and k+1 cases, derive k+2.",
+            "C": "Check u20 and make no implication.",
+            "D": "Assume the desired formula at k+2."
+          }
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct reason.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-R41"
+    },
+    {
+      "id": "M4U-9231-IN-Q-R42",
+      "family_uid": "M4U-9231-IN-Q-R4",
+      "lesson": "recurrences",
+      "title": "Bounds and a rational map",
+      "collection": "variant",
+      "prompt_html": "<p>To show \\(0&lt;u_{k+1}&lt;2\\) for a rational recurrence, which step must precede multiplying an inequality by its denominator?</p>",
+      "answer_html": "<p>Reason: Establish the denominator is non-zero and determine its sign from the hypothesis.</p>",
+      "solution_html": "<p>The sign controls the inequality direction, and a zero denominator would make the next term undefined.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "reason",
+          "label": "Reason",
+          "type": "choice",
+          "expected": "A",
+          "options": {
+            "A": "Establish the denominator is non-zero and determine its sign from the hypothesis.",
+            "B": "Assume all denominators are positive.",
+            "C": "Discard the denominator.",
+            "D": "Replace the denominator with its limit."
+          }
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct reason.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-R42"
+    },
+    {
+      "id": "M4U-9231-IN-Q-M41",
+      "family_uid": "M4U-9231-IN-Q-M4",
+      "lesson": "matrices",
+      "title": "The next power is a product",
+      "collection": "short",
+      "prompt_html": "<p>Assuming \\(A^{k}=F(k)\\), which is always valid for a square matrix A?</p>",
+      "answer_html": "<p>Reason: A^(k+1)=F(k)A.</p>",
+      "solution_html": "<p>\\(A^{k}A=A^{k+1}\\). The full matrix product must be calculated.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "reason",
+          "label": "Reason",
+          "type": "choice",
+          "expected": "C",
+          "options": {
+            "A": "A^(k+1) is the entrywise square of F(k).",
+            "B": "A^(k+1)=F(k)+A.",
+            "C": "A^(k+1)=F(k)A.",
+            "D": "A^(k+1)=F(k)F(k)."
+          }
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct reason.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-M41"
+    },
+    {
+      "id": "M4U-9231-IN-Q-M42",
+      "family_uid": "M4U-9231-IN-Q-M4",
+      "lesson": "matrices",
+      "title": "A tempting generalisation",
+      "collection": "variant",
+      "prompt_html": "<p>Which statement requires an extra commutativity condition and cannot be assumed for arbitrary square matrices?</p>",
+      "answer_html": "<p>Reason: (AB)^n=A^n B^n for every n.</p>",
+      "solution_html": "<p>General A and B need not commute; a proof cannot move B past A without justification.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "reason",
+          "label": "Reason",
+          "type": "choice",
+          "expected": "D",
+          "options": {
+            "A": "A^0=I.",
+            "B": "A^k A=A^(k+1).",
+            "C": "A^2 A^k=A^(k+2).",
+            "D": "(AB)^n=A^n B^n for every n."
+          }
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct reason.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-M42"
+    },
+    {
+      "id": "M4U-9231-IN-Q-V41",
+      "family_uid": "M4U-9231-IN-Q-V4",
+      "lesson": "divisibility",
+      "title": "The integer witness",
+      "collection": "short",
+      "prompt_html": "<p>Assume f(k)=7q with q integer. Which next expression guarantees divisibility by 7 for all integer k?</p>",
+      "answer_html": "<p>Reason: \\(f(k+1)=3f(k)+7k^{2}\\).</p>",
+      "solution_html": "<p>The expression is \\(7(3q+k^{2})\\), and the bracket is an integer.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "reason",
+          "label": "Reason",
+          "type": "choice",
+          "expected": "B",
+          "options": {
+            "A": "f(k+1)=7q+1.",
+            "B": "f(k+1)=3f(k)+7k².",
+            "C": "f(k+1)=f(k)/2.",
+            "D": "f(k+1)=q+7."
+          }
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct reason.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-V41"
+    },
+    {
+      "id": "M4U-9231-IN-Q-V42",
+      "family_uid": "M4U-9231-IN-Q-V4",
+      "lesson": "divisibility",
+      "title": "The correct next odd index",
+      "collection": "variant",
+      "prompt_html": "<p>A statement is to be proved for every positive odd n, starting at 1. Which transition covers that domain?</p>",
+      "answer_html": "<p>Reason: \\(P(k)\\Rightarrow P(k+2)\\) for each positive odd k.</p>",
+      "solution_html": "<p>A step of two from the odd base visits exactly the positive odd indices.</p>",
+      "hint_html": "<p>Identify the exact starting case and next index. Work from the assumed case towards the target; include every requested component.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "reason",
+          "label": "Reason",
+          "type": "choice",
+          "expected": "A",
+          "options": {
+            "A": "P(k)⇒P(k+2) for each positive odd k.",
+            "B": "P(k)⇒P(k+1) but only when k is even, with no even base.",
+            "C": "P(1) only.",
+            "D": "P(k+2)⇒P(k) with no later base."
+          }
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete correct reason.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "M4U-9231-IN-Q-V42"
+    }
+  ],
+  "marking_status": "DRAFT"
+}

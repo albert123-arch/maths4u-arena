@@ -259,3 +259,51 @@ Use those mutation tests only on the guarded local test database, not during
 owner preview. Final local publication was performed separately after tests;
 repeat application skipped all 124 tasks with zero writes. These commands
 authorise neither production import nor deployment.
+
+## C3: Proof by induction
+
+`9231-fp1-induction` adds chapter `fp1_induction`, position 6. It uses the
+mathematical order of book sections 7.1–7.2, with independently authored notes,
+20 examples, 30 written problems and 40 short checks. No owner question file,
+archive mapping, third-party question or image is imported. `source.supplied`
+is zero; `source.sha256` binds the committed authoring brief, not an invented
+examination source. The source audit explicitly records null archive links.
+
+There are five lessons, each with six written problems and eight quick checks
+(six SHORT, two MC). Short fields require the whole requested algebraic bridge,
+all coefficients or matrix entries, and exact residues. MC checks target proof
+logic. These are ingredients of a proof, not automated assessment of a full
+induction argument. Written proofs remain MANUAL, with separate hints, worked
+solutions, DRAFT indicative criteria and paper self-assessment. Existing frozen
+assignment grading and learner progress mechanisms are unchanged.
+
+```powershell
+python scripts/content/prepare-fp1-induction.py
+python scripts/content/verify-fp1-induction.py --report .local/c3-induction-20261106/math.json
+```
+
+Both commands are independent of owner drives. The preparer creates the manifest,
+verification models and source audit; it reads no examination dataset. The verifier
+binds every model to the actual question/example and lesson content, then checks
+base cases and symbolic transitions. Divisibility uses integer exponential
+remainders or integral Newton coefficients of the polynomial quotient, covering
+all non-negative integers; finite substitutions are additional diagnostics.
+REVIEWED distinguishes author review of written logic and completeness from
+symbolic PASS results and does not imply external peer review.
+
+Final local version is 1.0.2. A source comparison before owner preview found
+coincidences between several initially authored standard formulae and book
+exercises. Those examples/variants were independently replaced. The already
+applied local 1.0.0 was preserved: applying 1.0.1 appended 70 TaskVersions under
+the existing package-version mechanism, without deleting the earlier versions
+or their QA records. Version 1.0.2 fixes the intermediate expansion in example
+E-S3 and adds a direct symbolic equality check. It appends another 70 immutable
+TaskVersions; all 140 previous versions and nested records were verified intact.
+There is one receipt per version; repeat application of 1.0.2 skips all 70 tasks
+and writes nothing. A clean database imports only 1.0.2.
+
+All seven FP1 packages are now PUBLISHED locally. The chapter-specific lifecycle
+and browser tests preserve all six older published packages but intentionally
+restore Induction to DRAFT. Run those mutation tests only through the guarded
+loopback test runtime. Final local publication is performed separately after
+testing. Cross-topic revision, production import and deployment are not included.
