@@ -1,3 +1,4 @@
+import { requireVisibleTasks } from "./cambridge-access";
 import { z } from "zod";
 import { Prisma } from "../generated/prisma/client";
 import { db } from "./prisma";
@@ -26,6 +27,7 @@ export async function taskPermission(actor: Actor | null): Promise<Prisma.TaskWh
 async function sqlPermission(actor: Actor | null) {
   const clauses = [Prisma.sql`t.archivedAt IS NULL`];
   if (!archiveAdmin(actor)) clauses.push(Prisma.sql`t.examArchivedAt IS NULL AND t.origin <> 'UNKNOWN' AND (t.origin = 'ORIGINAL' OR t.originManual = true)`);
+  if (!archiveAdmin(actor)) clauses.push(Prisma.sql`NOT EXISTS(SELECT 1 FROM TaskVersion cv LEFT JOIN Source cs ON cs.id=cv.sourceId WHERE cv.taskId=t.id AND (cv.examBoard IN ('Cambridge','Cambridge International') OR cs.name IN ('Cambridge','Cambridge International')))`);
   if (!actor || !isAdmin(actor)) clauses.push(actor && isTeacher(actor) ? Prisma.sql`(t.visibility = 'PUBLIC' OR t.ownerId = ${actor.id})` : Prisma.sql`t.visibility = 'PUBLIC'`);
   if (!actor || !isTeacher(actor)) {
     const features = await db().task.groupBy({ by: ["featureKey"], where: { visibility: "PUBLIC", archivedAt: null, featureKey: { not: null } } });
@@ -74,7 +76,7 @@ export async function catalog(actor: Actor | null, lang: string, input: unknown,
   if (strictLocale && lang === "ru") where.push(russianTaskSql);
   if (f.mode) { const clause = Prisma.sql`${modeSql}=${f.mode}`; base.push(clause); where.push(clause); }
   ensure(!f.progress || actor, 401, "LOGIN_REQUIRED");
-  const progress = actor ? await latestPracticeProgress(actor.id, f.topic || undefined) : [];
+  const progress = actor ? await latestPracticeProgress(actor.id, f.topic || undefined, actor) : [];
   if (f.progress) {
     const ids = progress.filter(p => f.progress === "SOLVED" || f.progress === "UNSOLVED" ? p.solved
       : f.progress === "IN_PROGRESS" ? p.state === "IN_PROGRESS" : f.progress === "NEEDS_REPEAT" ? p.state === "NEEDS_REPEAT" : true).map(p => p.taskId);
@@ -165,6 +167,7 @@ export async function basket(actor: Actor, lang: string) {
 export async function saveBasket(actor: Actor, input: unknown, lang: string) {
   teacher(actor);
   const data = z.object({ taskIds: z.array(z.string().min(1).max(191)).max(50).refine(ids => new Set(ids).size === ids.length), revision: z.number().int().nonnegative() }).parse(input);
+  await requireVisibleTasks(actor,data.taskIds);
   ensure(await db().task.count({where:{id:{in:data.taskIds},examArchivedAt:null,...approvedWhere}}) === data.taskIds.length, 400, "TASK_UNAVAILABLE");
   await transaction(async tx => { await lockUser(tx, actor.id); const current = await tx.taskBasket.findUnique({ where: { userId: actor.id } });
     ensure(data.revision === (current?.revision ?? 0), 409, "STALE_BASKET");

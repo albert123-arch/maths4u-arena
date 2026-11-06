@@ -1,4 +1,5 @@
 import { restrictedMaterial, restrictedWhere, approvedWhere } from "./content-access";
+import { requireVisibleTasks, requireVisibleWork } from "./cambridge-access";
 import { z } from "zod";
 import { db } from "./prisma";
 import { AppError, ensure } from "./errors";
@@ -51,6 +52,7 @@ export async function createWork(tx: Prisma.TransactionClient, actor: Actor, dat
     const classroom = await ownClass(actor, data.classId, tx);
     ensure(!classroom.archivedAt, 400, "CLASS_ARCHIVED");
   }
+  await requireVisibleTasks(actor, data.taskIds, tx);
   const tasks = await tx.task.findMany({ where: { id: { in: data.taskIds }, archivedAt: null, examArchivedAt: null, ...approvedWhere }, include: {
     versions: { orderBy: { number: "desc" }, take: 1, include: versionInclude },
   } });
@@ -140,6 +142,7 @@ export async function finalize(tx: Prisma.TransactionClient, attempt: FullAttemp
 export async function startAttempt(actor: Actor, workId: string, newAttempt = false) {
   return transaction(async tx => {
     await lockUser(tx, actor.id);
+    await requireVisibleWork(actor,workId,tx);
     const work = await tx.work.findUnique({ where: { id: workId }, include: { ...contextInclude, versions: { take: 1, orderBy: { number: "desc" } } } });
     ensure(work, 404, "NOT_FOUND");
     await workAccess(actor, work, tx);
@@ -163,6 +166,7 @@ export async function mutateAttempt(actor: Actor, id: string, input: unknown, su
   const data = saveSchema.parse(input);
   const outcome = await transaction(async tx => {
     const a = await lockAttempt(tx, id);
+    if(a) await requireVisibleWork(actor,a.workVersion.workId,tx);
     ensure(a && a.userId === actor.id, 404, "NOT_FOUND");
     ensure(!independentPractice(a) || (!a.study?.selfDirected && !a.workVersion.items.some(i => i.taskVersion.parts.some(p => p.kind === "MANUAL"))), 403, "ASSIGNMENT_REQUIRED");
     // Repeated submissions cannot change a finished attempt, even with stale revisions.
@@ -246,6 +250,7 @@ export async function gradeAttempt(actor: Actor, id: string, input: unknown) {
   ensure(new Set(data.reviews.map(r => r.partId)).size === data.reviews.length, 400, "DUPLICATE_REVIEW");
   return transaction(async tx => {
     const a = await lockAttempt(tx, id);
+    if(a) await requireVisibleWork(actor,a.workVersion.workId,tx);
     ensure(a && (isAdmin(actor) || (a.workVersion.work.ownerId === actor.id && a.userId !== actor.id) || await mayReviewPractice(actor, id, tx)), 404, "NOT_FOUND");
     ensure(!a.workVersion.items.some(i => restrictedMaterial(i.taskVersion.task)), 410, "MATERIAL_UNAVAILABLE");
     ensure(!a.study?.selfDirected, 403, "SELF_STUDY_NOT_GRADED");

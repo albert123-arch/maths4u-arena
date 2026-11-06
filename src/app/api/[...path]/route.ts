@@ -104,7 +104,7 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
       if (parts.length === 4 && method === "GET") return json(await previewMaterial(parts[2], parts[3], lang));
       if (parts.length === 5 && parts[4] === "check" && method === "POST") return json(await checkPreview(parts[2], parts[3], input, lang));
     }
-    if (method === "GET" && route === "learning/course-choices") return json(await courseChoices());
+    if (method === "GET" && route === "learning/course-choices") return json(await courseChoices(await actorForToken(tokenFrom(request))));
     if ((route === "learning/square/check" || action === "check") && method === "POST") {
       const user = await actorForToken(tokenFrom(request));
       // Bounded algebra and payload. Guest checks do not create accounts or assessment attempts.

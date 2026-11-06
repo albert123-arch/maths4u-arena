@@ -9,6 +9,8 @@ import { firstAdministrator, disconnectBootstrap } from "../../src/lib/bootstrap
 import { childDiagnostic, errorCode } from "./diagnostics";
 import { prepareEngine } from "./engine-access";
 import { migrationChild } from "./child-process";
+import { applyReleaseD, releaseDKey, releaseDFingerprint } from "../../src/lib/release-d";
+import { db } from "../../src/lib/prisma";
 
 export { databaseConfig };
 
@@ -55,6 +57,22 @@ export async function prepareRuntime(root: string) {
     if (Number(lockRows[0].acquired) !== 1) throw new Error();
     const [tables] = await connection.query<RowDataPacket[]>("SELECT TABLE_NAME AS name FROM information_schema.TABLES WHERE TABLE_SCHEMA = ?", [target.database]);
     if (tables.length && !tables.some(table => table.name === "_prisma_migrations")) { stage = "database must be empty or Prisma-managed"; throw new Error(); }
+    // Refuse before *any* new migration when an existing Arena needs Release D.
+    // The owner enters a backup identifier in private hPanel settings; no SSH is needed.
+    stage = "Release D backup and approval";
+    let needsRelease = false;
+    if (tables.some(t => t.name.toLowerCase() === "task")) {
+      const [counts] = await connection.query<RowDataPacket[]>("SELECT COUNT(*) AS n FROM Task");
+      needsRelease = Number(counts[0].n) > 0;
+    }
+    if (needsRelease && tables.some(t => t.name.toLowerCase() === "contentrelease")) {
+      const [receipts] = await connection.query<RowDataPacket[]>("SELECT fingerprint,state FROM ContentRelease WHERE `key`=?", [releaseDKey]);
+      if (receipts.length) {
+        if (receipts[0].fingerprint !== releaseDFingerprint || receipts[0].state !== "APPLIED") throw new Error();
+        needsRelease = false;
+      }
+    }
+    if (needsRelease && (process.env.ARENA_RELEASE_D_APPLY !== "1" || (process.env.ARENA_RELEASE_D_BACKUP_ID ?? "").length < 8)) throw new Error();
     stage = "Maths4U migration history";
     const migrationDirectory = path.join(root, "prisma/migrations");
     const expectedMigrations = new Map(fs.readdirSync(migrationDirectory, { withFileTypes: true })
@@ -128,12 +146,19 @@ export async function prepareRuntime(root: string) {
     delete process.env.NEW_ADMIN_NAME;
     delete process.env.MATHS4U_BOOTSTRAP_ADMIN;
     await disconnectBootstrap();
+    if (needsRelease) {
+      stage = "Release D content transaction";
+      const release = await applyReleaseD(storage, { apply: true, backupId: process.env.ARENA_RELEASE_D_BACKUP_ID });
+      console.log("[Maths4U] Release D " + JSON.stringify(release));
+      await db().$disconnect();
+    }
     await connection.end();
     connection = undefined;
     console.log("[Maths4U] Runtime preparation complete; starting Next.js.");
   } catch {
     if (connection) await connection.end().catch(() => {});
     await disconnectBootstrap().catch(() => {});
+    await db().$disconnect().catch(() => {});
     throw new Error("[Maths4U] Startup stopped at " + stage + ". Check private hPanel settings; no credentials were logged.");
   }
 }

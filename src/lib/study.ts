@@ -1,4 +1,5 @@
 import { restrictedMaterial } from "./content-access";
+import { requireVisibleTasks, requireVisibleWork } from "./cambridge-access";
 import { z } from "zod";
 import { Prisma } from "../generated/prisma/client";
 import { db } from "./prisma";
@@ -16,6 +17,7 @@ export { progressInclude, studyProgressStatus } from "./practice-progress";
 export async function beginStudy(actor: Actor, input: unknown, lang: string) {
   const data = z.object({ taskId: z.string(), lessonId: z.string().nullable().optional() }).parse(input);
   return transaction(async tx => {
+    await requireVisibleTasks(actor,[data.taskId],tx);
     await lockUser(tx, actor.id);
     const task = await tx.task.findUnique({ where: { id: data.taskId }, include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true, parts: true } } } });
     ensure(task && !task.archivedAt && !restrictedMaterial(task) && task.versions.length && (task.visibility === "PUBLIC" || task.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
@@ -39,6 +41,7 @@ export async function revealStudyHelp(actor: Actor, attemptId: string, input: un
   const { kind } = z.object({ kind: z.enum(["hint", "answer", "solution", "markScheme"]) }).parse(input);
   return transaction(async tx => {
     const a = await lockAttempt(tx, attemptId);
+    if(a) await requireVisibleWork(actor,a.workVersion.workId,tx);
     ensure(a && a.userId === actor.id && a.study && a.workVersion.work.kind === "PRACTICE", 404, "STUDY_ONLY");
     ensure(!a.workVersion.items.some(i=>restrictedMaterial(i.taskVersion.task)),410,"MATERIAL_UNAVAILABLE");
     ensure(availableHelp(a.workVersion.items[0].taskVersion, lang)[kind], 404, "HELP_NOT_PROVIDED");
@@ -51,6 +54,7 @@ export async function selfCheckStudy(actor: Actor, attemptId: string, input: unk
   const data = z.object({ state: z.enum(["SELF_CHECKED", "NEEDS_REPEAT"]), solved: z.boolean().optional(), points: z.number().finite().min(0).nullable().optional() }).strict().parse(input);
   return transaction(async tx => {
     const a = await lockAttempt(tx, attemptId);
+    if(a) await requireVisibleWork(actor,a.workVersion.workId,tx);
     ensure(a && a.userId === actor.id && a.study && a.workVersion.work.kind === "PRACTICE", 404, "STUDY_ONLY");
     ensure(!a.workVersion.items.some(i=>restrictedMaterial(i.taskVersion.task)),410,"MATERIAL_UNAVAILABLE");
     const maximum = a.workVersion.items.reduce((n, i) => n + i.maxPoints, 0);

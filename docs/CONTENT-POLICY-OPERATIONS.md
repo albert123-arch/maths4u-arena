@@ -2,6 +2,8 @@
 
 Owner decision: Stage 6b, 6 November 2026. These instructions do not authorise a deployment or production mutation.
 
+**Release D update, 6 November:** the historical Stage 6b manual-executor checklist below is superseded for the first Arena D deployment by the reviewed, gated runtime procedure in [HOSTINGER.md](HOSTINGER.md) and [ARENA-RELEASE-D-REPORT-20261106.md](ARENA-RELEASE-D-REPORT-20261106.md). Production was not contacted or mutated during preparation. The old local-only scripts retain their guards; they are not repurposed by changing environment flags. Release D has a separate startup coordinator, a deterministic data migration, database policy backups, a private dry-run journal and an atomic authored-content import.
+
 ## Access rules
 
 - Non-administrators see a task only if its existing visibility/entitlement rules allow it, it is not archived, its origin is not UNKNOWN, and it is ORIGINAL or manually approved by the owner.
@@ -9,7 +11,7 @@ Owner decision: Stage 6b, 6 November 2026. These instructions do not authorise a
 - Importers classify all newly created/revised tasks centrally. Confirmed Cambridge examination provenance is immediately archived; other imported tasks remain UNKNOWN. Existing manual origin decisions are preserved. Re-importing an unchanged task cannot approve it.
 - The previously approved 668 original tasks remain available. The owner's 20 Book 2 olympiad tasks have manual ORIGINAL classification. The ten local demonstrations have manual DEMO classification and an administrator-only archive.
 - `Task.examArchivedAt` is retained for compatibility and now also covers the Demo archive. The UI derives “Archived · Demo” from DEMO provenance; other archived examination material uses “Archived · Cambridge”. This field's name must not be treated as authorship evidence.
-- Restoring an archive does not by itself approve an UNKNOWN/unreviewed task. A manual Cambridge classification archives by default; an explicit owner approval plus explicit restoration is required before such material could become visible again.
+- Restoring an archive does not by itself approve an UNKNOWN/unreviewed task. A manual Cambridge classification archives by default. Release D additionally retains H1's historical-version restriction: clearing an archive flag or relabelling origin cannot expose a task with an exact Cambridge source/board. Changing that protection requires a separate code/policy decision.
 - Administrators can review individual tasks or a whole applied `admin/bank/*` task batch. Batch operations require a reviewed fingerprint, recheck every row, retain existing archives, and write a private restoration journal before the transaction. A bulk origin change is not an automatic archive restoration.
 
 ## Local Stage 6b data operation

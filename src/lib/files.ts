@@ -1,4 +1,5 @@
 import { restrictedMaterial } from "./content-access";
+import { requireVisibleTasks } from "./cambridge-access";
 import { mkdir, readFile, writeFile, unlink } from "node:fs/promises";
 import path from "node:path";
 import { db } from "./prisma";
@@ -92,6 +93,7 @@ export async function download(actor: Actor | null, id: string, variant = "origi
     ensure(view.lens.mode === "USER" && file.submissions.some(s => s.answer.attempt.userId === actor?.id), 404, "NOT_FOUND");
     if (userViewTeacher()) ensure(await db().attempt.count({ where: { id: { in: file.submissions.map(s => s.answer.attemptId) }, userId: actor?.id, AND: [lensAttemptScope()] } }), 404, "NOT_FOUND");
   } else if (userViewTeacher() && file.ownerId === actor?.id && !file.assets.length) ensure(false, 404, "NOT_FOUND");
+  await requireVisibleTasks(actor,file.assets.map(a=>a.version.taskId));
   let allowed = !!actor && (file.ownerId === actor.id || isAdmin(actor));
   if (!allowed && view?.lens?.mode === "ROLE" && view.real && !file.submissions.length) {
     for (const asset of file.assets) if (asset.role !== "TEACHER" && await db().workItem.count({ where: { taskVersionId: asset.versionId, workVersion: { work: { ownerId: view.real.id } } } })) { allowed = true; break; }

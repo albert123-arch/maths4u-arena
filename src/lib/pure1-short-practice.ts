@@ -1,6 +1,7 @@
 import { quarantineImportedTask } from "./import-content-policy";
 import { cleanAuthoredTitle } from "./content-text-cleanup";
 import { z } from "zod";
+import type { Prisma } from "../generated/prisma/client";
 import { admin, digest, lockUser, transaction, type Actor } from "./security";
 import { databaseConfig } from "./database-url";
 import { createTaskVersion, renderContent, taskSchema, versionInclude } from "./content";
@@ -38,10 +39,14 @@ export async function importPure1ShortLocal(actor:Actor,input:unknown){
 }
 /** Internal shared writer; public entry points validate their own complete editorial pack first. */
 export async function importPure1PracticeMaterialsLocal(actor:Actor,pack:Pick<Pure1ShortPack,"provenance"|"grading_policy"|"questions">,variants:boolean){
- const cfg=databaseConfig();if(process.env.MATHS4U_ENV!=="test"||cfg.host!=="127.0.0.1"||!cfg.database.startsWith("maths4u_test_bank_"))throw Error("P1_SHORT_LOCAL_ONLY");admin(actor);
+ const cfg=databaseConfig();if(process.env.MATHS4U_ENV!=="test"||cfg.host!=="127.0.0.1"||!cfg.database.startsWith("maths4u_test_bank_"))throw Error("P1_SHORT_LOCAL_ONLY");
+ return transaction(tx => writePure1PracticeMaterials(tx,actor,pack,variants));
+}
+/** Internal transaction writer; publication approval is the release coordinator's job. */
+export async function writePure1PracticeMaterials(tx:Prisma.TransactionClient,actor:Actor,pack:Pick<Pure1ShortPack,"provenance"|"grading_policy"|"questions">,variants:boolean){
+ admin(actor);
  const materials=pack.questions.map(q=>({q,material:pure1ShortTask(pack,q)}));
  for(const {material}of materials)for(const text of [...material.texts.flatMap(t=>[t.statement,t.hint,t.solution,t.answer??""]),...material.parts.flatMap(p=>p.options.flatMap(o=>o.texts.map(t=>t.text)))])if(renderContent(text).includes('class="katex-error"'))throw Error("P1_SHORT_INVALID_MATH");
- return transaction(async tx=>{
   await lockUser(tx,actor.id);let created=0,skipped=0;const mapping:Record<string,string>={};
   const textsMatch=(expected:{locale:string}[],actual:{locale:string}[])=>expected.length===actual.length&&expected.every(t=>{const row=actual.find(r=>r.locale===t.locale);return row&&Object.entries(t).every(([key,value])=>row[key as keyof typeof row]===value);});
   for(const {q,material} of materials){
@@ -61,6 +66,5 @@ export async function importPure1PracticeMaterialsLocal(actor:Actor,pack:Pick<Pu
    const position=(variants?100:1)+Number(q.uid.slice(-2)),link=await tx.lessonTask.findUnique({where:{lessonId_taskId:{lessonId:id,taskId}}});
    if(link&&link.position!==position)throw Error("P1_SHORT_ORDER_CHANGED");
    if(!link)await tx.lessonTask.create({data:{lessonId:id,taskId,position}});mapping[q.uid]=taskId;
-  }return {created,skipped,mapping,skills:50,course:"/courses/maths4u-9709-p1"};
- });
+   }return {created,skipped,mapping,skills:50,course:"/courses/maths4u-9709-p1"};
 }

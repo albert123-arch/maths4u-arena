@@ -2,7 +2,7 @@ name: Hostinger preview package
 
 on:
   push:
-    branches: [main, codex/personal-learning, hostinger-preview, codex/learning-review-ux, codex/five-course-import, codex/smartboard-lessons, codex/assignment-source-privacy]
+    branches: [main, 'release/arena-d-*', codex/personal-learning, hostinger-preview, codex/learning-review-ux, codex/five-course-import, codex/smartboard-lessons, codex/assignment-source-privacy]
   workflow_dispatch:
 
 permissions:
@@ -15,7 +15,7 @@ concurrency:
 jobs:
   linux-node22:
     # Preview verification only. This workflow never deploys or uses production secrets.
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/personal-learning' || github.ref == 'refs/heads/hostinger-preview' || github.ref == 'refs/heads/codex/learning-review-ux' || github.ref == 'refs/heads/codex/five-course-import' || github.ref == 'refs/heads/codex/smartboard-lessons' || github.ref == 'refs/heads/codex/assignment-source-privacy'
+    if: startsWith(github.ref, 'refs/heads/release/arena-d-') || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/personal-learning' || github.ref == 'refs/heads/hostinger-preview' || github.ref == 'refs/heads/codex/learning-review-ux' || github.ref == 'refs/heads/codex/five-course-import' || github.ref == 'refs/heads/codex/smartboard-lessons' || github.ref == 'refs/heads/codex/assignment-source-privacy'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     services:
@@ -51,6 +51,8 @@ jobs:
         run: node --test tests/platform-statistics.test.mjs
       - name: Check safe startup diagnostics
         run: npx tsx --test tests/hostinger-diagnostics.test.ts tests/hostinger-runtime.test.ts tests/image-previews.test.ts tests/bank-materials.test.ts tests/request-diagnostic.test.ts tests/transport-response.test.ts tests/bank-upload-queue.test.ts tests/presentation-url.test.ts
+      - name: Check Release D bundle, mathematics and provenance guards
+        run: npx tsx --test tests/release-d.test.ts tests/content-origin.test.ts tests/content-stage6b.test.ts tests/square-learning.test.ts tests/quadratics-learning.test.ts tests/view-lens.test.ts
       - name: Verify populated database migration and pilot publication
         run: npx tsx --test tests/pilot-migration.test.ts
         env:

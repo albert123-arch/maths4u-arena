@@ -42,6 +42,10 @@ Before changing educational content, read
   provenance decisions. The approved removal of editorial wrappers uses new
   immutable versions; keys, criteria, marks and all other content stay unchanged.
   Production operations still require a separate owner command and a backup.
+- H1 was deployed on 6 November 2026. Release D must retain its exact Cambridge
+  aliases and historical-version guard, alongside reversible archiving and history
+  redaction. Release D preparation is authorised locally only; no push or production
+  writes. See docs/ARENA-RELEASE-D-PLAN-20261106.md.
 - Preserve task identities, sources, immutable versions, import mappings, work
   assignments, files, answers and reviews. Do not relabel imported tasks as original
   or put a new original problem over an unrelated existing Task identity.

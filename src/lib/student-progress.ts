@@ -1,4 +1,4 @@
-import { restrictedMaterial, approvedWhere } from "./content-access";
+import { restrictedMaterial, approvedWhere, visibleLessonWhere } from "./content-access";
 import { z } from "zod";
 import { Prisma } from "../generated/prisma/client";
 import { db } from "./prisma";
@@ -56,7 +56,7 @@ async function progressReport(studentId: string, student: { id: string; displayN
     db().attempt.count({ where: scope }),
     db().attempt.count({ where: { AND: [scope, { status: "IN_PROGRESS", expiresAt: { gt: now } }] } }),
     db().attempt.count({ where: { AND: [scope, { status: "GRADED" }] } }),
-    db().learningProgress.findMany({ where: { userId: studentId }, include: { lesson: { include: lessonInclude } } }),
+    db().learningProgress.findMany({ where: { userId: studentId, lesson:visibleLessonWhere(reader) }, include: { lesson: { include: lessonInclude } } }),
     // One latest attempt per task and topic; retries must not inflate progress.
     db().$queryRaw<{ attemptId: string }[]>(Prisma.sql`SELECT s.attemptId FROM PracticeStudy s JOIN Attempt a ON a.id=s.attemptId
       WHERE a.userId=${studentId} AND NOT EXISTS (

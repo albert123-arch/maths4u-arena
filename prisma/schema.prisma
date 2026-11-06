@@ -940,3 +940,23 @@ model IndependentCheck {
   @@index([userId, contentVersion, checkedAt])
   @@index([taskVersionId])
 }
+// Release D journals contain policy metadata only, never student responses.
+model ContentRelease {
+  key         String    @id @db.VarChar(80)
+  fingerprint String    @db.VarChar(64)
+  state       String    @db.VarChar(32)
+  details     Json
+  completedAt DateTime? @db.DateTime(3)
+}
+
+model ContentReleaseTaskBackup {
+  releaseKey     String    @db.VarChar(80)
+  taskId         String    @db.VarChar(191)
+  origin         String    @db.VarChar(32)
+  originManual   Boolean
+  originReason   String?   @db.VarChar(1000)
+  originRule     String?   @db.VarChar(80)
+  examArchivedAt DateTime? @db.DateTime(3)
+
+  @@id([releaseKey, taskId])
+}

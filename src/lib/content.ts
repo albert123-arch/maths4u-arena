@@ -1,3 +1,4 @@
+import { requireVisibleTasks } from "./cambridge-access";
 import sanitizeHtml from "sanitize-html";
 import katex from "katex";
 import { z } from "zod";
@@ -47,7 +48,7 @@ export const taskSchema = z.object({
 });
 export type TaskInput = z.infer<typeof taskSchema>;
 export const versionInclude = {
-  task: true, texts: true, source: true, assets: { include: { file: { select: { mimeType: true } } } },
+  task: { include: { versions: { select: { examBoard: true, source: { select: { name: true } } } } } }, texts: true, source: true, assets: { include: { file: { select: { mimeType: true } } } },
   parts: { orderBy: { position: "asc" }, include: { texts: true, acceptedAnswers: true, options: { orderBy: { position: "asc" }, include: { texts: true } } } },
 } satisfies Prisma.TaskVersionInclude;
 export type Version = Prisma.TaskVersionGetPayload<{ include: typeof versionInclude }>;
@@ -118,6 +119,8 @@ export function publicVersion(v: Version, lang: string, solutions = false, revea
     }) };
 }
 export async function createTaskVersion(tx: Prisma.TransactionClient, actor: Actor, data: TaskInput, taskId?: string) {
+  if(taskId) await requireVisibleTasks(actor,[taskId],tx);
+  ensure(isAdmin(actor) || !/^Cambridge(?: International)?$/i.test(data.examBoard ?? "") && !/^Cambridge(?: International)?$/i.test(data.source ?? ""),403,"FORBIDDEN");
   if (taskId) {
     await tx.$queryRaw`SELECT id FROM Task WHERE id = ${taskId} FOR UPDATE`;
     const task = await tx.task.findUnique({ where: { id: taskId } });
@@ -178,6 +181,7 @@ export function editableVersion(v: Version) {
 
 export async function editorTask(actor: Actor, id: string) {
   teacher(actor);
+  await requireVisibleTasks(actor,[id]);
   const t = await db().task.findUnique({ where: { id }, include: { topics: true, versions: { take: 1, orderBy: { number: "desc" }, include: versionInclude } } });
   ensure(t && !hiddenMaterial(actor, t) && (t.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
   return t;

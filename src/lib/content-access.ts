@@ -1,3 +1,5 @@
+import { cambridgeTask } from "./cambridge-access";
+import { hasH1Provenance } from "./content-origin";
 import type { publicVersion } from "./content";
 import type { Prisma } from "../generated/prisma/client";
 import { type Actor, isAdmin, isTeacher } from "./security";
@@ -6,10 +8,10 @@ import { db } from "./prisma";
 import { ensure } from "./errors";
 
 export const archiveAdmin = (actor: Actor | null) => !!actor && isAdmin(actor) && !requestView()?.lens;
-export const approvedWhere: Prisma.TaskWhereInput = { origin: { not: "UNKNOWN" }, AND: [{ OR: [{ origin: "ORIGINAL" }, { originManual: true }] }] };
-export const restrictedWhere: Prisma.TaskWhereInput = { OR: [{ examArchivedAt: { not: null } }, { origin: "UNKNOWN" }, { origin: { not: "ORIGINAL" }, originManual: false }] };
-export const restrictedMaterial = (task: { examArchivedAt: Date | null; origin: string; originManual: boolean }) => !!task.examArchivedAt || task.origin === "UNKNOWN" || task.origin !== "ORIGINAL" && !task.originManual;
-export const archiveWhere = (actor: Actor | null): Prisma.TaskWhereInput => archiveAdmin(actor) ? {} : { examArchivedAt: null, ...approvedWhere };
+export const approvedWhere: Prisma.TaskWhereInput = { origin: { not: "UNKNOWN" }, NOT: cambridgeTask, AND: [{ OR: [{ origin: "ORIGINAL" }, { originManual: true }] }] };
+export const restrictedWhere: Prisma.TaskWhereInput = { OR: [cambridgeTask, { examArchivedAt: { not: null } }, { origin: "UNKNOWN" }, { origin: { not: "ORIGINAL" }, originManual: false }] };
+export const restrictedMaterial = (task: { examArchivedAt: Date | null; origin: string; originManual: boolean; versions?: { examBoard: string | null; source?: { name: string } | null }[] }) => !!task.examArchivedAt || task.origin === "UNKNOWN" || task.origin === "CAMBRIDGE_EXAM" || task.versions?.some(v => hasH1Provenance({ examBoard: v.examBoard, source: v.source?.name ?? null })) === true || task.origin !== "ORIGINAL" && !task.originManual;
+export const archiveWhere = (actor: Actor | null): Prisma.TaskWhereInput => archiveAdmin(actor) ? {} : { examArchivedAt: null, ...approvedWhere, NOT: cambridgeTask };
 export const hiddenMaterial = (actor: Actor | null, task: { examArchivedAt: Date | null; origin: string; originManual: boolean }) => !archiveAdmin(actor) && restrictedMaterial(task);
 export const unavailableMessage = (lang: string) => lang === "ru" ? "Этот материал больше недоступен" : "This material is no longer available";
 export function hierarchyTaskWhere(actor: Actor | null): Prisma.TaskWhereInput {

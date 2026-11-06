@@ -1,6 +1,7 @@
 import { quarantineImportedTask } from "./import-content-policy";
 import { cleanAuthoredTitle, cleanAuthoredMarkup } from "./content-text-cleanup";
 import { z } from "zod";
+import type { Prisma } from "../generated/prisma/client";
 import { createTaskVersion, renderContent, taskSchema, versionInclude } from "./content";
 import { databaseConfig } from "./database-url";
 import { admin, digest, lockUser, transaction, type Actor } from "./security";
@@ -74,6 +75,10 @@ export function originalTask(pack: OriginalBlock, p: OriginalBlock["problems"][n
 export async function importOriginalBlockLocal(actor: Actor, input: unknown) {
   const cfg = databaseConfig();
   if (process.env.MATHS4U_ENV !== "test" || cfg.host !== "127.0.0.1" || !cfg.database.startsWith("maths4u_test_bank_")) throw new Error("ORIGINAL_LOCAL_ONLY");
+  return transaction(tx => writeOriginalBlock(tx, actor, input));
+}
+/** Internal writer: release coordinator supplies the transaction and owner-reviewed bundle. */
+export async function writeOriginalBlock(tx: Prisma.TransactionClient, actor: Actor, input: unknown) {
   admin(actor);
   const pack = originalBlockSchema.parse(input);
   const spec=originalBlocks[pack.key],chapterId=originalChapterId(pack);
@@ -82,7 +87,6 @@ export async function importOriginalBlockLocal(actor: Actor, input: unknown) {
     if (renderContent(html).includes('class="katex-error"')) throw new Error("ORIGINAL_INVALID_MATH");
   for (const {material} of tasks) for (const html of [...material.texts.flatMap(t => [t.statement,t.hint,t.solution,t.markScheme]), ...material.parts.flatMap(p => p.texts.flatMap(t => [t.prompt,t.answer,t.rubric]))])
     if (renderContent(html).includes('class="katex-error"')) throw new Error("ORIGINAL_INVALID_MATH");
-  return transaction(async tx => {
     await lockUser(tx,actor.id);
     const course = await tx.course.findUnique({where:{slug:"maths4u-9709-p1"}});
     if (course && course.id !== originalCourseId) throw new Error("ORIGINAL_COURSE_COLLISION");
@@ -128,5 +132,4 @@ export async function importOriginalBlockLocal(actor: Actor, input: unknown) {
       for(const [position,p] of pack.problems.filter(p=>p.skill===l.key).entries()) await tx.lessonTask.upsert({where:{lessonId_taskId:{lessonId:id,taskId:mapping[p.uid]}},create:{lessonId:id,taskId:mapping[p.uid],position},update:{}});
     }
     return {created,skipped,course:"/courses/maths4u-9709-p1",mapping};
-  });
 }
