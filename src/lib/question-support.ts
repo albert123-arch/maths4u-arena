@@ -13,6 +13,7 @@ import type { SupportContent } from "./question-support-model";
 import { materialGrant } from "./material-grant";
 import { rolePreview } from "./request-view";
 import { contentPackages, packageTopic } from "./content-package-content";
+import { grantPackageHelp } from "./content-package-assets";
 
 const access = z.enum(["attempt", "stuck", "paper"]);
 async function readable(actor: Actor | null, id: string) {
@@ -40,7 +41,7 @@ export async function catalogSupport(actor: Actor | null, id: string, input: unk
   if (topic) {
     ensure((await squareMappings(topic.key)).get(v.sourceUid!) === v.id, 409, "QUESTION_CHANGED");
     const q = questionsForTopic(topic.key).find(q => q.id === v.sourceUid)!;
-    return data.kind === "guidance" ? { rows: squareMarkingRows(q), total: q.marks } : { html: squareHelp(q, data.kind) };
+    return data.kind === "guidance" ? { rows: squareMarkingRows(q), total: q.marks } : { html: await grantPackageHelp(squareHelp(q,data.kind),v.id,data.kind,actor) };
   }
   const reveal = { hint: data.kind === "hint", answer: data.kind === "solution", solution: data.kind === "solution", markScheme: data.kind === "guidance" };
   const shown = publicVersion(v, lang, true, reveal);

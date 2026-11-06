@@ -7,6 +7,7 @@ import { requestView } from "./request-view";
 import { createTaskVersion, taskSchema } from "./content";
 import { contentPackage, contentPackages } from "./content-package-content";
 import type { ContentPackage, PackageQuestion } from "./content-package-schema";
+import { readPackageAssets, installPackageAssets, packageTaskAssets } from "./content-package-assets";
 
 type Client=Prisma.TransactionClient;
 const project=(p:ContentPackage)=>"arena-package-"+p.key;
@@ -21,6 +22,7 @@ export function packageTask(p:ContentPackage,q:PackageQuestion) {
     // Source exam metadata is not copied into public TaskVersion columns.
     texts:[{locale:"en",title:q.title,statement:q.prompt_html,answer:q.answer_html,hint:q.hint_html,solution:q.solution_html,markScheme:criteria,markSchemeText:criteria,markSchemeStatus:"DRAFT",
       teacherNote:JSON.stringify({editorialUid:q.id,provenance:q.provenance??{type:"independently-authored"},package:p.key,version:p.version,markingStatus:"DRAFT",fullAnswerChecker:"exact-v1"})}],
+    assets:packageTaskAssets(p,q.id),
     parts:choice?[{kind:"CHOICE",maxPoints:q.marks,texts:[{locale:"en",prompt:"",answer:q.answer_html}],options:Object.entries(f.options!).map(([key,text])=>({correct:key===f.expected,texts:[{locale:"en",text}]}))}]
       :manual?[{kind:"MANUAL",maxPoints:q.marks,texts:[{locale:"en",prompt:"",answer:q.answer_html,rubric:criteria,markSchemeText:criteria,markSchemeStatus:"DRAFT"}]}]
       :q.fields.map(f=>({kind:"SHORT",maxPoints:1,acceptedAnswers:[JSON.stringify({checker:"arena-exact-v1",field:f})],texts:[{locale:"en",prompt:"<p>"+f.label+"</p>",answer:q.answer_html,rubric:"One mark for this complete field."}]})),
@@ -31,6 +33,7 @@ function lessonText(p:ContentPackage,l:ContentPackage["lessons"][number]){
     examples:l.examples.map(e=>'<h3>'+e.title+'</h3>'+e.question+'<details><summary>Follow the solution</summary>'+e.solution+'</details>').join('')};
 }
 async function plan(client:Client,p:ContentPackage){
+  await readPackageAssets(p);
   const fingerprint=packageFingerprint(p),release=await client.contentRelease.findUnique({where:{key:releaseKey(p)}});
   ensure(!release||release.fingerprint===fingerprint,409,"PACKAGE_VERSION_CHANGED");
   const state=await client.contentPackage.findUnique({where:{key:p.key}});
@@ -59,6 +62,7 @@ export async function applyContentPackage(actor:Actor,key:string,input:unknown){
     await lockUser(tx,actor.id);const report=await plan(tx,p);
     ensure(report.token===token,409,"STALE_DRY_RUN");
     if(report.state==="ALREADY_APPLIED")return report; // Zero writes, including audit.
+    await installPackageAssets(tx,actor,await readPackageAssets(p));
     const old=await tx.contentPackage.findUnique({where:{key}});
     if(old){const a=old.version.split('.').map(Number),b=p.version.split('.').map(Number);ensure(b.some((n,i)=>n>a[i]&&b.slice(0,i).every((m,j)=>m===a[j])),409,"PACKAGE_VERSION_ORDER");}
     const course=await tx.course.findUnique({where:{slug:p.course.slug}})??await tx.course.create({data:{slug:p.course.slug,published:false,texts:{create:{locale:"en",title:p.course.title,description:""}}}});

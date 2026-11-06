@@ -13,7 +13,7 @@ if (!fs.existsSync(path.join(standalone, "server.js"))) throw new Error("Standal
 // This is the generated deployment directory only, never the repository or storage.
 fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output);
-for (const name of [".next", "public"]) {
+for (const name of [".next", "public", "content"]) {
   // Next may emit links to traced files on Linux. Materialize them so the
   // deployment cannot retain references to the builder's checkout.
   if (fs.existsSync(path.join(standalone, name))) fs.cpSync(path.join(standalone, name), path.join(output, name), { recursive: true, dereference: true });

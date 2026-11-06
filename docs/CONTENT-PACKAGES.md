@@ -78,3 +78,40 @@ The browser tests temporarily publish **only on that test database**, exercise
 guest checking and self-assessment, and restore the chapter to DRAFT. Eight
 synthetic lifecycle questions remain archived; the 94 teaching questions remain
 as the owner's draft. These commands do not authorize a production import.
+
+## C2: Rational functions and solution diagrams
+
+After the owner's separate publication command on 6 November, both Roots and
+Rational functions are PUBLISHED **locally**. Do not run the Rational lifecycle
+or browser publication tests during that review: they intentionally restore
+Rational to DRAFT. The paragraphs below describe the initial preparation checks.
+
+The owner has since published C1 **locally**. Do not run the C1 lifecycle/browser
+publication tests while reviewing C2: they intentionally restore C1 to DRAFT.
+Use `tests/content-rational-local.test.ts` and
+`tests/ux-browser/content-c2-rational.spec.ts` for this chapter. They preserve
+the published Roots package and restore only Rational functions to DRAFT.
+
+The Rational package contains 53 supplied written questions, five lessons,
+20 independently written examples, 40 complete-answer checks and 81 supplied
+solution diagrams. Regenerate the normalised JSON from the read-only source
+using the committed source audit as both `--audit` and `--assets`. The source
+directory is never written to.
+
+Optional package assets are immutable PNGs with declared size, dimensions and
+SHA-256. Dry-run verifies their bytes without writing files. Apply installs them
+as StoredFile/TaskAsset records in private storage and references their stable
+IDs from TaskVersion solution HTML. Repeat application creates neither new
+files nor new versions. Existing files are never overwritten or deleted;
+content-addressed bytes can be reused after a failed transaction.
+
+These C2 diagrams have role SOLUTION, so raw guest downloads return 404. The
+existing support flow issues an actor/version/role-bound material grant after
+the learner requests the solution. A grant cannot read a different image or
+be reused by a different signed-in actor. Old versions keep their own assets.
+Source package files and PNGs in `content/original/` are not public static files.
+Next traces these PNGs into standalone output; the deployment packager retains
+that private content directory. There are no new chapter-specific runtime flags.
+
+Public keys/provenance remain server-only. A C1 manifest without assets retains
+its original fingerprint; installing C2 does not revise or re-import Roots.
