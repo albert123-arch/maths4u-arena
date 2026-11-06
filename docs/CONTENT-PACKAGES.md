@@ -307,3 +307,51 @@ and browser tests preserve all six older published packages but intentionally
 restore Induction to DRAFT. Run those mutation tests only through the guarded
 loopback test runtime. Final local publication is performed separately after
 testing. Cross-topic revision, production import and deployment are not included.
+
+## C5: Further Probability & Statistics — Continuous random variables
+
+`9231-stats-crv` 1.0.0 reuses `maths4u-9231-statistics` and its existing course
+identity. It adds chapter `stats_crv`, with five lessons in the mathematical
+order of book sections 8.1–8.4: densities, cumulative probabilities, moments,
+monotone transformations, then piecewise distributions and inverse branches.
+Notes and 20 examples are independently written. All 38 supplied owner tasks
+retain 119 parts, 343 marks, answers, hints, solutions and criteria. Their 38
+archive mappings remain administrator-only; original examination rows stay intact.
+
+Each lesson has eight complete short checks (six SHORT, two MC), including
+fresh variants and weak-skill review. They ask for all requested coefficients,
+quartiles, CDF branches and support endpoints. Rational densities use the existing
+numerator/denominator field with an explicit format; fractions and exact surds
+remain supported. No general exponential/logarithmic input parser is introduced.
+Those supplied written questions remain MANUAL paper self-study with DRAFT guidance.
+
+```powershell
+node scripts/content/prepare-stats-crv-media.mjs --source 'E:\my folder\questions_data\original\Statistics 9231\01_Continuous_random_variables_9231_revised.json' --html 'E:\my folder\questions_data\original\Statistics 9231\9231_Statistics_Chapter_01_Teacher_Review.html' --metadata .local/c5-crv-20261106/assets.json
+python scripts/content/prepare-stats-crv.py --source 'E:\my folder\questions_data\original\Statistics 9231\01_Continuous_random_variables_9231_revised.json' --mapping docs/ARENA-C5-CRV-SOURCE-AUDIT-20261106.json --assets .local/c5-crv-20261106/assets.json
+python scripts/content/verify-stats-crv.py --report .local/c5-crv-20261106/math.json
+```
+
+The teacher HTML embeds 16 Matplotlib model SVGs inside solution figures.
+The preparer verifies article number/title, the JSON image path and alt text,
+SVG aria-label and its filename-prefixed element IDs. It preserves XML attribute
+case and does not rasterise the thousands of formula SVGs. The result is 16
+immutable SOLUTION PNGs (813,878 bytes, maximum side 1600 px), served only through
+the existing session/version/role-bound solution grants. Raw URLs remain 404.
+The owner source files are read-only; the 11 earlier source images are not reused.
+
+The verifier recomputes statement-derived density models, checks their mass,
+sign and CDF joins, and parses the actual supplied scalar/CDF/PDF answers.
+Compact TeX arguments are made explicit only inside the verifier; owner text
+is unchanged. CDF methods precede transformed densities, including reversed
+inequalities and mapped breakpoints. Quantiles are checked in their actual
+branches; the rounded numerical percentile uses a probability bracket.
+REVIEWED separates author review of sketches and reasoning from symbolic PASS.
+The verifier and content-bound fixtures run in CI without the E: drive; optional
+`--owner` adds direct hash, content and criterion comparisons.
+
+All eight packages (seven FP1 chapters plus Statistics chapter 1) are PUBLISHED
+locally. The Statistics lifecycle/browser tests preserve all seven older packages
+and deliberately restore only Statistics to DRAFT. Run those mutations solely on
+the guarded loopback test database. Final local publication is a separate action
+after tests; repeat skips 78 questions with zero writes. Production import,
+deployment and subsequent Statistics chapters are not included.
