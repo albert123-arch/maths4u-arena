@@ -115,3 +115,36 @@ that private content directory. There are no new chapter-specific runtime flags.
 
 Public keys/provenance remain server-only. A C1 manifest without assets retains
 its original fingerprint; installing C2 does not revise or re-import Roots.
+
+## C2: Summation of series
+
+The third package is `9231-fp1-summation`, with chapter `fp1_summation`.
+It has four lessons in the mathematical order of coursebook sections 3.1–3.2:
+power-sum derivations, finite-sum applications, telescoping, then convergence
+and remainders. Teaching text and the 16 worked examples are independently
+written. The owner's 68 supplied adaptations have separate ORIGINAL Task
+identities; the 32 new quick checks use complete polynomial, rational or
+numeric answers and eight multiple-choice checks. No diagram is required.
+
+The optional `polynomial` field uses the existing bounded exact algebra
+checker; its addition to the package schema changes no previous manifest
+or fingerprint. Rational formulae use the existing numerator/denominator
+pair, accepting equivalent fractions by cross multiplication.
+
+Reproduce the source normalisation with:
+
+```powershell
+python scripts/content/prepare-fp1-series.py --source 'E:\my folder\questions_data\original\Pure1 9231\03_Summation_of_series_9231_revised.json' --mapping docs/ARENA-C2-SERIES-SOURCE-AUDIT-20261106.json
+python scripts/content/verify-fp1-series.py --report .local/c2-series-20261106/math.json
+```
+
+The source remains read-only. Mathematical fixtures and source hashes are
+committed so CI does not need the E: drive. The mathematics report separates
+symbolic PASS checks from reviewed analytic arguments about endpoints.
+
+Roots, Rational and Summation are now PUBLISHED locally. Do not run their
+chapter-specific lifecycle or browser-publication tests during owner review:
+each test deliberately restores only its own tested chapter to DRAFT.
+The new Series tests preserve Roots and Rational's published states.
+Use unit tests, a read-only dry-run or the local public preview for review.
+No production import or deployment is authorised by these local commands.

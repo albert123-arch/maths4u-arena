@@ -1,9 +1,10 @@
 // Server-only registry: never import package JSON from a client component.
 import roots from "../../content/original/9231-fp1/roots-v1.json";
 import rational from "../../content/original/9231-fp1/rational-v1.json";
+import summation from "../../content/original/9231-fp1/summation-v1.json";
 import { contentPackageSchema, type ContentPackage } from "./content-package-schema";
 import type { QuadraticTopic } from "./square-model";
-export const contentPackages: ContentPackage[] = [contentPackageSchema.parse(roots),contentPackageSchema.parse(rational)];
+export const contentPackages: ContentPackage[] = [contentPackageSchema.parse(roots),contentPackageSchema.parse(rational),contentPackageSchema.parse(summation)];
 export function contentPackage(key:string) {
   const p=contentPackages.find(p=>p.key===key);if(!p)throw Error("UNKNOWN_CONTENT_PACKAGE");return p;
 }
