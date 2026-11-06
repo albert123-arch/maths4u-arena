@@ -522,3 +522,29 @@ and restore only this one to DRAFT. Final local publication is separate.
 Repeating the package skips 90 tasks with zero writes. No assets, dependencies
 or schema migrations are introduced. Use only the guarded loopback test runtime.
 Production operations and any further course are outside this work.
+
+## C5: Further Pure 2 — Hyperbolic functions
+
+9231-fp2-hyperbolic 1.0.0 adds fp2_hyperbolic to the existing FP2 course.
+Six lessons, 24 independently authored examples, 48 complete-answer checks,
+and all 50 owner tasks (104 parts, 337 marks). There are 44 new tasks and
+six adaptations with explicit archive mappings. Private provenance is omitted
+from public DTOs. The final five tasks disclose later calculus/ODE prerequisites.
+Eleven solution graphs come from exact matching owner Teacher Review articles;
+they use hashed PNG assets and the existing protected material-grant API.
+No images are leaked in prompts. No migrations or dependencies are added.
+
+Rebuild and verify:
+
+    python scripts/content/prepare-fp2-hyperbolic.py --source 'E:\my folder\questions_data\original\Pure 2 9231\01_Hyperbolic_functions_9231_FP2_revised.json' --mapping docs/ARENA-C5-FP2-HYPERBOLIC-SOURCE-AUDIT-20261107.json --assets .local/c5-fp2-hyperbolic-20261106/assets.json
+    python scripts/content/verify-fp2-hyperbolic.py --source 'E:\my folder\questions_data\original\Pure 2 9231\01_Hyperbolic_functions_9231_FP2_revised.json'
+    python scripts/content/verify-fp2-hyperbolic.py --report .local/c5-fp2-hyperbolic-20261106/ci-math.json
+
+CI needs no E: drive. Exact statement models verify all owner tasks, keys,
+examples, branch restrictions, identities and cross-topic extensions. Written
+reasoning remains MANUAL with indicative DRAFT marking guidance. Full quick
+checks use the existing bounded parser, including positive exponential-root
+sets rather than arbitrary transcendental-expression equivalence.
+The guarded lifecycle/browser tests leave the older twelve packages unchanged
+and restore only this package to DRAFT. Final local publication is separate.
+Repeat skips 98 tasks with zero writes. Production is outside this work.
