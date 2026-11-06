@@ -4,7 +4,7 @@
 
 Подготовка выполняется только в `D:\www\arena`, репозиторий `maths4u-arena`, целевой адрес `https://arena.maths4u.sbs`. Проект PHP `maths4u.sbs`, его файлы и база не использовались. Рабочая база Arena не открывалась. Push и deploy не выполняются.
 
-H1 слит локальным merge-коммитом `b1762c0a675298fa11b8cea3d1f459c8bf7897fa`; его родители — прежняя локальная main `5a9444a` и H1 `3b7a887`. Далее отдельно зафиксированы уточнения проверки неизменяемых снимков и старых CI-фикстур. Совместимое recovery-дерево подготовлено отдельной локальной веткой; его SHA и результаты записаны в `rollback-verification.json`.
+H1 слит локальным merge-коммитом `b1762c0a675298fa11b8cea3d1f459c8bf7897fa`; его родители — прежняя локальная main `5a9444a` и H1 `3b7a887`. Уточнения проверки неизменяемых снимков и старых CI-фикстур зафиксированы в `8a056110cdd210bd8e9976acd973b6f015c1c395`. Совместимое recovery-дерево — локальная ветка `rollback/release-d-h1-compatible`, проверенный коммит `a7dd45af37a1332c8ccd88cea418b1625e05dd6f`; результаты — `test-results/release-d-20261106/rollback-verification.json`.
 
 Требования владельца перенесены в раздел «Деплой → D» [дорожной карты](CODEX-ARENA-ROADMAP-20261105.md). Отдельный файл плана теперь указывает на этот единственный актуальный раздел.
 
@@ -43,12 +43,14 @@ H1 слит локальным merge-коммитом `b1762c0a675298fa11b8cea3d
 | Настоящие 404 | Пять Cambridge-курсов, их темы и API закрыты для guest/student/teacher |
 | Файлы | Original/preview/thumbnail закрыты не-администраторам, администратор получает файл |
 | Линза | Admin → student не получает архив и видит только 688 |
-| Практика в браузере | Ошибка → исправление → перезагрузка черновика; пропущенный корень отклонён; повторение выбирает свежий вариант |
+| Финальный браузерный прогон | 2/2 на окончательной сборке main; ошибка → исправление → перезагрузка черновика; пропущенный корень отклонён; повторение выбирает свежий вариант |
 | Адаптивность | 56 состояний: 360/390/768/1280, light/dark, публичные страницы и три настоящих кабинета |
 | Контраст/токены | 76 пар, нарушений нет |
-| Модульные проверки | 49/50, один платформенный POSIX-тест пропущен на Windows; ошибок нет |
+| Модульные проверки | Расширенный набор 49/50; финальный CI-набор 42/43. В каждом один платформенный POSIX-тест пропущен на Windows; ошибок нет |
 | Существующий populated-migration CI | Проверен локально: сохранение старых строк, публикация, банк, презентации, приватность источников, прогресс, режимы практики и личное обучение |
 | Готовый Hostinger-пакет | 10 проверок, включая перенос пакета, ранний 503, миграции, повторный запуск, сохранение администратора/данных/файла |
+| TypeScript, ESLint, production build | Успешны; полный main и совместимый recovery собираются отдельно в канонической папке |
+| Совместимый recovery | Сборка, populated-migration CI, реальный старт с 14 миграциями без сброса базы: guest 688 / admin 3342, архив закрыт, старые строки и release receipt сохранены; устаревшая линза получает 409 |
 
 В main-конфигурации обнаружен и исправлен узкий случай фильтра Topic на 360 px: сетка не должна растягиваться из-за длинных названий. В админском обзоре убрана устаревшая ссылка на ещё не выполненный Этап 6; категории вопросов отделены от происхождения.
 
@@ -60,7 +62,23 @@ H1 слит локальным merge-коммитом `b1762c0a675298fa11b8cea3d
 
 ## 3. Изменённые файлы
 
-Точный список фиксируется перед локальным merge-коммитом в `test-results/release-d-20261106/changed-files.json`. Код релиза: общий доступ и H1, классификатор, общий writer двух импортёров, `src/lib/release-d.ts`, схема/новая миграция, Hostinger startup и preview CI. Документация: дорожная карта, план-ссылка, этот отчёт, HOSTINGER и CONTENT-POLICY-OPERATIONS. Проверки: release-d unit/DB/startup/browser, обновлённые ожидания происхождения; отдельный helper готовит локальное совместимое восстановление.
+Итоговый diff относительно прежней локальной main `5a9444a` — 46 файлов, включая пришедшие со слиянием H1. Точный машинный список с базовым SHA находится в `test-results/release-d-20261106/changed-files.json`. Для проверки:
+
+```powershell
+git diff --name-status 5a9444a70bd92ad462b4d2e93e20ab4aef6b2821 main
+git log --oneline origin/main..main
+```
+
+| Область | Файлы |
+| --- | --- |
+| Запуск/CI | `.github/workflows/hostinger-preview.yml`, `scripts/hostinger/setup.ts`, `playwright.ux.config.ts` |
+| Схема | `prisma/schema.prisma`, `prisma/migrations/20261106160000_release_d_provenance/migration.sql` |
+| Доступ/каталог | `src/lib/cambridge-access.ts`, `content-access.ts`, `content-origin.ts`, `catalog.ts`, `content.ts`, `files.ts`, `learning-home.ts`, `practice-progress.ts`, `student-progress.ts`, `study.ts`, `works.ts`; `src/app/api/[...path]/route.ts` |
+| Импорт/репетиция | `src/lib/release-d.ts`, `original-blocks.ts`, `pure1-short-practice.ts`; `scripts/release-d-rehearsal.mjs`, `scripts/prepare-release-d-rollback.mjs` |
+| Интерфейс | `src/app/public-catalog.css`, `src/components/dashboards.tsx` |
+| Новые проверки | `tests/release-d.test.ts`, `release-d-rehearsal.test.ts`, `release-d-startup.test.mjs`, `fixture-provenance.ts`, `tests/ux-browser/release-d.spec.ts` |
+| Адаптация проверок | `tests/content-origin.test.ts`, `hotfix-cambridge.test.ts`, `assessment-sources-fixture.ts`, `bank-fixture.ts`, `learning-mechanics-fixture.ts`, `personal-learning-fixture.ts`, `pilot-migration.test.ts`, `presentations-fixture.ts`, `student-progress-fixture.ts`, `tests/ux-browser/hotfix.spec.ts` |
+| Документация | `AGENTS.md`; `docs/ARENA-H1-REPORT-20261106.md`, `ARENA-RELEASE-D-PLAN-20261106.md`, `ARENA-RELEASE-D-REPORT-20261106.md`, `CODEX-ARENA-ROADMAP-20261105.md`, `CONTENT-POLICY-OPERATIONS.md`, `HOSTINGER.md` |
 
 В коммит не входят `.local/`, `output/`, `tmp/`, `test-results/`, сборки, конфигурация БД, журналы, секреты и исходные Cambridge-пакеты. Исходные файлы H1 включаются самим слиянием.
 
@@ -71,7 +89,8 @@ H1 слит локальным merge-коммитом `b1762c0a675298fa11b8cea3d
 - `screenshots/{home,courses,library,square,student,teacher,admin}-{390,1280}-{light,dark}.png`;
 - `screenshots/review-fresh-768-dark.png`;
 - `access.json`, `responsive.json`, `preservation.json`, `failure-and-demo.json`;
-- `changed-files.json` — точный scope локального коммита.
+- `changed-files.json` — полный итоговый scope относительно прежней локальной main;
+- `rollback-verification.json` — проверка совместимого recovery на той же уже мигрированной базе.
 
 Контраст: `test-results/foundation-20261105/contrast.json`. Приватный план первого импорта и журнал сохранены вне public storage; его UUID указан в runtime log и `ContentRelease.details`.
 
@@ -194,6 +213,7 @@ git push origin "${recovery}:main"
 ## 6. Ограничения и подтверждение
 
 - Репетиция соответствует согласованному составу, но не подтверждает неизменность production после H1. Runtime останавливается на расхождении; это не повод ослаблять проверки.
+- Финальная read-only проверка GitHub подтвердила прежний `main = 3b7a88782634dcbeb308339361037fa8aaf30ac0`. Локальная ветка — main; H1 является её предком. Это не проверка рабочей базы или живого релиза D.
 - Backup ID связывает журнал с указанной владельцем копией, но не проверяет её содержимое через API Hostinger. Проверка восстановления — обязательный шаг владельца до push.
 - Репетиция не содержит production-презентаций и реальных ученических персональных данных. Их фактический состав и сохранность нужно сверить с новой резервной копией на разрешённой выкладке; релиз не обновляет и не удаляет LessonPresentation.
 - Не проводилась независимая новая редакторская проверка всей математики; прежние pending/DRAFT не подменяются статусом verified. Очищаются только ранее согласованные служебные фрагменты.
