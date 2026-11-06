@@ -10,7 +10,9 @@ type Entry = { id: string; before: string | null; after: string };
 type Journal = { schema: 1; runId: string; database: string; state: string; entries: Entry[] };
 async function main() {
   const u = new URL(process.env.MATHS4U_DATABASE_URL ?? "http://invalid");
-  if (process.env.MATHS4U_ENV !== "test" || u.hostname !== "127.0.0.1" || !u.pathname.startsWith("/maths4u_test_bank_")) throw Error("LOCAL_TEST_DATABASE_ONLY: production requires a separate owner command, backup and reviewed dry-run");
+  const productionReport=process.argv.includes("--production-report");
+  const readOnlyProduction=productionReport&&process.env.MATHS4U_ENV==="production"&&!process.argv.includes("--apply")&&(!process.argv.includes("--mode")||process.argv[process.argv.indexOf("--mode")+1]==="classify")&&process.env.MATHS4U_DATABASE_NAME===decodeURIComponent(u.pathname.slice(1));
+  if (!readOnlyProduction && (productionReport||process.env.MATHS4U_ENV !== "test" || u.hostname !== "127.0.0.1" || !u.pathname.startsWith("/maths4u_test_bank_"))) throw Error("LOCAL_TEST_DATABASE_ONLY: production requires a separate owner command, backup and reviewed dry-run");
   localValidated=true;
   const args = process.argv.slice(2), value = (key: string, fallback = "") => { const i = args.indexOf(key); return i < 0 ? fallback : args[i + 1]; };
   const mode = value("--mode", "classify"), apply = args.includes("--apply"), reportPath = path.resolve(value("--report", ".local/stage6-20261106/" + mode + ".json")), journalPath = value("--journal"), fingerprint = createHash("sha256").update(u.host + u.pathname).digest("hex");
@@ -47,10 +49,10 @@ async function main() {
       topic: { include: { texts: true, course: { include: { texts: true } } } },
     } } } },
   } });
-  const decisions = rows.map(t => ({ task: t, decision: t.originManual ? { origin: t.origin, reason: t.originReason ?? "Owner manual classification" } : classifyTask(t.versions.map(v => ({ ...v, source: v.source?.name ?? null, sourceUrl: v.source?.url ?? null, titles: v.texts.map(x => x.title) }))) }));
+  const decisions = rows.map(t => {const evidence=classifyTask(t.versions.map(v => ({ ...v, source: v.source?.name ?? null, sourceUrl: v.source?.url ?? null, titles: v.texts.map(x => x.title) })));return {task:t,decision:t.originManual?{origin:t.origin,reason:t.originReason??"Owner manual classification"}:evidence.origin==="CAMBRIDGE_EXAM"?evidence:t.origin==="ORIGINAL"&&evidence.origin==="ORIGINAL"?evidence:{origin:"UNKNOWN" as const,reason:"Awaiting owner review. "+evidence.reason}};});
   const counts = Object.fromEntries(origins.map(o => [o, decisions.filter(d => d.decision.origin === o).length]));
   if (mode === "classify" && apply) {
-    for (let i = 0; i < decisions.length; i += 100) await db().$transaction(decisions.slice(i, i + 100).filter(d => !d.task.originManual).map(({ task: t, decision: d }) => db().task.updateMany({ where: { id: t.id, originManual: false }, data: { origin: d.origin, originReason: d.reason, originRule } })));
+    for (let i = 0; i < decisions.length; i += 100) await db().$transaction(decisions.slice(i, i + 100).filter(d => !d.task.originManual).map(({ task: t, decision: d }) => db().task.updateMany({ where: { id: t.id, originManual: false }, data: { origin: d.origin, originReason: d.reason, originRule, ...(d.origin==="CAMBRIDGE_EXAM"?{examArchivedAt:t.examArchivedAt??new Date()}:{}) } })));
     await db().auditEvent.create({ data: { actorId, action: "CONTENT_CLASSIFIED", targetId: originRule } });
   }
   const classified = mode === "archive" ? rows.filter(t => t.origin === "CAMBRIDGE_EXAM" && !t.examArchivedAt) : [];

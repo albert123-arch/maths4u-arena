@@ -1,3 +1,4 @@
+import { restrictedMaterial, approvedWhere } from "./content-access";
 import { z } from "zod";
 import { Prisma } from "../generated/prisma/client";
 import { db } from "./prisma";
@@ -15,7 +16,7 @@ import { lensAttemptScope } from "./request-view";
 const lessonInclude = {
   versions: { take: 1, orderBy: { number: "desc" }, select: { texts: { select: { locale: true, title: true } } } },
   topic: { include: { texts: true, course: { include: { texts: true } } } },
-  _count: { select: { tasks: {where:{task:{examArchivedAt:null,archivedAt:null}}} } },
+  _count: { select: { tasks: {where:{task:{examArchivedAt:null,archivedAt:null,...approvedWhere}}} } },
 } satisfies Prisma.LessonInclude;
 
 export async function studentProgress(actor: Actor, classId: string, studentId: string, lang: string, input: unknown = {}) {
@@ -49,7 +50,7 @@ async function progressReport(studentId: string, student: { id: string; displayN
     db().attempt.count({ where }),
     db().attempt.findMany({ where, take: 20, skip: (page - 1) * 20, orderBy: [{ startedAt: "desc" }, { id: "desc" }], include: {
       study: { include: { lesson: { include: lessonInclude } } },
-      workVersion: { include: { work: true, items: { orderBy: { position: "asc" }, select: { maxPoints: true, taskVersion: { select: { task:{select:{examArchivedAt:true}}, texts: { select: { locale: true, title: true } } } } } } } },
+      workVersion: { include: { work: true, items: { orderBy: { position: "asc" }, select: { maxPoints: true, taskVersion: { select: { task:{select:{examArchivedAt:true,origin:true,originManual:true}}, texts: { select: { locale: true, title: true } } } } } } } },
       answers: { select: { autoPoints: true, review: { select: { points: true } }, _count: { select: { files: true } } } },
     } }),
     db().attempt.count({ where: scope }),
@@ -81,7 +82,7 @@ async function progressReport(studentId: string, student: { id: string; displayN
     attempts: attempts.map(a => {
       const finished = a.status !== "IN_PROGRESS" || a.expiresAt <= now;
       const study = a.study;
-      return { id: a.id, title: !archiveAdmin(reader) && a.workVersion.items.some(i=>i.taskVersion.task.examArchivedAt) ? unavailableMessage(lang) : study ? localized(a.workVersion.items[0].taskVersion.texts, lang).title : a.workVersion.work.title,
+      return { id: a.id, title: !archiveAdmin(reader) && a.workVersion.items.some(i=>restrictedMaterial(i.taskVersion.task)) ? unavailableMessage(lang) : study ? localized(a.workVersion.items[0].taskVersion.texts, lang).title : a.workVersion.work.title,
         kind: a.workVersion.work.kind, number: a.number, startedAt: a.startedAt, submittedAt: a.submittedAt,
         status: study?.selfDirected ? study.needsRepeat ? "NEEDS_REPEAT" : study.selfCheckedAt ? "SELF_CHECKED" : "IN_PROGRESS" : a.status === "IN_PROGRESS" && finished ? "EXPIRED" : a.status,
         canOpen: self || (!study?.selfDirected && (a.workVersion.work.kind !== "PRACTICE" || finished)),

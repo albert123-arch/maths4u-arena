@@ -1,3 +1,5 @@
+import { quarantineImportedTask } from "./import-content-policy";
+import { cleanAuthoredTitle, cleanAuthoredMarkup } from "./content-text-cleanup";
 import { z } from "zod";
 import { createTaskVersion, renderContent, taskSchema, versionInclude } from "./content";
 import { databaseConfig } from "./database-url";
@@ -48,7 +50,7 @@ export const originalLessonId = (block:OriginalBlock["key"],key: string) => "ori
 export function originalLessonText(l: OriginalBlock["lessons"][number]) {
   const body=`<p><strong>Maths4U Original</strong> · ${esc(l.objective)}</p>${l.notes_html}<h3>Common mistakes</h3><ul>${l.common_mistakes.map(m=>`<li>${esc(m)}</li>`).join("")}</ul><p>AI-assisted preparation from independent skill briefs. Teacher editorial review is pending.</p>`;
   const examples=l.examples.map((e,i)=>`<h3>Example ${i+1}</h3><p>${e.question_html}</p>${e.solution_html}`).join("");
-  return {locale:"en" as const,title:l.title,body,examples};
+  return {locale:"en" as const,title:cleanAuthoredTitle(l.title),body:cleanAuthoredMarkup(body),examples};
 }
 export function originalRubric(p: OriginalBlock["problems"][number]["parts"][number]) {
   return `<h4>(${p.label}) · ${p.marks} marks</h4><ul>` + p.criteria.map(c => `<li><strong>${esc(c.id)} · ${c.marks} mark(s):</strong> ${esc(c.requirement)}</li>`).join("") +
@@ -59,7 +61,7 @@ export function originalTask(pack: OriginalBlock, p: OriginalBlock["problems"][n
   return taskSchema.parse({ visibility: "PUBLIC", featureKey: null, difficulty: p.difficulty, difficultyKnown: true, materialCategory: "EXAM",
     source: "Maths4U Original (AI-assisted)", syllabus: "9709", qualification: "AS & A Level Mathematics", component: "Pure 1",
     sourceUid: p.uid, sourceReference: `${p.uid} v${p.version}; original exam-style problem; teacher editorial review pending`, topicIds: [originalChapterId(pack)],
-    texts: [{ locale: "en", title: p.title, statement: `<p><strong>Maths4U Original · ${p.uid} · ${p.marks} marks</strong></p>` + p.stem_html,
+    texts: [{ locale: "en", title: cleanAuthoredTitle(p.title), statement: p.stem_html,
       hint: p.hint_html, answer: p.parts.map(a => `<p>(${a.label}) ${a.answer_html}</p>`).join(""),
       solution: p.parts.map(a => `<h3>(${a.label})</h3>${a.solution_html}`).join(""), markScheme: guidance,
       markSchemeSource: "Maths4U indicative guidance; not an official examination-board mark scheme", markSchemeText: guidance, markSchemeStatus: "DRAFT",
@@ -102,11 +104,11 @@ export async function importOriginalBlockLocal(actor: Actor, input: unknown) {
         const textsMatch=(expected: {locale:string}[],actual:{locale:string}[])=>expected.length===actual.length&&expected.every(t=>{
           const row=actual.find(r=>r.locale===t.locale);return row&&Object.entries(t).every(([key,value])=>row[key as keyof typeof row]===value);
         });
-        if(task.visibility!=="PUBLIC"||task.featureKey!==null||task.archivedAt||task.versions.length!==1||!v||v.number!==1||
+        if(task.visibility!=="PUBLIC"||task.featureKey!==null||task.archivedAt||!v||v.number<1||
           v.source?.name!==material.source||metadata.some(key=>(v[key]??undefined)!==material[key])||v.assets.length||
           task.topics.length!==1||task.topics[0].topicId!==chapterId||!textsMatch(material.texts,v.texts)||v.parts.length!==material.parts.length||
           material.parts.some((a,i)=>{const b=v.parts[i];return b.kind!==a.kind||b.maxPoints!==a.maxPoints||b.acceptedAnswers.length||b.options.length||!textsMatch(a.texts,b.texts);}))throw new Error("ORIGINAL_MAPPING_CHANGED");
-        mapping[p.uid]=existing.taskId;skipped++;
+        await quarantineImportedTask(tx,existing.taskId,true);mapping[p.uid]=existing.taskId;skipped++;
       }else{
         if(await tx.taskVersion.count({where:{sourceUid:p.uid}}))throw new Error("ORIGINAL_IDENTITY_COLLISION");
         const v=await createTaskVersion(tx,actor,material);

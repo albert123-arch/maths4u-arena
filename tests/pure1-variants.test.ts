@@ -5,7 +5,7 @@ import {familyReviewItems,restoreFamilyReviews,nextReview,reviewQueue} from "../
 test("fresh variants preserve identities, keys and grading; family rotation is unseen then least recent",async()=>{
  const actor=await db().user.findFirstOrThrow({where:{status:"ACTIVE",roles:{some:{role:"ADMIN"}}},select:userSelect}),before=await db().taskVersion.count();
  const result=await importPure1VariantsLocal(actor,pure1VariantsPack);assert.equal(result.created,0);assert.equal(result.skipped,208);
- for(const q of pure1VariantsPack.questions){if(q.kind!=="NUMERIC")throw Error("Numeric variant required");const t=await db().task.findUniqueOrThrow({where:{id:result.mapping[q.uid]},include:{versions:{include:versionInclude}}});assert.equal(t.versions.length,1);const v=t.versions[0],p=v.parts[0];assert.equal(p.kind,"NUMERIC");assert.ok(v.texts[0].teacherNote.includes(q.family_uid));
+ for(const q of pure1VariantsPack.questions){if(q.kind!=="NUMERIC")throw Error("Numeric variant required");const t=await db().task.findUniqueOrThrow({where:{id:result.mapping[q.uid]},include:{versions:{orderBy:{number:"desc"},include:versionInclude}}});assert.deepEqual(t.versions.map(v=>v.number).sort((a,b)=>a-b),Array.from({length:t.versions.length},(_,i)=>i+1));const v=t.versions[0],p=v.parts[0];assert.equal(p.kind,"NUMERIC");assert.ok(v.texts[0].teacherNote.includes(q.family_uid));
   assert.equal(automaticPoints(p,{value:q.answer},q.uid),1);assert.equal(automaticPoints(p,{value:String(p.numericAnswer!+.01)},q.uid),0);assert.equal(automaticPoints(p,{value:"1+1"},q.uid),0);
   const publicDto=publicVersion(v,"en");for(const key of ["answer","solution","teacherNote","arithmetic_witness"])assert.ok(!(key in publicDto));assert.ok(!("numericAnswer" in publicDto.parts[0]));
  }

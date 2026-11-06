@@ -32,6 +32,16 @@ Before changing educational content, read
   reviews are preserved, and archiving must be reversible. Material that cannot
   be classified automatically stays as it is until the owner reviews it. Follow
   Stage 6 of `docs/CODEX-ARENA-ROADMAP-20261105.md`.
+- **Owner decision, Stage 6b, 6 November 2026:** the 20 audited Book 2 olympiad
+  tasks are owner-authored, with manual ORIGINAL provenance. The ten local demo
+  tasks are a separate reversible Demo archive, visible only to administrators.
+  New imports are denied by default: classify examination provenance immediately
+  into the Cambridge archive, and hold other imports as UNKNOWN for owner review.
+  UNKNOWN never appears to non-administrators. Only ORIGINAL or explicitly
+  owner-approved, non-archived material can be served to them. Preserve manual
+  provenance decisions. The approved removal of editorial wrappers uses new
+  immutable versions; keys, criteria, marks and all other content stay unchanged.
+  Production operations still require a separate owner command and a backup.
 - Preserve task identities, sources, immutable versions, import mappings, work
   assignments, files, answers and reviews. Do not relabel imported tasks as original
   or put a new original problem over an unrelated existing Task identity.

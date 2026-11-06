@@ -22,7 +22,7 @@ test("registered original blocks: separate identities, complete rubrics, unchang
   for(const p of pack.problems){
    const taskId=result.mapping[p.uid];assert.ok(!seen.has(taskId));seen.add(taskId);
    const task=await db().task.findUniqueOrThrow({where:{id:taskId},include:{versions:{orderBy:{number:"desc"},include:versionInclude}}});
-   assert.equal(task.versions.length,1);const v=task.versions[0];assert.equal(v.sourceUid,p.uid);
+   assert.deepEqual(task.versions.map(v=>v.number).sort((a,b)=>a-b),Array.from({length:task.versions.length},(_,i)=>i+1));const v=task.versions[0];assert.equal(v.sourceUid,p.uid);
    assert.equal(v.parts.length,3);assert.equal(v.parts.reduce((n,a)=>n+a.maxPoints,0),p.marks);
    assert.equal(v.examBoard,null);assert.equal(v.year,null);assert.equal(v.texts[0].markSchemeStatus,"DRAFT");
    const noHelp=publicVersion(v,"en",false),help=publicVersion(v,"en",true);

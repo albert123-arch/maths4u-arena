@@ -27,7 +27,7 @@ import { pure1Review } from "@/lib/pure1-review";
 import { checkSquare, helpSquare, squareProgress, importSquareProgress, squareMappings } from "@/lib/square-learning";
 import { courseChoices, learningHome, openSquareLesson } from "@/lib/learning-home";
 
-import { archiveOverview, changeContentAccess } from "@/lib/content-archive";
+import { archiveOverview, changeContentAccess, classifyImportBatch } from "@/lib/content-archive";
 import { quadraticTopics } from "@/lib/square-model";
 import { inRequestView, requestView, rolePreview } from "@/lib/request-view";
 import { resolveRequestView, guardViewRequest, enterView, exitView, touchView } from "@/lib/view-lens";
@@ -140,6 +140,8 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
     }
     const actor = await requireActor(request);
     if (route === "admin/content" && method === "GET") return json(await archiveOverview(actor));
+    if (route === "admin/content/batches/check" && method === "POST") return json(await classifyImportBatch(actor,input));
+    if (route === "admin/content/batches/apply" && method === "POST") return json(await classifyImportBatch(actor,input,true));
     if (parts[0] === "admin" && parts[1] === "content" && parts.length === 3 && method === "PATCH") return json(await changeContentAccess(actor,parts[2],input));
     if (route === "dashboard/student" && method === "GET") return json(await studentDashboard(actor, lang));
     if (route === "dashboard/teacher" && method === "GET") return json(await teacherDashboard(actor));

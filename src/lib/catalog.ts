@@ -8,10 +8,10 @@ import { localized, publicVersion, renderContent, versionInclude } from "./conte
 import { latestPracticeProgress } from "./practice-progress";
 import { displayMarkup, displayTitle } from "./public-presentation";
 import { publicLanguages } from "./public-language";
-import { archiveWhere, archiveAdmin, assertLessonVisible, visibleCourseWhere, visibleLessonWhere } from "./content-access";
+import { archiveWhere, archiveAdmin, assertLessonVisible, visibleCourseWhere, visibleLessonWhere, approvedWhere } from "./content-access";
 
 const filterSchema = z.object({ q: z.string().max(100).default(""), course: z.string().max(191).default(""), chapter: z.string().max(191).default(""), topic: z.string().max(191).default(""),
-  bookmarks: z.enum(["", "1"]).default(""), origin: z.enum(["", "ORIGINAL", "CAMBRIDGE_EXAM", "OTHER_THIRD_PARTY", "UNKNOWN"]).default(""), archive: z.enum(["", "1", "0"]).default(""),
+  bookmarks: z.enum(["", "1"]).default(""), origin: z.enum(["", "ORIGINAL", "CAMBRIDGE_EXAM", "OTHER_THIRD_PARTY", "UNKNOWN", "DEMO"]).default(""), archive: z.enum(["", "1", "0"]).default(""),
   category: z.enum(["", "UNKNOWN", "EXAM", "TRAINING", "OLYMPIAD"]).default(""), year: z.string().regex(/^$|^\d{4}$/).default(""), session: z.string().max(50).default(""), paper: z.string().max(50).default(""),
   mode: z.enum(["", "MC", "SHORT", "WRITTEN"]).default(""), progress: z.enum(["", "UNSOLVED", "SOLVED", "ATTEMPTED", "IN_PROGRESS", "NEEDS_REPEAT"]).default(""),
   language: z.enum(["", "ru", "en"]).default(""), difficulty: z.string().regex(/^$|^[1-5]$/).default(""), page: z.coerce.number().int().min(1).max(100000).default(1), pageSize: z.coerce.number().int().min(1).max(50).default(25) });
@@ -25,7 +25,7 @@ export async function taskPermission(actor: Actor | null): Promise<Prisma.TaskWh
 }
 async function sqlPermission(actor: Actor | null) {
   const clauses = [Prisma.sql`t.archivedAt IS NULL`];
-  if (!archiveAdmin(actor)) clauses.push(Prisma.sql`t.examArchivedAt IS NULL`);
+  if (!archiveAdmin(actor)) clauses.push(Prisma.sql`t.examArchivedAt IS NULL AND t.origin <> 'UNKNOWN' AND (t.origin = 'ORIGINAL' OR t.originManual = true)`);
   if (!actor || !isAdmin(actor)) clauses.push(actor && isTeacher(actor) ? Prisma.sql`(t.visibility = 'PUBLIC' OR t.ownerId = ${actor.id})` : Prisma.sql`t.visibility = 'PUBLIC'`);
   if (!actor || !isTeacher(actor)) {
     const features = await db().task.groupBy({ by: ["featureKey"], where: { visibility: "PUBLIC", archivedAt: null, featureKey: { not: null } } });
@@ -165,7 +165,7 @@ export async function basket(actor: Actor, lang: string) {
 export async function saveBasket(actor: Actor, input: unknown, lang: string) {
   teacher(actor);
   const data = z.object({ taskIds: z.array(z.string().min(1).max(191)).max(50).refine(ids => new Set(ids).size === ids.length), revision: z.number().int().nonnegative() }).parse(input);
-  ensure(await db().task.count({where:{id:{in:data.taskIds},examArchivedAt:null}}) === data.taskIds.length, 400, "TASK_UNAVAILABLE");
+  ensure(await db().task.count({where:{id:{in:data.taskIds},examArchivedAt:null,...approvedWhere}}) === data.taskIds.length, 400, "TASK_UNAVAILABLE");
   await transaction(async tx => { await lockUser(tx, actor.id); const current = await tx.taskBasket.findUnique({ where: { userId: actor.id } });
     ensure(data.revision === (current?.revision ?? 0), 409, "STALE_BASKET");
     await tx.taskBasket.upsert({ where: { userId: actor.id }, create: { userId: actor.id, taskIds: data.taskIds, revision: 1 }, update: { taskIds: data.taskIds, revision: { increment: 1 }, updatedAt: new Date() } });

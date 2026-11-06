@@ -1,3 +1,5 @@
+import { quadraticTopics } from "../src/lib/square-model";
+import { questionsForTopic } from "../src/lib/square-content";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -17,7 +19,7 @@ test("208 canonical original checks: repeat-safe import, all options/numbers, bo
  const before=await db().taskVersion.count(),lessons=await db().lessonVersion.count();
  const result=await importPure1ShortLocal(actor,pack);assert.equal(result.created,0);assert.equal(result.skipped,208);
  for(const q of pack.questions){
-  const t=await db().task.findUniqueOrThrow({where:{id:result.mapping[q.uid]},include:{versions:{include:versionInclude}}});assert.equal(t.versions.length,1);const v=t.versions[0],part=v.parts[0];
+  const t=await db().task.findUniqueOrThrow({where:{id:result.mapping[q.uid]},include:{versions:{orderBy:{number:"desc"},include:versionInclude}}});assert.deepEqual(t.versions.map(v=>v.number).sort((a,b)=>a-b),Array.from({length:t.versions.length},(_,i)=>i+1));const v=t.versions[0],part=v.parts[0];
   assert.equal(v.sourceUid,q.uid);assert.equal(v.materialCategory,"TRAINING");assert.equal(v.examBoard,null);assert.equal(part.kind,q.kind);
   const guest=publicVersion(v,"en");for(const field of ["answer","hint","solution","teacherNote","markScheme"])assert.ok(!(field in guest));
   assert.ok(!("numericAnswer" in guest.parts[0]));assert.ok(guest.parts[0].options.every(o=>!("correct" in o)));
@@ -32,7 +34,7 @@ test("208 canonical original checks: repeat-safe import, all options/numbers, bo
  }
  for(const b of Object.values(originalBlocks))for(const skill of Object.keys(b.skills)){
   const id=originalLessonId(("maths4u-original-"+b.key) as keyof typeof originalBlocks,skill),expected=allPure1Questions.filter(q=>q.block===b.key&&q.skill===skill),content=await topicContent(null,id,"en");
-  assert.equal(content.questionCounts.MC,expected.filter(q=>q.kind==="CHOICE").length);assert.equal(content.questionCounts.SHORT,expected.filter(q=>q.kind==="NUMERIC").length);assert.equal(content.questionCounts.WRITTEN,2);
+  assert.equal(content.questionCounts.MC,expected.filter(q=>q.kind==="CHOICE").length);assert.equal(content.questionCounts.SHORT,expected.filter(q=>q.kind==="NUMERIC").length);const quadratic=quadraticTopics.find(t=>t.lessonId===id);assert.equal(content.questionCounts.WRITTEN,2+(quadratic?questionsForTopic(quadratic.key).length:0));
  }
  const changed=structuredClone(pack);changed.questions[0].solution_html+=" changed";await assert.rejects(importPure1ShortLocal(actor,changed),/P1_SHORT_EXPLICIT_REVISION_REQUIRED/);
  const bad=structuredClone(pack);bad.questions[0].php_subchapter_id=999999;assert.throws(()=>pure1ShortSchema.parse(bad));

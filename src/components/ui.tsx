@@ -13,6 +13,8 @@ export const PublicLocaleContext = createContext<"en" | "ru" | null>(null);
 export function useLocale() { const lang = useContext(LocaleContext); return { lang, t: (ru: string, en: string) => lang === "ru" ? ru : en }; }
 export const errorLabels: Record<string, [string, string]> = {
   MATERIAL_UNAVAILABLE: ["Этот материал больше недоступен. Сохранённые ответы и баллы остаются в истории.","This material is no longer available. Your saved answers and marks remain in history."],
+  ARCHIVE_ORIGIN_REQUIRED: ["Архивировать можно только Cambridge или Demo.","Only Cambridge or Demo material can be archived."],
+  STALE_DRY_RUN: ["Данные изменились. Повторите пробный запуск.","Content changed. Preview the changes again."],
   CAMBRIDGE_ONLY: ["Архивировать можно только классифицированные задачи Cambridge.","Only classified Cambridge examination tasks can be archived."],
   VIEW_CHANGED: ["Режим просмотра изменился или истёк. Обновите страницу.", "The viewing mode changed or expired. Reload this page."],
   VIEW_READ_ONLY: ["В режиме просмотра пользователя изменения запрещены.", "User view is read only. Changes are disabled."],

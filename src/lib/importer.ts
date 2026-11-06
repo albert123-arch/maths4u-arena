@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { db } from "./prisma";
 import { taskSchema, createTaskVersion, type TaskInput } from "./content";
+import { quarantineImportedTask } from "./import-content-policy";
 import { type Actor, admin, digest, transaction, lockUser } from "./security";
 import { ensure } from "./errors";
 
@@ -55,7 +56,7 @@ export async function importMaterials(actor: Actor, input: unknown) {
       // Course-bound pilot records have a source-verified version correction path.
       // Generic exports must never erase their order, publication or split MS.
       if (existing) ensure(!await tx.lessonTask.count({ where: { taskId: existing.taskId, lessonId: { startsWith: "pilot_" } } }), 409, "PILOT_USE_CORRECTION_ROUTE");
-      if (existing?.contentHash === contentHash) { skipped++; continue; }
+      if (existing?.contentHash === contentHash) { await quarantineImportedTask(tx,existing.taskId,true); skipped++; continue; }
       const v = await createTaskVersion(tx, actor, row.material, existing?.taskId);
       await tx.importRecord.upsert({ where: { sourceProject_legacyId: key }, create: { ...key, taskId: v.taskId, contentHash },
         update: { contentHash, importedAt: new Date() } });

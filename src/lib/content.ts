@@ -12,6 +12,7 @@ import { findAll, textContent } from "domutils";
 import { isPure1ShortUid } from "./pure1-practice-number";
 import { displayMarkup, displaySource, displayTitle } from "./public-presentation";
 import { archiveWhere, hiddenMaterial } from "./content-access";
+import { quarantineImportedTask } from "./import-content-policy";
 
 const locale = z.enum(["ru", "en"]);
 const text = z.string().max(100000);
@@ -133,7 +134,7 @@ export async function createTaskVersion(tx: Prisma.TransactionClient, actor: Act
   const last = await tx.taskVersion.aggregate({ where: { taskId: task.id }, _max: { number: true } });
   await tx.taskTopic.deleteMany({ where: { taskId: task.id } });
   await tx.taskTopic.createMany({ data: [...new Set(data.topicIds)].map(topicId => ({ taskId: task.id, topicId })) });
-  return tx.taskVersion.create({ data: {
+  const version = await tx.taskVersion.create({ data: {
     taskId: task.id, number: (last._max.number ?? 0) + 1, difficulty: data.difficulty, sourceId: source?.id,
     difficultyKnown: data.difficultyKnown, materialCategory: data.materialCategory,
     syllabus: data.syllabus, examBoard: data.examBoard, year: data.year, examSession: data.examSession, paper: data.paper, questionNumber: data.questionNumber,
@@ -143,6 +144,8 @@ export async function createTaskVersion(tx: Prisma.TransactionClient, actor: Act
       numericAnswer: p.numericAnswer, tolerance: p.tolerance, texts: { create: p.texts }, acceptedAnswers: { create: p.acceptedAnswers.map(value => ({ value })) },
       options: { create: p.options.map((o, position) => ({ position, correct: o.correct, texts: { create: o.texts } })) } })) },
   }, include: versionInclude });
+  const policy = await quarantineImportedTask(tx, task.id);
+  return { ...version, task: policy };
 }
 export async function saveTask(actor: Actor, input: unknown, taskId?: string) {
   teacher(actor);

@@ -1,3 +1,5 @@
+import { quarantineImportedTask } from "./import-content-policy";
+import { cleanAuthoredTitle } from "./content-text-cleanup";
 import { z } from "zod";
 import { admin, digest, lockUser, transaction, type Actor } from "./security";
 import { databaseConfig } from "./database-url";
@@ -25,7 +27,7 @@ export function pure1ShortTask(pack:Pick<Pure1ShortPack,"provenance"|"grading_po
  const answer=q.kind==="NUMERIC"?q.answer:q.options[q.correct_option];
  const instruction=q.kind==="NUMERIC"?"Enter one number or fraction. Round decimals to at least six decimal places when needed.":"Choose one answer.";
  return taskSchema.parse({visibility:"PUBLIC",featureKey:null,materialCategory:"TRAINING",difficulty:1,difficultyKnown:false,source:"Maths4U Original (AI-assisted)",syllabus:"9709",component:"Pure 1",qualification:"AS & A Level Mathematics",sourceUid:q.uid,sourceReference:`${q.uid} v1; original short practice; teacher editorial review pending`,topicIds:[spec.chapterId],
-  texts:[{locale:"en",title:q.title,statement:`<p><strong>Maths4U Original · Short practice · ${q.stage}</strong></p>${q.prompt_html}<p>${instruction}</p>`,hint:q.hint_html,answer,solution:q.solution_html,teacherNote:JSON.stringify({editorialUid:q.uid,version:q.version,focus:q.focus,...("family_uid" in q?{familyUid:q.family_uid}:{}),provenance:pack.provenance,gradingPolicy:pack.grading_policy})}],
+  texts:[{locale:"en",title:cleanAuthoredTitle(q.title),statement:`<p><strong>Short practice · ${q.stage}</strong></p>${q.prompt_html}<p>${instruction}</p>`,hint:q.hint_html,answer,solution:q.solution_html,teacherNote:JSON.stringify({editorialUid:q.uid,version:q.version,focus:q.focus,...("family_uid" in q?{familyUid:q.family_uid}:{}),provenance:pack.provenance,gradingPolicy:pack.grading_policy})}],
   parts:[{kind:q.kind,maxPoints:1,...(q.kind==="NUMERIC"?{numericAnswer:pure1PracticeNumber(q.answer)!,tolerance:q.tolerance}:{}),texts:[{locale:"en",prompt:"",answer,rubric:"One point for the correct final answer. Written reasoning is not assessed in this short check."}],options:q.kind==="CHOICE"?q.options.map((text,i)=>({correct:i===q.correct_option,texts:[{locale:"en",text}]})):[]}]
  });
 }
@@ -50,8 +52,8 @@ export async function importPure1PracticeMaterialsLocal(actor:Actor,pack:Pick<Pu
    if(existing){
     if(existing.contentHash!==hash)throw Error("P1_SHORT_EXPLICIT_REVISION_REQUIRED");
     const task=await tx.task.findUniqueOrThrow({where:{id:existing.taskId},include:{topics:true,versions:{orderBy:{number:"desc"},include:versionInclude}}}),v=task.versions[0],a=material.parts[0],b=v?.parts[0];
-    if(task.visibility!=="PUBLIC"||task.featureKey||task.archivedAt||task.versions.length!==1||v.number!==1||v.sourceUid!==q.uid||v.source?.name!==material.source||v.materialCategory!=="TRAINING"||v.sourceReference!==material.sourceReference||v.examBoard!==null||v.year!==null||v.difficulty!==material.difficulty||v.difficultyKnown!==material.difficultyKnown||v.syllabus!==material.syllabus||v.component!==material.component||v.qualification!==material.qualification||v.assets.length||task.topics.length!==1||task.topics[0].topicId!==lesson.topicId||!textsMatch(material.texts,v.texts)||v.parts.length!==1||b.kind!==a.kind||b.maxPoints!==1||b.numericAnswer!==(a.numericAnswer??null)||b.tolerance!==a.tolerance||b.caseSensitive!==a.caseSensitive||b.acceptedAnswers.length||!textsMatch(a.texts,b.texts)||b.options.length!==a.options.length||a.options.some((o,i)=>o.correct!==b.options[i].correct||!textsMatch(o.texts,b.options[i].texts)))throw Error("P1_SHORT_MAPPING_CHANGED");
-    taskId=task.id;skipped++;
+    if(task.visibility!=="PUBLIC"||task.featureKey||task.archivedAt||v.number<1||v.sourceUid!==q.uid||v.source?.name!==material.source||v.materialCategory!=="TRAINING"||v.sourceReference!==material.sourceReference||v.examBoard!==null||v.year!==null||v.difficulty!==material.difficulty||v.difficultyKnown!==material.difficultyKnown||v.syllabus!==material.syllabus||v.component!==material.component||v.qualification!==material.qualification||v.assets.length||task.topics.length!==1||task.topics[0].topicId!==lesson.topicId||!textsMatch(material.texts,v.texts)||v.parts.length!==1||b.kind!==a.kind||b.maxPoints!==1||b.numericAnswer!==(a.numericAnswer??null)||b.tolerance!==a.tolerance||b.caseSensitive!==a.caseSensitive||b.acceptedAnswers.length||!textsMatch(a.texts,b.texts)||b.options.length!==a.options.length||a.options.some((o,i)=>o.correct!==b.options[i].correct||!textsMatch(o.texts,b.options[i].texts)))throw Error("P1_SHORT_MAPPING_CHANGED");
+    await quarantineImportedTask(tx,task.id,true);taskId=task.id;skipped++;
    }else{
     if(await tx.taskVersion.count({where:{sourceUid:q.uid}}))throw Error("P1_SHORT_IDENTITY_COLLISION");
     const v=await createTaskVersion(tx,actor,material);taskId=v.taskId;await tx.importRecord.create({data:{...key,taskId,contentHash:hash}});created++;

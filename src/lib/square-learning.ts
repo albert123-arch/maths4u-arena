@@ -1,4 +1,5 @@
-import { assertLessonVisible, archiveWhere } from "./content-access";
+import { quarantineImportedTask } from "./import-content-policy";
+import { assertLessonVisible, archiveWhere, restrictedWhere } from "./content-access";
 import { cache } from "react";
 import { z } from "zod";
 import { db } from "./prisma";
@@ -38,6 +39,7 @@ export async function importSquareLocal(actor: Actor, topic: QuadraticTopic = qu
           await createTaskVersion(tx,actor,data,old.taskId);
           await tx.importRecord.update({where:{sourceProject_legacyId:key},data:{contentHash:hash}});revised++;
         }
+        await quarantineImportedTask(tx,old.taskId,true);
         continue;
       }
       ensure(!await tx.taskVersion.findFirst({ where: { sourceUid: q.id } }), 409, "EDITORIAL_ID_COLLISION");
@@ -87,7 +89,7 @@ export async function checkSquare(actor: Actor | null, input: unknown, topic: Qu
   const event = requestSchema(topic).parse(input), mappings = await visibleSquareMappings(actor,topic);
   ensure(mappings.has(event.uid), 404, "NOT_FOUND");
   const result = gradeSquare(squareQuestion(event.uid, topic.key), event.answers);
-  if (actor && result.valid && !await db().taskVersion.count({where:{id:mappings.get(event.uid),task:{examArchivedAt:{not:null}}}})) await recordCheck(actor, event, mappings, false, topic);
+  if (actor && result.valid && !await db().taskVersion.count({where:{id:mappings.get(event.uid),task:restrictedWhere}})) await recordCheck(actor, event, mappings, false, topic);
   return result;
 }
 export async function helpSquare(input: unknown, topic: QuadraticTopic = quadraticTopic(), actor:Actor|null=null) {

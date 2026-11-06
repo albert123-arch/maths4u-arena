@@ -7,6 +7,7 @@ import { ensure } from "./errors";
 import { privateStorageRoot } from "./storage-config";
 import { verifyFile } from "./files";
 import { createTaskVersion, taskSchema } from "./content";
+import { quarantineImportedTask } from "./import-content-policy";
 import { pilotId } from "./pilot-schema";
 import { bankHash, bankKey, bankManifestSchema, bankAssetsSchema, bankTasksSchema, bankStructureSchema, type BankAsset, type BankTask } from "./bank-schema";
 import type { Prisma } from "../generated/prisma/client";
@@ -119,6 +120,7 @@ export async function applyBankTasks(actor:Actor,input:unknown) {
       for(const link of r.row.links){const lesson=await tx.lesson.findUnique({where:{id:pilotId("lesson","maths4u",link.lessonKey)},include:{topic:{select:{courseId:true}}}});ensure(lesson&&lesson.topicId===pilotId("topic","maths4u",link.chapterKey)&&lesson.topic.courseId===pilotId("course","maths4u",link.courseKey),409,"BANK_STRUCTURE_REQUIRED");}
       let taskId=r.taskId;
       if(r.action!=="unchanged") {const v=await createTaskVersion(tx,actor,r.material,taskId);taskId=v.taskId;const key=recordKey(r.row);await tx.importRecord.upsert({where:{sourceProject_legacyId:key},create:{...key,taskId,contentHash:r.sourceHash},update:{contentHash:r.sourceHash,importedAt:new Date()}});}
+      if(r.action==="unchanged")await quarantineImportedTask(tx,taskId!,true);
       for(const l of r.row.links){const lessonId=pilotId("lesson","maths4u",l.lessonKey);await tx.lessonTask.upsert({where:{lessonId_taskId:{lessonId,taskId:taskId!}},create:{lessonId,taskId:taskId!,position:l.position},update:{position:l.position}});}
     }
     await tx.bankBatch.update({where:{runId_key:{runId:d.runId,key:d.key}},data:{appliedAt:new Date()}});

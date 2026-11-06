@@ -1,3 +1,4 @@
+import { restrictedMaterial } from "./content-access";
 import { z } from "zod";
 import { Prisma } from "../generated/prisma/client";
 import { db } from "./prisma";
@@ -17,7 +18,7 @@ export async function beginStudy(actor: Actor, input: unknown, lang: string) {
   return transaction(async tx => {
     await lockUser(tx, actor.id);
     const task = await tx.task.findUnique({ where: { id: data.taskId }, include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true, parts: true } } } });
-    ensure(task && !task.archivedAt && !task.examArchivedAt && task.versions.length && (task.visibility === "PUBLIC" || task.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
+    ensure(task && !task.archivedAt && !restrictedMaterial(task) && task.versions.length && (task.visibility === "PUBLIC" || task.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
     if (data.lessonId) {
       const link = await tx.lessonTask.findUnique({ where: { lessonId_taskId: { lessonId: data.lessonId, taskId: data.taskId } }, include: { lesson: { include: { topic: { include: { course: true } } } } } });
       ensure(link && !link.lesson.archivedAt && !link.lesson.topic.course.archivedAt && link.lesson.topic.course.published, 404, "NOT_FOUND");
@@ -39,7 +40,7 @@ export async function revealStudyHelp(actor: Actor, attemptId: string, input: un
   return transaction(async tx => {
     const a = await lockAttempt(tx, attemptId);
     ensure(a && a.userId === actor.id && a.study && a.workVersion.work.kind === "PRACTICE", 404, "STUDY_ONLY");
-    ensure(!a.workVersion.items.some(i=>i.taskVersion.task.examArchivedAt),410,"MATERIAL_UNAVAILABLE");
+    ensure(!a.workVersion.items.some(i=>restrictedMaterial(i.taskVersion.task)),410,"MATERIAL_UNAVAILABLE");
     ensure(availableHelp(a.workVersion.items[0].taskVersion, lang)[kind], 404, "HELP_NOT_PROVIDED");
     const fields = { hint: "hintAt", answer: "answerAt", solution: "solutionAt", markScheme: "markSchemeAt" } as const;
     if (!studyHelp(a)[kind]) await tx.practiceStudy.update({ where: { attemptId }, data: { [fields[kind]]: new Date(), updatedAt: new Date() } });
@@ -51,7 +52,7 @@ export async function selfCheckStudy(actor: Actor, attemptId: string, input: unk
   return transaction(async tx => {
     const a = await lockAttempt(tx, attemptId);
     ensure(a && a.userId === actor.id && a.study && a.workVersion.work.kind === "PRACTICE", 404, "STUDY_ONLY");
-    ensure(!a.workVersion.items.some(i=>i.taskVersion.task.examArchivedAt),410,"MATERIAL_UNAVAILABLE");
+    ensure(!a.workVersion.items.some(i=>restrictedMaterial(i.taskVersion.task)),410,"MATERIAL_UNAVAILABLE");
     const maximum = a.workVersion.items.reduce((n, i) => n + i.maxPoints, 0);
     ensure(data.points == null || data.points <= maximum, 400, "INVALID_POINTS");
     if (!a.study.selfDirected) ensure(a.status !== "IN_PROGRESS", 409, "CHECK_ANSWER_FIRST");
@@ -77,6 +78,6 @@ export async function topicStudy(actor: Actor, lessonId: string, lang: string, h
   const history = await db().practiceStudy.findMany({ where: { lessonId, attempt: { userId: actor.id, AND: [lensAttemptScope()] } }, orderBy: [{ attempt: { startedAt: "desc" } }, { attemptId: "desc" }], take: 20, skip: (historyPage - 1) * 20, include: progressInclude });
   const theory = await db().learningProgress.findUnique({ where: { userId_lessonId: { userId: actor.id, lessonId } } });
   return { lessonId, items, theoryRead: theory?.completed ?? false, completedWithoutHelp: items.filter(i => i.checkedWithoutHelp).length,
-    historyPage, historyPages: Math.max(1, Math.ceil(historyCount / 20)), history: history.map(r => ({ id: r.attemptId, taskId: r.taskId, title: r.attempt.workVersion.items.some(i=>i.taskVersion.task.examArchivedAt) ? unavailableMessage(lang) : localized(r.attempt.workVersion.items[0].taskVersion.texts, lang).title, startedAt: r.attempt.startedAt, ...studyProgressStatus(r) })) };
+    historyPage, historyPages: Math.max(1, Math.ceil(historyCount / 20)), history: history.map(r => ({ id: r.attemptId, taskId: r.taskId, title: r.attempt.workVersion.items.some(i=>restrictedMaterial(i.taskVersion.task)) ? unavailableMessage(lang) : localized(r.attempt.workVersion.items[0].taskVersion.texts, lang).title, startedAt: r.attempt.startedAt, ...studyProgressStatus(r) })) };
 }
 export type TopicStudyDto = Awaited<ReturnType<typeof topicStudy>>;

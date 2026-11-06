@@ -1,3 +1,4 @@
+import { quarantineImportedTask } from "./import-content-policy";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { privateStorageRoot } from "./storage-config";
@@ -57,7 +58,7 @@ export async function writePilot(actor: Actor, bundle: PilotBundle, fileData: Ma
         const key = { sourceProject: section.project, legacyId: row.id };
         const existing = await tx.importRecord.findUnique({ where: { sourceProject_legacyId: key } });
         let taskId = existing?.taskId;
-        if (existing?.contentHash === contentHash) stats.skipped++;
+        if (existing?.contentHash === contentHash) { await quarantineImportedTask(tx,existing.taskId,true); stats.skipped++; }
         else {
           const version = await createTaskVersion(tx, actor, material, taskId); taskId = version.taskId;
           await tx.importRecord.upsert({ where: { sourceProject_legacyId: key }, create: { ...key, taskId, contentHash }, update: { contentHash, importedAt: new Date() } });

@@ -1,3 +1,4 @@
+import { restrictedMaterial } from "./content-access";
 import { mkdir, readFile, writeFile, unlink } from "node:fs/promises";
 import path from "node:path";
 import { db } from "./prisma";
@@ -50,7 +51,7 @@ export async function upload(actor: Actor, file: File, attemptId?: string, partI
         ensure(a && a.userId === actor.id, 404, "NOT_FOUND");
         ensure(!independentPractice(a), 403, "ASSIGNMENT_REQUIRED");
         await workAccess(actor, a.workVersion.work, tx);
-        ensure(!a.workVersion.items.some(i => i.taskVersion.task.examArchivedAt), 410, "MATERIAL_UNAVAILABLE");
+        ensure(!a.workVersion.items.some(i => restrictedMaterial(i.taskVersion.task)), 410, "MATERIAL_UNAVAILABLE");
         ensure(a.status === "IN_PROGRESS", 409, "ATTEMPT_FINISHED");
         if (a.expiresAt <= new Date()) { await finalize(tx, a, true); return { expired: true as const }; }
         ensure(!a.workVersion.work.archivedAt && a.workVersion.allowFiles, 403, "FILES_DISABLED");
@@ -84,7 +85,7 @@ export async function download(actor: Actor | null, id: string, variant = "origi
   const file = await db().storedFile.findUnique({ where: { id }, include: { derivatives: true, submissions: { include: { answer: { include: { attempt: { include: attemptInclude } } } } },
     assets: { include: { version: { include: { task: true } } } } } });
   ensure(file && !file.deletedAt, 404, "NOT_FOUND");
-  ensure(archiveAdmin(actor) || !file.assets.some(a => a.version.task.examArchivedAt), 404, "NOT_FOUND");
+  ensure(archiveAdmin(actor) || !file.assets.some(a => restrictedMaterial(a.version.task)), 404, "NOT_FOUND");
   const view = requestView();
   if (view?.lens && file.submissions.length) {
     // Never expose a target's unrelated uploads through a borrowed owner check.
@@ -138,7 +139,7 @@ export async function removeAnswerFile(actor: Actor, id: string, attemptId: stri
     const a = await lockAttempt(tx, attemptId);
     ensure(a && a.userId === actor.id, 404, "NOT_FOUND");
     await workAccess(actor, a.workVersion.work, tx);
-    ensure(!a.workVersion.items.some(i => i.taskVersion.task.examArchivedAt), 410, "MATERIAL_UNAVAILABLE");
+    ensure(!a.workVersion.items.some(i => restrictedMaterial(i.taskVersion.task)), 410, "MATERIAL_UNAVAILABLE");
         ensure(a.status === "IN_PROGRESS", 409, "ATTEMPT_FINISHED");
     if (a.expiresAt <= new Date()) { await finalize(tx, a, true); return { expired: true }; }
     ensure(!a.workVersion.work.archivedAt && a.workVersion.allowFiles, 403, "FILES_DISABLED");

@@ -8,7 +8,7 @@ export const progressInclude = {
   attempt: { include: {
     answers: { select: { autoPoints: true, review: { select: { points: true } } } },
     workVersion: { include: { items: { select: {
-      maxPoints: true, taskVersion: { select: { task:{select:{examArchivedAt:true}}, texts: { select: { locale: true, title: true } } } },
+      maxPoints: true, taskVersion: { select: { task:{select:{examArchivedAt:true,origin:true,originManual:true}}, texts: { select: { locale: true, title: true } } } },
     } } } },
   } },
 } satisfies Prisma.PracticeStudyInclude;

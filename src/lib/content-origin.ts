@@ -1,5 +1,5 @@
 export const originRule = "provenance-20261106-v1";
-export const origins = ["ORIGINAL", "CAMBRIDGE_EXAM", "OTHER_THIRD_PARTY", "UNKNOWN"] as const;
+export const origins = ["ORIGINAL", "CAMBRIDGE_EXAM", "OTHER_THIRD_PARTY", "UNKNOWN", "DEMO"] as const;
 export type ContentOrigin = typeof origins[number];
 export type Provenance = { source: string | null; sourceUrl?: string | null; materialCategory: string; examBoard: string | null; syllabus: string | null; year: number | null; examSession: string | null; paper: string | null; questionNumber: string | null; sourceUid: string | null; sourceReference: string | null; titles: string[] };
 function classifyVersion(v: Provenance): { origin: ContentOrigin; reason: string } {

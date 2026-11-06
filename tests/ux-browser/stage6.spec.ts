@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import mysql from "mysql2/promise";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-const run=promisify(execFile),base="http://127.0.0.1:3102",headers={Origin:base},root="test-results/stage6-20261106";
+const run=promisify(execFile),base="http://127.0.0.1:3102",headers={Origin:base},root=process.env.STAGE6_REPORT_ROOT??"test-results/stage6-20261106";
 let fixture:{task:string;title:string;part:string;lesson:string;course:string;file:string;attempt:string;studentId:string;demo:string;classId:string;work:string};
 async function sql(){const r=JSON.parse(await fs.readFile('.local/content-bank/runtime.json','utf8')),u=new URL(r.MATHS4U_DATABASE_URL);if(r.MATHS4U_ENV!=="test"||u.hostname!=="127.0.0.1"||!u.pathname.startsWith('/maths4u_test_bank_'))throw Error('LOCAL_ONLY');return mysql.createConnection(u.href);}
 async function role(name:string){
@@ -25,7 +25,7 @@ test.beforeAll(async()=>{
  if(!seeded){
    const teacher=await role('teacher'),admin=await role('admin'),teacherId=(await(await teacher.get('/api/auth/me')).json()).user.id;
    const [[member]]=await c.query<mysql.RowDataPacket[]>('SELECT m.classId FROM ClassMembership m JOIN Classroom c ON c.id=m.classId WHERE m.userId=? AND m.removedAt IS NULL AND c.teacherId=? AND c.archivedAt IS NULL LIMIT 1',[me.user.id,teacherId]);expect(member).toBeTruthy();
-   const [[before]]=await c.query<mysql.RowDataPacket[]>("SELECT DATE_FORMAT(examArchivedAt,'%Y-%m-%d %H:%i:%s.%f') stamp FROM Task WHERE id=?",[fixture.task]);
+   const [[before]]=await c.query<mysql.RowDataPacket[]>("SELECT originManual,originReason,originRule,DATE_FORMAT(examArchivedAt,'%Y-%m-%d %H:%i:%s.%f') stamp FROM Task WHERE id=?",[fixture.task]);
    try{
      expect((await admin.patch('/api/admin/content/'+fixture.task,{headers,data:{archive:false,reason:'Controlled local history fixture setup'}})).status()).toBe(200);
      const created=await teacher.post('/api/works',{headers,data:{title:'Stage 6 controlled archive-history QA',classId:member.classId,kind:'HOMEWORK',taskIds:[fixture.task],opensAt:new Date(Date.now()-10000).toISOString(),dueAt:new Date(Date.now()+3600000).toISOString(),resultPolicy:'AFTER_SUBMIT',revealSolutions:true}});expect(created.status()).toBe(201);const work=(await created.json()).id;
@@ -33,7 +33,7 @@ test.beforeAll(async()=>{
      expect((await student.post(`/api/attempts/${attempt}/submit`,{headers,data:{revision:a.revision,answers:parts.map((p:{id:string})=>({partId:p.id,response:{value:'Synthetic student solution retained for the local archive-history test.'}}))}})).status()).toBe(200);
      expect((await teacher.post(`/api/attempts/${attempt}/review`,{headers,data:{reviews:parts.map((p:{id:string;maxPoints:number})=>({partId:p.id,points:Math.min(1,p.maxPoints),comment:'Synthetic teacher feedback for preservation check.',revision:0}))}})).status()).toBe(200);
      seeded={attempt,work};await fs.writeFile('.local/stage6-20261106/history-seed.json',JSON.stringify(seeded));
-   }finally{await c.query('UPDATE Task SET examArchivedAt=? WHERE id=?',[before.stamp,fixture.task]);await Promise.all([teacher.dispose(),admin.dispose()]);}
+   }finally{await c.query('UPDATE Task SET examArchivedAt=?,originManual=?,originReason=?,originRule=? WHERE id=?',[before.stamp,before.originManual,before.originReason,before.originRule,fixture.task]);await Promise.all([teacher.dispose(),admin.dispose()]);}
  }
  fixture.attempt=seeded!.attempt;fixture.work=seeded!.work;
  await fs.writeFile('.local/stage6-20261106/fixture.json',JSON.stringify(fixture));
@@ -89,26 +89,26 @@ test('stage6: existing history keeps the student response and points without the
 });
 
 test('stage6: restore works; re-archive invalidates an already issued scan link and cached public page',async()=>{
- const c=await sql(),admin=await role('admin'),guest=await request.newContext({baseURL:base});const [[before]]=await c.query<mysql.RowDataPacket[]>("SELECT DATE_FORMAT(examArchivedAt,'%Y-%m-%d %H:%i:%s.%f') stamp FROM Task WHERE id=?",[fixture.task]);
+ const c=await sql(),admin=await role('admin'),guest=await request.newContext({baseURL:base});const [[before]]=await c.query<mysql.RowDataPacket[]>("SELECT originManual,originReason,originRule,DATE_FORMAT(examArchivedAt,'%Y-%m-%d %H:%i:%s.%f') stamp FROM Task WHERE id=?",[fixture.task]);
  try{
-  expect((await admin.patch('/api/admin/content/'+fixture.task,{headers,data:{archive:false,reason:'Controlled local restoration test'}})).status()).toBe(200);
+  expect((await admin.patch('/api/admin/content/'+fixture.task,{headers,data:{origin:'CAMBRIDGE_EXAM',archive:false,reason:'Controlled local explicit owner approval and restoration test'}})).status()).toBe(200);
   expect((await guest.get('/api/files/'+fixture.file)).status()).toBe(404); // help remains gated until explicitly requested
   const support=await guest.post(`/api/catalog/tasks/${fixture.task}/support`,{headers,data:{kind:'guidance',access:'paper'}});expect(support.status()).toBe(200);const help=await support.json(),url=help.html.match(/(?:src|href)=["']([^"']+support=[^"']+)/)?.[1]?.replaceAll('&amp;','&');expect(url).toBeTruthy();expect((await guest.get(url)).status()).toBe(200);
   expect((await guest.get(`/courses/${fixture.course}/topics/${fixture.lesson}`)).status()).toBe(200);
   expect((await admin.patch('/api/admin/content/'+fixture.task,{headers,data:{archive:true,reason:'Controlled local re-archival test'}})).status()).toBe(200);
   expect((await guest.get(url)).status()).toBe(404);expect((await guest.get(`/courses/${fixture.course}/topics/${fixture.lesson}`)).status()).toBe(404);
   await fs.writeFile(root+'/restore-and-stale-grant.json',JSON.stringify({restoreAvailable:true,signedScanReadBeforeArchive:true,sameSignedScanDeniedImmediatelyAfterArchive:true,publicPage404Immediately:true},null,2));
- }finally{await c.query('UPDATE Task SET examArchivedAt=? WHERE id=?',[before.stamp,fixture.task]);await c.end();await Promise.all([admin.dispose(),guest.dispose()]);}
+ }finally{await c.query('UPDATE Task SET examArchivedAt=?,originManual=?,originReason=?,originRule=? WHERE id=?',[before.stamp,before.originManual,before.originReason,before.originRule,fixture.task]);await c.end();await Promise.all([admin.dispose(),guest.dispose()]);}
 });
 
 test('stage6: manual owner origin is not overwritten by the classifier',async()=>{
- const c=await sql(),admin=await role('admin');const [[old]]=await c.query<mysql.RowDataPacket[]>('SELECT origin,originManual,originReason,originRule FROM Task WHERE id=?',[fixture.demo]);
+ const c=await sql(),admin=await role('admin');const [[old]]=await c.query<mysql.RowDataPacket[]>('SELECT origin,originManual,originReason,originRule,examArchivedAt FROM Task WHERE id=?',[fixture.demo]);
  try{
-  expect((await admin.patch('/api/admin/content/'+fixture.demo,{headers,data:{origin:'OTHER_THIRD_PARTY',reason:'Controlled local manual-origin preservation test'}})).status()).toBe(200);
+  expect((await admin.patch('/api/admin/content/'+fixture.demo,{headers,data:{origin:'OTHER_THIRD_PARTY',archive:false,reason:'Controlled local manual-origin preservation test'}})).status()).toBe(200);
   const runtime=JSON.parse(await fs.readFile('.local/content-bank/runtime.json','utf8'));
   await run(process.execPath,['node_modules/tsx/dist/cli.mjs','scripts/content-policy.ts','--mode','classify','--apply','--actor',(await(await admin.get('/api/auth/me')).json()).user.id,'--report','.local/stage6-20261106/manual-test.json'],{env:{...process.env,...runtime},windowsHide:true});
   const [[current]]=await c.query<mysql.RowDataPacket[]>('SELECT origin,originManual,originReason FROM Task WHERE id=?',[fixture.demo]);expect(current.origin).toBe('OTHER_THIRD_PARTY');expect(current.originManual).toBe(1);expect(current.originReason).toContain('Controlled local');
- }finally{await c.query('UPDATE Task SET origin=?,originManual=?,originReason=?,originRule=? WHERE id=?',[old.origin,old.originManual,old.originReason,old.originRule,fixture.demo]);await c.end();await admin.dispose();}
+ }finally{await c.query('UPDATE Task SET origin=?,originManual=?,originReason=?,originRule=?,examArchivedAt=? WHERE id=?',[old.origin,old.originManual,old.originReason,old.originRule,old.examArchivedAt,fixture.demo]);await c.end();await admin.dispose();}
 });
 
 test('stage6: admin archive is usable at four widths in both themes',async({browser})=>{
