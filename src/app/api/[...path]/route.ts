@@ -24,11 +24,14 @@ import { studentProgress, myProgress } from "@/lib/student-progress";
 import { classProgress } from "@/lib/class-progress";
 import { bookmarkTask, followCourse } from "@/lib/personal-learning";
 import { pure1Review } from "@/lib/pure1-review";
-import { checkSquare, helpSquare, squareProgress, importSquareProgress, squareMappings } from "@/lib/square-learning";
+import { checkSquare, helpSquare, squareProgress, importSquareProgress, squareMappings, visibleSquareMappings } from "@/lib/square-learning";
 import { courseChoices, learningHome, openSquareLesson } from "@/lib/learning-home";
 
 import { archiveOverview, changeContentAccess, classifyImportBatch } from "@/lib/content-archive";
 import { quadraticTopics } from "@/lib/square-model";
+import { contentPackage, packageTopic } from "@/lib/content-package-content";
+import { contentPackageStatus, planContentPackage, applyContentPackage, changeContentPackage } from "@/lib/content-packages";
+import { squarePublicLesson } from "@/lib/square-content";
 import { inRequestView, requestView, rolePreview } from "@/lib/request-view";
 import { resolveRequestView, guardViewRequest, enterView, exitView, touchView } from "@/lib/view-lens";
 import { previewMaterial, checkPreview } from "@/lib/view-preview";
@@ -62,7 +65,7 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
   try {
     const parts = (await context.params).path, route = parts.join("/"), method = request.method;
     guardViewRequest(request, route);
-    const topic = parts[0] === "learning" && parts[1] === "quadratics" && parts.length === 4 ? quadraticTopics.find(t => t.key === parts[2]) : undefined;
+    const topic = parts[0] === "learning" && parts[1] === "quadratics" && parts.length === 4 ? quadraticTopics.find(t => t.key === parts[2]) : parts[0]==="learning"&&parts[1]==="packages"&&parts.length===4?packageTopic(parts[2]):undefined;
     const action = topic ? parts[3] : "";
     const url = new URL(request.url), lang = url.searchParams.get("lang") === "ru" ? "ru" : "en";
     let input: unknown = {};
@@ -139,6 +142,29 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
         "Content-Security-Policy": "sandbox; default-src 'none'", "Cross-Origin-Resource-Policy": "same-origin" } });
     }
     const actor = await requireActor(request);
+    if(parts[0]==="admin"&&parts[1]==="content-packages"){
+      if(parts.length===2&&method==="GET")return json(await contentPackageStatus(actor));
+      const key=parts[2];
+      if(parts.length===4&&method==="POST"){
+        if(parts[3]==="dry-run")return json(await planContentPackage(actor,key));
+        if(parts[3]==="apply")return json(await applyContentPackage(actor,key,input));
+        if(parts[3]==="state")return json(await changeContentPackage(actor,key,input));
+      }
+      if(parts.length===5&&parts[3]==="lessons"&&method==="GET"){
+        admin(actor);ensure(!requestView()?.lens,403,"FORBIDDEN");
+        const p=contentPackage(key),t=packageTopic(parts[4]);ensure(t?.packageKey===key,404,"NOT_FOUND");
+        const visible=await visibleSquareMappings(actor,t),lesson=squarePublicLesson(t);lesson.questions=lesson.questions.filter(q=>visible.has(q.uid));
+        ensure(lesson.questions.length,404,"NOT_FOUND");
+        const status=(await contentPackageStatus(actor)).find(p=>p.key===key)!;
+        lesson.draft=status.state!=="PUBLISHED";
+        if(lesson.draft&&lesson.navigation){
+          const prefix="/admin/content-packages/"+key+"/preview/";
+          for(const l of p.lessons)lesson.notes=lesson.notes.replaceAll("/courses/"+p.course.slug+"/topics/"+l.id,prefix+l.id);
+          lesson.navigation={...lesson.navigation,coursePath:"/admin/content-packages/"+key,topics:lesson.navigation.topics.map(n=>({...n,path:prefix+n.key}))};
+        }
+        return json(lesson);
+      }
+    }
     if (route === "admin/content" && method === "GET") return json(await archiveOverview(actor));
     if (route === "admin/content/batches/check" && method === "POST") return json(await classifyImportBatch(actor,input));
     if (route === "admin/content/batches/apply" && method === "POST") return json(await classifyImportBatch(actor,input,true));

@@ -62,7 +62,7 @@ export async function progress(actor: Actor, lessonId: string, input: unknown) {
   await assertLessonVisible(actor, lessonId);
   const { completed } = z.object({ completed: z.boolean() }).parse(input);
   const lesson = await db().lesson.findUnique({ where: { id: lessonId }, include: { topic: { include: { course: true } } } });
-  ensure(lesson && !lesson.archivedAt && lesson.topic.course.published && !lesson.topic.course.archivedAt, 404, "NOT_FOUND");
+  ensure(lesson && !lesson.archivedAt && (lesson.topic.course.published || isAdmin(actor)) && !lesson.topic.course.archivedAt, 404, "NOT_FOUND");
   const key = lesson.topic.course.featureKey;
   ensure(!key || await hasFeature(actor, key), 403, "SUBSCRIPTION_REQUIRED");
   return db().learningProgress.upsert({ where: { userId_lessonId: { userId: actor.id, lessonId } }, create: { userId: actor.id, lessonId, completed },

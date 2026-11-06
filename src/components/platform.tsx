@@ -29,6 +29,7 @@ import { ViewContext, setViewNonce } from "./view-state";
 import type { ViewLens } from "@/lib/request-view";
 import { TeacherDashboard } from "./dashboards";
 import { MaterialPreview } from "./view-preview";
+import { ContentPackages, ContentPackagePreview } from "./content-packages";
 
 export function Platform({ discovery, square, publicData, languagePair }: { discovery?: DiscoveryProps; square?: SquareLesson; publicData?: PublicPageData; languagePair?: LanguagePair }) {
   const rawPath = usePathname(), path = publicPath(rawPath), parts = path.split("/").filter(Boolean), publicLearning = isPublicLearningPath(path);
@@ -80,6 +81,7 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   else if (parts[0] === "teacher" && parts[1] === "works" && parts[2] === "new") content = <WorkEditor />;
   else if (parts[0] === "teacher" && parts[1] === "tasks") content = <TaskEditor id={parts[2] === "new" ? undefined : parts[2]} />;
   else if (parts[0] === "teacher" && parts[1] === "olympiads") content = <OlympiadEditor />;
+  else if(parts[0]==="admin"&&parts[1]==="content-packages")content=parts[3]==="preview"&&parts[4]?<ContentPackagePreview packageKey={parts[2]} lessonId={parts[4]}/>:<ContentPackages selected={parts[2]}/>;
   else if (parts[0] === "admin" && parts[1] === "courses") content = <StructureEditor />;
   else if (parts[0] === "admin") content = <AdminScreen section={parts[1] ?? "overview"} />;
   else if (parts[0] === "teacher" && parts.length === 1) content = <TeacherDashboard />;

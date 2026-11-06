@@ -6,7 +6,9 @@ import { db } from "./prisma";
 import { ensure } from "./errors";
 import { digest, lockUser, transaction, type Actor } from "./security";
 import { taskSchema, createTaskVersion, versionInclude } from "./content";
-import { questionsForTopic, squareQuestion, gradeSquare, squareHelp, squareMarkingRows, questionCriteria, type SourceQuestion } from "./square-content";
+import { questionsForTopic, squareQuestion, gradeSquare, squareHelp, squareMarkingRows, questionCriteria, learningTopic, type SourceQuestion } from "./square-content";
+import { packageVersionMappings } from "./content-packages";
+import { taskPermission } from "./catalog";
 import { quadraticTopic, squareSnapshot, type Evidence, type QuadraticTopic } from "./square-model";
 import { databaseConfig } from "./database-url";
 
@@ -53,7 +55,8 @@ export async function importSquareLocal(actor: Actor, topic: QuadraticTopic = qu
 }
 /** Refuse to grade a different edited version under a cached editorial UID. */
 export const squareMappings = cache(async (key = "completing-square") => {
-  const topic = quadraticTopic(key), sourceProject = topic.sourceProject, squareLessonId = topic.lessonId, squareQuestions = questionsForTopic(key);
+  const topic = learningTopic(key), sourceProject = topic.sourceProject, squareLessonId = topic.lessonId, squareQuestions = questionsForTopic(key);
+  if(topic.packageKey){const all=await packageVersionMappings(topic.packageKey);return new Map([...all].filter(([uid])=>squareQuestions.some(q=>q.id===uid)));}
   const rows = await db().importRecord.findMany({ where: { sourceProject }, include: { task: { include: { lessons: true, versions: { orderBy: { number: "desc" }, take: 1, include: versionInclude } } } } });
   const mappings = new Map<string,string>();
   for (const q of squareQuestions) {
@@ -82,7 +85,7 @@ async function recordCheck(actor: Actor, event: z.infer<typeof eventSchema>, map
 }
 export async function visibleSquareMappings(actor: Actor | null, topic: QuadraticTopic = quadraticTopic()) {
   const all=await squareMappings(topic.key);
-  const rows=await db().taskVersion.findMany({where:{id:{in:[...all.values()]},task:{archivedAt:null,...archiveWhere(actor)}},select:{id:true}});
+  const rows=await db().taskVersion.findMany({where:{id:{in:[...all.values()]},task:{AND:[{archivedAt:null,...archiveWhere(actor)},await taskPermission(actor)]}},select:{id:true}});
   const ids=new Set(rows.map(r=>r.id));return new Map([...all].filter(([,id])=>ids.has(id)));
 }
 export async function checkSquare(actor: Actor | null, input: unknown, topic: QuadraticTopic = quadraticTopic()) {
@@ -104,7 +107,7 @@ export async function helpSquare(input: unknown, topic: QuadraticTopic = quadrat
 export async function squareProgress(actor: Actor, topic: QuadraticTopic = quadraticTopic()) {
   await assertLessonVisible(actor,topic.lessonId);
   const mappings = await visibleSquareMappings(actor,topic), uids = new Map([...mappings].map(([uid,v]) => [v,uid]));
-  const rows = await db().independentCheck.findMany({ where: { userId: actor.id, contentVersion: topic.version, taskVersionId: { in: [...uids.keys()] } }, orderBy: [{ checkedAt: "asc" }, { id: "asc" }] });
+  const rows = await db().independentCheck.findMany({ where: { userId: actor.id,...(topic.packageKey?{}:{contentVersion:topic.version}), taskVersionId: { in: [...uids.keys()] } }, orderBy: [{ checkedAt: "asc" }, { id: "asc" }] });
   const evidence: Evidence[] = rows.map(r => { const uid = uids.get(r.taskVersionId)!; return { eventKey: r.eventKey, uid, family: squareQuestion(uid, topic.key).family_uid, correct: r.correct, helpUsed: r.helpUsed, at: r.checkedAt.getTime(), imported: r.imported }; });
   const notes = await db().learningProgress.findUnique({ where: { userId_lessonId: { userId: actor.id, lessonId: topic.lessonId } } });
   return { ...squareSnapshot(evidence), notesRead: notes?.completed ?? false };

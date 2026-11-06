@@ -6,6 +6,7 @@ import { checkExact, isExpandedPolynomial, type ExactField } from "./exact-answe
 import { renderContent } from "./content";
 import { type SquareLesson, type CheckResult, squareVersion, quadraticTopic, type QuadraticTopic } from "./square-model";
 import type { MarkingRow, SupportKind } from "./question-support-model";
+import { packageQuestions, packageTeaching, packageTopic } from "./content-package-content";
 
 type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
 export type SourceQuestion = { id: string; family_uid: string; title: string; collection: string; prompt_html: string; hint_html: string; solution_html: string; answer_html: string; marks: number; difficulty: number; fields: ExactField[]; marking_criteria?: Criterion[]; parts?: { label: string; marking_criteria: Criterion[] }[]; provenance?: { type: string; past_paper_reference: unknown } };
@@ -14,6 +15,7 @@ export const squareQuestions = pack.questions as SourceQuestion[];
 if (pack.version !== squareVersion || squareQuestions.length !== 30 || pack.source.is_official_cambridge_material !== false || squareQuestions.some(q => q.provenance && (q.provenance.type !== "original" || q.provenance.past_paper_reference))) throw Error("SQUARE_ORIGINAL_SOURCE_REQUIRED");
 export function squareQuestion(uid: string, key = "completing-square") { const q = questionsForTopic(key).find(q => q.id === uid); if (!q) throw Error("UNKNOWN_SQUARE_QUESTION"); return q; }
 export function questionsForTopic(key = "completing-square"): SourceQuestion[] {
+  const supplied=packageQuestions(key);if(supplied)return supplied;
   quadraticTopic(key);
   return key === "completing-square" ? squareQuestions : extension.questions.filter(q => q.skill === key) as SourceQuestion[];
 }
@@ -49,9 +51,10 @@ const examples = [
   { title: "4 · Count intersections within the domain", question: String.raw`<p>For \(f(x)=(x-2)^2+1\), \(0\le x\le5\), find all levels \(t\) giving two distinct solutions of \(f(x)=t\).</p>`, solution: String.raw`<p>The vertex level is \(1\); it gives only one solution. The left branch reaches \(f(0)=5\), and the right branch reaches \(f(5)=10\). Both branches meet the level precisely when \(1<t\le5\). At \(t=5\), the roots \(0\) and \(4\) both belong to the domain.</p>` },
 ];
 export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): SquareLesson {
-  const teaching = topic.code === "CS" ? { notes, examples } : quadraticsTeaching[topic.key];
-  return { topic, version: topic.version, title: topic.title, notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, prompt: renderContent(q.prompt_html).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>'), fields: q.fields.map(f => ({ key: f.key, label: topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
+  const packaged=packageTeaching(topic),teaching = packaged??(topic.code === "CS" ? { notes, examples } : quadraticsTeaching[topic.key]);
+  return { topic, version: topic.version, title: topic.title,...(packaged?{navigation:packaged.navigation}:{}), notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, prompt: renderContent(q.prompt_html).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>'), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey?f.label:topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
 }
+export function learningTopic(key:string){return packageTopic(key)??quadraticTopic(key);}
 // Feedback describes an identifiable answer pattern, not an assumed thought process.
 // This is server-only: none of the expected values are added to the public DTO.
 function matchesFeedbackPattern(f: ExactField, input: string) {
@@ -77,6 +80,7 @@ function retryMessage(q: SourceQuestion, f: ExactField, input: string) {
 }
 export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): CheckResult {
   const fields: CheckResult["fields"] = {};
+  if(!q.fields.length)return {valid:false,correct:false,fields,error:"This written problem needs working on paper and self-assessment."};
   if (Object.keys(answers).length !== q.fields.length || Object.keys(answers).some(k => !q.fields.some(f => f.key === k))) return { valid: false, correct: false, fields, error: "Complete every labelled field." };
   let valid = true;
   for (const f of q.fields) {

@@ -6,6 +6,7 @@ import type { DiscoveryProps } from "@/components/discovery-home";
 import { publicDiscovery } from "./discovery";
 import { learningDirections, type DiscoveryData } from "./discovery-model";
 import { quadraticTopics } from "./square-model";
+import { packageTopic } from "./content-package-content";
 import { squarePublicLesson } from "./square-content";
 import { AppError } from "./errors";
 import { assertLessonVisible } from "./content-access";
@@ -32,7 +33,7 @@ export async function pageMetadata({ params }: PageProps, locale: Locale): Promi
   if (locale === "ru" && !translated) notFound();
   const canonical = origin + (locale === "ru" ? "/ru" : "") + (path === "/" ? "/" : path);
   const alternates = { canonical, ...(translated ? { languages: { en: origin + path, ru: origin + "/ru" + path } } : {}) };
-  const discovery = discoveryRoute(parts), topic = quadraticTopics.find(t => t.path === path);
+  const discovery = discoveryRoute(parts), topic = quadraticTopics.find(t => t.path === path)??(parts[0]==="courses"&&parts[2]==="topics"?packageTopic(parts[3]):undefined);
   const data = await publicDiscovery(locale), item = data.items.find(i => i.href === (locale === "ru" ? "/ru" : "") + path);
   const direction = learningDirections.find(d => d.key === discovery?.direction);
   const title = topic ? topic.title : item ? (locale === "ru" ? item.ru : item.title) : direction ? locale === "ru" ? direction.ru : direction.title : path === "/library" ? "Practice" : path === "/courses" ? "Mathematics courses" : path === "/search" ? "Search courses and topics" : path === "/for-teachers" ? "Maths teaching tools" : "Learn mathematics, practise and prepare for exams";
@@ -41,13 +42,17 @@ export async function pageMetadata({ params }: PageProps, locale: Locale): Promi
 }
 async function renderAllowedPage({ params, searchParams }: PageProps, locale: Locale) {
   const parts = (await params).page ?? [], path = "/" + parts.join("/"), publicPage = isPublicLearningPath(path);
+  // Versioned source packages contain private keys/provenance and are not an
+  // HTTP file tree. Keep this namespace a real 404, never a client login shell.
+  if(parts[0]==="content")notFound();
   if (!publicPage) { if (locale === "ru") notFound(); return <Platform />; }
   await connection();
   const available = await publicLanguages(), translated = hasRussianPage(path, available);
   if (locale === "ru" && !translated) notFound();
   const pair = translated ? { en: path, ru: "/ru" + path } : undefined;
   const raw = await searchParams, search = Object.fromEntries(Object.entries(raw).filter((e): e is [string, string] => typeof e[1] === "string"));
-  const topic = quadraticTopics.find(t => t.path === path), oldPractice = !!search.reviewTask || ["MC", "SHORT", "WRITTEN", "NOTES"].includes(search.mode);
+  const packaged=parts[0]==="courses"&&parts[2]==="topics"?packageTopic(parts[3]):undefined;
+  const topic = quadraticTopics.find(t => t.path === path)??(packaged?.path===path?packaged:undefined), oldPractice = !!search.reviewTask || ["MC", "SHORT", "WRITTEN", "NOTES"].includes(search.mode);
   if (topic && search.view !== "legacy" && !oldPractice) { await assertLessonVisible(null,topic.lessonId); const visible=await visibleSquareMappings(null,topic); const lesson=squarePublicLesson(topic); lesson.questions=lesson.questions.filter(q=>visible.has(q.uid)); return <Platform square={lesson} languagePair={pair} />; }
   const discovery = discoveryRoute(parts);
   if (discovery) {

@@ -3,7 +3,7 @@ import { Button, ButtonLink, Input } from "./controls";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import { ActorContext, api, ErrorNotice, Loading, useResource, useLocale } from "./ui";
-import { QuadraticsReviewCards } from "./square-progress";
+import { QuadraticsReviewCards, SquareReviewCard } from "./square-progress";
 import { Pure1Review } from "./pure1-review";
 import type { courseChoices, learningHome } from "@/lib/learning-home";
 import { StudentOverview } from "./dashboards";
@@ -28,6 +28,7 @@ export function MyLearning({ sessionReady = true }: { sessionReady?: boolean }) 
       <div className="learning-cards">{selected.map(c => <article key={c.id}><h3><Link href={"/courses/" + c.slug}>{c.title}</Link></h3>{c.locked ? <p>Your course is saved. Access is required to open its materials.</p> : <><p className="muted">{c.read} {c.read === 1 ? "topic" : "topics"} marked as read · {c.lessons} available topics</p>{c.resume && <p>Next: {c.resume.title}</p>}<ButtonLink className="button" href={c.resume?.href ?? "/courses/" + c.slug}>{c.resume?.at ? "Continue learning" : "Start learning"} →</ButtonLink><p><Link href={"/courses/" + c.slug}>Browse this course</Link></p></>}</article>)}</div>
     </section>
     {pure1 && <><QuadraticsReviewCards sessionReady={sessionReady} /><details className="card"><summary>Review from your earlier Pure 1 practice</summary><Pure1Review /></details></>}
+    {home.data?.practiceTopics.map(topic=><SquareReviewCard key={topic.key} topic={topic} sessionReady={sessionReady} hideUntouched/>)}
     <nav className="row"><Link href="/student/progress">Previous results & feedback</Link><Link href="/join-class">Join a class</Link></nav>
     <p><Link href="/courses">Explore all courses</Link> · <Link href="/search">Find a topic</Link></p>
   </div>;

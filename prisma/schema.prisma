@@ -949,6 +949,18 @@ model ContentRelease {
   completedAt DateTime? @db.DateTime(3)
 }
 
+// Administrative state; editorial identities remain Task / TaskVersion / ImportRecord.
+model ContentPackage {
+  key         String @id @db.VarChar(80)
+  version     String @db.VarChar(30)
+  fingerprint String @db.VarChar(64)
+  courseId    String @db.VarChar(191)
+  chapterId   String @db.VarChar(191)
+  state       String @default("DRAFT") @db.VarChar(20)
+  publishedAt DateTime? @db.DateTime(3)
+  updatedAt   DateTime @updatedAt @db.DateTime(3)
+}
+
 model ContentReleaseTaskBackup {
   releaseKey     String    @db.VarChar(80)
   taskId         String    @db.VarChar(191)

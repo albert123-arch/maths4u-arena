@@ -80,10 +80,10 @@ export function SquareSaveNotice({ state }: { state: ReturnType<typeof useSquare
   </div>;
 }
 export function SquareReviewCard({ sessionReady, topic = quadraticTopic(), hideUntouched = false }: { sessionReady: boolean; topic?: QuadraticTopic; hideUntouched?: boolean }) {
-  const state = useSquareProgress(sessionReady, topic), actor = useContext(ActorContext), states = Object.entries(state.snapshot.states).filter(([family]) => new RegExp("-S-" + topic.code + "\\d\\d$").test(family)).map(([,s])=>s), clock = useReviewNow(), now = Math.max(clock, ...states.map(s => s.checkedAt), 0), due = states.filter(s => s.dueAt <= now).length;
+  const state = useSquareProgress(sessionReady, topic), actor = useContext(ActorContext), states = Object.entries(state.snapshot.states).filter(([family]) => topic.packageKey||new RegExp("-S-" + topic.code + "\\d\\d$").test(family)).map(([,s])=>s), clock = useReviewNow(), now = Math.max(clock, ...states.map(s => s.checkedAt), 0), due = states.filter(s => s.dueAt <= now).length;
   if (!state.ready) return null;
   if ((!actor || hideUntouched) && !state.snapshot.evidence.length && !state.storageIssue) return null;
-  return <section className="card square-review-card"><p className="eyebrow">9709 · Pure Mathematics 1</p><h2>Review · {topic.title}</h2>
+  return <section className="card square-review-card">{!topic.packageKey&&<p className="eyebrow">9709 · Pure Mathematics 1</p>}<h2>Review · {topic.title}</h2>
     <p>{!states.length ? "Start with a quick check. Your review plan will use your own answers." : due ? `${due} ${due === 1 ? "skill is" : "skills are"} ready for review. Try a fresh variant.` : "Nothing is due now. Your next review is " + new Date(Math.min(...states.map(s => s.dueAt))).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) + "."}</p>
     <ButtonLink className="button" href={topic.path + (due ? "?review=1#practice" : "#practice")}>{due ? "Review now" : "Continue practice"} →</ButtonLink><SquareSaveNotice state={state} />
   </section>;

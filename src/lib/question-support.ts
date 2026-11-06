@@ -12,6 +12,7 @@ import { squareMappings } from "./square-learning";
 import type { SupportContent } from "./question-support-model";
 import { materialGrant } from "./material-grant";
 import { rolePreview } from "./request-view";
+import { contentPackages, packageTopic } from "./content-package-content";
 
 const access = z.enum(["attempt", "stuck", "paper"]);
 async function readable(actor: Actor | null, id: string) {
@@ -34,7 +35,8 @@ export async function catalogSupport(actor: Actor | null, id: string, input: unk
       if (data.kind !== "hint" || text.hint || v.assets.some(a => a.role === "HINT")) await revealStudyHelp(actor, study.id, { kind }, lang);
     }
   }
-  const topic = quadraticTopics.find(t => questionsForTopic(t.key).some(q => q.id === v.sourceUid));
+  const pack=contentPackages.find(p=>p.questions.some(q=>q.id===v.sourceUid)),packQuestion=pack?.questions.find(q=>q.id===v.sourceUid);
+  const topic = pack&&packQuestion?packageTopic(pack.lessons.find(l=>l.key===packQuestion.lesson)!.id):quadraticTopics.find(t => questionsForTopic(t.key).some(q => q.id === v.sourceUid));
   if (topic) {
     ensure((await squareMappings(topic.key)).get(v.sourceUid!) === v.id, 409, "QUESTION_CHANGED");
     const q = questionsForTopic(topic.key).find(q => q.id === v.sourceUid)!;

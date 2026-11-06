@@ -75,7 +75,7 @@ export function guardViewRequest(request: Request, route: string) {
   if (!v?.lens || control || route === "view/touch") return;
   if (v.lens.mode === "USER") { ensure(request.method === "GET", 403, "VIEW_READ_ONLY"); if (userViewTeacher()) ensure(route !== "subscriptions", 403, "VIEW_NOT_ALLOWED"); return; }
   if (request.method === "GET") return;
-  const safe = /^learning\/(?:square|quadratics\/[\w-]+)\/(check|help|open)$/.test(route)
+  const safe = /^learning\/(?:square|quadratics\/[\w-]+|packages\/[\w-]+)\/(check|help|open)$/.test(route)
     || /^catalog\/tasks\/[\w-]+\/support$/.test(route)
     || /^view\/preview\/(tasks|works)\/[\w-]+\/check$/.test(route);
   ensure(safe, 403, "PREVIEW_NO_WRITES");

@@ -5,6 +5,7 @@ import { hasFeature } from "./subscriptions";
 import { squareLessonId, squarePath, type QuadraticTopic, quadraticTopic } from "./square-model";
 import { assertLessonVisible, visibleCourseWhere, visibleLessonWhere, archiveWhere } from "./content-access";
 import { lensAttemptScope } from "./request-view";
+import { contentPackages, packageTopic } from "./content-package-content";
 
 export async function courseChoices(actor: Actor | null = null) {
   const rows = await db().course.findMany({ where: { published: true, archivedAt: null, featureKey: null, ...visibleCourseWhere(actor) }, orderBy: [{ position: "asc" }, { id: "asc" }], select: { id: true, slug: true, texts: { select: { locale: true, title: true } } } });
@@ -23,7 +24,9 @@ export async function learningHome(actor: Actor, lang: string) {
     ].sort((a,b) => b.at - a.at);
     return { id: c.id, slug: c.slug, title: localized(c.texts, lang).title, locked: false, read: await db().learningProgress.count({ where: { userId: actor.id, lessonId: { in: lessonIds }, completed: true } }), lessons: lessonIds.length, resume: candidates[0] ?? (lessonIds.includes(squareLessonId) ? { title: "Completing the square", href: squarePath, at: 0 } : null) };
   }));
-  return { courses };
+  const enabled=await db().contentPackage.findMany({where:{state:"PUBLISHED",courseId:{in:courses.filter(c=>!c.locked).map(c=>c.id)}}});
+  const practiceTopics=contentPackages.filter(p=>enabled.some(e=>e.key===p.key&&e.version===p.version)).flatMap(p=>p.lessons.map(l=>packageTopic(l.id)!));
+  return { courses,practiceTopics };
 }
 export async function openSquareLesson(actor: Actor, topic: QuadraticTopic = quadraticTopic()) {
   const squareLessonId = topic.lessonId;
