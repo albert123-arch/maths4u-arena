@@ -217,3 +217,45 @@ The Polar lifecycle/browser tests temporarily publish, archive and restore
 only Polar to DRAFT. They preserve all four older published packages. Run
 these only against the explicitly guarded local test database. Final local
 publication is a separate action after those tests.
+
+## C2: Vectors
+
+`9231-fp1-vectors` adds chapter 6 without a schema migration or a new answer
+grammar. Five lessons follow book sections 6.1–6.3: products, lines, planes,
+distances and parameter exceptions. Notes and 20 examples are independently
+written; the 84 owner questions retain all 258 parts, 975 marks and their
+answers, hints, solutions and guidance. All 84 archive mappings remain private
+administrative provenance, never learner-facing examination references.
+
+There are 40 complete-answer quick checks (30 SHORT and 10 MC), with fresh
+variants and review. Vectors and feet require every coordinate. A plane is
+explicitly normalised to x-coefficient 1 and asks for B, C and D; an intersection
+line fixes its anchor at z=0 and its direction's z-component at 1. These are
+complete specified answers, not a parser for arbitrary three-variable equations.
+Parameter sets require every root; parallel exceptions use a separate formula.
+
+The owner's teacher-review HTML embeds eight model SVGs directly inside
+solution figures, rather than in img tags. The media preparer matches article
+number, title and SVG title to the owner's JSON, preserves XML attribute case,
+and extracts only model figures. It does not rasterise the nested MathJax SVGs.
+Eight unique PNGs (454,892 bytes, maximum side 1600 px) use immutable SOLUTION
+files and existing per-session grants; raw paths and another session's grant
+remain inaccessible. Both owner files are read-only.
+
+```powershell
+node scripts/content/prepare-fp1-vectors-media.mjs --source 'E:\my folder\questions_data\original\Pure1 9231\06_Vectors_9231_revised.json' --html 'E:\my folder\questions_data\original\Pure1 9231\9231_Chapter_06_Teacher_Review.html' --metadata .local/c2-vectors-20261106/assets.json
+python scripts/content/prepare-fp1-vectors.py --source 'E:\my folder\questions_data\original\Pure1 9231\06_Vectors_9231_revised.json' --mapping docs/ARENA-C2-VECTORS-SOURCE-AUDIT-20261106.json --assets .local/c2-vectors-20261106/assets.json
+python scripts/content/verify-fp1-vectors.py --report .local/c2-vectors-20261106/math.json
+```
+
+CI uses content-bound fixtures and geometry models without the E: drive.
+Optional `--owner` additionally verifies the SHA and every supplied field.
+The report distinguishes symbolic/numeric PASS checks from reviewed converse
+and completeness arguments. Owner keys and marks required no corrections.
+
+All six FP1 packages are PUBLISHED locally. The Vectors lifecycle/browser tests
+preserve the five older packages, but deliberately restore only Vectors to DRAFT.
+Use those mutation tests only on the guarded local test database, not during
+owner preview. Final local publication was performed separately after tests;
+repeat application skipped all 124 tasks with zero writes. These commands
+authorise neither production import nor deployment.

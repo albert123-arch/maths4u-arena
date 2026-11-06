@@ -1,0 +1,118 @@
+"""Independent teaching in the mathematical order of book sections 6.1–6.3."""
+import sympy as s
+
+def tex(value):return s.latex(value)
+def lesson(key,title,summary,objective,before,ideas,method,mistakes,examples):
+    return dict(key=key,id='fp1_vectors_'+key,title=title,summary=summary,objective=objective,before=before,ideas=ideas,method=method,mistakes=mistakes,examples=examples)
+def example(code,title,question,solution):
+    return dict(title=title,question=question,solution=solution,verification=code)
+
+lessons=[
+lesson('products','Vector products, orientation and area',
+ 'Find a common normal, keep its orientation and use its magnitude geometrically.',
+ 'Calculate vector products and use them for normals, areas and coplanarity.',
+ r'<p>Review vector components, magnitudes and the scalar product. The <a href="/courses/maths4u-9231-fp1/topics/fp1_matrices_determinants">determinant lesson</a> supplies the alternating signs. Later lessons supply the line and plane methods used by some parts of the written practice.</p>',
+ r'''<h3>A perpendicular vector with an order</h3><p>For non-parallel vectors u and v, their vector product is perpendicular to both. Its magnitude is \(|u||v|\sin\theta\); its direction follows the right-hand rule from u to v. Interchanging the factors reverses the result.</p>
+ \[u\times v=\begin{pmatrix}u_2v_3-u_3v_2\\u_3v_1-u_1v_3\\u_1v_2-u_2v_1\end{pmatrix}.\]
+ <p>Each dot product with a factor is zero: substituting the component formula makes the terms cancel in pairs. This checks perpendicularity but does not by itself check orientation. The zero vector has no direction and cannot be used as a normal.</p>
+ <h3>Area comes from a perpendicular height</h3><p>Choose two displacements sharing a vertex. Their parallelogram has area \(|u||v|\sin\theta\); a triangle has half that area.</p>
+ \[A_{\triangle ABC}=\frac12\left|(b-a)\times(c-a)\right|.\]
+ <p>Parallel sides give zero area. A unit normal is either sign of \((u\times v)/|u\times v|\); retain the sign or component restriction in the question.</p>
+ <h3>Coplanarity and a geometric extension</h3><p>Three non-collinear points A,B,C determine a plane. A fourth point D belongs to it exactly when its displacement from A has no component along the normal:</p>
+ \[(d-a)\cdot\big((b-a)\times(c-a)\big)=0.\]
+ <p>First check the normal is non-zero; collinear A,B,C do not determine a unique plane. For a tetrahedron, base area times perpendicular height divided by three gives the derived extension</p>
+ \[V=\frac16\left|(d-a)\cdot\big((b-a)\times(c-a)\big)\right|.\]
+ <p>This follows from the base-and-height argument; a separately memorised named product is unnecessary.</p>
+ <h3>Solving a vector-product equation</h3><p>If \(w\times u=b\) with \(u\ne0\), necessarily \(b\cdot u=0\). Write the three component equations to find one solution. Adding any multiple of u leaves the product unchanged. Conversely, subtracting two solutions gives a vector parallel to u. An extra scalar-product condition may select one member of this family.</p>''',
+ r'<ol><li>Form displacement vectors, keeping their order.</li><li>Calculate the three components and check both scalar products.</li><li>Check non-degeneracy and the required orientation.</li><li>Use the magnitude for area, or project a displacement onto the normal.</li></ol>',
+ ['Reversing the factors changes the sign.','A normal may be rescaled, but a requested vector product may not.','Use displacements from a shared vertex for a triangle.','A zero normal does not define a plane.'],
+ [
+ example('E-P1','1 · Check both perpendicularity and orientation',r'<p>Find \(u\times v\) for \(u=(2,1,-1)^T\), \(v=(1,-2,3)^T\), and a unit vector in that direction.</p>',r'\[u\times v=(1,-7,-5)^T.\]<p>The dot products are \(2-7+5=0\) and \(1+14-15=0\). The magnitude is \(\sqrt{75}=5\sqrt3\), so the required unit vector is</p>\[\frac1{5\sqrt3}(1,-7,-5)^T.\]<p>The negative is also perpendicular, but has the opposite orientation.</p>'),
+ example('E-P2','2 · Area and an altitude from one calculation',r'<p>Find the area of triangle \(ABC\), where \(A=(1,0,2)\), \(B=(3,1,2)\), \(C=(2,-1,4)\), and the perpendicular distance from C to AB.</p>',r'<p>Use \(AB=(2,1,0)^T\) and \(AC=(1,-1,2)^T\). Their product is \((2,-4,-3)^T\), of magnitude \(\sqrt{29}\). Thus</p>\[A=\frac{\sqrt{29}}2,\qquad h=\frac{\sqrt{29}}{\sqrt5}=\frac{\sqrt{145}}5.\]<p>The height uses AB as its base; changing the base would change the altitude.</p>'),
+ example('E-P3','3 · Retain the non-collinearity check',r'<p>For \(A=(0,1,0)\), \(B=(1,1,1)\), \(C=(0,2,1)\) and \(D=(k,0,2)\), find k for coplanarity.</p>',r'\[AB\times AC=(-1,-1,1)^T\ne0.\]<p>Hence ABC determines a plane. The condition on \(AD=(k,-1,2)^T\) is \(-k+1+2=0\), giving \(k=3\). The test works because the first three points are non-collinear.</p>'),
+ example('E-P4','4 · Derive a volume from area and height',r'<p>Find the volume of \(OABC\), with \(A=(2,0,0)\), \(B=(0,3,0)\), \(C=(1,1,4)\).</p>',r'<p>OAB has area 3 and lies in \(z=0\). C has perpendicular height 4, so \(V=\frac13(3)(4)=4\). Equivalently, \(OA\times OB=(0,0,6)^T\); its scalar product with OC is 24, and \(24/6=4\). The absolute value makes a volume positive.</p>')
+ ]),
+lesson('lines','Lines and common perpendiculars',
+ 'Use independent parameters to distinguish intersection, parallelism and skewness.',
+ 'Find perpendicular feet and the shortest distance between lines, treating parallel lines separately.',
+ r'<p>Review <a href="/courses/maths4u-9231-fp1/topics/fp1_vectors_products">vector products</a>, scalar products and simultaneous linear equations. Some written problems also use the following plane lessons; return to their plane parts after studying those methods.</p>',
+ r'''<h3>A point and a non-zero direction</h3><p>A line has equation \(r=a+s\,u\), with \(u\ne0\) and real s. Two given points give a direction by subtraction. Changing the anchor along the line, or rescaling its direction with a corresponding change of parameter, describes the same locus.</p>
+ <h3>Classify before applying a distance formula</h3><p>For \(r=a+s\,u\) and \(r=b+t\,v\), use separate parameters. If \(u\times v=0\), the lines are parallel; they coincide exactly when \((b-a)\times u=0\). For non-parallel directions, zero \((b-a)\cdot(u\times v)\) means the two lines are coplanar and intersect. Otherwise they are skew.</p>
+ <h3>The nearest point on a line</h3><p>The foot \(H=a+s\,u\) from P satisfies \((p-H)\cdot u=0\), giving</p>
+ \[s=\frac{(p-a)\cdot u}{u\cdot u},\qquad d=|p-H|.\]
+ <p>Equivalently, triangle area gives \(d=|(p-a)\times u|/|u|\). The line is infinite: do not impose a segment restriction unless requested.</p>
+ <h3>Two perpendicular feet</h3><p>Write \(P=a+s\,u\), \(Q=b+t\,v\). The shortest connector is perpendicular to each line, so solve</p>
+ \[(Q-P)\cdot u=0,\qquad (Q-P)\cdot v=0.\]
+ <p>The coefficient determinant is non-zero for non-parallel directions, giving a unique pair of feet. A common perpendicular then passes through P in direction Q−P. Its direction is parallel to \(u\times v\).</p>
+ <h3>Distance as a normal projection</h3>
+ \[d=\frac{|(b-a)\cdot(u\times v)|}{|u\times v|}\quad(u\times v\ne0).\]
+ <p>Every connector has the same normal component because changing s or t adds a line direction, perpendicular to the normal. The perpendicular connector attains that lower bound. For parallel lines the displayed formula is undefined; use a point-to-line distance instead. Distinct parallel lines have infinitely many shortest joining segments.</p>''',
+ r'<ol><li>Identify both anchors and both non-zero directions.</li><li>Test parallelism and intersection before choosing a formula.</li><li>For feet, solve both perpendicularity equations.</li><li>Check membership on the original lines and the connector length.</li></ol>',
+ ['Different lines need independent parameters.','A zero numerator means intersection only when the cross product is non-zero.','The skew-line formula cannot be used for parallel directions.','A shortest distance alone does not give the two feet.'],
+ [
+ example('E-L1','1 · Recover a parameter from all coordinates',r'<p>Give a line through \(A=(2,-1,3)\), \(B=(5,1,2)\), and decide whether \(P=(8,3,1)\) lies on it.</p>',r'\[r=(2,-1,3)^T+s(3,2,-1)^T.\]<p>The x-coordinate of P gives \(s=2\). The same value gives y=3 and z=1, so P belongs to the line. Checking only one coordinate would be insufficient.</p>'),
+ example('E-L2','2 · Find the full perpendicular foot',r'<p>Find the foot from \(P=(4,1,5)\) to \(r=(1,-1,2)^T+s(1,2,2)^T\), and its distance.</p>',r'<p>The perpendicularity equation is \(13-9s=0\), so \(s=13/9\). Therefore</p>\[H=(22/9,17/9,44/9),\qquad d=\frac{\sqrt{29}}3.\]<p>The displacement \(P-H=(14,-8,1)^T/9\) has zero dot product with \((1,2,2)^T\). This checks both the point and the distance.</p>'),
+ example('E-L3','3 · Locate both ends of a skew separation',r'<p>Find the shortest joining segment between \(r=(1,0,0)^T+s(1,1,0)^T\) and \(r=(0,2,3)^T+t(1,-1,0)^T\).</p>',r'<p>The perpendicularity equations give \(s=1/2\), \(t=3/2\). Thus</p>\[P=(3/2,1/2,0),\qquad Q=(3/2,1/2,3).\]<p>The connector is \((0,0,3)^T\), perpendicular to both directions, and its length is 3. Their direction product is \((0,0,-2)^T\), and the non-zero normal separation confirms the lines are skew.</p>'),
+ example('E-L4','4 · Parallel lines have a family of feet',r'<p>Find the distance between \(r=(0,1,0)^T+s(1,0,1)^T\) and \(r=(1,3,0)^T+t(2,0,2)^T\). Describe every closest pair.</p>',r'<p>The directions are parallel. The foot of the second anchor B on the first line is \(H=(1/2,1,1/2)\). Hence \(d=3\sqrt2/2\). Every closest pair has the form</p>\[P=H+\lambda(1,0,1)^T,\]\[Q=B+\lambda(1,0,1)^T.\]<p>The connector remains \((1/2,2,-1/2)^T\), perpendicular to the common direction. Conversely, perpendicularity forces equal displacement along that direction.</p>')
+ ]),
+lesson('planes','Describing and intersecting planes',
+ 'Turn independent directions into a normal, and check every defining condition.',
+ 'Convert plane descriptions and find complete line–plane and plane–plane intersections.',
+ r'<p>Review <a href="/courses/maths4u-9231-fp1/topics/fp1_vectors_products">common normals</a> and <a href="/courses/maths4u-9231-fp1/topics/fp1_vectors_lines">line equations</a>. A plane requires two independent directions, not merely two listed vectors.</p>',
+ r'''<h3>Equivalent descriptions of one plane</h3><p>Through a point a with non-zero normal n, all plane points satisfy \((r-a)\cdot n=0\). Thus \(n\cdot r=d\), where \(d=n\cdot a\). In components, \(Ax+By+Cz=D\), with \((A,B,C)\ne(0,0,0)\). Multiplying all four coefficients by one non-zero scalar leaves the plane unchanged.</p>
+ <p>A two-parameter description is \(r=a+s\,u+t\,v\), with \(u\times v\ne0\). Its normal is \(u\times v\). For points A,B,C, use \(u=b-a\) and \(v=c-a\). Parallel directions would describe a line instead.</p>
+ <h3>Substituting a line</h3><p>For \(r=a+s\,u\) and \(n\cdot r=d\), substitution gives</p>
+ \[s(n\cdot u)=d-n\cdot a.\]
+ <p>A non-zero coefficient gives one intersection. If it is zero, check the remaining constant: zero gives containment, non-zero gives parallel disjointness. Do not divide before making this distinction.</p>
+ <h3>Intersecting two planes</h3><p>For independent normals \(n_1,n_2\), the intersection direction is \(n_1\times n_2\). Find one point satisfying both equations, then combine it with that direction. Setting a convenient coordinate to zero is allowed only if the resulting equations are consistent; otherwise choose another free coordinate.</p>
+ <p>Verify the anchor satisfies both planes and the direction is perpendicular to both normals. Parallel normals require a separate check for coincident or disjoint planes; they do not give an intersection line.</p>
+ <h3>A plane containing an entire line</h3><p>Check both its anchor and its direction: \(n\cdot a=d\) and \(n\cdot u=0\). A plane perpendicular to a line has normal parallel to that line's direction. A plane perpendicular to another plane has a normal perpendicular to the other normal. Combine the required conditions before choosing a normal.</p>''',
+ r'<ol><li>List the required points and directions.</li><li>Find a non-zero normal or two independent plane directions.</li><li>Use a defining point to find the plane constant.</li><li>For intersections, solve and substitute into every original equation.</li></ol>',
+ ['A plane normal is not generally a direction in the plane.','Two parallel vectors do not determine a plane.','Rescale the constant together with the normal coefficients.','A failed convenient coordinate choice does not imply disjoint planes.'],
+ [
+ example('E-N1','1 · Build a plane through three points',r'<p>Find a plane through \(A=(1,0,2)\), \(B=(2,1,2)\), \(C=(1,1,3)\).</p>',r'<p>The directions \((1,1,0)^T\), \((0,1,1)^T\) have product \((1,-1,1)^T\). Dotting it with A gives 3. Hence</p>\[x-y+z=3.\]<p>Both other points satisfy the equation, and the non-zero normal confirms uniqueness.</p>'),
+ example('E-N2','2 · Convert a two-parameter description',r'<p>Convert \(r=(0,2,1)^T+s(1,1,0)^T+t(0,1,2)^T\) to scalar-product and Cartesian form.</p>',r'<p>The normal is \((2,-2,1)^T\); its scalar product with the anchor is −3. Thus</p>\[r\cdot(2,-2,1)^T=-3,\]\[2x-2y+z=-3.\]<p>The two directions are independent. Dividing all coefficients, including −3, by one non-zero number gives an equivalent equation.</p>'),
+ example('E-N3','3 · Verify an entire intersection line',r'<p>Find the intersection of \(x+y+z=4\) and \(x-y+z=2\).</p>',r'<p>Subtracting gives y=1, then x+z=3. Choose x=0 for the anchor and let x vary as s:</p>\[r=(0,1,3)^T+s(1,0,-1)^T.\]<p>The anchor satisfies both equations. The direction has zero scalar product with both normals. These two checks verify every point of the line, not just the anchor.</p>'),
+ example('E-N4','4 · Find the unique crossing point',r'<p>Intersect \(r=(2,0,1)^T+t(1,2,-1)^T\) with \(x-y+z=5\).</p>',r'<p>Substitution gives \(3-2t=5\), so t=−1. The point is \(X=(1,-2,2)\), and \(1-(-2)+2=5\). The coefficient −2 is non-zero, so this is the only intersection.</p>')
+ ]),
+lesson('distances','Angles, projections and distances',
+ 'Choose a normal component or a tangential component to match the geometry.',
+ 'Find angles, perpendicular feet, projections and reflections with correct signs and complete coordinates.',
+ r'<p>Review <a href="/courses/maths4u-9231-fp1/topics/fp1_vectors_planes">plane equations</a> and perpendicular feet on <a href="/courses/maths4u-9231-fp1/topics/fp1_vectors_lines">lines</a>. Angles between a line and a plane differ from angles between their direction and normal.</p>',
+ r'''<h3>Angles use the right pair of directions</h3><p>For the smaller angle between two lines, use the absolute scalar product of their directions. For planes, use their normals:</p>
+ \[\cos\beta=\frac{|n_1\cdot n_2|}{|n_1||n_2|}.\]
+ <p>For a line direction u and plane normal n, the line–plane angle is complementary to the direction–normal angle:</p>
+ \[\sin\alpha=\frac{|u\cdot n|}{|u||n|},\quad0\le\alpha\le\pi/2.\]
+ <p>Check non-zero directions and normals. Parallel and perpendicular configurations attain the endpoints, rather than an acute interior angle.</p>
+ <h3>Distance and foot on a plane</h3><p>For \(n\cdot r=d\), removing the normal component of p gives</p>
+ \[H=p-\frac{n\cdot p-d}{n\cdot n}\,n,\]
+ \[\operatorname{dist}(P,\Pi)=\frac{|n\cdot p-d|}{|n|}.\]
+ <p>The residual itself is signed; distance needs its absolute value. Verify H lies in the plane and P−H is parallel to its normal. Reflection is \(R=2H-P\).</p>
+ <h3>Projecting or reflecting an entire line</h3><p>Apply the point map to \(a+t\,u\) and collect the constant and t terms. Projection sends the direction to \(u-(n\cdot u)n/(n\cdot n)\); reflection subtracts twice that normal component. A zero projected direction means the projected locus is one point, not a line. A reflected direction cannot vanish when u is non-zero.</p>
+ <h3>Equal distances and minimum routes</h3><p>The locus equidistant from two distinct points is their perpendicular bisector plane; expanding the squared distances cancels the quadratic terms. Equal distances to two planes give two signed equations after dividing each residual by its normal's magnitude. For a route touching a plane, reflection and the triangle inequality can establish a global minimum, but equality must occur on the required segment.</p>''',
+ r'<ol><li>Identify the required angle or distance.</li><li>Use a non-zero normal and the appropriate scalar product.</li><li>Recover all requested coordinates, not only a length.</li><li>Check membership, perpendicularity, signs and any equality conditions.</li></ol>',
+ ['Line–plane angles use sine; plane–plane angles use cosine.','Distance is non-negative even when a residual is negative.','Reflection moves twice the distance to the perpendicular foot.','A projected line can collapse to one point.'],
+ [
+ example('E-D1','1 · Distance, foot and reflection together',r'<p>For \(P=(5,1,2)\) and \(\Pi:2x-y+2z=4\), find the perpendicular foot, distance and reflection.</p>',r'<p>The normal is \(n=(2,-1,2)^T\), with \(n\cdot n=9\) and residual 9. Therefore</p>\[H=P-n=(3,2,0),\qquad d=3,\]\[R=2H-P=(1,3,-2).\]<p>The midpoint of P,R is H; both displacements are normal to the plane.</p>'),
+ example('E-D2','2 · Distinguish the two angle formulae',r'<p>A line has direction \((1,2,2)^T\). Find its smaller angle with a plane of normal \((2,-1,2)^T\). Also find the smaller angle between this plane and one of normal \((1,1,0)^T\), to 1 decimal place.</p>',r'<p>For the line–plane angle, \(\sin\alpha=4/9\), giving \(\alpha=26.4^\circ\). For the plane–plane angle,</p>\[\cos\beta=\frac1{3\sqrt2},\qquad\beta=76.4^\circ.\]<p>The different trigonometric functions reflect different geometric angles.</p>'),
+ example('E-D3','3 · Project a whole line without losing its parameter',r'<p>Project \(r=(5,1,2)^T+t(1,2,2)^T\) orthogonally onto \(2x-y+2z=4\).</p>',r'<p>The projected anchor is \((3,2,0)^T\). Remove the normal component of the direction:</p>\[u_{\parallel}=(1,2,2)^T-\frac49(2,-1,2)^T=\frac19(1,22,10)^T.\]<p>Thus the projection is</p>\[r=(3,2,0)^T+\frac t9(1,22,10)^T.\]<p>The direction is non-zero and perpendicular to the plane normal. Replacing t/9 by a new real parameter gives the same line, but changes the correspondence of parameters.</p>'),
+ example('E-D4','4 · Recover a plane from equal distances',r'<p>Find the locus of points equidistant from \(A=(1,0,0)\), \(B=(3,2,0)\). Then find both angle-bisector planes of \(x+y=3\) and \(x-y=1\).</p>',r'<p>The first locus has normal \(B-A=(2,2,0)^T\) and contains the midpoint \((2,1,0)\), so it is \(x+y=3\). The two given plane normals have equal magnitude. Hence their equal-distance condition is</p>\[|x+y-3|=|x-y-1|.\]<p>Taking the two signs gives \(y=1\) or \(x=2\), with no restriction on z. Keeping only one sign would omit half the locus.</p>')
+ ]),
+lesson('parameters','Parameters and exceptional configurations',
+ 'Classify the geometry before cancelling a factor or taking a limit.',
+ 'Find all admissible parameter values and describe exceptional lines, planes and loci completely.',
+ r'<p>Review <a href="/courses/maths4u-9231-fp1/topics/fp1_vectors_lines">line classification</a>, <a href="/courses/maths4u-9231-fp1/topics/fp1_vectors_planes">plane intersections</a> and <a href="/courses/maths4u-9231-fp1/topics/fp1_vectors_distances">distance formulae</a>. Every parameter value must still define the objects in the question.</p>',
+ r'''<h3>Check whether the object exists</h3><p>A line needs a non-zero direction. A Cartesian plane needs a non-zero normal. Two directions give a plane only if their vector product is non-zero. Record the values where these conditions fail before applying a formula.</p>
+ <h3>Separate the exceptional equations</h3><p>In a line–plane substitution \(A(k)t=B(k)\), first solve \(A(k)=0\). At each such value, \(B(k)=0\) gives containment; otherwise there is no intersection. For the other values solve \(t=B(k)/A(k)\). A cancelled factor can hide a whole contained line.</p>
+ <h3>Distance conditions need both signs</h3><p>A positive target distance can lie on either side of a plane. Squaring an absolute-value equation is legitimate when its denominator is defined and both sides are non-negative; check the original equation and all restrictions afterwards. If two directions become parallel, recompute their distance with a point-to-line method.</p>
+ <h3>State the whole locus, including omissions</h3><p>A parametrised result may resemble a complete line but omit points. Determine the range of the new parameter and prove a converse: every retained point should come from an allowed original parameter. A limiting point need not be attained. Different geometry at an exceptional value can make a distance discontinuous there.</p>
+ <h3>Completeness is part of the answer</h3><p>Give every valid root, both signed distance cases and every permitted branch of a trigonometric parameter interval. Explain whether exceptional planes coincide, intersect or are parallel; do not label all zero determinants as the same configuration.</p>''',
+ r'<ol><li>Find values making a direction, normal or denominator vanish.</li><li>Classify those configurations directly.</li><li>Solve the non-degenerate equation with all signs and domain restrictions.</li><li>Check every candidate in the original geometry and describe any omitted locus points.</li></ol>',
+ ['Do not substitute into a formula that became undefined.','A zero intersection coefficient can mean containment or disjointness.','Squaring does not remove the need to check restrictions.','An unattained limiting point is not part of a locus.'],
+ [
+ example('E-T1','1 · A contained line, a parallel line and two missing points',r'<p>Classify \(r=(k,0,0)^T+t(k(k-2),1,0)^T\) relative to \(x=0\). Describe the locus of unique intersection points.</p>',r'<p>Substitution gives \(k+k(k-2)t=0\). At k=0 the line is contained; at k=2 it is parallel and disjoint. Otherwise \(t=-1/(k-2)\), giving \(X=(0,-1/(k-2),0)\). Its y-coordinate takes every real value except 0 and 1/2: zero is unattainable, while 1/2 would require k=0. Conversely \(k=2-1/y\) recovers every retained point.</p>'),
+ example('E-T2','2 · Retain both sides of a plane',r'<p>Find all k for which \(P=(k,1,2)\) has distance 2 from \(x+2y-2z=0\).</p>',r'\[\frac{|k-2|}{3}=2.\]<p>Thus \(k-2=\pm6\), giving \(k=-4\) or \(k=8\). Both satisfy the original distance condition. Giving one value would select only one side of the plane.</p>'),
+ example('E-T3','3 · Recompute the distance at a parallel value',r'<p>Find the distance between \(r=s(1,0,0)^T\) and \(r=(0,2,1)^T+t(1,k,0)^T\) for every real k.</p>',r'<p>If \(k\ne0\), the common normal is \((0,0,k)^T\), giving distance 1. At k=0 the directions are parallel, and the nearest connector is \((0,2,1)^T\), of length \(\sqrt5\). The distance is therefore 1 for \(k\ne0\), and \(\sqrt5\) for k=0. The non-parallel formula divides by zero at k=0; its limiting value does not answer that case.</p>'),
+ example('E-T4','4 · Coincident planes are not an intersection line',r'<p>Classify the intersection of \(x+y+z=2\) and \((k-1)x+y+z=2\) for every real k.</p>',r'<p>Subtracting gives \((k-2)x=0\). When \(k\ne2\), the intersection is the line \(x=0,\ y+z=2\), for example \(r=(0,2,0)^T+t(0,-1,1)^T\). When k=2 the equations coincide, so the intersection is the whole plane. Neither normal vanishes, but the normals become parallel; division by k−2 would lose that case.</p>')
+ ])
+]
