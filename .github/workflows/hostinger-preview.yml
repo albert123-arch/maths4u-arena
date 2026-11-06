@@ -46,7 +46,7 @@ jobs:
       - name: Type check
         run: npm run typecheck
       - name: Validate content package schema and complete-answer projections
-        run: npx tsx --test tests/content-packages.test.ts tests/content-rational.test.ts tests/content-series.test.ts tests/content-matrices.test.ts tests/content-polar.test.ts tests/content-vectors.test.ts tests/content-induction.test.ts tests/content-stats-crv.test.ts tests/content-stats-inference.test.ts tests/exact-pi.test.ts tests/question-layout.test.ts
+        run: npx tsx --test tests/content-packages.test.ts tests/content-rational.test.ts tests/content-series.test.ts tests/content-matrices.test.ts tests/content-polar.test.ts tests/content-vectors.test.ts tests/content-induction.test.ts tests/content-stats-crv.test.ts tests/content-stats-inference.test.ts tests/content-stats-chi2.test.ts tests/exact-pi.test.ts tests/question-layout.test.ts
       - name: Verify FP1 mathematics
         run: |
           python3 -m pip install sympy==1.14.0 antlr4-python3-runtime==4.11.1
@@ -59,6 +59,7 @@ jobs:
           python3 scripts/content/verify-fp1-induction.py --report /tmp/arena-c3-induction-maths.json
           python3 scripts/content/verify-stats-crv.py --report /tmp/arena-c5-crv-maths.json
           python3 scripts/content/verify-stats-inference.py --report /tmp/arena-c5-inference-maths.json
+          python3 scripts/content/verify-stats-chi2.py --report /tmp/arena-c5-chi2-maths.json
       - name: Check portable dependency aliases
         run: node --test tests/package-links.test.mjs
       - name: Check consent and public-only analytics

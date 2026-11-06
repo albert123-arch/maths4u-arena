@@ -392,3 +392,52 @@ packages and restore only this package to DRAFT. Use only the guarded loopback
 test runtime. Final local publication is separate; repeating the import skips
 115 tasks with zero writes. No new assets or database migrations are introduced.
 Production import and the remaining Statistics chapters are outside this work.
+
+## C5: Further Probability & Statistics — Chi-squared tests
+
+`9231-stats-chi2` 1.0.1 adds chapter `stats_chi2` to the existing Statistics
+course. Four lessons follow the mathematical order of book sections 10.1–10.4:
+specified discrete goodness of fit, fitted discrete models, continuous models,
+and contingency tables. Hypotheses and Pearson’s statistic precede fitting and
+pooling. Notes and 16 examples are independently authored; no book exercise,
+explanation or diagram is reproduced.
+
+All 35 owner tasks keep their 74 parts, 303 marks, keys, hints, solutions and
+criteria. Archive mappings remain administrator-only. Each lesson has six SHORT
+and two MC checks, with fresh variants and weak-skill review. Complete expected
+counts, contributions, parameter estimates and degrees of freedom are required.
+Written reasoning stays MANUAL paper self-study with indicative DRAFT guidance.
+There are only five supplied continuous-model tasks; this shortage is documented
+rather than duplicating a task to reach six.
+
+```powershell
+python scripts/content/prepare-stats-chi2.py --source 'E:\my folder\questions_data\original\Statistics 9231\03_Chi_squared_tests_9231_revised.json' --mapping docs/ARENA-C5-CHI2-SOURCE-AUDIT-20261106.json
+python scripts/content/verify-stats-chi2.py --source 'E:\my folder\questions_data\original\Statistics 9231\03_Chi_squared_tests_9231_revised.json'
+python scripts/content/verify-stats-chi2.py --report .local/c5-chi2-20261106/ci-math.json
+```
+
+The independent verifier reads the actual observed and expected HTML tables,
+recomputes binomial/Poisson probabilities, continuous integrals and normal tails,
+then checks pooled tables, Pearson contributions, df, critical values, p-values
+and displayed answers. It also checks the second classification in question 29,
+whole-column pooling, proportions and the independent-sample scaling threshold.
+Inverse-gamma critical values are cross-checked by direct chi-squared density
+integration. The CI mode needs no E: drive. Optional `--source` compares the
+original texts and criteria and verifies the SHA-256.
+
+The owner explicitly approved correcting question 18 from 80.612 to the exact
+midpoint estimate 80.6125 in its local answer and solution. Its source on E:,
+marks and criteria remain unchanged. The chapter also normalises question-part
+wrappers to the existing ol.parts layout with letters and right-hand marks,
+without changing the stems or individual prompts. The active manifest is
+chi2-v1.0.1.json; chi2-v1.json preserves the initially tested 1.0.0 manifest.
+The revision appends 67 immutable TaskVersions (the package version is recorded
+in each teacher note) without creating Tasks. All 67 earlier versions and their
+nested data and QA checks are retained. There is one receipt per version; a clean
+installation imports only the active 1.0.1. Repeat application writes nothing.
+
+The local lifecycle/browser mutation tests preserve all nine older published
+packages and restore only this one to DRAFT. Use the guarded loopback runtime.
+Final local publication is separate; repeating the import skips 67 tasks with
+zero writes. No assets, new dependencies or schema migrations are introduced.
+Production operations and the remaining Statistics chapters are not included.
