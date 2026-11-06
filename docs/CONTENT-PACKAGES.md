@@ -148,3 +148,35 @@ each test deliberately restores only its own tested chapter to DRAFT.
 The new Series tests preserve Roots and Rational's published states.
 Use unit tests, a read-only dry-run or the local public preview for review.
 No production import or deployment is authorised by these local commands.
+
+## C2: Matrices 1
+
+`9231-fp1-matrices1` reuses the package mechanism and exact-answer engine.
+Five lessons follow the mathematical sequence of book sections 4.1–4.4,
+with transformations split into plane maps and invariant sets / spatial maps.
+They contain 20 independently written examples and 40 complete quick checks.
+Matrices use a separate exact field for every entry; partial matrices do not
+count as a complete answer. Set fields require every parameter value, and
+line equations accept equivalent non-zero scalar multiples.
+
+The owner's 60 questions include 20 adaptations/replacements with archived
+source links and 40 new original questions with no examination source.
+The latter deliberately omit the optional source-link object: no archive ID
+is invented. The source audit records all 60 editorial identities.
+There are no images or new database migrations in this chapter.
+
+```powershell
+python scripts/content/prepare-fp1-matrices.py --source 'E:\my folder\questions_data\original\Pure1 9231\04_Matrices_1_9231_revised.json' --mapping docs/ARENA-C2-MATRICES-SOURCE-AUDIT-20261106.json
+python scripts/content/verify-fp1-matrices.py --report .local/c2-matrices-20261106/math.json
+```
+
+The verifier works without the E: drive in CI, using immutable content-bound
+fixtures. When `--owner` is supplied it additionally verifies the source SHA
+and directly compares every supplied answer, hint, solution, part and mark.
+REVIEWED entries identify analytic/geometric completeness arguments separately
+from exact symbolic PASS checks. Source inputs are never written to.
+
+All four FP1 packages are PUBLISHED locally. The Matrices lifecycle and browser
+publication tests preserve the three older packages, but intentionally restore
+Matrices to DRAFT. Do not run them against the owner's published preview
+unless that temporary state change is intended.
