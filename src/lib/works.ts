@@ -94,7 +94,7 @@ export async function practice(actor: Actor, taskId: string) {
 }
 export const attemptInclude = {
   study: { include: { lesson: { include: { topic: { include: { course: { select: { slug: true } } } } } } } },
-  workVersion: { include: { work: { include: contextInclude }, items: { orderBy: { position: "asc" }, include: { taskVersion: { include: versionInclude } } } } },
+  workVersion: { include: { work: { include: contextInclude }, items: { orderBy: { position: "asc" }, include: { taskVersion: { include: { ...versionInclude, task: { include: { versions: { select: { examBoard: true, source: { select: { name: true } } } } } } } } } } } },
   answers: { include: { review: true, files: { include: { file: { select: { id: true, originalName: true, size: true, mimeType: true, width: true, height: true, previewError: true, derivatives: { select: { kind: true } } } } } } } },
 } satisfies Prisma.AttemptInclude;
 export type FullAttempt = Prisma.AttemptGetPayload<{ include: typeof attemptInclude }>;

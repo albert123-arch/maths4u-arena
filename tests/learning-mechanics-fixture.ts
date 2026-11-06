@@ -1,3 +1,4 @@
+import {approveSyntheticTasks} from "./fixture-provenance";
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import { db } from "../src/lib/prisma";
@@ -34,6 +35,7 @@ export async function verifyLearningMechanics(admin: Actor) {
     tasks.push(v.taskId); await db().lessonTask.create({ data: { lessonId: lesson.id, taskId: v.taskId, position: n } });
   }
   const privateTask = await saveTask(admin, { visibility: "PRIVATE", texts: [{ locale: "en", title: "Private MC", statement: "Secret" }], parts: [choice] });
+  await approveSyntheticTasks([...tasks,privateTask.taskId]);
   await db().lessonTask.create({ data: { lessonId: lesson.id, taskId: privateTask.taskId, position: 5 } });
   const counts = (await courseCatalog(student, "en", course.slug))[0].chapters[0].topics[0].questionCounts;
   assert.deepEqual(counts, { MC: 1, SHORT: 2, WRITTEN: 2 }, "Mixed questions are written; private questions excluded");

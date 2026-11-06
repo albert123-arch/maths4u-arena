@@ -48,7 +48,7 @@ export const taskSchema = z.object({
 });
 export type TaskInput = z.infer<typeof taskSchema>;
 export const versionInclude = {
-  task: { include: { versions: { select: { examBoard: true, source: { select: { name: true } } } } } }, texts: true, source: true, assets: { include: { file: { select: { mimeType: true } } } },
+  task: true, texts: true, source: true, assets: { include: { file: { select: { mimeType: true } } } },
   parts: { orderBy: { position: "asc" }, include: { texts: true, acceptedAnswers: true, options: { orderBy: { position: "asc" }, include: { texts: true } } } },
 } satisfies Prisma.TaskVersionInclude;
 export type Version = Prisma.TaskVersionGetPayload<{ include: typeof versionInclude }>;

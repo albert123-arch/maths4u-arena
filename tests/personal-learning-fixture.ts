@@ -1,3 +1,4 @@
+import {approveSyntheticTasks} from "./fixture-provenance";
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import { db } from "../src/lib/prisma";
@@ -25,6 +26,7 @@ export async function verifyPersonalLearning(admin: Actor) {
   const lesson = await db().lesson.create({ data: { topicId: chapter.id, versions: { create: { number: 1, texts: { create: { locale: "en", title: "Self study", body: "Theory" } } } } } });
   const material = { visibility: "PUBLIC", texts: [{ locale: "en", title: "Written personal question", statement: "Explain", solution: "Worked steps", markScheme: "Independent MS" }], parts: [{ kind: "MANUAL", maxPoints: 5, texts: [{ locale: "en", prompt: "Explain your steps", answer: "Answer" }] }] };
   const task = await saveTask(admin, material), privateTask = await saveTask(admin, { ...material, visibility: "PRIVATE" });
+  await approveSyntheticTasks([task.taskId,privateTask.taskId]);
   await db().lessonTask.create({ data: { lessonId: lesson.id, taskId: task.taskId, position: 0 } });
   await Promise.all([bookmarkTask(student, task.taskId, { selected: true }), bookmarkTask(student, task.taskId, { selected: true })]);
   assert.equal(await db().taskBookmark.count({ where: { userId: student.id, taskId: task.taskId } }), 1);
@@ -45,8 +47,14 @@ export async function verifyPersonalLearning(admin: Actor) {
   assert.equal((await courseCatalog(other, "en", course.slug))[0].followed, false);
   const feature = await db().feature.create({ data: { key: "personal_locked_" + suffix, title: "Restricted" } });
   const locked = await db().course.create({ data: { slug: "locked-" + suffix, published: true, featureKey: feature.key, texts: { create: { locale: "en", title: "Locked course", description: "" } } } });
+  await assert.rejects(followCourse(student,locked.id,{selected:true}),/NOT_FOUND/,"Empty courses are hidden even when they carry a paid feature");
+  const lockedChapter=await db().topic.create({data:{courseId:locked.id,slug:"locked-chapter",texts:{create:{locale:"en",title:"Locked chapter"}}}});
+  const lockedLesson=await db().lesson.create({data:{topicId:lockedChapter.id,versions:{create:{number:1,texts:{create:{locale:"en",title:"Locked lesson",body:"Theory"}}}}}});
+  const lockedTask=await saveTask(admin,{...material,featureKey:feature.key});await approveSyntheticTasks([lockedTask.taskId]);
+  await db().lessonTask.create({data:{lessonId:lockedLesson.id,taskId:lockedTask.taskId,position:0}});
   await followCourse(student, locked.id, { selected: true });
-  assert.equal((await courseCatalog(student, "en", locked.slug))[0].locked, true, "Following never grants paid access");
+  try {assert.equal((await courseCatalog(student,"en",locked.slug))[0].locked,true,"Following never grants paid access");}catch(e){assert.equal((e as {code?:string}).code,"NOT_FOUND","A course with no entitled visible questions may stay hidden");}
+  await assert.rejects(catalog(student,"en",{course:locked.id}),/SUBSCRIPTION_REQUIRED|NOT_FOUND/);
   assert.equal(await db().subscription.count({ where: { userId: student.id } }), 0);
   await followCourse(student, course.id, { selected: false });
   assert.equal((await courseCatalog(student, "en", course.slug))[0].followed, false);

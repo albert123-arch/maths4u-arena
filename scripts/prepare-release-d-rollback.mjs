@@ -16,6 +16,9 @@ try{git(['show-ref','--verify',branch]);throw Error('ROLLBACK_BRANCH_ALREADY_EXI
 isolated(['read-tree',h1]);
 function overlay(file,text){const blob=git(['hash-object','-w','--stdin'],{input:text});isolated(['update-index','--add','--cacheinfo','100644,'+blob+','+file]);}
 for(const file of git(['ls-tree','-r','--name-only',parent,'--','prisma']).split('\n'))overlay(file,git(['show',parent+':'+file])+'\n');
+// The historical CI fixtures must explicitly approve their own synthetic data.
+// Copy only these small tests/helpers, never a database or a second application.
+for(const file of ['tests/fixture-provenance.ts','tests/pilot-migration.test.ts','tests/bank-fixture.ts','tests/presentations-fixture.ts','tests/assessment-sources-fixture.ts','tests/student-progress-fixture.ts','tests/learning-mechanics-fixture.ts','tests/personal-learning-fixture.ts','src/lib/content-revisions.ts','src/lib/content-text-cleanup.ts'])overlay(file,execFileSync('git',['show',parent+':'+file],{encoding:'utf8'}));
 let access=git(['show',h1+':src/lib/cambridge-access.ts'])+'\n';
 access=access.replace('export const cambridgeScope', 'export const restrictedTask: Prisma.TaskWhereInput = { OR: [cambridgeTask, {examArchivedAt:{not:null}}, {origin:"UNKNOWN"}, {origin:{not:"ORIGINAL"},originManual:false}] };\nexport const cambridgeScope')
  .replaceAll('{ NOT: cambridgeTask }','{ examArchivedAt:null, origin:{not:"UNKNOWN"}, AND:[{OR:[{origin:"ORIGINAL"},{originManual:true}]}], NOT:cambridgeTask }')

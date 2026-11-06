@@ -1,3 +1,4 @@
+import {versionContent} from "../src/lib/content-revisions";
 import assert from 'node:assert/strict';
 import {db} from '../src/lib/prisma';
 import {digest,type Actor} from '../src/lib/security';
@@ -26,13 +27,13 @@ export async function verifyBankFixture(admin:Actor,student:Actor){
   await applyBankTasks(admin,{...first,fingerprint:plan.fingerprint});await assert.rejects(applyBankTasks(admin,{...first,fingerprint:plan.fingerprint}),/BANK_STALE_DRY_RUN/);
   const p=await db().importRecord.findUniqueOrThrow({where:{sourceProject_legacyId:{sourceProject:'maths4u',legacyId:'problems:9000'}}}),q=await db().importRecord.findUniqueOrThrow({where:{sourceProject_legacyId:{sourceProject:'maths4u',legacyId:'questions:9000'}}});assert.notEqual(p.taskId,q.taskId);
   assert.equal((await db().task.findUniqueOrThrow({where:{id:q.taskId}})).visibility,'PRIVATE');
-  const old=await db().taskVersion.findFirstOrThrow({where:{taskId:p.taskId},include:versionInclude});const hash=digest(JSON.stringify(old));assert.equal(publicVersion(old,'en').markSchemeText,undefined);assert.equal(publicVersion(old,'en',true).markSchemeStatus,undefined);assert.equal(publicVersion(old,'en',true,undefined,undefined,true).markSchemeStatus,'OCR_UNVERIFIED');
+  const old=await db().taskVersion.findFirstOrThrow({where:{taskId:p.taskId},include:versionInclude});const hash=digest(JSON.stringify(versionContent(old)));assert.equal(publicVersion(old,'en').markSchemeText,undefined);assert.equal(publicVersion(old,'en',true).markSchemeStatus,undefined);assert.equal(publicVersion(old,'en',true,undefined,undefined,true).markSchemeStatus,'OCR_UNVERIFIED');
   const repeat=await checkBankTasks(admin,first);assert.equal(repeat.skipped,2);await applyBankTasks(admin,{...first,fingerprint:repeat.fingerprint});assert.equal(await db().taskVersion.count({where:{taskId:p.taskId}}),1);
   await db().feature.create({data:{key:'kept-feature',title:'Preserved feature'}});
   await db().task.update({where:{id:p.taskId},data:{visibility:'PRIVATE',featureKey:'kept-feature'}});await db().course.update({where:{id:pilotId('course','maths4u','0606')},data:{published:false}});
   rows[0].material.texts[0].title='Changed source';const second=await setup(),changed=await checkBankTasks(admin,second);assert.equal(changed.updated,1);await applyBankTasks(admin,{...second,fingerprint:changed.fingerprint});await applyBankStructure(admin,{runId:second.runId,key:'structure-0001'});
   const task=await db().task.findUniqueOrThrow({where:{id:p.taskId}});assert.equal(task.visibility,'PRIVATE');assert.equal(task.featureKey,'kept-feature');assert.equal((await db().course.findUniqueOrThrow({where:{id:pilotId('course','maths4u','0606')}})).published,false);
-  assert.equal(await db().taskVersion.count({where:{taskId:p.taskId}}),2);assert.equal(digest(JSON.stringify(await db().taskVersion.findUniqueOrThrow({where:{id:old.id},include:versionInclude}))),hash);
+  assert.equal(await db().taskVersion.count({where:{taskId:p.taskId}}),2);assert.equal(digest(JSON.stringify(versionContent(await db().taskVersion.findUniqueOrThrow({where:{id:old.id},include:versionInclude})))),hash);
   const v=await db().taskVersion.findFirstOrThrow({where:{taskId:p.taskId},orderBy:{number:'desc'},include:versionInclude});const edit={...editableVersion(v),visibility:task.visibility,featureKey:task.featureKey};edit.texts[0].markSchemeText='Teacher correction';edit.texts[0].markSchemeStatus='VERIFIED';await saveTask(admin,edit,p.taskId);
   const unchanged=await checkBankTasks(admin,second);assert.equal(unchanged.skipped,2);await applyBankTasks(admin,{...second,fingerprint:unchanged.fingerprint});assert.equal(await db().taskVersion.count({where:{taskId:p.taskId}}),3);
 }

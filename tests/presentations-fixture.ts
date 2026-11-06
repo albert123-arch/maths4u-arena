@@ -1,3 +1,5 @@
+import {saveTask} from "../src/lib/content";
+import {approveSyntheticTasks} from "./fixture-provenance";
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -29,6 +31,9 @@ export async function verifyPresentations(admin: Actor, student: Actor) {
     } },
   }, include: { topics: { include: { lessons: true } } } });
   const lessonId = course.topics[0].lessons[0].id;
+  const q=await saveTask(admin,{visibility:"PUBLIC",texts:[{locale:"en",title:"Synthetic board practice",statement:"Find 1+1."}],parts:[{kind:"NUMERIC",maxPoints:1,numericAnswer:2,texts:[{locale:"en",prompt:""}]}]});
+  await approveSyntheticTasks([q.taskId]);
+  await db().lessonTask.create({data:{lessonId,taskId:q.taskId,position:0}});
   const create = { action: "save", title: "Quadratics · lesson 1", url: "https://docs.google.com/presentation/d/board_fixture_1/edit?usp=sharing" };
   await assert.rejects(changePresentation(student, lessonId, create), /FORBIDDEN/);
   await assert.rejects(lessonPresentations(student, lessonId, "en"), /FORBIDDEN/);

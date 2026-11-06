@@ -1,3 +1,4 @@
+import {approveSyntheticTasks} from "./fixture-provenance";
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import sharp from "sharp";
@@ -19,12 +20,13 @@ export async function verifyAssessmentSources(admin: Actor, student: Actor) {
   const pixels = await sharp({ create: { width: 2, height: 2, channels: 3, background: "white" } }).png().toBuffer();
   const inline = await upload(teacher, new File([new Uint8Array(pixels)], marker + ".png", { type: "image/png" }));
   const attachment = await upload(teacher, new File([new Uint8Array(pixels)], marker + "-extra.png", { type: "image/png" }));
-  const task = await saveTask(admin, { visibility: "PUBLIC", source: marker, syllabus: "0606", examBoard: "Cambridge", year: 2024, examSession: "June", paper: "11", questionNumber: "7",
+  const task = await saveTask(admin, { visibility: "PUBLIC", source: marker, syllabus: "0606", examBoard: "Synthetic assessment board", year: 2024, examSession: "June", paper: "11", questionNumber: "7",
     sourceReference: marker, sourceUid: marker, component: "11", seriesCode: "s24", qualification: marker,
     texts: [{ locale: "en", title, statement: `<p>Find \\(x+2024\\).</p><img src="/api/files/${inline.id}" alt="${marker}">`, solution: "WITHHELD_SOLUTION" }],
     parts: [{ kind: "MANUAL", maxPoints: 4, texts: [{ locale: "en", prompt: `<p>Explain.</p><img src="/api/files/${inline.id}" alt="${marker}">`, answer: "WITHHELD_ANSWER", rubric: "WITHHELD_CRITERIA" }] }],
     assets: [{ fileId: inline.id, role: "STATEMENT", caption: marker }, { fileId: attachment.id, role: "STATEMENT", caption: marker }],
   });
+  await approveSyntheticTasks([task.taskId]);
   const token = randomBytes(32).toString("hex");
   await db().session.create({ data: { userId: student.id, tokenHash: digest(token), expiresAt: new Date(Date.now() + 3600000) } });
   async function request(route: string, body?: unknown, authenticated = true) {

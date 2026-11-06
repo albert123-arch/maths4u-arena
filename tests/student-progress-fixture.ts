@@ -1,3 +1,4 @@
+import {approveSyntheticTasks} from "./fixture-provenance";
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -33,6 +34,7 @@ export async function verifyStudentProgress(admin: Actor) {
   const solutionFile = await upload(admin, new File([new Uint8Array(pixels)], "solution.png", { type: "image/png" }));
   const task = await saveTask(admin, { visibility: "PUBLIC", texts: [{ locale: "en", title: "Independent quadratic exercise", statement: "<p>Solve \\(x^2-5x+6=0\\).</p>", hint: "Factor the expression.", solution: "The roots are 2 and 3.", markScheme: "One mark for factorisation." }],
     parts: [{ kind: "MANUAL", maxPoints: 5, texts: [{ locale: "en", prompt: "Explain your reasoning.", answer: "2 and 3", rubric: "Show the steps." }] }], assets: [{ fileId: solutionFile.id, role: "SOLUTION", caption: "Worked solution" }] });
+  await approveSyntheticTasks([task.taskId]);
   await db().lessonTask.create({ data: { lessonId: lesson.id, taskId: task.taskId, position: 0 } });
   await db().learningProgress.create({ data: { userId: student.id, lessonId: lesson.id, completed: true } });
   // Historical records emulate work submitted before self-directed practice existed.

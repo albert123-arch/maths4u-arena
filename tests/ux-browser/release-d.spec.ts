@@ -38,7 +38,11 @@ test('Release D: all guest pages, roles, scans, history, real 404 and default qu
  for(const path of ['/courses','/library','/search','/courses/olymp-number-theory2','/courses/maths4u-9709-p1'])expect((await guest.get(path)).status()).toBe(200);
  const sitemap=await(await guest.get('/sitemap.xml')).text();expect(sitemap).toContain('/courses/maths4u-9709-p1');expect(sitemap).not.toContain('maths4u-0606');expect((await guest.get('/robots.txt')).status()).toBe(200);
  const html=await(await guest.get('/courses/maths4u-9709-p1')).text();expect(html).not.toMatch(/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/i);expect(html).toContain('rel="canonical" href="https://arena.maths4u.sbs/courses/maths4u-9709-p1"');
- await fs.writeFile(root+'/access.json',JSON.stringify({guestVisible:ids.size,pages,sources,examTitles,cambridgeHidden:2654,adminVisible:3342,historyPreserved:true,hiddenPagesReal404:true,lensDenied:true,productionIndex:true},null,2));
+ const cookieHtml=await(await guest.get('/courses/maths4u-9709-p1',{headers:{Cookie:'maths4u_locale=ru; maths4u_theme=dark'}})).text();expect(cookieHtml).toContain('<html lang="en"');expect(cookieHtml).not.toMatch(/<html[^>]+data-theme=/);expect(cookieHtml).not.toContain('href="https://arena.maths4u.sbs/ru/courses/maths4u-9709-p1"');
+ const cs=await(await guest.get('/api/catalog/courses?slug=olymp-number-theory2')).json(),bookTopic=cs[0].chapters[0].topics[0].id;
+ for(const path of ['/learn/olympiad','/courses/olymp-number-theory2','/courses/olymp-number-theory2/topics/'+bookTopic]){const en=await guest.get(path),ru=await guest.get('/ru'+path);expect(en.status()).toBe(200);expect(ru.status()).toBe(200);expect(await en.text()).toMatch(/hreflang="ru"/i);expect(await ru.text()).toContain('<html lang="ru"');}
+ expect((await guest.get('/ru/courses/maths4u-9709-p1')).status()).toBe(404);
+ await fs.writeFile(root+'/access.json',JSON.stringify({guestVisible:ids.size,pages,sources,examTitles,cambridgeHidden:2654,adminVisible:3342,historyPreserved:true,hiddenPagesReal404:true,lensDenied:true,productionIndex:true,englishCookieIndependent:true,russianPairs:3},null,2));
  }finally{await Promise.all([guest.dispose(),student.dispose(),teacher.dispose(),admin.dispose()]);}
 });
 

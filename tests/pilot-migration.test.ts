@@ -1,3 +1,4 @@
+import {approveSyntheticTasks} from "./fixture-provenance";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mkdir, readFile, cp, writeFile, readdir } from "node:fs/promises";
@@ -111,6 +112,8 @@ test("populated migration and publication preserve existing accounts, tasks, att
     const current = await snapshot();
     for (const [table, hashes] of Object.entries(before)) for (const hash of hashes) assert.ok(current[table].includes(hash), `Existing ${table} row must survive publication`);
     assert.equal(await client.olympiad.count(), 0);
+    await assert.rejects(courses(student,"en","olymp-ci"),/NOT_FOUND/);
+    await approveSyntheticTasks(published.sections[0].taskIds);
     assert.equal((await courses(student, "en", "olymp-ci"))[0].topics[0].lessons[0].tasks?.[0].position, 3);
     const imported = await client.taskVersion.findFirstOrThrow({ where: { taskId: published.sections[0].taskIds[0] }, include: versionInclude });
     assert.equal("solution" in publicVersion(imported, "en", false), false);
