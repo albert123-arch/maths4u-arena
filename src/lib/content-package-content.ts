@@ -5,11 +5,12 @@ import summation from "../../content/original/9231-fp1/summation-v1.json";
 import vectors from "../../content/original/9231-fp1/vectors-v1.json";
 import induction from "../../content/original/9231-fp1/induction-v1.json";
 import statsCrv from "../../content/original/9231-statistics/crv-v1.json";
+import statsInference from "../../content/original/9231-statistics/inference-v1.json";
 import polar from "../../content/original/9231-fp1/polar-v1.json";
 import matrices1 from "../../content/original/9231-fp1/matrices1-v1.json";
 import { contentPackageSchema, type ContentPackage } from "./content-package-schema";
 import type { QuadraticTopic } from "./square-model";
-export const contentPackages: ContentPackage[] = [contentPackageSchema.parse(roots),contentPackageSchema.parse(rational),contentPackageSchema.parse(summation),contentPackageSchema.parse(matrices1),contentPackageSchema.parse(polar),contentPackageSchema.parse(vectors),contentPackageSchema.parse(induction),contentPackageSchema.parse(statsCrv)];
+export const contentPackages: ContentPackage[] = [contentPackageSchema.parse(roots),contentPackageSchema.parse(rational),contentPackageSchema.parse(summation),contentPackageSchema.parse(matrices1),contentPackageSchema.parse(polar),contentPackageSchema.parse(vectors),contentPackageSchema.parse(induction),contentPackageSchema.parse(statsCrv),contentPackageSchema.parse(statsInference)];
 export function contentPackage(key:string) {
   const p=contentPackages.find(p=>p.key===key);if(!p)throw Error("UNKNOWN_CONTENT_PACKAGE");return p;
 }

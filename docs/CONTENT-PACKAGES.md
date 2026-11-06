@@ -355,3 +355,40 @@ and deliberately restore only Statistics to DRAFT. Run those mutations solely on
 the guarded loopback test database. Final local publication is a separate action
 after tests; repeat skips 78 questions with zero writes. Production import,
 deployment and subsequent Statistics chapters are not included.
+
+## C5: Further Probability & Statistics — Inferential statistics
+
+`9231-stats-inference` 1.0.0 adds chapter `stats_inference` to the same course.
+Six lessons follow the mathematical order of book sections 9.1–9.5: one-sample
+t, independent normal comparisons, pooled variance and two-sample t, paired t,
+one-mean intervals and reverse calculations, then mean-difference intervals.
+Notes and 24 examples are independently authored; no book exercise or diagram
+is reproduced. All 67 owner tasks retain their 120 parts, 555 marks, keys,
+solutions and criteria. All archive mappings remain administrator-only.
+
+There are 48 complete short checks, six SHORT and two MC per lesson. They use
+exact fractions/surds and explicitly stipulated critical values where relevant,
+so deterministic checking does not silently accept an arbitrary tolerance.
+Every requested statistic, degree of freedom, recovered summary and interval
+endpoint must be present. Written inference and reasoning stay MANUAL paper
+self-study with indicative DRAFT guidance, separate from automatic scores.
+New example display chains are split into gathered rows for mobile reading.
+
+```powershell
+python scripts/content/prepare-stats-inference.py --source 'E:\my folder\questions_data\original\Statistics 9231\02_Inferential_statistics_9231_revised.json' --mapping docs/ARENA-C5-INFERENCE-SOURCE-AUDIT-20261106.json
+python scripts/content/verify-stats-inference.py --source 'E:\my folder\questions_data\original\Statistics 9231\02_Inferential_statistics_9231_revised.json'
+python scripts/content/verify-stats-inference.py --report .local/c5-inference-20261106/ci-math.json
+```
+
+The independent verifier uses exact sample arithmetic, high-precision normal
+and Student t probabilities and inverse CDFs, plus direct density integration
+as a second quantile check. It binds the displayed source data, statistics and
+interval limits, full quick keys and content hashes. The CI mode needs no E:
+drive. Optional `--source` also compares the immutable owner texts and criteria
+and rechecks its SHA-256. No owner key or mark was corrected.
+
+The local lifecycle/browser mutation tests preserve the eight older published
+packages and restore only this package to DRAFT. Use only the guarded loopback
+test runtime. Final local publication is separate; repeating the import skips
+115 tasks with zero writes. No new assets or database migrations are introduced.
+Production import and the remaining Statistics chapters are outside this work.
