@@ -22,7 +22,7 @@ test('components: public pages and dashboards in both themes, four widths',async
     const page=await context.newPage(),errors:string[]=[],httpErrors:string[]=[],cancelledRequests:{path:string;error:string|undefined;rsc:boolean}[]=[];page.on('pageerror',e=>errors.push(e.message));
     page.on('response',r=>{if(r.status()>=500)httpErrors.push(new URL(r.url()).pathname+':'+r.status());});
     page.on('requestfailed',r=>{const u=new URL(r.url());cancelledRequests.push({path:u.pathname,error:r.failure()?.errorText,rsc:u.searchParams.has('_rsc')});});
-    const routes=role==='guest'?[['home','/'],['courses','/courses'],['library','/library'],['square',lesson],['pure1','/courses/maths4u-9709-p1'],['additional','/courses/maths4u-0606']]:[[role,'/'+role]];
+    const routes=role==='guest'?[['home','/'],['courses','/courses'],['library','/library'],['square',lesson],['pure1','/courses/maths4u-9709-p1'],['olympiad','/courses/olymp-number-theory2']]:[[role,'/'+role]];
     for(const theme of ['light','dark'] as const){await page.emulateMedia({colorScheme:theme});
       for(const width of [390,1280,360,768]){await page.setViewportSize({width,height:width<800?844:900});
         for(const[name,url]of routes){await ready(page,url);

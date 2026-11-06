@@ -11,6 +11,7 @@ import { parseDocument } from "htmlparser2";
 import { findAll, textContent } from "domutils";
 import { isPure1ShortUid } from "./pure1-practice-number";
 import { displayMarkup, displaySource, displayTitle } from "./public-presentation";
+import { archiveWhere, hiddenMaterial } from "./content-access";
 
 const locale = z.enum(["ru", "en"]);
 const text = z.string().max(100000);
@@ -45,7 +46,7 @@ export const taskSchema = z.object({
 });
 export type TaskInput = z.infer<typeof taskSchema>;
 export const versionInclude = {
-  texts: true, source: true, assets: { include: { file: { select: { mimeType: true } } } },
+  task: true, texts: true, source: true, assets: { include: { file: { select: { mimeType: true } } } },
   parts: { orderBy: { position: "asc" }, include: { texts: true, acceptedAnswers: true, options: { orderBy: { position: "asc" }, include: { texts: true } } } },
 } satisfies Prisma.TaskVersionInclude;
 export type Version = Prisma.TaskVersionGetPayload<{ include: typeof versionInclude }>;
@@ -93,7 +94,7 @@ export function publicVersion(v: Version, lang: string, solutions = false, revea
   const whole = (html:string|null) => {let result=protectMathHtml(html??"");const doc=parseDocument(result,{withStartIndices:true,withEndIndices:true});
     for(const n of findAll(n=>n.name==="img"&&v.assets.some(a=>a.partPosition!=null&&n.attribs.src==="/api/files/"+a.fileId),doc.children).reverse())result=result.slice(0,n.startIndex!)+result.slice(n.endIndex!+1);return result;};
   const visibleHtml = [t.statement, ...(show("answer") ? [whole(t.answer)] : []), ...(show("hint") ? [t.hint] : []), ...(show("solution") ? [whole(t.solution)] : []), ...(show("markScheme") ? [whole(t.markScheme)] : [])].join("\n");
-  return { id: v.id, title: anonymousTitle ?? displayTitle(t.title), locale: t.locale, statement: displayMarkup(render(t.statement)),
+  return { id: v.id, unavailable: false, title: anonymousTitle ?? displayTitle(t.title), locale: t.locale, statement: displayMarkup(render(t.statement)),
     ...(show("hint") ? { hint: render(t.hint) } : {}), ...(show("solution") ? { solution: render(whole(t.solution)) } : {}),
     ...(show("answer") ? {answer:render(whole(t.answer))} : {}),
     ...(show("markScheme") ? { markScheme: render(whole(t.markScheme)), markSchemeSource: anonymousTitle === undefined ? t.markSchemeSource : undefined, markSchemeText: render(t.markSchemeText ?? ""), markSchemeStatus:internalEditorial ? t.markSchemeStatus : undefined } : {}),
@@ -119,7 +120,7 @@ export async function createTaskVersion(tx: Prisma.TransactionClient, actor: Act
   if (taskId) {
     await tx.$queryRaw`SELECT id FROM Task WHERE id = ${taskId} FOR UPDATE`;
     const task = await tx.task.findUnique({ where: { id: taskId } });
-    ensure(task && (task.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
+    ensure(task && !hiddenMaterial(actor, task) && (task.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
   }
   for (const asset of data.assets) {
     const file = await tx.storedFile.findUnique({ where: { id: asset.fileId } });
@@ -151,7 +152,7 @@ export async function saveTask(actor: Actor, input: unknown, taskId?: string) {
   return transaction(async tx => { await lockUser(tx, actor.id); return createTaskVersion(tx, actor, data, taskId); });
 }
 export async function library(actor: Actor | null, lang: string, query = "") {
-  const rows = await db().task.findMany({ where: { archivedAt: null,
+  const rows = await db().task.findMany({ where: { archivedAt: null, ...archiveWhere(actor),
     OR: [{ visibility: "PUBLIC" }, ...(actor && isTeacher(actor) ? [{ ownerId: actor.id }, ...(isAdmin(actor) ? [{}] : [])] : [])],
     versions: query ? { some: { texts: { some: { title: { contains: query } } } } } : undefined,
   }, take: 100, orderBy: { createdAt: "desc" }, include: { versions: { orderBy: { number: "desc" }, take: 1, include: versionInclude }, topics: { include: { topic: { include: { texts: true } } } } } });
@@ -175,7 +176,7 @@ export function editableVersion(v: Version) {
 export async function editorTask(actor: Actor, id: string) {
   teacher(actor);
   const t = await db().task.findUnique({ where: { id }, include: { topics: true, versions: { take: 1, orderBy: { number: "desc" }, include: versionInclude } } });
-  ensure(t && (t.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
+  ensure(t && !hiddenMaterial(actor, t) && (t.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
   return t;
 }
 

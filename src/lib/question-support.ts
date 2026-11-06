@@ -24,7 +24,7 @@ export async function catalogSupport(actor: Actor | null, id: string, input: unk
   const existing = actor ? await db().practiceStudy.findFirst({ where: { taskId: id, attempt: { userId: actor.id, ...(data.access === "attempt" ? { status: { not: "IN_PROGRESS" as const } } : {}), workVersion: { items: { some: { taskVersionId: v.id } } } } }, orderBy: { updatedAt: "desc" }, select: { attemptId: true } }) : null;
   if (data.kind !== "hint" && data.access === "attempt" && !rolePreview()) ensure(existing, 403, "CHECK_ANSWER_FIRST");
   ensure(data.access !== "paper" || manual, 400, "INVALID_INPUT");
-  if (actor && !rolePreview()) {
+  if (actor && !rolePreview() && !v.task.examArchivedAt) {
     const study = existing ? { id: existing.attemptId } : await beginStudy(actor, { taskId: id, lessonId: data.lessonId }, lang);
     if (data.kind !== "guidance" || data.access !== "paper") {
       const kind = data.kind === "guidance" ? "markScheme" : data.kind;
@@ -61,7 +61,7 @@ export async function catalogSupport(actor: Actor | null, id: string, input: unk
 export async function saveSelfMarks(actor: Actor | null, id: string, input: unknown, lang: string) {
   ensure(actor, 401, "LOGIN_REQUIRED");
   const data = z.object({ points: z.number().int().min(0), lessonId: z.string().optional() }).strict().parse(input);
-  const v = await readable(actor, id);ensure(v.parts.some(p => p.kind === "MANUAL"), 400, "INVALID_INPUT");
+  const v = await readable(actor, id);ensure(!v.task.examArchivedAt,410,"MATERIAL_UNAVAILABLE");ensure(v.parts.some(p => p.kind === "MANUAL"), 400, "INVALID_INPUT");
   ensure(data.points <= v.parts.reduce((n, p) => n + p.maxPoints, 0), 400, "INVALID_POINTS");
   const study = await beginStudy(actor, { taskId: id, lessonId: data.lessonId }, lang);
   // A self-awarded total never becomes an independent-check or teacher grade.

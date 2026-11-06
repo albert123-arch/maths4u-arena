@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 import fs from 'node:fs/promises';
-const root='test-results/stage4b-20261105',path='/courses/maths4u-9709-p1/topics/orig_quadratics_completing_square',version='2026-11-05.1',uid='M4U-9709-Q26-E-CS01';
+const root=process.env.UX_REPORT_ROOT ? process.env.UX_REPORT_ROOT+'/stage4b' : 'test-results/stage4b-20261105',path='/courses/maths4u-9709-p1/topics/orig_quadratics_completing_square',version='2026-11-05.1',uid='M4U-9709-Q26-E-CS01';
 test.setTimeout(180000);
 test('stage4b: server gate, independent panels and paper self marks survive reload',async({page,request})=>{
   await fs.mkdir(root+'/after',{recursive:true});
@@ -23,12 +23,13 @@ test('stage4b: server gate, independent panels and paper self marks survive relo
   await q.getByRole('button',{name:'Worked solution',exact:true}).click();await expect(q.locator('.support-solution')).toContainText('(a)');expect(await q.locator('.support-solution').innerText()).not.toMatch(/marking guidance|mark scheme|Cambridge/i);expect((await page.evaluate(()=>JSON.parse(localStorage.getItem('maths4u.square.draft.guest.2026-11-05.1.M4U-9709-Q26-E-CS01')!))).helpUsed).toBe(true);
   await q.getByRole('button',{name:'Hint',exact:true}).click();await expect(q.locator('.support-hint')).toBeVisible();await fs.writeFile(root+'/guidance-responsive.json',JSON.stringify(matrix,null,2));
 });
-test('stage4b: catalogue retains legacy guidance without inventing a table',async({page,request})=>{
-  const courses=await(await request.get('/api/catalog/courses?lang=en')).json(),course=courses.find((c:{slug:string})=>c.slug==='maths4u-0606'),lesson=course.chapters[0].topics[0];
-  await page.setViewportSize({width:390,height:844});await page.goto('/courses/'+course.slug+'/topics/'+lesson.id+'?mode=WRITTEN');const q=page.locator('.catalog-task').first();await expect(q.getByRole('button',{name:'Hint',exact:true})).toBeEnabled();await expect(q.getByRole('button',{name:'Marking guidance',exact:true})).toBeDisabled();
-  const response=await request.get('/api/catalog?lang=en&mode=WRITTEN&topic='+lesson.id),data=await response.json(),id=data.items[0].id;
-  const denied=await request.post('/api/catalog/tasks/'+id+'/support',{headers:{Origin:'http://127.0.0.1:3102'},data:{kind:'guidance'}});expect(denied.status()).toBe(403);
-  const forged=await request.post('/api/catalog/tasks/'+id+'/support',{headers:{Origin:'http://127.0.0.1:3102'},data:{kind:'guidance',access:'attempt'}});expect(forged.status()).toBe(403);
-  await q.getByRole('button',{name:'I’ve finished on paper',exact:true}).click();await q.getByRole('button',{name:'Marking guidance',exact:true}).click();await expect(q.locator('.support-guidance')).toBeVisible();await expect(q.locator('.marking-table')).toHaveCount(0);await q.getByLabel('Your marks',{exact:true}).selectOption('1');await expect(q.locator('.support-saved')).toContainText('1 /');await page.reload();await expect(q.locator('.support-saved')).toContainText('1 /');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await q.getByRole('button',{name:'Marking guidance',exact:true}).click();await expect(q.locator('.support-guidance')).toBeVisible();const image=q.locator('.support-guidance img');await expect(image).toHaveCount(1);await expect.poll(()=>image.evaluate((e:HTMLImageElement)=>e.complete&&e.naturalWidth>0)).toBe(true);const src=await image.getAttribute('src');expect((await request.get(src!)).status()).toBe(200);const bad=new URL(src!,'http://127.0.0.1:3102');bad.searchParams.set('support',bad.searchParams.get('support')+'x');expect((await request.get(bad.pathname+bad.search)).status()).toBe(404);await q.locator('.support-guidance').screenshot({path:root+'/after/legacy-guidance-390.png'});
+test('stage4b: legacy guidance stays available to administrators without inventing a table',async({browser,request})=>{
+  const ctx=await browser.newContext({baseURL:'http://127.0.0.1:3102',storageState:'.local/components-20261105/admin-session.json'}),page=await ctx.newPage();
+  try{
+    await page.setViewportSize({width:390,height:844});await page.goto('/admin/archive');const q=page.locator('.archive-task').first();
+    await expect(q.getByRole('button',{name:'Hint',exact:true})).toBeEnabled();await expect(q.getByRole('button',{name:'Marking guidance',exact:true})).toBeDisabled();
+    await q.getByRole('button',{name:'I’ve finished on paper',exact:true}).click();await q.getByRole('button',{name:'Marking guidance',exact:true}).click();await expect(q.locator('.support-guidance')).toBeVisible();await expect(q.locator('.marking-table')).toHaveCount(0);
+    const image=q.locator('.support-guidance img').first();await expect(image).toBeVisible();await expect.poll(()=>image.evaluate((e:HTMLImageElement)=>e.complete&&e.naturalWidth>0)).toBe(true);const src=await image.getAttribute('src');expect((await ctx.request.get(src!)).status()).toBe(200);expect((await request.get(src!)).status()).toBe(404);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    await q.locator('.support-guidance').screenshot({path:root+'/after/legacy-admin-guidance-390.png'});
+  }finally{await page.close();await ctx.close();}
 });

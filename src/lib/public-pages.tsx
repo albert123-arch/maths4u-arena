@@ -7,7 +7,9 @@ import { publicDiscovery } from "./discovery";
 import { learningDirections, type DiscoveryData } from "./discovery-model";
 import { quadraticTopics } from "./square-model";
 import { squarePublicLesson } from "./square-content";
-import { squareMappings } from "./square-learning";
+import { AppError } from "./errors";
+import { assertLessonVisible } from "./content-access";
+import { visibleSquareMappings } from "./square-learning";
 import { publicLanguages } from "./public-language";
 import { hasRussianPage, isPublicLearningPath } from "./public-presentation";
 import { publicCourses, publicQuestions, publicTopic } from "./public-page-data";
@@ -37,7 +39,7 @@ export async function pageMetadata({ params }: PageProps, locale: Locale): Promi
   const description = topic?.summary ?? (direction ? locale === "ru" ? direction.descriptionRu : direction.description : locale === "ru" ? "Конспекты, задачи и решения по теме «" + title + "» на Maths4U." : "Explore " + title + " and its available practice questions on Maths4U.");
   return { title: title + " | Maths4U", description, alternates, ...(path === "/search" || process.env.MATHS4U_ENV !== "production" ? { robots: { index: false, follow: true } } : {}), openGraph: { title, description, url: canonical, siteName: "Maths4U", type: "website" } };
 }
-export async function renderPage({ params, searchParams }: PageProps, locale: Locale) {
+async function renderAllowedPage({ params, searchParams }: PageProps, locale: Locale) {
   const parts = (await params).page ?? [], path = "/" + parts.join("/"), publicPage = isPublicLearningPath(path);
   if (!publicPage) { if (locale === "ru") notFound(); return <Platform />; }
   await connection();
@@ -46,7 +48,7 @@ export async function renderPage({ params, searchParams }: PageProps, locale: Lo
   const pair = translated ? { en: path, ru: "/ru" + path } : undefined;
   const raw = await searchParams, search = Object.fromEntries(Object.entries(raw).filter((e): e is [string, string] => typeof e[1] === "string"));
   const topic = quadraticTopics.find(t => t.path === path), oldPractice = !!search.reviewTask || ["MC", "SHORT", "WRITTEN", "NOTES"].includes(search.mode);
-  if (topic && search.view !== "legacy" && !oldPractice) { await squareMappings(topic.key); return <Platform square={squarePublicLesson(topic)} languagePair={pair} />; }
+  if (topic && search.view !== "legacy" && !oldPractice) { await assertLessonVisible(null,topic.lessonId); const visible=await visibleSquareMappings(null,topic); const lesson=squarePublicLesson(topic); lesson.questions=lesson.questions.filter(q=>visible.has(q.uid)); return <Platform square={lesson} languagePair={pair} />; }
   const discovery = discoveryRoute(parts);
   if (discovery) {
     let data: DiscoveryData;
@@ -61,4 +63,9 @@ export async function renderPage({ params, searchParams }: PageProps, locale: Lo
   } else if (parts[0] === "courses") initial.courses = await publicCourses(locale, parts[1]);
   else if (parts[0] === "library") { const [courses, questions] = await Promise.all([publicCourses(locale), publicQuestions(locale, search)]); initial.courses = courses; initial.catalog = questions; }
   return <Platform publicData={initial} languagePair={pair} />;
+}
+
+export async function renderPage(props: PageProps, locale: Locale) {
+  try { return await renderAllowedPage(props,locale); }
+  catch(e) { if(e instanceof AppError && e.status === 404) notFound(); throw e; }
 }

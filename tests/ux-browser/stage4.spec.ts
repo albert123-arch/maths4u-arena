@@ -1,8 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
-const root = 'test-results/stage4-20261105';
+const root = process.env.UX_REPORT_ROOT ? process.env.UX_REPORT_ROOT + '/stage4' : 'test-results/stage4-20261105';
 const book = '/courses/olymp-number-theory2', topic = book + '/topics/pilot_f2da4f4d6de9a3f01df74fffaacdbcf3792b3e29';
 test.setTimeout(180000);
+test.beforeAll(async () => { await fs.mkdir(root + '/after', { recursive: true }); });
 async function ready(page: Page, url: string) { await page.goto(url); await expect(page.locator('.brand')).toBeVisible(); await expect(page.locator('.catalog-skeleton,.skeleton')).toHaveCount(0); await page.evaluate(() => document.fonts.ready); }
 
 test('stage4: server HTML, canonical, real language pairs and unavailable translations', async ({ request, browser }) => {
@@ -12,7 +13,7 @@ test('stage4: server HTML, canonical, real language pairs and unavailable transl
     expect(response.status()).toBe(200);expect(html).toMatch(/<html[^>]*lang="en"/);expect(html).not.toMatch(/<html[^>]*data-theme=/);expect(html).toContain('theme-before-paint');
     expect(html).not.toContain('>Loading…<');expect(html).toContain('rel="canonical" href="https://arena.maths4u.sbs'+path+'"');
     const paired=[book,topic,'/learn/olympiad'].includes(path);expect(html.includes('hrefLang="ru"')).toBe(paired);report.push({path,status:response.status(),paired});
-    if(path==='/courses')expect(html).toContain('Additional Mathematics');if(path==='/library')expect(html).toContain('catalog-task');
+    if(path==='/courses'){expect(html).toContain('Pure Mathematics 1');expect(html).not.toContain('href="/courses/maths4u-0606"');}if(path==='/library')expect(html).toContain('catalog-task');
   }
   for(const path of ['/ru/courses/maths4u-9709-p1','/ru/learn/igcse','/ru/library','/ru/student'])expect((await request.get(path)).status()).toBe(404);
   for(const path of ['/student','/teacher','/admin','/login','/access']){const html=await (await request.get(path)).text();expect(html).toMatch(/name="robots" content="noindex, nofollow"/);expect(html).not.toContain('hrefLang=');}

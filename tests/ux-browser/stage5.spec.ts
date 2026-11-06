@@ -4,7 +4,7 @@ import mysql from "mysql2/promise";
 import sharp from "sharp";
 import { createHash, randomUUID } from "node:crypto";
 
-const base = "http://127.0.0.1:3102", root = "test-results/stage5-20261105";
+const base = "http://127.0.0.1:3102", root = process.env.UX_REPORT_ROOT ? process.env.UX_REPORT_ROOT + '/stage5' : "test-results/stage5-20261105";
 const square = "/courses/maths4u-9709-p1/topics/orig_quadratics_completing_square";
 const headers = { Origin: base };
 type Fixture = { password: string; users: Record<string, { id: string; username: string }>; numeric: { id: string; part: { id: string; numericAnswer: number } }; manual: { id: string; part: { id: string } }; work?: string; otherWork?: string; attempt?: string; expiredAttempt?: string; otherAttempt?:string; otherFile?:string; seeded?:boolean; topicWork?:string };
@@ -130,6 +130,7 @@ test("stage5: role and user lens matrix, server denial, no stored preview result
 
 test("stage5: inactivity, membership revocation, logout and expired attempts remain read only", async () => {
   const c = await connection(), teacher = await session("teacher");
+  let previousExpiry: string | undefined;
   try {
     const me = await enter(teacher, "USER", "STUDENT", fixture.users.student.id);
     const state = await teacher.storageState(), token = state.cookies.find(c=>c.name==='maths4u_session')!.value, hash = createHash('sha256').update(token).digest('hex');
@@ -140,6 +141,7 @@ test("stage5: inactivity, membership revocation, logout and expired attempts rem
     if(!fixture.expiredAttempt){
       const student=await session('student');const started=await student.post(`/api/works/${fixture.work}/start`,{headers,data:{newAttempt:true}});expect(started.status()).toBe(200);fixture.expiredAttempt=(await started.json()).id;await student.dispose();await fs.writeFile('.local/stage5-20261105/fixtures.json',JSON.stringify(fixture));
     }
+    const [[originalExpiry]]=await c.query<mysql.RowDataPacket[]>("SELECT DATE_FORMAT(expiresAt,'%Y-%m-%d %H:%i:%s.%f') stamp FROM Attempt WHERE id=?",[fixture.expiredAttempt]);previousExpiry=originalExpiry.stamp;
     await c.query('UPDATE Attempt SET expiresAt=DATE_SUB(UTC_TIMESTAMP(3),INTERVAL 1 MINUTE) WHERE id=? AND userId=?',[fixture.expiredAttempt,fixture.users.student.id]);
     const [beforeRows]=await c.query('SELECT * FROM Attempt WHERE id=?',[fixture.expiredAttempt]);
     expect((await teacher.get('/api/attempts/'+fixture.expiredAttempt)).status()).toBe(200);
@@ -152,7 +154,7 @@ test("stage5: inactivity, membership revocation, logout and expired attempts rem
     const [[sessionRow]]=await c.query<mysql.RowDataPacket[]>('SELECT userId,lensMode,revokedAt FROM Session WHERE tokenHash=?',[hash]);expect(sessionRow.userId).toBe(fixture.users.teacher.id);expect(sessionRow.lensMode).toBe(null);expect(sessionRow.revokedAt).not.toBe(null);
     expect(me.lens.targetId).toBe(fixture.users.student.id);
     await fs.writeFile(root+'/expiry-logout.json',JSON.stringify({idleMinutes:30,staleWriteDenied:true,membershipRevocationClearsLens:true,logoutClearsLens:true,sameRealSessionUser:true},null,2));
-  } finally { await c.query('UPDATE ClassMembership SET removedAt=NULL WHERE classId=? AND userId=?',['qa_stage5_class',fixture.users.student.id]);await c.end();await teacher.dispose(); }
+  } finally { if(previousExpiry)await c.query('UPDATE Attempt SET expiresAt=? WHERE id=?',[previousExpiry,fixture.expiredAttempt]);await c.query('UPDATE ClassMembership SET removedAt=NULL WHERE classId=? AND userId=?',['qa_stage5_class',fixture.users.student.id]);await c.end();await teacher.dispose(); }
 });
 
 test("stage5: preview UI, full-answer checks, private work preview and user read-only controls", async ({ browser }) => {

@@ -9,12 +9,13 @@ import { localized } from "./content";
 import { progressInclude, studyProgressStatus } from "./practice-progress";
 import { maySeeResult } from "./works";
 import { taskPermission } from "./catalog";
+import { archiveAdmin, archiveWhere, unavailableMessage } from "./content-access";
 import { lensAttemptScope } from "./request-view";
 
 const lessonInclude = {
   versions: { take: 1, orderBy: { number: "desc" }, select: { texts: { select: { locale: true, title: true } } } },
   topic: { include: { texts: true, course: { include: { texts: true } } } },
-  _count: { select: { tasks: true } },
+  _count: { select: { tasks: {where:{task:{examArchivedAt:null,archivedAt:null}}} } },
 } satisfies Prisma.LessonInclude;
 
 export async function studentProgress(actor: Actor, classId: string, studentId: string, lang: string, input: unknown = {}) {
@@ -25,19 +26,19 @@ export async function studentProgress(actor: Actor, classId: string, studentId: 
   ensure(membership && !membership.removedAt, 404, "NOT_FOUND");
   const practice: Prisma.AttemptWhereInput = { workVersion: { work: { kind: "PRACTICE", ownerId: studentId } } };
   const assigned: Prisma.AttemptWhereInput = { workVersion: { work: { classId, ...(isAdmin(actor) ? {} : { ownerId: actor.id }) } } };
-  return { ...await progressReport(studentId, membership.user, lang, input, practice, assigned, false), classroom: { id: classId, title: classroom.title } };
+  return { ...await progressReport(studentId, membership.user, lang, input, practice, assigned, false, actor), classroom: { id: classId, title: classroom.title } };
 }
 
 export async function myProgress(actor: Actor, lang: string, input: unknown = {}) {
   const practice: Prisma.AttemptWhereInput = { workVersion: { work: { kind: "PRACTICE", ownerId: actor.id } } };
   const assigned: Prisma.AttemptWhereInput = { workVersion: { work: { OR: [{ kind: { not: "PRACTICE" } }, { ownerId: { not: actor.id } }] } } };
-  const report = await progressReport(actor.id, { id: actor.id, displayName: actor.displayName, username: actor.username }, lang, input, practice, assigned, true);
+  const report = await progressReport(actor.id, { id: actor.id, displayName: actor.displayName, username: actor.username }, lang, input, practice, assigned, true, actor);
   const counts = await db().lessonTask.groupBy({ by: ["lessonId"], where: { lessonId: { in: report.topics.map(t => t.id) }, task: await taskPermission(actor) }, _count: true });
   return { ...report, topics: report.topics.map(t => ({ ...t, totalTasks: counts.find(c => c.lessonId === t.id)?._count ?? 0 })) };
 }
 
 async function progressReport(studentId: string, student: { id: string; displayName: string; username: string }, lang: string, input: unknown,
-  practice: Prisma.AttemptWhereInput, assigned: Prisma.AttemptWhereInput, self: boolean) {
+  practice: Prisma.AttemptWhereInput, assigned: Prisma.AttemptWhereInput, self: boolean, reader:Actor) {
   const { page, kind, lessonId } = z.object({ page: z.coerce.number().int().min(1).max(100000).default(1),
     kind: z.enum(["ALL", "PRACTICE", "ASSIGNED"]).default("ALL"), lessonId: z.string().max(100).optional() }).parse(input);
   const scope: Prisma.AttemptWhereInput = { userId: studentId, OR: [practice, assigned], AND: [lensAttemptScope()] };
@@ -48,7 +49,7 @@ async function progressReport(studentId: string, student: { id: string; displayN
     db().attempt.count({ where }),
     db().attempt.findMany({ where, take: 20, skip: (page - 1) * 20, orderBy: [{ startedAt: "desc" }, { id: "desc" }], include: {
       study: { include: { lesson: { include: lessonInclude } } },
-      workVersion: { include: { work: true, items: { orderBy: { position: "asc" }, select: { maxPoints: true, taskVersion: { select: { texts: { select: { locale: true, title: true } } } } } } } },
+      workVersion: { include: { work: true, items: { orderBy: { position: "asc" }, select: { maxPoints: true, taskVersion: { select: { task:{select:{examArchivedAt:true}}, texts: { select: { locale: true, title: true } } } } } } } },
       answers: { select: { autoPoints: true, review: { select: { points: true } }, _count: { select: { files: true } } } },
     } }),
     db().attempt.count({ where: scope }),
@@ -62,10 +63,10 @@ async function progressReport(studentId: string, student: { id: string; displayN
         WHERE s2.taskId=s.taskId AND s2.lessonId <=> s.lessonId AND a2.userId=a.userId
         AND (a2.startedAt>a.startedAt OR (a2.startedAt=a.startedAt AND a2.id>a.id)))`),
   ]);
-  const latest = await db().practiceStudy.findMany({ where: { attemptId: { in: latestIds.map(r => r.attemptId) }, attempt: lensAttemptScope() },
+  const latest = await db().practiceStudy.findMany({ where: { attemptId: { in: latestIds.map(r => r.attemptId) }, attempt: lensAttemptScope(), task:archiveWhere(reader) },
     include: { ...progressInclude, lesson: { include: lessonInclude } } });
   const lessons = new Map([...theory.map(r => r.lesson), ...latest.flatMap(r => r.lesson ? [r.lesson] : [])].map(l => [l.id, l]));
-  const topics = [...lessons.values()].map(l => {
+  const topics = [...lessons.values()].filter(l=>archiveAdmin(reader)||l._count.tasks>0).map(l => {
     const rows = latest.filter(r => r.lessonId === l.id), states = rows.map(studyProgressStatus);
     return { id: l.id, title: localized(l.versions[0]?.texts ?? [], lang)?.title ?? "—", courseId: l.topic.courseId,
       courseSlug: l.topic.course.slug, course: displayTitle(localized(l.topic.course.texts, lang).title), chapter: displayTitle(localized(l.topic.texts, lang).title),
@@ -80,7 +81,7 @@ async function progressReport(studentId: string, student: { id: string; displayN
     attempts: attempts.map(a => {
       const finished = a.status !== "IN_PROGRESS" || a.expiresAt <= now;
       const study = a.study;
-      return { id: a.id, title: study ? localized(a.workVersion.items[0].taskVersion.texts, lang).title : a.workVersion.work.title,
+      return { id: a.id, title: !archiveAdmin(reader) && a.workVersion.items.some(i=>i.taskVersion.task.examArchivedAt) ? unavailableMessage(lang) : study ? localized(a.workVersion.items[0].taskVersion.texts, lang).title : a.workVersion.work.title,
         kind: a.workVersion.work.kind, number: a.number, startedAt: a.startedAt, submittedAt: a.submittedAt,
         status: study?.selfDirected ? study.needsRepeat ? "NEEDS_REPEAT" : study.selfCheckedAt ? "SELF_CHECKED" : "IN_PROGRESS" : a.status === "IN_PROGRESS" && finished ? "EXPIRED" : a.status,
         canOpen: self || (!study?.selfDirected && (a.workVersion.work.kind !== "PRACTICE" || finished)),
@@ -89,7 +90,7 @@ async function progressReport(studentId: string, student: { id: string; displayN
         maximum: a.workVersion.items.reduce((sum, item) => sum + item.maxPoints, 0), files: a.answers.reduce((sum, answer) => sum + answer._count.files, 0),
         helpUsed: study ? [study.hintAt, study.answerAt, study.solutionAt, study.markSchemeAt].some(Boolean) : null,
         selfDirected: study?.selfDirected ?? false, selfSolved: study?.selfSolved ?? null, selfPoints: study?.selfPoints ?? null, selfChecked: !!study?.selfCheckedAt, needsRepeat: study?.needsRepeat ?? false,
-        topic: study?.lesson ? localized(study.lesson.versions[0].texts, lang).title : null };
+        topic: study?.lesson && (archiveAdmin(reader)||study.lesson._count.tasks>0) ? localized(study.lesson.versions[0].texts, lang).title : null };
     }) };
 }
 export type StudentProgressDto = Awaited<ReturnType<typeof studentProgress>>;

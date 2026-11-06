@@ -5,7 +5,7 @@ const reportRoot=process.env.FOUNDATION_REPORT_ROOT ?? "test-results/foundation-
 const origin=phase === "before" ? "http://127.0.0.1:3110" : "http://127.0.0.1:3102";
 test("foundation: local production mobile performance samples",async({browser})=>{
   const results=[];
-  for(const route of ["/","/courses","/library","/courses/maths4u-9709-p1","/courses/maths4u-0606","/courses/maths4u-9709-p1/topics/orig_quadratics_completing_square"]){
+  for(const route of ["/","/courses","/library","/courses/maths4u-9709-p1","/courses/olymp-number-theory2","/courses/maths4u-9709-p1/topics/orig_quadratics_completing_square"]){
     for(let run=1;run<=3;run++){
       const context=await browser.newContext({viewport:{width:390,height:844},colorScheme:"light"});
       await context.addInitScript(()=>{

@@ -12,6 +12,8 @@ export const ActorContext = createContext<Actor | null>(null);
 export const PublicLocaleContext = createContext<"en" | "ru" | null>(null);
 export function useLocale() { const lang = useContext(LocaleContext); return { lang, t: (ru: string, en: string) => lang === "ru" ? ru : en }; }
 export const errorLabels: Record<string, [string, string]> = {
+  MATERIAL_UNAVAILABLE: ["Этот материал больше недоступен. Сохранённые ответы и баллы остаются в истории.","This material is no longer available. Your saved answers and marks remain in history."],
+  CAMBRIDGE_ONLY: ["Архивировать можно только классифицированные задачи Cambridge.","Only classified Cambridge examination tasks can be archived."],
   VIEW_CHANGED: ["Режим просмотра изменился или истёк. Обновите страницу.", "The viewing mode changed or expired. Reload this page."],
   VIEW_READ_ONLY: ["В режиме просмотра пользователя изменения запрещены.", "User view is read only. Changes are disabled."],
   PREVIEW_NO_WRITES: ["В предпросмотре изменения не сохраняются.", "Changes cannot be saved in role preview."],

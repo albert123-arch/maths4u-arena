@@ -15,6 +15,7 @@ export function AttemptScreen({ id, review, backHref }: { id: string; review: bo
   const r = useResource<AttemptDto>("attempts/" + id);
   if (r.error) return <ErrorNotice error={r.error} />;
   if (!r.data) return <Loading />;
+  if (r.data.containsUnavailable) return <AttemptForm key={id} initial={r.data} review={review} />;
   if (review) return <ReviewScreen key={id} initial={r.data} backHref={backHref} />;
   if (r.data.study?.selfDirected) return <SelfStudyScreen key={id} initial={r.data} />;
   return <AttemptForm key={id + String(review)} initial={r.data} review={review} />;
@@ -30,13 +31,13 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
   const [conflict, setConflict] = useState(false);
   const alive = useRef(true);
   const independentWritten = dto.independent && dto.questions.some(q => q.parts.some(p => p.kind === "MANUAL"));
-  const finished = dto.status !== "IN_PROGRESS", readOnly = !!lens || finished || review || independentWritten;
+  const finished = dto.status !== "IN_PROGRESS", readOnly = dto.containsUnavailable || !!lens || finished || review || independentWritten;
   const remaining = Math.max(0, Math.ceil((new Date(dto.expiresAt).getTime() - now - offset) / 1000));
   const apply = (next: AttemptDto) => { if (next.revision < dtoRef.current.revision) return; dtoRef.current = next; if (alive.current) setDto(next); };
   async function refresh() { const next = await api<AttemptDto>("attempts/" + initial.id + "?lang=" + lang); apply(next); }
   async function flush(submit: boolean) {
     if (busy.current) { await busy.current; return flush(submit); }
-    if (lens || blocked.current || independentWritten || dtoRef.current.status !== "IN_PROGRESS" || review || (!submit && !dirty.current.size)) return;
+    if (dtoRef.current.containsUnavailable || lens || blocked.current || independentWritten || dtoRef.current.status !== "IN_PROGRESS" || review || (!submit && !dirty.current.size)) return;
     const snapshot = Object.fromEntries([...dirty.current].map(id => [id, drafts.current[id]]));
     setSaving(true);
     const operation = (async () => {
@@ -97,7 +98,7 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
     <ErrorNotice error={error} />
     {independentWritten && <div className="notice"><p>{t("Ранее сохранённые ответы остаются в истории. Новые самостоятельные решения проверяются на бумаге; отправка доступна только в задании учителя.", "Previously saved answers remain in your history. Check new independent written work on paper; submit solutions in teacher assignments.")}</p>
       <ActionButton secondary label={t("Открыть самопроверку", "Open self-check")} action={async () => { const a = await api<{ id: string }>("study/start", "POST", { taskId: dto.study?.taskId ?? dto.questions[0].taskId, lessonId: dto.study?.lessonId }); router.push(`/attempts/${a.id}`); }} /></div>}
-    {dto.study && !lens && <StudyActions dto={dto} apply={apply} save={async () => { await flush(false); if (blocked.current || dirty.current.size) throw new ApiError("STALE_REVISION", 409); }} />}
+    {dto.study && !lens && !dto.containsUnavailable && <StudyActions dto={dto} apply={apply} save={async () => { await flush(false); if (blocked.current || dirty.current.size) throw new ApiError("STALE_REVISION", 409); }} />}
     {finished && !dto.resultVisible && <p className="notice">{t("Работа принята. Баллы, решения и комментарии станут доступны после публикации результатов.", "Your work was received. Marks, solutions and comments will be available when results are released.")}</p>}
     {dto.resultVisible && <div className="card tint space-block-20" ><p className="eyebrow">{t("Результат", "Result")}</p><div className="metric">{dto.study && dto.pendingReview ? t("Без оценки", "Ungraded") : dto.score} {!(dto.study && dto.pendingReview) && <span className="muted text-size-20" >/ {dto.maxPoints}</span>}</div>{dto.pendingReview && <p className="muted">{dto.study ? t("Ручная задача: автоматическая оценка не выставляется. Самопроверка хранится отдельно.", "Written solution: no automatic mark is awarded. Self-checking is recorded separately.") : t("Часть ответов ещё ожидает проверки. Баллы пока предварительные.", "Some answers are awaiting review. This score is provisional.")}</p>}{dto.submittedAt && <p className="muted"><DateLabel value={dto.submittedAt} /></p>}</div>}
     <div className="stack">{dto.questions.map((q, qi) => <article className="card" key={q.id}>{!dto.sourcesHidden && <p className="eyebrow">{t("Задача ", "Problem ")}{qi + 1}</p>}<h2>{q.title}</h2><MathContent html={q.statement} />
@@ -105,7 +106,7 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
       {q.parts.map((p, pi) => { const answer = dto.answers.find(a => a.partId === p.id), response = responses[p.id] ?? { value: "" }; return <section className="part" key={p.id}>
         <div className="row spread"><strong>{t("Часть ", "Part ")}{pi + 1}</strong><span className="muted">{p.maxPoints} {t("балл.", "pts")}</span></div>
         <MathContent html={p.prompt} />
-        {p.kind === "CHOICE" ? <div className="stack space-top-14" >{p.options.map(o => <label className="check choice" key={o.id}><Input type="radio" name={p.id} checked={response.optionId === o.id} disabled={readOnly} onChange={() => change(p.id, { value: "", optionId: o.id })} /><MathContent html={o.text} />{o.correct !== undefined && o.correct && <span>✓</span>}</label>)}</div> :
+        {q.unavailable && p.kind === "CHOICE" ? <p>{t("Сохранённый ответ", "Saved answer")}: {answer?.savedChoiceLabel ?? t("Нет ответа", "No saved answer")}</p> : p.kind === "CHOICE" ? <div className="stack space-top-14" >{p.options.map(o => <label className="check choice" key={o.id}><Input type="radio" name={p.id} checked={response.optionId === o.id} disabled={readOnly} onChange={() => change(p.id, { value: "", optionId: o.id })} /><MathContent html={o.text} />{o.correct !== undefined && o.correct && <span>✓</span>}</label>)}</div> :
           <label className="space-top-14">{p.answerFormat ? t("Число или дробь", "Number or fraction") : t("Ваш ответ", "Your answer")}{p.kind === "MANUAL" ? <Textarea aria-label={t("Ваш ответ", "Your answer")} value={response.value} readOnly={readOnly} onChange={e => change(p.id, { value: e.target.value })} placeholder={t("Запишите рассуждение или приложите файл решения…", "Write your reasoning or attach your solution…")} rows={5} /> : <Input aria-label={t("Ваш ответ", "Your answer")} value={response.value} readOnly={readOnly} inputMode={p.kind === "NUMERIC" && !p.answerFormat ? "decimal" : "text"} onChange={e => change(p.id, { value: e.target.value })} />}</label>}
         {(!dto.independent || !!answer?.files.length) && <AnswerAttachments files={answer?.files ?? []} attemptId={dto.id} partId={p.id} readOnly={readOnly || !dto.allowFiles} disabledByTeacher={!readOnly && !dto.allowFiles} mutate={mutateFiles} />}
         {dto.resultVisible && answer && <div className="notice space-top-16" ><strong>{t("Баллы: ", "Points: ")}{answer.points ?? t("ожидает проверки", "pending")} / {p.maxPoints}</strong>{answer.comment && <p className="answer-comment">{answer.comment}</p>}</div>}

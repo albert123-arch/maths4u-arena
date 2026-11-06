@@ -1,12 +1,14 @@
 import { Prisma } from "../generated/prisma/client";
 import { db } from "./prisma";
+import { archiveWhere } from "./content-access";
+import { requestView } from "./request-view";
 import { lensAttemptScope } from "./request-view";
 
 export const progressInclude = {
   attempt: { include: {
     answers: { select: { autoPoints: true, review: { select: { points: true } } } },
     workVersion: { include: { items: { select: {
-      maxPoints: true, taskVersion: { select: { texts: { select: { locale: true, title: true } } } },
+      maxPoints: true, taskVersion: { select: { task:{select:{examArchivedAt:true}}, texts: { select: { locale: true, title: true } } } },
     } } } },
   } },
 } satisfies Prisma.PracticeStudyInclude;
@@ -32,6 +34,6 @@ export async function latestPracticeProgress(userId: string, lessonId?: string) 
     AND NOT EXISTS(SELECT 1 FROM PracticeStudy s2 JOIN Attempt a2 ON a2.id=s2.attemptId
       WHERE s2.taskId=s.taskId AND a2.userId=a.userId ${lessonId ? Prisma.sql`AND s2.lessonId=${lessonId}` : Prisma.empty}
       AND (a2.startedAt>a.startedAt OR (a2.startedAt=a.startedAt AND a2.id>a.id)))`);
-  const rows = await db().practiceStudy.findMany({ where: { attemptId: { in: ids.map(r => r.attemptId) }, attempt: lensAttemptScope() }, include: progressInclude });
+  const rows = await db().practiceStudy.findMany({ where: { attemptId: { in: ids.map(r => r.attemptId) }, attempt: lensAttemptScope(), task: archiveWhere(requestView()?.actor ?? null) }, include: progressInclude });
   return rows.map(r => ({ taskId: r.taskId, attemptId: r.attemptId, ...studyProgressStatus(r) }));
 }

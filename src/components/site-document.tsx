@@ -15,7 +15,7 @@ import "@/app/dashboards.css";
 import "../../public/platform-statistics.css";
 import "katex/dist/katex.min.css";
 export const siteMetadata: Metadata = { title: "Maths4U — Learn, practise, progress", description: "Mathematics courses, practice, class assignments and progress in one place.", icons: { icon: "/favicon.svg" } };
-const inter = localFont({ src: "../app/fonts/InterVariable.woff2", variable: "--font-inter", weight: "100 900", display: "swap", adjustFontFallback: false });
+const inter = localFont({ src: "../app/fonts/InterVariable.woff2", variable: "--font-inter", weight: "100 900", display: "swap", adjustFontFallback: "Arial" });
 // Runs before paint. No request headers/cookies are read by either server layout.
 const themeScript = `(function(){try{var c=document.cookie.match(/(?:^|;\\s*)maths4u_theme=(light|dark|system)(?:;|$)/),v=c?c[1]:localStorage.getItem('maths4u_theme');if(v==='light'||v==='dark')document.documentElement.dataset.theme=v;else delete document.documentElement.dataset.theme}catch(e){}})()`;
 export function SiteDocument({ children, locale }: { children: React.ReactNode; locale: "en" | "ru" }) {

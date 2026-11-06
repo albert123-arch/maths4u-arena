@@ -9,6 +9,7 @@ import { mayReviewPractice } from "./practice-access";
 import { isPure1ShortUid, pure1PracticeNumber } from "./pure1-practice-number";
 import { displayTeacherNote } from "./public-presentation";
 import { requestView, userViewTeacher, lensAttemptScope } from "./request-view";
+import { hiddenMaterial, unavailableVersion, unavailableMessage } from "./content-access";
 
 const contextInclude = { classroom: true, round: { include: { olympiad: true } } } satisfies Prisma.WorkInclude;
 type Context = Prisma.WorkGetPayload<{ include: typeof contextInclude }>;
@@ -49,7 +50,7 @@ export async function createWork(tx: Prisma.TransactionClient, actor: Actor, dat
     const classroom = await ownClass(actor, data.classId, tx);
     ensure(!classroom.archivedAt, 400, "CLASS_ARCHIVED");
   }
-  const tasks = await tx.task.findMany({ where: { id: { in: data.taskIds }, archivedAt: null }, include: {
+  const tasks = await tx.task.findMany({ where: { id: { in: data.taskIds }, archivedAt: null, examArchivedAt: null }, include: {
     versions: { orderBy: { number: "desc" }, take: 1, include: versionInclude },
   } });
   ensure(tasks.length === data.taskIds.length, 400, "TASK_UNAVAILABLE");
@@ -78,6 +79,7 @@ export async function publishWork(actor: Actor, input: unknown) {
   return transaction(tx => createWork(tx, actor, data));
 }
 export async function practice(actor: Actor, taskId: string) {
+  ensure(await db().task.count({where:{id:taskId,examArchivedAt:null,archivedAt:null}}),404,"NOT_FOUND");
   return transaction(async tx => {
     await lockUser(tx, actor.id);
     const previous = await tx.work.findFirst({ where: { ownerId: actor.id, kind: "PRACTICE",
@@ -120,6 +122,7 @@ export function automaticPoints(part: FullAttempt["workVersion"]["items"][number
 }
 export async function finalize(tx: Prisma.TransactionClient, attempt: FullAttempt, timedOut: boolean) {
   if (attempt.status !== "IN_PROGRESS") return;
+  if (attempt.workVersion.items.some(i => i.taskVersion.task.examArchivedAt)) return;
   if (attempt.study?.selfDirected) return; // No fabricated submissions or grades for paper self-study.
   let manual = false;
   for (const item of attempt.workVersion.items) for (const part of item.taskVersion.parts) {
@@ -139,6 +142,7 @@ export async function startAttempt(actor: Actor, workId: string, newAttempt = fa
     const work = await tx.work.findUnique({ where: { id: workId }, include: { ...contextInclude, versions: { take: 1, orderBy: { number: "desc" } } } });
     ensure(work, 404, "NOT_FOUND");
     await workAccess(actor, work, tx);
+    ensure(!await tx.workItem.count({where:{workVersion:{workId},taskVersion:{task:{examArchivedAt:{not:null}}}}}), 410, "MATERIAL_UNAVAILABLE");
     const v = work.versions[0], now = new Date();
     const last = await tx.attempt.findFirst({ where: { workVersionId: v.id, userId: actor.id }, orderBy: { number: "desc" } });
     if (last) {
@@ -162,6 +166,7 @@ export async function mutateAttempt(actor: Actor, id: string, input: unknown, su
     ensure(!independentPractice(a) || (!a.study?.selfDirected && !a.workVersion.items.some(i => i.taskVersion.parts.some(p => p.kind === "MANUAL"))), 403, "ASSIGNMENT_REQUIRED");
     // Repeated submissions cannot change a finished attempt, even with stale revisions.
     if (a.status !== "IN_PROGRESS") { ensure(submit, 409, "ATTEMPT_FINISHED"); return { id }; }
+    ensure(!a.workVersion.items.some(i => i.taskVersion.task.examArchivedAt), 410, "MATERIAL_UNAVAILABLE");
     await workAccess(actor, a.workVersion.work, tx);
     if (a.expiresAt <= new Date()) { await finalize(tx, a, true); return { id, expired: true }; }
     ensure(!a.workVersion.work.archivedAt, 409, "WORK_CLOSED");
@@ -208,9 +213,10 @@ export async function getAttempt(actor: Actor, id: string, lang = "ru") {
     ensure(row && (row.userId === actor.id || isAdmin(actor) || (isTeacher(actor) && row.workVersion.work.ownerId === actor.id) || practiceReview), 404, "NOT_FOUND");
     if (userViewTeacher()) ensure(await tx.attempt.count({ where: { id, AND: [lensAttemptScope()] } }), 404, "NOT_FOUND");
     if (row.status === "IN_PROGRESS" && row.expiresAt > new Date() && row.userId === actor.id) await workAccess(actor, row.workVersion.work, tx);
-    if (!requestView()?.lens && row.status === "IN_PROGRESS" && row.expiresAt <= new Date()) { await finalize(tx, row, true); row = (await tx.attempt.findUnique({ where: { id }, include: attemptInclude }))!; }
+    if (!requestView()?.lens && !row.workVersion.items.some(i => i.taskVersion.task.examArchivedAt) && row.status === "IN_PROGRESS" && row.expiresAt <= new Date()) { await finalize(tx, row, true); row = (await tx.attempt.findUnique({ where: { id }, include: attemptInclude }))!; }
     return { a: row, practiceReview };
   });
+  const containsUnavailable = a.workVersion.items.some(i => hiddenMaterial(actor, i.taskVersion.task));
   const manager = isAdmin(actor) || (isTeacher(actor) && a.workVersion.work.ownerId === actor.id && a.userId !== actor.id);
   const reviewer = manager || practiceReview;
   const reviewStudent = reviewer ? await db().user.findUniqueOrThrow({ where: { id: a.userId }, select: { displayName: true, username: true } }) : null;
@@ -219,17 +225,17 @@ export async function getAttempt(actor: Actor, id: string, lang = "ru") {
   const sourcesHidden = !manager && a.status === "IN_PROGRESS" && ["HOMEWORK", "TEST"].includes(a.workVersion.work.kind);
   const maxPoints = a.workVersion.items.reduce((s, i) => s + i.maxPoints, 0);
   const score = a.answers.reduce((s, r) => s + (r.review?.points ?? r.autoPoints ?? 0), 0);
-  return { id: a.id, userId: a.userId, workId: a.workVersion.workId, title: a.study ? localized(a.workVersion.items[0].taskVersion.texts, lang).title : a.workVersion.work.title, number: a.number, status: a.status,
+  return { containsUnavailable, id: a.id, userId: a.userId, workId: a.workVersion.workId, title: containsUnavailable ? unavailableMessage(lang) : a.study ? localized(a.workVersion.items[0].taskVersion.texts, lang).title : a.workVersion.work.title, number: a.number, status: a.status,
     startedAt: a.startedAt, expiresAt: a.expiresAt, submittedAt: a.submittedAt, timedOut: a.timedOut, revision: a.revision,
     serverTime: new Date(), allowFiles: a.workVersion.allowFiles && !independentPractice(a), independent: independentPractice(a), resultVisible, solutionsVisible: solutions, manager, practiceReview, reviewStudent, sourcesHidden, kind: a.workVersion.work.kind,
     study: a.study ? { taskId: a.study.taskId, lessonId: a.study.lessonId, courseSlug: a.study.lesson?.topic.course.slug, help: studyHelp(a), selfCheckedAt: a.study.selfCheckedAt, needsRepeat: a.study.needsRepeat,
       selfDirected: a.study.selfDirected, selfSolved: a.study.selfSolved, selfPoints: a.study.selfPoints, maximum: maxPoints } : null,
     ...(resultVisible && !a.study?.selfDirected ? { score, maxPoints, pendingReview: a.answers.some(r => r.autoPoints === null && r.review?.points == null) } : {}),
-    questions: a.workVersion.items.map((i, index) => ({ ...publicVersion(i.taskVersion, lang, solutions || !!revealed, revealed,
-      sourcesHidden ? (lang === "en" ? "Problem " : "Задача ") + (index + 1) : undefined, isAdmin(actor)),
-      ...(a.study ? { availableHelp: availableHelp(i.taskVersion, lang) } : {}),
-      ...(reviewer ? { teacherNote: renderContent(displayTeacherNote(localized(i.taskVersion.texts, lang).teacherNote, isAdmin(actor))) } : {}) })),
-    answers: a.answers.map(r => ({ id: r.id, partId: r.partId, response: r.response, savedAt: r.savedAt, files: r.files.map(f => f.file),
+    questions: a.workVersion.items.map((i, index) => ({ ...(hiddenMaterial(actor,i.taskVersion.task) ? unavailableVersion(i.taskVersion,lang) : publicVersion(i.taskVersion, lang, solutions || !!revealed, revealed,
+      sourcesHidden ? (lang === "en" ? "Problem " : "Задача ") + (index + 1) : undefined, isAdmin(actor))),
+      ...(a.study && !hiddenMaterial(actor,i.taskVersion.task) ? { availableHelp: availableHelp(i.taskVersion, lang) } : {}),
+      ...(reviewer && !hiddenMaterial(actor,i.taskVersion.task) ? { teacherNote: renderContent(displayTeacherNote(localized(i.taskVersion.texts, lang).teacherNote, isAdmin(actor))) } : {}) })),
+    answers: a.answers.map(r => ({ id: r.id, partId: r.partId, response: r.response, savedAt: r.savedAt, savedChoiceLabel: (()=>{const p=a.workVersion.items.flatMap(i=>i.taskVersion.parts).find(p=>p.id===r.partId);const id=(r.response as {optionId?:string}).optionId;const index=p?.options.findIndex(o=>o.id===id)??-1;return index<0?null:"Option "+(index<26?String.fromCharCode(65+index):index+1);})(), files: r.files.map(f => f.file),
       ...(resultVisible ? { points: r.review?.points ?? r.autoPoints, comment: r.review?.comment ?? "", ...(reviewer ? { autoPoints: r.autoPoints, reviewRevision: r.review?.revision ?? 0 } : {}) } : {}) })),
   };
 }
@@ -240,6 +246,7 @@ export async function gradeAttempt(actor: Actor, id: string, input: unknown) {
   return transaction(async tx => {
     const a = await lockAttempt(tx, id);
     ensure(a && (isAdmin(actor) || (a.workVersion.work.ownerId === actor.id && a.userId !== actor.id) || await mayReviewPractice(actor, id, tx)), 404, "NOT_FOUND");
+    ensure(!a.workVersion.items.some(i => i.taskVersion.task.examArchivedAt), 410, "MATERIAL_UNAVAILABLE");
     ensure(!a.study?.selfDirected, 403, "SELF_STUDY_NOT_GRADED");
     if (a.status === "IN_PROGRESS" && a.expiresAt <= new Date()) await finalize(tx, a, true);
     else ensure(a.status !== "IN_PROGRESS", 409, "NOT_SUBMITTED");
@@ -261,6 +268,7 @@ export async function gradeAttempt(actor: Actor, id: string, input: unknown) {
 }
 export async function publishResults(actor: Actor, id: string) {
   const work = await ownWork(actor, id);
+  ensure(!await db().workItem.count({where:{workVersion:{workId:id},taskVersion:{task:{examArchivedAt:{not:null}}}}}),410,"MATERIAL_UNAVAILABLE");
   const version = await db().workVersion.findFirstOrThrow({ where: { workId: id } });
   ensure(work.kind !== "OLYMPIAD" || version.dueAt <= new Date(), 409, "ROUND_NOT_FINISHED");
   const expired = await db().attempt.findMany({ where: { workVersionId: version.id, status: "IN_PROGRESS", expiresAt: { lte: new Date() } }, select: { id: true } });
@@ -280,7 +288,8 @@ export async function workSummary(actor: Actor, id: string) {
   if (viewer) ensure(work.ownerId === viewer.id || work.kind === "PRACTICE" && await db().attempt.count({ where: { userId: actor.id, workVersion: { workId: id }, AND: [lensAttemptScope()] } }), 404, "NOT_FOUND");
   const manager = isAdmin(actor) || (isTeacher(actor) && work.ownerId === actor.id);
   if (!manager && !work.versions[0].attempts.length) await workAccess(actor, work);
-  return { id, title: work.title, kind: work.kind, classTitle: work.classroom?.title, version: work.versions[0], manager, archived: !!work.archivedAt, resultsPublished: !!work.resultsPublishedAt };
+  const containsArchived=!!await db().workItem.count({where:{workVersion:{workId:id},taskVersion:{task:{examArchivedAt:{not:null}}}}});
+  return { containsArchived, id, title: work.title, kind: work.kind, classTitle: work.classroom?.title, version: work.versions[0], manager, archived: !!work.archivedAt, resultsPublished: !!work.resultsPublishedAt };
 }
 export async function listWorks(actor: Actor, manage = false) {
   if (manage) teacher(actor);

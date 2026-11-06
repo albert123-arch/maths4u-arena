@@ -4,6 +4,7 @@ import { ensure } from "./errors";
 import { type Actor, admin, isAdmin, transaction, lockUser } from "./security";
 import { localized, renderContent } from "./content";
 import { hasFeature } from "./subscriptions";
+import { assertLessonVisible, visibleCourseWhere, visibleLessonWhere } from "./content-access";
 import { taskPermission } from "./catalog";
 import { displayDescription, displayMarkup, displayTitle } from "./public-presentation";
 
@@ -37,18 +38,19 @@ export async function saveCourse(actor: Actor, input: unknown) {
   });
 }
 export async function courses(actor: Actor | null, lang: string, slug?: string) {
-  const rows = await db().course.findMany({ where: { archivedAt: null, ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) },
-    include: { texts: true, topics: { orderBy: { position: "asc" }, include: { texts: true, lessons: { where: { archivedAt: null }, include: {
+  const rows = await db().course.findMany({ where: { archivedAt: null, ...visibleCourseWhere(actor), ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) },
+    include: { texts: true, topics: { orderBy: { position: "asc" }, include: { texts: true, lessons: { where: { archivedAt: null, ...visibleLessonWhere(actor) }, include: {
       versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } },
       tasks: { where: { task: await taskPermission(actor) }, orderBy: { position: "asc" },
         include: { task: { include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } } } } } },
       progress: actor ? { where: { userId: actor.id } } : false,
     } } } } } });
+  if (slug) ensure(rows.length,404,"NOT_FOUND");
   return Promise.all(rows.map(async c => {
     const allowed = !!(actor && isAdmin(actor)) || !c.featureKey || (actor && await hasFeature(actor, c.featureKey));
     const t = localized(c.texts, lang);
     return { id: c.id, slug: c.slug, title: displayTitle(t.title), description: displayDescription(t.description), locked: !allowed, featureKey: c.featureKey,
-      topics: c.topics.map(topic => ({ id: topic.id, title: displayTitle(localized(topic.texts, lang).title),
+      topics: c.topics.filter(topic => topic.lessons.length).map(topic => ({ id: topic.id, title: displayTitle(localized(topic.texts, lang).title),
         lessons: topic.lessons.map(lesson => { const l = localized(lesson.versions[0].texts, lang); return {
           id: lesson.id, title: displayTitle(l.title), completed: lesson.progress?.[0]?.completed ?? false,
           openedAt: lesson.progress?.[0]?.openedAt ?? null, ...(allowed ? { body: displayMarkup(renderContent(l.body)),
@@ -57,6 +59,7 @@ export async function courses(actor: Actor | null, lang: string, slug?: string) 
   }));
 }
 export async function progress(actor: Actor, lessonId: string, input: unknown) {
+  await assertLessonVisible(actor, lessonId);
   const { completed } = z.object({ completed: z.boolean() }).parse(input);
   const lesson = await db().lesson.findUnique({ where: { id: lessonId }, include: { topic: { include: { course: true } } } });
   ensure(lesson && !lesson.archivedAt && lesson.topic.course.published && !lesson.topic.course.archivedAt, 404, "NOT_FOUND");

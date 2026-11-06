@@ -1,3 +1,4 @@
+import { assertLessonVisible, archiveWhere } from "./content-access";
 import { cache } from "react";
 import { z } from "zod";
 import { db } from "./prisma";
@@ -77,16 +78,21 @@ async function recordCheck(actor: Actor, event: z.infer<typeof eventSchema>, map
     await tx.independentCheck.create({ data: { userId: actor.id, taskVersionId: mappings.get(q.id)!, eventKey: event.eventKey, contentVersion: topic.version, answers: event.answers, correct: result.correct, helpUsed: event.helpUsed, imported, checkedAt } });
   });
 }
+export async function visibleSquareMappings(actor: Actor | null, topic: QuadraticTopic = quadraticTopic()) {
+  const all=await squareMappings(topic.key);
+  const rows=await db().taskVersion.findMany({where:{id:{in:[...all.values()]},task:{archivedAt:null,...archiveWhere(actor)}},select:{id:true}});
+  const ids=new Set(rows.map(r=>r.id));return new Map([...all].filter(([,id])=>ids.has(id)));
+}
 export async function checkSquare(actor: Actor | null, input: unknown, topic: QuadraticTopic = quadraticTopic()) {
-  const event = requestSchema(topic).parse(input), mappings = await squareMappings(topic.key);
+  const event = requestSchema(topic).parse(input), mappings = await visibleSquareMappings(actor,topic);
   ensure(mappings.has(event.uid), 404, "NOT_FOUND");
   const result = gradeSquare(squareQuestion(event.uid, topic.key), event.answers);
-  if (actor && result.valid) await recordCheck(actor, event, mappings, false, topic);
+  if (actor && result.valid && !await db().taskVersion.count({where:{id:mappings.get(event.uid),task:{examArchivedAt:{not:null}}}})) await recordCheck(actor, event, mappings, false, topic);
   return result;
 }
-export async function helpSquare(input: unknown, topic: QuadraticTopic = quadraticTopic()) {
+export async function helpSquare(input: unknown, topic: QuadraticTopic = quadraticTopic(), actor:Actor|null=null) {
   const { uid, kind, version, access, answers } = z.object({ uid: z.string().max(80), kind: z.enum(["hint", "solution", "guidance"]), version: z.literal(topic.version), access: z.enum(["attempt", "stuck", "paper"]).optional(), answers: z.record(z.string().max(50),z.string().max(400)).optional() }).strict().parse(input);
-  ensure(version === topic.version && (await squareMappings(topic.key)).has(uid), 404, "NOT_FOUND");
+  ensure(version === topic.version && (await visibleSquareMappings(actor,topic)).has(uid), 404, "NOT_FOUND");
   const q = squareQuestion(uid, topic.key);
   ensure(kind === "hint" || !!access, 403, "CHECK_ANSWER_FIRST");
   ensure(kind === "hint" || access !== "attempt" || (answers && Object.keys(answers).length === q.fields.length && q.fields.every(f => Object.hasOwn(answers,f.key)) && Object.values(answers).some(v => v.trim())), 403, "CHECK_ANSWER_FIRST");
@@ -94,7 +100,8 @@ export async function helpSquare(input: unknown, topic: QuadraticTopic = quadrat
   return kind === "guidance" ? { rows: squareMarkingRows(q), total: q.marks } : { html: squareHelp(q, kind) };
 }
 export async function squareProgress(actor: Actor, topic: QuadraticTopic = quadraticTopic()) {
-  const mappings = await squareMappings(topic.key), uids = new Map([...mappings].map(([uid,v]) => [v,uid]));
+  await assertLessonVisible(actor,topic.lessonId);
+  const mappings = await visibleSquareMappings(actor,topic), uids = new Map([...mappings].map(([uid,v]) => [v,uid]));
   const rows = await db().independentCheck.findMany({ where: { userId: actor.id, contentVersion: topic.version, taskVersionId: { in: [...uids.keys()] } }, orderBy: [{ checkedAt: "asc" }, { id: "asc" }] });
   const evidence: Evidence[] = rows.map(r => { const uid = uids.get(r.taskVersionId)!; return { eventKey: r.eventKey, uid, family: squareQuestion(uid, topic.key).family_uid, correct: r.correct, helpUsed: r.helpUsed, at: r.checkedAt.getTime(), imported: r.imported }; });
   const notes = await db().learningProgress.findUnique({ where: { userId_lessonId: { userId: actor.id, lessonId: topic.lessonId } } });
@@ -102,7 +109,7 @@ export async function squareProgress(actor: Actor, topic: QuadraticTopic = quadr
 }
 export async function importSquareProgress(actor: Actor, input: unknown, topic: QuadraticTopic = quadraticTopic()) {
   const data = z.object({ version: z.literal(topic.version), events: z.array(eventSchema).max(100) }).strict().parse(input);
-  const mappings = await squareMappings(topic.key);
+  const mappings = await visibleSquareMappings(actor,topic);
   for (const e of data.events) ensure(mappings.has(e.uid) && gradeSquare(squareQuestion(e.uid, topic.key), e.answers).valid, 400, "INVALID_INPUT");
   for (const event of data.events) await recordCheck(actor, event, mappings, true, topic);
   return squareProgress(actor, topic);

@@ -7,6 +7,7 @@ import { PilotCorrection } from "./pilot-correction";
 import { StorageStatus } from "./storage-status";
 import { BankImport } from "./bank-import";
 import type { Actor } from "@/lib/security";
+import { ContentArchive } from "./content-archive";
 import { AdminAudit } from "./dashboards";
 import { ViewButton } from "./view-controls";
 import { useLocale, useResource, Heading, Loading, ErrorNotice, Form, Field, ActionButton, api, str, DateLabel, localDate } from "./ui";
@@ -14,10 +15,10 @@ type Plan = { id: string; name: string; active: boolean; features: { featureKey:
 export function AdminScreen({ section }: { section: string }) {
   const { t } = useLocale();
   return <><Heading title={t("Управление платформой", "Platform administration")} subtitle={t("Люди, материалы и доступ к обучению.", "People, materials and learning access.")} /><nav className="tabs">{[
-    ["audit", t("Журнал аудита", "Audit log")], ["overview", t("Обзор", "Overview")], ["users", t("Пользователи", "Users")], ["materials", t("Материалы", "Materials")],
+    ["archive", t("Архив и источники", "Archive & sources")], ["audit", t("Журнал аудита", "Audit log")], ["overview", t("Обзор", "Overview")], ["users", t("Пользователи", "Users")], ["materials", t("Материалы", "Materials")],
     ["access", t("Тарифы и доступ", "Plans & access")], ["import", t("Импорт и состояние", "Import & status")],
   ].map(([key, title]) => <Link className={section === key ? "active" : ""} key={key} href={"/admin/" + key}>{title}</Link>)}</nav>
-    {section === "audit" ? <AdminAudit auditOnly /> : section === "users" ? <Users /> : section === "access" ? <Access /> : section === "import" ? <><BankImport/><PilotCorrection /><PilotPublish /><Import /><StorageStatus /></> : section === "materials" ? <div className="grid three">{[
+    {section === "archive" ? <ContentArchive /> : section === "audit" ? <AdminAudit auditOnly /> : section === "users" ? <Users /> : section === "access" ? <Access /> : section === "import" ? <><BankImport/><PilotCorrection /><PilotPublish /><Import /><StorageStatus /></> : section === "materials" ? <div className="grid three">{[
       ["/library", t("Банк задач", "Problem bank")], ["/admin/courses", t("Курсы и теория", "Courses & theory")], ["/olympiads", t("Олимпиады", "Olympiads")],
     ].map(([href, title]) => <Link className="card" href={href} key={href}><h2>{title} →</h2></Link>)}</div> : <><Overview /><AdminAudit /></>}
   </>;

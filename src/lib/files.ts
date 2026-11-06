@@ -9,6 +9,7 @@ import { privateStorageRoot } from "./storage-config";
 import { imagePreviews } from "./image-previews";
 import { mayReviewPractice, mentoredPracticeWhere } from "./practice-access";
 import { requestView, userViewTeacher, lensAttemptScope } from "./request-view";
+import { archiveAdmin } from "./content-access";
 import { readMaterialGrant } from "./material-grant";
 import { taskPermission } from "./catalog";
 
@@ -49,6 +50,7 @@ export async function upload(actor: Actor, file: File, attemptId?: string, partI
         ensure(a && a.userId === actor.id, 404, "NOT_FOUND");
         ensure(!independentPractice(a), 403, "ASSIGNMENT_REQUIRED");
         await workAccess(actor, a.workVersion.work, tx);
+        ensure(!a.workVersion.items.some(i => i.taskVersion.task.examArchivedAt), 410, "MATERIAL_UNAVAILABLE");
         ensure(a.status === "IN_PROGRESS", 409, "ATTEMPT_FINISHED");
         if (a.expiresAt <= new Date()) { await finalize(tx, a, true); return { expired: true as const }; }
         ensure(!a.workVersion.work.archivedAt && a.workVersion.allowFiles, 403, "FILES_DISABLED");
@@ -82,6 +84,7 @@ export async function download(actor: Actor | null, id: string, variant = "origi
   const file = await db().storedFile.findUnique({ where: { id }, include: { derivatives: true, submissions: { include: { answer: { include: { attempt: { include: attemptInclude } } } } },
     assets: { include: { version: { include: { task: true } } } } } });
   ensure(file && !file.deletedAt, 404, "NOT_FOUND");
+  ensure(archiveAdmin(actor) || !file.assets.some(a => a.version.task.examArchivedAt), 404, "NOT_FOUND");
   const view = requestView();
   if (view?.lens && file.submissions.length) {
     // Never expose a target's unrelated uploads through a borrowed owner check.
@@ -135,7 +138,8 @@ export async function removeAnswerFile(actor: Actor, id: string, attemptId: stri
     const a = await lockAttempt(tx, attemptId);
     ensure(a && a.userId === actor.id, 404, "NOT_FOUND");
     await workAccess(actor, a.workVersion.work, tx);
-    ensure(a.status === "IN_PROGRESS", 409, "ATTEMPT_FINISHED");
+    ensure(!a.workVersion.items.some(i => i.taskVersion.task.examArchivedAt), 410, "MATERIAL_UNAVAILABLE");
+        ensure(a.status === "IN_PROGRESS", 409, "ATTEMPT_FINISHED");
     if (a.expiresAt <= new Date()) { await finalize(tx, a, true); return { expired: true }; }
     ensure(!a.workVersion.work.archivedAt && a.workVersion.allowFiles, 403, "FILES_DISABLED");
     ensure(a.answers.some(r => r.files.some(f => f.file.id === id)), 404, "NOT_FOUND");

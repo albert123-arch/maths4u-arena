@@ -8,14 +8,15 @@ import { localized, publicVersion, renderContent, versionInclude } from "./conte
 import { latestPracticeProgress } from "./practice-progress";
 import { displayMarkup, displayTitle } from "./public-presentation";
 import { publicLanguages } from "./public-language";
+import { archiveWhere, archiveAdmin, assertLessonVisible, visibleCourseWhere, visibleLessonWhere } from "./content-access";
 
 const filterSchema = z.object({ q: z.string().max(100).default(""), course: z.string().max(191).default(""), chapter: z.string().max(191).default(""), topic: z.string().max(191).default(""),
-  bookmarks: z.enum(["", "1"]).default(""),
+  bookmarks: z.enum(["", "1"]).default(""), origin: z.enum(["", "ORIGINAL", "CAMBRIDGE_EXAM", "OTHER_THIRD_PARTY", "UNKNOWN"]).default(""), archive: z.enum(["", "1", "0"]).default(""),
   category: z.enum(["", "UNKNOWN", "EXAM", "TRAINING", "OLYMPIAD"]).default(""), year: z.string().regex(/^$|^\d{4}$/).default(""), session: z.string().max(50).default(""), paper: z.string().max(50).default(""),
   mode: z.enum(["", "MC", "SHORT", "WRITTEN"]).default(""), progress: z.enum(["", "UNSOLVED", "SOLVED", "ATTEMPTED", "IN_PROGRESS", "NEEDS_REPEAT"]).default(""),
   language: z.enum(["", "ru", "en"]).default(""), difficulty: z.string().regex(/^$|^[1-5]$/).default(""), page: z.coerce.number().int().min(1).max(100000).default(1), pageSize: z.coerce.number().int().min(1).max(50).default(25) });
 export async function taskPermission(actor: Actor | null): Promise<Prisma.TaskWhereInput> {
-  const visible: Prisma.TaskWhereInput = { archivedAt: null, versions: { some: {} }, OR: [{ visibility: "PUBLIC" }, ...(actor && isTeacher(actor) ? [{ ownerId: actor.id }, ...(isAdmin(actor) ? [{}] : [])] : [])] };
+  const visible: Prisma.TaskWhereInput = { archivedAt: null, ...archiveWhere(actor), versions: { some: {} }, OR: [{ visibility: "PUBLIC" }, ...(actor && isTeacher(actor) ? [{ ownerId: actor.id }, ...(isAdmin(actor) ? [{}] : [])] : [])] };
   if (actor && isTeacher(actor)) return visible;
   const features = await db().task.groupBy({ by: ["featureKey"], where: { ...visible, featureKey: { not: null } } });
   const granted: string[] = [];
@@ -24,6 +25,7 @@ export async function taskPermission(actor: Actor | null): Promise<Prisma.TaskWh
 }
 async function sqlPermission(actor: Actor | null) {
   const clauses = [Prisma.sql`t.archivedAt IS NULL`];
+  if (!archiveAdmin(actor)) clauses.push(Prisma.sql`t.examArchivedAt IS NULL`);
   if (!actor || !isAdmin(actor)) clauses.push(actor && isTeacher(actor) ? Prisma.sql`(t.visibility = 'PUBLIC' OR t.ownerId = ${actor.id})` : Prisma.sql`t.visibility = 'PUBLIC'`);
   if (!actor || !isTeacher(actor)) {
     const features = await db().task.groupBy({ by: ["featureKey"], where: { visibility: "PUBLIC", archivedAt: null, featureKey: { not: null } } });
@@ -51,8 +53,14 @@ export type PracticeMode = "MC" | "SHORT" | "WRITTEN";
 export async function catalog(actor: Actor | null, lang: string, input: unknown, strictLocale = false) {
   const f = filterSchema.parse(input), base = await sqlPermission(actor);
   ensure(!f.bookmarks || actor, 401, "LOGIN_REQUIRED");
+  ensure(!f.origin && !f.archive || archiveAdmin(actor), 403, "FORBIDDEN");
+  if(f.origin) base.push(Prisma.sql`t.origin=${f.origin}`);
+  if(f.archive) base.push(f.archive === "1" ? Prisma.sql`t.examArchivedAt IS NOT NULL` : Prisma.sql`t.examArchivedAt IS NULL`);
   if (f.bookmarks && actor) base.push(Prisma.sql`EXISTS(SELECT 1 FROM TaskBookmark b WHERE b.taskId=t.id AND b.userId=${actor.id})`);
   if (f.q) base.push(Prisma.sql`EXISTS(SELECT 1 FROM TaskText tt WHERE tt.versionId=v.id AND tt.title LIKE ${"%" + f.q + "%"})`);
+  if (f.topic) await assertLessonVisible(actor, f.topic);
+  if (f.course) ensure(await db().course.count({where:{id:f.course,...visibleCourseWhere(actor)}}),404,"NOT_FOUND");
+  if (f.chapter) ensure(await db().topic.count({where:{id:f.chapter,lessons:{some:{archivedAt:null,...visibleLessonWhere(actor)}}}}),404,"NOT_FOUND");
   if (f.course || f.chapter || f.topic) {
     const hierarchy = [Prisma.sql`lt.taskId=t.id`, Prisma.sql`l.archivedAt IS NULL`, Prisma.sql`c.archivedAt IS NULL`];
     if (!actor || !isAdmin(actor)) hierarchy.push(Prisma.sql`c.published=true`);
@@ -87,6 +95,7 @@ export async function catalog(actor: Actor | null, lang: string, input: unknown,
   const facet = <K extends keyof (typeof facetRows)[number]>(key: K) => [...new Set(facetRows.map(r => r[key]).filter(v => v !== null && v !== ""))].sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true }));
   return { total, page, pages, pageSize: f.pageSize, facets: { categories: facet("category"), years: facet("year"), sessions: facet("session"), papers: facet("paper"), difficulties: facet("difficulty"), languages: facet("language") },
     items: ids.map((meta, i) => { const task = tasks.find(t => t.id === meta.id)!, v = task.versions[0]; return { id: task.id, number: (page - 1) * f.pageSize + i + 1, category: meta.category, mode: meta.mode, difficulty: meta.difficulty, progress: progress.find(p => p.taskId === task.id) ?? null,
+      ...(archiveAdmin(actor) ? { origin: task.origin, originManual: task.originManual, originReason: task.originReason, examArchivedAt: task.examArchivedAt } : {}),
       bookmarked: bookmarks.some(b => b.taskId === task.id), editable: !!actor && (isAdmin(actor) || task.ownerId === actor.id), points: v.parts.reduce((n, p) => n + p.maxPoints, 0), languages: v.texts.map(t => t.locale), version: publicVersion(v, lang) }; }) };
 }
 export type CatalogDto = Awaited<ReturnType<typeof catalog>>;
@@ -108,14 +117,14 @@ export async function courseCatalog(actor: Actor | null, lang: string, slug?: st
   const taskCount = (lessonIds: string[], allowed: boolean) => allowed ? new Set(modeRows.filter(r => lessonIds.includes(r.lessonId)).map(r => r.taskId)).size : 0;
   const rows = await db().course.findMany({ orderBy: [{ position: "asc" }, { id: "asc" }], where: { archivedAt: null, ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) }, include: { texts: true, topics: { orderBy: [{ position: "asc" }, { id: "asc" }], include: { texts: true, lessons: { where: { archivedAt: null }, orderBy: [{ position: "asc" }, { id: "asc" }], include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: { select: { locale: true, title: true } } } }, _count: { select: { tasks: { where: { task: permission } } } } } } } } } });
   const russian = strictLocale && lang === "ru" ? await publicLanguages() : null;
-  return Promise.all(rows.filter(c => !russian || russian.courses.includes(c.slug)).map(async c => {
+  const result = await Promise.all(rows.filter(c => (archiveAdmin(actor) || modeRows.some(r => c.topics.some(ch => ch.lessons.some(l => l.id === r.lessonId)))) && (!russian || russian.courses.includes(c.slug))).map(async c => {
     const allowed = !c.featureKey || !!(actor && isTeacher(actor)) || !!(actor && await hasFeature(actor, c.featureKey));
-    const chapters = await Promise.all(c.topics.filter(ch => !russian || ch.lessons.some(l => russian.lessons.some(r => r.id === l.id))).map(async ch => ({ id: ch.id, title: displayTitle(localized(ch.texts, lang).title), position: ch.position,
+    const chapters = await Promise.all(c.topics.filter(ch => (archiveAdmin(actor) || modeRows.some(r => ch.lessons.some(l => l.id === r.lessonId))) && (!russian || ch.lessons.some(l => russian.lessons.some(r => r.id === l.id)))).map(async ch => ({ id: ch.id, title: displayTitle(localized(ch.texts, lang).title), position: ch.position,
       original: modeRows.some(r => ch.lessons.some(l => l.id === r.lessonId) && !!r.original),
       writtenLabel: modeRows.some(r => ch.lessons.some(l => l.id === r.lessonId) && !!r.original) ? "exam-style" : modeRows.some(r => ch.lessons.some(l => l.id === r.lessonId) && r.category === "EXAM") ? "exam" : "written",
       count: taskCount(ch.lessons.map(l => l.id), allowed),
       questionCounts: questionCounts(ch.lessons.map(l => l.id), allowed),
-      topics: ch.lessons.filter(l => l.versions.length && (!russian || russian.lessons.some(r => r.id === l.id))).map(l => ({ id: l.id, title: displayTitle(localized(l.versions[0].texts, lang).title), count: taskCount([l.id], allowed), questionCounts: questionCounts([l.id], allowed) })) })));
+      topics: ch.lessons.filter(l => (archiveAdmin(actor) || modeRows.some(r => r.lessonId === l.id)) && l.versions.length && (!russian || russian.lessons.some(r => r.id === l.id))).map(l => ({ id: l.id, title: displayTitle(localized(l.versions[0].texts, lang).title), count: taskCount([l.id], allowed), questionCounts: questionCounts([l.id], allowed) })) })));
     return { id: c.id, slug: c.slug, groupLabel:c.groupLabel, title: displayTitle(localized(c.texts, lang).title), description: russian ? c.texts.find(t => t.locale === "ru")?.description ?? "" : localized(c.texts, lang).description, locked: !allowed,
       original: modeRows.some(r => c.topics.some(ch => ch.lessons.some(l => l.id === r.lessonId)) && !!r.original),
       followed: follows.some(f => f.courseId === c.id),
@@ -124,8 +133,11 @@ export async function courseCatalog(actor: Actor | null, lang: string, slug?: st
       questionCounts: questionCounts(c.topics.flatMap(ch => ch.lessons.map(l => l.id)), allowed),
       count: taskCount(c.topics.flatMap(ch => ch.lessons.map(l => l.id)), allowed), chapters };
   }));
+  if(slug) ensure(result.length,404,"NOT_FOUND");
+  return result;
 }
 export async function topicContent(actor: Actor | null, id: string, lang: string, strictLocale = false) {
+  await assertLessonVisible(actor, id);
   const l = await db().lesson.findUnique({ where: { id }, include: { topic: { include: { texts: true, course: { include: { texts: true } } } }, versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } } } });
   ensure(l && !l.archivedAt && !l.topic.course.archivedAt && (l.topic.course.published || !!(actor && isAdmin(actor))) && l.versions.length, 404, "NOT_FOUND");
   const c = l.topic.course;
@@ -146,13 +158,14 @@ export async function basket(actor: Actor, lang: string) {
   const tasks = await db().task.findMany({ where: { AND: [await taskPermission(actor), { id: { in: ids } }] }, include: { versions: { take: 1, orderBy: { number: "desc" }, include: versionInclude } } });
   return { revision: saved?.revision ?? 0, taskIds: ids, items: ids.map(id => {
     const task = tasks.find(t => t.id === id), v = task?.versions[0];
-    return v ? { id, available: true, public: task!.visibility === "PUBLIC", title: localized(v.texts, lang).title, points: v.parts.reduce((n, p) => n + p.maxPoints, 0), version: publicVersion(v, lang) }
+    return v ? { id, available: !task!.examArchivedAt, public: task!.visibility === "PUBLIC", title: localized(v.texts, lang).title, points: v.parts.reduce((n, p) => n + p.maxPoints, 0), version: publicVersion(v, lang) }
       : { id, available: false, public: false, title: "", points: 0, version: null };
   }) };
 }
 export async function saveBasket(actor: Actor, input: unknown, lang: string) {
   teacher(actor);
   const data = z.object({ taskIds: z.array(z.string().min(1).max(191)).max(50).refine(ids => new Set(ids).size === ids.length), revision: z.number().int().nonnegative() }).parse(input);
+  ensure(await db().task.count({where:{id:{in:data.taskIds},examArchivedAt:null}}) === data.taskIds.length, 400, "TASK_UNAVAILABLE");
   await transaction(async tx => { await lockUser(tx, actor.id); const current = await tx.taskBasket.findUnique({ where: { userId: actor.id } });
     ensure(data.revision === (current?.revision ?? 0), 409, "STALE_BASKET");
     await tx.taskBasket.upsert({ where: { userId: actor.id }, create: { userId: actor.id, taskIds: data.taskIds, revision: 1 }, update: { taskIds: data.taskIds, revision: { increment: 1 }, updatedAt: new Date() } });

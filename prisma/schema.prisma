@@ -357,7 +357,19 @@ model BankBatch {
 }
 
 
+enum ContentOrigin {
+  ORIGINAL
+  CAMBRIDGE_EXAM
+  OTHER_THIRD_PARTY
+  UNKNOWN
+}
+
 model Task {
+  origin ContentOrigin @default(UNKNOWN)
+  originManual Boolean @default(false)
+  originReason String? @db.VarChar(1000)
+  originRule String? @db.VarChar(80)
+  examArchivedAt DateTime?
   bookmarks TaskBookmark[]
   practiceStudies PracticeStudy[]
   id         String         @id @default(cuid())
@@ -375,6 +387,7 @@ model Task {
 
   @@index([ownerId])
   @@index([visibility, archivedAt])
+  @@index([origin, examArchivedAt])
 }
 
 model TaskTopic {

@@ -4,10 +4,12 @@ import { db } from "./prisma";
 import { ensure } from "./errors";
 import { isAdmin, teacher, transaction, type Actor } from "./security";
 import { localized } from "./content";
+import { assertLessonVisible } from "./content-access";
 import { presentationLink } from "./presentation-url";
 
 async function availableLesson(client: Prisma.TransactionClient, actor: Actor, lessonId: string) {
   teacher(actor);
+  await assertLessonVisible(actor, lessonId);
   const lesson = await client.lesson.findUnique({ where: { id: lessonId }, include: {
     topic: { include: { course: true } },
     versions: { orderBy: { number: "desc" }, take: 1, include: { texts: true } },
@@ -41,6 +43,7 @@ const commandSchema = z.discriminatedUnion("action", [editSchema,
 
 export async function changePresentation(actor: Actor, lessonId: string, input: unknown) {
   teacher(actor);
+  await assertLessonVisible(actor, lessonId);
   const data = commandSchema.parse(input);
   const link = data.action === "save" ? presentationLink(data.url) : null;
   if (data.action === "save") ensure(link, 400, "INVALID_PRESENTATION_URL");

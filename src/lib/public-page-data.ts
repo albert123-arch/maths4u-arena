@@ -1,6 +1,8 @@
-import { unstable_cache } from "next/cache";
+// Request-scoped only: archive/restore must take effect on the next request,
+// including previously issued material grants. No cross-request content cache.
+import { cache } from "react";
 import { catalog, courseCatalog, topicContent } from "./catalog";
 import type { Locale } from "./locale";
-export const publicCourses = unstable_cache((lang: Locale, slug?: string) => courseCatalog(null, lang, slug, true), ["anonymous-courses-v1"], { revalidate: 60, tags: ["public-content"] });
-export const publicQuestions = unstable_cache((lang: Locale, filters: Record<string, string>) => catalog(null, lang, { ...filters, progress: "", bookmarks: "", ...(lang === "ru" ? { language: "ru" } : {}) }, true), ["anonymous-practice-v2"], { revalidate: 60, tags: ["public-content"] });
-export const publicTopic = unstable_cache((lang: Locale, id: string) => topicContent(null, id, lang, true), ["anonymous-topic-v2"], { revalidate: 60, tags: ["public-content"] });
+export const publicCourses = cache((lang: Locale, slug?: string) => courseCatalog(null, lang, slug, true));
+export const publicQuestions = cache((lang: Locale, filters: Record<string, string>) => catalog(null, lang, { ...filters, origin:"", archive:"", progress: "", bookmarks: "", ...(lang === "ru" ? { language: "ru" } : {}) }, true));
+export const publicTopic = cache((lang: Locale, id: string) => topicContent(null, id, lang, true));

@@ -3,6 +3,7 @@ import { cache } from "react";
 import { db } from "./prisma";
 import { courseDirection, type DiscoveryCourse, type DiscoveryItem, type DiscoveryData } from "./discovery-model";
 import { publicLanguages } from "./public-language";
+import { visibleCourseWhere, visibleLessonWhere } from "./content-access";
 import { displayTitle, displayDescription } from "./public-presentation";
 
 function title(texts: { locale: string; title: string }[], lang: string): string {
@@ -11,9 +12,9 @@ function title(texts: { locale: string; title: string }[], lang: string): string
 export const publicDiscovery = cache(async (lang: "en" | "ru" = "en"): Promise<DiscoveryData> => {
   // Do not use actor-dependent catalogues or serialise an ORM record to the client.
   // Entitled/private courses continue through their existing account-only routes.
-  const rows = await db().course.findMany({ where: { published: true, archivedAt: null, featureKey: null }, orderBy: [{ position: "asc" }, { id: "asc" }], select: {
+  const rows = await db().course.findMany({ where: { published: true, archivedAt: null, featureKey: null, ...visibleCourseWhere(null) }, orderBy: [{ position: "asc" }, { id: "asc" }], select: {
     slug: true, texts: { select: { locale: true, title: true, description: true } },
-    topics: { orderBy: [{ position: "asc" }, { id: "asc" }], select: { texts: { select: { locale: true, title: true } }, lessons: { where: { archivedAt: null }, orderBy: [{ position: "asc" }, { id: "asc" }], select: { id: true, versions: { take: 1, orderBy: { number: "desc" }, select: { texts: { select: { locale: true, title: true } } } } } } } },
+    topics: { orderBy: [{ position: "asc" }, { id: "asc" }], select: { texts: { select: { locale: true, title: true } }, lessons: { where: { archivedAt: null, ...visibleLessonWhere(null) }, orderBy: [{ position: "asc" }, { id: "asc" }], select: { id: true, versions: { take: 1, orderBy: { number: "desc" }, select: { texts: { select: { locale: true, title: true } } } } } } } },
   } });
   const courses: DiscoveryCourse[] = [], items: DiscoveryItem[] = [];
   const russian = lang === "ru" ? await publicLanguages() : null, prefix = lang === "ru" ? "/ru" : "";

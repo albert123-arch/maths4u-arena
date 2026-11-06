@@ -9,13 +9,14 @@ import { progressInclude, studyProgressStatus } from "./practice-progress";
 import { squareProgress } from "./square-learning";
 import { quadraticTopics } from "./square-model";
 import { mentoredPracticeWhere } from "./practice-access";
+import { visibleLessonWhere, archiveAdmin } from "./content-access";
 import { freshIndependent } from "./dashboard-evidence";
 
 export async function studentDashboard(actor: Actor, lang: string) {
   const [works, bookmarks, lessons, checks] = await Promise.all([
     listWorks(actor),
     db().taskBookmark.findMany({ where: { userId: actor.id, task: await taskPermission(actor) }, take: 6, orderBy: { createdAt: "desc" }, include: { task: { include: { versions: { take: 1, orderBy: { number: "desc" }, select: { texts: true } } } } } }),
-    db().lesson.findMany({ where: { archivedAt: null, topic: { course: { published: true, archivedAt: null, featureKey: null, followers: { some: { userId: actor.id } } } } }, include: {
+    db().lesson.findMany({ where: { archivedAt: null, ...visibleLessonWhere(actor), topic: { course: { published: true, archivedAt: null, featureKey: null, followers: { some: { userId: actor.id } } } } }, include: {
       topic: { include: { course: true } }, versions: { take: 1, orderBy: { number: "desc" }, select: { texts: true } },
       progress: { where: { userId: actor.id } }, practiceStudies: { where: { attempt: { userId: actor.id, AND: [lensAttemptScope()] } }, include: progressInclude, orderBy: { updatedAt: "desc" } },
     } }),
@@ -43,7 +44,7 @@ export async function studentDashboard(actor: Actor, lang: string) {
 }
 export async function teacherDashboard(actor: Actor) {
   teacher(actor);
-  const pendingWhere = { status: "SUBMITTED" as const, answers: { some: { autoPoints: null, review: { is: null } } }, OR: [{ workVersion: { work: { ownerId: actor.id, kind: { not: "PRACTICE" as const } } } }, mentoredPracticeWhere(actor)] };
+  const pendingWhere = { ...(archiveAdmin(actor) ? {} : { workVersion:{items:{none:{taskVersion:{task:{examArchivedAt:{not:null}}}}}} }), status: "SUBMITTED" as const, answers: { some: { autoPoints: null, review: { is: null } } }, OR: [{ workVersion: { work: { ownerId: actor.id, kind: { not: "PRACTICE" as const } } } }, mentoredPracticeWhere(actor)] };
   const [classes, pending, pendingCount] = await Promise.all([
     db().classroom.findMany({ where: { teacherId: actor.id, archivedAt: null }, orderBy: { createdAt: "desc" }, include: { members: { where: { removedAt: null }, select: { user: { select: { id: true, displayName: true, username: true } } } }, _count: { select: { works: { where: { archivedAt: null } } } } } }),
     db().attempt.findMany({ where: pendingWhere, take: 20, orderBy: { submittedAt: "asc" }, select: { id: true, submittedAt: true, user: { select: { displayName: true } }, workVersion: { select: { work: { select: { title: true, classroom: { select: { title: true } } } } } } } }),

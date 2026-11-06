@@ -27,6 +27,7 @@ import { pure1Review } from "@/lib/pure1-review";
 import { checkSquare, helpSquare, squareProgress, importSquareProgress, squareMappings } from "@/lib/square-learning";
 import { courseChoices, learningHome, openSquareLesson } from "@/lib/learning-home";
 
+import { archiveOverview, changeContentAccess } from "@/lib/content-archive";
 import { quadraticTopics } from "@/lib/square-model";
 import { inRequestView, requestView, rolePreview } from "@/lib/request-view";
 import { resolveRequestView, guardViewRequest, enterView, exitView, touchView } from "@/lib/view-lens";
@@ -110,7 +111,7 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
       ensure(JSON.stringify(input).length <= 6000, 413, "BODY_TOO_LARGE");
       return json(await checkSquare(rolePreview() ? null : user, input, topic));
     }
-    if ((route === "learning/square/help" || action === "help") && method === "POST") return json(await helpSquare(input, topic));
+    if ((route === "learning/square/help" || action === "help") && method === "POST") return json(await helpSquare(input, topic, await actorForToken(tokenFrom(request))));
     if ((route === "learning/square/self-assess" || action === "self-assess") && method === "POST") return json(await squareSelfMarks(await actorForToken(tokenFrom(request)), input, topic));
     if (parts[0] === "catalog" && parts[1] === "tasks" && parts.length === 4 && method === "POST") {
       const actor = await actorForToken(tokenFrom(request));
@@ -138,6 +139,8 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
         "Content-Security-Policy": "sandbox; default-src 'none'", "Cross-Origin-Resource-Policy": "same-origin" } });
     }
     const actor = await requireActor(request);
+    if (route === "admin/content" && method === "GET") return json(await archiveOverview(actor));
+    if (parts[0] === "admin" && parts[1] === "content" && parts.length === 3 && method === "PATCH") return json(await changeContentAccess(actor,parts[2],input));
     if (route === "dashboard/student" && method === "GET") return json(await studentDashboard(actor, lang));
     if (route === "dashboard/teacher" && method === "GET") return json(await teacherDashboard(actor));
     if (route === "dashboard/admin" && method === "GET") return json(await adminDashboard(actor));

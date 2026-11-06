@@ -4,6 +4,7 @@ import { ensure } from "./errors";
 import { requestView, rolePreview } from "./request-view";
 import { publicVersion, versionInclude } from "./content";
 import { automaticPoints, ownWork, responseSchema } from "./works";
+import { hiddenMaterial } from "./content-access";
 import { taskPermission } from "./catalog";
 
 async function material(kind: string, id: string) {
@@ -14,6 +15,7 @@ async function material(kind: string, id: string) {
     // their own assignment, with no access to any student's responses.
     ensure(work.ownerId === v.real.id, 404, "NOT_FOUND");
     const version = await db().workVersion.findFirstOrThrow({ where: { workId: id }, orderBy: { number: "desc" }, include: { items: { orderBy: { position: "asc" }, include: { taskVersion: { include: versionInclude } } } } });
+    ensure(!version.items.some(i=>hiddenMaterial(v.actor,i.taskVersion.task)),404,"NOT_FOUND");
     return { title: work.title, versions: version.items.map(i => i.taskVersion) };
   }
   const task = await db().task.findFirst({ where: { AND: [{ id }, await taskPermission(v.actor)] }, include: { versions: { orderBy: { number: "desc" }, take: 1, include: versionInclude } } });
