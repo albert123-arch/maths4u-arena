@@ -1,3 +1,4 @@
+import { cambridgeScope, visibleCourse, visibleLesson, requireVisibleLesson, requireVisibleTasks } from "./cambridge-access";
 import { z } from "zod";
 import { Prisma } from "../generated/prisma/client";
 import { db } from "./prisma";
@@ -13,7 +14,7 @@ const filterSchema = z.object({ q: z.string().max(100).default(""), course: z.st
   mode: z.enum(["", "MC", "SHORT", "WRITTEN"]).default(""), progress: z.enum(["", "UNSOLVED", "SOLVED", "ATTEMPTED", "IN_PROGRESS", "NEEDS_REPEAT"]).default(""),
   language: z.enum(["", "ru", "en"]).default(""), difficulty: z.string().regex(/^$|^[1-5]$/).default(""), page: z.coerce.number().int().min(1).max(100000).default(1), pageSize: z.coerce.number().int().min(1).max(50).default(25) });
 export async function taskPermission(actor: Actor | null): Promise<Prisma.TaskWhereInput> {
-  const visible: Prisma.TaskWhereInput = { archivedAt: null, versions: { some: {} }, OR: [{ visibility: "PUBLIC" }, ...(actor && isTeacher(actor) ? [{ ownerId: actor.id }, ...(isAdmin(actor) ? [{}] : [])] : [])] };
+  const visible: Prisma.TaskWhereInput = { archivedAt: null, ...cambridgeScope(actor), versions: { some: {} }, OR: [{ visibility: "PUBLIC" }, ...(actor && isTeacher(actor) ? [{ ownerId: actor.id }, ...(isAdmin(actor) ? [{}] : [])] : [])] };
   if (actor && isTeacher(actor)) return visible;
   const features = await db().task.groupBy({ by: ["featureKey"], where: { ...visible, featureKey: { not: null } } });
   const granted: string[] = [];
@@ -22,6 +23,7 @@ export async function taskPermission(actor: Actor | null): Promise<Prisma.TaskWh
 }
 async function sqlPermission(actor: Actor | null) {
   const clauses = [Prisma.sql`t.archivedAt IS NULL`];
+  if (!actor || !isAdmin(actor)) clauses.push(Prisma.sql`NOT EXISTS(SELECT 1 FROM TaskVersion cv LEFT JOIN Source cs ON cs.id=cv.sourceId WHERE cv.taskId=t.id AND (cv.examBoard IN ('Cambridge','Cambridge International') OR cs.name IN ('Cambridge','Cambridge International')))`);
   if (!actor || !isAdmin(actor)) clauses.push(actor && isTeacher(actor) ? Prisma.sql`(t.visibility = 'PUBLIC' OR t.ownerId = ${actor.id})` : Prisma.sql`t.visibility = 'PUBLIC'`);
   if (!actor || !isTeacher(actor)) {
     const features = await db().task.groupBy({ by: ["featureKey"], where: { visibility: "PUBLIC", archivedAt: null, featureKey: { not: null } } });
@@ -62,7 +64,7 @@ export async function catalog(actor: Actor | null, lang: string, input: unknown)
   const where = [...base];
   if (f.mode) { const clause = Prisma.sql`${modeSql}=${f.mode}`; base.push(clause); where.push(clause); }
   ensure(!f.progress || actor, 401, "LOGIN_REQUIRED");
-  const progress = actor ? await latestPracticeProgress(actor.id, f.topic || undefined) : [];
+  const progress = actor ? await latestPracticeProgress(actor.id, f.topic || undefined, actor) : [];
   if (f.progress) {
     const ids = progress.filter(p => f.progress === "SOLVED" || f.progress === "UNSOLVED" ? p.solved
       : f.progress === "IN_PROGRESS" ? p.state === "IN_PROGRESS" : f.progress === "NEEDS_REPEAT" ? p.state === "NEEDS_REPEAT" : true).map(p => p.taskId);
@@ -90,7 +92,7 @@ export type CatalogDto = Awaited<ReturnType<typeof catalog>>;
 export async function courseCatalog(actor: Actor | null, lang: string, slug?: string) {
   const permission = await taskPermission(actor);
   const follows = actor ? await db().courseFollow.findMany({ where: { userId: actor.id }, select: { courseId: true } }) : [];
-  const progress = actor ? await latestPracticeProgress(actor.id) : [];
+  const progress = actor ? await latestPracticeProgress(actor.id, undefined, actor) : [];
   const modeRows = await db().$queryRaw<{ lessonId: string; taskId: string; mode: PracticeMode }[]>(Prisma.sql`SELECT lt.lessonId, t.id AS taskId, ${modeSql} AS mode ${fromSql}
     JOIN LessonTask lt ON lt.taskId=t.id JOIN Lesson l ON l.id=lt.lessonId JOIN Topic ch ON ch.id=l.topicId JOIN Course c ON c.id=ch.courseId
     WHERE ${Prisma.join(await sqlPermission(actor), " AND ")} AND l.archivedAt IS NULL AND c.archivedAt IS NULL
@@ -100,10 +102,11 @@ export async function courseCatalog(actor: Actor | null, lang: string, slug?: st
     if (allowed) for (const row of modeRows) if (lessonIds.includes(row.lessonId)) sets[row.mode].add(row.taskId);
     return { MC: sets.MC.size, SHORT: sets.SHORT.size, WRITTEN: sets.WRITTEN.size };
   };
-  const rows = await db().course.findMany({ orderBy: [{ position: "asc" }, { id: "asc" }], where: { archivedAt: null, ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) }, include: { texts: true, topics: { orderBy: [{ position: "asc" }, { id: "asc" }], include: { texts: true, lessons: { where: { archivedAt: null }, orderBy: [{ position: "asc" }, { id: "asc" }], include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: { select: { locale: true, title: true } } } }, _count: { select: { tasks: { where: { task: permission } } } } } } } } } });
+  const rows = await db().course.findMany({ orderBy: [{ position: "asc" }, { id: "asc" }], where: { archivedAt: null, ...visibleCourse(actor), ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) }, include: { texts: true, topics: { orderBy: [{ position: "asc" }, { id: "asc" }], include: { texts: true, lessons: { where: { archivedAt: null, ...visibleLesson(actor) }, orderBy: [{ position: "asc" }, { id: "asc" }], include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: { select: { locale: true, title: true } } } }, _count: { select: { tasks: { where: { task: permission } } } } } } } } } });
+  if(slug) ensure(rows.length,404,"NOT_FOUND");
   return Promise.all(rows.map(async c => {
     const allowed = !c.featureKey || !!(actor && isTeacher(actor)) || !!(actor && await hasFeature(actor, c.featureKey));
-    const chapters = await Promise.all(c.topics.map(async ch => ({ id: ch.id, title: localized(ch.texts, lang).title, position: ch.position,
+    const chapters = await Promise.all(c.topics.filter(ch=>ch.lessons.length||actor&&isAdmin(actor)).map(async ch => ({ id: ch.id, title: localized(ch.texts, lang).title, position: ch.position,
       count: allowed ? await db().task.count({ where: { AND: [permission, { lessons: { some: { lesson: { archivedAt: null, topicId: ch.id } } } }] } }) : 0,
       questionCounts: questionCounts(ch.lessons.map(l => l.id), allowed),
       topics: ch.lessons.filter(l => l.versions.length).map(l => ({ id: l.id, title: localized(l.versions[0].texts, lang).title, count: allowed ? l._count.tasks : 0, questionCounts: questionCounts([l.id], allowed) })) })));
@@ -116,6 +119,7 @@ export async function courseCatalog(actor: Actor | null, lang: string, slug?: st
   }));
 }
 export async function topicContent(actor: Actor | null, id: string, lang: string) {
+  await requireVisibleLesson(actor,id);
   const l = await db().lesson.findUnique({ where: { id }, include: { topic: { include: { texts: true, course: { include: { texts: true } } } }, versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } } } });
   ensure(l && !l.archivedAt && !l.topic.course.archivedAt && (l.topic.course.published || !!(actor && isAdmin(actor))) && l.versions.length, 404, "NOT_FOUND");
   const c = l.topic.course;
@@ -140,6 +144,7 @@ export async function basket(actor: Actor, lang: string) {
 export async function saveBasket(actor: Actor, input: unknown, lang: string) {
   teacher(actor);
   const data = z.object({ taskIds: z.array(z.string().min(1).max(191)).max(50).refine(ids => new Set(ids).size === ids.length), revision: z.number().int().nonnegative() }).parse(input);
+  await requireVisibleTasks(actor,data.taskIds);
   await transaction(async tx => { await lockUser(tx, actor.id); const current = await tx.taskBasket.findUnique({ where: { userId: actor.id } });
     ensure(data.revision === (current?.revision ?? 0), 409, "STALE_BASKET");
     await tx.taskBasket.upsert({ where: { userId: actor.id }, create: { userId: actor.id, taskIds: data.taskIds, revision: 1 }, update: { taskIds: data.taskIds, revision: { increment: 1 }, updatedAt: new Date() } });

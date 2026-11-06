@@ -1,3 +1,4 @@
+import { cambridgeScope, requireVisibleTasks, requireVisibleWork, visibleWorkVersion } from "./cambridge-access";
 import { z } from "zod";
 import { db } from "./prisma";
 import { AppError, ensure } from "./errors";
@@ -25,12 +26,14 @@ export async function ownClass(actor: Actor, id: string, tx: Prisma.TransactionC
   return classroom;
 }
 export async function ownWork(actor: Actor, id: string, tx: Prisma.TransactionClient = db()) {
+  await requireVisibleWork(actor,id,tx);
   teacher(actor);
   const work = await tx.work.findUnique({ where: { id }, include: contextInclude });
   ensure(work && (work.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
   return work;
 }
 export async function workAccess(actor: Actor, work: Context, tx: Prisma.TransactionClient = db()) {
+  await requireVisibleWork(actor,work.id,tx);
   if (work.kind === "PRACTICE") { ensure(work.ownerId === actor.id || isAdmin(actor), 404, "NOT_FOUND"); return; }
   if (work.classId) {
     const membership = await tx.classMembership.findUnique({ where: { classId_userId: { classId: work.classId, userId: actor.id } } });
@@ -45,7 +48,7 @@ export async function createWork(tx: Prisma.TransactionClient, actor: Actor, dat
     const classroom = await ownClass(actor, data.classId, tx);
     ensure(!classroom.archivedAt, 400, "CLASS_ARCHIVED");
   }
-  const tasks = await tx.task.findMany({ where: { id: { in: data.taskIds }, archivedAt: null }, include: {
+  const tasks = await tx.task.findMany({ where: { id: { in: data.taskIds }, archivedAt: null, ...cambridgeScope(actor) }, include: {
     versions: { orderBy: { number: "desc" }, take: 1, include: versionInclude },
   } });
   ensure(tasks.length === data.taskIds.length, 400, "TASK_UNAVAILABLE");
@@ -74,6 +77,7 @@ export async function publishWork(actor: Actor, input: unknown) {
   return transaction(tx => createWork(tx, actor, data));
 }
 export async function practice(actor: Actor, taskId: string) {
+  await requireVisibleTasks(actor,[taskId]);
   return transaction(async tx => {
     await lockUser(tx, actor.id);
     const previous = await tx.work.findFirst({ where: { ownerId: actor.id, kind: "PRACTICE",
@@ -132,6 +136,7 @@ export async function finalize(tx: Prisma.TransactionClient, attempt: FullAttemp
 export async function startAttempt(actor: Actor, workId: string, newAttempt = false) {
   return transaction(async tx => {
     await lockUser(tx, actor.id);
+    await requireVisibleWork(actor,workId,tx);
     const work = await tx.work.findUnique({ where: { id: workId }, include: { ...contextInclude, versions: { take: 1, orderBy: { number: "desc" } } } });
     ensure(work, 404, "NOT_FOUND");
     await workAccess(actor, work, tx);
@@ -154,6 +159,7 @@ export async function mutateAttempt(actor: Actor, id: string, input: unknown, su
   const data = saveSchema.parse(input);
   const outcome = await transaction(async tx => {
     const a = await lockAttempt(tx, id);
+    if(a) await requireVisibleWork(actor,a.workVersion.workId,tx);
     ensure(a && a.userId === actor.id, 404, "NOT_FOUND");
     ensure(!independentPractice(a) || (!a.study?.selfDirected && !a.workVersion.items.some(i => i.taskVersion.parts.some(p => p.kind === "MANUAL"))), 403, "ASSIGNMENT_REQUIRED");
     // Repeated submissions cannot change a finished attempt, even with stale revisions.
@@ -200,6 +206,7 @@ export function maySeeMaterialFile(a: FullAttempt, role: string) {
 export async function getAttempt(actor: Actor, id: string, lang = "ru") {
   const { a, practiceReview } = await transaction(async tx => {
     let row = await lockAttempt(tx, id);
+    if(row) await requireVisibleWork(actor,row.workVersion.workId,tx);
     const practiceReview = !!row && await mayReviewPractice(actor, id, tx);
     ensure(row && (row.userId === actor.id || isAdmin(actor) || (isTeacher(actor) && row.workVersion.work.ownerId === actor.id) || practiceReview), 404, "NOT_FOUND");
     if (row.status === "IN_PROGRESS" && row.expiresAt > new Date() && row.userId === actor.id) await workAccess(actor, row.workVersion.work, tx);
@@ -234,6 +241,7 @@ export async function gradeAttempt(actor: Actor, id: string, input: unknown) {
   ensure(new Set(data.reviews.map(r => r.partId)).size === data.reviews.length, 400, "DUPLICATE_REVIEW");
   return transaction(async tx => {
     const a = await lockAttempt(tx, id);
+    if(a) await requireVisibleWork(actor,a.workVersion.workId,tx);
     ensure(a && (isAdmin(actor) || (a.workVersion.work.ownerId === actor.id && a.userId !== actor.id) || await mayReviewPractice(actor, id, tx)), 404, "NOT_FOUND");
     ensure(!a.study?.selfDirected, 403, "SELF_STUDY_NOT_GRADED");
     if (a.status === "IN_PROGRESS" && a.expiresAt <= new Date()) await finalize(tx, a, true);
@@ -266,6 +274,7 @@ export async function publishResults(actor: Actor, id: string) {
   return db().work.update({ where: { id }, data: { resultsPublishedAt: new Date() } });
 }
 export async function workSummary(actor: Actor, id: string) {
+  await requireVisibleWork(actor,id);
   const work = await db().work.findUnique({ where: { id }, include: { ...contextInclude, versions: { orderBy: { number: "desc" }, take: 1, include: {
     attempts: { where: { userId: actor.id }, select: { id: true, number: true, status: true }, orderBy: { number: "desc" } },
     _count: { select: { items: true } },
@@ -277,11 +286,11 @@ export async function workSummary(actor: Actor, id: string) {
 }
 export async function listWorks(actor: Actor, manage = false) {
   if (manage) teacher(actor);
-  const rows = await db().work.findMany({ where: manage ? { ownerId: isAdmin(actor) ? undefined : actor.id, kind: { not: "PRACTICE" } } : { OR: [
+  const rows = await db().work.findMany({ where: { AND: [{ versions: { every: visibleWorkVersion(actor) } }, manage ? { ownerId: isAdmin(actor) ? undefined : actor.id, kind: { not: "PRACTICE" } } : { OR: [
     { classId: { not: null }, archivedAt: null, classroom: { archivedAt: null, members: { some: { userId: actor.id, removedAt: null } } } },
     { versions: { some: { attempts: { some: { userId: actor.id } } } } },
     { round: { olympiad: { registrations: { some: { userId: actor.id, withdrawnAt: null } } } }, archivedAt: null },
-  ] }, take: 100, orderBy: { createdAt: "desc" }, include: { classroom: true, versions: { take: 1, orderBy: { number: "desc" }, include: { attempts: {
+  ] }] }, take: 100, orderBy: { createdAt: "desc" }, include: { classroom: true, versions: { take: 1, orderBy: { number: "desc" }, include: { attempts: {
     where: manage ? undefined : { userId: actor.id }, select: { id: true, status: true, number: true, user: { select: { displayName: true } } } },
   } } } });
   return rows.map(w => ({ id: w.id, title: w.title, kind: w.kind, archived: !!w.archivedAt, classTitle: w.classroom?.title,

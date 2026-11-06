@@ -1,3 +1,4 @@
+import { cambridgeScope, visibleWorkVersion, visibleLesson } from "./cambridge-access";
 import { z } from "zod";
 import { Prisma } from "../generated/prisma/client";
 import { db } from "./prisma";
@@ -23,36 +24,37 @@ export async function studentProgress(actor: Actor, classId: string, studentId: 
   ensure(membership && !membership.removedAt, 404, "NOT_FOUND");
   const practice: Prisma.AttemptWhereInput = { workVersion: { work: { kind: "PRACTICE", ownerId: studentId } } };
   const assigned: Prisma.AttemptWhereInput = { workVersion: { work: { classId, ...(isAdmin(actor) ? {} : { ownerId: actor.id }) } } };
-  return { ...await progressReport(studentId, membership.user, lang, input, practice, assigned, false), classroom: { id: classId, title: classroom.title } };
+  return { ...await progressReport(studentId, membership.user, lang, input, practice, assigned, false, actor), classroom: { id: classId, title: classroom.title } };
 }
 
 export async function myProgress(actor: Actor, lang: string, input: unknown = {}) {
   const practice: Prisma.AttemptWhereInput = { workVersion: { work: { kind: "PRACTICE", ownerId: actor.id } } };
   const assigned: Prisma.AttemptWhereInput = { workVersion: { work: { OR: [{ kind: { not: "PRACTICE" } }, { ownerId: { not: actor.id } }] } } };
-  const report = await progressReport(actor.id, { id: actor.id, displayName: actor.displayName, username: actor.username }, lang, input, practice, assigned, true);
+  const report = await progressReport(actor.id, { id: actor.id, displayName: actor.displayName, username: actor.username }, lang, input, practice, assigned, true, actor);
   const counts = await db().lessonTask.groupBy({ by: ["lessonId"], where: { lessonId: { in: report.topics.map(t => t.id) }, task: await taskPermission(actor) }, _count: true });
   return { ...report, topics: report.topics.map(t => ({ ...t, totalTasks: counts.find(c => c.lessonId === t.id)?._count ?? 0 })) };
 }
 
 async function progressReport(studentId: string, student: { id: string; displayName: string; username: string }, lang: string, input: unknown,
-  practice: Prisma.AttemptWhereInput, assigned: Prisma.AttemptWhereInput, self: boolean) {
+  practice: Prisma.AttemptWhereInput, assigned: Prisma.AttemptWhereInput, self: boolean, reader: Actor) {
+  const lessonProjection={...lessonInclude,_count:{select:{tasks:{where:{task:cambridgeScope(reader)}}}}};
   const { page, kind, lessonId } = z.object({ page: z.coerce.number().int().min(1).max(100000).default(1),
     kind: z.enum(["ALL", "PRACTICE", "ASSIGNED"]).default("ALL"), lessonId: z.string().max(100).optional() }).parse(input);
-  const scope: Prisma.AttemptWhereInput = { userId: studentId, OR: [practice, assigned] };
+  const scope: Prisma.AttemptWhereInput = { userId: studentId, workVersion:visibleWorkVersion(reader), OR: [practice, assigned] };
   const where: Prisma.AttemptWhereInput = { AND: [scope, ...(kind === "ALL" ? [] : [kind === "PRACTICE" ? practice : assigned]),
     ...(lessonId ? [{ study: { lessonId } }] : [])] };
   const now = new Date();
   const [total, attempts, allAttempts, inProgress, graded, theory, latestIds] = await Promise.all([
     db().attempt.count({ where }),
     db().attempt.findMany({ where, take: 20, skip: (page - 1) * 20, orderBy: [{ startedAt: "desc" }, { id: "desc" }], include: {
-      study: { include: { lesson: { include: lessonInclude } } },
+      study: { include: { lesson: { include: lessonProjection } } },
       workVersion: { include: { work: true, items: { orderBy: { position: "asc" }, select: { maxPoints: true, taskVersion: { select: { texts: { select: { locale: true, title: true } } } } } } } },
       answers: { select: { autoPoints: true, review: { select: { points: true } }, _count: { select: { files: true } } } },
     } }),
     db().attempt.count({ where: scope }),
     db().attempt.count({ where: { AND: [scope, { status: "IN_PROGRESS", expiresAt: { gt: now } }] } }),
     db().attempt.count({ where: { AND: [scope, { status: "GRADED" }] } }),
-    db().learningProgress.findMany({ where: { userId: studentId }, include: { lesson: { include: lessonInclude } } }),
+    db().learningProgress.findMany({ where: { userId: studentId, lesson:visibleLesson(reader) }, include: { lesson: { include: lessonProjection } } }),
     // One latest attempt per task and topic; retries must not inflate progress.
     db().$queryRaw<{ attemptId: string }[]>(Prisma.sql`SELECT s.attemptId FROM PracticeStudy s JOIN Attempt a ON a.id=s.attemptId
       WHERE a.userId=${studentId} AND NOT EXISTS (
@@ -60,8 +62,8 @@ async function progressReport(studentId: string, student: { id: string; displayN
         WHERE s2.taskId=s.taskId AND s2.lessonId <=> s.lessonId AND a2.userId=a.userId
         AND (a2.startedAt>a.startedAt OR (a2.startedAt=a.startedAt AND a2.id>a.id)))`),
   ]);
-  const latest = await db().practiceStudy.findMany({ where: { attemptId: { in: latestIds.map(r => r.attemptId) } },
-    include: { ...progressInclude, lesson: { include: lessonInclude } } });
+  const latest = await db().practiceStudy.findMany({ where: { attemptId: { in: latestIds.map(r => r.attemptId) }, task:cambridgeScope(reader) },
+    include: { ...progressInclude, lesson: { include: lessonProjection } } });
   const lessons = new Map([...theory.map(r => r.lesson), ...latest.flatMap(r => r.lesson ? [r.lesson] : [])].map(l => [l.id, l]));
   const topics = [...lessons.values()].map(l => {
     const rows = latest.filter(r => r.lessonId === l.id), states = rows.map(studyProgressStatus);

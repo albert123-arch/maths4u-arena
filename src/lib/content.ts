@@ -1,3 +1,4 @@
+import { cambridgeScope, requireVisibleTasks } from "./cambridge-access";
 import sanitizeHtml from "sanitize-html";
 import katex from "katex";
 import { z } from "zod";
@@ -114,6 +115,8 @@ export function publicVersion(v: Version, lang: string, solutions = false, revea
     }) };
 }
 export async function createTaskVersion(tx: Prisma.TransactionClient, actor: Actor, data: TaskInput, taskId?: string) {
+  if(taskId) await requireVisibleTasks(actor,[taskId],tx);
+  ensure(isAdmin(actor) || !/^Cambridge(?: International)?$/i.test(data.examBoard ?? "") && !/^Cambridge(?: International)?$/i.test(data.source ?? ""),403,"FORBIDDEN");
   if (taskId) {
     await tx.$queryRaw`SELECT id FROM Task WHERE id = ${taskId} FOR UPDATE`;
     const task = await tx.task.findUnique({ where: { id: taskId } });
@@ -149,7 +152,7 @@ export async function saveTask(actor: Actor, input: unknown, taskId?: string) {
   return transaction(async tx => { await lockUser(tx, actor.id); return createTaskVersion(tx, actor, data, taskId); });
 }
 export async function library(actor: Actor | null, lang: string, query = "") {
-  const rows = await db().task.findMany({ where: { archivedAt: null,
+  const rows = await db().task.findMany({ where: { archivedAt: null, ...cambridgeScope(actor),
     OR: [{ visibility: "PUBLIC" }, ...(actor && isTeacher(actor) ? [{ ownerId: actor.id }, ...(isAdmin(actor) ? [{}] : [])] : [])],
     versions: query ? { some: { texts: { some: { title: { contains: query } } } } } : undefined,
   }, take: 100, orderBy: { createdAt: "desc" }, include: { versions: { orderBy: { number: "desc" }, take: 1, include: versionInclude }, topics: { include: { topic: { include: { texts: true } } } } } });
@@ -172,6 +175,7 @@ export function editableVersion(v: Version) {
 
 export async function editorTask(actor: Actor, id: string) {
   teacher(actor);
+  await requireVisibleTasks(actor,[id]);
   const t = await db().task.findUnique({ where: { id }, include: { topics: true, versions: { take: 1, orderBy: { number: "desc" }, include: versionInclude } } });
   ensure(t && (t.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
   return t;

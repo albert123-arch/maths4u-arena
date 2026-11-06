@@ -1,3 +1,4 @@
+import { visibleCourse } from "./cambridge-access";
 import { z } from "zod";
 import { ensure } from "./errors";
 import { type Actor, isAdmin, lockUser, transaction } from "./security";
@@ -22,7 +23,7 @@ export async function followCourse(actor: Actor, courseId: string, input: unknow
   return transaction(async tx => {
     await lockUser(tx, actor.id);
     if (selected) {
-      ensure(await tx.course.findFirst({ where: { id: courseId, archivedAt: null, ...(isAdmin(actor) ? {} : { published: true }) }, select: { id: true } }), 404, "NOT_FOUND");
+      ensure(await tx.course.findFirst({ where: { id: courseId, archivedAt: null, ...visibleCourse(actor), ...(isAdmin(actor) ? {} : { published: true }) }, select: { id: true } }), 404, "NOT_FOUND");
       await tx.courseFollow.upsert({ where: { userId_courseId: { userId: actor.id, courseId } }, create: { userId: actor.id, courseId }, update: {} });
     } else await tx.courseFollow.deleteMany({ where: { userId: actor.id, courseId } });
     return { followed: selected };

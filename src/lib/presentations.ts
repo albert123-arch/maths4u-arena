@@ -1,3 +1,4 @@
+import { requireVisibleLesson } from "./cambridge-access";
 import { z } from "zod";
 import type { Prisma } from "../generated/prisma/client";
 import { db } from "./prisma";
@@ -8,6 +9,7 @@ import { presentationLink } from "./presentation-url";
 
 async function availableLesson(client: Prisma.TransactionClient, actor: Actor, lessonId: string) {
   teacher(actor);
+  await requireVisibleLesson(actor,lessonId);
   const lesson = await client.lesson.findUnique({ where: { id: lessonId }, include: {
     topic: { include: { course: true } },
     versions: { orderBy: { number: "desc" }, take: 1, include: { texts: true } },
@@ -41,6 +43,7 @@ const commandSchema = z.discriminatedUnion("action", [editSchema,
 
 export async function changePresentation(actor: Actor, lessonId: string, input: unknown) {
   teacher(actor);
+  await requireVisibleLesson(actor,lessonId);
   const data = commandSchema.parse(input);
   const link = data.action === "save" ? presentationLink(data.url) : null;
   if (data.action === "save") ensure(link, 400, "INVALID_PRESENTATION_URL");

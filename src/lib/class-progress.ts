@@ -1,3 +1,4 @@
+import { cambridgeScope } from "./cambridge-access";
 import { Prisma } from "../generated/prisma/client";
 import { db } from "./prisma";
 import { ownClass } from "./works";
@@ -25,7 +26,7 @@ export async function classProgress(actor: Actor, classId: string) {
         WHERE a2.userId=a.userId AND s2.taskId=s.taskId AND s2.lessonId <=> s.lessonId
         AND (a2.startedAt>a.startedAt OR (a2.startedAt=a.startedAt AND a2.id>a.id)))`) : [],
   ]);
-  const latest = await db().practiceStudy.findMany({ where: { attemptId: { in: latestIds.map(r => r.attemptId) } }, include: progressInclude });
+  const latest = await db().practiceStudy.findMany({ where: { attemptId: { in: latestIds.map(r => r.attemptId) }, task:cambridgeScope(actor) }, include: progressInclude });
   const students = members.map(({ user }) => {
     const attempts = counts.filter(c => c.userId === user.id), practice = latest.filter(r => r.attempt.userId === user.id);
     const total = attempts.reduce((n, a) => n + a._count, 0), inProgress = active.find(a => a.userId === user.id)?._count ?? 0;

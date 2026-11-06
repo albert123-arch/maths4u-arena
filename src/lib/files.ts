@@ -1,3 +1,4 @@
+import { requireVisibleTasks } from "./cambridge-access";
 import { mkdir, readFile, writeFile, unlink } from "node:fs/promises";
 import path from "node:path";
 import { db } from "./prisma";
@@ -79,6 +80,7 @@ export async function download(actor: Actor | null, id: string, variant = "origi
   const file = await db().storedFile.findUnique({ where: { id }, include: { derivatives: true, submissions: { include: { answer: { include: { attempt: { include: attemptInclude } } } } },
     assets: { include: { version: { include: { task: true } } } } } });
   ensure(file && !file.deletedAt, 404, "NOT_FOUND");
+  await requireVisibleTasks(actor,file.assets.map(a=>a.version.taskId));
   let allowed = !!actor && (file.ownerId === actor.id || isAdmin(actor));
   if (!allowed && actor) allowed = file.submissions.some(s => s.answer.attempt.userId === actor.id || (isTeacher(actor) && s.answer.attempt.workVersion.work.ownerId === actor.id));
   if (!allowed && actor && isTeacher(actor)) for (const submission of file.submissions) {

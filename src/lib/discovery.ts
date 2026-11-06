@@ -1,3 +1,4 @@
+import { visibleCourse, visibleLesson } from "./cambridge-access";
 /** Public navigation only: no task answers, files, accounts or learning records. */
 import { cache } from "react";
 import { db } from "./prisma";
@@ -9,9 +10,9 @@ function title(texts: { locale: string; title: string }[], lang: string): string
 export const publicDiscovery = cache(async (): Promise<DiscoveryData> => {
   // Do not use actor-dependent catalogues or serialise an ORM record to the client.
   // Entitled/private courses continue through their existing account-only routes.
-  const rows = await db().course.findMany({ where: { published: true, archivedAt: null, featureKey: null }, orderBy: [{ position: "asc" }, { id: "asc" }], select: {
+  const rows = await db().course.findMany({ where: { published: true, archivedAt: null, featureKey: null, ...visibleCourse(null) }, orderBy: [{ position: "asc" }, { id: "asc" }], select: {
     slug: true, texts: { select: { locale: true, title: true, description: true } },
-    topics: { orderBy: [{ position: "asc" }, { id: "asc" }], select: { texts: { select: { locale: true, title: true } }, lessons: { where: { archivedAt: null }, orderBy: [{ position: "asc" }, { id: "asc" }], select: { id: true, versions: { take: 1, orderBy: { number: "desc" }, select: { texts: { select: { locale: true, title: true } } } } } } } },
+    topics: { orderBy: [{ position: "asc" }, { id: "asc" }], select: { texts: { select: { locale: true, title: true } }, lessons: { where: { archivedAt: null, ...visibleLesson(null) }, orderBy: [{ position: "asc" }, { id: "asc" }], select: { id: true, versions: { take: 1, orderBy: { number: "desc" }, select: { texts: { select: { locale: true, title: true } } } } } } } },
   } });
   const courses: DiscoveryCourse[] = [], items: DiscoveryItem[] = [];
   for (const row of rows) {

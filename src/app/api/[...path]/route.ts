@@ -89,7 +89,7 @@ async function handler(request: Request, context: { params: Promise<{ path: stri
       await logout(tokenFrom(request)); return json({ ok: true }, 200, { "Set-Cookie": sessionCookie("", true) });
     }
     if (method === "GET" && route === "auth/me") return json({ user: await actorForToken(tokenFrom(request)) });
-    if (method === "GET" && route === "learning/course-choices") return json(await courseChoices());
+    if (method === "GET" && route === "learning/course-choices") return json(await courseChoices(await actorForToken(tokenFrom(request))));
     if ((route === "learning/square/check" || action === "check") && method === "POST") {
       const user = await actorForToken(tokenFrom(request));
       // Bounded algebra and payload. Guest checks do not create accounts or assessment attempts.

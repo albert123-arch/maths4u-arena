@@ -24,6 +24,10 @@ Before changing educational content, read
   Do not delete, unpublish, hide, restrict, redirect or bulk-noindex existing
   materials because of the redesign or the move toward original content. Later
   retirement requires a separate owner decision, even after the new bank is ready.
+- Owner emergency decision H1 (6 November 2026): this legacy-release hotfix hides
+  Cambridge examination content from non-administrators using existing provenance
+  fields only. No schema migration, archival writes or redesign-stage code is
+  authorised in this branch. See docs/ARENA-H1-REPORT-20261106.md.
 - Preserve task identities, sources, immutable versions, import mappings, work
   assignments, files, answers and reviews. Do not relabel imported tasks as original
   or put a new original problem over an unrelated existing Task identity.
