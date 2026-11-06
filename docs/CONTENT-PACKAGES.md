@@ -548,3 +548,33 @@ sets rather than arbitrary transcendental-expression equivalence.
 The guarded lifecycle/browser tests leave the older twelve packages unchanged
 and restore only this package to DRAFT. Final local publication is separate.
 Repeat skips 98 tasks with zero writes. Production is outside this work.
+
+## C5: Further Pure 2 — Matrices 2
+
+9231-fp2-matrices2 1.0.1 adds fp2_matrices2 to the existing FP2 course.
+Seven lessons follow book sections 20.1–20.4, with independently authored
+notes and 28 examples, 56 full-answer checks and all 70 owner tasks
+(206 parts, 729 marks). Source revision_type is explicitly mapped for
+63 rewritten, six syllabus-replacement and one syllabus-adjusted task.
+All archive links are private; new ORIGINAL identities preserve the archive.
+No owner answers, criteria or marks are corrected. There are no assets.
+
+Rebuild and verify:
+
+    python scripts/content/prepare-fp2-matrices2.py --source 'E:\my folder\questions_data\original\Pure 2 9231\02_Matrices_2_9231_FP2_revised.json' --mapping docs/ARENA-C5-FP2-MATRICES2-SOURCE-AUDIT-20261107.json
+    python scripts/content/verify-fp2-matrices2.py --source 'E:\my folder\questions_data\original\Pure 2 9231\02_Matrices_2_9231_FP2_revised.json'
+    python scripts/content/verify-fp2-matrices2.py --report .local/c5-fp2-matrices2-20261107/ci-math.json
+
+The independent verifier reads actual TeX matrices/claims and checks exact
+eigenpairs, characteristic polynomials, displayed row reductions, inverses,
+diagonalisations, powers, parameter boundaries, full system families and
+geometric intersections. CI requires no E: drive. Keys require all entries,
+coordinates or coefficients, including complete free-parameter polynomials.
+Prescribed eigenvector normalisations make the expected answer unambiguous.
+No parser, dependencies or schema changes are introduced.
+
+The first local rehearsal 1.0.0 is retained. Version 1.0.1 typesets powers in
+the new teaching prose as KaTeX, preserving keys/criteria and immutable task
+history. Reapplying skips 126 tasks with zero writes. Lifecycle/browser tests
+leave the older thirteen packages unchanged and restore only this one to DRAFT;
+final local publication is separate. Production remains outside this task.
