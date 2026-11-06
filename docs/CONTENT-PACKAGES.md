@@ -482,3 +482,43 @@ and restore only this one to DRAFT. Final local publication is separate;
 repeat application skips 59 tasks with zero writes. No assets, dependencies
 or schema migrations are introduced. Use only the guarded loopback test runtime.
 Production operations and Probability generating functions are outside this work.
+
+## C5: Further Probability & Statistics — Probability generating functions
+
+9231-stats-pgf 1.0.0 adds chapter stats_pgf to the existing Statistics course.
+Five lessons follow sections 12.1–12.4 in mathematical order: constructing
+and reading PGFs, recovering distributions and moments, independent sums,
+transformations and dependence, and repeated independent sums.
+Notes and 20 examples are independently authored; no book exercise, wording
+or diagram is reproduced.
+
+All 50 owner tasks retain their 167 parts, 437 marks, keys, hints, solutions
+and criteria. The normaliser explicitly handles this export's source_id and
+source_uid provenance fields. Archive mappings stay administrator-only.
+Prompt wrappers use the existing ol.parts layout with letters and right-hand
+marks. Each lesson has six SHORT and two MC checks, fresh variants and review.
+Complete probability polynomials and rational PGFs are checked with the existing
+bounded exact parser; rational fields use numerator; denominator, without
+changing parser limits. Written reasoning stays MANUAL paper self-study
+with indicative DRAFT guidance.
+
+Rebuild using the immutable owner file and the checked mapping:
+
+    python scripts/content/prepare-stats-pgf.py --source 'E:\my folder\questions_data\original\Statistics 9231\05_Probability_generating_functions_9231_revised.json' --mapping docs/ARENA-C5-PGF-SOURCE-AUDIT-20261106.json
+    python scripts/content/verify-stats-pgf.py --source 'E:\my folder\questions_data\original\Statistics 9231\05_Probability_generating_functions_9231_revised.json'
+    python scripts/content/verify-stats-pgf.py --report .local/c5-pgf-20261106/ci-math.json
+
+The independent verifier reconstructs all 50 statement models and parses actual
+TeX PGFs, derivatives, moments and selected scalar answers. It checks exact
+coefficient convolution, hypergeometric and joint selection probabilities,
+finite-support moments, strict adjacent integer bounds, transformed support,
+mixtures, conditional counts and roots of repeated sums. Direct enumeration
+cross-checks conditional totals. Full example and quick-check keys are bound
+to the content by hashes. CI requires no E: drive; optional --source also checks
+unchanged owner texts, criteria and SHA-256. No owner key or mark was corrected.
+
+The guarded lifecycle/browser tests preserve all eleven older published packages
+and restore only this one to DRAFT. Final local publication is separate.
+Repeating the package skips 90 tasks with zero writes. No assets, dependencies
+or schema migrations are introduced. Use only the guarded loopback test runtime.
+Production operations and any further course are outside this work.
