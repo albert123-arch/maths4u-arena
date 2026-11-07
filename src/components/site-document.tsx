@@ -12,6 +12,8 @@ import "@/app/topic.css";
 import "@/app/public-catalog.css";
 import "@/app/question-support.css";
 import "@/app/dashboards.css";
+import "@/app/student-dashboard.css";
+import "@/app/student-navigation.css";
 import "../../public/platform-statistics.css";
 import "katex/dist/katex.min.css";
 export const siteMetadata: Metadata = { title: "Maths4U — Learn, practise, progress", description: "Mathematics courses, practice, class assignments and progress in one place.", icons: { icon: "/favicon.svg" } };

@@ -176,7 +176,7 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
     if (route === "admin/content/batches/check" && method === "POST") return json(await classifyImportBatch(actor,input));
     if (route === "admin/content/batches/apply" && method === "POST") return json(await classifyImportBatch(actor,input,true));
     if (parts[0] === "admin" && parts[1] === "content" && parts.length === 3 && method === "PATCH") return json(await changeContentAccess(actor,parts[2],input));
-    if (route === "dashboard/student" && method === "GET") return json(await studentDashboard(actor, lang));
+    if (route === "dashboard/student" && method === "GET") return json(await studentDashboard(actor, lang, Object.fromEntries(url.searchParams)));
     if (route === "dashboard/teacher" && method === "GET") return json(await teacherDashboard(actor));
     if (route === "dashboard/admin" && method === "GET") return json(await adminDashboard(actor));
     if (route === "learning/home" && method === "GET") return json(await learningHome(actor, lang));

@@ -30,6 +30,7 @@ import type { ViewLens } from "@/lib/request-view";
 import { TeacherDashboard } from "./dashboards";
 import { MaterialPreview } from "./view-preview";
 import { ContentPackages, ContentPackagePreview } from "./content-packages";
+import { StudentPracticeQueue } from "./student-dashboard";
 
 export function Platform({ discovery, square, publicData, languagePair }: { discovery?: DiscoveryProps; square?: SquareLesson; publicData?: PublicPageData; languagePair?: LanguagePair }) {
   const rawPath = usePathname(), path = publicPath(rawPath), parts = path.split("/").filter(Boolean), publicLearning = isPublicLearningPath(path);
@@ -47,9 +48,10 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
       if (!publicLearning) { setLang(preferred); if (!lens) rememberLocale(preferred); } else setLang(initialLocale);
     }).catch(setError).finally(() => setReady(true));
   }, [initialLocale, publicLearning]);
-  useEffect(() => { document.documentElement.lang = lang; }, [lang]);
-  const t = (ru: string, en: string) => lang === "ru" ? ru : en;
   const admin = actor?.roles.some(r => r.role === "ADMIN"), teacher = admin || actor?.roles.some(r => r.role === "TEACHER");
+  const workspaceLanguage = actor && !teacher && (!publicLearning || !parts.length) ? "en" : lang;
+  const t = (ru: string, en: string) => workspaceLanguage === "ru" ? ru : en;
+  useEffect(() => { document.documentElement.lang = workspaceLanguage; }, [workspaceLanguage]);
   const publicPage = !parts.length || ["login", "register", "recover", "library", "courses", "learn", "search", "for-teachers"].includes(parts[0]);
   const boardPage = ready && teacher && parts[0] === "teacher" && parts[1] === "board" && !!parts[2];
   let content;
@@ -72,6 +74,8 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   else if (parts[0] === "access") content = <MyAccess />;
   else if (parts[0] === "teacher" && parts[1] === "board" && parts[2]) content = <SmartBoard lessonId={parts[2]} presentationId={parts[3]} />;
   else if (parts[0] === "student" && parts.length === 1) content = <MyLearning sessionReady={ready} />;
+  else if (parts[0] === "student" && parts[1] === "review") content = <StudentPracticeQueue />;
+  else if (parts[0] === "student" && parts[1] === "notebook") content = <StudentPracticeQueue mistakes />;
   else if (parts[0] === "student" && parts[1] === "progress") content = <MyProgress />;
   else if (parts[0] === "teacher" && parts[1] === "classes" && parts[2] && parts[3] === "progress") content = <ClassProgress classId={parts[2]} />;
   else if (parts[0] === "teacher" && parts[1] === "classes" && parts[2] && parts[3] === "students" && parts[4]) content = parts[5] === "attempts" && parts[6]
@@ -87,9 +91,9 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   else if (parts[0] === "teacher" && parts.length === 1) content = <TeacherDashboard />;
   else if (["student", "teacher"].includes(parts[0])) content = <Dashboard manage={parts[0] === "teacher"} />;
   else content = <div className="card"><h1>404</h1><Link href="/">{t("На главную", "Go home")}</Link></div>;
-  return <LocaleContext.Provider value={lang}><ActorContext.Provider value={actor}><ViewContext.Provider value={lens}><PublicLocaleContext.Provider value={publicLearning ? initialLocale : null}><TaskBasketProvider key={(actor?.id ?? "guest") + (lens?.nonce ?? "")}>
-    <SiteHeader key={rawPath} actor={actor} path={path} hidden={!!boardPage && !lens} publicPage={publicLearning} languagePair={languagePair} accountLanguage={accountLanguage} viewChanged={setLens} changeLanguage={value => { if (lens) return; setAccountLanguage(value); if (!publicLearning) setLang(value); rememberLocale(value); if (publicLearning) document.documentElement.lang = initialLocale; if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
-    <main className="container" id="main-content" data-home={!parts.length && !actor} key={path}>{(discovery || square) && !!error && <ErrorNotice error={error} />}{content}</main>
+  return <LocaleContext.Provider value={workspaceLanguage}><ActorContext.Provider value={actor}><ViewContext.Provider value={lens}><PublicLocaleContext.Provider value={publicLearning ? initialLocale : null}><TaskBasketProvider key={(actor?.id ?? "guest") + (lens?.nonce ?? "")}>
+    <SiteHeader key={"header:" + rawPath} actor={actor} path={path} hidden={!!boardPage && !lens} publicPage={publicLearning} languagePair={languagePair} accountLanguage={accountLanguage} viewChanged={setLens} changeLanguage={value => { if (lens) return; setAccountLanguage(value); if (!publicLearning) setLang(value); rememberLocale(value); if (publicLearning) document.documentElement.lang = initialLocale; if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
+    <main className="container" id="main-content" data-home={!parts.length && !actor} key={"page:" + path}>{(discovery || square) && !!error && <ErrorNotice error={error} />}{content}</main>
     <footer className="footer" hidden={!!boardPage}><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><a href="https://maths4u.sbs/">Maths4U main site ↗</a><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
     <VisitorStatistics path={path} eligible={ready && !actor && !error} language={lang} />
   </TaskBasketProvider></PublicLocaleContext.Provider></ViewContext.Provider></ActorContext.Provider></LocaleContext.Provider>;
