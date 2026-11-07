@@ -798,3 +798,53 @@ read-only dry-run and zero-write repeat. It preserves all nineteen earlier
 packages and returns this one to DRAFT for browser QA; final publication is local.
 Written reasoning stays MANUAL paper self-study with indicative DRAFT guidance.
 No new migrations, dependencies, permissions or renderer changes are needed.
+
+
+## C5: Further Mechanics — Circular motion
+
+Package 9231-mechanics-circular, version 1.0.0, continues the existing course
+maths4u-9231-mechanics at chapter fm_circular (position 2). Five lessons follow
+the mathematical sequence of book sections 15.1–15.3: horizontal radial
+motion, conical/linked/elastic constraints, vertical energy and forces,
+first loss of constraint, then projectile/impact/peg stages. Explanations
+and 20 worked examples are independently authored in British English.
+No book text, exercises, examples or diagrams are reproduced.
+
+All 63 supplied tasks (125 parts, 444 marks), 40 complete quick checks
+(30 SHORT, 10 MC) and 35 owner diagrams are included. Each lesson has four
+examples and eight checks with paired fresh variants, using the existing
+exact-answer, drafts and review model. Written reasoning is MANUAL paper
+self-study with indicative DRAFT marking guidance. Source answer keys,
+criteria and marks remain unchanged; archive identities/versions are retained.
+
+Reproduce and verify:
+
+    python scripts/content/prepare-mechanics-circular.py --source 'E:\my folder\questions_data\original\Mechanics 9231\03_Circular_motion_9231_Mechanics_revised.json' --mapping docs/ARENA-C5-MECHANICS-CIRCULAR-SOURCE-AUDIT-20261107.json --assets docs/ARENA-C5-MECHANICS-CIRCULAR-SOURCE-AUDIT-20261107.json
+    python scripts/content/verify-mechanics-circular.py --source 'E:\my folder\questions_data\original\Mechanics 9231\03_Circular_motion_9231_Mechanics_revised.json'
+    python scripts/content/verify-mechanics-circular.py --report .local/c5-mechanics-circular-20261107/ci-math.json
+
+The self-contained verification fixture allows CI without access to E:.
+Independent checks derive radial forces, energy, conical geometry, friction
+and elastic extension, impact velocities and event ordering. They distinguish
+strings/inner contacts from exterior normals and bilateral wires/rods, handle
+lower-half turning before formal force zero, and reset centre/radius at pegs.
+Projectile next-contact polynomials are factorised. Actual printed TeX receives
+50-digit deterministic comparisons, distinguished from universal symbolic proofs.
+An external teacher review remains outstanding.
+
+The source already contains four syllabus replacements (Q1–Q4) and a repaired
+Q57 complete-circle model. This import does not repeat those edits. The elastic,
+collision and projectile cross-topic prerequisites are named and explained.
+Thirty-one diagrams belong to statements; Q31/Q38/Q43/Q60 solution diagrams
+remain protected help images. They are matched from Teacher Review HTML by
+article, source path and alt, with unsafe SVG/external references rejected.
+Source SVG/HTML and content-addressed PNG hashes are retained in the audit.
+Generic new-variant captions become Diagram not to scale; no mathematical
+labels are changed. Inline figures are extracted separately because source
+stem_html contains none. No duplicate gallery is introduced.
+
+The guarded local lifecycle uses read-only dry-run, append-only creation,
+publish/archive/restore and a zero-write repeat. It preserves all twenty prior
+published packages, old tasks and learning progress. No migrations, dependencies,
+access permissions or shared rendering changes are needed. Runtime source JSON
+and asset paths are not directly public. Final publication is local only.
