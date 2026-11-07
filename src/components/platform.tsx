@@ -51,7 +51,9 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   const admin = actor?.roles.some(r => r.role === "ADMIN"), teacher = admin || actor?.roles.some(r => r.role === "TEACHER");
   const workspaceLanguage = actor && !teacher && (!publicLearning || !parts.length) ? "en" : lang;
   const t = (ru: string, en: string) => workspaceLanguage === "ru" ? ru : en;
-  useEffect(() => { document.documentElement.lang = workspaceLanguage; }, [workspaceLanguage]);
+  // Restoring account preferences also writes html.lang; reapply the workspace
+  // language after the actor arrives even when that language remains English.
+  useEffect(() => { document.documentElement.lang = workspaceLanguage; }, [workspaceLanguage, actor]);
   const publicPage = !parts.length || ["login", "register", "recover", "library", "courses", "learn", "search", "for-teachers"].includes(parts[0]);
   const boardPage = ready && teacher && parts[0] === "teacher" && parts[1] === "board" && !!parts[2];
   let content;

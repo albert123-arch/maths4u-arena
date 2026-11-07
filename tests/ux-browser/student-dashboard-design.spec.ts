@@ -19,6 +19,19 @@ test.describe.configure({mode:'serial'});
 test.beforeAll(async()=>{fixture=JSON.parse(await fs.readFile(privateDir+'/fixture.json','utf8'));expect(fixture.complete).toBe(true);await fs.mkdir(dir,{recursive:true});});
 test.afterAll(async()=>{try{await oldRowsPreserved();}finally{await Promise.all(Object.values(apis).map(api=>api.dispose()));}});
 
+test('Student dashboard: RU profile keeps English document language after session hydration',async({browser})=>{
+ const empty=await login('empty'),savedLocale=(await(await empty.get('/api/auth/me')).json()).user.profile.locale;
+ expect((await empty.patch('/api/profile',{data:{locale:'ru'}})).status()).toBe(200);
+ const ctx=await browser.newContext({baseURL:base,storageState:await empty.storageState(),viewport:{width:390,height:900},timezoneId:'Asia/Tashkent'}),page=await ctx.newPage(),mutations:string[]=[];
+ page.on('request',r=>{if(!['GET','HEAD'].includes(r.method()))mutations.push(r.method()+' '+r.url());});
+ try{
+  for(const route of ['/student','/student/review','/student/notebook','/']){
+   await page.goto(route);await expect(page.locator('.student-dashboard')).toBeVisible();await expect(page.locator('html')).toHaveAttribute('lang','en',{timeout:5000});expect(await page.locator('body').innerText()).not.toMatch(/[\u0400-\u04ff]/);
+  }
+  expect((await(await empty.get('/api/auth/me')).json()).user.profile.locale).toBe('ru');expect(mutations).toEqual([]);
+ }finally{await ctx.close();expect((await empty.patch('/api/profile',{data:{locale:savedLocale}})).status()).toBe(200);}
+});
+
 test('Student dashboard: real data, selected courses, honest evidence and Plus response gates',async()=>{
  const student=await login('student'),plus=await login('plus'),empty=await login('empty'),basic=await dashboard(student),advanced=await dashboard(plus);
  const guest=await request.newContext({baseURL:base});try{expect((await guest.get('/api/dashboard/student')).status()).toBe(401);}finally{await guest.dispose();}
