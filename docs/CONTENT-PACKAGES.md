@@ -681,3 +681,38 @@ claimed. Written reasoning stays MANUAL paper self-study with indicative DRAFT
 guidance. The guarded lifecycle preserves all sixteen older packages and restores
 this one to DRAFT for browser QA. Final publication is local only; repeat skips
 99 tasks with zero writes. Production is outside this task.
+
+
+## C5: Further Pure 2 — Differential equations
+
+`9231-fp2-ode` 1.0.0 adds `fp2_ode` to the same course. Five lessons follow
+book 24.1–24.4: first order, complementary functions, algebraic/exponential
+forcing, oscillation/resonance and substitutions. All 69 owner tasks retain
+their keys, solutions, criteria and 655 marks across 135 parts. There are
+20 independently authored examples and 40 complete-answer quick checks,
+with variants and review. The source already contains the editorial replacements;
+the importer does not repeat or invent those repairs. There are no source images.
+
+Rebuild from the read-only source and the source audit:
+
+    python scripts/content/prepare-fp2-ode.py --source 'E:\my folder\questions_data\original\Pure 2 9231\06_Differential_equations_9231_FP2_revised.json' --mapping docs/ARENA-C5-FP2-ODE-SOURCE-AUDIT-20261107.json
+    python scripts/content/verify-fp2-ode.py --source 'E:\my folder\questions_data\original\Pure 2 9231\06_Differential_equations_9231_FP2_revised.json'
+    python scripts/content/verify-fp2-ode.py --report .local/c5-fp2-ode-20261107/ci-math.json
+
+CI needs no E: drive. Actual supplied TeX answers and original differential
+equations are parsed, differentiated and checked by residuals and initial data.
+Wronskians test independent homogeneous modes. Additional checks cover the
+exceptional parameter, tank/observed models, implicit solutions, transformed
+equations, positive radicals, the negative real cube-root branch, nonzero
+reciprocal denominators, one-sided limits and periodic asymptotic responses.
+Every numeric/polynomial short-answer field reconstructs a complete solution.
+Printed-expression comparisons at 50-digit sample points are distinguished
+from symbolic identities. External teacher review remains outstanding.
+
+All 69 written tasks remain MANUAL paper self-study with indicative DRAFT
+guidance. Short checks use the existing bounded exact parser, full coefficient
+structures and complete root sets, not arbitrary transcendental equivalence.
+No new migrations, dependencies, permissions or renderer changes are needed.
+The guarded lifecycle preserves all seventeen older packages and restores this
+one to DRAFT for browser QA. Final local publication is separate; repeat skips
+109 tasks with zero writes. Production is outside this task.
