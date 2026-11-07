@@ -5,6 +5,7 @@ export type PublicPageData = {
   topic?: Awaited<ReturnType<typeof topicContent>>;
   filters?: Record<string, string>;
   chapter?: string;
+  chapterTitle?:string;
   mode?: "NOTES" | "MC" | "SHORT" | "WRITTEN";
 };
 export type LanguagePair = { en: string; ru: string };

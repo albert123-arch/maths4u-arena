@@ -63,7 +63,7 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   else if (["login", "register", "recover"].includes(parts[0])) content = <Auth mode={parts[0]} />;
   else if (parts[0] === "library") content = <CatalogScreen initial={publicData} />;
   else if (parts[0] === "bookmarks") content = <CatalogScreen bookmarksOnly />;
-  else if (parts[0] === "courses") content = parts[2] === "topics" && parts[3] ? <TopicScreen id={parts[3]} initial={publicData} /> : <CourseCatalogScreen slug={parts[1]} initial={publicData} />;
+  else if (parts[0] === "courses") content = parts[2] === "topics" && parts[3] ? <TopicScreen id={parts[3]} initial={publicData} /> : <CourseCatalogScreen key={path} slug={parts[1]} initial={publicData} />;
   else if (parts[0] === "attempts" && parts[1]) content = <AttemptScreen id={parts[1]} review={parts[2] === "review"} />;
   else if (parts[0] === "works" && parts[1]) content = parts[2] === "results" ? <ResultsPage id={parts[1]} /> : <WorkPage id={parts[1]} />;
   else if (parts[0] === "preview" && parts[1] === "works" && parts[2]) content = <MaterialPreview kind="works" id={parts[2]} />;
@@ -90,7 +90,7 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   return <LocaleContext.Provider value={lang}><ActorContext.Provider value={actor}><ViewContext.Provider value={lens}><PublicLocaleContext.Provider value={publicLearning ? initialLocale : null}><TaskBasketProvider key={(actor?.id ?? "guest") + (lens?.nonce ?? "")}>
     <SiteHeader key={rawPath} actor={actor} path={path} hidden={!!boardPage && !lens} publicPage={publicLearning} languagePair={languagePair} accountLanguage={accountLanguage} viewChanged={setLens} changeLanguage={value => { if (lens) return; setAccountLanguage(value); if (!publicLearning) setLang(value); rememberLocale(value); if (publicLearning) document.documentElement.lang = initialLocale; if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
     <main className="container" id="main-content" data-home={!parts.length && !actor} key={path}>{(discovery || square) && !!error && <ErrorNotice error={error} />}{content}</main>
-    <footer className="footer" hidden={!!boardPage}><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
+    <footer className="footer" hidden={!!boardPage}><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><a href="https://maths4u.sbs/">Maths4U main site ↗</a><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
     <VisitorStatistics path={path} eligible={ready && !actor && !error} language={lang} />
   </TaskBasketProvider></PublicLocaleContext.Provider></ViewContext.Provider></ActorContext.Provider></LocaleContext.Provider>;
 }

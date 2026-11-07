@@ -31,6 +31,7 @@ import { archiveOverview, changeContentAccess, classifyImportBatch } from "@/lib
 import { quadraticTopics } from "@/lib/square-model";
 import { contentPackage, packageTopic } from "@/lib/content-package-content";
 import { contentPackageStatus, planContentPackage, applyContentPackage, changeContentPackage } from "@/lib/content-packages";
+import { adminArchiveContext, planCourseTree, applyCourseTree, disableCourseTree } from '@/lib/course-tree';
 import { squarePublicLesson } from "@/lib/square-content";
 import { inRequestView, requestView, rolePreview } from "@/lib/request-view";
 import { resolveRequestView, guardViewRequest, enterView, exitView, touchView } from "@/lib/view-lens";
@@ -142,6 +143,11 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
         "Content-Security-Policy": "sandbox; default-src 'none'", "Cross-Origin-Resource-Policy": "same-origin" } });
     }
     const actor = await requireActor(request);
+    if(route==='admin/course-tree/catalog'&&method==='GET'){admin(actor);return json(await courseCatalog(actor,lang,undefined,false,true));}
+    if(route==='admin/course-tree/context'&&method==='GET'){const q=z.object({lesson:z.string().max(191).optional(),uid:z.string().max(191).optional(),legacyLesson:z.string().max(191).optional()}).parse(Object.fromEntries(url.searchParams));return json(await adminArchiveContext(actor,q.lesson,q.uid,q.legacyLesson));}
+    if(route==='admin/course-tree'&&method==='GET')return json(await planCourseTree(actor));
+    if(route==='admin/course-tree/apply'&&method==='POST')return json(await applyCourseTree(actor,input));
+    if(route==='admin/course-tree/disable'&&method==='POST'){const {courseId}=z.object({courseId:z.string().max(191)}).strict().parse(input);return json(await disableCourseTree(actor,courseId));}
     if(parts[0]==="admin"&&parts[1]==="content-packages"){
       if(parts.length===2&&method==="GET")return json(await contentPackageStatus(actor));
       const key=parts[2];

@@ -206,6 +206,7 @@ model ClassMembership {
 }
 
 model Course {
+  archivePlacements ArchiveTaskPlacement[]
   followers CourseFollow[]
   groupLabel String? @db.VarChar(100)
   position Int @default(0)
@@ -230,6 +231,9 @@ model CourseText {
 }
 
 model Topic {
+  archiveSource ArchiveChapterLink? @relation("ArchiveChapterSource")
+  archiveReplacements ArchiveChapterLink[] @relation("ArchiveChapterTarget")
+  archivePlacements ArchiveTaskPlacement[]
   id       String      @id @default(cuid())
   courseId String
   slug     String      @db.VarChar(120)
@@ -252,6 +256,11 @@ model TopicText {
 }
 
 model Lesson {
+  archiveSource ArchiveLessonLink? @relation("ArchiveLessonSource")
+  archiveProposals ArchiveLessonLink[] @relation("ArchiveLessonProposal")
+  archiveApprovals ArchiveLessonLink[] @relation("ArchiveLessonApproval")
+  archiveSourcePlacements ArchiveTaskPlacement[] @relation("ArchivePlacementSource")
+  archivePlacements ArchiveTaskPlacement[] @relation("ArchivePlacementTarget")
   presentations LessonPresentation[]
   practiceStudies PracticeStudy[]
   position Int @default(0)
@@ -366,6 +375,7 @@ enum ContentOrigin {
 }
 
 model Task {
+  archivePlacements ArchiveTaskPlacement[]
   origin ContentOrigin @default(UNKNOWN)
   originManual Boolean @default(false)
   originReason String? @db.VarChar(1000)
@@ -857,6 +867,58 @@ model ImportRecord {
 
   @@unique([sourceProject, legacyId])
   @@index([taskId])
+}
+
+// Navigation overlays only. Never move LessonTask, TaskTopic, versions or progress.
+model ArchiveChapterLink {
+  sourceTopicId String @id
+  canonicalTopicId String?
+  active Boolean @default(true)
+  reason String @db.VarChar(500)
+  source Topic @relation("ArchiveChapterSource",fields:[sourceTopicId],references:[id],onDelete:Restrict)
+  canonical Topic? @relation("ArchiveChapterTarget",fields:[canonicalTopicId],references:[id],onDelete:Restrict)
+  lessons ArchiveLessonLink[]
+  placements ArchiveTaskPlacement[]
+}
+
+model ArchiveLessonLink {
+  sourceLessonId String @id
+  sourceTopicId String
+  proposedLessonId String?
+  approvedLessonId String?
+  proposalReason String @db.VarChar(1000)
+  source Lesson @relation("ArchiveLessonSource",fields:[sourceLessonId],references:[id],onDelete:Restrict)
+  chapter ArchiveChapterLink @relation(fields:[sourceTopicId],references:[sourceTopicId],onDelete:Restrict)
+  proposed Lesson? @relation("ArchiveLessonProposal",fields:[proposedLessonId],references:[id],onDelete:Restrict)
+  approved Lesson? @relation("ArchiveLessonApproval",fields:[approvedLessonId],references:[id],onDelete:Restrict)
+  @@index([sourceTopicId])
+}
+
+enum ArchivePlacementMethod {
+  PROVENANCE
+  APPROVED_MAP
+  UNALLOCATED
+  LEGACY
+}
+
+model ArchiveTaskPlacement {
+  courseId String
+  taskId String
+  sourceTopicId String
+  sourceLessonId String
+  targetTopicId String
+  targetLessonId String?
+  method ArchivePlacementMethod
+  adaptationUids Json
+  course Course @relation(fields:[courseId],references:[id],onDelete:Restrict)
+  task Task @relation(fields:[taskId],references:[id],onDelete:Restrict)
+  chapter ArchiveChapterLink @relation(fields:[sourceTopicId],references:[sourceTopicId],onDelete:Restrict)
+  sourceLesson Lesson @relation("ArchivePlacementSource",fields:[sourceLessonId],references:[id],onDelete:Restrict)
+  targetTopic Topic @relation(fields:[targetTopicId],references:[id],onDelete:Restrict)
+  targetLesson Lesson? @relation("ArchivePlacementTarget",fields:[targetLessonId],references:[id],onDelete:Restrict)
+  @@id([courseId,taskId])
+  @@index([targetLessonId])
+  @@index([targetTopicId,method])
 }
 
 model AuditEvent {

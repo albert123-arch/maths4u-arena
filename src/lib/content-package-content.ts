@@ -46,5 +46,5 @@ export function packageTeaching(topic:QuadraticTopic) {
   return {notes:'<h2>Objective</h2><p>'+l.objective+'</p><h3>Before you start</h3>'+l.before+'<h2>Key ideas</h2>'+l.ideas+'<h2>Method</h2>'+l.method+'<h3>Common mistakes</h3><ul>'+l.mistakes.map(m=>'<li>'+m+'</li>').join('')+'</ul>',
     examples:l.examples,
     navigation:{directionPath:"/learn/"+p.course.direction,directionTitle:"Further Mathematics",coursePath:"/courses/"+p.course.slug,courseTitle:p.course.title,
-      chapterTitle:p.chapter.title,topics:p.lessons.map(l=>({key:l.id,title:l.title,path:"/courses/"+p.course.slug+"/topics/"+l.id}))}};
+      chapterTitle:p.chapter.title,chapterPath:"/courses/"+p.course.slug+"/chapters/"+p.chapter.slug,topics:p.lessons.map(l=>({key:l.id,title:l.title,path:"/courses/"+p.course.slug+"/topics/"+l.id}))}};
 }

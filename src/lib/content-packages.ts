@@ -8,6 +8,7 @@ import { createTaskVersion, taskSchema } from "./content";
 import { contentPackage, contentPackages } from "./content-package-content";
 import type { ContentPackage, PackageQuestion } from "./content-package-schema";
 import { readPackageAssets, installPackageAssets, packageTaskAssets } from "./content-package-assets";
+import { syncEnabledCourseTree } from './course-tree';
 
 type Client=Prisma.TransactionClient;
 const project=(p:ContentPackage)=>"arena-package-"+p.key;
@@ -91,6 +92,7 @@ export async function applyContentPackage(actor:Actor,key:string,input:unknown){
     }
     await tx.contentPackage.upsert({where:{key},create:{key,version:p.version,fingerprint:report.fingerprint,courseId:course.id,chapterId:chapter.id,state:"DRAFT"},update:{version:p.version,fingerprint:report.fingerprint}});
     await tx.contentRelease.create({data:{key:releaseKey(p),fingerprint:report.fingerprint,state:"APPLIED",completedAt:new Date(),details:{created:report.create,updated:report.update,skipped:report.skip,members}}});
+    await syncEnabledCourseTree(tx,actor,course.id);
     await tx.auditEvent.create({data:{actorId:actor.id,action:"CONTENT_PACKAGE_APPLIED",targetId:releaseKey(p)}});
     return {...report,state:"APPLIED"};
   },{maxWait:30000,timeout:180000,isolationLevel:"Serializable"});

@@ -13,7 +13,7 @@ export const quadraticTopics: QuadraticTopic[] = [
 export function quadraticTopic(key = "completing-square") { const t = quadraticTopics.find(t => t.key === key); if (!t) throw Error("UNKNOWN_QUADRATICS_TOPIC"); return t; }
 export type SquareField = { key: string; label: string; type: string; variables?: string[]; options?: Record<string, string>; dimension?: number; factor_variable?: string };
 export type SquareQuestion = { uid: string; family: string; title: string; collection: string; prompt: string; fields: SquareField[]; marks: number; manual: boolean };
-export type SquareLesson = { version: string; topic: QuadraticTopic; title: string; notes: string; examples: { title: string; question: string; solution: string }[]; questions: SquareQuestion[]; draft?:boolean; navigation?:{directionPath:string;directionTitle:string;coursePath:string;courseTitle:string;chapterTitle:string;topics:{key:string;title:string;path:string}[]} };
+export type SquareLesson = { version: string; topic: QuadraticTopic; title: string; notes: string; examples: { title: string; question: string; solution: string }[]; questions: SquareQuestion[]; draft?:boolean; navigation?:{directionPath:string;directionTitle:string;coursePath:string;courseTitle:string;chapterTitle:string;chapterPath?:string;topics:{key:string;title:string;path:string}[]} };
 export type CheckEvent = { eventKey: string; uid: string; answers: Record<string, string>; helpUsed: boolean; at: number };
 export type CheckResult = { valid: boolean; correct: boolean; fields: Record<string, { correct: boolean; message: string; formatError?: true }>; error?: string };
 export type Evidence = { eventKey: string; uid: string; family: string; correct: boolean; helpUsed: boolean; at: number; imported?: boolean };

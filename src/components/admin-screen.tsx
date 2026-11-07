@@ -7,6 +7,7 @@ import { PilotCorrection } from "./pilot-correction";
 import { StorageStatus } from "./storage-status";
 import { BankImport } from "./bank-import";
 import type { Actor } from "@/lib/security";
+import { AdminArchiveBank } from "./admin-archive-bank";
 import { ContentArchive } from "./content-archive";
 import { AdminAudit } from "./dashboards";
 import { ViewButton } from "./view-controls";
@@ -15,10 +16,10 @@ type Plan = { id: string; name: string; active: boolean; features: { featureKey:
 export function AdminScreen({ section }: { section: string }) {
   const { t } = useLocale();
   return <><Heading title={t("Управление платформой", "Platform administration")} subtitle={t("Люди, материалы и доступ к обучению.", "People, materials and learning access.")} /><nav className="tabs">{[
-    ["archive", t("Архив и источники", "Archive & sources")], ["audit", t("Журнал аудита", "Audit log")], ["overview", t("Обзор", "Overview")], ["users", t("Пользователи", "Users")], ["materials", t("Материалы", "Materials")],
+    ["archive-bank",t("Задачи Cambridge","Cambridge questions")], ["archive", t("Архив и источники", "Archive & sources")], ["audit", t("Журнал аудита", "Audit log")], ["overview", t("Обзор", "Overview")], ["users", t("Пользователи", "Users")], ["materials", t("Материалы", "Materials")],
     ["access", t("Тарифы и доступ", "Plans & access")], ["import", t("Импорт и состояние", "Import & status")],
   ].map(([key, title]) => <Link className={section === key ? "active" : ""} key={key} href={"/admin/" + key}>{title}</Link>)}</nav>
-    {section === "archive" ? <ContentArchive /> : section === "audit" ? <AdminAudit auditOnly /> : section === "users" ? <Users /> : section === "access" ? <Access /> : section === "import" ? <><BankImport/><PilotCorrection /><PilotPublish /><Import /><StorageStatus /></> : section === "materials" ? <div className="grid three">{[
+    {section === "archive-bank" ? <AdminArchiveBank/> : section === "archive" ? <ContentArchive /> : section === "audit" ? <AdminAudit auditOnly /> : section === "users" ? <Users /> : section === "access" ? <Access /> : section === "import" ? <><BankImport/><PilotCorrection /><PilotPublish /><Import /><StorageStatus /></> : section === "materials" ? <div className="grid three">{[
       ["/admin/content-packages",t("Пакеты содержания","Content packages")], ["/library", t("Банк задач", "Problem bank")], ["/admin/courses", t("Курсы и теория", "Courses & theory")], ["/olympiads", t("Олимпиады", "Olympiads")],
     ].map(([href, title]) => <Link className="card" href={href} key={href}><h2>{title} →</h2></Link>)}</div> : <><Overview /><AdminAudit /></>}
   </>;

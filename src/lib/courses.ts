@@ -4,8 +4,8 @@ import { ensure } from "./errors";
 import { type Actor, admin, isAdmin, transaction, lockUser } from "./security";
 import { localized, renderContent } from "./content";
 import { hasFeature } from "./subscriptions";
-import { assertLessonVisible, visibleCourseWhere, visibleLessonWhere } from "./content-access";
-import { taskPermission } from "./catalog";
+import { archiveAdmin, assertLessonVisible, visibleCourseWhere, visibleLessonWhere } from "./content-access";
+import { taskPermission, courseCatalog } from "./catalog";
 import { displayDescription, displayMarkup, displayTitle } from "./public-presentation";
 
 export async function saveCourse(actor: Actor, input: unknown) {
@@ -38,6 +38,7 @@ export async function saveCourse(actor: Actor, input: unknown) {
   });
 }
 export async function courses(actor: Actor | null, lang: string, slug?: string) {
+  const navigation=archiveAdmin(actor)?await courseCatalog(actor,lang,slug):null;
   const rows = await db().course.findMany({ where: { archivedAt: null, ...visibleCourseWhere(actor), ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) },
     include: { texts: true, topics: { orderBy: { position: "asc" }, include: { texts: true, lessons: { where: { archivedAt: null, ...visibleLessonWhere(actor) }, include: {
       versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } },
@@ -49,8 +50,9 @@ export async function courses(actor: Actor | null, lang: string, slug?: string) 
   return Promise.all(rows.map(async c => {
     const allowed = !!(actor && isAdmin(actor)) || !c.featureKey || (actor && await hasFeature(actor, c.featureKey));
     const t = localized(c.texts, lang);
+    const nav=navigation?.find(n=>n.id===c.id),chapterIds=nav?.archiveChapters?new Set(nav.chapters.map(ch=>ch.id)):null;
     return { id: c.id, slug: c.slug, title: displayTitle(t.title), description: displayDescription(t.description), locked: !allowed, featureKey: c.featureKey,
-      topics: c.topics.filter(topic => topic.lessons.length).map(topic => ({ id: topic.id, title: displayTitle(localized(topic.texts, lang).title),
+      topics: c.topics.filter(topic => topic.lessons.length&&(!chapterIds||chapterIds.has(topic.id))).map(topic => ({ id: topic.id, title: displayTitle(localized(topic.texts, lang).title),
         lessons: topic.lessons.map(lesson => { const l = localized(lesson.versions[0].texts, lang); return {
           id: lesson.id, title: displayTitle(l.title), completed: lesson.progress?.[0]?.completed ?? false,
           openedAt: lesson.progress?.[0]?.openedAt ?? null, ...(allowed ? { body: displayMarkup(renderContent(l.body)),

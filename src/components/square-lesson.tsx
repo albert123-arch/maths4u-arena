@@ -7,6 +7,7 @@ import { Button, ButtonLink, Input } from "./controls";
 import { ActorContext, api, ErrorNotice, MathContent, useLocale } from "./ui";
 import { Feedback } from "./feedback";
 import { QuestionSupport } from "./question-support";
+import { AdminArchiveLinks } from './admin-archive-links';
 import type { SupportContent } from "@/lib/question-support-model";
 import { LessonPresentations } from "./lesson-presentations";
 import { useSquareProgress, SquareSaveNotice } from "./square-progress";
@@ -21,7 +22,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
   const lens = useView();
   const topic = lesson.topic, actor = useContext(ActorContext), state = useSquareProgress(sessionReady, topic);
   const diagnostic = lesson.questions.find(q => q.collection === "diagnostic")??lesson.questions.find(q=>q.collection==="short")??lesson.questions[0], primary = lesson.questions.filter(q => q.collection === "short");
-  const navigation=lesson.navigation??{directionPath:"/learn/a-level",directionTitle:"AS & A Level",coursePath:"/courses/maths4u-9709-p1",courseTitle:"Pure 1 · 9709",chapterTitle:"Quadratics",topics:quadraticTopics};
+  const navigation:NonNullable<SquareLesson["navigation"]>=lesson.navigation??{directionPath:"/learn/a-level",directionTitle:"AS & A Level",coursePath:"/courses/maths4u-9709-p1",courseTitle:"Pure 1 · 9709",chapterTitle:"Quadratics",topics:quadraticTopics};
   const [uid, setUid] = useState(diagnostic.uid), [restored, setRestored] = useState(false), [active, setActive] = useState("notes");
   const queue = nextSquareReview(lesson.questions, state.snapshot), current = lesson.questions.find(q => q.uid === uid) ?? diagnostic;
   const storageKey = topic.storage + ".resume." + (actor?.id ?? "guest") + "." + topic.version;
@@ -82,7 +83,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
   const next = primary.find(q => !state.snapshot.states[q.family]?.correct) ?? lesson.questions.find(q => q.collection === "mixed"||q.collection==="exam")??primary[0];
   return <div className="square-lesson" ref={root}>
     {lesson.draft&&<p className="muted">{t("Не опубликовано · предпросмотр администратора","Unpublished · administrator preview")}</p>}
-    <nav className="square-crumbs" aria-label={t("Путь", "Breadcrumb")}><Link href={navigation.directionPath}>{navigation.directionTitle}</Link><span> / </span><Link href={navigation.coursePath}>{navigation.courseTitle}</Link><span> / {navigation.chapterTitle}</span></nav>
+    <nav className="square-crumbs" aria-label={t("Путь", "Breadcrumb")}><Link href={navigation.directionPath}>{navigation.directionTitle}</Link><span> / </span><Link href={navigation.coursePath}>{navigation.courseTitle}</Link><span> / </span>{navigation.chapterPath?<Link href={navigation.chapterPath}>{navigation.chapterTitle}</Link>:<span>{navigation.chapterTitle}</span>}</nav>
     <header className="square-heading"><h1>{topic.title}</h1><p>{topic.summary}</p><ButtonLink variant="text" href="#practice">{t("Начать с короткой проверки →", "Try the quick check →")}</ButtonLink>{!lesson.draft&&<span className="muted">{t("Без регистрации", "No account needed")}</span>}{teacher&&!lesson.draft && <ButtonLink href={"/teacher/works/new?topic=" + topic.lessonId}>{t("Задание из темы", "Assign from this topic")} →</ButtonLink>}</header>
     <details className="square-topic-mobile"><summary>{navigation.chapterTitle} · {navigation.topics.findIndex(q => q.key === topic.key) + 1} {t("из", "of")} {navigation.topics.length}<span aria-hidden="true">▾</span></summary><nav aria-label={t("Выбрать тему главы", "Choose a chapter topic")}>{navigation.topics.map(q => <Link key={q.key} href={q.path} aria-current={q.key === topic.key ? "page" : undefined}>{q.title}</Link>)}</nav></details>
     <nav className="quadratics-topics" aria-label={t("Темы главы", "Chapter topics")}>{navigation.topics.map(q => <Link key={q.key} href={q.path} aria-current={q.key === topic.key ? "page" : undefined}>{q.title}</Link>)}</nav>
@@ -134,7 +135,7 @@ function SquareQuestionForm({ q, enabled, onResult, topic }: { topic: QuadraticT
     const focused = document.activeElement;
     return () => { pendingFocus.current = focused instanceof HTMLElement ? focused : null; };
   }
-  return <article className="square-question"><div className="row spread"><h3>{questionTitle(q)}</h3><span className="badge">{q.marks} {q.marks === 1 ? t("балл", "mark") : t("баллов", "marks")}</span></div><MathContent html={q.prompt} />
+  return <article className="square-question"><div className="row spread"><h3>{questionTitle(q)}</h3><span className="badge">{q.marks} {q.marks === 1 ? t("балл", "mark") : t("баллов", "marks")}</span></div><AdminArchiveLinks uid={q.uid}/><MathContent html={q.prompt} />
     {q.fields.some(f => /^(a|form_a)$/.test(f.key)) && <p className="square-template">{t("Введите полную форму во всех трёх полях:", "Enter the complete form using all three fields:")} <strong>{q.fields.some(f => f.key === "form_a") ? "A(x − H)² + C" : "a(x − h)² + c"}</strong>.</p>}
     {q.fields.length>0&&<form ref={form} onSubmit={async e => {
       e.preventDefault(); const restoreFocus = preserveFocus(); setBusy(true); setError(null); setAttempted(true); save(answers, helpUsed, undefined, true);
