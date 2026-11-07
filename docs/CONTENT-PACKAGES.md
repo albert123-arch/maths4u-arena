@@ -716,3 +716,42 @@ No new migrations, dependencies, permissions or renderer changes are needed.
 The guarded lifecycle preserves all seventeen older packages and restores this
 one to DRAFT for browser QA. Final local publication is separate; repeat skips
 109 tasks with zero writes. Production is outside this task.
+
+
+## C5: Further Mechanics — Projectiles
+
+The owner's next-course request authorises `9231-mechanics-projectiles` 1.0.0,
+course `maths4u-9231-mechanics`, chapter `fm_projectiles`. Three lessons follow
+the mathematical order of book 13.1–13.2, then connect meetings and stages.
+Each has four independent worked examples, six SHORT checks and two MC checks
+with variants/review, and nine owner written tasks. All 27 tasks (70 parts,
+219 marks) retain the supplied keys and guidance. Criteria have no M/A codes
+in this source; the projection leaves the code blank and retains text/marks.
+
+Rebuild from the read-only source and source audit:
+
+    python scripts/content/prepare-mechanics-projectiles.py --source 'E:\my folder\questions_data\original\Mechanics 9231\01_Projectiles_9231_Mechanics_revised.json' --mapping docs/ARENA-C5-MECHANICS-PROJECTILES-SOURCE-AUDIT-20261107.json --assets docs/ARENA-C5-MECHANICS-PROJECTILES-SOURCE-AUDIT-20261107.json
+    python scripts/content/verify-mechanics-projectiles.py --source 'E:\my folder\questions_data\original\Mechanics 9231\01_Projectiles_9231_Mechanics_revised.json'
+    python scripts/content/verify-mechanics-projectiles.py --report .local/c5-mechanics-projectiles-20261107/ci-math.json
+
+CI needs no E: drive. Independent kinematic models verify complete component
+states, both height/time roots, target-angle/time pairing, first-landing validity,
+strict/inclusive wall boundaries, normal/tangential restitution, finite-barrier
+recontact and pre-cut energy/tension. Actual TeX claims receive deterministic
+50-digit comparisons, distinguished from symbolic proofs. External teacher
+review remains outstanding. Every short field is independently recomputed.
+
+Nine owner SVG diagrams are matched by article/alt/source path in the active
+Teacher Review HTML, checked for external references and unsafe elements, and
+converted to content-addressed PNGs: three STATEMENT, six SOLUTION. Existing
+file grants and inline/gallery deduplication apply. Raw package/asset paths and
+solution images stay hidden outside the authorised help boundary.
+
+The four cross-topic tasks retain all supplied content. Q2/Q9/Q15 require
+restitution; Q25 also requires circular-motion energy and radial force. These
+prerequisites are explicit in the final lesson, with independent explanations.
+No general bounding-parabola formula, new dependencies or migrations are added.
+The guarded lifecycle preserves all eighteen preceding packages and restores
+this one to DRAFT for browser QA. Final publication is local only. Repeat skips
+51 tasks with zero writes. Production and other Mechanics chapters are outside
+this task.
