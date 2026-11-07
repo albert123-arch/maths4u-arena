@@ -16,7 +16,7 @@ export const contentPackageSchema = z.object({ schema_version: z.literal(1), key
   lessons: z.array(z.object({ key:id, id, title:z.string().min(1), summary:z.string().min(1), objective:z.string().min(1), before:html, ideas:html, method:html, mistakes:z.array(z.string()).min(3).max(5),
     examples:z.array(z.object({ title:z.string(),question:html,solution:html,verification:z.string() }).strict()).min(3).max(4),
   }).strict()).min(1), questions:z.array(question).min(1), marking_status:z.literal("DRAFT"),
-  assets:z.array(z.object({question_uid:id,file_id:id,path:z.string().regex(/^content\/original\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+\/[a-f0-9]{64}\.png$/),sha256:z.string().regex(/^[a-f0-9]{64}$/),size:z.number().int().positive().max(8*1024*1024),width:z.number().int().positive().max(10000),height:z.number().int().positive().max(10000),mime:z.literal("image/png"),role:z.literal("SOLUTION"),caption:z.string().max(500)}).strict()).max(500).optional(),
+  assets:z.array(z.object({question_uid:id,file_id:id,path:z.string().regex(/^content\/original\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+\/[a-f0-9]{64}\.png$/),sha256:z.string().regex(/^[a-f0-9]{64}$/),size:z.number().int().positive().max(8*1024*1024),width:z.number().int().positive().max(10000),height:z.number().int().positive().max(10000),mime:z.literal("image/png"),role:z.enum(["STATEMENT","SOLUTION"]),caption:z.string().max(500)}).strict()).max(500).optional(),
 }).strict().superRefine((p,c)=>{
   const fail=(message:string)=>c.addIssue({code:"custom",message});
   if(new Set(p.questions.map(q=>q.id)).size!==p.questions.length)fail("Duplicate question identity");

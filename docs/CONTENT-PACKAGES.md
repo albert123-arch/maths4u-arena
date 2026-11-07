@@ -608,3 +608,40 @@ indicative DRAFT guidance. There are no assets, migrations or new dependencies.
 Guarded lifecycle/browser tests preserve the older fourteen packages and restore
 only this one to DRAFT; final local publication is separate. Repeat skips 125
 tasks with zero writes. Production is outside this task.
+
+## C5: Further Pure 2 — Integration
+
+`9231-fp2-integration` 1.0.0 adds `fp2_integration` to the same course.
+Six lessons follow the mathematical order of book 22.1–22.4: integration
+techniques; algebraic/exponential reductions; trigonometric/hyperbolic
+reductions; arc length; curved surfaces; rectangle estimates and limits.
+All explanations and 24 examples are independently authored. All 109 supplied
+owner problems (268 parts, 1051 marks) retain their answers and criteria.
+There are 48 new complete-answer short checks with variants and review.
+Means and volumes are identified as prerequisite applications.
+
+Rebuild from the read-only owner file and the committed source audit:
+
+    python scripts/content/prepare-fp2-integration.py --source 'E:\my folder\questions_data\original\Pure 2 9231\04_Integration_9231_FP2_revised.json' --mapping docs/ARENA-C5-FP2-INTEGRATION-SOURCE-AUDIT-20261107.json --assets docs/ARENA-C5-FP2-INTEGRATION-SOURCE-AUDIT-20261107.json
+    python scripts/content/verify-fp2-integration.py --source 'E:\my folder\questions_data\original\Pure 2 9231\04_Integration_9231_FP2_revised.json'
+    python scripts/content/verify-fp2-integration.py --report .local/c5-fp2-integration-20261107/ci-math.json
+
+CI needs no E: drive. It uses hash-bound fixtures, actual supplied TeX claims,
+independent 55-digit quadrature, exact differentiation and summation, endpoint
+and least-integer checks. Sampled recurrence checks are not represented as
+symbolic proofs for every n. External teacher review remains outstanding.
+
+23 content-addressed PNGs were extracted from the owner's active teacher-review
+articles, with article/alt matching, SVG safety checks and source hashes recorded
+in the audit. The package schema now allows existing STATEMENT as well as
+SOLUTION roles: 18 statement images and five solution images. Existing file
+permissions, inline/gallery deduplication and actor-bound help grants are reused.
+Direct solution links, draft/archived statements and raw package files stay hidden.
+No old archive images, database migrations or new dependencies are introduced.
+
+All 109 written tasks remain MANUAL paper self-study with indicative DRAFT
+guidance. Exact short checks use the existing bounded algebraic parser and
+explicit complete coefficient structures, not arbitrary transcendental matching.
+The guarded local lifecycle preserves all fifteen preceding packages and returns
+this one to DRAFT for browser checks; final local publication is separate.
+Repeat skips 157 tasks with zero writes. Production is outside this task.
