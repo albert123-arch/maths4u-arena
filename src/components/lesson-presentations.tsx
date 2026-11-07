@@ -6,7 +6,7 @@ import { presentationLink } from "@/lib/presentation-url";
 import { api, ErrorNotice, Loading, useLocale, useResource } from "./ui";
 
 type Item = PresentationsDto["items"][number];
-export function LessonPresentations({ lessonId }: { lessonId: string }) {
+export function LessonPresentations({ lessonId, administratorOnly=false }: { lessonId: string; administratorOnly?:boolean }) {
   const { t } = useLocale(), endpoint = `teaching/topics/${lessonId}/presentations`;
   const resource = useResource<PresentationsDto>(endpoint);
   const [editing, setEditing] = useState<Item | "new" | null>(null);
@@ -22,7 +22,7 @@ export function LessonPresentations({ lessonId }: { lessonId: string }) {
   return <section className="card lesson-presentations" aria-labelledby="presentations-heading">
     <div className="row spread"><div><p className="eyebrow">{t("Для урока", "For the classroom")}</p><h2 id="presentations-heading">{t("Презентации темы", "Topic presentations")}</h2></div>
       <Button className="secondary" disabled={disabled} onClick={() => { setEditing("new"); setError(null); }}>{t("+ Добавить ссылку", "+ Add a link")}</Button></div>
-    <p className="muted">{t("Материалы видны учителям и администратору. Ученики их здесь не видят. Изменять ссылку может её автор или администратор.", "Visible to teachers and administrators, hidden from students. Only the author or an administrator can edit a link.")}</p>
+    <p className="muted">{administratorOnly?t("Презентации архивных тем доступны только администратору.","Presentations in archived topics are available only to administrators."):t("Материалы видны учителям и администратору. Ученики их здесь не видят. Изменять ссылку может её автор или администратор.", "Visible to teachers and administrators, hidden from students. Only the author or an administrator can edit a link.")}</p>
     <ErrorNotice error={resource.error || error} />
     {!resource.data ? !resource.error && <Loading /> : !resource.data.items.length ? <div className="presentation-empty"><strong>{t("Ваша презентация — прямо в теме урока", "Your slides, right inside the topic")}</strong><p>{t("Загрузите PPTX или PDF в Google Drive либо создайте Google Slides. Скопируйте ссылку через «Поделиться» и добавьте её сюда.", "Upload a PPTX or PDF to Google Drive, or create Google Slides. Copy its Share link and add it here.")}</p></div> : <ol className="presentation-list">{resource.data.items.map((item, i) => <li key={item.id}>
       <span className="presentation-number" aria-hidden="true">{i + 1}</span><div className="presentation-description"><h3>{item.title}</h3><span className="muted">{item.kind === "slides" ? "Google Slides" : "Google Drive"} · {item.ownerName}</span></div>

@@ -30,6 +30,12 @@ async function write(client:Client,actor:Actor,result:ReturnType<typeof buildCou
  return {writes,chapters:result.chapters.length,lessons:result.lessons.length,placements:result.placements.length};
 }
 export async function planCourseTree(actor:Actor){permit(actor);return plan(db());}
+export async function archivePresentationLessons(actor:Actor){
+ permit(actor);
+ const rows=await db().lesson.findMany({where:{archivedAt:null,topic:{course:{archivedAt:null}},presentations:{some:{archivedAt:null}}},include:{versions:{orderBy:{number:'desc'},take:1,include:{texts:true}},topic:{include:{texts:true,course:{include:{texts:true}}}},_count:{select:{presentations:{where:{archivedAt:null}}}}}});
+ const lessons=rows.map(l=>({id:l.id,title:l.versions[0]?.texts.find(t=>t.locale==='en')?.title??l.id,chapter:l.topic.texts.find(t=>t.locale==='en')?.title??l.topic.slug,courseId:l.topic.courseId,course:l.topic.course.texts.find(t=>t.locale==='en')?.title??l.topic.course.slug,count:l._count.presentations})).sort((a,b)=>a.course.localeCompare(b.course)||a.chapter.localeCompare(b.chapter)||a.title.localeCompare(b.title));
+ return {total:lessons.reduce((n,l)=>n+l.count,0),lessons};
+}
 export async function applyCourseTree(actor:Actor,value:unknown){
  permit(actor);const {token}=z.object({token:z.string().length(64)}).strict().parse(value);
  return db().$transaction(async tx=>{await lockUser(tx,actor.id);const p=await plan(tx);ensure(p.token===token,409,'STALE_DRY_RUN');return write(tx,actor,p.result);},{maxWait:30000,timeout:180000,isolationLevel:'Serializable'});
