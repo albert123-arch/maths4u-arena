@@ -65,3 +65,21 @@ Before changing educational content, read
   owner files, including output/ and tmp/.
 
 <!-- END:maths4u-content-policy -->
+
+
+## Owner decision: self-service teacher authorship, 7 November 2026
+
+- Teachers may register themselves with basic, bounded class access. This does not
+  confer administrator rights, existing legacy-teacher library access, paid
+  entitlements, AI access or verified-teacher status. Existing access stays intact.
+- Only the explicit personal-authoring workflow may classify a newly created,
+  unimported, teacher-owned PRIVATE Task as self-declared ORIGINAL. This records
+  the author's declaration, not owner review or a public quality endorsement.
+  Imported UNKNOWN, Cambridge and other legacy records retain their classification.
+- Teachers keep immutable versions of their own questions. Submitting a version
+  freezes the exact text, answers, marking guidance and publication permission.
+  Only an administrator may approve it. Approval creates or updates a separate
+  public Task with an explicit mapping to that exact submitted version. Private
+  edits never update a public copy until a fresh submission is approved.
+- Preserve task identities, assigned versions, responses, marks and access. The
+  generic editor and importer must not bypass this moderation boundary.

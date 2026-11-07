@@ -1,4 +1,5 @@
 "use client";
+import {ReportError} from "./report-error";
 import { useView } from "./view-state";
 /* eslint-disable react-hooks/set-state-in-effect -- Restore versioned drafts after authentication/hydration. */
 import Link from "next/link";
@@ -96,7 +97,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
         <progress max={group.questions.length} value={checked} aria-label={t("Проверено в этой подборке", "Questions checked in this collection")} /><p className="square-progress-label">{checked} / {group.questions.length} {t("проверено в этой подборке", "checked in this collection")}</p>
         <details className="square-question-list"><summary>{t("Все вопросы", "Question list")}</summary>{groups.map(g => <div key={g.key}><h3>{collectionLabel(g.key)}</h3><ol>{g.questions.map((q, i) => <li key={q.uid}><Button variant="text" aria-current={q.uid === uid ? "step" : undefined} onClick={e => { const disclosure = e.currentTarget.closest("details"); if (disclosure) { disclosure.open = false; disclosure.querySelector("summary")?.focus({ preventScroll: true }); } choose(q); }}><span>{i + 1}. {questionTitle(q)}</span>{!!state.snapshot.seen[q.uid] && <span className="square-list-checked">{t("Проверено", "Checked")}</span>}</Button></li>)}</ol></div>)}</details>
       </div>
-      <SquareQuestionForm topic={topic} key={uid + (actor?.id ?? "guest")} q={current} enabled={sessionReady && state.ready && !state.error && lens?.mode !== "USER"} onResult={async (event, result) => { await state.record(event, current.family, result); }} />
+      <SquareQuestionForm reportReady={restored && sessionReady} topic={topic} key={uid + (actor?.id ?? "guest")} q={current} enabled={sessionReady && state.ready && !state.error && lens?.mode !== "USER"} onResult={async (event, result) => { await state.record(event, current.family, result); }} />
       <div className="square-next row"><Button onClick={() => choose(next)}>{t("Следующий шаг →", "Next step →")}</Button>{lesson.questions.some(q => q.family === current.family && q.uid !== current.uid) && <Button onClick={() => choose(lesson.questions.filter(q => q.family === current.family && q.uid !== current.uid).sort((a, b) => (state.snapshot.seen[a.uid] ?? 0) - (state.snapshot.seen[b.uid] ?? 0))[0])}>{t("Новый вариант", "Try a fresh variant")}</Button>}<a href="#examples">{t("Повторить метод", "Review the method")}</a></div>
       <SquareSaveNotice state={state} />
     </section>
@@ -107,7 +108,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
   </div>;
 }
 
-function SquareQuestionForm({ q, enabled, onResult, topic }: { topic: QuadraticTopic; q: SquareQuestion; enabled: boolean; onResult: (event: CheckEvent, result: CheckResult) => Promise<void> }) {
+function SquareQuestionForm({ q, enabled, onResult, topic, reportReady }: { reportReady:boolean; topic: QuadraticTopic; q: SquareQuestion; enabled: boolean; onResult: (event: CheckEvent, result: CheckResult) => Promise<void> }) {
   const lens = useView();
   const { t } = useLocale(), actor = useContext(ActorContext), form = useRef<HTMLFormElement>(null);
   const pendingFocus = useRef<HTMLElement | null>(null);
@@ -156,6 +157,7 @@ function SquareQuestionForm({ q, enabled, onResult, topic }: { topic: QuadraticT
     <div className="square-result">{result && <Feedback kind={result.correct ? "correct" : result.valid ? "again" : "format"}>{result.correct ? t("Все итоговые ответы верны.", "All final answers are correct.") + (helpUsed ? t(" Теперь попробуйте новый вариант без помощи.", " Now try a fresh variant without help.") : t(" Переходите дальше или вернитесь позже для повторения.", " Try the next step or return later for review.")) : result.valid ? t("Проверьте поля с отметкой «Попробуйте ещё».", "Look at the fields marked ‘Look again’, then try again.") : t("Некоторые ответы не удалось прочитать. Проверьте формат в отмеченных полях; результат ещё не записан.", "Some answers could not be read. Check the marked fields; no result has been recorded yet.")}</Feedback>}</div>
     {q.manual && <p className="muted">{q.fields.length?t("Проверяются только итоговые ответы. Сравните объяснение, рисунок и метод с разобранным решением; баллы за метод требуют проверки.", "The checker checks final answers only. Compare your explanation, sketch and method with the worked solution; method marks need review."):t("Решите задачу на бумаге, затем сравните работу с решением и критериями.", "Solve the complete problem on paper, then compare your working with the solution and marking guidance.")}</p>}
     <QuestionSupport storageKey={draftKey+'.support'} manual={q.manual} maximum={q.marks} enabled={enabled} attempted={attempted} onPaperFinished={()=>setPaper(true)} onHelp={()=>{setHelpUsed(true);save(answers,true);}} request={(kind,access)=>api<SupportContent>(topic.api+'/help','POST',{uid:q.uid,kind,version:topic.version,...(access?{access}:{}),...(access==='attempt'?{answers}:{})})} assess={actor&&!lens?points=>api(topic.api+'/self-assess','POST',{uid:q.uid,version:topic.version,points}):undefined}/>
+    <ReportError disabled={!reportReady} source={{topic:topic.key,uid:q.uid,version:topic.version}}/>
     {storageIssue && <p role="alert">{t("Не удалось сохранить черновик в браузере. Не закрывайте страницу до окончания работы.", "This draft could not be saved in your browser. Keep the page open until you finish.")}</p>}
   </article>;
 }

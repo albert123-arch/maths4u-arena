@@ -1,5 +1,5 @@
 "use client";
-import { Button, ButtonLink, Input, Select } from "./controls";
+import { Button, Input, Select } from "./controls";
 import Link from "next/link";
 import { useState } from "react";
 import { PilotPublish } from "./pilot-publish";
@@ -11,25 +11,18 @@ import { AdminArchiveBank } from "./admin-archive-bank";
 import { ContentArchive } from "./content-archive";
 import { AdminAudit } from "./dashboards";
 import { ViewButton } from "./view-controls";
-import { useLocale, useResource, Heading, Loading, ErrorNotice, Form, Field, ActionButton, api, str, DateLabel, localDate } from "./ui";
+import { useLocale, useResource, Loading, ErrorNotice, Form, Field, ActionButton, api, str, DateLabel, localDate } from "./ui";
+import { AdminDashboard, AdminWorkspace } from "./admin-dashboard";
+import { AdminTaskReports } from "./admin-task-reports";
 type Plan = { id: string; name: string; active: boolean; features: { featureKey: string; usageLimit: number | null; feature: { title: string } }[] };
 export function AdminScreen({ section }: { section: string }) {
   const { t } = useLocale();
-  return <><Heading title={t("Управление платформой", "Platform administration")} subtitle={t("Люди, материалы и доступ к обучению.", "People, materials and learning access.")} /><nav className="tabs">{[
-    ["archive-bank",t("Задачи Cambridge","Cambridge questions")], ["archive", t("Архив и источники", "Archive & sources")], ["audit", t("Журнал аудита", "Audit log")], ["overview", t("Обзор", "Overview")], ["users", t("Пользователи", "Users")], ["materials", t("Материалы", "Materials")],
-    ["access", t("Тарифы и доступ", "Plans & access")], ["import", t("Импорт и состояние", "Import & status")],
-  ].map(([key, title]) => <Link className={section === key ? "active" : ""} key={key} href={"/admin/" + key}>{title}</Link>)}</nav>
-    {section === "archive-bank" ? <AdminArchiveBank/> : section === "archive" ? <ContentArchive /> : section === "audit" ? <AdminAudit auditOnly /> : section === "users" ? <Users /> : section === "access" ? <Access /> : section === "import" ? <><BankImport/><PilotCorrection /><PilotPublish /><Import /><StorageStatus /></> : section === "materials" ? <div className="grid three">{[
+  const titles: Record<string, string> = { archive: "Archive & sources", audit: "Audit log", users: "Users & roles", access: "Plans & access", import: "Import & status", materials: "Content tools" };
+  return <AdminWorkspace section={section}>{titles[section] && <header className="ad-page-heading"><h1>{titles[section]}</h1><p className="ad-meta">{section === "users" ? "Manage registered accounts, roles and recovery access." : section === "access" ? "Plans and manually granted learning access." : "Platform administration"}</p></header>}
+    {section === "task-reports" ? <AdminTaskReports /> : section === "decisions" ? <AdminDashboard decisionsOnly /> : section === "archive-bank" ? <AdminArchiveBank/> : section === "archive" ? <ContentArchive /> : section === "audit" ? <AdminAudit auditOnly /> : section === "users" ? <Users /> : section === "access" ? <Access /> : section === "import" ? <><BankImport/><PilotCorrection /><PilotPublish /><Import /><div id="admin-storage"><StorageStatus /></div></> : section === "materials" ? <div className="grid three">{[
       ["/admin/content-packages",t("Пакеты содержания","Content packages")], ["/library", t("Банк задач", "Problem bank")], ["/admin/courses", t("Курсы и теория", "Courses & theory")], ["/olympiads", t("Олимпиады", "Olympiads")],
-    ].map(([href, title]) => <Link className="card" href={href} key={href}><h2>{title} →</h2></Link>)}</div> : <><Overview /><AdminAudit /></>}
-  </>;
-}
-function Overview() {
-  const { t } = useLocale(), r = useResource<{ users: number; tasks: number; attempts: number; pendingReview: number }>("admin/status");
-  return <><ErrorNotice error={r.error} />{r.data ? <div className="grid three">{[
-    [r.data.users, t("Пользователей", "Users"), "/admin/users"], [r.data.tasks, t("Задач в банке", "Problems"), "/library"], [r.data.pendingReview, t("Работ на проверке", "Awaiting review"), "/teacher"],
-  ].map(([value, label, href]) => <Link className="card" key={label} href={String(href)}><p className="muted">{label}</p><div className="metric">{value} →</div></Link>)}</div> : <Loading />}
-    <section className="card space-top-24" ><h2>{t("Работа с платформой", "Manage the platform")}</h2><div className="grid two"><div><p>{t("Назначьте учителей зарегистрированным пользователям. Они смогут создать классы и выдать задания.", "Assign teacher roles to registered users so they can create classes and assignments.")}</p><ButtonLink className="button secondary" href="/admin/users">{t("Пользователи и роли", "Users & roles")}</ButtonLink></div><div><p>{t("Добавьте материалы, затем опубликуйте их в общем банке или назначьте классу.", "Add learning materials, then publish them in the library or assign them to a class.")}</p><ButtonLink className="button secondary" href="/teacher/tasks/new">{t("Добавить задачу", "Add a problem")}</ButtonLink></div></div></section></>;
+    ].map(([href, title]) => <Link className="card" href={href} key={href}><h2>{title} →</h2></Link>)}</div> : <AdminDashboard />}
+  </AdminWorkspace>;
 }
 function Users() {
   const { t } = useLocale(), [q, setQ] = useState(""), r = useResource<Actor[]>("admin/users?q=" + encodeURIComponent(q));

@@ -12,6 +12,12 @@ export const ActorContext = createContext<Actor | null>(null);
 export const PublicLocaleContext = createContext<"en" | "ru" | null>(null);
 export function useLocale() { const lang = useContext(LocaleContext); return { lang, t: (ru: string, en: string) => lang === "ru" ? ru : en }; }
 export const errorLabels: Record<string, [string, string]> = {
+  TEACHER_CLASS_LIMIT: ["Достигнут лимит классов.", "Your basic teacher account supports up to 3 active classes. Archive a class to make room."],
+  TEACHER_STUDENT_LIMIT: ["Достигнут лимит учеников.", "Your basic teacher account supports up to 100 distinct students across active classes."],
+  AUTHORING_IDENTITY_CHANGED: ["Запись задачи изменилась.", "This task's ownership or access changed. Reload before continuing."],
+  AUTHORING_REVIEW_REQUIRED: ["Используйте редактор личных задач.", "Use My tasks to edit your private copy and submit changes for review."],
+
+  REQUEST_KEY_REUSED: ["Данные обращения изменились. Повторите отправку.", "The report changed after a send attempt. Try sending it again."],
   MATERIAL_UNAVAILABLE: ["Этот материал больше недоступен. Сохранённые ответы и баллы остаются в истории.","This material is no longer available. Your saved answers and marks remain in history."],
   ARCHIVE_ORIGIN_REQUIRED: ["Архивировать можно только Cambridge или Demo.","Only Cambridge or Demo material can be archived."],
   STALE_DRY_RUN: ["Данные изменились. Повторите пробный запуск.","Content changed. Preview the changes again."],

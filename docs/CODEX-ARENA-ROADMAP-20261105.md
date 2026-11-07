@@ -1075,3 +1075,64 @@ JS и переполнения; базовые функции доступны �
 её аккаунт, курсы и активная сессия сохранены, проверка не ослаблялась.
 Новых учебных результатов или содержимого нет. `maths4u.sbs` не затронут.
 Отчёт: [ARENA-STUDENT-DASHBOARD-DEPLOY-20261107.md](ARENA-STUDENT-DASHBOARD-DEPLOY-20261107.md).
+
+### Кабинет учителя и экран проверки — локально, 7 ноября 2026
+
+По отдельной команде владельца реализованы четыре компьютерных/мобильных
+макета: To mark, Needs attention, реальные сроки, задания, тепловая карта,
+трудности, подготовка урока, классы и двухколоночная ручная проверка.
+Критерии и Worked solution переключаются вкладками; фотографии, версии,
+баллы и правила выпуска результата сохраняются. Черновик оценки хранится
+только на устройстве до Confirm; ROLE/USER не получают права записи.
+Очередь и счётчик исключают ограниченные материалы во всех версиях работы.
+ИИ, автоматические рассылки, OCR и учительская оплата не подключены.
+Предпросмотр: http://127.0.0.1:3109/teacher.
+Отчёт: [ARENA-TEACHER-DASHBOARD-DESIGN-REPORT-20261107.md](ARENA-TEACHER-DASHBOARD-DESIGN-REPORT-20261107.md).
+Набор файлов: [ARENA-TEACHER-DASHBOARD-DESIGN-FILES-20261107.json](ARENA-TEACHER-DASHBOARD-DESIGN-FILES-20261107.json).
+Только локальная тестовая база; старый банк и прогресс сохранены.
+Push/deploy и основной maths4u.sbs этой командой не затрагиваются.
+
+
+### Админка и сообщения об ошибках — локально, 7 ноября 2026
+
+По команде владельца выполнены два административных макета и Report an error
+у задач. Английский интерфейс; только фактические метрики, отсутствующие
+интеграции явно Not connected. Сохранены прежние разделы и права.
+Новая TaskReport привязана к точной TaskVersion; повтор защищён UUID и квотой,
+разбор доступен только администратору, статусы с revision и AuditEvent.
+Обращения не изменяют задачи, ответы, оценки или доступы. Исторический
+provenance guard и ROLE/USER ограничения сохраняются. Аддитивная миграция
+выполнена только на прежней loopback-тестовой базе.
+Предпросмотр: http://127.0.0.1:3109/admin.
+Отчёт: [ARENA-ADMIN-DASHBOARD-DESIGN-REPORT-20261107.md](ARENA-ADMIN-DASHBOARD-DESIGN-REPORT-20261107.md).
+Набор: [ARENA-ADMIN-DASHBOARD-DESIGN-FILES-20261107.json](ARENA-ADMIN-DASHBOARD-DESIGN-FILES-20261107.json).
+Учительская регистрация, новый редактор/публичная модерация авторских задач,
+расшаривание презентаций, ИИ, реклама и платежи не запускались.
+Без push/deploy/production; maths4u.sbs не менялся. Прежний локальный набор
+кабинета учителя сохранён, коммит не выполнялся.
+
+
+## Teacher self-service and moderated personal authoring — 7 November 2026
+
+Owner instruction: implement locally, in the background, without push or deploy.
+Only Arena and its isolated test database are in scope. Preserve the bank, legacy
+access and progress. This is additional owner-authorised work after the teacher
+and administrator dashboard stages; it does not authorise rollout.
+
+- Self-registration offers Student or Teacher. New teachers receive a separate
+  basic account profile (3 active classes, 100 distinct active learners); they do
+  not inherit legacy-teacher paid-library privileges, Plus, AI or admin rights.
+- My tasks provides private versioned questions, a visual formula editor, safe
+  KaTeX previews, answers, solutions, indicative criteria, autosave and recovery.
+- An explicit first-party authorship declaration is recorded. Imported UNKNOWN,
+  Cambridge archives, identities and historical assignment versions stay intact.
+- Submission freezes the exact version and publication permission. The owner’s
+  queue supports approval, return with feedback, rejection and revision conflicts.
+  Approval creates a mapped separate public copy; later private edits require a
+  new submission. No generic editor/importer may bypass moderation.
+- No SMTP or real AI/payment integration is enabled. Optional email remains
+  unverified. The teacher role alone does not mean identity verification.
+
+Report and exact file manifest:
+[ARENA-TEACHER-AUTHORING-REPORT-20261107.md](ARENA-TEACHER-AUTHORING-REPORT-20261107.md),
+[ARENA-TEACHER-AUTHORING-FILES-20261107.json](ARENA-TEACHER-AUTHORING-FILES-20261107.json).

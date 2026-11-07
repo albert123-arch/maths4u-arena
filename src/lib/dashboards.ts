@@ -1,7 +1,7 @@
 import { db } from "./prisma";
 import { z } from "zod";
 import type { Prisma } from "../generated/prisma/client";
-import { type Actor, admin, teacher } from "./security";
+import { type Actor, admin } from "./security";
 import { localized } from "./content";
 import { displayTitle } from "./public-presentation";
 import { taskPermission } from "./catalog";
@@ -11,8 +11,7 @@ import { progressInclude, studyProgressStatus } from "./practice-progress";
 import { quadraticTopics } from "./square-model";
 import { questionsForTopic } from "./square-content";
 import { contentPackages, packageTopic } from "./content-package-content";
-import { mentoredPracticeWhere } from "./practice-access";
-import { visibleLessonWhere, archiveAdmin, approvedWhere, restrictedWhere } from "./content-access";
+import { visibleLessonWhere, approvedWhere, restrictedWhere } from "./content-access";
 import { hasFeature } from "./subscriptions";
 import { dashboardAssignment, prioritizeDashboardAssignments, studentDashboardModel, validDashboardTimeZone, type DashboardLesson, type DashboardMarkedQuestion } from "./student-dashboard-model";
 
@@ -114,17 +113,8 @@ export async function studentDashboard(actor: Actor, lang: string, input: unknow
     bookmarks: bookmarks.map(b => ({ id: b.taskId, title: displayTitle(localized(b.task.versions[0]?.texts ?? [], lang)?.title ?? "Problem"), href: "/library?bookmarks=1#question-" + b.taskId })),
   };
 }
-export async function teacherDashboard(actor: Actor) {
-  teacher(actor);
-  const pendingWhere = { ...(archiveAdmin(actor) ? {} : { workVersion:{items:{none:{taskVersion:{task:{examArchivedAt:{not:null}}}}}} }), status: "SUBMITTED" as const, answers: { some: { autoPoints: null, review: { is: null } } }, OR: [{ workVersion: { work: { ownerId: actor.id, kind: { not: "PRACTICE" as const } } } }, mentoredPracticeWhere(actor)] };
-  const [classes, pending, pendingCount] = await Promise.all([
-    db().classroom.findMany({ where: { teacherId: actor.id, archivedAt: null }, orderBy: { createdAt: "desc" }, include: { members: { where: { removedAt: null }, select: { user: { select: { id: true, displayName: true, username: true } } } }, _count: { select: { works: { where: { archivedAt: null } } } } } }),
-    db().attempt.findMany({ where: pendingWhere, take: 20, orderBy: { submittedAt: "asc" }, select: { id: true, submittedAt: true, user: { select: { displayName: true } }, workVersion: { select: { work: { select: { title: true, classroom: { select: { title: true } } } } } } } }),
-    db().attempt.count({ where: pendingWhere }),
-  ]);
-  return { classes: classes.map(c => ({ id: c.id, title: c.title, assignments: c._count.works, students: c.members.map(m => m.user) })), pendingCount,
-    pending: pending.map(p => ({ id: p.id, student: p.user.displayName, title: p.workVersion.work.title, classTitle: p.workVersion.work.classroom?.title ?? "Independent practice", submittedAt: p.submittedAt })) };
-}
+export { teacherDashboard, teacherDashboardCounts } from './teacher-dashboard';
+export type { TeacherDashboardDto } from './teacher-dashboard';
 export async function adminDashboard(actor: Actor) {
   admin(actor);
   const [sources, recordedSources, audit] = await Promise.all([
@@ -136,5 +126,4 @@ export async function adminDashboard(actor: Actor) {
   return { sources: sources.map(s => ({ label: s.materialCategory, versions: s._count })), recordedSources: recordedSources.map(s => ({ id: s.id, name: s.name, versions: s._count.tasks })), audit };
 }
 export type StudentDashboardDto = Awaited<ReturnType<typeof studentDashboard>>;
-export type TeacherDashboardDto = Awaited<ReturnType<typeof teacherDashboard>>;
 export type AdminDashboardDto = Awaited<ReturnType<typeof adminDashboard>>;

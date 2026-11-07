@@ -1,0 +1,128 @@
+/* Marking uses the owner's two-pane reference; marks remain manual until an
+   explicit confirmation. Source criteria, solutions and release rules stay intact. */
+.teacher-workspace:has(> .teacher-review) { max-width:none;padding:0; }
+.teacher-review { color:var(--c-text);font-size:16px;line-height:1.5;min-width:0; }
+.teacher-review *,.teacher-review *::before,.teacher-review *::after { box-sizing:border-box; }
+.teacher-review :is(h1,h2,h3,p) { margin:0; }
+.teacher-review h1 { font-size:21px;line-height:1.35;font-weight:750;letter-spacing:-.3px; }
+.teacher-review h2 { font-size:21px;line-height:1.4;font-weight:750;letter-spacing:-.25px; }
+.teacher-review h3 { font-size:16px;line-height:1.5;font-weight:700; }
+.teacher-review :is(a,button,summary):focus-visible { outline:3px solid var(--c-focus);outline-offset:3px; }
+.teacher-review .ui-button { min-height:44px;font-size:15px;line-height:1.35; }
+.teacher-review .tr-topbar { display:flex;align-items:center;gap:18px;padding:18px 24px;background:var(--c-header);color:var(--c-on-header); }
+.teacher-review .tr-topbar > .ui-button { color:var(--c-on-header);background:transparent;border-color:var(--c-header-border); }
+.teacher-review .tr-topbar > .ui-button:focus-visible { outline-color:var(--c-header-link); }
+.teacher-review .tr-topbar > .ui-button:first-child { min-width:44px; }
+.teacher-review .tr-context { flex:1;min-width:0; }
+.teacher-review .tr-context > p { color:var(--c-header-link);font-size:15px;line-height:1.4;margin-bottom:4px; }
+.teacher-review .tr-mode { display:flex;align-items:center;gap:2px;flex-shrink:0;padding:4px;border-radius:8px;background:var(--c-header-selected); }
+.teacher-review .tr-mode .ui-button { color:var(--c-on-header);border-color:transparent; }
+.teacher-review .tr-mode .ui-button[aria-pressed="true"] { background:var(--c-surface);color:var(--c-text);border-color:var(--c-border); }
+.teacher-review .tr-hide { display:flex;align-items:center;gap:8px;font-size:15px;white-space:nowrap; }
+.teacher-review .tr-hide input { width:20px;height:20px;accent-color:var(--c-primary); }
+.teacher-review .tr-peerbar { display:flex;align-items:center;gap:16px;padding:12px 24px;background:var(--c-surface);border-bottom:1px solid var(--c-border);font-size:14px;color:var(--c-text-muted); }
+.teacher-review .tr-peerbar > span:first-child { white-space:nowrap; }
+.teacher-review .tr-peers { display:flex;align-items:center;gap:8px;min-width:0;overflow:auto;padding:4px; }
+.teacher-review .tr-peer { min-width:44px;padding:8px;background:var(--c-surface-muted);border-color:var(--c-border); }
+.teacher-review .tr-peer[data-marked="true"] { background:var(--c-success-bg);color:var(--c-success-text); }
+.teacher-review .tr-peer[aria-current="page"] { border:2px solid var(--c-primary);color:var(--c-primary);background:var(--c-surface); }
+.teacher-review .tr-peer-legend { margin-left:auto;white-space:nowrap; }
+.teacher-review .tr-peer-legend i { display:inline-block;width:11px;height:11px;background:var(--c-success-bg);border:1px solid var(--c-success);border-radius:3px;margin-right:6px; }
+.teacher-review .tr-layout { display:grid;grid-template-columns:minmax(0,1.07fr) minmax(0,1fr);gap:24px;max-width:1400px;margin-inline:auto;padding:28px 24px 64px; }
+.teacher-review .tr-left,.teacher-review .tr-right { min-width:0;display:flex;flex-direction:column;gap:20px; }
+.teacher-review .tr-card { min-width:0;padding:24px;background:var(--c-surface);border:1px solid var(--c-border);border-radius:12px; }
+.teacher-review .tr-statement > summary { cursor:pointer;min-height:44px;list-style-position:inside;font-size:17px;font-weight:750; }
+.teacher-review .tr-statement h2 { font-size:17px;margin:14px 0; }
+.teacher-review .tr-statement .math-content { font-size:16px; }
+.teacher-review .tr-question-parts { display:grid;gap:12px;margin-top:16px; }
+.teacher-review .tr-question-parts > div { display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:8px;align-items:baseline; }
+.teacher-review .tr-question-parts .math-content p { margin:0; }
+.teacher-review .tr-card-heading { display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px; }
+.teacher-review .tr-card-heading select { max-width:150px; }
+.teacher-review .tr-meta { color:var(--c-text-muted);font-size:14px;line-height:1.55; }
+.teacher-review .tr-answer > .tr-meta { margin:-6px 0 16px; }
+.teacher-review .tr-answer > .tr-study-help { margin-top:0; }
+.teacher-review .tr-teacher-note { margin-bottom:16px;font-size:14px; }
+.teacher-review .tr-teacher-note summary { min-height:44px;align-content:center;cursor:pointer; }
+.teacher-review .tr-written-part { padding:16px 0;border-bottom:1px solid var(--c-border); }
+.teacher-review .written-answer { white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8;font-size:16px;margin-top:12px; }
+.teacher-review .tr-written-part > .tr-meta { margin-top:8px; }
+.teacher-review .tr-answer .file-viewer { margin-top:16px; }
+.teacher-review .tr-total { font-size:34px;line-height:1.2;font-weight:800;white-space:nowrap; }
+.teacher-review .tr-total small { font-size:21px;color:var(--c-text-muted);font-weight:600; }
+.teacher-review .tr-reference-tabs { display:flex;align-items:stretch;border-bottom:1px solid var(--c-border);gap:8px;margin:0 0 16px; }
+.teacher-review .tr-reference-tabs .ui-button { flex:1;white-space:normal;background:transparent;border-radius:8px 8px 0 0;border-color:transparent; }
+.teacher-review .tr-reference-tabs .ui-button[aria-selected="true"] { color:var(--c-primary);border-bottom:3px solid var(--c-primary);background:var(--c-surface-muted); }
+.teacher-review .tr-manual-note { background:var(--c-hint-bg);color:var(--c-hint-text);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px;margin-bottom:18px; }
+.teacher-review .tr-part-picker { display:flex;align-items:center;gap:16px;justify-content:space-between;margin-bottom:18px; }
+.teacher-review .tr-part-picker > label { display:flex;gap:12px;align-items:center;flex:1;min-width:0;font-size:14px;color:var(--c-text-muted); }
+.teacher-review .tr-part-picker select { width:100%;max-width:260px;min-width:0; }
+.teacher-review .tr-codes { position:relative;font-size:14px; }
+.teacher-review .tr-codes summary { display:grid;place-items:center;width:44px;height:44px;cursor:pointer;border:1px solid var(--c-border-strong);border-radius:50%;color:var(--c-text-muted);font-size:22px;list-style:none; }
+.teacher-review .tr-codes[open] p { position:absolute;right:0;z-index:3;width:min(300px,65vw);padding:16px;margin-top:8px;box-shadow:var(--shadow-menu);background:var(--c-surface);border:1px solid var(--c-border);border-radius:8px; }
+.teacher-review .tr-reference { max-height:580px;overflow:auto;overscroll-behavior:contain;padding:4px 4px 18px;border-bottom:1px solid var(--c-border);margin-bottom:20px; }
+.teacher-review .tr-reference .math-content { font-size:16px;line-height:1.7; }
+.teacher-review :is(.tr-reference,.tr-statement) .katex-display { overflow-x:auto;overflow-y:hidden;max-width:100%;padding:8px 2px; }
+.teacher-review .tr-reference table { border-collapse:collapse;width:100%;font-size:14px; }
+.teacher-review .tr-reference :is(td,th) { border-bottom:1px solid var(--c-border);padding:10px 8px;text-align:left; }
+.teacher-review .tr-answer-key { margin-top:16px;font-size:14px; }
+.teacher-review .tr-answer-key summary { min-height:44px;cursor:pointer;font-weight:650; }
+.teacher-review .tr-score-section { display:grid;gap:12px; }
+.teacher-review .tr-score-buttons { display:flex;gap:8px;flex-wrap:wrap; }
+.teacher-review .tr-score-buttons .ui-button { min-width:44px;padding-inline:12px; }
+.teacher-review .tr-score-buttons .ui-button[aria-pressed="true"] { background:var(--c-success);color:var(--c-on-primary);border-color:var(--c-success); }
+.teacher-review .tr-points-label { display:flex;gap:12px;align-items:center;font-size:15px; }
+.teacher-review .tr-points-label input { width:95px;text-align:center;font-weight:700; }
+.teacher-review .tr-points-label span { color:var(--c-text-muted); }
+.teacher-review .tr-part-totals { display:flex;gap:8px;flex-wrap:wrap; }
+.teacher-review .tr-part-totals button { min-height:44px;padding:8px 12px;background:var(--c-surface-muted);color:var(--c-text);border:1px solid var(--c-border);border-radius:8px;cursor:pointer;font:inherit;font-size:14px; }
+.teacher-review .tr-part-totals button[aria-pressed="true"] { border-color:var(--c-primary);color:var(--c-primary); }
+.teacher-review .tr-consistency { padding-block:18px; }
+.teacher-review .tr-feedback-label { display:grid;gap:10px;font-size:16px;font-weight:700; }
+.teacher-review .tr-feedback-label textarea { min-height:115px;font-weight:400;line-height:1.6;font-size:15px; }
+.teacher-review .tr-phrases { display:flex;align-items:center;gap:6px 8px;flex-wrap:wrap;padding-top:10px;font-size:13px;color:var(--c-text-muted); }
+.teacher-review .tr-phrases .ui-button { border:1px solid var(--c-border);border-radius:999px;padding:8px 12px;background:var(--c-surface-muted);color:var(--c-text);font-size:13px; }
+.teacher-review .tr-save-state { color:var(--c-text-muted);font-size:14px;line-height:1.55;margin-top:18px; }
+.teacher-review .tr-actions { display:flex;gap:10px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--c-border);padding-top:18px;margin-top:18px; }
+.teacher-review .tr-actions .ui-button--primary { margin-left:auto; }
+.teacher-review .tr-key-hint { padding-top:12px;font-size:13px; }
+.teacher-review .tr-mobile-nav { display:none; }
+@media(min-width:769px) and (max-width:1100px) {
+  .teacher-review .tr-topbar { gap:12px;flex-wrap:wrap; }
+  .teacher-review .tr-context { min-width:45%; }
+  .teacher-review .tr-layout { gap:16px;padding-inline:20px; }
+  .teacher-review .tr-card { padding:20px; }
+  .teacher-review .tr-peer-legend { display:none; }
+}
+@media(max-width:768px) {
+  .teacher-review { font-size:15px; }
+  .teacher-review .tr-topbar { display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;padding:12px 16px; }
+  .teacher-review h1 { font-size:17px; }
+  .teacher-review h2 { font-size:20px; }
+  .teacher-review .tr-context > p { font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+  .teacher-review .tr-exit { font-size:13px;padding:8px; }
+  .teacher-review .tr-mode { grid-row:2;grid-column:1/3;justify-self:start; }
+  .teacher-review .tr-mode .ui-button { min-height:44px;font-size:13px;padding:8px 12px; }
+  .teacher-review .tr-hide { grid-row:2;grid-column:3;font-size:13px;gap:6px; }
+  .teacher-review .tr-peerbar { display:grid;grid-template-columns:minmax(0,1fr);padding:10px 16px;gap:6px; }
+  .teacher-review .tr-peerbar > span:first-child { font-size:13px; }
+  .teacher-review .tr-peer-legend { display:none; }
+  .teacher-review .tr-layout { display:grid;grid-template-columns:minmax(0,1fr);gap:16px;padding:16px 16px 40px; }
+  .teacher-review .tr-left,.teacher-review .tr-right { gap:16px; }
+  .teacher-review .tr-card { padding:20px 16px; }
+  .teacher-review .tr-mobile-nav { display:flex;align-items:center;gap:8px;padding:12px 16px 0; }
+  .teacher-review .tr-mobile-nav .ui-button { flex:1;padding:8px 10px;font-size:13px; }
+  .teacher-review .tr-mobile-nav select { width:72px; }
+  .teacher-review .tr-card-heading { gap:10px; }
+  .teacher-review .tr-card-heading select { width:110px;font-size:13px; }
+  .teacher-review .tr-statement h2 { font-size:16px; }
+  .teacher-review .tr-total { font-size:30px; }
+  .teacher-review .tr-total small { font-size:18px; }
+  .teacher-review .tr-reference-tabs .ui-button { font-size:14px;padding:9px; }
+  .teacher-review .tr-reference { max-height:480px; }
+  .teacher-review .tr-actions { gap:8px; }
+  .teacher-review .tr-actions > .ui-button { white-space:normal;font-size:14px; }
+  .teacher-review .tr-actions > .ui-button--primary { flex:1;min-width:170px; }
+  .teacher-review .tr-key-hint { display:none; }
+  .teacher-review .tr-question-parts { gap:10px; }
+}

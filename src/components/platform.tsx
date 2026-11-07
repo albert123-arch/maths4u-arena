@@ -2,10 +2,11 @@
 import { ButtonLink, Input } from "./controls";
 /* eslint-disable @next/next/no-location-assign-relative-destination -- Authentication changes discard account-specific client state with a full navigation. */
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useSyncExternalStore } from "react";
 import type { Actor } from "@/lib/security";
-import { api, LocaleContext, ActorContext, PublicLocaleContext, useLocale, Form, Field, str, Heading, ErrorNotice, Loading } from "./ui";
+import { api, LocaleContext, ActorContext, PublicLocaleContext, useLocale, useResource, Form, Field, str, Heading, ErrorNotice, Loading } from "./ui";
 import { Dashboard, Classes, ClassDetail, Olympiads, WorkPage, ResultsPage, MyAccess } from "./screens";
 import { WorkEditor, TaskEditor, OlympiadEditor } from "./editors";
 import { AttemptScreen } from "./attempt-screen";
@@ -13,6 +14,7 @@ import { TaskBasketProvider } from "./task-basket";
 import { CatalogScreen, CourseCatalogScreen, TopicScreen } from "./catalog-screen";
 import { StructureEditor } from "./structure-editor";
 import { AdminScreen } from "./admin-screen";
+import {AdminWorkspace} from "./admin-dashboard";
 import { SmartBoard } from "./smart-board";
 import { StudentProgress, MyProgress } from "./student-progress";
 import { ClassProgress } from "./class-progress";
@@ -31,6 +33,18 @@ import { TeacherDashboard } from "./dashboards";
 import { MaterialPreview } from "./view-preview";
 import { ContentPackages, ContentPackagePreview } from "./content-packages";
 import { StudentPracticeQueue } from "./student-dashboard";
+const PersonalTasks=dynamic(()=>import('./personal-tasks').then(m=>m.PersonalTasks));
+const PersonalTaskEditor=dynamic(()=>import('./personal-task-editor').then(m=>m.PersonalTaskEditor));
+const TeacherSubmissions=dynamic(()=>import('./admin-teacher-submissions').then(m=>m.TeacherSubmissions));
+function TaskEditorRoute({id}:{id:string}){
+  const r=useResource<{kind:'personal'|'legacy'|'moderated';id?:string;href?:string}>('teacher/task-editor/'+id);
+  if(r.error)return <ErrorNotice error={r.error}/>;
+  if(!r.data)return <Loading/>;
+  if(r.data.kind==='personal')return <PersonalTaskEditor id={r.data.id}/>;
+  if(r.data.kind==='moderated')return <section className="card"><h1>Reviewed teacher material</h1><p>Open the submitted version in the review queue. Published copies are updated only through a new review.</p><ButtonLink href={r.data.href!}>Teacher submissions</ButtonLink></section>;
+  return <TaskEditor id={id}/>;
+}
+
 
 export function Platform({ discovery, square, publicData, languagePair }: { discovery?: DiscoveryProps; square?: SquareLesson; publicData?: PublicPageData; languagePair?: LanguagePair }) {
   const rawPath = usePathname(), path = publicPath(rawPath), parts = path.split("/").filter(Boolean), publicLearning = isPublicLearningPath(path);
@@ -49,20 +63,23 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
     }).catch(setError).finally(() => setReady(true));
   }, [initialLocale, publicLearning]);
   const admin = actor?.roles.some(r => r.role === "ADMIN"), teacher = admin || actor?.roles.some(r => r.role === "TEACHER");
-  const workspaceLanguage = actor && !teacher && (!publicLearning || !parts.length) ? "en" : lang;
+  const teacherWorkspace = teacher && (parts[0] === 'teacher' || parts[0] === 'works' || parts[0] === 'attempts' || !parts.length && !admin);
+  const adminWorkspace = !!admin && parts[0] === 'admin';
+  const workspaceLanguage = ["login","register","recover"].includes(parts[0]) || adminWorkspace || teacherWorkspace || actor && !teacher && (!publicLearning || !parts.length) ? "en" : lang;
   const t = (ru: string, en: string) => workspaceLanguage === "ru" ? ru : en;
   // Restoring account preferences also writes html.lang; reapply the workspace
   // language after the actor arrives even when that language remains English.
   useEffect(() => { document.documentElement.lang = workspaceLanguage; }, [workspaceLanguage, actor]);
   const publicPage = !parts.length || ["login", "register", "recover", "library", "courses", "learn", "search", "for-teachers"].includes(parts[0]);
   const boardPage = ready && teacher && parts[0] === "teacher" && parts[1] === "board" && !!parts[2];
+  const markingPage = teacher && (parts[0] === 'attempts' && parts[2] === 'review' || parts[0] === 'teacher' && parts[1] === 'classes' && parts[5] === 'attempts' && !!parts[6]);
   let content;
   if (!ready && !discovery && !square && !publicData) content = <Loading />;
   else if (error && !discovery && !square && !publicData) content = <ErrorNotice error={error} />;
   else if (!publicPage && !actor) content = <Auth mode="login" next={path} />;
   else if (parts[0] === "admin" && !admin || parts[0] === "teacher" && !teacher) content = <div className="notice error">{t("Этот раздел недоступен вашему аккаунту.", "This section is not available to your account.")}</div>;
   else if (square) content = <SquareLessonView lesson={square} sessionReady={ready && !error} />;
-  else if (discovery) content = discovery.view === "home" && actor ? <MyLearning sessionReady={ready} /> : <DiscoveryHome {...discovery} sessionReady={ready && !error} />;
+  else if (discovery) content = discovery.view === "home" && actor ? teacher && !admin ? <TeacherDashboard/> : <MyLearning sessionReady={ready} /> : <DiscoveryHome {...discovery} sessionReady={ready && !error} />;
   else if (!parts.length) content = <CourseCatalogScreen home />;
   else if (["login", "register", "recover"].includes(parts[0])) content = <Auth mode={parts[0]} />;
   else if (parts[0] === "library") content = <CatalogScreen initial={publicData} />;
@@ -85,36 +102,44 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
     : <StudentProgress key={`${parts[2]}/${parts[4]}`} classId={parts[2]} studentId={parts[4]} />;
   else if (parts[0] === "teacher" && parts[1] === "classes") content = parts[2] ? <ClassDetail id={parts[2]} /> : <Classes manage />;
   else if (parts[0] === "teacher" && parts[1] === "works" && parts[2] === "new") content = <WorkEditor />;
-  else if (parts[0] === "teacher" && parts[1] === "tasks") content = <TaskEditor id={parts[2] === "new" ? undefined : parts[2]} />;
+  else if (parts[0] === "teacher" && parts[1] === "marking") content = <TeacherDashboard section="marking"/>;
+  else if (parts[0] === "teacher" && parts[1] === "assignments") content = <TeacherDashboard section="assignments"/>;
+  else if (parts[0] === "teacher" && parts[1] === "tasks") content = !parts[2] ? <PersonalTasks/> : parts[2]==="new" ? <PersonalTaskEditor/> : <TaskEditorRoute id={parts[2]}/>;
   else if (parts[0] === "teacher" && parts[1] === "olympiads") content = <OlympiadEditor />;
-  else if(parts[0]==="admin"&&parts[1]==="content-packages")content=parts[3]==="preview"&&parts[4]?<ContentPackagePreview packageKey={parts[2]} lessonId={parts[4]}/>:<ContentPackages selected={parts[2]}/>;
-  else if (parts[0] === "admin" && parts[1] === "courses") content = <StructureEditor />;
+  else if(parts[0]==="admin"&&parts[1]==="content-packages")content=parts[3]==="preview"&&parts[4]?<ContentPackagePreview packageKey={parts[2]} lessonId={parts[4]}/>:<AdminWorkspace section="content-packages"><ContentPackages selected={parts[2]}/></AdminWorkspace>;
+  else if(parts[0]==="admin"&&parts[1]==="teacher-submissions")content=<AdminWorkspace section="teacher-submissions"><TeacherSubmissions/></AdminWorkspace>;
+  else if (parts[0] === "admin" && parts[1] === "courses") content = <AdminWorkspace section="courses"><StructureEditor /></AdminWorkspace>;
   else if (parts[0] === "admin") content = <AdminScreen section={parts[1] ?? "overview"} />;
   else if (parts[0] === "teacher" && parts.length === 1) content = <TeacherDashboard />;
   else if (["student", "teacher"].includes(parts[0])) content = <Dashboard manage={parts[0] === "teacher"} />;
   else content = <div className="card"><h1>404</h1><Link href="/">{t("На главную", "Go home")}</Link></div>;
   return <LocaleContext.Provider value={workspaceLanguage}><ActorContext.Provider value={actor}><ViewContext.Provider value={lens}><PublicLocaleContext.Provider value={publicLearning ? initialLocale : null}><TaskBasketProvider key={(actor?.id ?? "guest") + (lens?.nonce ?? "")}>
-    <SiteHeader key={"header:" + rawPath} actor={actor} path={path} hidden={!!boardPage && !lens} publicPage={publicLearning} languagePair={languagePair} accountLanguage={accountLanguage} viewChanged={setLens} changeLanguage={value => { if (lens) return; setAccountLanguage(value); if (!publicLearning) setLang(value); rememberLocale(value); if (publicLearning) document.documentElement.lang = initialLocale; if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
-    <main className="container" id="main-content" data-home={!parts.length && !actor} key={"page:" + path}>{(discovery || square) && !!error && <ErrorNotice error={error} />}{content}</main>
+    <SiteHeader key={"header:" + rawPath} actor={actor} path={path} hidden={(!!boardPage || !!markingPage || adminWorkspace) && !lens} publicPage={publicLearning} languagePair={languagePair} accountLanguage={accountLanguage} viewChanged={setLens} changeLanguage={value => { if (lens) return; setAccountLanguage(value); if (!publicLearning) setLang(value); rememberLocale(value); if (publicLearning) document.documentElement.lang = initialLocale; if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
+    <main className={"container" + (adminWorkspace ? " admin-container" : teacherWorkspace ? " teacher-workspace" : "")} id="main-content" data-home={!parts.length && !actor} key={"page:" + path}>{(discovery || square) && !!error && <ErrorNotice error={error} />}{content}</main>
     <footer className="footer" hidden={!!boardPage}><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><a href="https://maths4u.sbs/">Maths4U main site ↗</a><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
     <VisitorStatistics path={path} eligible={ready && !actor && !error} language={lang} />
   </TaskBasketProvider></PublicLocaleContext.Provider></ViewContext.Provider></ActorContext.Provider></LocaleContext.Provider>;
 }
+function subscribeAuthLocation(changed:()=>void){window.addEventListener("popstate",changed);return()=>window.removeEventListener("popstate",changed);}
 function Auth({ mode, next }: { mode: string; next?: string }) {
   const { t, lang } = useLocale();
   const [courseSlugs, setCourseSlugs] = useState<string[]>([]);
+  const [selectedAccountType,setAccountType]=useState<"STUDENT"|"TEACHER"|null>(null);
+  const search=useSyncExternalStore(subscribeAuthLocation,()=>window.location.search,()=>"");
+  const accountType=selectedAccountType??(mode==="register"&&new URLSearchParams(search).get("accountType")==="teacher"?"TEACHER":"STUDENT");
   const register = mode === "register", recovery = mode === "recover";
   return <section className="form-narrow"><Heading title={recovery ? t("Восстановить доступ", "Recover your account") : register ? t("Добро пожаловать", "Welcome to Maths4U") : t("С возвращением", "Welcome back")}
     subtitle={t("Один аккаунт для всего обучения.", "One account for all your learning.")} /><div className="card">
     {recovery && <p className="notice">{t("Сообщите школьному администратору свой логин. После проверки личности он выдаст одноразовый код на 60 минут. Личная почта не нужна.", "Tell your school administrator your login. After verifying your identity, they will issue a one-time code valid for 60 minutes. No personal email is required.")}</p>}
     <Form primary label={recovery ? t("Сменить пароль", "Reset password") : register ? t("Создать аккаунт", "Create account") : t("Войти", "Sign in")} submit={async f => {
       if (recovery) { await api("auth/recover", "POST", { token: str(f, "token"), password: str(f, "password") }); window.location.assign("/login"); return; }
-      if (register) await api("auth/register", "POST", { username: str(f, "username"), password: str(f, "password"), displayName: str(f, "displayName"), locale: lang, courseSlugs, ...(str(f, "email") ? { email: str(f, "email") } : {}) });
+      if (register) await api("auth/register", "POST", { username: str(f, "username"), password: str(f, "password"), displayName: str(f, "displayName"), locale: lang, courseSlugs, accountType, ...(str(f, "email") ? { email: str(f, "email") } : {}) });
       const user = await api<Actor>("auth/login", "POST", { username: str(f, "username"), password: str(f, "password") });
       const intended = next ?? new URLSearchParams(window.location.search).get("next");
       const safe = intended && /^\/(?!\/|\\)/.test(intended) ? intended : user.roles.some(r => r.role === "ADMIN") ? "/admin" : user.roles.some(r => r.role === "TEACHER") ? "/teacher" : "/student";
       window.location.assign(safe);
     }}>
+      {register && <fieldset className="ae-account-type"><legend>I am a</legend><div className="row">{(["STUDENT","TEACHER"] as const).map(role=><label key={role}><Input type="radio" name="accountType" value={role} checked={accountType===role} onChange={()=>setAccountType(role)}/>{role==='TEACHER'?'Teacher':'Student'}</label>)}</div><p className="muted">{accountType==='TEACHER'?'Create private questions, set class work and mark responses. Basic accounts include 3 active classes and 100 students. AI tools require separate access.':'Learn, practise and keep your progress across courses.'}</p></fieldset>}
       {register && <Field name="displayName" label={t("Имя и фамилия", "Full name")} />}
       {recovery ? <Field name="token" label={t("Код от администратора", "Administrator recovery code")} /> : <label>{t("Логин", "Login")}<Input aria-label={t("Логин", "Login")} name="username" autoComplete="username" required pattern="[a-zA-Z0-9_.\-]{3,64}" /><span className="muted">{t("От 3 символов: латинские буквы, цифры, точка, дефис.", "3 or more characters: letters, numbers, dots or hyphens.")}</span></label>}
       <label>{recovery ? t("Новый пароль", "New password") : t("Пароль", "Password")}<Input aria-label={recovery ? t("Новый пароль", "New password") : t("Пароль", "Password")} name="password" type="password" required minLength={register || recovery ? 10 : 1} maxLength={72} autoComplete={register || recovery ? "new-password" : "current-password"} />{(register || recovery) && <span className="muted">{t("Не менее 10 символов.", "At least 10 characters.")}</span>}</label>

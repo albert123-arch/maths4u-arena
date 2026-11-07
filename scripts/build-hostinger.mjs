@@ -10,6 +10,7 @@ for (const key of Object.keys(environment)) {
 }
 for (const command of [
   ["scripts/prepare-pdf-viewer.mjs"],
+  ["scripts/prepare-mathlive.mjs"],
   ["node_modules/prisma/build/index.js", "generate"],
   // Turbopack's CSS worker exits before connecting on Hostinger; use the supported Webpack build.
   ["node_modules/next/dist/bin/next", "build", "--webpack"],

@@ -2,7 +2,7 @@ import { z, ZodError } from "zod";
 import { db } from "@/lib/prisma";
 import { AppError, ensure } from "@/lib/errors";
 import { actorForToken, tokenFrom, register, login, logout, sessionCookie, requireActor, admin, changeUser, issueRecovery, recover, rateLimit, userSelect } from "@/lib/security";
-import { library, saveTask, editorTask, exportTask } from "@/lib/content";
+import { library, saveTask, editorTask, exportTask, renderContent } from "@/lib/content";
 import { catalogSupport, saveSelfMarks, squareSelfMarks } from "@/lib/question-support";
 import { createClass, listClasses, classDetail, joinClass, editClass } from "@/lib/classrooms";
 import { listWorks, publishWork, workSummary, startAttempt, getAttempt, mutateAttempt, gradeAttempt, workResults, publishResults, ownWork, practice } from "@/lib/works";
@@ -36,8 +36,13 @@ import { squarePublicLesson } from "@/lib/square-content";
 import { inRequestView, requestView, rolePreview } from "@/lib/request-view";
 import { resolveRequestView, guardViewRequest, enterView, exitView, touchView } from "@/lib/view-lens";
 import { previewMaterial, checkPreview } from "@/lib/view-preview";
-import { studentDashboard, teacherDashboard, adminDashboard } from "@/lib/dashboards";
+import { studentDashboard, teacherDashboard, teacherDashboardCounts, adminDashboard } from "@/lib/dashboards";
 
+import {adminOverview} from "@/lib/admin-overview";
+import {createTaskReport,listTaskReports,getTaskReport,changeTaskReport} from "@/lib/task-reports";
+import {taskReportContext} from "@/lib/task-report-context";
+
+import {listTeacherAuthoredTasks,getTeacherAuthoredTask,createTeacherAuthoredTask,saveTeacherAuthoredTask,submitTeacherAuthoredTask,withdrawTeacherAuthoredTask,listAuthoringSubmissions,getAuthoringSubmission,decideAuthoringSubmission} from "@/lib/teacher-authoring";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 const headers = { "Cache-Control": "private, no-store, max-age=0", "X-Content-Type-Options": "nosniff", "Vary": "Cookie" };
@@ -143,6 +148,46 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
         "Content-Security-Policy": "sandbox; default-src 'none'", "Cross-Origin-Resource-Policy": "same-origin" } });
     }
     const actor = await requireActor(request);
+    if(route==='teacher/authoring/preview'&&method==='POST'){
+      ensure(actor.roles.some(r=>r.role==='TEACHER'||r.role==='ADMIN'),403,'FORBIDDEN');
+      const data=z.object({content:z.string().max(100000)}).strict().parse(input);
+      await rateLimit('authoring-preview:'+actor.id,120,60);
+      return json({html:renderContent(data.content)});
+    }
+    if(route==='teacher/authoring'){
+      if(method==='GET')return json(await listTeacherAuthoredTasks(actor));
+      if(method==='POST')return json(await createTeacherAuthoredTask(actor,input),201);
+    }
+    if(parts[0]==='teacher'&&parts[1]==='authoring'&&parts.length>=3){
+      if(parts.length===3&&method==='GET')return json(await getTeacherAuthoredTask(actor,parts[2]));
+      if(parts.length===3&&method==='PUT')return json(await saveTeacherAuthoredTask(actor,parts[2],input));
+      if(parts.length===4&&method==='POST'&&parts[3]==='submit')return json(await submitTeacherAuthoredTask(actor,parts[2],input));
+      if(parts.length===4&&method==='POST'&&parts[3]==='withdraw')return json(await withdrawTeacherAuthoredTask(actor,parts[2],input));
+    }
+    if(parts[0]==='teacher'&&parts[1]==='task-editor'&&parts.length===3&&method==='GET'){
+      ensure(actor.roles.some(r=>r.role==='TEACHER'||r.role==='ADMIN'),403,'FORBIDDEN');
+      const record=await db().taskAuthoring.findFirst({where:{OR:[{id:parts[2]},{taskId:parts[2]},{publicTaskId:parts[2]}]},select:{id:true,ownerId:true,publicTaskId:true}});
+      if(record){
+        ensure(record.ownerId===actor.id||actor.roles.some(r=>r.role==='ADMIN'),404,'NOT_FOUND');
+        if(record.ownerId===actor.id&&record.publicTaskId!==parts[2])return json({kind:'personal',id:record.id});
+        return json({kind:'moderated',href:'/admin/teacher-submissions'});
+      }
+      await editorTask(actor,parts[2]);return json({kind:'legacy'});
+    }
+    if(route==='admin/teacher-submissions'&&method==='GET'){const q=Object.fromEntries(url.searchParams);delete q.lang;return json(await listAuthoringSubmissions(actor,q));}
+    if(parts[0]==='admin'&&parts[1]==='teacher-submissions'&&parts.length===3){
+      if(method==='GET')return json(await getAuthoringSubmission(actor,parts[2]));
+      if(method==='PATCH')return json(await decideAuthoringSubmission(actor,parts[2],input));
+    }
+
+    if(route==='task-reports/context'&&method==='GET'){const q=Object.fromEntries(url.searchParams);delete q.lang;return json(await taskReportContext(actor,q));}
+    if(route==='task-reports'&&method==='POST'){ensure(JSON.stringify(input).length<=8000,413,'BODY_TOO_LARGE');return json(await createTaskReport(actor,input),201);}
+    if(route==='admin/overview'&&method==='GET')return json(await adminOverview(actor,Object.fromEntries(url.searchParams)));
+    if(route==='admin/task-reports'&&method==='GET'){const q=Object.fromEntries(url.searchParams);delete q.lang;return json(await listTaskReports(actor,q));}
+    if(parts[0]==='admin'&&parts[1]==='task-reports'&&parts.length===3){
+      if(method==='GET')return json(await getTaskReport(actor,parts[2]));
+      if(method==='PATCH')return json(await changeTaskReport(actor,parts[2],input));
+    }
     if(route==='admin/course-tree/presentations'&&method==='GET')return json(await archivePresentationLessons(actor));
     if(route==='admin/course-tree/catalog'&&method==='GET'){admin(actor);return json(await courseCatalog(actor,lang,undefined,false,true));}
     if(route==='admin/course-tree/context'&&method==='GET'){const q=z.object({lesson:z.string().max(191).optional(),uid:z.string().max(191).optional(),legacyLesson:z.string().max(191).optional()}).parse(Object.fromEntries(url.searchParams));return json(await adminArchiveContext(actor,q.lesson,q.uid,q.legacyLesson));}
@@ -177,7 +222,8 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
     if (route === "admin/content/batches/apply" && method === "POST") return json(await classifyImportBatch(actor,input,true));
     if (parts[0] === "admin" && parts[1] === "content" && parts.length === 3 && method === "PATCH") return json(await changeContentAccess(actor,parts[2],input));
     if (route === "dashboard/student" && method === "GET") return json(await studentDashboard(actor, lang, Object.fromEntries(url.searchParams)));
-    if (route === "dashboard/teacher" && method === "GET") return json(await teacherDashboard(actor));
+    if (route === "dashboard/teacher" && method === "GET") return json(await teacherDashboard(actor, Object.fromEntries(url.searchParams)));
+    if (route === "dashboard/teacher/counts" && method === "GET") return json(await teacherDashboardCounts(actor));
     if (route === "dashboard/admin" && method === "GET") return json(await adminDashboard(actor));
     if (route === "learning/home" && method === "GET") return json(await learningHome(actor, lang));
     if ((route === "learning/square/progress" || action === "progress") && method === "GET") return json(await squareProgress(actor, topic));
@@ -338,3 +384,5 @@ export const GET = handler;
 export const POST = handler;
 export const PATCH = handler;
 export const DELETE = handler;
+
+export const PUT = handler;

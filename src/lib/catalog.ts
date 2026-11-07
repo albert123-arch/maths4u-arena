@@ -13,6 +13,7 @@ import { archiveWhere, archiveAdmin, assertLessonVisible, visibleCourseWhere, vi
 import { archiveLessonNavigation, archiveRelated, courseTreeOverlay } from './course-tree';
 import { furtherPublic } from './further-public';
 import { unallocatedChapter, unallocatedId } from './course-tree-plan';
+import { canUseTeacherLibrary } from "./teacher-account";
 
 const filterSchema = z.object({ q: z.string().max(100).default(""), course: z.string().max(191).default(""), chapter: z.string().max(191).default(""), topic: z.string().max(191).default(""),
   source:z.enum(['','ORIGINAL','CAMBRIDGE','ALL']).default(''),taskId:z.string().max(191).default(''),legacyLesson:z.string().max(191).default(''),
@@ -22,22 +23,23 @@ const filterSchema = z.object({ q: z.string().max(100).default(""), course: z.st
   language: z.enum(["", "ru", "en"]).default(""), difficulty: z.string().regex(/^$|^[1-5]$/).default(""), page: z.coerce.number().int().min(1).max(100000).default(1), pageSize: z.coerce.number().int().min(1).max(50).default(25) });
 export async function taskPermission(actor: Actor | null): Promise<Prisma.TaskWhereInput> {
   const visible: Prisma.TaskWhereInput = { archivedAt: null, ...archiveWhere(actor), versions: { some: {} }, OR: [{ visibility: "PUBLIC" }, ...(actor && isTeacher(actor) ? [{ ownerId: actor.id }, ...(isAdmin(actor) ? [{}] : [])] : [])] };
-  if (actor && isTeacher(actor)) return visible;
+  if (canUseTeacherLibrary(actor)) return visible;
   const features = await db().task.groupBy({ by: ["featureKey"], where: { ...visible, featureKey: { not: null } } });
   const granted: string[] = [];
   for (const { featureKey } of features) if (featureKey && actor && await hasFeature(actor, featureKey)) granted.push(featureKey);
-  return { AND: [visible, { OR: [{ featureKey: null }, { featureKey: { in: granted } }] }] };
+  return { AND: [visible, { OR: [{ featureKey: null }, { featureKey: { in: granted } }, ...(actor && isTeacher(actor) ? [{ ownerId: actor.id }] : [])] }] };
 }
 async function sqlPermission(actor: Actor | null) {
   const clauses = [Prisma.sql`t.archivedAt IS NULL`];
   if (!archiveAdmin(actor)) clauses.push(Prisma.sql`t.examArchivedAt IS NULL AND t.origin <> 'UNKNOWN' AND (t.origin = 'ORIGINAL' OR t.originManual = true)`);
   if (!archiveAdmin(actor)) clauses.push(Prisma.sql`NOT EXISTS(SELECT 1 FROM TaskVersion cv LEFT JOIN Source cs ON cs.id=cv.sourceId WHERE cv.taskId=t.id AND (cv.examBoard IN ('Cambridge','Cambridge International') OR cs.name IN ('Cambridge','Cambridge International')))`);
   if (!actor || !isAdmin(actor)) clauses.push(actor && isTeacher(actor) ? Prisma.sql`(t.visibility = 'PUBLIC' OR t.ownerId = ${actor.id})` : Prisma.sql`t.visibility = 'PUBLIC'`);
-  if (!actor || !isTeacher(actor)) {
+  if (!canUseTeacherLibrary(actor)) {
     const features = await db().task.groupBy({ by: ["featureKey"], where: { visibility: "PUBLIC", archivedAt: null, featureKey: { not: null } } });
     const granted: string[] = [];
     for (const { featureKey } of features) if (featureKey && actor && await hasFeature(actor, featureKey)) granted.push(featureKey);
-    clauses.push(granted.length ? Prisma.sql`(t.featureKey IS NULL OR t.featureKey IN (${Prisma.join(granted)}))` : Prisma.sql`t.featureKey IS NULL`);
+    const own = actor && isTeacher(actor) ? Prisma.sql` OR t.ownerId = ${actor.id}` : Prisma.empty;
+    clauses.push(granted.length ? Prisma.sql`(t.featureKey IS NULL OR t.featureKey IN (${Prisma.join(granted)})${own})` : Prisma.sql`(t.featureKey IS NULL${own})`);
   }
   return clauses;
 }
@@ -86,7 +88,7 @@ export async function catalog(actor: Actor | null, lang: string, input: unknown,
     base.push(Prisma.sql`(${normal} OR ${placed})`);
     // Access to a restricted course also gates the topic-filtered list.
     const selected = await db().course.findMany({ where: { ...(f.course ? { id: f.course } : {}), topics: { some: { ...(f.chapter ? { id: f.chapter } : {}), ...(f.topic ? { lessons: { some: { id: f.topic } } } : {}) } } }, select: { featureKey: true } });
-    for (const c of selected) ensure(!c.featureKey || !!(actor && isTeacher(actor)) || !!(actor && await hasFeature(actor, c.featureKey)), 403, "SUBSCRIPTION_REQUIRED");
+    for (const c of selected) ensure(!c.featureKey || canUseTeacherLibrary(actor) || !!(actor && await hasFeature(actor, c.featureKey)), 403, "SUBSCRIPTION_REQUIRED");
   }
   const where = [...base];
   if (strictLocale && lang === "ru") where.push(russianTaskSql);
@@ -140,7 +142,7 @@ export async function courseCatalog(actor: Actor | null, lang: string, slug?: st
   const rows = await db().course.findMany({ orderBy: [{ position: "asc" }, { id: "asc" }], where: { archivedAt: null, ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) }, include: { texts: true, topics: { orderBy: [{ position: "asc" }, { id: "asc" }], include: { texts: true, lessons: { where: { archivedAt: null }, orderBy: [{ position: "asc" }, { id: "asc" }], include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: { select: { locale: true, title: true } } } }, _count: { select: { tasks: { where: { task: permission } } } } } } } } } });
   const russian = strictLocale && lang === "ru" ? await publicLanguages() : null;
   const result = await Promise.all(rows.filter(c => (archiveAdmin(actor)&&archiveView || modeRows.some(r => c.topics.some(ch => ch.lessons.some(l => l.id === r.lessonId)))) && (!russian || russian.courses.includes(c.slug))).map(async c => {
-    const allowed = !c.featureKey || !!(actor && isTeacher(actor)) || !!(actor && await hasFeature(actor, c.featureKey));
+    const allowed = !c.featureKey || canUseTeacherLibrary(actor) || !!(actor && await hasFeature(actor, c.featureKey));
     const archiveCount=(lessonIds:string[])=>new Set(modeRows.filter(r=>r.origin==='CAMBRIDGE_EXAM'&&lessonIds.includes(r.lessonId)).map(r=>r.taskId)).size;
     const courseLinks=overlay?.chapters.filter(ch=>ch.source.courseId===c.id)??[],placed=overlay?.placements.filter(p=>p.courseId===c.id)??[],sourceIds=new Set(courseLinks.map(ch=>ch.sourceTopicId));
     const chapters = await Promise.all(c.topics.filter(ch => (archiveAdmin(actor)&&archiveView || modeRows.some(r => ch.lessons.some(l => l.id === r.lessonId))) && (!russian || ch.lessons.some(l => russian.lessons.some(r => r.id === l.id)))).map(async ch => ({ id: ch.id, title: displayTitle(localized(ch.texts, lang).title), position: ch.position,...(publicChapters.some(p=>p.chapterId===ch.id)?{path:publicChapters.find(p=>p.chapterId===ch.id)!.chapterPath}:{}),
@@ -178,7 +180,7 @@ export async function topicContent(actor: Actor | null, id: string, lang: string
   const l = await db().lesson.findUnique({ where: { id }, include: { topic: { include: { texts: true, course: { include: { texts: true } } } }, versions: { take: 1, orderBy: { number: "desc" }, include: { texts: true } } } });
   ensure(l && !l.archivedAt && !l.topic.course.archivedAt && (l.topic.course.published || !!(actor && isAdmin(actor))) && l.versions.length, 404, "NOT_FOUND");
   const c = l.topic.course;
-  ensure(!c.featureKey || !!(actor && isTeacher(actor)) || !!(actor && await hasFeature(actor, c.featureKey)), 403, "SUBSCRIPTION_REQUIRED");
+  ensure(!c.featureKey || canUseTeacherLibrary(actor) || !!(actor && await hasFeature(actor, c.featureKey)), 403, "SUBSCRIPTION_REQUIRED");
   const ru = strictLocale && lang === "ru";
   if (ru) ensure((await publicLanguages()).lessons.some(l => l.id === id), 404, "NOT_FOUND");
   const text = ru ? l.versions[0].texts.find(t => t.locale === "ru") ?? { locale: "ru", title: localized(l.versions[0].texts, "en").title, body: "", examples: "" } : localized(l.versions[0].texts, lang), hierarchy = (await courseCatalog(actor, lang, c.slug, strictLocale,archiveAdmin(actor)))[0];

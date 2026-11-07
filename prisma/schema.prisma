@@ -119,6 +119,11 @@ model User {
   bookmarks            TaskBookmark[]
   followedCourses      CourseFollow[]
   independentChecks    IndependentCheck[]
+  taskReports          TaskReport[]           @relation("TaskReportReporter")
+  reviewedTaskReports  TaskReport[]           @relation("TaskReportReviewer")
+  teacherAccount       TeacherAccount?
+  authoredTasks        TaskAuthoring[]
+  reviewedAuthoredTasks TaskAuthoringSubmission[] @relation("AuthoringReviewer")
 
   @@index([status])
 }
@@ -129,6 +134,17 @@ model UserRole {
   user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   @@id([userId, role])
+}
+
+// Only self-registered teachers get this row; existing teachers retain their
+// existing entitlements without a data migration or a synthetic plan.
+model TeacherAccount {
+  userId              String   @id
+  selfRegistered      Boolean  @default(true)
+  maxActiveClasses    Int      @default(3)
+  maxDistinctStudents Int      @default(100)
+  createdAt           DateTime @default(now())
+  user                User     @relation(fields: [userId], references: [id], onDelete: Restrict)
 }
 
 model Profile {
@@ -206,6 +222,8 @@ model ClassMembership {
 }
 
 model Course {
+  authoringRecommendations TaskAuthoring[]
+  submittedRecommendations TaskAuthoringSubmission[]
   archivePlacements ArchiveTaskPlacement[]
   followers CourseFollow[]
   groupLabel String? @db.VarChar(100)
@@ -231,6 +249,8 @@ model CourseText {
 }
 
 model Topic {
+  authoringRecommendations TaskAuthoring[]
+  submittedRecommendations TaskAuthoringSubmission[]
   archiveSource ArchiveChapterLink? @relation("ArchiveChapterSource")
   archiveReplacements ArchiveChapterLink[] @relation("ArchiveChapterTarget")
   archivePlacements ArchiveTaskPlacement[]
@@ -375,6 +395,8 @@ enum ContentOrigin {
 }
 
 model Task {
+  authoring TaskAuthoring? @relation("AuthoredPrivateTask")
+  authoringProjection TaskAuthoring? @relation("AuthoredPublicTask")
   archivePlacements ArchiveTaskPlacement[]
   origin ContentOrigin @default(UNKNOWN)
   originManual Boolean @default(false)
@@ -395,6 +417,7 @@ model Task {
   versions   TaskVersion[]
   topics     TaskTopic[]
   imports    ImportRecord[]
+  reports    TaskReport[]
 
   @@index([ownerId])
   @@index([visibility, archivedAt])
@@ -412,6 +435,9 @@ model TaskTopic {
 }
 
 model TaskVersion {
+  authoringLatest TaskAuthoring? @relation("AuthoringLatestVersion")
+  authoringSubmissions TaskAuthoringSubmission[] @relation("AuthoringSubmittedVersion")
+  authoringPublication TaskAuthoringSubmission? @relation("AuthoringPublishedVersion")
   independentChecks IndependentCheck[]
   sourceReference String? @db.VarChar(500)
   sourceUid String? @db.VarChar(191)
@@ -438,6 +464,7 @@ model TaskVersion {
   parts          TaskPart[]
   assets         TaskAsset[]
   items          WorkItem[]
+  reports        TaskReport[]
 
   @@unique([taskId, number])
   @@index([sourceId])
@@ -644,6 +671,7 @@ model Attempt {
   workVersion   WorkVersion   @relation(fields: [workVersionId], references: [id], onDelete: Restrict)
   user          User          @relation(fields: [userId], references: [id], onDelete: Restrict)
   answers       Answer[]
+  taskReports   TaskReport[]
 
   @@unique([workVersionId, userId, number])
   @@index([userId, status])
@@ -933,6 +961,55 @@ model AuditEvent {
   @@index([targetId])
 }
 
+enum TaskReportCategory {
+  QUESTION
+  ANSWER
+  SOLUTION
+  DIAGRAM
+  FORMATTING
+  OTHER
+}
+
+enum TaskReportStatus {
+  OPEN
+  IN_REVIEW
+  RESOLVED
+  DISMISSED
+}
+
+// Moderation metadata only. The reported immutable content and learner records
+// are never rewritten when a report is created or resolved.
+model TaskReport {
+  id            String             @id @default(cuid())
+  reporterId    String
+  taskId        String
+  taskVersionId String
+  attemptId     String?
+  requestKey    String             @db.Char(36)
+  category      TaskReportCategory
+  message       String             @db.Text
+  status        TaskReportStatus   @default(OPEN)
+  resolution    String?            @db.Text
+  revision      Int                @default(0)
+  reviewerId    String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @default(now()) @updatedAt
+  reviewedAt    DateTime?
+  reporter      User               @relation("TaskReportReporter", fields: [reporterId], references: [id], onDelete: Restrict)
+  reviewer      User?              @relation("TaskReportReviewer", fields: [reviewerId], references: [id], onDelete: Restrict)
+  task          Task               @relation(fields: [taskId], references: [id], onDelete: Restrict)
+  taskVersion   TaskVersion        @relation(fields: [taskVersionId], references: [id], onDelete: Restrict)
+  attempt       Attempt?           @relation(fields: [attemptId], references: [id], onDelete: Restrict)
+
+  @@unique([reporterId, requestKey])
+  @@index([status, createdAt])
+  @@index([reporterId, createdAt])
+  @@index([taskId])
+  @@index([taskVersionId])
+  @@index([reviewerId])
+  @@index([attemptId])
+}
+
 model TaskBasket {
   userId String @id
   taskIds Json
@@ -1033,4 +1110,73 @@ model ContentReleaseTaskBackup {
   examArchivedAt DateTime? @db.DateTime(3)
 
   @@id([releaseKey, taskId])
+}
+
+enum TaskAuthoringStatus {
+  SUBMITTED
+  CHANGES_REQUESTED
+  REJECTED
+  APPROVED
+  WITHDRAWN
+}
+
+// The canonical teacher task stays PRIVATE. Public approval creates a separate
+// stable projection; later personal edits cannot alter its immutable content.
+model TaskAuthoring {
+  id                 String   @id @default(cuid())
+  taskId             String   @unique
+  ownerId            String
+  latestVersionId    String   @unique
+  publicTaskId       String?  @unique
+  courseId           String?
+  topicId            String?
+  revision           Int      @default(0)
+  declarationVersion String   @default("teacher-original-v1") @db.VarChar(80)
+  declaredAt         DateTime @default(now())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now()) @updatedAt
+  task               Task     @relation("AuthoredPrivateTask", fields: [taskId], references: [id], onDelete: Restrict)
+  publicTask         Task?    @relation("AuthoredPublicTask", fields: [publicTaskId], references: [id], onDelete: Restrict)
+  owner              User     @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  latestVersion      TaskVersion @relation("AuthoringLatestVersion", fields: [latestVersionId], references: [id], onDelete: Restrict)
+  course             Course?  @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  topic              Topic?   @relation(fields: [topicId], references: [id], onDelete: Restrict)
+  submissions        TaskAuthoringSubmission[]
+  @@index([ownerId, updatedAt])
+  @@index([courseId])
+  @@index([topicId])
+}
+
+// Each request freezes one version and the author's permission. Feedback and
+// decision metadata can change with a revision guard; the submitted version cannot.
+model TaskAuthoringSubmission {
+  id                 String   @id @default(cuid())
+  authoringId        String
+  taskVersionId      String
+  courseId           String
+  topicId            String
+  contentFingerprint String   @db.Char(64)
+  authorDeclaration  Boolean
+  permissionToPublish Boolean
+  declarationVersion String  @db.VarChar(80)
+  note               String   @db.Text
+  status             TaskAuthoringStatus @default(SUBMITTED)
+  revision           Int      @default(0)
+  feedback           String?  @db.Text
+  reviewerId         String?
+  publishedVersionId String?  @unique
+  submittedAt        DateTime @default(now())
+  reviewedAt         DateTime?
+  authoring          TaskAuthoring @relation(fields: [authoringId], references: [id], onDelete: Restrict)
+  taskVersion        TaskVersion @relation("AuthoringSubmittedVersion", fields: [taskVersionId], references: [id], onDelete: Restrict)
+  publishedVersion   TaskVersion? @relation("AuthoringPublishedVersion", fields: [publishedVersionId], references: [id], onDelete: Restrict)
+  course             Course @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  topic              Topic @relation(fields: [topicId], references: [id], onDelete: Restrict)
+  reviewer           User? @relation("AuthoringReviewer", fields: [reviewerId], references: [id], onDelete: Restrict)
+  @@index([authoringId, submittedAt])
+  @@index([status, submittedAt])
+  @@index([taskVersionId])
+  @@index([reviewerId])
+  @@index([courseId])
+  @@index([topicId])
 }

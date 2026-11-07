@@ -165,3 +165,20 @@ queueing and operational rollout are implementation work, not enabled by this au
 
 Read-only SQL, anonymised aggregate results and an exact backup of the prior AGENTS
 file are kept locally in `.local/content-policy-audit-20261030/`, outside Git.
+
+
+## Personal teacher materials — owner-authorised workflow, 7 November 2026
+
+New self-registered teachers have basic classroom limits (3 active classes and
+100 distinct active students); paid/AI features remain separately gated. Existing
+teacher and administrator entitlements are preserved. No verified status is
+implied, and optional email is not verified by this local implementation.
+
+Teachers explicitly declare ownership of newly created personal tasks. These
+first-party records are PRIVATE and self-declared ORIGINAL (not publicly reviewed).
+This narrow path never reclassifies imported UNKNOWN or Cambridge material. A
+submission stores the exact immutable version, recommendation and permission to
+publish. An administrator reviews that version and either returns feedback,
+rejects it, or creates/updates a separate public copy. Subsequent private edits
+need a new submission. Import mappings preserve publication provenance; old
+assignments and learner responses continue to use their original versions.

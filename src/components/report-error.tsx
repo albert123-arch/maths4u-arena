@@ -1,0 +1,27 @@
+"use client";
+import Link from 'next/link';
+import {createPortal} from 'react-dom';
+import {useContext,useEffect,useId,useRef,useState} from 'react';
+import {Button,Select,Textarea} from './controls';
+import {ActorContext,LocaleContext,api,ErrorNotice} from './ui';
+import {useView} from './view-state';
+
+type SourceContext = {topic:string;uid:string;version:string};
+type ReportProps={taskVersionId?:string;source?:SourceContext;attemptId?:string;disabled?:boolean};
+export function ReportError(props:ReportProps){const identity=JSON.stringify([props.taskVersionId,props.attemptId,props.source?.topic,props.source?.uid,props.source?.version]);return <ReportErrorForm key={identity} {...props}/>;}
+function ReportErrorForm({taskVersionId,source,attemptId,disabled=false}:ReportProps) {
+  const actor=useContext(ActorContext),lens=useView(),id=useId(),trigger=useRef<HTMLButtonElement>(null),dialog=useRef<HTMLDialogElement>(null);
+  const [open,setOpen]=useState(false),[target,setTarget]=useState(taskVersionId??''),[category,setCategory]=useState('QUESTION'),[message,setMessage]=useState(''),[busy,setBusy]=useState(false),[resolving,setResolving]=useState(false),[sent,setSent]=useState(false),[error,setError]=useState<unknown>(null);
+  const requestKey=useRef<string|null>(null),payloadKey=useRef<string|null>(null);
+  const [returnPath,setReturnPath]=useState('/library');
+  function close(){dialog.current?.close();setOpen(false);trigger.current?.focus();}
+  useEffect(()=>{if(!open)return;const previous=trigger.current;dialog.current?.showModal();dialog.current?.querySelector<HTMLSelectElement>('select')?.focus();return()=>previous?.focus();},[open]);
+  async function show(){setOpen(true);setReturnPath(location.pathname+location.search+location.hash);if(!actor||target||!source)return;setResolving(true);setError(null);try{const result=await api<{taskVersionId:string}>('task-reports/context?'+new URLSearchParams(source));setTarget(result.taskVersionId);}catch(e){setError(e);}finally{setResolving(false);}}
+  async function submit(){if(!actor||lens||!target||busy||sent)return;setBusy(true);setError(null);const body={taskVersionId:target,category,message:message.trim(),...(attemptId?{attemptId}:{})},signature=JSON.stringify(body);if(payloadKey.current!==signature){payloadKey.current=signature;requestKey.current=crypto.randomUUID();}try{await api('task-reports','POST',{...body,requestKey:requestKey.current});setSent(true);window.dispatchEvent(new Event('arena:task-report-updated'));}catch(e){setError(e);}finally{setBusy(false);}}
+  return <LocaleContext.Provider value="en"><span className="report-error-action"><Button ref={trigger} variant="text" className="report-error-trigger" disabled={disabled||!!lens||(!taskVersionId&&!source)} title={lens?'Exit preview to send a report':undefined} onClick={()=>void show()}><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M5 21V4m0 0c5-4 9 4 14 0v11c-5 4-9-4-14 0"/></svg>Report an error</Button></span>
+    {open&&createPortal(<dialog className="report-error-dialog" ref={dialog} aria-labelledby={id+'-title'} aria-describedby={id+'-description'} onCancel={e=>{e.preventDefault();close();}} onClick={e=>{if(e.target===e.currentTarget){const b=e.currentTarget.getBoundingClientRect();if(e.clientX<b.left||e.clientX>b.right||e.clientY<b.top||e.clientY>b.bottom)close();}}}><div className="report-error-heading"><h2 id={id+'-title'}>Report an error</h2><Button aria-label="Close report" variant="text" onClick={close}>Close</Button></div>
+      <p id={id+'-description'}>Tell us what needs checking in this question. Your report refers to the version shown here.</p>
+      {!actor?<div className="report-error-signin"><p>Sign in to send a report.</p><Link className="ui-button ui-button--primary" href={'/login?next='+encodeURIComponent(returnPath)}>Sign in</Link></div>:sent?<div className="report-error-success" role="status"><strong>Report sent</strong><p>Thank you. The Maths4U team will review this version. Your answers and marks have not changed.</p><Button variant="primary" onClick={close}>Done</Button></div>:<form onSubmit={e=>{e.preventDefault();void submit();}}><label>What needs checking?<Select value={category} onChange={e=>setCategory(e.target.value)} disabled={busy} autoFocus><option value="QUESTION">Question wording or data</option><option value="ANSWER">Answer or answer checking</option><option value="SOLUTION">Worked solution or marking guidance</option><option value="DIAGRAM">Diagram or missing image</option><option value="FORMATTING">Formula or layout</option><option value="OTHER">Something else</option></Select></label><label>Describe the issue<Textarea value={message} onChange={e=>setMessage(e.target.value)} minLength={10} maxLength={2000} required disabled={busy} placeholder="For example: in part (b), the diagram label and the question use different lengths." rows={5}/></label><p className="report-error-help">Please include the part or formula involved. Leave out names, contact details and other private information.</p><ErrorNotice error={error}/>{resolving&&<p role="status">Finding the question version…</p>}<div className="report-error-footer"><Button variant="outline" onClick={close}>Cancel</Button><Button variant="primary" type="submit" disabled={busy||resolving||!target||message.trim().length<10}>{busy?'Sending…':'Send report'}</Button></div></form>}
+    </dialog>,document.body)}
+  </LocaleContext.Provider>;
+}

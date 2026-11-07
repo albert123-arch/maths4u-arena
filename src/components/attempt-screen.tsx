@@ -1,4 +1,5 @@
 "use client";
+import {ReportError} from "./report-error";
 import { useView } from "./view-state";
 import { Button, ButtonLink, Input, Textarea } from "./controls";
 import { useRouter } from "next/navigation";
@@ -101,7 +102,7 @@ function AttemptForm({ initial, review }: { initial: AttemptDto; review: boolean
     {dto.study && !lens && !dto.containsUnavailable && <StudyActions dto={dto} apply={apply} save={async () => { await flush(false); if (blocked.current || dirty.current.size) throw new ApiError("STALE_REVISION", 409); }} />}
     {finished && !dto.resultVisible && <p className="notice">{t("Работа принята. Баллы, решения и комментарии станут доступны после публикации результатов.", "Your work was received. Marks, solutions and comments will be available when results are released.")}</p>}
     {dto.resultVisible && <div className="card tint space-block-20" ><p className="eyebrow">{t("Результат", "Result")}</p><div className="metric">{dto.study && dto.pendingReview ? t("Без оценки", "Ungraded") : dto.score} {!(dto.study && dto.pendingReview) && <span className="muted text-size-20" >/ {dto.maxPoints}</span>}</div>{dto.pendingReview && <p className="muted">{dto.study ? t("Ручная задача: автоматическая оценка не выставляется. Самопроверка хранится отдельно.", "Written solution: no automatic mark is awarded. Self-checking is recorded separately.") : t("Часть ответов ещё ожидает проверки. Баллы пока предварительные.", "Some answers are awaiting review. This score is provisional.")}</p>}{dto.submittedAt && <p className="muted"><DateLabel value={dto.submittedAt} /></p>}</div>}
-    <div className="stack">{dto.questions.map((q, qi) => <article className="card" key={q.id}>{!dto.sourcesHidden && <p className="eyebrow">{t("Задача ", "Problem ")}{qi + 1}</p>}<h2>{q.title}</h2><MathContent html={q.statement} />
+    <div className="stack">{dto.questions.map((q, qi) => <article className="card" key={q.id}>{!dto.sourcesHidden && <p className="eyebrow">{t("Задача ", "Problem ")}{qi + 1}</p>}<h2>{q.title}</h2><MathContent html={q.statement} /><ReportError taskVersionId={q.id} attemptId={dto.id}/>
       {q.assets.filter(a => a.role === "STATEMENT").map(a => <MaterialAsset key={a.id} asset={a} />)}
       {q.parts.map((p, pi) => { const answer = dto.answers.find(a => a.partId === p.id), response = responses[p.id] ?? { value: "" }; return <section className="part" key={p.id}>
         <div className="row spread"><strong>{t("Часть ", "Part ")}{pi + 1}</strong><span className="muted">{p.maxPoints} {t("балл.", "pts")}</span></div>
@@ -126,7 +127,7 @@ function SelfStudyScreen({ initial }: { initial: AttemptDto }) {
   const s = dto.study!, back = s.lessonId && s.courseSlug ? `/courses/${s.courseSlug}/topics/${s.lessonId}?mode=WRITTEN` : "/library";
   return <><Heading title={dto.title} subtitle={t("Самостоятельная практика на бумаге", "Independent practice on paper")}><ButtonLink className="button secondary" href={back}>{t("К вопросам", "Back to questions")}</ButtonLink></Heading>
     <StudyActions dto={dto} apply={setDto} save={async () => {}} />
-    {dto.questions.map(q => <article className="card self-study-question" key={q.id}><h2>{q.title}</h2><MathContent html={q.statement} />
+    {dto.questions.map(q => <article className="card self-study-question" key={q.id}><h2>{q.title}</h2><MathContent html={q.statement} /><ReportError taskVersionId={q.id} attemptId={dto.id}/>
       {q.assets.filter(a => a.role === "STATEMENT").map(a => <MaterialAsset key={a.id} asset={a} />)}
       {q.parts.map((p, i) => <section className="part" key={p.id}><div className="row spread"><strong>{t("Часть", "Part")} {i + 1}</strong><span>{p.maxPoints} {t("б.", "pts")}</span></div><MathContent html={p.prompt} />
         {p.answer && <MathContent html={p.answer} />}{p.rubric && <MathContent html={p.rubric} />}{p.markScheme && <MathContent html={p.markScheme} />}<MarkSchemeText html={p.markSchemeText} status={p.markSchemeStatus} />

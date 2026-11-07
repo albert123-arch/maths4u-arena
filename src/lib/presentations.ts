@@ -6,6 +6,8 @@ import { isAdmin, teacher, transaction, type Actor } from "./security";
 import { localized } from "./content";
 import { assertLessonVisible } from "./content-access";
 import { presentationLink } from "./presentation-url";
+import { canUseTeacherLibrary } from "./teacher-account";
+import { hasFeature } from "./subscriptions";
 
 async function availableLesson(client: Prisma.TransactionClient, actor: Actor, lessonId: string) {
   teacher(actor);
@@ -16,6 +18,8 @@ async function availableLesson(client: Prisma.TransactionClient, actor: Actor, l
   } });
   ensure(lesson && !lesson.archivedAt && !lesson.topic.course.archivedAt &&
     (lesson.topic.course.published || isAdmin(actor)) && lesson.versions.length, 404, "NOT_FOUND");
+  const key = lesson.topic.course.featureKey;
+  ensure(!key || canUseTeacherLibrary(actor) || await hasFeature(actor, key), 403, "SUBSCRIPTION_REQUIRED");
   return lesson;
 }
 

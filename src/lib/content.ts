@@ -14,6 +14,7 @@ import { isPure1ShortUid } from "./pure1-practice-number";
 import { displayMarkup, displaySource, displayTitle } from "./public-presentation";
 import { archiveWhere, hiddenMaterial } from "./content-access";
 import { quarantineImportedTask } from "./import-content-policy";
+import { canUseTeacherLibrary } from "./teacher-account-model";
 
 const locale = z.enum(["ru", "en"]);
 const text = z.string().max(100000);
@@ -132,13 +133,19 @@ export function publicVersion(v: Version, lang: string, solutions = false, revea
         options: p.options.map(o => ({ id: o.id, text: render(localized(o.texts, lang).text), ...(show("answer") ? { correct: o.correct } : {}) })) };
     }) };
 }
-export async function createTaskVersion(tx: Prisma.TransactionClient, actor: Actor, data: TaskInput, taskId?: string) {
+// A server-only capability. Existing editor/import callers cannot accidentally
+// publish or revise teacher-authoring identities outside their review workflow.
+export const teacherAuthoringVersionPermit = Symbol("teacher-authoring-version");
+export async function createTaskVersion(tx: Prisma.TransactionClient, actor: Actor, data: TaskInput, taskId?: string, authoringPermit?: typeof teacherAuthoringVersionPermit) {
   if(taskId) await requireVisibleTasks(actor,[taskId],tx);
   ensure(isAdmin(actor) || !/^Cambridge(?: International)?$/i.test(data.examBoard ?? "") && !/^Cambridge(?: International)?$/i.test(data.source ?? ""),403,"FORBIDDEN");
   if (taskId) {
     await tx.$queryRaw`SELECT id FROM Task WHERE id = ${taskId} FOR UPDATE`;
     const task = await tx.task.findUnique({ where: { id: taskId } });
     ensure(task && !hiddenMaterial(actor, task) && (task.ownerId === actor.id || isAdmin(actor)), 404, "NOT_FOUND");
+    const authored = await tx.taskAuthoring.findFirst({ where: { OR: [{ taskId }, { publicTaskId: taskId }] }, select: { taskId: true } });
+    ensure(!authored || authoringPermit === teacherAuthoringVersionPermit, 403, "AUTHORING_WORKFLOW_REQUIRED");
+    if (authored?.taskId === taskId) ensure(data.visibility === "PRIVATE" && !data.featureKey, 403, "AUTHORING_TASK_IS_PRIVATE");
   }
   for (const asset of data.assets) {
     const file = await tx.storedFile.findUnique({ where: { id: asset.fileId } });
@@ -177,7 +184,7 @@ export async function library(actor: Actor | null, lang: string, query = "") {
     versions: query ? { some: { texts: { some: { title: { contains: query } } } } } : undefined,
   }, take: 100, orderBy: { createdAt: "desc" }, include: { versions: { orderBy: { number: "desc" }, take: 1, include: versionInclude }, topics: { include: { topic: { include: { texts: true } } } } } });
   return Promise.all(rows.map(async t => {
-    const allowed = (actor && isTeacher(actor)) || !t.featureKey || (actor && await hasFeature(actor, t.featureKey));
+    const allowed = canUseTeacherLibrary(actor) || actor?.id === t.ownerId || !t.featureKey || (actor && await hasFeature(actor, t.featureKey));
     const v = t.versions[0];
     return { id: t.id, title: displayTitle(localized(v.texts, lang).title), locked: !allowed, featureKey: t.featureKey,
       editable: !!actor && (isAdmin(actor) || t.ownerId === actor.id),

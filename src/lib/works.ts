@@ -13,6 +13,7 @@ import { isPure1ShortUid, pure1PracticeNumber } from "./pure1-practice-number";
 import { displayTeacherNote } from "./public-presentation";
 import { requestView, userViewTeacher, lensAttemptScope } from "./request-view";
 import { hiddenMaterial, unavailableVersion, unavailableMessage } from "./content-access";
+import { canUseTeacherLibrary } from "./teacher-account";
 
 const contextInclude = { classroom: true, round: { include: { olympiad: true } } } satisfies Prisma.WorkInclude;
 type Context = Prisma.WorkGetPayload<{ include: typeof contextInclude }>;
@@ -60,7 +61,8 @@ export async function createWork(tx: Prisma.TransactionClient, actor: Actor, dat
   ensure(tasks.length === data.taskIds.length, 400, "TASK_UNAVAILABLE");
   for (const task of tasks) {
     ensure(task.visibility === "PUBLIC" || task.ownerId === actor.id || isAdmin(actor), 403, "TASK_UNAVAILABLE");
-    if (data.kind === "PRACTICE" && task.featureKey) ensure(await hasFeature(actor, task.featureKey), 403, "SUBSCRIPTION_REQUIRED");
+    if (task.featureKey && (data.kind === "PRACTICE" || (!canUseTeacherLibrary(actor) && task.ownerId !== actor.id)))
+      ensure(await hasFeature(actor, task.featureKey), 403, "SUBSCRIPTION_REQUIRED");
     if (data.kind === "OLYMPIAD") ensure(!await tx.lessonTask.count({ where: { taskId: task.id, lessonId: "pilot_f2da4f4d6de9a3f01df74fffaacdbcf3792b3e29" } }), 409, "PROVISIONAL_OLYMPIAD_SCORE");
   }
   const work = await tx.work.create({ data: { title: data.title, ownerId: actor.id, kind: data.kind, classId: data.classId,

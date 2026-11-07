@@ -1,11 +1,11 @@
 "use client";
 import Link from "next/link";
 import { ButtonLink } from "./controls";
-import { DateLabel, Empty, ErrorNotice, Heading, Loading, Status, useLocale, useResource } from "./ui";
+import { DateLabel, Empty, ErrorNotice, Loading, Status, useLocale, useResource } from "./ui";
 import { ViewButton } from "./view-controls";
 import { useReviewNow } from "./square-progress";
-import { useView } from "./view-state";
-import type { AdminDashboardDto, StudentDashboardDto, TeacherDashboardDto } from "@/lib/dashboards";
+import type { AdminDashboardDto, StudentDashboardDto } from "@/lib/dashboards";
+export { TeacherDashboard } from './teacher-dashboard';
 
 export function StudentOverview() {
   const { t } = useLocale(), r = useResource<StudentDashboardDto>("dashboard/student"), clock = useReviewNow();
@@ -19,16 +19,6 @@ export function StudentOverview() {
     <details className="card dashboard-topics"><summary>{t("Прогресс по темам", "Your topics")}</summary><p className="muted">{t("Прочитанный конспект и самооценка не означают самостоятельное решение.", "Reading notes and self-awarded marks do not establish independent mastery.")}</p>{!d.topics.length ? <p>{t("Выберите курс ниже.", "Choose a course below.")}</p> : <ul className="dashboard-topic-list">{d.topics.map(p => <li key={p.id}><Link href={p.href}>{p.title}</Link><span className="badge" data-topic-state={p.state}>{states[p.state]}</span>{p.notesRead && <small>{t("Конспект прочитан", "Notes read")}</small>}</li>)}</ul>}</details>
     <section className="card"><div className="row spread"><h2>{t("Закладки", "Bookmarks")}</h2><Link href="/bookmarks">{t("Все закладки", "All bookmarks")} →</Link></div>{d.bookmarks.length ? <div className="dashboard-links">{d.bookmarks.map(b => <Link key={b.id} href={b.href}>{b.title} →</Link>)}</div> : <p>{t("Сохраняйте полезные задачи, чтобы быстро вернуться к ним.", "Save useful questions to find them quickly later.")}</p>}</section>
   </>;
-}
-export function TeacherDashboard() {
-  const { t } = useLocale(), lens = useView(), r = useResource<TeacherDashboardDto>("dashboard/teacher");
-  if (r.error) return <ErrorNotice error={r.error} />; if (!r.data) return <Loading />;
-  const d = r.data;
-  return <div className="stack"><Heading title={t("Кабинет учителя", "Teacher dashboard")} subtitle={t("Классы, работы и следующий шаг каждого ученика.", "Your classes, assignments and each learner’s next step.")}><ViewButton role="STUDENT">Preview as student</ViewButton></Heading>
-    <section className="card"><div className="row spread"><h2>{t("Нужно проверить", "Awaiting review")} · {d.pendingCount}</h2><Link href="/teacher/assignments">{t("Все работы", "All assignments")} →</Link></div>{!d.pending.length ? <Empty>{t("Очередь проверки пуста.", "Your review queue is clear.")}</Empty> : d.pending.map(a => <article className="item" key={a.id}><h3><Link href={"/attempts/" + a.id + "/review"}>{a.student} · {a.title} →</Link></h3><p className="muted">{a.classTitle} {a.submittedAt && <>· <DateLabel value={a.submittedAt} /></>}</p></article>)}{d.pendingCount > d.pending.length && <p>{t("Показаны первые 20. Остальные доступны в результатах работ.", "Showing the first 20. Open assignment results for the rest.")}</p>}</section>
-    <section className="card"><div className="row spread"><h2>{t("Мои классы", "My classes")}</h2><ButtonLink href="/teacher/classes">{t("Управлять классами", "Manage classes")}</ButtonLink></div>{!d.classes.length ? <Empty>{t("Создайте класс и пригласите учеников.", "Create a class and invite your students.")}</Empty> : d.classes.map(c => <article className="item" key={c.id}><h3><Link href={"/teacher/classes/" + c.id + "/progress"}>{c.title} →</Link></h3><p>{c.students.length} {c.students.length === 1 ? t("ученик", "student") : t("учеников", "students")} · {c.assignments} {c.assignments === 1 ? t("работа", "assignment") : t("работ", "assignments")}</p><Link href={"/teacher/classes/" + c.id + "/progress"}>{t("Прогресс класса по темам", "Class progress by topic")} →</Link><details><summary>{t("Кабинеты учеников — только чтение", "Student dashboards — read only")}</summary><ul className="dashboard-topic-list">{c.students.map(s => <li key={s.id}><span>{s.displayName}</span><ViewButton role="STUDENT" targetId={s.id}>{t("Смотреть как ученик", "View student")}</ViewButton></li>)}</ul></details></article>)}</section>
-    <section className="card"><h2>{t("Подготовить занятие", "Prepare a lesson")}</h2><p>{t("Откройте тему, выберите задачи и назначьте их своему классу.", "Open a topic, choose questions and assign them to your class.")}</p><div className="row"><ButtonLink href="/courses">{t("Создать задание из темы", "Create an assignment from a topic")} →</ButtonLink><ButtonLink href="/teacher/works/new">{t("Мой набор задач", "My question set")} →</ButtonLink></div>{!lens && <p className="muted">{t("Для пробного решения своей работы используйте кнопку предпросмотра на странице работы.", "Use Preview as student on your assignment to try it without saving results.")}</p>}</section>
-  </div>;
 }
 export function AdminAudit({ auditOnly = false }: { auditOnly?: boolean }) {
   const { t } = useLocale(), r = useResource<AdminDashboardDto>("dashboard/admin");

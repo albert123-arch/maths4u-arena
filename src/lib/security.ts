@@ -7,7 +7,7 @@ import type { Prisma } from "../generated/prisma/client";
 import { requestView } from "./request-view";
 
 export const COOKIE = "maths4u_session";
-export const userSelect = { id: true, username: true, displayName: true, status: true, roles: true, profile: true } satisfies Prisma.UserSelect;
+export const userSelect = { id: true, username: true, displayName: true, status: true, roles: true, profile: true, teacherAccount: true } satisfies Prisma.UserSelect;
 export type Actor = Prisma.UserGetPayload<{ select: typeof userSelect }>;
 export const digest = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
 export const secret = () => randomBytes(32).toString("base64url");
@@ -20,9 +20,10 @@ export const usernameSchema = z.string().trim().toLowerCase().regex(/^[a-z0-9_.-
 export const registrationSchema = z.object({
   username: usernameSchema, password: passwordSchema, displayName: z.string().trim().min(2).max(160),
   email: z.email().max(191).optional(), locale: z.enum(["ru", "en"]).default("en"),
+  accountType: z.enum(["STUDENT", "TEACHER"]).default("STUDENT"),
   courseSlugs: z.array(z.string().regex(/^[a-z0-9-]{2,120}$/)).max(12).default([]),
 });
-// Roles supplied by clients are discarded; only STUDENT is inserted.
+// Arbitrary client roles are discarded. Only these two self-declared account types exist.
 export async function register(input: unknown) {
   const data = registrationSchema.parse(input);
   const passwordHash = await hashPassword(data.password);
@@ -31,7 +32,8 @@ export async function register(input: unknown) {
   ensure(courses.length === slugs.length, 400, "INVALID_COURSE_SELECTION");
   return db().user.create({ data: { username: data.username, passwordHash, displayName: data.displayName,
     followedCourses: { create: courses.map(c => ({ courseId: c.id })) },
-    email: data.email?.toLowerCase(), roles: { create: { role: "STUDENT" } }, profile: { create: { locale: data.locale } } }, select: userSelect });
+    email: data.email?.toLowerCase(), roles: { create: { role: data.accountType } }, profile: { create: { locale: data.locale } },
+    ...(data.accountType === "TEACHER" ? { teacherAccount: { create: { selfRegistered: true } } } : {}) }, select: userSelect });
 }
 export async function transaction<T>(fn: (tx: Prisma.TransactionClient) => Promise<T>): Promise<T> {
   for (let i = 0; ; i++) {
