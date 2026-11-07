@@ -1,4 +1,5 @@
 import { db } from "./prisma";
+import { dashboardAttemptWhere, dashboardVisibleItems } from "./student-dashboard-assignments";
 import { z } from "zod";
 import type { Prisma } from "../generated/prisma/client";
 import { type Actor, admin } from "./security";
@@ -54,15 +55,19 @@ export async function studentDashboard(actor: Actor, lang: string, input: unknow
   const descriptors = new Map(practiceTopics.map(t => [t.lessonId, new Map(questionsForTopic(t.key).map(q => [q.id, q]))]));
   const versionIds = [...new Set(lessons.flatMap(l => l.tasks.flatMap(t => t.task.versions.map(v => v.id))))];
   const taskIds = [...new Set(lessons.flatMap(l => l.tasks.map(t => t.taskId)))];
-  const [checks, attempts, assignmentDetails] = await Promise.all([
+  // listWorks supplies the actor's assigned work/history, including private
+  // teacher materials and work outside followed courses. Keep its membership
+  // and teacher USER-lens boundaries, then reject held material in every version.
+  const assignmentDetails = await db().work.findMany({ where: { id: { in: works.filter(w => w.kind !== "PRACTICE" && !w.archived).map(w => w.id) }, versions: { none: { items: { some: { taskVersion: { task: restrictedWhere } } } } } }, select: { id: true, versions: { take: 1, orderBy: { number: "desc" }, select: { id: true, items: { select: { maxPoints: true, taskVersion: { select: { taskId: true } } } } } } } });
+  const assignedWorkIds = new Set(assignmentDetails.filter(w => !!w.versions[0]?.items.length).map(w => w.id));
+  const [checks, attempts] = await Promise.all([
     // IndependentCheck has no teacher/attempt relationship. A teacher USER lens
     // cannot use this summary to inspect the learner's private self-study.
     teacherLens ? [] : db().independentCheck.findMany({ where: { userId: actor.id, taskVersionId: { in: versionIds } }, orderBy: [{ checkedAt: "asc" }, { id: "asc" }], select: { eventKey: true, taskVersionId: true, contentVersion: true, correct: true, helpUsed: true, imported: true, checkedAt: true } }),
-    db().attempt.findMany({ where: { userId: actor.id, AND: [lensAttemptScope()], workVersion: { items: { some: { taskVersion: { taskId: { in: taskIds } } }, none: { taskVersion: { task: restrictedWhere } } } } }, orderBy: [{ startedAt: "desc" }, { id: "desc" }], include: {
+    db().attempt.findMany({ where: dashboardAttemptWhere(actor.id, taskIds, [...assignedWorkIds], lensAttemptScope()), orderBy: [{ startedAt: "desc" }, { id: "desc" }], include: {
       workVersion: { include: { work: { select: { id: true, kind: true, title: true, resultsPublishedAt: true } }, items: { include: { taskVersion: { select: { taskId: true, texts: { select: { locale: true, title: true } }, parts: { select: { id: true, kind: true, maxPoints: true } } } } } } } },
       answers: { select: { partId: true, response: true, savedAt: true, autoPoints: true, _count: { select: { files: true } }, review: { select: { id: true, points: true, comment: true, reviewedAt: true, reviewer: { select: { displayName: true } } } } } },
     } }),
-    db().work.findMany({ where: { id: { in: works.filter(w => w.kind !== "PRACTICE" && !w.archived).map(w => w.id) }, versions: { none: { items: { some: { taskVersion: { task: restrictedWhere } } } } } }, select: { id: true, versions: { take: 1, orderBy: { number: "desc" }, select: { id: true, items: { select: { maxPoints: true, taskVersion: { select: { taskId: true } } } } } } } }),
   ]);
   const modelLessons: DashboardLesson[] = lessons.map(l => {
     const course = courses.find(c => c.id === l.topic.courseId)!, topic = practiceTopics.find(t => t.lessonId === l.id);
@@ -82,14 +87,14 @@ export async function studentDashboard(actor: Actor, lang: string, input: unknow
   const activityAt: number[] = [];
   const courseByTask = new Map(modelLessons.flatMap(l => l.questions.map(q => [q.id, l.course.id] as const)));
   for (const a of attempts) {
-    const selectedItems = a.workVersion.items.filter(i => courseByTask.has(i.taskVersion.taskId));
+    const selectedItems = dashboardVisibleItems(a.workVersion.items, a.workVersion.work.id, assignedWorkIds, courseByTask);
     const selectedParts = new Set(selectedItems.flatMap(i => i.taskVersion.parts.map(p => p.id)));
     activityAt.push(a.startedAt.getTime(), ...(a.submittedAt ? [a.submittedAt.getTime()] : []), ...a.answers.filter(answer => selectedParts.has(answer.partId)).map(answer => answer.savedAt.getTime()));
     if (!maySeeResult(a)) continue;
     for (const item of selectedItems) {
       const version = item.taskVersion, answers = a.answers.filter(answer => version.parts.some(p => p.id === answer.partId));
       for (const answer of answers) if (answer.review?.comment.trim()) feedback.push({ id: answer.review.id, comment: answer.review.comment, reviewer: answer.review.reviewer.displayName, reviewedAt: answer.review.reviewedAt.getTime(), href: "/attempts/" + a.id, title: displayTitle(localized(version.texts, lang)?.title ?? a.workVersion.work.title), points: answer.review.points, maxPoints: version.parts.find(p => p.id === answer.partId)!.maxPoints });
-      if (a.status !== "GRADED" || !version.parts.every(p => answers.some(answer => answer.partId === p.id && (answer.review?.points ?? answer.autoPoints) !== null))) continue;
+      if (!courseByTask.has(version.taskId) || a.status !== "GRADED" || !version.parts.every(p => answers.some(answer => answer.partId === p.id && (answer.review?.points ?? answer.autoPoints) !== null))) continue;
       for (const source of ["teacher", "automatic"] as const) {
         const partAnswers = answers.filter(answer => source === "teacher" ? answer.review?.points != null : answer.review?.points == null && answer.autoPoints != null);
         if (!partAnswers.length) continue;
@@ -98,7 +103,7 @@ export async function studentDashboard(actor: Actor, lang: string, input: unknow
     }
   }
   for (const l of modelLessons) for (const s of l.studies) if (s.selfChecked && s.selfPoints !== null) { const q = l.questions.find(q => q.id === s.taskId); if (q) marks.push({ taskId: q.id, courseId: l.course.id, at: s.at, attemptId: s.attemptId, source: "self", points: s.selfPoints, maximum: q.maximum }); }
-  const relevantWorks = works.filter(w => w.kind !== "PRACTICE" && !w.archived && assignmentDetails.some(d => d.id === w.id && d.versions[0]?.items.some(i => courseByTask.has(i.taskVersion.taskId))));
+  const relevantWorks = works.filter(w => w.kind !== "PRACTICE" && !w.archived && assignedWorkIds.has(w.id));
   const assignmentCards = prioritizeDashboardAssignments(relevantWorks.map(w => {
     const version = assignmentDetails.find(d => d.id === w.id)!.versions[0], allowedAttempts = attempts.filter(a => a.workVersionId === version.id), a = allowedAttempts[0];
     const answered = a ? new Set(a.answers.filter(answer => { const r = answer.response as { value?: unknown; optionId?: unknown }; return typeof r.value === "string" && !!r.value.trim() || !!r.optionId || answer._count.files > 0; }).flatMap(answer => a.workVersion.items.filter(i => i.taskVersion.parts.some(p => p.id === answer.partId)).map(i => i.taskVersion.taskId))).size : 0;

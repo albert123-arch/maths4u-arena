@@ -92,3 +92,27 @@ test("activity uses the requested local week, including timezone date boundaries
 test("no selected content produces an honest empty state", () => {
   const d = model(lesson(), { lessons: [], marks: [] }); assert.equal(d.currentLesson, null); assert.deepEqual(d.courses, []); assert.deepEqual(d.reviewQuestions, []); assert.equal(d.examReadiness?.average, null); assert.equal(d.activity.activeDays, 0);
 });
+
+
+test("private assignments remain visible without following a public course", async () => {
+  const { dashboardVisibleItems } = await import("../src/lib/student-dashboard-assignments");
+  const items = [{ taskVersion: { taskId: "private" } }, { taskVersion: { taskId: "public" } }];
+  assert.deepEqual(dashboardVisibleItems(items, "own-class-work", new Set(["own-class-work"]), new Map()), items);
+  assert.deepEqual(dashboardVisibleItems(items, "unassigned", new Set(["own-class-work"]), new Map([["public", "course"]])), [items[1]]);
+  assert.deepEqual(dashboardVisibleItems(items, "unassigned", new Set(), new Map()), []);
+});
+
+test("assignment attempt query keeps actor, teacher lens and every historical archive guard", async () => {
+  const { dashboardAttemptWhere } = await import("../src/lib/student-dashboard-assignments");
+  const { restrictedWhere } = await import("../src/lib/content-access");
+  const lens = { workVersion: { work: { ownerId: "teacher" } } };
+  const where = dashboardAttemptWhere("student", [], ["assigned"], lens);
+  assert.deepEqual(where, { userId: "student", AND: [lens], workVersion: {
+    OR: [{ workId: { in: ["assigned"] } }, { items: { some: { taskVersion: { taskId: { in: [] } } } } }],
+    items: { none: { taskVersion: { task: restrictedWhere } } },
+    work: { versions: { none: { items: { some: { taskVersion: { task: restrictedWhere } } } } } },
+  } });
+  const empty = dashboardAttemptWhere("student", [], [], {});
+  assert.match(JSON.stringify(empty), /"in":\[\]/);
+  assert.equal(JSON.stringify(empty).includes('"visibility":"PRIVATE"'), false);
+});
