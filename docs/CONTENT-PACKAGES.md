@@ -755,3 +755,46 @@ The guarded lifecycle preserves all eighteen preceding packages and restores
 this one to DRAFT for browser QA. Final publication is local only. Repeat skips
 51 tasks with zero writes. Production and other Mechanics chapters are outside
 this task.
+
+
+## C5: Further Mechanics — Equilibrium of a rigid body
+
+`9231-mechanics-equilibrium` 1.0.1 adds `fm_equilibrium` to the existing
+`maths4u-9231-mechanics` course. Four lessons follow book 14.1–14.4, with
+16 independent worked examples and 32 complete-answer quick checks, variants
+and review. All 48 owner tasks (111 parts, 407 marks) retain their keys and
+criteria, distributed 10/13/9/16. No rotation dynamics is introduced. The three
+Hooke-law applications have explicit prerequisite explanations.
+
+Rebuild using the read-only source and committed source audit:
+
+    python scripts/content/prepare-mechanics-equilibrium.py --source 'E:\my folder\questions_data\original\Mechanics 9231\02_Equilibrium_of_a_rigid_body_9231_Mechanics_revised.json' --mapping docs/ARENA-C5-MECHANICS-EQUILIBRIUM-SOURCE-AUDIT-20261107.json --assets docs/ARENA-C5-MECHANICS-EQUILIBRIUM-SOURCE-AUDIT-20261107.json
+    python scripts/content/verify-mechanics-equilibrium.py --source 'E:\my folder\questions_data\original\Mechanics 9231\02_Equilibrium_of_a_rigid_body_9231_Mechanics_revised.json'
+    python scripts/content/verify-mechanics-equilibrium.py --report .local/c5-mechanics-equilibrium-20261107/ci-math.json
+
+CI needs no E: drive. Independent signed moments, polygon shoelace centroids,
+signed mass/area/volume/surface first moments, geometric root domains, friction,
+unilateral contacts, toppling and elastic extension checks cover all supplied
+questions and newly authored examples/checks. Parsed printed TeX receives
+50-digit sample comparisons; these are distinguished from symbolic proofs.
+External teacher review remains outstanding.
+
+43 diagrams in question_html are STATEMENT; three force diagrams in solutions
+(Q36/Q45/Q47) are SOLUTION. The source stem does not embed the geometry, so
+normalisation explicitly extracts question figures before adding the parts.
+Unsafe SVG content/external references are rejected; owner images are converted
+to content-addressed PNGs with source and result hashes. Existing file grants
+and inline/gallery deduplication apply. Generic new-variant captions are removed.
+Owner criteria have no M/A codes, so projection codes remain blank.
+
+An editorial correction changed only our 32 quick-check hints from a projectile
+template to skill-specific statics hints. Local 1.0.0 history is retained; 1.0.1
+is current and keeps task identities. Version metadata creates new immutable
+versions for the 80 package tasks. No prior package is modified, and no other
+course or production database is used. A fresh install does not require 1.0.0.
+
+The guarded lifecycle supports initial creation, append-only editorial revision,
+read-only dry-run and zero-write repeat. It preserves all nineteen earlier
+packages and returns this one to DRAFT for browser QA; final publication is local.
+Written reasoning stays MANUAL paper self-study with indicative DRAFT guidance.
+No new migrations, dependencies, permissions or renderer changes are needed.
