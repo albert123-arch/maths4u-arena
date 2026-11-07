@@ -578,3 +578,33 @@ the new teaching prose as KaTeX, preserving keys/criteria and immutable task
 history. Reapplying skips 126 tasks with zero writes. Lifecycle/browser tests
 leave the older thirteen packages unchanged and restore only this one to DRAFT;
 final local publication is separate. Production remains outside this task.
+
+## C5: Further Pure 2 — Differentiation
+
+9231-fp2-differentiation 1.0.0 adds fp2_differentiation to the existing course.
+Six lessons follow the mathematical sequence of book 21.1–21.4, with local
+geometry separated for clarity. All explanations and 24 examples are independently
+authored. All 77 owner tasks (189 parts, 684 marks) are retained alongside
+48 complete-answer quick checks. Seven ODE and three integration links disclose
+their later-topic prerequisites. No old archive illustrations are reused.
+
+Rebuild and verify:
+
+    python scripts/content/prepare-fp2-differentiation.py --source 'E:\my folder\questions_data\original\Pure 2 9231\03_Differentiation_9231_FP2_revised.json' --mapping docs/ARENA-C5-FP2-DIFFERENTIATION-SOURCE-AUDIT-20261107.json
+    python scripts/content/verify-fp2-differentiation.py --source 'E:\my folder\questions_data\original\Pure 2 9231\03_Differentiation_9231_FP2_revised.json'
+    python scripts/content/verify-fp2-differentiation.py --report .local/c5-fp2-differentiation-20261107/ci-math.json
+
+CI needs no E: drive. Independent models read actual TeX result claims and verify
+implicit/parametric derivatives, regular stationary sets, inverse branches,
+Maclaurin polynomials, factorials, labelled integrals and ODE residuals/initial
+data. The content and verification models are hash-bound. No owner keys, criteria
+or marks are corrected. Source IDs and archive mappings remain private.
+
+Full short checks use the existing bounded parser: rational functions in the
+specified variables, full polynomials and complete sets/pairs. Hyperbolic formulas
+explicitly request c/h polynomials or a radical structure; arbitrary transcendental
+equivalence is not claimed. Written reasoning stays MANUAL paper self-study with
+indicative DRAFT guidance. There are no assets, migrations or new dependencies.
+Guarded lifecycle/browser tests preserve the older fourteen packages and restore
+only this one to DRAFT; final local publication is separate. Repeat skips 125
+tasks with zero writes. Production is outside this task.
