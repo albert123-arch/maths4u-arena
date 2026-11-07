@@ -645,3 +645,39 @@ explicit complete coefficient structures, not arbitrary transcendental matching.
 The guarded local lifecycle preserves all fifteen preceding packages and returns
 this one to DRAFT for browser checks; final local publication is separate.
 Repeat skips 157 tasks with zero writes. Production is outside this task.
+
+## C5: Further Pure 2 — Complex numbers
+
+`9231-fp2-complex` 1.0.0 adds `fp2_complex` to the same course. Five lessons
+follow book 23.1–23.4, separating basic powers/geometry from multiple-angle
+polynomial applications. All 59 owner tasks (146 parts, 551 marks) retain their
+keys, solutions and guidance. There are 20 independently authored examples
+and 40 complete-answer quick checks, with variants and review.
+
+Rebuild from the read-only source and committed audit:
+
+    python scripts/content/prepare-fp2-complex.py --source 'E:\my folder\questions_data\original\Pure 2 9231\05_Complex_numbers_9231_FP2_revised.json' --mapping docs/ARENA-C5-FP2-COMPLEX-SOURCE-AUDIT-20261107.json --assets docs/ARENA-C5-FP2-COMPLEX-SOURCE-AUDIT-20261107.json
+    python scripts/content/verify-fp2-complex.py --source 'E:\my folder\questions_data\original\Pure 2 9231\05_Complex_numbers_9231_FP2_revised.json'
+    python scripts/content/verify-fp2-complex.py --report .local/c5-fp2-complex-20261107/ci-math.json
+
+CI needs no E: drive. Hash-bound models verify exact complex/Laurent algebra,
+polynomial root completeness and independent real-root counts, unity products
+and reciprocal sums in a quotient ring, direct finite/binomial sums,
+convergence conditions, 55-digit quadrature and actual printed TeX results.
+Numerical samples of general formulas are distinguished from symbolic proofs.
+Independent teacher review remains outstanding.
+
+Nine PNGs come from the active owner review articles, matched by exact alt and
+question number; Q52 has two diagrams. Source HTML/SVG and output PNG hashes
+are in the audit. All assets are SOLUTION-only and use the existing private
+file/grant boundary. No new migrations, dependencies, permission or renderer
+changes are needed. Archived diagrams and Task/TaskVersion records are retained.
+
+Quick checks require every component, all roots, whole polynomials/quotients,
+all harmonic coefficients or full parameter intervals. Exponential roots use
+the complete rational angle-coefficient set and positive modulus. The existing
+bounded exact parser is retained; arbitrary transcendental equivalence is not
+claimed. Written reasoning stays MANUAL paper self-study with indicative DRAFT
+guidance. The guarded lifecycle preserves all sixteen older packages and restores
+this one to DRAFT for browser QA. Final publication is local only; repeat skips
+99 tasks with zero writes. Production is outside this task.

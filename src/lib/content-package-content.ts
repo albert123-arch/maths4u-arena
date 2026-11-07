@@ -11,13 +11,14 @@ import statsNonparam from "../../content/original/9231-statistics/nonparam-v1.js
 import statsPgf from "../../content/original/9231-statistics/pgf-v1.json";
 import fp2Hyperbolic from "../../content/original/9231-fp2/hyperbolic-v1.json";
 import fp2Matrices2 from "../../content/original/9231-fp2/matrices2-v1.0.1.json";
+import fp2Complex from "../../content/original/9231-fp2/complex-v1.json";
 import fp2Integration from "../../content/original/9231-fp2/integration-v1.json";
 import fp2Differentiation from "../../content/original/9231-fp2/differentiation-v1.json";
 import polar from "../../content/original/9231-fp1/polar-v1.json";
 import matrices1 from "../../content/original/9231-fp1/matrices1-v1.json";
 import { contentPackageSchema, type ContentPackage } from "./content-package-schema";
 import type { QuadraticTopic } from "./square-model";
-export const contentPackages: ContentPackage[] = [contentPackageSchema.parse(roots),contentPackageSchema.parse(rational),contentPackageSchema.parse(summation),contentPackageSchema.parse(matrices1),contentPackageSchema.parse(polar),contentPackageSchema.parse(vectors),contentPackageSchema.parse(induction),contentPackageSchema.parse(statsCrv),contentPackageSchema.parse(statsInference),contentPackageSchema.parse(statsChi2),contentPackageSchema.parse(statsNonparam),contentPackageSchema.parse(statsPgf),contentPackageSchema.parse(fp2Hyperbolic),contentPackageSchema.parse(fp2Matrices2),contentPackageSchema.parse(fp2Differentiation),contentPackageSchema.parse(fp2Integration)];
+export const contentPackages: ContentPackage[] = [contentPackageSchema.parse(roots),contentPackageSchema.parse(rational),contentPackageSchema.parse(summation),contentPackageSchema.parse(matrices1),contentPackageSchema.parse(polar),contentPackageSchema.parse(vectors),contentPackageSchema.parse(induction),contentPackageSchema.parse(statsCrv),contentPackageSchema.parse(statsInference),contentPackageSchema.parse(statsChi2),contentPackageSchema.parse(statsNonparam),contentPackageSchema.parse(statsPgf),contentPackageSchema.parse(fp2Hyperbolic),contentPackageSchema.parse(fp2Matrices2),contentPackageSchema.parse(fp2Differentiation),contentPackageSchema.parse(fp2Integration),contentPackageSchema.parse(fp2Complex)];
 export function contentPackage(key:string) {
   const p=contentPackages.find(p=>p.key===key);if(!p)throw Error("UNKNOWN_CONTENT_PACKAGE");return p;
 }
