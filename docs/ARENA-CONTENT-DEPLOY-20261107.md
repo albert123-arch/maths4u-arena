@@ -24,3 +24,10 @@
 ## Фактический результат
 
 На момент этого подготовительного коммита push/deploy ещё не выполнены. Итог, CI URL, SHA и live-readbacks будут дописаны после действий.
+
+
+### Первый кодовый deployment и исправление зависимостей
+
+Linux CI [42358429432](https://github.com/albert123-arch/maths4u-arena/actions/runs/42358429432) прошёл для точного SHA `762493936913e6b88f8faa510b17da3f4224b29b`. Без force этот SHA отправлен в main. Hostinger deployment [01a1b54b-cdd1-728e-8aaf-5752b687b67f](https://hpanel.hostinger.com/websites/arena.maths4u.sbs/node/deployments/01a1b54b-cdd1-728e-8aaf-5752b687b67f/details) завершён за 2m33s; health 200, гость 688. Новые пакеты ещё не применялись.
+
+Build audit выявил известные уязвимости старых зависимостей. Перед импортом выполняются [исправления и повторная проверка](ARENA-SECURITY-20261107.md). Постоянная копия файлов от 6 ноября (600776104 байт, SHA-256 56f9ee7b94fcaf3a66ef04dd160090bfecd179f2563a37b4a271d63b2a8385a6) повторно проверена; все 3059 старых StoredFile и 34 FileDerivative свежего экспорта ею покрываются. Новые 331 PNG добавятся отдельно, прежние файлы не перезаписываются.
