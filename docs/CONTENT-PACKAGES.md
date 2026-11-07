@@ -902,3 +902,59 @@ append-only application, publish/archive/restore and zero-write repeat. It prese
 all twenty-one earlier published packages and the old bank/progress. No migrations,
 dependencies, access rules or shared renderer changes are required. JSON/source
 asset paths are not directly public. Publication and verification are local only.
+
+## C5: Further Mechanics — Linear motion under a variable force
+
+Package 9231-mechanics-variable, version 1.0.0, continues the existing course
+at chapter fm_variable (position 4). Four lessons follow the mathematical
+progression of book sections 17.1–17.2: time-dependent acceleration, the
+position–velocity chain rule, resistance and first stops, then limiting
+speeds and constant power. Resistance and limits extend these methods to
+cover the owner's bank. Explanations and 16 worked examples are independently
+authored in British English. No book wording, worked examples, exercises or
+figures are reproduced; formal SHM and integrating factors are not introduced.
+
+All 33 supplied tasks (76 parts, 258 marks), 32 quick checks (24 SHORT, 8 MC)
+and eight owner diagrams are included. Each lesson has four examples and eight
+checks with paired fresh variants, saved drafts and review. The written tasks
+are distributed 6 / 9 / 8 / 10. Owner keys, criteria and marks remain unchanged;
+the revised source already replaces Q16–Q22, so no second replacement is made.
+Each adaptation has a new ORIGINAL Task and a private mapping to the archived
+Task and TaskVersion. No old identity is reused. Written reasoning stays MANUAL
+paper self-study with indicative DRAFT guidance, not automatic proof grading.
+
+Complete polynomials and rational functions use the existing exact checker.
+Exponential and logarithmic answers use explicitly prescribed full-function
+forms with every coefficient required, together with event/domain quantities.
+This reconstructs the complete requested functions, but does not claim general
+equivalence checking of arbitrary exponential/logarithmic input. No shared
+answer parser or renderer changes are needed. Stop/reversal restrictions,
+signed velocity, divergent travel, finite-time poles and target reachability
+are part of the explanations and independent verification.
+
+Reproduce and verify:
+
+    python scripts/content/prepare-mechanics-variable.py --source 'E:\my folder\questions_data\original\Mechanics 9231\05_Linear_motion_under_a_variable_force_9231_Mechanics_revised.json' --mapping docs/ARENA-C5-MECHANICS-VARIABLE-SOURCE-AUDIT-20261107.json --assets docs/ARENA-C5-MECHANICS-VARIABLE-SOURCE-AUDIT-20261107.json
+    python scripts/content/verify-mechanics-variable.py --source 'E:\my folder\questions_data\original\Mechanics 9231\05_Linear_motion_under_a_variable_force_9231_Mechanics_revised.json'
+    python scripts/content/verify-mechanics-variable.py --report .local/c5-mechanics-variable-20261107/ci-math.json
+
+The verification fixture allows CI without E:. Independent calculations cover
+signed time/spatial ODE residuals, initial conditions, trajectory derivatives,
+work integrals, first stops/turns/returns, force switches, square-root branches,
+ascent/descent, finite-time domains, terminal speeds and constant power.
+Actual printed TeX is checked at deterministic 50-digit points separately from
+symbolic identities and domain proofs. External teacher review remains open.
+
+Four statement diagrams (Q2/Q6/Q15/Q33) and four solution-only diagrams
+(Q7/Q11/Q22/Q25) are matched by Teacher Review article, source path and alt.
+Unsafe SVG and external references are rejected. Transparent black-line SVGs
+are rendered on white for legibility in both themes; labels are unchanged.
+Source HTML/SVG and content-addressed PNG hashes are recorded in the audit.
+Generic variant captions become Diagram not to scale. Protected solution
+images stay out of prompts; raw source JSON/asset paths are not public.
+
+The guarded local lifecycle preserves all twenty-two earlier published packages
+and supports read-only dry-run, append-only creation, reversible publication
+and archiving, and zero-write repeat. Old bank records and learning progress
+are preserved. No migrations, dependencies or permissions change. Publication
+is local only; no production operation is part of this chapter.
