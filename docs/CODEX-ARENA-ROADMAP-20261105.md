@@ -1136,3 +1136,25 @@ and administrator dashboard stages; it does not authorise rollout.
 Report and exact file manifest:
 [ARENA-TEACHER-AUTHORING-REPORT-20261107.md](ARENA-TEACHER-AUTHORING-REPORT-20261107.md),
 [ARENA-TEACHER-AUTHORING-FILES-20261107.json](ARENA-TEACHER-AUTHORING-FILES-20261107.json).
+
+
+## Accepted production: teacher/admin workspaces and authoring — 7 November 2026
+
+Owner authorised push/deploy of these completed updates. Published only Arena,
+`maths4u-arena` main, accepted SHA `8b008b1e199efba1818f3192f896abf390dc62ff`.
+Hostinger `01a1b716-7ab0-7178-85cd-fb324b0ade4f`: Completed / Current, health 200.
+Final release and main Linux CI passed. A private-assignment integration gap was
+fixed before main: assigned private questions and released feedback now appear
+without a public lesson mapping; archive/lens boundaries and analytics preserved.
+
+Both additive migrations applied. Fresh production comparison: all 66,443 old
+rows unchanged, 66 -> 70 tables, no exceptions or unexplained additions. Two own
+QA accounts/class/work/tasks are archived; old content, access and progress stay
+intact. All59catalog pages contain2,928 public tasks, Cambridge/exam-shaped count0;
+59presentations remain administrator-only. Real registration, formulas, marking,
+4/4 results, V1 approval with newer private V2, and error-report resolution passed.
+No real AI/SMTP/payments/ads were called; maths4u.sbs was untouched.
+
+Acceptance: [ARENA-TEACHER-WORKSPACE-DEPLOY-20261107.md](ARENA-TEACHER-WORKSPACE-DEPLOY-20261107.md).
+Only this acceptance documentation is committed locally after release; do not
+redeploy just for these notes.
