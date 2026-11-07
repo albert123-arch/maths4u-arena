@@ -20,6 +20,7 @@ test('One Tree: ordinary admin courses and separate archive at desktop and mobil
   }
   const archive=await(await api.get('/api/admin/course-tree/catalog')).json(),mechanics=archive.find((c:{slug:string})=>c.slug==='maths4u-9231-mechanics');
   for(const width of [390,1280])for(const theme of ['light','dark'] as const){await page.setViewportSize({width,height:900});await page.emulateMedia({colorScheme:theme});await page.goto('/admin/archive-bank?course='+mechanics.id);await expect(page.getByRole('heading',{name:'Cambridge question archive',exact:true})).toBeVisible();await expect(page.locator('.archive-course-cards a')).toHaveCount(5);await expect(page.getByText('Momentum',{exact:false}).first()).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+1);await page.screenshot({path:dir+'/archive-'+width+'-'+theme+'.png',fullPage:true});}
+  await page.getByText('Update archive placement',{exact:true}).click();await page.getByRole('button',{name:'Dry run placement',exact:true}).click();await expect(page.getByText('1261 questions · 1159 exact links · 63 unallocated',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Apply placement',exact:true}).click();await expect(page.getByText('Rows changed: 0',{exact:true})).toBeVisible();
   expect(errors).toEqual([]);await fs.writeFile(dir+'/responsive.json',JSON.stringify({matrix,pageErrors:errors},null,2));
  }finally{await ctx.close();await api.dispose();}
 });
