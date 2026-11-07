@@ -1158,3 +1158,24 @@ No real AI/SMTP/payments/ads were called; maths4u.sbs was untouched.
 Acceptance: [ARENA-TEACHER-WORKSPACE-DEPLOY-20261107.md](ARENA-TEACHER-WORKSPACE-DEPLOY-20261107.md).
 Only this acceptance documentation is committed locally after release; do not
 redeploy just for these notes.
+
+## Admin workspace visibility hotfix — 7 November 2026
+
+After the teacher/admin release, the owner's Chrome cosmetic filtering hid the
+new `.ad-sidebar` and `.ad-main` elements despite successfully loaded data. Rename
+the entire admin UI class/ID namespace to `arena-admin-*`; the four source files
+are otherwise identical under inverse-prefix comparison. No account, permission,
+API, schema, content or progress logic changed; no production SQL was executed.
+
+Accepted Arena SHA `35557dc3c3d339884cefe1132dfc33e5376cc85e`, Hostinger
+`01a1b74e-9867-73af-bcdf-91b441437e33` Completed / Current. Exact-SHA Linux
+release and main CI both passed; four mocked-transport browser cases passed against
+both development and production builds (1280/390, light/dark, six admin routes,
+real CSS/layout and an active legacy-class cosmetic-filter positive control).
+Verified the affected live Chrome session: overview, users, submissions and reports
+visible; public catalogue remains 2,928 tasks over 59 pages, Unclassified 0,
+presentations 59, health 200, guest admin APIs 401. Main `maths4u.sbs` untouched.
+
+Report: [ARENA-ADMIN-VISIBILITY-HOTFIX-20261107.md](ARENA-ADMIN-VISIBILITY-HOTFIX-20261107.md).
+The report and this acceptance note stay local after rollout; no documentation-only
+redeployment is needed.
