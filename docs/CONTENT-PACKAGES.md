@@ -848,3 +848,57 @@ publish/archive/restore and a zero-write repeat. It preserves all twenty prior
 published packages, old tasks and learning progress. No migrations, dependencies,
 access permissions or shared rendering changes are needed. Runtime source JSON
 and asset paths are not directly public. Final publication is local only.
+
+## C5: Further Mechanics — Hooke's law
+
+Package 9231-mechanics-hooke, version 1.0.0, continues the course at chapter
+fm_hooke (position 3). Four lessons follow the mathematical progression of
+book sections 16.1–16.3: force models/equilibrium, stored energy and smooth
+motion, coupled systems/friction, then slack and collision stages. Explanations
+and 16 worked examples are independently authored in British English; no book
+wording, worked examples, exercises or figures are reproduced.
+
+All 31 owner tasks (72 parts, 230 marks), 32 complete quick checks
+(24 SHORT, 8 MC) and 21 owner diagrams are included. Each lesson has four
+examples, eight quick checks with paired fresh variants, drafts and review.
+Owner keys, criteria and marks remain unchanged. Each adaptation gets a new
+ORIGINAL Task, with a private mapping to the archived source; existing Task
+identities and immutable versions are retained. Written work remains MANUAL
+paper self-study with indicative DRAFT guidance, not official marking.
+
+Reproduce and verify:
+
+    python scripts/content/prepare-mechanics-hooke.py --source 'E:\my folder\questions_data\original\Mechanics 9231\04_Hookes_law_9231_Mechanics_revised.json' --mapping docs/ARENA-C5-MECHANICS-HOOKE-SOURCE-AUDIT-20261107.json --assets docs/ARENA-C5-MECHANICS-HOOKE-SOURCE-AUDIT-20261107.json
+    python scripts/content/verify-mechanics-hooke.py --source 'E:\my folder\questions_data\original\Mechanics 9231\04_Hookes_law_9231_Mechanics_revised.json'
+    python scripts/content/verify-mechanics-hooke.py --report .local/c5-mechanics-hooke-20261107/ci-math.json
+
+Verification is self-contained for CI without E:. It independently derives
+forces and energy using actual natural lengths, separate spring/string branches,
+gravity, member geometry, static/sliding friction and reachable event roots.
+It checks momentum and energy loss at coalescence and continuous speed across
+non-impulsive friction boundaries. The first-event monotonicity in Q15 is
+verified symbolically; supplementary sampled checks and deterministic 50-digit
+comparisons of actual displayed TeX are distinguished from universal proofs.
+An external teacher review remains outstanding.
+
+Source Q1–Q5 already replace earlier oscillation/time questions. These revisions
+are not repeated. No formal time-dependent SHM formulas are taught. Q3 links to
+the existing conical-pendulum lesson; Q27/Q29 state collision prerequisites.
+Changing a load while holding position is distinguished from a collision.
+Tautness, compression, strict mass bounds, first equal-speed crossings, friction
+at a final stop and absolute separation when crossing an anchor are explicit.
+The parameter-position answer uses the existing declared-variable polynomial
+checker; no shared parser extension is needed.
+
+Twenty images are statements; the Q18 force diagram is solution-only. Figures
+are extracted from question_html because stem_html does not embed them. They
+are matched to the owner Teacher Review HTML by article, path and alt; unsafe
+SVG/external references are rejected before conversion to hashed PNG. HTML/SVG
+and PNG hashes are retained, generic new-variant captions are shortened, and
+the solution diagram remains behind the existing help grant without duplication.
+
+The local lifecycle guards the exact test database, supports read-only dry-run,
+append-only application, publish/archive/restore and zero-write repeat. It preserves
+all twenty-one earlier published packages and the old bank/progress. No migrations,
+dependencies, access rules or shared renderer changes are required. JSON/source
+asset paths are not directly public. Publication and verification are local only.
