@@ -958,3 +958,54 @@ and supports read-only dry-run, append-only creation, reversible publication
 and archiving, and zero-write repeat. Old bank records and learning progress
 are preserved. No migrations, dependencies or permissions change. Publication
 is local only; no production operation is part of this chapter.
+
+## C5: Further Mechanics — Momentum
+
+Package `9231-mechanics-momentum` 1.0.0 adds chapter `fm_momentum`, position 5,
+slug `momentum-and-impacts`, preserving the historical `momentum` address.
+Four lessons follow the mathematical progression of book chapter 18:
+signed impulse and direct impact, smooth fixed surfaces, normal/tangential
+components for spheres, then successive impacts and the next physical event.
+Explanations and 16 worked examples are independently written in English;
+book wording, examples, exercises and figures are not reproduced.
+
+All 39 supplied tasks (91 parts, 307 marks), 32 quick checks (24 SHORT, 8 MC)
+and 16 owner diagrams are included. Written distribution is 6 / 8 / 16 / 9.
+Each lesson has four examples and eight checks with paired fresh variants,
+saved drafts and review. Complete answers use the existing numeric/choice
+checker: every requested signed velocity, impulse, vector component, energy,
+coefficient or event time is required. No shared checker changes are needed.
+
+Owner keys, criteria and marks remain unchanged. New ORIGINAL Task identities
+have private exact mappings to archived sources; old Task/TaskVersion rows
+are preserved. There is no similarity threshold. Written reasoning remains
+MANUAL paper self-study, with indicative guidance rather than automatic grading.
+
+Reproduce and verify:
+
+    python scripts/content/prepare-mechanics-momentum.py --source 'E:\my folder\questions_data\original\Mechanics 9231\06_Momentum_9231_Mechanics_revised.json' --mapping docs/ARENA-C5-MECHANICS-MOMENTUM-SOURCE-AUDIT-20261107.json --assets docs/ARENA-C5-MECHANICS-MOMENTUM-SOURCE-AUDIT-20261107.json
+    python scripts/content/verify-mechanics-momentum.py --source 'E:\my folder\questions_data\original\Mechanics 9231\06_Momentum_9231_Mechanics_revised.json'
+    python scripts/content/verify-mechanics-momentum.py --report .local/c5-mechanics-momentum-20261107/ci-math.json
+    python scripts/content/verify-momentum-teaching.py --report .local/c5-mechanics-momentum-20261107/ci-teaching.json
+
+Verification runs without E: in CI. The source verifier independently derives
+signed momentum/restitution systems, reduced-mass energy loss, wall impulse,
+unchanged tangential components, physically valid roots and event ordering.
+The separate teaching verifier checks the actual shipped lesson/quick-check
+text and fixture, including printed numeric TeX. A fixed support supplies an
+external normal impulse; e=0 in an oblique collision need not imply sticking.
+Simultaneous contacts are explicitly outside the sequential pairwise model.
+
+Fourteen diagrams are statements; Q28 and Q35 diagrams are solution-only.
+Teacher Review article/path/alt and source hashes identify each figure.
+Unsafe SVG/external references are rejected before white-background PNG
+conversion. Solution images require the existing scoped help grant; raw
+JSON/asset paths are not public. No owner source files are modified.
+
+The guarded local lifecycle creates 71 tasks/versions and 16 StoredFiles,
+supports read-only dry-run, publication/archive/restore and zero-write repeat.
+Normal application synchronises the existing One Tree overlay: one chapter
+link, two lesson proposals and 39 exact provenance placements. It does not
+approve fallback lesson mappings or alter archive source tasks. All 24
+registered package repeats and previous core-row preservation are checked.
+Local publication only; no production operation, push or deploy is included.
