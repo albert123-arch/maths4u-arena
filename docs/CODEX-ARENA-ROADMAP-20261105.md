@@ -1344,3 +1344,28 @@ No push/deploy or production writes; maths4u.sbs untouched.
 The next course has not been started.
 
 Report: [ARENA-9709-P1-INTEGRATION-REPORT-20261108.md](ARENA-9709-P1-INTEGRATION-REPORT-20261108.md).
+
+## 9709 S1 — Source copy and Representation of data (2026-11-08)
+
+Eight fresh owner archives were safely extracted from Downloads into
+E:/my folder/questions_data/original/Statistics1 9709. All 830 files
+(160,769,402 bytes) and the original archives were verified by SHA-256.
+Only chapter 1 is implemented; the other seven chapters are copied only.
+Local package 9709-s1-representation 1.0.1 creates a distinct 9709 S1 course
+and five lessons, informed by Chalmers book sections 1.1–1.5 and 3.2.
+Independent notes, 20 examples, 40 complete-answer/MCQ checks and review
+connect to all 50 supplied main problems and 150 numerical analogues.
+All source answers, solutions, marks and criteria are retained; 128 private
+SVGs (20 statement and 108 solution) and three original teaching vectors
+are connected. Book-style stem tables preserve mirrored left leaves,
+central vertical rules, a key and units, including teacher preview and MCQ.
+Narrow sanitized table classes support accessible HTML and internal scrolling.
+Relevant conventions and mixed-topic prerequisites are explicit. Written
+drawings/graph estimates remain manual; their check specifications are private.
+S1 written variants stop after V3 instead of automatically cycling to Main.
+Immutable 1.0.0 history is retained after the key typography revision.
+PUBLISHED only in the C1 test database; repeat import writes nothing.
+All 100,742 pre-existing rows across 70 tables, including work/access/progress,
+are preserved. No push/deploy or production writes; maths4u.sbs untouched.
+
+Report: [ARENA-9709-S1-REPRESENTATION-REPORT-20261108.md](ARENA-9709-S1-REPRESENTATION-REPORT-20261108.md).

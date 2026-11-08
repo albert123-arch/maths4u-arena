@@ -68,9 +68,9 @@ export function renderContent(raw: string, anonymousImages = false) {
     return prefix+(formulas.push(rendered)-1)+"END";
   });
   const html=sanitizeHtml(prepared, {
-    allowedTags: ["p", "br", "strong", "em", "b", "i", "u", "sub", "sup", "ul", "ol", "li", "span", "blockquote", "h2", "h3", "h4", "table", "thead", "tbody", "tr", "th", "td", "img"],
-    allowedAttributes: { img: ["src", "alt", "width", "height"], td: ["colspan", "rowspan"], th: ["colspan", "rowspan"], ol: ["type", "start", "class"], span: ["class"] },
-    allowedClasses: { ol: ["parts"], span: ["marks"] },
+    allowedTags: ["p", "br", "strong", "em", "b", "i", "u", "sub", "sup", "ul", "ol", "li", "span", "div", "blockquote", "h2", "h3", "h4", "table", "thead", "tbody", "tr", "th", "td", "img"],
+    allowedAttributes: { img: ["src", "alt", "width", "height"], td: ["colspan", "rowspan"], th: ["colspan", "rowspan", "scope"], table: ["class"], div: ["class"], ol: ["type", "start", "class"], span: ["class"] },
+    allowedClasses: { ol: ["parts"], span: ["marks"], table: ["stem-leaf", "stem-leaf-back"], div: ["stem-leaf-scroll", "table-scroll"] },
     allowedSchemes: [], allowProtocolRelative: false,
     // Imported alt text may contain the paper/session reference. Keep the image,
     // dimensions and mathematical content, but omit that description in a live assessment.
@@ -78,7 +78,7 @@ export function renderContent(raw: string, anonymousImages = false) {
     // Reviewed first-party diagrams are static, same-origin assets. Retain the
     // private-file boundary and reject arbitrary paths, URLs and query strings.
     exclusiveFilter: frame => frame.tag === "img" && !/^\/api\/files\/[a-zA-Z0-9_-]+$/.test(frame.attribs.src || "") &&
-      !/^\/assets\/original\/(coordinate-geometry\/(segment|perpendicular|line-intercepts|circle|line-circle)|circular-measure\/(radian|arc-length|sector-area|segment|annular-sector|composite-boundary|overlapping-circles)|trigonometry\/(unit-circle|wave-graphs|tangent-graph|sine-solutions|identity-triangle|quadratic-levels|cosine-levels)|series\/(arithmetic-terms|geometric-terms|partial-sums|arithmetic-condition|geometric-condition|rebound-heights)|binomial-expansion\/(pascal-triangle|term-index|laurent-powers|coefficient-pairs|parameter-branches|approximation-error)|differentiation\/(secant-to-tangent|tangent-normal|stationary-sign-chart|stationary-inflection|related-rates|optimisation-interval)|integration\/(family-of-curves|initial-condition|signed-area|between-curves|disk-volume|accumulation)|cross-topic-revision\/(restricted-inverse|shared-tangent|distance-squared|sector-segment|coefficient-ratio-tail|area-washers))\.svg$/.test(frame.attribs.src || ""),
+      !/^\/assets\/original\/(coordinate-geometry\/(segment|perpendicular|line-intercepts|circle|line-circle)|circular-measure\/(radian|arc-length|sector-area|segment|annular-sector|composite-boundary|overlapping-circles)|trigonometry\/(unit-circle|wave-graphs|tangent-graph|sine-solutions|identity-triangle|quadratic-levels|cosine-levels)|series\/(arithmetic-terms|geometric-terms|partial-sums|arithmetic-condition|geometric-condition|rebound-heights)|binomial-expansion\/(pascal-triangle|term-index|laurent-powers|coefficient-pairs|parameter-branches|approximation-error)|differentiation\/(secant-to-tangent|tangent-normal|stationary-sign-chart|stationary-inflection|related-rates|optimisation-interval)|integration\/(family-of-curves|initial-condition|signed-area|between-curves|disk-volume|accumulation)|s1-representation\/(histogram|cumulative|boxplot)|cross-topic-revision\/(restricted-inverse|shared-tangent|distance-squared|sector-segment|coefficient-ratio-tail|area-washers))\.svg$/.test(frame.attribs.src || ""),
     textFilter: escaped=>escaped.replace(new RegExp(prefix+"(\\d+)END","g"),(_m,index)=>formulas[Number(index)]??""),
   });
   // Legacy alphabetical questions put marks in a final text node. Restore only
