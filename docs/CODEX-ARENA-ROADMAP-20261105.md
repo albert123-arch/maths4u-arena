@@ -1555,3 +1555,36 @@ PUBLISHED only in guarded C1; no push/deploy or production writes.
 maths4u.sbs untouched. No other chapters or Statistics 2 started.
 
 Report: [ARENA-9709-S1-NORMAL-REPORT-20261108.md](ARENA-9709-S1-NORMAL-REPORT-20261108.md).
+
+### 9709 Pure 1 and Statistics 1 — production publication, 8 November 2026
+
+The owner authorised push and deployment of all completed chapters, explicitly
+including Pure 1. Accepted application SHA: `c8ee38e5556f5aec39f21edf7f488dc1c7baced3`.
+Both Linux CI runs passed; Hostinger deployment `01a1bc3d-506f-73dc-abf0-3c7788c9ac2e`
+is Completed / Current. Only Arena was deployed; maths4u.sbs was not changed.
+
+Nine P1 and eight S1 packages are PUBLISHED: 85 lessons, 340 worked examples,
+680 quick checks and 3,400 written questions, adding 4,080 Task identities.
+The prepared Roots 9231 FP1 notation revision 1.0.1 and teacher preview changes
+are also deployed: 94 new immutable versions, preserving historical work/progress.
+Every live package repeated dry run gives ALREADY_APPLIED and zero create/update;
+actual zero-write repeat apply was rehearsed on the isolated production copy.
+
+Live acceptance: 712 complete-answer checks, 89 incorrect/incomplete-input
+rejections, 18 solution/guidance checks, 34 responsive browser states and fresh
+review/reload in both courses. All 141 guest catalogue pages contain 7,008 unique
+tasks, zero examination-style titles and no Cambridge/Cambridge International
+source rows. Health 200; 89 lesson canonicals and sitemap entries verified.
+
+A fresh 70-table Arena export was restored into one new loopback test database;
+production packages were applied only after successful rehearsal, CI and backups.
+Existing tasks, immutable versions, users, access, work, answers and progress remain.
+Of 66,537 previous rows, 66,441 are exact matches; 95 are expected Roots package
+metadata updates and one Session differs only in ROLE/STUDENT lensTouchedAt.
+The strict raw difference is retained with a separate exact metadata reconciliation;
+no blanket Session exclusion or rollback of concurrent activity was performed.
+UNKNOWN remains 0, Cambridge archive 2,654 and presentations 59.
+
+Report: [ARENA-9709-P1-S1-DEPLOY-20261108.md](ARENA-9709-P1-S1-DEPLOY-20261108.md).
+The acceptance documents are a separate local commit; no additional deployment
+is performed just to publish the report. No next content block was started.
