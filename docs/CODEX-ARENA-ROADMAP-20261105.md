@@ -1445,3 +1445,27 @@ unchanged. PUBLISHED only in guarded C1; no push/deploy or production writes.
 maths4u.sbs untouched. Next chapter Permutations and combinations not started.
 
 Report: [ARENA-9709-S1-PROBABILITY-REPORT-20261108.md](ARENA-9709-S1-PROBABILITY-REPORT-20261108.md).
+
+## 9709 S1 — Permutations and combinations (2026-11-08)
+
+Local package 9709-s1-counting 1.0.0 adds chapter 5, preserving S1 chapters
+1–4. Book sections 5.1–5.4 inform independently written notes, 20 examples,
+40 complete-answer/MCQ checks and fresh-variant review. The owner bank adds
+50 selected families from 229 source records and 150 numerical analogues;
+the remaining 179 records are not converted or replaced. All source answers,
+marks and criteria remain unchanged. Coverage distinguishes ordered outcomes,
+leading zeroes, repeated visible symbols, physical subsets, gap constructions,
+exact pair-events, composition restrictions, named versus unnamed groups,
+numbered rows, overlapping blocks and conditional denominators. Official
+9709 2026–2027 Version 5 section 5.2 is verified; circular arrangements are
+excluded and probability prerequisites are explicit. The 32 protected solution
+SVG placements share 29 immutable files, alongside three independent teaching
+vectors. Factorial denominators retain grouping in mathematical fractions;
+own long displays fit 390 px, including expanded worked solutions.
+Initial local apply creates 240 tasks and five lessons; repeat writes nothing.
+All 118,444 pre-existing rows across 70 tables, including work/access/progress,
+are preserved. The book, 830 copied files and eight Downloads archives remain
+unchanged. PUBLISHED only in guarded C1; no push/deploy or production writes.
+maths4u.sbs untouched. Next chapter Probability distributions not started.
+
+Report: [ARENA-9709-S1-COUNTING-REPORT-20261108.md](ARENA-9709-S1-COUNTING-REPORT-20261108.md).
