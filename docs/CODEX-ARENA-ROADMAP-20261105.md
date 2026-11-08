@@ -1288,3 +1288,19 @@ are preserved. No push/deploy or production writes; maths4u.sbs untouched.
 Binomial Expansion remains the next separate chapter and was not started.
 
 Report: [ARENA-9709-P1-SERIES-REPORT-20261108.md](ARENA-9709-P1-SERIES-REPORT-20261108.md).
+
+## 9709 P1 — Binomial Expansion teaching chapter (2026-11-08)
+
+Local package 9709-p1-binomial-expansion 1.0.0 retains five existing lesson
+IDs/URLs. Book sections 6.1–6.2 inform independent teaching, 20 worked examples,
+40 complete-answer/MCQ checks and review. The owner bank adds 50 main written
+tasks and 150 variants, preserving answers, marks and criteria, with 200
+immutable protected solution SVGs and six reused independent teaching vectors.
+New immutable expanded-form descriptors require multiplied-out polynomials
+in practice and assignments; older descriptors retain their grading contract.
+PUBLISHED only in the C1 test database; repeat import writes nothing.
+All 89,863 pre-existing rows in 70 tables, including work/access/progress,
+are preserved. No push/deploy or production writes; maths4u.sbs untouched.
+Next chapter Differentiation not started.
+
+Report: [ARENA-9709-P1-BINOMIAL-EXPANSION-REPORT-20261108.md](ARENA-9709-P1-BINOMIAL-EXPANSION-REPORT-20261108.md).

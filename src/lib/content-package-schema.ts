@@ -2,7 +2,7 @@ import { z } from "zod";
 const id = z.string().regex(/^[a-zA-Z0-9_-]{2,80}$/);
 const html = z.string().min(1).max(100000);
 const criterion = z.object({ code: z.string().max(20), marks: z.number().int().positive().max(100), description_html: html, guidance_html: z.string().optional() }).strict();
-const field = z.object({ key: z.string().regex(/^[a-zA-Z0-9_-]{1,50}$/), label: z.string().min(1), type: z.enum(["number", "polynomial", "expression", "equation", "set", "choice", "pairs", "ratio"]), expected: z.union([z.string(), z.array(z.string())]), variables: z.array(z.string()).max(2).optional(), options: z.record(z.string(), z.string()).optional() }).strict();
+const field = z.object({ key: z.string().regex(/^[a-zA-Z0-9_-]{1,50}$/), label: z.string().min(1), type: z.enum(["number", "polynomial", "expression", "equation", "set", "choice", "pairs", "ratio"]), expected: z.union([z.string(), z.array(z.string())]), variables: z.array(z.string()).max(2).optional(), options: z.record(z.string(), z.string()).optional(), form: z.literal("expanded").optional() }).strict().refine(f=>!f.form||f.type==="polynomial",{message:"Expanded form requires a polynomial field"});
 const question = z.object({ id, family_uid: id, lesson: id, title: z.string().min(1).max(191), collection: z.enum(["short", "variant", "exam"]),
   prompt_html: html, answer_html: html, solution_html: html, hint_html: html, marks: z.number().int().positive().max(100), difficulty: z.number().int().min(1).max(5),
   fields: z.array(field).max(12), parts: z.array(z.object({ label: z.string().max(20), marking_criteria: z.array(criterion).min(1) }).strict()).min(1),

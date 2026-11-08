@@ -156,7 +156,7 @@ function proportional(a: Poly,b: Poly) {
   return !!left && same(a,pmul(b,constant(mul(left,inv(b.get(power)!)))));
 }
 function equation(raw:string,variables:string[]) { const sides=raw.split("="); if(sides.length>2)fail();return padd(poly(sides[0],variables),poly(sides[1]??"0",variables),-BigInt(1)); }
-export type ExactField = { key: string; label: string; type: string; expected: string | string[]; variables?: string[]; options?: Record<string, string>; dimension?: number; factor_variable?: string };
+export type ExactField = { key: string; label: string; type: string; expected: string | string[]; variables?: string[]; options?: Record<string, string>; dimension?: number; factor_variable?: string; form?: "expanded" };
 export function checkExact(field: ExactField, input: string): boolean {
   if (typeof input !== "string" || !input.trim() || input.length > 400) fail();
   if (field.type === "choice") { if (!Object.hasOwn(field.options ?? {}, input)) fail(); return input === field.expected; }
@@ -185,6 +185,11 @@ export function checkExact(field: ExactField, input: string): boolean {
     if(factors.some(p=>Math.max(...[...p.keys()].map(k=>index===0?k%7:Math.floor(k/7)%7))!==1))return false;
     return same(pmul(factors[0],factors[1]),poly(expected,vars));
   }
-  if (field.type === "polynomial" || field.type === "number") return JSON.stringify(polynomialKey(input, field.variables)) === JSON.stringify(polynomialKey(expected, field.variables));
+  if (field.type === "polynomial" || field.type === "number") {
+    const equivalent = JSON.stringify(polynomialKey(input, field.variables)) === JSON.stringify(polynomialKey(expected, field.variables));
+    // Opt in through the immutable assigned descriptor. Older descriptors retain
+    // their original equivalence rules; new expansion tasks require the form.
+    return equivalent && (field.form !== "expanded" || isExpandedPolynomial(input, field.variables ?? []));
+  }
   return fail();
 }
