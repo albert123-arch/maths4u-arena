@@ -1469,3 +1469,30 @@ unchanged. PUBLISHED only in guarded C1; no push/deploy or production writes.
 maths4u.sbs untouched. Next chapter Probability distributions not started.
 
 Report: [ARENA-9709-S1-COUNTING-REPORT-20261108.md](ARENA-9709-S1-COUNTING-REPORT-20261108.md).
+
+## 9709 S1 — Probability distributions (2026-11-08)
+
+Local package 9709-s1-distributions 1.0.1 adds chapter 6, preserving S1
+chapters 1–5. Book sections 6.1–6.3 inform independently written notes,
+20 examples with their own datasets, 40 complete-answer/MCQ checks and
+fresh-variant review. The owner bank adds 50 selected families from 114
+source records and 150 analogues; the remaining 64 records are not converted
+or replaced. All source answers, marks and criteria remain unchanged.
+Coverage includes valid tables, unknown probabilities, expectation versus
+second moment, uneven finite outcomes, repeated physical labels, stopping
+positions, mixtures, transfers, conditional moments, inverse scores,
+negative transformations, fair fees and risk comparisons. The finite-table
+part of syllabus 5.4 is covered; named binomial/geometric models remain for
+chapter 7. Conditional tables and moments explicitly use H={X>0}; this
+notation refinement is a new immutable package version, retaining earlier
+versions and all numerical answers. All 32 protected source solution SVGs
+and three independent teaching vectors are connected. Own displays fit
+390 px, including expanded solutions. Initial local apply creates 240 tasks
+and five lessons; the notation revision creates no tasks and changes one
+lesson. Repeat writes nothing. All 120,761 pre-existing rows across 70
+tables, including work/access/progress, are preserved. The book, 830 copied
+files and eight Downloads archives remain unchanged. PUBLISHED only in
+guarded C1; no push/deploy or production writes. maths4u.sbs untouched.
+Next chapter Binomial and geometric distributions not started.
+
+Report: [ARENA-9709-S1-DISTRIBUTIONS-REPORT-20261108.md](ARENA-9709-S1-DISTRIBUTIONS-REPORT-20261108.md).
