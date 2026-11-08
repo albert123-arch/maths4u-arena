@@ -1256,3 +1256,19 @@ are preserved. No push/deploy or production writes; maths4u.sbs untouched.
 Next chapter not started.
 
 Report: [ARENA-9709-P1-CIRCULAR-MEASURE-REPORT-20261108.md](ARENA-9709-P1-CIRCULAR-MEASURE-REPORT-20261108.md).
+
+## 9709 P1 — Trigonometry teaching chapter (2026-11-08)
+
+Local package 9709-p1-trigonometry 1.0.1 retains five existing lesson IDs/URLs.
+Book chapter 5 sections 5.1–5.8 are grouped into independently written notes,
+20 worked examples, 40 complete-answer/MCQ checks and fresh-variant review.
+The owner bank contributes 50 main written tasks and 150 variants, preserving
+all answers, marks and criteria. 224 SVG placements retain 223 immutable files,
+with solution grants; an independent cosine-levels teaching vector is added.
+The notation/typography improvement uses a new version, preserving 1.0.0.
+PUBLISHED only in the C1 local test database; repeated apply adds nothing.
+All 83,269 pre-existing rows of 70 tables, including old work/access/progress,
+are preserved. No push/deploy or production writes; maths4u.sbs untouched.
+Next chapter not started.
+
+Report: [ARENA-9709-P1-TRIGONOMETRY-REPORT-20261108.md](ARENA-9709-P1-TRIGONOMETRY-REPORT-20261108.md).

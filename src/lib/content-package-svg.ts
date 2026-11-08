@@ -19,7 +19,7 @@ export function validatePackageSvg(data: Buffer, width: number, height: number) 
     ensure(node.type === "tag" && tags.has(node.name), 409, "INVALID_PACKAGE_SVG");
     for (const [name, value] of Object.entries(node.attribs)) {
       const restrictedAttribute =
-        (/^data-(curve|circle|line)-index$/.test(name) || name === "data-construction") && /^\d+$/.test(value) ||
+        (/^data-(curve|circle|line)-index$/.test(name) || name === "data-construction" || name === "data-curve") && /^\d+$/.test(value) ||
         name === "data-region" && /^(true|false)$/.test(value) ||
         name === "fill-rule" && /^(evenodd|nonzero)$/.test(value);
       ensure((attributes.has(name) || restrictedAttribute) && !/[<>\\]|(?:javascript|data|https?):|\/\//i.test(name === "xmlns" ? "" : value), 409, "INVALID_PACKAGE_SVG");
