@@ -1496,3 +1496,32 @@ guarded C1; no push/deploy or production writes. maths4u.sbs untouched.
 Next chapter Binomial and geometric distributions not started.
 
 Report: [ARENA-9709-S1-DISTRIBUTIONS-REPORT-20261108.md](ARENA-9709-S1-DISTRIBUTIONS-REPORT-20261108.md).
+
+## 9709 S1 — Binomial and geometric distributions (2026-11-08)
+
+Local package 9709-s1-binomial-geometric 1.0.1 adds chapter 7, preserving
+S1 chapters 1–6. Book sections 7.1–7.2 inform independently written notes,
+20 examples with separate datasets, 40 complete-answer/MCQ checks and
+fresh-variant review. The owner bank adds 50 selected families from 126
+source records and 150 analogues; 76 records are not converted or replaced.
+All source numerical answers, marks and criteria remain unchanged.
+Coverage includes justified binomial assumptions, strict integer events,
+parameter recovery and both p branches, shared hidden causes, batch models,
+conditional moments, first-success Geo(p) starting at one, further versus
+total waiting, finite caps and terminal success histories. No geometric
+variance or normal/Poisson approximation is added as a required theorem.
+All 32 source solution SVGs retain their original bytes and protected access;
+three independent teaching vectors are added. Trusted rect metadata is
+restricted to one class, integer/tail labels and exact probabilities in [0,1].
+Malformed metadata and active/external SVG content remain rejected. Literal
+currency dollars in F010 are entity-escaped without changing displayed
+amounts or cent rounding. Own display formulae fit 390 px. A new immutable
+version typesets mathematical prose while preserving all answers and criteria.
+Initial apply creates 240 tasks and five lessons; the typography revision
+creates no tasks. Repeated imports write nothing. All 124,651 pre-existing
+rows across 70 tables, including work/access/progress, are preserved. The
+book, 830 copied files and eight Downloads archives remain unchanged.
+PUBLISHED only in guarded C1; no push/deploy or production writes.
+maths4u.sbs untouched. Next chapter Normal distribution not started.
+
+Report: [ARENA-9709-S1-BINOMIAL-GEOMETRIC-REPORT-20261108.md](ARENA-9709-S1-BINOMIAL-GEOMETRIC-REPORT-20261108.md).

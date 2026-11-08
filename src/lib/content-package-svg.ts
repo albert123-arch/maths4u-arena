@@ -20,11 +20,17 @@ export function validatePackageSvg(data: Buffer, width: number, height: number) 
     if (node.type === "text") return;
     ensure(node.type === "tag" && tags.has(node.name), 409, "INVALID_PACKAGE_SVG");
     for (const [name, value] of Object.entries(node.attribs)) {
+      const probabilityMetadata = node.name === "rect" && (
+        name === "class" && value === "probability-bar" ||
+        name === "data-value" && /^(0|[1-9]\d*)\+?$/.test(value) ||
+        name === "data-probability" && /^(0|[1-9]\d*)(\/[1-9]\d*)?$/.test(value) &&
+          BigInt(value.split("/")[0]) <= BigInt(value.split("/")[1] ?? "1")
+      );
       const restrictedAttribute =
         (/^data-(curve|circle|line)-index$/.test(name) || name === "data-construction" || name === "data-curve") && /^\d+$/.test(value) ||
         name === "data-region" && /^(true|false)$/.test(value) ||
         name === "fill-rule" && /^(evenodd|nonzero)$/.test(value);
-      ensure((attributes.has(name) || restrictedAttribute) && !/[<>\\]|(?:javascript|data|https?):|\/\//i.test(name === "xmlns" ? "" : value), 409, "INVALID_PACKAGE_SVG");
+      ensure((attributes.has(name) || restrictedAttribute || probabilityMetadata) && !/[<>\\]|(?:javascript|data|https?):|\/\//i.test(name === "xmlns" ? "" : value), 409, "INVALID_PACKAGE_SVG");
       ensure(!/url\s*\(/i.test(value) || name === "clip-path" && /^url\(#[a-zA-Z][\w-]*\)$/.test(value), 409, "INVALID_PACKAGE_SVG");
     }
     node.children.forEach(visit);
