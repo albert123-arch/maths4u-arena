@@ -1227,3 +1227,17 @@ in teacher previews and assignments. Existing tasks, assigned versions and
 progress are unchanged. No production writes or deployment.
 
 Report: [ARENA-9709-P1-FUNCTIONS-REPORT-20261108.md](ARENA-9709-P1-FUNCTIONS-REPORT-20261108.md).
+
+
+## 9709 P1 — Coordinate Geometry teaching chapter (2026-11-08)
+
+Local package 9709-p1-coordinate-geometry 1.0.0 reuses the existing five
+lesson IDs in book section order 3.1–3.5. Independently written teaching,
+20 examples, 40 complete-answer checks and review are connected to the owner
+bank of 50 main written questions plus 150 variants. All 100 SVG placements
+use 99 immutable files; exact shared artwork is deduplicated with validated
+metadata and version/role grants retained. PUBLISHED only in the C1 test DB.
+All previous content, accounts, work and progress are preserved. No push or
+deploy; maths4u.sbs untouched. Next chapter not started.
+
+Report: [ARENA-9709-P1-COORDINATE-GEOMETRY-REPORT-20261108.md](ARENA-9709-P1-COORDINATE-GEOMETRY-REPORT-20261108.md).

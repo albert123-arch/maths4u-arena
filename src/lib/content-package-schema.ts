@@ -22,7 +22,13 @@ export const contentPackageSchema = z.object({ schema_version: z.literal(1), key
   if(new Set(p.questions.map(q=>q.id)).size!==p.questions.length)fail("Duplicate question identity");
   if(new Set(p.lessons.map(l=>l.id)).size!==p.lessons.length||new Set(p.lessons.map(l=>l.key)).size!==p.lessons.length)fail("Duplicate lesson identity");
   const media=p.assets??[];
-  if(new Set(media.map(a=>a.file_id)).size!==media.length)fail("Duplicate asset identity");
+  if(new Set(media.map(a=>a.question_uid+":"+a.file_id+":"+a.role)).size!==media.length)fail("Duplicate asset placement");
+  const identities=new Map<string,string>();
+  for(const a of media){
+    const descriptor=JSON.stringify([a.path,a.sha256,a.size,a.width,a.height,a.mime]);
+    if(identities.has(a.file_id)&&identities.get(a.file_id)!==descriptor)fail("Conflicting asset identity");
+    identities.set(a.file_id,descriptor);
+  }
   for(const a of media){
     if(!p.questions.some(q=>q.id===a.question_uid))fail("Unmapped asset: "+a.file_id);
     if(!a.file_id.startsWith("pkg_")||!a.file_id.endsWith(a.sha256)||!a.path.endsWith("/"+a.sha256+(a.mime==="image/png"?".png":".svg")))fail("Asset hash identity mismatch");
