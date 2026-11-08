@@ -1324,3 +1324,23 @@ are preserved. No push/deploy or production writes; maths4u.sbs untouched.
 Next chapter Integration not started.
 
 Report: [ARENA-9709-P1-DIFFERENTIATION-REPORT-20261108.md](ARENA-9709-P1-DIFFERENTIATION-REPORT-20261108.md).
+
+## 9709 P1 — Integration teaching chapter (2026-11-08)
+
+Local package 9709-p1-integration 1.0.1 retains five existing lesson IDs/URLs.
+Book chapter 9 sections 9.1–9.9 inform independently written notes,
+20 worked examples, 40 complete-answer/MCQ checks and fresh-variant review.
+The owner bank adds 50 main written tasks and 150 variants, preserving all
+answers, hints, solutions, marks and criteria. 304 SVG placements use 282
+immutable files (104 statement and 200 solution placements); six existing
+independent teaching vectors are reused. Complete recovered functions,
+constants, original domains, signed/geometric areas, improper limits and
+disk/washer models about either axis are checked. A fractional-power curve
+is entered completely in u=sqrt(x) after integrating in x. Typography is
+revised through new immutable versions, retaining 1.0.0. PUBLISHED only
+in the C1 test database; repeat import writes nothing. All 96,495 previous
+rows across 70 tables, including work/access/progress, are preserved.
+No push/deploy or production writes; maths4u.sbs untouched.
+The next course has not been started.
+
+Report: [ARENA-9709-P1-INTEGRATION-REPORT-20261108.md](ARENA-9709-P1-INTEGRATION-REPORT-20261108.md).
