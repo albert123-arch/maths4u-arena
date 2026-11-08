@@ -1272,3 +1272,19 @@ are preserved. No push/deploy or production writes; maths4u.sbs untouched.
 Next chapter not started.
 
 Report: [ARENA-9709-P1-TRIGONOMETRY-REPORT-20261108.md](ARENA-9709-P1-TRIGONOMETRY-REPORT-20261108.md).
+
+## 9709 P1 — Series teaching chapter (2026-11-08)
+
+Local package 9709-p1-series 1.0.0 reuses the five existing lesson IDs/URLs.
+Book sections 6.3–6.6 inform independent AP/GP teaching, 20 worked examples,
+40 complete-answer/MCQ checks and fresh-variant review. The supplied bank
+adds 50 main written tasks and 150 variants; answers, marks and criteria
+remain unchanged. 216 SVG placements use 207 immutable files, including
+protected solution figures. Exact viewBox-only SVG sizes are validated
+without changing source bytes. Six existing independent teaching vectors
+are reused. PUBLISHED only in the C1 test database; repeat import is a no-op.
+All 87,271 pre-existing rows across 70 tables, including work/access/progress,
+are preserved. No push/deploy or production writes; maths4u.sbs untouched.
+Binomial Expansion remains the next separate chapter and was not started.
+
+Report: [ARENA-9709-P1-SERIES-REPORT-20261108.md](ARENA-9709-P1-SERIES-REPORT-20261108.md).
