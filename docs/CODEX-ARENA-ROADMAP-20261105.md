@@ -1241,3 +1241,18 @@ All previous content, accounts, work and progress are preserved. No push or
 deploy; maths4u.sbs untouched. Next chapter not started.
 
 Report: [ARENA-9709-P1-COORDINATE-GEOMETRY-REPORT-20261108.md](ARENA-9709-P1-COORDINATE-GEOMETRY-REPORT-20261108.md).
+
+## 9709 P1 — Circular Measure teaching chapter (2026-11-08)
+
+Local package 9709-p1-circular-measure 1.0.0 preserves five existing lesson
+IDs/URLs and follows book sections 4.1–4.3, with segment/composite applications.
+Independent notes, 20 worked examples, 40 full-answer/MCQ checks and review
+are connected to the supplied 50 main written problems and 150 variants.
+All 200 statement SVG placements retain 152 immutable files; one independent
+overlap teaching diagram is added. Existing answers, marks and criteria are
+unchanged. PUBLISHED only in the C1 test database; repeat import is a no-op.
+All 80,776 pre-existing rows of 70 tables, including progress/access/work,
+are preserved. No push/deploy or production writes; maths4u.sbs untouched.
+Next chapter not started.
+
+Report: [ARENA-9709-P1-CIRCULAR-MEASURE-REPORT-20261108.md](ARENA-9709-P1-CIRCULAR-MEASURE-REPORT-20261108.md).

@@ -18,7 +18,11 @@ export function validatePackageSvg(data: Buffer, width: number, height: number) 
     if (node.type === "text") return;
     ensure(node.type === "tag" && tags.has(node.name), 409, "INVALID_PACKAGE_SVG");
     for (const [name, value] of Object.entries(node.attribs)) {
-      ensure((attributes.has(name) || /^data-(curve|circle|line)-index$/.test(name) && /^\d+$/.test(value)) && !/[<>\\]|(?:javascript|data|https?):|\/\//i.test(name === "xmlns" ? "" : value), 409, "INVALID_PACKAGE_SVG");
+      const restrictedAttribute =
+        (/^data-(curve|circle|line)-index$/.test(name) || name === "data-construction") && /^\d+$/.test(value) ||
+        name === "data-region" && /^(true|false)$/.test(value) ||
+        name === "fill-rule" && /^(evenodd|nonzero)$/.test(value);
+      ensure((attributes.has(name) || restrictedAttribute) && !/[<>\\]|(?:javascript|data|https?):|\/\//i.test(name === "xmlns" ? "" : value), 409, "INVALID_PACKAGE_SVG");
       ensure(!/url\s*\(/i.test(value) || name === "clip-path" && /^url\(#[a-zA-Z][\w-]*\)$/.test(value), 409, "INVALID_PACKAGE_SVG");
     }
     node.children.forEach(visit);
