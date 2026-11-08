@@ -12,6 +12,7 @@ import { progressInclude, studyProgressStatus } from "./practice-progress";
 import { quadraticTopics } from "./square-model";
 import { questionsForTopic } from "./square-content";
 import { contentPackages, packageTopic } from "./content-package-content";
+import { packageCheckVersionAliases, type CompatibleCheckVersion } from "./content-package-progress";
 import { visibleLessonWhere, approvedWhere, restrictedWhere } from "./content-access";
 import { hasFeature } from "./subscriptions";
 import { dashboardAssignment, prioritizeDashboardAssignments, studentDashboardModel, validDashboardTimeZone, type DashboardLesson, type DashboardMarkedQuestion } from "./student-dashboard-model";
@@ -52,8 +53,13 @@ export async function studentDashboard(actor: Actor, lang: string, input: unknow
   ]);
   const lessonIds = new Set(lessons.map(l => l.id));
   const practiceTopics = [...quadraticTopics, ...contentPackages.filter(p => packages.some(s => s.key === p.key && s.version === p.version)).flatMap(p => p.lessons.map(l => packageTopic(l.id)!))].filter(t => lessonIds.has(t.lessonId));
-  const descriptors = new Map(practiceTopics.map(t => [t.lessonId, new Map(questionsForTopic(t.key).map(q => [q.id, q]))]));
+  const descriptors = new Map<string, Map<string, ReturnType<typeof questionsForTopic>[number]>>();
+  for(const t of practiceTopics){const entries=descriptors.get(t.lessonId)??new Map();for(const q of questionsForTopic(t.key))entries.set(q.id,q);descriptors.set(t.lessonId,entries);}
   const versionIds = [...new Set(lessons.flatMap(l => l.tasks.flatMap(t => t.task.versions.map(v => v.id))))];
+  const checkAliases = new Map<string, CompatibleCheckVersion>();
+  if (!teacherLens) for (const key of new Set(practiceTopics.flatMap(t => t.packageKey ? [t.packageKey] : []))) {
+    for (const [old, current] of await packageCheckVersionAliases(key, new Set(versionIds))) checkAliases.set(old, current);
+  }
   const taskIds = [...new Set(lessons.flatMap(l => l.tasks.map(t => t.taskId)))];
   // listWorks supplies the actor's assigned work/history, including private
   // teacher materials and work outside followed courses. Keep its membership
@@ -63,20 +69,20 @@ export async function studentDashboard(actor: Actor, lang: string, input: unknow
   const [checks, attempts] = await Promise.all([
     // IndependentCheck has no teacher/attempt relationship. A teacher USER lens
     // cannot use this summary to inspect the learner's private self-study.
-    teacherLens ? [] : db().independentCheck.findMany({ where: { userId: actor.id, taskVersionId: { in: versionIds } }, orderBy: [{ checkedAt: "asc" }, { id: "asc" }], select: { eventKey: true, taskVersionId: true, contentVersion: true, correct: true, helpUsed: true, imported: true, checkedAt: true } }),
+    teacherLens ? [] : db().independentCheck.findMany({ where: { userId: actor.id, taskVersionId: { in: [...versionIds, ...checkAliases.keys()] } }, orderBy: [{ checkedAt: "asc" }, { id: "asc" }], select: { eventKey: true, taskVersionId: true, contentVersion: true, correct: true, helpUsed: true, imported: true, checkedAt: true } }),
     db().attempt.findMany({ where: dashboardAttemptWhere(actor.id, taskIds, [...assignedWorkIds], lensAttemptScope()), orderBy: [{ startedAt: "desc" }, { id: "desc" }], include: {
       workVersion: { include: { work: { select: { id: true, kind: true, title: true, resultsPublishedAt: true } }, items: { include: { taskVersion: { select: { taskId: true, texts: { select: { locale: true, title: true } }, parts: { select: { id: true, kind: true, maxPoints: true } } } } } } } },
       answers: { select: { partId: true, response: true, savedAt: true, autoPoints: true, _count: { select: { files: true } }, review: { select: { id: true, points: true, comment: true, reviewedAt: true, reviewer: { select: { displayName: true } } } } } },
     } }),
   ]);
   const modelLessons: DashboardLesson[] = lessons.map(l => {
-    const course = courses.find(c => c.id === l.topic.courseId)!, topic = practiceTopics.find(t => t.lessonId === l.id);
+    const course = courses.find(c => c.id === l.topic.courseId)!, topic = [...practiceTopics].reverse().find(t => t.lessonId === l.id);
     const questions = l.tasks.flatMap(t => { const v = t.task.versions[0]; if (!v) return []; const q = v.sourceUid ? descriptors.get(l.id)?.get(v.sourceUid) : null;
       const quick = q ? !["exam", "mixed"].includes(q.collection) && q.fields.length > 0 : v.parts.length > 0 && v.parts.every(p => p.kind !== "MANUAL");
       return [{ id: t.taskId, versionId: v.id, uid: q?.id ?? null, title: displayTitle(localized(v.texts, lang)?.title ?? "Question"), family: q?.family_uid ?? t.taskId, collection: q?.collection ?? (quick ? "short" : "exam"), quick, examStyle: q ? ["exam", "mixed"].includes(q.collection) : v.materialCategory === "EXAM", maximum: v.parts.reduce((sum, p) => sum + p.maxPoints, 0) }];
     });
     const byVersion = new Map(questions.map(q => [q.versionId, q]));
-    const evidence = checks.flatMap(e => { const q = byVersion.get(e.taskVersionId); return q && (!topic || topic.packageKey || e.contentVersion === topic.version) ? [{ eventKey: e.eventKey, uid: q.uid ?? q.id, family: q.family, correct: e.correct, helpUsed: e.helpUsed, imported: e.imported, at: e.checkedAt.getTime() }] : []; });
+    const evidence = checks.flatMap(e => { const alias = checkAliases.get(e.taskVersionId); if (alias && alias.contentVersion !== e.contentVersion) return []; const q = byVersion.get(alias?.versionId ?? e.taskVersionId); return q && (!topic || topic.packageKey || e.contentVersion === topic.version) ? [{ eventKey: e.eventKey, uid: q.uid ?? q.id, family: q.family, correct: e.correct, helpUsed: e.helpUsed, imported: e.imported, at: e.checkedAt.getTime() }] : []; });
     return { id: l.id, title: displayTitle(localized(l.versions[0]?.texts ?? [], lang)?.title ?? "Topic"), href: `/courses/${course.slug}/topics/${l.id}`, position: l.position, notesRead: !!l.progress[0]?.completed, openedAt: l.progress[0]?.openedAt.getTime() ?? 0,
       course: { id: course.id, slug: course.slug, title: displayTitle(localized(course.texts, lang).title), position: course.position, code: contentPackages.find(p => p.course.slug === course.slug)?.course.code ?? (course.slug === "maths4u-9709-p1" ? "9709" : null) },
       chapter: { id: l.topic.id, slug: l.topic.slug, title: displayTitle(localized(l.topic.texts, lang).title), position: l.topic.position }, questions, evidence,

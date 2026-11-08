@@ -11,9 +11,11 @@ import { privateStorageRoot } from "./storage-config";
 import { imagePreviews } from "./image-previews";
 import { mayReviewPractice, mentoredPracticeWhere } from "./practice-access";
 import { requestView, userViewTeacher, lensAttemptScope } from "./request-view";
-import { archiveAdmin } from "./content-access";
+import { archiveAdmin, approvedWhere } from "./content-access";
 import { readMaterialGrant } from "./material-grant";
 import { taskPermission } from "./catalog";
+import { teacherPreviewGrantMatches } from "./teacher-task-preview-assets";
+import { canUseTeacherLibrary } from "./teacher-account-model";
 
 export const MAX_FILE_BYTES = 8 * 1024 * 1024;
 function storageRoot() {
@@ -94,12 +96,23 @@ export async function download(actor: Actor | null, id: string, variant = "origi
     if (userViewTeacher()) ensure(await db().attempt.count({ where: { id: { in: file.submissions.map(s => s.answer.attemptId) }, userId: actor?.id, AND: [lensAttemptScope()] } }), 404, "NOT_FOUND");
   } else if (userViewTeacher() && file.ownerId === actor?.id && !file.assets.length) ensure(false, 404, "NOT_FOUND");
   await requireVisibleTasks(actor,file.assets.map(a=>a.version.taskId));
-  let allowed = !!actor && (file.ownerId === actor.id || isAdmin(actor));
+  const grant=readMaterialGrant(support);
+  let teachingPreview=false;
+  if(grant?.context==='teacher-preview'){
+    // A teacher-scoped URL must keep its context even when an independent
+    // owner/assignment shortcut would otherwise permit the same file.
+    ensure(grant.fileId===id&&grant.role!=='TEACHER'&&teacherPreviewGrantMatches(grant,actor,view?.lens,grant.versionId),404,'NOT_FOUND');
+    const asset=file.assets.find(a=>a.versionId===grant.versionId&&a.role===grant.role);
+    ensure(asset,404,'NOT_FOUND');
+    const task=await db().task.findFirst({where:{AND:[{id:asset.version.taskId,archivedAt:null,examArchivedAt:null,...approvedWhere},await taskPermission(actor)]},select:{versions:{take:1,orderBy:{number:'desc'},select:{id:true}}}});
+    ensure(task&&teacherPreviewGrantMatches(grant,actor,view?.lens,task.versions[0]?.id??''),404,'NOT_FOUND');
+    teachingPreview=true;
+  }
+  let allowed = teachingPreview || !!actor && (file.ownerId === actor.id || isAdmin(actor));
   if (!allowed && view?.lens?.mode === "ROLE" && view.real && !file.submissions.length) {
     for (const asset of file.assets) if (asset.role !== "TEACHER" && await db().workItem.count({ where: { taskVersionId: asset.versionId, workVersion: { work: { ownerId: view.real.id } } } })) { allowed = true; break; }
   }
   if (!allowed && !file.submissions.length) {
-    const grant=readMaterialGrant(support);
     if(grant&&grant.fileId===id&&grant.actorId===(actor?.id??null)&&grant.role!=="TEACHER"){
       const asset=file.assets.find(a=>a.versionId===grant.versionId&&a.role===grant.role);
       if(asset)allowed=!!await db().task.findFirst({where:{AND:[{id:asset.version.taskId},await taskPermission(actor)]},select:{id:true}});
@@ -116,7 +129,7 @@ export async function download(actor: Actor | null, id: string, variant = "origi
       if (actor && isTeacher(actor) && await db().workItem.count({ where: { taskVersionId: asset.versionId, workVersion: { work: { ownerId: actor.id } } } })) { allowed = true; break; }
       if (actor && isTeacher(actor) && asset.role !== "TEACHER" && await db().attempt.findFirst({ where: { AND: [mentoredPracticeWhere(actor),
         { workVersion: { items: { some: { taskVersionId: asset.versionId } } } }] }, select: { id: true } })) { allowed = true; break; }
-      if (asset.role === "STATEMENT" && task.visibility === "PUBLIC" && !task.archivedAt && (!task.featureKey || (actor && await hasFeature(actor, task.featureKey)))) { allowed = true; break; }
+      if (asset.role === "STATEMENT" && task.visibility === "PUBLIC" && !task.archivedAt && (!task.featureKey || canUseTeacherLibrary(actor) || (actor && await hasFeature(actor, task.featureKey)))) { allowed = true; break; }
       if (actor && asset.role !== "TEACHER") {
         const attempts = await db().attempt.findMany({ where: { userId: actor.id, AND: [lensAttemptScope()], workVersion: { items: { some: { taskVersionId: asset.versionId } } } }, include: attemptInclude });
         if (attempts.some(a => maySeeMaterialFile(a, asset.role))) { allowed = true; break; }

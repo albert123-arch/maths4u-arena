@@ -5,6 +5,7 @@ import { Button, Input, Select } from "./controls";
 import { useView } from "./view-state";
 import { ErrorNotice, MaterialAsset, MathContent, useLocale } from "./ui";
 import { markingCodes, selfMarkTotal, type MarkingRow, type SupportAccess, type SupportContent, type SupportKind } from "@/lib/question-support-model";
+import { firstStoredValue } from "@/lib/square-device-progress";
 
 const meanings: Record<string, [string, string]> = { B: ["Независимый балл", "Independent mark"], M: ["Балл за метод", "Method mark"], A: ["Точность после верного метода", "Accuracy after M"], FT: ["Продолжение с предыдущим результатом", "Follow through"] };
 function InfoTip({ label, children, text }: { label: string; children: ReactNode; text: string }) {
@@ -27,12 +28,12 @@ function Guidance({ data, manual, values, change }: { data: SupportContent; manu
   </>;
 }
 type Draft={access?:SupportAccess;marks:Record<string,number>;points?:number;helpUsed?:boolean};
-export function QuestionSupport({ storageKey, manual, maximum, enabled=true, attempted=false, request, onHelp, onPaperFinished, assess }: { storageKey:string;manual:boolean;maximum:number;enabled?:boolean;attempted?:boolean;request:(kind:SupportKind,access?:SupportAccess)=>Promise<SupportContent>;onHelp?:()=>void;onPaperFinished?:()=>void;assess?:(points:number)=>Promise<unknown> }) {
+export function QuestionSupport({ storageKey, compatibleStorageKeys=[], manual, maximum, enabled=true, attempted=false, request, onHelp, onPaperFinished, assess }: { storageKey:string;compatibleStorageKeys?:string[];manual:boolean;maximum:number;enabled?:boolean;attempted?:boolean;request:(kind:SupportKind,access?:SupportAccess)=>Promise<SupportContent>;onHelp?:()=>void;onPaperFinished?:()=>void;assess?:(points:number)=>Promise<unknown> }) {
   const lens=useView();
   const {t}=useLocale(),id=useId(),[draft,setDraft]=useState<Draft>({marks:{}}),[ready,setReady]=useState(false),[panels,setPanels]=useState<Partial<Record<SupportKind,SupportContent>>>({}),[open,setOpen]=useState<Partial<Record<SupportKind,boolean>>>({}),[busy,setBusy]=useState(false),[error,setError]=useState<unknown>(null),[saved,setSaved]=useState(false),queue=useRef(Promise.resolve());
   const pendingFocus=useRef<HTMLElement|null>(null);
   useLayoutEffect(()=>{if(!busy&&pendingFocus.current){const button=pendingFocus.current;pendingFocus.current=null;if(button.isConnected&&(document.activeElement===document.body||document.activeElement===button))button.focus({preventScroll:true});}});
-  useEffect(()=>{setOpen({});setPanels({});setDraft({marks:{}});try{const d=lens?null:JSON.parse(localStorage.getItem(storageKey)??'null');if(d&&typeof d.marks==='object'){setDraft(d);if(d.access==='paper')onPaperFinished?.();}}catch(e){setError(e);}setReady(true);},[storageKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(()=>{setOpen({});setPanels({});setDraft({marks:{}});try{const d=lens?null:JSON.parse(firstStoredValue(localStorage,[storageKey,...compatibleStorageKeys])??'null');if(d&&typeof d.marks==='object'){setDraft(d);if(d.access==='paper')onPaperFinished?.();}}catch(e){setError(e);}setReady(true);},[storageKey]); // eslint-disable-line react-hooks/exhaustive-deps
   const access=draft.access??(attempted?'attempt':undefined);
   function store(next:Draft){setDraft(next);if(lens)return;try{localStorage.setItem(storageKey,JSON.stringify(next));}catch(e){setError(e);}}
   const labels={hint:t('Подсказка','Hint'),solution:t('Разобранное решение','Worked solution'),guidance:t('Критерии оценивания','Marking guidance')};

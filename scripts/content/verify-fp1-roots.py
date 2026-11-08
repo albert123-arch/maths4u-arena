@@ -87,6 +87,25 @@ P=x**4+4*x**3-4*x*x-16*x-1;powers('6429',P,{1:-4,2:24,3:-64,-1:-16,4:292});ck('6
 P=2*x**3-4*x*x-3*x-6;powers('6557',P,{2:7,3:26});ck('6557','singularity',8+6-2*7,0)
 P=x**4-3*x**3+x*x-3*x+1;ck('6582','reciprocal substitution',s.expand(x*x*((x+1/x)**2-3*(x+1/x)-1)),P);ck('6582','combined sums',power(P,2)+power(P,-2),14)
 
+# Textbook notation distinguishes unordered products from powers, including
+# multiplicity and the one cubic/four quartic triple products.
+for degree in (3,4):
+    rs=list(s.symbols('notation_r1:'+str(degree+1)))
+    pair=sum(s.prod(terms) for terms in itertools.combinations(rs,2))
+    triple=sum(s.prod(terms) for terms in itertools.combinations(rs,3))
+    product=s.prod(rs);total=sum(rs)
+    ck('NOTATION-'+str(degree),'square sum',sum(r*r for r in rs),total**2-2*pair)
+    ck('NOTATION-'+str(degree),'cube sum',sum(r**3 for r in rs),total**3-3*total*pair+3*triple)
+    ck('NOTATION-'+str(degree),'number of pair terms',len(list(itertools.combinations(rs,2))),degree*(degree-1)//2)
+    ck('NOTATION-'+str(degree),'number of triple terms',len(list(itertools.combinations(rs,3))),1 if degree==3 else 4)
+    ck('NOTATION-'+str(degree),'reciprocal sum',sum(1/r for r in rs),sum(s.prod(terms) for terms in itertools.combinations(rs,degree-1))/product)
+    ck('NOTATION-'+str(degree),'reciprocal pair sum',sum(1/s.prod(terms) for terms in itertools.combinations(rs,2)),sum(s.prod(terms) for terms in itertools.combinations(rs,degree-2))/product)
+rs=[a,a,b]
+ck('NOTATION-repeated','pair-product sum',sum(i*j for i,j in itertools.combinations(rs,2)),a*a+2*a*b)
+ck('NOTATION-repeated','product',s.prod(rs),a*a*b)
+ck('NOTATION-repeated','square sum',sum(r*r for r in rs),2*a*a+b*b)
+ck('NOTATION-repeated','cube sum',sum(r**3 for r in rs),2*a**3+b**3)
+
 # New examples: independent polynomial checks, not copies of textbook examples.
 powers('E-C1',6*x*x-5*x-4,{1:s.Rational(5,6)})
 ck('E-C1','product',s.Rational(-4,6),s.Rational(-2,3))
@@ -106,16 +125,38 @@ ck('E-M4','square contradiction',power(x**4+x**3+c*x*x-x-1,2)+power(x**4+x**3+c*
 root=Path('content/original/9231-fp1');pack=json.loads((root/'roots-v1.json').read_text(encoding='utf-8'))
 refs=json.loads((root/'roots-quick-verification-v1.json').read_text())
 audit=json.loads(Path('docs/ARENA-C1-SOURCE-AUDIT-20261106.json').read_text(encoding='utf-8'))
+# Owner-authorised notation-only revision, 8 November 2026. Original audit
+# manifests remain immutable. Every other package value is bound by the protected
+# projection; only these exact new presentation digests are accepted for 1.0.1.
+NOTATION_PATHS = [['version'], ['lessons', 0, 'ideas'], ['lessons', 0, 'examples', 1, 'question'], ['lessons', 0, 'examples', 1, 'solution'], ['lessons', 0, 'examples', 2, 'solution'], ['lessons', 1, 'ideas'], ['lessons', 1, 'examples', 0, 'solution'], ['lessons', 1, 'examples', 3, 'solution'], ['questions', 1, 'prompt_html'], ['questions', 2, 'prompt_html'], ['questions', 3, 'prompt_html'], ['questions', 4, 'solution_html'], ['questions', 17, 'prompt_html'], ['questions', 18, 'prompt_html'], ['questions', 19, 'prompt_html'], ['questions', 20, 'solution_html'], ['questions', 36, 'solution_html'], ['questions', 46, 'solution_html'], ['questions', 59, 'solution_html'], ['questions', 61, 'solution_html'], ['questions', 62, 'answer_html'], ['questions', 62, 'solution_html'], ['questions', 63, 'solution_html'], ['questions', 64, 'solution_html'], ['questions', 65, 'solution_html'], ['questions', 66, 'solution_html'], ['questions', 76, 'solution_html'], ['questions', 83, 'solution_html'], ['questions', 86, 'solution_html'], ['questions', 91, 'solution_html']]
+NOTATION_PROTECTED_SHA256 = '7b2041b77d4cab753ad30f796f3c23410bc2e2d0dd25283193e64c5392fc4f0d'
+NOTATION_QUESTIONS = {'M4U-9231-RPE-C21': {'before': 'a733a1c11f9e8e8fd9c8027d05433a75114cff9c1def8b5c7703338e9a793e20', 'after': '3e667ce70318984ebc4b60f56587efb20da40b6bb3f7a4c51183ecfd6e1c08a5'}, 'M4U-9231-RPE-C31': {'before': '3b19671abcc763e04175f3474ee7e50e991176567e7391160d368c00992f3644', 'after': '9da0940d7e0d6be9b402e85337dabc5466d6ccf2bb666d49fd4543afcf7cc539'}, 'M4U-9231-RPE-C41': {'before': '58616ff8ec2f8652115ee7d71c7d3481043eb9ad81a763065356b5bd7c70175d', 'after': 'f8cc927be3b4d11a958703f0fae29d80013ba59aa1d7d3edf18e44771867722e'}, 'M4U-9231-RPE-S11': {'before': 'da582b487d4c2fc8dabd1c49ef430236ea8873e2607fe6008552fdd70e093744', 'after': 'a55c49bde073296fab90db784e3fba5e7a4b924a0d01a135312ca6fedc4a49ff'}, 'M4U-9231-RPE-C22': {'before': '8e78018e822ed388cb11a348ff7f451ace13e2767bc321c087b6af47b79a2b0e', 'after': '4e1a18fa36edb2daab5fee36a87321ccd618a1d585deccefdad9674d1f57751c'}, 'M4U-9231-RPE-C32': {'before': '61f3d2a9a59b40f73e332a7d16324539829d991739ef99361d0f0e52b18a9f27', 'after': '9e7552447831592fddee6b67a4c1ad8750c325e3ffdfc17789a38a1a7027e25f'}, 'M4U-9231-RPE-C42': {'before': 'ca0fdb71a698fef9a6a4cebbe2876cc75d15d44f2dee7ba6d7501b708972e2aa', 'after': '3add6d72275291f24dec1aad11e7b32d37ea735aee2fd6b9c214a0a9b713ece9'}, 'M4U-9231-RPE-S12': {'before': '9078d0fb2a8e88c4d6a65517c724575ad354c5c825a9fa41e0f6adf851d453b1', 'after': '291ba357f8c72d714c426dfcd97a7dbffd13b0de5be8794ed1585ade20d2e354'}, 'M4U-9231-FP1-RPE-4274': {'before': '36b73ec33118ee43f5ea3bc99eab65f56688cc9459771907fdfaf75a692ad2b3', 'after': 'ced034e4a7cbaeafb633f578bd74f76d7081ad6f174b8749e1b3dc3e2c2158a5'}, 'M4U-9231-FP1-RPE-6355': {'before': 'a316b061a15109ba12be8269b97c21f401c4ead1f71d912dd9140a87f9813429', 'after': 'e2146f5799181876a42736e9b2ce8fb97632f245d5a8d494a792f4d6231e0d5c'}, 'M4U-9231-FP1-RPE-6566': {'before': '43e3d1a0592372dcf21016c4c2bbc7e92ccbef1b20367cd47531a342863c602b', 'after': '38fa7b7fc007adc9be5801e83a6cf7279ca7304d08bed00b4686a272dab6d3a6'}, 'M4U-9231-FP1-RPE-4138': {'before': '9f874c539a779cc4555c687a8edeabf6bbc40619dcf42e780cd5633a696276d6', 'after': '321ad1e542a4a5f13280b7700f94a428093b2bec27d6d3ed63c0a4ec80a6d9df'}, 'M4U-9231-FP1-RPE-4145': {'before': 'ee004352882c1225279b60d108b70789c84379d1ee228b571d06506fc9eb506c', 'after': '958551c94d57c0bf30ee0f77c8db4a1fc6802f4fad41f160490acafe5895c359'}, 'M4U-9231-FP1-RPE-4152': {'before': '3ad89f3fe2b9bf2ec5ca209d07c855e251d88997e7ab1f835d46d9f057ef0aa4', 'after': '8f30ddea41d57ca1c8f9c4b0e6dbaf24eea054a4abfbc0b5052623f09f7ffe72'}, 'M4U-9231-FP1-RPE-4180': {'before': '81a0d0e6a6611e383e43ac35a670366676b27852599ec2b1cd410907c072213e', 'after': '0bc8b16989e23b67f665b2d7567995d6d450583d9cae7d140ddcb5392f05a41f'}, 'M4U-9231-FP1-RPE-4194': {'before': '907b8008dfb75cb8234bb3d0f45b0808b22bc064f1ba0bcd32930e81e9749ffd', 'after': '818e48992f187d56eeb7a75739b471d65aa12d1e9db2a6706eb4eba10aa21331'}, 'M4U-9231-FP1-RPE-4262': {'before': 'e1dee51347e42041611f8b2900edebf72a57f5183494b8034b6ff009e3aa315e', 'after': '373be412cb1c4a16fdc045e362df54cc604ea02199ea7e291762f58e6b443c97'}, 'M4U-9231-FP1-RPE-6307': {'before': 'd2d1e969844f282a2feb276522729a8a43efeb6ca34ddb91f57a35e7a9b94415', 'after': '60a9e8d79330ecb8debdc5b086960883814fed6cfffb0cca6ec802172cf3e71a'}, 'M4U-9231-FP1-RPE-6594': {'before': '0fe41ddb33766f9e9b7802e242c92b1909883ebf53fecec790650f34dc959004', 'after': '4bea8e90e3b64cde799af3d2f546c7f2b36695b290399f5d7e9a2f2993f507f5'}, 'M4U-9231-FP1-RPE-5884': {'before': '41da1fdd84dcc641fecfb9d755701b5b8674039ceb09b0809540cc2ba644b5f2', 'after': '3b7cad5cae9a396c6c3eee14a6e2232cbcad28c59b36ccbd23ed878b820fa6c4'}, 'M4U-9231-FP1-RPE-6429': {'before': 'e68fda5dc2b6d5513ff98ab8369f52ac7829a3195bcdfbf89476030cba08a702', 'after': 'aa15cc4cb53d9761b77361ff6a81c87e06afa23fc5a9f225b11541e02b9536d1'}}
+NOTATION_LESSONS = {'fp1_roots_coefficients': {'before': '9c4f6e8ad4ac19e3a7a9ff0698859265e7c11fcacfd485d0ec0412249bbb771d', 'after': '0380a524f45f01cb8451dc2a1aaae32953eda5f0c710bb39e497a27b090650f1'}, 'fp1_roots_symmetric_sums': {'before': '6973e4cf53447e22953f481de8c8c08cce9ae488540d0e0d13f31c584c6ec00f', 'after': 'eaa75c3886ba129ef086dfa0362ba19046d25cf64bc0c3f28cde0ec3e2352e52'}}
+assert pack['version'] in {'1.0.0','1.0.1'}, 'Unaudited roots package version'
+import copy,re
+projection=copy.deepcopy(pack)
+for path in NOTATION_PATHS:
+    node=projection
+    for key in path[:-1]: node=node[key]
+    node[path[-1]]=None
+assert hashlib.sha256(json.dumps(projection,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()==NOTATION_PROTECTED_SHA256, 'Non-notation package data changed'
+if pack['version']=='1.0.1':
+    assert not re.search(r'\be_(?:[1-4j]|\{[1-4j]\})',json.dumps(pack)), 'Obsolete elementary-sum labels remain'
+def approved_digest(identity,old_expected,changes):
+    if identity not in changes: return old_expected
+    assert old_expected==changes[identity]['before'], 'Original audit reference changed'
+    return changes[identity]['after'] if pack['version']=='1.0.1' else old_expected
+
 def content_digest(q):
     return hashlib.sha256('\0'.join([q['title'],q['prompt_html'],q['answer_html'],q['solution_html'],q['hint_html'],str(q['marks'])]).encode()).hexdigest()
 for lesson in pack['lessons']:
-    assert hashlib.sha256(json.dumps(lesson,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()==audit['teachingDigests'][lesson['id']],'Teaching text changed after audited checks'
+    assert hashlib.sha256(json.dumps(lesson,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()==approved_digest(lesson['id'],audit['teachingDigests'][lesson['id']],NOTATION_LESSONS),'Teaching text changed after audited checks'
 for row in audit['rows']:
-    assert content_digest(next(q for q in pack['questions'] if q['id']==row['uid']))==row['contentSha256'],'Owner text changed after audited checks'
+    assert content_digest(next(q for q in pack['questions'] if q['id']==row['uid']))==approved_digest(row['uid'],row['contentSha256'],NOTATION_QUESTIONS),'Owner text changed after audited checks'
 for row in refs:
     uid=row['uid'];ref=row['reference'];P=s.sympify(ref.get('poly','0'));ans=row['answers']
     current=next(q for q in pack['questions'] if q['id']==uid)
-    assert content_digest(current)==row['contentSha256']
+    assert content_digest(current)==approved_digest(uid,row['contentSha256'],NOTATION_QUESTIONS)
     assert {f['key']:f['expected'] for f in current['fields']}==ans,'Quick-check key differs from verified mathematics'
     if ref['kind']=='power':ck(uid,'quick power',power(P,ref['n']),s.sympify(next(iter(ans.values()))))
     elif ref['kind']=='combined':ck(uid,'quick combined',power(P,2)+power(P,-2),s.sympify(ans['sum']))

@@ -15,8 +15,8 @@ import type { DiscoveryProps } from "@/components/discovery-home";
 import { publicDiscovery } from "./discovery";
 import { learningDirections, type DiscoveryData } from "./discovery-model";
 import { quadraticTopics } from "./square-model";
-import { packageTopic } from "./content-package-content";
-import { squarePublicLesson } from "./square-content";
+import { publicLearningTopic } from "./public-learning-topic";
+import { squarePublicLesson, questionsForTopic } from "./square-content";
 import { AppError } from "./errors";
 import { assertLessonVisible } from "./content-access";
 import { visibleSquareMappings } from "./square-learning";
@@ -43,7 +43,7 @@ export async function pageMetadata({ params,searchParams }: PageProps, locale: L
   if (locale === "ru" && !translated) notFound();
   const canonical = origin + (locale === "ru" ? "/ru" : "") + (path === "/" ? "/" : path);
   const alternates = { canonical, ...(translated ? { languages: { en: origin + path, ru: origin + "/ru" + path } } : {}) };
-  const discovery = discoveryRoute(parts), topic = quadraticTopics.find(t => t.path === path)??(parts[0]==="courses"&&parts[2]==="topics"?packageTopic(parts[3]):undefined);
+  const discovery = discoveryRoute(parts), topic = parts[0]==="courses"&&parts[2]==="topics"?await publicLearningTopic(parts[3]):undefined;
   const data = await publicDiscovery(locale), item = data.items.find(i => i.href === (locale === "ru" ? "/ru" : "") + path);
   const further=locale==='en'?await furtherPublic():[],chapter=further.find(ch=>ch.chapterPath===path),lessonChapter=further.find(ch=>ch.lessons.some(l=>l.path===path)),specific=chapter?furtherMetadata(chapter):lessonChapter?furtherMetadata(lessonChapter,lessonChapter.lessons.find(l=>l.path===path)):null;
   const direction = learningDirections.find(d => d.key === discovery?.direction);
@@ -78,12 +78,14 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   const pair = translated ? { en: path, ru: "/ru" + path } : undefined;
   const raw = await searchParams, search = Object.fromEntries(Object.entries(raw).filter((e): e is [string, string] => typeof e[1] === "string"));
   if(search.source||search.taskId||search.legacyLesson||parts[0]==='courses'&&parts[2]==='topics'&&unallocatedChapter(parts[3]??''))return privateArchivePage(parts,search);
-  const packaged=parts[0]==="courses"&&parts[2]==="topics"?packageTopic(parts[3]):undefined;
+  const packaged=parts[0]==="courses"&&parts[2]==="topics"?await publicLearningTopic(parts[3]):undefined;
   const further=locale==='en'?await furtherPublic():[],chapterPage=further.find(ch=>ch.chapterPath===path),lessonChapter=further.find(ch=>ch.lessons.some(l=>l.path===path));
   if(parts[0]==='courses'&&parts[2]==='chapters'&&!chapterPage)notFound();
   const structured=chapterPage?learningStructuredData(chapterPage):lessonChapter?learningStructuredData(lessonChapter,lessonChapter.lessons.find(l=>l.path===path)):null;
   const schema=structured?<script type="application/ld+json" dangerouslySetInnerHTML={{__html:safeJsonLd(structured)}}/>:null;
-  const topic = quadraticTopics.find(t => t.path === path)??(packaged?.path===path?packaged:undefined), oldPractice = !!search.reviewTask || ["MC", "SHORT", "WRITTEN", "NOTES"].includes(search.mode);
+  const previous = quadraticTopics.find(t => t.path === path);
+  const previousRequested=previous&&(search.practice==="previous"||!!search.item&&questionsForTopic(previous.key).some(q=>q.id===search.item));
+  const topic = previousRequested?previous:(packaged?.path===path?packaged:previous), oldPractice = !!search.reviewTask || ["MC", "SHORT", "WRITTEN", "NOTES"].includes(search.mode);
   if (topic && search.view !== "legacy" && !oldPractice) { await assertLessonVisible(null,topic.lessonId); const visible=await visibleSquareMappings(null,topic); const lesson=squarePublicLesson(topic); lesson.questions=lesson.questions.filter(q=>visible.has(q.uid)); return <>{schema}<Platform square={lesson} languagePair={pair} /></>; }
   const discovery = discoveryRoute(parts);
   if (discovery) {

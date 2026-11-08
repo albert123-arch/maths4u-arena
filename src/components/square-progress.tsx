@@ -5,11 +5,11 @@ import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { ActorContext, api, ErrorNotice } from "./ui";
 import { useView } from "./view-state";
-import { quadraticTopic, quadraticTopics, type QuadraticTopic, squareSnapshot, type SquareSnapshot, type CheckEvent, type CheckResult, type Evidence } from "@/lib/square-model";
+import { readSquareDevice, type SquareDeviceProgress } from "@/lib/square-device-progress";
+import { quadraticTopic, quadraticTopics, type QuadraticTopic, squareSnapshot, type SquareSnapshot, type CheckEvent, type CheckResult } from "@/lib/square-model";
 
 
-type DeviceEvent = CheckEvent & { result: Evidence; claimedBy?: string };
-type Device = { version: string; events: DeviceEvent[] };
+type Device = SquareDeviceProgress;
 const empty = () => squareSnapshot([]);
 export function useReviewNow() {
   const [now, setNow] = useState(0);
@@ -17,11 +17,7 @@ export function useReviewNow() {
   return now;
 }
 function read(topic: QuadraticTopic): Device {
-  const key = topic.storage + ".guest.v1", squareVersion = topic.version;
-  const raw = localStorage.getItem(key); if (!raw) return { version: squareVersion, events: [] };
-  const d = JSON.parse(raw) as Device;
-  if (d.version !== squareVersion || !Array.isArray(d.events) || d.events.length > 5000 || d.events.some(e => !e || !e.result || typeof e.result.correct !== "boolean" || typeof e.result.helpUsed !== "boolean" || !Number.isFinite(e.result.at) || !e.answers)) throw Error("Device results could not be read. They have not been replaced.");
-  return d;
+  return readSquareDevice(localStorage.getItem(topic.storage + ".guest.v1"), topic);
 }
 export function useSquareProgress(sessionReady: boolean, topic: QuadraticTopic = quadraticTopic()) {
   const lens = useView();

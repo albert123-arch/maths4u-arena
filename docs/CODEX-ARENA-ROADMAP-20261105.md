@@ -1179,3 +1179,37 @@ presentations 59, health 200, guest admin APIs 401. Main `maths4u.sbs` untouched
 Report: [ARENA-ADMIN-VISIBILITY-HOTFIX-20261107.md](ARENA-ADMIN-VISIBILITY-HOTFIX-20261107.md).
 The report and this acceptance note stay local after rollout; no documentation-only
 redeployment is needed.
+
+## Roots notation and teacher preparation — local, 8 November 2026
+
+Owner authorised local-only correction of 9231 FP1 Roots and complete teacher
+question previews. Roots 1.0.1 replaces elementary-symmetric `e_i` teaching
+notation in 2 lessons/21 questions, retaining power-sum S_k and all 94 identities,
+542 marks and grading contracts. Immutable versions preserve assigned work.
+Explicit full-fingerprint compatibility retains existing independent checks and
+guest drafts/history for this reviewed notation-only revision; it does not grant
+compatibility to arbitrary later edits.
+
+Read-only teacher previews show stems/parts/figures/all MCQ options and immediate
+answers/solutions/guidance in the library, picker, basket and lesson. Exact-version
+GETs preserve current permissions, held/private/paid boundaries and lens safety;
+teacher browsing creates no attempts, marks or self-study records. Existing admin
+archive flow is retained. Local import/repeat and old-progress preservation passed.
+
+Report: [ARENA-ROOTS-TEACHER-PREVIEW-REPORT-20261108.md](ARENA-ROOTS-TEACHER-PREVIEW-REPORT-20261108.md).
+Files: [ARENA-ROOTS-TEACHER-PREVIEW-FILES-20261108.json](ARENA-ROOTS-TEACHER-PREVIEW-FILES-20261108.json).
+Only local test data; no commit, push or deployment. Main maths4u.sbs untouched.
+
+
+## 9709 P1 — Quadratics teaching chapter (2026-11-08)
+
+Owner requested the first 9709 P1 chapter using the Pure 1 book in
+`D:/new_books/9709 cambridge/` and the completed 50 + 150 local question bank.
+Five existing lesson IDs/URLs are reused; 20 independently written worked
+examples, 40 complete-answer quick checks, review and 200 written tasks are
+installed in the existing C1 local test database. All 60 supplied SVGs are
+retained with private solution grants. Earlier questions, lesson versions,
+answers and progress remain available. Local-only PUBLISHED preview; no push,
+deploy or production writes, and no next chapter started.
+
+Report: [ARENA-9709-P1-QUADRATICS-REPORT-20261108.md](ARENA-9709-P1-QUADRATICS-REPORT-20261108.md).

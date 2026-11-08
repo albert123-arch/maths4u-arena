@@ -4,6 +4,7 @@ import { AppError, ensure } from "@/lib/errors";
 import { actorForToken, tokenFrom, register, login, logout, sessionCookie, requireActor, admin, changeUser, issueRecovery, recover, rateLimit, userSelect } from "@/lib/security";
 import { library, saveTask, editorTask, exportTask, renderContent } from "@/lib/content";
 import { catalogSupport, saveSelfMarks, squareSelfMarks } from "@/lib/question-support";
+import { teacherTaskPreview, teacherPackageTaskPreview } from "@/lib/teacher-task-preview";
 import { createClass, listClasses, classDetail, joinClass, editClass } from "@/lib/classrooms";
 import { listWorks, publishWork, workSummary, startAttempt, getAttempt, mutateAttempt, gradeAttempt, workResults, publishResults, ownWork, practice } from "@/lib/works";
 import { createOlympiad, listOlympiads, registerOlympiad, olympiadResults } from "@/lib/olympiads";
@@ -245,6 +246,10 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
     if (route === "admin/structure" && method === "GET") return json(await structure(actor));
     if (route === "admin/structure" && method === "POST") return json(await saveStructure(actor, input));
     if (route === "basket" && method === "GET") return json(await basket(actor, lang));
+    if (parts[0] === "teacher" && parts[1] === "tasks" && parts[3] === "preview" && parts.length === 4 && method === "GET")
+      return json(await teacherTaskPreview(actor, parts[2], { versionId: url.searchParams.get("versionId") ?? undefined }, lang));
+    if (route === "teacher/package-task-preview" && method === "GET")
+      return json(await teacherPackageTaskPreview(actor, { lessonId: url.searchParams.get("lessonId") ?? undefined, uid: url.searchParams.get("uid") ?? undefined, version: url.searchParams.get("version") ?? undefined }, lang));
     if (route === "basket" && method === "POST") return json(await saveBasket(actor, input, lang));
     if (route === "admin/import/pilot/correction/check" && method === "POST") return json(await checkPilotCorrection(actor, input));
     if (route === "admin/import/pilot/correction/apply" && method === "POST") return json(await applyPilotCorrection(actor, input));

@@ -9,6 +9,7 @@ import { BasketPanel, useTaskBasket } from "./task-basket";
 import type { ClassList } from "./screens";
 import {reassignAsset} from "@/lib/asset-association";
 import { MarkSchemeStatusField } from "./mark-scheme-text";
+import { TeacherTaskPreview } from "./teacher-task-preview";
 
 function WorkFields({ classes, olymp = false }: { classes: ClassList; olymp?: boolean }) {
   const { t } = useLocale();
@@ -46,7 +47,7 @@ function TopicAssignmentEditor({ topicId }: { topicId: string }) {
   return <><Heading title={t("Задание из темы", "Assignment from a topic")} subtitle={t("Выберите до 50 задач. Ваш предыдущий набор задач сохранится.", "Choose up to 50 questions. Your previous question set is preserved.")} /><ErrorNotice error={tasks.error || classes.error} />{!tasks.data || !classes.data ? <Loading /> : <section className="card"><Form primary label={t("Назначить классу", "Assign to class")} submit={async f => {
     if (!selected.length) throw new ApiError("TASK_UNAVAILABLE", 400);
     const w = await api<{id:string}>("works", "POST", workData(f, selected)); router.push("/works/" + w.id + "/results");
-  }}><p>{t("Первые 50 доступных задач темы. Для другой подборки используйте общий банк.", "The first 50 available questions in this topic. Use the library for a different selection.")}</p><div className="dashboard-topic-list">{tasks.data.items.map(q => <label className="check" key={q.id}><Input type="checkbox" checked={selected.includes(q.id)} onChange={e => setSelected(s => e.target.checked ? [...s, q.id] : s.filter(id => id !== q.id))} /><span>{q.version.title} · {q.points} marks</span></label>)}</div><WorkFields classes={classes.data} /></Form></section>}</>;
+  }}><p>{t("Первые 50 доступных задач темы. Для другой подборки используйте общий банк.", "The first 50 available questions in this topic. Use the library for a different selection.")}</p><div className="topic-question-picker">{tasks.data.items.map(q => <article className="topic-question-choice" key={q.id}><label className="check"><Input type="checkbox" checked={selected.includes(q.id)} disabled={!selected.includes(q.id) && selected.length >= 50} onChange={e => { const checked = e.target.checked; setSelected(s => checked ? s.length < 50 ? [...s.filter(id => id !== q.id), q.id] : s : s.filter(id => id !== q.id)); }} /><span>{q.version.title} · {q.points} marks</span></label><TeacherTaskPreview taskId={q.id} version={q.version} /></article>)}</div><WorkFields classes={classes.data} /></Form></section>}</>;
 }
 export function OlympiadEditor() {
   const router = useRouter();

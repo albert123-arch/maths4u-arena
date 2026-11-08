@@ -8,6 +8,7 @@ import { ensure } from "./errors";
 import { db } from "./prisma";
 import { materialGrant } from "./material-grant";
 import type { Actor } from "./security";
+import { validatePackageSvg } from "./content-package-svg";
 
 type Asset=NonNullable<ContentPackage["assets"]>[number];
 export async function readPackageAssets(p:ContentPackage) {
@@ -17,7 +18,8 @@ export async function readPackageAssets(p:ContentPackage) {
     ensure(relative!==""&&!relative.startsWith("..")&&!path.isAbsolute(relative),409,"INVALID_PACKAGE_ASSET");
     const data=await fs.readFile(resolved);
     ensure(data.length===asset.size&&createHash("sha256").update(data).digest("hex")===asset.sha256,409,"PACKAGE_ASSET_CHANGED");
-    ensure(data.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))&&data.readUInt32BE(16)===asset.width&&data.readUInt32BE(20)===asset.height,409,"INVALID_PACKAGE_IMAGE");
+    if(asset.mime==="image/svg+xml")validatePackageSvg(data,asset.width,asset.height);
+    else ensure(data.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))&&data.readUInt32BE(16)===asset.width&&data.readUInt32BE(20)===asset.height,409,"INVALID_PACKAGE_IMAGE");
     return {asset,data};
   }));
 }
@@ -32,7 +34,7 @@ export async function installPackageAssets(tx:Prisma.TransactionClient,actor:Act
       if((e as NodeJS.ErrnoException).code!=="EEXIST")throw e;
       ensure(createHash("sha256").update(await fs.readFile(target)).digest("hex")===asset.sha256,409,"PACKAGE_STORAGE_COLLISION");
     }
-    await tx.storedFile.create({data:{id:asset.file_id,ownerId:actor.id,storageKey,originalName:"lesson-diagram.png",mimeType:asset.mime,size:asset.size,sha256:asset.sha256,width:asset.width,height:asset.height}});
+    await tx.storedFile.create({data:{id:asset.file_id,ownerId:actor.id,storageKey,originalName:"lesson-diagram"+(asset.mime==="image/svg+xml"?".svg":".png"),mimeType:asset.mime,size:asset.size,sha256:asset.sha256,width:asset.width,height:asset.height}});
   }
 }
 export function packageTaskAssets(p:ContentPackage,uid:string){

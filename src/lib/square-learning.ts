@@ -12,6 +12,7 @@ import { taskPermission } from "./catalog";
 import { quadraticTopic, squareSnapshot, type Evidence, type QuadraticTopic } from "./square-model";
 import { databaseConfig } from "./database-url";
 import { grantPackageHelp } from "./content-package-assets";
+import { packageCheckVersionAliases, type CompatibleCheckVersion } from "./content-package-progress";
 
 export function squareTask(q: SourceQuestion, topic: QuadraticTopic = quadraticTopic()) {
   return taskSchema.parse({ visibility: "PUBLIC", materialCategory: q.collection === "exam" ? "EXAM" : "TRAINING", difficulty: q.difficulty ?? 2, difficultyKnown: true,
@@ -72,12 +73,12 @@ export const squareMappings = cache(async (key = "completing-square") => {
 const eventSchema = z.object({ eventKey: z.string().uuid(), uid: z.string().max(80), answers: z.record(z.string().max(50), z.string().max(400)).refine(v => Object.keys(v).length <= 12), helpUsed: z.boolean(), at: z.number().finite().nonnegative() }).strict();
 const requestSchema = (topic: QuadraticTopic) => eventSchema.extend({ version: z.literal(topic.version) });
 const answerKey = (value: unknown) => JSON.stringify(Object.entries(value as Record<string,string>).sort(([a],[b])=>a.localeCompare(b)));
-async function recordCheck(actor: Actor, event: z.infer<typeof eventSchema>, mappings: Map<string,string>, imported: boolean, topic: QuadraticTopic) {
+async function recordCheck(actor: Actor, event: z.infer<typeof eventSchema>, mappings: Map<string,string>, imported: boolean, topic: QuadraticTopic, aliases: ReadonlyMap<string, CompatibleCheckVersion> = new Map()) {
   const q = squareQuestion(event.uid, topic.key), result = gradeSquare(q, event.answers); ensure(result.valid, 400, "INVALID_INPUT");
   return transaction(async tx => {
     await lockUser(tx, actor.id);
     const old = await tx.independentCheck.findUnique({ where: { userId_eventKey: { userId: actor.id, eventKey: event.eventKey } } });
-    if (old) { ensure(old.taskVersionId === mappings.get(q.id) && old.contentVersion === topic.version && answerKey(old.answers) === answerKey(event.answers), 409, "EVENT_CONFLICT"); return; }
+    if (old) { const alias = aliases.get(old.taskVersionId); ensure((old.taskVersionId === mappings.get(q.id) && old.contentVersion === topic.version || alias?.versionId === mappings.get(q.id) && alias?.contentVersion === old.contentVersion) && answerKey(old.answers) === answerKey(event.answers), 409, "EVENT_CONFLICT"); return; }
     // Keep device chronology so old guest mistakes cannot overwrite newer account work.
     // Future/extreme clocks are bounded; imported evidence cannot advance mastery.
     const now = Date.now(), checkedAt = new Date(imported ? Math.min(now, Math.max(now - 365 * 86400000, event.at)) : now);
@@ -93,7 +94,7 @@ export async function checkSquare(actor: Actor | null, input: unknown, topic: Qu
   const event = requestSchema(topic).parse(input), mappings = await visibleSquareMappings(actor,topic);
   ensure(mappings.has(event.uid), 404, "NOT_FOUND");
   const result = gradeSquare(squareQuestion(event.uid, topic.key), event.answers);
-  if (actor && result.valid && !await db().taskVersion.count({where:{id:mappings.get(event.uid),task:restrictedWhere}})) await recordCheck(actor, event, mappings, false, topic);
+  if (actor && result.valid && !await db().taskVersion.count({where:{id:mappings.get(event.uid),task:restrictedWhere}})) await recordCheck(actor, event, mappings, false, topic, topic.packageKey ? await packageCheckVersionAliases(topic.packageKey, new Set(mappings.values())) : undefined);
   return result;
 }
 export async function helpSquare(input: unknown, topic: QuadraticTopic = quadraticTopic(), actor:Actor|null=null) {
@@ -109,8 +110,10 @@ export async function helpSquare(input: unknown, topic: QuadraticTopic = quadrat
 export async function squareProgress(actor: Actor, topic: QuadraticTopic = quadraticTopic()) {
   await assertLessonVisible(actor,topic.lessonId);
   const mappings = await visibleSquareMappings(actor,topic), uids = new Map([...mappings].map(([uid,v]) => [v,uid]));
+  const aliases = topic.packageKey ? await packageCheckVersionAliases(topic.packageKey, new Set(mappings.values())) : new Map();
+  for (const [old, current] of aliases) { const uid = uids.get(current.versionId); if (uid) uids.set(old, uid); }
   const rows = await db().independentCheck.findMany({ where: { userId: actor.id,...(topic.packageKey?{}:{contentVersion:topic.version}), taskVersionId: { in: [...uids.keys()] } }, orderBy: [{ checkedAt: "asc" }, { id: "asc" }] });
-  const evidence: Evidence[] = rows.map(r => { const uid = uids.get(r.taskVersionId)!; return { eventKey: r.eventKey, uid, family: squareQuestion(uid, topic.key).family_uid, correct: r.correct, helpUsed: r.helpUsed, at: r.checkedAt.getTime(), imported: r.imported }; });
+  const evidence: Evidence[] = rows.filter(r => !aliases.has(r.taskVersionId) || aliases.get(r.taskVersionId)!.contentVersion === r.contentVersion).map(r => { const uid = uids.get(r.taskVersionId)!; return { eventKey: r.eventKey, uid, family: squareQuestion(uid, topic.key).family_uid, correct: r.correct, helpUsed: r.helpUsed, at: r.checkedAt.getTime(), imported: r.imported }; });
   const notes = await db().learningProgress.findUnique({ where: { userId_lessonId: { userId: actor.id, lessonId: topic.lessonId } } });
   return { ...squareSnapshot(evidence), notesRead: notes?.completed ?? false };
 }
@@ -118,6 +121,7 @@ export async function importSquareProgress(actor: Actor, input: unknown, topic: 
   const data = z.object({ version: z.literal(topic.version), events: z.array(eventSchema).max(100) }).strict().parse(input);
   const mappings = await visibleSquareMappings(actor,topic);
   for (const e of data.events) ensure(mappings.has(e.uid) && gradeSquare(squareQuestion(e.uid, topic.key), e.answers).valid, 400, "INVALID_INPUT");
-  for (const event of data.events) await recordCheck(actor, event, mappings, true, topic);
+  const aliases = topic.packageKey ? await packageCheckVersionAliases(topic.packageKey, new Set(mappings.values())) : undefined;
+  for (const event of data.events) await recordCheck(actor, event, mappings, true, topic, aliases);
   return squareProgress(actor, topic);
 }

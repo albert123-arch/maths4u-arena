@@ -3,7 +3,8 @@ import { Button, ButtonLink } from "./controls";
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import type { BasketDto } from "@/lib/catalog";
 import { useView } from "./view-state";
-import { ActorContext, api, ApiError, ErrorNotice, MathContent, useLocale } from "./ui";
+import { ActorContext, api, ApiError, ErrorNotice, useLocale } from "./ui";
+import { TeacherTaskPreview } from "./teacher-task-preview";
 
 const BasketContext = createContext<{ data: BasketDto | null; selection: string[]; busy: boolean; error: unknown; change: (fn: (ids: string[]) => string[]) => Promise<void>; flush: () => Promise<BasketDto | null> } | null>(null);
 export function TaskBasketProvider({ children }: { children: ReactNode }) {
@@ -49,7 +50,7 @@ export function BasketPanel({ compact = false }: { compact?: boolean }) {
       <div className="row"><Button type="button" className="secondary" aria-label={t("Выше: ", "Move up: ") + item.title} disabled={b.busy || index === 0} onClick={() => change(ids => { const next = [...ids]; [next[index - 1], next[index]] = [next[index], next[index - 1]]; return next; })}>↑</Button>
         <Button type="button" className="secondary" aria-label={t("Ниже: ", "Move down: ") + item.title} disabled={b.busy || index + 1 === b.data?.items.length} onClick={() => change(ids => { const next = [...ids]; [next[index + 1], next[index]] = [next[index], next[index + 1]]; return next; })}>↓</Button>
         <Button type="button" className="quiet" disabled={b.busy} onClick={() => change(ids => ids.filter(id => id !== item.id))}>{t("Убрать", "Remove")}</Button>
-        {item.version && <details className="basket-preview"><summary>{t("Условие", "Statement")}</summary><MathContent html={item.version.statement} /></details>}</div></li>)}</ol>
+        </div>{item.available && item.version && <details className="basket-question-preview" open><summary>{t("Полная задача и материалы", "Full question & resources")}</summary><TeacherTaskPreview taskId={item.id} version={item.version} /></details>}</li>)}</ol>
     {!b.data?.items.length && <p className="empty">{t("Выберите задачи в каталоге или на странице темы.", "Choose tasks in the catalog or on a topic page.")}</p>}
     <div className="row"><ButtonLink className="button secondary" href="/library">{t("Подобрать задачи", "Choose tasks")}</ButtonLink>{compact && !!b.data?.items.length && !missing && <ButtonLink className="button" href="/teacher/works/new">{t("Создать ДЗ / тест", "Create homework / test")}</ButtonLink>}
       {!!b.data?.items.length && <Button type="button" className="quiet" disabled={b.busy} onClick={() => change(() => [])}>{t("Очистить", "Clear")}</Button>}</div>
