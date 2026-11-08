@@ -1422,3 +1422,26 @@ remain unchanged. No push/deploy or production writes; maths4u.sbs untouched.
 Next chapter Probability not started.
 
 Report: [ARENA-9709-S1-VARIATION-REPORT-20261108.md](ARENA-9709-S1-VARIATION-REPORT-20261108.md).
+
+## 9709 S1 — Probability (2026-11-08)
+
+Local package 9709-s1-probability 1.0.0 adds chapter 4, preserving S1 chapters
+1–3. Book sections 4.1–4.5 inform independently written notes, 20 examples,
+40 complete-answer/MCQ checks and fresh-variant review. The owner bank adds
+50 selected families from 158 source records and 150 numerical analogues;
+the remaining 108 records are not converted or replaced by this package.
+All source numerical answers, marks and criteria remain unchanged.
+Coverage includes equiprobable and weighted outcomes, disjoint Venn regions,
+independence versus mutual exclusion, conditional direction, finite stopping,
+two-way tables, mixtures, conditional independence, transfers and changing
+contents. Counting-selections prerequisites are explicit. All 56 solution
+SVGs retain protected access, alongside three independent teaching vectors.
+Own fractional notation and long displays are checked at 390 px before apply.
+JSON generation is atomic and skips identical results. Initial local apply
+creates 240 tasks and five lessons; repeat creates or updates nothing.
+All 116,070 pre-existing rows across 70 tables, including work/access/progress,
+are preserved. The book, 830 copied files and eight Downloads archives remain
+unchanged. PUBLISHED only in guarded C1; no push/deploy or production writes.
+maths4u.sbs untouched. Next chapter Permutations and combinations not started.
+
+Report: [ARENA-9709-S1-PROBABILITY-REPORT-20261108.md](ARENA-9709-S1-PROBABILITY-REPORT-20261108.md).
