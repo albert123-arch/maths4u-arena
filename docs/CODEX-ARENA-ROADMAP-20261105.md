@@ -1213,3 +1213,17 @@ answers and progress remain available. Local-only PUBLISHED preview; no push,
 deploy or production writes, and no next chapter started.
 
 Report: [ARENA-9709-P1-QUADRATICS-REPORT-20261108.md](ARENA-9709-P1-QUADRATICS-REPORT-20261108.md).
+
+
+## 9709 P1 — Functions teaching chapter (2026-11-08)
+
+Previous completed work was committed locally as `c545c49`, including the
+Quadratics chapter and the earlier Roots/teacher-preview changes. No push.
+Functions now reuses its existing five lesson IDs: 20 independent worked
+examples, 40 complete-answer/MCQ checks, review and the supplied 50 main
+questions plus 150 variants, with 76 SVG diagrams. Package 1.0.1 is PUBLISHED
+in the C1 local test database. Mixed-choice fields retain their answer options
+in teacher previews and assignments. Existing tasks, assigned versions and
+progress are unchanged. No production writes or deployment.
+
+Report: [ARENA-9709-P1-FUNCTIONS-REPORT-20261108.md](ARENA-9709-P1-FUNCTIONS-REPORT-20261108.md).

@@ -18,7 +18,7 @@ export function validatePackageSvg(data: Buffer, width: number, height: number) 
     if (node.type === "text") return;
     ensure(node.type === "tag" && tags.has(node.name), 409, "INVALID_PACKAGE_SVG");
     for (const [name, value] of Object.entries(node.attribs)) {
-      ensure(attributes.has(name) && !/[<>\\]|(?:javascript|data|https?):|\/\//i.test(name === "xmlns" ? "" : value), 409, "INVALID_PACKAGE_SVG");
+      ensure((attributes.has(name) || name === "data-curve-index" && /^\d+$/.test(value)) && !/[<>\\]|(?:javascript|data|https?):|\/\//i.test(name === "xmlns" ? "" : value), 409, "INVALID_PACKAGE_SVG");
       ensure(!/url\s*\(/i.test(value) || name === "clip-path" && /^url\(#[a-zA-Z][\w-]*\)$/.test(value), 409, "INVALID_PACKAGE_SVG");
     }
     node.children.forEach(visit);

@@ -26,7 +26,9 @@ export function packageTask(p:ContentPackage,q:PackageQuestion) {
     assets:packageTaskAssets(p,q.id),
     parts:choice?[{kind:"CHOICE",maxPoints:q.marks,texts:[{locale:"en",prompt:"",answer:q.answer_html}],options:Object.entries(f.options!).map(([key,text])=>({correct:key===f.expected,texts:[{locale:"en",text}]}))}]
       :manual?[{kind:"MANUAL",maxPoints:q.marks,texts:[{locale:"en",prompt:"",answer:q.answer_html,rubric:criteria,markSchemeText:criteria,markSchemeStatus:"DRAFT"}]}]
-      :q.fields.map(f=>({kind:"SHORT",maxPoints:1,acceptedAnswers:[JSON.stringify({checker:"arena-exact-v1",field:f})],texts:[{locale:"en",prompt:"<p>"+f.label+"</p>",answer:q.answer_html,rubric:"One mark for this complete field."}]})),
+      :q.fields.map(f=>f.type==="choice"
+        ?{kind:"CHOICE",maxPoints:1,texts:[{locale:"en",prompt:"<p>"+f.label+"</p>",answer:q.answer_html}],options:Object.entries(f.options!).map(([key,text])=>({correct:key===f.expected,texts:[{locale:"en",text}]}))}
+        :{kind:"SHORT",maxPoints:1,acceptedAnswers:[JSON.stringify({checker:"arena-exact-v1",field:f})],texts:[{locale:"en",prompt:"<p>"+f.label+"</p>",answer:q.answer_html,rubric:"One mark for this complete field."}]}),
   });
 }
 function lessonText(p:ContentPackage,l:ContentPackage["lessons"][number]){
