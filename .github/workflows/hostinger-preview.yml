@@ -55,6 +55,8 @@ jobs:
         run: npx tsx --test tests/content-packages.test.ts tests/content-rational.test.ts tests/content-series.test.ts tests/content-matrices.test.ts tests/content-polar.test.ts tests/content-vectors.test.ts tests/content-induction.test.ts tests/content-stats-crv.test.ts tests/content-stats-inference.test.ts tests/content-stats-chi2.test.ts tests/content-stats-nonparam.test.ts tests/content-stats-pgf.test.ts tests/content-fp2-hyperbolic.test.ts tests/content-fp2-matrices2.test.ts tests/content-fp2-differentiation.test.ts tests/content-fp2-integration.test.ts tests/content-fp2-complex.test.ts tests/content-fp2-ode.test.ts tests/content-mechanics-projectiles.test.ts tests/content-mechanics-equilibrium.test.ts tests/content-mechanics-circular.test.ts tests/content-mechanics-hooke.test.ts tests/content-mechanics-variable.test.ts tests/content-mechanics-momentum.test.ts tests/exact-pi.test.ts tests/question-layout.test.ts tests/course-tree.test.ts tests/further-seo.test.ts
       - name: Check teacher self-service authoring boundaries
         run: npx tsx --test tests/teacher-account.test.ts tests/teacher-authoring-model.test.ts tests/math-editor-model.test.ts
+      - name: Check 9709 Pure 1 and Statistics 1 packages and complete answers
+        run: npx tsx --test tests/p1-*-package.test.ts tests/s1-*-package.test.ts tests/approximate-answer.test.ts tests/roots-notation.test.ts tests/roots-progress-compatibility.test.ts tests/teacher-task-preview.test.ts
       - name: Verify course mathematics
         run: |
           python3 -m pip install sympy==1.14.0 antlr4-python3-runtime==4.11.1
@@ -83,6 +85,11 @@ jobs:
           python3 scripts/content/verify-mechanics-variable.py --report /tmp/arena-c5-mechanics-variable-maths.json
           python3 scripts/content/verify-mechanics-momentum.py --report /tmp/arena-c5-mechanics-momentum-maths.json
           python3 scripts/content/verify-momentum-teaching.py --report /tmp/arena-c5-mechanics-momentum-teaching.json
+      - name: Verify 9709 Pure 1 and Statistics 1 teaching mathematics
+        run: |
+          for verifier in scripts/content/verify-p1-*.py scripts/content/verify-s1-*.py; do
+            python3 "$verifier"
+          done
       - name: Check portable dependency aliases
         run: node --test tests/package-links.test.mjs
       - name: Check consent and public-only analytics
