@@ -1394,3 +1394,31 @@ No push/deploy or production writes; maths4u.sbs untouched.
 Next chapter Measures of variation not started.
 
 Report: [ARENA-9709-S1-CENTRAL-TENDENCY-REPORT-20261108.md](ARENA-9709-S1-CENTRAL-TENDENCY-REPORT-20261108.md).
+
+## 9709 S1 — Measures of variation (2026-11-08)
+
+Local package 9709-s1-variation 1.0.2 adds chapter 3 to the existing S1
+course, preserving chapters 1–2. Book chapter 3 sections 3.1–3.3 inform
+independently written notes, 20 examples, 40 complete-answer/MCQ checks
+and fresh-variant review. All 50 owner main families (36 redeveloped
+source records and 14 additional families) and 150 analogues are connected.
+All numerical answers, marks and criteria remain unchanged. Coverage includes
+range/IQR, raw and coded moments, unknown origins/counts, both possible means,
+feasibility, changed records, pooled variation, grouped estimates and percentiles.
+Notes also cover both calibration signs, unchanged SD after adding a value,
+and symmetric replacements under an SD bound. All feasible answer branches,
+positive SD and ordered missing pairs are checked. 36 source SVGs
+(4 statement and 32 solution) and three independent teaching vectors are
+connected. Source back-to-back tables preserve leaves, key and units;
+narrow mobile spacing allows both batches to fit at 390 px, including
+teacher preview. Earlier Representation of data diagrams are regression-tested.
+Direct-link question forms now wait for resume restoration before accepting
+input, preventing an initial field from being lost when the requested UID loads.
+New immutable versions wrap own long displays without changing mathematics.
+PUBLISHED only in the guarded C1 test database; repeat import writes nothing.
+All 111,069 pre-existing rows across 70 tables, including work/access/progress,
+are preserved. Source book, 830 copied files and eight Downloads archives
+remain unchanged. No push/deploy or production writes; maths4u.sbs untouched.
+Next chapter Probability not started.
+
+Report: [ARENA-9709-S1-VARIATION-REPORT-20261108.md](ARENA-9709-S1-VARIATION-REPORT-20261108.md).
