@@ -1525,3 +1525,33 @@ PUBLISHED only in guarded C1; no push/deploy or production writes.
 maths4u.sbs untouched. Next chapter Normal distribution not started.
 
 Report: [ARENA-9709-S1-BINOMIAL-GEOMETRIC-REPORT-20261108.md](ARENA-9709-S1-BINOMIAL-GEOMETRIC-REPORT-20261108.md).
+
+## 9709 S1 — Normal distribution (2026-11-08)
+
+Local package 9709-s1-normal 1.0.1 adds chapter 8, preserving chapters 1–7.
+Book sections 8.1–8.4 inform independently written notes, 20 examples with
+separate datasets, 40 complete-answer/MCQ checks and fresh-variant review.
+The owner bank adds 50 selected families from 289 source records and 150
+analogues; 239 records are not converted or replaced. All source answers,
+marks and criteria remain unchanged. Coverage includes continuous areas,
+standardisation by SD, inverse normal and parameter inference, conditional
+and repeated models, mixtures, rounded readings, strict continuity boundaries,
+normal approximation conditions np>5 and nq>5, integer cutoffs and rewards.
+The new approximate field opts into explicit bounded tolerances; exact
+fields and old assigned descriptors retain their original rules. Lesson
+checks and native automaticPoints share the saved descriptor. Targets,
+tolerances and bounds remain server-side. All 36 protected solution SVGs
+retain source bytes, with three independent teaching diagrams. Trusted
+patterns/markers accept local references only; active/external content is
+still denied. Own displays fit 390 px. A new immutable notation revision
+uses approximate signs for rounded z-scores and exact symbolic quantiles.
+All answers and grading descriptors remain unchanged; the approved complete
+fingerprint pair preserves prior guest/account progress without rewriting it.
+Initial apply creates 240 tasks and five lessons; the notation revision
+creates no tasks. Repeat imports write nothing. All 128,405 pre-existing
+rows in 70 tables, including bank/work/access/progress, are preserved.
+The book, 830 copied files and eight Downloads archives remain unchanged.
+PUBLISHED only in guarded C1; no push/deploy or production writes.
+maths4u.sbs untouched. No other chapters or Statistics 2 started.
+
+Report: [ARENA-9709-S1-NORMAL-REPORT-20261108.md](ARENA-9709-S1-NORMAL-REPORT-20261108.md).

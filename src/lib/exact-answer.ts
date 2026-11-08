@@ -156,9 +156,21 @@ function proportional(a: Poly,b: Poly) {
   return !!left && same(a,pmul(b,constant(mul(left,inv(b.get(power)!)))));
 }
 function equation(raw:string,variables:string[]) { const sides=raw.split("="); if(sides.length>2)fail();return padd(poly(sides[0],variables),poly(sides[1]??"0",variables),-BigInt(1)); }
-export type ExactField = { key: string; label: string; type: string; expected: string | string[]; variables?: string[]; options?: Record<string, string>; dimension?: number; factor_variable?: string; form?: "expanded" };
+export type ExactField = { key: string; label: string; type: string; expected: string | string[]; variables?: string[]; options?: Record<string, string>; dimension?: number; factor_variable?: string; form?: "expanded"; absolute_tolerance?:number; minimum?:number; maximum?:number };
 export function checkExact(field: ExactField, input: string): boolean {
   if (typeof input !== "string" || !input.trim() || input.length > 400) fail();
+  // Opt-in descriptor is saved in the assigned immutable version. Existing
+  // exact fields never acquire a tolerance through a later content package.
+  if(field.type==="approximate"){
+    const target=typeof field.expected==="string"&&field.expected.trim()!==""?Number(field.expected):NaN,tolerance=field.absolute_tolerance;
+    if(typeof tolerance!=="number")return fail();
+    if(!Number.isFinite(target)||!Number.isFinite(tolerance)||tolerance<=0||tolerance>1||field.variables?.length||field.form)fail();
+    for(const value of [field.minimum,field.maximum])if(value!==undefined&&!Number.isFinite(value))fail();
+    if(field.minimum!==undefined&&target<field.minimum||field.maximum!==undefined&&target>field.maximum||field.minimum!==undefined&&field.maximum!==undefined&&field.minimum>field.maximum)fail();
+    const raw=input.trim().replace(/[−–]/g,"-"),actual=/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d{1,3})?$/.test(raw)?Number(raw):numeric(raw);
+    if(!Number.isFinite(actual)||field.minimum!==undefined&&actual<field.minimum||field.maximum!==undefined&&actual>field.maximum)return false;
+    return Math.abs(actual-target)<=tolerance+8*Number.EPSILON*Math.max(1,Math.abs(actual),Math.abs(target));
+  }
   if (field.type === "choice") { if (!Object.hasOwn(field.options ?? {}, input)) fail(); return input === field.expected; }
   if (field.type === "ratio") {
     const parts=split(input,";"), expected=field.expected;

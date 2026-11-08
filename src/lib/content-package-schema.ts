@@ -2,7 +2,14 @@ import { z } from "zod";
 const id = z.string().regex(/^[a-zA-Z0-9_-]{2,80}$/);
 const html = z.string().min(1).max(100000);
 const criterion = z.object({ code: z.string().max(20), marks: z.number().int().positive().max(100), description_html: html, guidance_html: z.string().optional() }).strict();
-const field = z.object({ key: z.string().regex(/^[a-zA-Z0-9_-]{1,50}$/), label: z.string().min(1), type: z.enum(["number", "polynomial", "expression", "equation", "set", "choice", "pairs", "ratio"]), expected: z.union([z.string(), z.array(z.string())]), variables: z.array(z.string()).max(2).optional(), options: z.record(z.string(), z.string()).optional(), form: z.literal("expanded").optional() }).strict().refine(f=>!f.form||f.type==="polynomial",{message:"Expanded form requires a polynomial field"});
+const field = z.object({ key: z.string().regex(/^[a-zA-Z0-9_-]{1,50}$/), label: z.string().min(1), type: z.enum(["number", "approximate", "polynomial", "expression", "equation", "set", "choice", "pairs", "ratio"]), expected: z.union([z.string(), z.array(z.string())]), variables: z.array(z.string()).max(2).optional(), options: z.record(z.string(), z.string()).optional(), form: z.literal("expanded").optional(), absolute_tolerance:z.number().finite().positive().max(1).optional(), minimum:z.number().finite().optional(), maximum:z.number().finite().optional() }).strict().superRefine((f,c)=>{
+  if(f.form&&f.type!=="polynomial")c.addIssue({code:"custom",message:"Expanded form requires a polynomial field"});
+  if(f.type==="approximate"){
+    const target=typeof f.expected==="string"&&f.expected.trim()!==""?Number(f.expected):NaN;
+    if(!Number.isFinite(target)||f.absolute_tolerance===undefined||f.variables?.length||f.form)c.addIssue({code:"custom",message:"Approximate fields need a finite scalar target and explicit tolerance"});
+    if(f.minimum!==undefined&&target<f.minimum||f.maximum!==undefined&&target>f.maximum||f.minimum!==undefined&&f.maximum!==undefined&&f.minimum>f.maximum)c.addIssue({code:"custom",message:"Invalid approximate bounds"});
+  }else if(f.absolute_tolerance!==undefined||f.minimum!==undefined||f.maximum!==undefined)c.addIssue({code:"custom",message:"Tolerance and bounds require an approximate field"});
+});
 const question = z.object({ id, family_uid: id, lesson: id, title: z.string().min(1).max(191), collection: z.enum(["short", "variant", "exam"]),
   prompt_html: html, answer_html: html, solution_html: html, hint_html: html, marks: z.number().int().positive().max(100), difficulty: z.number().int().min(1).max(5),
   fields: z.array(field).max(12), parts: z.array(z.object({ label: z.string().max(20), marking_criteria: z.array(criterion).min(1) }).strict()).min(1),

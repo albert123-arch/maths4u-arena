@@ -14,7 +14,7 @@ export function validatePackageSvg(data: Buffer, width: number, height: number) 
   const explicitSize = root.attribs.width === String(width) && root.attribs.height === String(height);
   const responsiveSize = root.attribs.width === undefined && root.attribs.height === undefined && root.attribs.viewBox === `0 0 ${width} ${height}`;
   ensure(root.attribs.xmlns === "http://www.w3.org/2000/svg" && (explicitSize || responsiveSize), 409, "INVALID_PACKAGE_SVG");
-  const tags = new Set(["svg", "g", "defs", "clipPath", "rect", "line", "path", "polyline", "polygon", "circle", "ellipse", "text", "tspan", "title", "desc"]);
+  const tags = new Set(["svg", "g", "defs", "clipPath", "pattern", "marker", "rect", "line", "path", "polyline", "polygon", "circle", "ellipse", "text", "tspan", "title", "desc"]);
   const attributes = new Set(["xmlns", "viewBox", "width", "height", "role", "aria-labelledby", "aria-label", "id", "x", "y", "x1", "x2", "y1", "y2", "cx", "cy", "r", "rx", "ry", "d", "points", "fill", "fill-opacity", "stroke", "stroke-width", "stroke-dasharray", "stroke-linecap", "stroke-linejoin", "font-family", "font-size", "font-weight", "text-anchor", "dominant-baseline", "clip-path", "transform", "opacity"]);
   function visit(node: typeof doc.children[number]) {
     if (node.type === "text") return;
@@ -29,9 +29,14 @@ export function validatePackageSvg(data: Buffer, width: number, height: number) 
       const restrictedAttribute =
         (/^data-(curve|circle|line)-index$/.test(name) || name === "data-construction" || name === "data-curve") && /^\d+$/.test(value) ||
         name === "data-region" && /^(true|false)$/.test(value) ||
-        name === "fill-rule" && /^(evenodd|nonzero)$/.test(value);
+        name === "fill-rule" && /^(evenodd|nonzero)$/.test(value) ||
+        name === "font-style" && /^(normal|italic)$/.test(value) ||
+        node.name === "pattern" && name === "patternUnits" && /^(userSpaceOnUse|objectBoundingBox)$/.test(value) ||
+        node.name === "marker" && /^(markerWidth|markerHeight|refX|refY)$/.test(name) && /^-?\d+(\.\d+)?$/.test(value) && Math.abs(Number(value))<=10000 ||
+        node.name === "marker" && name === "orient" && value === "auto" ||
+        /^(path|line|polyline)$/.test(node.name) && name === "marker-end" && /^url\(#[a-zA-Z][\w-]*\)$/.test(value);
       ensure((attributes.has(name) || restrictedAttribute || probabilityMetadata) && !/[<>\\]|(?:javascript|data|https?):|\/\//i.test(name === "xmlns" ? "" : value), 409, "INVALID_PACKAGE_SVG");
-      ensure(!/url\s*\(/i.test(value) || name === "clip-path" && /^url\(#[a-zA-Z][\w-]*\)$/.test(value), 409, "INVALID_PACKAGE_SVG");
+      ensure(!/url\s*\(/i.test(value) || /^(clip-path|fill|marker-end)$/.test(name) && /^url\(#[a-zA-Z][\w-]*\)$/.test(value), 409, "INVALID_PACKAGE_SVG");
     }
     node.children.forEach(visit);
   }
