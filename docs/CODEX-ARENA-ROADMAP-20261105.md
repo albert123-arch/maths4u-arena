@@ -1369,3 +1369,28 @@ All 100,742 pre-existing rows across 70 tables, including work/access/progress,
 are preserved. No push/deploy or production writes; maths4u.sbs untouched.
 
 Report: [ARENA-9709-S1-REPRESENTATION-REPORT-20261108.md](ARENA-9709-S1-REPRESENTATION-REPORT-20261108.md).
+
+## 9709 S1 — Measures of central tendency (2026-11-08)
+
+Local package 9709-s1-central-tendency 1.0.3 adds the second chapter to
+the existing Statistics 1 course, retaining Representation of data.
+Book chapter 2 sections 2.1–2.3 and a descriptive-spread primer from 3.3
+inform independently written notes, 20 examples, 40 complete-answer/MCQ
+checks and fresh-variant review. The owner bank supplies 50 main families
+(35 redeveloped source records and 15 additional families) and 150 analogues.
+All numerical answers, marks and source criteria are retained. Mixed-topic
+prerequisites are explicit; density-based modal classes remain distinct
+from greatest-frequency classes. All modes, ordered missing observations,
+both moments, decoded SD and complete closed intervals are checked.
+32 protected solution SVGs and three independent teaching vectors are
+connected; book-style stem tables reuse chapter 1 rendering. New immutable
+versions correct percent/squared-unit typography, connect separate source
+illustrations to guest solutions and wrap own displays for mobile screens.
+Earlier versions remain intact. PUBLISHED only in the C1 test database;
+repeat import writes nothing. All 104,817 pre-existing rows across
+70 tables, including work/access/progress, are preserved. Source book,
+all 830 copied files and eight Downloads archives remain unchanged.
+No push/deploy or production writes; maths4u.sbs untouched.
+Next chapter Measures of variation not started.
+
+Report: [ARENA-9709-S1-CENTRAL-TENDENCY-REPORT-20261108.md](ARENA-9709-S1-CENTRAL-TENDENCY-REPORT-20261108.md).
