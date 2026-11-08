@@ -1304,3 +1304,23 @@ are preserved. No push/deploy or production writes; maths4u.sbs untouched.
 Next chapter Differentiation not started.
 
 Report: [ARENA-9709-P1-BINOMIAL-EXPANSION-REPORT-20261108.md](ARENA-9709-P1-BINOMIAL-EXPANSION-REPORT-20261108.md).
+
+## 9709 P1 — Differentiation teaching chapter (2026-11-08)
+
+Local package 9709-p1-differentiation 1.0.1 retains the five existing lesson
+IDs/URLs. Book chapters 7 and 8 inform independently written notes,
+20 worked examples, 40 complete-answer/MCQ checks and fresh-variant review.
+The owner bank adds 50 main written tasks and 150 variants, with answers,
+marks and criteria unchanged. 228 SVG placements use 212 immutable files
+(28 statement and 200 solution placements); six existing independent
+teaching vectors are reused. Complete derivatives, full tangent/normal
+equations, all coordinate sets, strict domains, signed connected rates
+and feasible/global bounds are checked. Fractional-power derivatives use
+an explicit reduced-ratio representation in u=sqrt(x) after differentiating
+in x. Typography is revised through new immutable versions, retaining 1.0.0.
+PUBLISHED only in the C1 test database; repeat import writes nothing.
+All 92,454 pre-existing rows across 70 tables, including work/access/progress,
+are preserved. No push/deploy or production writes; maths4u.sbs untouched.
+Next chapter Integration not started.
+
+Report: [ARENA-9709-P1-DIFFERENTIATION-REPORT-20261108.md](ARENA-9709-P1-DIFFERENTIATION-REPORT-20261108.md).
