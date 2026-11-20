@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { connection } from "next/server";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { cookies } from 'next/headers';
 import { COOKIE } from './security';
 import { resolveRequestView } from './view-lens';
@@ -9,8 +10,10 @@ import { archiveAdmin } from './content-access';
 import { archiveLessonNavigation } from './course-tree';
 import { unallocatedChapter } from './course-tree-plan';
 import { topicContent } from './catalog';
-import { furtherPublic,furtherMetadata,furtherCourseName,learningStructuredData,safeJsonLd } from './further-public';
+import { arenaOrigin, publicChapters, chapterMetadata, matchPublicChapter, furtherCourseName, learningStructuredData, safeJsonLd } from './public-chapters';
 import { Platform } from "@/components/platform";
+import { StudyRevision } from "@/components/study-revision";
+import { quadraticsRevision } from "./quadratics-study";
 import type { DiscoveryProps } from "@/components/discovery-home";
 import { publicDiscovery } from "./discovery";
 import { learningDirections, type DiscoveryData } from "./discovery-model";
@@ -26,7 +29,11 @@ import { publicCourses, publicQuestions, publicTopic } from "./public-page-data"
 import type { PublicPageData } from "./public-page-model";
 import type { Locale } from "./locale";
 export type PageProps = { params: Promise<{ page?: string[] }>; searchParams: Promise<Record<string, string | string[] | undefined>> };
-const origin = "https://arena.maths4u.sbs";
+const topicAtPath = cache(async (lessonId: string, path: string) => {
+  const topic = await publicLearningTopic(lessonId);
+  if (topic?.packageKey === "9709-p1-quadratics" && topic.path !== path) notFound();
+  return topic;
+});
 function discoveryRoute(parts: string[]): Omit<DiscoveryProps, "data"> | null {
   if (!parts.length) return { view: "home" };
   if (parts.length === 1 && parts[0] === "search") return { view: "search" };
@@ -41,16 +48,20 @@ export async function pageMetadata({ params,searchParams }: PageProps, locale: L
   await connection();
   const available = await publicLanguages(), translated = hasRussianPage(path, available);
   if (locale === "ru" && !translated) notFound();
-  const canonical = origin + (locale === "ru" ? "/ru" : "") + (path === "/" ? "/" : path);
-  const alternates = { canonical, ...(translated ? { languages: { en: origin + path, ru: origin + "/ru" + path } } : {}) };
-  const discovery = discoveryRoute(parts), topic = parts[0]==="courses"&&parts[2]==="topics"?await publicLearningTopic(parts[3]):undefined;
+  const chapters = locale === "en" ? await publicChapters() : [];
+  const chapter = matchPublicChapter(chapters, path, query.chapter);
+  const canonical = arenaOrigin + (locale === "ru" ? "/ru" : "") + (chapter?.chapterPath ?? path);
+  const alternates = { canonical, ...(translated && (!chapter || chapter.chapterPath === path) ? { languages: { en: arenaOrigin + path, ru: arenaOrigin + "/ru" + path } } : {}) };
+  const discovery = discoveryRoute(parts), topic = parts[0]==="courses"&&parts[2]==="topics"&&parts[3]?await topicAtPath(parts[3],path):undefined;
   const data = await publicDiscovery(locale), item = data.items.find(i => i.href === (locale === "ru" ? "/ru" : "") + path);
-  const further=locale==='en'?await furtherPublic():[],chapter=further.find(ch=>ch.chapterPath===path),lessonChapter=further.find(ch=>ch.lessons.some(l=>l.path===path)),specific=chapter?furtherMetadata(chapter):lessonChapter?furtherMetadata(lessonChapter,lessonChapter.lessons.find(l=>l.path===path)):null;
+  const lessonChapter = chapters.find(ch => ch.lessons.some(l => l.path === path));
+  const specific = chapter ? chapterMetadata(chapter) : lessonChapter ? chapterMetadata(lessonChapter, lessonChapter.lessons.find(l => l.path === path)) : null;
+  const further = chapters.filter(ch => ch.courseCode === "9231");
   const direction = learningDirections.find(d => d.key === discovery?.direction);
   const title = topic ? topic.title : item ? (locale === "ru" ? item.ru : item.title) : direction ? locale === "ru" ? direction.ru : direction.title : path === "/library" ? "Practice" : path === "/courses" ? "Mathematics courses" : path === "/search" ? "Search courses and topics" : path === "/for-teachers" ? "Maths teaching tools" : "Learn mathematics, practise and prepare for exams";
   const description = topic?.summary ?? (direction ? locale === "ru" ? direction.descriptionRu : direction.description : locale === "ru" ? "Конспекты, задачи и решения по теме «" + title + "» на Maths4U." : "Explore " + title + " and its available practice questions on Maths4U.");
   const course=further.find(ch=>path==='/courses/'+ch.courseSlug),finalTitle=specific?.title??(course?'9231 '+furtherCourseName(course.courseTitle)+' notes & practice | Maths4U':path==='/'&&further.length?'9231 Further Mathematics: notes, examples & practice | Maths4U':title+' | Maths4U'),finalDescription=specific?.description??(course?'Study 9231 '+furtherCourseName(course.courseTitle)+' with notes, worked examples, quick checks and exam-style questions with solutions.':description);
-  return { title: finalTitle, description:finalDescription, alternates, ...(path === "/search" || process.env.MATHS4U_ENV !== "production" ? { robots: { index: false, follow: true } } : {}), openGraph: { title:finalTitle, description:finalDescription, url: canonical, siteName: "Maths4U", type: "website" } };
+  return { title: finalTitle, description:finalDescription, alternates, ...(path === "/search" || query.view === "revision" || process.env.MATHS4U_ENV !== "production" ? { robots: { index: false, follow: true } } : {}), openGraph: { title:finalTitle, description:finalDescription, url: canonical, siteName: "Maths4U", type: "website" } };
 }
 async function privateArchivePage(parts:string[],search:Record<string,string>){
   // Authenticate only private archive routes; public language/theme stay cookie-free.
@@ -78,13 +89,22 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   const pair = translated ? { en: path, ru: "/ru" + path } : undefined;
   const raw = await searchParams, search = Object.fromEntries(Object.entries(raw).filter((e): e is [string, string] => typeof e[1] === "string"));
   if(search.source||search.taskId||search.legacyLesson||parts[0]==='courses'&&parts[2]==='topics'&&unallocatedChapter(parts[3]??''))return privateArchivePage(parts,search);
-  const packaged=parts[0]==="courses"&&parts[2]==="topics"?await publicLearningTopic(parts[3]):undefined;
-  const further=locale==='en'?await furtherPublic():[],chapterPage=further.find(ch=>ch.chapterPath===path),lessonChapter=further.find(ch=>ch.lessons.some(l=>l.path===path));
+  const packaged=parts[0]==="courses"&&parts[2]==="topics"&&parts[3]?await topicAtPath(parts[3],path):undefined;
+  const chapters = locale === "en" ? await publicChapters() : [];
+  const chapterPage = matchPublicChapter(chapters, path, raw.chapter);
+  if (chapterPage && path !== chapterPage.chapterPath && Object.keys(raw).length === 1) permanentRedirect(chapterPage.chapterPath);
+  const lessonChapter = chapters.find(ch => ch.lessons.some(l => l.path === path));
   if(parts[0]==='courses'&&parts[2]==='chapters'&&!chapterPage)notFound();
   const structured=chapterPage?learningStructuredData(chapterPage):lessonChapter?learningStructuredData(lessonChapter,lessonChapter.lessons.find(l=>l.path===path)):null;
   const schema=structured?<script type="application/ld+json" dangerouslySetInnerHTML={{__html:safeJsonLd(structured)}}/>:null;
   const previous = quadraticTopics.find(t => t.path === path);
   const previousRequested=previous&&(search.practice==="previous"||!!search.item&&questionsForTopic(previous.key).some(q=>q.id===search.item));
+  if (search.view === "revision" && locale === "en" && packaged?.path === path && packaged.packageKey === "9709-p1-quadratics") {
+    await assertLessonVisible(null, packaged.lessonId);
+    const revision = quadraticsRevision(packaged.lessonId);
+    if (!revision) notFound();
+    return <StudyRevision title={packaged.title} revision={revision} path={path} />;
+  }
   const topic = previousRequested?previous:(packaged?.path===path?packaged:previous), oldPractice = !!search.reviewTask || ["MC", "SHORT", "WRITTEN", "NOTES"].includes(search.mode);
   if (topic && search.view !== "legacy" && !oldPractice) { await assertLessonVisible(null,topic.lessonId); const visible=await visibleSquareMappings(null,topic); const lesson=squarePublicLesson(topic); lesson.questions=lesson.questions.filter(q=>visible.has(q.uid)); return <>{schema}<Platform square={lesson} languagePair={pair} /></>; }
   const discovery = discoveryRoute(parts);
@@ -94,7 +114,13 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
     return <Platform languagePair={pair} discovery={{ ...discovery, data, query: (search.q ?? "").slice(0, 120) }} />;
   }
   const initial: PublicPageData = { filters: search, chapter: search.chapter ?? "" };
-  if(chapterPage){initial.chapter=chapterPage.chapterId;initial.chapterTitle=chapterPage.chapterTitle;}
+  if(chapterPage){
+    initial.chapter=chapterPage.chapterId;initial.chapterTitle=chapterPage.chapterTitle;
+    if (chapterPage.key === "9709-p1-quadratics") {
+      initial.chapterSummary = chapterMetadata(chapterPage).description;
+      initial.lessonObjectives = Object.fromEntries(chapterPage.lessons.map(l => [l.id, l.objective]));
+    }
+  }
   if (parts[0] === "courses" && parts[2] === "topics" && parts[3]) {
     try{initial.topic = await publicTopic(locale, parts[3]);}
     catch(e){if(e instanceof AppError&&e.status===404)return privateArchivePage(parts,search);throw e;}

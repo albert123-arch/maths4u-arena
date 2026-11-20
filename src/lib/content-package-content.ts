@@ -47,6 +47,11 @@ export const contentPackages: ContentPackage[] = [contentPackageSchema.parse(roo
 export function contentPackage(key:string) {
   const p=contentPackages.find(p=>p.key===key);if(!p)throw Error("UNKNOWN_CONTENT_PACKAGE");return p;
 }
+export function publicChapterPath(p: ContentPackage) {
+  if (p.course.direction === "further" || p.key === "9709-p1-quadratics") {
+    return "/courses/" + p.course.slug + "/chapters/" + p.chapter.slug;
+  }
+}
 export function packageTopic(key:string):QuadraticTopic|undefined {
   for(const p of contentPackages){const l=p.lessons.find(l=>l.id===key);if(l)return {key:l.id,code:l.key,lessonId:l.id,
     title:l.title,summary:l.summary,version:p.version,sourceProject:"arena-package-"+p.key,
@@ -65,5 +70,5 @@ export function packageTeaching(topic:QuadraticTopic) {
   return {notes:'<h2>Objective</h2><p>'+l.objective+'</p><h3>Before you start</h3>'+l.before+'<h2>Key ideas</h2>'+l.ideas+'<h2>Method</h2>'+l.method+'<h3>Common mistakes</h3><ul>'+l.mistakes.map(m=>'<li>'+m+'</li>').join('')+'</ul>',
     examples:l.examples,
     navigation:{directionPath:"/learn/"+p.course.direction,directionTitle:p.course.direction==="further"?"Further Mathematics":"AS & A Level",coursePath:"/courses/"+p.course.slug,courseTitle:p.course.title,
-      chapterTitle:p.chapter.title,chapterPath:p.course.direction==="further"?"/courses/"+p.course.slug+"/chapters/"+p.chapter.slug:"/courses/"+p.course.slug+"?chapter="+p.chapter.id,topics:p.lessons.map(l=>({key:l.id,title:l.title,path:"/courses/"+p.course.slug+"/topics/"+l.id}))}};
+      chapterTitle:p.chapter.title,chapterPath:publicChapterPath(p)??"/courses/"+p.course.slug+"?chapter="+p.chapter.id,topics:p.lessons.map(l=>({key:l.id,title:l.title,path:"/courses/"+p.course.slug+"/topics/"+l.id}))}};
 }

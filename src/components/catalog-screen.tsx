@@ -95,11 +95,11 @@ export function CourseCatalogScreen({ slug, home = false, initial }: { slug?: st
   const count = (n: number) => n + " " + t("вопросов", "questions");
   const currentCourse = slug ? r.data?.[0] : undefined;
   const chapterLink = (c: NonNullable<typeof r.data>[number], ch: NonNullable<typeof r.data>[number]["chapters"][number], selectedId?: string) => <Link key={ch.id} href={prefix+(ch.path??("/courses/"+c.slug+"?chapter="+ch.id))} aria-current={selectedId === ch.id ? "page" : undefined} onClick={e => {
-    if (ch.path || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    if (ch.path || initial?.chapterTitle || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
     e.preventDefault(); setChapter(ch.id); history.replaceState(null, "", prefix + "/courses/" + c.slug + "?chapter=" + ch.id);
     const disclosure = e.currentTarget.closest("details"); if (disclosure) { disclosure.open = false; disclosure.querySelector("summary")?.focus({ preventScroll: true }); }
   }}><span>{ch.title}</span><small>{count(ch.count)}</small></Link>;
-  return <><Heading title={initial?.chapterTitle??currentCourse?.title ?? (home && actor ? t("Мои курсы", "My courses") : t("Курсы математики", "Mathematics courses"))} subtitle={currentCourse ? programName(currentCourse.slug, lang === "ru") + " · " + count(currentCourse.count) : t("Выберите программу, главу и тему.", "Choose a programme, chapter and topic.")}>
+  return <><Heading title={initial?.chapterTitle??currentCourse?.title ?? (home && actor ? t("Мои курсы", "My courses") : t("Курсы математики", "Mathematics courses"))} subtitle={initial?.chapterSummary ?? (currentCourse ? programName(currentCourse.slug, lang === "ru") + " · " + count(currentCourse.count) : t("Выберите программу, главу и тему.", "Choose a programme, chapter and topic."))}>
     {currentCourse?.original && <span className="badge course-origin">Maths4U Original</span>}
     {actor && !slug && <ButtonLink href={home ? "/courses" : "/"}>{home ? t("Выбрать курсы", "Choose courses") : t("Мои курсы", "My courses")}</ButtonLink>}
     {home && actor && <ButtonLink href={teacher ? "/teacher" : "/student"}>{t("Мой кабинет", "My dashboard")} →</ButtonLink>}
@@ -117,10 +117,10 @@ export function CourseCatalogScreen({ slug, home = false, initial }: { slug?: st
       return <div key={c.id}>{follow(c)}{lang === "ru" && c.description && <p className="muted course-description">{c.description}</p>}{c.locked ? <p className="catalog-guest-note">{t("Для этого курса нужен доступ.", "This course requires access.")}</p> : <div className="course-study-layout">
         <nav className="card chapter-navigation" aria-label={t("Главы курса", "Course chapters")}><h2>{t("Главы", "Chapters")}</h2>{c.chapters.map(ch => chapterLink(c, ch, selected?.id))}</nav>
         <details className="chapter-mobile"><summary>{t("Глава", "Chapter")} · {selected?.title} ({selectedIndex + 1} {t("из", "of")} {c.chapters.length})<span aria-hidden="true">▾</span></summary><nav aria-label={t("Выбрать главу", "Choose a chapter")}>{c.chapters.map(ch => chapterLink(c, ch, selected?.id))}</nav></details>
-        <section className="card chapter-topics"><h2>{selected?.title}</h2><p className="muted">{t("Откройте тему или выберите практику.", "Open a topic or choose your practice.")}</p>
+        <section className="card chapter-topics"><h2>{initial?.chapterSummary ? "Lessons in this chapter" : selected?.title}</h2><p className="muted">{t("Откройте тему или выберите практику.", "Open a topic or choose your practice.")}</p>
           {!selected?.topics.length && <Empty />}{selected?.topics.map(topic => {
             const href = prefix + "/courses/" + c.slug + "/topics/" + topic.id;
-            return <article className="item topic-entry" key={topic.id}><h3><Link href={href}>{topic.title} →</Link></h3><div className="topic-shortcuts"><Link href={href}>{t("Конспект и примеры", "Notes & examples")}</Link>
+            return <article className="item topic-entry" key={topic.id}><h3><Link href={href}>{topic.title} →</Link></h3>{initial?.lessonObjectives?.[topic.id] && <p>{initial.lessonObjectives[topic.id]}</p>}<div className="topic-shortcuts"><Link href={href}>{t("Конспект и примеры", "Notes & examples")}</Link>
               {topic.questionCounts.MC > 0 && <Link href={href + "?mode=MC"}>{t("Выбор ответа", "Multiple choice")} · {topic.questionCounts.MC}</Link>}
               {topic.questionCounts.SHORT > 0 && <Link href={href + "?mode=SHORT"}>{t("Короткий ответ", "Short answer")} · {topic.questionCounts.SHORT}</Link>}
               {topic.questionCounts.WRITTEN > 0 && <Link href={href + "?mode=WRITTEN"}>{selected.writtenLabel === "exam-style" ? t("Авторские задачи", "Exam-style") : selected.writtenLabel === "exam" ? t("Экзаменационные задачи", "Exam questions") : t("Письменные задачи", "Written problems")} · {topic.questionCounts.WRITTEN}</Link>}

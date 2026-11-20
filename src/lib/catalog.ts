@@ -11,7 +11,7 @@ import { displayMarkup, displayTitle } from "./public-presentation";
 import { publicLanguages } from "./public-language";
 import { archiveWhere, archiveAdmin, assertLessonVisible, visibleCourseWhere, visibleLessonWhere, approvedWhere } from "./content-access";
 import { archiveLessonNavigation, archiveRelated, courseTreeOverlay } from './course-tree';
-import { furtherPublic } from './further-public';
+import { publicChapters as publishedChapters } from './public-chapters';
 import { unallocatedChapter, unallocatedId } from './course-tree-plan';
 import { canUseTeacherLibrary } from "./teacher-account";
 import { quadraticsStudy } from "./quadratics-study";
@@ -125,7 +125,7 @@ export type CatalogDto = Awaited<ReturnType<typeof catalog>>;
 export async function courseCatalog(actor: Actor | null, lang: string, slug?: string, strictLocale = false, archiveView=false) {
   ensure(!archiveView||archiveAdmin(actor),403,"FORBIDDEN");
   const permission = await taskPermission(actor);
-  const overlay=await courseTreeOverlay(actor),publicChapters=await furtherPublic();
+  const overlay=await courseTreeOverlay(actor),publicChapters=await publishedChapters();
   const follows = actor ? await db().courseFollow.findMany({ where: { userId: actor.id }, select: { courseId: true } }) : [];
   const progress = actor ? await latestPracticeProgress(actor.id) : [];
   const modeRows = await db().$queryRaw<{ lessonId: string; taskId: string; mode: PracticeMode; original: number; category: string;origin:string }[]>(Prisma.sql`SELECT lt.lessonId, t.origin, t.id AS taskId, ${modeSql} AS mode, ${categorySql} AS category, EXISTS(SELECT 1 FROM Source os WHERE os.id=v.sourceId AND os.name LIKE 'Maths4U Original%') AS original ${fromSql}

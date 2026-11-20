@@ -1,25 +1,83 @@
 import {test,expect,request} from '@playwright/test';
 import fs from 'node:fs/promises';
 import pack from '../../content/original/9709-p1/quadratics-v1.json';
+import study from '../../content/original/9709-p1/quadratics-study.json';
 
 const base='http://127.0.0.1:3109',out='.local/p1-quadratics-20261108/screenshots';
-const revisedExamples: Record<string,number> = { equations:7, square:10, discriminant:11, inequalities:11, simultaneous:9 };
 test.beforeAll(async()=>{await fs.mkdir(out,{recursive:true});});
+test('Quadratics is linked from the course and all five lessons are readable without JavaScript', async ({browser}) => {
+  const context = await browser.newContext({baseURL:base, javaScriptEnabled:false, viewport:{width:390,height:850}});
+  const course = '/courses/' + pack.course.slug, chapter = course + '/chapters/' + pack.chapter.slug;
+  const origin = 'https://arena.maths4u.sbs';
+  try {
+    const page = await context.newPage();
+    await page.goto(course);
+    expect(await page.locator('a[href="' + chapter + '"]').count()).toBeGreaterThan(0);
+    await page.goto(course + '?chapter=' + pack.chapter.id);
+    await expect(page).toHaveURL(base + chapter);
+    await expect(page.locator('h1')).toHaveText(pack.chapter.title);
+    await expect(page.locator('.chapter-topics article h3 a')).toHaveCount(pack.lessons.length);
+    const sitemap = await (await context.request.get('/sitemap.xml')).text();
+    for (const path of [chapter, ...pack.lessons.map(l => course + '/topics/' + l.id)]) {
+      const address = origin + path;
+      expect(sitemap.split('<loc>' + address + '</loc>')).toHaveLength(2);
+      expect(sitemap).not.toContain(address + '?');
+      await page.goto(path);
+      await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href',address);
+      await expect(page).toHaveTitle(/9709 Pure 1/);
+      const graph = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() ?? '[]');
+      expect(graph[0].itemListElement.at(-1).item).toBe(address);
+      expect(graph[1].url).toBe(address);
+      expect(graph[1].description).toBe(await page.locator('meta[name=description]').getAttribute('content'));
+      expect(sitemap).toContain('<lastmod>' + graph[1].dateModified + '</lastmod>');
+      const lesson = pack.lessons.find(l => path.endsWith('/' + l.id));
+      if (lesson) {
+        const content = study[lesson.id as keyof typeof study];
+        await expect(page.locator('#notes section h2')).toHaveText(content.sections.map(s => s.title));
+        const count = content.examples.reduce((total, e) => total + e.solution.length, 0);
+        await expect(page.locator('#notes article ol[id$="-steps"] > li:visible')).toHaveCount(count);
+      }
+    }
+    const printed = course + '/topics/' + pack.lessons[0].id;
+    await page.goto(printed + '?view=revision');
+    await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href',origin + printed);
+    await expect(page.locator('meta[name=robots]')).toHaveAttribute('content',/noindex/);
+    for (const duplicate of [printed + '/extra', printed.replace('9709-p1','9709-s1')]) {
+      expect((await context.request.get(duplicate)).status()).toBe(404);
+    }
+  } finally { await context.close(); }
+});
+test('the first available worked-step control responds even when scripts load slowly', async ({page}) => {
+  let releaseScripts!: () => void;
+  const gate = new Promise<void>(resolve => { releaseScripts = resolve; });
+  await page.route(/\/_next\/static\/chunks\/.*\.js(?:\?|$)/, async route => { await gate; await route.continue(); });
+  const example = page.locator('#factorise article').last();
+  const next = example.locator('button').first();
+  try {
+    await page.goto(base+'/courses/'+pack.course.slug+'/topics/orig_quadratics_factorisation',{waitUntil:'commit'});
+    await expect(example.locator('h3')).toBeVisible();
+    await expect(next).toHaveText('Show next step');
+    await expect(next).toBeHidden();
+  } finally { releaseScripts(); }
+  await next.click();
+  await expect(example.locator('ol > li:visible')).toHaveCount(2);
+});
 test('five public lessons: desktop and mobile notes, mathematical layout and main-only lists',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   for(const l of pack.lessons)for(const width of [1280,390]){
     await page.setViewportSize({width,height:900});
     await page.goto(base+'/courses/'+pack.course.slug+'/topics/'+l.id);
     await expect(page.getByRole('heading',{name:l.title,exact:true})).toBeVisible();
-    await expect(page.locator('#examples .square-example')).toHaveCount(revisedExamples[l.key]??4);
-    if(revisedExamples[l.key])await expect(page.locator('#notes h2')).toHaveCount(6);
+    const authored=study[l.id as keyof typeof study];
+    await expect(page.locator('#examples li a')).toHaveCount(authored.examples.length);
+    await expect(page.locator('#notes section h2')).toHaveText(authored.sections.map(section=>section.title));
+    await expect(page.locator('[data-study-check]')).toHaveCount(authored.sections.flatMap(s=>s.blocks.filter(b=>b.kind==='check')).length);
     await expect(page.locator('.katex-error')).toHaveCount(0);
     await expect(page.locator('#challenge .square-challenges button')).toHaveCount(pack.questions.filter(q=>q.lesson===l.key&&q.collection==='exam'&&q.variant_index===0).length);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+1);
     if(l.key==='simultaneous'&&width===390){
       await page.evaluate(()=>document.fonts.ready);
-      for(const solution of await page.locator('#examples summary').all())await solution.click();
-      const displays=page.locator('#notes .katex-display,#examples .katex-display');
+      const displays=page.locator('#notes .katex-display:visible');
       expect(await displays.evaluateAll(nodes=>nodes.filter(node=>node.scrollWidth>node.clientWidth+5).map(node=>node.textContent))).toEqual([]);
     }
     await page.screenshot({path:out+'/'+l.key+'-'+width+'.png',fullPage:true});
@@ -30,16 +88,44 @@ test('five public lessons: desktop and mobile notes, mathematical layout and mai
 test('guest full-root checking, fresh review and draft persistence',async({page})=>{
   const path='/courses/'+pack.course.slug+'/topics/orig_quadratics_factorisation';
   await page.goto(base+path);
-  const field=page.getByRole('textbox',{name:'All real roots',exact:true});
+  const field=page.locator('#practice').getByRole('textbox',{name:'All real roots',exact:true});
   await field.fill('0');await page.getByRole('button',{name:'Check answer',exact:true}).click();
   await expect(page.locator('.square-result')).toContainText('Look at the fields');
   await page.getByRole('button',{name:'Review with a fresh variant →',exact:true}).click();
   expect(new URL(page.url()).searchParams.get('item')).toBe('M4U-9709-P1-QD-CHECK-EQUATIONS-1-1');
-  await page.getByRole('textbox',{name:'All real roots',exact:true}).fill('{-3,0}');
+  await field.fill('x = 0 or x = -3');
   await page.getByRole('button',{name:'Check answer',exact:true}).click();
   await expect(page.locator('.square-result')).toContainText('All final answers are correct');
-  await page.reload();await expect(page.getByRole('textbox',{name:'All real roots',exact:true})).toHaveValue('{-3,0}');
+  await page.reload();await expect(field).toHaveValue('x = 0 or x = -3');
   await expect(page.locator('#review')).toContainText('Return after a break');
+});
+
+test('lesson steps, mobile contents and formative feedback',async({page})=>{
+  const path='/courses/'+pack.course.slug+'/topics/orig_quadratics_factorisation';
+  await page.setViewportSize({width:390,height:850});
+  await page.goto(base+path);
+  const contents=page.locator('#notes aside > details');
+  await contents.locator('summary').first().click();
+  await contents.getByRole('link',{name:'Factorise and find the roots',exact:false}).click();
+  await expect(page).toHaveURL(/#factorise$/);
+  const example=page.locator('#factorise article').last();
+  await expect(example.locator('ol>li:visible')).toHaveCount(1);
+  await example.getByRole('button',{name:'Show next step'}).click();
+  await expect(example.locator('ol>li:visible')).toHaveCount(2);
+  await example.getByRole('button',{name:'Show all steps'}).click();
+  await expect(example.locator('ol>li:visible')).toHaveCount(study.orig_quadratics_factorisation.examples[0].solution.length);
+  const check=page.locator('[data-study-check="monic-roots"]');
+  const answer=check.getByRole('textbox');
+  await answer.fill('x = 3');
+  await check.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(check.locator('[data-status=retry]')).toContainText('another root');
+  await answer.fill('x = −5 or x = 3');
+  await check.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(check.locator('[data-status=correct]')).toContainText('Correct');
+  await expect(page.locator('#review')).toContainText('Your review plan starts after your first check');
+  await page.locator('#review').getByRole('link',{name:'Quick revision sheet (A4)'}).click();
+  await expect(page.getByRole('button',{name:'Print / Save as PDF'})).toBeVisible();
+  await expect(page.locator('head link[rel=canonical]')).toHaveAttribute('href','https://arena.maths4u.sbs'+path);
 });
 
 test('exam marks, all numerical variants and protected vector solutions',async({page})=>{

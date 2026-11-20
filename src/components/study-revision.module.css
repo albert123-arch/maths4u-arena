@@ -1,0 +1,59 @@
+.revisionPage { max-width: 880px; margin: 0 auto; padding: var(--sp-4); }
+.toolbar { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+.sheet {
+  background: var(--c-document-page);
+  color: #172033;
+  color-scheme: light;
+  --line: #dce3ee;
+  padding: clamp(var(--sp-4), 4vw, var(--sp-6));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+.heading { border-bottom: 2px solid #12306b; padding-bottom: var(--sp-3); margin-bottom: var(--sp-4); }
+.heading p { color: #2457d6; font-weight: 650; margin: 0 0 var(--sp-1); font-size: var(--fs-small); }
+.heading h1 { margin: 0; }
+.sheet :global(.math-content) { font-size: var(--fs-small); line-height: var(--lh-compact); }
+.sheet :global(.math-content) h2 { margin: var(--sp-4) 0 var(--sp-2); font-size: var(--fs-h3); }
+.sheet :global(.math-content) :is(p, ul, ol) { margin-block: var(--sp-2); }
+.sheet :global(.math-content) img { display: block; width: min(100%, 23rem); height: auto; margin: 0 auto; }
+.sheet :global(.math-content) table { width: 100%; }
+.sheet :global(.math-content) th { text-align: left; background: #eef2f8; }
+.sheet :global(.math-content) :is(td,th) { padding: var(--sp-2); }
+.footer { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: var(--sp-2); margin-top: var(--sp-4); color: #5a6478; font-size: var(--fs-meta); }
+
+.sheet :global(.math-content) ul { list-style: disc; }
+.sheet :global(.math-content) ol { list-style: decimal; }
+.reminders { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); margin-top: var(--sp-4); }
+.reminders aside { min-width: 0; padding: var(--sp-3); border: 1px solid; border-radius: var(--radius-control); }
+.reminders h2 { margin: 0 0 var(--sp-1); font-size: var(--fs-body); }
+.reminders :global(.math-content) > :last-child { margin-bottom: 0; }
+.reminders .commonMistakes { border-color: #e6c390; background: #fff4e0; }
+.commonMistakes h2 { color: #7c2d12; }
+.reminders .examTip { border-color: #c7cdf9; background: #eef0ff; }
+.examTip h2 { color: #312e81; }
+@media screen and (max-width: 580px) {
+  .reminders { grid-template-columns: minmax(0, 1fr); }
+}
+
+@page arena-revision { size: A4; margin: 11mm 12mm; background: #fff; }
+@media print {
+  :global(html:root):has(.revisionPage), :global(body):has(.revisionPage) { background: #fff; color-scheme: only light; }
+  .revisionPage { max-width: none; margin: 0; padding: 0; }
+  .toolbar { display: none; }
+  .sheet { page: arena-revision; border: 0; border-radius: 0; padding: 0; background: white; }
+  .heading { margin-bottom: 3mm; padding-bottom: 2.5mm; }
+  .heading h1 { font-size: 20pt; line-height: 1.12; }
+  .heading p, .footer { font-size: 9pt; }
+  .sheet :global(.math-content) { font-size: 10.25pt; line-height: 1.32; overflow: visible; }
+  .sheet :global(.math-content) h2 { margin: 3.1mm 0 1.55mm; font-size: 12.5pt; break-after: avoid; }
+  .sheet :global(.math-content) :is(p, li, tr) { break-inside: avoid; }
+  .sheet :global(.math-content) :is(p, ul, ol) { margin-block: 1.55mm; }
+  .sheet :global(.math-content) :is(td, th) { padding: 0.95mm 1.5mm; min-width: 0; }
+  .sheet :global(.math-content) table { font-size: inherit; margin: 1.5mm 0; }
+  .sheet :global(.math-content) img { max-height: 45mm; width: auto; max-width: 100%; }
+  .sheet :global(.table-scroll) { overflow: visible; }
+  .reminders { margin-top: 3mm; gap: 2.5mm; break-inside: avoid; }
+  .reminders aside { padding: 2.5mm; }
+  .reminders h2 { font-size: 11pt; }
+  .footer { margin-top: 3mm; padding-top: 1.5mm; }
+}
