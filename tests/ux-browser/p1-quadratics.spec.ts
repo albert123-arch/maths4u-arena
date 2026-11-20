@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import pack from '../../content/original/9709-p1/quadratics-v1.json';
 
 const base='http://127.0.0.1:3109',out='.local/p1-quadratics-20261108/screenshots';
+const revisedExamples: Record<string,number> = { equations:7, square:10, discriminant:11 };
 test.beforeAll(async()=>{await fs.mkdir(out,{recursive:true});});
 test('five public lessons: desktop and mobile notes, mathematical layout and main-only lists',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
@@ -10,8 +11,8 @@ test('five public lessons: desktop and mobile notes, mathematical layout and mai
     await page.setViewportSize({width,height:900});
     await page.goto(base+'/courses/'+pack.course.slug+'/topics/'+l.id);
     await expect(page.getByRole('heading',{name:l.title,exact:true})).toBeVisible();
-    await expect(page.locator('#examples .square-example')).toHaveCount(l.key==='equations'?7:l.key==='square'?10:4);
-    if(l.key==='equations'||l.key==='square')await expect(page.locator('#notes h2')).toHaveCount(6);
+    await expect(page.locator('#examples .square-example')).toHaveCount(revisedExamples[l.key]??4);
+    if(revisedExamples[l.key])await expect(page.locator('#notes h2')).toHaveCount(6);
     await expect(page.locator('.katex-error')).toHaveCount(0);
     await expect(page.locator('#challenge .square-challenges button')).toHaveCount(pack.questions.filter(q=>q.lesson===l.key&&q.collection==='exam'&&q.variant_index===0).length);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+1);
