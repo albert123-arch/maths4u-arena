@@ -10,6 +10,7 @@ const lessonPath = coursePath + '/topics/orig_functions_inverse';
 const lessonUrl = base + lessonPath;
 const compositePath = coursePath + '/topics/orig_functions_composite';
 const restrictedPath = coursePath + '/topics/orig_functions_restricted_inverse';
+const graphsPath = coursePath + '/topics/orig_functions_inverse_graphs';
 test.beforeAll(async()=>{await fs.mkdir(out,{recursive:true});});
 test('Functions: all five public lessons at desktop and mobile widths',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -63,7 +64,7 @@ test('the new Functions lesson and canonical chapter are readable without JavaSc
       expect.objectContaining({'@type':['WebPage','LearningResource'],url:'https://arena.maths4u.sbs'+lessonPath}),
     ]));
     const sitemap = await (await ctx.request.get('/sitemap.xml')).text();
-    for (const path of [chapterPath, lessonPath, compositePath, restrictedPath]) {
+    for (const path of [chapterPath, lessonPath, compositePath, restrictedPath, graphsPath]) {
       expect(sitemap.split('<loc>https://arena.maths4u.sbs' + path + '</loc>')).toHaveLength(2);
     }
     expect(sitemap).not.toContain('?view=revision');
@@ -78,6 +79,12 @@ test('the new Functions lesson and canonical chapter are readable without JavaSc
     await expect(page.locator('#range-of-the-restriction header img')).toBeVisible();
     await expect(page.locator('#swap-domain-and-range table tbody tr')).toHaveCount(2);
     await expect(page.locator('#choose-the-inverse-sign article').first().locator('ol > li:visible')).toHaveCount(3);
+    await page.goto(graphsPath);
+    await expect(page).toHaveTitle('Graphs of functions and inverses | 9709 Pure 1 | Maths4U');
+    await expect(page.locator('head link[rel=canonical]')).toHaveAttribute('href','https://arena.maths4u.sbs'+graphsPath);
+    await expect(page.locator('#reflect-in-the-diagonal header img')).toBeVisible();
+    await expect(page.locator('#keep-endpoints table tbody tr')).toHaveCount(2);
+    await expect(page.locator('#fixed-points-on-the-mirror article ol > li:visible')).toHaveCount(3);
   } finally {
     await ctx.close();
   }
@@ -257,6 +264,65 @@ test('restricted inverse checks the branch, exact output bounds and fresh practi
   await expect(formula.locator('input[value="A"]')).toBeChecked();
   await expect(inputs).toHaveValue('x ≥ 13');
   await expect(outputs).toHaveValue('y ≥ 4');
+});
+
+test('inverse graphs reflect points, check included features and repeat a fresh practice variant', async ({page}) => {
+  await page.setViewportSize({width:390,height:860});
+  await page.emulateMedia({colorScheme:'dark'});
+  await page.goto(base + graphsPath + '#reflect-in-the-diagonal');
+  const chart = page.locator('#reflect-in-the-diagonal header img');
+  await expect(chart).toBeVisible();
+  await expect.poll(() => chart.evaluate((img:HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+  const worked = page.locator('#reflect-in-the-diagonal article');
+  await expect(worked.locator('ol > li:visible')).toHaveCount(1);
+  await worked.getByRole('button',{name:'Show next step'}).click();
+  await expect(worked.locator('ol > li:visible')).toHaveCount(2);
+
+  const reflected = page.locator('[data-study-check="reflect-every-point"]');
+  await reflected.getByRole('button',{name:'Hint',exact:true}).click();
+  await expect(reflected.getByText('within each pair',{exact:false})).toBeVisible();
+  await reflected.getByRole('textbox').fill('(2,−3),(5,1)');
+  await reflected.getByRole('textbox').press('Enter');
+  await expect(reflected.locator('[data-status=retry]')).toContainText('remaining point');
+  await reflected.getByRole('textbox').fill('(2,−3),(5,1),(9,4)');
+  await reflected.getByRole('textbox').press('Enter');
+  await expect(reflected.locator('[data-status=correct]')).toBeVisible();
+
+  const intercept = page.locator('[data-study-check="absent-inverse-intercept"]');
+  await intercept.getByRole('textbox').fill('(-12,0)');
+  await intercept.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(intercept.locator('[data-status=retry]')).toContainText('original range');
+  await intercept.getByRole('textbox').fill('empty');
+  await intercept.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(intercept.locator('[data-status=correct]')).toBeVisible();
+
+  const shared = page.locator('[data-study-check="shared-pairs-off-the-diagonal"]');
+  await shared.getByRole('textbox').fill('(5,5)');
+  await shared.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(shared.locator('[data-status=retry]')).toContainText('specifies inputs');
+  await shared.getByRole('textbox').fill('(3,7);(7,3)');
+  await shared.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(shared.locator('[data-status=correct]')).toBeVisible();
+  await expect(page.locator('.katex-error')).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(391);
+  await page.locator('#review').getByRole('link',{name:'Quick revision sheet (A4)'}).click();
+  await expect(page).toHaveURL(base + graphsPath + '?view=revision');
+  await expect(page.locator('meta[name=robots]')).toHaveAttribute('content',/noindex/);
+  await expect(page.getByRole('heading',{name:'Graphs of functions and inverses',exact:true})).toBeVisible();
+
+  await page.goto(base + graphsPath + '?item=M4U-9709-P1-FN-CHECK-GRAPHS-1-0#practice');
+  const practice = page.locator('#practice');
+  const points = practice.getByRole('textbox',{name:'All reflected points (x,y)',exact:true});
+  await points.fill('(4,1),(6,2)');
+  await practice.getByRole('button',{name:'Check answer',exact:true}).click();
+  await expect(practice.locator('.square-result')).toContainText('Look at the fields');
+  await page.locator('#review').getByRole('button',{name:'Review with a fresh variant →',exact:true}).click();
+  await expect(page).toHaveURL(/item=M4U-9709-P1-FN-CHECK-GRAPHS-1-1/);
+  await points.fill('(1,−2), (3,0), (7,4)');
+  await practice.getByRole('button',{name:'Check answer',exact:true}).click();
+  await expect(practice.locator('.square-result')).toContainText('All final answers are correct');
+  await page.reload();
+  await expect(points).toHaveValue('(1,−2), (3,0), (7,4)');
 });
 
 test('written variants and diagrams retain marks and help boundaries on mobile',async({page})=>{

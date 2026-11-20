@@ -17,6 +17,7 @@ const p=contentPackage('9709-p1-functions');
 const firstLesson = "orig_functions_inverse";
 const compositeLesson = "orig_functions_composite";
 const restrictedLesson = "orig_functions_restricted_inverse";
+const graphsLesson = "orig_functions_inverse_graphs";
 test('Functions reuses the five existing lessons and preserves all 200 authored written records',async()=>{
   assert.deepEqual(p.lessons.map(l=>l.id),['orig_functions_inverse','orig_functions_composite','orig_functions_restricted_inverse','orig_functions_inverse_graphs','orig_functions_transformations']);
   assert.equal(p.questions.length,240);assert.equal(p.questions.filter(q=>q.variant_index===0).length,50);
@@ -177,6 +178,42 @@ test("restricted inverse checks require the correct exact branch and attained en
   assert.equal(grade("right-branch-exact-inverse-value","5.236").status,"retry");
   assert.equal(grade("actual-domain-of-the-inverse","0 < x <=").status,"format");
   assert.equal(gradeStudyCheck(firstLesson,"right-branch-exact-inverse-value","3+√5"),undefined);
+});
+
+test("inverse graph checks preserve coordinates, missing intercepts and all common points", () => {
+  const grade = (id: string, answer: string) => gradeStudyCheck(graphsLesson,id,answer)!;
+  for (const [id,answers] of [
+    ["reflect-every-point", ["(2,−3), (5,1), (9,4)","(9,4); (2,-3); (5,1)"]],
+    ["open-endpoint-reflected", ["(4,2)","x = 4, y = 2"]],
+    ["domain-from-reflected-endpoints", ["4 < x ≤ 10","(4,10]"]],
+    ["included-inverse-intercept", ["(0,4)","x = 0, y = 4"]],
+    ["absent-inverse-intercept", ["empty","none","∅"]],
+    ["inverse-vertical-asymptote", ["−2","x=−2"]],
+    ["inverse-horizontal-asymptote", ["4","y=4"]],
+    ["all-increasing-intersections", ["(3,3), (7,7)","(7,7);(3,3)"]],
+    ["intersection-after-endpoint-removed", ["(7,7)","x=7, y=7"]],
+    ["shared-pairs-off-the-diagonal", ["(3,7); (7,3)","(7,3), (3,7)"]],
+    ["mirror-point-on-shared-line", ["(5,5)"]],
+    ["decreasing-graphs-one-intersection", ["(3,3)"]],
+  ] as const) {
+    for (const answer of answers) assert.equal(grade(id,answer).status,"correct",id + " / " + answer);
+  }
+  for (const [id,answer,hint] of [
+    ["reflect-every-point","(2,-3),(5,1)",/remaining point/],
+    ["open-endpoint-reflected","(2,4)",/original open boundary/],
+    ["domain-from-reflected-endpoints","[4,10]",/hollow/],
+    ["absent-inverse-intercept","(-12,0)",/original range/],
+    ["inverse-vertical-asymptote","x=4",/original horizontal line/],
+    ["all-increasing-intersections","(7,7)",/includes the vertex/],
+    ["intersection-after-endpoint-removed","(3,3),(7,7)",/restriction removes/],
+    ["shared-pairs-off-the-diagonal","(5,5)",/specifies inputs/],
+  ] as const) {
+    const result = grade(id,answer);
+    assert.equal(result.status,"retry",id);
+    assert.match(result.feedback,hint);
+  }
+  assert.equal(grade("reflect-every-point","(2,-3),(5,)").status,"format");
+  assert.equal(gradeStudyCheck(restrictedLesson,"reflect-every-point","(2,-3);(5,1);(9,4)"),undefined);
 });
 
 test('fractional answers accept equivalent whole ratios and interval checks respect both endpoints',()=>{
