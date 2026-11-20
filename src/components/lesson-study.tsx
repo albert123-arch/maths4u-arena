@@ -12,7 +12,8 @@ import type { SquareExample, SquareLesson } from "@/lib/square-model";
 import type { StudyBlock, StudyCheck, StudyCheckResult, StudyLesson, StudySection } from "@/lib/study-lesson-model";
 import styles from "./lesson-study.module.css";
 
-const level = (section: StudySection) => section.level === "core" ? "Core" : "Further applications";
+const levelNames = { core: "Core", further: "Further applications", extension: "Extension" };
+const level = (section: StudySection) => levelNames[section.level];
 const sectionInfo = (section: StudySection) => level(section) + " · about " + section.minutes + " min";
 const exampleAnchor = (index: number) => "worked-example-" + (index + 1);
 const subscribeToHydration = () => () => {};
@@ -23,6 +24,11 @@ export function LessonStudy({ lesson, study, activeId, children }: {
   const { sections, glossary, related } = study;
   const interactive = useSyncExternalStore(subscribeToHydration, () => true, () => false);
   const selected = Math.max(0, sections.findIndex(section => section.id === activeId));
+  const totalMinutes = sections.reduce((sum, section) => sum + section.minutes, 0);
+  const extensionMinutes = sections.reduce((sum, section) => sum + (section.level === "extension" ? section.minutes : 0), 0);
+  const duration = extensionMinutes
+    ? (totalMinutes - extensionMinutes) + " min Core + " + extensionMinutes + " min Extension"
+    : "About " + totalMinutes + " min";
   const revision = lesson.topic.path + "?view=revision";
   const revisionLink = <ButtonLink href={revision} className={styles.revisionLink}>Quick revision sheet (A4)</ButtonLink>;
   function contents() {
@@ -49,7 +55,7 @@ export function LessonStudy({ lesson, study, activeId, children }: {
     <aside className={styles.sidebar}>
       <div className={styles.desktopContents}>
         <div className={"card " + styles.sidebarCard}>
-          <div className={styles.contentsHeading}><strong>In this lesson</strong><span>About {sections.reduce((time, section) => time + section.minutes, 0)} min</span></div>
+          <div className={styles.contentsHeading}><strong>In this lesson</strong><span>{duration}</span></div>
           {contents()}
           {revisionLink}
         </div>
@@ -57,6 +63,7 @@ export function LessonStudy({ lesson, study, activeId, children }: {
       </div>
       <details className={styles.mobileContents}>
         <summary>Section {selected + 1} of {sections.length} · {sectionInfo(sections[selected])}</summary>
+        {extensionMinutes > 0 && <p>{duration}</p>}
         {contents()}
         <details className={styles.mobileGlossary}><summary>Key words</summary>{words}</details>
         {revisionLink}
@@ -83,7 +90,10 @@ export function LessonStudy({ lesson, study, activeId, children }: {
           ) : null}
           <nav aria-label={section.label + " navigation"} className={styles.sectionNavigation}>
             {previous && <a className="ui-button ui-button--outline" href={"#" + previous.id}>← {previous.label}</a>}
-            <a className="ui-button ui-button--primary" href={next ? "#" + next.id : "#practice"}>{next ? "Next · " + next.label + " →" : "Go to practice →"}</a>
+            {next?.level === "extension" && <a className="ui-button ui-button--outline" href={"#" + next.id}>Extension · {next.label} →</a>}
+            {next && next.level !== "extension"
+              ? <a className="ui-button ui-button--primary" href={"#" + next.id}>Next · {next.label} →</a>
+              : <a className="ui-button ui-button--primary" href="#practice">Go to practice →</a>}
           </nav>
         </section>;
       })}

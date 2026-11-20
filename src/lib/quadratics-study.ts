@@ -1,6 +1,6 @@
 import source from "../../content/original/9709-p1/quadratics-study.json";
 import { renderContent } from "./content";
-import { checkExact, type ExactField } from "./exact-answer";
+import { checkExact, AnswerVariableError, type ExactField } from "./exact-answer";
 import { answerFormat } from "./square-presentation";
 import type { StudyBlock, StudyCheck, StudyCheckResult, StudyLesson, StudySection } from "./study-lesson-model";
 
@@ -99,7 +99,8 @@ export function gradeQuadraticsStudyCheck(lessonId: string, id: string, answer: 
   const field = block.field;
   try {
     if (checkExact(field, answer)) return { status: "correct", feedback: renderContent(block.solution) };
-  } catch {
+  } catch (error) {
+    if (error instanceof AnswerVariableError) return { status: "retry", feedback: renderContent("<p>" + error.message + "</p>") };
     return { status: "format", feedback: renderContent("<p>" + answerFormat(field).en + "</p>") };
   }
 

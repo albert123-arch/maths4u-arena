@@ -2,13 +2,14 @@
 import extension from "../../content/original/quadratics-extension-20261105-v1.json";
 import { quadraticsTeaching } from "./quadratics-notes";
 import pack from "../../content/original/completing-square-20261105-v1.json";
-import { checkExact, isExpandedPolynomial, type ExactField } from "./exact-answer";
+import { checkExact, isExpandedPolynomial, scalarAnswerValue, AnswerVariableError, type ExactField } from "./exact-answer";
 import { renderContent } from "./content";
 import { type SquareLesson, type CheckResult, squareVersion, quadraticTopic, type QuadraticTopic } from "./square-model";
 import type { MarkingRow, SupportKind } from "./question-support-model";
 import { packageQuestions, packageTeaching, packageTopic } from "./content-package-content";
 import { quadraticsStudy, quadraticsStudyLayout } from "./quadratics-study";
 import { answerFormat } from "./square-presentation";
+import { isCoordinateField, isIntervalField, rangeOutputs } from "./answer-notation";
 
 type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
 export type SourceQuestion = { id: string; family_uid: string; title: string; collection: string; prompt_html: string; hint_html: string; solution_html: string; answer_html: string; marks: number; difficulty: number; variant_index?: number; fields: ExactField[]; marking_criteria?: Criterion[]; parts?: { label: string; marking_criteria: Criterion[] }[]; provenance?: { type: string; past_paper_reference: unknown } };
@@ -68,7 +69,7 @@ function retryMessage(q: SourceQuestion, f: ExactField, input: string) {
   const multiplier = q.fields.find(x => /^(a|form_a)$/.test(x.key));
   const centre = q.fields.find(x => /^(h|form_h)$/.test(x.key));
   if (multiplier && /^(h|form_h)$/.test(f.key)) {
-    if (matchesFeedbackPattern(f, `-(${input})`)) return "This is the opposite centre. The form uses x − h; check the sign of h.";
+    if (matchesFeedbackPattern(f, `-(${scalarAnswerValue(f, input)})`)) return "This is the opposite centre. The form uses x − h; check the sign of h.";
     return "Halve the coefficient of x inside the bracket, then match the form x − h.";
   }
   if (multiplier && centre && /^(k|form_k)$/.test(f.key)) {
@@ -80,7 +81,10 @@ function retryMessage(q: SourceQuestion, f: ExactField, input: string) {
     }
     return "Subtract the square you added inside the bracket, then simplify the outside constant.";
   }
-  return ["set", "integers"].includes(f.type) ? "Recheck all values, both roots and included or excluded endpoints." : "Recheck this complete answer.";
+  if (rangeOutputs(f)) return "Check the lowest and highest outputs and whether the boundary values are attained.";
+  if (f.type === "set" && isIntervalField(f)) return "Check each interval and whether its endpoints belong to the solution set.";
+  if (f.type === "pairs" && isCoordinateField(f)) return "Match each x-coordinate to its y-coordinate and include every required point.";
+  return ["set", "integers"].includes(f.type) ? "Recheck every value in the set." : "Recheck this complete answer.";
 }
 export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): CheckResult {
   const fields: CheckResult["fields"] = {};
@@ -88,8 +92,14 @@ export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): 
   if (Object.keys(answers).length !== q.fields.length || Object.keys(answers).some(k => !q.fields.some(f => f.key === k))) return { valid: false, correct: false, fields, error: "Complete every labelled field." };
   let valid = true;
   for (const f of q.fields) {
-    try { const correct = checkExact(f, answers[f.key]); fields[f.key] = { correct, message: correct ? "Correct." : retryMessage(q, f, answers[f.key]) }; }
-    catch { valid = false; fields[f.key] = { correct: false, formatError: true, message: "Check the format. " + answerFormat(f).en }; }
+    try { const correct = checkExact(f, answers[f.key], q.prompt_html); fields[f.key] = { correct, message: correct ? "Correct." : retryMessage(q, f, answers[f.key]) }; }
+    catch (error) {
+      if (error instanceof AnswerVariableError) fields[f.key] = { correct: false, message: error.message };
+      else {
+        valid = false;
+        fields[f.key] = { correct: false, formatError: true, message: "Check the format. " + answerFormat(f).en };
+      }
+    }
     if (f.key === "expanded" && fields[f.key].correct && !isExpandedPolynomial(answers[f.key], f.variables ?? [])) fields[f.key] = { correct: false, message: "This is equivalent, but this field asks for expanded form. Multiply out the brackets." };
   }
   return { valid, correct: valid && Object.values(fields).every(f => f.correct), fields, ...(!valid ? { error: "Some answers could not be read; no result has been recorded yet." } : {}) };

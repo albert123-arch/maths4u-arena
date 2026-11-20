@@ -128,6 +128,83 @@ test('lesson steps, mobile contents and formative feedback',async({page})=>{
   await expect(page.locator('head link[rel=canonical]')).toHaveAttribute('href','https://arena.maths4u.sbs'+path);
 });
 
+test('Completing the square shows both diagrams on arrival and grades range notation as a guest', async ({page}) => {
+  const path = '/courses/' + pack.course.slug + '/topics/orig_quadratics_completing_square';
+  for (const width of [390, 1280]) {
+    await page.setViewportSize({width, height: 900});
+    for (const colorScheme of ['light', 'dark'] as const) {
+      await page.emulateMedia({colorScheme});
+      await page.goto(base + path);
+      for (const selector of ['#make-the-square img', '#sketch-parabola img[src$="square-sketch.svg"]']) {
+        const image = page.locator(selector);
+        await expect(image).toHaveCount(1);
+        await image.scrollIntoViewIfNeeded();
+        await expect(image).toBeVisible();
+        await expect.poll(() => image.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+      }
+      const sketch = page.locator('#sketch-parabola header img');
+      await expect(sketch).toBeVisible();
+      const offsetFromHeading = await sketch.evaluate(el => el.getBoundingClientRect().top - el.closest('header')!.getBoundingClientRect().top);
+      expect(offsetFromHeading).toBeLessThan(280);
+      await expect(page.locator('#worked-example-6 ol>li:visible')).toHaveCount(1);
+      await expect(page.locator('#restricted-range header')).toContainText('Core · about 5 min');
+      await expect(page.locator('#open-and-unbounded-domains header')).toContainText('Extension');
+      await expect(page.locator('#restricted-range a[href="#practice"]')).toBeVisible();
+      await expect(page.locator('.katex-error')).toHaveCount(0);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width + 1);
+    }
+  }
+  const check = page.locator('[data-study-check="full-parabola-range"]');
+  for (const [answer, status] of [['f(x) ≤ 8','correct'],['y <= 8','correct'],['(−inf, 8]','correct'],['x ≤ 8','retry'],['y < 8','retry']]) {
+    await check.getByRole('textbox').fill(answer);
+    await check.getByRole('button',{name:'Check',exact:true}).click();
+    await expect(check.locator('[data-status='+status+']')).toBeVisible();
+    if (answer.startsWith('x')) await expect(check.locator('[data-status=retry]')).toContainText('output values');
+  }
+  const bounded = page.locator('[data-study-check="restricted-parabola-range"]');
+  await bounded.getByRole('textbox').fill('0 ≤ g(x) ≤ 9');
+  await bounded.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(bounded.locator('[data-status=correct]')).toBeVisible();
+  await expect(page.locator('#review')).toContainText('Your review plan starts after your first check');
+});
+
+test('exam-style answers work across lessons, Practice and a fresh review variant', async ({page}) => {
+  const lesson = (suffix: string) => base + '/courses/' + pack.course.slug + '/topics/orig_quadratics_' + suffix;
+  await page.setViewportSize({width:390, height:850});
+  const examples: [string, string, string][] = [
+    ['factorisation','signed-b','b = −4'],
+    ['roots','strict-sign-parameters','k > 8'],
+    ['simultaneous','full-intersections','(2, 4), (−1, 1)'],
+    ['simultaneous','tangent-point','x = 2, y = 5'],
+    ['inequalities','outside-including-roots','x ≤ −2 or x ≥ 3'],
+  ];
+  for (const [route, id, value] of examples) {
+    await page.goto(lesson(route));
+    const form = page.locator('[data-study-check="' + id + '"]');
+    if (id === 'outside-including-roots') {
+      await expect(form).toContainText('Use inequalities in x');
+      await expect(form).not.toContainText('Give every root');
+    }
+    if (id === 'signed-b') await expect(page.locator('#fractional-and-reciprocal-substitutions header')).toContainText('Extension');
+    await form.getByRole('textbox').fill(value);
+    await form.getByRole('button',{name:'Check',exact:true}).click();
+    await expect(form.locator('[data-status=correct]')).toBeVisible();
+  }
+  await page.goto(lesson('inequalities') + '?item=M4U-9709-P1-QD-CHECK-INEQUALITIES-1-0#practice');
+  const field = page.locator('#practice').getByRole('textbox', {name:'All allowed x-values', exact:true});
+  await field.fill('−2 < x ≤ 3');
+  await page.getByRole('button',{name:'Check answer',exact:true}).click();
+  await expect(page.locator('.square-result')).toContainText('Look at the fields');
+  await page.getByRole('button',{name:'Review with a fresh variant →',exact:true}).click();
+  await expect(page).toHaveURL(/item=M4U-9709-P1-QD-CHECK-INEQUALITIES-1-1/);
+  await field.fill('−3 ≤ x ≤ 4');
+  await page.getByRole('button',{name:'Check answer',exact:true}).click();
+  await expect(page.locator('.square-result')).toContainText('All final answers are correct');
+  await page.reload();
+  await expect(field).toHaveValue('−3 ≤ x ≤ 4');
+  await expect(page.locator('#review')).toContainText('Return after a break');
+});
+
 test('exam marks, all numerical variants and protected vector solutions',async({page})=>{
   await page.setViewportSize({width:390,height:900});
   const q=pack.questions.find(q=>q.variant_index===0&&q.id.endsWith('-02'))!;

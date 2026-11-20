@@ -1,4 +1,5 @@
 import type { SquareField, SquareQuestion } from "./square-model";
+import { isCoordinateField, isIntervalField, rangeOutputs, scalarSymbol, setSymbol } from "./answer-notation";
 
 // Display labels only: the original IDs, titles and progress keys stay intact.
 const titles: Record<string, string> = {
@@ -23,15 +24,36 @@ export function answerFormat(f: SquareField): { en: string; ru: string; placehol
   if (f.type === "integers") return { en: "List every integer in braces, for example {1, 2, 3}; use empty if there are none.", ru: "Перечислите все целые числа в фигурных скобках, например {1, 2, 3}; если их нет, введите empty.", placeholder: "{1, 2, 3}" };
   if (f.type === "pairs") return f.dimension === 3
     ? { en: "Enter (parameter, x, y); separate multiple triples with semicolons.", ru: "Введите (параметр, x, y); несколько троек разделяйте точкой с запятой.", placeholder: "(parameter, x, y); (…)" }
-    : { en: "Enter (x, y); separate multiple pairs with semicolons. Fractions and sqrt(...) are accepted.", ru: "Введите (x, y); несколько пар разделяйте точкой с запятой. Можно использовать дроби и sqrt(...).", placeholder: "(1, 2); (3, 4)" };
+    : isCoordinateField(f)
+      ? { en: "Enter a point as (1, 2) or x = 1, y = 2. Separate complete pairs with commas or semicolons.", ru: "Введите точку как (1, 2) или x = 1, y = 2. Пары можно разделять запятыми или точками с запятой.", placeholder: "(1, 2), (3, 4)" }
+      : { en: "Enter each pair in the order shown. Separate complete pairs with commas or semicolons.", ru: "Введите каждую пару в указанном порядке. Несколько пар можно разделить запятыми или точками с запятой.", placeholder: "(1, 2), (3, 4)" };
   if (f.type === "factors") return { en: "Enter both linear factors, separated by a semicolon: x-1 ; x+2.", ru: "Введите оба линейных множителя через точку с запятой: x-1 ; x+2.", placeholder: "x-1 ; x+2" };
   if (f.type === "ratio") return { en: "Enter numerator ; denominator, keeping any parameter restrictions in the relevant field.", ru: "Введите числитель ; знаменатель. Ограничения параметра укажите в соответствующем поле.", placeholder: "numerator ; denominator" };
   if (f.type === "equation") return { en: "Enter both sides of the equation, or its polynomial equal to zero. Use ^ for powers and / for fractions.", ru: "Введите обе части уравнения или многочлен, равный нулю. Степени: ^; дроби: /.", placeholder: "x^2=3x+1 or x^2-3x-1" };
   if (f.type === "set") {
+    const outputs = rangeOutputs(f);
+    if (outputs) return {
+      en: "Give the output range as an inequality or an interval. For example, y ≤ 4 is (−∞, 4]. You can type <= for ≤.",
+      ru: "Область значений можно записать неравенством или интервалом. Например, y ≤ 4 означает (−∞, 4]. Можно ввести <= вместо ≤.",
+      placeholder: "y ≤ 4 or (−∞, 4]",
+    };
+    if (isIntervalField(f)) {
+      const variable = setSymbol(f) ?? "x";
+      return {
+        en: "Use inequalities in " + variable + " or interval notation. Join intervals with ‘or’ or ∪. Enter an isolated value on its own.",
+        ru: "Запишите неравенство для " + variable + " или интервал. Объединяйте промежутки словом or или знаком ∪. Изолированное значение укажите отдельно.",
+        placeholder: variable + " < 1 or " + variable + " ≥ 4",
+      };
+    }
     if (/(?:^|_)roots?$/.test(f.key)) return { en: "Give every root, for example x = 1 or x = 4, or 1, 4. Use sqrt(...) for exact roots, or empty if there are none.", ru: "Укажите все корни, например x = 1 or x = 4 или 1, 4. Для точных корней используйте sqrt(...), если корней нет — empty.", placeholder: "x = 1 or x = 4" };
-    if (/range|domain|allowed|restriction|levels|parameters/.test(f.key)) return { en: "Use intervals such as (1, 5], inf for infinity and U for union. Isolated values use {…}; no values uses empty.", ru: "Используйте интервалы, например (1, 5], inf для бесконечности и U для объединения. Отдельные значения: {…}; нет значений: empty.", placeholder: "(lower, upper] U {value}" };
     return { en: "Give the complete set: {1, 4} for separate values, (1, 5] for an interval, U for union or empty for no real solutions. Use sqrt(...) for exact roots.", ru: "Укажите всё множество: {1, 4} для отдельных значений, (1, 5] для интервала, U для объединения, empty, если действительных решений нет. Точные корни: sqrt(...).", placeholder: "{root1, root2} or (lower, upper]" };
   }
   if (f.variables?.length) return { en: `Enter an expression in ${f.variables.join(", ")}; use ^ for powers and / for fractions.`, ru: `Введите выражение с ${f.variables.join(", ")}; степени обозначайте ^, дроби — /.`, placeholder: `Expression in ${f.variables.join(", ")}` };
+  const symbol = scalarSymbol(f);
+  if (symbol) return {
+    en: "Enter the value on its own or write " + symbol + " = … . Fractions and exact square roots are accepted.",
+    ru: "Введите значение отдельно или с обозначением " + symbol + " = … . Можно использовать дроби и точные корни.",
+    placeholder: symbol + " = …",
+  };
   return { en: "Enter an exact number, for example 3/2 or 2-sqrt(3).", ru: "Введите точное число, например 3/2 или 2-sqrt(3).", placeholder: "Exact number or fraction" };
 }

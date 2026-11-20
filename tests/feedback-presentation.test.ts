@@ -4,6 +4,7 @@ import { squareQuestions, gradeSquare, questionsForTopic } from "../src/lib/squa
 import { completeAnswers } from "./quadratics-answers";
 import { answerFormat, questionTitle } from "../src/lib/square-presentation";
 import { quadraticTopics } from "../src/lib/square-model";
+import { checkExact } from "../src/lib/exact-answer";
 test("only an unreadable field is marked as a format error in a mixed answer", () => {
   const question = squareQuestions.find(q => q.collection === "short" && q.fields.length >= 3)!;
   const answers = completeAnswers(question), [unreadable, wrong, correct] = question.fields;
@@ -18,7 +19,7 @@ test("only an unreadable field is marked as a format error in a mixed answer", (
 
 test("centre feedback distinguishes an opposite sign from an unrelated incorrect value", () => {
   const q = squareQuestions.find(q => q.id === "M4U-9709-Q26-S-CS01")!, correct = completeAnswers(q);
-  for (const input of ["-7", "-14/2"]) {
+  for (const input of ["-7", "-14/2", "h = −7"]) {
     const r = gradeSquare(q, { ...correct, h: input });
     assert.equal(r.valid, true); assert.equal(r.correct, false);
     assert.match(r.fields.h.message, /opposite centre/);
@@ -34,7 +35,7 @@ test("centre feedback distinguishes an opposite sign from an unrelated incorrect
 test("constant feedback identifies a missing multiplier only when its value matches", () => {
   const q = squareQuestions.find(q => q.id === "M4U-9709-Q26-S-CS03")!, correct = completeAnswers(q);
   // 3(x−2)²+5 = 3x²−12x+17. Subtracting 4 instead of 12 gives 13.
-  const pattern = gradeSquare(q, { ...correct, k: "26/2" });
+  const pattern = gradeSquare(q, { ...correct, k: "k = 26/2" });
   assert.equal(pattern.valid, true); assert.equal(pattern.correct, false);
   assert.match(pattern.fields.k.message, /without the outside multiplier/);
   const other = gradeSquare(q, { ...correct, k: "2" });
@@ -61,5 +62,14 @@ test("every existing question has a meaningful display title and type-specific f
       if (f.type === "choice") assert.doesNotMatch(help.en, /interval|fraction/);
       if (f.type === "polynomial" && !f.variables?.length) assert.doesNotMatch(help.en, /interval|pair/);
     }
+  }
+});
+
+test("coordinate labels match the axes in the question", () => {
+  for (const label of ["Intersection (r, theta)", "All greatest-amount points (t,A)", "Polar point"]) {
+    const field = {key: "points", type: "pairs", label, expected: "(2,5)"};
+    assert(checkExact(field,"(2,5)"));
+    assert.throws(() => checkExact(field,"x=2,y=5"));
+    assert.doesNotMatch(answerFormat(field).en, /x = 1, y = 2/);
   }
 });

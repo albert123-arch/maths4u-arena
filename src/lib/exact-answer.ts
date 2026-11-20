@@ -1,4 +1,5 @@
 /** Bounded exact algebra for independent practice; never eval user input. */
+import { isCoordinateField, rangeOutputs, scalarSymbol, setSymbol } from "./answer-notation";
 type Rat = [bigint, bigint];
 type Scalar = Map<number, Rat>; // square-free radical -> rational coefficient
 type Poly = Map<number, Scalar>; // base-7 exponents: two declared variables, then the exact constant pi
@@ -111,11 +112,16 @@ function split(s: string, separator: string) {
 }
 type Bound = { key: string; value: number };
 type Interval = { low: Bound; high: Bound; lc: boolean; hc: boolean };
-function bound(s: string): Bound { s = s.trim(); if (/^\+?(?:inf|infinity|∞)$/i.test(s)) return { key: "+inf", value: Infinity }; if (/^-(?:inf|infinity|∞)$/i.test(s)) return { key: "-inf", value: -Infinity }; return { key: numberKey(s), value: numeric(s) }; }
-function setKey(raw: string) {
+function bound(raw: string): Bound {
+  const value = raw.trim().replace(/[−–]/g, "-").replace(/\\infty/g, "∞");
+  if (/^\+?(?:inf|infinity|∞)$/i.test(value)) return { key: "+inf", value: Infinity };
+  if (/^-(?:inf|infinity|∞)$/i.test(value)) return { key: "-inf", value: -Infinity };
+  return { key: numberKey(value), value: numeric(value) };
+}
+function setIntervals(raw: string): Interval[] {
   if (raw.length > 400) fail();
   const s = raw.trim().replace(/∪/g, "U");
-  if (/^(?:empty|none|∅|\{\s*\})$/i.test(s)) return "[]";
+  if (/^(?:empty|none|∅|\{\s*\})$/i.test(s)) return [];
   const intervals: Interval[] = [];
   for (const part of split(s, "U")) {
     const t = part.trim();
@@ -130,6 +136,9 @@ function setKey(raw: string) {
       for (const v of split(t, ",")) { const b = bound(v); if (!Number.isFinite(b.value)) fail(); intervals.push({ low: b, high: b, lc: true, hc: true }); }
     }
   }
+  return intervals;
+}
+function canonicalSet(intervals: Interval[]) {
   intervals.sort((a, b) => a.low.value - b.low.value || Number(b.lc) - Number(a.lc));
   const merged: Interval[] = [];
   for (const i of intervals) {
@@ -141,8 +150,41 @@ function setKey(raw: string) {
   }
   return JSON.stringify(merged.map(i => [i.low.key, i.high.key, i.lc, i.hc]));
 }
+const setKey = (raw: string) => canonicalSet(setIntervals(raw));
+
+export class AnswerVariableError extends Error {}
+
+function checkVariable(name: string, allowed: string[], range: boolean) {
+  if (!allowed.length) allowed.push(name);
+  if (allowed.includes(name)) return;
+  if (range && name === "x") {
+    throw new AnswerVariableError("The range describes output values. Write your inequality using " +
+      allowed.slice(0, 2).join(" or ") + ". The variable x describes the domain.");
+  }
+  throw new AnswerVariableError("This field asks for " + allowed.slice(0, 2).join(" or ") + ". Use that symbol in your answer.");
+}
+
+function comparisonInterval(raw: string, allowed: string[], range: boolean): Interval | undefined {
+  const parts = raw.split(/(<=|>=|<|>)/).map(part => part.trim());
+  if ((parts.length !== 3 && parts.length !== 5) || parts.includes("")) return fail();
+  const signs = parts.filter((_, i) => i % 2 === 1);
+  if (signs.length === 2 && signs[0][0] !== signs[1][0]) return fail();
+  if (signs[0][0] === ">") parts.reverse();
+
+  const index = parts.findIndex((part, i) => i % 2 === 0 && /^[a-z](?:\(x\))?$/i.test(part.replace(/\s+/g, "")));
+  if (index < 0 || (parts.length === 5 && index !== 2)) return fail();
+  const low = index === 0 ? "-inf" : parts[0];
+  const high = index === parts.length - 1 ? "inf" : parts.at(-1)!;
+  const lower = bound(low), upper = bound(high);
+  checkVariable(parts[index].replace(/\s+/g, ""), allowed, range);
+  const lc = Number.isFinite(lower.value) && !!parts[index - 1]?.includes("=");
+  const hc = Number.isFinite(upper.value) && !!parts[index + 1]?.includes("=");
+  if (lower.value > upper.value || (lower.key === upper.key && !(lc && hc))) return undefined;
+  return { low: lower, high: upper, lc, hc };
+}
+
 // Read natural lists of individual roots without changing interval syntax.
-function statedValues(raw: string) {
+function statedValues(raw: string, allowed: string[], range: boolean) {
   const connector = /\b(?:or|and)\b/gi;
   const signPattern = /±|\+\/-|\\pm/;
   if (!raw.includes("=") && !connector.test(raw) && !signPattern.test(raw)) return raw;
@@ -150,21 +192,79 @@ function statedValues(raw: string) {
   if (list.startsWith("{") && list.endsWith("}")) list = list.slice(1, -1);
   let variable: string | undefined;
   const values = split(list.replace(connector, ","), ",").flatMap(part => {
-    const label = /^\s*([a-z])\s*=\s*/i.exec(part)?.[1]?.toLowerCase();
+    const assignment = /^\s*([a-z](?:\(\s*x\s*\))?)\s*=\s*/i.exec(part);
+    const label = assignment?.[1].replace(/\s+/g, "");
     if (label && variable && label !== variable) fail();
-    if (label) variable = label;
-    const value = part.replace(/^\s*[a-z]\s*=\s*/i, "");
+    if (label) {
+      checkVariable(label, allowed, range);
+      variable = label;
+    }
+    const value = part.slice(assignment?.[0].length ?? 0);
     const sign = signPattern.exec(value)?.[0];
     return sign ? [value.replace(sign, "+"), value.replace(sign, "-")] : [value];
   });
   return "{" + values.join(",") + "}";
 }
 
-function pairsKey(raw: string, dimension = 2) {
+function intersection(a: Interval, b: Interval): Interval | undefined {
+  const low = a.low.value >= b.low.value ? a.low : b.low;
+  const high = a.high.value <= b.high.value ? a.high : b.high;
+  const lc = (a.low.key !== low.key || a.lc) && (b.low.key !== low.key || b.lc);
+  const hc = (a.high.key !== high.key || a.hc) && (b.high.key !== high.key || b.hc);
+  if (low.value > high.value || (low.key === high.key && !(lc && hc))) return undefined;
+  return { low, high, lc, hc };
+}
+
+function answerSetKey(field: ExactField, raw: string, prompt?: string) {
+  const outputs = rangeOutputs(field, prompt);
+  const symbol = setSymbol(field);
+  const allowed = outputs ?? (symbol ? [symbol] : []);
+  const range = !!outputs;
+  const input = raw.replace(/≤|\\leq?(?![a-z])/g, "<=").replace(/≥|\\geq?(?![a-z])/g, ">=")
+    .replace(/([)\]}])\s*\bor\b\s*(?=\(|\[|\{)/gi, "$1 ∪ ");
+  if (!/[<>]/.test(input)) {
+    const branches = input.split(/∪|\bU\b/);
+    return canonicalSet(branches.flatMap(branch => setIntervals(statedValues(branch, allowed, range))));
+  }
+  const intervals: Interval[] = [];
+  for (const branch of input.replace(/\bor\b/gi, "∪").split(/∪|\bU\b/)) {
+    if (!/[<>]/.test(branch)) {
+      intervals.push(...setIntervals(statedValues(branch, allowed, range)));
+      continue;
+    }
+    const constraints = branch.split(/\band\b/i).map(clause => comparisonInterval(clause, allowed, range));
+    const common = constraints.reduce((a, b) => a && b ? intersection(a, b) : undefined);
+    if (common) intervals.push(common);
+  }
+  return canonicalSet(intervals);
+}
+
+function pairsKey(raw: string, dimension = 2, coordinates = false) {
   if (raw.length > 400) fail();
   if (/^(?:empty|none|∅|\{\s*\})$/i.test(raw.trim())) return "[]";
-  const parts = split(raw.trim().replace(/^\{(.*)\}$/, "$1"), ";");
-  const pairs = parts.map(p => { const t = p.trim(); if (!t.startsWith("(") || !t.endsWith(")")) fail(); const xs = split(t.slice(1, -1), ","); if (xs.length !== dimension) fail(); return xs.map(numberKey).join("|"); });
+  function tuple(entries: string[]) {
+    if (entries.length !== dimension) return fail();
+    if (coordinates && dimension === 2 && entries.some(part => part.includes("="))) {
+      const labelled = entries.map(part => /^([xy])\s*=\s*(.+)$/.exec(part.trim()));
+      const x = labelled.find(match => match?.[1] === "x"), y = labelled.find(match => match?.[1] === "y");
+      if (!x || !y) return fail();
+      return numberKey(x[2]) + "|" + numberKey(y[2]);
+    }
+    return entries.map(numberKey).join("|");
+  }
+  const list = raw.trim().replace(/^\{(.*)\}$/, "$1").replace(/\)\s+and\s+(?=\()/gi, ");");
+  const pairs = split(list, ";").flatMap(group => {
+    const entries = split(group, ",").map(part => part.trim());
+    if (coordinates && dimension === 2 && /^[xy]\s*=/.test(entries[0])) {
+      const labelledPairs: string[] = [];
+      for (let i = 0; i < entries.length; i += 2) labelledPairs.push(tuple(entries.slice(i, i + 2)));
+      return labelledPairs;
+    }
+    return entries.map(entry => {
+      if (!entry.startsWith("(") || !entry.endsWith(")")) return fail();
+      return tuple(split(entry.slice(1, -1), ","));
+    });
+  });
   return JSON.stringify([...new Set(pairs)].sort());
 }
 function poly(raw: string, variables: string[] = []): Poly { return new Map(polynomialKey(raw, variables).map(([power,terms])=>[power,new Map(terms.map(([d,n,q])=>[d,rat(BigInt(n),BigInt(q))]))])); }
@@ -176,8 +276,20 @@ function proportional(a: Poly,b: Poly) {
 }
 function equation(raw:string,variables:string[]) { const sides=raw.split("="); if(sides.length>2)fail();return padd(poly(sides[0],variables),poly(sides[1]??"0",variables),-BigInt(1)); }
 export type ExactField = { key: string; label: string; type: string; expected: string | string[]; variables?: string[]; options?: Record<string, string>; dimension?: number; factor_variable?: string; form?: "expanded"; absolute_tolerance?:number; minimum?:number; maximum?:number };
-export function checkExact(field: ExactField, input: string): boolean {
+// Feedback for a labelled scalar uses the same mathematical expression as grading.
+export function scalarAnswerValue(field: ExactField, input: string): string {
+  if (!["number", "approximate", "polynomial"].includes(field.type)) return input;
+  const assignment = /^\s*([a-z])\s*=\s*/i.exec(input);
+  if (!assignment) return input;
+  const symbol = scalarSymbol(field);
+  if (!symbol) return fail();
+  checkVariable(assignment[1].toLowerCase(), [symbol.toLowerCase()], false);
+  return input.slice(assignment[0].length);
+}
+
+export function checkExact(field: ExactField, input: string, prompt?: string): boolean {
   if (typeof input !== "string" || !input.trim() || input.length > 400) fail();
+  input = scalarAnswerValue(field, input);
   // Opt-in descriptor is saved in the assigned immutable version. Existing
   // exact fields never acquire a tolerance through a later content package.
   if(field.type==="approximate"){
@@ -206,8 +318,8 @@ export function checkExact(field: ExactField, input: string): boolean {
     for(const value of split(s,",")){const p=polynomialKey(value);if(p.length && (p.length!==1 || p[0][0]!==0 || p[0][1].length!==1 || p[0][1][0][0]!==1 || p[0][1][0][2]!=="1"))return false;}
     return setKey(input)===setKey(expected);
   }
-  if (field.type === "set") return setKey(statedValues(input)) === setKey(expected);
-  if (field.type === "pairs") return pairsKey(input,field.dimension) === pairsKey(expected,field.dimension);
+  if (field.type === "set") return answerSetKey(field, input, prompt) === setKey(expected);
+  if (field.type === "pairs") return pairsKey(input, field.dimension, isCoordinateField(field)) === pairsKey(expected, field.dimension);
   if (field.type === "equation") return proportional(equation(input,field.variables??[]),equation(expected,field.variables??[]));
   if (field.type === "factors") {
     const parts=split(input,";"), vars=field.variables??[], index=vars.indexOf(field.factor_variable??vars[0]);

@@ -26,7 +26,7 @@ export type StudySection = {
   title: string;
   label: string;
   minutes: number;
-  level: "core" | "further";
+  level: "core" | "further" | "extension";
   intro: string;
   blocks: StudyBlock[];
 };
