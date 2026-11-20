@@ -1448,5 +1448,544 @@
       "checks": "<ul><li>Swap the coordinates of every marked point.</li><li>Carry open ends and other restrictions into the sketch.</li><li>Check each proposed intersection on both graphs.</li></ul>",
       "examTip": "<p>Use equal scales, label the mirror \\(y=x\\) and distinguish \\(y=f(x)\\) from \\(y=f^{-1}(x)\\). Give shared points as coordinate pairs.</p>"
     }
+  },
+  "orig_functions_transformations": {
+    "updatedOn": "2026-11-20",
+    "description": "Learn graph transformations for Cambridge 9709 Pure 1. Translate, reflect and stretch graphs, track points and intervals, and combine transformations in order.",
+    "sections": [
+      {
+        "id": "translate-a-graph",
+        "title": "Which way does a translation move the graph?",
+        "label": "Translations",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>Start with \\(f(x)=(x-1)^2+1\\) for \\(-1\\le x<2\\). A translation two units right and three units down gives \\(y=f(x-2)-3\\). Follow the vertex from \\((1,1)\\) to \\((3,-2)\\).</p><p><img src=\"/assets/original/functions/transformations-translation.svg\" width=\"480\" height=\"330\" alt=\"The parabola translates two units right and three down. Its vertex moves from (1, 1) to (3, −2). Both endpoints follow the same translation.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Take a point \\((u,v)\\) on \\(y=f(x)\\), so \\(f(u)=v\\). On \\(y=f(x-h)+k\\), recover the same input by solving \\(x-h=u\\). The new point is \\((u+h,v+k)\\).</p><p>The translation vector is \\(\\binom{h}{k}\\). Positive components move the graph right and up. Negative components move it left and down.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>For \\(f(x-2)\\), the old input \\(u\\) is reached at \\(x=u+2\\). That is why a minus sign inside the brackets moves the graph right.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "translated-point",
+            "field": {
+              "key": "point",
+              "label": "New point (x, y)",
+              "type": "pairs",
+              "expected": "(-2,-1)"
+            },
+            "prompt": "<p>The point \\((2,-3)\\) lies on \\(y=p(x)\\). Give the matching point on \\(y=p(x+4)+2\\).</p>",
+            "hint": "<p>Set \\(x+4=2\\) to find the input. Add \\(2\\) to the original output.</p>",
+            "solution": "<p>The new input is \\(2-4=-2\\) and the new output is \\(-3+2=-1\\). The point is \\((-2,-1)\\).</p>",
+            "retry": [
+              {
+                "answer": "(6,-1)",
+                "feedback": "<p>The output is correct. Solve \\(x+4=2\\) to keep the old input to \\(p\\).</p>"
+              },
+              {
+                "answer": "(-2,-5)",
+                "feedback": "<p>The input is correct. The \\(+2\\) outside \\(p\\) raises the old output.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "translated-equation",
+            "field": {
+              "key": "y",
+              "label": "New expression for y",
+              "type": "polynomial",
+              "expected": "x^2+4*x+7",
+              "variables": [
+                "x"
+              ]
+            },
+            "prompt": "<p>The graph of \\(y=x^2-2x\\) moves three units left and four units up. Give the new expression for \\(y\\).</p>",
+            "hint": "<p>Replace each \\(x\\) in the old rule by \\(x+3\\). Then add \\(4\\) to the whole expression.</p>",
+            "solution": "<p>The new rule is \\(y=(x+3)^2-2(x+3)+4\\), which simplifies to \\(y=x^2+4x+7\\).</p>",
+            "retry": [
+              {
+                "answer": "(x-3)^2-2*(x-3)+4",
+                "feedback": "<p>This moves the graph right. To move it left, the new input \\(x\\) must reach the old input at \\(x+3\\).</p>"
+              },
+              {
+                "answer": "(x+3)^2-2*x+4",
+                "feedback": "<p>Use \\(x+3\\) in both terms of the old expression before adding \\(4\\).</p>"
+              },
+              {
+                "answer": "(x+3)^2-2*(x+3)",
+                "feedback": "<p>The horizontal move is correct. Add \\(4\\) to account for the upward move.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "reflect-in-an-axis",
+        "title": "Which coordinate changes under reflection?",
+        "label": "Reflections",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>Find the vertex \\((1,1)\\) on the same parabola. The graph of \\(y=-f(x)\\) takes it below the \\(x\\)-axis. The graph of \\(y=f(-x)\\) takes it across the \\(y\\)-axis.</p><p><img src=\"/assets/original/functions/transformations-reflection.svg\" width=\"480\" height=\"367\" alt=\"The vertex (1, 1) of f reflects to (1, −1) on −f(x) and to (−1, 1) on f(−x). Hollow endpoints stay hollow.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p><strong>Reflect in the \\(x\\)-axis.</strong> Negate the output: \\(y=-f(x)\\) maps \\((u,v)\\) to \\((u,-v)\\).</p><p><strong>Reflect in the \\(y\\)-axis.</strong> Set \\(-x=u\\): \\(y=f(-x)\\) maps \\((u,v)\\) to \\((-u,v)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "tip",
+            "html": "<p>State the axis in your description. Points on that axis stay fixed. A hollow endpoint stays hollow when its position changes.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "reflection-in-x-axis",
+            "field": {
+              "key": "point",
+              "label": "Point after reflection (x, y)",
+              "type": "pairs",
+              "expected": "(-3,-2)"
+            },
+            "prompt": "<p>The point \\((-3,2)\\) lies on \\(y=p(x)\\). Give the matching point on \\(y=-p(x)\\).</p>",
+            "hint": "<p>The minus sign is outside \\(p\\). Keep the input and change the sign of the output.</p>",
+            "solution": "<p>The reflection is in the \\(x\\)-axis. The input stays \\(-3\\) and \\(2\\) becomes \\(-2\\), so the point is \\((-3,-2)\\).</p>",
+            "retry": [
+              {
+                "answer": "(3,2)",
+                "feedback": "<p>That point is reflected in the \\(y\\)-axis. Here the minus sign acts on the output.</p>"
+              },
+              {
+                "answer": "(3,-2)",
+                "feedback": "<p>Only the output changes. Keep the input at \\(-3\\).</p>"
+              }
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "reflection-in-y-axis",
+            "field": {
+              "key": "point",
+              "label": "Point after reflection (x, y)",
+              "type": "pairs",
+              "expected": "(-4,-2)"
+            },
+            "prompt": "<p>The point \\((4,-2)\\) lies on \\(y=r(x)\\). Give the matching point on \\(y=r(-x)\\).</p>",
+            "hint": "<p>Find the new \\(x\\) by solving \\(-x=4\\). The original output is kept.</p>",
+            "solution": "<p>The reflection is in the \\(y\\)-axis. The point \\((4,-2)\\) becomes \\((-4,-2)\\).</p>",
+            "retry": [
+              {
+                "answer": "(4,2)",
+                "feedback": "<p>That point is reflected in the \\(x\\)-axis. Here the minus sign acts inside \\(r\\), so solve \\(-x=4\\).</p>"
+              },
+              {
+                "answer": "(-4,2)",
+                "feedback": "<p>The input is correct. At \\(x=-4\\), the output is still \\(r(4)=-2\\).</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stretch-a-graph",
+        "title": "Why does doubling the input halve the horizontal distances?",
+        "label": "Stretches",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>On \\(y=f(2x)\\), the input \\(1\\) to \\(f\\) is reached at \\(x=\\tfrac12\\). The vertex moves from \\((1,1)\\) to \\((\\tfrac12,1)\\). The entire graph becomes narrower.</p><p><img src=\"/assets/original/functions/transformations-stretch.svg\" width=\"480\" height=\"289\" alt=\"The graph of f(2x) is half as wide as f(x). The marked vertices are (1, 1) and (one half, 1).\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(a,b>0\\), \\(y=af(x)\\) multiplies each \\(y\\)-coordinate by \\(a\\). It is a stretch parallel to the \\(y\\)-axis with scale factor \\(a\\).</p><p>For \\(y=f(bx)\\), solve \\(bx=u\\), giving \\(x=u/b\\). It is a stretch parallel to the \\(x\\)-axis with scale factor \\(1/b\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The factor in \\(f(2x)\\) multiplies the input to \\(f\\). The new \\(x\\)-coordinate is divided by \\(2\\). For a negative multiplier, describe the corresponding reflection and give the positive scale factor.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "horizontal-stretch-point",
+            "field": {
+              "key": "point",
+              "label": "New point (x, y)",
+              "type": "pairs",
+              "expected": "(-3/2,5)"
+            },
+            "prompt": "<p>The point \\((-3,5)\\) lies on \\(y=p(x)\\). Find its image on \\(y=p(2x)\\).</p>",
+            "hint": "<p>Set \\(2x=-3\\). Keep the output \\(5\\).</p>",
+            "solution": "<p>Solving \\(2x=-3\\) gives \\(x=-\\tfrac32\\). The image is \\((-\\tfrac32,5)\\).</p>",
+            "retry": [
+              {
+                "answer": "(-6,5)",
+                "feedback": "<p>Keep the original input to \\(p\\) by solving \\(2x=-3\\). The horizontal scale factor is \\(\\tfrac12\\).</p>"
+              },
+              {
+                "answer": "(-3,10)",
+                "feedback": "<p>Doubling the output would give \\(2p(x)\\). Here the change is inside \\(p\\).</p>"
+              }
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "stretch-and-reflect-equation",
+            "field": {
+              "key": "y",
+              "label": "New expression for y",
+              "type": "polynomial",
+              "expected": "-2*x^2/9-2",
+              "variables": [
+                "x"
+              ]
+            },
+            "prompt": "<p>Let \\(p(x)=x^2+1\\). Give the expression for \\(y=-2p(x/3)\\).</p>",
+            "hint": "<p>Substitute \\(x/3\\) everywhere for \\(x\\). Multiply the entire result by \\(-2\\).</p>",
+            "solution": "<p>The expression is \\(y=-2((x/3)^2+1)=-\\tfrac29x^2-2\\). The graph stretches horizontally by \\(3\\) and vertically by \\(2\\), and reflects in the \\(x\\)-axis.</p>",
+            "retry": [
+              {
+                "answer": "-2*x^2/3-2",
+                "feedback": "<p>Square both parts of \\(x/3\\): \\((x/3)^2=x^2/9\\).</p>"
+              },
+              {
+                "answer": "-2*x^2/9+1",
+                "feedback": "<p>The factor \\(-2\\) multiplies the entire output, including the constant.</p>"
+              },
+              {
+                "answer": "2*x^2/9+2",
+                "feedback": "<p>The two scale factors are included. The minus sign reflects the graph in the \\(x\\)-axis.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "combine-input-and-output",
+        "title": "How do you track a point through several changes?",
+        "label": "Combined changes",
+        "level": "core",
+        "minutes": 7,
+        "intro": "<p>For \\(y=2f(2x-6)-1\\), follow the marked vertex of \\(f\\) at \\((1,1)\\). First find the new \\(x\\) that feeds the old input \\(1\\) into \\(f\\). Then use the old output \\(1\\) to find the new \\(y\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>In \\(y=A f(B(x-h))+k\\), let \\(A\\ne0\\) and \\(B\\ne0\\). For a point \\((u,v)\\) on \\(f\\), solve \\(B(x-h)=u\\) and calculate \\(y=Av+k\\).</p>\\[(u,v)\\ \\longmapsto\\ \\left(h+\\frac{u}{B},\\,Av+k\\right).\\]<p>Factor the input first to read the horizontal changes: scale by \\(1/|B|\\), reflect in the \\(y\\)-axis if \\(B<0\\), then translate by \\(h\\) horizontally. Apply the signed output multiplier \\(A\\) before the vertical translation \\(k\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>In \\(2x-6=2(x-3)\\), the translation after the horizontal stretch is \\(3\\) units right. The \\(-6\\) is the constant before factoring.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "combined-point",
+            "field": {
+              "key": "point",
+              "label": "New point (x, y)",
+              "type": "pairs",
+              "expected": "(1,-5)"
+            },
+            "prompt": "<p>The point \\((6,-2)\\) lies on \\(y=p(x)\\). Give its image on \\(y=3p(2x+4)+1\\).</p>",
+            "hint": "<p>Solve \\(2x+4=6\\), then calculate \\(3(-2)+1\\).</p>",
+            "solution": "<p>The new input is \\(x=1\\) and the output is \\(y=-5\\), so the image is \\((1,-5)\\).</p>",
+            "retry": [
+              {
+                "answer": "(-1,-5)",
+                "feedback": "<p>The output is correct. Solve \\(2x+4=6\\). Factoring gives \\(2(x+2)\\), so the horizontal translation after scaling is two units left.</p>"
+              },
+              {
+                "answer": "(1,-3)",
+                "feedback": "<p>The input is correct. Multiply the original output by \\(3\\) before adding \\(1\\).</p>"
+              }
+            ]
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "transformed-sine-minimum",
+            "field": {
+              "key": "point",
+              "label": "Point on the new graph (x, y)",
+              "type": "pairs",
+              "expected": "(45,-1)"
+            },
+            "prompt": "<p>Angles are in degrees. The sine graph has a maximum at \\((90,1)\\). Give the corresponding minimum on \\(y=-3\\sin(2x)+2\\).</p>",
+            "hint": "<p>Find \\(x\\) from \\(2x=90\\). For the output, multiply \\(1\\) by \\(-3\\), then add \\(2\\).</p>",
+            "solution": "<p>The new input is \\(45\\) and the output is \\(-3(1)+2=-1\\). The matching minimum is \\((45,-1)\\).</p>",
+            "retry": [
+              {
+                "answer": "(180,-1)",
+                "feedback": "<p>The output is correct. The old angle \\(90^\\circ\\) is reached when \\(2x=90\\).</p>"
+              },
+              {
+                "answer": "(45,5)",
+                "feedback": "<p>The input is correct. The negative multiplier turns the maximum into a minimum: \\(-3(1)+2=-1\\).</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "track-domain-and-range",
+        "title": "What happens to the ends of an interval?",
+        "label": "Domain and range",
+        "level": "core",
+        "minutes": 7,
+        "intro": "<p>Take the original restricted \\(f\\) and form \\(g(x)=7-2f(1-x)\\). Its graph is \\(y=5-2x^2\\) for \\(-1<x\\le2\\). The hollow point is now on the left, and the original minimum becomes the new maximum.</p><p><img src=\"/assets/original/functions/transformations-bounds.svg\" width=\"480\" height=\"362\" alt=\"The transformed graph has an open end at (−1, 3), a maximum at (0, 5), and a closed end at (2, −3).\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the inside condition to find the new domain. Carry each boundary’s open or closed status with it. A negative horizontal factor can swap which boundary is on the left.</p><p>Transform the <em>original range</em> using the outside rule. A negative output multiplier reverses the order of the range endpoints. The range includes any attained turning value.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>On this graph, the excluded end has height \\(3\\). That height is still reached at \\(x=1\\). Read the entire set of outputs when deciding whether a value belongs to the range.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "domain-after-negative-input",
+            "field": {
+              "key": "domain",
+              "label": "Domain of g",
+              "type": "set",
+              "expected": "[-3,4)"
+            },
+            "prompt": "<p>A function \\(p\\) has domain \\((-2,5]\\) and range \\([1,4)\\). Set \\(g(x)=6-3p(2-x)\\). Give the domain of \\(g\\).</p>",
+            "hint": "<p>Require \\(-2<2-x\\le5\\). Reverse the signs of the inequalities when multiplying through by \\(-1\\).</p>",
+            "solution": "<p>The boundary \\(5\\) gives \\(x=-3\\), included. The boundary \\(-2\\) gives \\(x=4\\), excluded. The domain is \\(-3\\le x<4\\), or \\([-3,4)\\).</p>",
+            "retry": [
+              {
+                "answer": "(-3,4]",
+                "feedback": "<p>The bounds are right. The included old input \\(5\\) becomes \\(-3\\). Move the closed bracket with that boundary.</p>"
+              },
+              {
+                "answer": "(-2,5]",
+                "feedback": "<p>This is the domain of \\(p\\). Use \\(-2<2-x\\le5\\) to find the allowed values of \\(x\\) for \\(g\\).</p>"
+              }
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "range-after-negative-output",
+            "field": {
+              "key": "range",
+              "label": "Range of g",
+              "type": "set",
+              "expected": "(-6,3]"
+            },
+            "prompt": "<p>For the same \\(g(x)=6-3p(2-x)\\), the range of \\(p\\) is \\([1,4)\\). Give the range of \\(g\\).</p>",
+            "hint": "<p>Apply \\(v\\mapsto 6-3v\\) to each end of the old range. The larger original output gives the smaller new output.</p>",
+            "solution": "<p>The included output \\(1\\) becomes \\(3\\). The excluded boundary \\(4\\) would give \\(-6\\). Thus \\(-6<y\\le3\\), or \\((-6,3]\\).</p>",
+            "retry": [
+              {
+                "answer": "[-6,3)",
+                "feedback": "<p>The bounds are right. \\(3\\) comes from the included output \\(1\\), and \\(-6\\) comes from the excluded boundary \\(4\\).</p>"
+              },
+              {
+                "answer": "[-3,4)",
+                "feedback": "<p>This is the new domain. The range comes from sending every original output \\(v\\) to \\(6-3v\\).</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "compare-transformation-orders",
+        "title": "Why can reversing two steps change the result?",
+        "label": "Compare two orders",
+        "level": "extension",
+        "minutes": 6,
+        "intro": "<p>Start at the same vertex \\((1,1)\\). Move one unit right, then double its horizontal distance from the \\(y\\)-axis. It finishes at \\((4,1)\\). Doubling the distance first and moving right afterwards sends it to \\((3,1)\\).</p><p><img src=\"/assets/original/functions/transformations-order.svg\" width=\"480\" height=\"324\" alt=\"The two final curves have different vertices. Translate then stretch gives (4, 1). Stretch then translate gives (3, 1).\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Apply each named transformation to the <em>current</em> point. Translating right by one then stretching parallel to the \\(x\\)-axis by factor \\(2\\) gives \\(x=2(u+1)\\). Reversing the steps gives \\(x=2u+1\\).</p><p>A horizontal change and a vertical change act on different coordinates, so their order can be exchanged. Two changes to the same coordinate can depend on order.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "tip",
+            "html": "<p>To write the equation for a given sequence, first express the new coordinate in terms of the old one. Then solve for the old input \\(u\\) in terms of the new input \\(x\\), and substitute into \\(f(u)\\).</p>"
+          },
+          {
+            "kind": "check",
+            "id": "translate-before-stretch",
+            "field": {
+              "key": "y",
+              "label": "New expression for y",
+              "type": "polynomial",
+              "expected": "(x/3+2)^2-1",
+              "variables": [
+                "x"
+              ]
+            },
+            "prompt": "<p>Start with \\(y=x^2-1\\). Translate two units left, then stretch parallel to the \\(x\\)-axis with scale factor \\(3\\). Give the final expression for \\(y\\).</p>",
+            "hint": "<p>An old input \\(u\\) moves to \\(u-2\\), then to \\(3(u-2)\\). Set this equal to \\(x\\) and solve for \\(u\\).</p>",
+            "solution": "<p>From \\(x=3(u-2)\\), find \\(u=x/3+2\\). The final expression is \\(y=(x/3+2)^2-1\\).</p>",
+            "retry": [
+              {
+                "answer": "((x+2)/3)^2-1",
+                "feedback": "<p>This gives the reverse order. The two-unit shift is also stretched, so the vertex must finish at \\(x=-6\\).</p>"
+              },
+              {
+                "answer": "(x/3-2)^2-1",
+                "feedback": "<p>This sends the vertex to the right. With a two-unit move left followed by stretching, the vertex goes to \\(x=-6\\).</p>"
+              }
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "stretch-before-translation",
+            "field": {
+              "key": "y",
+              "label": "New expression for y",
+              "type": "polynomial",
+              "expected": "((x+2)/3)^2-1",
+              "variables": [
+                "x"
+              ]
+            },
+            "prompt": "<p>Start again with \\(y=x^2-1\\). Stretch parallel to the \\(x\\)-axis with scale factor \\(3\\), then translate two units left. Give the final expression for \\(y\\).</p>",
+            "hint": "<p>The new input is \\(x=3u-2\\). Express the old input \\(u\\) in terms of \\(x\\).</p>",
+            "solution": "<p>Now \\(x=3u-2\\), so \\(u=(x+2)/3\\). The final expression is \\(y=((x+2)/3)^2-1\\).</p>",
+            "retry": [
+              {
+                "answer": "(x/3+2)^2-1",
+                "feedback": "<p>This stretches the two-unit shift, which only happens when you translate first. With the given order the vertex finishes at \\(x=-2\\).</p>"
+              },
+              {
+                "answer": "((x-2)/3)^2-1",
+                "feedback": "<p>This moves the stretched graph right. The vertex should finish at \\(x=-2\\).</p>"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Move a vertex and keep the hollow end",
+        "question": "<p>Translate the restricted graph of \\(f(x)=(x-1)^2+1\\) two units right and three units down. Find its new equation, vertex and hollow endpoint.</p>",
+        "solution": [
+          "<p>To move the curve right, the old input \\(u\\) must be reached at \\(x=u+2\\). Use \\(u=x-2\\), then subtract \\(3\\) from the output.</p>",
+          "<p>The new equation is \\(y=f(x-2)-3=(x-3)^2-2\\). Its vertex is \\((3,-2)\\).</p>",
+          "<p>The old hollow endpoint \\((2,2)\\) moves to \\((4,-1)\\). The same vector \\(\\binom{2}{-3}\\) gives both moves.</p>"
+        ]
+      },
+      {
+        "title": "Reflect one vertex in two axes",
+        "question": "<p>The original vertex is \\((1,1)\\) on \\(y=f(x)\\). Give its images on \\(y=-f(x)\\) and \\(y=f(-x)\\), and name both axes of reflection.</p>",
+        "solution": [
+          "<p>On \\(y=-f(x)\\), set \\(x=1\\) and get \\(y=-1\\). The vertex \\((1,-1)\\) is reflected in the \\(x\\)-axis.</p>",
+          "<p>On \\(y=f(-x)\\), set \\(-x=1\\) and get \\(x=-1\\). The output stays \\(1\\). The vertex \\((-1,1)\\) is reflected in the \\(y\\)-axis.</p>",
+          "<p>The original hollow endpoint is \\((2,2)\\). It stays hollow at \\((2,-2)\\) on the first graph and at \\((-2,2)\\) on the second.</p>"
+        ]
+      },
+      {
+        "title": "Find the scale factor from a marked point",
+        "question": "<p>The left end of \\(f\\) is \\((-1,5)\\). Find its images on \\(y=f(2x)\\) and \\(y=2f(x)\\). Describe each stretch.</p>",
+        "solution": [
+          "<p>For \\(f(2x)\\), solve \\(2x=-1\\) and keep \\(y=5\\). The point \\((-\\tfrac12,5)\\) shows a stretch parallel to the \\(x\\)-axis with factor \\(\\tfrac12\\).</p>",
+          "<p>For \\(2f(x)\\), keep \\(x=-1\\) and double \\(5\\). The point \\((-1,10)\\) shows a stretch parallel to the \\(y\\)-axis with factor \\(2\\).</p>",
+          "<p>Both graphs keep the endpoint included. The first halves its horizontal distance from the \\(y\\)-axis. The second doubles its vertical distance from the \\(x\\)-axis.</p>"
+        ]
+      },
+      {
+        "title": "Use the old input and output separately",
+        "question": "<p>Find the image of \\((1,1)\\) on \\(y=2f(2x-6)-1\\). Describe the horizontal changes in order.</p>",
+        "solution": [
+          "<p>Set \\(2x-6=1\\) so that \\(f\\) receives its old input. This gives \\(x=\\tfrac72\\).</p>",
+          "<p>The output is \\(2(1)-1=1\\). The new point is \\((\\tfrac72,1)\\).</p>",
+          "<p>Factor \\(2x-6=2(x-3)\\). Halve the old \\(x\\)-coordinate, then add \\(3\\). The graph stretches parallel to the \\(x\\)-axis with factor \\(\\tfrac12\\) before translating \\(3\\) units right.</p>"
+        ]
+      },
+      {
+        "title": "Track a maximum on a sine graph",
+        "question": "<p>Angles are in degrees. The point \\((90,1)\\) is a maximum on \\(y=\\sin x\\). Find the corresponding maximum on \\(y=2\\sin(x-30)+1\\).</p>",
+        "solution": [
+          "<p>Use the old input \\(90^\\circ\\): \\(x-30=90\\) gives \\(x=120\\).</p>",
+          "<p>Double the original height and add one: \\(2(1)+1=3\\). The positive multiplier keeps this point a maximum. Its image is \\((120,3)\\).</p>"
+        ]
+      },
+      {
+        "title": "Carry both brackets through a reflection",
+        "question": "<p>The restricted \\(f\\) has domain \\([-1,2)\\) and range \\([1,5]\\). Find the domain and range of \\(g(x)=7-2f(1-x)\\).</p>",
+        "solution": [
+          "<p>Require \\(-1\\le1-x<2\\). Solving gives \\(-1<x\\le2\\). The included old input \\(-1\\) moves to \\(2\\), and the excluded boundary \\(2\\) moves to \\(-1\\).</p>",
+          "<p>The original outputs run from \\(1\\) to \\(5\\), inclusive. The rule \\(v\\mapsto7-2v\\) sends \\(1\\) to \\(5\\) and \\(5\\) to \\(-3\\).</p>",
+          "<p>So the domain is \\((-1,2]\\) and the range is \\([-3,5]\\). The highest output is attained at the vertex.</p>"
+        ]
+      },
+      {
+        "title": "Write both equations and compare the vertices",
+        "question": "<p>Translate \\(y=f(x)\\) right by one, then stretch parallel to the \\(x\\)-axis by factor two. Write the final equation. Repeat with the order reversed.</p>",
+        "solution": [
+          "<p>Translate first: \\(x=2(u+1)\\), so \\(u=x/2-1\\). The equation is \\(y=f(x/2-1)\\). The vertex at old input \\(1\\) finishes at \\(x=4\\).</p>",
+          "<p>Stretch first: \\(x=2u+1\\), so \\(u=(x-1)/2\\). The equation is \\(y=f((x-1)/2)\\). The same vertex finishes at \\(x=3\\).</p>",
+          "<p>A translation performed first is also scaled by the stretch. Compare the marked vertices on the two final graphs.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Translation",
+        "definition": "<p>A move by the same vector at every point.</p>"
+      },
+      {
+        "term": "Reflection",
+        "definition": "<p>A flip across a line. Points on that line remain fixed.</p>"
+      },
+      {
+        "term": "Scale factor",
+        "definition": "<p>The multiplier of the coordinate being stretched. A positive factor below \\(1\\) reduces the distance to the other axis.</p>"
+      },
+      {
+        "term": "Corresponding point",
+        "definition": "<p>The image of a chosen point after the stated changes.</p>"
+      },
+      {
+        "term": "Domain and range",
+        "definition": "<p>All allowed inputs and all outputs the function actually takes.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Graphs of functions and inverses",
+        "href": "/courses/maths4u-9709-p1/topics/orig_functions_inverse_graphs"
+      },
+      {
+        "title": "Trigonometric graphs",
+        "href": "/courses/maths4u-9709-p1/topics/orig_trigonometry_graphs"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Follow an original point \\((u,v)\\)</h2><table><thead><tr><th scope=\"col\">New graph</th><th scope=\"col\">New point</th><th scope=\"col\">Transformation</th></tr></thead><tbody><tr><th scope=\"row\">\\(f(x-h)\\)</th><td>\\((u+h,v)\\)</td><td>Horizontal translation by \\(h\\)</td></tr><tr><th scope=\"row\">\\(f(x)+k\\)</th><td>\\((u,v+k)\\)</td><td>Vertical translation by \\(k\\)</td></tr><tr><th scope=\"row\">\\(-f(x)\\)</th><td>\\((u,-v)\\)</td><td>Reflection in the \\(x\\)-axis</td></tr><tr><th scope=\"row\">\\(f(-x)\\)</th><td>\\((-u,v)\\)</td><td>Reflection in the \\(y\\)-axis</td></tr><tr><th scope=\"row\">\\(af(x)\\), \\(a>0\\)</th><td>\\((u,av)\\)</td><td>Stretch parallel to \\(y\\)-axis, factor \\(a\\)</td></tr><tr><th scope=\"row\">\\(f(bx)\\), \\(b>0\\)</th><td>\\((u/b,v)\\)</td><td>Stretch parallel to \\(x\\)-axis, factor \\(1/b\\)</td></tr></tbody></table><p><img src=\"/assets/original/functions/transformations-stretch.svg\" width=\"480\" height=\"289\" alt=\"The vertex of f at (1, 1) moves to (one half, 1) on f(2x).\"></p><h2>Combine the changes and check the bounds</h2><p>For \\(y=A f(B(x-h))+k\\), with \\(A,B\\ne0\\), solve \\(B(x-h)=u\\) and set \\(y=Av+k\\). Factor the inside before reading the horizontal translation. A negative multiplier adds a reflection in the relevant axis.</p><p>Map the original domain using the input rule and the original range using the output rule. Carry open and closed endpoints. For two changes to the same coordinate, follow the order given.</p>",
+      "checks": "<ul><li>Keep the old input inside the function.</li><li>Use the reciprocal horizontal scale factor.</li><li>Carry every included or excluded boundary to its new position.</li></ul>",
+      "examTip": "<p>Give the direction and scale factor of a stretch, the axis of reflection and the vector for a translation. Label a corresponding point to check the sketch.</p>"
+    }
   }
 }

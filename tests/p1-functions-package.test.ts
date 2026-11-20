@@ -18,6 +18,7 @@ const firstLesson = "orig_functions_inverse";
 const compositeLesson = "orig_functions_composite";
 const restrictedLesson = "orig_functions_restricted_inverse";
 const graphsLesson = "orig_functions_inverse_graphs";
+const transformationsLesson = "orig_functions_transformations";
 test('Functions reuses the five existing lessons and preserves all 200 authored written records',async()=>{
   assert.deepEqual(p.lessons.map(l=>l.id),['orig_functions_inverse','orig_functions_composite','orig_functions_restricted_inverse','orig_functions_inverse_graphs','orig_functions_transformations']);
   assert.equal(p.questions.length,240);assert.equal(p.questions.filter(q=>q.variant_index===0).length,50);
@@ -214,6 +215,42 @@ test("inverse graph checks preserve coordinates, missing intercepts and all comm
   }
   assert.equal(grade("reflect-every-point","(2,-3),(5,)").status,"format");
   assert.equal(gradeStudyCheck(restrictedLesson,"reflect-every-point","(2,-3);(5,1);(9,4)"),undefined);
+});
+
+test("transformations check scale, complete formulas and the inclusion of both bounds", () => {
+  const grade = (id: string, answer: string) => gradeStudyCheck(transformationsLesson, id, answer)!;
+  for (const [id, answers] of [
+    ["translated-point", ["x = -2, y = -1", "(-2,-1)"]],
+    ["translated-equation", ["y=x^2+4x+7", "(x+3)^2-2(x+3)+4"]],
+    ["reflection-in-x-axis", ["(−3,−2)"]],
+    ["reflection-in-y-axis", ["(−4,−2)"]],
+    ["horizontal-stretch-point", ["(-3/2,5)", "(-1.5, 5)"]],
+    ["stretch-and-reflect-equation", ["y=-2((x/3)^2+1)", "-2x^2/9-2"]],
+    ["combined-point", ["(1,-5)"]],
+    ["transformed-sine-minimum", ["(45,-1)"]],
+    ["domain-after-negative-input", ["−3 ≤ x < 4", "[-3,4)"]],
+    ["range-after-negative-output", ["−6 < y ≤ 3", "-6 < g(x) <= 3", "(-6,3]"]],
+    ["translate-before-stretch", ["(x/3+2)^2-1", "y=x^2/9+4x/3+3"]],
+    ["stretch-before-translation", ["((x+2)/3)^2-1", "x^2/9+4x/9-5/9"]],
+  ] as const) {
+    for (const answer of answers) assert.equal(grade(id, answer).status, "correct", id + " / " + answer);
+  }
+  for (const [id, answer, mistake] of [
+    ["translated-equation", "(x+3)^2-2x+4", /both terms/],
+    ["reflection-in-x-axis", "(3,2)", /output/],
+    ["horizontal-stretch-point", "(-6,5)", /original input/],
+    ["combined-point", "(1,-3)", /before adding/],
+    ["domain-after-negative-input", "(-3,4]", /closed bracket/],
+    ["range-after-negative-output", "[-6,3)", /included output/],
+    ["translate-before-stretch", "((x+2)/3)^2-1", /reverse order/],
+    ["stretch-before-translation", "(x/3+2)^2-1", /translate first/],
+  ] as const) {
+    const result = grade(id, answer);
+    assert.equal(result.status, "retry", id);
+    assert.match(result.feedback, mistake);
+  }
+  assert.equal(grade("horizontal-stretch-point", "(-3/2,)").status, "format");
+  assert.equal(gradeStudyCheck(graphsLesson, "combined-point", "(1,-5)"), undefined);
 });
 
 test('fractional answers accept equivalent whole ratios and interval checks respect both endpoints',()=>{

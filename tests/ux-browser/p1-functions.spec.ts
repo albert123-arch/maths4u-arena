@@ -11,6 +11,7 @@ const lessonUrl = base + lessonPath;
 const compositePath = coursePath + '/topics/orig_functions_composite';
 const restrictedPath = coursePath + '/topics/orig_functions_restricted_inverse';
 const graphsPath = coursePath + '/topics/orig_functions_inverse_graphs';
+const transformationsPath = coursePath + '/topics/orig_functions_transformations';
 test.beforeAll(async()=>{await fs.mkdir(out,{recursive:true});});
 test('Functions: all five public lessons at desktop and mobile widths',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -64,7 +65,7 @@ test('the new Functions lesson and canonical chapter are readable without JavaSc
       expect.objectContaining({'@type':['WebPage','LearningResource'],url:'https://arena.maths4u.sbs'+lessonPath}),
     ]));
     const sitemap = await (await ctx.request.get('/sitemap.xml')).text();
-    for (const path of [chapterPath, lessonPath, compositePath, restrictedPath, graphsPath]) {
+    for (const path of [chapterPath, lessonPath, compositePath, restrictedPath, graphsPath, transformationsPath]) {
       expect(sitemap.split('<loc>https://arena.maths4u.sbs' + path + '</loc>')).toHaveLength(2);
     }
     expect(sitemap).not.toContain('?view=revision');
@@ -85,6 +86,11 @@ test('the new Functions lesson and canonical chapter are readable without JavaSc
     await expect(page.locator('#reflect-in-the-diagonal header img')).toBeVisible();
     await expect(page.locator('#keep-endpoints table tbody tr')).toHaveCount(2);
     await expect(page.locator('#fixed-points-on-the-mirror article ol > li:visible')).toHaveCount(3);
+    await page.goto(transformationsPath);
+    await expect(page).toHaveTitle('Translations, reflections and ordered stretches | 9709 Pure 1 | Maths4U');
+    await expect(page.locator('head link[rel=canonical]')).toHaveAttribute('href','https://arena.maths4u.sbs'+transformationsPath);
+    await expect(page.locator('#translate-a-graph header img')).toBeVisible();
+    await expect(page.locator('#compare-transformation-orders article ol > li:visible')).toHaveCount(3);
   } finally {
     await ctx.close();
   }
@@ -323,6 +329,62 @@ test('inverse graphs reflect points, check included features and repeat a fresh 
   await expect(practice.locator('.square-result')).toContainText('All final answers are correct');
   await page.reload();
   await expect(points).toHaveValue('(1,−2), (3,0), (7,4)');
+});
+
+test('transformations check the order and bounds, print a revision sheet and offer a fresh question', async ({page}) => {
+  await page.setViewportSize({width:390,height:860});
+  await page.emulateMedia({colorScheme:'dark'});
+  await page.goto(base + transformationsPath + '#translate-a-graph');
+  const drawing = page.locator('#translate-a-graph header img');
+  await expect.poll(() => drawing.evaluate((img:HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+  const example = page.locator('#translate-a-graph article').first();
+  await expect(example.locator('ol > li:visible')).toHaveCount(1);
+  await example.getByRole('button',{name:'Show next step'}).click();
+  await expect(example.locator('ol > li:visible')).toHaveCount(2);
+
+  const order = page.locator('[data-study-check="translate-before-stretch"]');
+  await order.getByRole('button',{name:'Hint',exact:true}).click();
+  await expect(order.getByText('Set this equal to', {exact:false})).toBeVisible();
+  await order.getByRole('textbox').fill('((x+2)/3)^2-1');
+  await order.getByRole('textbox').press('Enter');
+  await expect(order.locator('[data-status=retry]')).toContainText('reverse order');
+  await order.getByRole('textbox').fill('y=x^2/9+4x/3+3');
+  await order.getByRole('textbox').press('Enter');
+  await expect(order.locator('[data-status=correct]')).toBeVisible();
+
+  const range = page.locator('[data-study-check="range-after-negative-output"]');
+  await range.getByRole('textbox').fill('[-6,3)');
+  await range.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(range.locator('[data-status=retry]')).toContainText('excluded boundary');
+  await range.getByRole('textbox').fill('-6 < g(x) ≤ 3');
+  await range.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(range.locator('[data-status=correct]')).toBeVisible();
+  await expect(page.locator('.katex-error')).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(391);
+
+  await page.locator('#review').getByRole('link',{name:'Quick revision sheet (A4)'}).click();
+  await expect(page).toHaveURL(base + transformationsPath + '?view=revision');
+  await expect(page.locator('meta[name=robots]')).toHaveAttribute('content',/noindex/);
+  await expect(page.locator('main table tbody tr')).toHaveCount(6);
+
+  await page.goto(base + transformationsPath + '?item=M4U-9709-P1-FN-CHECK-TRANSFORMATIONS-1-0#practice');
+  const practice = page.locator('#practice');
+  const point = practice.getByRole('textbox',{name:'Transformed point (x,y)',exact:true});
+  const domain = practice.getByRole('textbox',{name:'Transformed domain',exact:true});
+  const checkAnswer = practice.getByRole('button',{name:'Check answer',exact:true});
+  await point.fill('(2,-6)');
+  await domain.fill('[5/3,3]');
+  await checkAnswer.click();
+  await expect(practice.locator('.square-result')).toContainText('Look at the fields');
+  await page.locator('#review').getByRole('button',{name:'Review with a fresh variant →',exact:true}).click();
+  await expect(page).toHaveURL(/item=M4U-9709-P1-FN-CHECK-TRANSFORMATIONS-1-1/);
+  await point.fill('x = -3, y = -7');
+  await domain.fill('-4 < x ≤ -2');
+  await checkAnswer.click();
+  await expect(practice.locator('.square-result')).toContainText('All final answers are correct');
+  await page.reload();
+  await expect(point).toHaveValue('x = -3, y = -7');
+  await expect(domain).toHaveValue('-4 < x ≤ -2');
 });
 
 test('written variants and diagrams retain marks and help boundaries on mobile',async({page})=>{
