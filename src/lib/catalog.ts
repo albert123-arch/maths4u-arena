@@ -14,6 +14,7 @@ import { archiveLessonNavigation, archiveRelated, courseTreeOverlay } from './co
 import { furtherPublic } from './further-public';
 import { unallocatedChapter, unallocatedId } from './course-tree-plan';
 import { canUseTeacherLibrary } from "./teacher-account";
+import { quadraticsStudy } from "./quadratics-study";
 
 const filterSchema = z.object({ q: z.string().max(100).default(""), course: z.string().max(191).default(""), chapter: z.string().max(191).default(""), topic: z.string().max(191).default(""),
   source:z.enum(['','ORIGINAL','CAMBRIDGE','ALL']).default(''),taskId:z.string().max(191).default(''),legacyLesson:z.string().max(191).default(''),
@@ -185,7 +186,11 @@ export async function topicContent(actor: Actor | null, id: string, lang: string
   if (ru) ensure((await publicLanguages()).lessons.some(l => l.id === id), 404, "NOT_FOUND");
   const text = ru ? l.versions[0].texts.find(t => t.locale === "ru") ?? { locale: "ru", title: localized(l.versions[0].texts, "en").title, body: "", examples: "" } : localized(l.versions[0].texts, lang), hierarchy = (await courseCatalog(actor, lang, c.slug, strictLocale,archiveAdmin(actor)))[0];
   const topics = [...hierarchy.chapters,...(hierarchy.archiveChapters??[])].flatMap(ch => ch.topics), i = topics.findIndex(t => t.id === id);ensure(i>=0,404,'NOT_FOUND');
-  return { id, title: displayTitle(text.title), locale: text.locale, body: displayMarkup(renderContent(text.body)), examples: displayMarkup(renderContent(text.examples ?? "")), questionCounts: topics[i].questionCounts,
+  const study = text.locale === "en" ? quadraticsStudy(id) : undefined;
+  const examples = study
+    ? study.examples.map(example => "<h3>" + example.title + "</h3>" + example.question + example.solution).join("\n")
+    : text.examples ?? "";
+  return { id, title: displayTitle(text.title), locale: text.locale, body: displayMarkup(renderContent(study?.notes ?? text.body)), examples: displayMarkup(renderContent(examples)), questionCounts: topics[i].questionCounts,
     original: hierarchy.chapters.find(ch => ch.id === l.topicId)?.original ?? false, writtenLabel: hierarchy.chapters.find(ch => ch.id === l.topicId)?.writtenLabel ?? "written",
     course: { id: c.id, slug: c.slug, title: displayTitle(localized(c.texts, lang).title) }, chapter: { id: l.topicId, title: displayTitle(localized(l.topic.texts, lang).title) }, previous: topics[i - 1] ?? null, next: topics[i + 1] ?? null,synthetic:false,cambridgeCount:topics[i].cambridgeCount,redirectTo:navigation??undefined };
 }
