@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import pack from '../../content/original/9709-p1/quadratics-v1.json';
 
 const base='http://127.0.0.1:3109',out='.local/p1-quadratics-20261108/screenshots';
-const revisedExamples: Record<string,number> = { equations:7, square:10, discriminant:11 };
+const revisedExamples: Record<string,number> = { equations:7, square:10, discriminant:11, inequalities:11 };
 test.beforeAll(async()=>{await fs.mkdir(out,{recursive:true});});
 test('five public lessons: desktop and mobile notes, mathematical layout and main-only lists',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));

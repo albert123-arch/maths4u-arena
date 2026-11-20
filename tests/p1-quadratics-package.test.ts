@@ -16,6 +16,7 @@ const revisedStudy: Record<string,{count:number;first:string;last:string}> = {
   equations: { count: 7, first: 'What are we trying to find?', last: 'Fractions, reciprocals and real situations' },
   square: { count: 10, first: 'What does completing the square do?', last: 'Restricted domains can change the range' },
   discriminant: { count: 11, first: 'What does the discriminant tell you?', last: 'Positive or negative for all real x' },
+  inequalities: { count: 11, first: 'An inequality asks where, not just where zero occurs', last: 'Build the condition, then interpret the answer' },
 };
 test('old lessons remain available until the exact new package is published',async()=>{
   const id=p.lessons[0].id,old=quadraticTopics[0];
@@ -64,6 +65,16 @@ test('all complete quick answers work; wrong or missing fields fail; review chan
       assert(dto.notes.includes('/assets/original/quadratics/parabola-line-intersections.svg'));
       assert.equal(dto.notes.match(/<div class="table-scroll"><table>/g)?.length,3);
       assert(dto.examples.find(e=>e.title==='Classify a whole family')?.solution.includes('<div class="table-scroll"><table>'));
+    }
+    if(l.key==='inequalities'){
+      assert(dto.notes.includes('/assets/original/quadratics/inequality-sign-interval.svg'));
+      assert(dto.notes.includes('/assets/original/quadratics/inequality-domain-overlap.svg'));
+      const product=dto.examples.find(e=>e.title==='A product that must be negative');
+      const hole=dto.examples.find(e=>e.title==='Cancelling leaves a hole');
+      assert(product?.solution.includes('<div class="table-scroll"><table>'));
+      assert(product.solution.includes('x\\in(-5,2)'));
+      assert(hole?.solution.includes('<div class="table-scroll"><table>'));
+      assert(hole.solution.includes('(-\\infty,2)\\cup(2,3]'));
     }
     assert.equal(dto.navigation?.directionTitle,'AS & A Level');
     const raw=JSON.stringify(dto);for(const key of ['"expected"','ownerProvenance','source_problem_id','source_exam','sourceSha256','archiveTaskId'])assert(!raw.includes(key),key);
