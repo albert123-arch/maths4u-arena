@@ -32,7 +32,7 @@ test("new answer formats compare exact meaning and preserve requested structure"
   assert(!check({type:"ratio",variables:["k"],expected:["-k","k-2"]},"-k*(k+1) ; (k-2)*(k+1)"));
 });
 test("each topic has notes, worked examples, diagnostics, exact public fields and clean KaTeX",()=>{
-  const revisedExamples: Record<string,number> = { equations:7, "completing-square":10, discriminant:11 };
+  const revisedExamples: Record<string,number> = { equations:7, "completing-square":10, discriminant:11, inequalities:11 };
   for(const t of quadraticTopics){const lesson=squarePublicLesson(t),qs=questionsForTopic(t.key);
     assert.equal(lesson.examples.length,revisedExamples[t.key]??4);assert.equal(lesson.questions.filter(q=>q.collection==="short").length,12);assert.equal(lesson.questions.filter(q=>q.collection==="variant").length,12);
     assert(lesson.questions.some(q=>q.collection==="diagnostic"));assert.equal(lesson.questions.filter(q=>q.collection==="exam").length,4);
