@@ -1,12 +1,14 @@
 import {test,expect,request} from '@playwright/test';
 import fs from 'node:fs/promises';
 import pack from '../../content/original/9709-p1/functions-v1.json';
+import teaching from '../../content/original/9709-p1/functions-study.json';
 
 const base='http://127.0.0.1:3109',out='.local/p1-functions-20261108/screenshots';
 const coursePath = '/courses/' + pack.course.slug;
 const chapterPath = coursePath + '/chapters/functions';
 const lessonPath = coursePath + '/topics/orig_functions_inverse';
 const lessonUrl = base + lessonPath;
+const compositePath = coursePath + '/topics/orig_functions_composite';
 test.beforeAll(async()=>{await fs.mkdir(out,{recursive:true});});
 test('Functions: all five public lessons at desktop and mobile widths',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -18,9 +20,11 @@ test('Functions: all five public lessons at desktop and mobile widths',async({pa
     await page.goto(base+'/courses/'+pack.course.slug+'/topics/'+l.id);
     await expect(page.getByRole('heading',{name:l.title,exact:true})).toBeVisible();
     await expect(page.getByRole('button',{name:'Check answer',exact:true})).toBeEnabled();
-    if (l.id === 'orig_functions_inverse') {
-      await expect(page.locator('#examples li a')).toHaveCount(7);
-      await expect(page.locator('[data-study-check]')).toHaveCount(10);
+    const lesson = teaching[l.id as keyof typeof teaching];
+    if (lesson) {
+      const checks = lesson.sections.reduce((total, section) => total + section.blocks.filter(block => block.kind === 'check').length, 0);
+      await expect(page.locator('#examples li a')).toHaveCount(lesson.examples.length);
+      await expect(page.locator('[data-study-check]')).toHaveCount(checks);
     } else await expect(page.locator('#examples .square-example')).toHaveCount(4);
     await expect(page.locator('.katex-error')).toHaveCount(0);
     await expect(page.locator('#challenge .square-challenges button')).toHaveCount(10);
@@ -58,10 +62,15 @@ test('the new Functions lesson and canonical chapter are readable without JavaSc
       expect.objectContaining({'@type':['WebPage','LearningResource'],url:'https://arena.maths4u.sbs'+lessonPath}),
     ]));
     const sitemap = await (await ctx.request.get('/sitemap.xml')).text();
-    for (const path of [chapterPath, lessonPath]) {
+    for (const path of [chapterPath, lessonPath, compositePath]) {
       expect(sitemap.split('<loc>https://arena.maths4u.sbs' + path + '</loc>')).toHaveLength(2);
     }
     expect(sitemap).not.toContain('?view=revision');
+    await page.goto(compositePath);
+    await expect(page).toHaveTitle('Composite functions and their domains | 9709 Pure 1 | Maths4U');
+    await expect(page.locator('head link[rel=canonical]')).toHaveAttribute('href','https://arena.maths4u.sbs'+compositePath);
+    await expect(page.locator('#which-function-first header img')).toBeVisible();
+    await expect(page.locator('#keep-original-exclusions article ol > li:visible')).toHaveCount(3);
   } finally {
     await ctx.close();
   }
@@ -127,6 +136,65 @@ test('guest checking rejects a wrong endpoint, gives a fresh inverse and retains
   await expect(page.locator('.square-result')).toContainText('All final answers are correct');
   await page.reload();await expect(page.getByRole('textbox',{name:'Inverse domain',exact:true})).toHaveValue('1 < x ≤ 13');
   await expect(page.locator('#review')).toContainText('Return after a break');
+});
+
+test('composite lesson checks both domains and offers a fresh practice variant', async ({page}) => {
+  await page.setViewportSize({width:390,height:860});
+  await page.emulateMedia({colorScheme:'dark'});
+  await page.goto(base + compositePath + '#which-function-first');
+  const images = page.locator('#notes header img[src*="/composite-"]');
+  await expect(images).toHaveCount(4);
+  for (const img of await images.all()) {
+    await img.scrollIntoViewIfNeeded();
+    await expect.poll(() => img.evaluate((el:HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+  }
+  const worked = page.locator('#pull-back-root article');
+  await expect(worked.locator('ol > li:visible')).toHaveCount(1);
+  await worked.getByRole('button',{name:'Show next step'}).click();
+  await expect(worked.locator('ol > li:visible')).toHaveCount(2);
+
+  const root = page.locator('[data-study-check="root-needs-two-branches"]');
+  await root.getByRole('button',{name:'Hint',exact:true}).click();
+  await expect(root.getByText('Take both branches', {exact:false})).toBeVisible();
+  await root.getByRole('textbox').fill('[3,4)');
+  await root.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(root.locator('[data-status=retry]')).toContainText('positive branch');
+  await root.getByRole('textbox').fill('−5 ≤ x ≤ −3 or 3 ≤ x < 4');
+  await root.getByRole('textbox').press('Enter');
+  await expect(root.locator('[data-status=correct]')).toBeVisible();
+
+  const fraction = page.locator('[data-study-check="fraction-composite-domain"]');
+  await fraction.getByRole('textbox').fill('x ≠ −2');
+  await fraction.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(fraction.locator('[data-status=retry]')).toContainText('original fraction');
+  await fraction.getByRole('textbox').fill('x ≠ −2 and x ≠ 0');
+  await fraction.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(fraction.locator('[data-status=correct]')).toBeVisible();
+  await expect(page.locator('#keep-original-exclusions a[href="#practice"]')).toBeVisible();
+  await expect(page.locator('.katex-error')).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(391);
+  await page.locator('#review').getByRole('link',{name:'Quick revision sheet (A4)'}).click();
+  await expect(page).toHaveURL(base + compositePath + '?view=revision');
+  await expect(page.locator('head meta[name=robots]')).toHaveAttribute('content',/noindex/);
+  await expect(page.getByRole('heading',{name:'Composite functions and their domains',exact:true})).toBeVisible();
+
+  await page.goto(base + compositePath + '#practice');
+  const practice = page.locator('#practice');
+  const fg = practice.getByRole('textbox',{name:'fg(x)',exact:true});
+  const gf = practice.getByRole('textbox',{name:'gf(x)',exact:true});
+  await fg.fill('9x^2-12x+5');
+  await gf.fill('9x^2-12x+5');
+  await practice.getByRole('button',{name:'Check answer',exact:true}).click();
+  await expect(practice.locator('.square-result')).toContainText('Look at the fields');
+  await page.locator('#review').getByRole('button',{name:'Review with a fresh variant →',exact:true}).click();
+  await expect(page).toHaveURL(/item=M4U-9709-P1-FN-CHECK-COMPOSITE-1-1/);
+  await fg.fill('3-2x^2');
+  await gf.fill('(5-2x)^2+1');
+  await practice.getByRole('button',{name:'Check answer',exact:true}).click();
+  await expect(practice.locator('.square-result')).toContainText('All final answers are correct');
+  await page.reload();
+  await expect(fg).toHaveValue('3-2x^2');
+  await expect(gf).toHaveValue('(5-2x)^2+1');
 });
 
 test('written variants and diagrams retain marks and help boundaries on mobile',async({page})=>{

@@ -447,5 +447,345 @@
       "checks": "<ul><li>Check which endpoints are reached.</li><li>Check that each attained output has one original input.</li><li>Keep the inverse input restriction with the formula.</li></ul>",
       "examTip": "<p>Show a pair of equal outputs to disprove one–one. When finding an inverse, write the rearranged equation before renaming the variable, and state its domain separately.</p>"
     }
+  },
+  "orig_functions_composite": {
+    "updatedOn": "2026-11-20",
+    "description": "Learn composite functions for Cambridge 9709 Pure 1. Work out fg and gf, find their allowed inputs and keep domain restrictions after simplifying.",
+    "sections": [
+      {
+        "id": "which-function-first",
+        "title": "Which function acts first?",
+        "label": "Read the order",
+        "level": "core",
+        "minutes": 4,
+        "intro": "<p>In the first lesson, \\(f(x)=5-2x\\) took \\(2\\) to \\(1\\). Now let \\(g(x)=x+1\\) for all real \\(x\\). Start at \\(1\\), add \\(1\\) using \\(g\\), then put the result into \\(f\\). You have found \\(fg(1)\\).</p><p><img src=\"/assets/original/functions/composite-order.svg\" width=\"480\" height=\"200\" alt=\"For fg of 1, g takes 1 to 2 and f takes 2 to 1. For gf of 1, f takes 1 to 3 and g takes 3 to 4.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Read \\(fg(x)\\) as \\(f(g(x))\\). Start with the function next to the input. Its output becomes the input of the second function. The notation \\((f\\circ g)(x)\\) means the same thing. This calculation needs both steps to be defined at the chosen input.</p>"
+          },
+          {"kind": "example", "index": 0},
+          {
+            "kind": "mistake",
+            "html": "<p>Writing \\(f(1)g(1)\\) multiplies two separate outputs, \\(3\\times2=6\\). For \\(fg(1)\\), pass the output \\(2\\) from \\(g\\) into \\(f\\), which gives \\(1\\).</p>"
+          },
+          {
+            "kind": "check",
+            "id": "apply-inner-first",
+            "field": {"key": "y", "label": "Value of pq(6)", "type": "number", "expected": "7"},
+            "prompt": "<p>Let \\(p(x)=2x+3\\) and \\(q(x)=x-4\\) for all real \\(x\\). Find \\(pq(6)\\).</p>",
+            "hint": "<p>Find \\(q(6)\\) first. Use that result as the input of \\(p\\).</p>",
+            "solution": "<p>\\(q(6)=2\\), so \\(pq(6)=p(2)=2\\times 2+3=7\\).</p>",
+            "retry": [
+              {"answer": "11", "feedback": "<p>Starting with \\(p\\) gives \\(qp(6)\\). In \\(pq(6)\\), \\(q\\) acts first, so start by subtracting \\(4\\).</p>"},
+              {"answer": "30", "feedback": "<p>You multiplied \\(p(6)\\) by \\(q(6)\\). Feed \\(q(6)=2\\) into \\(p\\) instead.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "build-both-formulae",
+        "title": "How do I build the formula in either order?",
+        "label": "Build both formulae",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>Work with \\(x\\) instead of a single number. Write the outside rule with an empty input, then put the whole inside expression into that space.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>In \\(f(g(x))\\), substitute the whole \\(g(x)\\) wherever the input occurs in \\(f\\). Use brackets before expanding. To find \\(gf(x)\\), switch which rule receives the substitution.</p>"
+          },
+          {"kind": "example", "index": 1},
+          {"kind": "example", "index": 2},
+          {
+            "kind": "tip",
+            "html": "<p>Start a written solution with \\(fg(x)=f(g(x))\\) to show the order. If the same rule is used twice, \\(ff(x)=f(f(x))\\). To square one output, write \\([f(x)]^2\\).</p>"
+          },
+          {
+            "kind": "check",
+            "id": "formula-ab",
+            "field": {"key": "formula", "label": "Expression in x for ab(x)", "type": "polynomial", "variables": ["x"], "expected": "4*x^2-2*x-2"},
+            "prompt": "<p>Let \\(a(x)=x^2-3x\\) and \\(b(x)=2x+1\\) for all real \\(x\\). Give the right-hand side of \\(ab(x)\\). Either expanded or bracketed form is fine.</p>",
+            "hint": "<p>Put \\(2x+1\\) in both input positions of \\(a\\): the squared term and the term multiplied by \\(-3\\).</p>",
+            "solution": "<p>\\(ab(x)=(2x+1)^2-3(2x+1)=4x^2-2x-2\\).</p>",
+            "retry": [
+              {"answer": "(2x+1)^2-3x", "feedback": "<p>You replaced the input in the square. Replace the second \\(x\\) in \\(-3x\\) with \\(2x+1\\) as well.</p>"},
+              {"answer": "2x^2-6x+1", "feedback": "<p>This applies \\(a\\) first and gives \\(ba(x)\\). For \\(ab(x)\\), apply \\(b\\) first.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "formula-ba",
+            "field": {"key": "formula", "label": "Expression in x for ba(x)", "type": "polynomial", "variables": ["x"], "expected": "2*x^2-6*x+1"},
+            "prompt": "<p>For those same rules, \\(a(x)=x^2-3x\\) and \\(b(x)=2x+1\\), give the right-hand side of \\(ba(x)\\).</p>",
+            "hint": "<p>This time \\(x^2-3x\\) goes into \\(b\\). Double the whole expression, then add \\(1\\).</p>",
+            "solution": "<p>\\(ba(x)=2(x^2-3x)+1=2x^2-6x+1\\).</p>",
+            "retry": [
+              {"answer": "4x^2-2x-2", "feedback": "<p>That is \\(ab(x)\\). For \\(ba(x)\\), the squared expression comes from \\(a\\), which acts first.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "match-range-to-domain",
+        "title": "Which inputs get through both functions?",
+        "label": "Check both domains",
+        "level": "core",
+        "minutes": 7,
+        "intro": "<p>With \\(g(x)=x+1\\), an input of \\(2\\) gives \\(g(2)=3\\). The original function \\(f(x)=5-2x\\) has domain \\(-2\\le x&lt;3\\). Since it cannot take \\(3\\), the calculation of \\(fg(2)\\) stops there.</p><p><img src=\"/assets/original/functions/composite-domain.svg\" width=\"480\" height=\"220\" alt=\"The allowed inputs of fg run from closed minus 3 to open 2. Adding 1 sends them to the interval from closed minus 2 to open 3, which is the domain of f.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<ol><li>Keep only inputs \\(x\\) that the inside function \\(g\\) accepts.</li><li>Require the intermediate value \\(g(x)\\) to be in the domain of \\(f\\).</li><li>Give the inputs that satisfy both conditions.</li></ol>"
+          },
+          {"kind": "example", "index": 3},
+          {
+            "kind": "tip",
+            "html": "<p>If asked whether \\(fg\\) can be formed for the functions as given, compare the <strong>whole range of \\(g\\)</strong> with the <strong>domain of \\(f\\)</strong>. Every output of \\(g\\) must be accepted by \\(f\\). When only some inputs work, state the restriction on \\(g\\) explicitly.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "composite-domain-both-conditions",
+            "field": {"key": "domain", "label": "Complete domain of pq", "type": "set", "expected": "(2,4]"},
+            "prompt": "<p>Let \\(p(t)=t^2\\) on \\(0\\le t&lt;5\\), and \\(q(x)=9-2x\\) on \\(-1\\le x\\le4\\). Restrict \\(q\\) to the inputs that give a value for \\(pq(x)\\). Give that complete interval.</p>",
+            "hint": "<p>Solve \\(0\\le9-2x&lt;5\\). Then take the overlap with \\(-1\\le x\\le4\\).</p>",
+            "solution": "<p>The outside rule requires \\(2&lt;x\\le\\tfrac92\\). The inside rule only takes \\(x\\le4\\), so the allowed inputs are \\(2&lt;x\\le4\\), or \\((2,4]\\).</p>",
+            "retry": [
+              {"answer": "(2,9/2]", "feedback": "<p>You found when the outside rule accepts \\(q(x)\\). The original rule \\(q\\) also requires \\(x\\le4\\).</p>"},
+              {"answer": "[-1,4]", "feedback": "<p>These are all the inputs of \\(q\\). Keep only those whose outputs satisfy \\(0\\le q(x)&lt;5\\).</p>"},
+              {"answer": "[2,4]", "feedback": "<p>At \\(x=2\\), \\(q(x)=5\\). The outside rule excludes \\(5\\), so the lower endpoint is open.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "whole-domain-counterexample",
+            "field": {"key": "y", "label": "Largest output of q", "type": "number", "expected": "11"},
+            "prompt": "<p>Use \\(q(x)=9-2x\\) on its whole stated domain \\(-1\\le x\\le4\\). Give its largest output to show why \\(pq\\) cannot be formed on that whole domain.</p>",
+            "hint": "<p>The line decreases. Which included input gives its largest output?</p>",
+            "solution": "<p>At \\(x=-1\\), \\(q(-1)=11\\). This output is outside the interval \\([0,5)\\) accepted by \\(p\\).</p>",
+            "retry": [
+              {"answer": "-1", "feedback": "<p>That is the input that gives the maximum. Substitute it into \\(9-2x\\) to get the output.</p>"},
+              {"answer": "1", "feedback": "<p>\\(q(4)=1\\) is the smallest output. Use the left-hand endpoint for the maximum.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "pull-back-root",
+        "title": "What if the outside rule contains a square root?",
+        "label": "Keep both branches",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>Let \\(q(x)=x^2+3\\) on \\(-4\\le x&lt;3\\). If the outside rule is \\(p(t)=\\sqrt{t-7}\\), it only accepts values \\(t\\ge7\\). Look for both parts of the graph of \\(q\\) at or above \\(7\\).</p><p><img src=\"/assets/original/functions/composite-root-threshold.svg\" width=\"480\" height=\"280\" alt=\"The restriction of y = x squared plus 3 from x = minus 4 to x = 3 meets y = 7 at x = minus 2 and x = 2. The allowed branches run from minus 4 to minus 2, and from 2 up to but excluding 3.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write the condition on the inside output first. Here \\(q(x)\\ge7\\) gives a quadratic inequality in \\(x\\). Solve it before applying the original bounds on \\(x\\).</p>"
+          },
+          {"kind": "example", "index": 4},
+          {
+            "kind": "mistake",
+            "html": "<p>\\(x^2\\ge4\\) has two branches. For example, \\(x=-3\\) gives \\(q(-3)=12\\), which the outside root accepts. A radicand of zero is also allowed.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "root-needs-two-branches",
+            "field": {"key": "domain", "label": "Complete domain of pq", "type": "set", "expected": "[-5,-3] U [3,4)"},
+            "prompt": "<p>Let \\(p(t)=\\sqrt{t-13}\\) for \\(t\\ge13\\) and \\(q(x)=x^2+4\\) for \\(-5\\le x&lt;4\\). Give every input for which \\(pq(x)\\) is defined.</p>",
+            "hint": "<p>Require \\(x^2+4\\ge13\\). Take both branches of that inequality and keep their portions inside \\([-5,4)\\).</p>",
+            "solution": "<p>\\(x^2\\ge9\\) gives \\(x\\le-3\\) or \\(x\\ge3\\). With the stated domain of \\(q\\), the answer is \\([-5,-3]\\cup[3,4)\\). In inequality notation, write \\(-5\\le x\\le-3\\) or \\(3\\le x&lt;4\\).</p>",
+            "retry": [
+              {"answer": "[3,4)", "feedback": "<p>This is the positive branch. Values with \\(x\\le-3\\) can also have \\(x^2\\ge9\\). Keep the part from \\(-5\\) to \\(-3\\).</p>"},
+              {"answer": "[-5,-3]", "feedback": "<p>This is the negative branch. The squared input is also at least \\(9\\) from \\(3\\) up to \\(4\\), excluding \\(4\\).</p>"},
+              {"answer": "[-5,-3) U (3,4)", "feedback": "<p>At \\(x=-3\\) and \\(x=3\\), the radicand is zero. Include both points.</p>"},
+              {"answer": "[-5,-3] U [3,4]", "feedback": "<p>Both square-root boundaries are included. The inside rule excludes \\(x=4\\), so use an open endpoint there.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "keep-original-exclusions",
+        "title": "Can simplification bring back a forbidden input?",
+        "label": "Keep original exclusions",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>The graph below comes from composing two fractions. The rule simplifies to \\(x-3\\), but the inside fraction is undefined at \\(3\\). The hollow point is part of the final answer.</p><p><img src=\"/assets/original/functions/composite-missing-point.svg\" width=\"480\" height=\"245\" alt=\"The line y = x minus 3 has an open point at (3, 0), since the composite excludes x = 3.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write the exclusions from the two original steps before simplifying. Keep them alongside the resulting rule, even if a denominator disappears.</p>"
+          },
+          {"kind": "example", "index": 5},
+          {
+            "kind": "text",
+            "title": "A link to inverses",
+            "html": "<p>When two rules undo each other, their composite gives back its input. For the \\(f\\) from the first lesson, \\(f^{-1}(f(x))=x\\) for \\(-2\\le x&lt;3\\). In the reverse order, \\(f(f^{-1}(x))=x\\) for \\(-1&lt;x\\le9\\). Both expressions are \\(x\\), with different allowed inputs.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "fraction-composite-formula",
+            "field": {"key": "ratio", "label": "Numerator and denominator of pq(x)", "type": "ratio", "variables": ["x"], "expected": ["4*x", "x+2"]},
+            "prompt": "<p>Let \\(p(t)=\\dfrac4{t+1}\\) for \\(t\\ne-1\\), and \\(q(x)=\\dfrac2x\\) for \\(x\\ne0\\). Write \\(pq(x)\\) as one fraction. Enter the numerator and denominator separated by a semicolon.</p>",
+            "hint": "<p>Start with \\(\\dfrac4{2/x+1}\\). Write the denominator over a common denominator before simplifying.</p>",
+            "solution": "<p>\\(pq(x)=\\dfrac4{2/x+1}=\\dfrac{4x}{x+2}\\). Enter <strong>4x ; x + 2</strong>. You will account for both exclusions in the next check.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "fraction-composite-domain",
+            "field": {"key": "domain", "label": "Complete domain of the fraction composite", "type": "set", "expected": "(-inf,-2) U (-2,0) U (0,inf)"},
+            "prompt": "<p>For the same \\(p(t)=\\dfrac4{t+1}\\) and \\(q(x)=\\dfrac2x\\), give the full domain of \\(pq\\). You can join the exclusions with <strong>and</strong>.</p>",
+            "hint": "<p>Keep \\(x\\ne0\\), then also solve \\(\\dfrac2x\\ne-1\\).</p>",
+            "solution": "<p>\\(x=0\\) is forbidden by \\(q\\). Also, \\(q(-2)=-1\\), which is forbidden by \\(p\\). So \\(x\\ne0\\) and \\(x\\ne-2\\). In interval notation this is \\((-\\infty,-2)\\cup(-2,0)\\cup(0,\\infty)\\).</p>",
+            "retry": [
+              {"answer": "(-inf,-2) U (-2,inf)", "feedback": "<p>The finished denominator excludes \\(-2\\). Keep \\(x=0\\) out as well, because the original fraction \\(q\\) cannot take it.</p>"},
+              {"answer": "(-inf,0) U (0,inf)", "feedback": "<p>You kept \\(x=0\\) out. Now check \\(x=-2\\): it gives \\(q(-2)=-1\\), where \\(p\\) is undefined.</p>"},
+              {"answer": "(-inf,inf)", "feedback": "<p>Both exclusions must hold at the same time. Join \\(x\\ne-2\\) and \\(x\\ne0\\) with the word <strong>and</strong>.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "recover-a-function",
+        "title": "How can I recover a missing function?",
+        "label": "Recover a missing rule",
+        "level": "extension",
+        "minutes": 8,
+        "intro": "<p>If one rule and the composite are known, use the order of the composition to see what can be recovered. The missing rule may be on the inside or the outside.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If the outside rule is reversible on the relevant outputs, undo it to find the inside rule. If the inside rule is known, name its output \\(t\\) and rewrite the composite in terms of \\(t\\).</p>"
+          },
+          {"kind": "example", "index": 6},
+          {
+            "kind": "check",
+            "id": "recover-inside-rule",
+            "field": {"key": "formula", "label": "Expression in x for q(x)", "type": "polynomial", "variables": ["x"], "expected": "2*x^2-3*x+1"},
+            "prompt": "<p>For all real \\(x\\), \\(pq(x)=4x^2-6x+9\\). The outside rule is \\(p(t)=2t+7\\) for real \\(t\\). Find the right-hand side of \\(q(x)\\).</p>",
+            "hint": "<p>Set \\(2q(x)+7\\) equal to the given composite. Subtract \\(7\\), then divide by \\(2\\).</p>",
+            "solution": "<p>\\(2q(x)=4x^2-6x+2\\), so \\(q(x)=2x^2-3x+1\\). Doubling this rule and adding \\(7\\) gives the required composite.</p>",
+            "retry": [
+              {"answer": "4x^2-6x+2", "feedback": "<p>You have found \\(2q(x)\\). Divide every term by \\(2\\) to obtain \\(q(x)\\).</p>"}
+            ]
+          },
+          {"kind": "example", "index": 7},
+          {
+            "kind": "tip",
+            "html": "<p>A formula recovered for the outside function is justified only where the inside rule actually sends its inputs. State this interval with your formula.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "recover-outside-rule",
+            "field": {"key": "formula", "label": "Expression in x for h(x)", "type": "polynomial", "variables": ["x"], "expected": "3*x-4"},
+            "prompt": "<p>Let \\(g(x)=2x+1\\) for \\(x\\ge0\\), and suppose \\(h(g(x))=6x-1\\) throughout that interval. Find the right-hand side of \\(h(x)\\) on the inputs reached by \\(g\\).</p>",
+            "hint": "<p>Let \\(t=2x+1\\), so \\(x=\\dfrac{t-1}{2}\\). Substitute into \\(6x-1\\), then use \\(x\\) to denote the input of \\(h\\).</p>",
+            "solution": "<p>\\(h(t)=6\\left(\\dfrac{t-1}{2}\\right)-1=3t-4\\). Thus \\(h(x)=3x-4\\) for the inputs reached by \\(g\\).</p>",
+            "retry": [
+              {"answer": "6x-1", "feedback": "<p>That formula takes the original input of \\(g\\). The input of \\(h\\) is \\(2x+1\\), so express the result in terms of this new input.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "recover-outside-inputs",
+            "field": {"key": "domain", "label": "Inputs for which h is determined", "type": "set", "expected": "[1,inf)"},
+            "prompt": "<p>For the same \\(g(x)=2x+1\\) on \\(x\\ge0\\), give all inputs of \\(h\\) for which the composite determines its rule.</p>",
+            "hint": "<p>Find the range of \\(g\\). It starts at \\(g(0)\\).</p>",
+            "solution": "<p>Since \\(g(0)=1\\) and \\(g\\) increases, every value from \\(1\\) upwards is reached. The rule for \\(h(x)\\) is determined for \\(x\\ge1\\).</p>",
+            "retry": [
+              {"answer": "[0,inf)", "feedback": "<p>That is the domain of \\(g\\). The formula for \\(h\\) is determined on the outputs of \\(g\\), starting at \\(1\\).</p>"}
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Follow the number through the two rules",
+        "question": "<p>For \\(f(x)=5-2x\\), \\(-2\\le x&lt;3\\), and \\(g(x)=x+1\\), \\(x\\in\\mathbb R\\), find \\(fg(1)\\) and \\(gf(1)\\).</p>",
+        "solution": [
+          "<p>For \\(fg(1)\\), start with \\(g(1)=2\\). The value \\(2\\) is allowed in \\(f\\), so \\(fg(1)=f(2)=1\\).</p>",
+          "<p>For \\(gf(1)\\), start with \\(f(1)=3\\). Now \\(3\\) goes into \\(g\\), which accepts every real input. So \\(gf(1)=g(3)=4\\).</p>"
+        ]
+      },
+      {
+        "title": "Replace the number with x",
+        "question": "<p>Using the same \\(f(x)=5-2x\\) and \\(g(x)=x+1\\), find the two composite formulae wherever they are defined.</p>",
+        "solution": [
+          "<p>For \\(fg\\), the inside rule gives \\(x+1\\). Replace the input of \\(f\\) with \\(x+1\\).</p>\\[fg(x)=5-2(x+1)=3-2x.\\]",
+          "<p>For \\(gf\\), the inside rule gives \\(5-2x\\). The outside rule \\(g\\) adds \\(1\\).</p>\\[gf(x)=(5-2x)+1=6-2x.\\]",
+          "<p>At \\(x=1\\), the formulae give \\(1\\) and \\(4\\), matching the two calculations in the previous section. Now check which other inputs are allowed.</p>"
+        ]
+      },
+      {
+        "title": "Replace every input in a quadratic rule",
+        "question": "<p>Let \\(a(x)=x^2+2x\\) and \\(b(x)=x-3\\) on the real numbers. Find \\(ab(x)\\) and \\(ba(x)\\).</p>",
+        "solution": [
+          "<p>Write the outside rule as \\(a(t)=t^2+2t\\). Both places marked \\(t\\) receive \\(x-3\\).</p>\\[ab(x)=(x-3)^2+2(x-3).\\]",
+          "<p>Expand the square and the linear term to get \\(ab(x)=x^2-4x+3\\).</p>",
+          "<p>With \\(b\\) on the outside, subtract \\(3\\) from the entire output of \\(a\\).</p>\\[ba(x)=x^2+2x-3.\\]"
+        ]
+      },
+      {
+        "title": "Find the inputs that pass both checks",
+        "question": "<p>For \\(f(x)=5-2x\\) on \\([-2,3)\\) and \\(g(x)=x+1\\) on \\(\\mathbb R\\), which inputs work in \\(fg\\)? Which work in \\(gf\\)?</p>",
+        "solution": [
+          "<p>For \\(fg\\), \\(g\\) can start at any real \\(x\\). The intermediate value \\(x+1\\) must belong to \\([-2,3)\\).</p>\\[-2\\le x+1&lt;3.\\]",
+          "<p>Subtract \\(1\\) throughout. The inputs that work are \\(-3\\le x&lt;2\\), or \\([-3,2)\\). In particular, \\(x=-3\\) works and \\(x=2\\) does not.</p>",
+          "<p>For \\(gf\\), start with the given domain of \\(f\\), \\([-2,3)\\). Every output of \\(f\\) is real and \\(g\\) accepts every real number, so there is no further restriction.</p>"
+        ]
+      },
+      {
+        "title": "Find two intervals from one square root",
+        "question": "<p>For \\(p(t)=\\sqrt{t-7}\\) on \\(t\\ge7\\), and \\(q(x)=x^2+3\\) on \\(-4\\le x&lt;3\\), find \\(pq(x)\\) and its domain.</p>",
+        "solution": [
+          "<p>The outside rule needs \\(q(x)\\ge7\\), so \\(x^2+3\\ge7\\), or \\(x^2\\ge4\\).</p>",
+          "<p>This is true when \\(x\\le-2\\) or \\(x\\ge2\\). The endpoints \\(-2\\) and \\(2\\) give a square root of zero, so both are allowed.</p>",
+          "<p>Restrict both branches to the stated interval \\([-4,3)\\). The composite is \\(pq(x)=\\sqrt{x^2-4}\\) on \\([-4,-2]\\cup[2,3)\\).</p>"
+        ]
+      },
+      {
+        "title": "A straight line with one missing point",
+        "question": "<p>Find \\(pq(x)\\) when \\(p(t)=\\dfrac5{t-2}\\), \\(t\\ne2\\), and \\(q(x)=2+\\dfrac5{x-3}\\), \\(x\\ne3\\). State the domain.</p>",
+        "solution": [
+          "<p>First record \\(x\\ne3\\) from \\(q\\). For every allowed \\(x\\), the fraction in \\(q\\) is non-zero. So its output never equals \\(2\\) and the outside rule takes it.</p>",
+          "<p>Substitute the output of \\(q\\) into \\(p\\).</p>\\[pq(x)=\\dfrac5{q(x)-2}=\\dfrac5{5/(x-3)}=x-3.\\]",
+          "<p>The resulting rule is \\(x-3\\) for \\(x\\ne3\\). At \\(x=3\\) the first step still has no value, so the point \\((3,0)\\) is absent.</p>"
+        ]
+      },
+      {
+        "title": "Undo the outside function",
+        "question": "<p>Let \\(a(t)=3t-5\\) for real \\(t\\), and let \\(ab(x)=6x^2-9x+7\\) for real \\(x\\). Find \\(b(x)\\).</p>",
+        "solution": [
+          "<p>The outside rule acts on \\(b(x)\\). That makes the equation \\(3b(x)-5=6x^2-9x+7\\).</p>",
+          "<p>Add \\(5\\) to both sides and divide every term by \\(3\\).</p>\\[b(x)=2x^2-3x+4.\\]",
+          "<p>Putting this into \\(3b(x)-5\\) gives \\(6x^2-9x+7\\), as required.</p>"
+        ]
+      },
+      {
+        "title": "Find the outside rule on the inputs it receives",
+        "question": "<p>Let \\(q(x)=x+4\\) for \\(x\\ge-2\\), and suppose \\(p(q(x))=x^2+3x\\) throughout that interval. Find the rule for \\(p\\) wherever it is determined.</p>",
+        "solution": [
+          "<p>The input of \\(p\\) is \\(t=q(x)=x+4\\). Since \\(x\\ge-2\\), we know that \\(t\\ge2\\). Express the old input as \\(x=t-4\\).</p>",
+          "<p>Substitute \\(t-4\\) into the given composite and simplify.</p>\\[p(t)=(t-4)^2+3(t-4)=t^2-5t+4.\\]",
+          "<p>This determines \\(p(t)\\) for \\(t\\ge2\\). Smaller values of \\(t\\) are never reached by the stated \\(q\\), so the composite gives no information about them.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {"term": "Composite", "definition": "<p>Two functions used in order, with the first output fed into the second function.</p>"},
+      {"term": "Inside function", "definition": "<p>The rule applied first. In \\(fg(x)=f(g(x))\\), this is \\(g\\).</p>"},
+      {"term": "Outside function", "definition": "<p>The rule that takes the first output as its input. In \\(fg(x)\\), this is \\(f\\).</p>"},
+      {"term": "Composite domain", "definition": "<p>The original inputs that pass through both rules.</p>"},
+      {"term": "Restriction", "definition": "<p>A condition that limits which inputs a function accepts.</p>"}
+    ],
+    "related": [
+      {"title": "Functions, domain, range and inverses", "href": "/courses/maths4u-9709-p1/topics/orig_functions_inverse"},
+      {"title": "Ranges, restrictions and inverse branches", "href": "/courses/maths4u-9709-p1/topics/orig_functions_restricted_inverse"}
+    ],
+    "revision": {
+      "body": "<h2>Read the order</h2><p>\\(fg(x)=f(g(x))\\). Apply \\(g\\) first, then feed its output into \\(f\\). Put the full inside expression into every input position.</p><p>For \\(f(x)=5-2x\\) on \\([-2,3)\\) and \\(g(x)=x+1\\) on \\(\\mathbb R\\), the two orders give different results at \\(x=1\\).</p><p><img src=\"/assets/original/functions/composite-order.svg\" width=\"480\" height=\"200\" alt=\"For fg of 1, applying g and then f gives 1. Applying f and then g gives 4.\"></p><h2>Check both domains</h2><p>Check that \\(x\\) is allowed in \\(g\\) and \\(g(x)\\) is allowed in \\(f\\). For all of \\(g\\)'s domain to work, its whole range must lie inside the domain of \\(f\\).</p><p>In the example above, solve \\(-2\\le x+1&lt;3\\). The domain of the restricted composite \\(fg\\) is \\([-3,2)\\).</p><h2>Keep exclusions and recover rules</h2><p>Record square-root conditions and both sets of denominator restrictions before simplifying. To recover an inside rule, undo the outside rule. To recover an outside rule, express the composite in terms of the first output and state where it is reached.</p>",
+      "checks": "<ul><li>Identify which function acts first.</li><li>Check endpoints and both branches of an inequality.</li><li>Keep every exclusion alongside the simplified rule.</li></ul>",
+      "examTip": "<p>Show the intermediate condition, such as \\(g(x)\\ge7\\), before solving for \\(x\\). In a question about the full stated domain, one forbidden output is enough to show that the whole domain cannot work.</p>"
+    }
   }
 }

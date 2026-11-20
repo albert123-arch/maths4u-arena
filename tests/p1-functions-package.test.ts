@@ -15,6 +15,7 @@ import teaching from '../content/original/9709-p1/functions-study.json';
 
 const p=contentPackage('9709-p1-functions');
 const firstLesson = "orig_functions_inverse";
+const compositeLesson = "orig_functions_composite";
 test('Functions reuses the five existing lessons and preserves all 200 authored written records',async()=>{
   assert.deepEqual(p.lessons.map(l=>l.id),['orig_functions_inverse','orig_functions_composite','orig_functions_restricted_inverse','orig_functions_inverse_graphs','orig_functions_transformations']);
   assert.equal(p.questions.length,240);assert.equal(p.questions.filter(q=>q.variant_index===0).length,50);
@@ -33,8 +34,9 @@ test('Functions reuses the five existing lessons and preserves all 200 authored 
 test('all complete function answers work, wrong fields and missing restrictions fail, review uses a fresh question',()=>{
   for(const l of p.lessons){
     const topic=packageTopic(l.id)!,dto=squarePublicLesson(topic),qs=questionsForTopic(l.id);
-    assert.equal(dto.examples.length,l.id===firstLesson ? 7 : 4);
-    assert.equal(!!dto.study,l.id===firstLesson);
+    const authored = teaching[l.id as keyof typeof teaching];
+    assert.equal(dto.examples.length,authored?.examples.length ?? 4);
+    assert.equal(!!dto.study,!!authored);
     assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
     for(const key of ['"expected"','source_problem_id','source_exam','ownerProvenance','archiveTaskId'])assert(!JSON.stringify(dto).includes(key),key);
     for(const html of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution]),...dto.questions.map(q=>q.prompt)])assert(!html.includes('katex-error'),l.id);
@@ -50,32 +52,30 @@ test('all complete function answers work, wrong fields and missing restrictions 
   }
 });
 
-test("the first Functions lesson gives a worked example and a fresh check in each section", () => {
-  const source = teaching.orig_functions_inverse;
-  const dto = squarePublicLesson(packageTopic(firstLesson)!);
-  assert(dto.study);
-  assert.equal(dto.study.sections.length, 7);
-  assert.equal(dto.study.sections.at(-1)?.level, "extension");
-  const rendered = [...dto.examples.flatMap(e => [e.question, ...(e.steps ?? [])]),
-    ...Object.values(studyRevision(firstLesson)!)];
-  let checks = 0;
-  for (const section of dto.study.sections) {
-    assert(section.blocks.some(b => b.kind === "example"));
-    assert(section.blocks.some(b => b.kind === "check"));
-    rendered.push(section.intro, ...section.blocks.flatMap(b => "html" in b ? [b.html] : b.kind === "check" ? [b.prompt, b.hint] : []));
+test("each revised Functions section gives a worked example and a fresh check", () => {
+  for (const [lessonId, source] of Object.entries(teaching)) {
+    const dto = squarePublicLesson(packageTopic(lessonId)!);
+    assert(dto.study);
+    assert.deepEqual(dto.study.sections.map(s => s.id), source.sections.map(s => s.id));
+    assert.equal(dto.study.sections.at(-1)?.level, "extension");
+    const rendered = [...dto.examples.flatMap(e => [e.question, ...(e.steps ?? [])]),
+      ...Object.values(studyRevision(lessonId)!)];
+    for (const section of dto.study.sections) {
+      assert(section.blocks.some(b => b.kind === "example"));
+      assert(section.blocks.some(b => b.kind === "check"));
+      rendered.push(section.intro, ...section.blocks.flatMap(b => "html" in b ? [b.html] : b.kind === "check" ? [b.prompt, b.hint] : []));
+    }
+    assert(rendered.every(html => !html.includes("katex-error")));
+    for (const section of source.sections) for (const block of section.blocks) {
+      if (block.kind !== "check" || !block.field) continue;
+      const expected = block.field.expected;
+      const answer = Array.isArray(expected) ? expected.join(";") : expected;
+      const result = gradeStudyCheck(lessonId, block.id!, answer);
+      assert.equal(result?.status, "correct", block.id);
+      assert.doesNotMatch(result.feedback, /katex-error/);
+    }
   }
-  assert(rendered.every(html => !html.includes("katex-error")));
-  for (const section of source.sections) for (const block of section.blocks) {
-    if (block.kind !== "check" || !block.field) continue;
-    const expected = block.field.expected;
-    const answer = Array.isArray(expected) ? expected.join(";") : expected;
-    const result = gradeStudyCheck(firstLesson, block.id!, answer);
-    assert.equal(result?.status, "correct", block.id);
-    assert.doesNotMatch(result.feedback, /katex-error/);
-    checks++;
-  }
-  assert.equal(checks, 10);
-  assert.equal(gradeStudyCheck("orig_functions_composite", "range-of-decreasing-line", "[2,14)"), undefined);
+  assert.equal(gradeStudyCheck(compositeLesson, "range-of-decreasing-line", "[2,14)"), undefined);
 });
 
 test("Functions checks accept full ranges, exclusions and inverse pairs in exam notation", () => {
@@ -108,6 +108,37 @@ test("Functions checks accept full ranges, exclusions and inverse pairs in exam 
   }
   assert.equal(grade("fraction-inverse-domain","x ≠").status,"format");
   assert.equal(grade("fraction-inverse-domain","x ≠ 1 ≠ 2").status,"format");
+});
+
+test("composite checks distinguish reversed operations, missing branches and original exclusions", () => {
+  const grade = (id: string, answer: string) => gradeStudyCheck(compositeLesson,id,answer)!;
+  for (const [id,answers] of [
+    ["apply-inner-first", ["7","y = 7"]],
+    ["formula-ab", ["(2x+1)^2−3(2x+1)","4x^2−2x−2"]],
+    ["formula-ba", ["2(x^2−3x)+1","2x²−6x+1"]],
+    ["composite-domain-both-conditions", ["2 < x ≤ 4","(2,4]"]],
+    ["root-needs-two-branches", ["−5 ≤ x ≤ −3 or 3 ≤ x < 4","[−5,−3] ∪ [3,4)"]],
+    ["fraction-composite-formula", ["4x;x+2","8x;2x+4"]],
+    ["fraction-composite-domain", ["x ≠ −2 and x ≠ 0","(−∞,−2) U (−2,0) U (0,∞)"]],
+    ["recover-outside-inputs", ["x ≥ 1","[1,∞)"]],
+  ] as const) {
+    for (const answer of answers) assert.equal(grade(id,answer).status,"correct",id + " / " + answer);
+  }
+  for (const [id,answer,hint] of [
+    ["apply-inner-first","11",/acts first/],
+    ["formula-ab","(2x+1)^2-3x",/Replace the second/],
+    ["composite-domain-both-conditions","(2,9/2]",/also requires/],
+    ["composite-domain-both-conditions","2 ≤ x ≤ 4",/lower endpoint is open/],
+    ["root-needs-two-branches","[3,4)",/positive branch/],
+    ["fraction-composite-domain","x ≠ −2",/original fraction/],
+    ["fraction-composite-domain","x ≠ −2 or x ≠ 0",/at the same time/],
+    ["recover-outside-inputs","x ≥ 0",/outputs of/],
+  ] as const) {
+    const result = grade(id,answer);
+    assert.equal(result.status,"retry",id);
+    assert.match(result.feedback,hint);
+  }
+  assert.equal(grade("composite-domain-both-conditions","2 < x <=").status,"format");
 });
 
 test('fractional answers accept equivalent whole ratios and interval checks respect both endpoints',()=>{
