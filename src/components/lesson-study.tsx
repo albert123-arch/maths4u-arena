@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useId, useState } from "react";
+import { useId, useState, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
 import { Button, ButtonLink, Input } from "./controls";
 import { api, MathContent } from "./ui";
@@ -15,11 +15,13 @@ import styles from "./lesson-study.module.css";
 const level = (section: StudySection) => section.level === "core" ? "Core" : "Further applications";
 const sectionInfo = (section: StudySection) => level(section) + " · about " + section.minutes + " min";
 const exampleAnchor = (index: number) => "worked-example-" + (index + 1);
+const subscribeToHydration = () => () => {};
 
 export function LessonStudy({ lesson, study, activeId, children }: {
   lesson: SquareLesson; study: StudyLesson; activeId: string; children?: ReactNode;
 }) {
   const { sections, glossary, related } = study;
+  const interactive = useSyncExternalStore(subscribeToHydration, () => true, () => false);
   const selected = Math.max(0, sections.findIndex(section => section.id === activeId));
   const revision = lesson.topic.path + "?view=revision";
   const revisionLink = <ButtonLink href={revision} className={styles.revisionLink}>Quick revision sheet (A4)</ButtonLink>;
@@ -43,7 +45,7 @@ export function LessonStudy({ lesson, study, activeId, children }: {
       <dd><MathContent html={word.definition} /></dd>
     </div>
   ))}</dl>;
-  return <section id="notes" className={styles.notesLayout} aria-label="Lesson notes">
+  return <section id="notes" className={styles.notesLayout} aria-label="Lesson notes" data-interactive={interactive ? "" : undefined}>
     <aside className={styles.sidebar}>
       <div className={styles.desktopContents}>
         <div className={"card " + styles.sidebarCard}>
@@ -182,6 +184,7 @@ function YourTurn({ check, lessonId }: { check: StudyCheck; lessonId: string }) 
     }}>
     <h3>Your turn</h3>
     <MathContent html={check.prompt} />
+    <noscript><p>Work out your answer on paper. Enable JavaScript to check it here.</p></noscript>
     <label htmlFor={id}>{check.field.label}</label>
     <div className={styles.answerRow}>
       <Input id={id} value={answer} readOnly={busy || preview} required maxLength={400} autoComplete="off" spellCheck={false}

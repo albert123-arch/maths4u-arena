@@ -47,6 +47,21 @@ test('Quadratics is linked from the course and all five lessons are readable wit
     }
   } finally { await context.close(); }
 });
+test('the first available worked-step control responds even when scripts load slowly', async ({page}) => {
+  let releaseScripts!: () => void;
+  const gate = new Promise<void>(resolve => { releaseScripts = resolve; });
+  await page.route(/\/_next\/static\/chunks\/.*\.js(?:\?|$)/, async route => { await gate; await route.continue(); });
+  const example = page.locator('#factorise article').last();
+  const next = example.locator('button').first();
+  try {
+    await page.goto(base+'/courses/'+pack.course.slug+'/topics/orig_quadratics_factorisation',{waitUntil:'commit'});
+    await expect(example.locator('h3')).toBeVisible();
+    await expect(next).toHaveText('Show next step');
+    await expect(next).toBeHidden();
+  } finally { releaseScripts(); }
+  await next.click();
+  await expect(example.locator('ol > li:visible')).toHaveCount(2);
+});
 test('five public lessons: desktop and mobile notes, mathematical layout and main-only lists',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   for(const l of pack.lessons)for(const width of [1280,390]){
