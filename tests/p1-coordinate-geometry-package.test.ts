@@ -12,6 +12,7 @@ import {checkExact} from '../src/lib/exact-answer';
 import {packageTask} from '../src/lib/content-packages';
 import {contentPackageSchema} from '../src/lib/content-package-schema';
 import {gradeStudyCheck,studyRevision} from '../src/lib/authored-study';
+import {answerFormat} from '../src/lib/square-presentation';
 import teaching from '../content/original/9709-p1/coordinate-geometry-study.json';
 
 const p=contentPackage('9709-p1-coordinate-geometry');
@@ -81,18 +82,24 @@ test('every Coordinate Geometry section has a readable example, fresh check and 
 test('lesson checks accept exact lengths, scaled equations, all points and strict parameter bounds',()=>{
   const [distance,directions,lines,circles,intersections]=p.lessons.map(l=>l.id);
   for(const [lessonId,id,answers] of [
-    [distance,'exact-surd-distance',['√73','sqrt(73)']],
+    [distance,'exact-surd-distance',['√73','sqrt(73)','PQ = √73']],
     [distance,'missing-endpoint',['x=-5, y=7','(-5,7)']],
     [directions,'perpendicular-equation',['y=3x/2-5/2','6x-4y-10=0']],
     [directions,'horizontal-segment-bisector',['x=-2','-2x-4=0']],
     [lines,'axis-intercept-pairs',['(0,−6), (4,0)','(4,0);(0,-6)']],
     [lines,'distinct-parallel-no-intersection',['empty','∅']],
+    [lines,'triangle-between-line-and-axes',['Area = 24']],
     [circles,'circle-from-a-centre-and-point',['(x+2)^2+(y-4)^2=25','x^2+y^2+4x-8y-5=0']],
     [circles,'tangent-from-centre-and-contact',['3x-4y=3','y=3(x-1)/4']],
+    [circles,'radius-from-expanded-circle',['r=3']],
     [intersections,'both-secant-points',['(3,4), (-4,-3)']],
-    [intersections,'secant-parameter-interval',['-4 < k < 4','(-4,4)']],
-    [intersections,'both-tangent-parameters',['k=-4 or k=4','{4,-4}']],
-    [intersections,'missing-circle-parameter-set',['k<-4 or k>4','(-inf,-4) U (4,inf)']],
+    [intersections,'secant-parameter-interval',['-4 < k < 4','(-4,4)','|k| < 4','4 > |k|']],
+    [intersections,'both-tangent-parameters',['k=-4 or k=4','{4,-4}','|k|=4']],
+    [intersections,'missing-circle-parameter-set',['k<-4 or k>4','(-inf,-4) U (4,inf)','|k| > 4']],
+    [intersections,'both-common-circle-points',['(3,±2)','x=3, y=±2']],
+    [intersections,'both-external-tangent-gradients',['m=±3','{-3,3}']],
+    [intersections,'both-external-contact-points',['(±3,1)','(3,1),(-3,1)']],
+    [intersections,'vertical-tangent-from-outside',['x=2','2x-4=0']],
   ] as const){
     for(const answer of answers)assert.equal(gradeStudyCheck(lessonId,id,answer)?.status,'correct',id+' / '+answer);
   }
@@ -102,7 +109,9 @@ test('lesson checks accept exact lengths, scaled equations, all points and stric
     [lines,'axis-intercept-pairs','(4,0)',/Also set/],
     [circles,'circle-from-a-centre-and-point','(x-2)^2+(y+4)^2=25',/must vanish/],
     [intersections,'secant-parameter-interval','[-4,4]',/strict interval/],
+    [intersections,'secant-parameter-interval','|k| ≤ 4',/strict interval/],
     [intersections,'both-common-circle-points','(3,2)',/lower point/],
+    [intersections,'both-external-tangent-gradients','3',/negative gradient/],
   ] as const){
     const result=gradeStudyCheck(lessonId,id,answer);
     assert.equal(result?.status,'retry',id);
@@ -110,6 +119,41 @@ test('lesson checks accept exact lengths, scaled equations, all points and stric
   }
   assert.equal(gradeStudyCheck(intersections,'both-secant-points','(3,)')?.status,'format');
   assert.equal(gradeStudyCheck(circles,'both-secant-points','(3,4)'),undefined);
+});
+
+test('Core methods and staged written practice retain existing geometry and functions families',()=>{
+  for(const [lessonId,id] of [
+    [p.lessons[0].id,'use-a-diameter'],
+    [p.lessons[2].id,'find-an-intercept-area'],
+    [p.lessons[4].id,'find-tangents-from-an-external-point'],
+    [p.lessons[4].id,'find-the-line-through-circle-intersections'],
+  ]){
+    const lesson=squarePublicLesson(packageTopic(lessonId)!);
+    assert.equal(lesson.study?.sections.find(s=>s.id===id)?.level,'core');
+  }
+  for(const pack of [p,contentPackage('9709-p1-functions')]){
+    for(const lesson of pack.lessons){
+      const dto=squarePublicLesson(packageTopic(lesson.id)!);
+      const path=dto.study?.examPractice;
+      if(!path)continue;
+      const exams=dto.questions.filter(q=>q.collection==='exam'&&q.variantIndex===0);
+      assert.equal(exams.length,10);
+      assert(path.starters.length+exams.filter(q=>!path.needs[q.family]).length>=2,lesson.id);
+      for(const [family,targets] of Object.entries(path.needs)){
+        assert(exams.some(q=>q.family===family),family);
+        for(const target of targets){
+          const [topic,section]=target.split('#');
+          assert(dto.navigation?.topics.some(t=>t.key===topic),target);
+          if(section)assert(squarePublicLesson(packageTopic(topic)!).study?.sections.some(s=>s.id===section),target);
+        }
+      }
+      for(const problem of path.starters)assert.doesNotMatch(problem.question+problem.solution,/katex-error/);
+    }
+  }
+  const exampleLine=answerFormat({key:'line',label:'Equation through A and B',type:'equation'});
+  const exampleCircle=answerFormat({key:'circle',label:'Circle equation',type:'equation'});
+  assert.equal(exampleLine.placeholder,'y=2x−3 or 2x−y=3');
+  assert.equal(exampleCircle.placeholder,'(x−1)^2+(y+2)^2=9');
 });
 
 test('line and circle equations allow equivalent forms, but not incorrect geometry or incomplete pairs',()=>{

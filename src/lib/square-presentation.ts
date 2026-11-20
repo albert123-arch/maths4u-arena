@@ -1,5 +1,5 @@
 import type { SquareField, SquareQuestion } from "./square-model";
-import { isCoordinateField, isIntervalField, rangeOutputs, scalarSymbol, setSymbol } from "./answer-notation";
+import { isCoordinateField, isIntervalField, rangeOutputs, scalarLabels, setSymbol } from "./answer-notation";
 
 // Display labels only: the original IDs, titles and progress keys stay intact.
 const titles: Record<string, string> = {
@@ -18,6 +18,8 @@ const titles: Record<string, string> = {
 };
 export function questionTitle(q: Pick<SquareQuestion, "uid" | "title">) { return titles[q.uid] ?? q.title; }
 
+export const exactValueFeedback = "Give the exact value. Use a fraction or sqrt(...) when needed.";
+
 export function answerFormat(f: SquareField): { en: string; ru: string; placeholder: string } {
   if (f.type === "approximate") return { en: "Round as requested in the label, or enter your calculator value. Decimal or fraction input is accepted.", ru: "Округлите как указано в подписи или введите значение калькулятора. Можно ввести десятичное число или дробь.", placeholder: "0.6827" };
   if (f.type === "choice") return { en: "Choose one option. Explain your reasoning on paper.", ru: "Выберите один вариант. Объясните рассуждение на бумаге.", placeholder: "" };
@@ -28,8 +30,18 @@ export function answerFormat(f: SquareField): { en: string; ru: string; placehol
       ? { en: "Enter a point as (1, 2) or x = 1, y = 2. Separate complete pairs with commas or semicolons.", ru: "Введите точку как (1, 2) или x = 1, y = 2. Пары можно разделять запятыми или точками с запятой.", placeholder: "(1, 2), (3, 4)" }
       : { en: "Enter each pair in the order shown. Separate complete pairs with commas or semicolons.", ru: "Введите каждую пару в указанном порядке. Несколько пар можно разделить запятыми или точками с запятой.", placeholder: "(1, 2), (3, 4)" };
   if (f.type === "factors") return { en: "Enter both linear factors, separated by a semicolon: x-1 ; x+2.", ru: "Введите оба линейных множителя через точку с запятой: x-1 ; x+2.", placeholder: "x-1 ; x+2" };
-  if (f.type === "ratio") return { en: "Enter numerator ; denominator, keeping any parameter restrictions in the relevant field.", ru: "Введите числитель ; знаменатель. Ограничения параметра укажите в соответствующем поле.", placeholder: "numerator ; denominator" };
-  if (f.type === "equation") return { en: "Enter both sides of the equation, or its polynomial equal to zero. Use ^ for powers and / for fractions.", ru: "Введите обе части уравнения или многочлен, равный нулю. Степени: ^; дроби: /.", placeholder: "x^2=3x+1 or x^2-3x-1" };
+  if (f.type === "ratio") return {
+    en: "Enter a single fraction such as (2x+1)/(x−3). You can also separate the numerator and denominator with a semicolon.",
+    ru: "Введите одну дробь, например (2x+1)/(x−3). Можно ввести числитель и знаменатель через точку с запятой.",
+    placeholder: "(2x+1)/(x−3)",
+  };
+  if (f.type === "equation") {
+    const circle = f.key === "circle" || /\bcircle\b/i.test(f.label);
+    const line = f.key === "line" || /\b(?:line|perpendicular|parallel|bisector|tangent|normal)\b/i.test(f.label);
+    const placeholder = circle ? "(x−1)^2+(y+2)^2=9" : line ? "y=2x−3 or 2x−y=3" : "x^2=3x+1 or x^2-3x-1";
+    return { en: "Enter both sides of the equation or give an expression equal to zero. Use ^ for powers and / for fractions.",
+      ru: "Введите уравнение или выражение, равное нулю. Для степеней используйте ^, для дробей /.", placeholder };
+  }
   if (f.type === "set") {
     const outputs = rangeOutputs(f);
     if (outputs) return {
@@ -49,7 +61,7 @@ export function answerFormat(f: SquareField): { en: string; ru: string; placehol
     return { en: "Give the complete set: {1, 4} for separate values, (1, 5] for an interval, U for union or empty for no real solutions. Use sqrt(...) for exact roots.", ru: "Укажите всё множество: {1, 4} для отдельных значений, (1, 5] для интервала, U для объединения, empty, если действительных решений нет. Точные корни: sqrt(...).", placeholder: "{root1, root2} or (lower, upper]" };
   }
   if (f.variables?.length) return { en: `Enter an expression in ${f.variables.join(", ")}; use ^ for powers and / for fractions.`, ru: `Введите выражение с ${f.variables.join(", ")}; степени обозначайте ^, дроби — /.`, placeholder: `Expression in ${f.variables.join(", ")}` };
-  const symbol = scalarSymbol(f);
+  const symbol = scalarLabels(f)[0];
   if (symbol) return {
     en: "Enter the value on its own or write " + symbol + " = … . Fractions and exact square roots are accepted.",
     ru: "Введите значение отдельно или с обозначением " + symbol + " = … . Можно использовать дроби и точные корни.",

@@ -2,13 +2,13 @@
 import extension from "../../content/original/quadratics-extension-20261105-v1.json";
 import { quadraticsTeaching } from "./quadratics-notes";
 import pack from "../../content/original/completing-square-20261105-v1.json";
-import { checkExact, isExpandedPolynomial, scalarAnswerValue, AnswerVariableError, type ExactField } from "./exact-answer";
+import { checkExact, isExpandedPolynomial, isRoundedNumberAnswer, scalarAnswerValue, AnswerVariableError, type ExactField } from "./exact-answer";
 import { renderContent } from "./content";
 import { type SquareLesson, type CheckResult, squareVersion, quadraticTopic, type QuadraticTopic } from "./square-model";
 import type { MarkingRow, SupportKind } from "./question-support-model";
 import { packageQuestions, packageTeaching, packageTopic } from "./content-package-content";
 import { legacyQuadraticsStudy, studyLayout } from "./authored-study";
-import { answerFormat } from "./square-presentation";
+import { answerFormat, exactValueFeedback } from "./square-presentation";
 import { isCoordinateField, isIntervalField, rangeOutputs } from "./answer-notation";
 
 type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
@@ -53,11 +53,19 @@ const examples = [
   { title: "3 · Keep both exact roots", question: String.raw`<p>Solve \(3x^2-12x+5=0\) by completing the square.</p>`, solution: String.raw`\[3(x-2)^2-7=0\quad\Longrightarrow\quad(x-2)^2=\frac73.\]\[x=2\pm\sqrt{\frac73}=2\pm\frac{\sqrt{21}}3.\]<p>There are two roots. Enter both, for example <strong>{2-sqrt(21)/3, 2+sqrt(21)/3}</strong>. A decimal approximation is not an exact answer.</p>` },
   { title: "4 · Count intersections within the domain", question: String.raw`<p>For \(f(x)=(x-2)^2+1\), \(0\le x\le5\), find all levels \(t\) giving two distinct solutions of \(f(x)=t\).</p>`, solution: String.raw`<p>The vertex level is \(1\); it gives only one solution. The left branch reaches \(f(0)=5\), and the right branch reaches \(f(5)=10\). Both branches meet the level precisely when \(1<t\le5\). At \(t=5\), the roots \(0\) and \(4\) both belong to the domain.</p>` },
 ];
+function practicePrompt(question: SourceQuestion) {
+  const prompt = question.fields.some(field => field.type === "ratio")
+    ? question.prompt_html.replace("Enter its numerator and denominator separately with a semicolon", "Give the inverse as a single fraction")
+      .replace("as numerator ; denominator", "as a single fraction")
+    : question.prompt_html;
+  return renderContent(prompt).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>');
+}
+
 export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): SquareLesson {
   const packaged=packageTeaching(topic);
   const layout = topic.packageKey ? studyLayout(topic.lessonId) : undefined;
   const teaching = (layout ? undefined : legacyQuadraticsStudy(topic.lessonId)) ?? packaged ?? (topic.code === "CS" ? { notes, examples } : quadraticsTeaching[topic.key]);
-  return { topic, version: topic.version, title: topic.title,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: renderContent(q.prompt_html).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>'), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey?f.label:topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
+  return { topic, version: topic.version, title: topic.title,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: practicePrompt(q), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey ? (f.type === "ratio" ? f.label.replace(/: numerator ; denominator/i, " as a fraction") : f.label) :topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
 }
 export function learningTopic(key:string){return packageTopic(key)??quadraticTopic(key);}
 // Feedback describes an identifiable answer pattern, not an assumed thought process.
@@ -66,6 +74,7 @@ function matchesFeedbackPattern(f: ExactField, input: string) {
   try { return checkExact(f, input); } catch { return false; }
 }
 function retryMessage(q: SourceQuestion, f: ExactField, input: string) {
+  if (isRoundedNumberAnswer(f, input)) return exactValueFeedback;
   const multiplier = q.fields.find(x => /^(a|form_a)$/.test(x.key));
   const centre = q.fields.find(x => /^(h|form_h)$/.test(x.key));
   if (multiplier && /^(h|form_h)$/.test(f.key)) {
@@ -94,10 +103,11 @@ export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): 
   for (const f of q.fields) {
     try { const correct = checkExact(f, answers[f.key], q.prompt_html); fields[f.key] = { correct, message: correct ? "Correct." : retryMessage(q, f, answers[f.key]) }; }
     catch (error) {
-      if (error instanceof AnswerVariableError) fields[f.key] = { correct: false, message: error.message };
+      if (error instanceof AnswerVariableError && !error.formatOnly) fields[f.key] = { correct: false, message: error.message };
       else {
         valid = false;
-        fields[f.key] = { correct: false, formatError: true, message: "Check the format. " + answerFormat(f).en };
+        fields[f.key] = { correct: false, formatError: true, message: "Check the format. " +
+          (error instanceof AnswerVariableError ? error.message : answerFormat(f).en) };
       }
     }
     if (f.key === "expanded" && fields[f.key].correct && !isExpandedPolynomial(answers[f.key], f.variables ?? [])) fields[f.key] = { correct: false, message: "This is equivalent, but this field asks for expanded form. Multiply out the brackets." };

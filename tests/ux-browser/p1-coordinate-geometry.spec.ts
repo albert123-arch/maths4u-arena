@@ -98,6 +98,40 @@ test('line and circle checks give feedback for missing points and included tange
   await expect(interval.locator('[data-status=correct]')).toBeVisible();
 });
 
+test('straight-line starters precede circle tasks and link to the two-tangent method',async({page})=>{
+  await page.setViewportSize({width:390,height:900});
+  const lesson=coursePath+'/topics/orig_coordinate_geometry_straight_lines';
+  const tangents=coursePath+'/topics/orig_coordinate_geometry_line_circle#find-tangents-from-an-external-point';
+  await page.goto(base+lesson);
+  const starter=page.locator('#challenge .exam-starter').first();
+  await expect(page.locator('#challenge .exam-starter')).toHaveCount(2);
+  await starter.locator('summary').first().click();
+  await expect(starter.getByText('Find the intersection of',{exact:false})).toBeVisible();
+  const mixed=page.locator('#challenge .exam-mixed');
+  const question=mixed.getByRole('button',{name:/Both tangents from a fixed point/});
+  await expect(question).toBeHidden();
+  await mixed.locator('summary').click();
+  await question.click();
+  const method=page.locator('#practice .exam-prerequisites').getByRole('link',{name:'Two tangents from a point'});
+  await expect(method).toHaveAttribute('href',tangents);
+  await method.click();
+  await expect(page).toHaveURL(base+tangents);
+  const section=page.locator('#find-tangents-from-an-external-point');
+  await expect.poll(()=>section.locator('header img').evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBe(true);
+  await section.getByRole('button',{name:'Show all steps'}).click();
+  await expect(section.getByText('Test', {exact:false}).filter({hasText:'separately'}).first()).toBeVisible();
+  for(const [id,answer] of [
+    ['both-external-tangent-gradients','m=±3'],
+    ['both-external-contact-points','(±3,1)'],
+    ['vertical-tangent-from-outside','x=2'],
+  ]){
+    const check=section.locator('[data-study-check="'+id+'"]');
+    await check.getByRole('textbox').fill(answer);
+    await check.getByRole('button',{name:'Check',exact:true}).click();
+    await expect(check.locator('[data-status=correct]')).toBeVisible();
+  }
+});
+
 test('guest exact lengths, complete midpoint, fresh review and retained answers',async({page})=>{
   await page.goto(base+'/courses/'+pack.course.slug+'/topics/orig_coordinate_geometry_distance_midpoint');
   await page.getByRole('textbox',{name:'Length AB',exact:true}).fill('0');

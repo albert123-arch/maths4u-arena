@@ -1,5 +1,5 @@
 /** Bounded exact algebra for independent practice; never eval user input. */
-import { isCoordinateField, rangeOutputs, scalarSymbol, setSymbol } from "./answer-notation";
+import { isCoordinateField, normaliseAnswerLabel, rangeOutputs, scalarLabels, setSymbol } from "./answer-notation";
 type Rat = [bigint, bigint];
 type Scalar = Map<number, Rat>; // square-free radical -> rational coefficient
 type Poly = Map<number, Scalar>; // base-7 exponents: two declared variables, then the exact constant pi
@@ -152,19 +152,21 @@ function canonicalSet(intervals: Interval[]) {
 }
 const setKey = (raw: string) => canonicalSet(setIntervals(raw));
 
-export class AnswerVariableError extends Error {}
+export class AnswerVariableError extends Error {
+  constructor(message: string, readonly formatOnly = false) { super(message); }
+}
 
 function checkVariable(name: string, allowed: string[], range: boolean) {
   if (!allowed.length) allowed.push(name);
-  if (allowed.includes(name)) return;
-  if (range && name === "x") {
+  if (allowed.some(label => normaliseAnswerLabel(label) === normaliseAnswerLabel(name))) return;
+  if (range && normaliseAnswerLabel(name) === "x") {
     throw new AnswerVariableError("The range describes output values. Write your inequality using " +
       allowed.slice(0, 2).join(" or ") + ". The variable x describes the domain.");
   }
   throw new AnswerVariableError("This field asks for " + allowed.slice(0, 2).join(" or ") + ". Use that symbol in your answer.");
 }
 
-const answerVariable = /^[a-z](?:\(x\))?$/i;
+const answerVariable = /^[a-z](?:\^-1)?(?:\(x\))?$/i;
 
 function comparisonInterval(raw: string, allowed: string[], range: boolean): Interval | undefined {
   const parts = raw.split(/(<=|>=|<|>)/).map(part => part.trim());
@@ -173,12 +175,12 @@ function comparisonInterval(raw: string, allowed: string[], range: boolean): Int
   if (signs.length === 2 && signs[0][0] !== signs[1][0]) return fail();
   if (signs[0][0] === ">") parts.reverse();
 
-  const index = parts.findIndex((part, i) => i % 2 === 0 && answerVariable.test(part.replace(/\s+/g, "")));
+  const index = parts.findIndex((part, i) => i % 2 === 0 && answerVariable.test(normaliseAnswerLabel(part)));
   if (index < 0 || (parts.length === 5 && index !== 2)) return fail();
   const low = index === 0 ? "-inf" : parts[0];
   const high = index === parts.length - 1 ? "inf" : parts.at(-1)!;
   const lower = bound(low), upper = bound(high);
-  checkVariable(parts[index].replace(/\s+/g, ""), allowed, range);
+  checkVariable(parts[index].trim(), allowed, range);
   const lc = Number.isFinite(lower.value) && !!parts[index - 1]?.includes("=");
   const hc = Number.isFinite(upper.value) && !!parts[index + 1]?.includes("=");
   if (lower.value > upper.value || (lower.key === upper.key && !(lc && hc))) return undefined;
@@ -194,8 +196,9 @@ function statedValues(raw: string, allowed: string[], range: boolean) {
   if (list.startsWith("{") && list.endsWith("}")) list = list.slice(1, -1);
   let variable: string | undefined;
   const values = split(list.replace(connector, ","), ",").flatMap(part => {
-    const assignment = /^\s*([a-z](?:\(\s*x\s*\))?)\s*=\s*/i.exec(part);
-    const label = assignment?.[1].replace(/\s+/g, "");
+    const assignment = /^\s*([^=]+?)\s*=\s*/.exec(part);
+    const label = assignment ? normaliseAnswerLabel(assignment[1]) : undefined;
+    if (label && !answerVariable.test(label)) return fail();
     if (label && variable && label !== variable) fail();
     if (label) {
       checkVariable(label, allowed, range);
@@ -217,13 +220,51 @@ function intersection(a: Interval, b: Interval): Interval | undefined {
   return { low, high, lc, hc };
 }
 
+function absoluteValueIntervals(clause: string, allowed: string[], range: boolean): Interval[] {
+  const parts = clause.trim().split(/(<=|>=|<|>|=)/).map(part => part.trim());
+  if (parts.length !== 3) return fail();
+  const variable = /^\|(.+)\|$/;
+  let label = variable.exec(parts[0])?.[1];
+  let sign = parts[1], endpoint = parts[2];
+  if (!label) {
+    label = variable.exec(parts[2])?.[1];
+    sign = sign.replace(/[<>]/, symbol => symbol === "<" ? ">" : "<");
+    endpoint = parts[0];
+  }
+  if (!label || !answerVariable.test(normaliseAnswerLabel(label))) return fail();
+  checkVariable(label.trim(), allowed, range);
+  const radius = bound(endpoint);
+  if (!Number.isFinite(radius.value)) return fail();
+  if (radius.value < 0) return sign.startsWith(">") ? setIntervals("(-inf,inf)") : [];
+  const negative = bound("-(" + endpoint + ")");
+  if (sign === "=") return [negative, radius].map(b => ({ low: b, high: b, lc: true, hc: true }));
+  const closed = sign.includes("=");
+  if (sign.startsWith("<")) {
+    return radius.value === 0 && !closed ? [] : [{ low: negative, high: radius, lc: closed, hc: closed }];
+  }
+  return [
+    { low: bound("-inf"), high: negative, lc: false, hc: closed },
+    { low: radius, high: bound("inf"), lc: closed, hc: false },
+  ];
+}
+
+const hasSetCondition = /[<>]|!=|[∈|]/;
+
 function comparisonSet(clause: string, allowed: string[], range: boolean): Interval[] {
+  if (clause.includes("∈")) {
+    const [variable, set, ...extra] = clause.split("∈").map(part => part.trim());
+    if (extra.length || !set || !answerVariable.test(normaliseAnswerLabel(variable))) return fail();
+    checkVariable(variable, allowed, range);
+    return /^(?:r|ℝ)$/i.test(set) ? setIntervals("(-inf,inf)") : setIntervals(set);
+  }
+  if (clause.includes("|")) return absoluteValueIntervals(clause, allowed, range);
+  if (!hasSetCondition.test(clause)) return setIntervals(statedValues(clause, allowed, range));
   if (!clause.includes("!=")) {
     const ordered = comparisonInterval(clause, allowed, range);
     return ordered ? [ordered] : [];
   }
-  const sides = clause.split("!=").map(side => side.replace(/\s+/g, ""));
-  const variable = sides.findIndex(side => answerVariable.test(side));
+  const sides = clause.split("!=").map(side => side.trim());
+  const variable = sides.findIndex(side => answerVariable.test(normaliseAnswerLabel(side)));
   if (sides.length !== 2 || variable < 0) return fail();
   const excluded = bound(sides[1 - variable]);
   if (!Number.isFinite(excluded.value)) return fail();
@@ -241,19 +282,20 @@ function answerSetKey(field: ExactField, raw: string, prompt?: string) {
   const range = !!outputs;
   const input = raw.replace(/≤|\\leq?(?![a-z])/g, "<=").replace(/≥|\\geq?(?![a-z])/g, ">=")
     .replace(/≠|\\neq?(?![a-z])/g, "!=")
+    .replace(/\\(?:left|right)(?=\|)/g, "").replace(/\\in(?![a-z])|\bin\b/gi, "∈").replace(/\\mathbb\{R\}/g, "ℝ")
     .replace(/([)\]}])\s*\bor\b\s*(?=\(|\[|\{)/gi, "$1 ∪ ");
-  const hasComparison = /[<>]|!=/;
-  if (!hasComparison.test(input)) {
+  if (!hasSetCondition.test(input)) {
     const branches = input.split(/∪|\bU\b/);
     return canonicalSet(branches.flatMap(branch => setIntervals(statedValues(branch, allowed, range))));
   }
   const intervals: Interval[] = [];
   for (const branch of input.replace(/\bor\b/gi, "∪").split(/∪|\bU\b/)) {
-    if (!hasComparison.test(branch)) {
+    if (!hasSetCondition.test(branch)) {
       intervals.push(...setIntervals(statedValues(branch, allowed, range)));
       continue;
     }
-    const constraints = branch.split(/\band\b/i).map(clause => comparisonSet(clause, allowed, range));
+    const constraints = branch.split(/\band\b/i).flatMap(part => split(part, ","))
+      .map(clause => comparisonSet(clause, allowed, range));
     const common = constraints.reduce((remaining, next) => remaining.flatMap(interval => next.flatMap(other => {
       const overlap = intersection(interval, other);
       return overlap ? [overlap] : [];
@@ -272,19 +314,23 @@ function pairsKey(raw: string, dimension = 2, coordinates = false) {
       const labelled = entries.map(part => /^([xy])\s*=\s*(.+)$/.exec(part.trim()));
       const x = labelled.find(match => match?.[1] === "x"), y = labelled.find(match => match?.[1] === "y");
       if (!x || !y) return fail();
-      return numberKey(x[2]) + "|" + numberKey(y[2]);
+      entries = [x[2], y[2]];
     }
-    return entries.map(numberKey).join("|");
+    const choices = entries.map(entry => entry.replace(/\+\/-|\\pm/g, "±"));
+    const signs = choices.join("").match(/±/g)?.length ?? 0;
+    if (!signs) return [entries.map(numberKey).join("|")];
+    if (!coordinates || dimension !== 2 || signs !== 1) return fail();
+    return ["+", "-"].map(sign => choices.map(entry => numberKey(entry.replace("±", sign))).join("|"));
   }
   const list = raw.trim().replace(/^\{(.*)\}$/, "$1").replace(/\)\s+and\s+(?=\()/gi, ");");
   const pairs = split(list, ";").flatMap(group => {
     const entries = split(group, ",").map(part => part.trim());
     if (coordinates && dimension === 2 && /^[xy]\s*=/.test(entries[0])) {
       const labelledPairs: string[] = [];
-      for (let i = 0; i < entries.length; i += 2) labelledPairs.push(tuple(entries.slice(i, i + 2)));
+      for (let i = 0; i < entries.length; i += 2) labelledPairs.push(...tuple(entries.slice(i, i + 2)));
       return labelledPairs;
     }
-    return entries.map(entry => {
+    return entries.flatMap(entry => {
       if (!entry.startsWith("(") || !entry.endsWith(")")) return fail();
       return tuple(split(entry.slice(1, -1), ","));
     });
@@ -303,12 +349,51 @@ export type ExactField = { key: string; label: string; type: string; expected: s
 // Feedback for a labelled scalar uses the same mathematical expression as grading.
 export function scalarAnswerValue(field: ExactField, input: string): string {
   if (!["number", "approximate", "polynomial"].includes(field.type)) return input;
-  const assignment = /^\s*([a-z])\s*=\s*/i.exec(input);
+  const assignment = /^\s*([^=]+?)\s*=\s*/.exec(input);
   if (!assignment) return input;
-  const symbol = scalarSymbol(field);
-  if (!symbol) return fail();
-  checkVariable(assignment[1].toLowerCase(), [symbol.toLowerCase()], false);
+  const labels = scalarLabels(field);
+  if (!labels.length) return fail();
+  if (!labels.some(label => normaliseAnswerLabel(label) === normaliseAnswerLabel(assignment[1]))) {
+    throw new AnswerVariableError("Enter the value on its own or label it " + labels[0] + ".", true);
+  }
   return input.slice(assignment[0].length);
+}
+
+export function isRoundedNumberAnswer(field: ExactField, input: string) {
+  if (field.type !== "number" || typeof field.expected !== "string") return false;
+  const entered = normalize(scalarAnswerValue(field, input));
+  const decimals = /^[+-]?\d*\.(\d+)$/.exec(entered)?.[1].length;
+  if (!decimals) return false;
+  const exact = numeric(field.expected), decimal = Number(entered);
+  return Math.abs(exact - decimal) <= 0.5 * 10 ** -decimals + Math.abs(exact) * Number.EPSILON;
+}
+
+function removeOuterBrackets(expression: string) {
+  while (expression.startsWith("(") && expression.endsWith(")")) {
+    let depth = 0, end = 0;
+    do {
+      if (expression[end] === "(") depth++;
+      if (expression[end] === ")") depth--;
+      end++;
+    } while (depth && end < expression.length);
+    if (end !== expression.length || depth) break;
+    expression = expression.slice(1, -1);
+  }
+  return expression;
+}
+
+function ratioParts(input: string) {
+  const legacy = split(input, ";");
+  if (legacy.length === 2) return legacy;
+  const parts = split(removeOuterBrackets(normalize(input)), "/");
+  if (legacy.length !== 1 || parts.length !== 2) return fail();
+  // An ungrouped sum is not the numerator of a single quotient.
+  const numerator = parts[0].replace(/^[+-]/, "");
+  const denominator = parts[1].replace(/^[+-]/, "");
+  const grouped = removeOuterBrackets(denominator) !== denominator;
+  if (split(numerator, "+").length !== 1 || split(numerator, "-").length !== 1 ||
+      (!grouped && !/^(?:[a-z]|pi|\d+(?:\.\d+)?)(?:\^[1-6])?$/.test(denominator))) return fail();
+  return parts;
 }
 
 export function checkExact(field: ExactField, input: string, prompt?: string): boolean {
@@ -328,8 +413,8 @@ export function checkExact(field: ExactField, input: string, prompt?: string): b
   }
   if (field.type === "choice") { if (!Object.hasOwn(field.options ?? {}, input)) fail(); return input === field.expected; }
   if (field.type === "ratio") {
-    const parts=split(input,";"), expected=field.expected;
-    if(parts.length!==2 || !Array.isArray(expected)||expected.length!==2)fail();
+    const parts=ratioParts(input), expected=field.expected;
+    if(!Array.isArray(expected)||expected.length!==2)fail();
     const [a,b]=parts.map(p=>poly(p,field.variables)),[c,d]=(expected as string[]).map(p=>poly(p,field.variables));
     // Same denominator domain: do not cancel away an excluded parameter value.
     return proportional(b,d) && same(pmul(a,d),pmul(c,b));

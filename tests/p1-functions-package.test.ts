@@ -60,7 +60,6 @@ test("each revised Functions section gives a worked example and a fresh check", 
     const dto = squarePublicLesson(packageTopic(lessonId)!);
     assert(dto.study);
     assert.deepEqual(dto.study.sections.map(s => s.id), source.sections.map(s => s.id));
-    assert.equal(dto.study.sections.at(-1)?.level, "extension");
     const rendered = [...dto.examples.flatMap(e => [e.question, ...(e.steps ?? [])]),
       ...Object.values(studyRevision(lessonId)!)];
     for (const section of dto.study.sections) {
@@ -81,17 +80,31 @@ test("each revised Functions section gives a worked example and a fresh check", 
   assert.equal(gradeStudyCheck(compositeLesson, "range-of-decreasing-line", "[2,14)"), undefined);
 });
 
+test("the methods used in Functions Core practice are in Core notes", () => {
+  for (const [lessonId, sectionId] of [
+    [firstLesson, "fractional-inverses"],
+    [compositeLesson, "recover-a-function"],
+    [graphsLesson, "shared-points-off-the-mirror"],
+    [transformationsLesson, "compare-transformation-orders"],
+  ] as const) {
+    const dto = squarePublicLesson(packageTopic(lessonId)!);
+    assert.equal(dto.study?.sections.find(section => section.id === sectionId)?.level, "core");
+  }
+});
+
 test("Functions checks accept full ranges, exclusions and inverse pairs in exam notation", () => {
   const grade = (id: string, answer: string) => gradeStudyCheck(firstLesson, id, answer)!;
   for (const [id, answers] of [
     ["range-of-decreasing-line", ["2 ≤ g(x) < 14", "14 > y >= 2", "[2,14)"]],
-    ["root-and-denominator-domain", ["−5 ≤ x ≤ 2 and x ≠ −3", "−3 != x and x>=-5 and x<=2", "[-5,-3) U (-3,2]"]],
+    ["root-and-denominator-domain", ["−5 ≤ x ≤ 2 and x ≠ −3", "−5 ≤ x ≤ 2, x ≠ −3", "−3 != x and x>=-5 and x<=2", "[-5,-3) U (-3,2]"]],
+    ["evaluate-output", ["g(-2) = 8"]],
+    ["undo-not-reciprocal", ["x=3", "y=3", "v⁻¹(5) = 3", "v^{-1}(5)=3"]],
     ["same-output-two-inputs", ["x = −3 or x = −1", "{-3,-1}"]],
     ["reverse-all-pairs", ["(3,−4), (0,−1), (8,5)", "x=8,y=5; x=3,y=-4; x=0,y=-1"]],
     ["linear-inverse-rule", ["(10-x)/4", "5/2-x/4"]],
     ["linear-inverse-domain", ["2 ≤ x < 10", "[2,10)"]],
-    ["fraction-inverse-rule", ["4x+2;x-1", "8x+4;2x-2"]],
-    ["fraction-inverse-domain", ["x ≠ 1", "x != 1", String.raw`x \ne 1`, "(-∞,1) ∪ (1,∞)"]],
+    ["fraction-inverse-rule", ["(4x+2)/(x-1)", "\\frac{4x+2}{x-1}", "4x+2;x-1", "8x+4;2x-2"]],
+    ["fraction-inverse-domain", ["x ≠ 1", "x != 1", String.raw`x \ne 1`, "x ∈ ℝ, x ≠ 1", "x in R, x != 1", "(-∞,1) ∪ (1,∞)"]],
   ] as const) {
     for (const answer of answers) assert.equal(grade(id,answer).status, "correct", id + " / " + answer);
   }
@@ -111,6 +124,9 @@ test("Functions checks accept full ranges, exclusions and inverse pairs in exam 
   }
   assert.equal(grade("fraction-inverse-domain","x ≠").status,"format");
   assert.equal(grade("fraction-inverse-domain","x ≠ 1 ≠ 2").status,"format");
+  assert.equal(grade("evaluate-output","g(-3)=8").status,"format");
+  assert.equal(grade("fraction-inverse-rule","4x+2/(x-1)").status,"format");
+  assert.equal(grade("fraction-inverse-rule","((4x+2)*(x+1))/((x-1)*(x+1))").status,"retry");
 });
 
 test("composite checks distinguish reversed operations, missing branches and original exclusions", () => {
@@ -121,7 +137,7 @@ test("composite checks distinguish reversed operations, missing branches and ori
     ["formula-ba", ["2(x^2−3x)+1","2x²−6x+1"]],
     ["composite-domain-both-conditions", ["2 < x ≤ 4","(2,4]"]],
     ["root-needs-two-branches", ["−5 ≤ x ≤ −3 or 3 ≤ x < 4","[−5,−3] ∪ [3,4)"]],
-    ["fraction-composite-formula", ["4x;x+2","8x;2x+4"]],
+    ["fraction-composite-formula", ["4x/(x+2)","4x;x+2","8x;2x+4"]],
     ["fraction-composite-domain", ["x ≠ −2 and x ≠ 0","(−∞,−2) U (−2,0) U (0,∞)"]],
     ["recover-outside-inputs", ["x ≥ 1","[1,∞)"]],
   ] as const) {
@@ -149,11 +165,11 @@ test("restricted inverse checks require the correct exact branch and attained en
   for (const [id,answers] of [
     ["smallest-right-cutoff", ["−2","c = −2"]],
     ["largest-left-cutoff", ["4","c = 4"]],
-    ["range-of-a-bounded-branch", ["6 < r(x) ≤ 22","(6,22]"]],
+    ["range-of-a-bounded-branch", ["6 < r(x) ≤ 22","6 < r ≤ 22","(6,22]"]],
     ["right-branch-exact-inverse-value", ["3 + √5","3+sqrt(20)/2"]],
     ["left-branch-exact-inverse-value", ["−1 − √3","-1-sqrt(12)/2"]],
     ["actual-domain-of-the-inverse", ["0 < x ≤ 8","(0,8]"]],
-    ["range-of-the-restricted-inverse", ["−4 ≤ y < −2","[-4,-2)"]],
+    ["range-of-the-restricted-inverse", ["−4 ≤ y < −2","−4 ≤ w⁻¹(x) < −2","[-4,-2)"]],
     ["inverse-of-a-root-formula", ["(x+2)^2−3","x²+4x+1"]],
     ["inverse-of-a-root-domain", ["−2 < x ≤ 2","(−2,2]"]],
     ["shared-output-still-reached", ["2 ≤ h(x) ≤ 11","[2,11]"]],
@@ -177,6 +193,7 @@ test("restricted inverse checks require the correct exact branch and attained en
     assert.match(result.feedback,hint);
   }
   assert.equal(grade("right-branch-exact-inverse-value","5.236").status,"retry");
+  assert.match(grade("right-branch-exact-inverse-value","5.24").feedback,/Give the exact value/);
   assert.equal(grade("actual-domain-of-the-inverse","0 < x <=").status,"format");
   assert.equal(gradeStudyCheck(firstLesson,"right-branch-exact-inverse-value","3+√5"),undefined);
 });

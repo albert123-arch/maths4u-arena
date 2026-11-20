@@ -50,6 +50,9 @@ Author desktop, mobile and print from the same reviewed lesson content. The [Qua
 - Use the same input conventions for **Your turn**, **Practice** and fresh review variants. Accept chained inequalities, both branches joined by “or”, an interval union, and a labelled scalar such as `b = −4` in the appropriate field. Ask for inequalities in an inequality question, including when the endpoints happen to be roots.
 - For coordinate answers, accept `(2, 4), (−1, 1)` or a semicolon between points. Accept a single point as `x = 2, y = 4`. Check the pairing of coordinates, every required point and every included boundary. Test one incomplete answer and one mathematically wrong answer alongside the accepted spellings.
 - Keep checks inside the notes formative. The existing Practice and Review flows record attempts and select fresh variants. Maintain task IDs, answer keys, criteria, marks, drafts and learning history.
+- Cover each Core practice skill in a Core section or link to the prerequisite that taught it. Place optional extensions after that explanation.
+- Start written practice with two or three problems the learner can solve using the lessons studied so far. Put problems requiring later sections under **Mixed chapter practice** and link to the relevant prerequisites. Keep existing question identities and variants.
+- Accept ordinary grouped fractions as well as the earlier numerator and denominator entry. Keep the original denominator restrictions. If an exact-answer field receives the rounded value, ask for the exact form in the feedback.
 - Provide a separate **Quick revision sheet (A4)** for each lesson. Include the method, useful conditions, a diagram or compact table where it clarifies the material, and common mistakes. Include a print or save as PDF control. Use a clean light print layout with no site navigation or interactive fields.
 
 ## Optional lesson videos

@@ -188,7 +188,12 @@ test("practice and fresh review variants accept the same exam notation as the st
     const q = questionsForTopic("orig_quadratics_" + lesson).find(q => q.id === "M4U-9709-P1-QD-CHECK-" + item)!;
     assert(gradeSquare(q, right).correct, item);
     const result = gradeSquare(q, wrong);
-    assert(result.valid && !result.correct, item);
+    assert(!result.correct, item);
+    if (item === "DISCRIMINANT-2-0") {
+      assert(!result.valid && result.fields.exception.formatError, item);
+    } else {
+      assert(result.valid, item);
+    }
   }
 });
 

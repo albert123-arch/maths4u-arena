@@ -1,10 +1,11 @@
 import quadratics from "../../content/original/9709-p1/quadratics-study.json";
 import functions from "../../content/original/9709-p1/functions-study.json";
 import coordinateGeometry from "../../content/original/9709-p1/coordinate-geometry-study.json";
+import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
 import { renderContent } from "./content";
-import { checkExact, AnswerVariableError, type ExactField } from "./exact-answer";
-import { answerFormat } from "./square-presentation";
-import type { StudyBlock, StudyCheck, StudyCheckResult, StudyLesson, StudySection } from "./study-lesson-model";
+import { checkExact, isRoundedNumberAnswer, AnswerVariableError, type ExactField } from "./exact-answer";
+import { answerFormat, exactValueFeedback } from "./square-presentation";
+import type { StudyBlock, StudyCheck, StudyCheckResult, StudyExamPractice, StudyLesson, StudySection } from "./study-lesson-model";
 
 type AuthoredCheck = { kind: "check" } & Omit<StudyCheck, "field"> & {
   field: ExactField;
@@ -21,6 +22,7 @@ type AuthoredLesson = Omit<StudyLesson, "sections"> & {
 };
 
 const lessons = { ...quadratics, ...functions, ...coordinateGeometry } as Record<string, AuthoredLesson>;
+const examPaths = examPracticePaths as Record<string, Omit<StudyExamPractice, "starters"> & { starters?: StudyExamPractice["starters"] }>;
 
 function lessonById(id: string) {
   return Object.hasOwn(lessons, id) ? lessons[id] : undefined;
@@ -71,6 +73,7 @@ function publicBlock(block: AuthoredBlock): StudyBlock {
 export function studyLayout(lessonId: string) {
   const lesson = lessonById(lessonId);
   if (!lesson) return undefined;
+  const path = examPaths[lessonId];
   const study: StudyLesson = {
     sections: lesson.sections.map(section => ({
       ...section,
@@ -79,6 +82,10 @@ export function studyLayout(lessonId: string) {
     })),
     glossary: lesson.glossary.map(word => ({ ...word, definition: renderContent(word.definition) })),
     related: lesson.related,
+    ...(path && { examPractice: {
+      needs: path.needs,
+      starters: (path.starters ?? []).map(q => ({ ...q, question: renderContent(q.question), solution: renderContent(q.solution) })),
+    } }),
   };
   const examples = lesson.examples.map(example => ({
     title: example.title,
@@ -102,8 +109,12 @@ export function gradeStudyCheck(lessonId: string, id: string, answer: string): S
   const field = block.field;
   try {
     if (checkExact(field, answer, block.prompt)) return { status: "correct", feedback: renderContent(block.solution) };
+    if (isRoundedNumberAnswer(field, answer)) return { status: "retry", feedback: renderContent("<p>" + exactValueFeedback + "</p>") };
   } catch (error) {
-    if (error instanceof AnswerVariableError) return { status: "retry", feedback: renderContent("<p>" + error.message + "</p>") };
+    if (error instanceof AnswerVariableError) return {
+      status: error.formatOnly ? "format" : "retry",
+      feedback: renderContent("<p>" + error.message + "</p>"),
+    };
     return { status: "format", feedback: renderContent("<p>" + answerFormat(field).en + "</p>") };
   }
 

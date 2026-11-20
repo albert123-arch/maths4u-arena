@@ -3,7 +3,7 @@ import {ReportError} from "./report-error";
 import { useView } from "./view-state";
 /* eslint-disable react-hooks/set-state-in-effect -- Restore versioned drafts after authentication/hydration. */
 import Link from "next/link";
-import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button, ButtonLink, Input } from "./controls";
 import { ActorContext, api, ErrorNotice, Loading, MathContent, useLocale, useResource } from "./ui";
 import { Feedback } from "./feedback";
@@ -33,6 +33,10 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
   const navigation:NonNullable<SquareLesson["navigation"]>=lesson.navigation??{directionPath:"/learn/a-level",directionTitle:"AS & A Level",coursePath:"/courses/maths4u-9709-p1",courseTitle:"Pure 1 · 9709",chapterTitle:"Quadratics",topics:quadraticTopics};
   const [uid, setUid] = useState(diagnostic.uid), [restored, setRestored] = useState(false), [active, setActive] = useState("notes");
   const queue = nextSquareReview(lesson.questions, state.snapshot), current = lesson.questions.find(q => q.uid === uid) ?? diagnostic;
+  const examRoute = study?.examPractice;
+  const exams = lesson.questions.filter(q => (q.collection === "exam" || q.collection === "mixed") && !q.variantIndex);
+  const readyExams = exams.filter(q => !examRoute?.needs[q.family]);
+  const mixedExams = exams.filter(q => examRoute?.needs[q.family]);
   const storageKey = topic.storage + ".resume." + (actor?.id ?? "guest") + "." + topic.version;
   const groups = collectionOrder.map(key => ({ key, questions: lesson.questions.filter(q => q.collection === key && (q.variantIndex===undefined||q.variantIndex===0||q.uid===uid)) })).filter(g => g.questions.length);
   const ordered = groups.flatMap(g => g.questions), group = groups.find(g => g.key === current.collection)!, index = ordered.findIndex(q => q.uid === current.uid);
@@ -96,7 +100,8 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
   const examVariants=current.variantIndex!==undefined?lesson.questions.filter(q=>q.family===current.family):[];
   const lastPreparedS1Variant=topic.packageKey?.startsWith("9709-s1-")&&current.variantIndex===3;
   const checked = group.questions.filter(q => state.snapshot.seen[q.uid]).length;
-  const next = primary.find(q => !state.snapshot.states[q.family]?.correct) ?? lesson.questions.find(q => q.collection === "mixed"||q.collection==="exam")??primary[0];
+  const nextExam = examRoute ? readyExams[0] : lesson.questions.find(q => q.collection === "mixed" || q.collection === "exam");
+  const next = primary.find(q => !state.snapshot.states[q.family]?.correct) ?? nextExam ?? (examRoute?.starters.length ? undefined : primary[0]);
   const markRead = actor && !teacher && <Button disabled={!!lens || !state.ready || !!state.snapshot.notesRead} onClick={() => void state.markRead()}>{state.snapshot.notesRead ? t("✓ Конспект прочитан", "✓ Notes marked as read") : t("Отметить прочитанным", "Mark notes as read")}</Button>;
   return <div className="square-lesson" ref={root} data-structured-notes={study ? "" : undefined}>
     {lesson.draft&&<p className="muted">{t("Не опубликовано · предпросмотр администратора","Unpublished · administrator preview")}</p>}
@@ -116,17 +121,52 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
         <details className="square-question-list"><summary>{t("Все вопросы", "Question list")}</summary>{groups.map(g => <div key={g.key}><h3>{collectionLabel(g.key)}</h3><ol>{g.questions.map((q, i) => <li key={q.uid}><Button variant="text" aria-current={q.uid === uid ? "step" : undefined} onClick={e => { const disclosure = e.currentTarget.closest("details"); if (disclosure) { disclosure.open = false; disclosure.querySelector("summary")?.focus({ preventScroll: true }); } choose(q); }}><span>{i + 1}. {questionTitle(q)}</span>{!!state.snapshot.seen[q.uid] && <span className="square-list-checked">{t("Проверено", "Checked")}</span>}</Button></li>)}</ol></div>)}</details>
       </div>
     {examVariants.length>1&&<div className="row spread"><p>Same skill, fresh numbers · {current.variantIndex===0?"Main question":"Variant "+current.variantIndex}</p>{lastPreparedS1Variant?<p>This is the last prepared variant. Review your method or choose another question.</p>:<Button onClick={()=>choose(examVariants.find(q=>q.variantIndex===((current.variantIndex??0)+1)%4)!)}>Try a fresh version of this question →</Button>}</div>}
+      {examRoute?.needs[current.family] && <ExamPrerequisites lesson={lesson} family={current.family} />}
       {teacher && !lens ? <TeacherLessonQuestion key={uid} topic={topic} q={current} /> : <SquareQuestionForm reportReady={restored && sessionReady} topic={topic} key={uid + (actor?.id ?? "guest")} q={current} enabled={restored && sessionReady && state.ready && !state.error && lens?.mode !== "USER"} onResult={async (event, result) => { await state.record(event, current.family, result); }} />}
-      <div className="square-next row"><Button onClick={() => choose(next)}>{t("Следующий шаг →", "Next step →")}</Button>{current.variantIndex===undefined && lesson.questions.some(q => q.family === current.family && q.uid !== current.uid) && <Button onClick={() => choose(lesson.questions.filter(q => q.family === current.family && q.uid !== current.uid).sort((a, b) => (state.snapshot.seen[a.uid] ?? 0) - (state.snapshot.seen[b.uid] ?? 0))[0])}>{t("Новый вариант", "Try a fresh variant")}</Button>}<a href="#examples">{t("Повторить метод", "Review the method")}</a></div>
+      <div className="square-next row">{next ? <Button onClick={() => choose(next)}>{t("Следующий шаг →", "Next step →")}</Button> : <ButtonLink href="#challenge">{t("Экзаменационная практика →", "Try exam-style practice →")}</ButtonLink>}{current.variantIndex===undefined && lesson.questions.some(q => q.family === current.family && q.uid !== current.uid) && <Button onClick={() => choose(lesson.questions.filter(q => q.family === current.family && q.uid !== current.uid).sort((a, b) => (state.snapshot.seen[a.uid] ?? 0) - (state.snapshot.seen[b.uid] ?? 0))[0])}>{t("Новый вариант", "Try a fresh variant")}</Button>}<a href="#examples">{t("Повторить метод", "Review the method")}</a></div>
       {(!teacher || lens) && <SquareSaveNotice state={state} />}
     </section>
-    <section id="challenge" className="card"><h2>{t("Примените метод · авторские экзаменационные задачи", "Apply it · original exam-style problems")}</h2><p>{t("Соединяйте навыки и записывайте рассуждения на бумаге. Проверяются итоговые ответы; сравните метод с критериями.", "Combine skills and show your reasoning on paper. Compare your complete solution with the worked answer and marking guidance.")}</p><div className="square-challenges">{lesson.questions.filter(q => (q.collection === "exam" || q.collection === "mixed") && !q.variantIndex).map(q => <Button key={q.uid} onClick={() => choose(q)}><strong>{questionTitle(q)}</strong><span>{q.marks} {t("баллов за письменное решение →", "written marks →")}</span></Button>)}</div></section>
+    <section id="challenge" className="card">
+      <h2>{t("Примените метод · авторские экзаменационные задачи", "Apply it · original exam-style problems")}</h2>
+      <p>{t("Запишите решение на бумаге и сравните его с разбором и критериями.", "Show your working on paper and compare it with the worked solution and marking guidance.")}</p>
+      {examRoute && <h3>Start after this lesson</h3>}
+      {examRoute?.starters.map(q => <details key={q.id} id={q.id} className="exam-starter">
+        <summary><strong>{q.title}</strong> <span className="muted">{q.marks} marks</span></summary>
+        <MathContent html={q.question} />
+        <details><summary>Worked solution</summary><MathContent html={q.solution} /></details>
+      </details>)}
+      {readyExams.length > 0 && <div className="square-challenges">{readyExams.map(q =>
+        <Button key={q.uid} onClick={() => choose(q)}><strong>{questionTitle(q)}</strong><span>{q.marks} {t("баллов за письменное решение →", "written marks →")}</span></Button>
+      )}</div>}
+      {mixedExams.length > 0 && <details className="exam-mixed">
+        <summary>Mixed chapter practice</summary>
+        <p>Try these after completing this chapter.</p>
+        <div className="square-challenges">{mixedExams.map(q => <div key={q.uid}>
+          <Button onClick={() => choose(q)}><strong>{questionTitle(q)}</strong><span>{q.marks} written marks →</span></Button>
+          <ExamPrerequisites lesson={lesson} family={q.family} />
+        </div>)}</div>
+      </details>}
+    </section>
     <section id="review" className="card"><h2>{t("Вернитесь к тому, что требует практики", "Come back to what needs practice")}</h2>{study && <ButtonLink href={topic.path + "?view=revision"}>Quick revision sheet (A4)</ButtonLink>}{!Object.keys(state.snapshot.states).length ? <p>{t("План повторения появится после первой проверки.", "Your review plan starts after your first check.")}</p> : <><p>{queue.length ? t("Навыков для повторения сейчас: " + queue.length + ".", queue.length + (queue.length === 1 ? " skill is" : " skills are") + " ready for review.") : t("Пока всё повторено. Вернитесь после перерыва, чтобы проверить, что запомнилось.", "You are up to date for now. Return after a break to check what you remember.")}</p>{queue.length > 0 && <Button onClick={() => choose(queue[0])}>{t("Повторить на новом варианте →", "Review with a fresh variant →")}</Button>}<p className="muted">{t("После верного ответа без помощи: через 1, 3, 7 и 14 дней. Повторы в тот же день не увеличивают интервал. Ошибки возвращаются сегодня; ответы с помощью — раньше.", "After a correct answer without help: 1, 3, 7, then 14 days. Same-day retries do not advance the interval. Mistakes return today; answers with help return sooner.")}</p></>}</section>
     {topic.packageKey==="9709-p1-quadratics"&&<p><Link href={topic.path+"?practice=previous"}>Earlier practice and saved answers</Link></p>}
     {["9709-p1-functions","9709-p1-coordinate-geometry","9709-p1-circular-measure","9709-p1-trigonometry","9709-p1-series","9709-p1-binomial-expansion","9709-p1-differentiation","9709-p1-integration","9709-s1-representation","9709-s1-central-tendency","9709-s1-variation","9709-s1-probability","9709-s1-counting","9709-s1-distributions","9709-s1-binomial-geometric","9709-s1-normal"].includes(topic.packageKey??"")&&<p><Link href={topic.path+"?view=legacy"}>Question bank and saved work</Link></p>}
     {teacher && <LessonPresentations lessonId={topic.lessonId} />}
     {!topic.packageKey&&<details className="square-source"><summary>{t("Об этих материалах и сохранённой работе", "About these materials and your existing work")}</summary><p>{t("Задачи взяты из авторской коллекции Maths4U Quadratics. В этом уроке нет экзаменационных вопросов или рисунков Cambridge.", "Questions come from the independently authored Maths4U Quadratics collection. No Cambridge examination questions or graphics are included in this lesson.")}</p><p><Link href={topic.path + "?view=legacy"}>{t("Прежние конспекты, банк и попытки", "Earlier notes, bank and saved attempts")}</Link> · <Link href="/student/progress">{t("Прогресс класса и прежние ответы", "Class progress and previous answers")}</Link></p></details>}
   </div>;
+}
+
+function ExamPrerequisites({ lesson, family }: { lesson: SquareLesson; family: string }) {
+  const links = (lesson.study?.examPractice?.needs[family] ?? []).flatMap(target => {
+    const [key, section] = target.split("#");
+    const topic = lesson.navigation?.topics.find(item => item.key === key);
+    if (!topic) return [];
+    const title = section === "find-tangents-from-an-external-point" ? "Two tangents from a point" : topic.title;
+    return [{ href: topic.path + (section ? "#" + section : ""), title }];
+  });
+  if (!links.length) return null;
+  return <p className="exam-prerequisites muted">Review {links.map((link, i) => <Fragment key={link.href}>
+    {i > 0 && (i === links.length - 1 ? " and " : ", ")}<Link href={link.href}>{link.title}</Link>
+  </Fragment>)} first.</p>;
 }
 
 function TeacherLessonQuestion({ topic, q }: { topic: QuadraticTopic; q: SquareQuestion }) {

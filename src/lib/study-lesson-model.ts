@@ -31,10 +31,24 @@ export type StudySection = {
   blocks: StudyBlock[];
 };
 
+export type StudyPaperQuestion = {
+  id: string;
+  title: string;
+  marks: number;
+  question: string;
+  solution: string;
+};
+
+export type StudyExamPractice = {
+  starters: StudyPaperQuestion[];
+  needs: Record<string, string[]>;
+};
+
 export type StudyLesson = {
   sections: StudySection[];
   glossary: { term: string; definition: string }[];
   related?: { title: string; href: string }[];
+  examPractice?: StudyExamPractice;
 };
 
 export type StudyCheckResult = {

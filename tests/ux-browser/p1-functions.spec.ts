@@ -129,7 +129,7 @@ test('Functions graphics, worked steps, answer feedback and the A4 view work on 
     await check.getByRole('button',{name:'Check',exact:true}).click();
     await expect(check.locator('[data-status=' + status + ']')).toContainText(text);
   }
-  await expect(page.locator('#inverse-formula a[href="#practice"]')).toBeVisible();
+  await expect(page.locator('#fractional-inverses a[href="#practice"]')).toBeVisible();
   await expect(page.locator('#review')).toContainText('Your review plan starts after your first check');
   await expect(page.locator('.katex-error')).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(391);
@@ -190,7 +190,7 @@ test('composite lesson checks both domains and offers a fresh practice variant',
   await fraction.getByRole('textbox').fill('x ≠ −2 and x ≠ 0');
   await fraction.getByRole('button',{name:'Check',exact:true}).click();
   await expect(fraction.locator('[data-status=correct]')).toBeVisible();
-  await expect(page.locator('#keep-original-exclusions a[href="#practice"]')).toBeVisible();
+  await expect(page.locator('#recover-a-function a[href="#practice"]')).toBeVisible();
   await expect(page.locator('.katex-error')).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(391);
   await page.locator('#review').getByRole('link',{name:'Quick revision sheet (A4)'}).click();
@@ -385,6 +385,38 @@ test('transformations check the order and bounds, print a revision sheet and off
   await page.reload();
   await expect(point).toHaveValue('x = -3, y = -7');
   await expect(domain).toHaveValue('-4 < x ≤ -2');
+});
+
+test('inverse answers accept natural notation and the exam route teaches prerequisites first',async({page})=>{
+  await page.setViewportSize({width:390,height:900});
+  await page.goto(lessonUrl);
+  const next=page.locator('#inverse-formula nav a[href="#fractional-inverses"]');
+  await expect(next).toContainText('Next');
+  await expect(page.locator('#inverse-formula nav a[href="#practice"]')).toHaveCount(0);
+  for(const [id,answer,status] of [
+    ['evaluate-output','g(−2) = 8','correct'],
+    ['undo-not-reciprocal','x = 3','correct'],
+    ['undo-not-reciprocal','z = 3','format'],
+    ['fraction-inverse-rule','(4x+2)/(x−1)','correct'],
+    ['fraction-inverse-domain','x ∈ ℝ, x ≠ 1','correct'],
+  ] as const){
+    const check=page.locator('[data-study-check="'+id+'"]');
+    await check.getByRole('textbox').fill(answer);
+    await check.getByRole('button',{name:'Check',exact:true}).click();
+    await expect(check.locator('[data-status="'+status+'"]')).toBeVisible();
+  }
+  const challenge=page.locator('#challenge');
+  await expect(challenge.locator('.exam-starter')).toHaveCount(2);
+  const starter=challenge.locator('.exam-starter').first();
+  await starter.locator('summary').first().click();
+  await expect(starter.getByText('Find the range of',{exact:false}).first()).toBeVisible();
+  const mixed=challenge.locator('.exam-mixed');
+  const quadratic=mixed.getByRole('button',{name:/A restricted downward quadratic/});
+  await expect(quadratic).toBeHidden();
+  await mixed.locator('summary').click();
+  await quadratic.click();
+  await expect(page.locator('#practice .exam-prerequisites a')).toHaveAttribute('href',restrictedPath);
+  await expect(page).toHaveURL(/item=M4U-9709-P1-FN-20261108-01/);
 });
 
 test('written variants and diagrams retain marks and help boundaries on mobile',async({page})=>{

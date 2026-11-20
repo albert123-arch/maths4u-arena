@@ -1,5 +1,10 @@
 type Field = { type: string; key: string; label: string };
 
+export function normaliseAnswerLabel(label: string) {
+  return label.replace(/[−–]/g, "-").replace(/\s+/g, "")
+    .replace(/⁻¹|\^\{-1\}|\^\(-1\)/g, "^-1").toLowerCase();
+}
+
 /** The answer symbol can differ from the independent variable in the question. */
 export function scalarSymbol(field: Field) {
   if (/^[a-z]$/i.test(field.key)) return field.key;
@@ -9,6 +14,22 @@ export function scalarSymbol(field: Field) {
   if (/^(?:linear_root|fixed_root|repeated_root|argmin)$/.test(field.key)) return "x";
   if (field.key === "discriminant") return "D";
   return undefined;
+}
+
+export function scalarLabels(field: Field) {
+  const labels = [scalarSymbol(field)].filter((label): label is string => !!label);
+  if (field.type === "polynomial") return labels;
+  const evaluation = /^(?:Exact )?value of ([a-z]{1,2}(?:⁻¹|\^-1|\^\{-1\})?\([−–+\d./ -]+\))$/i.exec(field.label)?.[1];
+  if (evaluation) {
+    labels.unshift(evaluation);
+    // Inverse evaluation gives the original input, often labelled x in the working.
+    if (normaliseAnswerLabel(evaluation).includes("^-1")) labels.push("x");
+  }
+  const segment = /^(?:Exact )?length ([A-Z]{2})$/i.exec(field.label)?.[1];
+  if (segment) labels.push(segment);
+  if (field.key === "radius") labels.push("r");
+  if (field.key === "area" || /^Area\b/i.test(field.label)) labels.push("area");
+  return [...new Set(labels)];
 }
 
 export function setSymbol(field: Field) {
@@ -41,7 +62,10 @@ export function rangeOutputs(field: Field, prompt?: string): string[] | undefine
   if (field.type !== "set") return undefined;
   const named = /^Range of ([a-z])$/i.exec(field.label)?.[1];
   if (field.key !== "range" && !(field.key === "allowed" && named)) return undefined;
-  if (/inverse/i.test(field.label)) return ["y"];
+  if (/inverse/i.test(field.label)) {
+    const inverse = prompt?.match(/\b([a-z])\^\{-1\}/i)?.[1];
+    return inverse ? ["y", inverse + "⁻¹(x)"] : ["y"];
+  }
   const name = named ?? prompt?.match(/\b([fgh])\(x\)\s*=/)?.[1];
-  return name ? ["y", name + "(x)"] : ["y", "f(x)", "g(x)", "h(x)"];
+  return name ? ["y", name + "(x)", ...(named && named !== "x" ? [named] : [])] : ["y", "f(x)", "g(x)", "h(x)"];
 }
