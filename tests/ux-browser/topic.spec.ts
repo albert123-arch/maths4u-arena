@@ -16,18 +16,22 @@ async function choose(page: Page, title: string) {
 
 test('topic: mobile reading, sticky sections, topic dropdown and question navigation', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 }); await open(page);
-  expect(await page.locator('#notes h2').evaluate(e => e.getBoundingClientRect().top)).toBeLessThan(700);
+  expect(await page.locator('#notes h2').first().evaluate(e => e.getBoundingClientRect().top)).toBeLessThan(700);
   await expect(page.locator('.square-topic-mobile summary')).toHaveText('Quadratics · 2 of 5▾');
   await expect(page.locator('.quadratics-topics')).toBeHidden();
   await page.locator('.square-topic-mobile summary').focus(); await page.keyboard.press('Enter');
   await expect(page.locator('.square-topic-mobile nav a')).toHaveCount(5);
   await page.locator('.square-topic-mobile summary').press('Enter');
   const listStyle = await page.locator('#notes ol').evaluate(e => getComputedStyle(e).listStyleType); expect(listStyle).toBe('decimal');
-  const formula = page.locator('#notes .katex-display').first();
+  const formulas = page.locator('#notes .katex-display');
+  const wideFormula = await formulas.evaluateAll(nodes => nodes.findIndex(node => node.scrollWidth > node.clientWidth + 1));
+  const formula = formulas.nth(Math.max(wideFormula, 0));
   await expect(formula).toHaveAttribute('tabindex', '0');
   expect(await formula.evaluate(e => getComputedStyle(e).overflowX)).toBe('auto');
-  await formula.focus(); await page.keyboard.press('ArrowRight');
-  await expect.poll(() => formula.evaluate(e => e.scrollLeft)).toBeGreaterThan(0);
+  if (wideFormula >= 0) {
+    await formula.focus(); await page.keyboard.press('ArrowRight');
+    await expect.poll(() => formula.evaluate(e => e.scrollLeft)).toBeGreaterThan(0);
+  }
   await page.evaluate(() => scrollTo(0, 0));
   const reading = await page.locator('#notes .math-content').evaluate(e => ({ width: e.getBoundingClientRect().width, limit: getComputedStyle(e).maxWidth }));
   expect(reading.width).toBeLessThanOrEqual(parseFloat(reading.limit) + 1);
@@ -106,7 +110,7 @@ test('topic: wrong choice has a visible non-colour status and old routes remain 
   await open(page, 'M4U-9709-Q26-S-CS03'); await expect(form.locator('h3')).toHaveText('Keep the outside coefficient');
   expect(await page.evaluate(() => localStorage.getItem('maths4u.square.guest.v1'))).toBe(stored);
   await page.locator('.square-topic-mobile summary').click(); await page.locator('.square-topic-mobile a').first().click();
-  await expect(page).toHaveURL(/orig_quadratics_factorisation$/); await expect(page.locator('#notes h2')).toHaveText('Choose a method, then check every root');
+  await expect(page).toHaveURL(/orig_quadratics_factorisation$/); await expect(page.locator('#notes h2').first()).toHaveText('What are we trying to find?');
   await page.locator('.square-topic-mobile summary').click(); await page.locator('.square-topic-mobile a').nth(1).click();
   await expect(page.locator('.square-question h3')).toHaveText('Keep the outside coefficient');
   await fs.writeFile(root + '/interaction-checks.json', JSON.stringify({ mobileReading: true, stickySections: true, truthfulFeedback: true, drafts: true, legacy: true, reviewEvidenceRetained: true }, null, 2));

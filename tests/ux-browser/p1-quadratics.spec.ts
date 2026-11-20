@@ -10,7 +10,8 @@ test('five public lessons: desktop and mobile notes, mathematical layout and mai
     await page.setViewportSize({width,height:900});
     await page.goto(base+'/courses/'+pack.course.slug+'/topics/'+l.id);
     await expect(page.getByRole('heading',{name:l.title,exact:true})).toBeVisible();
-    await expect(page.locator('#examples .square-example')).toHaveCount(4);
+    await expect(page.locator('#examples .square-example')).toHaveCount(l.key==='equations'?7:l.key==='square'?10:4);
+    if(l.key==='equations'||l.key==='square')await expect(page.locator('#notes h2')).toHaveCount(6);
     await expect(page.locator('.katex-error')).toHaveCount(0);
     await expect(page.locator('#challenge .square-challenges button')).toHaveCount(pack.questions.filter(q=>q.lesson===l.key&&q.collection==='exam'&&q.variant_index===0).length);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+1);

@@ -41,7 +41,21 @@ test('Quadratics reuses all five canonical lessons and keeps every source part a
 test('all complete quick answers work; wrong or missing fields fail; review changes the numbers',()=>{
   for(const l of p.lessons){
     const topic=packageTopic(l.id)!,dto=squarePublicLesson(topic),qs=questionsForTopic(l.id);
-    assert.equal(dto.examples.length,4);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
+    const study = l.key === 'equations' ? { count: 7, first: 'What are we trying to find?', last: 'Fractions, reciprocals and real situations' }
+      : l.key === 'square' ? { count: 10, first: 'What does completing the square do?', last: 'Restricted domains can change the range' }
+      : undefined;
+    assert.equal(dto.examples.length,study?.count??4);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
+    if(study){
+      assert.equal(dto.notes.match(/<h2>/g)?.length,6);
+      assert(dto.notes.startsWith('<h2>'+study.first+'</h2>'));
+      assert(dto.notes.includes('<h2>'+study.last+'</h2>'));
+      assert(!/<script\b|<style\b|data-panel|data-math|m4-graph-explorer/.test(dto.notes));
+      assert.equal(dto.version,topic.version);
+    }
+    if(l.key==='square'){
+      assert(dto.notes.includes('/assets/original/quadratics/restricted-domain.svg'));
+      assert(dto.examples.find(e=>e.title==='Combine the useful forms')?.solution.includes('/assets/original/quadratics/square-sketch.svg'));
+    }
     assert.equal(dto.navigation?.directionTitle,'AS & A Level');
     const raw=JSON.stringify(dto);for(const key of ['"expected"','ownerProvenance','source_problem_id','source_exam','sourceSha256','archiveTaskId'])assert(!raw.includes(key),key);
     for(const text of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution]),...dto.questions.map(q=>q.prompt)])assert(!text.includes('katex-error'),l.key);

@@ -7,6 +7,7 @@ import { renderContent } from "./content";
 import { type SquareLesson, type CheckResult, squareVersion, quadraticTopic, type QuadraticTopic } from "./square-model";
 import type { MarkingRow, SupportKind } from "./question-support-model";
 import { packageQuestions, packageTeaching, packageTopic } from "./content-package-content";
+import { quadraticsStudy } from "./quadratics-study";
 
 type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
 export type SourceQuestion = { id: string; family_uid: string; title: string; collection: string; prompt_html: string; hint_html: string; solution_html: string; answer_html: string; marks: number; difficulty: number; variant_index?: number; fields: ExactField[]; marking_criteria?: Criterion[]; parts?: { label: string; marking_criteria: Criterion[] }[]; provenance?: { type: string; past_paper_reference: unknown } };
@@ -51,7 +52,8 @@ const examples = [
   { title: "4 · Count intersections within the domain", question: String.raw`<p>For \(f(x)=(x-2)^2+1\), \(0\le x\le5\), find all levels \(t\) giving two distinct solutions of \(f(x)=t\).</p>`, solution: String.raw`<p>The vertex level is \(1\); it gives only one solution. The left branch reaches \(f(0)=5\), and the right branch reaches \(f(5)=10\). Both branches meet the level precisely when \(1<t\le5\). At \(t=5\), the roots \(0\) and \(4\) both belong to the domain.</p>` },
 ];
 export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): SquareLesson {
-  const packaged=packageTeaching(topic),teaching = packaged??(topic.code === "CS" ? { notes, examples } : quadraticsTeaching[topic.key]);
+  const packaged=packageTeaching(topic);
+  const teaching = quadraticsStudy(topic.lessonId) ?? packaged ?? (topic.code === "CS" ? { notes, examples } : quadraticsTeaching[topic.key]);
   return { topic, version: topic.version, title: topic.title,...(packaged?{navigation:packaged.navigation}:{}), notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: renderContent(q.prompt_html).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>'), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey?f.label:topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
 }
 export function learningTopic(key:string){return packageTopic(key)??quadraticTopic(key);}
