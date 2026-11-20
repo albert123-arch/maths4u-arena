@@ -32,8 +32,9 @@ test("new answer formats compare exact meaning and preserve requested structure"
   assert(!check({type:"ratio",variables:["k"],expected:["-k","k-2"]},"-k*(k+1) ; (k-2)*(k+1)"));
 });
 test("each topic has notes, worked examples, diagnostics, exact public fields and clean KaTeX",()=>{
+  const revisedExamples: Record<string,number> = { equations:7, "completing-square":10, discriminant:11 };
   for(const t of quadraticTopics){const lesson=squarePublicLesson(t),qs=questionsForTopic(t.key);
-    assert.equal(lesson.examples.length,t.key==="equations"?7:t.key==="completing-square"?10:4);assert.equal(lesson.questions.filter(q=>q.collection==="short").length,12);assert.equal(lesson.questions.filter(q=>q.collection==="variant").length,12);
+    assert.equal(lesson.examples.length,revisedExamples[t.key]??4);assert.equal(lesson.questions.filter(q=>q.collection==="short").length,12);assert.equal(lesson.questions.filter(q=>q.collection==="variant").length,12);
     assert(lesson.questions.some(q=>q.collection==="diagnostic"));assert.equal(lesson.questions.filter(q=>q.collection==="exam").length,4);
     assert(!JSON.stringify(lesson).includes('"expected"'));
     for(const html of [lesson.notes,...lesson.examples.flatMap(e=>[e.question,e.solution]),...lesson.questions.map(q=>q.prompt),...qs.flatMap(q=>[squareHelp(q,"hint"),squareHelp(q,"solution")])])assert(!html.includes('class="katex-error"'),t.key+html.slice(0,200));

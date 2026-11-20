@@ -12,6 +12,11 @@ import { packageTask } from '../src/lib/content-packages';
 import {publicLearningTopic} from '../src/lib/public-learning-topic';
 
 const p=contentPackage('9709-p1-quadratics');
+const revisedStudy: Record<string,{count:number;first:string;last:string}> = {
+  equations: { count: 7, first: 'What are we trying to find?', last: 'Fractions, reciprocals and real situations' },
+  square: { count: 10, first: 'What does completing the square do?', last: 'Restricted domains can change the range' },
+  discriminant: { count: 11, first: 'What does the discriminant tell you?', last: 'Positive or negative for all real x' },
+};
 test('old lessons remain available until the exact new package is published',async()=>{
   const id=p.lessons[0].id,old=quadraticTopics[0];
   assert.deepEqual(await publicLearningTopic(id,async()=>null),old);
@@ -41,9 +46,7 @@ test('Quadratics reuses all five canonical lessons and keeps every source part a
 test('all complete quick answers work; wrong or missing fields fail; review changes the numbers',()=>{
   for(const l of p.lessons){
     const topic=packageTopic(l.id)!,dto=squarePublicLesson(topic),qs=questionsForTopic(l.id);
-    const study = l.key === 'equations' ? { count: 7, first: 'What are we trying to find?', last: 'Fractions, reciprocals and real situations' }
-      : l.key === 'square' ? { count: 10, first: 'What does completing the square do?', last: 'Restricted domains can change the range' }
-      : undefined;
+    const study = revisedStudy[l.key];
     assert.equal(dto.examples.length,study?.count??4);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
     if(study){
       assert.equal(dto.notes.match(/<h2>/g)?.length,6);
@@ -55,6 +58,12 @@ test('all complete quick answers work; wrong or missing fields fail; review chan
     if(l.key==='square'){
       assert(dto.notes.includes('/assets/original/quadratics/restricted-domain.svg'));
       assert(dto.examples.find(e=>e.title==='Combine the useful forms')?.solution.includes('/assets/original/quadratics/square-sketch.svg'));
+    }
+    if(l.key==='discriminant'){
+      assert(dto.notes.includes('/assets/original/quadratics/discriminant-root-cases.svg'));
+      assert(dto.notes.includes('/assets/original/quadratics/parabola-line-intersections.svg'));
+      assert.equal(dto.notes.match(/<div class="table-scroll"><table>/g)?.length,3);
+      assert(dto.examples.find(e=>e.title==='Classify a whole family')?.solution.includes('<div class="table-scroll"><table>'));
     }
     assert.equal(dto.navigation?.directionTitle,'AS & A Level');
     const raw=JSON.stringify(dto);for(const key of ['"expected"','ownerProvenance','source_problem_id','source_exam','sourceSha256','archiveTaskId'])assert(!raw.includes(key),key);
