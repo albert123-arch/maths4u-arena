@@ -48,7 +48,8 @@ export function contentPackage(key:string) {
   const p=contentPackages.find(p=>p.key===key);if(!p)throw Error("UNKNOWN_CONTENT_PACKAGE");return p;
 }
 export function publicChapterPath(p: ContentPackage) {
-  if (p.course.direction === "further" || p.key === "9709-p1-quadratics" || p.key === "9709-p1-functions") {
+  if (p.course.direction === "further" || p.key === "9709-p1-quadratics" ||
+    p.key === "9709-p1-functions" || p.key === "9709-p1-coordinate-geometry") {
     return "/courses/" + p.course.slug + "/chapters/" + p.chapter.slug;
   }
 }

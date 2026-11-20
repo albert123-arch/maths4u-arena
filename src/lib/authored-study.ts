@@ -1,5 +1,6 @@
 import quadratics from "../../content/original/9709-p1/quadratics-study.json";
 import functions from "../../content/original/9709-p1/functions-study.json";
+import coordinateGeometry from "../../content/original/9709-p1/coordinate-geometry-study.json";
 import { renderContent } from "./content";
 import { checkExact, AnswerVariableError, type ExactField } from "./exact-answer";
 import { answerFormat } from "./square-presentation";
@@ -19,7 +20,7 @@ type AuthoredLesson = Omit<StudyLesson, "sections"> & {
   revision: { body: string; checks: string; examTip: string };
 };
 
-const lessons = { ...quadratics, ...functions } as Record<string, AuthoredLesson>;
+const lessons = { ...quadratics, ...functions, ...coordinateGeometry } as Record<string, AuthoredLesson>;
 
 function lessonById(id: string) {
   return Object.hasOwn(lessons, id) ? lessons[id] : undefined;

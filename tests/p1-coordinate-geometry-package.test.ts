@@ -11,6 +11,8 @@ import {publicLearningTopic} from '../src/lib/public-learning-topic';
 import {checkExact} from '../src/lib/exact-answer';
 import {packageTask} from '../src/lib/content-packages';
 import {contentPackageSchema} from '../src/lib/content-package-schema';
+import {gradeStudyCheck,studyRevision} from '../src/lib/authored-study';
+import teaching from '../content/original/9709-p1/coordinate-geometry-study.json';
 
 const p=contentPackage('9709-p1-coordinate-geometry');
 test('Coordinate Geometry keeps five existing lesson identities and every written answer, mark and criterion',async()=>{
@@ -30,7 +32,8 @@ test('Coordinate Geometry keeps five existing lesson identities and every writte
 test('all full quick answers work, missing or wrong fields fail and review changes the question',()=>{
   for(const l of p.lessons){
     const dto=squarePublicLesson(packageTopic(l.id)!),qs=questionsForTopic(l.id);
-    assert.equal(dto.examples.length,4);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
+    assert.equal(dto.examples.length,teaching[l.id as keyof typeof teaching].examples.length);
+    assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
     for(const forbidden of ['"expected"','source_problem_id','source_exam','ownerProvenance','archiveTaskId'])assert(!JSON.stringify(dto).includes(forbidden),forbidden);
     for(const html of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution]),...dto.questions.map(q=>q.prompt)])assert(!html.includes('katex-error'),l.id);
     for(const q of qs){
@@ -43,6 +46,70 @@ test('all full quick answers work, missing or wrong fields fail and review chang
     const q=dto.questions.find(q=>q.collection==='short')!,snapshot=squareSnapshot([{eventKey:'test',uid:q.uid,family:q.family,correct:false,helpUsed:false,at:1000}]);
     const fresh=nextSquareReview(dto.questions,snapshot,1000)[0];assert.equal(fresh.family,q.family);assert.notEqual(fresh.uid,q.uid);assert.equal(fresh.collection,'variant');
   }
+});
+
+test('every Coordinate Geometry section has a readable example, fresh check and exact answer',()=>{
+  assert.deepEqual(Object.keys(teaching),p.lessons.map(l=>l.id));
+  for(const [lessonId,lesson] of Object.entries(teaching)){
+    const dto=squarePublicLesson(packageTopic(lessonId)!);
+    assert(dto.study);
+    assert.deepEqual(dto.study.sections.map(s=>s.id),lesson.sections.map(s=>s.id));
+    const revision=studyRevision(lessonId);
+    assert(revision);
+    assert.match(revision.body,/\/assets\/original\/coordinate-geometry\/study-/);
+    const rendered=[...Object.values(revision),...dto.examples.flatMap(e=>[e.question,...(e.steps??[])])];
+    for(const section of dto.study.sections){
+      assert(section.blocks.some(b=>b.kind==='example'));
+      assert(section.blocks.some(b=>b.kind==='check'));
+      rendered.push(section.intro,...section.blocks.flatMap(b=>'html' in b?[b.html]:b.kind==='check'?[b.prompt,b.hint]:[]));
+    }
+    for(const html of rendered)assert.doesNotMatch(html,/katex-error/);
+    for(const section of lesson.sections)for(const block of section.blocks){
+      if(block.kind!=='check'||!block.field)continue;
+      const correct=gradeStudyCheck(lessonId,block.id,block.field.expected);
+      assert.equal(correct?.status,'correct',block.id);
+      assert.doesNotMatch(correct.feedback,/katex-error/);
+      for(const retry of block.retry){
+        const incorrect=gradeStudyCheck(lessonId,block.id,retry.answer);
+        assert.equal(incorrect?.status,'retry',block.id+' / '+retry.answer);
+        assert.doesNotMatch(incorrect.feedback,/katex-error/);
+      }
+    }
+  }
+});
+
+test('lesson checks accept exact lengths, scaled equations, all points and strict parameter bounds',()=>{
+  const [distance,directions,lines,circles,intersections]=p.lessons.map(l=>l.id);
+  for(const [lessonId,id,answers] of [
+    [distance,'exact-surd-distance',['√73','sqrt(73)']],
+    [distance,'missing-endpoint',['x=-5, y=7','(-5,7)']],
+    [directions,'perpendicular-equation',['y=3x/2-5/2','6x-4y-10=0']],
+    [directions,'horizontal-segment-bisector',['x=-2','-2x-4=0']],
+    [lines,'axis-intercept-pairs',['(0,−6), (4,0)','(4,0);(0,-6)']],
+    [lines,'distinct-parallel-no-intersection',['empty','∅']],
+    [circles,'circle-from-a-centre-and-point',['(x+2)^2+(y-4)^2=25','x^2+y^2+4x-8y-5=0']],
+    [circles,'tangent-from-centre-and-contact',['3x-4y=3','y=3(x-1)/4']],
+    [intersections,'both-secant-points',['(3,4), (-4,-3)']],
+    [intersections,'secant-parameter-interval',['-4 < k < 4','(-4,4)']],
+    [intersections,'both-tangent-parameters',['k=-4 or k=4','{4,-4}']],
+    [intersections,'missing-circle-parameter-set',['k<-4 or k>4','(-inf,-4) U (4,inf)']],
+  ] as const){
+    for(const answer of answers)assert.equal(gradeStudyCheck(lessonId,id,answer)?.status,'correct',id+' / '+answer);
+  }
+  for(const [lessonId,id,answer,message] of [
+    [distance,'radius-squared-from-diameter','50',/quarters/],
+    [directions,'perpendicular-bisector','3x+y=-2',/must pass through the midpoint/],
+    [lines,'axis-intercept-pairs','(4,0)',/Also set/],
+    [circles,'circle-from-a-centre-and-point','(x-2)^2+(y+4)^2=25',/must vanish/],
+    [intersections,'secant-parameter-interval','[-4,4]',/strict interval/],
+    [intersections,'both-common-circle-points','(3,2)',/lower point/],
+  ] as const){
+    const result=gradeStudyCheck(lessonId,id,answer);
+    assert.equal(result?.status,'retry',id);
+    assert.match(result.feedback,message);
+  }
+  assert.equal(gradeStudyCheck(intersections,'both-secant-points','(3,)')?.status,'format');
+  assert.equal(gradeStudyCheck(circles,'both-secant-points','(3,4)'),undefined);
 });
 
 test('line and circle equations allow equivalent forms, but not incorrect geometry or incomplete pairs',()=>{

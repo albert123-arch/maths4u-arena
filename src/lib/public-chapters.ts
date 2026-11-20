@@ -58,14 +58,18 @@ export function matchPublicChapter(chapters: PublicChapter[], path: string, chap
   ));
 }
 
+const pure1ChapterDescriptions: Record<string, string> = {
+  "9709-p1-quadratics": "Study quadratics for Cambridge 9709 Pure Mathematics 1. Work through factorisation, completing the square, the discriminant, inequalities and simultaneous equations.",
+  "9709-p1-functions": "Study functions for Cambridge 9709 Pure Mathematics 1. Work through domain and range, inverse and composite functions, and graph transformations.",
+  "9709-p1-coordinate-geometry": "Study coordinate geometry for Cambridge 9709 Pure Mathematics 1. Find exact distances, gradients, line and circle equations, intersections and tangents.",
+};
+
 export function chapterMetadata(ch: PublicChapter, lesson?: PublicLesson) {
   if (ch.courseCode === "9709") {
-    const overview = ch.key === "9709-p1-functions"
-      ? "Study functions for Cambridge 9709 Pure Mathematics 1. Work through domain and range, inverse and composite functions, and graph transformations."
-      : "Study quadratics for Cambridge 9709 Pure Mathematics 1. Work through factorisation, completing the square, the discriminant, inequalities and simultaneous equations.";
     return {
       title: (lesson?.title ?? ch.chapterTitle) + " | 9709 Pure 1 | Maths4U",
-      description: lesson?.description ?? lesson?.objective ?? overview,
+      description: lesson?.description ?? lesson?.objective ?? pure1ChapterDescriptions[ch.key]
+        ?? "Study " + ch.chapterTitle + " for Cambridge 9709 Pure Mathematics 1.",
     };
   }
   const course = furtherCourseName(ch.courseTitle), focus = lesson?.title.split(/,| and /)[0].trimEnd();

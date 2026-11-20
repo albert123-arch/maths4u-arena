@@ -1,0 +1,1526 @@
+{
+  "orig_coordinate_geometry_distance_midpoint": {
+    "updatedOn": "2026-11-20",
+    "description": "Learn distance and midpoint methods for Cambridge 9709 Pure 1. Find exact lengths, missing endpoints, equally distant points and a circle from its diameter.",
+    "sections": [
+      {
+        "id": "find-the-distance",
+        "title": "How do coordinate changes give a length?",
+        "label": "Find the distance",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>From \\(A(-3,1)\\) to \\(B(5,5)\\), move \\(8\\) units right and \\(4\\) units up. These are the two perpendicular sides of a right-angled triangle. The segment \\(AB\\) is its hypotenuse.</p><p><img src=\"/assets/original/coordinate-geometry/study-segment.svg\" width=\"480\" height=\"318\" alt=\"A at (−3, 1) and B at (5, 5) form a right triangle with horizontal change 8 and vertical change 4. Their midpoint C is (1, 3).\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Subtract the \\(x\\)-coordinates to get \\(\\Delta x=x_2-x_1\\). Do the same for \\(y\\). Then use Pythagoras.</p>\\[AB=\\sqrt{(\\Delta x)^2+(\\Delta y)^2}.\\]"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Write \\((-8)^2=64\\). Squaring a signed coordinate change is different from placing a minus sign in front of a square.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "distance-with-negative-change",
+            "field": {"key": "length", "label": "Exact length PQ", "type": "number", "expected": "10"},
+            "prompt": "<p>Find the length of the segment from \\(P(-4,2)\\) to \\(Q(2,-6)\\).</p>",
+            "hint": "<p>The coordinate changes are \\(6\\) and \\(-8\\). Square each before adding.</p>",
+            "solution": "<p>\\(PQ=\\sqrt{6^2+(-8)^2}=\\sqrt{100}=10\\).</p>",
+            "retry": [
+              {"answer": "100", "feedback": "<p>\\(100\\) is the squared length. Take its square root to get \\(PQ\\).</p>"},
+              {"answer": "14", "feedback": "<p>Adding the horizontal and vertical distances gives the length of a two-leg route. Use Pythagoras for the straight segment.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "exact-surd-distance",
+            "field": {"key": "length", "label": "Exact length PQ", "type": "number", "expected": "sqrt(73)"},
+            "prompt": "<p>Find the exact length from \\(P(-2,4)\\) to \\(Q(1,-4)\\). Give a surd.</p>",
+            "hint": "<p>Use \\(\\Delta x=3\\) and \\(\\Delta y=-8\\). Keep the final square root exact.</p>",
+            "solution": "<p>\\(PQ=\\sqrt{3^2+(-8)^2}=\\sqrt{73}\\).</p>",
+            "retry": [
+              {"answer": "73", "feedback": "<p>You found \\(PQ^2\\). Give \\(\\sqrt{73}\\) for the length.</p>"},
+              {"answer": "5", "feedback": "<p>Use \\(3^2+(-8)^2\\) under the square root. The negative \\(y\\)-change contributes \\(64\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "find-the-midpoint",
+        "title": "Where is the midpoint?",
+        "label": "Find the midpoint",
+        "level": "core",
+        "minutes": 4,
+        "intro": "<p>To reach the midpoint of \\(AB\\), make half of each move from \\(A\\) to \\(B\\). From \\((-3,1)\\), move \\(4\\) right and \\(2\\) up to reach \\(C(1,3)\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Average the two \\(x\\)-coordinates and average the two \\(y\\)-coordinates. Keep the coordinates in that order.</p>\\[C=\\left(\\frac{x_1+x_2}{2},\\,\\frac{y_1+y_2}{2}\\right).\\]"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check each midpoint coordinate lies between the two endpoint coordinates. When one coordinate is the same at both ends, it stays the same at the midpoint.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "midpoint-both-coordinates",
+            "field": {"key": "point", "label": "Midpoint (x, y)", "type": "pairs", "expected": "(-1,7/2)"},
+            "prompt": "<p>Find the midpoint of \\(P(-6,1)\\) and \\(Q(4,6)\\).</p>",
+            "hint": "<p>The \\(x\\)-coordinate is halfway from \\(-6\\) to \\(4\\). The \\(y\\)-coordinate is halfway from \\(1\\) to \\(6\\).</p>",
+            "solution": "<p>The midpoint is \\(\\left(\\frac{-6+4}{2},\\frac{1+6}{2}\\right)=(-1,\\tfrac72)\\).</p>",
+            "retry": [
+              {"answer": "(-2,7)", "feedback": "<p>Divide each coordinate sum by \\(2\\) to find its average.</p>"},
+              {"answer": "(5,5/2)", "feedback": "<p>These are half the coordinate changes from \\(P\\). Add them to \\(P\\) to get the midpoint.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "recover-an-endpoint",
+        "title": "How can a midpoint locate the missing endpoint?",
+        "label": "Recover an endpoint",
+        "level": "core",
+        "minutes": 4,
+        "intro": "<p>The move from \\(A\\) to the midpoint \\(C\\) is exactly the move from \\(C\\) to \\(B\\). Knowing \\(A\\) and \\(C\\) therefore tells you the position of \\(B\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write \\(B_x=2C_x-A_x\\) and \\(B_y=2C_y-A_y\\). These are the midpoint equations rearranged for the missing coordinates.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The change from a point to the midpoint is a displacement. Add it to the midpoint to turn that move into the final position.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "missing-endpoint",
+            "field": {"key": "point", "label": "Other endpoint (x, y)", "type": "pairs", "expected": "(-5,7)"},
+            "prompt": "<p>A segment starts at \\((3,-2)\\) and has midpoint \\((-1,\\tfrac52)\\). Find the other endpoint.</p>",
+            "hint": "<p>Double each midpoint coordinate and subtract the matching coordinate of the known endpoint.</p>",
+            "solution": "<p>The other endpoint is \\((2(-1)-3,\\,2(\\tfrac52)-(-2))=(-5,7)\\).</p>",
+            "retry": [
+              {"answer": "(-4,9/2)", "feedback": "<p>That is the move to the midpoint. Repeat that move starting from the midpoint to locate the far endpoint.</p>"},
+              {"answer": "(-2,5)", "feedback": "<p>Each doubled midpoint coordinate is the sum of two endpoint coordinates. Subtract the known endpoint.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "use-equal-distances",
+        "title": "How can equal distances locate a point?",
+        "label": "Use equal distances",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>A point \\(P\\) lies on the \\(y\\)-axis and is equally far from \\(A\\) and \\(B\\). Write it as \\(P(0,p)\\). Now there is only one unknown coordinate.</p><p><img src=\"/assets/original/coordinate-geometry/study-equidistance.svg\" width=\"480\" height=\"326\" alt=\"P (0, 5) is connected to A (−3, 1) and B (5, 5). PA and PB have the same length.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Distances are non-negative, so \\(PA=PB\\) is equivalent to \\(PA^2=PB^2\\). Equate the sums of squares. The squared terms in the unknown coordinate cancel.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use the given restriction before expanding. If the point lies on the \\(x\\)-axis, its \\(y\\)-coordinate is zero.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "equal-distance-on-x-axis",
+            "field": {"key": "point", "label": "Equidistant point (x, y)", "type": "pairs", "expected": "(1/3,0)"},
+            "prompt": "<p>Find the point on the \\(x\\)-axis equally far from \\(D(-2,3)\\) and \\(E(4,1)\\).</p>",
+            "hint": "<p>Use \\(P(x,0)\\). Equate \\((x+2)^2+9\\) and \\((x-4)^2+1\\).</p>",
+            "solution": "<p>Equating squared distances gives \\(4x+13=-8x+17\\), so \\(12x=4\\). The point is \\((\\tfrac13,0)\\).</p>",
+            "retry": [
+              {"answer": "(1,2)", "feedback": "<p>That is the midpoint of \\(DE\\). It is equidistant, but the required point must have \\(y=0\\).</p>"},
+              {"answer": "(0,1/3)", "feedback": "<p>The number \\(\\tfrac13\\) is the \\(x\\)-coordinate. A point on the \\(x\\)-axis has \\(y=0\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "use-a-diameter",
+        "title": "How does a diameter determine a circle?",
+        "label": "Use a diameter",
+        "level": "extension",
+        "minutes": 5,
+        "intro": "<p>When \\(AB\\) is a diameter, the centre is its midpoint \\(C\\). The radius runs from \\(C\\) to one endpoint.</p><p><img src=\"/assets/original/coordinate-geometry/study-diameter.svg\" width=\"480\" height=\"348\" alt=\"The circle with diameter AB has centre C (1, 3). The radius CB is half the length of AB.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find the midpoint for the centre. Since \\(r=AB/2\\), the squared radius is \\(r^2=AB^2/4\\). You can also find \\(r^2\\) by using the squared distance from the centre to one endpoint.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The radius is half a length. Dividing the squared diameter by \\(2\\) does not give the squared radius.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "centre-from-diameter",
+            "field": {"key": "centre", "label": "Centre (x, y)", "type": "pairs", "expected": "(2,1)"},
+            "prompt": "<p>A circle has diameter from \\((-2,4)\\) to \\((6,-2)\\). Give its centre.</p>",
+            "hint": "<p>Find the midpoint of the two ends of the diameter.</p>",
+            "solution": "<p>The centre is \\(\\left(\\frac{-2+6}{2},\\frac{4-2}{2}\\right)=(2,1)\\).</p>",
+            "retry": [
+              {"answer": "(4,-3)", "feedback": "<p>These are the half-diameter coordinate changes. Add them to \\((-2,4)\\) to find the centre.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "radius-squared-from-diameter",
+            "field": {"key": "radius_squared", "label": "Squared radius", "type": "number", "expected": "25"},
+            "prompt": "<p>For the same diameter from \\((-2,4)\\) to \\((6,-2)\\), find \\(r^2\\).</p>",
+            "hint": "<p>The diameter's squared length is \\(8^2+(-6)^2=100\\). Square the factor \\(\\tfrac12\\) when finding \\(r^2\\).</p>",
+            "solution": "<p>The radius is half of \\(10\\), so \\(r=5\\) and \\(r^2=25\\).</p>",
+            "retry": [
+              {"answer": "50", "feedback": "<p>Halving the length quarters its square. Use \\(100/4\\).</p>"},
+              {"answer": "5", "feedback": "<p>\\(5\\) is the radius. The question asks for its square.</p>"},
+              {"answer": "100", "feedback": "<p>That is the squared diameter. First halve the diameter, or divide its square by \\(4\\).</p>"}
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use the two sides of the right triangle",
+        "question": "<p>Find the exact distance between \\(A(-3,1)\\) and \\(B(5,5)\\).</p>",
+        "solution": [
+          "<p>The coordinate changes from \\(A\\) to \\(B\\) are \\(5-(-3)=8\\) and \\(5-1=4\\).</p>",
+          "<p>Squaring and adding gives \\(AB^2=8^2+4^2=64+16=80\\).</p>",
+          "<p>Take the non-negative square root. \\(AB=\\sqrt{80}=4\\sqrt5\\).</p>"
+        ]
+      },
+      {
+        "title": "Average one coordinate at a time",
+        "question": "<p>Use the midpoint formula for \\(A(-3,1)\\) and \\(B(5,5)\\).</p>",
+        "solution": [
+          "<p>The average \\(x\\)-coordinate is \\(\\frac{-3+5}{2}=1\\).</p>",
+          "<p>The average \\(y\\)-coordinate is \\(\\frac{1+5}{2}=3\\). So \\(C=(1,3)\\).</p>",
+          "<p>The move from \\(A\\) to \\(C\\) is \\((4,2)\\), and the move from \\(C\\) to \\(B\\) is also \\((4,2)\\).</p>"
+        ]
+      },
+      {
+        "title": "Extend the same half of a segment",
+        "question": "<p>The midpoint of \\(AB\\) is \\(C(1,3)\\) and \\(A=(-3,1)\\). Find \\(B\\).</p>",
+        "solution": [
+          "<p>From \\(A\\) to \\(C\\), the change is \\(1-(-3)=4\\) in \\(x\\) and \\(3-1=2\\) in \\(y\\).</p>",
+          "<p>Add the same changes to \\(C\\). This gives \\(B=(1+4,3+2)=(5,5)\\).</p>",
+          "<p>Check that the averages of the endpoint coordinates are \\(1\\) and \\(3\\).</p>"
+        ]
+      },
+      {
+        "title": "Find an equidistant point on the y-axis",
+        "question": "<p>Find the point \\(P(0,p)\\) that is equally far from \\(A(-3,1)\\) and \\(B(5,5)\\).</p>",
+        "solution": [
+          "<p>Use \\(PA^2=PB^2\\). This gives \\(9+(p-1)^2=25+(p-5)^2\\).</p>",
+          "<p>Expand to get \\(p^2-2p+10=p^2-10p+50\\). Hence \\(8p=40\\) and \\(p=5\\).</p>",
+          "<p>At \\(P=(0,5)\\), the two squared distances are \\(9+16=25\\) and \\(25+0=25\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the midpoint and half the diameter",
+        "question": "<p>A circle has diameter from \\(A(-3,1)\\) to \\(B(5,5)\\). Find its centre and the square of its radius.</p>",
+        "solution": [
+          "<p>The midpoint is \\((1,3)\\), so this is the centre.</p>",
+          "<p>The diameter has squared length \\(80\\), so \\(r^2=80/4=20\\).</p>",
+          "<p>Check using the changes from the centre to \\(B\\). They are \\(4\\) and \\(2\\). Thus \\(4^2+2^2=20\\), and \\(r=2\\sqrt5\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Displacement",
+        "definition": "<p>The signed changes in \\(x\\) and \\(y\\) between two points.</p>"
+      },
+      {
+        "term": "Midpoint",
+        "definition": "<p>The point halfway along a segment.</p>"
+      },
+      {
+        "term": "Equidistant",
+        "definition": "<p>At the same distance from each named point.</p>"
+      },
+      {
+        "term": "Diameter",
+        "definition": "<p>A chord passing through the centre of a circle. Its length is twice the radius.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Parallel, perpendicular and exceptional lines",
+        "href": "/courses/maths4u-9709-p1/topics/orig_coordinate_geometry_parallel_perpendicular"
+      },
+      {
+        "title": "Circle equations, centres and tangents",
+        "href": "/courses/maths4u-9709-p1/topics/orig_coordinate_geometry_circles"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Difference for distance, average for midpoint</h2><p>For \\(A(x_1,y_1)\\) and \\(B(x_2,y_2)\\), use \\(AB=\\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}\\). The midpoint averages the two \\(x\\)-coordinates and the two \\(y\\)-coordinates separately.</p><p><img src=\"/assets/original/coordinate-geometry/study-segment.svg\" width=\"480\" height=\"318\" alt=\"A at (−3, 1) and B at (5, 5) form a right triangle with horizontal change 8 and vertical change 4. Their midpoint C is (1, 3).\"></p><h2>Work backwards from the midpoint</h2><p>If \\(C\\) is the midpoint, \\(B_x=2C_x-A_x\\) and \\(B_y=2C_y-A_y\\). Repeat the same move from \\(A\\) to \\(C\\), starting at \\(C\\).</p><h2>Turn a condition into an equation</h2><p>For equal distances, use \\(PA^2=PB^2\\). If \\(AB\\) is a diameter, the centre is its midpoint and \\(r^2=AB^2/4\\).</p>",
+      "checks": "<ul><li>Subtract coordinates in the same order.</li><li>Keep a length exact until taking the final root.</li><li>Check both coordinates of the midpoint or missing end.</li></ul>",
+      "examTip": "<p>Write a point on the \\(x\\)-axis as \\((x,0)\\) before imposing an equal-distance condition. Read whether the question asks for \\(r\\) or \\(r^2\\).</p>"
+    }
+  },
+  "orig_coordinate_geometry_parallel_perpendicular": {
+    "updatedOn": "2026-11-20",
+    "description": "Learn gradients, parallel and perpendicular lines, and perpendicular bisectors for Cambridge 9709 Pure 1. Handle horizontal and vertical lines and solve for an unknown coordinate.",
+    "sections": [
+      {
+        "id": "read-the-gradient",
+        "title": "How do I find the gradient with the correct sign?",
+        "label": "Find the gradient",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>The segment from \\(A(-3,1)\\) to \\(B(5,5)\\) rises \\(4\\) units in a horizontal run of \\(8\\). The gradient measures the signed rise per unit of run.</p><p><img src=\"/assets/original/coordinate-geometry/study-segment.svg\" width=\"480\" height=\"318\" alt=\"AB rises 4 units from A to B while moving 8 units to the right.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(m=\\frac{y_2-y_1}{x_2-x_1}\\), with \\(x_2\\ne x_1\\). A line falling as you move right has negative gradient. A vertical line has undefined gradient because the horizontal change is zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If you take the second point minus the first in the numerator, use the same order in the denominator.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "signed-gradient",
+            "field": {"key": "m", "label": "Gradient m", "type": "number", "expected": "-2/3"},
+            "prompt": "<p>Find the gradient of the line through \\((-2,4)\\) and \\((4,0)\\).</p>",
+            "hint": "<p>When moving left to right, the run is \\(6\\) and the \\(y\\)-coordinate falls by \\(4\\).</p>",
+            "solution": "<p>\\(m=\\frac{0-4}{4-(-2)}=-\\tfrac23\\).</p>",
+            "retry": [
+              {"answer": "2/3", "feedback": "<p>The line falls as you move right. Keep the negative sign in the change in \\(y\\).</p>"},
+              {"answer": "-3/2", "feedback": "<p>You divided the run by the rise. Gradient is signed rise divided by run.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "match-a-parallel-direction",
+        "title": "What stays the same on a parallel line?",
+        "label": "Find a parallel",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>A parallel line follows the same direction as the original line. Its position is fixed by the point it must pass through.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For non-vertical lines, use the same gradient and substitute the required point. For \\(ax+by+c=0\\), first rearrange to \\(y=-\\frac ab x-\\frac cb\\) if \\(b\\ne0\\). Distinct vertical lines are parallel.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Matching gradients give the same direction. If the two lines also contain the same point, their equations describe one line.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "parallel-equation",
+            "field": {"key": "line", "label": "Equation of the line", "type": "equation", "expected": "3*x+2*y=20", "variables": ["x", "y"]},
+            "prompt": "<p>Find the equation of the line through \\((6,1)\\) parallel to \\(3x+2y=8\\).</p>",
+            "hint": "<p>Keep \\(3x+2y\\) on the left and find the constant by substituting \\((6,1)\\).</p>",
+            "solution": "<p>Use \\(3(6)+2(1)=20\\), so the new line is \\(3x+2y=20\\). Both lines have gradient \\(-\\tfrac32\\).</p>",
+            "retry": [
+              {"answer": "3*x+2*y=8", "feedback": "<p>The gradient is right. Recalculate the constant using the required point \\((6,1)\\).</p>"},
+              {"answer": "3*x-2*y=16", "feedback": "<p>Your line passes through the point, but it rises to the right. The given line has negative gradient.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "make-a-right-angle",
+        "title": "Why is the perpendicular gradient a negative reciprocal?",
+        "label": "Find a perpendicular",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>On \\(AB\\), a step of \\(4\\) right and \\(2\\) up has gradient \\(\\tfrac12\\). Rotating that step a quarter turn anticlockwise gives \\(2\\) left and \\(4\\) up. The perpendicular gradient is \\(-2\\).</p><p><img src=\"/assets/original/coordinate-geometry/study-perpendicular.svg\" width=\"480\" height=\"346\" alt=\"AB passes through C (1, 3) with gradient one half. The perpendicular through C has gradient −2. A small square marks the right angle.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Rotating a step \\((a,b)\\) through \\(90^\\circ\\) anticlockwise gives \\((-b,a)\\). If \\(a\\) and \\(b\\) are non-zero, the two gradients are \\(b/a\\) and \\(-a/b\\). Their product is \\(-1\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Check \\(m_1m_2=-1\\) only when both gradients are finite. Handle an axis-parallel line using its direction.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "perpendicular-equation",
+            "field": {"key": "line", "label": "Equation of the perpendicular", "type": "equation", "expected": "3*x-2*y=5", "variables": ["x", "y"]},
+            "prompt": "<p>Find the line through \\((3,2)\\) perpendicular to \\(y=-\\tfrac23x+5\\).</p>",
+            "hint": "<p>The negative reciprocal of \\(-\\tfrac23\\) is \\(\\tfrac32\\). Use this gradient through \\((3,2)\\).</p>",
+            "solution": "<p>\\(y-2=\\tfrac32(x-3)\\), so \\(3x-2y=5\\).</p>",
+            "retry": [
+              {"answer": "3*x+2*y=13", "feedback": "<p>Taking the reciprocal alone leaves a negative gradient. Changing the sign as well gives \\(\\tfrac32\\).</p>"},
+              {"answer": "2*x-3*y=0", "feedback": "<p>Your line changes the sign but keeps the size of the gradient. Swap the numerator and denominator as well.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bisect-a-segment",
+        "title": "What makes a perpendicular line a bisector?",
+        "label": "Bisect the segment",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>The perpendicular line in the sketch passes through \\(C(1,3)\\), the midpoint of \\(AB\\). These two conditions give one perpendicular bisector.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>First find the midpoint, then find the perpendicular direction. Use both in the equation. Points on the perpendicular bisector are equally far from the endpoints.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the midpoint lies on the final line. A slope calculation alone leaves many possible perpendicular lines.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "perpendicular-bisector",
+            "field": {"key": "line", "label": "Equation of the bisector", "type": "equation", "expected": "3*x+y=8", "variables": ["x", "y"]},
+            "prompt": "<p>Find the perpendicular bisector of the segment from \\((-1,1)\\) to \\((5,3)\\).</p>",
+            "hint": "<p>Find midpoint \\((2,2)\\) and segment gradient \\(\\tfrac13\\). The bisector has gradient \\(-3\\).</p>",
+            "solution": "<p>\\(y-2=-3(x-2)\\), or \\(3x+y=8\\).</p>",
+            "retry": [
+              {"answer": "3*x+y=-2", "feedback": "<p>This perpendicular goes through the first endpoint. A bisector must pass through the midpoint \\((2,2)\\).</p>"},
+              {"answer": "x-3*y=-4", "feedback": "<p>This is the line containing the segment. Use the negative reciprocal of its gradient through the midpoint.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "handle-axis-parallel-lines",
+        "title": "What if a line is horizontal or vertical?",
+        "label": "Axis-parallel lines",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>Horizontal lines have constant \\(y\\). Vertical lines have constant \\(x\\). They are perpendicular to each other.</p><p><img src=\"/assets/original/coordinate-geometry/study-axis-lines.svg\" width=\"480\" height=\"319\" alt=\"The vertical segment from (−2, −1) to (−2, 7) lies on x = −2. Its perpendicular bisector is the horizontal line y = 3.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Direction</th><th scope=\"col\">Equation</th><th scope=\"col\">Gradient</th></tr></thead><tbody><tr><th scope=\"row\">Horizontal</th><td>\\(y=c\\)</td><td>Zero</td></tr><tr><th scope=\"row\">Vertical</th><td>\\(x=c\\)</td><td>Undefined</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A gradient of zero gives a horizontal line. Division by zero signals a vertical line, so use \\(x=c\\) directly.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "horizontal-segment-bisector",
+            "field": {"key": "line", "label": "Equation of the bisector", "type": "equation", "expected": "x=-2", "variables": ["x", "y"]},
+            "prompt": "<p>Find the perpendicular bisector of the segment from \\((-5,4)\\) to \\((1,4)\\).</p>",
+            "hint": "<p>The segment is horizontal. Find its midpoint and write the vertical line through it.</p>",
+            "solution": "<p>The midpoint is \\((-2,4)\\), so the perpendicular bisector is \\(x=-2\\).</p>",
+            "retry": [
+              {"answer": "y=4", "feedback": "<p>This is the horizontal line through both endpoints. The bisector runs vertically through the midpoint.</p>"},
+              {"answer": "y=-2", "feedback": "<p>The midpoint has \\(x=-2\\). A vertical line fixes that \\(x\\)-coordinate.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "parallel-to-horizontal",
+            "field": {"key": "line", "label": "Equation of the parallel", "type": "equation", "expected": "y=2", "variables": ["x", "y"]},
+            "prompt": "<p>Find the line parallel to \\(y=-4\\) that passes through \\((3,2)\\).</p>",
+            "hint": "<p>Keep the horizontal direction and use the \\(y\\)-coordinate of the required point.</p>",
+            "solution": "<p>The line is \\(y=2\\). It has gradient zero and contains \\((3,2)\\).</p>",
+            "retry": [
+              {"answer": "x=3", "feedback": "<p>The point is on your line, but \\(x=3\\) is vertical. A horizontal line has fixed \\(y\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "choose-a-coordinate",
+        "title": "How can a direction fix a missing coordinate?",
+        "label": "Find a parameter",
+        "level": "extension",
+        "minutes": 6,
+        "intro": "<p>When one coordinate is unknown, start from the required direction. That gives an equation for the coordinate change.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find the required gradient first. If a denominator contains the unknown, note the value that would make it zero. Check the chosen coordinate in the original direction condition.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Substituting the value back into the gradient catches sign and zero-denominator errors.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "parameter-for-parallel-line",
+            "field": {"key": "t", "label": "Value of t", "type": "number", "expected": "1"},
+            "prompt": "<p>The segment joining \\((t,-1)\\) and \\((4,5)\\) is parallel to \\(y=2x+3\\). Find \\(t\\).</p>",
+            "hint": "<p>The rise is \\(6\\). A gradient of \\(2\\) requires a horizontal change of \\(3\\).</p>",
+            "solution": "<p>\\(\\frac6{4-t}=2\\) gives \\(4-t=3\\), so \\(t=1\\).</p>",
+            "retry": [
+              {"answer": "7", "feedback": "<p>At \\(t=7\\), the rise is \\(6\\) and the run is \\(-3\\), so the gradient is \\(-2\\). Use a run of \\(3\\).</p>"},
+              {"answer": "4", "feedback": "<p>At \\(t=4\\), the segment is vertical and has undefined gradient. The gradient here must be \\(2\\).</p>"}
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use the same subtraction order twice",
+        "question": "<p>Find the gradient from \\(A(-3,1)\\) to \\(B(5,5)\\). Check it by reversing the order.</p>",
+        "solution": [
+          "<p>From \\(A\\) to \\(B\\), the rise is \\(4\\) and the run is \\(8\\), so \\(m=\\tfrac12\\).</p>",
+          "<p>From \\(B\\) to \\(A\\), the changes are \\(-4\\) and \\(-8\\). The ratio is still \\(\\frac{-4}{-8}=\\tfrac12\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the gradient and move the line",
+        "question": "<p>Find the line parallel to \\(AB\\) that passes through \\((1,-2)\\). The gradient of \\(AB\\) is \\(\\tfrac12\\).</p>",
+        "solution": [
+          "<p>Using \\(y-y_1=m(x-x_1)\\) through the given point gives \\(y+2=\\tfrac12(x-1)\\).</p>",
+          "<p>Multiply by \\(2\\) and rearrange to \\(x-2y=5\\). The original line and this line have the same gradient.</p>",
+          "<p>Check \\(1-2(-2)=5\\), so the new line contains \\((1,-2)\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the perpendicular direction through a new point",
+        "question": "<p>Find the line through \\((2,4)\\) perpendicular to \\(AB\\), whose gradient is \\(\\tfrac12\\).</p>",
+        "solution": [
+          "<p>The perpendicular gradient is \\(-1/(\\tfrac12)=-2\\).</p>",
+          "<p>Using the given point gives \\(y-4=-2(x-2)\\). This becomes \\(2x+y=8\\).</p>",
+          "<p>The product of the gradients is \\(-1\\), and the point gives \\(2(2)+4=8\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the direction and the midpoint",
+        "question": "<p>Find the perpendicular bisector of \\(A(-3,1)\\) and \\(B(5,5)\\).</p>",
+        "solution": [
+          "<p>The midpoint is \\((1,3)\\) and the segment gradient is \\(4/8=\\tfrac12\\).</p>",
+          "<p>The bisector has gradient \\(-2\\) and passes through \\((1,3)\\). Its equation is \\(y-3=-2(x-1)\\), or \\(2x+y=5\\).</p>",
+          "<p>The line meets the \\(y\\)-axis at \\((0,5)\\), the point found earlier by equating the distances to \\(A\\) and \\(B\\).</p>"
+        ]
+      },
+      {
+        "title": "Bisect a vertical segment",
+        "question": "<p>Find the perpendicular bisector of \\((-2,-1)\\) and \\((-2,7)\\).</p>",
+        "solution": [
+          "<p>The segment is vertical because its endpoints have the same \\(x\\)-coordinate.</p>",
+          "<p>The midpoint is \\((-2,3)\\). A perpendicular is horizontal, so its equation is \\(y=3\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a perpendicular gradient to locate an endpoint",
+        "question": "<p>The segment from \\((t,1)\\) to \\((3,5)\\) is perpendicular to \\(y=-2x+1\\). Find \\(t\\).</p>",
+        "solution": [
+          "<p>The required gradient is \\(\\tfrac12\\). In particular the segment has non-zero horizontal change.</p>",
+          "<p>Use \\(\\frac4{3-t}=\\tfrac12\\), so \\(3-t=8\\) and \\(t=-5\\).</p>",
+          "<p>The changes are \\(8\\) horizontally and \\(4\\) vertically. Their ratio gives \\(\\tfrac12\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Gradient",
+        "definition": "<p>Signed change in \\(y\\) per unit change in \\(x\\) along a non-vertical line.</p>"
+      },
+      {
+        "term": "Perpendicular",
+        "definition": "<p>Meeting at a right angle.</p>"
+      },
+      {
+        "term": "Perpendicular bisector",
+        "definition": "<p>The line through the midpoint of a segment at right angles to it.</p>"
+      },
+      {
+        "term": "Coincident lines",
+        "definition": "<p>Equations that describe the same line.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Distances, midpoints and diameter geometry",
+        "href": "/courses/maths4u-9709-p1/topics/orig_coordinate_geometry_distance_midpoint"
+      },
+      {
+        "title": "Straight-line equations, intercepts and intersections",
+        "href": "/courses/maths4u-9709-p1/topics/orig_coordinate_geometry_straight_lines"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Read and compare gradients</h2><p>Use \\(m=(y_2-y_1)/(x_2-x_1)\\) when \\(x_2\\ne x_1\\). Compare like orders of subtraction.</p><table><thead><tr><th scope=\"col\">Given line</th><th scope=\"col\">Parallel direction</th><th scope=\"col\">Perpendicular direction</th></tr></thead><tbody><tr><th scope=\"row\">Finite, non-zero \\(m\\)</th><td>Same \\(m\\)</td><td>\\(-1/m\\)</td></tr><tr><th scope=\"row\">Horizontal</th><td>Horizontal, \\(y=c\\)</td><td>Vertical, \\(x=c\\)</td></tr><tr><th scope=\"row\">Vertical</th><td>Vertical, \\(x=c\\)</td><td>Horizontal, \\(y=c\\)</td></tr></tbody></table><p><img src=\"/assets/original/coordinate-geometry/study-perpendicular.svg\" width=\"480\" height=\"346\" alt=\"AB passes through C (1, 3) with gradient one half. The perpendicular through C has gradient −2. A small square marks the right angle.\"></p><h2>Make a perpendicular bisector</h2><p>Find the segment midpoint and the perpendicular direction. Write the line through that midpoint. In the sketch, \\(AB\\) has gradient \\(\\tfrac12\\) and midpoint \\((1,3)\\). The bisector is \\(y-3=-2(x-1)\\).</p>",
+      "checks": "<ul><li>Check both direction and required point.</li><li>Use the negative reciprocal for a finite, non-zero gradient.</li><li>Use a constant coordinate for a vertical or horizontal line.</li></ul>",
+      "examTip": "<p>For a bisector, show the midpoint calculation as well as the direction. Two lines of equal finite gradient through the same point coincide.</p>"
+    }
+  },
+  "orig_coordinate_geometry_straight_lines": {
+    "updatedOn": "2026-11-20",
+    "description": "Work with straight-line equations for Cambridge 9709 Pure 1. Use a point and gradient, find exact intercepts and intersections, and calculate the area bounded by a line and the axes.",
+    "sections": [
+      {
+        "id": "build-a-line-equation",
+        "title": "Which form uses the given point and gradient?",
+        "label": "Point and gradient",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>The line \\(AB\\) has gradient \\(\\tfrac12\\) and passes through \\(A(-3,1)\\). Writing the changes from \\(A\\) gives the equation in one step.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a point \\((x_1,y_1)\\) and finite gradient \\(m\\), write \\(y-y_1=m(x-x_1)\\). In \\(y=mx+c\\), \\(c\\) is the \\(y\\)-intercept. The general form \\(ax+by+c=0\\) can also describe a vertical line when \\(b=0\\) and \\(a\\ne0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Substitute the given point into your finished equation. When clearing fractions, multiply the whole equation by the same non-zero number.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "equation-from-point-gradient",
+            "field": {"key": "line", "label": "Equation of the line", "type": "equation", "expected": "3*x+4*y=4", "variables": ["x", "y"]},
+            "prompt": "<p>Find the line through \\((4,-2)\\) with gradient \\(-\\tfrac34\\).</p>",
+            "hint": "<p>Use \\(y-(-2)=-\\tfrac34(x-4)\\). Multiply every term by \\(4\\) to clear the fraction.</p>",
+            "solution": "<p>From \\(4(y+2)=-3(x-4)\\), rearrange to \\(3x+4y=4\\).</p>",
+            "retry": [
+              {"answer": "3*x+4*y=20", "feedback": "<p>The gradient is correct. The point has \\(y=-2\\), so the constant is \\(3(4)+4(-2)=4\\).</p>"},
+              {"answer": "-3*x+4*y=-20", "feedback": "<p>The line through the point must fall to the right. Keep the gradient \\(-\\tfrac34\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "use-two-points",
+        "title": "How do two points determine the equation?",
+        "label": "Use two points",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>Distinct points specify both a direction and a position. If the \\(x\\)-coordinates agree, the line is vertical and its equation already follows.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>When the \\(x\\)-coordinates differ, find the gradient and substitute either point into \\(y-y_1=m(x-x_1)\\). Check the second point in the result.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If the horizontal change is zero, write \\(x=x_1\\) directly. A point–gradient calculation needs a finite gradient.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "two-point-line",
+            "field": {"key": "line", "label": "Equation of the line", "type": "equation", "expected": "x+2*y=7", "variables": ["x", "y"]},
+            "prompt": "<p>Find the line through \\((-1,4)\\) and \\((5,1)\\).</p>",
+            "hint": "<p>The gradient is \\(-3/6\\). Then use either given point.</p>",
+            "solution": "<p>The gradient is \\(-\\tfrac12\\). Using \\((-1,4)\\) gives \\(y-4=-\\tfrac12(x+1)\\), or \\(x+2y=7\\).</p>",
+            "retry": [
+              {"answer": "x+2*y=8", "feedback": "<p>The gradient is correct. At the first point the constant is \\(-1+2(4)=7\\).</p>"},
+              {"answer": "x-2*y=-9", "feedback": "<p>Your line has positive gradient. Going from \\((-1,4)\\) to \\((5,1)\\), \\(y\\) decreases by \\(3\\).</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "line-from-equal-x-coordinates",
+            "field": {"key": "line", "label": "Equation of the line", "type": "equation", "expected": "x=-3", "variables": ["x", "y"]},
+            "prompt": "<p>Find the line through \\((-3,1)\\) and \\((-3,7)\\).</p>",
+            "hint": "<p>Identify the coordinate that is the same at both points.</p>",
+            "solution": "<p>Both points have \\(x=-3\\), so that is the equation of the vertical line.</p>",
+            "retry": [
+              {"answer": "y=-3", "feedback": "<p>The matching coordinate is \\(x\\). The constant \\(x\\)-coordinate gives the vertical line \\(x=-3\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "find-both-intercepts",
+        "title": "Where does the line meet each axis?",
+        "label": "Find the intercepts",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>Every point on the \\(x\\)-axis has \\(y=0\\). Every point on the \\(y\\)-axis has \\(x=0\\). Use these conditions one at a time.</p><p><img src=\"/assets/original/coordinate-geometry/study-intercepts.svg\" width=\"480\" height=\"309\" alt=\"The line through A (−3, 1) and B (5, 5) meets the axes at (−5, 0) and (0, 5/2). A shaded triangle is bounded by the line and the axes.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Set \\(y=0\\) for the \\(x\\)-intercept and \\(x=0\\) for the \\(y\\)-intercept. Give coordinates in the order \\((x,y)\\). A line that is parallel to and distinct from an axis has no intersection with that axis.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "tip",
+            "html": "<p>When a line coincides with an axis, every point on that axis lies on the line. Check this before looking for a single intercept.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "axis-intercept-pairs",
+            "field": {"key": "points", "label": "Both intercepts (x, y)", "type": "pairs", "expected": "(4,0);(0,-6)"},
+            "prompt": "<p>Give the two axis intercepts of \\(3x-2y=12\\) as coordinate pairs.</p>",
+            "hint": "<p>First set \\(y=0\\), then set \\(x=0\\). Preserve the negative sign in the second equation.</p>",
+            "solution": "<p>\\(3x=12\\) gives \\((4,0)\\). \\(-2y=12\\) gives \\((0,-6)\\).</p>",
+            "retry": [
+              {"answer": "(4,0);(0,6)", "feedback": "<p>The \\(x\\)-intercept is correct. With \\(x=0\\), solve \\(-2y=12\\).</p>"},
+              {"answer": "(4,0)", "feedback": "<p>You found the \\(x\\)-intercept. Also set \\(x=0\\) to find where the line meets the \\(y\\)-axis.</p>"},
+              {"answer": "(0,4);(-6,0)", "feedback": "<p>Put each answer on the axis used to find it. The \\(x\\)-intercept has \\(y=0\\) and the \\(y\\)-intercept has \\(x=0\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "solve-for-an-intersection",
+        "title": "What does a simultaneous solution represent?",
+        "label": "Meet at one point",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>A common point satisfies both line equations. The segment \\(AB\\) and its perpendicular bisector meet at their shared point \\(C\\).</p><p><img src=\"/assets/original/coordinate-geometry/study-perpendicular.svg\" width=\"480\" height=\"346\" alt=\"AB and its perpendicular bisector meet at C (1, 3). Each line contains C.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use substitution or elimination for the two equations. Recover the matching second coordinate, then check the pair in both equations. Distinct parallel lines have no common point. Coincident lines share the whole line.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A value of \\(x\\) is only one coordinate of the intersection. Substitute it back to obtain the paired value of \\(y\\).</p>"
+          },
+          {
+            "kind": "check",
+            "id": "intersection-of-two-lines",
+            "field": {"key": "point", "label": "Intersection (x, y)", "type": "pairs", "expected": "(3,5)"},
+            "prompt": "<p>Find the intersection of \\(y=2x-1\\) and \\(3x+y=14\\).</p>",
+            "hint": "<p>Use \\(3x+(2x-1)=14\\). Find \\(x\\), then find the matching \\(y\\).</p>",
+            "solution": "<p>\\(5x=15\\) gives \\(x=3\\). Using \\(y=2x-1\\) gives \\(y=5\\), so the point is \\((3,5)\\).</p>",
+            "retry": [
+              {"answer": "(5,3)", "feedback": "<p>Keep the coordinates in \\((x,y)\\) order. The substitution equation gives \\(x=3\\).</p>"},
+              {"answer": "(3,6)", "feedback": "<p>The value \\(x=3\\) is correct. Use \\(2(3)-1\\) for the second coordinate.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "distinct-parallel-no-intersection",
+            "field": {"key": "points", "label": "All common points (x, y)", "type": "pairs", "expected": "empty"},
+            "prompt": "<p>Give all common points of \\(y=-x+4\\) and \\(2x+2y=10\\). Enter <strong>empty</strong> if there are none.</p>",
+            "hint": "<p>Divide the second equation by \\(2\\) and compare the two constants in \\(x+y=c\\).</p>",
+            "solution": "<p>The equations give \\(x+y=4\\) and \\(x+y=5\\). These describe distinct parallel lines with no common points.</p>",
+            "retry": [
+              {"answer": "(0,4)", "feedback": "<p>This is on the first line. It gives \\(2(0)+2(4)=8\\) in the second expression, which must equal \\(10\\).</p>"},
+              {"answer": "(0,5)", "feedback": "<p>This is on the second line. Check it in the first equation too.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "find-an-intercept-area",
+        "title": "How do the intercepts give the area?",
+        "label": "Area from intercepts",
+        "level": "extension",
+        "minutes": 5,
+        "intro": "<p>The line \\(2y=x+5\\) and the axes bound a right-angled triangle. The two sides from the origin have lengths \\(5\\) and \\(\\tfrac52\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If the intercepts are \\((p,0)\\) and \\((0,q)\\), with both \\(p\\) and \\(q\\) non-zero, the area is \\(\\tfrac12|p|\\,|q|\\). Use the distances from the origin as lengths.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A positive intercept triangle needs two distinct non-zero intercepts. A line through the origin shares that point with both axes.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "triangle-between-line-and-axes",
+            "field": {"key": "area", "label": "Area in square units", "type": "number", "expected": "24"},
+            "prompt": "<p>Find the area of the triangle bounded by \\(4x-3y=24\\) and the axes.</p>",
+            "hint": "<p>Find each intercept and take its distance from the origin. Use half the product of those lengths.</p>",
+            "solution": "<p>The intercepts are \\((6,0)\\) and \\((0,-8)\\). The area is \\(\\tfrac12(6)(8)=24\\) square units.</p>",
+            "retry": [
+              {"answer": "-24", "feedback": "<p>The \\(y\\)-intercept is negative, but the height from the origin is \\(8\\). Use positive lengths for the area.</p>"},
+              {"answer": "48", "feedback": "<p>You found base times height. Multiply by \\(\\tfrac12\\) for the triangle.</p>"}
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Write three forms for the same line",
+        "question": "<p>Write the equation of the line through \\(A(-3,1)\\) with gradient \\(\\tfrac12\\).</p>",
+        "solution": [
+          "<p>Point and gradient give \\(y-1=\\tfrac12(x+3)\\).</p>",
+          "<p>Rearrange to \\(y=\\tfrac12x+\\tfrac52\\). The constant \\(\\tfrac52\\) is the height at \\(x=0\\).</p>",
+          "<p>Multiply by \\(2\\) and move all terms to one side to get \\(x-2y+5=0\\). The three equations describe the same line.</p>"
+        ]
+      },
+      {
+        "title": "Find a line through two distinct points",
+        "question": "<p>Find the equation of the line through \\((-2,5)\\) and \\((4,-1)\\).</p>",
+        "solution": [
+          "<p>The gradient is \\(\\frac{-1-5}{4-(-2)}=-1\\).</p>",
+          "<p>Use the first point to get \\(y-5=-(x+2)\\), or \\(x+y=3\\).</p>",
+          "<p>Check the second point gives \\(4+(-1)=3\\).</p>"
+        ]
+      },
+      {
+        "title": "Find both places where AB meets an axis",
+        "question": "<p>Find the two axis intercepts of \\(2y=x+5\\).</p>",
+        "solution": [
+          "<p>With \\(y=0\\), \\(0=x+5\\) gives \\(x=-5\\). The \\(x\\)-intercept is \\((-5,0)\\).</p>",
+          "<p>With \\(x=0\\), \\(2y=5\\) gives \\(y=\\tfrac52\\). The \\(y\\)-intercept is \\((0,\\tfrac52)\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the same point from two equations",
+        "question": "<p>Find the intersection of \\(2y=x+5\\) and \\(2x+y=5\\).</p>",
+        "solution": [
+          "<p>Double \\(2x+y=5\\) to get \\(4x+2y=10\\).</p>",
+          "<p>Replace \\(2y\\) by \\(x+5\\). Then \\(5x+5=10\\), so \\(x=1\\).</p>",
+          "<p>From \\(2y=1+5\\), \\(y=3\\). The point \\((1,3)\\) satisfies both equations.</p>"
+        ]
+      },
+      {
+        "title": "Turn signed intercepts into lengths",
+        "question": "<p>Find the area of the triangle formed by \\(2y=x+5\\) and the axes.</p>",
+        "solution": [
+          "<p>The intercepts are \\((-5,0)\\) and \\((0,\\tfrac52)\\).</p>",
+          "<p>Using the base \\(5\\) and height \\(\\tfrac52\\), the area is \\(\\tfrac12(5)(\\tfrac52)=\\tfrac{25}4\\) square units.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Point–gradient form",
+        "definition": "<p>An equation written from a point and a finite gradient.</p>"
+      },
+      {
+        "term": "Intercept",
+        "definition": "<p>A point where the graph meets an axis.</p>"
+      },
+      {
+        "term": "Intersection",
+        "definition": "<p>A point shared by the graphs.</p>"
+      },
+      {
+        "term": "Simultaneous equations",
+        "definition": "<p>Equations that must be true for the same values of the variables.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Parallel, perpendicular and exceptional lines",
+        "href": "/courses/maths4u-9709-p1/topics/orig_coordinate_geometry_parallel_perpendicular"
+      },
+      {
+        "title": "Circle equations, centres and tangents",
+        "href": "/courses/maths4u-9709-p1/topics/orig_coordinate_geometry_circles"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose a form for the information given</h2><table><thead><tr><th scope=\"col\">You know</th><th scope=\"col\">Start with</th></tr></thead><tbody><tr><th scope=\"row\">A point and finite gradient</th><td>\\(y-y_1=m(x-x_1)\\)</td></tr><tr><th scope=\"row\">Gradient and y-intercept</th><td>\\(y=mx+c\\)</td></tr><tr><th scope=\"row\">A fixed x-coordinate</th><td>\\(x=c\\)</td></tr></tbody></table><p><img src=\"/assets/original/coordinate-geometry/study-intercepts.svg\" width=\"480\" height=\"309\" alt=\"The line through A (−3, 1) and B (5, 5) meets the axes at (−5, 0) and (0, 5/2). A shaded triangle is bounded by the line and the axes.\"></p><h2>Read points from equations</h2><p>Set \\(y=0\\) at the \\(x\\)-intercept and \\(x=0\\) at the \\(y\\)-intercept. The intercept triangle has area \\(\\tfrac12|p|\\,|q|\\) for non-zero intercepts \\(p\\) and \\(q\\). Solve the two equations together for an intersection.</p>",
+      "checks": "<ul><li>Check the given point or points in the new line.</li><li>Use positive distances in an area calculation.</li><li>Substitute a shared point into both equations.</li></ul>",
+      "examTip": "<p>Keep coordinates paired. Two distinct parallel lines give no common point, and coincident equations give the same line.</p>"
+    }
+  },
+  "orig_coordinate_geometry_circles": {
+    "updatedOn": "2026-11-20",
+    "description": "Study circle equations for Cambridge 9709 Pure 1. Find the centre and radius, complete the square, use a diameter or three points, and write a tangent from its radius.",
+    "sections": [
+      {
+        "id": "turn-a-radius-into-an-equation",
+        "title": "Why does a fixed distance give a circle equation?",
+        "label": "Write a circle equation",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>Every point on the circle is the same distance from \\(C\\). The point \\(B(5,5)\\) is \\(2\\sqrt5\\) units from \\(C(1,3)\\), so the radius is \\(2\\sqrt5\\).</p><p><img src=\"/assets/original/coordinate-geometry/study-diameter.svg\" width=\"480\" height=\"348\" alt=\"A (−3, 1) and B (5, 5) lie on the circle with centre C (1, 3). CB is a radius.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For centre \\((h,k)\\) and positive radius \\(r\\), equate the squared distance from \\((x,y)\\) to \\(r^2\\).</p>\\[(x-h)^2+(y-k)^2=r^2.\\]"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Read the centre by setting each bracket to zero. In \\((x+2)^2\\), the centre's \\(x\\)-coordinate is \\(-2\\).</p>"
+          },
+          {
+            "kind": "check",
+            "id": "circle-from-a-centre-and-point",
+            "field": {"key": "circle", "label": "Equation of the circle", "type": "equation", "expected": "(x+2)^2+(y-4)^2=25", "variables": ["x", "y"]},
+            "prompt": "<p>Find the equation of the circle with centre \\((-2,4)\\) that passes through \\((1,0)\\).</p>",
+            "hint": "<p>The radius has coordinate changes \\(3\\) and \\(-4\\). Calculate \\(r^2\\), then put the centre into the squared terms.</p>",
+            "solution": "<p>\\(r^2=3^2+(-4)^2=25\\), so \\((x+2)^2+(y-4)^2=25\\).</p>",
+            "retry": [
+              {"answer": "(x+2)^2+(y-4)^2=5", "feedback": "<p>The centre is right. The left side is a squared distance, so the right side must be \\(5^2\\).</p>"},
+              {"answer": "(x-2)^2+(y+4)^2=25", "feedback": "<p>The square terms must vanish at the centre \\((-2,4)\\). Use \\(x+2\\) and \\(y-4\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "test-a-point-against-a-circle",
+        "title": "How do I tell where a point lies?",
+        "label": "Test a point",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>Compare the point's squared distance from the centre with the squared radius. You can decide whether it lies inside, on or outside the circle using integers or exact fractions.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(d^2=(x-h)^2+(y-k)^2\\), use \\(d^2&lt;r^2\\) for inside, \\(d^2=r^2\\) for on the circle and \\(d^2&gt;r^2\\) for outside.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep both sides in squared units throughout the comparison. Compare \\(d^2\\) with \\(r^2\\), or compare \\(d\\) with \\(r\\).</p>"
+          },
+          {
+            "kind": "check",
+            "id": "all-points-on-a-circle",
+            "field": {"key": "points", "label": "All points on the circle (x, y)", "type": "pairs", "expected": "(-4,1);(2,3)"},
+            "prompt": "<p>Which of \\((2,3)\\), \\((-4,1)\\), \\((-1,5)\\) and \\((3,2)\\) lie on \\((x+1)^2+(y-2)^2=10\\)? Give every matching pair.</p>",
+            "hint": "<p>Substitute each point into the left side. Only squared distances equal to \\(10\\) give points on the circle.</p>",
+            "solution": "<p>The squared distances in order are \\(10,10,9,16\\). The points on the circle are \\((2,3)\\) and \\((-4,1)\\).</p>",
+            "retry": [
+              {"answer": "(2,3)", "feedback": "<p>This point lies on the circle. Check \\((-4,1)\\) as well.</p>"},
+              {"answer": "(-4,1)", "feedback": "<p>This point lies on the circle. Check \\((2,3)\\) as well.</p>"},
+              {"answer": "(2,3);(-4,1);(-1,5)", "feedback": "<p>The first two are on the circle. The point \\((-1,5)\\) gives \\(d^2=9\\), placing it inside.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "complete-squares-for-a-circle",
+        "title": "How does expanded form reveal the centre?",
+        "label": "Complete two squares",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>The equation \\(x^2+y^2-2x-6y-10=0\\) looks different from the circle equation in the first section. Complete the square separately for \\(x\\) and \\(y\\) to reveal the same centre and radius.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Group the \\(x\\)-terms and the \\(y\\)-terms. Half each linear coefficient to form each square, then balance the added constants. In \\(x^2+y^2+2gx+2fy+c=0\\), the centre is \\((-g,-f)\\) and \\(r^2=g^2+f^2-c\\) for a real circle of positive radius.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "tip",
+            "html": "<p>After completing the squares, a positive right-hand side gives a circle. Zero gives just the centre point, and a negative value gives no real points.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "centre-from-expanded-circle",
+            "field": {"key": "centre", "label": "Centre (x, y)", "type": "pairs", "expected": "(-3,2)"},
+            "prompt": "<p>Find the centre of \\(x^2+y^2+6x-4y+4=0\\).</p>",
+            "hint": "<p>Complete \\(x^2+6x\\) with \\(9\\) and \\(y^2-4y\\) with \\(4\\). Which values make the new brackets zero?</p>",
+            "solution": "<p>The new form is \\((x+3)^2+(y-2)^2=9\\). Its centre is \\((-3,2)\\).</p>",
+            "retry": [
+              {"answer": "(3,-2)", "feedback": "<p>Set \\(x+3=0\\) and \\(y-2=0\\) to read the centre.</p>"},
+              {"answer": "(-6,4)", "feedback": "<p>Halve each linear coefficient before choosing the signs of the centre coordinates.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "radius-from-expanded-circle",
+            "field": {"key": "radius", "label": "Radius", "type": "number", "expected": "3"},
+            "prompt": "<p>Find the radius of \\(x^2+y^2+6x-4y+4=0\\).</p>",
+            "hint": "<p>The right side after completing both squares is \\(-4+9+4\\). Take the square root for the radius.</p>",
+            "solution": "<p>\\((x+3)^2+(y-2)^2=9\\), so \\(r=3\\).</p>",
+            "retry": [
+              {"answer": "9", "feedback": "<p>\\(9\\) is \\(r^2\\). Take the positive square root to get the radius.</p>"},
+              {"answer": "sqrt(13)", "feedback": "<p>Keep the original constant. The right side becomes \\(-4+9+4=9\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "use-the-angle-in-a-semicircle",
+        "title": "When does a right angle identify the diameter?",
+        "label": "Angle in a semicircle",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>Let \\(Q=(-3,5)\\). The sides \\(QA\\) and \\(QB\\) are vertical and horizontal, so \\(\\angle AQB=90^\\circ\\). The side opposite that angle is \\(AB\\).</p><p><img src=\"/assets/original/coordinate-geometry/study-semicircle.svg\" width=\"480\" height=\"348\" alt=\"A, Q and B lie on the same circle. The sides QA and QB meet at a right angle at Q. The hypotenuse AB is the diameter.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>An angle subtended by a diameter at another point on the circle is a right angle. Conversely, for a right-angled triangle, the hypotenuse is the diameter of its circumcircle.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Locate the right angle first. The diameter joins the other two vertices.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "circle-from-a-right-angle",
+            "field": {"key": "circle", "label": "Equation of the circle", "type": "equation", "expected": "(x-1)^2+(y-1)^2=13", "variables": ["x", "y"]},
+            "prompt": "<p>Find the circle through \\(U(-2,-1)\\), \\(V(4,3)\\) and \\(W(4,-1)\\).</p>",
+            "hint": "<p>The right angle is at \\(W\\), so the diameter is \\(UV\\). Use its midpoint and half its length.</p>",
+            "solution": "<p>The centre is \\((1,1)\\). \\(UV^2=6^2+4^2=52\\), so \\(r^2=13\\). The equation is \\((x-1)^2+(y-1)^2=13\\).</p>",
+            "retry": [
+              {"answer": "(x-1)^2+(y-1)^2=26", "feedback": "<p>The midpoint is right. Halving the diameter divides its square by \\(4\\), giving \\(52/4=13\\).</p>"},
+              {"answer": "(x-4)^2+(y+1)^2=36", "feedback": "<p>\\(W\\) is the right-angle vertex. Use the midpoint of the opposite side \\(UV\\) for the centre.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "find-the-tangent-from-a-radius",
+        "title": "How does the radius give the tangent?",
+        "label": "Find a tangent",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>At \\(B(5,5)\\), the tangent meets radius \\(CB\\) at \\(90^\\circ\\). The tangent passes through \\(B\\). The normal is the line along the radius.</p><p><img src=\"/assets/original/coordinate-geometry/study-tangent.svg\" width=\"480\" height=\"348\" alt=\"At B (5, 5), radius CB is perpendicular to the tangent. The centre is C (1, 3).\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check that the given point is on the circle. Find the radius direction from centre to point. Use the perpendicular direction through the point for the tangent. A vertical radius gives a horizontal tangent, and a horizontal radius gives a vertical tangent.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The normal passes through the centre and the contact point. The tangent uses the contact point and a perpendicular direction.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "tangent-from-centre-and-contact",
+            "field": {"key": "line", "label": "Equation of the tangent", "type": "equation", "expected": "3*x-4*y=3", "variables": ["x", "y"]},
+            "prompt": "<p>A circle has centre \\((-2,4)\\). Its tangent touches at \\((1,0)\\). Find the tangent equation.</p>",
+            "hint": "<p>The radius has gradient \\(-4/3\\), so the tangent has gradient \\(3/4\\). Use the point of contact.</p>",
+            "solution": "<p>\\(y=\\tfrac34(x-1)\\), or \\(3x-4y=3\\).</p>",
+            "retry": [
+              {"answer": "4*x+3*y=4", "feedback": "<p>This is the line along the radius. Use the perpendicular gradient \\(\\tfrac34\\).</p>"},
+              {"answer": "3*x-4*y=-22", "feedback": "<p>The gradient is right. The tangent passes through \\((1,0)\\), the point on the circle.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "tangent-with-vertical-radius",
+            "field": {"key": "line", "label": "Equation of the tangent", "type": "equation", "expected": "y=3", "variables": ["x", "y"]},
+            "prompt": "<p>A circle with centre \\((2,-1)\\) has contact point \\((2,3)\\) on a tangent. Find the tangent equation.</p>",
+            "hint": "<p>The radius is vertical. Use a horizontal line through the contact point.</p>",
+            "solution": "<p>The tangent fixes \\(y=3\\) because it is horizontal through \\((2,3)\\).</p>",
+            "retry": [
+              {"answer": "x=2", "feedback": "<p>\\(x=2\\) is the vertical line containing the radius. Its perpendicular through the contact point has fixed \\(y\\).</p>"},
+              {"answer": "y=-1", "feedback": "<p>This line is horizontal through the centre. Use the contact point \\((2,3)\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "use-three-points-on-a-circle",
+        "title": "How can three points locate a centre?",
+        "label": "Find a hidden centre",
+        "level": "extension",
+        "minutes": 6,
+        "intro": "<p>The centre is equally far from any two points on the circumference. That puts it on the perpendicular bisector of each chord.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Three distinct non-collinear points determine a circle. Find the intersection of two perpendicular bisectors, or use equal squared distances to form two linear equations for the centre. Then find the radius from any one point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check all three points in the final equation. A circle of positive radius cannot pass through three distinct collinear points.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "centre-from-three-points",
+            "field": {"key": "centre", "label": "Centre (x, y)", "type": "pairs", "expected": "(3,1)"},
+            "prompt": "<p>Find the centre of the circle through \\((0,0)\\), \\((6,0)\\) and \\((2,4)\\).</p>",
+            "hint": "<p>The first chord gives a bisector \\(x=3\\). For centre \\((3,k)\\), equate squared distances to \\((0,0)\\) and \\((2,4)\\).</p>",
+            "solution": "<p>Equating gives \\(9+k^2=1+(k-4)^2\\), so \\(8k=8\\). The centre is \\((3,1)\\).</p>",
+            "retry": [
+              {"answer": "(3,0)", "feedback": "<p>This is the first chord's midpoint. Move along its bisector until the distance to \\((2,4)\\) also agrees.</p>"},
+              {"answer": "(3,2)", "feedback": "<p>\\(x=3\\) is correct. Use the equal squared distances \\(9+k^2\\) and \\(1+(k-4)^2\\) to determine \\(k\\).</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "circle-through-three-points",
+            "field": {"key": "circle", "label": "Equation of the circle", "type": "equation", "expected": "(x-3)^2+(y-1)^2=10", "variables": ["x", "y"]},
+            "prompt": "<p>Give the circle equation through the same three points \\((0,0)\\), \\((6,0)\\) and \\((2,4)\\).</p>",
+            "hint": "<p>Use centre \\((3,1)\\) and calculate the squared distance to \\((0,0)\\).</p>",
+            "solution": "<p>\\(r^2=3^2+1^2=10\\). The circle is \\((x-3)^2+(y-1)^2=10\\).</p>",
+            "retry": [
+              {"answer": "(x-3)^2+(y-1)^2=9", "feedback": "<p>The centre is right. Include both coordinate changes from the centre to the origin when finding \\(r^2\\).</p>"}
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Write the equation from a centre and one point",
+        "question": "<p>Find the circle with centre \\((1,3)\\) passing through \\((5,5)\\).</p>",
+        "solution": [
+          "<p>The squared radius is \\((5-1)^2+(5-3)^2=16+4=20\\).</p>",
+          "<p>Every point on the circle has that squared distance, so the equation is \\((x-1)^2+(y-3)^2=20\\).</p>",
+          "<p>At \\((5,5)\\) the left side is \\(20\\), as required.</p>"
+        ]
+      },
+      {
+        "title": "Compare three points with the same radius",
+        "question": "<p>Classify \\(P(3,4)\\), \\(Q(-3,5)\\) and \\(R(1,-2)\\) for \\((x-1)^2+(y-3)^2=20\\).</p>",
+        "solution": [
+          "<p>For \\(P\\), \\(d^2=2^2+1^2=5\\). Since \\(5&lt;20\\), \\(P\\) is inside.</p>",
+          "<p>For \\(Q\\), \\(d^2=(-4)^2+2^2=20\\). Hence \\(Q\\) is on the circle.</p>",
+          "<p>For \\(R\\), \\(d^2=0^2+(-5)^2=25\\). Since \\(25&gt;20\\), \\(R\\) is outside.</p>"
+        ]
+      },
+      {
+        "title": "Complete two squares without losing constants",
+        "question": "<p>Find the centre and radius of \\(x^2+y^2-2x-6y-10=0\\).</p>",
+        "solution": [
+          "<p>Rearrange to \\((x^2-2x)+(y^2-6y)=10\\).</p>",
+          "<p>Add \\(1\\) and \\(9\\) to both sides. This gives \\((x-1)^2+(y-3)^2=20\\).</p>",
+          "<p>Setting each bracket to zero gives \\((1,3)\\). The radius is \\(\\sqrt{20}=2\\sqrt5\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a circle from a right-angled triangle",
+        "question": "<p>Find the circle through \\(A(-3,1)\\), \\(Q(-3,5)\\) and \\(B(5,5)\\).</p>",
+        "solution": [
+          "<p>\\(QA\\) and \\(QB\\) are perpendicular, so the hypotenuse \\(AB\\) is the diameter.</p>",
+          "<p>The midpoint of \\(AB\\) is \\((1,3)\\), and \\(AB^2=80\\), so \\(r^2=20\\).</p>",
+          "<p>The circle is \\((x-1)^2+(y-3)^2=20\\). Substituting \\(Q\\) gives \\(16+4=20\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the radius gradient and the point of contact",
+        "question": "<p>Find the tangent and normal at \\(B(5,5)\\) to \\((x-1)^2+(y-3)^2=20\\).</p>",
+        "solution": [
+          "<p>The point is on the circle since \\(4^2+2^2=20\\). The radius gradient is \\(2/4=\\tfrac12\\).</p>",
+          "<p>The tangent gradient is \\(-2\\). Through \\(B\\), \\(y-5=-2(x-5)\\), so \\(y=-2x+15\\).</p>",
+          "<p>The normal uses the radius gradient. Its equation is \\(y-5=\\tfrac12(x-5)\\), or \\(2y=x+5\\).</p>"
+        ]
+      },
+      {
+        "title": "Use two equal-distance conditions",
+        "question": "<p>Find the circle through \\((0,0)\\), \\((4,0)\\) and \\((1,3)\\).</p>",
+        "solution": [
+          "<p>The perpendicular bisector of the first two points is \\(x=2\\), so write the centre as \\((2,k)\\).</p>",
+          "<p>Equate the distances squared to \\((0,0)\\) and \\((1,3)\\). This gives \\(4+k^2=1+(k-3)^2\\), so \\(6k=6\\) and \\(k=1\\).</p>",
+          "<p>The radius squared is \\(2^2+1^2=5\\). The equation is \\((x-2)^2+(y-1)^2=5\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Circumference",
+        "definition": "<p>The points at exactly distance \\(r\\) from the centre.</p>"
+      },
+      {
+        "term": "Circumcircle",
+        "definition": "<p>A circle containing all three vertices of a triangle.</p>"
+      },
+      {
+        "term": "Tangent",
+        "definition": "<p>A line touching a circle at one point, perpendicular to the radius there.</p>"
+      },
+      {
+        "term": "Normal",
+        "definition": "<p>The line through the centre and the point of contact.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Distances, midpoints and diameter geometry",
+        "href": "/courses/maths4u-9709-p1/topics/orig_coordinate_geometry_distance_midpoint"
+      },
+      {
+        "title": "Line–circle intersections, chords and tangency",
+        "href": "/courses/maths4u-9709-p1/topics/orig_coordinate_geometry_line_circle"
+      },
+      {
+        "title": "Completing the square",
+        "href": "/courses/maths4u-9709-p1/topics/orig_quadratics_completing_square"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Read the centre and radius</h2><p>In \\((x-h)^2+(y-k)^2=r^2\\), the centre is \\((h,k)\\) and the radius is \\(r\\). Compare a point's squared distance from the centre with \\(r^2\\) to classify it.</p><p>For expanded form, complete the \\(x\\)-square and the \\(y\\)-square separately and balance the constants. A positive result on the right gives \\(r^2\\).</p><p><img src=\"/assets/original/coordinate-geometry/study-tangent.svg\" width=\"480\" height=\"348\" alt=\"At B (5, 5), radius CB is perpendicular to the tangent. The centre is C (1, 3).\"></p><h2>Use the geometry before the algebra</h2><table><thead><tr><th scope=\"col\">Given</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Diameter</th><td>Midpoint for the centre, half the length for \\(r\\)</td></tr><tr><th scope=\"row\">Right-angled triangle</th><td>Hypotenuse is the diameter</td></tr><tr><th scope=\"row\">Three non-collinear points</th><td>Intersect two perpendicular bisectors</td></tr><tr><th scope=\"row\">Tangent at \\(P\\)</th><td>Perpendicular to the radius through \\(P\\)</td></tr></tbody></table>",
+      "checks": "<ul><li>Set the brackets to zero to check the signs of the centre.</li><li>Take the square root of \\(r^2\\) for the radius.</li><li>Check the contact point lies on the circle.</li></ul>",
+      "examTip": "<p>Use the point of contact in the tangent equation. A horizontal radius gives a vertical tangent, and a vertical radius gives a horizontal tangent.</p>"
+    }
+  },
+  "orig_coordinate_geometry_line_circle": {
+    "updatedOn": "2026-11-20",
+    "description": "Study line and circle intersections for Cambridge 9709 Pure 1. Use substitutions, discriminant inequalities, chord symmetry and common points of two circles.",
+    "sections": [
+      {
+        "id": "substitute-a-line-into-a-circle",
+        "title": "How does a quadratic give both intersection points?",
+        "label": "Match both points",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>At an intersection with \\(y=x\\), both coordinates are the same. Substitute \\(y=x\\) into the circle to find which inputs give points on both graphs.</p><p><img src=\"/assets/original/coordinate-geometry/study-secant.svg\" width=\"480\" height=\"348\" alt=\"The line y = x crosses the circle centred at (1, 3) at (−1, −1) and (5, 5).\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Replace one variable using the line equation. Solve the resulting quadratic and use the line to find the second coordinate for each root. Give every matched pair.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Two roots require two coordinate pairs. Checking each pair in the line prevents swapping the two \\(y\\)-coordinates.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "both-secant-points",
+            "field": {"key": "points", "label": "Both intersection points (x, y)", "type": "pairs", "expected": "(-4,-3);(3,4)"},
+            "prompt": "<p>Find the intersections of \\(y=x+1\\) and \\(x^2+y^2=25\\).</p>",
+            "hint": "<p>Substitute to get \\(x^2+(x+1)^2=25\\). For each root, add \\(1\\) to get its matching \\(y\\).</p>",
+            "solution": "<p>The equation reduces to \\(x^2+x-12=0\\), giving \\(x=-4\\) and \\(x=3\\). The pairs are \\((-4,-3)\\) and \\((3,4)\\).</p>",
+            "retry": [
+              {"answer": "(3,4)", "feedback": "<p>This is one intersection. Use the other root \\(x=-4\\) and pair it with \\(y=x+1\\).</p>"},
+              {"answer": "(-4,-3)", "feedback": "<p>This is one intersection. Find the other root of \\(x^2+x-12=0\\) too.</p>"},
+              {"answer": "(-4,4);(3,-3)", "feedback": "<p>The roots are right. Compute \\(y=x+1\\) separately for each one to match the pairs.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "intersect-a-vertical-line",
+        "title": "What changes for a vertical or horizontal line?",
+        "label": "Use a fixed coordinate",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>A vertical line already fixes \\(x\\). A horizontal line already fixes \\(y\\). Substitute that fixed coordinate directly.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Reduce to one square. For \\((y-k)^2=d\\), \\(d&gt;0\\) gives \\(k\\pm\\sqrt d\\), \\(d=0\\) gives one value, and \\(d&lt;0\\) gives no real values. Use the same rule for a square in \\(x\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A zero square gives a single coordinate. It represents a tangent contact when the other coordinate is fixed.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "both-vertical-secant-points",
+            "field": {"key": "points", "label": "Both intersection points (x, y)", "type": "pairs", "expected": "(-2,-5);(-2,3)"},
+            "prompt": "<p>Find where \\(x=-2\\) meets \\((x-1)^2+(y+1)^2=25\\).</p>",
+            "hint": "<p>Substitution gives \\((y+1)^2=16\\). Use both square roots.</p>",
+            "solution": "<p>\\(y=-1\\pm4\\), so the points are \\((-2,-5)\\) and \\((-2,3)\\).</p>",
+            "retry": [
+              {"answer": "(-2,3)", "feedback": "<p>Use \\(y+1=-4\\) as well to find the lower point.</p>"},
+              {"answer": "(-2,-3);(-2,5)", "feedback": "<p>The centre has \\(y=-1\\). Add and subtract \\(4\\) from \\(-1\\).</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "vertical-tangent-contact",
+            "field": {"key": "point", "label": "Contact point (x, y)", "type": "pairs", "expected": "(6,-1)"},
+            "prompt": "<p>Give the one point where \\(x=6\\) meets \\((x-1)^2+(y+1)^2=25\\).</p>",
+            "hint": "<p>Substituting \\(x=6\\) uses the full squared radius in the \\(x\\)-term. Solve the remaining square.</p>",
+            "solution": "<p>\\(25+(y+1)^2=25\\) gives \\(y=-1\\). The line touches at \\((6,-1)\\).</p>",
+            "retry": [
+              {"answer": "(6,1)", "feedback": "<p>For the remaining square to vanish, \\(y+1=0\\).</p>"},
+              {"answer": "(1,-1)", "feedback": "<p>That is the centre. The contact point is on the line \\(x=6\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "classify-lines-with-a-discriminant",
+        "title": "How can a discriminant tell whether a line touches?",
+        "label": "Count the intersections",
+        "level": "core",
+        "minutes": 7,
+        "intro": "<p>Slide the line \\(y=x+k\\) up or down. With two crossings it is a secant. At a boundary it just touches, and beyond that boundary it misses. The circle here is \\((x-1)^2+(y-2)^2=18\\).</p><p><img src=\"/assets/original/coordinate-geometry/study-line-cases.svg\" width=\"480\" height=\"365\" alt=\"For the circle centred at (1, 2) with squared radius 18, the line y = x + 1 crosses twice, y = x + 7 touches once at (−2, 5), and y = x + 9 misses.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Quadratic discriminant</th><th scope=\"col\">Common points</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\Delta&gt;0\\)</th><td>Two distinct points</td></tr><tr><th scope=\"row\">\\(\\Delta=0\\)</th><td>One point, a tangent</td></tr><tr><th scope=\"row\">\\(\\Delta&lt;0\\)</th><td>No real common points</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Form the discriminant from the equation after substitution. Keep tangent values separate from any strict inequality for two points or for no points.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "secant-parameter-interval",
+            "field": {"key": "parameters", "label": "Values of k for two intersections", "type": "set", "expected": "(-4,4)"},
+            "prompt": "<p>For \\(x^2+y^2=8\\) and \\(y=x+k\\), give all \\(k\\) for which the line meets the circle in two distinct points.</p>",
+            "hint": "<p>After substitution the quadratic has discriminant \\(64-4k^2\\). Use a strict inequality for two distinct roots.</p>",
+            "solution": "<p>\\(64-4k^2&gt;0\\) gives \\(k^2&lt;16\\), hence \\(-4&lt;k&lt;4\\).</p>",
+            "retry": [
+              {"answer": "[-4,4]", "feedback": "<p>The boundary values give one common point each. Use a strict interval for two distinct points.</p>"},
+              {"answer": "(0,4)", "feedback": "<p>Both signs of \\(k\\) can satisfy \\(k^2&lt;16\\). Include all values between \\(-4\\) and \\(4\\), including zero.</p>"},
+              {"answer": "(-inf,-4) U (4,inf)", "feedback": "<p>Those lines miss the circle. Use \\(64-4k^2&gt;0\\) for two crossings.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "both-tangent-parameters",
+            "field": {"key": "values", "label": "All values of k for tangency", "type": "set", "expected": "{-4,4}"},
+            "prompt": "<p>For \\(x^2+y^2=8\\) and \\(y=x+k\\), give all values of \\(k\\) for which the line is tangent.</p>",
+            "hint": "<p>Set \\(64-4k^2=0\\). Keep both signs of \\(k\\).</p>",
+            "solution": "<p>\\(k^2=16\\), so \\(k=-4\\) or \\(k=4\\).</p>",
+            "retry": [
+              {"answer": "4", "feedback": "<p>That gives one tangent. The other solution of \\(k^2=16\\) is \\(-4\\).</p>"},
+              {"answer": "-4", "feedback": "<p>That gives one tangent. Also use the positive solution \\(k=4\\).</p>"},
+              {"answer": "[-4,4]", "feedback": "<p>Only the boundary values give tangency. Enter the two separate values \\(-4\\) and \\(4\\).</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "missing-circle-parameter-set",
+            "field": {"key": "parameters", "label": "Values of k with no intersection", "type": "set", "expected": "(-inf,-4) U (4,inf)"},
+            "prompt": "<p>For \\(x^2+y^2=8\\) and \\(y=x+k\\), give all \\(k\\) for which there is no intersection.</p>",
+            "hint": "<p>Use \\(64-4k^2&lt;0\\). Which values have \\(|k|&gt;4\\)?</p>",
+            "solution": "<p>The line misses for \\(k&lt;-4\\) or \\(k&gt;4\\). These are the two open intervals outside the tangencies.</p>",
+            "retry": [
+              {"answer": "(-inf,-4] U [4,inf)", "feedback": "<p>At \\(k=-4\\) and \\(k=4\\) the line still shares one point. Exclude both endpoints.</p>"},
+              {"answer": "(4,inf)", "feedback": "<p>Also include lines with \\(k&lt;-4\\), below the opposite tangent.</p>"},
+              {"answer": "(-4,4)", "feedback": "<p>Inside that interval the discriminant is positive. No intersection requires \\(k^2&gt;16\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "use-the-chord-midpoint",
+        "title": "How can symmetry give a chord length?",
+        "label": "Use half a chord",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>The perpendicular from the centre \\(C(1,3)\\) to the chord \\(y=5\\) meets its midpoint \\(M(1,5)\\). The radius to \\(B(5,5)\\) and the half chord \\(MB\\) form a right-angled triangle with \\(CM\\).</p><p><img src=\"/assets/original/coordinate-geometry/study-chord.svg\" width=\"480\" height=\"348\" alt=\"For the chord y = 5, its midpoint M (1, 5) is directly above C (1, 3). The right triangle CMB has perpendicular leg CM = 2 and hypotenuse CB = 2√5.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(d\\) is the perpendicular distance from the centre to a chord and \\(r\\) is the radius, half the chord has length \\(\\sqrt{r^2-d^2}\\). Double it for the full chord. A chord with distinct ends has \\(d&lt;r\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Subtract squares in the right triangle. The half-chord length is the square root of \\(r^2-d^2\\).</p>"
+          },
+          {
+            "kind": "check",
+            "id": "centre-to-chord-midpoint",
+            "field": {"key": "point", "label": "Midpoint of the chord (x, y)", "type": "pairs", "expected": "(-1,5)"},
+            "prompt": "<p>Find the midpoint of the chord cut by \\(y=5\\) on \\((x+1)^2+(y-2)^2=34\\).</p>",
+            "hint": "<p>Drop a vertical line from the centre \\((-1,2)\\) to the horizontal chord.</p>",
+            "solution": "<p>The perpendicular meets the chord at \\((-1,5)\\). This is its midpoint.</p>",
+            "retry": [
+              {"answer": "(-1,2)", "feedback": "<p>That is the centre. Keep its \\(x\\)-coordinate and use \\(y=5\\) to reach the chord.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "whole-chord-length",
+            "field": {"key": "length", "label": "Length of the chord", "type": "number", "expected": "10"},
+            "prompt": "<p>Find the full length of the chord cut by \\(y=5\\) on \\((x+1)^2+(y-2)^2=34\\).</p>",
+            "hint": "<p>The line is \\(3\\) units from the centre. Use \\(r^2=34\\) to find the half chord.</p>",
+            "solution": "<p>The half chord has length \\(\\sqrt{34-9}=5\\). The full chord has length \\(10\\).</p>",
+            "retry": [
+              {"answer": "5", "feedback": "<p>\\(5\\) is the distance from the chord midpoint to one endpoint. Double it.</p>"},
+              {"answer": "25", "feedback": "<p>You found the square of the half chord. Take the square root and double it.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "find-the-line-through-circle-intersections",
+        "title": "How can two circles give one line?",
+        "label": "Find a common chord",
+        "level": "extension",
+        "minutes": 6,
+        "intro": "<p>Both common points lie on both circles. Subtract the equations to cancel \\(x^2\\) and \\(y^2\\). For circles with different centres, this gives a straight line through any common points.</p><p><img src=\"/assets/original/coordinate-geometry/study-common-chord.svg\" width=\"480\" height=\"328\" alt=\"Two radius-five circles with centres (0, 0) and (6, 0) meet at (3, 4) and (3, −4). The common chord lies on x = 3.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write both equations with coefficients \\(1\\) for the squared terms. Subtract, then substitute the resulting line into either circle. Check the solutions in both original equations.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use the line to narrow the search, then solve with a circle equation. For circles with the same centre, compare their radii directly.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "line-through-common-points",
+            "field": {"key": "line", "label": "Line through the common points", "type": "equation", "expected": "x=3", "variables": ["x", "y"]},
+            "prompt": "<p>Find the line through the common points of \\(x^2+y^2=13\\) and \\((x-4)^2+y^2=5\\).</p>",
+            "hint": "<p>Subtract the first equation from the second. The change on the right is \\(5-13=-8\\).</p>",
+            "solution": "<p>The difference gives \\(-8x+16=-8\\), so \\(x=3\\).</p>",
+            "retry": [
+              {"answer": "x=2", "feedback": "<p>This would be the midpoint between the centres. The right sides differ here, so include \\(5-13\\) when subtracting.</p>"},
+              {"answer": "y=3", "feedback": "<p>The \\(y^2\\) terms cancel. The remaining linear equation fixes \\(x=3\\).</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "both-common-circle-points",
+            "field": {"key": "points", "label": "Both common points (x, y)", "type": "pairs", "expected": "(3,-2);(3,2)"},
+            "prompt": "<p>Give both common points of \\(x^2+y^2=13\\) and \\((x-4)^2+y^2=5\\).</p>",
+            "hint": "<p>Use \\(x=3\\) in the first circle and take both square roots for \\(y\\).</p>",
+            "solution": "<p>\\(9+y^2=13\\) gives \\(y=\\pm2\\). The points are \\((3,2)\\) and \\((3,-2)\\).</p>",
+            "retry": [
+              {"answer": "(3,2)", "feedback": "<p>This is the upper point. The other root of \\(y^2=4\\) gives the lower point.</p>"},
+              {"answer": "(3,-2)", "feedback": "<p>This is the lower point. Also take the positive root of \\(y^2=4\\).</p>"}
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Substitute, solve, then pair the coordinates",
+        "question": "<p>Find where \\(y=x\\) meets \\((x-1)^2+(y-3)^2=20\\).</p>",
+        "solution": [
+          "<p>Substitute \\(y=x\\) to obtain \\((x-1)^2+(x-3)^2=20\\).</p>",
+          "<p>Expand and simplify to \\(x^2-4x-5=0\\). Factor as \\((x+1)(x-5)=0\\).</p>",
+          "<p>With \\(y=x\\), the roots \\(-1\\) and \\(5\\) give the points \\((-1,-1)\\) and \\((5,5)\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a fixed x-coordinate",
+        "question": "<p>Find where \\(x=-1\\) meets \\((x-1)^2+(y-3)^2=20\\).</p>",
+        "solution": [
+          "<p>Substituting gives \\(4+(y-3)^2=20\\). Hence \\((y-3)^2=16\\).</p>",
+          "<p>Taking both square roots gives \\(y-3=4\\) or \\(y-3=-4\\), so \\(y=7\\) or \\(y=-1\\).</p>",
+          "<p>Use the fixed \\(x=-1\\) in both pairs. The points are \\((-1,7)\\) and \\((-1,-1)\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the full range of secants and both tangents",
+        "question": "<p>Classify the intersections of \\(y=x+k\\) with \\((x-1)^2+(y-2)^2=18\\) for all real \\(k\\).</p>",
+        "solution": [
+          "<p>Let \\(u=x-1\\). Then \\(y-2=u+k-1\\), so \\(u^2+(u+k-1)^2=18\\).</p>",
+          "<p>The quadratic in \\(u\\) has coefficients \\(2,\\ 2(k-1),\\ (k-1)^2-18\\). Thus \\(\\Delta=144-4(k-1)^2\\).</p>",
+          "<p>For two points, \\((k-1)^2&lt;36\\), giving \\(-5&lt;k&lt;7\\). A tangent has \\(k=-5\\) or \\(k=7\\). If \\(k&lt;-5\\) or \\(k&gt;7\\), the line misses the circle.</p>"
+        ]
+      },
+      {
+        "title": "Use the radius and the perpendicular distance",
+        "question": "<p>Find the length of the chord cut by \\(y=5\\) on \\((x-1)^2+(y-3)^2=20\\).</p>",
+        "solution": [
+          "<p>The centre is \\((1,3)\\), so its perpendicular distance to \\(y=5\\) is \\(d=2\\).</p>",
+          "<p>Half the chord is \\(\\sqrt{20-2^2}=\\sqrt{16}=4\\).</p>",
+          "<p>The full length is \\(8\\). The endpoints sit \\(4\\) units either side of \\(M(1,5)\\), at \\((-3,5)\\) and \\((5,5)\\).</p>"
+        ]
+      },
+      {
+        "title": "Find both ends of the common chord",
+        "question": "<p>Find the common points of \\(x^2+y^2=25\\) and \\((x-6)^2+y^2=25\\).</p>",
+        "solution": [
+          "<p>Subtracting the first equation from the second gives \\(-12x+36=0\\). Hence every common point has \\(x=3\\).</p>",
+          "<p>Substituting into \\(x^2+y^2=25\\) gives \\(y^2=16\\). Use both roots.</p>",
+          "<p>The two points are \\((3,4)\\) and \\((3,-4)\\). Both satisfy the second equation too.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Secant",
+        "definition": "<p>A line meeting a circle at two distinct points.</p>"
+      },
+      {
+        "term": "Tangent",
+        "definition": "<p>A line meeting a circle at one point.</p>"
+      },
+      {
+        "term": "Chord",
+        "definition": "<p>The segment joining two points on a circle.</p>"
+      },
+      {
+        "term": "Discriminant",
+        "definition": "<p>The expression \\(b^2-4ac\\) which determines the number of distinct real roots of a quadratic.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Circle equations, centres and tangents",
+        "href": "/courses/maths4u-9709-p1/topics/orig_coordinate_geometry_circles"
+      },
+      {
+        "title": "Discriminant and parameters",
+        "href": "/courses/maths4u-9709-p1/topics/orig_quadratics_roots"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Substitute before counting or solving</h2><p>Insert the line into the circle. Solve the quadratic and find the second coordinate for each root. Substitute \\(x=c\\) directly for a vertical line.</p><table><thead><tr><th scope=\"col\">Discriminant</th><th scope=\"col\">Intersection</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\Delta&gt;0\\)</th><td>Two distinct points</td></tr><tr><th scope=\"row\">\\(\\Delta=0\\)</th><td>One tangent point</td></tr><tr><th scope=\"row\">\\(\\Delta&lt;0\\)</th><td>No intersection</td></tr></tbody></table><p><img src=\"/assets/original/coordinate-geometry/study-line-cases.svg\" width=\"480\" height=\"365\" alt=\"For the circle centred at (1, 2) with squared radius 18, the line y = x + 1 crosses twice, y = x + 7 touches once at (−2, 5), and y = x + 9 misses.\"></p><h2>Use chord geometry</h2><p>The perpendicular from the centre bisects the chord. If its distance is \\(d&lt;r\\), the chord length is \\(2\\sqrt{r^2-d^2}\\). For two circles with different centres, subtract their expanded equations and substitute the resulting line back into a circle.</p>",
+      "checks": "<ul><li>Pair each root with its own second coordinate.</li><li>Keep tangent boundaries out of strict secant ranges.</li><li>Double a half chord to get its full length.</li></ul>",
+      "examTip": "<p>Give all parameter intervals and all boundary values requested. Check any stated intersection in both equations.</p>"
+    }
+  }
+}
