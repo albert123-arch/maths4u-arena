@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import pack from '../../content/original/9709-p1/quadratics-v1.json';
 
 const base='http://127.0.0.1:3109',out='.local/p1-quadratics-20261108/screenshots';
-const revisedExamples: Record<string,number> = { equations:7, square:10, discriminant:11, inequalities:11 };
+const revisedExamples: Record<string,number> = { equations:7, square:10, discriminant:11, inequalities:11, simultaneous:9 };
 test.beforeAll(async()=>{await fs.mkdir(out,{recursive:true});});
 test('five public lessons: desktop and mobile notes, mathematical layout and main-only lists',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
@@ -16,6 +16,12 @@ test('five public lessons: desktop and mobile notes, mathematical layout and mai
     await expect(page.locator('.katex-error')).toHaveCount(0);
     await expect(page.locator('#challenge .square-challenges button')).toHaveCount(pack.questions.filter(q=>q.lesson===l.key&&q.collection==='exam'&&q.variant_index===0).length);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+1);
+    if(l.key==='simultaneous'&&width===390){
+      await page.evaluate(()=>document.fonts.ready);
+      for(const solution of await page.locator('#examples summary').all())await solution.click();
+      const displays=page.locator('#notes .katex-display,#examples .katex-display');
+      expect(await displays.evaluateAll(nodes=>nodes.filter(node=>node.scrollWidth>node.clientWidth+5).map(node=>node.textContent))).toEqual([]);
+    }
     await page.screenshot({path:out+'/'+l.key+'-'+width+'.png',fullPage:true});
   }
   expect(errors).toEqual([]);

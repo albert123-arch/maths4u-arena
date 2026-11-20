@@ -17,6 +17,7 @@ const revisedStudy: Record<string,{count:number;first:string;last:string}> = {
   square: { count: 10, first: 'What does completing the square do?', last: 'Restricted domains can change the range' },
   discriminant: { count: 11, first: 'What does the discriminant tell you?', last: 'Positive or negative for all real x' },
   inequalities: { count: 11, first: 'An inequality asks where, not just where zero occurs', last: 'Build the condition, then interpret the answer' },
+  simultaneous: { count: 9, first: 'One solution is a matching pair', last: 'Translate the conditions, then interpret the pairs' },
 };
 test('old lessons remain available until the exact new package is published',async()=>{
   const id=p.lessons[0].id,old=quadraticTopics[0];
@@ -71,10 +72,21 @@ test('all complete quick answers work; wrong or missing fields fail; review chan
       assert(dto.notes.includes('/assets/original/quadratics/inequality-domain-overlap.svg'));
       const product=dto.examples.find(e=>e.title==='A product that must be negative');
       const hole=dto.examples.find(e=>e.title==='Cancelling leaves a hole');
-      assert(product?.solution.includes('<div class="table-scroll"><table>'));
+      assert(product);
+      assert(product.solution.includes('<div class="table-scroll"><table>'));
       assert(product.solution.includes('x\\in(-5,2)'));
-      assert(hole?.solution.includes('<div class="table-scroll"><table>'));
+      assert(hole);
+      assert(hole.solution.includes('<div class="table-scroll"><table>'));
       assert(hole.solution.includes('(-\\infty,2)\\cup(2,3]'));
+    }
+    if(l.key==='simultaneous'){
+      assert(dto.notes.includes('/assets/original/quadratics/simultaneous-matching-pairs.svg'));
+      assert(dto.notes.includes('/assets/original/quadratics/simultaneous-tangency-cases.svg'));
+      const first=dto.examples.find(e=>e.title==='A line and a parabola');
+      assert(first);
+      assert(first.solution.includes('<div class="table-scroll"><table>'));
+      assert(first.solution.includes('(-1,1)'));
+      assert(first.solution.includes('(4,6)'));
     }
     assert.equal(dto.navigation?.directionTitle,'AS & A Level');
     const raw=JSON.stringify(dto);for(const key of ['"expected"','ownerProvenance','source_problem_id','source_exam','sourceSha256','archiveTaskId'])assert(!raw.includes(key),key);
