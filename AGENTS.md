@@ -52,6 +52,7 @@ Before changing educational content, read
 - Arena's canonical model is Task / TaskVersion in its own database. The PHP site's
   problems table is not Arena's schema. For shared original content, preserve an
   editorial identity and explicit import mapping; do not merge the live databases.
+- For new and revised teaching pages, use the [Arena lesson standard](docs/ARENA-LESSON-STANDARD.md).
 - Keep Notes, Practice, original Exam-style problems and Worked solutions by paper
   distinguishable. Record provenance and actual verification. Maths4U's own marking
   criteria must not be presented as an official mark scheme.

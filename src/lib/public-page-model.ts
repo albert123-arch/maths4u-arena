@@ -6,6 +6,8 @@ export type PublicPageData = {
   filters?: Record<string, string>;
   chapter?: string;
   chapterTitle?:string;
+  chapterSummary?: string;
+  lessonObjectives?: Record<string, string>;
   mode?: "NOTES" | "MC" | "SHORT" | "WRITTEN";
 };
 export type LanguagePair = { en: string; ru: string };

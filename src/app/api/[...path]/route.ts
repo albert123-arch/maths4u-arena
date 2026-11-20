@@ -34,6 +34,9 @@ import { contentPackage, packageTopic } from "@/lib/content-package-content";
 import { contentPackageStatus, planContentPackage, applyContentPackage, changeContentPackage } from "@/lib/content-packages";
 import { adminArchiveContext, planCourseTree, applyCourseTree, disableCourseTree, archivePresentationLessons } from '@/lib/course-tree';
 import { squarePublicLesson } from "@/lib/square-content";
+import { publicLearningTopic } from "@/lib/public-learning-topic";
+import { assertLessonVisible } from "@/lib/content-access";
+import { gradeQuadraticsStudyCheck } from "@/lib/quadratics-study";
 import { inRequestView, requestView, rolePreview } from "@/lib/request-view";
 import { resolveRequestView, guardViewRequest, enterView, exitView, touchView } from "@/lib/view-lens";
 import { previewMaterial, checkPreview } from "@/lib/view-preview";
@@ -115,6 +118,17 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
       if (parts.length === 5 && parts[4] === "check" && method === "POST") return json(await checkPreview(parts[2], parts[3], input, lang));
     }
     if (method === "GET" && route === "learning/course-choices") return json(await courseChoices(await actorForToken(tokenFrom(request))));
+    if (route === "learning/study-check" && method === "POST") {
+      const { lessonId, id, answer } = z.object({
+        lessonId: z.string().min(1).max(80), id: z.string().min(1).max(80), answer: z.string().trim().min(1).max(400),
+      }).strict().parse(input);
+      const lesson = await publicLearningTopic(lessonId);
+      ensure(lesson?.packageKey === "9709-p1-quadratics", 404, "NOT_FOUND");
+      await assertLessonVisible(null, lessonId);
+      const result = gradeQuadraticsStudyCheck(lessonId, id, answer);
+      ensure(result, 404, "NOT_FOUND");
+      return json(result);
+    }
     if ((route === "learning/square/check" || action === "check") && method === "POST") {
       const user = await actorForToken(tokenFrom(request));
       // Bounded algebra and payload. Guest checks do not create accounts or assessment attempts.

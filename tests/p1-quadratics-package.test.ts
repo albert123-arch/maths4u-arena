@@ -9,16 +9,11 @@ import { validatePackageSvg } from '../src/lib/content-package-svg';
 import { squarePublicLesson, gradeSquare, questionsForTopic, squareHelp, squareMarkingRows } from '../src/lib/square-content';
 import { quadraticTopics, squareSnapshot, nextSquareReview } from '../src/lib/square-model';
 import { packageTask } from '../src/lib/content-packages';
+import teaching from "../content/original/9709-p1/quadratics-study.json";
+import { gradeQuadraticsStudyCheck, quadraticsRevision, quadraticsStudy } from "../src/lib/quadratics-study";
 import {publicLearningTopic} from '../src/lib/public-learning-topic';
 
 const p=contentPackage('9709-p1-quadratics');
-const revisedStudy: Record<string,{count:number;first:string;last:string}> = {
-  equations: { count: 7, first: 'What are we trying to find?', last: 'Fractions, reciprocals and real situations' },
-  square: { count: 10, first: 'What does completing the square do?', last: 'Restricted domains can change the range' },
-  discriminant: { count: 11, first: 'What does the discriminant tell you?', last: 'Positive or negative for all real x' },
-  inequalities: { count: 11, first: 'An inequality asks where, not just where zero occurs', last: 'Build the condition, then interpret the answer' },
-  simultaneous: { count: 9, first: 'One solution is a matching pair', last: 'Translate the conditions, then interpret the pairs' },
-};
 test('old lessons remain available until the exact new package is published',async()=>{
   const id=p.lessons[0].id,old=quadraticTopics[0];
   assert.deepEqual(await publicLearningTopic(id,async()=>null),old);
@@ -48,49 +43,32 @@ test('Quadratics reuses all five canonical lessons and keeps every source part a
 test('all complete quick answers work; wrong or missing fields fail; review changes the numbers',()=>{
   for(const l of p.lessons){
     const topic=packageTopic(l.id)!,dto=squarePublicLesson(topic),qs=questionsForTopic(l.id);
-    const study = revisedStudy[l.key];
-    assert.equal(dto.examples.length,study?.count??4);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
-    if(study){
-      assert.equal(dto.notes.match(/<h2>/g)?.length,6);
-      assert(dto.notes.startsWith('<h2>'+study.first+'</h2>'));
-      assert(dto.notes.includes('<h2>'+study.last+'</h2>'));
-      assert(!/<script\b|<style\b|data-panel|data-math|m4-graph-explorer/.test(dto.notes));
-      assert.equal(dto.version,topic.version);
+    assert(dto.study);
+    assert.equal(dto.study.sections.length, 6);
+    assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
+    assert.equal(dto.version,topic.version);
+    const authored = teaching[l.id as keyof typeof teaching];
+    const includedExamples = dto.study.sections.flatMap(s => s.blocks.filter(b => b.kind === "example").map(b => b.index));
+    assert.deepEqual([...includedExamples].sort((a,b) => a-b), authored.examples.map((_, i) => i));
+    for (const section of dto.study.sections) {
+      assert(section.blocks.some(b => b.kind === "example" && !b.tryFirst), section.id);
+      assert(section.blocks.some(b => b.kind === "check"), section.id);
     }
-    if(l.key==='square'){
-      assert(dto.notes.includes('/assets/original/quadratics/restricted-domain.svg'));
-      assert(dto.examples.find(e=>e.title==='Combine the useful forms')?.solution.includes('/assets/original/quadratics/square-sketch.svg'));
-    }
-    if(l.key==='discriminant'){
-      assert(dto.notes.includes('/assets/original/quadratics/discriminant-root-cases.svg'));
-      assert(dto.notes.includes('/assets/original/quadratics/parabola-line-intersections.svg'));
-      assert.equal(dto.notes.match(/<div class="table-scroll"><table>/g)?.length,3);
-      assert(dto.examples.find(e=>e.title==='Classify a whole family')?.solution.includes('<div class="table-scroll"><table>'));
-    }
-    if(l.key==='inequalities'){
-      assert(dto.notes.includes('/assets/original/quadratics/inequality-sign-interval.svg'));
-      assert(dto.notes.includes('/assets/original/quadratics/inequality-domain-overlap.svg'));
-      const product=dto.examples.find(e=>e.title==='A product that must be negative');
-      const hole=dto.examples.find(e=>e.title==='Cancelling leaves a hole');
-      assert(product);
-      assert(product.solution.includes('<div class="table-scroll"><table>'));
-      assert(product.solution.includes('x\\in(-5,2)'));
-      assert(hole);
-      assert(hole.solution.includes('<div class="table-scroll"><table>'));
-      assert(hole.solution.includes('(-\\infty,2)\\cup(2,3]'));
-    }
-    if(l.key==='simultaneous'){
-      assert(dto.notes.includes('/assets/original/quadratics/simultaneous-matching-pairs.svg'));
-      assert(dto.notes.includes('/assets/original/quadratics/simultaneous-tangency-cases.svg'));
-      const first=dto.examples.find(e=>e.title==='A line and a parabola');
-      assert(first);
-      assert(first.solution.includes('<div class="table-scroll"><table>'));
-      assert(first.solution.includes('(-1,1)'));
-      assert(first.solution.includes('(4,6)'));
+    const notes = quadraticsStudy(l.id)!.notes;
+    assert(!/<script\b|<style\b|data-panel|data-math|m4-graph-explorer/.test(notes));
+    assert(Object.values(quadraticsRevision(l.id)!).every(html => !html.includes('katex-error')));
+    for (const section of authored.sections) {
+      for (const block of section.blocks) {
+        if (block.kind !== "check" || !("field" in block) || !block.field) continue;
+        const result = gradeQuadraticsStudyCheck(l.id, block.id!, block.field.expected);
+        assert.equal(result?.status, "correct", block.id);
+        assert(!result.feedback.includes("katex-error"), block.id);
+      }
     }
     assert.equal(dto.navigation?.directionTitle,'AS & A Level');
     const raw=JSON.stringify(dto);for(const key of ['"expected"','ownerProvenance','source_problem_id','source_exam','sourceSha256','archiveTaskId'])assert(!raw.includes(key),key);
-    for(const text of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution]),...dto.questions.map(q=>q.prompt)])assert(!text.includes('katex-error'),l.key);
+    const notesHtml = dto.study.sections.flatMap(s => [s.intro, ...s.blocks.flatMap(b => "html" in b ? [b.html] : b.kind === "check" ? [b.prompt,b.hint] : [])]);
+    for(const text of [...notesHtml,...dto.examples.flatMap(e=>[e.question,...(e.steps ?? [])]),...dto.questions.map(q=>q.prompt)])assert(!text.includes('katex-error'),l.key);
     for(const q of qs){
       assert(!squareHelp(q,'solution').includes('katex-error'),q.id);assert.equal(squareMarkingRows(q).reduce((n,r)=>n+r.marks,0),q.marks);
       if(!q.fields.length)continue;
@@ -102,6 +80,23 @@ test('all complete quick answers work; wrong or missing fields fail; review chan
   }
   const q=p.questions.find(q=>q.fields.some(f=>f.key==='roots')&&q.lesson==='equations')!;
   assert(!gradeSquare({...q,provenance:undefined},{roots:'0'}).correct,'one root is an incomplete answer');
+});
+
+test("root checks accept natural notation and require the entire set", () => {
+  const q = questionsForTopic("orig_quadratics_factorisation").find(q => q.id === "M4U-9709-P1-QD-CHECK-EQUATIONS-1-0")!;
+  for (const roots of ["x = 0 or x = 5", "5, 0", "{0, 5}", "x=5 and x=0"]) {
+    assert(gradeSquare(q, { roots }).correct, roots);
+  }
+  for (const roots of ["0", "x=5", "[0,5]", "x=0 or y=5", "x=0 or"]) {
+    assert(!gradeSquare(q, { roots }).correct, roots);
+  }
+  const lesson = "orig_quadratics_factorisation";
+  assert.equal(gradeQuadraticsStudyCheck(lesson, "monic-roots", "x=−5 or x=3")?.status, "correct");
+  assert.equal(gradeQuadraticsStudyCheck(lesson, "monic-roots", "x=3")?.status, "retry");
+  assert.match(gradeQuadraticsStudyCheck(lesson, "monic-roots", "x=3")!.feedback, /another root/);
+  assert.equal(gradeQuadraticsStudyCheck(lesson, "formula-roots", "x=2 ± sqrt(5)")?.status, "correct");
+  assert.equal(gradeQuadraticsStudyCheck(lesson, "monic-roots", "x=−5 or z=3")?.status, "format");
+  assert.equal(gradeQuadraticsStudyCheck("orig_trigonometry_equations", "monic-roots", "-5,3"), undefined);
 });
 
 test('vectors are immutable private assets; active SVG, remote references and entities are rejected',async()=>{

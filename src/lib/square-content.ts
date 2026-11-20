@@ -7,7 +7,8 @@ import { renderContent } from "./content";
 import { type SquareLesson, type CheckResult, squareVersion, quadraticTopic, type QuadraticTopic } from "./square-model";
 import type { MarkingRow, SupportKind } from "./question-support-model";
 import { packageQuestions, packageTeaching, packageTopic } from "./content-package-content";
-import { quadraticsStudy } from "./quadratics-study";
+import { quadraticsStudy, quadraticsStudyLayout } from "./quadratics-study";
+import { answerFormat } from "./square-presentation";
 
 type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
 export type SourceQuestion = { id: string; family_uid: string; title: string; collection: string; prompt_html: string; hint_html: string; solution_html: string; answer_html: string; marks: number; difficulty: number; variant_index?: number; fields: ExactField[]; marking_criteria?: Criterion[]; parts?: { label: string; marking_criteria: Criterion[] }[]; provenance?: { type: string; past_paper_reference: unknown } };
@@ -53,8 +54,9 @@ const examples = [
 ];
 export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): SquareLesson {
   const packaged=packageTeaching(topic);
-  const teaching = quadraticsStudy(topic.lessonId) ?? packaged ?? (topic.code === "CS" ? { notes, examples } : quadraticsTeaching[topic.key]);
-  return { topic, version: topic.version, title: topic.title,...(packaged?{navigation:packaged.navigation}:{}), notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: renderContent(q.prompt_html).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>'), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey?f.label:topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
+  const layout = topic.packageKey === "9709-p1-quadratics" ? quadraticsStudyLayout(topic.lessonId) : undefined;
+  const teaching = (layout ? undefined : quadraticsStudy(topic.lessonId)) ?? packaged ?? (topic.code === "CS" ? { notes, examples } : quadraticsTeaching[topic.key]);
+  return { topic, version: topic.version, title: topic.title,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: renderContent(q.prompt_html).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>'), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey?f.label:topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
 }
 export function learningTopic(key:string){return packageTopic(key)??quadraticTopic(key);}
 // Feedback describes an identifiable answer pattern, not an assumed thought process.
@@ -87,7 +89,7 @@ export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): 
   let valid = true;
   for (const f of q.fields) {
     try { const correct = checkExact(f, answers[f.key]); fields[f.key] = { correct, message: correct ? "Correct." : retryMessage(q, f, answers[f.key]) }; }
-    catch { valid = false; fields[f.key] = { correct: false, formatError: true, message: "Check the format. Use fractions, sqrt(...), pi/6, intervals such as (1,5], or coordinate pairs/triples separated by semicolons. Factors and ratios also use semicolons. Complete every field." }; }
+    catch { valid = false; fields[f.key] = { correct: false, formatError: true, message: "Check the format. " + answerFormat(f).en }; }
     if (f.key === "expanded" && fields[f.key].correct && !isExpandedPolynomial(answers[f.key], f.variables ?? [])) fields[f.key] = { correct: false, message: "This is equivalent, but this field asks for expanded form. Multiply out the brackets." };
   }
   return { valid, correct: valid && Object.values(fields).every(f => f.correct), fields, ...(!valid ? { error: "Some answers could not be read; no result has been recorded yet." } : {}) };

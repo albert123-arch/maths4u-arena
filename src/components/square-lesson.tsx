@@ -11,6 +11,7 @@ import { QuestionSupport } from "./question-support";
 import { AdminArchiveLinks } from './admin-archive-links';
 import type { SupportContent } from "@/lib/question-support-model";
 import { LessonPresentations } from "./lesson-presentations";
+import { LessonStudy, StudyExampleList } from "./lesson-study";
 import { useSquareProgress, SquareSaveNotice } from "./square-progress";
 import { firstStoredValue } from "@/lib/square-device-progress";
 import { TeacherTaskPreview } from "./teacher-task-preview";
@@ -24,6 +25,8 @@ const collectionOrder = ["diagnostic", "short", "variant", "exam", "mixed"];
 export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesson; sessionReady: boolean }) {
   const { t } = useLocale(), root = useRef<HTMLDivElement>(null), sectionNav = useRef<HTMLElement>(null);
   const lens = useView();
+  const study = lesson.study;
+  const [activeNote, setActiveNote] = useState(study?.sections[0]?.id ?? "");
   const topic = lesson.topic, actor = useContext(ActorContext), state = useSquareProgress(sessionReady, topic);
   const teacher = actor?.roles.some(r => r.role === "TEACHER" || r.role === "ADMIN");
   const diagnostic = lesson.questions.find(q => q.collection === "diagnostic")??lesson.questions.find(q=>q.collection==="short")??lesson.questions[0], primary = lesson.questions.filter(q => q.collection === "short");
@@ -59,6 +62,13 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
       for (const id of sectionIds) if ((document.getElementById(id)?.getBoundingClientRect().top ?? Infinity) <= boundary) selected = id;
       if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) selected = "review";
       setActive(selected);
+      if (study && selected === "notes") {
+        let note = study.sections[0].id;
+        for (const section of study.sections) {
+          if ((document.getElementById(section.id)?.getBoundingClientRect().top ?? Infinity) <= boundary) note = section.id;
+        }
+        setActiveNote(note);
+      }
       const link = nav!.querySelector<HTMLAnchorElement>('[href="#' + selected + '"]');
       if (link && link.offsetLeft < nav!.scrollLeft) nav!.scrollLeft = link.offsetLeft;
       else if (link && link.offsetLeft + link.offsetWidth > nav!.scrollLeft + nav!.clientWidth) nav!.scrollLeft = link.offsetLeft + link.offsetWidth - nav!.clientWidth;
@@ -67,7 +77,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
     const observer = new ResizeObserver(schedule); observer.observe(header); observer.observe(nav);
     window.addEventListener("scroll", schedule, { passive: true }); window.addEventListener("resize", schedule); update();
     return () => { observer.disconnect(); cancelAnimationFrame(frame); window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); };
-  }, []);
+  }, [study]);
   useEffect(() => {
     root.current?.querySelectorAll<HTMLElement>(".katex-display").forEach(formula => {
       formula.tabIndex = 0;
@@ -87,15 +97,18 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
   const lastPreparedS1Variant=topic.packageKey?.startsWith("9709-s1-")&&current.variantIndex===3;
   const checked = group.questions.filter(q => state.snapshot.seen[q.uid]).length;
   const next = primary.find(q => !state.snapshot.states[q.family]?.correct) ?? lesson.questions.find(q => q.collection === "mixed"||q.collection==="exam")??primary[0];
-  return <div className="square-lesson" ref={root}>
+  const markRead = actor && !teacher && <Button disabled={!!lens || !state.ready || !!state.snapshot.notesRead} onClick={() => void state.markRead()}>{state.snapshot.notesRead ? t("✓ Конспект прочитан", "✓ Notes marked as read") : t("Отметить прочитанным", "Mark notes as read")}</Button>;
+  return <div className="square-lesson" ref={root} data-structured-notes={study ? "" : undefined}>
     {lesson.draft&&<p className="muted">{t("Не опубликовано · предпросмотр администратора","Unpublished · administrator preview")}</p>}
     <nav className="square-crumbs" aria-label={t("Путь", "Breadcrumb")}><Link href={navigation.directionPath}>{navigation.directionTitle}</Link><span> / </span><Link href={navigation.coursePath}>{navigation.courseTitle}</Link><span> / </span>{navigation.chapterPath?<Link href={navigation.chapterPath}>{navigation.chapterTitle}</Link>:<span>{navigation.chapterTitle}</span>}</nav>
     <header className="square-heading"><h1>{topic.title}</h1><p>{topic.summary}</p><ButtonLink variant="text" href="#practice">{t("Начать с короткой проверки →", "Try the quick check →")}</ButtonLink>{!lesson.draft&&<span className="muted">{t("Без регистрации", "No account needed")}</span>}{teacher&&!lesson.draft && <ButtonLink href={"/teacher/works/new?topic=" + topic.lessonId}>{t("Задание из темы", "Assign from this topic")} →</ButtonLink>}</header>
     <details className="square-topic-mobile"><summary>{navigation.chapterTitle} · {navigation.topics.findIndex(q => q.key === topic.key) + 1} {t("из", "of")} {navigation.topics.length}<span aria-hidden="true">▾</span></summary><nav aria-label={t("Выбрать тему главы", "Choose a chapter topic")}>{navigation.topics.map(q => <Link key={q.key} href={q.path} aria-current={q.key === topic.key ? "page" : undefined}>{q.title}</Link>)}</nav></details>
     <nav className="quadratics-topics" aria-label={t("Темы главы", "Chapter topics")}>{navigation.topics.map(q => <Link key={q.key} href={q.path} aria-current={q.key === topic.key ? "page" : undefined}>{q.title}</Link>)}</nav>
     <nav className="square-nav" ref={sectionNav} aria-label={t("Разделы урока", "Lesson sections")}>{[t("Конспект", "Notes"), t("Примеры", "Examples"), t("Практика", "Practice"), t("Задачи", "Exam-style"), t("Повторение", "Review")].map((label, i) => <a key={sectionIds[i]} href={"#" + sectionIds[i]} aria-current={active === sectionIds[i] ? "location" : undefined}>{label}</a>)}</nav>
-    <section className="card square-reading" id="notes"><MathContent html={lesson.notes} />{actor && !teacher && <Button disabled={!!lens || !state.ready || !!state.snapshot.notesRead} onClick={() => void state.markRead()}>{state.snapshot.notesRead ? t("✓ Конспект прочитан", "✓ Notes marked as read") : t("Отметить прочитанным", "Mark notes as read")}</Button>}</section>
-    <section className="card square-reading" id="examples"><h2>{t("Разобранные примеры", "Worked examples")}</h2>{lesson.examples.map(e => <article className="square-example" key={e.title}><h3>{e.title}</h3><MathContent html={e.question} /><details><summary>{t("Посмотреть решение", "Follow the solution")}</summary><MathContent html={e.solution} /></details></article>)}</section>
+    {study
+      ? <LessonStudy lesson={lesson} study={study} activeId={activeNote}>{markRead}</LessonStudy>
+      : <section className="card square-reading" id="notes"><MathContent html={lesson.notes} />{markRead}</section>}
+    <section className="card square-reading" id="examples"><h2>{t("Разобранные примеры", "Worked examples")}</h2>{study ? <StudyExampleList study={study} examples={lesson.examples} /> : lesson.examples.map(e => <article className="square-example" key={e.title}><h3>{e.title}</h3><MathContent html={e.question} /><details><summary>{t("Посмотреть решение", "Follow the solution")}</summary><MathContent html={e.solution} /></details></article>)}</section>
     <section id="practice" className="card square-practice"><h2>{t("Практика метода", "Practise the method")}</h2>
       <div className="square-question-nav" aria-label={t("Навигация по вопросам", "Question navigation")}>
         <div className="row spread"><div><span className="square-collection">{collectionLabel(current.collection)}</span><p className="square-question-position" aria-live="polite">{t("Вопрос", "Question")} {group.questions.findIndex(q => q.uid === uid) + 1} {t("из", "of")} {group.questions.length}</p></div><div className="row"><Button disabled={index === 0} onClick={() => choose(ordered[index - 1])}>{t("← Назад", "← Previous")}</Button><Button disabled={index === ordered.length - 1} onClick={() => choose(ordered[index + 1])}>{t("Далее →", "Next →")}</Button></div></div>
@@ -108,7 +121,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
       {(!teacher || lens) && <SquareSaveNotice state={state} />}
     </section>
     <section id="challenge" className="card"><h2>{t("Примените метод · авторские экзаменационные задачи", "Apply it · original exam-style problems")}</h2><p>{t("Соединяйте навыки и записывайте рассуждения на бумаге. Проверяются итоговые ответы; сравните метод с критериями.", "Combine skills and show your reasoning on paper. Compare your complete solution with the worked answer and marking guidance.")}</p><div className="square-challenges">{lesson.questions.filter(q => (q.collection === "exam" || q.collection === "mixed") && !q.variantIndex).map(q => <Button key={q.uid} onClick={() => choose(q)}><strong>{questionTitle(q)}</strong><span>{q.marks} {t("баллов за письменное решение →", "written marks →")}</span></Button>)}</div></section>
-    <section id="review" className="card"><h2>{t("Вернитесь к тому, что требует практики", "Come back to what needs practice")}</h2>{!Object.keys(state.snapshot.states).length ? <p>{t("План повторения появится после первой проверки.", "Your review plan starts after your first check.")}</p> : <><p>{queue.length ? t("Навыков для повторения сейчас: " + queue.length + ".", queue.length + (queue.length === 1 ? " skill is" : " skills are") + " ready for review.") : t("Пока всё повторено. Вернитесь после перерыва, чтобы проверить, что запомнилось.", "You are up to date for now. Return after a break to check what you remember.")}</p>{queue.length > 0 && <Button onClick={() => choose(queue[0])}>{t("Повторить на новом варианте →", "Review with a fresh variant →")}</Button>}<p className="muted">{t("После верного ответа без помощи: через 1, 3, 7 и 14 дней. Повторы в тот же день не увеличивают интервал. Ошибки возвращаются сегодня; ответы с помощью — раньше.", "After a correct answer without help: 1, 3, 7, then 14 days. Same-day retries do not advance the interval. Mistakes return today; answers with help return sooner.")}</p></>}</section>
+    <section id="review" className="card"><h2>{t("Вернитесь к тому, что требует практики", "Come back to what needs practice")}</h2>{study && <ButtonLink href={topic.path + "?view=revision"}>Quick revision sheet (A4)</ButtonLink>}{!Object.keys(state.snapshot.states).length ? <p>{t("План повторения появится после первой проверки.", "Your review plan starts after your first check.")}</p> : <><p>{queue.length ? t("Навыков для повторения сейчас: " + queue.length + ".", queue.length + (queue.length === 1 ? " skill is" : " skills are") + " ready for review.") : t("Пока всё повторено. Вернитесь после перерыва, чтобы проверить, что запомнилось.", "You are up to date for now. Return after a break to check what you remember.")}</p>{queue.length > 0 && <Button onClick={() => choose(queue[0])}>{t("Повторить на новом варианте →", "Review with a fresh variant →")}</Button>}<p className="muted">{t("После верного ответа без помощи: через 1, 3, 7 и 14 дней. Повторы в тот же день не увеличивают интервал. Ошибки возвращаются сегодня; ответы с помощью — раньше.", "After a correct answer without help: 1, 3, 7, then 14 days. Same-day retries do not advance the interval. Mistakes return today; answers with help return sooner.")}</p></>}</section>
     {topic.packageKey==="9709-p1-quadratics"&&<p><Link href={topic.path+"?practice=previous"}>Earlier practice and saved answers</Link></p>}
     {["9709-p1-functions","9709-p1-coordinate-geometry","9709-p1-circular-measure","9709-p1-trigonometry","9709-p1-series","9709-p1-binomial-expansion","9709-p1-differentiation","9709-p1-integration","9709-s1-representation","9709-s1-central-tendency","9709-s1-variation","9709-s1-probability","9709-s1-counting","9709-s1-distributions","9709-s1-binomial-geometric","9709-s1-normal"].includes(topic.packageKey??"")&&<p><Link href={topic.path+"?view=legacy"}>Question bank and saved work</Link></p>}
     {teacher && <LessonPresentations lessonId={topic.lessonId} />}

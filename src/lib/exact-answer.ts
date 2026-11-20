@@ -141,6 +141,25 @@ function setKey(raw: string) {
   }
   return JSON.stringify(merged.map(i => [i.low.key, i.high.key, i.lc, i.hc]));
 }
+// Read natural lists of individual roots without changing interval syntax.
+function statedValues(raw: string) {
+  const connector = /\b(?:or|and)\b/gi;
+  const signPattern = /±|\+\/-|\\pm/;
+  if (!raw.includes("=") && !connector.test(raw) && !signPattern.test(raw)) return raw;
+  let list = raw.trim();
+  if (list.startsWith("{") && list.endsWith("}")) list = list.slice(1, -1);
+  let variable: string | undefined;
+  const values = split(list.replace(connector, ","), ",").flatMap(part => {
+    const label = /^\s*([a-z])\s*=\s*/i.exec(part)?.[1]?.toLowerCase();
+    if (label && variable && label !== variable) fail();
+    if (label) variable = label;
+    const value = part.replace(/^\s*[a-z]\s*=\s*/i, "");
+    const sign = signPattern.exec(value)?.[0];
+    return sign ? [value.replace(sign, "+"), value.replace(sign, "-")] : [value];
+  });
+  return "{" + values.join(",") + "}";
+}
+
 function pairsKey(raw: string, dimension = 2) {
   if (raw.length > 400) fail();
   if (/^(?:empty|none|∅|\{\s*\})$/i.test(raw.trim())) return "[]";
@@ -187,7 +206,7 @@ export function checkExact(field: ExactField, input: string): boolean {
     for(const value of split(s,",")){const p=polynomialKey(value);if(p.length && (p.length!==1 || p[0][0]!==0 || p[0][1].length!==1 || p[0][1][0][0]!==1 || p[0][1][0][2]!=="1"))return false;}
     return setKey(input)===setKey(expected);
   }
-  if (field.type === "set") return setKey(input) === setKey(expected);
+  if (field.type === "set") return setKey(statedValues(input)) === setKey(expected);
   if (field.type === "pairs") return pairsKey(input,field.dimension) === pairsKey(expected,field.dimension);
   if (field.type === "equation") return proportional(equation(input,field.variables??[]),equation(expected,field.variables??[]));
   if (field.type === "factors") {
