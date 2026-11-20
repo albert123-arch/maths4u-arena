@@ -787,5 +787,337 @@
       "checks": "<ul><li>Identify which function acts first.</li><li>Check endpoints and both branches of an inequality.</li><li>Keep every exclusion alongside the simplified rule.</li></ul>",
       "examTip": "<p>Show the intermediate condition, such as \\(g(x)\\ge7\\), before solving for \\(x\\). In a question about the full stated domain, one forbidden output is enough to show that the whole domain cannot work.</p>"
     }
+  },
+  "orig_functions_restricted_inverse": {
+    "updatedOn": "2026-11-20",
+    "description": "Choose the correct branch of a quadratic inverse. Find its domain and range from the stated restriction, including open endpoints, for Cambridge 9709 Pure 1.",
+    "sections": [
+      {
+        "id": "cut-at-the-vertex",
+        "title": "Where can I cut the parabola to make it one–one?",
+        "label": "Choose a one–one branch",
+        "level": "core",
+        "minutes": 5,
+        "intro": "<p>Return to \\(q(x)=(x-1)^2+2\\) from the first lesson. The horizontal line \\(y=6\\) meets the full parabola at \\(x=-1\\) and \\(x=3\\). If we keep \\(x\\ge1\\), every attained output comes from a single input.</p><p><img src=\"/assets/original/functions/one-one-branch.svg\" width=\"480\" height=\"280\" alt=\"Both branches of the full parabola meet y = 6. Keeping x greater than or equal to 1 leaves the solid branch and just one point at that level.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>On either side of the vertex, the graph moves in one direction. For \\(a(x-h)^2+k\\) with \\(a\\ne0\\), the widest domain of the form \\(x\\ge c\\) that is one–one is \\(x\\ge h\\). The widest of the form \\(x\\le c\\) is \\(x\\le h\\). Both include the vertex.</p>"
+          },
+          {"kind": "example", "index": 0},
+          {
+            "kind": "tip",
+            "html": "<p>For the <strong>smallest</strong> cutoff in \\(x\\ge c\\), or the <strong>largest</strong> cutoff in \\(x\\le c\\), find the \\(x\\)-coordinate of the vertex. If the question gives a narrower domain, keep that domain for the rest of the calculation.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "smallest-right-cutoff",
+            "field": {"key": "c", "label": "Smallest value of c", "type": "number", "expected": "-2"},
+            "prompt": "<p>Let \\(w(x)=8-(x+2)^2\\) for \\(x\\ge c\\). Give the smallest \\(c\\) for which \\(w\\) is one–one.</p>",
+            "hint": "<p>Find the input that makes the square zero. That is where the right branch begins.</p>",
+            "solution": "<p>The square is zero at \\(x=-2\\). The widest right-hand domain is \\(x\\ge-2\\), so \\(c=-2\\).</p>",
+            "retry": [
+              {"answer": "2", "feedback": "<p>\\(x+2\\) is zero at \\(-2\\). The cutoff \\(2\\) works, but it leaves out more of the right branch than needed.</p>"},
+              {"answer": "8", "feedback": "<p>\\(8\\) is the vertex's output. A cutoff is an input. Solve \\(x+2=0\\).</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "largest-left-cutoff",
+            "field": {"key": "c", "label": "Largest value of c", "type": "number", "expected": "4"},
+            "prompt": "<p>Let \\(s(x)=3(x-4)^2+6\\) for \\(x\\le c\\). Give the largest \\(c\\) for which \\(s\\) is one–one.</p>",
+            "hint": "<p>Keep the whole left branch, up to and including the vertex.</p>",
+            "solution": "<p>The vertex has \\(x\\)-coordinate \\(4\\). Taking \\(c=4\\) includes the complete left branch. Any larger \\(c\\) includes points on both sides and repeats an output.</p>",
+            "retry": [
+              {"answer": "-4", "feedback": "<p>Solve \\(x-4=0\\). The value \\(-4\\) gives a one–one restriction, but the left branch continues further.</p>"},
+              {"answer": "6", "feedback": "<p>\\(6\\) is the output at the vertex. The cutoff comes from the input that makes \\(x-4\\) zero.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "range-of-the-restriction",
+        "title": "Which outputs does the chosen piece reach?",
+        "label": "Read the restricted range",
+        "level": "core",
+        "minutes": 6,
+        "intro": "<p>Start with \\(q(x)=(x-1)^2+2\\). Keep only \\(-2\\le x&lt;0\\), a piece to the left of the vertex. The filled point gives an attained output, and the hollow point marks an output the piece approaches.</p><p><img src=\"/assets/original/functions/restricted-inverse-branch-bounds.svg\" width=\"480\" height=\"280\" alt=\"The kept arc runs from the filled point (−2, 11) to the open point (0, 3). The vertex (1, 2) lies on the discarded part of the parabola.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>On a single branch, find the output at each input boundary. Order the output bounds from smaller to larger, and carry each endpoint's inclusion with it. A decreasing branch reverses the order of the bounds.</p>"
+          },
+          {"kind": "example", "index": 1},
+          {
+            "kind": "mistake",
+            "html": "<p>The minimum of the full parabola is \\(2\\) at \\(x=1\\). The chosen piece stops before \\(x=0\\), so the vertex's output is outside the restricted range.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "range-of-a-bounded-branch",
+            "field": {"key": "range", "label": "Range of r", "type": "set", "expected": "(6,22]"},
+            "prompt": "<p>Find the range of \\(r(x)=4+2(x-2)^2\\) on \\(3&lt;x\\le5\\). Give an interval or an inequality in \\(r(x)\\) or \\(y\\).</p>",
+            "hint": "<p>Compare the limiting output at \\(3\\) with the output at \\(5\\). Which input is included?</p>",
+            "solution": "<p>The increasing branch approaches \\(6\\) as \\(x\\) approaches \\(3\\) from above, and it reaches \\(22\\) at \\(x=5\\). The range is \\(6&lt;r(x)\\le22\\), or \\((6,22]\\).</p>",
+            "retry": [
+              {"answer": "[6,22]", "feedback": "<p>The smaller output \\(6\\) would require \\(x=3\\) on this branch. The domain excludes that input.</p>"},
+              {"answer": "(3,5]", "feedback": "<p>Those are the allowed inputs. Find the smallest and largest outputs of the expression on that interval.</p>"},
+              {"answer": "[4,inf)", "feedback": "<p>This is the range of the full parabola. Use only the piece from just after \\(3\\) to \\(5\\), including \\(5\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "choose-the-inverse-sign",
+        "title": "Which sign belongs in the inverse formula?",
+        "label": "Choose the sign before renaming",
+        "level": "core",
+        "minutes": 8,
+        "intro": "<p>Write the original equation as \\(y=a(x-h)^2+k\\). Rearranging gives \\((x-h)^2=\\dfrac{y-k}{a}\\). The sign of \\(x-h\\) on the chosen domain tells you which square-root branch to take.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<ul><li>On \\(x\\ge h\\), \\(x-h\\ge0\\), so use the plus sign before the square root.</li><li>On \\(x\\le h\\), \\(x-h\\le0\\), so use the minus sign before the square root.</li></ul><p>Choose the sign while \\(x\\) still means the original input. Then rename the original output as the input of the inverse.</p>"
+          },
+          {"kind": "example", "index": 2},
+          {"kind": "example", "index": 3},
+          {
+            "kind": "mistake",
+            "html": "<p>A negative coefficient in front of the square changes the direction of the parabola and the radicand. To choose the sign before the root, check whether the original input lies to the left or right of the vertex.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "right-branch-exact-inverse-value",
+            "field": {"key": "value", "label": "Exact value of r⁻¹(0)", "type": "number", "expected": "3+sqrt(5)"},
+            "prompt": "<p>Let \\(r(x)=10-2(x-3)^2\\) for \\(x\\ge4\\). Use the allowed branch to give the exact value of \\(r^{-1}(0)\\).</p>",
+            "hint": "<p>Solve \\(10-2(x-3)^2=0\\). Which sign for \\(x-3\\) gives an input of at least \\(4\\)?</p>",
+            "solution": "<p>\\((x-3)^2=5\\). The stated domain gives \\(x-3\\ge1\\), so \\(r^{-1}(0)=3+\\sqrt5\\).</p>",
+            "retry": [
+              {"answer": "3-sqrt(5)", "feedback": "<p>This input lies to the left of \\(3\\). The original function takes inputs from \\(4\\) upwards, so use the other root.</p>"},
+              {"answer": "sqrt(5)", "feedback": "<p>You found \\(x-3\\). Add \\(3\\) to get the original input \\(x\\).</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "left-branch-exact-inverse-value",
+            "field": {"key": "value", "label": "Exact value of m⁻¹(10)", "type": "number", "expected": "-1-sqrt(3)"},
+            "prompt": "<p>Let \\(m(x)=4(x+1)^2-2\\) for \\(x\\le-2\\). Find \\(m^{-1}(10)\\) exactly.</p>",
+            "hint": "<p>After finding \\((x+1)^2\\), choose the sign that keeps \\(x\\le-2\\).</p>",
+            "solution": "<p>\\(4(x+1)^2-2=10\\) gives \\((x+1)^2=3\\). Since \\(x+1\\le-1\\), take \\(x+1=-\\sqrt3\\) to obtain \\(m^{-1}(10)=-1-\\sqrt3\\).</p>",
+            "retry": [
+              {"answer": "-1+sqrt(3)", "feedback": "<p>The positive root would put the input to the right of the vertex. The stated domain lies entirely on the left.</p>"},
+              {"answer": "-sqrt(3)", "feedback": "<p>This is the value of \\(x+1\\). Subtract \\(1\\) to give \\(x\\).</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "swap-domain-and-range",
+        "title": "Which interval belongs to the inverse?",
+        "label": "Swap the domain and range",
+        "level": "core",
+        "minutes": 7,
+        "intro": "<p>Take \\(q(x)=(x-1)^2+2\\) on \\([-2,0)\\). Its inverse takes the original outputs as inputs, so the two intervals swap.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Function</th><th scope=\"col\">Domain</th><th scope=\"col\">Range</th></tr></thead><tbody><tr><th scope=\"row\">\\(q\\)</th><td>\\([-2,0)\\)</td><td>\\((3,11]\\)</td></tr><tr><th scope=\"row\">\\(q^{-1}\\)</th><td>\\((3,11]\\)</td><td>\\([-2,0)\\)</td></tr></tbody></table></div>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find the inverse domain from the <strong>actual range</strong> of the original function. The square-root expression may be defined for more numbers. To reverse a restricted function, keep only the outputs that function actually reached.</p>"
+          },
+          {"kind": "example", "index": 4},
+          {
+            "kind": "tip",
+            "html": "<p>Write the formula, the permitted inverse inputs and the inverse outputs as separate answers. Use \\(x\\) for inverse inputs and \\(y\\) for inverse outputs. Carry the open and closed endpoints with the intervals.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "actual-domain-of-the-inverse",
+            "field": {"key": "domain", "label": "Domain of the inverse", "type": "set", "expected": "(0,8]"},
+            "prompt": "<p>Let \\(w(x)=(x+1)^2-1\\) for \\(-4\\le x&lt;-2\\). Find the complete domain of \\(w^{-1}\\).</p>",
+            "hint": "<p>Use the outputs of the decreasing original branch. Check which endpoint is attained.</p>",
+            "solution": "<p>\\(w(-4)=8\\) is attained. As \\(x\\) approaches \\(-2\\) from below, \\(w(x)\\) approaches \\(0\\). The inverse domain is \\(0&lt;x\\le8\\), or \\((0,8]\\).</p>",
+            "retry": [
+              {"answer": "[-1,inf)", "feedback": "<p>The root in the inverse formula can be evaluated for \\(x\\ge-1\\). Keep only the outputs of \\(w\\) on the stated piece.</p>"},
+              {"answer": "[-4,-2)", "feedback": "<p>This is the original domain. Find the original outputs to get the inverse domain.</p>"},
+              {"answer": "[0,8]", "feedback": "<p>The output \\(0\\) would require the excluded input \\(-2\\) on this branch. The lower endpoint of the inverse domain is open.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "range-of-the-restricted-inverse",
+            "field": {"key": "range", "label": "Range of the inverse", "type": "set", "expected": "[-4,-2)"},
+            "prompt": "<p>For the same \\(w(x)=(x+1)^2-1\\) on \\(-4\\le x&lt;-2\\), give the range of \\(w^{-1}\\) as an interval or an inequality in \\(y\\).</p>",
+            "hint": "<p>Which original inputs can the inverse return?</p>",
+            "solution": "<p>The inverse returns the original inputs. Its range is \\(-4\\le y&lt;-2\\), or \\([-4,-2)\\).</p>",
+            "retry": [
+              {"answer": "(0,8]", "feedback": "<p>Those values go into the inverse. The inverse returns the original inputs from \\(-4\\) up to \\(-2\\).</p>"},
+              {"answer": "[-4,-2]", "feedback": "<p>The original function never takes \\(-2\\) on this domain. The inverse cannot return it.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "reverse-a-square-root",
+        "title": "What if the original rule contains a square root?",
+        "label": "Reverse a square-root rule",
+        "level": "core",
+        "minutes": 7,
+        "intro": "<p>For \\(p(x)=5-\\sqrt{x+1}\\) on \\(-1&lt;x\\le8\\), the output approaches \\(5\\) at the open end and reaches \\(2\\) at the closed end. The inverse will accept exactly those outputs.</p><p><img src=\"/assets/original/functions/restricted-inverse-root-bounds.svg\" width=\"480\" height=\"260\" alt=\"The decreasing square-root curve has an open point at (−1, 5) and a filled point at (8, 2). Its outputs include 2 and exclude 5.\"></p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Isolate the square root before squaring. The isolated expression must have the same sign as the root. Keep the full range of the original function, including any restriction at the other end.</p>"
+          },
+          {"kind": "example", "index": 5},
+          {
+            "kind": "mistake",
+            "html": "<p>After squaring, the polynomial expression can be evaluated at \\(x=6\\), where it gives \\(0\\). But \\(p(0)=4\\), so \\(6\\) cannot be an input to the inverse. The interval \\(2\\le x&lt;5\\) is part of the inverse.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "inverse-of-a-root-formula",
+            "field": {"key": "formula", "label": "Right-hand side of the inverse in x", "type": "polynomial", "variables": ["x"], "expected": "x^2+4*x+1"},
+            "prompt": "<p>Let \\(g(x)=\\sqrt{x+3}-2\\) for \\(-3&lt;x\\le13\\). Enter the expression on the right-hand side of the equation for \\(g^{-1}(x)\\). Brackets or expanded form are both accepted.</p>",
+            "hint": "<p>Add \\(2\\) to both sides of \\(y=\\sqrt{x+3}-2\\) before you square.</p>",
+            "solution": "<p>\\(y+2=\\sqrt{x+3}\\), so \\(x=(y+2)^2-3\\). Hence \\(g^{-1}(x)=(x+2)^2-3=x^2+4x+1\\).</p>",
+            "retry": [
+              {"answer": "(x-2)^2-3", "feedback": "<p>Isolate the root by adding \\(2\\) to the output. The squared term is \\((x+2)^2\\) after renaming the inverse input.</p>"},
+              {"answer": "(x+2)^2+3", "feedback": "<p>After squaring, \\(x+3=(y+2)^2\\). Subtract \\(3\\) to make the old input the subject.</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "inverse-of-a-root-domain",
+            "field": {"key": "domain", "label": "Complete inverse domain", "type": "set", "expected": "(-2,2]"},
+            "prompt": "<p>For the same \\(g(x)=\\sqrt{x+3}-2\\) on \\(-3&lt;x\\le13\\), give the complete domain of \\(g^{-1}\\).</p>",
+            "hint": "<p>First find the range of \\(\\sqrt{x+3}\\) on the stated interval. Then subtract \\(2\\) from those outputs.</p>",
+            "solution": "<p>The square root takes values above \\(0\\) up to and including \\(4\\). Subtracting \\(2\\) gives the inverse domain \\(-2&lt;x\\le2\\), or \\((-2,2]\\).</p>",
+            "retry": [
+              {"answer": "[-2,2]", "feedback": "<p>The output \\(-2\\) would require the input \\(-3\\). That endpoint was excluded, so \\(-2\\) stays out of the inverse domain.</p>"},
+              {"answer": "(-2,inf)", "feedback": "<p>The original input stops at \\(13\\), where \\(g(13)=2\\). Keep the upper endpoint of the original range.</p>"},
+              {"answer": "(-inf,inf)", "feedback": "<p>The inverse expression is a polynomial. Its allowed inputs still come from the original square-root function's range.</p>"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "same-output-another-input",
+        "title": "Can another input supply an excluded endpoint's output?",
+        "label": "Check whether a bound is still attained",
+        "level": "extension",
+        "minutes": 6,
+        "intro": "<p>When a restriction crosses the vertex, two different inputs may give the same output. An open endpoint removes an output only if no remaining input gives that value.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>When finding the range, check both input boundaries and the vertex if it is included. For a candidate endpoint of the range, ask whether any allowed input reaches it. Before inverting, check one–one separately.</p>"
+          },
+          {"kind": "example", "index": 6},
+          {
+            "kind": "check",
+            "id": "shared-output-still-reached",
+            "field": {"key": "range", "label": "Range of h", "type": "set", "expected": "[2,11]"},
+            "prompt": "<p>Let \\(h(x)=2+(x+1)^2\\) for \\(-4&lt;x\\le2\\). Find its range.</p>",
+            "hint": "<p>The vertex lies in the domain. Compare the output at \\(x=2\\) with the limiting output at \\(x=-4\\).</p>",
+            "solution": "<p>The vertex at \\(x=-1\\) gives \\(2\\). The output \\(11\\) is reached at \\(x=2\\), even though the other input that would give it, \\(-4\\), is excluded. The range is \\([2,11]\\).</p>",
+            "retry": [
+              {"answer": "[2,11)", "feedback": "<p>\\(x=-4\\) is open, but \\(x=2\\) is closed and gives \\(11\\). An output only needs one allowed input to be attained.</p>"},
+              {"answer": "(2,11]", "feedback": "<p>The vertex \\(x=-1\\) lies inside the domain. Include its output \\(2\\).</p>"}
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "shared-output-after-restriction",
+            "field": {"key": "domain", "label": "Domain of the inverse of the left piece", "type": "set", "expected": "[2,11)"},
+            "prompt": "<p>Now keep only \\(-4&lt;x\\le-1\\) for \\(h(x)=2+(x+1)^2\\). Give the domain of the inverse of this left piece.</p>",
+            "hint": "<p>On this piece, check the vertex and the open endpoint at \\(-4\\). The input \\(2\\) is now outside the restriction.</p>",
+            "solution": "<p>The vertex still gives \\(2\\). The value \\(11\\) is now only a limit as \\(x\\) approaches \\(-4\\). The left piece is one–one and its inverse has domain \\(2\\le x&lt;11\\), or \\([2,11)\\).</p>",
+            "retry": [
+              {"answer": "[2,11]", "feedback": "<p>The included input \\(2\\) has now been removed. The only remaining boundary that would give \\(11\\) is the excluded input \\(-4\\).</p>"}
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find the cutoff for each full branch",
+        "question": "<p>For \\(q(x)=(x-1)^2+2\\), find the smallest cutoff \\(c\\) for a one–one domain \\(x\\ge c\\), and the largest cutoff for a one–one domain \\(x\\le c\\).</p>",
+        "solution": [
+          "<p>The vertex has \\(x=1\\). On \\(x\\ge1\\), the square \\((x-1)^2\\) increases with \\(x\\), so no two allowed inputs give the same output.</p>",
+          "<p>If \\(c&lt;1\\), then both \\(c\\) and \\(2-c\\) lie in \\(x\\ge c\\) and give the same output. Thus the smallest right-hand cutoff is \\(1\\).</p>",
+          "<p>On \\(x\\le1\\), the outputs decrease as \\(x\\) moves towards the vertex. If \\(c&gt;1\\), the left-hand domain includes both \\(c\\) and \\(2-c\\). Its largest one–one cutoff is therefore also \\(1\\).</p>"
+        ]
+      },
+      {
+        "title": "Read the range away from the vertex",
+        "question": "<p>Find the range of \\(q(x)=(x-1)^2+2\\) on \\(-2\\le x&lt;0\\).</p>",
+        "solution": [
+          "<p>As \\(x\\) moves from \\(-2\\) towards \\(0\\), its distance from the vertex \\(x=1\\) decreases. The expression decreases along this piece.</p>",
+          "<p>At \\(-2\\), the output is \\(q(-2)=(-3)^2+2=11\\), which is included. At the right boundary the expression approaches \\((-1)^2+2=3\\), which is excluded.</p>",
+          "<p>The curve takes every output in between. Give \\(3&lt;q(x)\\le11\\), \\(3&lt;y\\le11\\) or \\((3,11]\\).</p>"
+        ]
+      },
+      {
+        "title": "Choose the left-hand square-root branch",
+        "question": "<p>Find the inverse of \\(q(x)=(x-1)^2+2\\), \\(-2\\le x&lt;0\\), and check what it does to the output \\(6\\).</p>",
+        "solution": [
+          "<p>From \\(y=(x-1)^2+2\\), get \\((x-1)^2=y-2\\). The original inputs are all below \\(1\\), so \\(x-1\\) is negative.</p>",
+          "<p>Take \\(x-1=-\\sqrt{y-2}\\). Rename the old output as the input of the inverse.</p>\\[q^{-1}(x)=1-\\sqrt{x-2},\\qquad 3&lt;x\\le11.\\]",
+          "<p>The original input \\(-1\\) gives \\(6\\). Check that \\(q^{-1}(6)=1-\\sqrt4=-1\\). The other root would give \\(3\\), which is outside the original domain.</p>"
+        ]
+      },
+      {
+        "title": "Use the plus sign on a downward parabola",
+        "question": "<p>Find the inverse of \\(s(x)=12-3(x+2)^2\\) on \\(x\\ge-1\\).</p>",
+        "solution": [
+          "<p>The vertex lies at \\(x=-2\\). The permitted inputs lie to its right. The selected branch decreases from \\(s(-1)=9\\), so its range is \\((-\\infty,9]\\).</p>",
+          "<p>Rearrange \\(y=12-3(x+2)^2\\) to get \\((x+2)^2=\\dfrac{12-y}{3}\\). On \\(x\\ge-1\\), \\(x+2\\) is positive, so choose the plus sign.</p>",
+          "<p>The inverse is \\(s^{-1}(x)=-2+\\sqrt{\\dfrac{12-x}{3}}\\) for \\(x\\le9\\). Check that \\(s(0)=0\\) and that the inverse returns \\(0\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep both bounds of a short branch",
+        "question": "<p>Find the inverse of \\(m(x)=7-2(x-1)^2\\) on \\(-2&lt;x\\le0\\), and state its domain and range.</p>",
+        "solution": [
+          "<p>On the selected left branch of the downward parabola, \\(m\\) increases. Its output approaches \\(-11\\) as \\(x\\) approaches \\(-2\\), and reaches \\(5\\) at \\(x=0\\). Its range is \\((-11,5]\\).</p>",
+          "<p>Since \\(x&lt;1\\), the rearrangement gives \\(x-1=-\\sqrt{\\dfrac{7-y}{2}}\\). Thus the inverse rule is \\(m^{-1}(x)=1-\\sqrt{\\dfrac{7-x}{2}}\\).</p>",
+          "<p>The inverse domain is \\((-11,5]\\), and its range is \\((-2,0]\\). The radical alone allows every \\(x\\le7\\), but the actual original range supplies both inverse input bounds.</p>"
+        ]
+      },
+      {
+        "title": "Square only after isolating the root",
+        "question": "<p>Invert \\(p(x)=5-\\sqrt{x+1}\\), \\(-1&lt;x\\le8\\), and give the inverse domain and range.</p>",
+        "solution": [
+          "<p>The square root takes values from just above \\(0\\) to \\(3\\) inclusive. Subtract them from \\(5\\): \\(2\\le y&lt;5\\).</p>",
+          "<p>Write \\(5-y=\\sqrt{x+1}\\). On the original range, \\(5-y\\) is positive. Squaring gives \\(x=(5-y)^2-1\\).</p>",
+          "<p>So \\(p^{-1}(x)=(5-x)^2-1\\) for \\(2\\le x&lt;5\\). Its range is \\(-1&lt;y\\le8\\). The included point checks out because \\(p(8)=2\\) and \\(p^{-1}(2)=8\\).</p>"
+        ]
+      },
+      {
+        "title": "One boundary is open but its output is included",
+        "question": "<p>Find the range of \\(u(x)=3+(x-1)^2\\) on \\(-1&lt;x\\le3\\). Then give the inverse domain after restricting to \\(1\\le x\\le3\\).</p>",
+        "solution": [
+          "<p>The vertex at \\(x=1\\) gives \\(3\\). The output \\(7\\) comes from the included input \\(3\\), even though the corresponding left-hand boundary \\(-1\\) is excluded. The range is \\([3,7]\\).</p>",
+          "<p>The full stated interval is many–one. For example, \\(u(0)=u(2)=4\\). Keep \\([1,3]\\) to get a one–one right branch.</p>",
+          "<p>The selected right branch still reaches every output from \\(3\\) to \\(7\\), inclusive. That makes \\([3,7]\\) the domain of its inverse.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {"term": "Branch", "definition": "<p>One side of a parabola, on which its outputs move in one direction.</p>"},
+      {"term": "Cutoff", "definition": "<p>A value of \\(x\\) that bounds a permitted part of the graph.</p>"},
+      {"term": "Attained output", "definition": "<p>A value reached at an input inside the stated domain.</p>"},
+      {"term": "Radicand", "definition": "<p>The expression inside the square root.</p>"},
+      {"term": "Inverse domain", "definition": "<p>The original range. These outputs become the allowed inputs of the inverse.</p>"}
+    ],
+    "related": [
+      {"title": "Functions, domain, range and inverses", "href": "/courses/maths4u-9709-p1/topics/orig_functions_inverse"},
+      {"title": "Graphs of functions and inverses", "href": "/courses/maths4u-9709-p1/topics/orig_functions_inverse_graphs"}
+    ],
+    "revision": {
+      "body": "<h2>Choose a branch</h2><p>For \\(a(x-h)^2+k\\) with \\(a\\ne0\\), a full one–one branch has domain \\(x\\le h\\) or \\(x\\ge h\\). Use the actual restriction given.</p><h2>Work out which outputs are attained</h2><p>For \\(q(x)=(x-1)^2+2\\) on \\(-2\\le x&lt;0\\), the output \\(11\\) is included and \\(3\\) is excluded.</p><p><img src=\"/assets/original/functions/restricted-inverse-branch-bounds.svg\" width=\"480\" height=\"280\" alt=\"The kept arc goes from the closed point (−2, 11) to the open point (0, 3).\"></p><h2>Choose the sign and swap the intervals</h2><p>Solve for \\(x-h\\). Use the minus sign on the left of \\(h\\) and the plus sign on the right. Then rename the old output as the inverse input.</p>\\[q^{-1}(x)=1-\\sqrt{x-2},\\qquad 3&lt;x\\le11.\\]<p>The inverse domain is \\((3,11]\\). Its range is \\([-2,0)\\). For a square-root rule, isolate the root before squaring and keep the original output interval as the inverse domain.</p>",
+      "checks": "<ul><li>Confirm that the chosen domain is one–one.</li><li>Choose the sign from the side of the vertex.</li><li>Check both bounds and whether they are reached.</li></ul>",
+      "examTip": "<p>Check a known pair. If \\(q(-1)=6\\), your inverse must give \\(q^{-1}(6)=-1\\). Give the inverse domain even when the formula's radical or polynomial is defined on a larger set.</p>"
+    }
   }
 }

@@ -16,6 +16,7 @@ import teaching from '../content/original/9709-p1/functions-study.json';
 const p=contentPackage('9709-p1-functions');
 const firstLesson = "orig_functions_inverse";
 const compositeLesson = "orig_functions_composite";
+const restrictedLesson = "orig_functions_restricted_inverse";
 test('Functions reuses the five existing lessons and preserves all 200 authored written records',async()=>{
   assert.deepEqual(p.lessons.map(l=>l.id),['orig_functions_inverse','orig_functions_composite','orig_functions_restricted_inverse','orig_functions_inverse_graphs','orig_functions_transformations']);
   assert.equal(p.questions.length,240);assert.equal(p.questions.filter(q=>q.variant_index===0).length,50);
@@ -139,6 +140,43 @@ test("composite checks distinguish reversed operations, missing branches and ori
     assert.match(result.feedback,hint);
   }
   assert.equal(grade("composite-domain-both-conditions","2 < x <=").status,"format");
+});
+
+test("restricted inverse checks require the correct exact branch and attained endpoints", () => {
+  const grade = (id: string, answer: string) => gradeStudyCheck(restrictedLesson,id,answer)!;
+  for (const [id,answers] of [
+    ["smallest-right-cutoff", ["−2","c = −2"]],
+    ["largest-left-cutoff", ["4","c = 4"]],
+    ["range-of-a-bounded-branch", ["6 < r(x) ≤ 22","(6,22]"]],
+    ["right-branch-exact-inverse-value", ["3 + √5","3+sqrt(20)/2"]],
+    ["left-branch-exact-inverse-value", ["−1 − √3","-1-sqrt(12)/2"]],
+    ["actual-domain-of-the-inverse", ["0 < x ≤ 8","(0,8]"]],
+    ["range-of-the-restricted-inverse", ["−4 ≤ y < −2","[-4,-2)"]],
+    ["inverse-of-a-root-formula", ["(x+2)^2−3","x²+4x+1"]],
+    ["inverse-of-a-root-domain", ["−2 < x ≤ 2","(−2,2]"]],
+    ["shared-output-still-reached", ["2 ≤ h(x) ≤ 11","[2,11]"]],
+    ["shared-output-after-restriction", ["2 ≤ x < 11","[2,11)"]],
+  ] as const) {
+    for (const answer of answers) assert.equal(grade(id,answer).status,"correct",id + " / " + answer);
+  }
+  for (const [id,answer,hint] of [
+    ["smallest-right-cutoff","c=2",/more of the right branch/],
+    ["right-branch-exact-inverse-value","3−√5",/use the other root/],
+    ["left-branch-exact-inverse-value","−1+√3",/on the left/],
+    ["actual-domain-of-the-inverse","x ≥ −1",/only the outputs/],
+    ["actual-domain-of-the-inverse","[0,8]",/endpoint.*open/],
+    ["range-of-the-restricted-inverse","−4 ≤ x < −2",/output values/],
+    ["inverse-of-a-root-domain","−2 < x",/upper endpoint/],
+    ["shared-output-still-reached","[2,11)",/closed and gives/],
+    ["shared-output-after-restriction","[2,11]",/excluded input/],
+  ] as const) {
+    const result = grade(id,answer);
+    assert.equal(result.status,"retry",id);
+    assert.match(result.feedback,hint);
+  }
+  assert.equal(grade("right-branch-exact-inverse-value","5.236").status,"retry");
+  assert.equal(grade("actual-domain-of-the-inverse","0 < x <=").status,"format");
+  assert.equal(gradeStudyCheck(firstLesson,"right-branch-exact-inverse-value","3+√5"),undefined);
 });
 
 test('fractional answers accept equivalent whole ratios and interval checks respect both endpoints',()=>{

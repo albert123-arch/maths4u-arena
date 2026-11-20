@@ -9,6 +9,7 @@ const chapterPath = coursePath + '/chapters/functions';
 const lessonPath = coursePath + '/topics/orig_functions_inverse';
 const lessonUrl = base + lessonPath;
 const compositePath = coursePath + '/topics/orig_functions_composite';
+const restrictedPath = coursePath + '/topics/orig_functions_restricted_inverse';
 test.beforeAll(async()=>{await fs.mkdir(out,{recursive:true});});
 test('Functions: all five public lessons at desktop and mobile widths',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -62,7 +63,7 @@ test('the new Functions lesson and canonical chapter are readable without JavaSc
       expect.objectContaining({'@type':['WebPage','LearningResource'],url:'https://arena.maths4u.sbs'+lessonPath}),
     ]));
     const sitemap = await (await ctx.request.get('/sitemap.xml')).text();
-    for (const path of [chapterPath, lessonPath, compositePath]) {
+    for (const path of [chapterPath, lessonPath, compositePath, restrictedPath]) {
       expect(sitemap.split('<loc>https://arena.maths4u.sbs' + path + '</loc>')).toHaveLength(2);
     }
     expect(sitemap).not.toContain('?view=revision');
@@ -71,6 +72,12 @@ test('the new Functions lesson and canonical chapter are readable without JavaSc
     await expect(page.locator('head link[rel=canonical]')).toHaveAttribute('href','https://arena.maths4u.sbs'+compositePath);
     await expect(page.locator('#which-function-first header img')).toBeVisible();
     await expect(page.locator('#keep-original-exclusions article ol > li:visible')).toHaveCount(3);
+    await page.goto(restrictedPath);
+    await expect(page).toHaveTitle('Ranges, restrictions and inverse branches | 9709 Pure 1 | Maths4U');
+    await expect(page.locator('head link[rel=canonical]')).toHaveAttribute('href','https://arena.maths4u.sbs'+restrictedPath);
+    await expect(page.locator('#range-of-the-restriction header img')).toBeVisible();
+    await expect(page.locator('#swap-domain-and-range table tbody tr')).toHaveCount(2);
+    await expect(page.locator('#choose-the-inverse-sign article').first().locator('ol > li:visible')).toHaveCount(3);
   } finally {
     await ctx.close();
   }
@@ -195,6 +202,61 @@ test('composite lesson checks both domains and offers a fresh practice variant',
   await page.reload();
   await expect(fg).toHaveValue('3-2x^2');
   await expect(gf).toHaveValue('(5-2x)^2+1');
+});
+
+test('restricted inverse checks the branch, exact output bounds and fresh practice', async ({page}) => {
+  await page.setViewportSize({width:390,height:860});
+  await page.emulateMedia({colorScheme:'dark'});
+  await page.goto(base + restrictedPath + '#choose-the-inverse-sign');
+  const worked = page.locator('#choose-the-inverse-sign article').first();
+  await expect(worked.locator('ol > li:visible')).toHaveCount(1);
+  await worked.getByRole('button',{name:'Show all steps'}).click();
+  await expect(worked.locator('ol > li:visible')).toHaveCount(3);
+  const sign = page.locator('[data-study-check="right-branch-exact-inverse-value"]');
+  await sign.getByRole('button',{name:'Hint',exact:true}).click();
+  await expect(sign.getByText('gives an input of at least',{exact:false})).toBeVisible();
+  await sign.getByRole('textbox').fill('3−√5');
+  await sign.getByRole('textbox').press('Enter');
+  await expect(sign.locator('[data-status=retry]')).toContainText('use the other root');
+  await sign.getByRole('textbox').fill('3+√5');
+  await sign.getByRole('textbox').press('Enter');
+  await expect(sign.locator('[data-status=correct]')).toBeVisible();
+
+  const domain = page.locator('[data-study-check="actual-domain-of-the-inverse"]');
+  await domain.getByRole('textbox').fill('x ≥ −1');
+  await domain.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(domain.locator('[data-status=retry]')).toContainText('only the outputs');
+  await domain.getByRole('textbox').fill('0 < x ≤ 8');
+  await domain.getByRole('button',{name:'Check',exact:true}).click();
+  await expect(domain.locator('[data-status=correct]')).toBeVisible();
+  await expect(page.locator('.katex-error')).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(391);
+  await page.locator('#review').getByRole('link',{name:'Quick revision sheet (A4)'}).click();
+  await expect(page).toHaveURL(base + restrictedPath + '?view=revision');
+  await expect(page.locator('meta[name=robots]')).toHaveAttribute('content',/noindex/);
+  await expect(page.getByRole('heading',{name:'Ranges, restrictions and inverse branches',exact:true})).toBeVisible();
+
+  await page.goto(base + restrictedPath + '?item=M4U-9709-P1-FN-CHECK-RESTRICTED-1-0#practice');
+  const practice = page.locator('#practice');
+  const formula = practice.getByRole('group',{name:'Inverse formula',exact:true});
+  const inputs = practice.getByRole('textbox',{name:'Inverse domain',exact:true});
+  const outputs = practice.getByRole('textbox',{name:'Inverse range',exact:true});
+  await formula.locator('input[value="B"]').check();
+  await inputs.fill('x ≥ 5');
+  await outputs.fill('y ≥ 3');
+  await practice.getByRole('button',{name:'Check answer',exact:true}).click();
+  await expect(practice.locator('.square-result')).toContainText('Look at the fields');
+  await page.locator('#review').getByRole('button',{name:'Review with a fresh variant →',exact:true}).click();
+  await expect(page).toHaveURL(/item=M4U-9709-P1-FN-CHECK-RESTRICTED-1-1/);
+  await formula.locator('input[value="A"]').check();
+  await inputs.fill('x ≥ 13');
+  await outputs.fill('y ≥ 4');
+  await practice.getByRole('button',{name:'Check answer',exact:true}).click();
+  await expect(practice.locator('.square-result')).toContainText('All final answers are correct');
+  await page.reload();
+  await expect(formula.locator('input[value="A"]')).toBeChecked();
+  await expect(inputs).toHaveValue('x ≥ 13');
+  await expect(outputs).toHaveValue('y ≥ 4');
 });
 
 test('written variants and diagrams retain marks and help boundaries on mobile',async({page})=>{
