@@ -164,6 +164,8 @@ function checkVariable(name: string, allowed: string[], range: boolean) {
   throw new AnswerVariableError("This field asks for " + allowed.slice(0, 2).join(" or ") + ". Use that symbol in your answer.");
 }
 
+const answerVariable = /^[a-z](?:\(x\))?$/i;
+
 function comparisonInterval(raw: string, allowed: string[], range: boolean): Interval | undefined {
   const parts = raw.split(/(<=|>=|<|>)/).map(part => part.trim());
   if ((parts.length !== 3 && parts.length !== 5) || parts.includes("")) return fail();
@@ -171,7 +173,7 @@ function comparisonInterval(raw: string, allowed: string[], range: boolean): Int
   if (signs.length === 2 && signs[0][0] !== signs[1][0]) return fail();
   if (signs[0][0] === ">") parts.reverse();
 
-  const index = parts.findIndex((part, i) => i % 2 === 0 && /^[a-z](?:\(x\))?$/i.test(part.replace(/\s+/g, "")));
+  const index = parts.findIndex((part, i) => i % 2 === 0 && answerVariable.test(part.replace(/\s+/g, "")));
   if (index < 0 || (parts.length === 5 && index !== 2)) return fail();
   const low = index === 0 ? "-inf" : parts[0];
   const high = index === parts.length - 1 ? "inf" : parts.at(-1)!;
@@ -215,26 +217,48 @@ function intersection(a: Interval, b: Interval): Interval | undefined {
   return { low, high, lc, hc };
 }
 
+function comparisonSet(clause: string, allowed: string[], range: boolean): Interval[] {
+  if (!clause.includes("!=")) {
+    const ordered = comparisonInterval(clause, allowed, range);
+    return ordered ? [ordered] : [];
+  }
+  const sides = clause.split("!=").map(side => side.replace(/\s+/g, ""));
+  const variable = sides.findIndex(side => answerVariable.test(side));
+  if (sides.length !== 2 || variable < 0) return fail();
+  const excluded = bound(sides[1 - variable]);
+  if (!Number.isFinite(excluded.value)) return fail();
+  checkVariable(sides[variable], allowed, range);
+  return [
+    { low: bound("-inf"), high: excluded, lc: false, hc: false },
+    { low: excluded, high: bound("inf"), lc: false, hc: false },
+  ];
+}
+
 function answerSetKey(field: ExactField, raw: string, prompt?: string) {
   const outputs = rangeOutputs(field, prompt);
   const symbol = setSymbol(field);
   const allowed = outputs ?? (symbol ? [symbol] : []);
   const range = !!outputs;
   const input = raw.replace(/≤|\\leq?(?![a-z])/g, "<=").replace(/≥|\\geq?(?![a-z])/g, ">=")
+    .replace(/≠|\\neq?(?![a-z])/g, "!=")
     .replace(/([)\]}])\s*\bor\b\s*(?=\(|\[|\{)/gi, "$1 ∪ ");
-  if (!/[<>]/.test(input)) {
+  const hasComparison = /[<>]|!=/;
+  if (!hasComparison.test(input)) {
     const branches = input.split(/∪|\bU\b/);
     return canonicalSet(branches.flatMap(branch => setIntervals(statedValues(branch, allowed, range))));
   }
   const intervals: Interval[] = [];
   for (const branch of input.replace(/\bor\b/gi, "∪").split(/∪|\bU\b/)) {
-    if (!/[<>]/.test(branch)) {
+    if (!hasComparison.test(branch)) {
       intervals.push(...setIntervals(statedValues(branch, allowed, range)));
       continue;
     }
-    const constraints = branch.split(/\band\b/i).map(clause => comparisonInterval(clause, allowed, range));
-    const common = constraints.reduce((a, b) => a && b ? intersection(a, b) : undefined);
-    if (common) intervals.push(common);
+    const constraints = branch.split(/\band\b/i).map(clause => comparisonSet(clause, allowed, range));
+    const common = constraints.reduce((remaining, next) => remaining.flatMap(interval => next.flatMap(other => {
+      const overlap = intersection(interval, other);
+      return overlap ? [overlap] : [];
+    })));
+    intervals.push(...common);
   }
   return canonicalSet(intervals);
 }

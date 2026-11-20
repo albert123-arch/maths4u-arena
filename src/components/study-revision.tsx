@@ -3,8 +3,9 @@ import { ButtonLink } from "./controls";
 import { PrintRevision } from "./print-revision";
 import styles from "./study-revision.module.css";
 
-export function StudyRevision({ title, revision, path }: {
-  title: string; revision: { body: string; checks: string; examTip: string }; path: string;
+export function StudyRevision({ title, revision, path, courseTitle, chapterTitle }: {
+  title: string; revision: { body: string; checks: string; examTip: string };
+  path: string; courseTitle: string; chapterTitle: string;
 }) {
   return <main className={styles.revisionPage}>
     <div className={styles.toolbar}>
@@ -13,7 +14,7 @@ export function StudyRevision({ title, revision, path }: {
     </div>
     <article className={styles.sheet}>
       <header className={styles.heading}>
-        <p>Pure Mathematics 1 (9709) · Quadratics · Quick revision</p>
+        <p>{courseTitle} · {chapterTitle} · Quick revision</p>
         <h1>{title}</h1>
       </header>
       <MathContent html={revision.body} />

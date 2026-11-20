@@ -10,8 +10,11 @@ import {publicLearningTopic} from '../src/lib/public-learning-topic';
 import {checkExact} from '../src/lib/exact-answer';
 import {packageTask} from '../src/lib/content-packages';
 import {automaticPoints} from '../src/lib/works';
+import {gradeStudyCheck, studyRevision} from '../src/lib/authored-study';
+import teaching from '../content/original/9709-p1/functions-study.json';
 
 const p=contentPackage('9709-p1-functions');
+const firstLesson = "orig_functions_inverse";
 test('Functions reuses the five existing lessons and preserves all 200 authored written records',async()=>{
   assert.deepEqual(p.lessons.map(l=>l.id),['orig_functions_inverse','orig_functions_composite','orig_functions_restricted_inverse','orig_functions_inverse_graphs','orig_functions_transformations']);
   assert.equal(p.questions.length,240);assert.equal(p.questions.filter(q=>q.variant_index===0).length,50);
@@ -30,7 +33,9 @@ test('Functions reuses the five existing lessons and preserves all 200 authored 
 test('all complete function answers work, wrong fields and missing restrictions fail, review uses a fresh question',()=>{
   for(const l of p.lessons){
     const topic=packageTopic(l.id)!,dto=squarePublicLesson(topic),qs=questionsForTopic(l.id);
-    assert.equal(dto.examples.length,4);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
+    assert.equal(dto.examples.length,l.id===firstLesson ? 7 : 4);
+    assert.equal(!!dto.study,l.id===firstLesson);
+    assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
     for(const key of ['"expected"','source_problem_id','source_exam','ownerProvenance','archiveTaskId'])assert(!JSON.stringify(dto).includes(key),key);
     for(const html of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution]),...dto.questions.map(q=>q.prompt)])assert(!html.includes('katex-error'),l.id);
     for(const q of qs){
@@ -43,6 +48,66 @@ test('all complete function answers work, wrong fields and missing restrictions 
     const q=dto.questions.find(q=>q.collection==='short')!,snapshot=squareSnapshot([{eventKey:'test',uid:q.uid,family:q.family,correct:false,helpUsed:false,at:1000}]);
     const fresh=nextSquareReview(dto.questions,snapshot,1000)[0];assert.equal(fresh.family,q.family);assert.notEqual(fresh.uid,q.uid);assert.equal(fresh.collection,'variant');
   }
+});
+
+test("the first Functions lesson gives a worked example and a fresh check in each section", () => {
+  const source = teaching.orig_functions_inverse;
+  const dto = squarePublicLesson(packageTopic(firstLesson)!);
+  assert(dto.study);
+  assert.equal(dto.study.sections.length, 7);
+  assert.equal(dto.study.sections.at(-1)?.level, "extension");
+  const rendered = [...dto.examples.flatMap(e => [e.question, ...(e.steps ?? [])]),
+    ...Object.values(studyRevision(firstLesson)!)];
+  let checks = 0;
+  for (const section of dto.study.sections) {
+    assert(section.blocks.some(b => b.kind === "example"));
+    assert(section.blocks.some(b => b.kind === "check"));
+    rendered.push(section.intro, ...section.blocks.flatMap(b => "html" in b ? [b.html] : b.kind === "check" ? [b.prompt, b.hint] : []));
+  }
+  assert(rendered.every(html => !html.includes("katex-error")));
+  for (const section of source.sections) for (const block of section.blocks) {
+    if (block.kind !== "check" || !block.field) continue;
+    const expected = block.field.expected;
+    const answer = Array.isArray(expected) ? expected.join(";") : expected;
+    const result = gradeStudyCheck(firstLesson, block.id!, answer);
+    assert.equal(result?.status, "correct", block.id);
+    assert.doesNotMatch(result.feedback, /katex-error/);
+    checks++;
+  }
+  assert.equal(checks, 10);
+  assert.equal(gradeStudyCheck("orig_functions_composite", "range-of-decreasing-line", "[2,14)"), undefined);
+});
+
+test("Functions checks accept full ranges, exclusions and inverse pairs in exam notation", () => {
+  const grade = (id: string, answer: string) => gradeStudyCheck(firstLesson, id, answer)!;
+  for (const [id, answers] of [
+    ["range-of-decreasing-line", ["2 ≤ g(x) < 14", "14 > y >= 2", "[2,14)"]],
+    ["root-and-denominator-domain", ["−5 ≤ x ≤ 2 and x ≠ −3", "−3 != x and x>=-5 and x<=2", "[-5,-3) U (-3,2]"]],
+    ["same-output-two-inputs", ["x = −3 or x = −1", "{-3,-1}"]],
+    ["reverse-all-pairs", ["(3,−4), (0,−1), (8,5)", "x=8,y=5; x=3,y=-4; x=0,y=-1"]],
+    ["linear-inverse-rule", ["(10-x)/4", "5/2-x/4"]],
+    ["linear-inverse-domain", ["2 ≤ x < 10", "[2,10)"]],
+    ["fraction-inverse-rule", ["4x+2;x-1", "8x+4;2x-2"]],
+    ["fraction-inverse-domain", ["x ≠ 1", "x != 1", String.raw`x \ne 1`, "(-∞,1) ∪ (1,∞)"]],
+  ] as const) {
+    for (const answer of answers) assert.equal(grade(id,answer).status, "correct", id + " / " + answer);
+  }
+  for (const [id, answer, hint] of [
+    ["range-of-decreasing-line", "2 ≤ x < 14", /output values.*domain/],
+    ["range-of-decreasing-line", "(2,14]", /included input/],
+    ["root-and-denominator-domain", "[-5,2]", /denominator is zero/],
+    ["same-output-two-inputs", "x = -1", /other|negative square root/],
+    ["undo-not-reciprocal", "1/11", /reciprocal/],
+    ["reverse-all-pairs", "(3,-4),(0,-1)", /Reverse each pair/],
+    ["linear-inverse-domain", "(0,2]", /outputs of/],
+    ["fraction-inverse-domain", "x != 4", /excluded from the original inputs/],
+  ] as const) {
+    const wrong = grade(id,answer);
+    assert.equal(wrong.status, "retry", id);
+    assert.match(wrong.feedback, hint);
+  }
+  assert.equal(grade("fraction-inverse-domain","x ≠").status,"format");
+  assert.equal(grade("fraction-inverse-domain","x ≠ 1 ≠ 2").status,"format");
 });
 
 test('fractional answers accept equivalent whole ratios and interval checks respect both endpoints',()=>{

@@ -13,7 +13,7 @@ import { topicContent } from './catalog';
 import { arenaOrigin, publicChapters, chapterMetadata, matchPublicChapter, furtherCourseName, learningStructuredData, safeJsonLd } from './public-chapters';
 import { Platform } from "@/components/platform";
 import { StudyRevision } from "@/components/study-revision";
-import { quadraticsRevision } from "./quadratics-study";
+import { studyMetadata, studyRevision } from "./authored-study";
 import type { DiscoveryProps } from "@/components/discovery-home";
 import { publicDiscovery } from "./discovery";
 import { learningDirections, type DiscoveryData } from "./discovery-model";
@@ -31,7 +31,7 @@ import type { Locale } from "./locale";
 export type PageProps = { params: Promise<{ page?: string[] }>; searchParams: Promise<Record<string, string | string[] | undefined>> };
 const topicAtPath = cache(async (lessonId: string, path: string) => {
   const topic = await publicLearningTopic(lessonId);
-  if (topic?.packageKey === "9709-p1-quadratics" && topic.path !== path) notFound();
+  if (topic?.packageKey && topic.path !== path && studyMetadata(topic.lessonId)) notFound();
   return topic;
 });
 function discoveryRoute(parts: string[]): Omit<DiscoveryProps, "data"> | null {
@@ -99,11 +99,13 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   const schema=structured?<script type="application/ld+json" dangerouslySetInnerHTML={{__html:safeJsonLd(structured)}}/>:null;
   const previous = quadraticTopics.find(t => t.path === path);
   const previousRequested=previous&&(search.practice==="previous"||!!search.item&&questionsForTopic(previous.key).some(q=>q.id===search.item));
-  if (search.view === "revision" && locale === "en" && packaged?.path === path && packaged.packageKey === "9709-p1-quadratics") {
-    await assertLessonVisible(null, packaged.lessonId);
-    const revision = quadraticsRevision(packaged.lessonId);
-    if (!revision) notFound();
-    return <StudyRevision title={packaged.title} revision={revision} path={path} />;
+  if (search.view === "revision" && locale === "en" && packaged?.path === path && lessonChapter) {
+    const revision = studyRevision(packaged.lessonId);
+    if (revision) {
+      await assertLessonVisible(null, packaged.lessonId);
+      return <StudyRevision title={packaged.title} revision={revision} path={path}
+        courseTitle={lessonChapter.courseTitle} chapterTitle={lessonChapter.chapterTitle} />;
+    }
   }
   const topic = previousRequested?previous:(packaged?.path===path?packaged:previous), oldPractice = !!search.reviewTask || ["MC", "SHORT", "WRITTEN", "NOTES"].includes(search.mode);
   if (topic && search.view !== "legacy" && !oldPractice) { await assertLessonVisible(null,topic.lessonId); const visible=await visibleSquareMappings(null,topic); const lesson=squarePublicLesson(topic); lesson.questions=lesson.questions.filter(q=>visible.has(q.uid)); return <>{schema}<Platform square={lesson} languagePair={pair} /></>; }
@@ -116,7 +118,7 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   const initial: PublicPageData = { filters: search, chapter: search.chapter ?? "" };
   if(chapterPage){
     initial.chapter=chapterPage.chapterId;initial.chapterTitle=chapterPage.chapterTitle;
-    if (chapterPage.key === "9709-p1-quadratics") {
+    if (chapterPage.courseCode === "9709") {
       initial.chapterSummary = chapterMetadata(chapterPage).description;
       initial.lessonObjectives = Object.fromEntries(chapterPage.lessons.map(l => [l.id, l.objective]));
     }

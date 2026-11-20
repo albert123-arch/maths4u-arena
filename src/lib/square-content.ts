@@ -7,7 +7,7 @@ import { renderContent } from "./content";
 import { type SquareLesson, type CheckResult, squareVersion, quadraticTopic, type QuadraticTopic } from "./square-model";
 import type { MarkingRow, SupportKind } from "./question-support-model";
 import { packageQuestions, packageTeaching, packageTopic } from "./content-package-content";
-import { quadraticsStudy, quadraticsStudyLayout } from "./quadratics-study";
+import { legacyQuadraticsStudy, studyLayout } from "./authored-study";
 import { answerFormat } from "./square-presentation";
 import { isCoordinateField, isIntervalField, rangeOutputs } from "./answer-notation";
 
@@ -55,8 +55,8 @@ const examples = [
 ];
 export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): SquareLesson {
   const packaged=packageTeaching(topic);
-  const layout = topic.packageKey === "9709-p1-quadratics" ? quadraticsStudyLayout(topic.lessonId) : undefined;
-  const teaching = (layout ? undefined : quadraticsStudy(topic.lessonId)) ?? packaged ?? (topic.code === "CS" ? { notes, examples } : quadraticsTeaching[topic.key]);
+  const layout = topic.packageKey ? studyLayout(topic.lessonId) : undefined;
+  const teaching = (layout ? undefined : legacyQuadraticsStudy(topic.lessonId)) ?? packaged ?? (topic.code === "CS" ? { notes, examples } : quadraticsTeaching[topic.key]);
   return { topic, version: topic.version, title: topic.title,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: renderContent(q.prompt_html).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>'), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey?f.label:topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
 }
 export function learningTopic(key:string){return packageTopic(key)??quadraticTopic(key);}

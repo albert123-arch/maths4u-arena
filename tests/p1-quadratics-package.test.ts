@@ -10,7 +10,7 @@ import { squarePublicLesson, gradeSquare, questionsForTopic, squareHelp, squareM
 import { quadraticTopics, squareSnapshot, nextSquareReview } from '../src/lib/square-model';
 import { packageTask } from '../src/lib/content-packages';
 import teaching from "../content/original/9709-p1/quadratics-study.json";
-import { gradeQuadraticsStudyCheck, quadraticsRevision, quadraticsStudy } from "../src/lib/quadratics-study";
+import { gradeStudyCheck as gradeQuadraticsStudyCheck, studyRevision as quadraticsRevision, legacyQuadraticsStudy as quadraticsStudy } from "../src/lib/authored-study";
 import { answerFormat } from "../src/lib/square-presentation";
 import {publicLearningTopic} from '../src/lib/public-learning-topic';
 

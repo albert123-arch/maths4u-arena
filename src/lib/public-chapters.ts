@@ -3,7 +3,7 @@ import { db } from "./prisma";
 import { contentPackages, publicChapterPath } from "./content-package-content";
 import { visibleLessonWhere } from "./content-access";
 import { matchesPublishedPackage } from "./public-learning-topic";
-import { quadraticsStudyMetadata } from "./quadratics-study";
+import { studyMetadata } from "./authored-study";
 
 export const arenaOrigin = "https://arena.maths4u.sbs";
 
@@ -16,7 +16,7 @@ export const publicChapters = cache(async () => {
   const packages = contentPackages.flatMap(p => {
     const chapterPath = publicChapterPath(p), state = byKey.get(p.key);
     if (!chapterPath || !state) return [];
-    if (p.key === "9709-p1-quadratics" && !matchesPublishedPackage(p, state)) return [];
+    if (p.course.code === "9709" && !matchesPublishedPackage(p, state)) return [];
     return [{ p, chapterPath, publishedAt: state.publishedAt?.getTime() ?? 0 }];
   });
   const visible = await db().lesson.findMany({
@@ -32,7 +32,7 @@ export const publicChapters = cache(async () => {
     const lessons = p.lessons.flatMap(lesson => {
       const versionDate = versionDates.get(lesson.id);
       if (versionDate === undefined) return [];
-      const study = p.key === "9709-p1-quadratics" ? quadraticsStudyMetadata(lesson.id) : undefined;
+      const study = studyMetadata(lesson.id);
       const modified = Math.max(publishedAt, versionDate, study ? Date.parse(study.updatedOn) : 0);
       return [{
         id: lesson.id, title: lesson.title, objective: lesson.objective, path: coursePath + "/topics/" + lesson.id,
@@ -54,15 +54,18 @@ export const furtherCourseName = (title: string) => title.replace(/\s*\(9231\)/,
 
 export function matchPublicChapter(chapters: PublicChapter[], path: string, chapterId?: string | string[]) {
   return chapters.find(ch => ch.chapterPath === path || (
-    ch.key === "9709-p1-quadratics" && ch.chapterId === chapterId && path === "/courses/" + ch.courseSlug
+    ch.courseCode === "9709" && ch.chapterId === chapterId && path === "/courses/" + ch.courseSlug
   ));
 }
 
 export function chapterMetadata(ch: PublicChapter, lesson?: PublicLesson) {
   if (ch.courseCode === "9709") {
+    const overview = ch.key === "9709-p1-functions"
+      ? "Study functions for Cambridge 9709 Pure Mathematics 1. Work through domain and range, inverse and composite functions, and graph transformations."
+      : "Study quadratics for Cambridge 9709 Pure Mathematics 1. Work through factorisation, completing the square, the discriminant, inequalities and simultaneous equations.";
     return {
       title: (lesson?.title ?? ch.chapterTitle) + " | 9709 Pure 1 | Maths4U",
-      description: lesson?.description ?? lesson?.objective ?? "Study quadratics for Cambridge 9709 Pure Mathematics 1. Work through factorisation, completing the square, the discriminant, inequalities and simultaneous equations.",
+      description: lesson?.description ?? lesson?.objective ?? overview,
     };
   }
   const course = furtherCourseName(ch.courseTitle), focus = lesson?.title.split(/,| and /)[0].trimEnd();

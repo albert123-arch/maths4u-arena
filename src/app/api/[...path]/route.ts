@@ -36,7 +36,7 @@ import { adminArchiveContext, planCourseTree, applyCourseTree, disableCourseTree
 import { squarePublicLesson } from "@/lib/square-content";
 import { publicLearningTopic } from "@/lib/public-learning-topic";
 import { assertLessonVisible } from "@/lib/content-access";
-import { gradeQuadraticsStudyCheck } from "@/lib/quadratics-study";
+import { gradeStudyCheck } from "@/lib/authored-study";
 import { inRequestView, requestView, rolePreview } from "@/lib/request-view";
 import { resolveRequestView, guardViewRequest, enterView, exitView, touchView } from "@/lib/view-lens";
 import { previewMaterial, checkPreview } from "@/lib/view-preview";
@@ -123,9 +123,9 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
         lessonId: z.string().min(1).max(80), id: z.string().min(1).max(80), answer: z.string().trim().min(1).max(400),
       }).strict().parse(input);
       const lesson = await publicLearningTopic(lessonId);
-      ensure(lesson?.packageKey === "9709-p1-quadratics", 404, "NOT_FOUND");
+      ensure(lesson?.packageKey, 404, "NOT_FOUND");
       await assertLessonVisible(null, lessonId);
-      const result = gradeQuadraticsStudyCheck(lessonId, id, answer);
+      const result = gradeStudyCheck(lessonId, id, answer);
       ensure(result, 404, "NOT_FOUND");
       return json(result);
     }

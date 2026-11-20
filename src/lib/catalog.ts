@@ -14,7 +14,7 @@ import { archiveLessonNavigation, archiveRelated, courseTreeOverlay } from './co
 import { publicChapters as publishedChapters } from './public-chapters';
 import { unallocatedChapter, unallocatedId } from './course-tree-plan';
 import { canUseTeacherLibrary } from "./teacher-account";
-import { quadraticsStudy } from "./quadratics-study";
+import { legacyQuadraticsStudy } from "./authored-study";
 
 const filterSchema = z.object({ q: z.string().max(100).default(""), course: z.string().max(191).default(""), chapter: z.string().max(191).default(""), topic: z.string().max(191).default(""),
   source:z.enum(['','ORIGINAL','CAMBRIDGE','ALL']).default(''),taskId:z.string().max(191).default(''),legacyLesson:z.string().max(191).default(''),
@@ -186,7 +186,7 @@ export async function topicContent(actor: Actor | null, id: string, lang: string
   if (ru) ensure((await publicLanguages()).lessons.some(l => l.id === id), 404, "NOT_FOUND");
   const text = ru ? l.versions[0].texts.find(t => t.locale === "ru") ?? { locale: "ru", title: localized(l.versions[0].texts, "en").title, body: "", examples: "" } : localized(l.versions[0].texts, lang), hierarchy = (await courseCatalog(actor, lang, c.slug, strictLocale,archiveAdmin(actor)))[0];
   const topics = [...hierarchy.chapters,...(hierarchy.archiveChapters??[])].flatMap(ch => ch.topics), i = topics.findIndex(t => t.id === id);ensure(i>=0,404,'NOT_FOUND');
-  const study = text.locale === "en" ? quadraticsStudy(id) : undefined;
+  const study = text.locale === "en" ? legacyQuadraticsStudy(id) : undefined;
   const examples = study
     ? study.examples.map(example => "<h3>" + example.title + "</h3>" + example.question + example.solution).join("\n")
     : text.examples ?? "";
