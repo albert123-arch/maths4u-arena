@@ -1,27 +1,30 @@
 import quadratics from "../../content/original/9709-p1/quadratics-study.json";
 import functions from "../../content/original/9709-p1/functions-study.json";
 import coordinateGeometry from "../../content/original/9709-p1/coordinate-geometry-study.json";
+import circularMeasure from "../../content/original/9709-p1/circular-measure-study.json";
 import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
 import { renderContent } from "./content";
-import { checkExact, isRoundedNumberAnswer, AnswerVariableError, type ExactField } from "./exact-answer";
+import { checkExact, checkExactInverseAngle, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
 import { answerFormat, exactValueFeedback } from "./square-presentation";
 import type { StudyBlock, StudyCheck, StudyCheckResult, StudyExamPractice, StudyLesson, StudySection } from "./study-lesson-model";
 
-type AuthoredCheck = { kind: "check" } & Omit<StudyCheck, "field"> & {
-  field: ExactField;
-  solution: string;
-  retry?: { answer: string; feedback: string }[];
-};
+type Retry = { answer: string; feedback: string }[];
+type StudyField = ExactField & { inverseAngle?: InverseAngle; retry?: Retry };
+type AuthoredCheck = { kind: "check"; solution: string } & Omit<StudyCheck, "fields"> & (
+  | { field: ExactField; retry?: Retry }
+  | { fields: StudyField[] }
+);
 type AuthoredBlock = Exclude<StudyBlock, { kind: "check" }> | AuthoredCheck;
-type AuthoredLesson = Omit<StudyLesson, "sections"> & {
+type AuthoredLesson = Omit<StudyLesson, "sections" | "extraPractice"> & {
   updatedOn: string;
   description: string;
   sections: (Omit<StudySection, "blocks"> & { blocks: AuthoredBlock[] })[];
   examples: { title: string; question: string; solution: string[] }[];
   revision: { body: string; checks: string; examTip: string };
+  extraPractice?: AuthoredCheck[];
 };
 
-const lessons = { ...quadratics, ...functions, ...coordinateGeometry } as Record<string, AuthoredLesson>;
+const lessons = { ...quadratics, ...functions, ...coordinateGeometry, ...circularMeasure } as Record<string, AuthoredLesson>;
 const examPaths = examPracticePaths as Record<string, Omit<StudyExamPractice, "starters"> & { starters?: StudyExamPractice["starters"] }>;
 
 function lessonById(id: string) {
@@ -56,12 +59,27 @@ export function legacyQuadraticsStudy(lessonId: string) {
   };
 }
 
+function authoredFields(check: AuthoredCheck): StudyField[] {
+  return "fields" in check ? check.fields : [{ ...check.field, retry: check.retry }];
+}
+
+function publicCheck(check: AuthoredCheck): { kind: "check" } & StudyCheck {
+  return {
+    kind: "check",
+    id: check.id,
+    title: check.title,
+    prompt: renderContent(check.prompt),
+    hint: renderContent(check.hint),
+    fields: authoredFields(check).map(({ key, label, type, variables, dimension, options, inverseAngle }) => ({
+      key, label, type, variables, dimension,
+      ...(options && { options: Object.fromEntries(Object.entries(options).map(([value, html]) => [value, renderContent(html)])) }),
+      ...(inverseAngle && { inverseAngle: true }),
+    })),
+  };
+}
+
 function publicBlock(block: AuthoredBlock): StudyBlock {
-  if (block.kind === "check") {
-    const { key, label, type, variables, dimension } = block.field;
-    const field = { key, label, type, variables, dimension };
-    return { kind: "check", id: block.id, field, prompt: renderContent(block.prompt), hint: renderContent(block.hint) };
-  }
+  if (block.kind === "check") return publicCheck(block);
   if (block.kind === "example") return block;
   return {
     ...block,
@@ -82,9 +100,14 @@ export function studyLayout(lessonId: string) {
     })),
     glossary: lesson.glossary.map(word => ({ ...word, definition: renderContent(word.definition) })),
     related: lesson.related,
+    ...(lesson.extraPractice && { extraPractice: lesson.extraPractice.map(publicCheck) }),
     ...(path && { examPractice: {
       needs: path.needs,
-      starters: (path.starters ?? []).map(q => ({ ...q, question: renderContent(q.question), solution: renderContent(q.solution) })),
+      starters: (path.starters ?? []).map(q => ({
+        ...q, question: renderContent(q.question), solution: renderContent(q.solution),
+        ...(q.hint && { hint: renderContent(q.hint) }),
+        ...(q.marking && { marking: renderContent(q.marking) }),
+      })),
     } }),
   };
   const examples = lesson.examples.map(example => ({
@@ -103,13 +126,14 @@ export function studyRevision(lessonId: string) {
   return { body: renderContent(body), checks: renderContent(checks), examTip: renderContent(examTip) };
 }
 
-export function gradeStudyCheck(lessonId: string, id: string, answer: string): StudyCheckResult | undefined {
-  const block = lessonById(lessonId)?.sections.flatMap(section => section.blocks).find(b => b.kind === "check" && b.id === id);
-  if (block?.kind !== "check") return undefined;
-  const field = block.field;
+function studyAnswerMatches(field: StudyField, answer: string, prompt: string) {
+  return field.inverseAngle ? checkExactInverseAngle(field, answer, field.inverseAngle) : checkExact(field, answer, prompt);
+}
+
+function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck): StudyCheckResult | undefined {
   try {
-    if (checkExact(field, answer, block.prompt)) return { status: "correct", feedback: renderContent(block.solution) };
-    if (isRoundedNumberAnswer(field, answer)) return { status: "retry", feedback: renderContent("<p>" + exactValueFeedback + "</p>") };
+    if (studyAnswerMatches(field, answer, check.prompt)) return undefined;
+    if (!field.inverseAngle && isRoundedNumberAnswer(field, answer)) return { status: "retry", feedback: renderContent("<p>" + exactValueFeedback + "</p>") };
   } catch (error) {
     if (error instanceof AnswerVariableError) return {
       status: error.formatOnly ? "format" : "retry",
@@ -118,6 +142,29 @@ export function gradeStudyCheck(lessonId: string, id: string, answer: string): S
     return { status: "format", feedback: renderContent("<p>" + answerFormat(field).en + "</p>") };
   }
 
-  const matching = block.retry?.find(retry => checkExact({ ...field, expected: retry.answer }, answer, block.prompt));
-  return { status: "retry", feedback: renderContent(matching?.feedback ?? block.hint) };
+  const matching = field.retry?.find(retry => {
+    try { return studyAnswerMatches({ ...field, expected: retry.answer }, answer, check.prompt); }
+    catch { return false; }
+  });
+  const exactAngleHint = field.inverseAngle ? "<p>Give the exact angle using inverse sine or inverse cosine.</p>" : "";
+  return { status: "retry", feedback: renderContent(matching?.feedback ?? exactAngleHint + check.hint) };
+}
+
+export function gradeStudyCheck(lessonId: string, id: string, answers: string | Record<string, string>): StudyCheckResult | undefined {
+  const lesson = lessonById(lessonId);
+  const block = lesson?.sections.flatMap(section => section.blocks).find(b => b.kind === "check" && b.id === id)
+    ?? lesson?.extraPractice?.find(b => b.id === id);
+  if (block?.kind !== "check") return undefined;
+  const fields = authoredFields(block);
+  const values = typeof answers === "string" ? { [fields[0].key]: answers } : answers;
+  if (Object.keys(values).length !== fields.length || fields.some(field => !Object.hasOwn(values, field.key) || !values[field.key]?.trim())) {
+    return { status: "format", feedback: "<p>Enter an answer in every field.</p>" };
+  }
+  for (const field of fields) {
+    const result = fieldFeedback(field, values[field.key], block);
+    if (result) return fields.length === 1 ? result : {
+      ...result, feedback: renderContent("<p><strong>" + field.label + "</strong></p>") + result.feedback,
+    };
+  }
+  return { status: "correct", feedback: renderContent(block.solution) };
 }

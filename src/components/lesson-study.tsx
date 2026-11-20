@@ -169,42 +169,76 @@ function ExampleSteps({ example, id, tryFirst }: { example: SquareExample; id: s
   </article>;
 }
 
-function YourTurn({ check, lessonId }: { check: StudyCheck; lessonId: string }) {
+export function ExtraStudyPractice({ checks, lessonId }: { checks: StudyCheck[]; lessonId: string }) {
+  return <details className={styles.extraPractice}>
+    <summary>Extra practice from this lesson</summary>
+    <div>{checks.map(check => <YourTurn key={check.id} check={check} lessonId={lessonId} supplementary />)}</div>
+  </details>;
+}
+
+function YourTurn({ check, lessonId, supplementary = false }: { check: StudyCheck; lessonId: string; supplementary?: boolean }) {
   const id = useId(), lens = useView();
-  const [answer, setAnswer] = useState("");
+  const [answers, setAnswers] = useState<Record<string, string>>({});
   const [hint, setHint] = useState(false);
   const [result, setResult] = useState<StudyCheckResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
-  const format = answerFormat(check.field);
   const preview = lens?.mode === "USER";
-  return <form className={styles.yourTurn} aria-label={check.field.label + " quick check"} data-study-check={check.id}
+  const { fields } = check;
+  const simple = fields.length === 1 && fields[0].type !== "choice";
+  const complete = fields.every(field => answers[field.key]?.trim());
+  const actions = <>
+    <Button variant="primary" disabled={busy || preview || !complete} type="submit">{busy ? "Checking…" : "Check"}</Button>
+    <Button type="button" aria-expanded={hint} aria-controls={id + "-hint"} onClick={() => setHint(!hint)}>Hint</Button>
+  </>;
+  function change(key: string, value: string) {
+    setAnswers(current => ({ ...current, [key]: value }));
+    setResult(null);
+    setFailed(false);
+  }
+  return <form className={styles.yourTurn} aria-label={(check.title ?? fields[0].label) + " quick check"} data-study-check={check.id}
     onSubmit={async event => {
       event.preventDefault();
-      if (busy || preview || !answer.trim()) return;
+      if (busy || preview || !complete) return;
       setBusy(true);
       setFailed(false);
       try {
-        setResult(await api<StudyCheckResult>("learning/study-check", "POST", { lessonId, id: check.id, answer }));
+        const values = fields.length === 1 ? { answer: answers[fields[0].key] } : { answers };
+        setResult(await api<StudyCheckResult>("learning/study-check", "POST", { lessonId, id: check.id, ...values }));
       } catch {
         setFailed(true);
       } finally {
         setBusy(false);
       }
     }}>
-    <h3>Your turn</h3>
+    <h3>{supplementary ? check.title : "Your turn"}</h3>
     <MathContent html={check.prompt} />
     <noscript><p>Work out your answer on paper. Enable JavaScript to check it here.</p></noscript>
-    <label htmlFor={id}>{check.field.label}</label>
-    <div className={styles.answerRow}>
-      <Input id={id} value={answer} readOnly={busy || preview} required maxLength={400} autoComplete="off" spellCheck={false}
-        placeholder={format.placeholder} aria-describedby={id + "-format " + id + "-result"}
-        aria-invalid={result ? result.status !== "correct" : undefined}
-        onChange={event => { setAnswer(event.target.value); setResult(null); setFailed(false); }} />
-      <Button variant="primary" disabled={busy || preview || !answer.trim()} type="submit">{busy ? "Checking…" : "Check"}</Button>
-      <Button type="button" aria-expanded={hint} aria-controls={id + "-hint"} onClick={() => setHint(!hint)}>Hint</Button>
-    </div>
-    <p className={styles.format} id={id + "-format"}>{format.en}</p>
+    {fields.map(field => {
+      const fieldId = id + "-" + field.key;
+      const format = answerFormat(field);
+      if (field.options) return <fieldset key={field.key} className={styles.checkChoices}>
+        <legend>{field.label}</legend>
+        {Object.entries(field.options).map(([value, html]) => <label key={value}>
+          <Input type="radio" name={fieldId} value={value} checked={answers[field.key] === value}
+            disabled={busy || preview} onChange={() => change(field.key, value)} />
+          <MathContent html={html} />
+        </label>)}
+      </fieldset>;
+      return <div key={field.key}>
+        <label htmlFor={fieldId}>{field.label}</label>
+        <div className={simple ? styles.answerRow : styles.studyInput}>
+          <Input id={fieldId} value={answers[field.key] ?? ""} readOnly={busy || preview} required maxLength={400}
+            autoComplete="off" spellCheck={false} placeholder={field.inverseAngle ? "Exact angle" : format.placeholder}
+            aria-describedby={fieldId + "-format " + id + "-result"}
+            aria-invalid={simple && result ? result.status !== "correct" : undefined}
+            onChange={event => change(field.key, event.target.value)} />
+          {simple && actions}
+        </div>
+        <p className={styles.format} id={fieldId + "-format"}>{field.inverseAngle ? "Enter the exact expression. You can type asin or acos for inverse trig." : format.en}</p>
+      </div>;
+    })}
+    {!simple && <div className={styles.actions}>{actions}</div>}
     <div className={styles.hint} id={id + "-hint"} hidden={!hint}><MathContent html={check.hint} /></div>
     <div id={id + "-result"} aria-live="polite">
       {result && <div className={styles.checkResult} data-status={result.status}>

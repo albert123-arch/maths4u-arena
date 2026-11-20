@@ -62,6 +62,7 @@ const pure1ChapterDescriptions: Record<string, string> = {
   "9709-p1-quadratics": "Study quadratics for Cambridge 9709 Pure Mathematics 1. Work through factorisation, completing the square, the discriminant, inequalities and simultaneous equations.",
   "9709-p1-functions": "Study functions for Cambridge 9709 Pure Mathematics 1. Work through domain and range, inverse and composite functions, and graph transformations.",
   "9709-p1-coordinate-geometry": "Study coordinate geometry for Cambridge 9709 Pure Mathematics 1. Find exact distances, gradients, line and circle equations, intersections and tangents.",
+  "9709-p1-circular-measure": "Study circular measure for Cambridge 9709 Pure Mathematics 1. Convert angles, find arc lengths and sector areas, and solve problems on segments and composite regions.",
 };
 
 export function chapterMetadata(ch: PublicChapter, lesson?: PublicLesson) {

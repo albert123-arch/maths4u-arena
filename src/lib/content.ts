@@ -15,6 +15,10 @@ import { displayMarkup, displaySource, displayTitle } from "./public-presentatio
 import { archiveWhere, hiddenMaterial } from "./content-access";
 import { quarantineImportedTask } from "./import-content-policy";
 import { canUseTeacherLibrary } from "./teacher-account-model";
+import fractionDisplay from "../../content/original/9709-p1/fraction-display.json";
+
+const reviewedFractions: Readonly<Record<string, string>> = fractionDisplay.formulas;
+const reviewedFractionProse = Object.entries(fractionDisplay.prose);
 
 const locale = z.enum(["ru", "en"]);
 const text = z.string().max(100000);
@@ -57,6 +61,10 @@ export function localized<T extends { locale: string }>(rows: T[], lang: string)
   return rows.find(r => r.locale === lang) ?? rows.find(r => r.locale === "en") ?? rows[0];
 }
 export function renderContent(raw: string, anonymousImages = false) {
+  // Retypeset the reviewed copy while keeping immutable question versions intact.
+  if (raw.includes("/")) {
+    for (const [before, after] of reviewedFractionProse) raw = raw.replaceAll(before, after);
+  }
   // HTML parsers emit separate text chunks around entities. Extract complete
   // expressions first so an inequality cannot split a matrix or cases block.
   let prefix="MATHS4UFORMULA";while(raw.includes(prefix))prefix+="X";
@@ -64,7 +72,8 @@ export function renderContent(raw: string, anonymousImages = false) {
   const protectedHtml:string=protectMathHtml(raw);
   const prepared=protectedHtml.replace(mathPattern,(_m,inline,display,double,single)=>{
     const value=textContent(parseDocument(inline??display??double??single));
-    const rendered=katex.renderToString(value,{displayMode:display!==undefined||double!==undefined,throwOnError:false,trust:false,strict:"ignore",maxExpand:1000,maxSize:20});
+    const tex = Object.hasOwn(reviewedFractions, value) ? reviewedFractions[value] : value;
+    const rendered=katex.renderToString(tex,{displayMode:display!==undefined||double!==undefined,throwOnError:false,trust:false,strict:"ignore",maxExpand:1000,maxSize:20});
     return prefix+(formulas.push(rendered)-1)+"END";
   });
   const html=sanitizeHtml(prepared, {
@@ -80,6 +89,7 @@ export function renderContent(raw: string, anonymousImages = false) {
     exclusiveFilter: frame => frame.tag === "img" && !/^\/api\/files\/[a-zA-Z0-9_-]+$/.test(frame.attribs.src || "") &&
       !/^\/assets\/original\/functions\/(line-domain-range|one-one-branch|reverse-mapping|composite-(order|domain|root-threshold|missing-point)|restricted-inverse-(branch-bounds|root-bounds)|inverse-graphs-(reflection|intercepts|asymptotes|shared-line)|transformations-(translation|reflection|stretch|bounds|order))\.svg$/.test(frame.attribs.src || "") &&
       !/^\/assets\/original\/coordinate-geometry\/study-(segment|equidistance|diameter|perpendicular|axis-lines|intercepts|semicircle|tangent|secant|line-cases|external-tangents|chord|common-chord)\.svg$/.test(frame.attribs.src || "") &&
+      !/^\/assets\/original\/circular-measure\/study-[a-z]+(?:-[a-z]+)*\.svg$/.test(frame.attribs.src || "") &&
       !/^\/assets\/original\/(quadratics\/(factorisation-roots|vertex-and-axis|square-sketch|restricted-domain|discriminant-root-cases|parabola-line-intersections|inequality-sign-interval|inequality-domain-overlap|simultaneous-matching-pairs|simultaneous-tangency-cases)|coordinate-geometry\/(segment|perpendicular|line-intercepts|circle|line-circle)|circular-measure\/(radian|arc-length|sector-area|segment|annular-sector|composite-boundary|overlapping-circles)|trigonometry\/(unit-circle|wave-graphs|tangent-graph|sine-solutions|identity-triangle|quadratic-levels|cosine-levels)|series\/(arithmetic-terms|geometric-terms|partial-sums|arithmetic-condition|geometric-condition|rebound-heights)|binomial-expansion\/(pascal-triangle|term-index|laurent-powers|coefficient-pairs|parameter-branches|approximation-error)|differentiation\/(secant-to-tangent|tangent-normal|stationary-sign-chart|stationary-inflection|related-rates|optimisation-interval)|integration\/(family-of-curves|initial-condition|signed-area|between-curves|disk-volume|accumulation)|s1-central-tendency\/(raw-centres|modal-density|weighted-means)|s1-variation\/(equal-centres|pooled-spread|percentiles)|s1-probability\/(sample-grid|venn-regions|mixture-tree)|s1-counting\/(block-orders|available-gaps|group-swap)|s1-distributions\/(probability-bars|sum-grid|stopping-positions)|s1-binomial-geometric\/(binomial-counts|first-success|stopped-tree)|s1-normal\/(normal-region|normal-quantile|continuity-strip)|s1-representation\/(histogram|cumulative|boxplot)|cross-topic-revision\/(restricted-inverse|shared-tangent|distance-squared|sector-segment|coefficient-ratio-tail|area-washers))\.svg$/.test(frame.attribs.src || ""),
     textFilter: escaped=>escaped.replace(new RegExp(prefix+"(\\d+)END","g"),(_m,index)=>formulas[Number(index)]??""),
   });

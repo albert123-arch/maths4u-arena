@@ -119,13 +119,17 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
     }
     if (method === "GET" && route === "learning/course-choices") return json(await courseChoices(await actorForToken(tokenFrom(request))));
     if (route === "learning/study-check" && method === "POST") {
-      const { lessonId, id, answer } = z.object({
-        lessonId: z.string().min(1).max(80), id: z.string().min(1).max(80), answer: z.string().trim().min(1).max(400),
-      }).strict().parse(input);
+      const value = z.string().trim().min(1).max(400);
+      const { lessonId, id, answer, answers } = z.object({
+        lessonId: z.string().min(1).max(80), id: z.string().min(1).max(80),
+        answer: value.optional(),
+        answers: z.record(z.string().min(1).max(60), value)
+          .refine(fields => Object.keys(fields).length >= 1 && Object.keys(fields).length <= 6).optional(),
+      }).strict().refine(data => !!data.answer !== !!data.answers).parse(input);
       const lesson = await publicLearningTopic(lessonId);
       ensure(lesson?.packageKey, 404, "NOT_FOUND");
       await assertLessonVisible(null, lessonId);
-      const result = gradeStudyCheck(lessonId, id, answer);
+      const result = gradeStudyCheck(lessonId, id, answer ?? answers!);
       ensure(result, 404, "NOT_FOUND");
       return json(result);
     }

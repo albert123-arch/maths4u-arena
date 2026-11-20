@@ -170,7 +170,7 @@ test("exam notation matches the real inequality, parameter, scalar and coordinat
   const lesson = squarePublicLesson(packageTopic("orig_quadratics_inequalities")!);
   const check = lesson.study!.sections.flatMap(s => s.blocks).find(b => b.kind === "check" && b.id === "outside-including-roots");
   assert(check?.kind === "check");
-  const help = answerFormat(check.field);
+  const help = answerFormat(check.fields[0]);
   assert.match(help.en, /inequalit/i);
   assert.doesNotMatch(help.en, /every root/i);
 });

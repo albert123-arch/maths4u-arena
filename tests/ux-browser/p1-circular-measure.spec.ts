@@ -1,48 +1,81 @@
 import {test,expect,request} from '@playwright/test';
 import fs from 'node:fs/promises';
 import pack from '../../content/original/9709-p1/circular-measure-v1.json';
+import study from '../../content/original/9709-p1/circular-measure-study.json';
 
 const base='http://127.0.0.1:3109',out='.local/p1-circular-measure-20261108/screenshots';
 test.beforeAll(async()=>{await fs.mkdir(out,{recursive:true});});
 test('Circular Measure chapter and five lessons on desktop and mobile',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   expect((await page.goto(base+'/courses/'+pack.course.slug+'?chapter='+pack.chapter.id))?.status()).toBe(200);
+  await expect(page).toHaveURL(base+'/courses/'+pack.course.slug+'/chapters/'+pack.chapter.slug);
   await expect(page.locator('a[href="/courses/'+pack.course.slug+'/topics/'+pack.lessons[0].id+'"]').first()).toBeVisible();
   for(const l of pack.lessons)for(const width of [1280,390]){
     await page.setViewportSize({width,height:900});await page.goto(base+'/courses/'+pack.course.slug+'/topics/'+l.id);
     await expect(page.getByRole('heading',{name:l.title,exact:true})).toBeVisible();
     await expect(page.getByRole('button',{name:'Check answer',exact:true})).toBeEnabled();
-    await expect(page.locator('#examples .square-example')).toHaveCount(4);
-    for(const summary of await page.locator('#examples summary').all())await summary.click();
+    await expect(page.locator('#notes article[id^="worked-example-"]')).toHaveCount(study[l.id as keyof typeof study].examples.length);
+    await page.locator('#notes article[id^="worked-example-"]').first().getByRole('button',{name:'Show next step'}).click();
     await expect(page.locator('.katex-error')).toHaveCount(0);
     await expect(page.locator('#challenge .square-challenges button')).toHaveCount(10);
     for(const img of await page.locator('#notes img, #examples img').all())await expect.poll(()=>img.evaluate((i:HTMLImageElement)=>i.complete&&i.naturalWidth>0)).toBe(true);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+1);
     await page.screenshot({path:out+'/'+l.key+'-'+width+'.png',fullPage:true});
-    if(l.key==='composites'&&width===390)await page.locator('#examples .square-example').nth(2).screenshot({path:out+'/overlap-example-390.png'});
+    if(l.key==='composites'&&width===390)await page.locator('#composite-sectors-overlapping-circles article').first().screenshot({path:out+'/overlap-example-390.png'});
   }
   expect(errors).toEqual([]);
+});
+
+test('the new lesson checks all parts, keeps source practice available and typesets the A4 sheet', async ({page}) => {
+  await page.setViewportSize({width:390,height:900});
+  const url=base+'/courses/'+pack.course.slug+'/topics/orig_circular_measure_radians';
+  await page.goto(url);
+  const convert=page.locator('[data-study-check="CM-20261120-L1-C03"]');
+  const check=convert.getByRole('button',{name:'Check',exact:true});
+  await convert.getByRole('textbox',{name:'First angle in radians'}).fill('7π/6');
+  await expect(check).toBeDisabled();
+  const degrees=convert.getByRole('textbox',{name:'Second angle in degrees'});
+  await degrees.fill('110');
+  await check.click();
+  await expect(convert.locator('[data-status="retry"]')).toBeVisible();
+  await degrees.fill('112.5');
+  await check.click();
+  await expect(convert.locator('[data-status="correct"]')).toBeVisible();
+  await expect(convert.locator('[data-status="correct"] mfrac').first()).toBeAttached();
+  await page.locator('#radians-calculator').getByRole('link',{name:'Go to practice →'}).click();
+  await expect(page).toHaveURL(/#practice$/);
+  await page.locator('#practice').getByText('Extra practice from this lesson',{exact:true}).click();
+  await expect(page.locator('[data-study-check="CM-20261120-L1-P01"]')).toBeVisible();
+  await page.locator('#challenge .exam-starter > summary').first().click();
+  await expect(page.locator('#challenge .exam-starter').first().getByText('Marking guidance',{exact:true})).toBeVisible();
+  await page.locator('#review').getByRole('link',{name:'Quick revision sheet (A4)'}).click();
+  await expect(page).toHaveURL(url+'?view=revision');
+  await expect(page.getByRole('button',{name:/Print/})).toBeVisible();
+  await expect(page.locator('main article mfrac').first()).toBeAttached();
+  await expect(page.locator('.katex-error')).toHaveCount(0);
 });
 
 test('guest degree-mode error, fresh radian review and retained complete answers',async({page})=>{
   await page.goto(base+'/courses/'+pack.course.slug+'/topics/orig_circular_measure_radians');
   const q=pack.questions.find(q=>q.id==='M4U-9709-P1-CM-CHECK-RADIANS-1-0')!;
-  await page.getByRole('textbox',{name:q.fields[0].label,exact:true}).fill('150');
-  await page.getByRole('textbox',{name:q.fields[1].label,exact:true}).fill('315');
+  const practice=page.locator('#practice');
+  await practice.getByRole('textbox',{name:q.fields[0].label,exact:true}).fill('150');
+  await practice.getByRole('textbox',{name:q.fields[1].label,exact:true}).fill('315');
   await page.getByRole('button',{name:'Check answer',exact:true}).click();await expect(page.locator('.square-result')).toContainText('Look at the fields');
   await page.getByRole('button',{name:'Review with a fresh variant →',exact:true}).click();
   await expect(page).toHaveURL(/item=M4U-9709-P1-CM-CHECK-RADIANS-1-1/);
-  await page.getByRole('textbox',{name:q.fields[0].label,exact:true}).fill('7*pi/6');
-  await page.getByRole('textbox',{name:q.fields[1].label,exact:true}).fill('300');
+  await practice.getByRole('textbox',{name:q.fields[0].label,exact:true}).fill('7*pi/6');
+  await practice.getByRole('textbox',{name:q.fields[1].label,exact:true}).fill('300');
   await page.getByRole('button',{name:'Check answer',exact:true}).click();await expect(page.locator('.square-result')).toContainText('All final answers are correct');
-  await page.reload();await expect(page.getByRole('textbox',{name:q.fields[0].label,exact:true})).toHaveValue('7*pi/6');
+  await page.reload();await expect(practice.getByRole('textbox',{name:q.fields[0].label,exact:true})).toHaveValue('7*pi/6');
   await expect(page.locator('#review')).toContainText('Return after a break');
 });
 
 test('segment checking requires both exact area and arc-plus-chord perimeter',async({page})=>{
   await page.goto(base+'/courses/'+pack.course.slug+'/topics/orig_circular_measure_segments');
-  await page.getByRole('textbox',{name:'Minor segment area (cm²)',exact:true}).fill('8*pi/3-4*sqrt(3)');
-  const input=page.getByRole('textbox',{name:'Minor segment perimeter (cm)',exact:true});await input.fill('8+4*pi/3');
+  const practice=page.locator('#practice');
+  await practice.getByRole('textbox',{name:'Minor segment area (cm²)',exact:true}).fill('8*pi/3-4*sqrt(3)');
+  const input=practice.getByRole('textbox',{name:'Minor segment perimeter (cm)',exact:true});await input.fill('8+4*pi/3');
   await page.getByRole('button',{name:'Check answer',exact:true}).click();await expect(page.locator('.square-result')).toContainText('Look at the fields');
   await input.fill('4+4*pi/3');await page.getByRole('button',{name:'Check answer',exact:true}).click();
   await expect(page.locator('.square-result')).toContainText('All final answers are correct');

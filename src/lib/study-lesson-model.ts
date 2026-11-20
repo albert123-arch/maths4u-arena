@@ -10,8 +10,9 @@ export type StudyFigure = {
 
 export type StudyCheck = {
   id: string;
+  title?: string;
   prompt: string;
-  field: SquareField;
+  fields: (SquareField & { inverseAngle?: boolean })[];
   hint: string;
 };
 
@@ -37,6 +38,8 @@ export type StudyPaperQuestion = {
   marks: number;
   question: string;
   solution: string;
+  hint?: string;
+  marking?: string;
 };
 
 export type StudyExamPractice = {
@@ -49,6 +52,7 @@ export type StudyLesson = {
   glossary: { term: string; definition: string }[];
   related?: { title: string; href: string }[];
   examPractice?: StudyExamPractice;
+  extraPractice?: StudyCheck[];
 };
 
 export type StudyCheckResult = {

@@ -11,7 +11,7 @@ import { QuestionSupport } from "./question-support";
 import { AdminArchiveLinks } from './admin-archive-links';
 import type { SupportContent } from "@/lib/question-support-model";
 import { LessonPresentations } from "./lesson-presentations";
-import { LessonStudy, StudyExampleList } from "./lesson-study";
+import { ExtraStudyPractice, LessonStudy, StudyExampleList } from "./lesson-study";
 import { useSquareProgress, SquareSaveNotice } from "./square-progress";
 import { firstStoredValue } from "@/lib/square-device-progress";
 import { TeacherTaskPreview } from "./teacher-task-preview";
@@ -125,6 +125,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
       {teacher && !lens ? <TeacherLessonQuestion key={uid} topic={topic} q={current} /> : <SquareQuestionForm reportReady={restored && sessionReady} topic={topic} key={uid + (actor?.id ?? "guest")} q={current} enabled={restored && sessionReady && state.ready && !state.error && lens?.mode !== "USER"} onResult={async (event, result) => { await state.record(event, current.family, result); }} />}
       <div className="square-next row">{next ? <Button onClick={() => choose(next)}>{t("Следующий шаг →", "Next step →")}</Button> : <ButtonLink href="#challenge">{t("Экзаменационная практика →", "Try exam-style practice →")}</ButtonLink>}{current.variantIndex===undefined && lesson.questions.some(q => q.family === current.family && q.uid !== current.uid) && <Button onClick={() => choose(lesson.questions.filter(q => q.family === current.family && q.uid !== current.uid).sort((a, b) => (state.snapshot.seen[a.uid] ?? 0) - (state.snapshot.seen[b.uid] ?? 0))[0])}>{t("Новый вариант", "Try a fresh variant")}</Button>}<a href="#examples">{t("Повторить метод", "Review the method")}</a></div>
       {(!teacher || lens) && <SquareSaveNotice state={state} />}
+      {study?.extraPractice && <ExtraStudyPractice checks={study.extraPractice} lessonId={topic.lessonId} />}
     </section>
     <section id="challenge" className="card">
       <h2>{t("Примените метод · авторские экзаменационные задачи", "Apply it · original exam-style problems")}</h2>
@@ -133,7 +134,9 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
       {examRoute?.starters.map(q => <details key={q.id} id={q.id} className="exam-starter">
         <summary><strong>{q.title}</strong> <span className="muted">{q.marks} marks</span></summary>
         <MathContent html={q.question} />
+        {q.hint && <details><summary>Hint</summary><MathContent html={q.hint} /></details>}
         <details><summary>Worked solution</summary><MathContent html={q.solution} /></details>
+        {q.marking && <details><summary>Marking guidance</summary><MathContent html={q.marking} /></details>}
       </details>)}
       {readyExams.length > 0 && <div className="square-challenges">{readyExams.map(q =>
         <Button key={q.uid} onClick={() => choose(q)}><strong>{questionTitle(q)}</strong><span>{q.marks} {t("баллов за письменное решение →", "written marks →")}</span></Button>

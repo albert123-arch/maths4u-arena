@@ -49,7 +49,8 @@ export function contentPackage(key:string) {
 }
 export function publicChapterPath(p: ContentPackage) {
   if (p.course.direction === "further" || p.key === "9709-p1-quadratics" ||
-    p.key === "9709-p1-functions" || p.key === "9709-p1-coordinate-geometry") {
+    p.key === "9709-p1-functions" || p.key === "9709-p1-coordinate-geometry" ||
+    p.key === "9709-p1-circular-measure") {
     return "/courses/" + p.course.slug + "/chapters/" + p.chapter.slug;
   }
 }

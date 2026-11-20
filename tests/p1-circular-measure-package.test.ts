@@ -12,6 +12,19 @@ import {checkExact} from '../src/lib/exact-answer';
 import {packageTask} from '../src/lib/content-packages';
 import {contentPackageSchema} from '../src/lib/content-package-schema';
 import {renderContent} from '../src/lib/content';
+import {gradeStudyCheck,studyRevision} from '../src/lib/authored-study';
+import study from '../content/original/9709-p1/circular-measure-study.json';
+
+type AuthoredBlockFixture = {
+  kind: string;
+  id?: string;
+  fields?: { key: string; expected: string | string[] }[];
+};
+const studyFixtures: Record<string, {
+  sections: { blocks: AuthoredBlockFixture[] }[];
+  extraPractice: AuthoredBlockFixture[];
+  examples: unknown[];
+}> = study;
 
 const p=contentPackage('9709-p1-circular-measure');
 test('Circular Measure preserves lesson identities and the entire owner bank without answer or marking edits',async()=>{
@@ -31,7 +44,7 @@ test('Circular Measure preserves lesson identities and the entire owner bank wit
 test('every complete quick answer works; missing and incorrect fields fail; review selects a fresh variant',()=>{
   for(const l of p.lessons){
     const dto=squarePublicLesson(packageTopic(l.id)!),qs=questionsForTopic(l.id);
-    assert.equal(dto.examples.length,4);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
+    assert.equal(dto.examples.length,studyFixtures[l.id].examples.length);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
     assert.equal(qs.filter(q=>q.collection==='exam'&&q.variant_index===0).length,10);
     for(const forbidden of ['"expected"','source_problem_id','source_exam','ownerProvenance','archiveTaskId'])assert(!JSON.stringify(dto).includes(forbidden),forbidden);
     for(const html of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution]),...dto.questions.map(q=>q.prompt)])assert(!html.includes('katex-error'),l.id);
@@ -45,6 +58,48 @@ test('every complete quick answer works; missing and incorrect fields fail; revi
     const q=dto.questions.find(q=>q.collection==='short')!,snapshot=squareSnapshot([{eventKey:'test',uid:q.uid,family:q.family,correct:false,helpUsed:false,at:1000}]);
     const fresh=nextSquareReview(dto.questions,snapshot,1000)[0];assert.equal(fresh.family,q.family);assert.notEqual(fresh.uid,q.uid);assert.equal(fresh.collection,'variant');
   }
+});
+
+test('the supplied study and practice accept complete answers and render the printable fractions', () => {
+  let checks = 0, supplementary = 0, papers = 0, examples = 0;
+  for (const [id, lesson] of Object.entries(studyFixtures)) {
+    const body = squarePublicLesson(packageTopic(id)!);
+    const revision = studyRevision(id)!;
+    assert(body.study);
+    assert.match(revision.body, /<mfrac>/);
+    const publicHtml = [revision.body, revision.checks, revision.examTip,
+      ...body.examples.flatMap(example => [example.question, ...(example.steps ?? [])]),
+      ...body.study.sections.map(section => section.intro),
+      ...body.study.examPractice!.starters.flatMap(q => [q.question, q.solution, q.hint ?? "", q.marking ?? ""]),
+    ];
+    for (const html of publicHtml) assert(!html.includes("katex-error"), id);
+    checks += lesson.sections.flatMap(section => section.blocks).filter(block => block.kind === "check").length;
+    supplementary += lesson.extraPractice.length;
+    papers += body.study.examPractice!.starters.length;
+    examples += lesson.examples.length;
+    for (const question of [...lesson.sections.flatMap(section => section.blocks), ...lesson.extraPractice]) {
+      if (question.kind !== "check") continue;
+      assert(question.fields?.length && question.id);
+      const answers = Object.fromEntries(question.fields.map(field =>
+        [field.key, Array.isArray(field.expected) ? field.expected.join(";") : field.expected]));
+      assert.equal(gradeStudyCheck(id, question.id, answers)?.status, "correct", question.id);
+      const missing = { ...answers };
+      delete missing[question.fields[0].key];
+      assert.equal(gradeStudyCheck(id, question.id, missing)?.status, "format", question.id);
+      assert.notEqual(gradeStudyCheck(id, question.id, { ...answers, [question.fields[0].key]: "99999" })?.status, "correct", question.id);
+    }
+  }
+  assert.deepEqual([checks,supplementary,papers,examples],[40,42,16,39]);
+  for (const [id, question, answers] of [
+    ["orig_circular_measure_radians","CM-20261120-L1-C03",{ radians:"\\frac{7\\pi}{6}", degrees:"225/2" }],
+    ["orig_circular_measure_segments","CM-20261120-L4-C4",{distance:"15",angle:"2\\arcsin\\left(\\frac{8}{17}\\right)"}],
+    ["orig_circular_measure_segments","CM-20261120-L4-C4",{distance:"15",angle:"2acos(15/17)"}],
+  ] as const) assert.equal(gradeStudyCheck(id,question,answers)?.status,"correct",question);
+  assert.equal(gradeStudyCheck("orig_circular_measure_segments","CM-20261120-L4-C4",{distance:"15",angle:"0.980"})?.status,"retry");
+  assert.equal(gradeStudyCheck("orig_circular_measure_composite_sectors","CM-20261120-L5-C8",
+    {bound:"144/π",attained:"no"})?.status,"correct");
+  assert.match(renderContent(String.raw`\(1/|B|\)`),/<mfrac>/);
+  assert.match(renderContent(String.raw`\(x^{2/3}\)`),/<mfrac>/);
 });
 
 test('exact radian, segment, major-region and maximum answers distinguish common mistakes',()=>{

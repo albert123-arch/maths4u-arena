@@ -42,6 +42,7 @@ Author desktop, mobile and print from the same reviewed lesson content. The [Qua
 - Verify the algebra, exact values, exceptional cases, units and boundary inclusion separately. Read the topic from top to bottom and resolve references such as “this substitution” and “the earlier result” within their section.
 - Check the topic against the syllabus for its course and examination year. For 9709 Quadratics use section 1.1. Show the working and follow any method specified in the question. A calculator can check the result. For non-exact 9709 answers, round only at the end. The usual precision is three significant figures, with angles in degrees given to one decimal place unless the question specifies otherwise. [9709 syllabus 2026–2027, subject content and degrees of accuracy](https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf)
 - Use Arena's KaTeX renderer and reviewed, labelled SVGs for diagrams. A long expression may scroll inside its own region. Break important lines of working at mathematical steps so they fit on a 390 px screen.
+- Use stacked fractions in questions, worked steps, feedback, diagram labels and printed revision sheets. Use slash notation in keyboard-entry guidance where it helps students type an answer.
 
 ## Feedback and revision
 

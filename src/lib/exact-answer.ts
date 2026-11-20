@@ -43,7 +43,7 @@ function pscalar(p: Poly) { if ([...p.keys()].some(k => k !== 0)) fail(); return
 function normalize(raw: string) {
   if (raw.length > 400) fail();
   let s = raw.trim().replace(/[−–]/g, "-").replace(/[×·]/g, "*").replace(/÷/g, "/").replace(/²/g, "^2").replace(/³/g, "^3").replace(/π|\\pi(?![a-z])/g, "pi").replace(/\\(?:left|right)/g, "").replace(/\\(?:cdot|times)/g, "*");
-  for (let i = 0; i < 4; i++) s = s.replace(/\\(?:d?frac)\{([^{}]+)\}\{([^{}]+)\}/g, "(($1)/($2))").replace(/\\sqrt\{([^{}]+)\}/g, "sqrt($1)");
+  for (let i = 0; i < 4; i++) s = s.replace(/\\(?:[dt]?frac)\{([^{}]+)\}\{([^{}]+)\}/g, "(($1)/($2))").replace(/\\sqrt\{([^{}]+)\}/g, "sqrt($1)");
   return s.replace(/√\(([^()]*)\)/g, "sqrt($1)").replace(/√(\d+)/g, "sqrt($1)").replace(/\*\*/g, "^").replace(/\s+/g, "");
 }
 export function polynomialKey(raw: string, variables: string[] = []): [number, [number, string, string][]][] {
@@ -346,6 +346,45 @@ function proportional(a: Poly,b: Poly) {
 }
 function equation(raw:string,variables:string[]) { const sides=raw.split("="); if(sides.length>2)fail();return padd(poly(sides[0],variables),poly(sides[1]??"0",variables),-BigInt(1)); }
 export type ExactField = { key: string; label: string; type: string; expected: string | string[]; variables?: string[]; options?: Record<string, string>; dimension?: number; factor_variable?: string; form?: "expanded"; absolute_tolerance?:number; minimum?:number; maximum?:number };
+
+/** A study exercise can name one exact inverse-trig constant to compare symbolically. */
+export type InverseAngle = { fn: "asin" | "acos"; argument: string };
+
+export function checkExactInverseAngle(field: ExactField, input: string, angle: InverseAngle) {
+  if (typeof field.expected !== "string") return fail();
+  const expectedArgument = poly(angle.argument);
+  function expression(raw: string) {
+    const text = normalize(raw.replace(/\\!/g, "")
+      .replace(/\\?arc(sin|cos)/g, "a$1")
+      .replace(/\\?(sin|cos)\s*(?:\^\{?-1\}?|⁻¹)/g, "a$1"));
+    if (text.includes("z")) return fail();
+    const calls = /a(?:sin|cos)\(/g;
+    let result = "", from = 0;
+    for (let match = calls.exec(text); match; match = calls.exec(text)) {
+      let end = calls.lastIndex, depth = 1;
+      for (; end < text.length && depth > 0; end++) {
+        if (text[end] === "(") depth++;
+        if (text[end] === ")") depth--;
+      }
+      if (depth) return fail();
+      const argument = text.slice(calls.lastIndex, end - 1);
+      const value = poly(argument);
+      const sameFunction = match[0] === angle.fn + "(";
+      const sameAngle = sameFunction ? same(value, expectedArgument)
+        : numeric(argument) >= 0 && numeric(angle.argument) >= 0
+          && same(padd(pmul(value, value), pmul(expectedArgument, expectedArgument)), poly("1"));
+      if (!sameAngle) return undefined;
+      result += text.slice(from, match.index) + "z";
+      from = end;
+      calls.lastIndex = end;
+    }
+    return result + text.slice(from);
+  }
+  const answer = expression(scalarAnswerValue(field, input));
+  const expected = expression(field.expected);
+  return answer !== undefined && expected !== undefined
+    && checkExact({ ...field, expected, variables: ["z"] }, answer);
+}
 // Feedback for a labelled scalar uses the same mathematical expression as grading.
 export function scalarAnswerValue(field: ExactField, input: string): string {
   if (!["number", "approximate", "polynomial"].includes(field.type)) return input;
