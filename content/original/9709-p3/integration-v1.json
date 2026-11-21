@@ -1,0 +1,3103 @@
+{
+  "schema_version": 1,
+  "key": "9709-p3-integration",
+  "version": "1.0.0",
+  "course": {
+    "slug": "maths4u-9709-p3",
+    "title": "Pure Mathematics 3 (9709)",
+    "code": "9709",
+    "direction": "a-level"
+  },
+  "chapter": {
+    "id": "orig_9709_p3_integration",
+    "slug": "integration",
+    "title": "Integration",
+    "position": 4
+  },
+  "source": {
+    "sha256": "ccee288ac8302c6904b03b7aba44336ae73f2fe72886fff70ba8a86e556fd595",
+    "supplied": 55,
+    "held": []
+  },
+  "marking_status": "DRAFT",
+  "lessons": [
+    {
+      "key": "standard",
+      "id": "orig_9709_p3_int_standard",
+      "title": "Standard integrals and linear arguments",
+      "summary": "Recognise the standard primitives, reverse a linear inside slope and evaluate exact definite integrals on the right interval.",
+      "objective": "Integrate exponentials, reciprocal linear and quadratic forms, sine, cosine and secant squared.",
+      "before": "<p>Recall the chain rule and how to evaluate a definite integral from a primitive.</p>",
+      "ideas": "<p>Differentiate a proposed primitive to recover any missing multiplier. For linear arguments with slope \\(a\\ne0\\), divide by the signed slope \\(a\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Integrand</th><th scope=\"col\">Primitive before adding \\(C\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(e^{ax+b}\\)</th><td>\\(\\frac1a e^{ax+b}\\)</td></tr><tr><th scope=\"row\">\\(\\frac1{ax+b}\\)</th><td>\\(\\frac1a\\ln|ax+b|\\)</td></tr><tr><th scope=\"row\">\\(\\sin(ax+b)\\)</th><td>\\(-\\frac1a\\cos(ax+b)\\)</td></tr><tr><th scope=\"row\">\\(\\cos(ax+b)\\)</th><td>\\(\\frac1a\\sin(ax+b)\\)</td></tr><tr><th scope=\"row\">\\(\\sec^2(ax+b)\\)</th><td>\\(\\frac1a\\tan(ax+b)\\)</td></tr><tr><th scope=\"row\">\\(\\frac1{x^2+c^2}\\), \\(c>0\\)</th><td>\\(\\frac1c\\arctan\\left(\\frac xc\\right)\\)</td></tr></tbody></table></div>",
+      "method": "<ol><li>Match the integrand to a known derivative.</li><li>Reverse the signed inner multiplier and retain the original domain.</li><li>For a definite integral, evaluate the same primitive at both limits.</li></ol>",
+      "mistakes": [
+        "The primitive of sine carries a minus sign.",
+        "The logarithm needs a modulus when its inside can be negative.",
+        "Do not apply endpoint subtraction across an excluded input."
+      ],
+      "examples": [
+        {
+          "title": "Undo the inner exponential slope",
+          "question": "<p>Find \\(\\int 6e^{2x-3}\\,\\mathrm dx\\).</p>",
+          "solution": "<p>Differentiating \\(e^{2x-3}\\) produces \\(2e^{2x-3}\\). The exponential keeps its whole exponent.</p><p>To get the coefficient \\(6\\), multiply the primitive by \\(\\frac62=3\\).</p><p>The answer is \\(3e^{2x-3}+C\\), since its derivative is the original integrand.</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Use the logarithm on a negative branch",
+          "question": "<p>Evaluate \\(\\int_{-2}^{-1}\\frac3{3x+2}\\,\\mathrm dx\\) as a single logarithm.</p>",
+          "solution": "<p>The linear denominator is negative throughout this interval and has no zero there.</p><p>The integrand is the derivative of \\(\\ln|3x+2|\\). The expression inside the modulus is evaluated at both limits.</p><p>Upper minus lower gives \\(\\ln 1-\\ln 4=\\ln\\left(\\frac14\\right)\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Track both the inner slope and the sine sign",
+          "question": "<p>Find \\(\\int\\big(3\\sin(2x+1)+4\\cos(1-4x)\\big)\\,\\mathrm dx\\).</p>",
+          "solution": "<p>For the sine term use negative cosine and divide by \\(2\\), giving \\(-\\frac32\\cos(2x+1)\\).</p><p>For the cosine term use sine and divide by the signed inner slope \\(-4\\), giving \\(-\\sin(1-4x)\\).</p><p>Therefore the primitive is \\(-\\frac32\\cos(2x+1)-\\sin(1-4x)+C\\). Differentiating checks both signs.</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Distinguish a tangent primitive from an inverse tangent",
+          "question": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{12}}6\\sec^2(3x)\\,\\mathrm dx\\) and \\(\\int_0^3\\frac6{x^2+9}\\,\\mathrm dx\\).</p>",
+          "solution": "<p>In the first integral the argument \\(3x\\) never reaches a pole. Use \\(\\big[2\\tan(3x)\\big]_0^{\\frac{\\pi}{12}}=2\\).</p><p>For the second, \\(x^2+9=x^2+3^2\\). The primitive is \\(2\\arctan\\left(\\frac x3\\right)\\).</p><p>The second integral is \\(2(\\arctan1-\\arctan0)=\\frac{\\pi}{2}\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        }
+      ]
+    },
+    {
+      "key": "trig_log",
+      "id": "orig_9709_p3_int_trig_log",
+      "title": "Trigonometric integrals and logarithmic derivatives",
+      "summary": "Rewrite trigonometric squares and products before integrating, and identify logarithmic derivatives and tangent integrals.",
+      "objective": "Choose a suitable identity or match a denominator to its derivative, then evaluate exact bounds on one continuous branch.",
+      "before": "<p>Recall the double-angle identities and the standard integrals with a linear argument.</p>",
+      "ideas": "<p>Reduce trigonometric powers and products to standard integrals. For a quotient, check whether its numerator is a constant times the derivative of the denominator.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">What you see</th><th scope=\"col\">Rewrite before integrating</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\sin^2u\\)</th><td>\\(\\frac{1-\\cos(2u)}2\\)</td></tr><tr><th scope=\"row\">\\(\\cos^2u\\)</th><td>\\(\\frac{1+\\cos(2u)}2\\)</td></tr><tr><th scope=\"row\">\\(\\sin u\\cos u\\)</th><td>\\(\\frac12\\sin(2u)\\)</td></tr><tr><th scope=\"row\">\\(\\tan u\\)</th><td>\\(\\frac{\\sin u}{\\cos u}\\), compare with the derivative of \\(\\cos u\\)</td></tr></tbody></table></div>",
+      "method": "<ol><li>Rewrite the trigonometric expression with an identity before integrating.</li><li>For a logarithmic derivative, match the whole numerator and keep the denominator inside the modulus.</li><li>Check continuity at all points between the limits and evaluate the signed difference.</li></ol>",
+      "mistakes": [
+        "Double the entire argument in a double-angle identity.",
+        "Match the whole numerator to a constant multiple of the denominator derivative.",
+        "An excluded point between the limits invalidates direct endpoint subtraction."
+      ],
+      "examples": [
+        {
+          "title": "Replace a squared cosine with a doubled angle",
+          "question": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{4}}6\\cos^2(2x)\\,\\mathrm dx\\).</p>",
+          "solution": "<p>Use \\(\\cos^2u=\\frac{1+\\cos(2u)}2\\) with \\(u=2x\\). The integrand becomes \\(3+3\\cos(4x)\\).</p><p>A primitive is \\(3x+\\frac34\\sin(4x)\\). Its sine term is zero at both endpoints.</p><p>Upper minus lower gives \\(\\frac{3\\pi}{4}\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Turn an equal-angle product into one sine",
+          "question": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{6}}8\\sin(3x)\\cos(3x)\\,\\mathrm dx\\).</p>",
+          "solution": "<p>The double-angle identity gives \\(8\\sin(3x)\\cos(3x)=4\\sin(6x)\\).</p><p>A primitive of \\(4\\sin(6x)\\) is \\(-\\frac23\\cos(6x)\\).</p><p>Evaluate at the endpoints. The result is \\(-\\frac23\\cos\\pi+\\frac23\\cos0=\\frac43\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Match a numerator to its denominator's derivative",
+          "question": "<p>Evaluate \\(\\int_1^2\\frac{9x^2}{x^3+5}\\,\\mathrm dx\\), keeping the denominator intact.</p>",
+          "solution": "<p>With \\(f(x)=x^3+5\\), its derivative is \\(3x^2\\). The numerator is \\(3 f'(x)\\).</p><p>The denominator is positive on the interval. A primitive is \\(3\\ln(x^3+5)\\).</p><p>The value is \\(3\\ln13-3\\ln6=3\\ln\\left(\\frac{13}{6}\\right)\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Integrate tangent from a logarithmic derivative",
+          "question": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{3}}2\\tan x\\,\\mathrm dx\\).</p>",
+          "solution": "<p>Write \\(2\\tan x=\\frac{2\\sin x}{\\cos x}\\). The derivative of \\(\\cos x\\) is \\(-\\sin x\\).</p><p>The integrand therefore has primitive \\(-2\\ln|\\cos x|\\). Cosine is positive and has no zero between the given limits.</p><p>The difference is \\(-2\\ln\\left(\\frac12\\right)+2\\ln1=2\\ln2\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        }
+      ]
+    },
+    {
+      "key": "partial_fractions",
+      "id": "orig_9709_p3_int_partial_fractions",
+      "title": "Integration using partial fractions",
+      "summary": "Decompose rational functions, integrate each part and check definite intervals for poles.",
+      "objective": "Choose the correct numerator form for each factor, integrate each term and evaluate only on intervals where the fraction is defined.",
+      "before": "<p>Recall factoring, division with remainder and the standard antiderivatives for linear reciprocals and inverse tangent.</p>",
+      "ideas": "<p>A distinct linear factor gives one constant numerator. A repeated linear factor uses a term for each power.</p><p>The quadratic numerator splits into a derivative term and a constant term.</p><p>When the degrees match, divide before decomposing and check that a definite interval contains no poles.</p>",
+      "method": "<ol><li>Check degrees and divide first when needed.</li><li>Factor the denominator and select a numerator for every term.</li><li>Clear denominators, solve for constants and check by recombining.</li><li>Integrate term by term and check the domain before using limits.</li></ol>",
+      "mistakes": [
+        "Losing the derivative multiplier in a linear logarithm.",
+        "Leaving out the first power of a repeated factor.",
+        "Evaluating an ordinary definite integral across a pole."
+      ],
+      "examples": [
+        {
+          "title": "Two different linear factors",
+          "question": "<p>Integrate \\(\\frac{5x+7}{(x+1)(x+3)}\\) with respect to \\(x\\).</p>",
+          "solution": "<p>Clear denominators to obtain \\(5x+7=A(x+3)+B(x+1)\\).</p><p>At \\(x=-1\\) obtain \\(A=1\\). At \\(x=-3\\) obtain \\(B=4\\).</p><p>Integrate the two terms to get \\(\\ln|x+1|+4\\ln|x+3|+C\\). This holds on each interval without poles.</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Keep both powers of a repeated factor",
+          "question": "<p>Integrate \\(\\frac{5x+11}{(x+1)(x+2)^2}\\) with respect to \\(x\\).</p>",
+          "solution": "<p>Use the form \\(\\frac A{x+1}+\\frac B{x+2}+\\frac D{(x+2)^2}\\). Clearing denominators gives \\(5x+11=A(x+2)^2+B(x+1)(x+2)+D(x+1)\\).</p><p>Substitute \\(x=-1\\) and \\(x=-2\\) to get \\(A=6\\) and \\(D=-1\\). The coefficient of \\(x^2\\) gives \\(A+B=0\\), so \\(B=-6\\).</p><p>Integrate to get \\(6\\ln|x+1|-6\\ln|x+2|+\\frac1{x+2}+C\\). The reciprocal term is positive because differentiating it gives the negative squared-denominator term.</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Split the numerator over a quadratic",
+          "question": "<p>Integrate \\(\\frac{5x^2+7x+10}{(x+2)(x^2+4)}\\) with respect to \\(x\\).</p>",
+          "solution": "<p>Use \\(\\frac A{x+2}+\\frac{Bx+D}{x^2+4}\\). At \\(x=-2\\) the numerator identity gives \\(A=2\\). Comparing the quadratic and linear coefficients gives \\(B=3\\) and \\(D=1\\).</p><p>The numerator \\(3x+1\\) splits as \\(\\frac32(2x)+1\\). The first part is a multiple of the derivative of \\(x^2+4\\).</p><p>Integrate to obtain \\(2\\ln|x+2|+\\frac32\\ln(x^2+4)+\\frac12\\tan^{-1}\\!\\left(\\frac x2\\right)+C\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Divide before integrating a definite rational function",
+          "question": "<p>Evaluate \\(\\int_2^4\\frac{2x^2+7x-3}{(x-1)(x+2)}\\,\\mathrm dx\\) exactly.</p>",
+          "solution": "<p>The denominator is \\(x^2+x-2\\). Subtract twice this denominator from the numerator to get \\(5x+1\\).</p><p>The remainder splits as \\(\\frac{5x+1}{(x-1)(x+2)}=\\frac2{x-1}+\\frac3{x+2}\\). Both poles lie outside the integration interval.</p><p>Use \\(\\left[2x+2\\ln(x-1)+3\\ln(x+2)\\right]_2^4\\). The exact value is \\(4+2\\ln3+3\\ln\\left(\\frac32\\right)\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        }
+      ]
+    },
+    {
+      "key": "substitution",
+      "id": "orig_9709_p3_int_substitution",
+      "title": "Integration by substitution",
+      "summary": "Use a given substitution to rewrite the integrand, transform limits and evaluate exact integrals.",
+      "objective": "Make a complete change of variable for indefinite and definite integrals, including decreasing substitutions.",
+      "before": "<p>Recall the chain rule, standard power antiderivatives and the identity connecting sine and cosine.</p>",
+      "ideas": "<p>Differentiate the given substitution and replace the differential with its matching factor.</p><p>Use the substitution itself to rewrite any remaining variables.</p><p>For a definite integral transform both endpoints in order. For an indefinite integral restore the original variable.</p>",
+      "method": "<ol><li>Name the given substitution and differentiate it.</li><li>Rewrite every factor in the new variable.</li><li>For a definite integral rewrite both limits in order.</li><li>Integrate and either evaluate consistently or restore the original variable.</li></ol>",
+      "mistakes": [
+        "Dropping a constant factor when converting the differential.",
+        "Leaving a factor of the original variable in the new integral.",
+        "Reversing the new limits without the required minus sign."
+      ],
+      "examples": [
+        {
+          "title": "Change variables in an indefinite integral",
+          "question": "<p>Evaluate \\(\\int 3x(1+x^2)^4\\,\\mathrm dx\\) using \\(u=1+x^2\\).</p>",
+          "solution": "<p>Differentiate \\(u=1+x^2\\) to get \\(\\mathrm du=2x\\,\\mathrm dx\\). Hence \\(3x\\,\\mathrm dx=\\frac32\\,\\mathrm du\\).</p><p>The integral becomes \\(\\frac32\\int u^4\\,\\mathrm du=\\frac3{10}u^5+C\\).</p><p>Restore \\(u=1+x^2\\) to obtain \\(\\frac3{10}(1+x^2)^5+C\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Rewrite a leftover factor of x",
+          "question": "<p>For \\(x&gt;-\\frac12\\), integrate \\(\\frac{x}{\\sqrt{2x+1}}\\) using \\(u=\\sqrt{2x+1}\\).</p>",
+          "solution": "<p>From \\(u^2=2x+1\\) obtain \\(x=\\frac{u^2-1}{2}\\) and \\(\\mathrm dx=u\\,\\mathrm du\\). In this domain \\(u&gt;0\\).</p><p>The root in the denominator becomes \\(u\\). Therefore the integral is \\(\\frac12\\int(u^2-1)\\,\\mathrm du\\).</p><p>Integrate to get \\(\\frac16u^3-\\frac12u+C\\) then replace \\(u\\) to obtain \\(\\frac16(2x+1)^{\\frac32}-\\frac12(2x+1)^{\\frac12}+C\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Respect decreasing limits",
+          "question": "<p>Evaluate \\(\\int_0^4\\sqrt{9-2x}\\,\\mathrm dx\\) using \\(u=9-2x\\).</p>",
+          "solution": "<p>The limits in order are \\(x=0\\mapsto u=9\\) and \\(x=4\\mapsto u=1\\). Also \\(\\mathrm dx=-\\frac12\\,\\mathrm du\\).</p><p>The integral is \\(-\\frac12\\int_9^1 u^{\\frac12}\\,\\mathrm du=\\frac12\\int_1^9u^{\\frac12}\\,\\mathrm du\\).</p><p>Evaluate \\(\\left[\\frac13u^{\\frac32}\\right]_1^9=\\frac13(27-1)=\\frac{26}3\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Transform the whole trigonometric product",
+          "question": "<p>Evaluate \\(\\int_0^{\\frac\\pi2}\\sin^2x\\cos^3x\\,\\mathrm dx\\) using \\(u=\\sin x\\).</p>",
+          "solution": "<p>Set aside one \\(\\cos x\\) for \\(\\mathrm du=\\cos x\\,\\mathrm dx\\). Rewrite the remaining \\(\\cos^2x\\) as \\(1-u^2\\).</p><p>The limits \\(0\\) and \\(\\frac\\pi2\\) become \\(0\\) and \\(1\\). The integral becomes \\(\\int_0^1(u^2-u^4)\\,\\mathrm du\\).</p><p>Evaluate \\(\\left[\\frac{u^3}3-\\frac{u^5}5\\right]_0^1=\\frac13-\\frac15=\\frac2{15}\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        }
+      ]
+    },
+    {
+      "id": "orig_9709_p3_int_parts",
+      "key": "parts",
+      "title": "Integration by parts and choosing a method",
+      "summary": "Choose factors for integration by parts, simplify logarithmic and repeated products, and evaluate exact definite integrals.",
+      "objective": "Apply integration by parts to algebraic, exponential, logarithmic and trigonometric functions.",
+      "before": "<p>Parts reverses the product rule. Arrange the two factors so that the second integral takes less work than the first.</p>",
+      "ideas": "<p>Write the integrand as \\(uv'\\). From \\((uv)'=u'v+uv'\\),</p>\\[\\int uv'\\,dx=uv-\\int u'v\\,dx.\\]<p>Choose \\(u\\) so its derivative is simpler, and choose \\(v'\\) so you know a primitive \\(v\\). First look for an inner function with its derivative, since that can make the reverse chain rule shorter.</p><p>For a positive argument, choose \\(u=\\ln g(x)\\) when \\(g'(x)\\) divided by \\(g(x)\\) is simpler. With \\(v'=1\\), take \\(v=x\\). For \\(\\int x^n\\ln x\\,dx\\), let \\(v'\\) be \\(x^n\\). The same idea works for inverse tangent, whose derivative is rational.</p><p>Keep a new \\(u,v'\\) choice for each integral. If the other factor is exponential or sinusoidal, its primitive stays in a familiar family. Check both the sign of the outer remainder and the sign introduced by the next primitive.</p><p>Use \\(\\int_a^b uv'\\,dx=[uv]_a^b-\\int_a^b u'v\\,dx\\). Evaluate the upper endpoint first. A definite integral is signed. If the problem asks for geometric area, locate every crossing and add the magnitudes of the separate regions.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">What you see</th><th scope=\"col\">First method to try</th></tr></thead><tbody><tr><th scope=\"row\">An inner function and its derivative</th><td>Reverse chain rule or a direct substitution</td></tr><tr><th scope=\"row\">A product such as \\(x\\cos(2x)\\)</th><td>Parts, because differentiating the polynomial lowers its degree</td></tr><tr><th scope=\"row\">A square such as \\(\\sin^2x\\)</th><td>Use a double-angle identity before integrating</td></tr><tr><th scope=\"row\">A rational function with a factorable denominator</th><td>Check for \\(\\frac{f'}{f}\\); otherwise try partial fractions</td></tr><tr><th scope=\"row\">A supplied change of variable</th><td>Substitute every factor and convert both limits</td></tr></tbody></table></div>",
+      "method": "<ol><li>Choose the factor to differentiate.</li><li>Integrate the second factor.</li><li>Evaluate the simpler integral, repeating parts if necessary.</li></ol>",
+      "mistakes": [
+        "Find a primitive for the second factor before forming the product.",
+        "Carry the minus sign through the remainder integral.",
+        "For a definite integral, evaluate both endpoints."
+      ],
+      "examples": [
+        {
+          "title": "Reduce a linear factor to a constant",
+          "question": "<p>Find \\(\\int (2x+1)e^{2x}\\,dx\\).</p>",
+          "solution": "<p>Set \\(u=2x+1\\) and \\(v'=e^{2x}\\). Then \\(u'=2\\) and \\(v=\\frac12e^{2x}\\).</p>\\[\\int (2x+1)e^{2x}\\,dx=\\left(x+\\frac12\\right)e^{2x}-\\int e^{2x}\\,dx.\\]<p>The remaining primitive is \\(\\frac12e^{2x}\\). The terms cancel to give \\(xe^{2x}+C\\). Differentiating returns \\((2x+1)e^{2x}\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Reveal the rational remainder",
+          "question": "<p>Find \\(\\int \\ln(3x+1)\\,dx\\), for \\(x>-\\frac13\\).</p>",
+          "solution": "<p>Use \\(u=\\ln(3x+1)\\) and \\(v'=1\\). This gives \\(u'=\\frac{3}{3x+1}\\) and \\(v=x\\).</p>\\[\\int\\ln(3x+1)\\,dx=x\\ln(3x+1)-\\int\\left(1-\\frac{1}{3x+1}\\right)\\,dx.\\]<p>Integrate the split remainder and collect logarithms. The result is \\(\\left(x+\\frac13\\right)\\ln(3x+1)-x+C\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Lower a quadratic factor twice",
+          "question": "<p>Find \\(\\int x^2e^{-x}\\,dx\\).</p>",
+          "solution": "<p>Use parts with \\(u=x^2,\\ v=-e^{-x}\\).</p>\\[\\int x^2e^{-x}\\,dx=-x^2e^{-x}+\\int 2xe^{-x}\\,dx.\\]<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Step</th><th scope=\"col\">Differentiated factor</th><th scope=\"col\">Primitive used</th></tr></thead><tbody><tr><th scope=\"row\">First</th><td>\\(u=x^2\\)</td><td>\\(v=-e^{-x}\\)</td></tr><tr><th scope=\"row\">Second</th><td>\\(u=2x\\)</td><td>\\(v=-e^{-x}\\)</td></tr></tbody></table></div><p>For the new integral, use \\(u=2x\\) and the same primitive \\(v=-e^{-x}\\). It gives \\(-2xe^{-x}-2e^{-x}\\), up to a constant.</p><p>Collect terms to obtain \\(-(x^2+2x+2)e^{-x}+C\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        },
+        {
+          "title": "Evaluate a trigonometric product",
+          "question": "<p>Find \\(\\int_0^{\\frac{\\pi}{2}}x\\sin(2x)\\,dx\\), using radians.</p>",
+          "solution": "<p>Select \\(u=x\\), \\(v'=\\sin(2x)\\). Then \\(u'=1\\) and \\(v=-\\frac12\\cos(2x)\\).</p>\\[\\int_0^{\\frac{\\pi}{2}}x\\sin(2x)\\,dx=\\left[-\\frac{x\\cos(2x)}2+\\frac{\\sin(2x)}4\\right]_0^{\\frac{\\pi}{2}}.\\]<p>At the upper limit, \\(\\cos\\pi=-1\\) and \\(\\sin\\pi=0\\). The lower value is \\(0\\), so the integral is \\(\\frac{\\pi}{4}\\).</p>",
+          "verification": "MATHS4U-P3-INT-CHECKED"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "M4U-9709-P3-INT-STD-01-0",
+      "family_uid": "M4U-9709-P3-INT-STD-01",
+      "lesson": "standard",
+      "collection": "short",
+      "title": "Reverse a positive exponential slope",
+      "prompt_html": "<p>Write \\(\\int9e^{3x+1}\\,\\mathrm dx=ke^{3x+1}+C\\). Give \\(k\\).</p>",
+      "answer_html": "<p>\\(k=3\\).</p>",
+      "solution_html": "<p>The derivative of \\(ke^{3x+1}\\) is \\(3ke^{3x+1}\\). Matching the integrand gives \\(3k=9\\) and \\(k=3\\).</p>",
+      "hint_html": "<p>Match the coefficient after differentiating the proposed primitive.</p>",
+      "fields": [
+        {
+          "key": "coefficient",
+          "label": "Coefficient",
+          "expected": "3",
+          "type": "number"
+        }
+      ],
+      "difficulty": 1,
+      "marks": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct coefficient.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-STD-02-0",
+      "family_uid": "M4U-9709-P3-INT-STD-02",
+      "lesson": "standard",
+      "collection": "short",
+      "title": "Evaluate a reciprocal linear integral",
+      "prompt_html": "<p>Express \\(\\int_0^1\\frac5{5x+2}\\,\\mathrm dx\\) as \\(\\ln r\\). Give \\(r>0\\).</p>",
+      "answer_html": "<p>\\(r=\\frac72\\).</p>",
+      "solution_html": "<p>The denominator is positive on the interval. The primitive \\(\\ln(5x+2)\\) gives \\(\\ln7-\\ln2=\\ln\\left(\\frac72\\right)\\).</p>",
+      "hint_html": "<p>Upper magnitude over lower magnitude.</p>",
+      "fields": [
+        {
+          "key": "ratio",
+          "label": "Positive ratio r",
+          "expected": "7/2",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct positive ratio r.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-STD-03-0",
+      "family_uid": "M4U-9709-P3-INT-STD-03",
+      "lesson": "standard",
+      "collection": "short",
+      "title": "Match two signed coefficients",
+      "prompt_html": "<p>Write \\(\\int\\big(8\\sin(4x)+9\\cos(3x)\\big)\\,\\mathrm dx=A\\cos(4x)+B\\sin(3x)+C\\). Give \\(A\\) and \\(B\\).</p>",
+      "answer_html": "<p>\\(A=-2\\), \\(B=3\\).</p>",
+      "solution_html": "<p>Matching derivatives gives \\(-4A=8\\) and \\(3B=9\\). Thus \\(A=-2\\) and \\(B=3\\).</p>",
+      "hint_html": "<p>Differentiate each basis function, including its inner slope.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient A",
+          "expected": "-2",
+          "type": "number"
+        },
+        {
+          "key": "b",
+          "label": "Coefficient B",
+          "expected": "3",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct coefficient A.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct coefficient B.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-STD-04-0",
+      "family_uid": "M4U-9709-P3-INT-STD-04",
+      "lesson": "standard",
+      "collection": "short",
+      "title": "Use tangent and inverse tangent",
+      "prompt_html": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{12}}3\\sec^2(3x)\\,\\mathrm dx\\) and \\(\\int_{-4}^4\\frac4{x^2+16}\\,\\mathrm dx\\) exactly.</p>",
+      "answer_html": "<p>\\(1\\) and \\(\\frac{\\pi}{2}\\).</p>",
+      "solution_html": "<p>The first is \\(\\big[\\tan(3x)\\big]_0^{\\frac{\\pi}{12}}=1\\).</p><p>The second is \\(\\left[\\arctan\\left(\\frac x4\\right)\\right]_{-4}^4=\\frac{\\pi}{4}-\\left(-\\frac{\\pi}{4}\\right)=\\frac{\\pi}{2}\\).</p>",
+      "hint_html": "<p>At the reciprocal-quadratic limits the inverse tangent input is minus one and one.</p>",
+      "fields": [
+        {
+          "key": "tangent",
+          "label": "First exact integral",
+          "expected": "1",
+          "type": "number"
+        },
+        {
+          "key": "arctan",
+          "label": "Second exact integral",
+          "expected": "pi/2",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct first exact integral.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct second exact integral.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-STD-01-1",
+      "family_uid": "M4U-9709-P3-INT-STD-01",
+      "lesson": "standard",
+      "collection": "variant",
+      "title": "Reverse a negative exponential slope",
+      "prompt_html": "<p>Write \\(\\int8e^{5-2x}\\,\\mathrm dx=ke^{5-2x}+C\\). Give \\(k\\).</p>",
+      "answer_html": "<p>\\(k=-4\\).</p>",
+      "solution_html": "<p>The derivative of \\(ke^{5-2x}\\) is \\(-2ke^{5-2x}\\). Hence \\(-2k=8\\) and \\(k=-4\\).</p>",
+      "hint_html": "<p>Use the signed inner slope.</p>",
+      "fields": [
+        {
+          "key": "coefficient",
+          "label": "Coefficient",
+          "expected": "-4",
+          "type": "number"
+        }
+      ],
+      "difficulty": 1,
+      "marks": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct coefficient.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-STD-02-1",
+      "family_uid": "M4U-9709-P3-INT-STD-02",
+      "lesson": "standard",
+      "collection": "variant",
+      "title": "Evaluate a reciprocal linear integral",
+      "prompt_html": "<p>Express \\(\\int_0^2\\frac3{3x-8}\\,\\mathrm dx\\) as \\(\\ln r\\). Give \\(r>0\\).</p>",
+      "answer_html": "<p>\\(r=\\frac14\\).</p>",
+      "solution_html": "<p>The denominator stays negative. Evaluating \\(\\ln|3x-8|\\) gives \\(\\ln2-\\ln8=\\ln\\left(\\frac14\\right)\\).</p>",
+      "hint_html": "<p>Use the absolute value at each limit.</p>",
+      "fields": [
+        {
+          "key": "ratio",
+          "label": "Positive ratio r",
+          "expected": "1/4",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct positive ratio r.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-STD-03-1",
+      "family_uid": "M4U-9709-P3-INT-STD-03",
+      "lesson": "standard",
+      "collection": "variant",
+      "title": "Match two signed coefficients",
+      "prompt_html": "<p>Write \\(\\int\\big(6\\sin(2-3x)+8\\cos(5-2x)\\big)\\,\\mathrm dx=A\\cos(2-3x)+B\\sin(5-2x)+C\\). Give \\(A\\) and \\(B\\).</p>",
+      "answer_html": "<p>\\(A=2\\), \\(B=-4\\).</p>",
+      "solution_html": "<p>Cosine introduces a minus sign that cancels the inner slope's sign, so \\(3A=6\\). The sine term gives \\(-2B=8\\). Therefore \\(A=2\\), \\(B=-4\\).</p>",
+      "hint_html": "<p>Both angles have negative inner slopes.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient A",
+          "expected": "2",
+          "type": "number"
+        },
+        {
+          "key": "b",
+          "label": "Coefficient B",
+          "expected": "-4",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct coefficient A.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct coefficient B.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-STD-04-1",
+      "family_uid": "M4U-9709-P3-INT-STD-04",
+      "lesson": "standard",
+      "collection": "variant",
+      "title": "Use tangent and inverse tangent",
+      "prompt_html": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{16}}12\\sec^2(4x)\\,\\mathrm dx\\) and \\(\\int_0^5\\frac5{x^2+25}\\,\\mathrm dx\\) exactly.</p>",
+      "answer_html": "<p>\\(3\\) and \\(\\frac{\\pi}{4}\\).</p>",
+      "solution_html": "<p>The first is \\(\\big[3\\tan(4x)\\big]_0^{\\frac{\\pi}{16}}=3\\).</p><p>The second is \\(\\left[\\arctan\\left(\\frac x5\\right)\\right]_0^5=\\frac{\\pi}{4}\\).</p>",
+      "hint_html": "<p>The scales for the tangent and inverse-tangent primitives come from different patterns.</p>",
+      "fields": [
+        {
+          "key": "tangent",
+          "label": "First exact integral",
+          "expected": "3",
+          "type": "number"
+        },
+        {
+          "key": "arctan",
+          "label": "Second exact integral",
+          "expected": "pi/4",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct first exact integral.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct second exact integral.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-STD-E01",
+      "family_uid": "M4U-9709-P3-INT-STD-E01",
+      "lesson": "standard",
+      "collection": "exam",
+      "title": "Recover a function on a single branch",
+      "prompt_html": "<p>A differentiable function satisfies \\(f'(x)=6e^{1-3x}+\\frac4{2x+3}\\) on the largest interval containing \\(0\\) where this derivative formula is defined.</p><ol type=\"a\"><li><p>State that interval. <span class=\"marks\">[1]</span></p></li><li><p>Find the general expression for the function on this interval. <span class=\"marks\">[4]</span></p></li><li><p>Given that \\(f\\left(\\frac13\\right)=0\\), find \\(f(1)\\) exactly. <span class=\"marks\">[3]</span></p></li></ol>",
+      "answer_html": "<ol type=\"a\"><li><p>\\(x>-\\frac32\\).</p></li><li><p>\\(f(x)=-2e^{1-3x}+2\\ln(2x+3)+C\\).</p></li><li><p>\\(2-2e^{-2}+2\\ln\\left(\\frac{15}{11}\\right)\\).</p></li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>The excluded input is \\(-\\frac32\\). The interval containing \\(0\\) is \\(\\left(-\\frac32,\\infty\\right)\\).</p></li><li><p>The exponential term requires division by \\(-3\\). The reciprocal linear term integrates to \\(2\\ln|2x+3|\\).</p><p>On the stated interval \\(2x+3>0\\), so \\(f(x)=-2e^{1-3x}+2\\ln(2x+3)+C\\).</p></li><li><p>At \\(x=\\frac13\\), the exponential equals \\(1\\) and the logarithm argument is \\(\\frac{11}{3}\\). Hence \\(C=2-2\\ln\\left(\\frac{11}{3}\\right)\\).</p><p>At \\(x=1\\), this gives \\(-2e^{-2}+2\\ln5+2-2\\ln\\left(\\frac{11}{3}\\right)=2-2e^{-2}+2\\ln\\left(\\frac{15}{11}\\right)\\).</p></li></ol>",
+      "hint_html": "<p>For \\(x=\\frac13\\), the exponent becomes zero. Use the full primitive before applying the condition.</p>",
+      "fields": [],
+      "marks": 8,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct open interval.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the reverse chain rule with the signed slope.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the exponential term.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the logarithmic term.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Include an arbitrary constant.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the given function value to determine the constant.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the exact constant.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the exact function value at \\(1\\).</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-STD-E02",
+      "family_uid": "M4U-9709-P3-INT-STD-E02",
+      "lesson": "standard",
+      "collection": "exam",
+      "title": "Area after a vertical translation",
+      "prompt_html": "<p>Let \\(g(x)=6\\sin(3x)+2\\cos(2x)\\) for \\(0\\le x\\le\\frac{\\pi}{6}\\).</p><ol type=\"a\"><li><p>Find \\(\\int g(x)\\,\\mathrm dx\\). <span class=\"marks\">[2]</span></p></li><li><p>Evaluate \\(\\int_0^{\\frac{\\pi}{6}}g(x)\\,\\mathrm dx\\) exactly. <span class=\"marks\">[2]</span></p></li><li><p>Show that \\(g(x)-1\\ge0\\) on the given interval. Find the area between \\(y=g(x)-1\\) and the \\(x\\)-axis there. <span class=\"marks\">[3]</span></p></li></ol>",
+      "answer_html": "<ol type=\"a\"><li><p>\\(-2\\cos(3x)+\\sin(2x)+C\\).</p></li><li><p>\\(2+\\frac{\\sqrt3}{2}\\).</p></li><li><p>Area \\(=2+\\frac{\\sqrt3}{2}-\\frac{\\pi}{6}\\).</p></li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>Integrate sine to negative cosine and divide by \\(3\\). Integrate cosine to sine and divide by \\(2\\). The result is \\(-2\\cos(3x)+\\sin(2x)+C\\).</p></li><li><p>The primitive without the constant has value \\(\\frac{\\sqrt3}{2}\\) at the upper limit, and value \\(-2\\) at the lower limit.</p><p>Upper minus lower gives \\(2+\\frac{\\sqrt3}{2}\\).</p></li><li><p>Here \\(0\\le3x\\le\\frac{\\pi}{2}\\), so \\(\\sin(3x)\\ge0\\). Also \\(0\\le2x\\le\\frac{\\pi}{3}\\), so \\(2\\cos(2x)\\ge1\\). Thus \\(g(x)-1\\ge0\\).</p><p>The requested area is the signed integral of \\(g-1\\), equal to \\(2+\\frac{\\sqrt3}{2}-\\frac{\\pi}{6}\\).</p></li></ol>",
+      "hint_html": "<p>Subtract the integral of \\(1\\) over the whole interval to account for the translation.</p>",
+      "fields": [],
+      "marks": 7,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the two trigonometric primitives and the relevant inner slopes.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the full primitive including its arbitrary constant.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Substitute both limits into a primitive.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the correct exact difference.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the transformed angle ranges to bound the two terms.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Establish that the curve lies on or above the axis.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the correct area.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-STD-E03",
+      "family_uid": "M4U-9709-P3-INT-STD-E03",
+      "lesson": "standard",
+      "collection": "exam",
+      "title": "Compare integrals with and without an excluded input",
+      "prompt_html": "<p>Consider the functions \\(p(x)=\\frac8{x^2+16}\\) and \\(q(x)=\\sec^2(2x)\\).</p><ol type=\"a\"><li><p>Find and verify \\(\\int p(x)\\,\\mathrm dx\\). <span class=\"marks\">[3]</span></p></li><li><p>Evaluate \\(\\int_{-4}^{4}p(x)\\,\\mathrm dx\\) and \\(\\int_0^{\\frac{\\pi}{8}}q(x)\\,\\mathrm dx\\) exactly. <span class=\"marks\">[2]</span></p></li><li><p>A student obtains zero for \\(\\int_0^{\\frac{\\pi}{2}}q(x)\\,\\mathrm dx\\) by subtracting tangent values at the endpoints. Explain why this procedure fails. <span class=\"marks\">[2]</span></p></li></ol>",
+      "answer_html": "<ol type=\"a\"><li><p>\\(2\\arctan\\left(\\frac x4\\right)+C\\).</p></li><li><p>\\(\\pi\\) and \\(\\frac12\\).</p></li><li><p>\\(q\\) is undefined at \\(x=\\frac{\\pi}{4}\\), so it has a singularity inside the interval.</p></li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>\\(x^2+16=x^2+4^2\\), so use \\(2\\arctan\\left(\\frac x4\\right)\\). Its derivative is \\(2\\cdot\\frac{1}{1+\\left(\\frac{x}{4}\\right)^2}\\cdot\\frac14=\\frac8{x^2+16}\\).</p><p>The general primitive is \\(2\\arctan\\left(\\frac x4\\right)+C\\).</p></li><li><p>The first is \\(2(\\arctan1-\\arctan(-1))=\\pi\\).</p><p>The second is \\(\\left[\\frac12\\tan(2x)\\right]_0^{\\frac{\\pi}{8}}=\\frac12\\), with no pole between the limits.</p></li><li><p>\\(\\cos(2x)=0\\) when \\(x=\\frac{\\pi}{4}\\). The integrand and its tangent primitive are not defined throughout the interval, so the endpoint subtraction does not apply.</p></li></ol>",
+      "hint_html": "<p>Check the entire interval for a zero of the denominator.</p>",
+      "fields": [],
+      "marks": 7,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Recognise the inverse-tangent primitive and scaling.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the primitive including the constant.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Verify by differentiation.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Evaluate both primitives at the relevant limits.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give each exact integral.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Locate the interior excluded input.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Explain why the primitive cannot be used across it.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-TL-01-0",
+      "family_uid": "M4U-9709-P3-INT-TL-01",
+      "lesson": "trig_log",
+      "collection": "short",
+      "title": "Reduce a squared sine before evaluating",
+      "prompt_html": "<p>Find the exact value of \\(\\int_0^{\\frac{\\pi}{8}}12\\sin^2(2x)\\,\\mathrm dx\\).</p>",
+      "answer_html": "<p>\\(\\frac{3\\pi}{4}-\\frac32\\).</p>",
+      "solution_html": "<p>Rewrite the integrand as \\(6-6\\cos(4x)\\).</p><p>The primitive \\(\\left[6x-\\frac32\\sin(4x)\\right]_0^{\\frac{\\pi}{8}}\\) gives \\(\\frac{3\\pi}{4}-\\frac32\\).</p>",
+      "hint_html": "<p>The sine square uses the minus form of the identity.</p>",
+      "fields": [
+        {
+          "key": "value",
+          "label": "Exact integral",
+          "expected": "3*pi/4-3/2",
+          "type": "number"
+        }
+      ],
+      "difficulty": 1,
+      "marks": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct exact integral.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-TL-02-0",
+      "family_uid": "M4U-9709-P3-INT-TL-02",
+      "lesson": "trig_log",
+      "collection": "short",
+      "title": "Replace the product with one sine",
+      "prompt_html": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{12}}10\\sin(3x)\\cos(3x)\\,\\mathrm dx\\) exactly.</p>",
+      "answer_html": "<p>\\(\\frac56\\).</p>",
+      "solution_html": "<p>The integrand becomes \\(5\\sin(6x)\\). Then \\(\\left[-\\frac56\\cos(6x)\\right]_0^{\\frac{\\pi}{12}}=\\frac56\\).</p>",
+      "hint_html": "<p>Keep the factor of one half when doubling the angle.</p>",
+      "fields": [
+        {
+          "key": "value",
+          "label": "Exact integral",
+          "expected": "5/6",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct exact integral.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-TL-03-0",
+      "family_uid": "M4U-9709-P3-INT-TL-03",
+      "lesson": "trig_log",
+      "collection": "short",
+      "title": "Use the denominator's derivative",
+      "prompt_html": "<p>Write \\(\\int_1^2\\frac{8x}{2x^2+3}\\,\\mathrm dx=k\\ln r\\) with \\(r=\\frac{|f(2)|}{|f(1)|}\\) for \\(f(x)=2x^2+3\\). Give \\(k\\) and \\(r\\).</p>",
+      "answer_html": "<p>\\(k=2\\), \\(r=\\frac{11}{5}\\).</p>",
+      "solution_html": "<p>\\(f'=4x\\) and the numerator is twice \\(f'\\).</p><p>The denominator magnitudes at the upper and lower limits are \\(11\\) and \\(5\\), giving \\(2\\ln\\left(\\frac{11}{5}\\right)\\).</p>",
+      "hint_html": "<p>Find the derivative of the exact denominator and compare coefficients.</p>",
+      "fields": [
+        {
+          "key": "coefficient",
+          "label": "Multiplier k",
+          "expected": "2",
+          "type": "number"
+        },
+        {
+          "key": "ratio",
+          "label": "Denominator magnitude ratio r",
+          "expected": "11/5",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct multiplier k.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct denominator magnitude ratio r.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-TL-04-0",
+      "family_uid": "M4U-9709-P3-INT-TL-04",
+      "lesson": "trig_log",
+      "collection": "short",
+      "title": "Integrate a multiple of tangent",
+      "prompt_html": "<p>Write \\(\\int_0^{\\frac{\\pi}{8}}4\\tan(2x)\\,\\mathrm dx=k\\ln2\\). Find \\(k\\).</p>",
+      "answer_html": "<p>\\(k=1\\).</p>",
+      "solution_html": "<p>The primitive is \\(-2\\ln|\\cos(2x)|\\). Both bounds lie on a continuous branch.</p><p>Since \\(\\cos\\frac{\\pi}{4}=\\frac1{\\sqrt2}\\), the result is \\(-2\\ln\\left(\\frac1{\\sqrt2}\\right)=\\ln2\\).</p>",
+      "hint_html": "<p>Remember the inner slope of two.</p>",
+      "fields": [
+        {
+          "key": "coefficient",
+          "label": "Coefficient of ln 2",
+          "expected": "1",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct coefficient of ln 2.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-TL-01-1",
+      "family_uid": "M4U-9709-P3-INT-TL-01",
+      "lesson": "trig_log",
+      "collection": "variant",
+      "title": "Reduce a squared cosine before evaluating",
+      "prompt_html": "<p>Find the exact value of \\(\\int_0^{\\frac{\\pi}{12}}8\\cos^2(3x)\\,\\mathrm dx\\).</p>",
+      "answer_html": "<p>\\(\\frac{\\pi}{3}+\\frac23\\).</p>",
+      "solution_html": "<p>Rewrite the integrand as \\(4+4\\cos(6x)\\).</p><p>The primitive \\(\\left[4x+\\frac23\\sin(6x)\\right]_0^{\\frac{\\pi}{12}}\\) gives \\(\\frac{\\pi}{3}+\\frac23\\).</p>",
+      "hint_html": "<p>The cosine square uses the plus form of the identity.</p>",
+      "fields": [
+        {
+          "key": "value",
+          "label": "Exact integral",
+          "expected": "pi/3+2/3",
+          "type": "number"
+        }
+      ],
+      "difficulty": 1,
+      "marks": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct exact integral.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-TL-02-1",
+      "family_uid": "M4U-9709-P3-INT-TL-02",
+      "lesson": "trig_log",
+      "collection": "variant",
+      "title": "Replace the product with one sine",
+      "prompt_html": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{8}}6\\sin(4x)\\cos(4x)\\,\\mathrm dx\\) exactly.</p>",
+      "answer_html": "<p>\\(\\frac34\\).</p>",
+      "solution_html": "<p>The integrand is \\(3\\sin(8x)\\), with primitive \\(-\\frac38\\cos(8x)\\).</p><p>The upper and lower cosine values are \\(-1\\) and \\(1\\), giving \\(\\frac38+\\frac38=\\frac34\\).</p>",
+      "hint_html": "<p>After doubling the argument, check both transformed limits.</p>",
+      "fields": [
+        {
+          "key": "value",
+          "label": "Exact integral",
+          "expected": "3/4",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct exact integral.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-TL-03-1",
+      "family_uid": "M4U-9709-P3-INT-TL-03",
+      "lesson": "trig_log",
+      "collection": "variant",
+      "title": "Use the denominator's derivative",
+      "prompt_html": "<p>Write \\(\\int_0^1\\frac{15x^2}{x^3+7}\\,\\mathrm dx=k\\ln r\\) with \\(r=\\frac{|f(1)|}{|f(0)|}\\) for \\(f(x)=x^3+7\\). Give \\(k\\) and \\(r\\).</p>",
+      "answer_html": "<p>\\(k=5\\), \\(r=\\frac87\\).</p>",
+      "solution_html": "<p>The numerator is \\(5\\) times \\(3x^2=f'(x)\\).</p><p>Use \\(5\\ln|f(x)|\\) and evaluate at denominator values \\(8\\) and \\(7\\).</p>",
+      "hint_html": "<p>Find the multiplier from the derivative of the denominator.</p>",
+      "fields": [
+        {
+          "key": "coefficient",
+          "label": "Multiplier k",
+          "expected": "5",
+          "type": "number"
+        },
+        {
+          "key": "ratio",
+          "label": "Denominator magnitude ratio r",
+          "expected": "8/7",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct multiplier k.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct denominator magnitude ratio r.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-TL-04-1",
+      "family_uid": "M4U-9709-P3-INT-TL-04",
+      "lesson": "trig_log",
+      "collection": "variant",
+      "title": "Integrate a multiple of tangent",
+      "prompt_html": "<p>Write \\(\\int_{-\\frac{\\pi}{9}}^0 6\\tan(3x)\\,\\mathrm dx=k\\ln2\\). Find \\(k\\).</p>",
+      "answer_html": "<p>\\(k=-2\\).</p>",
+      "solution_html": "<p>The primitive is \\(-2\\ln|\\cos(3x)|\\). At the lower limit \\(\\cos(3x)=\\frac12\\); at zero it is \\(1\\).</p><p>The difference is \\(0-2\\ln2=-2\\ln2\\).</p>",
+      "hint_html": "<p>Use the transformed lower angle and take the signed difference.</p>",
+      "fields": [
+        {
+          "key": "coefficient",
+          "label": "Coefficient of ln 2",
+          "expected": "-2",
+          "type": "number"
+        }
+      ],
+      "difficulty": 2,
+      "marks": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Give the correct coefficient of ln 2.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-TL-E01",
+      "family_uid": "M4U-9709-P3-INT-TL-E01",
+      "lesson": "trig_log",
+      "collection": "exam",
+      "title": "Combine a square and a product before integration",
+      "prompt_html": "<p>For \\(0\\le x\\le\\frac{\\pi}{8}\\), let \\(y=3+4\\cos^2(2x)-6\\sin(2x)\\cos(2x)\\).</p><ol type=\"a\"><li><p>Write \\(y\\) in the form \\(A+B\\cos(4x)+D\\sin(4x)\\), stating the coefficients. <span class=\"marks\">[3]</span></p></li><li><p>Evaluate \\(\\int_0^{\\frac{\\pi}{8}}y\\,\\mathrm dx\\) exactly. <span class=\"marks\">[3]</span></p></li><li><p>Find the exact height of the rectangle with this same base interval and the same area as the region under the curve. <span class=\"marks\">[2]</span></p></li></ol>",
+      "answer_html": "<ol type=\"a\"><li><p>\\(y=5+2\\cos(4x)-3\\sin(4x)\\).</p></li><li><p>\\(\\frac{5\\pi}{8}-\\frac14\\).</p></li><li><p>Height \\(=5-\\frac2\\pi\\).</p></li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>The square term becomes \\(2+2\\cos(4x)\\). The product term becomes \\(-3\\sin(4x)\\). Adding the constant gives \\(y=5+2\\cos(4x)-3\\sin(4x)\\).</p></li><li><p>A primitive is \\(5x+\\frac12\\sin(4x)+\\frac34\\cos(4x)\\). Its endpoint difference is \\(\\frac{5\\pi}{8}+\\frac12-\\frac34=\\frac{5\\pi}{8}-\\frac14\\).</p></li><li><p>On the interval, \\(\\cos(4x)\\ge0\\) and \\(\\sin(4x)\\le1\\), so \\(y\\ge2\\). The signed integral is therefore the area.</p><p>Divide \\(\\frac{5\\pi}{8}-\\frac14\\) by the base width \\(\\frac{\\pi}{8}\\) to obtain \\(5-\\frac2\\pi\\).</p></li></ol>",
+      "hint_html": "<p>Both identities must use the original angle before doubling it.</p>",
+      "fields": [],
+      "marks": 8,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the cosine-square identity.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the doubled-angle sine for the product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give all three coefficients.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Integrate the constant and both trigonometric terms.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Evaluate upper minus lower.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the exact value.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use area divided by the base width.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the exact height.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-TL-E02",
+      "family_uid": "M4U-9709-P3-INT-TL-E02",
+      "lesson": "trig_log",
+      "collection": "exam",
+      "title": "Use a logarithm on a connected branch",
+      "prompt_html": "<p>Let \\(q(x)=\\frac{10x}{x^2-4}\\).</p><ol type=\"a\"><li><p>Find \\(\\int q(x)\\,\\mathrm dx\\) on an interval where \\(q\\) is defined. <span class=\"marks\">[3]</span></p></li><li><p>Evaluate \\(\\int_0^1 q(x)\\,\\mathrm dx\\) exactly. <span class=\"marks\">[2]</span></p></li><li><p>Explain why the same endpoint subtraction does not give an ordinary definite integral for \\(\\int_1^3 q(x)\\,\\mathrm dx\\). <span class=\"marks\">[2]</span></p></li><li><p>Find \\(\\int_{-1}^{1}q(x)\\,\\mathrm dx\\) using symmetry. <span class=\"marks\">[2]</span></p></li></ol>",
+      "answer_html": "<ol type=\"a\"><li><p>\\(5\\ln|x^2-4|+C\\).</p></li><li><p>\\(5\\ln\\left(\\frac34\\right)\\).</p></li><li><p>\\(q\\) is undefined at \\(x=2\\) inside the interval.</p></li><li><p>\\(0\\).</p></li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>The denominator derivative is \\(2x\\). The numerator is \\(5\\) times this, so the primitive is \\(5\\ln|x^2-4|+C\\).</p></li><li><p>The denominator stays negative but non-zero. Its endpoint magnitudes are \\(3\\) and \\(4\\).</p><p>Upper minus lower is \\(5\\ln3-5\\ln4=5\\ln\\left(\\frac34\\right)\\).</p></li><li><p>The denominator vanishes at \\(x=2\\). The integrand is undefined there and the logarithmic primitive is not continuous across that point.</p></li><li><p>The numerator is odd and the denominator is even, so \\(q(-x)=-q(x)\\). There are no poles on \\([-1,1]\\).</p><p>Opposite signed contributions cancel, giving \\(0\\).</p></li></ol>",
+      "hint_html": "<p>Inspect the original denominator on each interval. Its sign can be negative without it vanishing.</p>",
+      "fields": [],
+      "marks": 9,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Compare the numerator with the denominator derivative.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the logarithmic primitive with modulus.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Include the constant.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the correct endpoint magnitudes.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the exact logarithmic result.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Locate the interior excluded input.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Explain why the subtraction rule does not apply across it.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(d)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Recognise the odd integrand on a continuous symmetric interval.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give zero.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-TL-E03",
+      "family_uid": "M4U-9709-P3-INT-TL-E03",
+      "lesson": "trig_log",
+      "collection": "exam",
+      "title": "Recover the upper limit of a tangent integral",
+      "prompt_html": "<p>Let \\(0\\le b<\\frac{\\pi}{4}\\) and \\(I(b)=\\int_0^b 6\\tan(2x)\\,\\mathrm dx\\).</p><ol type=\"a\"><li><p>Find \\(I(b)\\) in terms of \\(b\\). <span class=\"marks\">[3]</span></p></li><li><p>Given \\(I(b)=3\\ln2\\), find \\(b\\) exactly. <span class=\"marks\">[3]</span></p></li><li><p>For this value of \\(b\\), find \\(\\int_0^b \\big(6\\tan(2x)+8\\cos^2(2x)\\big)\\,\\mathrm dx\\). <span class=\"marks\">[3]</span></p></li></ol>",
+      "answer_html": "<ol type=\"a\"><li><p>\\(I(b)=-3\\ln(\\cos(2b))\\).</p></li><li><p>\\(b=\\frac{\\pi}{6}\\).</p></li><li><p>\\(3\\ln2+\\frac{2\\pi}{3}+\\frac{\\sqrt3}{2}\\).</p></li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>Since \\(\\tan(2x)=\\frac{\\sin(2x)}{\\cos(2x)}\\), compare with \\(\\big(\\cos(2x)\\big)'=-2\\sin(2x)\\). A primitive is \\(-3\\ln|\\cos(2x)|\\).</p><p>Cosine is positive throughout the interval and \\(\\ln(\\cos0)=0\\), so \\(I(b)=-3\\ln(\\cos(2b))\\).</p></li><li><p>\\(-3\\ln(\\cos(2b))=3\\ln2\\) gives \\(\\cos(2b)=\\frac12\\).</p><p>The required interval is \\(0\\le 2b<\\frac{\\pi}{2}\\), so \\(2b=\\frac{\\pi}{3}\\) and \\(b=\\frac{\\pi}{6}\\).</p></li><li><p>The tangent term contributes \\(3\\ln2\\) by the given condition.</p><p>The square term becomes \\(4+4\\cos(4x)\\). Its integral is \\(\\big[4x+\\sin(4x)\\big]_0^{\\frac{\\pi}{6}}=\\frac{2\\pi}{3}+\\frac{\\sqrt3}{2}\\).</p><p>Add the two contributions to obtain \\(3\\ln2+\\frac{2\\pi}{3}+\\frac{\\sqrt3}{2}\\).</p></li></ol>",
+      "hint_html": "<p>On the stated branch the logarithm argument is positive. Solve for the doubled angle first.</p>",
+      "fields": [],
+      "marks": 9,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Match the logarithmic derivative.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Find the correct primitive and sign.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Evaluate the lower limit and give the expression in terms of \\(b\\).</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Isolate the logarithm and exponentiate.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the correct cosine value.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Select the exact angle in the stated interval.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the double-angle identity for the square.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Evaluate the square term exactly.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Add the previously found tangent contribution.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-PF-01-0",
+      "family_uid": "M4U-9709-P3-INT-PF-01",
+      "lesson": "partial_fractions",
+      "collection": "short",
+      "title": "Adjust the coefficient of a logarithm",
+      "prompt_html": "<p>Find coefficients \\(a,b\\) such that \\(a\\ln|2x+1|+b\\ln|x+3|+C\\) is an antiderivative of \\(\\frac{8x+9}{(2x+1)(x+3)}\\).</p>",
+      "answer_html": "<p>\\(a=1,\\ b=3\\)</p>",
+      "solution_html": "<p>The decomposition is \\(\\frac2{2x+1}+\\frac3{x+3}\\).</p><p>The derivative of \\(2x+1\\) is two, so integrate to get \\(\\ln|2x+1|+3\\ln|x+3|+C\\).</p>",
+      "hint_html": "<p>Clear the denominators first. Divide the first partial-fraction coefficient by two when integrating.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient a",
+          "type": "number",
+          "expected": "1"
+        },
+        {
+          "key": "b",
+          "label": "Coefficient b",
+          "type": "number",
+          "expected": "3"
+        }
+      ],
+      "marks": 2,
+      "difficulty": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient a.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient b.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-PF-01-1",
+      "family_uid": "M4U-9709-P3-INT-PF-01",
+      "lesson": "partial_fractions",
+      "collection": "variant",
+      "title": "Keep a negative logarithm coefficient",
+      "prompt_html": "<p>Find coefficients \\(a,b\\) such that \\(a\\ln|3x-1|+b\\ln|x+2|+C\\) is an antiderivative of \\(\\frac{14}{(3x-1)(x+2)}\\).</p>",
+      "answer_html": "<p>\\(a=2,\\ b=-2\\)</p>",
+      "solution_html": "<p>The decomposition is \\(\\frac6{3x-1}-\\frac2{x+2}\\).</p><p>Divide the first numerator by three. The antiderivative is \\(2\\ln|3x-1|-2\\ln|x+2|+C\\).</p>",
+      "hint_html": "<p>Try the roots of the two linear factors in the numerator identity.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient a",
+          "type": "number",
+          "expected": "2"
+        },
+        {
+          "key": "b",
+          "label": "Coefficient b",
+          "type": "number",
+          "expected": "-2"
+        }
+      ],
+      "marks": 2,
+      "difficulty": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient a.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient b.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-PF-02-0",
+      "family_uid": "M4U-9709-P3-INT-PF-02",
+      "lesson": "partial_fractions",
+      "collection": "short",
+      "title": "Integrate a repeated linear factor",
+      "prompt_html": "<p>Find coefficients \\(a,b,c\\) such that \\(a\\ln|x+1|+b\\ln|x+3|+\\frac c{x+3}+C\\) is an antiderivative of \\(\\frac{10x+22}{(x+1)(x+3)^2}\\).</p>",
+      "answer_html": "<p>\\(a=3,\\ b=-3,\\ c=-4\\)</p>",
+      "solution_html": "<p>The decomposition is \\(\\frac3{x+1}-\\frac3{x+3}+\\frac4{(x+3)^2}\\). Substitution at the two roots gives the coefficients of the non-repeated term and the squared term. The coefficient of \\(x^2\\) in the identity gives the remaining coefficient.</p><p>The squared term integrates to \\(-\\frac4{x+3}\\).</p>",
+      "hint_html": "<p>The squared denominator is a negative power. Use the power rule for its integral.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient a",
+          "type": "number",
+          "expected": "3"
+        },
+        {
+          "key": "b",
+          "label": "Coefficient b",
+          "type": "number",
+          "expected": "-3"
+        },
+        {
+          "key": "c",
+          "label": "Coefficient c",
+          "type": "number",
+          "expected": "-4"
+        }
+      ],
+      "marks": 3,
+      "difficulty": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient a.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient b.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient c.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-PF-02-1",
+      "family_uid": "M4U-9709-P3-INT-PF-02",
+      "lesson": "partial_fractions",
+      "collection": "variant",
+      "title": "Integrate a negative squared-denominator term",
+      "prompt_html": "<p>Find coefficients \\(a,b,c\\) such that \\(a\\ln|x-1|+b\\ln|x+2|+\\frac c{x+2}+C\\) is an antiderivative of \\(\\frac{5x+13}{(x-1)(x+2)^2}\\).</p>",
+      "answer_html": "<p>\\(a=2,\\ b=-2,\\ c=1\\)</p>",
+      "solution_html": "<p>Partial fractions give \\(\\frac2{x-1}-\\frac2{x+2}-\\frac1{(x+2)^2}\\).</p><p>The last term integrates to \\(\\frac1{x+2}\\), so the reciprocal coefficient is positive.</p>",
+      "hint_html": "<p>Keep both powers of the repeated factor in the decomposition.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient a",
+          "type": "number",
+          "expected": "2"
+        },
+        {
+          "key": "b",
+          "label": "Coefficient b",
+          "type": "number",
+          "expected": "-2"
+        },
+        {
+          "key": "c",
+          "label": "Coefficient c",
+          "type": "number",
+          "expected": "1"
+        }
+      ],
+      "marks": 3,
+      "difficulty": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient a.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient b.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient c.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-PF-03-0",
+      "family_uid": "M4U-9709-P3-INT-PF-03",
+      "lesson": "partial_fractions",
+      "collection": "short",
+      "title": "Distinguish the two quadratic terms",
+      "prompt_html": "<p>Find coefficients \\(a,b,c\\) such that \\(a\\ln|x+1|+b\\ln(x^2+9)+c\\tan^{-1}\\!\\left(\\frac x3\\right)+C\\) is an antiderivative of \\(\\frac{3x^2+5x+12}{(x+1)(x^2+9)}\\).</p>",
+      "answer_html": "<p>\\(a=1,\\ b=1,\\ c=1\\)</p>",
+      "solution_html": "<p>The decomposition is \\(\\frac1{x+1}+\\frac{2x+3}{x^2+9}\\).</p><p>The term with numerator \\(2x\\) is the derivative of \\(\\ln(x^2+9)\\). The constant numerator \\(3\\) gives \\(\\tan^{-1}\\!\\left(\\frac x3\\right)\\).</p>",
+      "hint_html": "<p>Find the two coefficients over the quadratic separately before integrating.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient a",
+          "type": "number",
+          "expected": "1"
+        },
+        {
+          "key": "b",
+          "label": "Coefficient b",
+          "type": "number",
+          "expected": "1"
+        },
+        {
+          "key": "c",
+          "label": "Coefficient c",
+          "type": "number",
+          "expected": "1"
+        }
+      ],
+      "marks": 3,
+      "difficulty": 3,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient a.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient b.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient c.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-PF-03-1",
+      "family_uid": "M4U-9709-P3-INT-PF-03",
+      "lesson": "partial_fractions",
+      "collection": "variant",
+      "title": "Integrate opposite signs over a quadratic",
+      "prompt_html": "<p>Find coefficients \\(a,b,c\\) such that \\(a\\ln|x-2|+b\\ln(x^2+4)+c\\tan^{-1}\\!\\left(\\frac x2\\right)+C\\) is an antiderivative of \\(\\frac{3x+10}{(x-2)(x^2+4)}\\).</p>",
+      "answer_html": "<p>\\(a=2,\\ b=-1,\\ c=-\\frac12\\)</p>",
+      "solution_html": "<p>The decomposition is \\(\\frac2{x-2}+\\frac{-2x-1}{x^2+4}\\).</p><p>Integrating the quadratic part gives \\(-\\ln(x^2+4)-\\frac12\\tan^{-1}\\!\\left(\\frac x2\\right)\\).</p>",
+      "hint_html": "<p>A linear numerator is needed over the quadratic, even though the whole numerator has degree one.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient a",
+          "type": "number",
+          "expected": "2"
+        },
+        {
+          "key": "b",
+          "label": "Coefficient b",
+          "type": "number",
+          "expected": "-1"
+        },
+        {
+          "key": "c",
+          "label": "Coefficient c",
+          "type": "number",
+          "expected": "-1/2"
+        }
+      ],
+      "marks": 3,
+      "difficulty": 3,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient a.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient b.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient c.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-PF-04-0",
+      "family_uid": "M4U-9709-P3-INT-PF-04",
+      "lesson": "partial_fractions",
+      "collection": "short",
+      "title": "Find a definite integral after division",
+      "prompt_html": "<p>Evaluate \\(\\int_2^3\\frac{x^2+2x+3}{(x-1)(x+2)}\\,\\mathrm dx\\) in the form \\(p+q\\ln2+r\\ln\\left(\\frac54\\right)\\). Give \\(p,q,r\\) from the constant, first fraction and second fraction respectively.</p>",
+      "answer_html": "<p>\\(p=1,\\ q=2,\\ r=-1\\)</p>",
+      "solution_html": "<p>Divide and decompose to obtain \\(1+\\frac2{x-1}-\\frac1{x+2}\\).</p><p>The integral of one is \\(1\\). The ratios of the log arguments at the endpoints are \\(2\\) for the first fraction and \\(\\frac54\\) for the second, giving \\(1+2\\ln2-\\ln\\left(\\frac54\\right)\\).</p>",
+      "hint_html": "<p>Check that neither pole lies between the limits. Then use the ratios of the logarithm arguments.</p>",
+      "fields": [
+        {
+          "key": "p",
+          "label": "Coefficient p",
+          "type": "number",
+          "expected": "1"
+        },
+        {
+          "key": "q",
+          "label": "Coefficient q",
+          "type": "number",
+          "expected": "2"
+        },
+        {
+          "key": "r",
+          "label": "Coefficient r",
+          "type": "number",
+          "expected": "-1"
+        }
+      ],
+      "marks": 3,
+      "difficulty": 3,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient p.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient q.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient r.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-PF-04-1",
+      "family_uid": "M4U-9709-P3-INT-PF-04",
+      "lesson": "partial_fractions",
+      "collection": "variant",
+      "title": "Evaluate an integral with two poles outside the interval",
+      "prompt_html": "<p>Evaluate \\(\\int_3^5\\frac{2x^2-x-12}{(x-2)(x+1)}\\,\\mathrm dx\\) in the form \\(p+q\\ln3+r\\ln\\left(\\frac32\\right)\\). Give \\(p,q,r\\) from the constant, first fraction and second fraction respectively.</p>",
+      "answer_html": "<p>\\(p=4,\\ q=-2,\\ r=3\\)</p>",
+      "solution_html": "<p>Divide and decompose to get \\(2-\\frac2{x-2}+\\frac3{x+1}\\).</p><p>There is no pole on \\([3,5]\\). Evaluate the contributions to obtain \\(4-2\\ln3+3\\ln\\left(\\frac32\\right)\\).</p>",
+      "hint_html": "<p>The equal degrees give a constant quotient. Integrate it over a two-unit interval.</p>",
+      "fields": [
+        {
+          "key": "p",
+          "label": "Coefficient p",
+          "type": "number",
+          "expected": "4"
+        },
+        {
+          "key": "q",
+          "label": "Coefficient q",
+          "type": "number",
+          "expected": "-2"
+        },
+        {
+          "key": "r",
+          "label": "Coefficient r",
+          "type": "number",
+          "expected": "3"
+        }
+      ],
+      "marks": 3,
+      "difficulty": 3,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient p.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient q.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient r.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-E-PF-01",
+      "family_uid": "M4U-9709-P3-INT-E-PF-01",
+      "lesson": "partial_fractions",
+      "collection": "exam",
+      "title": "Three linear factors and an exact logarithm",
+      "prompt_html": "<p>Let \\(R(x)=\\frac{6x^2+19x+11}{(x+1)(x+2)(2x+1)}\\).</p><ol type=\"a\"><li>Express \\(R(x)\\) in partial fractions. <span class=\"marks\">[3]</span></li><li>Find an antiderivative of \\(R(x)\\). <span class=\"marks\">[3]</span></li><li>Evaluate \\(\\int_0^1 R(x)\\,\\mathrm dx\\) as a single natural logarithm. <span class=\"marks\">[3]</span></li></ol>",
+      "answer_html": "<ol type=\"a\"><li>\\(\\frac2{x+1}-\\frac1{x+2}+\\frac4{2x+1}\\)</li><li>\\(2\\ln|x+1|-\\ln|x+2|+2\\ln|2x+1|+C\\)</li><li>\\(\\ln24\\)</li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>Clear denominators, then evaluate the numerator identity at \\(x=-1,-2,-\\frac12\\).</p><p>The surviving terms give numerators \\(2,-1,4\\) in that order, so \\(R(x)=\\frac2{x+1}-\\frac1{x+2}+\\frac4{2x+1}\\).</p></li><li><p>Integrate the first two fractions directly. The third gives \\(2\\ln|2x+1|\\) because the derivative of \\(2x+1\\) is two.</p><p>Thus the antiderivative is \\(2\\ln|x+1|-\\ln|x+2|+2\\ln|2x+1|+C\\) on any interval avoiding the poles.</p></li><li><p>There is no pole from zero to one. Subtract the lower value to obtain \\(2\\ln2-\\ln\\left(\\frac32\\right)+2\\ln3\\).</p><p>The log laws give \\(\\ln\\left(4\\cdot\\frac23\\cdot9\\right)=\\ln24\\).</p></li></ol>",
+      "hint_html": "<p>Find the partial-fraction numerators before integrating. The third denominator has derivative two.</p>",
+      "fields": [],
+      "marks": 9,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use three appropriate linear denominators and clear them.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Find the first two numerators correctly.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Find the third numerator and state the complete decomposition.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Integrate the simple fractions as logarithms.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Adjust for the non-unit linear coefficient correctly.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete antiderivative, including a constant.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Evaluate both endpoints using the antiderivative.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Find the correct log expression.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Simplify to the single logarithm.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-E-PF-02",
+      "family_uid": "M4U-9709-P3-INT-E-PF-02",
+      "lesson": "partial_fractions",
+      "collection": "exam",
+      "title": "A repeated factor and a broken interval",
+      "prompt_html": "<p>Let \\(R(x)=\\frac{4x}{(x-1)(x+1)^2}\\).</p><ol type=\"a\"><li>Express \\(R(x)\\) in partial fractions. <span class=\"marks\">[3]</span></li><li>Find an antiderivative of \\(R(x)\\). <span class=\"marks\">[3]</span></li><li>Evaluate \\(\\int_2^3R(x)\\,\\mathrm dx\\) exactly. Explain why the same endpoint calculation cannot be used on \\([0,2]\\). <span class=\"marks\">[4]</span></li></ol>",
+      "answer_html": "<ol type=\"a\"><li>\\(\\frac1{x-1}-\\frac1{x+1}+\\frac2{(x+1)^2}\\)</li><li>\\(\\ln|x-1|-\\ln|x+1|-\\frac2{x+1}+C\\)</li><li>\\(\\ln\\left(\\frac32\\right)+\\frac16\\). The second interval crosses \\(x=1\\).</li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>Clearing denominators in the three-term form gives \\(4x=A(x+1)^2+B(x-1)(x+1)+D(x-1)\\).</p><p>Substitute \\(x=1,-1\\) to get \\(A=1,\\ D=2\\). Comparing \\(x^2\\) terms gives \\(B=-1\\). Hence \\(R(x)=\\frac1{x-1}-\\frac1{x+1}+\\frac2{(x+1)^2}\\).</p></li><li><p>The linear factors contribute logarithms. The square term contributes \\(-\\frac2{x+1}\\) by the power rule.</p><p>The antiderivative is \\(\\ln|x-1|-\\ln|x+1|-\\frac2{x+1}+C\\) on each interval of its domain.</p></li><li><p>There is no pole between two and three. The logarithms give \\(\\ln2-\\ln\\left(\\frac43\\right)=\\ln\\left(\\frac32\\right)\\).</p><p>The reciprocal term gives \\(-\\frac12+\\frac23=\\frac16\\). The total is \\(\\ln\\left(\\frac32\\right)+\\frac16\\).</p><p>On \\([0,2]\\), \\(x=1\\) is a pole, so plugging in only the outer endpoints misses the break.</p></li></ol>",
+      "hint_html": "<p>Keep the first and second powers of the repeated linear factor. Check the integration interval for poles.</p>",
+      "fields": [],
+      "marks": 10,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use a term for each power of the repeated factor.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Find the first and squared-denominator numerators.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Find the remaining numerator and state the decomposition.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Integrate the two first-power terms as logarithms.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Integrate the repeated square term with its sign.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete antiderivative, including a constant.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the antiderivative at both endpoints.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the correct logarithmic contribution.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the exact total including the reciprocal contribution.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Identify the interior pole on the second interval.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-E-PF-03",
+      "family_uid": "M4U-9709-P3-INT-E-PF-03",
+      "lesson": "partial_fractions",
+      "collection": "exam",
+      "title": "Division and an irreducible quadratic",
+      "prompt_html": "<p>Let \\(R(x)=\\frac{x^3+4x^2+8x+10}{(x+1)(x^2+4)}\\).</p><ol type=\"a\"><li>Divide and express \\(R(x)\\) as a constant plus partial fractions. <span class=\"marks\">[4]</span></li><li>Find an antiderivative of \\(R(x)\\). <span class=\"marks\">[3]</span></li><li>Evaluate \\(\\int_0^2 R(x)\\,\\mathrm dx\\) exactly. <span class=\"marks\">[3]</span></li></ol>",
+      "answer_html": "<ol type=\"a\"><li>\\(1+\\frac1{x+1}+\\frac{2x+2}{x^2+4}\\)</li><li>\\(x+\\ln|x+1|+\\ln(x^2+4)+\\tan^{-1}\\!\\left(\\frac x2\\right)+C\\)</li><li>\\(2+\\ln6+\\frac\\pi4\\)</li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>The leading coefficient ratio gives the quotient one. Subtract the denominator \\(x^3+x^2+4x+4\\) to leave \\(3x^2+4x+6\\).</p><p>Write the proper part as \\(\\frac A{x+1}+\\frac{Bx+D}{x^2+4}\\). At \\(x=-1\\) get \\(A=1\\). Coefficient comparison then gives \\(B=D=2\\).</p><p>Thus \\(R(x)=1+\\frac1{x+1}+\\frac{2x+2}{x^2+4}\\).</p></li><li><p>The numerator \\(2x\\) is the derivative of the quadratic. The remaining numerator \\(2\\) supplies an inverse-tangent term.</p><p>Together with the constant and linear-denominator terms, the antiderivative is \\(x+\\ln|x+1|+\\ln(x^2+4)+\\tan^{-1}\\!\\left(\\frac x2\\right)+C\\).</p></li><li><p>The only real pole lies at \\(x=-1\\), outside the limits.</p><p>On evaluating the antiderivative the linear term contributes \\(2\\), the log terms give \\(\\ln3+\\ln\\left(\\frac84\\right)=\\ln6\\), and the inverse tangent contributes \\(\\frac\\pi4\\).</p><p>Thus the integral is \\(2+\\ln6+\\frac\\pi4\\).</p></li></ol>",
+      "hint_html": "<p>First remove the constant quotient. Then split the numerator over the quadratic into a multiple of its derivative and a constant.</p>",
+      "fields": [],
+      "marks": 10,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Perform division to obtain the constant quotient.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Find the correct remainder.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the correct linear and quadratic numerator forms.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete decomposition.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Integrate the constant and linear fraction.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Split the quadratic numerator into the derivative part and constant.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Integrate both quadratic terms and give the full result.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Evaluate all terms between the two limits.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the correct logarithmic contribution.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the exact total with the radian angle.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-SUB-01-0",
+      "family_uid": "M4U-9709-P3-INT-SUB-01",
+      "lesson": "substitution",
+      "collection": "short",
+      "title": "Apply a given quadratic substitution",
+      "prompt_html": "<p>Use \\(u=2+3x^2\\) to evaluate \\(\\int6x(2+3x^2)^2\\,\\mathrm dx\\). Give \\(a,n\\) in the form \\(a(2+3x^2)^n+C\\).</p>",
+      "answer_html": "<p>\\(a=\\frac13,\\ n=3\\)</p>",
+      "solution_html": "<p>Since \\(\\mathrm du=6x\\,\\mathrm dx\\), the integral becomes \\(\\int u^2\\,\\mathrm du=\\frac13u^3+C\\).</p><p>After back-substitution the result is \\(\\frac13(2+3x^2)^3+C\\).</p>",
+      "hint_html": "<p>Differentiate the inner expression before changing the integral.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient a",
+          "type": "number",
+          "expected": "1/3"
+        },
+        {
+          "key": "n",
+          "label": "Exponent n",
+          "type": "number",
+          "expected": "3"
+        }
+      ],
+      "marks": 2,
+      "difficulty": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient a.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for exponent n.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-SUB-01-1",
+      "family_uid": "M4U-9709-P3-INT-SUB-01",
+      "lesson": "substitution",
+      "collection": "variant",
+      "title": "Carry an extra constant through a substitution",
+      "prompt_html": "<p>Use \\(u=1+2x^2\\) to evaluate \\(\\int8x(1+2x^2)^3\\,\\mathrm dx\\). Give \\(a,n\\) in the form \\(a(1+2x^2)^n+C\\).</p>",
+      "answer_html": "<p>\\(a=\\frac12,\\ n=4\\)</p>",
+      "solution_html": "<p>Here \\(\\mathrm du=4x\\,\\mathrm dx\\). Rewrite \\(8x\\,\\mathrm dx\\) as \\(2\\,\\mathrm du\\).</p><p>Integrate \\(2\\int u^3\\,\\mathrm du=\\frac12u^4+C\\) and replace \\(u\\).</p>",
+      "hint_html": "<p>Use the differential formed by differentiating the inside. The original factor is twice as large.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient a",
+          "type": "number",
+          "expected": "1/2"
+        },
+        {
+          "key": "n",
+          "label": "Exponent n",
+          "type": "number",
+          "expected": "4"
+        }
+      ],
+      "marks": 2,
+      "difficulty": 1,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient a.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for exponent n.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-SUB-02-0",
+      "family_uid": "M4U-9709-P3-INT-SUB-02",
+      "lesson": "substitution",
+      "collection": "short",
+      "title": "Transform every factor of a square-root integral",
+      "prompt_html": "<p>For \\(x&gt;-\\frac13\\), use \\(u=\\sqrt{3x+1}\\) to integrate \\(\\frac{x}{\\sqrt{3x+1}}\\). Give \\(a,b\\) in the form \\(a(3x+1)^{\\frac32}+b(3x+1)^{\\frac12}+C\\).</p>",
+      "answer_html": "<p>\\(a=\\frac2{27},\\ b=-\\frac29\\)</p>",
+      "solution_html": "<p>Use \\(x=\\frac{u^2-1}{3}\\) and \\(\\mathrm dx=\\frac{2u}{3}\\,\\mathrm du\\).</p><p>The integral is \\(\\frac29\\int(u^2-1)\\,\\mathrm du=\\frac2{27}u^3-\\frac29u+C\\).</p><p>Replace \\(u\\) to recover the required form.</p>",
+      "hint_html": "<p>Rearrange the square of the substitution to replace x as well as the root.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient a",
+          "type": "number",
+          "expected": "2/27"
+        },
+        {
+          "key": "b",
+          "label": "Coefficient b",
+          "type": "number",
+          "expected": "-2/9"
+        }
+      ],
+      "marks": 2,
+      "difficulty": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient a.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient b.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-SUB-02-1",
+      "family_uid": "M4U-9709-P3-INT-SUB-02",
+      "lesson": "substitution",
+      "collection": "variant",
+      "title": "Keep the constant in a rewritten square-root integral",
+      "prompt_html": "<p>For \\(x&gt;-\\frac52\\), use \\(u=\\sqrt{2x+5}\\) to integrate \\(\\frac{x}{\\sqrt{2x+5}}\\). Give \\(a,b\\) in the form \\(a(2x+5)^{\\frac32}+b(2x+5)^{\\frac12}+C\\).</p>",
+      "answer_html": "<p>\\(a=\\frac16,\\ b=-\\frac52\\)</p>",
+      "solution_html": "<p>The coordinate and differential become \\(x=\\frac{u^2-5}{2}\\) and \\(\\mathrm dx=u\\,\\mathrm du\\).</p><p>The integral is \\(\\frac12\\int(u^2-5)\\,\\mathrm du=\\frac16u^3-\\frac52u+C\\).</p><p>Replace \\(u\\) in both powers.</p>",
+      "hint_html": "<p>The leftover x is the square of u minus five, divided by two.</p>",
+      "fields": [
+        {
+          "key": "a",
+          "label": "Coefficient a",
+          "type": "number",
+          "expected": "1/6"
+        },
+        {
+          "key": "b",
+          "label": "Coefficient b",
+          "type": "number",
+          "expected": "-5/2"
+        }
+      ],
+      "marks": 2,
+      "difficulty": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient a.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for coefficient b.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-SUB-03-0",
+      "family_uid": "M4U-9709-P3-INT-SUB-03",
+      "lesson": "substitution",
+      "collection": "short",
+      "title": "Keep decreasing limits and the differential sign",
+      "prompt_html": "<p>Evaluate \\(\\int_1^4\\sqrt{21-5x}\\,\\mathrm dx\\) using \\(u=21-5x\\). Give the starting and finishing \\(u\\) limits and the exact value.</p>",
+      "answer_html": "<p>\\(16,\\ 1,\\ \\frac{42}{5}\\)</p>",
+      "solution_html": "<p>The endpoints give \\(16\\) then \\(1\\), and \\(\\mathrm dx=-\\frac15\\,\\mathrm du\\).</p><p>The integral is \\(-\\frac15\\int_{16}^1u^{\\frac12}\\,\\mathrm du=\\frac2{15}(64-1)=\\frac{42}5\\).</p>",
+      "hint_html": "<p>Preserve the order in which the endpoints are given.</p>",
+      "fields": [
+        {
+          "key": "start",
+          "label": "Starting u-limit",
+          "type": "number",
+          "expected": "16"
+        },
+        {
+          "key": "end",
+          "label": "Finishing u-limit",
+          "type": "number",
+          "expected": "1"
+        },
+        {
+          "key": "value",
+          "label": "Exact integral value",
+          "type": "number",
+          "expected": "42/5"
+        }
+      ],
+      "marks": 3,
+      "difficulty": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for starting u-limit.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for finishing u-limit.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for exact integral value.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-SUB-03-1",
+      "family_uid": "M4U-9709-P3-INT-SUB-03",
+      "lesson": "substitution",
+      "collection": "variant",
+      "title": "Transform both endpoints under a decreasing map",
+      "prompt_html": "<p>Evaluate \\(\\int_2^5\\sqrt{24-4x}\\,\\mathrm dx\\) using \\(u=24-4x\\). Give the starting and finishing \\(u\\) limits and the exact value.</p>",
+      "answer_html": "<p>\\(16,\\ 4,\\ \\frac{28}3\\)</p>",
+      "solution_html": "<p>The endpoints give \\(16\\) then \\(4\\). The transformed integral is \\(-\\frac14\\int_{16}^4u^{\\frac12}\\,\\mathrm du\\).</p><p>Evaluate to obtain \\(\\frac16(64-8)=\\frac{28}3\\).</p>",
+      "hint_html": "<p>Both transformed limits are positive. Their order is reversed because the slope of the substitution is negative.</p>",
+      "fields": [
+        {
+          "key": "start",
+          "label": "Starting u-limit",
+          "type": "number",
+          "expected": "16"
+        },
+        {
+          "key": "end",
+          "label": "Finishing u-limit",
+          "type": "number",
+          "expected": "4"
+        },
+        {
+          "key": "value",
+          "label": "Exact integral value",
+          "type": "number",
+          "expected": "28/3"
+        }
+      ],
+      "marks": 3,
+      "difficulty": 2,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for starting u-limit.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for finishing u-limit.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for exact integral value.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-SUB-04-0",
+      "family_uid": "M4U-9709-P3-INT-SUB-04",
+      "lesson": "substitution",
+      "collection": "short",
+      "title": "Change variable to cosine",
+      "prompt_html": "<p>Use \\(u=\\cos x\\) to evaluate \\(\\int_0^{\\frac\\pi2}\\sin^3x\\cos^2x\\,\\mathrm dx\\) exactly.</p>",
+      "answer_html": "<p>\\(\\frac2{15}\\)</p>",
+      "solution_html": "<p>Rewrite the sine cube as \\((1-u^2)\\sin x\\). Then \\(\\sin x\\,\\mathrm dx=-\\mathrm du\\), with limits \\(1\\) then \\(0\\).</p><p>The integral is \\(\\int_0^1(u^2-u^4)\\,\\mathrm du=\\frac13-\\frac15=\\frac2{15}\\).</p>",
+      "hint_html": "<p>Take one sine for the differential and use the identity on the remaining square.</p>",
+      "fields": [
+        {
+          "key": "value",
+          "label": "Exact integral value",
+          "type": "number",
+          "expected": "2/15"
+        }
+      ],
+      "marks": 1,
+      "difficulty": 3,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for exact integral value.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-SUB-04-1",
+      "family_uid": "M4U-9709-P3-INT-SUB-04",
+      "lesson": "substitution",
+      "collection": "variant",
+      "title": "Change variable to sine",
+      "prompt_html": "<p>Use \\(u=\\sin x\\) to evaluate \\(\\int_0^{\\frac\\pi2}\\sin^4x\\cos^3x\\,\\mathrm dx\\) exactly.</p>",
+      "answer_html": "<p>\\(\\frac2{35}\\)</p>",
+      "solution_html": "<p>Set aside one cosine to form \\(\\mathrm du\\) and replace the remaining cosine squared by \\(1-u^2\\).</p><p>The integral becomes \\(\\int_0^1(u^4-u^6)\\,\\mathrm du=\\frac15-\\frac17=\\frac2{35}\\).</p>",
+      "hint_html": "<p>Look for the even power left over after forming the differential.</p>",
+      "fields": [
+        {
+          "key": "value",
+          "label": "Exact integral value",
+          "type": "number",
+          "expected": "2/35"
+        }
+      ],
+      "marks": 1,
+      "difficulty": 3,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct response for exact integral value.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-E-SUB-01",
+      "family_uid": "M4U-9709-P3-INT-E-SUB-01",
+      "lesson": "substitution",
+      "collection": "exam",
+      "title": "Substitution in an antiderivative and an area",
+      "prompt_html": "<p>A curve is given by \\(y=\\frac{x}{\\sqrt{x+4}}\\) for \\(x&gt;-4\\). Use the substitution \\(u=\\sqrt{x+4}\\).</p><ol type=\"a\"><li>Show that the integral of \\(y\\) becomes \\(2\\int(u^2-4)\\,\\mathrm du\\). <span class=\"marks\">[2]</span></li><li>Find an antiderivative of \\(y\\) in terms of \\(x\\). <span class=\"marks\">[3]</span></li><li>Find the exact area between the curve and the \\(x\\)-axis for \\(0\\le x\\le5\\). <span class=\"marks\">[3]</span></li></ol>",
+      "answer_html": "<ol type=\"a\"><li>\\(x=u^2-4,\\quad \\mathrm dx=2u\\,\\mathrm du\\).</li><li>\\(\\frac23(x+4)^{\\frac32}-8(x+4)^{\\frac12}+C\\)</li><li>\\(\\frac{14}3\\) square units.</li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>The relation \\(u^2=x+4\\) gives \\(x=u^2-4\\) and \\(\\mathrm dx=2u\\,\\mathrm du\\).</p><p>The denominator is \\(u\\). Thus \\(\\frac{x}{\\sqrt{x+4}}\\,\\mathrm dx=\\frac{u^2-4}{u}(2u)\\,\\mathrm du=2(u^2-4)\\,\\mathrm du\\).</p></li><li><p>Integrating gives \\(\\frac23u^3-8u+C\\).</p><p>Replace \\(u\\) to obtain \\(\\frac23(x+4)^{\\frac32}-8(x+4)^{\\frac12}+C\\).</p></li><li><p>The function is non-negative on this interval. The transformed limits are \\(2\\) and \\(3\\).</p><p>The area is \\(\\left[\\frac23u^3-8u\\right]_2^3=-6-\\left(-\\frac{32}3\\right)=\\frac{14}3\\) square units.</p></li></ol>",
+      "hint_html": "<p>Square the substitution to write x in terms of u and use the resulting differential.</p>",
+      "fields": [],
+      "marks": 8,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Rearrange and differentiate the substitution.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Replace all factors to obtain the stated integral.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Integrate the polynomial in u.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give both coefficients correctly.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Return to x and include a constant.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the definite integral for the non-negative function.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Evaluate at matching limits in the chosen variable.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the exact positive area.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-E-SUB-02",
+      "family_uid": "M4U-9709-P3-INT-E-SUB-02",
+      "lesson": "substitution",
+      "collection": "exam",
+      "title": "A decreasing substitution and a scale factor",
+      "prompt_html": "<p>Let \\(I=\\int_0^2 x\\sqrt{5-2x}\\,\\mathrm dx\\). Use \\(u=5-2x\\).</p><ol type=\"a\"><li>Write \\(I\\) as an integral in \\(u\\) with limits in increasing order. <span class=\"marks\">[3]</span></li><li>Evaluate \\(I\\) exactly. <span class=\"marks\">[4]</span></li><li>For \\(k&gt;0\\), the area under \\(y=kx\\sqrt{5-2x}\\) from \\(x=0\\) to \\(x=2\\) is four. Find \\(k\\) exactly. <span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "<ol type=\"a\"><li>\\(I=\\frac14\\int_1^5 (5-u)u^{\\frac12}\\,\\mathrm du\\)</li><li>\\(\\frac{5\\sqrt5}3-\\frac{11}{15}\\)</li><li>\\(k=\\frac{60}{25\\sqrt5-11}\\)</li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>The relations are \\(x=\\frac{5-u}{2}\\) and \\(\\mathrm dx=-\\frac12\\,\\mathrm du\\).</p><p>From \\(x=0,2\\) obtain \\(u=5,1\\). The integral starts as \\(-\\frac14\\int_5^1(5-u)u^{\\frac12}\\,\\mathrm du\\).</p><p>Reversing the order removes the minus sign, so \\(I=\\frac14\\int_1^5(5-u)u^{\\frac12}\\,\\mathrm du\\).</p></li><li><p>Expand the integrand and use \\(\\frac14\\left[\\frac{10}3u^{\\frac32}-\\frac25u^{\\frac52}\\right]_1^5\\).</p><p>The upper bracket gives \\(\\frac{20}3\\sqrt5\\). The lower bracket gives \\(\\frac{44}{15}\\).</p><p>Apply the factor \\(\\frac14\\) to their difference to obtain \\(\\frac{5\\sqrt5}3-\\frac{11}{15}\\).</p></li><li><p>The integrand is non-negative on the interval, so the area is \\(kI\\).</p><p>Solve \\(kI=4\\) using the exact value of \\(I\\). This gives \\(k=\\frac{60}{25\\sqrt5-11}\\).</p></li></ol>",
+      "hint_html": "<p>The new limits run from five to one. Retain the negative factor from the differential until you swap the limits.</p>",
+      "fields": [],
+      "marks": 9,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Replace x and the differential using the substitution.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Transform both limits correctly.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Use an equivalent integral with limits in increasing order.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Expand and integrate the two powers.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the correct antiderivative.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use both transformed limits.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Find the exact simplified value.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Relate the scaled area to kI.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the exact positive scale factor.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-E-SUB-03",
+      "family_uid": "M4U-9709-P3-INT-E-SUB-03",
+      "lesson": "substitution",
+      "collection": "exam",
+      "title": "Compare adjacent trigonometric areas",
+      "prompt_html": "<p>Let \\(J=\\int_0^{\\frac\\pi3}\\sin^3x\\cos^3x\\,\\mathrm dx\\). Use \\(u=\\sin x\\).</p><ol type=\"a\"><li>Give the transformed integral for \\(J\\), including the new limits. <span class=\"marks\">[3]</span></li><li>Find the exact value of \\(J\\). <span class=\"marks\">[2]</span></li><li>Find \\(\\int_{\\frac\\pi3}^{\\frac\\pi2}\\sin^3x\\cos^3x\\,\\mathrm dx\\) exactly. <span class=\"marks\">[3]</span></li></ol>",
+      "answer_html": "<ol type=\"a\"><li>\\(J=\\int_0^{\\frac{\\sqrt3}{2}}(u^3-u^5)\\,\\mathrm du\\)</li><li>\\(\\frac9{128}\\)</li><li>\\(\\frac5{384}\\)</li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>The derivative is \\(\\mathrm du=\\cos x\\,\\mathrm dx\\). Replace the extra \\(\\cos^2x\\) by \\(1-u^2\\).</p><p>The lower limit becomes \\(0\\) and the upper becomes \\(\\frac{\\sqrt3}2\\). The integral is \\(\\int_0^{\\frac{\\sqrt3}{2}}(u^3-u^5)\\,\\mathrm du\\).</p></li><li><p>The antiderivative in \\(u\\) is \\(\\frac{u^4}4-\\frac{u^6}6\\) and vanishes at zero.</p><p>At the upper limit this gives \\(\\frac9{64}-\\frac9{128}=\\frac9{128}\\).</p></li><li><p>Extending the original upper limit to \\(\\frac\\pi2\\) extends the transformed upper limit to \\(1\\). The integral from zero is \\(\\frac14-\\frac16=\\frac1{12}\\).</p><p>Subtract \\(J\\) to find the adjacent integral \\(\\frac1{12}-\\frac9{128}=\\frac5{384}\\).</p></li></ol>",
+      "hint_html": "<p>Reserve one cosine factor for the differential and write the extra cosine squared in terms of u.</p>",
+      "fields": [],
+      "marks": 8,
+      "difficulty": 4,
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the trigonometric identity to remove the extra cosine squared.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the correct transformed integrand.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give both new limits.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Find the antiderivative and use the transformed limits.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the exact value.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use the correct transformed limit for the endpoint π/2.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Evaluate the full interval and subtract J, or evaluate the adjacent interval directly.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the exact result.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-PARTS-01-0",
+      "family_uid": "M4U-9709-P3-INT-PARTS-01",
+      "lesson": "parts",
+      "title": "Find a linear exponential primitive",
+      "collection": "short",
+      "prompt_html": "<p>Find \\(A,B\\) such that \\(\\int (3x+1)e^{2x}\\,dx=(Ax+B)e^{2x}+C\\).</p>",
+      "answer_html": "<p>\\(A=\\frac{3}{2},\\ B=-\\frac{1}{4}\\).</p>",
+      "solution_html": "<p>Set \\(u=3x+1\\), \\(v=\\frac{1}{2}e^{2x}\\). Parts gives</p>\\[\\int (3x+1)e^{2x}\\,dx=\\frac{(3x+1)e^{2x}}{2}-\\frac{3}{4}e^{2x}+C=(\\frac{3}{2}x-\\frac{1}{4})e^{2x}+C.\\]",
+      "hint_html": "<p>Differentiate the linear factor and retain the chain factor when integrating the exponential.</p>",
+      "marks": 2,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "a",
+          "label": "A",
+          "type": "number",
+          "expected": "3/2"
+        },
+        {
+          "key": "b",
+          "label": "B",
+          "type": "number",
+          "expected": "-1/4"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct coefficient of x.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct constant coefficient.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "MATHS4U-P3-INT-CHECKED"
+    },
+    {
+      "id": "M4U-9709-P3-INT-PARTS-01-1",
+      "family_uid": "M4U-9709-P3-INT-PARTS-01",
+      "lesson": "parts",
+      "title": "Find a linear exponential primitive",
+      "collection": "variant",
+      "prompt_html": "<p>Find \\(A,B\\) such that \\(\\int (2x+5)e^{-2x}\\,dx=(Ax+B)e^{-2x}+C\\).</p>",
+      "answer_html": "<p>\\(A=-1,\\ B=-3\\).</p>",
+      "solution_html": "<p>Set \\(u=2x+5\\), \\(v=\\frac{1}{-2}e^{-2x}\\). Parts gives</p>\\[\\int (2x+5)e^{-2x}\\,dx=\\frac{(2x+5)e^{-2x}}{-2}-\\frac{2}{4}e^{-2x}+C=(-x-3)e^{-2x}+C.\\]",
+      "hint_html": "<p>Differentiate the linear factor and retain the chain factor when integrating the exponential.</p>",
+      "marks": 2,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "a",
+          "label": "A",
+          "type": "number",
+          "expected": "-1"
+        },
+        {
+          "key": "b",
+          "label": "B",
+          "type": "number",
+          "expected": "-3"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct coefficient of x.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct constant coefficient.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "MATHS4U-P3-INT-CHECKED"
+    },
+    {
+      "id": "M4U-9709-P3-INT-PARTS-02-0",
+      "family_uid": "M4U-9709-P3-INT-PARTS-02",
+      "lesson": "parts",
+      "title": "Integrate a power multiplied by a logarithm",
+      "collection": "short",
+      "prompt_html": "<p>For \\(x>0\\), write \\(\\int x^2\\ln x\\,dx=A x^3\\ln x+B x^3+C\\). Give \\(A,B\\).</p>",
+      "answer_html": "<p>\\(A=\\frac{1}{3},\\ B=-\\frac{1}{9}\\).</p>",
+      "solution_html": "<p>Use \\(u=\\ln x\\) and \\(v=\\frac{x^3}{3}\\). The second integrand becomes \\(\\frac{x^2}{3}\\). Subtract its primitive \\(\\frac{x^3}{9}\\) from \\(\\frac{x^3\\ln x}{3}\\).</p>",
+      "hint_html": "<p>Differentiate the logarithm. Its factor \\(\\frac1x\\) lowers the power in the remaining integral.</p>",
+      "marks": 2,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "a",
+          "label": "A",
+          "type": "number",
+          "expected": "1/3"
+        },
+        {
+          "key": "b",
+          "label": "B",
+          "type": "number",
+          "expected": "-1/9"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct logarithmic coefficient.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct sign and power for the remaining term.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "MATHS4U-P3-INT-CHECKED"
+    },
+    {
+      "id": "M4U-9709-P3-INT-PARTS-02-1",
+      "family_uid": "M4U-9709-P3-INT-PARTS-02",
+      "lesson": "parts",
+      "title": "Integrate a power multiplied by a logarithm",
+      "collection": "variant",
+      "prompt_html": "<p>For \\(x>0\\), write \\(\\int x^3\\ln x\\,dx=A x^4\\ln x+B x^4+C\\). Give \\(A,B\\).</p>",
+      "answer_html": "<p>\\(A=\\frac{1}{4},\\ B=-\\frac{1}{16}\\).</p>",
+      "solution_html": "<p>Use \\(u=\\ln x\\) and \\(v=\\frac{x^4}{4}\\). The second integrand becomes \\(\\frac{x^3}{4}\\). Subtract its primitive \\(\\frac{x^4}{16}\\) from \\(\\frac{x^4\\ln x}{4}\\).</p>",
+      "hint_html": "<p>Differentiate the logarithm. Its factor \\(\\frac1x\\) lowers the power in the remaining integral.</p>",
+      "marks": 2,
+      "difficulty": 2,
+      "fields": [
+        {
+          "key": "a",
+          "label": "A",
+          "type": "number",
+          "expected": "1/4"
+        },
+        {
+          "key": "b",
+          "label": "B",
+          "type": "number",
+          "expected": "-1/16"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct logarithmic coefficient.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct sign and power for the remaining term.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "MATHS4U-P3-INT-CHECKED"
+    },
+    {
+      "id": "M4U-9709-P3-INT-PARTS-03-0",
+      "family_uid": "M4U-9709-P3-INT-PARTS-03",
+      "lesson": "parts",
+      "title": "Complete the primitive after two uses of parts",
+      "collection": "short",
+      "prompt_html": "<p>Write \\(\\int x^2e^{2x}\\,dx=(Ax^2+Bx+D)e^{2x}+C\\). Give all three coefficients.</p>",
+      "answer_html": "<p>\\(A=\\frac{1}{2},\\ B=-\\frac{1}{2},\\ D=\\frac{1}{4}\\).</p>",
+      "solution_html": "<p>First choose \\(u=x^2\\) and \\(v=\\frac{1}{2}e^{2x}\\). Then integrate the remaining \\(\\int xe^{2x}\\,dx\\) by parts with \\(u=x\\).</p>\\[\\int x^2e^{2x}\\,dx=(\\frac{1}{2}x^2-\\frac{1}{2}x+\\frac{1}{4})e^{2x}+C.\\]",
+      "hint_html": "<p>First reduce the degree from two to one. Then use parts once more to integrate the linear product.</p>",
+      "marks": 3,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "a",
+          "label": "A",
+          "type": "number",
+          "expected": "1/2"
+        },
+        {
+          "key": "b",
+          "label": "B",
+          "type": "number",
+          "expected": "-1/2"
+        },
+        {
+          "key": "d",
+          "label": "D",
+          "type": "number",
+          "expected": "1/4"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct quadratic coefficient.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct linear coefficient.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct constant coefficient.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "MATHS4U-P3-INT-CHECKED"
+    },
+    {
+      "id": "M4U-9709-P3-INT-PARTS-03-1",
+      "family_uid": "M4U-9709-P3-INT-PARTS-03",
+      "lesson": "parts",
+      "title": "Complete the primitive after two uses of parts",
+      "collection": "variant",
+      "prompt_html": "<p>Write \\(\\int x^2e^{-2x}\\,dx=(Ax^2+Bx+D)e^{-2x}+C\\). Give all three coefficients.</p>",
+      "answer_html": "<p>\\(A=-\\frac{1}{2},\\ B=-\\frac{1}{2},\\ D=-\\frac{1}{4}\\).</p>",
+      "solution_html": "<p>First choose \\(u=x^2\\) and \\(v=\\frac{1}{-2}e^{-2x}\\). Then integrate the remaining \\(\\int xe^{-2x}\\,dx\\) by parts with \\(u=x\\).</p>\\[\\int x^2e^{-2x}\\,dx=(-\\frac{1}{2}x^2-\\frac{1}{2}x-\\frac{1}{4})e^{-2x}+C.\\]",
+      "hint_html": "<p>First reduce the degree from two to one. Then use parts once more to integrate the linear product.</p>",
+      "marks": 3,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "a",
+          "label": "A",
+          "type": "number",
+          "expected": "-1/2"
+        },
+        {
+          "key": "b",
+          "label": "B",
+          "type": "number",
+          "expected": "-1/2"
+        },
+        {
+          "key": "d",
+          "label": "D",
+          "type": "number",
+          "expected": "-1/4"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct quadratic coefficient.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct linear coefficient.</p>"
+            },
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct constant coefficient.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "MATHS4U-P3-INT-CHECKED"
+    },
+    {
+      "id": "M4U-9709-P3-INT-PARTS-04-0",
+      "family_uid": "M4U-9709-P3-INT-PARTS-04",
+      "lesson": "parts",
+      "title": "Evaluate a product over an exact interval",
+      "collection": "short",
+      "prompt_html": "<p>Use parts to evaluate \\(\\int_0^{\\frac{\\pi}{2}}x\\sin(2x)\\,dx\\). Give the exact result as \\(K\\pi\\) by entering \\(K\\).</p>",
+      "answer_html": "<p>\\(K=\\frac{1}{4}\\), so the value is \\(\\frac{\\pi}{4}\\).</p>",
+      "solution_html": "<p>Taking \\(u=x,\\ v=-\\frac{\\cos(2x)}{2}\\) gives \\(\\left[-\\frac{x\\cos(2x)}{2}+\\frac{\\sin(2x)}{4}\\right]_0^{\\frac{\\pi}{2}}\\). Since \\(\\cos(1\\pi)=-1\\) and \\(\\sin(1\\pi)=0\\), the value is \\(\\frac{\\pi}{4}\\).</p>",
+      "hint_html": "<p>Evaluate the cosine at the given radian bound, keeping the sign from the primitive.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "k",
+          "label": "K",
+          "type": "number",
+          "expected": "1/4"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct exact multiple of pi.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "MATHS4U-P3-INT-CHECKED"
+    },
+    {
+      "id": "M4U-9709-P3-INT-PARTS-04-1",
+      "family_uid": "M4U-9709-P3-INT-PARTS-04",
+      "lesson": "parts",
+      "title": "Evaluate a product over an exact interval",
+      "collection": "variant",
+      "prompt_html": "<p>Use parts to evaluate \\(\\int_0^{\\frac{\\pi}{2}}x\\sin(4x)\\,dx\\). Give the exact result as \\(K\\pi\\) by entering \\(K\\).</p>",
+      "answer_html": "<p>\\(K=-\\frac{1}{8}\\), so the value is \\(-\\frac{\\pi}{8}\\).</p>",
+      "solution_html": "<p>Taking \\(u=x,\\ v=-\\frac{\\cos(4x)}{4}\\) gives \\(\\left[-\\frac{x\\cos(4x)}{4}+\\frac{\\sin(4x)}{16}\\right]_0^{\\frac{\\pi}{2}}\\). Since \\(\\cos(2\\pi)=1\\) and \\(\\sin(2\\pi)=0\\), the value is \\(-\\frac{\\pi}{8}\\).</p>",
+      "hint_html": "<p>Evaluate the cosine at the given radian bound, keeping the sign from the primitive.</p>",
+      "marks": 1,
+      "difficulty": 3,
+      "fields": [
+        {
+          "key": "k",
+          "label": "K",
+          "type": "number",
+          "expected": "-1/8"
+        }
+      ],
+      "parts": [
+        {
+          "label": "",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Correct exact multiple of pi.</p>"
+            }
+          ]
+        }
+      ],
+      "verification": "MATHS4U-P3-INT-CHECKED"
+    },
+    {
+      "id": "M4U-9709-P3-INT-E-PARTS-01",
+      "family_uid": "M4U-9709-P3-INT-E-PARTS-01",
+      "lesson": "parts",
+      "title": "Exponential curves and an exact area",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(f(x)=(4x+1)e^{2x}\\) and \\(g(x)=e^{2x}\\).</p><ol type=\"a\"><li>Use integration by parts to find a primitive for \\(f(x)\\). <span class=\"marks\">[3]</span></li><li>Find \\(\\int_0^{\\ln 2} f(x)\\,dx\\). <span class=\"marks\">[2]</span></li><li>Find the exact area between the two curves for \\(0\\le x\\le \\ln 2\\). <span class=\"marks\">[3]</span></li></ol>",
+      "answer_html": "<ol type=\"a\"><li>\\(\\left(2x-\\frac12\\right)e^{2x}+C\\).</li><li>\\(8\\ln 2-\\frac32\\).</li><li>\\(8\\ln 2-3\\).</li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>Use \\(u=4x+1\\) and \\(v=\\frac12e^{2x}\\). The product term is \\(\\frac12(4x+1)e^{2x}\\) and the remaining integral is \\(\\int 2e^{2x}\\,dx=e^{2x}+C\\). Subtraction gives \\(\\left(2x-\\frac12\\right)e^{2x}+C\\).</p></li><li><p>At \\(\\ln 2\\), \\(e^{2\\ln 2}=4\\), and at \\(0\\) the primitive without its constant is \\(-\\frac12\\). Thus \\(4(2\\ln 2-\\frac12)+\\frac12=8\\ln 2-\\frac32\\).</p></li><li><p>On the interval, \\(f(x)-g(x)=4xe^{2x}\\ge0\\), so subtract the integral of \\(g\\). It is \\([\\frac12 e^{2x}]_0^{\\ln2}=\\frac32\\). The area is \\(8\\ln2-\\frac32-\\frac32=8\\ln2-3\\).</p></li></ol>",
+      "hint_html": "<p>Use the boundary of the first integral again when calculating the area between the curves.</p>",
+      "marks": 8,
+      "difficulty": 4,
+      "fields": [],
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Choose factors and find the exponential primitive.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply parts and evaluate the remaining exponential integral.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the stated primitive with an integration constant.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Use both endpoints, including the lower contribution.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the exact integral.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Identify the upper curve over the interval.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Subtract the exact integral of the lower curve.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the exact area.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-E-PARTS-02",
+      "family_uid": "M4U-9709-P3-INT-E-PARTS-02",
+      "lesson": "parts",
+      "title": "Products and a rational remainder",
+      "collection": "exam",
+      "prompt_html": "<p>Consider \\(\\int x\\ln(1+x)\\,dx\\) for \\(x>-1\\).</p><ol type=\"a\"><li>Show that \\(\\frac{x^2}{1+x}=x-1+\\frac1{1+x}\\). <span class=\"marks\">[2]</span></li><li>Find the original indefinite integral. <span class=\"marks\">[3]</span></li><li>Evaluate \\(\\int_1^3 x\\ln(1+x)\\,dx\\) exactly. <span class=\"marks\">[2]</span></li></ol>",
+      "answer_html": "<ol type=\"a\"><li>\\(x^2=(x-1)(1+x)+1\\).</li><li>\\(\\frac{x^2-1}{2}\\ln(1+x)-\\frac{x^2}{4}+\\frac{x}{2}+C\\).</li><li>\\(8\\ln 2-1\\).</li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>Multiply \\((x-1)(1+x)\\) to obtain \\(x^2-1\\). Add \\(1\\), then divide by \\(1+x\\), which is nonzero on the given domain.</p></li><li><p>Choose \\(u=\\ln(1+x),\\ v=\\frac{x^2}{2}\\). The remainder is \\(\\frac12\\int\\frac{x^2}{1+x}\\,dx\\). After using part (a), the result is \\(\\frac{x^2-1}{2}\\ln(1+x)-\\frac{x^2}{4}+\\frac{x}{2}+C\\).</p></li><li><p>The primitive without its constant has values \\(4\\ln4-\\frac34\\) at \\(3\\) and \\(\\frac14\\) at \\(1\\). Their difference is \\(4\\ln4-1=8\\ln2-1\\).</p></li></ol>",
+      "hint_html": "<p>After using parts, split the remaining rational term before integrating it.</p>",
+      "marks": 7,
+      "difficulty": 4,
+      "fields": [],
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Perform the division or multiply the proposed quotient and add the remainder.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the complete decomposition.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Choose the logarithm to differentiate and apply parts.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Integrate all three terms of the rational remainder.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give a correct primitive with a constant.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Substitute both limits into the full primitive.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give an exact equivalent of the stated answer.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4U-9709-P3-INT-E-PARTS-03",
+      "family_uid": "M4U-9709-P3-INT-E-PARTS-03",
+      "lesson": "parts",
+      "title": "A trigonometric product and two signed regions",
+      "collection": "exam",
+      "prompt_html": "<p>Let \\(f(x)=(x^2+1)\\cos(2x)\\) on \\(0\\le x\\le\\frac{\\pi}{2}\\).</p><ol type=\"a\"><li>Find a primitive for \\(f\\). <span class=\"marks\">[4]</span></li><li>Find \\(\\int_0^{\\frac{\\pi}{2}}f(x)\\,dx\\). <span class=\"marks\">[2]</span></li><li>Find the total geometric area between the graph and the horizontal axis on this interval. <span class=\"marks\">[3]</span></li></ol>",
+      "answer_html": "<ol type=\"a\"><li>\\(F(x)=\\frac{2x^2+1}{4}\\sin(2x)+\\frac{x}{2}\\cos(2x)+C\\).</li><li>\\(-\\frac{\\pi}{4}\\).</li><li>\\(\\frac{\\pi^2}{16}+\\frac12+\\frac{\\pi}{4}\\).</li></ol>",
+      "solution_html": "<ol type=\"a\"><li><p>The first parts step gives \\(\\frac{x^2+1}{2}\\sin(2x)-\\int x\\sin(2x)\\,dx\\). The second integral has primitive \\(-\\frac{x}{2}\\cos(2x)+\\frac14\\sin(2x)\\). Subtract and collect to get \\(\\frac{2x^2+1}{4}\\sin(2x)+\\frac{x}{2}\\cos(2x)+C\\).</p></li><li><p>Use the primitive with \\(C=0\\). At \\(0\\), both terms vanish. At \\(\\frac{\\pi}{2}\\), the sine term vanishes and the cosine term is \\(-\\frac{\\pi}{4}\\).</p></li><li><p>The positive factor \\(x^2+1\\) leaves the sign to \\(\\cos(2x)\\), which changes from positive to negative at \\(\\frac{\\pi}{4}\\). With \\(C=0\\), \\(F(\\frac{\\pi}{4})=\\frac{\\pi^2}{32}+\\frac14\\). The total area is \\(2F(\\frac{\\pi}{4})-F(0)-F(\\frac{\\pi}{2})=\\frac{\\pi^2}{16}+\\frac12+\\frac{\\pi}{4}\\).</p></li></ol>",
+      "hint_html": "<p>The polynomial lowers its degree twice. For the area calculation, first find where the cosine changes sign.</p>",
+      "marks": 9,
+      "difficulty": 4,
+      "fields": [],
+      "verification": "MATHS4U-P3-INT-CHECKED",
+      "parts": [
+        {
+          "label": "(a)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply parts to the initial product.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Obtain the correct remaining sine integral.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Apply parts to this remaining integral.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the complete primitive.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(b)",
+          "marking_criteria": [
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Evaluate both endpoints in the primitive.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the signed integral.</p>"
+            }
+          ]
+        },
+        {
+          "label": "(c)",
+          "marking_criteria": [
+            {
+              "code": "B1",
+              "marks": 1,
+              "description_html": "<p>Identify the sign change at the correct coordinate.</p>"
+            },
+            {
+              "code": "M1",
+              "marks": 1,
+              "description_html": "<p>Split the interval and add the magnitudes of both integrals.</p>"
+            },
+            {
+              "code": "A1",
+              "marks": 1,
+              "description_html": "<p>Give the exact area.</p>"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

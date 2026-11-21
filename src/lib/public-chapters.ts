@@ -67,6 +67,7 @@ const chapterDescriptions: Record<string, string> = {
   "9709-p3-logarithms": "Study logarithms and exponentials for Cambridge 9709 Pure Mathematics 3. Solve equations and inequalities, check logarithm domains and use straight-line graphs to recover model constants.",
   "9709-p3-trigonometry": "Study reciprocal graphs, compound and double angles, the R form and trigonometric equations for Cambridge 9709 Pure Mathematics 3.",
   "9709-p3-differentiation": "Study the chain, product and quotient rules, implicit and parametric differentiation, and tangent and normal problems for Cambridge 9709 Pure Mathematics 3.",
+  "9709-p3-integration": "Choose and use integration methods for 9709 Pure Mathematics 3, including trig identities, partial fractions, substitution and integration by parts.",
 };
 
 export function chapterMetadata(ch: PublicChapter, lesson?: PublicLesson) {

@@ -1,0 +1,1326 @@
+{
+  "orig_9709_p3_int_standard": {
+    "updatedOn": "2026-11-21",
+    "description": "Recognise the standard primitives, reverse a linear inside slope and evaluate exact definite integrals on the right interval.",
+    "sections": [
+      {
+        "id": "reverse-the-slope",
+        "title": "Why divide by the inner slope?",
+        "label": "Reverse a linear inner slope",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Integration reverses differentiation. Take a known primitive of the outer function and check what differentiation would multiply it by.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(F'=f\\) and \\(a\\ne0\\), then \\(\\int f(ax+b)\\,\\mathrm dx=\\frac1aF(ax+b)+C\\), where the expressions are defined. Differentiating the right-hand side produces the factor \\(a\\), which cancels \\(\\frac1a\\).</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Integrand</th><th scope=\"col\">Primitive before adding \\(C\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(e^{ax+b}\\)</th><td>\\(\\frac1a e^{ax+b}\\)</td></tr><tr><th scope=\"row\">\\(\\frac1{ax+b}\\)</th><td>\\(\\frac1a\\ln|ax+b|\\)</td></tr><tr><th scope=\"row\">\\(\\sin(ax+b)\\)</th><td>\\(-\\frac1a\\cos(ax+b)\\)</td></tr><tr><th scope=\"row\">\\(\\cos(ax+b)\\)</th><td>\\(\\frac1a\\sin(ax+b)\\)</td></tr><tr><th scope=\"row\">\\(\\sec^2(ax+b)\\)</th><td>\\(\\frac1a\\tan(ax+b)\\)</td></tr><tr><th scope=\"row\">\\(\\frac1{x^2+c^2}\\), \\(c>0\\)</th><td>\\(\\frac1c\\arctan\\left(\\frac xc\\right)\\)</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use the signed value of \\(a\\). Division by its magnitude alone fails when the inside decreases.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "int-std-check-exponential",
+            "title": "Find the exponential coefficient",
+            "prompt": "<p>Write \\(\\int6e^{1-2x}\\,\\mathrm dx=ke^{1-2x}+C\\). Give \\(k\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient",
+                "expected": "-3",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "3",
+                    "feedback": "<p>Keep the sign of the inner slope. Dividing \\(6\\) by \\(-2\\) gives \\(-3\\).</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>The signed slope of \\(1-2x\\) is \\(-2\\).</p>",
+            "solution": "<p>Differentiate \\(ke^{1-2x}\\) to obtain \\(-2ke^{1-2x}\\). Thus \\(-2k=6\\), so \\(k=-3\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "logarithm-branches",
+        "title": "When does the logarithm need a modulus?",
+        "label": "Use the original domain",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A reciprocal linear function has one excluded input. On either interval where its denominator is non-zero, the modulus makes the logarithm defined.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>On any interval with \\(ax+b\\ne0\\), the derivative of \\(\\ln|ax+b|\\) is \\(\\frac a{ax+b}\\). For definite integrals use one continuous interval and evaluate the primitive at the upper limit minus its value at the lower limit.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Finite values at both endpoints are insufficient for the subtraction rule. A zero of the denominator between them interrupts the interval.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "int-std-check-log-branch",
+            "title": "Read the ratio of endpoint magnitudes",
+            "prompt": "<p>Express \\(\\int_0^1\\frac4{4x-6}\\,\\mathrm dx\\) as \\(\\ln r\\) with \\(r>0\\). Give \\(r\\).</p>",
+            "fields": [
+              {
+                "key": "ratio",
+                "label": "Positive ratio r",
+                "expected": "1/3",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "3",
+                    "feedback": "<p>Subtract the lower primitive value from the upper value. The upper magnitude goes on top.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>The denominator is negative throughout. Use its absolute value at each endpoint, upper over lower.</p>",
+            "solution": "<p>The primitive is \\(\\ln|4x-6|\\) on the interval. Upper minus lower is \\(\\ln2-\\ln6=\\ln\\left(\\frac13\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "sine-and-cosine",
+        "title": "Where does the minus sign go with sine?",
+        "label": "Integrate sine and cosine in radians",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Use \\(\\sin u\\mapsto-\\cos u\\) and \\(\\cos u\\mapsto\\sin u\\). Then divide by the slope of the angle; the standard trigonometric rules use radians.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>With \\(a\\ne0\\), the coefficient of the cosine primitive for \\(\\sin(ax+b)\\) is \\(-\\frac1a\\). The coefficient of the sine primitive for \\(\\cos(ax+b)\\) is \\(\\frac1a\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If an angle is expressed as a degree variable \\(\\theta\\), replace the argument by \\(\\frac{\\pi\\theta}{180}\\) in radians before using these formulas.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "int-std-check-trig",
+            "title": "Match both trigonometric coefficients",
+            "prompt": "<p>Write \\(\\int\\big(5\\sin(2x)-3\\cos(4x)\\big)\\,\\mathrm dx=A\\cos(2x)+B\\sin(4x)+C\\). Give \\(A\\) and \\(B\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "expected": "-5/2",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "5/2",
+                    "feedback": "<p>The primitive of sine has a minus sign.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B",
+                "expected": "-3/4",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Differentiate each candidate term; check which gains a minus sign and which gains a positive multiplier.</p>",
+            "solution": "<p>\\(-2A=5\\) because the derivative of cosine is negative sine. \\(4B=-3\\) from differentiating sine.</p><p>So \\(A=-\\frac52\\) and \\(B=-\\frac34\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "tangent-or-arctan",
+        "title": "Does the primitive use tangent or inverse tangent?",
+        "label": "Recognise the two different patterns",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>\\(\\sec^2(ax+b)\\) calls for tangent. A positive quadratic of the form \\(x^2+c^2\\) in a reciprocal calls for inverse tangent.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\int\\sec^2(ax+b)\\,\\mathrm dx=\\frac1a\\tan(ax+b)+C\\). For \\(c>0\\), \\(\\frac{\\mathrm d}{\\mathrm dx}\\arctan\\left(\\frac xc\\right)=\\frac c{x^2+c^2}\\), so divide by \\(c\\) for the reciprocal quadratic.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A \\(\\sec^2\\) integrand is undefined where its cosine denominator is zero. A reciprocal \\(x^2+c^2\\) with \\(c>0\\) has no real pole.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "int-std-check-tangent",
+            "title": "Evaluate both exact integrals",
+            "prompt": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{8}}4\\sec^2(2x)\\,\\mathrm dx\\) and \\(\\int_0^2\\frac3{x^2+4}\\,\\mathrm dx\\).</p>",
+            "fields": [
+              {
+                "key": "tangent",
+                "label": "First exact integral",
+                "expected": "2",
+                "type": "number"
+              },
+              {
+                "key": "arctan",
+                "label": "Second exact integral",
+                "expected": "3*pi/8",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>At each upper limit the tangent angle is \\(\\frac{\\pi}{4}\\), or the inverse tangent input is \\(1\\).</p>",
+            "solution": "<p>The first is \\(\\big[2\\tan(2x)\\big]_0^{\\frac{\\pi}{8}}=2\\).</p><p>The second is \\(\\left[\\frac32\\arctan\\left(\\frac x2\\right)\\right]_0^2=\\frac{3\\pi}{8}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Primitive",
+        "definition": "<p>A function whose derivative is the integrand.</p>"
+      },
+      {
+        "term": "Integrand",
+        "definition": "<p>The expression being integrated.</p>"
+      },
+      {
+        "term": "Linear argument",
+        "definition": "<p>An inside expression \\(ax+b\\) with constant slope \\(a\\).</p>"
+      },
+      {
+        "term": "Pole",
+        "definition": "<p>An excluded input where these reciprocal functions grow without bound.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Undo the inner exponential slope",
+        "question": "<p>Find \\(\\int 6e^{2x-3}\\,\\mathrm dx\\).</p>",
+        "solution": [
+          "<p>Differentiating \\(e^{2x-3}\\) produces \\(2e^{2x-3}\\). The exponential keeps its whole exponent.</p>",
+          "<p>To get the coefficient \\(6\\), multiply the primitive by \\(\\frac62=3\\).</p>",
+          "<p>The answer is \\(3e^{2x-3}+C\\), since its derivative is the original integrand.</p>"
+        ]
+      },
+      {
+        "title": "Use the logarithm on a negative branch",
+        "question": "<p>Evaluate \\(\\int_{-2}^{-1}\\frac3{3x+2}\\,\\mathrm dx\\) as a single logarithm.</p>",
+        "solution": [
+          "<p>The linear denominator is negative throughout this interval and has no zero there.</p>",
+          "<p>The integrand is the derivative of \\(\\ln|3x+2|\\). The expression inside the modulus is evaluated at both limits.</p>",
+          "<p>Upper minus lower gives \\(\\ln 1-\\ln 4=\\ln\\left(\\frac14\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Track both the inner slope and the sine sign",
+        "question": "<p>Find \\(\\int\\big(3\\sin(2x+1)+4\\cos(1-4x)\\big)\\,\\mathrm dx\\).</p>",
+        "solution": [
+          "<p>For the sine term use negative cosine and divide by \\(2\\), giving \\(-\\frac32\\cos(2x+1)\\).</p>",
+          "<p>For the cosine term use sine and divide by the signed inner slope \\(-4\\), giving \\(-\\sin(1-4x)\\).</p>",
+          "<p>Therefore the primitive is \\(-\\frac32\\cos(2x+1)-\\sin(1-4x)+C\\). Differentiating checks both signs.</p>"
+        ]
+      },
+      {
+        "title": "Distinguish a tangent primitive from an inverse tangent",
+        "question": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{12}}6\\sec^2(3x)\\,\\mathrm dx\\) and \\(\\int_0^3\\frac6{x^2+9}\\,\\mathrm dx\\).</p>",
+        "solution": [
+          "<p>In the first integral the argument \\(3x\\) never reaches a pole. Use \\(\\big[2\\tan(3x)\\big]_0^{\\frac{\\pi}{12}}=2\\).</p>",
+          "<p>For the second, \\(x^2+9=x^2+3^2\\). The primitive is \\(2\\arctan\\left(\\frac x3\\right)\\).</p>",
+          "<p>The second integral is \\(2(\\arctan1-\\arctan0)=\\frac{\\pi}{2}\\).</p>"
+        ]
+      }
+    ],
+    "revision": {
+      "body": "<h2>Match the primitive</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Integrand</th><th scope=\"col\">Primitive before adding \\(C\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(e^{ax+b}\\)</th><td>\\(\\frac1a e^{ax+b}\\)</td></tr><tr><th scope=\"row\">\\(\\frac1{ax+b}\\)</th><td>\\(\\frac1a\\ln|ax+b|\\)</td></tr><tr><th scope=\"row\">\\(\\sin(ax+b)\\)</th><td>\\(-\\frac1a\\cos(ax+b)\\)</td></tr><tr><th scope=\"row\">\\(\\cos(ax+b)\\)</th><td>\\(\\frac1a\\sin(ax+b)\\)</td></tr><tr><th scope=\"row\">\\(\\sec^2(ax+b)\\)</th><td>\\(\\frac1a\\tan(ax+b)\\)</td></tr><tr><th scope=\"row\">\\(\\frac1{x^2+c^2}\\), \\(c>0\\)</th><td>\\(\\frac1c\\arctan\\left(\\frac xc\\right)\\)</td></tr></tbody></table></div><h2>Reverse the signed chain factor</h2><p>In the table \\(a\\ne0\\), angles are in radians and the reciprocal quadratic uses \\(c>0\\). For example, \\(\\int6e^{1-2x}\\,\\mathrm dx=-3e^{1-2x}+C\\).</p>",
+      "checks": "<ul><li>Use the whole original argument.</li><li>Add an arbitrary constant to an indefinite integral.</li><li>For definite integration, check that the interval has no excluded input and subtract lower from upper.</li></ul>",
+      "examTip": "<p>Verify signs and multipliers by differentiating your proposed primitive.</p>"
+    },
+    "related": [
+      {
+        "title": "Trigonometric integrals and logarithmic derivatives",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_int_trig_log"
+      }
+    ]
+  },
+  "orig_9709_p3_int_trig_log": {
+    "updatedOn": "2026-11-21",
+    "description": "Rewrite trigonometric squares and products before integrating, and identify logarithmic derivatives and tangent integrals.",
+    "sections": [
+      {
+        "id": "square-identities",
+        "title": "How can a squared sine or cosine become a sum?",
+        "label": "Reduce a square using the double angle",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Choose a double-angle identity that isolates the squared function. A constant term and an ordinary cosine are easier to integrate separately.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\cos(2u)=1-2\\sin^2u=2\\cos^2u-1\\). Solve for the square before integrating.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">What you see</th><th scope=\"col\">Rewrite before integrating</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\sin^2u\\)</th><td>\\(\\frac{1-\\cos(2u)}2\\)</td></tr><tr><th scope=\"row\">\\(\\cos^2u\\)</th><td>\\(\\frac{1+\\cos(2u)}2\\)</td></tr><tr><th scope=\"row\">\\(\\sin u\\cos u\\)</th><td>\\(\\frac12\\sin(2u)\\)</td></tr><tr><th scope=\"row\">\\(\\tan u\\)</th><td>\\(\\frac{\\sin u}{\\cos u}\\), compare with the derivative of \\(\\cos u\\)</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Double the entire angle: if \\(u=3x\\), the cosine after rewriting is \\(\\cos(6x)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "int-triglog-check-squares",
+            "title": "Integrate a squared sine",
+            "prompt": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{6}}4\\sin^2(3x)\\,\\mathrm dx\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Exact integral",
+                "expected": "pi/3",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Use the minus form for a sine square. The new angle is \\(6x\\).</p>",
+            "solution": "<p>\\(4\\sin^2(3x)=2-2\\cos(6x)\\).</p><p>The primitive \\(2x-\\frac13\\sin(6x)\\) gives \\(\\frac{\\pi}{3}\\) at the upper limit and \\(0\\) at the lower limit.</p>"
+          }
+        ]
+      },
+      {
+        "id": "sine-cosine-products",
+        "title": "What if sine and cosine share an angle?",
+        "label": "Replace the product with one sine",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The identity for sine of a double angle turns an equal-angle product into a standard integral.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\sin u\\cos u=\\frac12\\sin(2u)\\), then apply the signed linear-argument rule.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not split a product into separate integrals. In this case the identity preserves the function and changes its shape.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "int-triglog-check-product",
+            "title": "Integrate a sine-cosine product",
+            "prompt": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{8}}12\\sin(2x)\\cos(2x)\\,\\mathrm dx\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Exact integral",
+                "expected": "3/2",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "3",
+                    "feedback": "<p>The double-angle sine represents twice the product. Halve the coefficient before integrating.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>The product of the two functions equals half the sine of their doubled angle.</p>",
+            "solution": "<p>Rewrite the integrand as \\(6\\sin(4x)\\).</p><p>Use \\(\\left[-\\frac32\\cos(4x)\\right]_0^{\\frac{\\pi}{8}}=0+\\frac32=\\frac32\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "logarithmic-derivative",
+        "title": "When does a quotient lead to a logarithm?",
+        "label": "Match the derivative of the denominator",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Keep the denominator as one function \\(f\\), differentiate it and compare the whole numerator with \\(f'\\). A constant mismatch can be taken outside.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>On any interval where \\(f\\ne0\\), \\(\\int k\\frac{f'(x)}{f(x)}\\,\\mathrm dx=k\\ln|f(x)|+C\\). For continuous bounds, evaluate \\(k\\ln\\left(\\frac{|f(b)|}{|f(a)|}\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Matching just the highest power is insufficient. The whole numerator must equal one constant times \\(f'\\). Check for zeros of \\(f\\) between the bounds.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "int-triglog-check-denominator",
+            "title": "Match the multiplier and endpoint ratio",
+            "prompt": "<p>Write \\(\\int_0^2\\frac{6x}{x^2+5}\\,\\mathrm dx=k\\ln r\\), with \\(r=\\frac{|f(2)|}{|f(0)|}\\) and \\(f(x)=x^2+5\\). Give \\(k\\) and \\(r\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Multiplier k",
+                "expected": "3",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "6",
+                    "feedback": "<p>Compare \\(6x\\) with \\(2x\\) to find the constant multiplier.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "ratio",
+                "label": "Denominator magnitude ratio r",
+                "expected": "9/5",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>The derivative of the denominator has coefficient two. Retain both endpoint values before taking their ratio.</p>",
+            "solution": "<p>The denominator derivative is \\(2x\\), so the multiplier is \\(3\\).</p><p>\\(f(2)=9\\), \\(f(0)=5\\), and the integral is \\(3\\ln\\left(\\frac95\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "integrate-tangent",
+        "title": "Where does the minus sign come from when integrating tangent?",
+        "label": "Read tangent as a logarithmic derivative",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Write tangent as sine divided by cosine. This exposes the negative sign in the derivative of cosine.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\int\\tan x\\,\\mathrm dx=-\\ln|\\cos x|+C\\). For \\(a\\ne0\\), \\(\\int\\tan(ax+b)\\,\\mathrm dx=-\\frac1a\\ln|\\cos(ax+b)|+C\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep the sign of a definite integral unless the question asks for an area. Check all intervening angles for zeros of cosine.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "int-triglog-check-tangent",
+            "title": "Evaluate tangent on a negative angle interval",
+            "prompt": "<p>Write \\(\\int_{-\\frac{\\pi}{3}}^{0}\\tan x\\,\\mathrm dx=k\\ln2\\). Give \\(k\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient of ln 2",
+                "expected": "-1",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "1",
+                    "feedback": "<p>The integrand is negative before zero on this interval; the signed definite integral must be negative.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Use \\(-\\ln|\\cos x|\\) and subtract its value at the lower limit.</p>",
+            "solution": "<p>At \\(0\\) the primitive is \\(0\\). At \\(-\\frac{\\pi}{3}\\) it is \\(-\\ln\\left(\\frac12\\right)=\\ln2\\).</p><p>The difference is \\(-\\ln2\\), so \\(k=-1\\).</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Double angle",
+        "definition": "<p>The argument \\(2u\\) built from the whole angle \\(u\\).</p>"
+      },
+      {
+        "term": "Logarithmic derivative",
+        "definition": "<p>A ratio \\(\\frac{f'}{f}\\), the derivative of \\(\\ln|f|\\).</p>"
+      },
+      {
+        "term": "Signed integral",
+        "definition": "<p>The net result once below-axis contributions have been subtracted.</p>"
+      },
+      {
+        "term": "Continuous branch",
+        "definition": "<p>An interval over which the expressions used in the calculation are defined and continuous.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Replace a squared cosine with a doubled angle",
+        "question": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{4}}6\\cos^2(2x)\\,\\mathrm dx\\).</p>",
+        "solution": [
+          "<p>Use \\(\\cos^2u=\\frac{1+\\cos(2u)}2\\) with \\(u=2x\\). The integrand becomes \\(3+3\\cos(4x)\\).</p>",
+          "<p>A primitive is \\(3x+\\frac34\\sin(4x)\\). Its sine term is zero at both endpoints.</p>",
+          "<p>Upper minus lower gives \\(\\frac{3\\pi}{4}\\).</p>"
+        ]
+      },
+      {
+        "title": "Turn an equal-angle product into one sine",
+        "question": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{6}}8\\sin(3x)\\cos(3x)\\,\\mathrm dx\\).</p>",
+        "solution": [
+          "<p>The double-angle identity gives \\(8\\sin(3x)\\cos(3x)=4\\sin(6x)\\).</p>",
+          "<p>A primitive of \\(4\\sin(6x)\\) is \\(-\\frac23\\cos(6x)\\).</p>",
+          "<p>Evaluate at the endpoints. The result is \\(-\\frac23\\cos\\pi+\\frac23\\cos0=\\frac43\\).</p>"
+        ]
+      },
+      {
+        "title": "Match a numerator to its denominator's derivative",
+        "question": "<p>Evaluate \\(\\int_1^2\\frac{9x^2}{x^3+5}\\,\\mathrm dx\\), keeping the denominator intact.</p>",
+        "solution": [
+          "<p>With \\(f(x)=x^3+5\\), its derivative is \\(3x^2\\). The numerator is \\(3 f'(x)\\).</p>",
+          "<p>The denominator is positive on the interval. A primitive is \\(3\\ln(x^3+5)\\).</p>",
+          "<p>The value is \\(3\\ln13-3\\ln6=3\\ln\\left(\\frac{13}{6}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Integrate tangent from a logarithmic derivative",
+        "question": "<p>Evaluate \\(\\int_0^{\\frac{\\pi}{3}}2\\tan x\\,\\mathrm dx\\).</p>",
+        "solution": [
+          "<p>Write \\(2\\tan x=\\frac{2\\sin x}{\\cos x}\\). The derivative of \\(\\cos x\\) is \\(-\\sin x\\).</p>",
+          "<p>The integrand therefore has primitive \\(-2\\ln|\\cos x|\\). Cosine is positive and has no zero between the given limits.</p>",
+          "<p>The difference is \\(-2\\ln\\left(\\frac12\\right)+2\\ln1=2\\ln2\\).</p>"
+        ]
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose an identity</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">What you see</th><th scope=\"col\">Rewrite before integrating</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\sin^2u\\)</th><td>\\(\\frac{1-\\cos(2u)}2\\)</td></tr><tr><th scope=\"row\">\\(\\cos^2u\\)</th><td>\\(\\frac{1+\\cos(2u)}2\\)</td></tr><tr><th scope=\"row\">\\(\\sin u\\cos u\\)</th><td>\\(\\frac12\\sin(2u)\\)</td></tr><tr><th scope=\"row\">\\(\\tan u\\)</th><td>\\(\\frac{\\sin u}{\\cos u}\\), compare with the derivative of \\(\\cos u\\)</td></tr></tbody></table></div><h2>Match a logarithmic derivative</h2><p>When the numerator is \\(k f'(x)\\), the primitive of \\(\\frac{kf'(x)}{f(x)}\\) is \\(k\\ln|f(x)|+C\\) wherever \\(f\\ne0\\).</p><p>Example: \\(\\int\\tan(2x)\\,\\mathrm dx=-\\frac12\\ln|\\cos(2x)|+C\\), wherever it is defined.</p>",
+      "checks": "<ul><li>Double the whole angle.</li><li>Keep both the outside multiplier and the sign of the inner slope.</li><li>Locate any denominator zeros before evaluating a definite integral.</li></ul>",
+      "examTip": "<p>Derive or write the identity before integrating. If the interval crosses a singularity, the ordinary endpoint subtraction does not apply.</p>"
+    },
+    "related": [
+      {
+        "title": "Standard integrals and linear arguments",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_int_standard"
+      }
+    ]
+  },
+  "orig_9709_p3_int_partial_fractions": {
+    "updatedOn": "2026-11-21",
+    "description": "Decompose rational functions, integrate each part and check definite intervals for poles.",
+    "sections": [
+      {
+        "id": "split-linear-factors",
+        "title": "How do separate linear factors produce logarithms?",
+        "label": "Distinct linear factors",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>First factor the denominator and check that the fraction is proper. Give each distinct linear factor a constant numerator. Clear the denominators to solve for the constants.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A term \\(\\frac{A}{ax+b}\\) integrates to \\(\\frac Aa\\ln|ax+b|+C\\) when \\(a\\ne0\\). The factor \\(\\frac1a\\) compensates for the derivative of \\(ax+b\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>After clearing denominators, substituting a root switches off every term except the one for that factor. This uses a polynomial identity, even though the original fraction is undefined at that root.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "int-partial-distinct-coefficients",
+            "title": "Find both logarithm coefficients",
+            "prompt": "<p>An antiderivative of \\(\\frac{7x+17}{(x+2)(x+5)}\\) is \\(a\\ln|x+2|+b\\ln|x+5|+C\\). Give \\(a\\) and \\(b\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "6"
+              }
+            ],
+            "hint": "<p>Clear denominators and substitute both roots into the numerator identity.</p>",
+            "solution": "<p>From \\(7x+17=a(x+5)+b(x+2)\\), the roots \\(x=-2\\) and \\(x=-5\\) give \\(a=1,\\ b=6\\). Each linear factor has derivative one.</p>"
+          }
+        ]
+      },
+      {
+        "id": "repeat-a-linear-factor",
+        "title": "What changes when a factor is squared?",
+        "label": "Keep the repeated powers",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Include one term for each power of the repeated factor. For a squared linear factor that means keeping both the first power and the square.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A term with denominator \\(ax+b\\) gives a logarithm. A term \\(\\frac D{(ax+b)^2}\\) gives \\(-\\frac D{a(ax+b)}\\) because the exponent is \\(-2\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Omitting the first-power term at a repeated factor leaves too few coefficients to represent a general numerator. A reciprocal squared integrates by the power rule, with a minus sign.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "int-partial-repeated-reciprocal",
+            "title": "Read the squared-factor coefficient and integrate it",
+            "prompt": "<p>The fraction \\(\\frac{7x+22}{(x+2)(x+4)^2}\\) splits as \\(\\frac A{x+2}+\\frac B{x+4}+\\frac D{(x+4)^2}\\). Give \\(D\\) and the coefficient \\(k\\) of \\(\\frac1{x+4}\\) in its antiderivative.</p>",
+            "fields": [
+              {
+                "key": "D",
+                "label": "Squared-factor coefficient D",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "k",
+                "label": "Reciprocal coefficient k",
+                "type": "number",
+                "expected": "-3",
+                "retry": [
+                  {
+                    "answer": "3",
+                    "feedback": "<p>Integrating the power −2 introduces a minus sign.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Clear the denominator and substitute \\(x=-4\\). Then integrate the squared-factor term.</p>",
+            "solution": "<p>At \\(x=-4\\) the numerator is \\(-6\\) and the surviving term is \\(-2D\\), giving \\(D=3\\). The antiderivative contains \\(-\\frac3{x+4}\\) so \\(k=-3\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "split-a-quadratic-numerator",
+        "title": "Why can one quadratic factor give two types of integral?",
+        "label": "Separate logarithm and inverse tangent",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>A real factor \\(x^2+a^2\\) with \\(a&gt;0\\) does not split into real linear factors. Keep a numerator of degree at most one for that denominator.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term over \\(x^2+a^2\\)</th><th scope=\"col\">Matching antiderivative term</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\frac{Bx}{x^2+a^2}\\)</th><td>\\(\\frac B2\\ln(x^2+a^2)\\)</td></tr><tr><th scope=\"row\">\\(\\frac{D}{x^2+a^2}\\)</th><td>\\(\\frac Da\\tan^{-1}\\!\\left(\\frac xa\\right)\\)</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For a denominator \\(cx^2+d\\) of this kind, factor out \\(c\\) before reading the value of \\(a\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "int-partial-quadratic-coefficients",
+            "title": "Find the three antiderivative coefficients",
+            "prompt": "<p>An antiderivative of \\(\\frac{5x^2+6x+11}{(x+1)(x^2+9)}\\) is \\(a\\ln|x+1|+b\\ln(x^2+9)+c\\tan^{-1}\\!\\left(\\frac x3\\right)+C\\). Give \\(a,b,c\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "c",
+                "label": "Coefficient c",
+                "type": "number",
+                "expected": "2/3"
+              }
+            ],
+            "hint": "<p>First obtain the numerator over \\(x^2+9\\). Its derivative-matching term and constant integrate differently.</p>",
+            "solution": "<p>The fraction splits as \\(\\frac1{x+1}+\\frac{4x+2}{x^2+9}\\). The logarithm of \\(x^2+9\\) has coefficient \\(2\\), and the inverse tangent has coefficient \\(\\frac23\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "divide-and-check-for-poles",
+        "title": "When do I divide first, and can I use the given limits?",
+        "label": "Divide and check the interval",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>If numerator and denominator have equal degree, divide to get a constant plus a proper fraction. Then decompose the proper remainder. Check the original denominator throughout any definite interval. Polynomial division also gives a proper remainder when the numerator degree is higher. Paper 3 partial-fraction cases go up to equal degrees.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For equal degrees subtract the denominator times the ratio of the leading coefficients. Integrate that constant as a multiple of \\(x\\) before adding the antiderivatives of the remaining fractions.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A pole inside the interval or at a limit prevents use of an ordinary definite integral across it. Finite values obtained by plugging the endpoints into an antiderivative do not fix the break.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "int-partial-improper-and-domain",
+            "title": "Find the quotient and choose a valid interval",
+            "prompt": "<p>For \\(R(x)=\\frac{3x^2-4x-13}{(x-2)(x+1)}\\), write \\(R(x)=q+\\frac A{x-2}+\\frac B{x+1}\\). Give \\(q,A,B\\) and choose the interval on which the ordinary definite integral is defined.</p>",
+            "fields": [
+              {
+                "key": "q",
+                "label": "Quotient q",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "A",
+                "label": "Partial-fraction coefficient A",
+                "type": "number",
+                "expected": "-3"
+              },
+              {
+                "key": "B",
+                "label": "Partial-fraction coefficient B",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "interval",
+                "label": "Interval without a pole",
+                "type": "choice",
+                "expected": "safe",
+                "options": {
+                  "crosses": "\\([0,3]\\)",
+                  "safe": "\\([3,4]\\)"
+                },
+                "retry": [
+                  {
+                    "answer": "crosses",
+                    "feedback": "<p>The interval from zero to three contains the pole at two.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Subtract three times the denominator. To choose the interval, test both roots of the denominator.</p>",
+            "solution": "<p>Division leaves remainder \\(-x-7\\), which gives \\(A=-3,\\ B=2\\). The poles are \\(x=2\\) and \\(x=-1\\). Only \\([3,4]\\) avoids both.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Proper fraction",
+        "definition": "<p>A rational fraction whose numerator has lower degree than its denominator.</p>"
+      },
+      {
+        "term": "Irreducible quadratic",
+        "definition": "<p>A quadratic that cannot be factored into real linear factors.</p>"
+      },
+      {
+        "term": "Pole",
+        "definition": "<p>A point where the rational expression grows without bound as its denominator approaches zero.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Two different linear factors",
+        "question": "<p>Integrate \\(\\frac{5x+7}{(x+1)(x+3)}\\) with respect to \\(x\\).</p>",
+        "solution": [
+          "<p>Clear denominators to obtain \\(5x+7=A(x+3)+B(x+1)\\).</p>",
+          "<p>At \\(x=-1\\) obtain \\(A=1\\). At \\(x=-3\\) obtain \\(B=4\\).</p>",
+          "<p>Integrate the two terms to get \\(\\ln|x+1|+4\\ln|x+3|+C\\). This holds on each interval without poles.</p>"
+        ]
+      },
+      {
+        "title": "Keep both powers of a repeated factor",
+        "question": "<p>Integrate \\(\\frac{5x+11}{(x+1)(x+2)^2}\\) with respect to \\(x\\).</p>",
+        "solution": [
+          "<p>Use the form \\(\\frac A{x+1}+\\frac B{x+2}+\\frac D{(x+2)^2}\\). Clearing denominators gives \\(5x+11=A(x+2)^2+B(x+1)(x+2)+D(x+1)\\).</p>",
+          "<p>Substitute \\(x=-1\\) and \\(x=-2\\) to get \\(A=6\\) and \\(D=-1\\). The coefficient of \\(x^2\\) gives \\(A+B=0\\), so \\(B=-6\\).</p>",
+          "<p>Integrate to get \\(6\\ln|x+1|-6\\ln|x+2|+\\frac1{x+2}+C\\). The reciprocal term is positive because differentiating it gives the negative squared-denominator term.</p>"
+        ]
+      },
+      {
+        "title": "Split the numerator over a quadratic",
+        "question": "<p>Integrate \\(\\frac{5x^2+7x+10}{(x+2)(x^2+4)}\\) with respect to \\(x\\).</p>",
+        "solution": [
+          "<p>Use \\(\\frac A{x+2}+\\frac{Bx+D}{x^2+4}\\). At \\(x=-2\\) the numerator identity gives \\(A=2\\). Comparing the quadratic and linear coefficients gives \\(B=3\\) and \\(D=1\\).</p>",
+          "<p>The numerator \\(3x+1\\) splits as \\(\\frac32(2x)+1\\). The first part is a multiple of the derivative of \\(x^2+4\\).</p>",
+          "<p>Integrate to obtain \\(2\\ln|x+2|+\\frac32\\ln(x^2+4)+\\frac12\\tan^{-1}\\!\\left(\\frac x2\\right)+C\\).</p>"
+        ]
+      },
+      {
+        "title": "Divide before integrating a definite rational function",
+        "question": "<p>Evaluate \\(\\int_2^4\\frac{2x^2+7x-3}{(x-1)(x+2)}\\,\\mathrm dx\\) exactly.</p>",
+        "solution": [
+          "<p>The denominator is \\(x^2+x-2\\). Subtract twice this denominator from the numerator to get \\(5x+1\\).</p>",
+          "<p>The remainder splits as \\(\\frac{5x+1}{(x-1)(x+2)}=\\frac2{x-1}+\\frac3{x+2}\\). Both poles lie outside the integration interval.</p>",
+          "<p>Use \\(\\left[2x+2\\ln(x-1)+3\\ln(x+2)\\right]_2^4\\). The exact value is \\(4+2\\ln3+3\\ln\\left(\\frac32\\right)\\).</p>"
+        ]
+      }
+    ],
+    "revision": {
+      "body": "<h2>Start with a proper fraction</h2><p>If the degrees are equal, subtract the constant quotient times the denominator. Decompose the remainder.</p><h2>Match each term to its integral</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Partial fraction</th><th scope=\"col\">Antiderivative term</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\frac{A}{ax+b}\\)</th><td>\\(\\frac Aa\\ln|ax+b|\\)</td></tr><tr><th scope=\"row\">\\(\\frac D{(ax+b)^2}\\)</th><td>\\(-\\frac{D}{a(ax+b)}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{Bx+D}{x^2+a^2}\\)</th><td>\\(\\frac B2\\ln(x^2+a^2)+\\frac Da\\tan^{-1}\\!\\left(\\frac xa\\right)\\)</td></tr></tbody></table></div><h2>One example</h2><p>\\(\\frac{5x+7}{(x+1)(x+3)}=\\frac1{x+1}+\\frac4{x+3}\\) gives \\(\\ln|x+1|+4\\ln|x+3|+C\\).</p>",
+      "checks": "<ul><li>Include every power of a repeated factor.</li><li>Check the chain multiplier on a logarithm.</li><li>Check both limits and the interval for poles.</li></ul>",
+      "examTip": "<p>Use absolute values in logarithms of signed linear factors. An antiderivative is valid on each interval where the original function is defined.</p>"
+    },
+    "related": [
+      {
+        "title": "Integration by substitution",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_int_substitution"
+      },
+      {
+        "title": "Polynomial division",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_alg_polynomial_division"
+      }
+    ]
+  },
+  "orig_9709_p3_int_substitution": {
+    "updatedOn": "2026-11-21",
+    "description": "Use a given substitution to rewrite the integrand, transform limits and evaluate exact integrals.",
+    "sections": [
+      {
+        "id": "sub-replace-inner-and-differential",
+        "title": "What must change when I use a given substitution?",
+        "label": "Replace the inner expression and differential",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Write down the given substitution and differentiate it. Then group the original differential with the factor it needs. The transformed integral should have one variable.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(u=g(x)\\), use \\(\\mathrm du=g'(x)\\,\\mathrm dx\\). If your integrand has \\(k g'(x)\\,\\mathrm dx\\), carry the constant \\(k\\) into the new integral.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For an indefinite integral, restore the original variable in the final answer and include a constant of integration.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "int-sub-indefinite-coefficients",
+            "title": "Find the factor and the exponent",
+            "prompt": "<p>Use \\(u=5+x^2\\) to evaluate \\(\\int4x(5+x^2)^2\\,\\mathrm dx\\). Give \\(a,n\\) in the form \\(a(5+x^2)^n+C\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "2/3"
+              },
+              {
+                "key": "n",
+                "label": "Exponent n",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>The differential is \\(\\mathrm du=2x\\,\\mathrm dx\\). Carry the remaining factor into the new integral.</p>",
+            "solution": "<p>The integral is \\(2\\int u^2\\,\\mathrm du=\\frac23u^3+C\\). Restore the substitution to get \\(a=\\frac23\\) and \\(n=3\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "sub-eliminate-leftover-x",
+        "title": "What if an x is still left after substitution?",
+        "label": "Rewrite leftover factors",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Sometimes the substitution replaces a square root but leaves a separate factor of \\(x\\). Rearrange the given relation to express that factor in terms of \\(u\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>With \\(u=\\sqrt{ax+b}\\), rewrite the relation as \\(u^2=ax+b\\) on its domain. Then \\(x=\\frac{u^2-b}{a}\\) and \\(\\mathrm dx=\\frac{2u}{a}\\,\\mathrm du\\), for \\(a\\ne0\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Writing \\(\\int f(x,u)\\,\\mathrm du\\) with an unreplaced \\(x\\) leaves the change of variables incomplete.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "int-sub-rewrite-square-root",
+            "title": "Rewrite x and the differential together",
+            "prompt": "<p>For \\(x&gt;-2\\), integrate \\(\\frac{x}{\\sqrt{x+2}}\\) using \\(u=\\sqrt{x+2}\\). Give \\(a,b\\) in \\(a(x+2)^{\\frac32}+b(x+2)^{\\frac12}+C\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "2/3"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "-4"
+              }
+            ],
+            "hint": "<p>Use \\(x=u^2-2\\) and \\(\\mathrm dx=2u\\,\\mathrm du\\) before cancelling the root.</p>",
+            "solution": "<p>The integral transforms to \\(2\\int(u^2-2)\\,\\mathrm du=\\frac23u^3-4u+C\\). So \\(a=\\frac23,\\ b=-4\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "sub-transform-ordered-limits",
+        "title": "What happens when the substitution reverses the order of the limits?",
+        "label": "Transform definite limits in order",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Apply the given substitution to the starting and finishing endpoints separately. If the substitution decreases, the new starting value can be larger than the finishing value.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Original limit</th><th scope=\"col\">New limit</th></tr></thead><tbody><tr><th scope=\"row\">\\(x=a\\)</th><td>\\(u=g(a)\\)</td></tr><tr><th scope=\"row\">\\(x=b\\)</th><td>\\(u=g(b)\\)</td></tr></tbody></table></div><p>Keep those limits in their original order or swap them and introduce a minus sign. Carry the factor from \\(\\mathrm dx\\) as well.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Sorting the new limits without changing the sign changes the value of the definite integral. Evaluating a formula in \\(u\\) at the old \\(x\\) limits also gives a different integral.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "int-sub-decreasing-limits",
+            "title": "Transform both limits and evaluate",
+            "prompt": "<p>Use \\(u=20-2x\\) to evaluate \\(\\int_2^8\\sqrt{20-2x}\\,\\mathrm dx\\). Give the starting and finishing \\(u\\) limits in that order, then the exact value.</p>",
+            "fields": [
+              {
+                "key": "start",
+                "label": "Starting u-limit",
+                "type": "number",
+                "expected": "16"
+              },
+              {
+                "key": "end",
+                "label": "Finishing u-limit",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "value",
+                "label": "Exact integral value",
+                "type": "number",
+                "expected": "56/3"
+              }
+            ],
+            "hint": "<p>Use the given order first. The differential contributes the factor \\(-\\frac12\\).</p>",
+            "solution": "<p>The limits are \\(16\\) and \\(4\\). The integral is \\(-\\frac12\\int_{16}^4 u^{\\frac12}\\,\\mathrm du=\\frac13(64-8)=\\frac{56}3\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "sub-trig-leftover-factor",
+        "title": "How do I transform a trigonometric product completely?",
+        "label": "Use an identity for what remains",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>With \\(u=\\sin x\\), one cosine factor belongs to the differential. The identity \\(\\sin^2x+\\cos^2x=1\\) converts an extra even power of cosine into a power of \\(1-u^2\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write \\(\\cos^{2k+1}x=(\\cos^2x)^k\\cos x\\). Then replace \\(\\cos^2x\\) by \\(1-u^2\\) and \\(\\cos x\\,\\mathrm dx\\) by \\(\\mathrm du\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For \\(u=\\cos x\\) the analogous substitution uses \\(\\mathrm du=-\\sin x\\,\\mathrm dx\\). Keep that sign and the transformed limits separate until you decide whether to swap the order.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "int-sub-trig-exact",
+            "title": "Use the given trigonometric substitution",
+            "prompt": "<p>Use \\(u=\\sin x\\) to evaluate \\(\\int_0^{\\frac\\pi2}\\sin^3x\\cos^3x\\,\\mathrm dx\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Exact integral value",
+                "type": "number",
+                "expected": "1/12"
+              }
+            ],
+            "hint": "<p>Use one cosine in the differential and turn the remaining square into \\(1-u^2\\).</p>",
+            "solution": "<p>The transformed integral is \\(\\int_0^1(u^3-u^5)\\,\\mathrm du=\\frac14-\\frac16=\\frac1{12}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Substitution",
+        "definition": "<p>Replacing the variable of integration with a related one.</p>"
+      },
+      {
+        "term": "Differential",
+        "definition": "<p>The piece such as dx or du that records the variable used in the integral.</p>"
+      },
+      {
+        "term": "Transformed limits",
+        "definition": "<p>The values of the new variable at the original starting and finishing endpoints.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Change variables in an indefinite integral",
+        "question": "<p>Evaluate \\(\\int 3x(1+x^2)^4\\,\\mathrm dx\\) using \\(u=1+x^2\\).</p>",
+        "solution": [
+          "<p>Differentiate \\(u=1+x^2\\) to get \\(\\mathrm du=2x\\,\\mathrm dx\\). Hence \\(3x\\,\\mathrm dx=\\frac32\\,\\mathrm du\\).</p>",
+          "<p>The integral becomes \\(\\frac32\\int u^4\\,\\mathrm du=\\frac3{10}u^5+C\\).</p>",
+          "<p>Restore \\(u=1+x^2\\) to obtain \\(\\frac3{10}(1+x^2)^5+C\\).</p>"
+        ]
+      },
+      {
+        "title": "Rewrite a leftover factor of x",
+        "question": "<p>For \\(x&gt;-\\frac12\\), integrate \\(\\frac{x}{\\sqrt{2x+1}}\\) using \\(u=\\sqrt{2x+1}\\).</p>",
+        "solution": [
+          "<p>From \\(u^2=2x+1\\) obtain \\(x=\\frac{u^2-1}{2}\\) and \\(\\mathrm dx=u\\,\\mathrm du\\). In this domain \\(u&gt;0\\).</p>",
+          "<p>The root in the denominator becomes \\(u\\). Therefore the integral is \\(\\frac12\\int(u^2-1)\\,\\mathrm du\\).</p>",
+          "<p>Integrate to get \\(\\frac16u^3-\\frac12u+C\\) then replace \\(u\\) to obtain \\(\\frac16(2x+1)^{\\frac32}-\\frac12(2x+1)^{\\frac12}+C\\).</p>"
+        ]
+      },
+      {
+        "title": "Respect decreasing limits",
+        "question": "<p>Evaluate \\(\\int_0^4\\sqrt{9-2x}\\,\\mathrm dx\\) using \\(u=9-2x\\).</p>",
+        "solution": [
+          "<p>The limits in order are \\(x=0\\mapsto u=9\\) and \\(x=4\\mapsto u=1\\). Also \\(\\mathrm dx=-\\frac12\\,\\mathrm du\\).</p>",
+          "<p>The integral is \\(-\\frac12\\int_9^1 u^{\\frac12}\\,\\mathrm du=\\frac12\\int_1^9u^{\\frac12}\\,\\mathrm du\\).</p>",
+          "<p>Evaluate \\(\\left[\\frac13u^{\\frac32}\\right]_1^9=\\frac13(27-1)=\\frac{26}3\\).</p>"
+        ]
+      },
+      {
+        "title": "Transform the whole trigonometric product",
+        "question": "<p>Evaluate \\(\\int_0^{\\frac\\pi2}\\sin^2x\\cos^3x\\,\\mathrm dx\\) using \\(u=\\sin x\\).</p>",
+        "solution": [
+          "<p>Set aside one \\(\\cos x\\) for \\(\\mathrm du=\\cos x\\,\\mathrm dx\\). Rewrite the remaining \\(\\cos^2x\\) as \\(1-u^2\\).</p>",
+          "<p>The limits \\(0\\) and \\(\\frac\\pi2\\) become \\(0\\) and \\(1\\). The integral becomes \\(\\int_0^1(u^2-u^4)\\,\\mathrm du\\).</p>",
+          "<p>Evaluate \\(\\left[\\frac{u^3}3-\\frac{u^5}5\\right]_0^1=\\frac13-\\frac15=\\frac2{15}\\).</p>"
+        ]
+      }
+    ],
+    "revision": {
+      "body": "<h2>Replace every part of the integral</h2><p>For \\(u=g(x)\\), write \\(\\mathrm du=g'(x)\\,\\mathrm dx\\). Rewrite any remaining \\(x\\) factors in terms of \\(u\\).</p><h2>Finish in the right variable</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Integral type</th><th scope=\"col\">How to finish</th></tr></thead><tbody><tr><th scope=\"row\">Indefinite</th><td>Restore the original variable and add \\(C\\).</td></tr><tr><th scope=\"row\">Definite</th><td>Use the transformed limits in their given order, or restore the original variable and keep the original limits.</td></tr></tbody></table></div><h2>One example</h2><p>\\(\\int_0^4\\sqrt{9-2x}\\,\\mathrm dx\\) becomes \\(-\\frac12\\int_9^1u^{\\frac12}\\,\\mathrm du\\) with \\(u=9-2x\\). Swap the limits to find \\(\\frac13(27-1)=\\frac{26}3\\).</p>",
+      "checks": "<ul><li>Form the new differential with its sign and scale.</li><li>Rewrite the entire integrand in one variable.</li><li>Use endpoint values for the variable in the antiderivative.</li></ul>",
+      "examTip": "<p>With \\(u=\\sin x\\), keep one \\(\\cos x\\) for the differential and replace each extra \\(\\cos^2x\\) by \\(1-u^2\\).</p>"
+    },
+    "related": [
+      {
+        "title": "Integration using partial fractions",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_int_partial_fractions"
+      },
+      {
+        "title": "The chain rule",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_diff_chain"
+      }
+    ]
+  },
+  "orig_9709_p3_int_parts": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose factors for integration by parts, simplify logarithmic and repeated products, and evaluate exact definite integrals.",
+    "sections": [
+      {
+        "id": "choose-parts",
+        "title": "What makes a good choice of u?",
+        "label": "Choose the factors",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Parts reverses the product rule. Arrange the two factors so that the second integral takes less work than the first.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write the integrand as \\(uv'\\). From \\((uv)'=u'v+uv'\\),</p>\\[\\int uv'\\,dx=uv-\\int u'v\\,dx.\\]<p>Choose \\(u\\) so its derivative is simpler, and choose \\(v'\\) so you know a primitive \\(v\\). First look for an inner function with its derivative, since that can make the reverse chain rule shorter.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The factor that appears in the integrand is \\(v'\\). Integrate it once before forming \\(uv\\).</p>"
+          },
+          {
+            "kind": "check",
+            "id": "M4U-9709-P3-INT-NOTE-PARTS-01",
+            "title": "Find the complete linear factor",
+            "prompt": "<p>Write \\(\\int (3x+4)e^{-x}\\,dx\\) as \\((Ax+B)e^{-x}+C\\). Give \\(A\\) and \\(B\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "A",
+                "type": "number",
+                "expected": "-3"
+              },
+              {
+                "key": "b",
+                "label": "B",
+                "type": "number",
+                "expected": "-7",
+                "retry": [
+                  {
+                    "answer": "-4",
+                    "feedback": "<p>The remaining integral contributes another \\(-3e^{-x}\\). Include it in the constant coefficient.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>With \\(v'=e^{-x}\\), take \\(v=-e^{-x}\\). Keep the minus sign outside the remaining integral.</p>",
+            "solution": "<p>Choose \\(u=3x+4\\). Parts gives \\(-(3x+4)e^{-x}+3\\int e^{-x}\\,dx=-(3x+7)e^{-x}+C\\). Thus \\(A=-3,\\ B=-7\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "logarithm-as-factor",
+        "title": "How can I integrate a logarithm on its own?",
+        "label": "Use a factor of one",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Write an isolated logarithm as \\(1\\times\\) the logarithm. Its derivative is rational, so the next integral may admit an algebraic simplification.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a positive argument, choose \\(u=\\ln g(x)\\) when \\(g'(x)\\) divided by \\(g(x)\\) is simpler. With \\(v'=1\\), take \\(v=x\\). For \\(\\int x^n\\ln x\\,dx\\), let \\(v'\\) be \\(x^n\\). The same idea works for inverse tangent, whose derivative is rational.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>For \\(\\ln(3x+1)\\), the real domain is \\(3x+1>0\\). Retain it even if the final expression can be written in several ways.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "M4U-9709-P3-INT-NOTE-PARTS-02",
+            "title": "Find the coefficients of a log primitive",
+            "prompt": "<p>For \\(x>0\\), write \\(\\int x\\ln x\\,dx\\) as \\(A x^2\\ln x+B x^2+C\\). Give \\(A\\) and \\(B\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "A",
+                "type": "number",
+                "expected": "1/2"
+              },
+              {
+                "key": "b",
+                "label": "B",
+                "type": "number",
+                "expected": "-1/4",
+                "retry": [
+                  {
+                    "answer": "1/4",
+                    "feedback": "<p>The second integral is subtracted in integration by parts.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Differentiate \\(\\ln x\\) and integrate the other factor \\(x\\).</p>",
+            "solution": "<p>Take \\(u=\\ln x,\\ v=\\frac{x^2}{2}\\). The remainder is \\(\\int\\frac{x}{2}\\,dx=\\frac{x^2}{4}\\). Thus \\(A=\\frac12,\\ B=-\\frac14\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "repeat-parts",
+        "title": "When should I use parts a second time?",
+        "label": "Repeat as the degree drops",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>A polynomial of degree two becomes linear after one use of parts. A second use removes the remaining variable factor.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Keep a new \\(u,v'\\) choice for each integral. If the other factor is exponential or sinusoidal, its primitive stays in a familiar family. Check both the sign of the outer remainder and the sign introduced by the next primitive.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An intermediate minus sign can multiply an entire new bracket. Write the second integral separately before recombining.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "M4U-9709-P3-INT-NOTE-PARTS-03",
+            "title": "Recover a quadratic, linear and constant coefficient",
+            "prompt": "<p>Write \\(\\int (x^2+4x)e^x\\,dx\\) as \\((Ax^2+Bx+D)e^x+C\\). Give \\(A,B,D\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "A",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "b",
+                "label": "B",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "d",
+                "label": "D",
+                "type": "number",
+                "expected": "-2",
+                "retry": [
+                  {
+                    "answer": "2",
+                    "feedback": "<p>Subtract the constant contribution from the primitive of \\((2x+4)e^x\\).</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>After the first step, write the primitive of \\((2x+4)e^x\\) in a separate line.</p>",
+            "solution": "<p>Parts gives \\((x^2+4x)e^x-\\int(2x+4)e^x\\,dx\\). The latter primitive is \\((2x+2)e^x\\). Therefore \\(A=1,\\ B=2,\\ D=-2\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "evaluate-definite-parts",
+        "title": "How do I handle limits and signs?",
+        "label": "Use definite bounds",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>For an integral with bounds, apply both limits to the boundary term and keep the same limits on the remaining integral.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\int_a^b uv'\\,dx=[uv]_a^b-\\int_a^b u'v\\,dx\\). Evaluate the upper endpoint first. A definite integral is signed. If the problem asks for geometric area, locate every crossing and add the magnitudes of the separate regions.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">What you see</th><th scope=\"col\">First method to try</th></tr></thead><tbody><tr><th scope=\"row\">An inner function and its derivative</th><td>Reverse chain rule or a direct substitution</td></tr><tr><th scope=\"row\">A product such as \\(x\\cos(2x)\\)</th><td>Parts, because differentiating the polynomial lowers its degree</td></tr><tr><th scope=\"row\">A square such as \\(\\sin^2x\\)</th><td>Use a double-angle identity before integrating</td></tr><tr><th scope=\"row\">A rational function with a factorable denominator</th><td>Check for \\(\\frac{f'}{f}\\); otherwise try partial fractions</td></tr><tr><th scope=\"row\">A supplied change of variable</th><td>Substitute every factor and convert both limits</td></tr></tbody></table></div>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_int_parts/signed-integral.svg",
+              "alt": "The graph of x cosine of twice x is above the horizontal axis before pi over four and below it afterwards, up to pi over two.",
+              "caption": "<p>In the Your turn integral, \\(x\\cos(2x)\\) changes sign at \\(x=\\frac{\\pi}{4}\\). The part below the axis contributes a negative value when evaluating the integral.</p>",
+              "width": 640,
+              "height": 338
+            }
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Substitute the lower limit into every term of a primitive. For example, a cosine term can survive at zero.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "M4U-9709-P3-INT-NOTE-PARTS-04",
+            "title": "Evaluate both boundary values",
+            "prompt": "<p>Find the exact signed integral \\(\\int_0^{\\frac{\\pi}{2}}x\\cos(2x)\\,dx\\).</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Value",
+                "type": "number",
+                "expected": "-1/2",
+                "retry": [
+                  {
+                    "answer": "-1/4",
+                    "feedback": "<p>At the lower limit the primitive equals \\(\\frac14\\), which must also be subtracted.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Use parts with \\(v=\\frac12\\sin(2x)\\) and evaluate the complete primitive at both endpoints.</p>",
+            "solution": "\\[\\left[\\frac{x\\sin(2x)}2+\\frac{\\cos(2x)}4\\right]_0^{\\frac{\\pi}{2}}=-\\frac14-\\frac14=-\\frac12.\\]"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Reduce a linear factor to a constant",
+        "question": "<p>Find \\(\\int (2x+1)e^{2x}\\,dx\\).</p>",
+        "solution": [
+          "<p>Set \\(u=2x+1\\) and \\(v'=e^{2x}\\). Then \\(u'=2\\) and \\(v=\\frac12e^{2x}\\).</p>",
+          "\\[\\int (2x+1)e^{2x}\\,dx=\\left(x+\\frac12\\right)e^{2x}-\\int e^{2x}\\,dx.\\]",
+          "<p>The remaining primitive is \\(\\frac12e^{2x}\\). The terms cancel to give \\(xe^{2x}+C\\). Differentiating returns \\((2x+1)e^{2x}\\).</p>"
+        ]
+      },
+      {
+        "title": "Reveal the rational remainder",
+        "question": "<p>Find \\(\\int \\ln(3x+1)\\,dx\\), for \\(x>-\\frac13\\).</p>",
+        "solution": [
+          "<p>Use \\(u=\\ln(3x+1)\\) and \\(v'=1\\). This gives \\(u'=\\frac{3}{3x+1}\\) and \\(v=x\\).</p>",
+          "\\[\\int\\ln(3x+1)\\,dx=x\\ln(3x+1)-\\int\\left(1-\\frac{1}{3x+1}\\right)\\,dx.\\]",
+          "<p>Integrate the split remainder and collect logarithms. The result is \\(\\left(x+\\frac13\\right)\\ln(3x+1)-x+C\\).</p>"
+        ]
+      },
+      {
+        "title": "Lower a quadratic factor twice",
+        "question": "<p>Find \\(\\int x^2e^{-x}\\,dx\\).</p>",
+        "solution": [
+          "<p>Use parts with \\(u=x^2,\\ v=-e^{-x}\\).</p>\\[\\int x^2e^{-x}\\,dx=-x^2e^{-x}+\\int 2xe^{-x}\\,dx.\\]",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Step</th><th scope=\"col\">Differentiated factor</th><th scope=\"col\">Primitive used</th></tr></thead><tbody><tr><th scope=\"row\">First</th><td>\\(u=x^2\\)</td><td>\\(v=-e^{-x}\\)</td></tr><tr><th scope=\"row\">Second</th><td>\\(u=2x\\)</td><td>\\(v=-e^{-x}\\)</td></tr></tbody></table></div><p>For the new integral, use \\(u=2x\\) and the same primitive \\(v=-e^{-x}\\). It gives \\(-2xe^{-x}-2e^{-x}\\), up to a constant.</p>",
+          "<p>Collect terms to obtain \\(-(x^2+2x+2)e^{-x}+C\\).</p>"
+        ]
+      },
+      {
+        "title": "Evaluate a trigonometric product",
+        "question": "<p>Find \\(\\int_0^{\\frac{\\pi}{2}}x\\sin(2x)\\,dx\\), using radians.</p>",
+        "solution": [
+          "<p>Select \\(u=x\\), \\(v'=\\sin(2x)\\). Then \\(u'=1\\) and \\(v=-\\frac12\\cos(2x)\\).</p>",
+          "\\[\\int_0^{\\frac{\\pi}{2}}x\\sin(2x)\\,dx=\\left[-\\frac{x\\cos(2x)}2+\\frac{\\sin(2x)}4\\right]_0^{\\frac{\\pi}{2}}.\\]",
+          "<p>At the upper limit, \\(\\cos\\pi=-1\\) and \\(\\sin\\pi=0\\). The lower value is \\(0\\), so the integral is \\(\\frac{\\pi}{4}\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Primitive",
+        "definition": "<p>A function whose derivative gives the original integrand.</p>"
+      },
+      {
+        "term": "Boundary term",
+        "definition": "<p>The evaluated product \\([uv]_a^b\\) in a definite application of integration by parts.</p>"
+      },
+      {
+        "term": "Signed integral",
+        "definition": "<p>The total with regions below the horizontal axis contributing a negative value.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Substitution",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_int_substitution"
+      },
+      {
+        "title": "Product and quotient rules",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_diff_product_quotient"
+      }
+    ],
+    "revision": {
+      "body": "<p>Reverse the product rule: \\(\\int uv'\\,dx=uv-\\int u'v\\,dx\\). Pick \\(u\\) to simplify by differentiation and \\(v'\\) to give an easy primitive.</p>",
+      "checks": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Integrand</th><th scope=\"col\">Useful choice</th></tr></thead><tbody><tr><th scope=\"row\">Polynomial times \\(e^{kx}\\) or \\(\\sin kx\\)</th><td>Take the polynomial as \\(u\\). Repeat if a polynomial factor remains.</td></tr><tr><th scope=\"row\">\\(\\ln x\\) or \\(\\arctan x\\)</th><td>Take the named function as \\(u\\) and \\(v'=1\\).</td></tr><tr><th scope=\"row\">Definite product</th><td>Evaluate \\([uv]_a^b\\) and the remaining integral on the same interval.</td></tr></tbody></table></div><ul><li>Track the sign in \\(uv-\\int u'v\\,dx\\).</li><li>Use one final integration constant for an indefinite primitive.</li><li>Differentiate your result for a quick check.</li></ul>",
+      "examTip": "<p>Keep the lower endpoint in the calculation even when part of the product vanishes at zero.</p>"
+    }
+  }
+}
