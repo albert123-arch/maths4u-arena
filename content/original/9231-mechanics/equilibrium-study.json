@@ -1,0 +1,1870 @@
+{
+  "fm_equilibrium_moments": {
+    "updatedOn": "2026-11-21",
+    "description": "Use signed moments and force balance to find support reactions, locate masses and check allowed loading.",
+    "sections": [
+      {
+        "id": "perpendicular-moment-arm",
+        "title": "Which distance belongs in a moment?",
+        "label": "Find the lever arm",
+        "intro": "<p>Turning effect depends on force and the perpendicular distance from the point to its line of action.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(M=Fd_\\perp\\), or use the force component perpendicular to a known position segment.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "moments-perpendicular-moment-arm-check",
+            "title": "Use the perpendicular component",
+            "prompt": "<p>A horizontal bar extends to the right of a pivot. A force of \\(13\\,\\mathrm N\\) acts upwards and to the right at a point \\(2\\,\\mathrm m\\) from the pivot. The sine of the angle to the bar is \\(\\frac{3}{5}\\). Find the moment magnitude and sense.</p>",
+            "fields": [
+              {
+                "key": "moment",
+                "label": "Moment magnitude",
+                "type": "number",
+                "expected": "78/5"
+              },
+              {
+                "key": "sense",
+                "label": "Moment sense",
+                "type": "choice",
+                "expected": "anti",
+                "options": {
+                  "anti": "Anticlockwise",
+                  "clockwise": "Clockwise"
+                }
+              }
+            ],
+            "hint": "<p>Check which component has a non-zero lever arm.</p>",
+            "solution": "<p>The upward component is \\(\\frac{39}{5}\\,\\mathrm N\\). The horizontal component's line of action passes through the pivot.</p><p>Moment is perpendicular force times horizontal separation. It is \\(\\frac{78}{5}\\,\\mathrm{N\\,m}\\) anticlockwise.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not multiply full force by an oblique distance.</p>"
+          }
+        ]
+      },
+      {
+        "id": "balance-support-reactions",
+        "title": "How can I remove one unknown reaction?",
+        "label": "Choose a turning point",
+        "intro": "<p>At rigid-body equilibrium both force totals are zero and the net moment about every point is zero.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Taking moments about a support removes its reaction from that equation.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/equilibrium/rod-supports.svg",
+              "alt": "A horizontal rod on two supports. Its weight and an additional load act at different points.",
+              "caption": "<p>Take moments about one of the supports. Then use vertical force balance to find the other reaction.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "moments-balance-support-reactions-check",
+            "title": "Balance moments about a support",
+            "prompt": "<p>A uniform horizontal bar of length \\(14\\,\\mathrm m\\) and weight \\(47\\,\\mathrm N\\) rests on point supports at \\(2\\,\\mathrm m\\) and \\(12\\,\\mathrm m\\) from its left end. A load of \\(20\\,\\mathrm N\\) acts at distance \\(8\\,\\mathrm m\\) from the left end. Find the two reactions.</p>",
+            "fields": [
+              {
+                "key": "left",
+                "label": "Left reaction",
+                "type": "number",
+                "expected": "63/2"
+              },
+              {
+                "key": "right",
+                "label": "Right reaction",
+                "type": "number",
+                "expected": "71/2"
+              }
+            ],
+            "hint": "<p>Take moments about one support, then use vertical force balance.</p>",
+            "solution": "<p>Its weight acts at \\(7\\,\\mathrm m\\) from the left end. Taking moments about the left support removes that reaction.</p><p>Write \\(R_B\\left(10\\right)=235+20\\left(x-2\\right)\\) for load position \\(x\\).</p><p>The load position is \\(8\\,\\mathrm m\\), the left reaction is \\(\\frac{63}{2}\\,\\mathrm N\\) and the right reaction is \\(\\frac{71}{2}\\,\\mathrm N\\). The reactions add to \\(67\\,\\mathrm N\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The moment equation alone does not determine every force.</p>"
+          }
+        ]
+      },
+      {
+        "id": "infer-load-position",
+        "title": "How can reactions reveal where the load acts?",
+        "label": "Solve the inverse problem",
+        "intro": "<p>Known support readings can locate an unknown force while its own line of action remains vertical.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Choose a support as pivot and solve its opposing moments for the missing distance.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "moments-infer-load-position-check",
+            "title": "Balance moments about a support",
+            "prompt": "<p>A uniform horizontal bar of length \\(14\\,\\mathrm m\\) and weight \\(47\\,\\mathrm N\\) rests on point supports at \\(2\\,\\mathrm m\\) and \\(12\\,\\mathrm m\\) from its left end. The measured reaction at the right support is \\(\\frac{71}{2}\\,\\mathrm N\\). A load of \\(20\\,\\mathrm N\\) is placed somewhere on the bar. Find the load position and the left reaction.</p>",
+            "fields": [
+              {
+                "key": "position",
+                "label": "Load position from left end",
+                "type": "number",
+                "expected": "8"
+              },
+              {
+                "key": "left",
+                "label": "Left reaction",
+                "type": "number",
+                "expected": "63/2"
+              }
+            ],
+            "hint": "<p>Take moments about one support, then use vertical force balance.</p>",
+            "solution": "<p>Its weight acts at \\(7\\,\\mathrm m\\) from the left end. Taking moments about the left support removes that reaction.</p><p>Write \\(R_B\\left(10\\right)=235+20\\left(x-2\\right)\\) for load position \\(x\\).</p><p>The load position is \\(8\\,\\mathrm m\\), the left reaction is \\(\\frac{63}{2}\\,\\mathrm N\\) and the right reaction is \\(\\frac{71}{2}\\,\\mathrm N\\). The reactions add to \\(67\\,\\mathrm N\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Convert distances measured from a support to distances from the stated origin.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "moments-infer-load-position-follow-up",
+            "title": "Balance moments about a support",
+            "prompt": "<p>A uniform horizontal bar of length \\(18\\,\\mathrm m\\) and weight \\(57\\,\\mathrm N\\) rests on point supports at \\(4\\,\\mathrm m\\) and \\(16\\,\\mathrm m\\) from its left end. The measured reaction at the right support is \\(\\frac{143}{4}\\,\\mathrm N\\). A load of \\(24\\,\\mathrm N\\) is placed somewhere on the bar. Find the load position and the left reaction.</p>",
+            "fields": [
+              {
+                "key": "position",
+                "label": "Load position from left end",
+                "type": "number",
+                "expected": "10"
+              },
+              {
+                "key": "left",
+                "label": "Left reaction",
+                "type": "number",
+                "expected": "181/4"
+              }
+            ],
+            "hint": "<p>Take moments about one support, then use vertical force balance.</p>",
+            "solution": "<p>Its weight acts at \\(9\\,\\mathrm m\\) from the left end. Taking moments about the left support removes that reaction.</p><p>Write \\(R_B\\left(12\\right)=285+24\\left(x-4\\right)\\) for load position \\(x\\).</p><p>The load position is \\(10\\,\\mathrm m\\), the left reaction is \\(\\frac{181}{4}\\,\\mathrm N\\) and the right reaction is \\(\\frac{143}{4}\\,\\mathrm N\\). The reactions add to \\(81\\,\\mathrm N\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "composite-rod",
+        "title": "How does varying linear density change the centre?",
+        "label": "Weight by mass",
+        "intro": "<p>Replace each section by its total mass acting at its own midpoint. Include attached point masses separately.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(x_G=\\frac{\\sum m_ix_i}{\\sum m_i}\\), with every coordinate referenced to one origin.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "moments-composite-rod-check",
+            "title": "Find the centre of a composite rod",
+            "prompt": "<p>A straight rod is made of two joined uniform sections. The first has length \\(3\\) m and linear density \\(1\\) kilogram per metre. The second has length \\(6\\) m and linear density \\(2\\) kilograms per metre. A point mass of \\(3\\,\\mathrm{kg}\\) is attached at the far right end. Find the centre of mass from the left end.</p>",
+            "fields": [
+              {
+                "key": "centre",
+                "label": "Centre from the left end",
+                "type": "number",
+                "expected": "23/4"
+              }
+            ],
+            "hint": "<p>Weight the midpoints by the corresponding masses. Use the same origin for every position.</p>",
+            "solution": "<p>The section masses are \\(3\\) kg and \\(12\\) kg. Their centres lie at \\(\\frac{3}{2}\\) m and \\(6\\) m from the same origin.</p><p>Include the point mass at \\(9\\) m. Divide the total first moment by the total mass.</p><p>The centre of mass is \\(\\frac{23}{4}\\,\\mathrm m\\) from the left end.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Equal lengths do not imply equal masses when densities differ.</p>"
+          }
+        ]
+      },
+      {
+        "id": "keep-reactions-nonnegative",
+        "title": "Which load positions keep both supports active?",
+        "label": "Check the reaction signs",
+        "intro": "<p>A support under a bar can push up but cannot pull it down. Its reaction can drop to zero as a load reaches a boundary.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The line of action of the total weight must lie over the supporting interval.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "moments-keep-reactions-nonnegative-check",
+            "title": "Find the allowed load position",
+            "prompt": "<p>A uniform bar of length \\(14\\) m and weight \\(32\\,\\mathrm N\\) is supported at distances \\(3\\) m and \\(10\\) m from its left end. A load of \\(18\\,\\mathrm N\\) is placed at position \\(x\\). What is the largest possible value of \\(x\\) for equilibrium?</p>",
+            "fields": [
+              {
+                "key": "max",
+                "label": "Maximum load position",
+                "type": "number",
+                "expected": "14"
+              }
+            ],
+            "hint": "<p>Find the greatest location for which the left support need not pull down.</p>",
+            "solution": "<p>The combined line of action is at \\(x_G=\\frac{224+18x}{50}\\) from the left end.</p><p>Both supporting reactions must be non-negative. This puts the line of action at or left of the right support, so \\(x\\le \\frac{46}{3}\\). The left condition already holds at \\(x=0\\).</p><p>Intersect this bound with the length of the bar. The maximum valid position is \\(14\\,\\mathrm m\\) from the left end.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A negative algebraic reaction invalidates the two-support model.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "moments-keep-reactions-nonnegative-follow-up",
+            "title": "Find the allowed load position",
+            "prompt": "<p>A uniform bar of length \\(18\\) m and weight \\(48\\,\\mathrm N\\) is supported at distances \\(3\\) m and \\(12\\) m from its left end. A load of \\(22\\,\\mathrm N\\) is placed at position \\(x\\). What is the largest possible value of \\(x\\) for equilibrium?</p>",
+            "fields": [
+              {
+                "key": "max",
+                "label": "Maximum load position",
+                "type": "number",
+                "expected": "18"
+              }
+            ],
+            "hint": "<p>Find the greatest location for which the left support need not pull down.</p>",
+            "solution": "<p>The combined line of action is at \\(x_G=\\frac{432+22x}{70}\\) from the left end.</p><p>Both supporting reactions must be non-negative. This puts the line of action at or left of the right support, so \\(x\\le \\frac{204}{11}\\). The left condition already holds at \\(x=0\\).</p><p>Intersect this bound with the length of the bar. The maximum valid position is \\(18\\,\\mathrm m\\) from the left end.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use the perpendicular component",
+        "question": "<p>A horizontal bar extends to the right of a pivot. A force of \\(10\\,\\mathrm N\\) acts upwards and to the right at a point \\(\\frac{3}{2}\\,\\mathrm m\\) from the pivot. The sine of the angle to the bar is \\(\\frac{5}{13}\\). Find the moment magnitude and sense.</p>",
+        "solution": [
+          "<p>The upward component is \\(\\frac{50}{13}\\,\\mathrm N\\). The horizontal component's line of action passes through the pivot.</p>",
+          "<p>Moment is perpendicular force times horizontal separation. It is \\(\\frac{75}{13}\\,\\mathrm{N\\,m}\\) anticlockwise.</p>"
+        ]
+      },
+      {
+        "title": "Balance moments about a support",
+        "question": "<p>A uniform horizontal bar of length \\(12\\,\\mathrm m\\) and weight \\(42\\,\\mathrm N\\) rests on point supports at \\(1\\,\\mathrm m\\) and \\(10\\,\\mathrm m\\) from its left end. A load of \\(18\\,\\mathrm N\\) acts at distance \\(7\\,\\mathrm m\\) from the left end. Find the two reactions.</p>",
+        "solution": [
+          "<p>Its weight acts at \\(6\\,\\mathrm m\\) from the left end. Taking moments about the left support removes that reaction.</p>",
+          "<p>Write \\(R_B\\left(9\\right)=210+18\\left(x-1\\right)\\) for load position \\(x\\).</p>",
+          "<p>The load position is \\(7\\,\\mathrm m\\), the left reaction is \\(\\frac{74}{3}\\,\\mathrm N\\) and the right reaction is \\(\\frac{106}{3}\\,\\mathrm N\\). The reactions add to \\(60\\,\\mathrm N\\).</p>"
+        ]
+      },
+      {
+        "title": "Balance moments about a support",
+        "question": "<p>A uniform horizontal bar of length \\(12\\,\\mathrm m\\) and weight \\(42\\,\\mathrm N\\) rests on point supports at \\(1\\,\\mathrm m\\) and \\(10\\,\\mathrm m\\) from its left end. The measured reaction at the right support is \\(\\frac{106}{3}\\,\\mathrm N\\). A load of \\(18\\,\\mathrm N\\) is placed somewhere on the bar. Find the load position and the left reaction.</p>",
+        "solution": [
+          "<p>Its weight acts at \\(6\\,\\mathrm m\\) from the left end. Taking moments about the left support removes that reaction.</p>",
+          "<p>Write \\(R_B\\left(9\\right)=210+18\\left(x-1\\right)\\) for load position \\(x\\).</p>",
+          "<p>The load position is \\(7\\,\\mathrm m\\), the left reaction is \\(\\frac{74}{3}\\,\\mathrm N\\) and the right reaction is \\(\\frac{106}{3}\\,\\mathrm N\\). The reactions add to \\(60\\,\\mathrm N\\).</p>"
+        ]
+      },
+      {
+        "title": "Balance moments about a support",
+        "question": "<p>A uniform horizontal bar of length \\(16\\,\\mathrm m\\) and weight \\(52\\,\\mathrm N\\) rests on point supports at \\(3\\,\\mathrm m\\) and \\(14\\,\\mathrm m\\) from its left end. The measured reaction at the right support is \\(\\frac{392}{11}\\,\\mathrm N\\). A load of \\(22\\,\\mathrm N\\) is placed somewhere on the bar. Find the load position and the left reaction.</p>",
+        "solution": [
+          "<p>Its weight acts at \\(8\\,\\mathrm m\\) from the left end. Taking moments about the left support removes that reaction.</p>",
+          "<p>Write \\(R_B\\left(11\\right)=260+22\\left(x-3\\right)\\) for load position \\(x\\).</p>",
+          "<p>The load position is \\(9\\,\\mathrm m\\), the left reaction is \\(\\frac{422}{11}\\,\\mathrm N\\) and the right reaction is \\(\\frac{392}{11}\\,\\mathrm N\\). The reactions add to \\(74\\,\\mathrm N\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the centre of a composite rod",
+        "question": "<p>A straight rod is made of two joined uniform sections. The first has length \\(2\\) m and linear density \\(1\\) kilogram per metre. The second has length \\(4\\) m and linear density \\(2\\) kilograms per metre. A point mass of \\(2\\,\\mathrm{kg}\\) is attached at the far right end. Find the centre of mass from the left end.</p>",
+        "solution": [
+          "<p>The section masses are \\(2\\) kg and \\(8\\) kg. Their centres lie at \\(1\\) m and \\(4\\) m from the same origin.</p>",
+          "<p>Include the point mass at \\(6\\) m. Divide the total first moment by the total mass.</p>",
+          "<p>The centre of mass is \\(\\frac{23}{6}\\,\\mathrm m\\) from the left end.</p>"
+        ]
+      },
+      {
+        "title": "Find the allowed load position",
+        "question": "<p>A uniform bar of length \\(12\\) m and weight \\(24\\,\\mathrm N\\) is supported at distances \\(3\\) m and \\(9\\) m from its left end. A load of \\(16\\,\\mathrm N\\) is placed at position \\(x\\). What is the largest possible value of \\(x\\) for equilibrium?</p>",
+        "solution": [
+          "<p>The combined line of action is at \\(x_G=\\frac{144+16x}{40}\\) from the left end.</p>",
+          "<p>Both supporting reactions must be non-negative. This puts the line of action at or left of the right support, so \\(x\\le \\frac{27}{2}\\). The left condition already holds at \\(x=0\\).</p>",
+          "<p>Intersect this bound with the length of the bar. The maximum valid position is \\(12\\,\\mathrm m\\) from the left end.</p>"
+        ]
+      },
+      {
+        "title": "Find the allowed load position",
+        "question": "<p>A uniform bar of length \\(16\\) m and weight \\(40\\,\\mathrm N\\) is supported at distances \\(3\\) m and \\(11\\) m from its left end. A load of \\(20\\,\\mathrm N\\) is placed at position \\(x\\). What is the largest possible value of \\(x\\) for equilibrium?</p>",
+        "solution": [
+          "<p>The combined line of action is at \\(x_G=\\frac{320+20x}{60}\\) from the left end.</p>",
+          "<p>Both supporting reactions must be non-negative. This puts the line of action at or left of the right support, so \\(x\\le 17\\). The left condition already holds at \\(x=0\\).</p>",
+          "<p>Intersect this bound with the length of the bar. The maximum valid position is \\(16\\,\\mathrm m\\) from the left end.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "moments-perpendicular-moment-arm-extra",
+        "title": "Use the perpendicular component",
+        "prompt": "<p>A horizontal bar extends to the right of a pivot. A force of \\(16\\,\\mathrm N\\) acts upwards and to the right at a point \\(\\frac{5}{2}\\,\\mathrm m\\) from the pivot. The sine of the angle to the bar is \\(\\frac{5}{13}\\). Find the moment magnitude and sense.</p>",
+        "fields": [
+          {
+            "key": "moment",
+            "label": "Moment magnitude",
+            "type": "number",
+            "expected": "200/13"
+          },
+          {
+            "key": "sense",
+            "label": "Moment sense",
+            "type": "choice",
+            "expected": "anti",
+            "options": {
+              "anti": "Anticlockwise",
+              "clockwise": "Clockwise"
+            }
+          }
+        ],
+        "hint": "<p>Check which component has a non-zero lever arm.</p>",
+        "solution": "<p>The upward component is \\(\\frac{80}{13}\\,\\mathrm N\\). The horizontal component's line of action passes through the pivot.</p><p>Moment is perpendicular force times horizontal separation. It is \\(\\frac{200}{13}\\,\\mathrm{N\\,m}\\) anticlockwise.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "moments-balance-support-reactions-extra",
+        "title": "Balance moments about a support",
+        "prompt": "<p>A uniform horizontal bar of length \\(16\\,\\mathrm m\\) and weight \\(52\\,\\mathrm N\\) rests on point supports at \\(3\\,\\mathrm m\\) and \\(14\\,\\mathrm m\\) from its left end. A load of \\(22\\,\\mathrm N\\) acts at distance \\(9\\,\\mathrm m\\) from the left end. Find the two reactions.</p>",
+        "fields": [
+          {
+            "key": "left",
+            "label": "Left reaction",
+            "type": "number",
+            "expected": "422/11"
+          },
+          {
+            "key": "right",
+            "label": "Right reaction",
+            "type": "number",
+            "expected": "392/11"
+          }
+        ],
+        "hint": "<p>Take moments about one support, then use vertical force balance.</p>",
+        "solution": "<p>Its weight acts at \\(8\\,\\mathrm m\\) from the left end. Taking moments about the left support removes that reaction.</p><p>Write \\(R_B\\left(11\\right)=260+22\\left(x-3\\right)\\) for load position \\(x\\).</p><p>The load position is \\(9\\,\\mathrm m\\), the left reaction is \\(\\frac{422}{11}\\,\\mathrm N\\) and the right reaction is \\(\\frac{392}{11}\\,\\mathrm N\\). The reactions add to \\(74\\,\\mathrm N\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "moments-infer-load-position-extra",
+        "title": "Balance moments about a support",
+        "prompt": "<p>A uniform horizontal bar of length \\(20\\,\\mathrm m\\) and weight \\(62\\,\\mathrm N\\) rests on point supports at \\(5\\,\\mathrm m\\) and \\(18\\,\\mathrm m\\) from its left end. The measured reaction at the right support is \\(\\frac{466}{13}\\,\\mathrm N\\). A load of \\(26\\,\\mathrm N\\) is placed somewhere on the bar. Find the load position and the left reaction.</p>",
+        "fields": [
+          {
+            "key": "position",
+            "label": "Load position from left end",
+            "type": "number",
+            "expected": "11"
+          },
+          {
+            "key": "left",
+            "label": "Left reaction",
+            "type": "number",
+            "expected": "678/13"
+          }
+        ],
+        "hint": "<p>Take moments about one support, then use vertical force balance.</p>",
+        "solution": "<p>Its weight acts at \\(10\\,\\mathrm m\\) from the left end. Taking moments about the left support removes that reaction.</p><p>Write \\(R_B\\left(13\\right)=310+26\\left(x-5\\right)\\) for load position \\(x\\).</p><p>The load position is \\(11\\,\\mathrm m\\), the left reaction is \\(\\frac{678}{13}\\,\\mathrm N\\) and the right reaction is \\(\\frac{466}{13}\\,\\mathrm N\\). The reactions add to \\(88\\,\\mathrm N\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "moments-composite-rod-extra",
+        "title": "Find the centre of a composite rod",
+        "prompt": "<p>A straight rod is made of two joined uniform sections. The first has length \\(4\\) m and linear density \\(1\\) kilogram per metre. The second has length \\(8\\) m and linear density \\(2\\) kilograms per metre. A point mass of \\(4\\,\\mathrm{kg}\\) is attached at the far right end. Find the centre of mass from the left end.</p>",
+        "fields": [
+          {
+            "key": "centre",
+            "label": "Centre from the left end",
+            "type": "number",
+            "expected": "23/3"
+          }
+        ],
+        "hint": "<p>Weight the midpoints by the corresponding masses. Use the same origin for every position.</p>",
+        "solution": "<p>The section masses are \\(4\\) kg and \\(16\\) kg. Their centres lie at \\(2\\) m and \\(8\\) m from the same origin.</p><p>Include the point mass at \\(12\\) m. Divide the total first moment by the total mass.</p><p>The centre of mass is \\(\\frac{23}{3}\\,\\mathrm m\\) from the left end.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "moments-keep-reactions-nonnegative-extra",
+        "title": "Find the allowed load position",
+        "prompt": "<p>A uniform bar of length \\(20\\) m and weight \\(56\\,\\mathrm N\\) is supported at distances \\(3\\) m and \\(13\\) m from its left end. A load of \\(24\\,\\mathrm N\\) is placed at position \\(x\\). What is the largest possible value of \\(x\\) for equilibrium?</p>",
+        "fields": [
+          {
+            "key": "max",
+            "label": "Maximum load position",
+            "type": "number",
+            "expected": "20"
+          }
+        ],
+        "hint": "<p>Find the greatest location for which the left support need not pull down.</p>",
+        "solution": "<p>The combined line of action is at \\(x_G=\\frac{560+24x}{80}\\) from the left end.</p><p>Both supporting reactions must be non-negative. This puts the line of action at or left of the right support, so \\(x\\le 20\\). The left condition already holds at \\(x=0\\).</p><p>Intersect this bound with the length of the bar. The maximum valid position is \\(20\\,\\mathrm m\\) from the left end.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Moment",
+        "definition": "<p>Turning effect of a force about a point.</p>"
+      },
+      {
+        "term": "Line of action",
+        "definition": "<p>The infinite line containing a force arrow.</p>"
+      },
+      {
+        "term": "Centre of mass",
+        "definition": "<p>The position at which the total weight may be modelled as acting.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Moment</th><td>Multiply by perpendicular distance. Record units \\(\\mathrm{N\\,m}\\).</td></tr><tr><th scope=\"row\">Equilibrium</th><td>Check force and moment balance.</td></tr><tr><th scope=\"row\">Composite centre</th><td>Divide \\(\\sum m_ix_i\\) by total mass.</td></tr><tr><th scope=\"row\">Unilateral support</th><td>Require a non-negative reaction.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A \\(30\\,\\mathrm N\\) force acts vertically at distance \\(2\\,\\mathrm m\\) from a pivot. What is its moment magnitude?</p><p><strong>Check</strong> \\(60\\,\\mathrm{N\\,m}\\).</p>",
+      "checks": "<ul><li>Do not multiply full force by an oblique distance.</li><li>The moment equation alone does not determine every force.</li></ul>",
+      "examTip": "<p>Take moments about a point that eliminates an unknown reaction.</p>"
+    },
+    "related": [
+      {
+        "title": "Plane laminas, suspension and toppling",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_equilibrium_laminas"
+      }
+    ]
+  },
+  "fm_equilibrium_laminas": {
+    "updatedOn": "2026-11-21",
+    "description": "Locate centres of laminas with additions or cut-outs and use centre-of-mass geometry to find equilibrium limits.",
+    "sections": [
+      {
+        "id": "triangular-centre",
+        "title": "Where does a triangular lamina balance?",
+        "label": "Use a median",
+        "intro": "<p>A uniform triangular lamina balances at the intersection of its medians.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Its centre lies two thirds of the way from a vertex to the midpoint of the opposite side.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "laminas-triangular-centre-check",
+            "title": "Locate the centre of a triangular lamina",
+            "prompt": "<p>A uniform triangular lamina has vertices \\((2,2)\\), \\((11,2)\\) and \\((5,9)\\). Find both centre-of-mass coordinates.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Centre x-coordinate",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "y",
+                "label": "Centre y-coordinate",
+                "type": "number",
+                "expected": "13/3"
+              }
+            ],
+            "hint": "<p>The centre lies on every median, two thirds of the way along it from its vertex.</p>",
+            "solution": "<p>Find the midpoint of a side and move two thirds of the way from the opposite vertex towards that midpoint.</p><p>Equivalently, average the three vertex coordinates separately. The centre of mass is \\((6,\\frac{13}{3})\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>From the opposite side the fraction is one third, not two thirds.</p>"
+          }
+        ]
+      },
+      {
+        "id": "subtract-a-rectangular-cut-out",
+        "title": "How do I allow for a missing rectangle?",
+        "label": "Subtract area and moments",
+        "intro": "<p>For one uniform sheet, use area as a mass weight. A cut-out removes a first moment as well as area.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Model the original sheet and the removed shape with opposite signs.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/equilibrium/cut-l-shape.svg",
+              "alt": "An L-shaped sheet fits inside a dashed rectangle. The top right rectangle is missing.",
+              "caption": "<p>Use the complete rectangle and subtract the area and first moments of the missing rectangle.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "laminas-subtract-a-rectangular-cut-out-check",
+            "title": "Subtract a cut-out from a lamina",
+            "prompt": "<p>A uniform rectangular sheet fills the rectangle between \\((0,0)\\) and \\((13,11)\\). An upper right rectangle of width \\(4\\) and height \\(5\\) is removed. Find both exact coordinates of the remaining centre of mass.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Centre x-coordinate",
+                "type": "number",
+                "expected": "473/82"
+              },
+              {
+                "key": "y",
+                "label": "Centre y-coordinate",
+                "type": "number",
+                "expected": "411/82"
+              }
+            ],
+            "hint": "<p>Subtract both the removed area and its first moments.</p>",
+            "solution": "<p>Mass is proportional to area throughout the original sheet. Use the full sheet and a negative mass at the centre of the removed piece.</p><p>The area weights are \\(143\\) and \\(-20\\). The full centre is \\((\\frac{13}{2},\\frac{11}{2})\\) and the cut-out centre is \\((11,\\frac{17}{2})\\).</p><p>Divide each signed first moment by net area. The centre is \\((\\frac{473}{82},\\frac{411}{82})\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Measure both centres from the same fixed origin.</p>"
+          }
+        ]
+      },
+      {
+        "id": "subtract-a-triangular-cut-out",
+        "title": "How do triangles fit into a composite lamina?",
+        "label": "Locate each piece first",
+        "intro": "<p>A triangle has half the area of the matching rectangle. Its centre is found using a median or vertex coordinates.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find the area and centre of each component before taking signed moments.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "laminas-subtract-a-triangular-cut-out-check",
+            "title": "Subtract a cut-out from a lamina",
+            "prompt": "<p>A uniform rectangular sheet fills the rectangle between \\((0,0)\\) and \\((13,11)\\). A triangular cut-out with vertices \\((0,0)\\), \\((4,0)\\) and \\((0,5)\\) is removed. Find both exact coordinates of the remaining centre of mass.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Centre x-coordinate",
+                "type": "number",
+                "expected": "5497/798"
+              },
+              {
+                "key": "y",
+                "label": "Centre y-coordinate",
+                "type": "number",
+                "expected": "4619/798"
+              }
+            ],
+            "hint": "<p>Subtract both the removed area and its first moments.</p>",
+            "solution": "<p>Mass is proportional to area throughout the original sheet. Use the full sheet and a negative mass at the centre of the removed piece.</p><p>The area weights are \\(143\\) and \\(-10\\). The full centre is \\((\\frac{13}{2},\\frac{11}{2})\\) and the cut-out centre is \\((\\frac{4}{3},\\frac{5}{3})\\).</p><p>Divide each signed first moment by net area. The centre is \\((\\frac{5497}{798},\\frac{4619}{798})\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The midpoint of a triangle’s bounding box is generally not its centre.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "laminas-subtract-a-triangular-cut-out-follow-up",
+            "title": "Subtract a cut-out from a lamina",
+            "prompt": "<p>A uniform rectangular sheet fills the rectangle between \\((0,0)\\) and \\((15,13)\\). A triangular cut-out with vertices \\((0,0)\\), \\((6,0)\\) and \\((0,7)\\) is removed. Find both exact coordinates of the remaining centre of mass.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Centre x-coordinate",
+                "type": "number",
+                "expected": "947/116"
+              },
+              {
+                "key": "y",
+                "label": "Centre y-coordinate",
+                "type": "number",
+                "expected": "2437/348"
+              }
+            ],
+            "hint": "<p>Subtract both the removed area and its first moments.</p>",
+            "solution": "<p>Mass is proportional to area throughout the original sheet. Use the full sheet and a negative mass at the centre of the removed piece.</p><p>The area weights are \\(195\\) and \\(-21\\). The full centre is \\((\\frac{15}{2},\\frac{13}{2})\\) and the cut-out centre is \\((2,\\frac{7}{3})\\).</p><p>Divide each signed first moment by net area. The centre is \\((\\frac{947}{116},\\frac{2437}{348})\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "free-suspension",
+        "title": "Why does a freely suspended lamina turn?",
+        "label": "Align the weight with the support",
+        "intro": "<p>If only a suspension force and weight act, they are equal, opposite, and collinear.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>In stable suspension the centre of mass lies vertically below the point of suspension.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "laminas-free-suspension-check",
+            "title": "Find the hanging angle of a lamina",
+            "prompt": "<p>In axes fixed in a lamina, the suspension hole is \\((0,0)\\) and its centre of mass is \\((4,-8)\\). It hangs freely from the hole. Find the tangent of the acute angle its original downwards axis makes with the vertical.</p>",
+            "fields": [
+              {
+                "key": "tan",
+                "label": "Tangent of hanging angle",
+                "type": "number",
+                "expected": "1/2"
+              }
+            ],
+            "hint": "<p>Use the line from the suspension point to the centre of mass as the vertical after hanging.</p>",
+            "solution": "<p>With only weight and the support force, their lines of action must coincide. The segment from the hole to the centre of mass points vertically down.</p><p>The original downwards axis and this segment form a right triangle with horizontal offset \\(4\\) and downwards offset \\(8\\).</p><p>The tangent of the acute angle is \\(\\frac{1}{2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use the line from the suspension point to its centre, not a geometric diagonal chosen by eye.</p>"
+          }
+        ]
+      },
+      {
+        "id": "find-the-toppling-angle",
+        "title": "When will the weight line pass outside the base?",
+        "label": "Find the tipping boundary",
+        "intro": "<p>Before toppling, the support can balance the weight by shifting the reaction line over the base.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>At the tipping boundary, the weight line crosses the downhill edge.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "laminas-find-the-toppling-angle-check",
+            "title": "Check a tilting block against its base",
+            "prompt": "<p>A uniform rectangular block rests on a slowly tilted rough plane. Along the plane it measures \\(8\\) metres, and perpendicular to the plane it measures \\(16\\) metres. Assume there is enough friction to prevent sliding until toppling. Find the tangent of the angle at which toppling is about to occur.</p>",
+            "fields": [
+              {
+                "key": "tan",
+                "label": "Tangent of toppling inclination",
+                "type": "number",
+                "expected": "1/2"
+              }
+            ],
+            "hint": "<p>Use the lower edge as the pivot at impending toppling. Compare any separate friction threshold.</p>",
+            "solution": "<p>At the tipping threshold the vertical line of weight crosses the lower edge of the base.</p><p>The distances from the centre in the two surface axes are \\(4\\) and \\(8\\). Their ratio gives tangent \\(\\frac{1}{2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A friction limit could occur sooner if sliding has not been excluded.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "laminas-find-the-toppling-angle-follow-up",
+            "title": "Check a tilting block against its base",
+            "prompt": "<p>A uniform rectangular block rests on a slowly tilted rough plane. Along the plane it measures \\(12\\) metres, and perpendicular to the plane it measures \\(20\\) metres. Assume there is enough friction to prevent sliding until toppling. Find the tangent of the angle at which toppling is about to occur.</p>",
+            "fields": [
+              {
+                "key": "tan",
+                "label": "Tangent of toppling inclination",
+                "type": "number",
+                "expected": "3/5"
+              }
+            ],
+            "hint": "<p>Use the lower edge as the pivot at impending toppling. Compare any separate friction threshold.</p>",
+            "solution": "<p>At the tipping threshold the vertical line of weight crosses the lower edge of the base.</p><p>The distances from the centre in the two surface axes are \\(6\\) and \\(10\\). Their ratio gives tangent \\(\\frac{3}{5}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Locate the centre of a triangular lamina",
+        "question": "<p>A uniform triangular lamina has vertices \\((1,2)\\), \\((10,2)\\) and \\((3,8)\\). Find both centre-of-mass coordinates.</p>",
+        "solution": [
+          "<p>Find the midpoint of a side and move two thirds of the way from the opposite vertex towards that midpoint.</p>",
+          "<p>Equivalently, average the three vertex coordinates separately. The centre of mass is \\((\\frac{14}{3},4)\\).</p>"
+        ]
+      },
+      {
+        "title": "Subtract a cut-out from a lamina",
+        "question": "<p>A uniform rectangular sheet fills the rectangle between \\((0,0)\\) and \\((12,10)\\). An upper right rectangle of width \\(3\\) and height \\(4\\) is removed. Find both exact coordinates of the remaining centre of mass.</p>",
+        "solution": [
+          "<p>Mass is proportional to area throughout the original sheet. Use the full sheet and a negative mass at the centre of the removed piece.</p>",
+          "<p>The area weights are \\(120\\) and \\(-12\\). The full centre is \\((6,5)\\) and the cut-out centre is \\((\\frac{21}{2},8)\\).</p>",
+          "<p>Divide each signed first moment by net area. The centre is \\((\\frac{11}{2},\\frac{14}{3})\\).</p>"
+        ]
+      },
+      {
+        "title": "Subtract a cut-out from a lamina",
+        "question": "<p>A uniform rectangular sheet fills the rectangle between \\((0,0)\\) and \\((12,10)\\). A triangular cut-out with vertices \\((0,0)\\), \\((3,0)\\) and \\((0,4)\\) is removed. Find both exact coordinates of the remaining centre of mass.</p>",
+        "solution": [
+          "<p>Mass is proportional to area throughout the original sheet. Use the full sheet and a negative mass at the centre of the removed piece.</p>",
+          "<p>The area weights are \\(120\\) and \\(-6\\). The full centre is \\((6,5)\\) and the cut-out centre is \\((1,\\frac{4}{3})\\).</p>",
+          "<p>Divide each signed first moment by net area. The centre is \\((\\frac{119}{19},\\frac{296}{57})\\).</p>"
+        ]
+      },
+      {
+        "title": "Subtract a cut-out from a lamina",
+        "question": "<p>A uniform rectangular sheet fills the rectangle between \\((0,0)\\) and \\((14,12)\\). A triangular cut-out with vertices \\((0,0)\\), \\((5,0)\\) and \\((0,6)\\) is removed. Find both exact coordinates of the remaining centre of mass.</p>",
+        "solution": [
+          "<p>Mass is proportional to area throughout the original sheet. Use the full sheet and a negative mass at the centre of the removed piece.</p>",
+          "<p>The area weights are \\(168\\) and \\(-15\\). The full centre is \\((7,6)\\) and the cut-out centre is \\((\\frac{5}{3},2)\\).</p>",
+          "<p>Divide each signed first moment by net area. The centre is \\((\\frac{1151}{153},\\frac{326}{51})\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the hanging angle of a lamina",
+        "question": "<p>In axes fixed in a lamina, the suspension hole is \\((0,0)\\) and its centre of mass is \\((3,-6)\\). It hangs freely from the hole. Find the tangent of the acute angle its original downwards axis makes with the vertical.</p>",
+        "solution": [
+          "<p>With only weight and the support force, their lines of action must coincide. The segment from the hole to the centre of mass points vertically down.</p>",
+          "<p>The original downwards axis and this segment form a right triangle with horizontal offset \\(3\\) and downwards offset \\(6\\).</p>",
+          "<p>The tangent of the acute angle is \\(\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Check a tilting block against its base",
+        "question": "<p>A uniform rectangular block rests on a slowly tilted rough plane. Along the plane it measures \\(6\\) metres, and perpendicular to the plane it measures \\(14\\) metres. Assume there is enough friction to prevent sliding until toppling. Find the tangent of the angle at which toppling is about to occur.</p>",
+        "solution": [
+          "<p>At the tipping threshold the vertical line of weight crosses the lower edge of the base.</p>",
+          "<p>The distances from the centre in the two surface axes are \\(3\\) and \\(7\\). Their ratio gives tangent \\(\\frac{3}{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "Check a tilting block against its base",
+        "question": "<p>A uniform rectangular block rests on a slowly tilted rough plane. Along the plane it measures \\(10\\) metres, and perpendicular to the plane it measures \\(18\\) metres. Assume there is enough friction to prevent sliding until toppling. Find the tangent of the angle at which toppling is about to occur.</p>",
+        "solution": [
+          "<p>At the tipping threshold the vertical line of weight crosses the lower edge of the base.</p>",
+          "<p>The distances from the centre in the two surface axes are \\(5\\) and \\(9\\). Their ratio gives tangent \\(\\frac{5}{9}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "laminas-triangular-centre-extra",
+        "title": "Locate the centre of a triangular lamina",
+        "prompt": "<p>A uniform triangular lamina has vertices \\((3,2)\\), \\((12,2)\\) and \\((7,10)\\). Find both centre-of-mass coordinates.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Centre x-coordinate",
+            "type": "number",
+            "expected": "22/3"
+          },
+          {
+            "key": "y",
+            "label": "Centre y-coordinate",
+            "type": "number",
+            "expected": "14/3"
+          }
+        ],
+        "hint": "<p>The centre lies on every median, two thirds of the way along it from its vertex.</p>",
+        "solution": "<p>Find the midpoint of a side and move two thirds of the way from the opposite vertex towards that midpoint.</p><p>Equivalently, average the three vertex coordinates separately. The centre of mass is \\((\\frac{22}{3},\\frac{14}{3})\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "laminas-subtract-a-rectangular-cut-out-extra",
+        "title": "Subtract a cut-out from a lamina",
+        "prompt": "<p>A uniform rectangular sheet fills the rectangle between \\((0,0)\\) and \\((14,12)\\). An upper right rectangle of width \\(5\\) and height \\(6\\) is removed. Find both exact coordinates of the remaining centre of mass.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Centre x-coordinate",
+            "type": "number",
+            "expected": "277/46"
+          },
+          {
+            "key": "y",
+            "label": "Centre y-coordinate",
+            "type": "number",
+            "expected": "123/23"
+          }
+        ],
+        "hint": "<p>Subtract both the removed area and its first moments.</p>",
+        "solution": "<p>Mass is proportional to area throughout the original sheet. Use the full sheet and a negative mass at the centre of the removed piece.</p><p>The area weights are \\(168\\) and \\(-30\\). The full centre is \\((7,6)\\) and the cut-out centre is \\((\\frac{23}{2},9)\\).</p><p>Divide each signed first moment by net area. The centre is \\((\\frac{277}{46},\\frac{123}{23})\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "laminas-subtract-a-triangular-cut-out-extra",
+        "title": "Subtract a cut-out from a lamina",
+        "prompt": "<p>A uniform rectangular sheet fills the rectangle between \\((0,0)\\) and \\((16,14)\\). A triangular cut-out with vertices \\((0,0)\\), \\((7,0)\\) and \\((0,8)\\) is removed. Find both exact coordinates of the remaining centre of mass.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Centre x-coordinate",
+            "type": "number",
+            "expected": "185/21"
+          },
+          {
+            "key": "y",
+            "label": "Centre y-coordinate",
+            "type": "number",
+            "expected": "160/21"
+          }
+        ],
+        "hint": "<p>Subtract both the removed area and its first moments.</p>",
+        "solution": "<p>Mass is proportional to area throughout the original sheet. Use the full sheet and a negative mass at the centre of the removed piece.</p><p>The area weights are \\(224\\) and \\(-28\\). The full centre is \\((8,7)\\) and the cut-out centre is \\((\\frac{7}{3},\\frac{8}{3})\\).</p><p>Divide each signed first moment by net area. The centre is \\((\\frac{185}{21},\\frac{160}{21})\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "laminas-free-suspension-extra",
+        "title": "Find the hanging angle of a lamina",
+        "prompt": "<p>In axes fixed in a lamina, the suspension hole is \\((0,0)\\) and its centre of mass is \\((5,-10)\\). It hangs freely from the hole. Find the tangent of the acute angle its original downwards axis makes with the vertical.</p>",
+        "fields": [
+          {
+            "key": "tan",
+            "label": "Tangent of hanging angle",
+            "type": "number",
+            "expected": "1/2"
+          }
+        ],
+        "hint": "<p>Use the line from the suspension point to the centre of mass as the vertical after hanging.</p>",
+        "solution": "<p>With only weight and the support force, their lines of action must coincide. The segment from the hole to the centre of mass points vertically down.</p><p>The original downwards axis and this segment form a right triangle with horizontal offset \\(5\\) and downwards offset \\(10\\).</p><p>The tangent of the acute angle is \\(\\frac{1}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "laminas-find-the-toppling-angle-extra",
+        "title": "Check a tilting block against its base",
+        "prompt": "<p>A uniform rectangular block rests on a slowly tilted rough plane. Along the plane it measures \\(14\\) metres, and perpendicular to the plane it measures \\(22\\) metres. Assume there is enough friction to prevent sliding until toppling. Find the tangent of the angle at which toppling is about to occur.</p>",
+        "fields": [
+          {
+            "key": "tan",
+            "label": "Tangent of toppling inclination",
+            "type": "number",
+            "expected": "7/11"
+          }
+        ],
+        "hint": "<p>Use the lower edge as the pivot at impending toppling. Compare any separate friction threshold.</p>",
+        "solution": "<p>At the tipping threshold the vertical line of weight crosses the lower edge of the base.</p><p>The distances from the centre in the two surface axes are \\(7\\) and \\(11\\). Their ratio gives tangent \\(\\frac{7}{11}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Lamina",
+        "definition": "<p>A flat object with negligible thickness.</p>"
+      },
+      {
+        "term": "Median",
+        "definition": "<p>The straight line from a triangle vertex to the opposite midpoint.</p>"
+      },
+      {
+        "term": "Toppling",
+        "definition": "<p>Loss of support as a body rotates about an edge.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Triangle</th><td>Two-thirds from a vertex along a median.</td></tr><tr><th scope=\"row\">Cut-out</th><td>Subtract its area and signed moments.</td></tr><tr><th scope=\"row\">Suspension</th><td>The centre of mass is below the support.</td></tr><tr><th scope=\"row\">Toppling</th><td>The vertical through the centre reaches a base edge.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Vertices \\((0,0),(6,0),(0,9)\\) form a uniform triangle. Find its centre.</p><p><strong>Check</strong> The centre is \\((2,3)\\).</p>",
+      "checks": "<ul><li>From the opposite side the fraction is one third, not two thirds.</li><li>Measure both centres from the same fixed origin.</li></ul>",
+      "examTip": "<p>State whether area weighting assumes a single uniform density.</p>"
+    },
+    "related": [
+      {
+        "title": "Moments, support reactions and composite rods",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_equilibrium_moments"
+      },
+      {
+        "title": "Composite solids, cavities and shells",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_equilibrium_solids"
+      }
+    ]
+  },
+  "fm_equilibrium_solids": {
+    "updatedOn": "2026-11-21",
+    "description": "Use volume or surface-area weights, signed axial coordinates and the correct centroid formula for each piece.",
+    "sections": [
+      {
+        "id": "combine-axial-solids",
+        "title": "How do cone and hemisphere masses combine?",
+        "label": "Use one signed axial coordinate",
+        "intro": "<p>Objects sharing an axis often need one centre coordinate. Measure each constituent relative to the same joining plane.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For equal-density solid pieces, weight the centroid coordinates by volume.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/equilibrium/axial-solids.svg",
+              "alt": "A cone and a solid hemisphere share a circular base. Their centres lie on different sides of the joining line.",
+              "caption": "<p>Measure the two centroid coordinates along one signed axis, with zero at the shared base.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "solids-combine-axial-solids-check",
+            "title": "Combine a cone and a solid hemisphere",
+            "prompt": "<p>A uniform solid consists of a cone of height \\(8\\) joined to a solid hemisphere of radius \\(4\\) at their common base of that radius. Find its signed centre along the axis from the joining plane, positive into the cone.</p>",
+            "fields": [
+              {
+                "key": "centre",
+                "label": "Signed axial coordinate",
+                "type": "number",
+                "expected": "1/4"
+              }
+            ],
+            "hint": "<p>Use volume weights for equal-density solids, and measure both centres from the join.</p>",
+            "solution": "<p>The volume weights after cancelling the common factor \\(\\pi\\) are \\(\\frac{128}{3}\\) and \\(\\frac{128}{3}\\).</p><p>The cone centre is \\(2\\) from the base and the solid hemisphere centre is \\(- \\frac{3}{2}\\) on the signed axis.</p><p>The weighted mean is \\(\\frac{1}{4}\\). A positive answer is inside the cone side.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An opposite side of the joining plane requires the opposite sign.</p>"
+          }
+        ]
+      },
+      {
+        "id": "distinguish-solid-and-shell",
+        "title": "Which formula applies to a hemisphere?",
+        "label": "Read the material model",
+        "intro": "<p>A solid hemisphere fills space. A thin hemispherical shell carries mass on its curved surface.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The centroid distances from the circular plane are \\(\\frac{3r}{8}\\) for a solid and \\(\\frac r2\\) for a thin open shell.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "solids-distinguish-solid-and-shell-check",
+            "title": "Distinguish the solid and shell formulae",
+            "prompt": "<p>A solid hemisphere and a thin open hemispherical shell both have radius \\(4\\). Find the two distances of their centres from their circular planes.</p>",
+            "fields": [
+              {
+                "key": "solid",
+                "label": "Solid centre distance",
+                "type": "number",
+                "expected": "3/2"
+              },
+              {
+                "key": "shell",
+                "label": "Shell centre distance",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Identify how the material fills the body before choosing a formula.</p>",
+            "solution": "<p>The solid fills the interior. Its centre lies \\(\\frac{3r}{8}\\) from the plane.</p><p>The thin shell has mass only on the curved surface. Its centre lies \\(\\frac r2\\) from the plane.</p><p>For the given radius the distances are \\(\\frac{3}{2}\\) for the solid and \\(2\\) for the shell.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The drawing alone may not distinguish the two. Read the description.</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-mass-per-area",
+        "title": "How does a lid affect a shell’s centre of mass?",
+        "label": "Use surface mass",
+        "intro": "<p>For thin pieces, use the stated mass per unit area and the surface area to find relative masses.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A flat lid’s centre lies in its own plane. Its weight can shift the assembly’s centre nearer that plane.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "solids-use-mass-per-area-check",
+            "title": "Use surface area weights for a uniform shell",
+            "prompt": "<p>A thin uniform hemispherical shell of radius \\(4\\) is sealed by a uniform thin circular lid of radius \\(4\\) and twice the shell’s mass per unit area. Find the centre measured perpendicular to the lid, towards the shell.</p>",
+            "fields": [
+              {
+                "key": "centre",
+                "label": "Axial coordinate",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Use the shell formula and account for the lid’s areal density.</p>",
+            "solution": "<p>The hemispherical surface area is \\(2\\pi r^2\\). The lid area is \\(\\pi r^2\\) but its mass per area is twice as large, so the two pieces have equal mass.</p><p>The lid's axial coordinate is zero. The thin hemisphere centre is \\(2\\) from the plane.</p><p>The centre of the assembly is \\(1\\) from the lid.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not use volume weights for a thin shell.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "solids-use-mass-per-area-follow-up",
+            "title": "Use surface area weights for a uniform shell",
+            "prompt": "<p>A thin uniform hemispherical shell of radius \\(6\\) is sealed by a uniform thin circular lid of radius \\(6\\) and twice the shell’s mass per unit area. Find the centre measured perpendicular to the lid, towards the shell.</p>",
+            "fields": [
+              {
+                "key": "centre",
+                "label": "Axial coordinate",
+                "type": "number",
+                "expected": "3/2"
+              }
+            ],
+            "hint": "<p>Use the shell formula and account for the lid’s areal density.</p>",
+            "solution": "<p>The hemispherical surface area is \\(2\\pi r^2\\). The lid area is \\(\\pi r^2\\) but its mass per area is twice as large, so the two pieces have equal mass.</p><p>The lid's axial coordinate is zero. The thin hemisphere centre is \\(3\\) from the plane.</p><p>The centre of the assembly is \\(\\frac{3}{2}\\) from the lid.</p>"
+          }
+        ]
+      },
+      {
+        "id": "subtract-a-cavity",
+        "title": "What happens if a hollow is away from the middle?",
+        "label": "Remove its first moment",
+        "intro": "<p>Treat a cavity as an imaginary piece removed from a full solid at the cavity's actual centre.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Subtract the cavity’s mass and its signed first moment before dividing.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "solids-subtract-a-cavity-check",
+            "title": "Subtract a spherical cavity",
+            "prompt": "<p>A homogeneous sphere of radius \\(12\\) has a spherical cavity of radius \\(4\\) whose centre lies \\(4\\) units along the positive axis from the original centre. Find the signed centre shift.</p>",
+            "fields": [
+              {
+                "key": "centre",
+                "label": "Signed centre shift",
+                "type": "number",
+                "expected": "-2/13"
+              }
+            ],
+            "hint": "<p>Remove the displaced cavity’s first moment as well as its mass.</p>",
+            "solution": "<p>The cavity lies wholly inside the original sphere. Relative masses are proportional to the cubes of the radii.</p><p>Take the negative weight at cavity coordinate \\(4\\), not at the original centre.</p><p>The signed location is \\(- \\frac{2}{13}\\). It is on the side opposite the cavity.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The centre shifts away from a removed piece, not towards it.</p>"
+          }
+        ]
+      },
+      {
+        "id": "solid-toppling-geometry",
+        "title": "How does the 3D centre determine the tipping angle?",
+        "label": "Use the relevant cross-section",
+        "intro": "<p>A vertical plane through the centre, perpendicular to the lower edge, gives the geometry that governs the onset of toppling.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>When the vertical weight line meets the lower edge, the body is at its tipping threshold.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "solids-solid-toppling-geometry-check",
+            "title": "Apply a solid's centre to a toppling threshold",
+            "prompt": "<p>A uniform cuboid of height \\(5\\) and length \\(3\\) in the slope direction stands flat on a tilted surface. It does not slip. Find the tangent of the inclination at the point of toppling about its lower edge.</p>",
+            "fields": [
+              {
+                "key": "tan",
+                "label": "Tangent of toppling inclination",
+                "type": "number",
+                "expected": "3/5"
+              }
+            ],
+            "hint": "<p>Use dimensions in the vertical cross-section that contains the steepest line of the surface.</p>",
+            "solution": "<p>The centre is halfway up and halfway along the face in this cross-section.</p><p>At impending toppling the vertical line through the centre just reaches the lower edge. The tangent is base half-length divided by centre height.</p><p>The required tangent is \\(\\frac{3}{5}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use centre height, not the full height of a uniform cuboid.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "solids-solid-toppling-geometry-follow-up",
+            "title": "Apply a solid's centre to a toppling threshold",
+            "prompt": "<p>A uniform cuboid of height \\(7\\) and length \\(3\\) in the slope direction stands flat on a tilted surface. It does not slip. Find the tangent of the inclination at the point of toppling about its lower edge.</p>",
+            "fields": [
+              {
+                "key": "tan",
+                "label": "Tangent of toppling inclination",
+                "type": "number",
+                "expected": "3/7"
+              }
+            ],
+            "hint": "<p>Use dimensions in the vertical cross-section that contains the steepest line of the surface.</p>",
+            "solution": "<p>The centre is halfway up and halfway along the face in this cross-section.</p><p>At impending toppling the vertical line through the centre just reaches the lower edge. The tangent is base half-length divided by centre height.</p><p>The required tangent is \\(\\frac{3}{7}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Combine a cone and a solid hemisphere",
+        "question": "<p>A uniform solid consists of a cone of height \\(6\\) joined to a solid hemisphere of radius \\(3\\) at their common base of that radius. Find its signed centre along the axis from the joining plane, positive into the cone.</p>",
+        "solution": [
+          "<p>The volume weights after cancelling the common factor \\(\\pi\\) are \\(18\\) and \\(18\\).</p>",
+          "<p>The cone centre is \\(\\frac{3}{2}\\) from the base and the solid hemisphere centre is \\(- \\frac{9}{8}\\) on the signed axis.</p>",
+          "<p>The weighted mean is \\(\\frac{3}{16}\\). A positive answer is inside the cone side.</p>"
+        ]
+      },
+      {
+        "title": "Distinguish the solid and shell formulae",
+        "question": "<p>A solid hemisphere and a thin open hemispherical shell both have radius \\(3\\). Find the two distances of their centres from their circular planes.</p>",
+        "solution": [
+          "<p>The solid fills the interior. Its centre lies \\(\\frac{3r}{8}\\) from the plane.</p>",
+          "<p>The thin shell has mass only on the curved surface. Its centre lies \\(\\frac r2\\) from the plane.</p>",
+          "<p>For the given radius the distances are \\(\\frac{9}{8}\\) for the solid and \\(\\frac{3}{2}\\) for the shell.</p>"
+        ]
+      },
+      {
+        "title": "Use surface area weights for a uniform shell",
+        "question": "<p>A thin uniform hemispherical shell of radius \\(3\\) is sealed by a uniform thin circular lid of radius \\(3\\) and twice the shell’s mass per unit area. Find the centre measured perpendicular to the lid, towards the shell.</p>",
+        "solution": [
+          "<p>The hemispherical surface area is \\(2\\pi r^2\\). The lid area is \\(\\pi r^2\\) but its mass per area is twice as large, so the two pieces have equal mass.</p>",
+          "<p>The lid's axial coordinate is zero. The thin hemisphere centre is \\(\\frac{3}{2}\\) from the plane.</p>",
+          "<p>The centre of the assembly is \\(\\frac{3}{4}\\) from the lid.</p>"
+        ]
+      },
+      {
+        "title": "Use surface area weights for a uniform shell",
+        "question": "<p>A thin uniform hemispherical shell of radius \\(5\\) is sealed by a uniform thin circular lid of radius \\(5\\) and twice the shell’s mass per unit area. Find the centre measured perpendicular to the lid, towards the shell.</p>",
+        "solution": [
+          "<p>The hemispherical surface area is \\(2\\pi r^2\\). The lid area is \\(\\pi r^2\\) but its mass per area is twice as large, so the two pieces have equal mass.</p>",
+          "<p>The lid's axial coordinate is zero. The thin hemisphere centre is \\(\\frac{5}{2}\\) from the plane.</p>",
+          "<p>The centre of the assembly is \\(\\frac{5}{4}\\) from the lid.</p>"
+        ]
+      },
+      {
+        "title": "Subtract a spherical cavity",
+        "question": "<p>A homogeneous sphere of radius \\(9\\) has a spherical cavity of radius \\(3\\) whose centre lies \\(3\\) units along the positive axis from the original centre. Find the signed centre shift.</p>",
+        "solution": [
+          "<p>The cavity lies wholly inside the original sphere. Relative masses are proportional to the cubes of the radii.</p>",
+          "<p>Take the negative weight at cavity coordinate \\(3\\), not at the original centre.</p>",
+          "<p>The signed location is \\(- \\frac{3}{26}\\). It is on the side opposite the cavity.</p>"
+        ]
+      },
+      {
+        "title": "Apply a solid's centre to a toppling threshold",
+        "question": "<p>A uniform cuboid of height \\(4\\) and length \\(3\\) in the slope direction stands flat on a tilted surface. It does not slip. Find the tangent of the inclination at the point of toppling about its lower edge.</p>",
+        "solution": [
+          "<p>The centre is halfway up and halfway along the face in this cross-section.</p>",
+          "<p>At impending toppling the vertical line through the centre just reaches the lower edge. The tangent is base half-length divided by centre height.</p>",
+          "<p>The required tangent is \\(\\frac{3}{4}\\).</p>"
+        ]
+      },
+      {
+        "title": "Apply a solid's centre to a toppling threshold",
+        "question": "<p>A uniform cuboid of height \\(6\\) and length \\(3\\) in the slope direction stands flat on a tilted surface. It does not slip. Find the tangent of the inclination at the point of toppling about its lower edge.</p>",
+        "solution": [
+          "<p>The centre is halfway up and halfway along the face in this cross-section.</p>",
+          "<p>At impending toppling the vertical line through the centre just reaches the lower edge. The tangent is base half-length divided by centre height.</p>",
+          "<p>The required tangent is \\(\\frac{1}{2}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "solids-combine-axial-solids-extra",
+        "title": "Combine a cone and a solid hemisphere",
+        "prompt": "<p>A uniform solid consists of a cone of height \\(10\\) joined to a solid hemisphere of radius \\(5\\) at their common base of that radius. Find its signed centre along the axis from the joining plane, positive into the cone.</p>",
+        "fields": [
+          {
+            "key": "centre",
+            "label": "Signed axial coordinate",
+            "type": "number",
+            "expected": "5/16"
+          }
+        ],
+        "hint": "<p>Use volume weights for equal-density solids, and measure both centres from the join.</p>",
+        "solution": "<p>The volume weights after cancelling the common factor \\(\\pi\\) are \\(\\frac{250}{3}\\) and \\(\\frac{250}{3}\\).</p><p>The cone centre is \\(\\frac{5}{2}\\) from the base and the solid hemisphere centre is \\(- \\frac{15}{8}\\) on the signed axis.</p><p>The weighted mean is \\(\\frac{5}{16}\\). A positive answer is inside the cone side.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "solids-distinguish-solid-and-shell-extra",
+        "title": "Distinguish the solid and shell formulae",
+        "prompt": "<p>A solid hemisphere and a thin open hemispherical shell both have radius \\(5\\). Find the two distances of their centres from their circular planes.</p>",
+        "fields": [
+          {
+            "key": "solid",
+            "label": "Solid centre distance",
+            "type": "number",
+            "expected": "15/8"
+          },
+          {
+            "key": "shell",
+            "label": "Shell centre distance",
+            "type": "number",
+            "expected": "5/2"
+          }
+        ],
+        "hint": "<p>Identify how the material fills the body before choosing a formula.</p>",
+        "solution": "<p>The solid fills the interior. Its centre lies \\(\\frac{3r}{8}\\) from the plane.</p><p>The thin shell has mass only on the curved surface. Its centre lies \\(\\frac r2\\) from the plane.</p><p>For the given radius the distances are \\(\\frac{15}{8}\\) for the solid and \\(\\frac{5}{2}\\) for the shell.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "solids-use-mass-per-area-extra",
+        "title": "Use surface area weights for a uniform shell",
+        "prompt": "<p>A thin uniform hemispherical shell of radius \\(7\\) is sealed by a uniform thin circular lid of radius \\(7\\) and twice the shell’s mass per unit area. Find the centre measured perpendicular to the lid, towards the shell.</p>",
+        "fields": [
+          {
+            "key": "centre",
+            "label": "Axial coordinate",
+            "type": "number",
+            "expected": "7/4"
+          }
+        ],
+        "hint": "<p>Use the shell formula and account for the lid’s areal density.</p>",
+        "solution": "<p>The hemispherical surface area is \\(2\\pi r^2\\). The lid area is \\(\\pi r^2\\) but its mass per area is twice as large, so the two pieces have equal mass.</p><p>The lid's axial coordinate is zero. The thin hemisphere centre is \\(\\frac{7}{2}\\) from the plane.</p><p>The centre of the assembly is \\(\\frac{7}{4}\\) from the lid.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "solids-subtract-a-cavity-extra",
+        "title": "Subtract a spherical cavity",
+        "prompt": "<p>A homogeneous sphere of radius \\(15\\) has a spherical cavity of radius \\(5\\) whose centre lies \\(5\\) units along the positive axis from the original centre. Find the signed centre shift.</p>",
+        "fields": [
+          {
+            "key": "centre",
+            "label": "Signed centre shift",
+            "type": "number",
+            "expected": "-5/26"
+          }
+        ],
+        "hint": "<p>Remove the displaced cavity’s first moment as well as its mass.</p>",
+        "solution": "<p>The cavity lies wholly inside the original sphere. Relative masses are proportional to the cubes of the radii.</p><p>Take the negative weight at cavity coordinate \\(5\\), not at the original centre.</p><p>The signed location is \\(- \\frac{5}{26}\\). It is on the side opposite the cavity.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "solids-solid-toppling-geometry-extra",
+        "title": "Apply a solid's centre to a toppling threshold",
+        "prompt": "<p>A uniform cuboid of height \\(8\\) and length \\(3\\) in the slope direction stands flat on a tilted surface. It does not slip. Find the tangent of the inclination at the point of toppling about its lower edge.</p>",
+        "fields": [
+          {
+            "key": "tan",
+            "label": "Tangent of toppling inclination",
+            "type": "number",
+            "expected": "3/8"
+          }
+        ],
+        "hint": "<p>Use dimensions in the vertical cross-section that contains the steepest line of the surface.</p>",
+        "solution": "<p>The centre is halfway up and halfway along the face in this cross-section.</p><p>At impending toppling the vertical line through the centre just reaches the lower edge. The tangent is base half-length divided by centre height.</p><p>The required tangent is \\(\\frac{3}{8}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Joining plane",
+        "definition": "<p>The common face used as a coordinate reference for joined pieces.</p>"
+      },
+      {
+        "term": "Shell",
+        "definition": "<p>Here a surface of negligible thickness carrying mass.</p>"
+      },
+      {
+        "term": "Cavity",
+        "definition": "<p>A region removed from a full solid.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Solid pieces</th><td>Use volume and density to obtain mass.</td></tr><tr><th scope=\"row\">Thin pieces</th><td>Use surface area and mass per unit area.</td></tr><tr><th scope=\"row\">Cavity</th><td>Subtract weight and first moment.</td></tr><tr><th scope=\"row\">Tip</th><td>Use the cross-section normal to the relevant tipping edge.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For radius \\(8\\), compare the centroid distances of a solid hemisphere and a thin open shell.</p><p><strong>Check</strong> The distances are \\(3\\) and \\(4\\), respectively.</p>",
+      "checks": "<ul><li>An opposite side of the joining plane requires the opposite sign.</li><li>The drawing alone may not distinguish the two. Read the description.</li></ul>",
+      "examTip": "<p>Write all centroid coordinates on a single signed axis before calculating a weighted mean.</p>"
+    },
+    "related": [
+      {
+        "title": "Plane laminas, suspension and toppling",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_equilibrium_laminas"
+      },
+      {
+        "title": "Contact forces, friction and linked constraints",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_equilibrium_contacts"
+      }
+    ]
+  },
+  "fm_equilibrium_contacts": {
+    "updatedOn": "2026-11-21",
+    "description": "Balance forces and moments for rough contacts and determine which of sliding or toppling first limits equilibrium.",
+    "sections": [
+      {
+        "id": "ladder-floor-and-wall",
+        "title": "Which directions do the contact forces have?",
+        "label": "Draw both contacts",
+        "intro": "<p>A smooth vertical wall can only press horizontally. A rough horizontal floor can press normally and exert horizontal friction.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the foot as the moment centre to remove the floor reaction and friction.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/equilibrium/ladder-contact.svg",
+              "alt": "A ladder leans from A on a floor to B on a smooth wall. The wall's force acts horizontally.",
+              "caption": "<p>The smooth wall reaction is perpendicular to the wall. Taking moments about A eliminates both components of floor contact.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "contacts-ladder-floor-and-wall-check",
+            "title": "Balance a ladder against a smooth wall",
+            "prompt": "<p>A uniform ladder of weight \\(60\\,\\mathrm N\\) leans against a smooth vertical wall with a rough horizontal floor at its foot. Its inclination to the floor has tangent \\(\\frac{3}{2}\\). Find the horizontal wall reaction and the least coefficient of friction at the floor.</p>",
+            "fields": [
+              {
+                "key": "wall",
+                "label": "Wall reaction in newtons",
+                "type": "number",
+                "expected": "20"
+              },
+              {
+                "key": "mu",
+                "label": "Least coefficient",
+                "type": "number",
+                "expected": "1/3"
+              }
+            ],
+            "hint": "<p>At the smooth wall the reaction is horizontal. Moments about the foot remove the two floor forces.</p>",
+            "solution": "<p>The wall reaction is horizontal. Take moments about the foot to eliminate both floor forces.</p><p>After dividing by ladder length and cosine of the inclination, \\(R_{\\rm wall}\\tan\\alpha=30\\).</p><p>Horizontal balance gives friction magnitude \\(20\\,\\mathrm N\\), and the vertical floor reaction is \\(60\\,\\mathrm N\\). The wall reaction is \\(20\\,\\mathrm N\\) and the least coefficient is \\(\\frac{1}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not add friction at a smooth wall.</p>"
+          }
+        ]
+      },
+      {
+        "id": "add-a-load",
+        "title": "How does an off-centre load change the required friction?",
+        "label": "Use the actual moment arms",
+        "intro": "<p>A load applied higher on the ladder contributes a longer horizontal moment arm about the foot.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Add its moment to the ladder weight's moment before working out the floor friction.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "contacts-add-a-load-check",
+            "title": "Balance a ladder against a smooth wall",
+            "prompt": "<p>A uniform ladder of weight \\(60\\,\\mathrm N\\) leans against a smooth vertical wall with a rough horizontal floor at its foot. Its inclination to the floor has tangent \\(\\frac{3}{2}\\). A load of \\(28\\,\\mathrm N\\) is placed two thirds of the way up it. Find the horizontal wall reaction and the least coefficient of friction at the floor.</p>",
+            "fields": [
+              {
+                "key": "wall",
+                "label": "Wall reaction in newtons",
+                "type": "number",
+                "expected": "292/9"
+              },
+              {
+                "key": "mu",
+                "label": "Least coefficient",
+                "type": "number",
+                "expected": "73/198"
+              }
+            ],
+            "hint": "<p>At the smooth wall the reaction is horizontal. Moments about the foot remove the two floor forces.</p>",
+            "solution": "<p>The wall reaction is horizontal. Take moments about the foot to eliminate both floor forces.</p><p>After dividing by ladder length and cosine of the inclination, \\(R_{\\rm wall}\\tan\\alpha=\\frac{146}{3}\\).</p><p>Horizontal balance gives friction magnitude \\(\\frac{292}{9}\\,\\mathrm N\\), and the vertical floor reaction is \\(88\\,\\mathrm N\\). The wall reaction is \\(\\frac{292}{9}\\,\\mathrm N\\) and the least coefficient is \\(\\frac{73}{198}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not assume every downward force acts at the ladder midpoint.</p>"
+          }
+        ]
+      },
+      {
+        "id": "position-the-normal-resultant",
+        "title": "Why can the normal reaction move along a base?",
+        "label": "Find the contact line",
+        "intro": "<p>A distributed normal contact can be replaced by one resultant. The resultant's line shifts as the applied moment changes.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use force balance for its magnitude and moment balance to locate it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "contacts-position-the-normal-resultant-check",
+            "title": "Find where the resultant contact acts",
+            "prompt": "<p>A uniform crate of weight \\(57\\,\\mathrm N\\) stands on a rough horizontal floor. A horizontal pull of \\(19\\,\\mathrm N\\) is applied \\(2\\) metres above the floor. The base extends \\(4\\) metres either side of the centre. Assume equilibrium. Find the friction magnitude and the forward shift of the vertical resultant contact line from the centre of the base.</p>",
+            "fields": [
+              {
+                "key": "friction",
+                "label": "Friction force",
+                "type": "number",
+                "expected": "19"
+              },
+              {
+                "key": "shift",
+                "label": "Shift of contact line",
+                "type": "number",
+                "expected": "2/3"
+              }
+            ],
+            "hint": "<p>Friction fixes translation. The shift of the normal line supplies the balancing moment.</p>",
+            "solution": "<p>Horizontal balance gives friction magnitude equal to the pull. Vertical balance gives normal reaction equal to the weight.</p><p>Take moments about the centre of the base. The friction acts along the floor through this moment centre. Balance the pull moment by shifting the normal force forwards.</p><p>The friction is \\(19\\,\\mathrm N\\) and the normal force acts \\(\\frac{2}{3}\\,\\mathrm m\\) forwards of the base centre.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A balanced force sum alone does not prove that contact can balance the moment.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "contacts-position-the-normal-resultant-follow-up",
+            "title": "Find where the resultant contact acts",
+            "prompt": "<p>A uniform crate of weight \\(71\\,\\mathrm N\\) stands on a rough horizontal floor. A horizontal pull of \\(\\frac{355}{9}\\,\\mathrm N\\) is applied \\(2\\) metres above the floor. The base extends \\(4\\) metres either side of the centre. Assume equilibrium. Find the friction magnitude and the forward shift of the vertical resultant contact line from the centre of the base.</p>",
+            "fields": [
+              {
+                "key": "friction",
+                "label": "Friction force",
+                "type": "number",
+                "expected": "355/9"
+              },
+              {
+                "key": "shift",
+                "label": "Shift of contact line",
+                "type": "number",
+                "expected": "10/9"
+              }
+            ],
+            "hint": "<p>Friction fixes translation. The shift of the normal line supplies the balancing moment.</p>",
+            "solution": "<p>Horizontal balance gives friction magnitude equal to the pull. Vertical balance gives normal reaction equal to the weight.</p><p>Take moments about the centre of the base. The friction acts along the floor through this moment centre. Balance the pull moment by shifting the normal force forwards.</p><p>The friction is \\(\\frac{355}{9}\\,\\mathrm N\\) and the normal force acts \\(\\frac{10}{9}\\,\\mathrm m\\) forwards of the base centre.</p>"
+          }
+        ]
+      },
+      {
+        "id": "push-to-slide-or-tip",
+        "title": "Which limit applies under a horizontal push?",
+        "label": "Compare competing thresholds",
+        "intro": "<p>A crate can slide or tip as the horizontal push increases. Compute the threshold for each event separately.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Compare the friction limit \\(\\mu R\\) with the applied push that balances the weight moment about the forward edge.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "contacts-push-to-slide-or-tip-check",
+            "title": "Compare sliding and toppling under a horizontal push",
+            "prompt": "<p>A uniform crate of weight \\(60\\,\\mathrm N\\) has half-width \\(3\\) metres. A horizontal push is applied at height \\(6\\) metres. The coefficient of friction is \\(\\frac{3}{5}\\). Which event would occur first as the push increases, and what is its threshold?</p>",
+            "fields": [
+              {
+                "key": "event",
+                "label": "First event",
+                "type": "choice",
+                "expected": "topple",
+                "options": {
+                  "slide": "Sliding",
+                  "topple": "Toppling"
+                }
+              },
+              {
+                "key": "force",
+                "label": "Threshold force",
+                "type": "number",
+                "expected": "30"
+              }
+            ],
+            "hint": "<p>Test both possibilities. Moments determine the tipping threshold, while horizontal force balance determines the sliding threshold.</p>",
+            "solution": "<p>At the sliding threshold the horizontal force reaches \\(\\mu W=36\\).</p><p>At the tipping threshold, take moments about the forward edge. Balance push times application height against weight times half-width, giving \\(30\\,\\mathrm N\\).</p><p>The lower threshold occurs first: toppling at \\(30\\,\\mathrm N\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The smaller threshold is reached first.</p>"
+          }
+        ]
+      },
+      {
+        "id": "incline-sliding-or-toppling",
+        "title": "Which limit applies on a tilting plane?",
+        "label": "Compare limiting angles",
+        "intro": "<p>The friction threshold is governed by the ratio of tangential to normal force. Toppling is governed by where the vertical weight line meets the base.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Compare the tangents of both possible acute limiting angles. Tangent increases over this interval.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "contacts-incline-sliding-or-toppling-check",
+            "title": "Check a tilting block against its base",
+            "prompt": "<p>A uniform rectangular block rests on a slowly tilted rough plane. Along the plane it measures \\(8\\) metres, and perpendicular to the plane it measures \\(16\\) metres. The coefficient of friction is \\(\\frac{1}{3}\\). Which event comes first, sliding or toppling? Give the tangent of the corresponding inclination.</p>",
+            "fields": [
+              {
+                "key": "event",
+                "label": "First event",
+                "type": "choice",
+                "expected": "slide",
+                "options": {
+                  "slide": "Sliding",
+                  "topple": "Toppling"
+                }
+              },
+              {
+                "key": "tan",
+                "label": "Tangent of limiting inclination",
+                "type": "number",
+                "expected": "1/3"
+              }
+            ],
+            "hint": "<p>Use the lower edge as the pivot at impending toppling. Compare any separate friction threshold.</p>",
+            "solution": "<p>Sliding starts at \\(\\tan\\alpha=\\mu\\), from the friction limit.</p><p>Toppling starts when the vertical through the centre reaches the lower edge. Here this gives \\(\\tan\\alpha=\\frac{1}{2}\\).</p><p>Compare these thresholds for increasing angle. Sliding occurs first, at tangent \\(\\frac{1}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not compute only the tipping angle and assume the body reaches it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "contacts-incline-sliding-or-toppling-follow-up",
+            "title": "Check a tilting block against its base",
+            "prompt": "<p>A uniform rectangular block rests on a slowly tilted rough plane. Along the plane it measures \\(12\\) metres, and perpendicular to the plane it measures \\(20\\) metres. The coefficient of friction is \\(\\frac{1}{3}\\). Which event comes first, sliding or toppling? Give the tangent of the corresponding inclination.</p>",
+            "fields": [
+              {
+                "key": "event",
+                "label": "First event",
+                "type": "choice",
+                "expected": "slide",
+                "options": {
+                  "slide": "Sliding",
+                  "topple": "Toppling"
+                }
+              },
+              {
+                "key": "tan",
+                "label": "Tangent of limiting inclination",
+                "type": "number",
+                "expected": "1/3"
+              }
+            ],
+            "hint": "<p>Use the lower edge as the pivot at impending toppling. Compare any separate friction threshold.</p>",
+            "solution": "<p>Sliding starts at \\(\\tan\\alpha=\\mu\\), from the friction limit.</p><p>Toppling starts when the vertical through the centre reaches the lower edge. Here this gives \\(\\tan\\alpha=\\frac{3}{5}\\).</p><p>Compare these thresholds for increasing angle. Sliding occurs first, at tangent \\(\\frac{1}{3}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Balance a ladder against a smooth wall",
+        "question": "<p>A uniform ladder of weight \\(54\\,\\mathrm N\\) leans against a smooth vertical wall with a rough horizontal floor at its foot. Its inclination to the floor has tangent \\(1\\). Find the horizontal wall reaction and the least coefficient of friction at the floor.</p>",
+        "solution": [
+          "<p>The wall reaction is horizontal. Take moments about the foot to eliminate both floor forces.</p>",
+          "<p>After dividing by ladder length and cosine of the inclination, \\(R_{\\rm wall}\\tan\\alpha=27\\).</p>",
+          "<p>Horizontal balance gives friction magnitude \\(27\\,\\mathrm N\\), and the vertical floor reaction is \\(54\\,\\mathrm N\\). The wall reaction is \\(27\\,\\mathrm N\\) and the least coefficient is \\(\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Balance a ladder against a smooth wall",
+        "question": "<p>A uniform ladder of weight \\(54\\,\\mathrm N\\) leans against a smooth vertical wall with a rough horizontal floor at its foot. Its inclination to the floor has tangent \\(1\\). A load of \\(24\\,\\mathrm N\\) is placed two thirds of the way up it. Find the horizontal wall reaction and the least coefficient of friction at the floor.</p>",
+        "solution": [
+          "<p>The wall reaction is horizontal. Take moments about the foot to eliminate both floor forces.</p>",
+          "<p>After dividing by ladder length and cosine of the inclination, \\(R_{\\rm wall}\\tan\\alpha=43\\).</p>",
+          "<p>Horizontal balance gives friction magnitude \\(43\\,\\mathrm N\\), and the vertical floor reaction is \\(78\\,\\mathrm N\\). The wall reaction is \\(43\\,\\mathrm N\\) and the least coefficient is \\(\\frac{43}{78}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find where the resultant contact acts",
+        "question": "<p>A uniform crate of weight \\(50\\,\\mathrm N\\) stands on a rough horizontal floor. A horizontal pull of \\(\\frac{100}{9}\\,\\mathrm N\\) is applied \\(2\\) metres above the floor. The base extends \\(4\\) metres either side of the centre. Assume equilibrium. Find the friction magnitude and the forward shift of the vertical resultant contact line from the centre of the base.</p>",
+        "solution": [
+          "<p>Horizontal balance gives friction magnitude equal to the pull. Vertical balance gives normal reaction equal to the weight.</p>",
+          "<p>Take moments about the centre of the base. The friction acts along the floor through this moment centre. Balance the pull moment by shifting the normal force forwards.</p>",
+          "<p>The friction is \\(\\frac{100}{9}\\,\\mathrm N\\) and the normal force acts \\(\\frac{4}{9}\\,\\mathrm m\\) forwards of the base centre.</p>"
+        ]
+      },
+      {
+        "title": "Find where the resultant contact acts",
+        "question": "<p>A uniform crate of weight \\(64\\,\\mathrm N\\) stands on a rough horizontal floor. A horizontal pull of \\(\\frac{256}{9}\\,\\mathrm N\\) is applied \\(2\\) metres above the floor. The base extends \\(4\\) metres either side of the centre. Assume equilibrium. Find the friction magnitude and the forward shift of the vertical resultant contact line from the centre of the base.</p>",
+        "solution": [
+          "<p>Horizontal balance gives friction magnitude equal to the pull. Vertical balance gives normal reaction equal to the weight.</p>",
+          "<p>Take moments about the centre of the base. The friction acts along the floor through this moment centre. Balance the pull moment by shifting the normal force forwards.</p>",
+          "<p>The friction is \\(\\frac{256}{9}\\,\\mathrm N\\) and the normal force acts \\(\\frac{8}{9}\\,\\mathrm m\\) forwards of the base centre.</p>"
+        ]
+      },
+      {
+        "title": "Compare sliding and toppling under a horizontal push",
+        "question": "<p>A uniform crate of weight \\(50\\,\\mathrm N\\) has half-width \\(2\\) metres. A horizontal push is applied at height \\(5\\) metres. The coefficient of friction is \\(\\frac{3}{5}\\). Which event would occur first as the push increases, and what is its threshold?</p>",
+        "solution": [
+          "<p>At the sliding threshold the horizontal force reaches \\(\\mu W=30\\).</p>",
+          "<p>At the tipping threshold, take moments about the forward edge. Balance push times application height against weight times half-width, giving \\(20\\,\\mathrm N\\).</p>",
+          "<p>The lower threshold occurs first: toppling at \\(20\\,\\mathrm N\\).</p>"
+        ]
+      },
+      {
+        "title": "Check a tilting block against its base",
+        "question": "<p>A uniform rectangular block rests on a slowly tilted rough plane. Along the plane it measures \\(6\\) metres, and perpendicular to the plane it measures \\(14\\) metres. The coefficient of friction is \\(\\frac{3}{4}\\). Which event comes first, sliding or toppling? Give the tangent of the corresponding inclination.</p>",
+        "solution": [
+          "<p>Sliding starts at \\(\\tan\\alpha=\\mu\\), from the friction limit.</p>",
+          "<p>Toppling starts when the vertical through the centre reaches the lower edge. Here this gives \\(\\tan\\alpha=\\frac{3}{7}\\).</p>",
+          "<p>Compare these thresholds for increasing angle. Toppling occurs first, at tangent \\(\\frac{3}{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "Check a tilting block against its base",
+        "question": "<p>A uniform rectangular block rests on a slowly tilted rough plane. Along the plane it measures \\(10\\) metres, and perpendicular to the plane it measures \\(18\\) metres. The coefficient of friction is \\(\\frac{3}{4}\\). Which event comes first, sliding or toppling? Give the tangent of the corresponding inclination.</p>",
+        "solution": [
+          "<p>Sliding starts at \\(\\tan\\alpha=\\mu\\), from the friction limit.</p>",
+          "<p>Toppling starts when the vertical through the centre reaches the lower edge. Here this gives \\(\\tan\\alpha=\\frac{5}{9}\\).</p>",
+          "<p>Compare these thresholds for increasing angle. Toppling occurs first, at tangent \\(\\frac{5}{9}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "contacts-ladder-floor-and-wall-extra",
+        "title": "Balance a ladder against a smooth wall",
+        "prompt": "<p>A uniform ladder of weight \\(66\\,\\mathrm N\\) leans against a smooth vertical wall with a rough horizontal floor at its foot. Its inclination to the floor has tangent \\(2\\). Find the horizontal wall reaction and the least coefficient of friction at the floor.</p>",
+        "fields": [
+          {
+            "key": "wall",
+            "label": "Wall reaction in newtons",
+            "type": "number",
+            "expected": "33/2"
+          },
+          {
+            "key": "mu",
+            "label": "Least coefficient",
+            "type": "number",
+            "expected": "1/4"
+          }
+        ],
+        "hint": "<p>At the smooth wall the reaction is horizontal. Moments about the foot remove the two floor forces.</p>",
+        "solution": "<p>The wall reaction is horizontal. Take moments about the foot to eliminate both floor forces.</p><p>After dividing by ladder length and cosine of the inclination, \\(R_{\\rm wall}\\tan\\alpha=33\\).</p><p>Horizontal balance gives friction magnitude \\(\\frac{33}{2}\\,\\mathrm N\\), and the vertical floor reaction is \\(66\\,\\mathrm N\\). The wall reaction is \\(\\frac{33}{2}\\,\\mathrm N\\) and the least coefficient is \\(\\frac{1}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "contacts-add-a-load-extra",
+        "title": "Balance a ladder against a smooth wall",
+        "prompt": "<p>A uniform ladder of weight \\(66\\,\\mathrm N\\) leans against a smooth vertical wall with a rough horizontal floor at its foot. Its inclination to the floor has tangent \\(2\\). A load of \\(32\\,\\mathrm N\\) is placed two thirds of the way up it. Find the horizontal wall reaction and the least coefficient of friction at the floor.</p>",
+        "fields": [
+          {
+            "key": "wall",
+            "label": "Wall reaction in newtons",
+            "type": "number",
+            "expected": "163/6"
+          },
+          {
+            "key": "mu",
+            "label": "Least coefficient",
+            "type": "number",
+            "expected": "163/588"
+          }
+        ],
+        "hint": "<p>At the smooth wall the reaction is horizontal. Moments about the foot remove the two floor forces.</p>",
+        "solution": "<p>The wall reaction is horizontal. Take moments about the foot to eliminate both floor forces.</p><p>After dividing by ladder length and cosine of the inclination, \\(R_{\\rm wall}\\tan\\alpha=\\frac{163}{3}\\).</p><p>Horizontal balance gives friction magnitude \\(\\frac{163}{6}\\,\\mathrm N\\), and the vertical floor reaction is \\(98\\,\\mathrm N\\). The wall reaction is \\(\\frac{163}{6}\\,\\mathrm N\\) and the least coefficient is \\(\\frac{163}{588}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "contacts-position-the-normal-resultant-extra",
+        "title": "Find where the resultant contact acts",
+        "prompt": "<p>A uniform crate of weight \\(78\\,\\mathrm N\\) stands on a rough horizontal floor. A horizontal pull of \\(52\\,\\mathrm N\\) is applied \\(2\\) metres above the floor. The base extends \\(4\\) metres either side of the centre. Assume equilibrium. Find the friction magnitude and the forward shift of the vertical resultant contact line from the centre of the base.</p>",
+        "fields": [
+          {
+            "key": "friction",
+            "label": "Friction force",
+            "type": "number",
+            "expected": "52"
+          },
+          {
+            "key": "shift",
+            "label": "Shift of contact line",
+            "type": "number",
+            "expected": "4/3"
+          }
+        ],
+        "hint": "<p>Friction fixes translation. The shift of the normal line supplies the balancing moment.</p>",
+        "solution": "<p>Horizontal balance gives friction magnitude equal to the pull. Vertical balance gives normal reaction equal to the weight.</p><p>Take moments about the centre of the base. The friction acts along the floor through this moment centre. Balance the pull moment by shifting the normal force forwards.</p><p>The friction is \\(52\\,\\mathrm N\\) and the normal force acts \\(\\frac{4}{3}\\,\\mathrm m\\) forwards of the base centre.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "contacts-push-to-slide-or-tip-extra",
+        "title": "Compare sliding and toppling under a horizontal push",
+        "prompt": "<p>A uniform crate of weight \\(70\\,\\mathrm N\\) has half-width \\(4\\) metres. A horizontal push is applied at height \\(7\\) metres. The coefficient of friction is \\(\\frac{3}{5}\\). Which event would occur first as the push increases, and what is its threshold?</p>",
+        "fields": [
+          {
+            "key": "event",
+            "label": "First event",
+            "type": "choice",
+            "expected": "topple",
+            "options": {
+              "slide": "Sliding",
+              "topple": "Toppling"
+            }
+          },
+          {
+            "key": "force",
+            "label": "Threshold force",
+            "type": "number",
+            "expected": "40"
+          }
+        ],
+        "hint": "<p>Test both possibilities. Moments determine the tipping threshold, while horizontal force balance determines the sliding threshold.</p>",
+        "solution": "<p>At the sliding threshold the horizontal force reaches \\(\\mu W=42\\).</p><p>At the tipping threshold, take moments about the forward edge. Balance push times application height against weight times half-width, giving \\(40\\,\\mathrm N\\).</p><p>The lower threshold occurs first: toppling at \\(40\\,\\mathrm N\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "contacts-incline-sliding-or-toppling-extra",
+        "title": "Check a tilting block against its base",
+        "prompt": "<p>A uniform rectangular block rests on a slowly tilted rough plane. Along the plane it measures \\(14\\) metres, and perpendicular to the plane it measures \\(22\\) metres. The coefficient of friction is \\(\\frac{3}{4}\\). Which event comes first, sliding or toppling? Give the tangent of the corresponding inclination.</p>",
+        "fields": [
+          {
+            "key": "event",
+            "label": "First event",
+            "type": "choice",
+            "expected": "topple",
+            "options": {
+              "slide": "Sliding",
+              "topple": "Toppling"
+            }
+          },
+          {
+            "key": "tan",
+            "label": "Tangent of limiting inclination",
+            "type": "number",
+            "expected": "7/11"
+          }
+        ],
+        "hint": "<p>Use the lower edge as the pivot at impending toppling. Compare any separate friction threshold.</p>",
+        "solution": "<p>Sliding starts at \\(\\tan\\alpha=\\mu\\), from the friction limit.</p><p>Toppling starts when the vertical through the centre reaches the lower edge. Here this gives \\(\\tan\\alpha=\\frac{7}{11}\\).</p><p>Compare these thresholds for increasing angle. Toppling occurs first, at tangent \\(\\frac{7}{11}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Distributed contact",
+        "definition": "<p>A contact force spread over an area or length.</p>"
+      },
+      {
+        "term": "Limiting friction",
+        "definition": "<p>The largest available static-friction magnitude for the stated reaction.</p>"
+      },
+      {
+        "term": "Base edge",
+        "definition": "<p>The pivot line at the onset of toppling.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Smooth wall</th><td>Normal horizontal reaction only.</td></tr><tr><th scope=\"row\">Rough floor</th><td>Normal and friction, both removed by moments about the foot.</td></tr><tr><th scope=\"row\">Friction</th><td>Require \\(|F|\\le\\mu R\\).</td></tr><tr><th scope=\"row\">Topple or slide</th><td>Calculate both thresholds and compare.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A block has weight \\(80\\,\\mathrm N\\), with \\(\\mu=\\frac14\\) on a horizontal floor. Find the horizontal sliding threshold if it stays flat.</p><p><strong>Check</strong> \\(20\\,\\mathrm N\\).</p>",
+      "checks": "<ul><li>Do not add friction at a smooth wall.</li><li>Do not assume every downward force acts at the ladder midpoint.</li></ul>",
+      "examTip": "<p>Check why each force acts in its stated direction before using the friction or moment equation.</p>"
+    },
+    "related": [
+      {
+        "title": "Composite solids, cavities and shells",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_equilibrium_solids"
+      }
+    ]
+  }
+}
