@@ -9,6 +9,7 @@ import differentiation from "../../content/original/9709-p1/differentiation-stud
 import integration from "../../content/original/9709-p1/integration-study.json";
 import crossTopic from "../../content/original/9709-p1/cross-topic-revision-study.json";
 import pure3Algebra from "../../content/original/9709-p3/algebra-study.json";
+import pure3Logarithms from "../../content/original/9709-p3/logarithmic-and-exponential-functions-study.json";
 import representation from "../../content/original/9709-s1/representation-study.json";
 import centralTendency from "../../content/original/9709-s1/central-tendency-study.json";
 import variation from "../../content/original/9709-s1/variation-study.json";
@@ -42,7 +43,7 @@ type AuthoredLesson = Omit<StudyLesson, "sections" | "extraPractice"> & {
 const lessons = {
   ...quadratics, ...functions, ...coordinateGeometry, ...circularMeasure, ...trigonometry,
   ...series, ...binomialExpansion, ...differentiation, ...integration, ...crossTopic,
-  ...pure3Algebra,
+  ...pure3Algebra, ...pure3Logarithms,
   ...representation, ...centralTendency, ...variation, ...probability,
   ...counting, ...distributions, ...binomialGeometric, ...normal,
 } as Record<string, AuthoredLesson>;

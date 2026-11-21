@@ -6,6 +6,18 @@ import { squarePublicLesson, questionsForTopic, gradeSquare, squareHelp, squareM
 import { squareSnapshot, nextSquareReview } from "../src/lib/square-model";
 import { packageTask } from "../src/lib/content-packages";
 import { automaticPoints } from "../src/lib/works";
+test("content package keys fit the persisted import project identifier", () => {
+  const pack = contentPackages[0];
+  assert(contentPackageSchema.safeParse({ ...pack, key: "k".repeat(36) }).success);
+  assert(!contentPackageSchema.safeParse({ ...pack, key: "k".repeat(37) }).success);
+});
+test("lesson summaries render maths and preserve surrounding plain text", () => {
+  const topic = packageTopic("orig_9709_p3_log_natural_logs")!;
+  assert.match(squarePublicLesson(topic).summaryHtml ?? "", /class="katex"/);
+  const literal = squarePublicLesson({ ...topic, summary: "Input < 5 and \\(x^2\\)" }).summaryHtml;
+  assert.match(literal ?? "", /Input &lt; 5 and /);
+  assert.equal(squarePublicLesson({ ...topic, summary: "Plain summary" }).summaryHtml, undefined);
+});
 test("C1 package schema, complete marks and all supplied identities",()=>{
  const p=contentPackages[0];assert.equal(p.questions.length,94);assert.equal(p.source.supplied,62);assert.equal(p.source.held.length,0);
  assert.equal(p.questions.filter(q=>q.provenance).length,62);

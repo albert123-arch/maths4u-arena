@@ -1,0 +1,1156 @@
+{
+  "orig_9709_p3_log_definitions_laws": {
+    "updatedOn": "2026-11-21",
+    "description": "Read logarithms as exponents, keep bases and arguments valid, and use the logarithm laws to rewrite expressions.",
+    "sections": [
+      {
+        "id": "read-exponent",
+        "title": "What is a logarithm telling me?",
+        "label": "Read an exponent",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>\\(\\log_a u=t\\) means \\(a^t=u\\). For a real logarithm, require \\(u&gt;0\\), \\(a&gt;0\\) and \\(a\\ne1\\). A negative answer is possible. It represents a reciprocal power of the base.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a valid base, \\(\\log_a1=0\\) and \\(\\log_a a=1\\). In this course \\(\\log_{10}\\) denotes the common logarithm and the calculator's log key gives base 10.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "exponents-from-logs",
+            "title": "Recover both exponents",
+            "prompt": "<p>Find \\(\\log_{10}(0.00001)\\) and \\(\\log_{16}8\\) exactly.</p>",
+            "hint": "<p>Express the first argument as a power of \\(10\\). For the second, write \\(16\\) and \\(8\\) as powers of \\(2\\).</p>",
+            "solution": "<p>\\(0.00001=10^{-5}\\) and \\(16^{\\frac34}=(2^4)^{\\frac34}=8\\). The answers are \\(-5\\) and \\(\\frac34\\).</p>",
+            "fields": [
+              {
+                "key": "common",
+                "label": "Value of the first logarithm",
+                "type": "number",
+                "expected": "-5",
+                "retry": [
+                  {
+                    "answer": "5",
+                    "feedback": "<p>A positive exponent of 10 gives a number greater than 1.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "other",
+                "label": "Value of the second logarithm",
+                "type": "number",
+                "expected": "3/4",
+                "retry": [
+                  {
+                    "answer": "4/3",
+                    "feedback": "<p>Write the target as a power of the stated base. The exponent of 2 in the target is 3.</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "logs-domain",
+        "title": "Which inputs and bases are allowed?",
+        "label": "Check the domain",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Require every original argument to be strictly positive. With a variable base, also require a positive base different from \\(1\\). Keep these conditions through every rearrangement.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "domain-intersection",
+            "title": "Keep both strict boundaries",
+            "prompt": "<p>Give the real domain of \\(\\log_5(2x-3)-\\log_5(9-x)\\).</p>",
+            "hint": "<p>Write one strict inequality for each argument, then intersect them.</p>",
+            "solution": "<p>The first argument needs \\(x&gt;\\frac32\\) and the second needs \\(x&lt;9\\). The domain is \\(\\frac32&lt;x&lt;9\\).</p>",
+            "fields": [
+              {
+                "key": "domain",
+                "label": "Domain in x",
+                "type": "set",
+                "expected": "(3/2,9)",
+                "retry": [
+                  {
+                    "answer": "[3/2,9]",
+                    "feedback": "<p>Both boundary values make an original argument zero.</p>"
+                  },
+                  {
+                    "answer": "(3/2,inf)",
+                    "feedback": "<p>The second logarithm supplies an upper bound.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "check",
+            "id": "permitted-base",
+            "title": "Spot a forbidden variable base",
+            "prompt": "<p>For which of these values of \\(x\\) is \\(\\log_{x-2}9\\) defined?</p>",
+            "hint": "<p>The base must be positive and different from \\(1\\).</p>",
+            "solution": "<p>\\(x=4\\) gives base \\(2\\). The other values give base \\(-1\\), \\(0\\) or \\(1\\).</p>",
+            "fields": [
+              {
+                "key": "base",
+                "label": "Choose one value",
+                "type": "choice",
+                "expected": "D",
+                "retry": [
+                  {
+                    "answer": "A",
+                    "feedback": "<p>The base would be negative.</p>"
+                  },
+                  {
+                    "answer": "B",
+                    "feedback": "<p>The base would be zero.</p>"
+                  },
+                  {
+                    "answer": "C",
+                    "feedback": "<p>A base of one cannot generate an inverse exponential.</p>"
+                  }
+                ],
+                "options": {
+                  "A": "<p>\\(x=1\\)</p>",
+                  "B": "<p>\\(x=2\\)</p>",
+                  "C": "<p>\\(x=3\\)</p>",
+                  "D": "<p>\\(x=4\\)</p>"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "laws",
+        "title": "How do I combine logarithms?",
+        "label": "Use the logarithm laws",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For a fixed valid base \\(a\\) and positive arguments \\(u,v\\), addition of logarithms corresponds to multiplication of arguments. Subtraction corresponds to division.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\log_a u+\\log_a v=\\log_a(uv)\\), \\(\\log_a u-\\log_a v=\\log_a\\!\\left(\\frac uv\\right)\\) and \\(k\\log_a u=\\log_a(u^k)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>\\(\\log_a(u+v)\\) requires the sum to be evaluated as a single argument. The sum law applies to \\(\\log_a u+\\log_a v\\) and produces a product inside the logarithm.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "combine-laws",
+            "title": "Choose the right order of operations",
+            "prompt": "<p>Evaluate \\(\\log_2 96-2\\log_2 3+\\log_2 6\\) exactly.</p>",
+            "hint": "<p>Deal with the coefficient first. Multiply by the last argument and divide by the squared argument.</p>",
+            "solution": "<p>The combined argument is \\(\\frac{96\\cdot 6}{3^2}=64\\). Thus \\(\\log_2 64=6\\).</p>",
+            "fields": [
+              {
+                "key": "result",
+                "label": "Value of the expression",
+                "type": "number",
+                "expected": "6"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Argument",
+        "definition": "<p>The positive quantity inside a logarithm.</p>"
+      },
+      {
+        "term": "Base",
+        "definition": "<p>The positive number \\(a\\ne1\\) raised to a power in \\(a^t\\).</p>"
+      },
+      {
+        "term": "Logarithm",
+        "definition": "<p>The exponent \\(t\\) such that \\(a^t=u\\), written \\(\\log_a u\\).</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Read negative and fractional exponents",
+        "question": "<p>Find \\(\\log_{10}(0.0001)\\) and \\(\\log_9 3\\) exactly.</p>",
+        "solution": [
+          "<p>Write \\(0.0001=10^{-4}\\). The exponent of base \\(10\\) is \\(-4\\).</p>",
+          "<p>Write \\(3=9^{\\frac12}\\). The exponent of base \\(9\\) is \\(\\frac12\\).</p>"
+        ]
+      },
+      {
+        "title": "Intersect two argument conditions",
+        "question": "<p>Find the real domain of \\(\\log_2(x-1)+\\log_3(7-x)\\).</p>",
+        "solution": [
+          "<p>The first logarithm requires \\(x-1&gt;0\\), so \\(x&gt;1\\).</p>",
+          "<p>The second requires \\(7-x&gt;0\\), so \\(x&lt;7\\). Together the conditions give \\(1&lt;x&lt;7\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a coefficient and a quotient",
+        "question": "<p>Evaluate \\(\\log_3 108-2\\log_3 2-\\log_3 3\\) exactly.</p>",
+        "solution": [
+          "<p>Move the coefficient inside as a power to get \\(2\\log_3 2=\\log_3(2^2)\\).</p>",
+          "<p>Combine the two subtractions to obtain \\(\\log_3\\!\\left(\\frac{108}{4\\cdot3}\\right)=\\log_3 9=2\\).</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Logarithmic equations",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_log_logarithmic_equations"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Read the exponent</h2><p>\\(\\log_a u=t\\) if and only if \\(a^t=u\\), where \\(a&gt;0\\), \\(a\\ne1\\) and \\(u&gt;0\\). In particular \\(\\log_a1=0\\) and \\(\\log_a a=1\\).</p><h2>Keep the original domain</h2><p>Apply the positivity test to every argument. For \\(\\log_2(x-1)+\\log_3(7-x)\\), the answer is \\(1&lt;x&lt;7\\).</p><h2>Use one base</h2><p>\\(\\log_a u+\\log_a v=\\log_a(uv)\\). Use \\(\\log_a\\!\\left(\\frac uv\\right)\\) for subtraction and \\(\\log_a(u^k)\\) for \\(k\\log_a u\\).</p><h2>Read exact powers</h2><p>\\(\\log_{10}(0.0001)=-4\\) and \\(\\log_9 3=\\frac12\\). A fractional exponent can be read as a root.</p>",
+      "checks": "<ul><li>Check that the base is positive and different from one.</li><li>Check the original arguments before combining.</li><li>Move a coefficient inside as a power.</li></ul>",
+      "examTip": "<p>Write a line that shows the combined argument. This makes the products, quotients and powers easy to check.</p>"
+    }
+  },
+  "orig_9709_p3_log_logarithmic_equations": {
+    "updatedOn": "2026-11-21",
+    "description": "Apply the log laws to equations, record the original domain and check every candidate solution.",
+    "sections": [
+      {
+        "id": "one-log",
+        "title": "How do I remove a single logarithm?",
+        "label": "Undo one logarithm",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Isolate the logarithm. The equation \\(\\log_a u=k\\) fixes its argument at \\(u=a^k\\). Solve for the unknown inside the argument and check the original condition \\(u&gt;0\\).</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "one-log-reciprocal",
+            "title": "Use a reciprocal base",
+            "prompt": "<p>Solve \\(\\log_{\\frac12}(3x-2)=-2\\).</p>",
+            "hint": "<p>Rewrite the equation as \\(3x-2=\\left(\\frac12\\right)^{-2}\\).</p>",
+            "solution": "<p>\\(\\left(\\frac12\\right)^{-2}=4\\), so \\(3x-2=4\\) and \\(x=2\\). This satisfies \\(x&gt;\\frac23\\).</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "2"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "sums",
+        "title": "Why can a product give an invalid root?",
+        "label": "Combine a sum",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Set the domain from the separate logarithms. After combining the arguments you may obtain a polynomial with more solutions than the original equation.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A product of two negative numbers is positive. The original individual arguments must still be positive.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "product-domain",
+            "title": "Submit only the roots that survive",
+            "prompt": "<p>Solve \\(\\log_3(x-4)+\\log_3(x+4)=2\\). Give the complete real solution set.</p>",
+            "hint": "<p>Require \\(x&gt;4\\) before rewriting the left side as one logarithm.</p>",
+            "solution": "<p>\\((x-4)(x+4)=9\\) gives \\(x^2=25\\). Only \\(x=5\\) satisfies \\(x&gt;4\\).</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "All real roots",
+                "type": "set",
+                "expected": "{5}",
+                "retry": [
+                  {
+                    "answer": "{-5,5}",
+                    "feedback": "<p>At \\(x=-5\\) the original arguments are negative.</p>"
+                  },
+                  {
+                    "answer": "-5",
+                    "feedback": "<p>\\(x=-5\\) violates \\(x&gt;4\\).</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "differences",
+        "title": "How do I clear a logarithmic quotient?",
+        "label": "Combine a difference",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Subtracting two logarithms of the same base produces the logarithm of a quotient. Keep the condition that its denominator is positive before multiplying.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "log-quotient",
+            "title": "Recover the exact root",
+            "prompt": "<p>Solve \\(\\log_2(5x+1)-\\log_2(2x-1)=2\\).</p>",
+            "hint": "<p>The combined argument is \\(\\frac{5x+1}{2x-1}\\). Set it equal to \\(2^2\\).</p>",
+            "solution": "<p>For \\(x&gt;\\frac12\\), solve \\(5x+1=4(2x-1)\\). The solution \\(x=\\frac53\\) is allowed.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "5/3"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "quadratic-log",
+        "title": "What if the equation is quadratic in a logarithm?",
+        "label": "Use a substitution",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>When you see \\((\\log_a x)^2\\) and \\(\\log_a x\\), let \\(t=\\log_a x\\). Solve the quadratic in \\(t\\) first. Each real value of \\(t\\) gives one positive value \\(x=a^t\\).</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "substitute-log",
+            "title": "Return both roots in x",
+            "prompt": "<p>Solve \\((\\log_2 x)^2-\\log_2 x-2=0\\). Give all real \\(x\\).</p>",
+            "hint": "<p>First solve \\((t-2)(t+1)=0\\) for \\(t=\\log_2 x\\). Then undo the substitution.</p>",
+            "solution": "<p>\\(t=2\\) gives \\(x=4\\) and \\(t=-1\\) gives \\(x=\\frac12\\). Both values are positive.</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "All real roots",
+                "type": "set",
+                "expected": "{1/2,4}",
+                "retry": [
+                  {
+                    "answer": "{-1,2}",
+                    "feedback": "<p>Those are values of \\(t\\). Convert them back using \\(x=2^t\\).</p>"
+                  },
+                  {
+                    "answer": "4",
+                    "feedback": "<p>The root \\(t=-1\\) is valid too. A negative logarithm has a positive argument below one.</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Original domain",
+        "definition": "<p>The values allowed by every expression in the given equation.</p>"
+      },
+      {
+        "term": "Candidate solution",
+        "definition": "<p>A value obtained during working that still needs checking in the original equation.</p>"
+      },
+      {
+        "term": "Substitution",
+        "definition": "<p>A temporary variable that exposes a simpler equation.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Isolate and exponentiate",
+        "question": "<p>Solve \\(\\log_3(2x-5)=2\\).</p>",
+        "solution": [
+          "<p>The argument condition is \\(2x-5&gt;0\\), so \\(x&gt;\\frac52\\).</p>",
+          "<p>\\(2x-5=3^2=9\\), giving \\(x=7\\). Here the argument is \\(9\\), which satisfies the original equation.</p>"
+        ]
+      },
+      {
+        "title": "Solve a quadratic and check the domain",
+        "question": "<p>Solve \\(\\log_2(x-2)+\\log_2(x+1)=2\\).</p>",
+        "solution": [
+          "<p>Both arguments are positive only for \\(x&gt;2\\).</p>",
+          "<p>Combine to get \\((x-2)(x+1)=4\\), so \\(x^2-x-6=0\\).</p>",
+          "<p>Factor as \\((x-3)(x+2)=0\\). Keep \\(x=3\\). At \\(x=-2\\) both original arguments are negative.</p>"
+        ]
+      },
+      {
+        "title": "Turn a log difference into a linear equation",
+        "question": "<p>Solve \\(\\log_5(2x-1)-\\log_5(x-3)=1\\).</p>",
+        "solution": [
+          "<p>The conditions \\(2x-1&gt;0\\) and \\(x-3&gt;0\\) reduce to \\(x&gt;3\\).</p>",
+          "<p>The combined argument satisfies \\(\\frac{2x-1}{x-3}=5\\). Multiplication gives \\(2x-1=5x-15\\).</p>",
+          "<p>Therefore \\(x=\\frac{14}{3}\\), which is in the original domain.</p>"
+        ]
+      },
+      {
+        "title": "Return from the substituted variable",
+        "question": "<p>Solve \\((\\log_3 x)^2-3\\log_3 x+2=0\\).</p>",
+        "solution": [
+          "<p>With \\(t=\\log_3 x\\), solve \\((t-1)(t-2)=0\\).</p>",
+          "<p>Use \\(x=3^t\\) at both values. The roots are \\(3\\) and \\(9\\).</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Logarithms and their laws",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_log_definitions_laws"
+      },
+      {
+        "title": "Exponential equations and inequalities",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_log_exponential_equations"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Write the domain first</h2><p>Each original argument must be positive. A later combined logarithm can hide an invalid branch.</p><h2>Use one logarithm</h2><p>\\(\\log_a u=k\\) gives \\(u=a^k\\). Combine sums as products and differences as quotients before undoing the logarithm.</p><h2>Check polynomial candidates</h2><p>\\(\\log_2(x-2)+\\log_2(x+1)=2\\) gives \\(x^2-x-6=0\\). Candidates are \\(3\\) and \\(-2\\). The domain \\(x&gt;2\\) leaves \\(x=3\\).</p><h2>Undo a substitution</h2><p>If \\(t=\\log_a x\\), a quadratic in \\(t\\) can give two values. Convert every value using \\(x=a^t\\).</p>",
+      "checks": "<ul><li>Keep the domain beside your working.</li><li>Clear a denominator only on the allowed domain.</li><li>List all real roots that pass the original check.</li></ul>",
+      "examTip": "<p>When a candidate is rejected, state the exact argument or original domain condition that it violates.</p>"
+    }
+  },
+  "orig_9709_p3_log_exponential_equations": {
+    "updatedOn": "2026-11-21",
+    "description": "Solve equations and inequalities with an unknown exponent using matching bases, logarithms and positive substitutions.",
+    "sections": [
+      {
+        "id": "common-base",
+        "title": "Can I use a common base?",
+        "label": "Match the bases",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>If both sides can be written as powers of one positive base different from \\(1\\), equal outputs have equal exponents. Rewrite the bases before expanding the products in the exponents.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "common-rational-base",
+            "title": "Equate complete exponents",
+            "prompt": "<p>Solve \\(27^{x-1}=9^{2x+1}\\).</p>",
+            "hint": "<p>Use base 3 on both sides. Apply the exponent multiplier to the whole bracket.</p>",
+            "solution": "<p>\\(3(x-1)=2(2x+1)\\) gives \\(3x-3=4x+2\\), hence \\(x=-5\\).</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "-5"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "use-logarithms",
+        "title": "When should I take logarithms?",
+        "label": "Take logs on both sides",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>First isolate the exponential. For \\(a^{g(x)}=c&gt;0\\), take the same logarithm on both sides and use \\(g(x)\\ln a=\\ln c\\). Keep full calculator precision until the final line.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "log-unmatched",
+            "title": "Give the rounded value of the exponent",
+            "prompt": "<p>Solve \\(5\\cdot2^{3x+1}=37\\). Give \\(x\\) to three decimal places.</p>",
+            "hint": "<p>After division by \\(5\\), take the natural logarithm of both sides.</p>",
+            "solution": "<p>\\((3x+1)\\ln 2=\\ln\\!\\left(\\frac{37}{5}\\right)\\). Hence \\(x=\\frac{\\frac{\\ln\\left(\\frac{37}{5}\\right)}{\\ln 2}-1}{3}\\approx 0.629\\).</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Value of x to three decimal places",
+                "type": "approximate",
+                "expected": "0.6291750902471958113291615827079287",
+                "absolute_tolerance": 0.0005
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "exponential-substitution",
+        "title": "How can a quadratic appear in an exponential?",
+        "label": "Use a positive substitution",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>If a term is the square of another exponential, use \\(t=a^x\\) and keep \\(t&gt;0\\). Convert only positive roots back to the original variable.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "keep-positive-substitution",
+            "title": "Reject an impossible exponential value",
+            "prompt": "<p>Solve \\(9^x-7\\cdot3^x-18=0\\). Give all real solutions.</p>",
+            "hint": "<p>Use \\(t=3^x\\) to factor the quadratic, and keep only values of \\(t\\) that are possible.</p>",
+            "solution": "<p>\\((t-9)(t+2)=0\\). Since \\(t&gt;0\\), take \\(t=9\\). Then \\(3^x=9\\) gives \\(x=2\\).</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "All real roots",
+                "type": "set",
+                "expected": "{2}",
+                "retry": [
+                  {
+                    "answer": "{-2,9}",
+                    "feedback": "<p>These are roots of the quadratic in \\(t\\). Reject the negative value and convert back to \\(x\\).</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "decreasing-exponential",
+        "title": "When does an inequality reverse?",
+        "label": "Use the direction of change",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For \\(a&gt;1\\), comparing values of \\(a^x\\) keeps the same order of exponents. For \\(0&lt;a&lt;1\\) it reverses. In logarithmic working this reversal occurs when you divide by \\(\\ln a&lt;0\\).</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "compare-decaying-powers",
+            "title": "Find the correct ray and endpoint",
+            "prompt": "<p>Solve \\(\\left(\\frac12\\right)^{3x+1}\\ge8\\).</p>",
+            "hint": "<p>Write \\(8\\) as \\(\\left(\\frac12\\right)^{-3}\\). Think about the order of the exponents.</p>",
+            "solution": "<p>The base is below one, so \\(3x+1\\le-3\\). The answer is \\(x\\le-\\frac43\\), including equality.</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Solution set in x",
+                "type": "set",
+                "expected": "(-inf,-4/3]",
+                "retry": [
+                  {
+                    "answer": "[-4/3,inf)",
+                    "feedback": "<p>For a decreasing exponential, the order of the exponents is reversed.</p>"
+                  },
+                  {
+                    "answer": "(-inf,-4/3)",
+                    "feedback": "<p>The original comparison includes equality.</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Index",
+        "definition": "<p>The exponent on a base.</p>"
+      },
+      {
+        "term": "Exponential growth",
+        "definition": "<p>For \\(a&gt;1\\), larger exponents give larger values of \\(a^x\\).</p>"
+      },
+      {
+        "term": "Exponential decay",
+        "definition": "<p>For \\(0&lt;a&lt;1\\), larger exponents give smaller values of \\(a^x\\).</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Convert two different powers",
+        "question": "<p>Solve \\(8^{x+2}=4^{2x-1}\\).</p>",
+        "solution": [
+          "<p>Use \\(8=2^3\\) and \\(4=2^2\\).</p>",
+          "<p>Equate \\(3(x+2)=2(2x-1)\\), so \\(3x+6=4x-2\\) and \\(x=8\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the exact answer until the final line",
+        "question": "<p>Solve \\(4\\cdot3^{2x-1}=17\\). Give the answer to three decimal places.</p>",
+        "solution": [
+          "<p>Divide by \\(4\\). This gives a positive right-hand side \\(\\frac{17}{4}\\).</p>",
+          "<p>Taking natural logarithms gives \\((2x-1)\\ln 3=\\ln\\!\\left(\\frac{17}{4}\\right)\\).</p>",
+          "<p>Hence \\(x=\\frac{1+\\frac{\\ln\\left(\\frac{17}{4}\\right)}{\\ln 3}}{2}\\approx1.159\\).</p>"
+        ]
+      },
+      {
+        "title": "Solve for a positive exponential",
+        "question": "<p>Solve \\(4^x-5\\cdot2^x+4=0\\).</p>",
+        "solution": [
+          "<p>Let \\(t=2^x&gt;0\\). Since \\(4^x=t^2\\), the equation becomes \\((t-1)(t-4)=0\\).</p>",
+          "<p>Both roots are positive. \\(2^x=1\\) gives \\(x=0\\), and \\(2^x=4\\) gives \\(x=2\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare powers of a base below one",
+        "question": "<p>Solve \\(\\left(\\frac13\\right)^{2x-1}&lt;\\frac1{27}\\).</p>",
+        "solution": [
+          "<p>The right side equals \\(\\left(\\frac13\\right)^3\\). A larger exponent gives a smaller value.</p>",
+          "<p>Therefore \\(2x-1&gt;3\\) and \\(x&gt;2\\). The inequality is strict, so exclude \\(2\\).</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Logarithmic equations",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_log_logarithmic_equations"
+      },
+      {
+        "title": "Natural logarithms and exponentials",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_log_natural_logs"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Match the bases</h2><p>\\(a^{g(x)}=a^{h(x)}\\) gives \\(g(x)=h(x)\\) when \\(a&gt;0\\) and \\(a\\ne1\\). Rewrite each base and multiply the whole exponent.</p><h2>Take logarithms</h2><p>With \\(a^{g(x)}=c&gt;0\\), use \\(g(x)\\ln a=\\ln c\\). Solve exactly first and round only the final value.</p><h2>Use a positive substitution</h2><p>Let \\(t=a^x&gt;0\\) when both \\(a^{2x}\\) and \\(a^x\\) occur. Solve in \\(t\\), then recover \\(x\\) for each positive root.</p><h2>Choose the inequality direction</h2><p>\\(a^x\\) increases for \\(a&gt;1\\) and decreases for \\(0&lt;a&lt;1\\). For example \\(\\left(\\frac13\\right)^{2x-1}&lt;\\left(\\frac13\\right)^3\\) gives \\(2x-1&gt;3\\), so \\(x&gt;2\\).</p>",
+      "checks": "<ul><li>Check the base and the sign of any logarithm you divide by.</li><li>Keep equality at any included boundary.</li><li>Reject non-positive values of a substituted exponential.</li></ul>",
+      "examTip": "<p>If no common base is available, an exact logarithmic expression is a good intermediate line even when a decimal is requested.</p>"
+    }
+  },
+  "orig_9709_p3_log_natural_logs": {
+    "updatedOn": "2026-11-21",
+    "description": "Connect the natural exponential and logarithm as inverse functions, then use their domains and ordering to solve problems.",
+    "sections": [
+      {
+        "id": "natural-inverse",
+        "title": "What makes natural logarithms special?",
+        "label": "Read the inverse graphs",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>\\(e\\) is a fixed positive constant greater than \\(1\\) with approximate value \\(2.718\\). The natural logarithm is the inverse of \\(y=e^x\\). Every real exponent gives one positive output.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\ln(e^x)=x\\) for all real \\(x\\). Also \\(e^{\\ln x}=x\\) for \\(x&gt;0\\). Swapping input and output reflects the graph in \\(y=x\\).</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_log_natural_logs/natural-inverse-graphs.svg",
+              "alt": "A blue exponential curve crosses the y-axis at (0, 1). A green logarithmic curve crosses the x-axis at (1, 0). They are mirror images across the dashed diagonal y = x.",
+              "caption": "\\(y=e^x\\) has horizontal asymptote \\(y=0\\). Its inverse \\(y=\\ln x\\) has vertical asymptote \\(x=0\\).",
+              "width": 500,
+              "height": 280
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "natural-graph",
+            "title": "Connect an intercept and an asymptote",
+            "prompt": "<p>Which description applies to \\(y=\\ln x\\)?</p>",
+            "hint": "<p>Reflect the corresponding features of the natural exponential graph in the line \\(y=x\\).</p>",
+            "solution": "<p>\\(\\ln 1=0\\) and the vertical asymptote is \\(x=0\\). The graph is defined to the right of the vertical axis.</p>",
+            "fields": [
+              {
+                "key": "graph",
+                "label": "Choose one description",
+                "type": "choice",
+                "expected": "C",
+                "options": {
+                  "A": "<p>\\(y\\)-intercept \\((0,1)\\) and horizontal asymptote \\(y=0\\)</p>",
+                  "B": "<p>\\(x\\)-intercept \\((1,0)\\) and horizontal asymptote \\(y=0\\)</p>",
+                  "C": "<p>\\(x\\)-intercept \\((1,0)\\) and vertical asymptote \\(x=0\\)</p>",
+                  "D": "<p>\\(x\\)-intercept \\((0,0)\\) and vertical asymptote \\(x=1\\)</p>"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "natural-growth-decay",
+        "title": "What does the sign of k change?",
+        "label": "Sketch growth and decay",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>All curves \\(y=e^{kx}\\) pass through \\((0,1)\\). For \\(k&gt;0\\), the graph rises to the right and approaches \\(y=0\\) at the left. For \\(k&lt;0\\), the graph falls to the right and approaches \\(y=0\\) at the right. When \\(k=0\\), the graph is the horizontal line \\(y=1\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The sketch shows one increasing and one decreasing exponential. Identify the same intercept and the direction of each curve.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_log_natural_logs/natural-growth-and-decay.svg",
+              "alt": "The blue curve y equals e to the x rises to the right. The green curve y equals e to the minus two x falls to the right. Both pass through (0, 1) and approach the x-axis at opposite ends.",
+              "caption": "A negative exponent multiplier reverses the direction of change. Neither curve meets the horizontal asymptote \\(y=0\\).",
+              "width": 500,
+              "height": 268
+            }
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "natural-growth-comparison",
+            "title": "Compare growth and decay at a point",
+            "prompt": "<p>At \\(x=-1\\), which is true of \\(y_1=e^{2x}\\) and \\(y_2=e^{-x}\\)?</p>",
+            "hint": "<p>Evaluate the exponents at \\(x=-1\\) before comparing the outputs.</p>",
+            "solution": "<p>At \\(x=-1\\), \\(y_1=e^{-2}\\) and \\(y_2=e\\). Hence \\(0&lt;y_1&lt;1&lt;y_2\\).</p>",
+            "fields": [
+              {
+                "key": "comparison",
+                "label": "Choose one comparison",
+                "type": "choice",
+                "expected": "B",
+                "options": {
+                  "A": "<p>\\(0&lt;y_2&lt;1&lt;y_1\\)</p>",
+                  "B": "<p>\\(0&lt;y_1&lt;1&lt;y_2\\)</p>",
+                  "C": "<p>\\(1&lt;y_1&lt;y_2\\)</p>",
+                  "D": "<p>\\(y_1=y_2=1\\)</p>"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "undo-natural",
+        "title": "When may I cancel an exponential and a log?",
+        "label": "Undo inverse operations",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Apply the inverse relationship to the whole exponent or argument. In \\(e^{\\ln u}\\), check \\(u&gt;0\\) before replacing the expression with \\(u\\).</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "natural-inverses-solve",
+            "title": "Check an inverse pair and a domain",
+            "prompt": "<p>Solve \\(\\ln(e^{2x+3})=7\\) and then solve \\(e^{\\ln(3x+2)}=11\\).</p>",
+            "hint": "<p>Undo the two inverse functions. The second logarithm still requires \\(3x+2&gt;0\\).</p>",
+            "solution": "<p>\\(2x+3=7\\) gives \\(x=2\\). On \\(x&gt;-\\frac23\\), \\(3x+2=11\\) gives \\(x=3\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First value of x",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "second",
+                "label": "Second value of x",
+                "type": "number",
+                "expected": "3"
+              }
+            ]
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "solve-natural-exponential",
+            "title": "Isolate the exponent",
+            "prompt": "<p>Solve \\(e^{4x-2}=5\\). Give \\(x\\) to three decimal places.</p>",
+            "hint": "<p>Take \\(\\ln\\) of both sides, then solve a linear equation for \\(x\\).</p>",
+            "solution": "<p>\\(4x-2=\\ln5\\), so \\(x=\\frac{2+\\ln5}{4}\\approx0.902\\).</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Value of x to three decimal places",
+                "type": "approximate",
+                "expected": "0.90235947810852509365",
+                "absolute_tolerance": 0.0005
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "natural-domain",
+        "title": "How does the domain affect an inequality?",
+        "label": "Solve on the original domain",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>\\(\\ln x\\) increases on its positive domain. Compare its arguments after recording their positivity. If you then divide by a negative coefficient of \\(x\\), reverse the inequality at that step.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Equality is allowed at \\(x=1\\) in this example. The boundary \\(x=-\\frac32\\) is still excluded because the argument is zero there.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "ln-inequality",
+            "title": "Show both strict bounds",
+            "prompt": "<p>Solve \\(\\ln(9-3x)&lt;\\ln6\\).</p>",
+            "hint": "<p>First require \\(9-3x&gt;0\\). Then convert the logarithmic comparison to a linear inequality and intersect the two conditions.</p>",
+            "solution": "<p>The domain gives \\(x&lt;3\\). The comparison \\(9-3x&lt;6\\) gives \\(x&gt;1\\). The solution is \\(1&lt;x&lt;3\\).</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Solution set in x",
+                "type": "set",
+                "expected": "(1,3)",
+                "retry": [
+                  {
+                    "answer": "(1,inf)",
+                    "feedback": "<p>The comparison supplies the lower bound. The original logarithm also supplies an upper bound.</p>"
+                  },
+                  {
+                    "answer": "[1,3]",
+                    "feedback": "<p>Both boundaries are strict. One gives equality and the other gives an undefined logarithm.</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Natural logarithm",
+        "definition": "<p>\\(\\ln x\\) is the logarithm to base \\(e\\), defined for \\(x&gt;0\\).</p>"
+      },
+      {
+        "term": "Inverse functions",
+        "definition": "<p>Applying one function and then its inverse recovers the original allowed input.</p>"
+      },
+      {
+        "term": "Asymptote",
+        "definition": "<p>A line that a curve approaches. Here an axis is approached without being reached.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Compare domains, ranges and axis crossings",
+        "question": "<p>State the domain, range and axis intercept of \\(e^x\\) and of \\(\\ln x\\).</p>",
+        "solution": [
+          "<p>For \\(e^x\\), any real \\(x\\) is allowed. The range is \\(y&gt;0\\). Its \\(y\\)-intercept is \\((0,1)\\).</p>",
+          "<p>For \\(\\ln x\\), only \\(x&gt;0\\) is allowed. The range is all real \\(y\\). Its \\(x\\)-intercept is \\((1,0)\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the exponent to predict the shape",
+        "question": "<p>Describe the shape of \\(y=e^{-2x}\\) and evaluate it at \\(x=0\\) and \\(x=1\\).</p>",
+        "solution": [
+          "<p>As \\(x\\) increases, \\(-2x\\) decreases. Because \\(e^t\\) increases with \\(t\\), the curve is decreasing.</p>",
+          "<p>The curve goes through \\((0,1)\\). At \\(x=1\\) the output is \\(e^{-2}\\), which lies between \\(0\\) and \\(1\\). It therefore approaches \\(0\\) on the right without reaching it.</p>"
+        ]
+      },
+      {
+        "title": "Solve two inverse equations",
+        "question": "<p>Solve \\(\\ln(e^{3x-1})=8\\) and then solve \\(e^{\\ln(2x-4)}=8\\).</p>",
+        "solution": [
+          "<p>In the first equation the exponential already has positive output. Use \\(\\ln(e^{3x-1})=3x-1\\) to get \\(x=3\\).</p>",
+          "<p>In the second equation require \\(2x-4&gt;0\\). On that domain \\(e^{\\ln(2x-4)}=2x-4\\), so \\(x=6\\) is allowed.</p>"
+        ]
+      },
+      {
+        "title": "Solve a natural logarithmic equation",
+        "question": "<p>Solve \\(2\\ln(x-1)=\\ln9\\).</p>",
+        "solution": [
+          "<p>The logarithm requires \\(x&gt;1\\). Divide both sides by \\(2\\) to get \\(\\ln(x-1)=\\ln3\\).</p>",
+          "<p>Equal natural logarithms have equal positive arguments, so \\(x-1=3\\) and \\(x=4\\). This lies in the original domain.</p>"
+        ]
+      },
+      {
+        "title": "Keep both domain and comparison",
+        "question": "<p>Solve \\(\\ln(2x+3)\\le\\ln5\\).</p>",
+        "solution": [
+          "<p>Require \\(2x+3&gt;0\\), so \\(x&gt;-\\frac32\\).</p>",
+          "<p>Since the logarithm is increasing, \\(2x+3\\le5\\), so \\(x\\le1\\). Combining the restrictions gives \\(-\\frac32&lt;x\\le1\\).</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Exponential equations and inequalities",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_log_exponential_equations"
+      },
+      {
+        "title": "Linearising power and exponential models",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_log_linearisation"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Match inverse inputs and outputs</h2><p>\\(\\ln(e^x)=x\\) for all real \\(x\\). \\(e^{\\ln x}=x\\) requires \\(x&gt;0\\). The inverse graphs reflect in \\(y=x\\).</p><h2>Locate asymptotes and intercepts</h2><p>\\(e^x\\) has intercept \\((0,1)\\) and horizontal asymptote \\(y=0\\). \\(\\ln x\\) has intercept \\((1,0)\\) and vertical asymptote \\(x=0\\).</p><img src=\"/assets/study/9709/orig_9709_p3_log_natural_logs/natural-inverse-graphs.svg\" alt=\"A blue exponential curve crosses the y-axis at (0, 1). A green logarithmic curve crosses the x-axis at (1, 0). They are mirror images across the dashed diagonal y = x.\"><h2>Use the sign of k</h2><p>\\(e^{kx}\\) grows for \\(k&gt;0\\) and decays for \\(k&lt;0\\). All these curves pass through \\((0,1)\\) and have positive outputs.</p><h2>Keep the domain in comparisons</h2><p>Because \\(\\ln x\\) increases, \\(\\ln(2x+3)\\le\\ln5\\) gives \\(2x+3\\le5\\). Combine with \\(2x+3&gt;0\\) to get \\(-\\frac32&lt;x\\le1\\).</p>",
+      "checks": "<ul><li>Apply the inverse operation to the entire expression.</li><li>Retain every original positivity condition.</li><li>Reverse an inequality when dividing by a negative number.</li></ul>",
+      "examTip": "<p>At a boundary where an argument is zero, the logarithm is undefined. That boundary is excluded even when the comparison includes equality.</p>"
+    }
+  },
+  "orig_9709_p3_log_linearisation": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose transformed axes, read a straight line, and recover constants in power and exponential models.",
+    "sections": [
+      {
+        "id": "power-model",
+        "title": "Which axes straighten a power model?",
+        "label": "Choose log–log axes",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For \\(y=Ax^n\\) with \\(A&gt;0\\) and \\(x&gt;0\\), take natural logarithms to get \\(\\ln y=n\\ln x+\\ln A\\). Plot \\(\\ln y\\) vertically against \\(\\ln x\\) horizontally. The gradient is \\(n\\) and the vertical intercept is \\(\\ln A\\).</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "power-line",
+            "title": "Use the transformed points",
+            "prompt": "<p>The straight line with coordinates \\((\\ln x,\\ln y)\\) passes through \\((0,\\ln7)\\) and \\((\\ln2,\\ln56)\\). Find \\(A\\) and \\(n\\) in \\(y=Ax^n\\).</p>",
+            "hint": "<p>The first point gives \\(\\ln A\\). The change in height is \\(\\ln\\!\\left(\\frac{56}{7}\\right)\\).</p>",
+            "solution": "<p>\\(\\ln A=\\ln7\\) gives \\(A=7\\). The gradient is \\(\\frac{\\ln8}{\\ln2}=3\\), so \\(n=3\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Value of A",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "n",
+                "label": "Value of n",
+                "type": "number",
+                "expected": "3"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "exponential-model",
+        "title": "Which axes straighten an exponential model?",
+        "label": "Choose semi-log axes",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For \\(y=Ab^x\\) with \\(A,b&gt;0\\), use \\(\\ln y=(\\ln b)x+\\ln A\\). Here \\(x\\) remains unchanged. If \\(y=Ae^{kx}\\), the slope is \\(k\\) and the intercept is \\(\\ln A\\). For the same model, \\(b=e^k\\).</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "recover-base",
+            "title": "Undo the log on the gradient",
+            "prompt": "<p>For \\(y=Ab^x\\), a graph of \\(\\ln y\\) against \\(x\\) gives \\(\\ln y=\\ln8+x\\ln\\!\\left(\\frac32\\right)\\). Find \\(A\\) and \\(b\\).</p>",
+            "hint": "<p>The vertical intercept and gradient are \\(\\ln A\\) and \\(\\ln b\\) respectively.</p>",
+            "solution": "<p>The intercept gives \\(A=8\\) and the gradient gives \\(b=\\frac32\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Value of A",
+                "type": "number",
+                "expected": "8"
+              },
+              {
+                "key": "b",
+                "label": "Value of b",
+                "type": "number",
+                "expected": "3/2",
+                "retry": [
+                  {
+                    "answer": "2/3",
+                    "feedback": "<p>The gradient is positive, so the original exponential base must be greater than one.</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "intercept-from-data",
+        "title": "How do I find an intercept from two points?",
+        "label": "Use the line equation",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Find the gradient using transformed coordinates. Substitute one of those points into \\(\\ln y=mx+c\\) to find the intercept \\(c\\). Convert using \\(A=e^c\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The points \\((2,5)\\) and \\((6,1)\\) below are in coordinates \\((x,\\ln y)\\). Use them directly to calculate the line.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_log_linearisation/semilog-gradient-intercept.svg",
+              "alt": "Horizontal x-axis and vertical ln y-axis with points (2, 5) and (6, 1). The line descends with gradient minus one. Extending it to x equals zero gives a vertical intercept of seven.",
+              "caption": "The vertical coordinate is \\(\\ln y\\). The intercept \\(7\\) means \\(\\ln A=7\\) in an exponential model, so \\(A=e^7\\).",
+              "width": 500,
+              "height": 264
+            }
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "recover-intercept",
+            "title": "Use both transformed coordinates",
+            "prompt": "<p>The line of \\(\\ln y\\) against \\(x\\) passes through \\((2,6)\\) and \\((5,12)\\). Find \\(k\\) and \\(\\ln A\\) in the model \\(y=Ae^{kx}\\).</p>",
+            "hint": "<p>Compute the gradient first. Substitute either point into \\(\\ln y=kx+\\ln A\\).</p>",
+            "solution": "<p>\\(k=\\frac{12-6}{5-2}=2\\). Using \\((2,6)\\) gives \\(\\ln A=6-2\\cdot2=2\\), so \\(A=e^2\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Value of k",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "intercept",
+                "label": "Value of the vertical intercept",
+                "type": "number",
+                "expected": "2"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "choose-model",
+        "title": "How do I choose between two possible models?",
+        "label": "Compare transformed scales",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Compare at least three points. With exact data, a candidate requires a consistent straight line on its chosen axes. With measured data, look for an approximately straight pattern. Two points by themselves always lie on a straight line.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "model-and-constants",
+            "title": "Identify the model and both constants",
+            "prompt": "<p>At \\(x=1,2,3\\), the outputs are \\(48,24,12\\). Choose the model that fits all three values exactly. Give its multiplier \\(A\\) and its base or exponent, as appropriate.</p>",
+            "hint": "<p>The \\(x\\)-steps are equal. Compare successive output ratios and check which transformed axes give a constant gradient.</p>",
+            "solution": "<p>Each increase of one in \\(x\\) halves \\(y\\), so \\(y=A\\left(\\frac12\\right)^x\\). Using \\((1,48)\\) gives \\(A=96\\).</p>",
+            "fields": [
+              {
+                "key": "model",
+                "label": "Choose one model",
+                "type": "choice",
+                "expected": "B",
+                "options": {
+                  "A": "<p>\\(y=Ax^n\\)</p>",
+                  "B": "<p>\\(y=Ab^x\\)</p>"
+                }
+              },
+              {
+                "key": "a",
+                "label": "Value of A",
+                "type": "number",
+                "expected": "96"
+              },
+              {
+                "key": "parameter",
+                "label": "Value of the base or exponent",
+                "type": "number",
+                "expected": "1/2"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Linearisation",
+        "definition": "<p>Choosing new coordinates so a model gives a straight-line graph.</p>"
+      },
+      {
+        "term": "Gradient",
+        "definition": "<p>Change in the vertical coordinate divided by change in the horizontal coordinate.</p>"
+      },
+      {
+        "term": "Intercept",
+        "definition": "<p>Vertical coordinate of the line at zero on the selected horizontal scale.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Read the gradient and recover the multiplier",
+        "question": "<p>The straight line of \\(\\ln y\\) against \\(\\ln x\\) for \\(y=Ax^n\\) goes through \\((0,\\ln5)\\) and \\((\\ln2,\\ln20)\\). Find \\(A\\) and \\(n\\).</p>",
+        "solution": [
+          "<p>The first point is at horizontal coordinate \\(0\\). It gives \\(\\ln A=\\ln5\\), so \\(A=5\\).</p>",
+          "<p>The gradient is \\(\\frac{\\ln20-\\ln5}{\\ln2}=\\frac{\\ln4}{\\ln2}=2\\). Thus \\(y=5x^2\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover the exponential base",
+        "question": "<p>For \\(y=Ab^x\\), a graph of \\(\\ln y\\) against \\(x\\) gives \\(\\ln y=\\ln12-x\\ln3\\). Find \\(A\\) and \\(b\\).</p>",
+        "solution": [
+          "<p>The vertical intercept is \\(\\ln12\\), so \\(A=12\\).</p>",
+          "<p>The gradient is \\(-\\ln3=\\ln\\!\\left(\\frac13\\right)\\), hence \\(b=\\frac13\\). This is a decay model.</p>"
+        ]
+      },
+      {
+        "title": "Find the intercept even when no point lies on the axis",
+        "question": "<p>A line of \\(\\ln y\\) against \\(x\\) passes through \\((2,5)\\) and \\((6,1)\\). Find \\(k\\) and \\(A\\) for \\(y=Ae^{kx}\\).</p>",
+        "solution": [
+          "<p>The gradient is \\(\\frac{1-5}{6-2}=-1\\), so \\(k=-1\\).</p>",
+          "<p>Put \\((2,5)\\) into \\(\\ln y=-x+c\\), obtaining \\(5=-2+c\\). Hence \\(c=7\\) and \\(A=e^7\\).</p>"
+        ]
+      },
+      {
+        "title": "Recognise a power pattern",
+        "question": "<p>At \\(x=1,2,4\\) the outputs are \\(5,20,80\\) respectively. Choose between a power model \\(y=Ax^n\\) and an exponential model \\(y=Ab^x\\) and find its constants.</p>",
+        "solution": [
+          "<p>Doubling \\(x\\) multiplies \\(y\\) by \\(4\\) in both steps. On log–log axes, each horizontal step is \\(\\ln2\\) and each vertical step is \\(\\ln4\\). Thus \\(n=2\\).</p>",
+          "<p>The point \\((1,5)\\) in original coordinates gives \\(A=5\\). The relation \\(y=5x^2\\) fits all three points.</p>",
+          "<p>On semi-log axes the vertical changes are both \\(\\ln4\\), but the horizontal changes are \\(1\\) and \\(2\\). The slopes on those axes differ.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Natural logarithms and exponentials",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_log_natural_logs"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Power model</h2><p>\\(y=Ax^n\\) gives \\(\\ln y=n\\ln x+\\ln A\\) for \\(x&gt;0\\) and \\(A&gt;0\\). Plot \\(\\ln y\\) against \\(\\ln x\\). Gradient \\(n\\), intercept \\(\\ln A\\).</p><h2>Exponential model</h2><p>\\(y=Ab^x\\) gives \\(\\ln y=(\\ln b)x+\\ln A\\). Plot \\(\\ln y\\) against \\(x\\). Gradient \\(\\ln b\\), intercept \\(\\ln A\\). For \\(y=Ae^{kx}\\) the gradient is \\(k\\).</p><h2>Recover the original constants</h2><p>Find \\(m\\) and \\(c\\) using the coordinates on the chosen axes. Use \\(A=e^c\\). In \\(y=Ab^x\\) use \\(b=e^m\\). In \\(y=Ax^n\\) use \\(n=m\\).</p><h2>Use both transformed points</h2><p>In a semi-log plot, \\((2,5)\\) and \\((6,1)\\) give gradient \\(-1\\) and intercept \\(7\\). This gives \\(y=e^7e^{-x}\\). Compare at least three data points when choosing a model.</p>",
+      "checks": "<ul><li>Read the labels on both transformed axes.</li><li>Use a substituted point to calculate the intercept.</li><li>Check the reconstructed model in the original coordinates.</li></ul>",
+      "examTip": "<p>State the full equation in \\(x\\) and \\(y\\) when both constants are found. Use the actual axes to justify the model type.</p>"
+    }
+  }
+}

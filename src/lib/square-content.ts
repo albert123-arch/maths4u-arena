@@ -4,6 +4,7 @@ import { quadraticsTeaching } from "./quadratics-notes";
 import pack from "../../content/original/completing-square-20261105-v1.json";
 import { checkExact, isExpandedPolynomial, isRoundedNumberAnswer, scalarAnswerValue, AnswerVariableError, type ExactField } from "./exact-answer";
 import { renderContent } from "./content";
+import { mathPattern } from "./math-markup.mjs";
 import { type SquareLesson, type CheckResult, squareVersion, quadraticTopic, type QuadraticTopic } from "./square-model";
 import type { MarkingRow, SupportKind } from "./question-support-model";
 import { packageQuestions, packageTeaching, packageTopic } from "./content-package-content";
@@ -65,7 +66,10 @@ export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): Sq
   const packaged=packageTeaching(topic);
   const layout = topic.packageKey ? studyLayout(topic.lessonId) : undefined;
   const teaching = (layout ? undefined : legacyQuadraticsStudy(topic.lessonId)) ?? packaged ?? (topic.code === "CS" ? { notes, examples } : quadraticsTeaching[topic.key]);
-  return { topic, version: topic.version, title: topic.title,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: practicePrompt(q), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey ? (f.type === "ratio" ? f.label.replace(/: numerator ; denominator/i, " as a fraction") : f.label) :topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
+  const summaryHtml = topic.summary.match(mathPattern)
+    ? renderContent(topic.summary.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"))
+    : undefined;
+  return { topic, version: topic.version, title: topic.title, summaryHtml,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: practicePrompt(q), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey ? (f.type === "ratio" ? f.label.replace(/: numerator ; denominator/i, " as a fraction") : f.label) :topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
 }
 export function learningTopic(key:string){return packageTopic(key)??quadraticTopic(key);}
 // Feedback describes an identifiable answer pattern, not an assumed thought process.

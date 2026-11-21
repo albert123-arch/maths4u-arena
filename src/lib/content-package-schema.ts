@@ -1,5 +1,7 @@
 import { z } from "zod";
 const id = z.string().regex(/^[a-zA-Z0-9_-]{2,80}$/);
+// ImportRecord.sourceProject fits 50 characters including the arena-package- prefix.
+const packageKey = id.max(36);
 const html = z.string().min(1).max(100000);
 const criterion = z.object({ code: z.string().max(20), marks: z.number().int().positive().max(100), description_html: html, guidance_html: z.string().optional() }).strict();
 const field = z.object({ key: z.string().regex(/^[a-zA-Z0-9_-]{1,50}$/), label: z.string().min(1), type: z.enum(["number", "approximate", "polynomial", "expression", "equation", "set", "choice", "pairs", "ratio"]), expected: z.union([z.string(), z.array(z.string())]), variables: z.array(z.string()).max(2).optional(), options: z.record(z.string(), z.string()).optional(), form: z.literal("expanded").optional(), absolute_tolerance:z.number().finite().positive().max(1).optional(), minimum:z.number().finite().optional(), maximum:z.number().finite().optional() }).strict().superRefine((f,c)=>{
@@ -16,7 +18,7 @@ const question = z.object({ id, family_uid: id, lesson: id, title: z.string().mi
   provenance: z.object({ original_id: z.string(), original_uid: z.string(), archiveTaskId: z.string(), similarity: z.number().min(0).max(1).optional(), sourceSha256: z.string().length(64), ownerProvenance: z.record(z.string(), z.unknown()) }).strict().optional(),
   verification: z.string().min(1), variant_index: z.number().int().min(0).max(3).optional(),
 }).strict();
-export const contentPackageSchema = z.object({ schema_version: z.literal(1), key: id, version: z.string().regex(/^\d+\.\d+\.\d+$/),
+export const contentPackageSchema = z.object({ schema_version: z.literal(1), key: packageKey, version: z.string().regex(/^\d+\.\d+\.\d+$/),
   course: z.object({ slug: z.string().regex(/^[a-z0-9-]{2,120}$/), title: z.string().min(1), code: z.string(), direction: z.string() }).strict(),
   chapter: z.object({ id, slug: z.string(), title: z.string().min(1), position: z.number().int().nonnegative() }).strict(),
   source: z.object({ sha256: z.string().length(64), supplied: z.number().int(), held: z.array(z.object({ id:z.string(), title:z.string(), reason:z.string(), similarity:z.number() }).strict()) }).strict(),
