@@ -1,0 +1,1896 @@
+{
+  "fm_variable_time": {
+    "updatedOn": "2026-11-21",
+    "description": "Integrate signed acceleration and velocity, account for initial conditions and distinguish turns from instantaneous rest.",
+    "sections": [
+      {
+        "id": "find-velocity-from-force",
+        "title": "How do I turn a time-dependent force into velocity?",
+        "label": "Divide by mass and integrate",
+        "intro": "<p>Along a chosen line, use a signed resultant. Since mass is constant, the signed acceleration is the force divided by mass.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(a=\\frac{\\mathrm dv}{\\mathrm dt}\\). Find the integration constant from a known velocity.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "time-find-velocity-from-force-check",
+            "title": "Integrate a force-dependent motion model",
+            "prompt": "<p>A particle of mass \\(4\\) kilograms has initial velocity \\(4\\,\\mathrm{m\\,s^{-1}}\\). Its signed resultant force at time \\(t\\) is \\(F=20 - 12 t\\) newtons. Find its signed acceleration and velocity after \\(1\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "acceleration",
+                "label": "Signed acceleration",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "velocity",
+                "label": "Signed velocity",
+                "type": "number",
+                "expected": "15/2"
+              }
+            ],
+            "hint": "<p>Use a separate initial condition every time you integrate.</p>",
+            "solution": "<p>Divide the net force by mass to obtain \\(a=5 - 3 t\\). There is a new acceleration at each time.</p><p>Integrate and use initial velocity. This gives \\(v=- \\frac{3 t^{2}}{2} + 5 t + 4\\).</p><p>At the stated time, signed acceleration is \\(2\\,\\mathrm{m\\,s^{-2}}\\) and velocity is \\(\\frac{15}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Constant-acceleration formulae do not apply if the net force varies with time.</p>"
+          }
+        ]
+      },
+      {
+        "id": "find-position-from-velocity",
+        "title": "Why do I need a second initial condition?",
+        "label": "Integrate velocity once more",
+        "intro": "<p>The first integration determines velocity up to a constant. A second integration introduces a new constant for the position origin.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(v=\\frac{\\mathrm dx}{\\mathrm dt}\\). Displacement is the difference between final and initial position.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "time-find-position-from-velocity-check",
+            "title": "Integrate a force-dependent motion model",
+            "prompt": "<p>At \\(t=0\\), a particle is at \\(x=3\\) metres with signed velocity \\(4\\,\\mathrm{m\\,s^{-1}}\\). The acceleration is \\(a=5 - 3 t\\) in SI units. Find its signed coordinate after \\(1\\,\\mathrm s\\) and its displacement over this time.</p>",
+            "fields": [
+              {
+                "key": "position",
+                "label": "Final coordinate",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "displacement",
+                "label": "Displacement from initial point",
+                "type": "number",
+                "expected": "6"
+              }
+            ],
+            "hint": "<p>Use a separate initial condition every time you integrate.</p>",
+            "solution": "<p>First integrate acceleration and fit the initial velocity: \\(v=- \\frac{3 t^{2}}{2} + 5 t + 4\\).</p><p>Integrate velocity and fit the initial coordinate: \\(x=- \\frac{t^{3}}{2} + \\frac{5 t^{2}}{2} + 4 t + 3\\).</p><p>The displacement is \\(6\\,\\mathrm m\\) and the final coordinate is \\(9\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The final coordinate is not always the displacement from the initial point.</p>"
+          }
+        ]
+      },
+      {
+        "id": "find-the-first-stop",
+        "title": "Which equation gives the first stop?",
+        "label": "Set velocity to zero",
+        "intro": "<p>A particle can have zero acceleration while still moving. A first stop occurs at the earliest accessible zero of signed velocity.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find all candidate roots on the permitted interval and check the direction before the first one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "time-find-the-first-stop-check",
+            "title": "Find the first stop under time-dependent acceleration",
+            "prompt": "<p>A particle has initial velocity \\(6\\,\\mathrm{m\\,s^{-1}}\\). Its signed acceleration is \\(a=- 3 t\\) in SI units. Find the first stopping time and its displacement by then.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "First stopping time",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "distance",
+                "label": "Displacement to first stop",
+                "type": "number",
+                "expected": "8"
+              }
+            ],
+            "hint": "<p>Set velocity, not acceleration, equal to zero. Check that there is no earlier positive root.</p>",
+            "solution": "<p>Integrating gives \\(v=6 - \\frac{3 t^{2}}{2}\\). The first non-negative zero is \\(2\\,\\mathrm s\\).</p><p>The motion remains in the positive direction up to that time. The displacement is \\(8\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not solve for zero acceleration instead of zero velocity.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "time-find-the-first-stop-follow-up",
+            "title": "Find the first stop under time-dependent acceleration",
+            "prompt": "<p>A particle has initial velocity \\(\\frac{45}{2}\\,\\mathrm{m\\,s^{-1}}\\). Its signed acceleration is \\(a=- 5 t\\) in SI units. Find the first stopping time and its displacement by then.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "First stopping time",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "distance",
+                "label": "Displacement to first stop",
+                "type": "number",
+                "expected": "45"
+              }
+            ],
+            "hint": "<p>Set velocity, not acceleration, equal to zero. Check that there is no earlier positive root.</p>",
+            "solution": "<p>Integrating gives \\(v=\\frac{45}{2} - \\frac{5 t^{2}}{2}\\). The first non-negative zero is \\(3\\,\\mathrm s\\).</p><p>The motion remains in the positive direction up to that time. The displacement is \\(45\\,\\mathrm m\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "distance-after-a-turn",
+        "title": "How do I calculate distance when velocity changes sign?",
+        "label": "Split at a turning time",
+        "intro": "<p>Velocity has signed area on a time graph. For total distance, divide the journey into intervals with constant velocity sign and add the lengths.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Displacement uses \\(\\int v\\,\\mathrm dt\\). Distance uses the integral of the magnitude of velocity.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/variable/signed-areas.svg",
+              "alt": "A velocity curve crosses the time axis at A. Areas on either side of A have different signs.",
+              "caption": "<p>Displacement counts the lower region negatively. For distance travelled, count the magnitudes of both regions.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "time-distance-after-a-turn-check",
+            "title": "Distinguish signed displacement from total distance",
+            "prompt": "<p>A particle has initial velocity \\(6\\,\\mathrm{m\\,s^{-1}}\\). Its signed acceleration is \\(a=- 3 t\\) in SI units. The acceleration law continues until \\(\\frac{8}{3}\\,\\mathrm s\\). Find the signed displacement and total distance by that instant.</p>",
+            "fields": [
+              {
+                "key": "displacement",
+                "label": "Final signed displacement",
+                "type": "number",
+                "expected": "176/27"
+              },
+              {
+                "key": "distance",
+                "label": "Total distance",
+                "type": "number",
+                "expected": "256/27",
+                "retry": [
+                  {
+                    "answer": "176/27",
+                    "feedback": "<p>This is the magnitude of displacement. Include the length travelled after the turn.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Split distance at the first velocity sign change. Add positive lengths for the two legs.</p>",
+            "solution": "<p>The velocity is \\(v=6 - \\frac{3 t^{2}}{2}\\). Its sign changes at \\(2\\,\\mathrm s\\).</p><p>The position relative to the start is \\(8\\,\\mathrm m\\) at that turn and \\(\\frac{176}{27}\\,\\mathrm m\\) at the end.</p><p>The signed displacement is \\(\\frac{176}{27}\\,\\mathrm m\\). The distance adds the outward leg and the length travelled back, giving \\(\\frac{256}{27}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The magnitude of the overall displacement can be smaller than total distance.</p>"
+          }
+        ]
+      },
+      {
+        "id": "piecewise-force-in-time",
+        "title": "What changes when the force law switches?",
+        "label": "Restart with a local time",
+        "intro": "<p>At an ordinary switch in finite force, position and velocity agree at the boundary. A different acceleration law applies on the second interval.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Start the new formula from the first stage’s ending position and velocity.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "time-piecewise-force-in-time-check",
+            "title": "Carry velocity and position across a change of law",
+            "prompt": "<p>A particle starts with velocity \\(\\frac{2}{3}\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=3 t\\) for \\(\\frac{3}{2}\\,\\mathrm s\\). It then changes to \\(a=5\\tau\\) where \\(\\tau\\) measures time since that change. Find velocity and displacement relative to the original start after \\(1\\,\\mathrm s\\) in the second stage.</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Final velocity",
+                "type": "number",
+                "expected": "157/24"
+              },
+              {
+                "key": "displacement",
+                "label": "Total displacement",
+                "type": "number",
+                "expected": "121/16"
+              }
+            ],
+            "hint": "<p>Restart the clock at the switch and carry position and velocity, rather than the old acceleration law.</p>",
+            "solution": "<p>Integrate the first acceleration from its own initial conditions. At the switch the velocity is \\(\\frac{97}{24}\\,\\mathrm{m\\,s^{-1}}\\) and displacement \\(\\frac{43}{16}\\,\\mathrm m\\).</p><p>Integrate the second acceleration with new initial velocity \\(\\frac{97}{24}\\,\\mathrm{m\\,s^{-1}}\\). Integrating this velocity gives the second-stage displacement.</p><p>The velocity is \\(\\frac{157}{24}\\,\\mathrm{m\\,s^{-1}}\\) and total displacement is \\(\\frac{121}{16}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not re-use the original starting speed in the second stage.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "time-piecewise-force-in-time-follow-up",
+            "title": "Carry velocity and position across a change of law",
+            "prompt": "<p>A particle starts with velocity \\(\\frac{4}{3}\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=5 t\\) for \\(\\frac{5}{2}\\,\\mathrm s\\). It then changes to \\(a=7\\tau\\) where \\(\\tau\\) measures time since that change. Find velocity and displacement relative to the original start after \\(2\\,\\mathrm s\\) in the second stage.</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Final velocity",
+                "type": "number",
+                "expected": "743/24"
+              },
+              {
+                "key": "displacement",
+                "label": "Total displacement",
+                "type": "number",
+                "expected": "2861/48"
+              }
+            ],
+            "hint": "<p>Restart the clock at the switch and carry position and velocity, rather than the old acceleration law.</p>",
+            "solution": "<p>Integrate the first acceleration from its own initial conditions. At the switch the velocity is \\(\\frac{407}{24}\\,\\mathrm{m\\,s^{-1}}\\) and displacement \\(\\frac{785}{48}\\,\\mathrm m\\).</p><p>Integrate the second acceleration with new initial velocity \\(\\frac{407}{24}\\,\\mathrm{m\\,s^{-1}}\\). Integrating this velocity gives the second-stage displacement.</p><p>The velocity is \\(\\frac{743}{24}\\,\\mathrm{m\\,s^{-1}}\\) and total displacement is \\(\\frac{2861}{48}\\,\\mathrm m\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Integrate a force-dependent motion model",
+        "question": "<p>A particle of mass \\(3\\) kilograms has initial velocity \\(3\\,\\mathrm{m\\,s^{-1}}\\). Its signed resultant force at time \\(t\\) is \\(F=12 - 6 t\\) newtons. Find its signed acceleration and velocity after \\(\\frac{1}{2}\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Divide the net force by mass to obtain \\(a=4 - 2 t\\). There is a new acceleration at each time.</p>",
+          "<p>Integrate and use initial velocity. This gives \\(v=- t^{2} + 4 t + 3\\).</p>",
+          "<p>At the stated time, signed acceleration is \\(3\\,\\mathrm{m\\,s^{-2}}\\) and velocity is \\(\\frac{19}{4}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Integrate a force-dependent motion model",
+        "question": "<p>At \\(t=0\\), a particle is at \\(x=2\\) metres with signed velocity \\(3\\,\\mathrm{m\\,s^{-1}}\\). The acceleration is \\(a=4 - 2 t\\) in SI units. Find its signed coordinate after \\(\\frac{1}{2}\\,\\mathrm s\\) and its displacement over this time.</p>",
+        "solution": [
+          "<p>First integrate acceleration and fit the initial velocity: \\(v=- t^{2} + 4 t + 3\\).</p>",
+          "<p>Integrate velocity and fit the initial coordinate: \\(x=- \\frac{t^{3}}{3} + 2 t^{2} + 3 t + 2\\).</p>",
+          "<p>The displacement is \\(\\frac{47}{24}\\,\\mathrm m\\) and the final coordinate is \\(\\frac{95}{24}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the first stop under time-dependent acceleration",
+        "question": "<p>A particle has initial velocity \\(\\frac{9}{4}\\,\\mathrm{m\\,s^{-1}}\\). Its signed acceleration is \\(a=- 2 t\\) in SI units. Find the first stopping time and its displacement by then.</p>",
+        "solution": [
+          "<p>Integrating gives \\(v=\\frac{9}{4} - t^{2}\\). The first non-negative zero is \\(\\frac{3}{2}\\,\\mathrm s\\).</p>",
+          "<p>The motion remains in the positive direction up to that time. The displacement is \\(\\frac{9}{4}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the first stop under time-dependent acceleration",
+        "question": "<p>A particle has initial velocity \\(\\frac{25}{2}\\,\\mathrm{m\\,s^{-1}}\\). Its signed acceleration is \\(a=- 4 t\\) in SI units. Find the first stopping time and its displacement by then.</p>",
+        "solution": [
+          "<p>Integrating gives \\(v=\\frac{25}{2} - 2 t^{2}\\). The first non-negative zero is \\(\\frac{5}{2}\\,\\mathrm s\\).</p>",
+          "<p>The motion remains in the positive direction up to that time. The displacement is \\(\\frac{125}{6}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Distinguish signed displacement from total distance",
+        "question": "<p>A particle has initial velocity \\(\\frac{9}{4}\\,\\mathrm{m\\,s^{-1}}\\). Its signed acceleration is \\(a=- 2 t\\) in SI units. The acceleration law continues until \\(\\frac{11}{6}\\,\\mathrm s\\). Find the signed displacement and total distance by that instant.</p>",
+        "solution": [
+          "<p>The velocity is \\(v=\\frac{9}{4} - t^{2}\\). Its sign changes at \\(\\frac{3}{2}\\,\\mathrm s\\).</p>",
+          "<p>The position relative to the start is \\(\\frac{9}{4}\\,\\mathrm m\\) at that turn and \\(\\frac{671}{324}\\,\\mathrm m\\) at the end.</p>",
+          "<p>The signed displacement is \\(\\frac{671}{324}\\,\\mathrm m\\). The distance adds the outward leg and the length travelled back, giving \\(\\frac{787}{324}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Carry velocity and position across a change of law",
+        "question": "<p>A particle starts with velocity \\(\\frac{1}{3}\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=2 t\\) for \\(1\\,\\mathrm s\\). It then changes to \\(a=4\\tau\\) where \\(\\tau\\) measures time since that change. Find velocity and displacement relative to the original start after \\(\\frac{1}{2}\\,\\mathrm s\\) in the second stage.</p>",
+        "solution": [
+          "<p>Integrate the first acceleration from its own initial conditions. At the switch the velocity is \\(\\frac{4}{3}\\,\\mathrm{m\\,s^{-1}}\\) and displacement \\(\\frac{2}{3}\\,\\mathrm m\\).</p>",
+          "<p>Integrate the second acceleration with new initial velocity \\(\\frac{4}{3}\\,\\mathrm{m\\,s^{-1}}\\). Integrating this velocity gives the second-stage displacement.</p>",
+          "<p>The velocity is \\(\\frac{11}{6}\\,\\mathrm{m\\,s^{-1}}\\) and total displacement is \\(\\frac{17}{12}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Carry velocity and position across a change of law",
+        "question": "<p>A particle starts with velocity \\(1\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=4 t\\) for \\(2\\,\\mathrm s\\). It then changes to \\(a=6\\tau\\) where \\(\\tau\\) measures time since that change. Find velocity and displacement relative to the original start after \\(\\frac{3}{2}\\,\\mathrm s\\) in the second stage.</p>",
+        "solution": [
+          "<p>Integrate the first acceleration from its own initial conditions. At the switch the velocity is \\(9\\,\\mathrm{m\\,s^{-1}}\\) and displacement \\(\\frac{22}{3}\\,\\mathrm m\\).</p>",
+          "<p>Integrate the second acceleration with new initial velocity \\(9\\,\\mathrm{m\\,s^{-1}}\\). Integrating this velocity gives the second-stage displacement.</p>",
+          "<p>The velocity is \\(\\frac{63}{4}\\,\\mathrm{m\\,s^{-1}}\\) and total displacement is \\(\\frac{581}{24}\\,\\mathrm m\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "time-find-velocity-from-force-extra",
+        "title": "Integrate a force-dependent motion model",
+        "prompt": "<p>A particle of mass \\(5\\) kilograms has initial velocity \\(5\\,\\mathrm{m\\,s^{-1}}\\). Its signed resultant force at time \\(t\\) is \\(F=30 - 20 t\\) newtons. Find its signed acceleration and velocity after \\(\\frac{3}{2}\\,\\mathrm s\\).</p>",
+        "fields": [
+          {
+            "key": "acceleration",
+            "label": "Signed acceleration",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "velocity",
+            "label": "Signed velocity",
+            "type": "number",
+            "expected": "19/2"
+          }
+        ],
+        "hint": "<p>Use a separate initial condition every time you integrate.</p>",
+        "solution": "<p>Divide the net force by mass to obtain \\(a=6 - 4 t\\). There is a new acceleration at each time.</p><p>Integrate and use initial velocity. This gives \\(v=- 2 t^{2} + 6 t + 5\\).</p><p>At the stated time, signed acceleration is \\(0\\,\\mathrm{m\\,s^{-2}}\\) and velocity is \\(\\frac{19}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "time-find-position-from-velocity-extra",
+        "title": "Integrate a force-dependent motion model",
+        "prompt": "<p>At \\(t=0\\), a particle is at \\(x=4\\) metres with signed velocity \\(5\\,\\mathrm{m\\,s^{-1}}\\). The acceleration is \\(a=6 - 4 t\\) in SI units. Find its signed coordinate after \\(\\frac{3}{2}\\,\\mathrm s\\) and its displacement over this time.</p>",
+        "fields": [
+          {
+            "key": "position",
+            "label": "Final coordinate",
+            "type": "number",
+            "expected": "16"
+          },
+          {
+            "key": "displacement",
+            "label": "Displacement from initial point",
+            "type": "number",
+            "expected": "12"
+          }
+        ],
+        "hint": "<p>Use a separate initial condition every time you integrate.</p>",
+        "solution": "<p>First integrate acceleration and fit the initial velocity: \\(v=- 2 t^{2} + 6 t + 5\\).</p><p>Integrate velocity and fit the initial coordinate: \\(x=- \\frac{2 t^{3}}{3} + 3 t^{2} + 5 t + 4\\).</p><p>The displacement is \\(12\\,\\mathrm m\\) and the final coordinate is \\(16\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "time-find-the-first-stop-extra",
+        "title": "Find the first stop under time-dependent acceleration",
+        "prompt": "<p>A particle has initial velocity \\(\\frac{147}{4}\\,\\mathrm{m\\,s^{-1}}\\). Its signed acceleration is \\(a=- 6 t\\) in SI units. Find the first stopping time and its displacement by then.</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "First stopping time",
+            "type": "number",
+            "expected": "7/2"
+          },
+          {
+            "key": "distance",
+            "label": "Displacement to first stop",
+            "type": "number",
+            "expected": "343/4"
+          }
+        ],
+        "hint": "<p>Set velocity, not acceleration, equal to zero. Check that there is no earlier positive root.</p>",
+        "solution": "<p>Integrating gives \\(v=\\frac{147}{4} - 3 t^{2}\\). The first non-negative zero is \\(\\frac{7}{2}\\,\\mathrm s\\).</p><p>The motion remains in the positive direction up to that time. The displacement is \\(\\frac{343}{4}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "time-distance-after-a-turn-extra",
+        "title": "Distinguish signed displacement from total distance",
+        "prompt": "<p>A particle has initial velocity \\(\\frac{25}{2}\\,\\mathrm{m\\,s^{-1}}\\). Its signed acceleration is \\(a=- 4 t\\) in SI units. The acceleration law continues until \\(\\frac{7}{2}\\,\\mathrm s\\). Find the signed displacement and total distance by that instant.</p>",
+        "fields": [
+          {
+            "key": "displacement",
+            "label": "Final signed displacement",
+            "type": "number",
+            "expected": "91/6"
+          },
+          {
+            "key": "distance",
+            "label": "Total distance",
+            "type": "number",
+            "expected": "53/2",
+            "retry": [
+              {
+                "answer": "91/6",
+                "feedback": "<p>This is the magnitude of displacement. Include the length travelled after the turn.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Split distance at the first velocity sign change. Add positive lengths for the two legs.</p>",
+        "solution": "<p>The velocity is \\(v=\\frac{25}{2} - 2 t^{2}\\). Its sign changes at \\(\\frac{5}{2}\\,\\mathrm s\\).</p><p>The position relative to the start is \\(\\frac{125}{6}\\,\\mathrm m\\) at that turn and \\(\\frac{91}{6}\\,\\mathrm m\\) at the end.</p><p>The signed displacement is \\(\\frac{91}{6}\\,\\mathrm m\\). The distance adds the outward leg and the length travelled back, giving \\(\\frac{53}{2}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "time-piecewise-force-in-time-extra",
+        "title": "Carry velocity and position across a change of law",
+        "prompt": "<p>A particle starts with velocity \\(\\frac{5}{3}\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=6 t\\) for \\(3\\,\\mathrm s\\). It then changes to \\(a=8\\tau\\) where \\(\\tau\\) measures time since that change. Find velocity and displacement relative to the original start after \\(\\frac{5}{2}\\,\\mathrm s\\) in the second stage.</p>",
+        "fields": [
+          {
+            "key": "velocity",
+            "label": "Final velocity",
+            "type": "number",
+            "expected": "161/3"
+          },
+          {
+            "key": "displacement",
+            "label": "Total displacement",
+            "type": "number",
+            "expected": "249/2"
+          }
+        ],
+        "hint": "<p>Restart the clock at the switch and carry position and velocity, rather than the old acceleration law.</p>",
+        "solution": "<p>Integrate the first acceleration from its own initial conditions. At the switch the velocity is \\(\\frac{86}{3}\\,\\mathrm{m\\,s^{-1}}\\) and displacement \\(32\\,\\mathrm m\\).</p><p>Integrate the second acceleration with new initial velocity \\(\\frac{86}{3}\\,\\mathrm{m\\,s^{-1}}\\). Integrating this velocity gives the second-stage displacement.</p><p>The velocity is \\(\\frac{161}{3}\\,\\mathrm{m\\,s^{-1}}\\) and total displacement is \\(\\frac{249}{2}\\,\\mathrm m\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Signed velocity",
+        "definition": "<p>Velocity with sense defined by the positive axis.</p>"
+      },
+      {
+        "term": "Integration constant",
+        "definition": "<p>An unknown fixed by information at a known time.</p>"
+      },
+      {
+        "term": "Turning time",
+        "definition": "<p>A zero of velocity at which its sign changes.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Force</th><td>\\(ma=F\\) with a signed net force.</td></tr><tr><th scope=\"row\">Velocity</th><td>Integrate \\(a(t)\\) and use a velocity condition.</td></tr><tr><th scope=\"row\">Position</th><td>Integrate \\(v(t)\\) and use a position condition.</td></tr><tr><th scope=\"row\">Distance</th><td>Split at each change of sign.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>If \\(a=-2t\\) and \\(v(0)=9\\) in SI units, find the first stopping time.</p><p><strong>Check</strong> \\(v=9-t^2\\) gives \\(t=3\\,\\mathrm s\\).</p>",
+      "checks": "<ul><li>Constant-acceleration formulae do not apply if the net force varies with time.</li><li>The final coordinate is not always the displacement from the initial point.</li></ul>",
+      "examTip": "<p>State the valid time interval for every expression.</p>"
+    },
+    "related": [
+      {
+        "title": "Position-dependent force and the physical velocity branch",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_variable_position"
+      }
+    ]
+  },
+  "fm_variable_position": {
+    "updatedOn": "2026-11-21",
+    "description": "Use the chain rule in one dimension and identify a physical signed velocity when squared speed is known.",
+    "sections": [
+      {
+        "id": "convert-acceleration-to-position",
+        "title": "Why is acceleration also v times dv/dx?",
+        "label": "Choose position as independent variable",
+        "intro": "<p>Velocity can be described along a monotone part of the path. The chain rule converts a time derivative into a position derivative.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(a=\\frac{\\mathrm dv}{\\mathrm dt}=\\frac{\\mathrm dv}{\\mathrm dx}\\frac{\\mathrm dx}{\\mathrm dt}=v\\frac{\\mathrm dv}{\\mathrm dx}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "position-convert-acceleration-to-position-check",
+            "title": "Choose the sign after solving for squared speed",
+            "prompt": "<p>At \\(x=0\\) a particle moves in the positive direction with speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=\\frac{2 x}{3} + \\frac{3}{2}\\) in SI units. Find its signed velocity at \\(x=1\\) metres assuming it has not turned.</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Signed velocity",
+                "type": "number",
+                "expected": "sqrt(258)/3",
+                "retry": [
+                  {
+                    "answer": "-sqrt(258)/3",
+                    "feedback": "<p>The square-root sign must match the stated direction of motion.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>The equation gives speed squared. Use the physical branch to recover signed velocity.</p>",
+            "solution": "<p>With position as independent variable, \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\). Thus \\(\\frac12v^2\\) is an antiderivative of \\(\\frac{2 x}{3} + \\frac{3}{2}\\).</p><p>Apply the initial condition to obtain \\(v^2=\\frac{2 x^{2}}{3} + 3 x + 25\\).</p><p>Choose the positive square root because the direction is unchanged. The signed velocity is \\(\\frac{\\sqrt{258}}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not treat a position-dependent force as a time-dependent one.</p>"
+          }
+        ]
+      },
+      {
+        "id": "keep-the-velocity-sign",
+        "title": "When do I take the negative square root?",
+        "label": "Read the physical branch",
+        "intro": "<p>The integrated result frequently gives squared velocity. On a branch without a stop, the velocity retains its starting sign.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the negative root for motion along the negative axis.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "position-keep-the-velocity-sign-check",
+            "title": "Choose the sign after solving for squared speed",
+            "prompt": "<p>At \\(x=0\\) a particle moves in the negative direction with speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=\\frac{2 x}{3} - \\frac{3}{2}\\) in SI units. Find its signed velocity at \\(x=-1\\) metres assuming it has not turned.</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Signed velocity",
+                "type": "number",
+                "expected": "-sqrt(258)/3",
+                "retry": [
+                  {
+                    "answer": "sqrt(258)/3",
+                    "feedback": "<p>The square-root sign must match the stated direction of motion.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>The equation gives speed squared. Use the physical branch to recover signed velocity.</p>",
+            "solution": "<p>With position as independent variable, \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\). Thus \\(\\frac12v^2\\) is an antiderivative of \\(\\frac{2 x}{3} - \\frac{3}{2}\\).</p><p>Apply the initial condition to obtain \\(v^2=\\frac{2 x^{2}}{3} - 3 x + 25\\).</p><p>Choose the negative square root because the direction is unchanged. The signed velocity is \\(- \\frac{\\sqrt{258}}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Speed is a magnitude. A question may instead require signed velocity.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reach-the-first-position-stop",
+        "title": "Where can a particle stop under a position-dependent force?",
+        "label": "Solve the accessible energy root",
+        "intro": "<p>Once squared speed is known as a function of position, a zero may mark a turning point. The direction and initial point decide which root can be reached.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>On the initial branch require \\(v^2\\ge0\\) up to the candidate root.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "position-reach-the-first-position-stop-check",
+            "title": "Locate a first stop from force as a function of x",
+            "prompt": "<p>At \\(x=0\\) a particle of mass \\(3\\) kilograms has rightwards velocity \\(5\\,\\mathrm{m\\,s^{-1}}\\). The signed resultant force is \\(F=- 12 x\\) newtons. Find the coordinate of its first stop.</p>",
+            "fields": [
+              {
+                "key": "position",
+                "label": "Coordinate of first stop",
+                "type": "number",
+                "expected": "5/2",
+                "retry": [
+                  {
+                    "answer": "-5/2",
+                    "feedback": "<p>The particle begins moving to positive x, so its first stop uses that side.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Solve for the first accessible zero of the squared speed.</p>",
+            "solution": "<p>Set \\(mv\\frac{\\mathrm dv}{\\mathrm dx}=F(x)\\) and integrate in x, rather than assuming constant acceleration.</p><p>The initial condition gives \\(v^2=25 - 4 x^{2}\\). The positive coordinate where this vanishes is \\(\\frac{5}{2}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A second root on the other side of the starting point is not a first stop.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "position-reach-the-first-position-stop-follow-up",
+            "title": "Locate a first stop from force as a function of x",
+            "prompt": "<p>At \\(x=0\\) a particle of mass \\(5\\) kilograms has rightwards velocity \\(\\frac{7 \\sqrt{6}}{2}\\,\\mathrm{m\\,s^{-1}}\\). The signed resultant force is \\(F=- 30 x\\) newtons. Find the coordinate of its first stop.</p>",
+            "fields": [
+              {
+                "key": "position",
+                "label": "Coordinate of first stop",
+                "type": "number",
+                "expected": "7/2",
+                "retry": [
+                  {
+                    "answer": "-7/2",
+                    "feedback": "<p>The particle begins moving to positive x, so its first stop uses that side.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Solve for the first accessible zero of the squared speed.</p>",
+            "solution": "<p>Set \\(mv\\frac{\\mathrm dv}{\\mathrm dx}=F(x)\\) and integrate in x, rather than assuming constant acceleration.</p><p>The initial condition gives \\(v^2=\\frac{147}{2} - 6 x^{2}\\). The positive coordinate where this vanishes is \\(\\frac{7}{2}\\,\\mathrm m\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "separate-in-position",
+        "title": "How can velocity-squared resistance simplify in space?",
+        "label": "Separate the spatial equation",
+        "intro": "<p>On a strictly forward branch, divide the velocity-squared force law by the positive velocity when using the chain rule.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>With \\(a=-kv^2\\), the spatial equation is \\(\\frac{\\mathrm dv}{\\mathrm dx}=-kv\\) for \\(v>0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "position-separate-in-position-check",
+            "title": "Separate with position as the independent variable",
+            "prompt": "<p>A particle has positive velocity \\(8\\,\\mathrm{m\\,s^{-1}}\\) at \\(x=0\\). Its acceleration while moving forwards is \\(a=- v^{2}\\). The speed becomes \\(\\frac{8}{3}\\,\\mathrm{m\\,s^{-1}}\\) at distance \\(C\\ln 3\\) metres. Find the exact coefficient \\(C\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient of the logarithm",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Convert the differential equation to dv/dx before separating the variables.</p>",
+            "solution": "<p>Use \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\) and cancel \\(v\\) on its positive branch.</p><p>Integrating gives \\(v=8 e^{- x}\\). At the target speed, \\(\\mathrm e^{-1x}=\\frac{1}{3}\\).</p><p>Therefore the distance is \\(\\log{\\left(3 \\right)}\\,\\mathrm m\\), with coefficient \\(1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Division by velocity would remove a zero-velocity branch.</p>"
+          }
+        ]
+      },
+      {
+        "id": "predict-an-asymptotic-coordinate",
+        "title": "Can zero speed be a purely limiting state?",
+        "label": "Check the time to reach the boundary",
+        "intro": "<p>A zero of squared velocity at a spatial coordinate need not occur in finite time.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the signed relation between velocity and position to test the approach.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/variable/positive-branch.svg",
+              "alt": "A forward velocity falls linearly with position towards zero at x = L.",
+              "caption": "<p>A spatial graph can show a zero speed at a position that is only approached. Solve the time equation before saying that the particle stops there.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "position-predict-an-asymptotic-coordinate-check",
+            "title": "Keep the physically valid branch up to a boundary",
+            "prompt": "<p>A particle starts from \\(x=0\\) with velocity \\(5\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=x - 5\\). Find the velocity at \\(x=\\frac{10}{3}\\) metres and the limiting coordinate.</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Velocity at given coordinate",
+                "type": "number",
+                "expected": "5/3"
+              },
+              {
+                "key": "limit",
+                "label": "Limiting coordinate",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>On a position-dependent model, a zero squared speed need not occur at a finite time.</p>",
+            "solution": "<p>Integrating with position gives \\(v^2=x^{2} - 10 x + 25\\). For \\(0\\le x<5\\), choose \\(v=5 - x\\).</p><p>At the requested coordinate the velocity is \\(\\frac{5}{3}\\,\\mathrm{m\\,s^{-1}}\\). The limiting coordinate is \\(5\\,\\mathrm m\\), approached as speed tends to zero.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not call a limiting position a finite turning event without checking time.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "position-predict-an-asymptotic-coordinate-follow-up",
+            "title": "Keep the physically valid branch up to a boundary",
+            "prompt": "<p>A particle starts from \\(x=0\\) with velocity \\(\\frac{35}{3}\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=\\frac{25 x}{9} - \\frac{175}{9}\\). Find the velocity at \\(x=\\frac{14}{3}\\) metres and the limiting coordinate.</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Velocity at given coordinate",
+                "type": "number",
+                "expected": "35/9"
+              },
+              {
+                "key": "limit",
+                "label": "Limiting coordinate",
+                "type": "number",
+                "expected": "7"
+              }
+            ],
+            "hint": "<p>On a position-dependent model, a zero squared speed need not occur at a finite time.</p>",
+            "solution": "<p>Integrating with position gives \\(v^2=\\frac{25 x^{2}}{9} - \\frac{350 x}{9} + \\frac{1225}{9}\\). For \\(0\\le x<7\\), choose \\(v=\\frac{35}{3} - \\frac{5 x}{3}\\).</p><p>At the requested coordinate the velocity is \\(\\frac{35}{9}\\,\\mathrm{m\\,s^{-1}}\\). The limiting coordinate is \\(7\\,\\mathrm m\\), approached as speed tends to zero.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Choose the sign after solving for squared speed",
+        "question": "<p>At \\(x=0\\) a particle moves in the positive direction with speed \\(4\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=\\frac{x}{3} + 1\\) in SI units. Find its signed velocity at \\(x=\\frac{1}{2}\\) metres assuming it has not turned.</p>",
+        "solution": [
+          "<p>With position as independent variable, \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\). Thus \\(\\frac12v^2\\) is an antiderivative of \\(\\frac{x}{3} + 1\\).</p>",
+          "<p>Apply the initial condition to obtain \\(v^2=\\frac{x^{2}}{3} + 2 x + 16\\).</p>",
+          "<p>Choose the positive square root because the direction is unchanged. The signed velocity is \\(\\frac{\\sqrt{615}}{6}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Choose the sign after solving for squared speed",
+        "question": "<p>At \\(x=0\\) a particle moves in the negative direction with speed \\(4\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=\\frac{x}{3} - 1\\) in SI units. Find its signed velocity at \\(x=- \\frac{1}{2}\\) metres assuming it has not turned.</p>",
+        "solution": [
+          "<p>With position as independent variable, \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\). Thus \\(\\frac12v^2\\) is an antiderivative of \\(\\frac{x}{3} - 1\\).</p>",
+          "<p>Apply the initial condition to obtain \\(v^2=\\frac{x^{2}}{3} - 2 x + 16\\).</p>",
+          "<p>Choose the negative square root because the direction is unchanged. The signed velocity is \\(- \\frac{\\sqrt{615}}{6}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Locate a first stop from force as a function of x",
+        "question": "<p>At \\(x=0\\) a particle of mass \\(2\\) kilograms has rightwards velocity \\(2 \\sqrt{3}\\,\\mathrm{m\\,s^{-1}}\\). The signed resultant force is \\(F=- 6 x\\) newtons. Find the coordinate of its first stop.</p>",
+        "solution": [
+          "<p>Set \\(mv\\frac{\\mathrm dv}{\\mathrm dx}=F(x)\\) and integrate in x, rather than assuming constant acceleration.</p>",
+          "<p>The initial condition gives \\(v^2=12 - 3 x^{2}\\). The positive coordinate where this vanishes is \\(2\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Locate a first stop from force as a function of x",
+        "question": "<p>At \\(x=0\\) a particle of mass \\(4\\) kilograms has rightwards velocity \\(3 \\sqrt{5}\\,\\mathrm{m\\,s^{-1}}\\). The signed resultant force is \\(F=- 20 x\\) newtons. Find the coordinate of its first stop.</p>",
+        "solution": [
+          "<p>Set \\(mv\\frac{\\mathrm dv}{\\mathrm dx}=F(x)\\) and integrate in x, rather than assuming constant acceleration.</p>",
+          "<p>The initial condition gives \\(v^2=45 - 5 x^{2}\\). The positive coordinate where this vanishes is \\(3\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Separate with position as the independent variable",
+        "question": "<p>A particle has positive velocity \\(7\\,\\mathrm{m\\,s^{-1}}\\) at \\(x=0\\). Its acceleration while moving forwards is \\(a=- \\frac{2 v^{2}}{3}\\). The speed becomes \\(\\frac{7}{2}\\,\\mathrm{m\\,s^{-1}}\\) at distance \\(C\\ln 2\\) metres. Find the exact coefficient \\(C\\).</p>",
+        "solution": [
+          "<p>Use \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\) and cancel \\(v\\) on its positive branch.</p>",
+          "<p>Integrating gives \\(v=7 e^{- \\frac{2 x}{3}}\\). At the target speed, \\(\\mathrm e^{-\\frac{2}{3}x}=\\frac{1}{2}\\).</p>",
+          "<p>Therefore the distance is \\(\\frac{3 \\log{\\left(2 \\right)}}{2}\\,\\mathrm m\\), with coefficient \\(\\frac{3}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the physically valid branch up to a boundary",
+        "question": "<p>A particle starts from \\(x=0\\) with velocity \\(\\frac{8}{3}\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=\\frac{4 x}{9} - \\frac{16}{9}\\). Find the velocity at \\(x=\\frac{8}{3}\\) metres and the limiting coordinate.</p>",
+        "solution": [
+          "<p>Integrating with position gives \\(v^2=\\frac{4 x^{2}}{9} - \\frac{32 x}{9} + \\frac{64}{9}\\). For \\(0\\le x<4\\), choose \\(v=\\frac{8}{3} - \\frac{2 x}{3}\\).</p>",
+          "<p>At the requested coordinate the velocity is \\(\\frac{8}{9}\\,\\mathrm{m\\,s^{-1}}\\). The limiting coordinate is \\(4\\,\\mathrm m\\), approached as speed tends to zero.</p>"
+        ]
+      },
+      {
+        "title": "Keep the physically valid branch up to a boundary",
+        "question": "<p>A particle starts from \\(x=0\\) with velocity \\(8\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=\\frac{16 x}{9} - \\frac{32}{3}\\). Find the velocity at \\(x=4\\) metres and the limiting coordinate.</p>",
+        "solution": [
+          "<p>Integrating with position gives \\(v^2=\\frac{16 x^{2}}{9} - \\frac{64 x}{3} + 64\\). For \\(0\\le x<6\\), choose \\(v=8 - \\frac{4 x}{3}\\).</p>",
+          "<p>At the requested coordinate the velocity is \\(\\frac{8}{3}\\,\\mathrm{m\\,s^{-1}}\\). The limiting coordinate is \\(6\\,\\mathrm m\\), approached as speed tends to zero.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "position-convert-acceleration-to-position-extra",
+        "title": "Choose the sign after solving for squared speed",
+        "prompt": "<p>At \\(x=0\\) a particle moves in the positive direction with speed \\(6\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=x + 2\\) in SI units. Find its signed velocity at \\(x=\\frac{3}{2}\\) metres assuming it has not turned.</p>",
+        "fields": [
+          {
+            "key": "velocity",
+            "label": "Signed velocity",
+            "type": "number",
+            "expected": "sqrt(177)/2",
+            "retry": [
+              {
+                "answer": "-sqrt(177)/2",
+                "feedback": "<p>The square-root sign must match the stated direction of motion.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The equation gives speed squared. Use the physical branch to recover signed velocity.</p>",
+        "solution": "<p>With position as independent variable, \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\). Thus \\(\\frac12v^2\\) is an antiderivative of \\(x + 2\\).</p><p>Apply the initial condition to obtain \\(v^2=x^{2} + 4 x + 36\\).</p><p>Choose the positive square root because the direction is unchanged. The signed velocity is \\(\\frac{\\sqrt{177}}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "position-keep-the-velocity-sign-extra",
+        "title": "Choose the sign after solving for squared speed",
+        "prompt": "<p>At \\(x=0\\) a particle moves in the negative direction with speed \\(6\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=x - 2\\) in SI units. Find its signed velocity at \\(x=- \\frac{3}{2}\\) metres assuming it has not turned.</p>",
+        "fields": [
+          {
+            "key": "velocity",
+            "label": "Signed velocity",
+            "type": "number",
+            "expected": "-sqrt(177)/2",
+            "retry": [
+              {
+                "answer": "sqrt(177)/2",
+                "feedback": "<p>The square-root sign must match the stated direction of motion.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The equation gives speed squared. Use the physical branch to recover signed velocity.</p>",
+        "solution": "<p>With position as independent variable, \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\). Thus \\(\\frac12v^2\\) is an antiderivative of \\(x - 2\\).</p><p>Apply the initial condition to obtain \\(v^2=x^{2} - 4 x + 36\\).</p><p>Choose the negative square root because the direction is unchanged. The signed velocity is \\(- \\frac{\\sqrt{177}}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "position-reach-the-first-position-stop-extra",
+        "title": "Locate a first stop from force as a function of x",
+        "prompt": "<p>At \\(x=0\\) a particle of mass \\(6\\) kilograms has rightwards velocity \\(4 \\sqrt{7}\\,\\mathrm{m\\,s^{-1}}\\). The signed resultant force is \\(F=- 42 x\\) newtons. Find the coordinate of its first stop.</p>",
+        "fields": [
+          {
+            "key": "position",
+            "label": "Coordinate of first stop",
+            "type": "number",
+            "expected": "4",
+            "retry": [
+              {
+                "answer": "-4",
+                "feedback": "<p>The particle begins moving to positive x, so its first stop uses that side.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Solve for the first accessible zero of the squared speed.</p>",
+        "solution": "<p>Set \\(mv\\frac{\\mathrm dv}{\\mathrm dx}=F(x)\\) and integrate in x, rather than assuming constant acceleration.</p><p>The initial condition gives \\(v^2=112 - 7 x^{2}\\). The positive coordinate where this vanishes is \\(4\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "position-separate-in-position-extra",
+        "title": "Separate with position as the independent variable",
+        "prompt": "<p>A particle has positive velocity \\(9\\,\\mathrm{m\\,s^{-1}}\\) at \\(x=0\\). Its acceleration while moving forwards is \\(a=- \\frac{4 v^{2}}{3}\\). The speed becomes \\(\\frac{9}{4}\\,\\mathrm{m\\,s^{-1}}\\) at distance \\(C\\ln 4\\) metres. Find the exact coefficient \\(C\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient of the logarithm",
+            "type": "number",
+            "expected": "3/4"
+          }
+        ],
+        "hint": "<p>Convert the differential equation to dv/dx before separating the variables.</p>",
+        "solution": "<p>Use \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\) and cancel \\(v\\) on its positive branch.</p><p>Integrating gives \\(v=9 e^{- \\frac{4 x}{3}}\\). At the target speed, \\(\\mathrm e^{-\\frac{4}{3}x}=\\frac{1}{4}\\).</p><p>Therefore the distance is \\(\\frac{3 \\log{\\left(4 \\right)}}{4}\\,\\mathrm m\\), with coefficient \\(\\frac{3}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "position-predict-an-asymptotic-coordinate-extra",
+        "title": "Keep the physically valid branch up to a boundary",
+        "prompt": "<p>A particle starts from \\(x=0\\) with velocity \\(16\\,\\mathrm{m\\,s^{-1}}\\). Its acceleration is \\(a=4 x - 32\\). Find the velocity at \\(x=\\frac{16}{3}\\) metres and the limiting coordinate.</p>",
+        "fields": [
+          {
+            "key": "velocity",
+            "label": "Velocity at given coordinate",
+            "type": "number",
+            "expected": "16/3"
+          },
+          {
+            "key": "limit",
+            "label": "Limiting coordinate",
+            "type": "number",
+            "expected": "8"
+          }
+        ],
+        "hint": "<p>On a position-dependent model, a zero squared speed need not occur at a finite time.</p>",
+        "solution": "<p>Integrating with position gives \\(v^2=4 x^{2} - 64 x + 256\\). For \\(0\\le x<8\\), choose \\(v=16 - 2 x\\).</p><p>At the requested coordinate the velocity is \\(\\frac{16}{3}\\,\\mathrm{m\\,s^{-1}}\\). The limiting coordinate is \\(8\\,\\mathrm m\\), approached as speed tends to zero.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Independent variable",
+        "definition": "<p>The chosen input for the differential equation, here position or time.</p>"
+      },
+      {
+        "term": "Physical branch",
+        "definition": "<p>The part of a solution that respects direction and the model's conditions.</p>"
+      },
+      {
+        "term": "Spatial limit",
+        "definition": "<p>A position a solution can approach without attaining it.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Chain rule</th><td>\\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\).</td></tr><tr><th scope=\"row\">Integrate</th><td>\\(\\frac12mv^2=\\int F(x)\\,\\mathrm dx+C\\).</td></tr><tr><th scope=\"row\">Signed velocity</th><td>Choose the sign from the direction.</td></tr><tr><th scope=\"row\">Boundary</th><td>Check if an apparent zero occurs in finite time.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>If \\(v^2=25+3x\\) and the particle is still moving left at \\(x=0\\), give its velocity there.</p><p><strong>Check</strong> \\(-5\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+      "checks": "<ul><li>Do not treat a position-dependent force as a time-dependent one.</li><li>Speed is a magnitude. A question may instead require signed velocity.</li></ul>",
+      "examTip": "<p>Write the sign of the branch before giving the final velocity.</p>"
+    },
+    "related": [
+      {
+        "title": "Time-dependent forces and complete trajectories",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_variable_time"
+      },
+      {
+        "title": "Resistance, first stops and changes of direction",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_variable_resistance"
+      }
+    ]
+  },
+  "fm_variable_resistance": {
+    "updatedOn": "2026-11-21",
+    "description": "Separate linear and quadratic drag models, determine first stops and track the sign when motion reverses.",
+    "sections": [
+      {
+        "id": "linear-driving-and-drag",
+        "title": "How does the net force change as speed increases?",
+        "label": "Find the balance speed",
+        "intro": "<p>A constant forward drive and a forward-speed-dependent resistance produce a variable resultant.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For linear resistance in forward motion, use \\(m\\frac{\\mathrm dv}{\\mathrm dt}=D-kv\\).</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/variable/approach-terminal-speed.svg",
+              "alt": "A speed curve increases towards a horizontal dashed terminal-speed line.",
+              "caption": "<p>In this model the driving force initially exceeds resistance. Their difference tends to zero as speed approaches the terminal value.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "resistance-linear-driving-and-drag-check",
+            "title": "Find the terminal speed and one finite-time speed",
+            "prompt": "<p>A particle of mass \\(4\\) kilograms has initial forward speed \\(4\\,\\mathrm{m\\,s^{-1}}\\). A constant driving force of \\(40\\,\\mathrm N\\) acts forwards and resistance magnitude is \\(4\\) times forward speed. Find its terminal speed and its speed at time \\(\\log{\\left(3 \\right)}\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "terminal",
+                "label": "Terminal speed",
+                "type": "number",
+                "expected": "10"
+              },
+              {
+                "key": "speed",
+                "label": "Speed at the stated time",
+                "type": "number",
+                "expected": "8"
+              }
+            ],
+            "hint": "<p>A terminal speed is the zero of the force, not necessarily an attained finite-time speed.</p>",
+            "solution": "<p>The force equation is \\(\\frac{\\mathrm dv}{\\mathrm dt}=10 - v\\). Separate on the branch set by the initial speed.</p><p>Fitting the initial condition gives \\(v=10 - 6 e^{- t}\\). The exponential tends to zero.</p><p>The terminal speed is \\(10\\,\\mathrm{m\\,s^{-1}}\\). At the stated time the exponential equals \\(\\frac{1}{3}\\), giving speed \\(8\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>At terminal speed the net force is zero. That does not imply finite-time attainment.</p>"
+          }
+        ]
+      },
+      {
+        "id": "vertical-downward-drag",
+        "title": "How does gravity compete with drag during a fall?",
+        "label": "Choose down as positive",
+        "intro": "<p>As the particle falls faster, the drag opposing the weight increases.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Taking down as positive gives \\(m\\frac{\\mathrm dv}{\\mathrm dt}=mg-kv\\) with a linear resistance model.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "resistance-vertical-downward-drag-check",
+            "title": "Find the terminal speed and one finite-time speed",
+            "prompt": "<p>A particle falls downwards from rest under gravity \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Its upward drag force has magnitude \\(4\\) times its speed, and its mass is \\(4\\) kilograms. Find its terminal speed and its speed at time \\(\\log{\\left(3 \\right)}\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "terminal",
+                "label": "Terminal speed",
+                "type": "number",
+                "expected": "10"
+              },
+              {
+                "key": "speed",
+                "label": "Speed at the stated time",
+                "type": "number",
+                "expected": "20/3"
+              }
+            ],
+            "hint": "<p>A terminal speed is the zero of the force, not necessarily an attained finite-time speed.</p>",
+            "solution": "<p>The force equation is \\(\\frac{\\mathrm dv}{\\mathrm dt}=10 - v\\). Separate on the branch set by the initial speed.</p><p>Fitting the initial condition gives \\(v=10 - 10 e^{- t}\\). The exponential tends to zero.</p><p>The terminal speed is \\(10\\,\\mathrm{m\\,s^{-1}}\\). At the stated time the exponential equals \\(\\frac{1}{3}\\), giving speed \\(\\frac{20}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If you choose down as positive, weight is positive and drag is negative.</p>"
+          }
+        ]
+      },
+      {
+        "id": "ascent-first-stop",
+        "title": "How do I find the apex with drag present?",
+        "label": "Solve the ascending branch",
+        "intro": "<p>During ascent, both gravity and resistance are down. Use the ascending velocity sign when writing the resultant.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Solve the velocity equation and find its first zero. The model after that time must have appropriate force directions.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "resistance-ascent-first-stop-check",
+            "title": "Find the first stop while rising against linear drag",
+            "prompt": "<p>A particle is launched straight upwards at \\(\\frac{40}{3}\\,\\mathrm{m\\,s^{-1}}\\). Acceleration during the ascent is \\(a=- \\frac{3 v}{2} - 10\\), using upwards-positive signed velocity. Its first stopping time is \\(C\\ln 3\\) seconds. Find the exact coefficient \\(C\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient of the logarithm",
+                "type": "number",
+                "expected": "2/3"
+              }
+            ],
+            "hint": "<p>Use the signed acceleration only on the branch with the correct drag direction if the model is stated for ascent.</p>",
+            "solution": "<p>Separate \\(\\frac{\\mathrm dv}{\\mathrm dt}=-10-kv\\), with the above initial speed.</p><p>The resulting velocity is \\(v=- \\frac{20}{3} + 20 e^{- \\frac{3 t}{2}}\\). At the first stop set this to zero.</p><p>This gives stopping time \\(\\frac{2 \\log{\\left(3 \\right)}}{3}\\,\\mathrm s\\), with coefficient \\(\\frac{2}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not let a model defined only for ascent automatically describe descent.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "resistance-ascent-first-stop-follow-up",
+            "title": "Find the first stop while rising against linear drag",
+            "prompt": "<p>A particle is launched straight upwards at \\(16\\,\\mathrm{m\\,s^{-1}}\\). Acceleration during the ascent is \\(a=- \\frac{5 v}{2} - 10\\), using upwards-positive signed velocity. Its first stopping time is \\(C\\ln 5\\) seconds. Find the exact coefficient \\(C\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient of the logarithm",
+                "type": "number",
+                "expected": "2/5"
+              }
+            ],
+            "hint": "<p>Use the signed acceleration only on the branch with the correct drag direction if the model is stated for ascent.</p>",
+            "solution": "<p>Separate \\(\\frac{\\mathrm dv}{\\mathrm dt}=-10-kv\\), with the above initial speed.</p><p>The resulting velocity is \\(v=-4 + 20 e^{- \\frac{5 t}{2}}\\). At the first stop set this to zero.</p><p>This gives stopping time \\(\\frac{2 \\log{\\left(5 \\right)}}{5}\\,\\mathrm s\\), with coefficient \\(\\frac{2}{5}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "restart-with-signed-drag",
+        "title": "Does the drag force keep the same sign after reversal?",
+        "label": "Restart at the apex",
+        "intro": "<p>In a signed linear law, the drag term changes direction automatically as signed velocity changes sign.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>With upwards-positive velocity, \\(a=-g-kv\\) represents drag opposing both positive and negative velocity.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "resistance-restart-with-signed-drag-check",
+            "title": "Restart the velocity after the first stop",
+            "prompt": "<p>A mass moves vertically with upwards-positive acceleration \\(a=- \\frac{3 v}{2} - 10\\). It reaches an apex and then descends. Find its downward speed \\(\\frac{2 \\log{\\left(4 \\right)}}{3}\\,\\mathrm s\\) after the apex and its limiting downward speed.</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Downward speed after the apex",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "terminal",
+                "label": "Limiting downward speed",
+                "type": "number",
+                "expected": "20/3"
+              }
+            ],
+            "hint": "<p>Use a local time from the apex. The signed drag law reverses the drag force when velocity reverses.</p>",
+            "solution": "<p>Take the apex as a new zero of time. Its initial signed velocity is zero, and the force law is still valid for negative velocity.</p><p>The signed velocity after the apex is \\(v=- \\frac{20}{3} + \\frac{20 e^{- \\frac{3 t}{2}}}{3}\\). Thus the downward speed at the stated time is \\(5\\,\\mathrm{m\\,s^{-1}}\\).</p><p>As time increases without bound the downward speed tends to \\(\\frac{20}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A fixed downwards drag arrow would incorrectly assist downward movement after the turn.</p>"
+          }
+        ]
+      },
+      {
+        "id": "separate-quadratic-drag",
+        "title": "Does a squared resistance law require a logarithm in time?",
+        "label": "Integrate the inverse square",
+        "intro": "<p>For purely quadratic resistance on a forward branch, separate by dividing by the square of the speed.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\frac{\\mathrm dv}{\\mathrm dt}=-kv^2\\) gives a reciprocal expression, because \\(\\int v^{-2}\\,\\mathrm dv=-v^{-1}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "resistance-separate-quadratic-drag-check",
+            "title": "Separate a quadratic resistance law",
+            "prompt": "<p>A particle of initial speed \\(5\\,\\mathrm{m\\,s^{-1}}\\) moves forwards under quadratic resistance only, with signed acceleration \\(a=- \\frac{3 v^{2}}{4}\\). Find its speed after \\(\\frac{2}{3}\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Speed at the stated time",
+                "type": "number",
+                "expected": "10/7"
+              }
+            ],
+            "hint": "<p>Integrate v to the power minus two, not v to the power minus one.</p>",
+            "solution": "<p>Separate using \\(\\frac{\\mathrm dv}{v^2}=-k\\,\\mathrm dt\\). On the positive branch, integration gives \\(\\frac1v=kt+\\frac1u\\).</p><p>Substitute the stated time. The speed is \\(\\frac{10}{7}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If extending a quadratic drag law across a reversal, its signed force is proportional to the negative of v times its magnitude.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "resistance-separate-quadratic-drag-follow-up",
+            "title": "Separate a quadratic resistance law",
+            "prompt": "<p>A particle of initial speed \\(7\\,\\mathrm{m\\,s^{-1}}\\) moves forwards under quadratic resistance only, with signed acceleration \\(a=- \\frac{5 v^{2}}{4}\\). Find its speed after \\(\\frac{4}{3}\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Speed at the stated time",
+                "type": "number",
+                "expected": "21/38"
+              }
+            ],
+            "hint": "<p>Integrate v to the power minus two, not v to the power minus one.</p>",
+            "solution": "<p>Separate using \\(\\frac{\\mathrm dv}{v^2}=-k\\,\\mathrm dt\\). On the positive branch, integration gives \\(\\frac1v=kt+\\frac1u\\).</p><p>Substitute the stated time. The speed is \\(\\frac{21}{38}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find the terminal speed and one finite-time speed",
+        "question": "<p>A particle of mass \\(3\\) kilograms has initial forward speed \\(3\\,\\mathrm{m\\,s^{-1}}\\). A constant driving force of \\(18\\,\\mathrm N\\) acts forwards and resistance magnitude is \\(2\\) times forward speed. Find its terminal speed and its speed at time \\(\\frac{3 \\log{\\left(2 \\right)}}{2}\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>The force equation is \\(\\frac{\\mathrm dv}{\\mathrm dt}=6 - \\frac{2 v}{3}\\). Separate on the branch set by the initial speed.</p>",
+          "<p>Fitting the initial condition gives \\(v=9 - 6 e^{- \\frac{2 t}{3}}\\). The exponential tends to zero.</p>",
+          "<p>The terminal speed is \\(9\\,\\mathrm{m\\,s^{-1}}\\). At the stated time the exponential equals \\(\\frac{1}{2}\\), giving speed \\(6\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the terminal speed and one finite-time speed",
+        "question": "<p>A particle falls downwards from rest under gravity \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Its upward drag force has magnitude \\(2\\) times its speed, and its mass is \\(3\\) kilograms. Find its terminal speed and its speed at time \\(\\frac{3 \\log{\\left(2 \\right)}}{2}\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>The force equation is \\(\\frac{\\mathrm dv}{\\mathrm dt}=10 - \\frac{2 v}{3}\\). Separate on the branch set by the initial speed.</p>",
+          "<p>Fitting the initial condition gives \\(v=15 - 15 e^{- \\frac{2 t}{3}}\\). The exponential tends to zero.</p>",
+          "<p>The terminal speed is \\(15\\,\\mathrm{m\\,s^{-1}}\\). At the stated time the exponential equals \\(\\frac{1}{2}\\), giving speed \\(\\frac{15}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the first stop while rising against linear drag",
+        "question": "<p>A particle is launched straight upwards at \\(10\\,\\mathrm{m\\,s^{-1}}\\). Acceleration during the ascent is \\(a=- v - 10\\), using upwards-positive signed velocity. Its first stopping time is \\(C\\ln 2\\) seconds. Find the exact coefficient \\(C\\).</p>",
+        "solution": [
+          "<p>Separate \\(\\frac{\\mathrm dv}{\\mathrm dt}=-10-kv\\), with the above initial speed.</p>",
+          "<p>The resulting velocity is \\(v=-10 + 20 e^{- t}\\). At the first stop set this to zero.</p>",
+          "<p>This gives stopping time \\(\\log{\\left(2 \\right)}\\,\\mathrm s\\), with coefficient \\(1\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the first stop while rising against linear drag",
+        "question": "<p>A particle is launched straight upwards at \\(15\\,\\mathrm{m\\,s^{-1}}\\). Acceleration during the ascent is \\(a=- 2 v - 10\\), using upwards-positive signed velocity. Its first stopping time is \\(C\\ln 4\\) seconds. Find the exact coefficient \\(C\\).</p>",
+        "solution": [
+          "<p>Separate \\(\\frac{\\mathrm dv}{\\mathrm dt}=-10-kv\\), with the above initial speed.</p>",
+          "<p>The resulting velocity is \\(v=-5 + 20 e^{- 2 t}\\). At the first stop set this to zero.</p>",
+          "<p>This gives stopping time \\(\\frac{\\log{\\left(4 \\right)}}{2}\\,\\mathrm s\\), with coefficient \\(\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Restart the velocity after the first stop",
+        "question": "<p>A mass moves vertically with upwards-positive acceleration \\(a=- v - 10\\). It reaches an apex and then descends. Find its downward speed \\(\\log{\\left(3 \\right)}\\,\\mathrm s\\) after the apex and its limiting downward speed.</p>",
+        "solution": [
+          "<p>Take the apex as a new zero of time. Its initial signed velocity is zero, and the force law is still valid for negative velocity.</p>",
+          "<p>The signed velocity after the apex is \\(v=-10 + 10 e^{- t}\\). Thus the downward speed at the stated time is \\(\\frac{20}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>As time increases without bound the downward speed tends to \\(10\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Separate a quadratic resistance law",
+        "question": "<p>A particle of initial speed \\(4\\,\\mathrm{m\\,s^{-1}}\\) moves forwards under quadratic resistance only, with signed acceleration \\(a=- \\frac{v^{2}}{2}\\). Find its speed after \\(\\frac{1}{3}\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Separate using \\(\\frac{\\mathrm dv}{v^2}=-k\\,\\mathrm dt\\). On the positive branch, integration gives \\(\\frac1v=kt+\\frac1u\\).</p>",
+          "<p>Substitute the stated time. The speed is \\(\\frac{12}{5}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Separate a quadratic resistance law",
+        "question": "<p>A particle of initial speed \\(6\\,\\mathrm{m\\,s^{-1}}\\) moves forwards under quadratic resistance only, with signed acceleration \\(a=- v^{2}\\). Find its speed after \\(1\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Separate using \\(\\frac{\\mathrm dv}{v^2}=-k\\,\\mathrm dt\\). On the positive branch, integration gives \\(\\frac1v=kt+\\frac1u\\).</p>",
+          "<p>Substitute the stated time. The speed is \\(\\frac{6}{7}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "resistance-linear-driving-and-drag-extra",
+        "title": "Find the terminal speed and one finite-time speed",
+        "prompt": "<p>A particle of mass \\(5\\) kilograms has initial forward speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). A constant driving force of \\(\\frac{220}{3}\\,\\mathrm N\\) acts forwards and resistance magnitude is \\(\\frac{20}{3}\\) times forward speed. Find its terminal speed and its speed at time \\(\\frac{3 \\log{\\left(4 \\right)}}{4}\\,\\mathrm s\\).</p>",
+        "fields": [
+          {
+            "key": "terminal",
+            "label": "Terminal speed",
+            "type": "number",
+            "expected": "11"
+          },
+          {
+            "key": "speed",
+            "label": "Speed at the stated time",
+            "type": "number",
+            "expected": "19/2"
+          }
+        ],
+        "hint": "<p>A terminal speed is the zero of the force, not necessarily an attained finite-time speed.</p>",
+        "solution": "<p>The force equation is \\(\\frac{\\mathrm dv}{\\mathrm dt}=\\frac{44}{3} - \\frac{4 v}{3}\\). Separate on the branch set by the initial speed.</p><p>Fitting the initial condition gives \\(v=11 - 6 e^{- \\frac{4 t}{3}}\\). The exponential tends to zero.</p><p>The terminal speed is \\(11\\,\\mathrm{m\\,s^{-1}}\\). At the stated time the exponential equals \\(\\frac{1}{4}\\), giving speed \\(\\frac{19}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "resistance-vertical-downward-drag-extra",
+        "title": "Find the terminal speed and one finite-time speed",
+        "prompt": "<p>A particle falls downwards from rest under gravity \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Its upward drag force has magnitude \\(\\frac{20}{3}\\) times its speed, and its mass is \\(5\\) kilograms. Find its terminal speed and its speed at time \\(\\frac{3 \\log{\\left(4 \\right)}}{4}\\,\\mathrm s\\).</p>",
+        "fields": [
+          {
+            "key": "terminal",
+            "label": "Terminal speed",
+            "type": "number",
+            "expected": "15/2"
+          },
+          {
+            "key": "speed",
+            "label": "Speed at the stated time",
+            "type": "number",
+            "expected": "45/8"
+          }
+        ],
+        "hint": "<p>A terminal speed is the zero of the force, not necessarily an attained finite-time speed.</p>",
+        "solution": "<p>The force equation is \\(\\frac{\\mathrm dv}{\\mathrm dt}=10 - \\frac{4 v}{3}\\). Separate on the branch set by the initial speed.</p><p>Fitting the initial condition gives \\(v=\\frac{15}{2} - \\frac{15 e^{- \\frac{4 t}{3}}}{2}\\). The exponential tends to zero.</p><p>The terminal speed is \\(\\frac{15}{2}\\,\\mathrm{m\\,s^{-1}}\\). At the stated time the exponential equals \\(\\frac{1}{4}\\), giving speed \\(\\frac{45}{8}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "resistance-ascent-first-stop-extra",
+        "title": "Find the first stop while rising against linear drag",
+        "prompt": "<p>A particle is launched straight upwards at \\(\\frac{50}{3}\\,\\mathrm{m\\,s^{-1}}\\). Acceleration during the ascent is \\(a=- 3 v - 10\\), using upwards-positive signed velocity. Its first stopping time is \\(C\\ln 6\\) seconds. Find the exact coefficient \\(C\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient of the logarithm",
+            "type": "number",
+            "expected": "1/3"
+          }
+        ],
+        "hint": "<p>Use the signed acceleration only on the branch with the correct drag direction if the model is stated for ascent.</p>",
+        "solution": "<p>Separate \\(\\frac{\\mathrm dv}{\\mathrm dt}=-10-kv\\), with the above initial speed.</p><p>The resulting velocity is \\(v=- \\frac{10}{3} + 20 e^{- 3 t}\\). At the first stop set this to zero.</p><p>This gives stopping time \\(\\frac{\\log{\\left(6 \\right)}}{3}\\,\\mathrm s\\), with coefficient \\(\\frac{1}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "resistance-restart-with-signed-drag-extra",
+        "title": "Restart the velocity after the first stop",
+        "prompt": "<p>A mass moves vertically with upwards-positive acceleration \\(a=- 2 v - 10\\). It reaches an apex and then descends. Find its downward speed \\(\\frac{\\log{\\left(5 \\right)}}{2}\\,\\mathrm s\\) after the apex and its limiting downward speed.</p>",
+        "fields": [
+          {
+            "key": "speed",
+            "label": "Downward speed after the apex",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "terminal",
+            "label": "Limiting downward speed",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>Use a local time from the apex. The signed drag law reverses the drag force when velocity reverses.</p>",
+        "solution": "<p>Take the apex as a new zero of time. Its initial signed velocity is zero, and the force law is still valid for negative velocity.</p><p>The signed velocity after the apex is \\(v=-5 + 5 e^{- 2 t}\\). Thus the downward speed at the stated time is \\(4\\,\\mathrm{m\\,s^{-1}}\\).</p><p>As time increases without bound the downward speed tends to \\(5\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "resistance-separate-quadratic-drag-extra",
+        "title": "Separate a quadratic resistance law",
+        "prompt": "<p>A particle of initial speed \\(8\\,\\mathrm{m\\,s^{-1}}\\) moves forwards under quadratic resistance only, with signed acceleration \\(a=- \\frac{3 v^{2}}{2}\\). Find its speed after \\(\\frac{5}{3}\\,\\mathrm s\\).</p>",
+        "fields": [
+          {
+            "key": "speed",
+            "label": "Speed at the stated time",
+            "type": "number",
+            "expected": "8/21"
+          }
+        ],
+        "hint": "<p>Integrate v to the power minus two, not v to the power minus one.</p>",
+        "solution": "<p>Separate using \\(\\frac{\\mathrm dv}{v^2}=-k\\,\\mathrm dt\\). On the positive branch, integration gives \\(\\frac1v=kt+\\frac1u\\).</p><p>Substitute the stated time. The speed is \\(\\frac{8}{21}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Linear drag",
+        "definition": "<p>A model where drag magnitude is proportional to speed.</p>"
+      },
+      {
+        "term": "Terminal speed",
+        "definition": "<p>A speed at which the forces along motion balance.</p>"
+      },
+      {
+        "term": "Reciprocal law",
+        "definition": "<p>A solution expressed using the inverse of speed.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Drive versus drag</th><td>\\(m\\frac{\\mathrm dv}{\\mathrm dt}=D-kv\\) on a forward branch.</td></tr><tr><th scope=\"row\">Vertical sign</th><td>Sign weight and resistance separately.</td></tr><tr><th scope=\"row\">Ascent</th><td>Find the first zero of signed velocity.</td></tr><tr><th scope=\"row\">Quadratic drag</th><td>Separate and integrate the inverse square.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A \\(3\\,\\mathrm{kg}\\) body falls with drag of magnitude \\(5v\\) newtons. Use \\(g=10\\) in SI units and find terminal speed.</p><p><strong>Check</strong> \\(30-5v=0\\) gives \\(6\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+      "checks": "<ul><li>At terminal speed the net force is zero. That does not imply finite-time attainment.</li><li>If you choose down as positive, weight is positive and drag is negative.</li></ul>",
+      "examTip": "<p>Check the assumed sign of velocity before dividing by an expression involving it.</p>"
+    },
+    "related": [
+      {
+        "title": "Position-dependent force and the physical velocity branch",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_variable_position"
+      },
+      {
+        "title": "Limiting speeds, finite travel and constant power",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_variable_limits"
+      }
+    ]
+  },
+  "fm_variable_limits": {
+    "updatedOn": "2026-11-21",
+    "description": "Distinguish exact stopping events from limits and choose time or position to solve constant-power motion.",
+    "sections": [
+      {
+        "id": "finite-time-or-limit",
+        "title": "How do I tell whether a boundary is reached in finite time?",
+        "label": "Solve the time model",
+        "intro": "<p>An exponential can remain positive for every finite time. Zero speed or a position at a boundary can then be a limit rather than an event.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Evaluate both the long-time limit and whether a finite time satisfies the endpoint equation.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/variable/finite-position-limit.svg",
+              "alt": "A position curve tends to a horizontal dashed line representing a finite limiting position.",
+              "caption": "<p>The position can converge even though the particle never comes to rest at a finite time.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "limits-finite-time-or-limit-check",
+            "title": "Distinguish an approached boundary from a finite stop",
+            "prompt": "<p>A particle starts at the origin. In SI units the speed is \\(v=5 - x\\) while its position is below \\(5\\). Does it reach \\(x=5\\) in finite time? Give its limiting coordinate.</p>",
+            "fields": [
+              {
+                "key": "finite",
+                "label": "Reached in finite time",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              },
+              {
+                "key": "limit",
+                "label": "Limiting coordinate",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Solve for position as a function of time before deciding whether the boundary is reached.</p>",
+            "solution": "<p>Use \\(\\frac{\\mathrm dx}{\\mathrm dt}=k(L-x)\\) and separate. The initial condition gives \\(x=5 - 5 e^{- t}\\).</p><p>The exponential is positive at every finite time. Thus the limiting coordinate is \\(5\\,\\mathrm m\\) but the particle never arrives there at finite time.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An asymptotic limit cannot be substituted as a reached boundary time.</p>"
+          }
+        ]
+      },
+      {
+        "id": "linear-drag-limiting-travel",
+        "title": "Can a particle travel a finite total distance without stopping?",
+        "label": "Integrate before taking the limit",
+        "intro": "<p>Even when speed is positive at all finite times, cumulative displacement can converge.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For linear drag without drive, velocity decays exponentially. Integrate it to obtain the converging displacement.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "limits-linear-drag-limiting-travel-check",
+            "title": "Find a finite limiting distance without a finite stop",
+            "prompt": "<p>A particle with initial velocity \\(7\\,\\mathrm{m\\,s^{-1}}\\) coasts with acceleration \\(a=- v\\). Find its limiting distance from its starting position and the distance at time \\(\\log{\\left(3 \\right)}\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "limit",
+                "label": "Limiting distance",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "distance",
+                "label": "Distance at stated time",
+                "type": "number",
+                "expected": "14/3"
+              }
+            ],
+            "hint": "<p>Integrate the velocity and then take its long-time limit.</p>",
+            "solution": "<p>Separating gives \\(v=7 e^{- t}\\). The speed stays positive at all finite times.</p><p>Integrating velocity from zero gives \\(x=7 - 7 e^{- t}\\).</p><p>The limiting distance is \\(7\\,\\mathrm m\\). At the stated time it has travelled \\(\\frac{14}{3}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The limit of speed alone does not determine whether total displacement is finite.</p>"
+          }
+        ]
+      },
+      {
+        "id": "constant-power-time-law",
+        "title": "How do I find time under a constant-power drive?",
+        "label": "Pick a time-based equation",
+        "intro": "<p>At positive speed, a constant-power engine produces less driving force as speed increases.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(P=Fv\\) and \\(F=m\\frac{\\mathrm dv}{\\mathrm dt}\\) for purely driven motion.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "limits-constant-power-time-law-check",
+            "title": "Use constant power to obtain squared speed in time",
+            "prompt": "<p>A particle of mass \\(5\\) kilograms starts with positive speed \\(4\\,\\mathrm{m\\,s^{-1}}\\). It is driven on a smooth level track by an engine of constant power \\(135\\,\\mathrm W\\). Find the time to reach speed \\(7\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time to reach the target speed",
+                "type": "number",
+                "expected": "11/18"
+              }
+            ],
+            "hint": "<p>The driving force decreases as speed increases. The power is constant, not force.</p>",
+            "solution": "<p>Since \\(P=Fv\\), Newton's second law gives \\(mv\\frac{\\mathrm dv}{\\mathrm dt}=P\\) on the positive-speed branch.</p><p>Integrating gives \\(v^2=54 t + 16\\). The required time is \\(\\frac{11}{18}\\,\\mathrm s\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A constant-power engine does not exert constant force.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "limits-constant-power-time-law-follow-up",
+            "title": "Use constant power to obtain squared speed in time",
+            "prompt": "<p>A particle of mass \\(7\\) kilograms starts with positive speed \\(6\\,\\mathrm{m\\,s^{-1}}\\). It is driven on a smooth level track by an engine of constant power \\(225\\,\\mathrm W\\). Find the time to reach speed \\(11\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time to reach the target speed",
+                "type": "number",
+                "expected": "119/90"
+              }
+            ],
+            "hint": "<p>The driving force decreases as speed increases. The power is constant, not force.</p>",
+            "solution": "<p>Since \\(P=Fv\\), Newton's second law gives \\(mv\\frac{\\mathrm dv}{\\mathrm dt}=P\\) on the positive-speed branch.</p><p>Integrating gives \\(v^2=\\frac{450 t}{7} + 36\\). The required time is \\(\\frac{119}{90}\\,\\mathrm s\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "constant-power-space-law",
+        "title": "How do I find distance directly under constant power?",
+        "label": "Pick a position-based equation",
+        "intro": "<p>If the question gives two speeds and asks for distance, eliminate time using acceleration as a function of position.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>With pure drive, \\(mv^2\\frac{\\mathrm dv}{\\mathrm dx}=P\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "limits-constant-power-space-law-check",
+            "title": "Use constant power with position as the variable",
+            "prompt": "<p>A particle of mass \\(5\\) kilograms starts with positive speed \\(4\\,\\mathrm{m\\,s^{-1}}\\). It is driven on a smooth level track by an engine of constant power \\(135\\,\\mathrm W\\). Find the distance to reach speed \\(7\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "distance",
+                "label": "Distance to reach the target speed",
+                "type": "number",
+                "expected": "31/9"
+              }
+            ],
+            "hint": "<p>When distance is requested, choose the chain-rule acceleration and integrate v squared.</p>",
+            "solution": "<p>Use \\(F=\\frac Pv\\) and \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\). This gives \\(mv^2\\frac{\\mathrm dv}{\\mathrm dx}=P\\).</p><p>Integrating gives \\(v^3=81 x + 64\\). The requested distance is \\(\\frac{31}{9}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Multiplying force by one estimated distance does not model variable drive.</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-a-steady-speed-with-resistance",
+        "title": "How does constant resistance change the limiting speed?",
+        "label": "Balance the forces at the limit",
+        "intro": "<p>The forward drive tends to decrease as speed increases. With fixed resistance, the balance speed is approached from a suitable positive-speed initial condition.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Set \\(\\frac Pv=R\\) for the balance speed. At a supplied instant, keep the full resultant when finding acceleration.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "limits-check-a-steady-speed-with-resistance-check",
+            "title": "Compare constant-power drive and resistance",
+            "prompt": "<p>A particle has mass \\(5\\) kilograms and constant engine power \\(135\\,\\mathrm W\\). It moves along a horizontal track against constant resistance \\(15\\,\\mathrm N\\). Find its positive limiting speed and signed acceleration at speed \\(7\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "terminal",
+                "label": "Limiting speed",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "acceleration",
+                "label": "Acceleration at stated speed",
+                "type": "number",
+                "expected": "6/7"
+              }
+            ],
+            "hint": "<p>Use the actual known speed for acceleration. Set the net force to zero only to find the steady limit.</p>",
+            "solution": "<p>At positive speed the drive is \\(\\frac Pv\\). Its balance with resistance identifies the limiting speed.</p><p>The limiting speed is \\(9\\,\\mathrm{m\\,s^{-1}}\\). At the stated smaller speed driving force exceeds resistance.</p><p>The acceleration from the force difference divided by mass is \\(\\frac{6}{7}\\,\\mathrm{m\\,s^{-2}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not set acceleration to zero at an instant simply because a steady speed exists.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "limits-check-a-steady-speed-with-resistance-follow-up",
+            "title": "Compare constant-power drive and resistance",
+            "prompt": "<p>A particle has mass \\(7\\) kilograms and constant engine power \\(225\\,\\mathrm W\\). It moves along a horizontal track against constant resistance \\(\\frac{225}{13}\\,\\mathrm N\\). Find its positive limiting speed and signed acceleration at speed \\(11\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "terminal",
+                "label": "Limiting speed",
+                "type": "number",
+                "expected": "13"
+              },
+              {
+                "key": "acceleration",
+                "label": "Acceleration at stated speed",
+                "type": "number",
+                "expected": "450/1001"
+              }
+            ],
+            "hint": "<p>Use the actual known speed for acceleration. Set the net force to zero only to find the steady limit.</p>",
+            "solution": "<p>At positive speed the drive is \\(\\frac Pv\\). Its balance with resistance identifies the limiting speed.</p><p>The limiting speed is \\(13\\,\\mathrm{m\\,s^{-1}}\\). At the stated smaller speed driving force exceeds resistance.</p><p>The acceleration from the force difference divided by mass is \\(\\frac{450}{1001}\\,\\mathrm{m\\,s^{-2}}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Distinguish an approached boundary from a finite stop",
+        "question": "<p>A particle starts at the origin. In SI units the speed is \\(v=\\frac{8}{3} - \\frac{2 x}{3}\\) while its position is below \\(4\\). Does it reach \\(x=4\\) in finite time? Give its limiting coordinate.</p>",
+        "solution": [
+          "<p>Use \\(\\frac{\\mathrm dx}{\\mathrm dt}=k(L-x)\\) and separate. The initial condition gives \\(x=4 - 4 e^{- \\frac{2 t}{3}}\\).</p>",
+          "<p>The exponential is positive at every finite time. Thus the limiting coordinate is \\(4\\,\\mathrm m\\) but the particle never arrives there at finite time.</p>"
+        ]
+      },
+      {
+        "title": "Find a finite limiting distance without a finite stop",
+        "question": "<p>A particle with initial velocity \\(6\\,\\mathrm{m\\,s^{-1}}\\) coasts with acceleration \\(a=- \\frac{2 v}{3}\\). Find its limiting distance from its starting position and the distance at time \\(\\frac{3 \\log{\\left(2 \\right)}}{2}\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Separating gives \\(v=6 e^{- \\frac{2 t}{3}}\\). The speed stays positive at all finite times.</p>",
+          "<p>Integrating velocity from zero gives \\(x=9 - 9 e^{- \\frac{2 t}{3}}\\).</p>",
+          "<p>The limiting distance is \\(9\\,\\mathrm m\\). At the stated time it has travelled \\(\\frac{9}{2}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Use constant power to obtain squared speed in time",
+        "question": "<p>A particle of mass \\(4\\) kilograms starts with positive speed \\(3\\,\\mathrm{m\\,s^{-1}}\\). It is driven on a smooth level track by an engine of constant power \\(90\\,\\mathrm W\\). Find the time to reach speed \\(5\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "solution": [
+          "<p>Since \\(P=Fv\\), Newton's second law gives \\(mv\\frac{\\mathrm dv}{\\mathrm dt}=P\\) on the positive-speed branch.</p>",
+          "<p>Integrating gives \\(v^2=45 t + 9\\). The required time is \\(\\frac{16}{45}\\,\\mathrm s\\).</p>"
+        ]
+      },
+      {
+        "title": "Use constant power to obtain squared speed in time",
+        "question": "<p>A particle of mass \\(6\\) kilograms starts with positive speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). It is driven on a smooth level track by an engine of constant power \\(180\\,\\mathrm W\\). Find the time to reach speed \\(9\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "solution": [
+          "<p>Since \\(P=Fv\\), Newton's second law gives \\(mv\\frac{\\mathrm dv}{\\mathrm dt}=P\\) on the positive-speed branch.</p>",
+          "<p>Integrating gives \\(v^2=60 t + 25\\). The required time is \\(\\frac{14}{15}\\,\\mathrm s\\).</p>"
+        ]
+      },
+      {
+        "title": "Use constant power with position as the variable",
+        "question": "<p>A particle of mass \\(4\\) kilograms starts with positive speed \\(3\\,\\mathrm{m\\,s^{-1}}\\). It is driven on a smooth level track by an engine of constant power \\(90\\,\\mathrm W\\). Find the distance to reach speed \\(5\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "solution": [
+          "<p>Use \\(F=\\frac Pv\\) and \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\). This gives \\(mv^2\\frac{\\mathrm dv}{\\mathrm dx}=P\\).</p>",
+          "<p>Integrating gives \\(v^3=\\frac{135 x}{2} + 27\\). The requested distance is \\(\\frac{196}{135}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare constant-power drive and resistance",
+        "question": "<p>A particle has mass \\(4\\) kilograms and constant engine power \\(90\\,\\mathrm W\\). It moves along a horizontal track against constant resistance \\(\\frac{90}{7}\\,\\mathrm N\\). Find its positive limiting speed and signed acceleration at speed \\(5\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "solution": [
+          "<p>At positive speed the drive is \\(\\frac Pv\\). Its balance with resistance identifies the limiting speed.</p>",
+          "<p>The limiting speed is \\(7\\,\\mathrm{m\\,s^{-1}}\\). At the stated smaller speed driving force exceeds resistance.</p>",
+          "<p>The acceleration from the force difference divided by mass is \\(\\frac{9}{7}\\,\\mathrm{m\\,s^{-2}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare constant-power drive and resistance",
+        "question": "<p>A particle has mass \\(6\\) kilograms and constant engine power \\(180\\,\\mathrm W\\). It moves along a horizontal track against constant resistance \\(\\frac{180}{11}\\,\\mathrm N\\). Find its positive limiting speed and signed acceleration at speed \\(9\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "solution": [
+          "<p>At positive speed the drive is \\(\\frac Pv\\). Its balance with resistance identifies the limiting speed.</p>",
+          "<p>The limiting speed is \\(11\\,\\mathrm{m\\,s^{-1}}\\). At the stated smaller speed driving force exceeds resistance.</p>",
+          "<p>The acceleration from the force difference divided by mass is \\(\\frac{20}{33}\\,\\mathrm{m\\,s^{-2}}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "limits-finite-time-or-limit-extra",
+        "title": "Distinguish an approached boundary from a finite stop",
+        "prompt": "<p>A particle starts at the origin. In SI units the speed is \\(v=8 - \\frac{4 x}{3}\\) while its position is below \\(6\\). Does it reach \\(x=6\\) in finite time? Give its limiting coordinate.</p>",
+        "fields": [
+          {
+            "key": "finite",
+            "label": "Reached in finite time",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          },
+          {
+            "key": "limit",
+            "label": "Limiting coordinate",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Solve for position as a function of time before deciding whether the boundary is reached.</p>",
+        "solution": "<p>Use \\(\\frac{\\mathrm dx}{\\mathrm dt}=k(L-x)\\) and separate. The initial condition gives \\(x=6 - 6 e^{- \\frac{4 t}{3}}\\).</p><p>The exponential is positive at every finite time. Thus the limiting coordinate is \\(6\\,\\mathrm m\\) but the particle never arrives there at finite time.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "limits-linear-drag-limiting-travel-extra",
+        "title": "Find a finite limiting distance without a finite stop",
+        "prompt": "<p>A particle with initial velocity \\(8\\,\\mathrm{m\\,s^{-1}}\\) coasts with acceleration \\(a=- \\frac{4 v}{3}\\). Find its limiting distance from its starting position and the distance at time \\(\\frac{3 \\log{\\left(4 \\right)}}{4}\\,\\mathrm s\\).</p>",
+        "fields": [
+          {
+            "key": "limit",
+            "label": "Limiting distance",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "distance",
+            "label": "Distance at stated time",
+            "type": "number",
+            "expected": "9/2"
+          }
+        ],
+        "hint": "<p>Integrate the velocity and then take its long-time limit.</p>",
+        "solution": "<p>Separating gives \\(v=8 e^{- \\frac{4 t}{3}}\\). The speed stays positive at all finite times.</p><p>Integrating velocity from zero gives \\(x=6 - 6 e^{- \\frac{4 t}{3}}\\).</p><p>The limiting distance is \\(6\\,\\mathrm m\\). At the stated time it has travelled \\(\\frac{9}{2}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "limits-constant-power-time-law-extra",
+        "title": "Use constant power to obtain squared speed in time",
+        "prompt": "<p>A particle of mass \\(8\\) kilograms starts with positive speed \\(7\\,\\mathrm{m\\,s^{-1}}\\). It is driven on a smooth level track by an engine of constant power \\(270\\,\\mathrm W\\). Find the time to reach speed \\(13\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Time to reach the target speed",
+            "type": "number",
+            "expected": "16/9"
+          }
+        ],
+        "hint": "<p>The driving force decreases as speed increases. The power is constant, not force.</p>",
+        "solution": "<p>Since \\(P=Fv\\), Newton's second law gives \\(mv\\frac{\\mathrm dv}{\\mathrm dt}=P\\) on the positive-speed branch.</p><p>Integrating gives \\(v^2=\\frac{135 t}{2} + 49\\). The required time is \\(\\frac{16}{9}\\,\\mathrm s\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "limits-constant-power-space-law-extra",
+        "title": "Use constant power with position as the variable",
+        "prompt": "<p>A particle of mass \\(6\\) kilograms starts with positive speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). It is driven on a smooth level track by an engine of constant power \\(180\\,\\mathrm W\\). Find the distance to reach speed \\(9\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "fields": [
+          {
+            "key": "distance",
+            "label": "Distance to reach the target speed",
+            "type": "number",
+            "expected": "302/45"
+          }
+        ],
+        "hint": "<p>When distance is requested, choose the chain-rule acceleration and integrate v squared.</p>",
+        "solution": "<p>Use \\(F=\\frac Pv\\) and \\(a=v\\frac{\\mathrm dv}{\\mathrm dx}\\). This gives \\(mv^2\\frac{\\mathrm dv}{\\mathrm dx}=P\\).</p><p>Integrating gives \\(v^3=90 x + 125\\). The requested distance is \\(\\frac{302}{45}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "limits-check-a-steady-speed-with-resistance-extra",
+        "title": "Compare constant-power drive and resistance",
+        "prompt": "<p>A particle has mass \\(8\\) kilograms and constant engine power \\(270\\,\\mathrm W\\). It moves along a horizontal track against constant resistance \\(18\\,\\mathrm N\\). Find its positive limiting speed and signed acceleration at speed \\(13\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "fields": [
+          {
+            "key": "terminal",
+            "label": "Limiting speed",
+            "type": "number",
+            "expected": "15"
+          },
+          {
+            "key": "acceleration",
+            "label": "Acceleration at stated speed",
+            "type": "number",
+            "expected": "9/26"
+          }
+        ],
+        "hint": "<p>Use the actual known speed for acceleration. Set the net force to zero only to find the steady limit.</p>",
+        "solution": "<p>At positive speed the drive is \\(\\frac Pv\\). Its balance with resistance identifies the limiting speed.</p><p>The limiting speed is \\(15\\,\\mathrm{m\\,s^{-1}}\\). At the stated smaller speed driving force exceeds resistance.</p><p>The acceleration from the force difference divided by mass is \\(\\frac{9}{26}\\,\\mathrm{m\\,s^{-2}}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Balance speed",
+        "definition": "<p>The positive speed at which the net force vanishes.</p>"
+      },
+      {
+        "term": "Asymptotic behaviour",
+        "definition": "<p>A long-time approach without necessarily reaching the limiting value.</p>"
+      },
+      {
+        "term": "Power",
+        "definition": "<p>Rate of doing work.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Finite event</th><td>Check whether finite time satisfies the stated boundary.</td></tr><tr><th scope=\"row\">Linear drag</th><td>Speed can tend to zero and total displacement can converge.</td></tr><tr><th scope=\"row\">Power in time</th><td>\\(v^2=u^2+\\frac{2Pt}{m}\\) for no load other than the drive.</td></tr><tr><th scope=\"row\">Power in space</th><td>\\(v^3=u^3+\\frac{3Px}{m}\\) for the same positive branch.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A drive of \\(120\\,\\mathrm W\\) balances resistance of \\(15\\,\\mathrm N\\). Find the steady speed.</p><p><strong>Check</strong> \\(8\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+      "checks": "<ul><li>An asymptotic limit cannot be substituted as a reached boundary time.</li><li>The limit of speed alone does not determine whether total displacement is finite.</li></ul>",
+      "examTip": "<p>Choose the independent variable to match the unknown asked for.</p>"
+    },
+    "related": [
+      {
+        "title": "Resistance, first stops and changes of direction",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_variable_resistance"
+      }
+    ]
+  }
+}
