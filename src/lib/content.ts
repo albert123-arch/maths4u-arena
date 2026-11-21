@@ -16,6 +16,7 @@ import { archiveWhere, hiddenMaterial } from "./content-access";
 import { quarantineImportedTask } from "./import-content-policy";
 import { canUseTeacherLibrary } from "./teacher-account-model";
 import fractionDisplay from "../../content/original/9709-p1/fraction-display.json";
+import { projectAttachedSolutionImages } from "./solution-image-display";
 
 const reviewedFractions: Readonly<Record<string, string>> = fractionDisplay.formulas;
 const reviewedFractionProse = Object.entries(fractionDisplay.prose);
@@ -123,16 +124,17 @@ export function publicVersion(v: Version, lang: string, solutions = false, revea
   const show = (key: keyof HelpVisibility) => solutions && (!revealed || revealed[key]);
   const whole = (html:string|null) => {let result=protectMathHtml(html??"");const doc=parseDocument(result,{withStartIndices:true,withEndIndices:true});
     for(const n of findAll(n=>n.name==="img"&&v.assets.some(a=>a.partPosition!=null&&n.attribs.src==="/api/files/"+a.fileId),doc.children).reverse())result=result.slice(0,n.startIndex!)+result.slice(n.endIndex!+1);return result;};
-  const visibleHtml = [t.statement, ...(show("answer") ? [whole(t.answer)] : []), ...(show("hint") ? [t.hint] : []), ...(show("solution") ? [whole(t.solution)] : []), ...(show("markScheme") ? [whole(t.markScheme)] : [])].join("\n");
+  const solution = show("solution") ? projectAttachedSolutionImages(whole(t.solution), v, t.locale) : undefined;
+  const visibleHtml = [t.statement, ...(show("answer") ? [whole(t.answer)] : []), ...(show("hint") ? [t.hint] : []), ...(solution ? [solution.html] : []), ...(show("markScheme") ? [whole(t.markScheme)] : [])].join("\n");
   return { id: v.id, unavailable: false, title: anonymousTitle ?? displayTitle(t.title), locale: t.locale, statement: displayMarkup(render(t.statement)),
-    ...(show("hint") ? { hint: render(t.hint) } : {}), ...(show("solution") ? { solution: render(whole(t.solution)) } : {}),
+    ...(show("hint") ? { hint: render(t.hint) } : {}), ...(solution ? { solution: render(solution.html) } : {}),
     ...(show("answer") ? {answer:render(whole(t.answer))} : {}),
     ...(show("markScheme") ? { markScheme: render(whole(t.markScheme)), markSchemeSource: anonymousTitle === undefined ? t.markSchemeSource : undefined, markSchemeText: render(t.markSchemeText ?? ""), markSchemeStatus:internalEditorial ? t.markSchemeStatus : undefined } : {}),
     // Keep all source metadata inside this boundary: hiding it only in JSX still
     // exposes the exam reference in GET, autosave and submit responses.
     ...(anonymousTitle === undefined ? { taskId: v.taskId, source: internalEditorial ? v.source?.name : displaySource(v.source?.name), syllabus: v.syllabus, year: v.year, examSession: v.examSession, paper: v.paper, questionNumber: v.questionNumber } : {}),
     separatePartPrompts: v.source?.name === "Maths4U Original (AI-assisted)",
-    assets: v.assets.filter(a => (!a.locale || a.locale === t.locale) && (a.role === "STATEMENT" || (a.role === "ANSWER" && show("answer")) || (a.role === "HINT" && show("hint")) || (a.role === "SOLUTION" && show("solution")) || (a.role === "MARK_SCHEME" && show("markScheme")))
+    assets: v.assets.filter(a => (!a.locale || a.locale === t.locale) && (a.role === "STATEMENT" || (a.role === "ANSWER" && show("answer")) || (a.role === "HINT" && show("hint")) || (a.role === "SOLUTION" && solution && !solution.replaced.has(a.fileId)) || (a.role === "MARK_SCHEME" && show("markScheme")))
       && !(a.file.mimeType.startsWith("image/") && ["\"", "'"].some(q => visibleHtml.includes(`src=${q}/api/files/${a.fileId}${q}`))))
       .map((a, index) => ({ id: a.fileId, caption: anonymousTitle === undefined ? a.caption : (lang === "en" ? "Question attachment " : "Вложение к условию ") + (index + 1), role: a.role, mimeType: a.file.mimeType, partPosition:a.partPosition })),
     parts: v.parts.map(p => {

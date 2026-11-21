@@ -5,12 +5,13 @@ import { isAdmin, isTeacher, type Actor } from "./security";
 import { requestView } from "./request-view";
 import { approvedWhere, restrictedMaterial } from "./content-access";
 import { taskPermission } from "./catalog";
-import { publicVersion, renderContent, versionInclude, type Version } from "./content";
+import { localized, publicVersion, renderContent, versionInclude, type Version } from "./content";
 import { contentPackages, packageTopic } from "./content-package-content";
 import { questionsForTopic, squareMarkingRows, type SourceQuestion } from "./square-content";
 import { quadraticTopics, type QuadraticTopic } from "./square-model";
 import { squareMappings, visibleSquareMappings } from "./square-learning";
 import { teacherPreviewAssets } from "./teacher-task-preview-assets";
+import { projectAttachedSolutionImages } from "./solution-image-display";
 import type { TeacherPreviewResource, TeacherTaskPreviewDto } from "./teacher-task-preview-model";
 
 const recordId = z.string().min(1).max(191).regex(/^[a-zA-Z0-9_-]+$/);
@@ -75,9 +76,10 @@ function legacyTeacherGuidance(shown: ReturnType<typeof publicVersion>) {
 export function projectTeacherTaskPreview(version: Version, actor: Actor, lang: string, source: SourceQuestion | null): TeacherTaskPreviewDto {
   const question = publicVersion(version, lang), shown = publicVersion(version, lang, true);
   const statement = teacherPreviewAssets(version, question.locale, ["STATEMENT"], actor);
+  const solution = projectAttachedSolutionImages(source?.solution_html ?? localized(version.texts, lang).solution, version, shown.locale);
   const total = version.parts.reduce((sum, part) => sum + part.maxPoints, 0);
-  const resource = (html: string, roles: string[], rows?: ReturnType<typeof squareMarkingRows>): TeacherPreviewResource => {
-    const assets = teacherPreviewAssets(version, shown.locale, roles, actor);
+  const resource = (html: string, roles: string[], rows?: ReturnType<typeof squareMarkingRows>, replacedSolutionImages?: ReadonlySet<string>): TeacherPreviewResource => {
+    const assets = teacherPreviewAssets(version, shown.locale, roles, actor, replacedSolutionImages);
     const rewritten = assets.rewrite(html), rewrittenRows = rows?.map(row => ({ ...row, html: assets.rewrite(row.html), ...(row.guidance ? { guidance: assets.rewrite(row.guidance) } : {}) }));
     return { html: rewritten, assets: assets.list(rewritten + (rewrittenRows?.map(row => row.html + (row.guidance ?? "")).join("") ?? "")), total,
       ...(rewrittenRows?.length ? { rows: rewrittenRows } : {}) };
@@ -90,7 +92,7 @@ export function projectTeacherTaskPreview(version: Version, actor: Actor, lang: 
       assets: question.assets.map(asset => ({ ...asset, accessToken: statement.grants.get(asset.id) })),
     },
     answers: resource(source ? renderContent(source.answer_html) : legacyTeacherAnswers(shown), ["ANSWER"]),
-    solution: resource(source ? renderContent(source.solution_html) : shown.solution ?? "", ["SOLUTION", "ANSWER"]),
+    solution: resource(source ? renderContent(solution.html) : shown.solution ?? "", ["SOLUTION", "ANSWER"], undefined, solution.replaced),
     guidance: resource(rows?.length ? "" : legacyTeacherGuidance(shown), ["MARK_SCHEME"], rows),
   };
 }

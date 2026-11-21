@@ -12,6 +12,7 @@ import { legacyQuadraticsStudy, studyLayout } from "./authored-study";
 import { answerFormat, exactValueFeedback } from "./square-presentation";
 import { isCoordinateField, isIntervalField, rangeOutputs } from "./answer-notation";
 import { permitsThreeSignificantFigures } from "./s1-answer-precision";
+import { projectSolutionImages } from "./solution-image-display";
 
 type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
 export type SourceQuestion = { id: string; family_uid: string; title: string; collection: string; prompt_html: string; hint_html: string; solution_html: string; answer_html: string; marks: number; difficulty: number; variant_index?: number; fields: ExactField[]; statisticsRounding?: boolean; marking_criteria?: Criterion[]; parts?: { label: string; marking_criteria: Criterion[] }[]; provenance?: { type: string; past_paper_reference: unknown } };
@@ -133,5 +134,5 @@ export function squareMarkingRows(q: SourceQuestion): MarkingRow[] {
 }
 export function squareHelp(q: SourceQuestion, kind: SupportKind) {
   if (kind === "hint") return renderContent(q.hint_html);
-  return kind === "solution" ? renderContent(q.answer_html + q.solution_html) : "";
+  return kind === "solution" ? renderContent(q.answer_html + projectSolutionImages(q.solution_html, q.id).html) : "";
 }

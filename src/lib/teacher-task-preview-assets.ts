@@ -14,8 +14,11 @@ export function teacherPreviewGrantMatches(grant: Grant, actor: PreviewActor | n
 
 // Reuse signed, version/role/actor-bound StoredFile grants. The extra context
 // prevents teacher-only help URLs being replayed through a learner view lens.
-export function teacherPreviewAssets(version: Version, locale: string, roles: string[], actor: Pick<Actor, "id">) {
-  const eligible = version.assets.filter(asset => roles.includes(asset.role) && (!asset.locale || asset.locale === locale));
+export function teacherPreviewAssets(
+  version: Version, locale: string, roles: string[], actor: Pick<Actor, "id">, replacedSolutionImages?: ReadonlySet<string>,
+) {
+  const eligible = version.assets.filter(asset => roles.includes(asset.role) && (!asset.locale || asset.locale === locale)
+    && !(asset.role === "SOLUTION" && replacedSolutionImages?.has(asset.fileId)));
   const grants = new Map(eligible.map(asset => [asset.fileId, materialGrant({ fileId: asset.fileId, versionId: version.id, role: asset.role, actorId: actor.id, context: "teacher-preview" })]));
   function rewrite(html: string) {
     return html.replace(/\b(src|href)=(['"])(\/api\/files\/([\w-]+)(?:\?[^'"]*)?)\2/g, (all, attribute, quote, url, id) => {

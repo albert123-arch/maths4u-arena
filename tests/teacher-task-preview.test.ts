@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { taskSchema, type Version } from "../src/lib/content";
+import { publicVersion, taskSchema, type Version } from "../src/lib/content";
 import { teacherTaskPreview, teacherPackageTaskPreview, projectTeacherTaskPreview, type TeacherPreviewReaders, type TeacherPackagePreviewReaders } from "../src/lib/teacher-task-preview";
 import { teacherPreviewGrantMatches } from "../src/lib/teacher-task-preview-assets";
 import { materialGrant, readMaterialGrant } from "../src/lib/material-grant";
@@ -9,6 +9,7 @@ import type { Actor } from "../src/lib/security";
 import type { SourceQuestion } from "../src/lib/square-content";
 import { contentPackages } from "../src/lib/content-package-content";
 import { download } from "../src/lib/files";
+import solutionImages from "../content/original/9709-s1/solution-image-display.json";
 import type { PrismaClient } from "../src/generated/prisma/client";
 
 function actor(role: "TEACHER" | "ADMIN" | "STUDENT" = "TEACHER", id = "teacher"): Actor {
@@ -112,6 +113,30 @@ test("packaged answers, separate worked solutions and per-part criteria retain t
   assert.match(preview.guidance.rows![2].guidance!, /equivalent form/);
   assert.equal(preview.guidance.total, 5);
   assert.equal(JSON.stringify(source), before);
+});
+
+test("a typeset worked solution replaces its stored diagram only after the solution is revealed", () => {
+  const uid = "M4U-9709-S1-04-F003-M";
+  const [fileId] = Object.entries(solutionImages).find(([, entry]) => entry.questionUids.includes(uid))!;
+  const question = contentPackages.find(pack => pack.key === "9709-s1-probability")!.questions.find(q => q.id === uid)!;
+  const versionWithFigure = version();
+  const asset = versionWithFigure.assets.find(a => a.role === "SOLUTION")!;
+  asset.fileId = fileId;
+  asset.file.mimeType = "image/svg+xml";
+  versionWithFigure.sourceUid = uid;
+  versionWithFigure.texts[0].solution = question.solution_html;
+  const before = JSON.stringify(versionWithFigure);
+  const hidden = publicVersion(versionWithFigure, "en");
+  assert.equal("solution" in hidden, false);
+  assert(!hidden.assets.some(a => a.id === fileId));
+  const shown = publicVersion(versionWithFigure, "en", true);
+  assert.match(shown.solution!, /<table>/);
+  assert(!shown.assets.some(a => a.id === fileId));
+  const preview = projectTeacherTaskPreview(versionWithFigure, actor(), "en", { ...question, provenance: undefined });
+  assert.match(preview.solution.html, /Sample-space grid/);
+  assert.match(preview.solution.html, /<table>/);
+  assert(!preview.solution.assets.some(a => a.id === fileId));
+  assert.equal(JSON.stringify(versionWithFigure), before);
 });
 
 test("teacher-preview file grants cannot be replayed as another actor, role, lens or immutable version", () => {

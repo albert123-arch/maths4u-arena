@@ -6,6 +6,8 @@ import { squarePublicLesson, questionsForTopic, gradeSquare, squareHelp, squareM
 import { squareSnapshot, nextSquareReview } from "../src/lib/square-model";
 import { packageTask } from "../src/lib/content-packages";
 import { automaticPoints } from "../src/lib/works";
+import { projectSolutionImages } from "../src/lib/solution-image-display";
+import solutionImages from "../content/original/9709-s1/solution-image-display.json";
 test("content package keys fit the persisted import project identifier", () => {
   const pack = contentPackages[0];
   assert(contentPackageSchema.safeParse({ ...pack, key: "k".repeat(36) }).success);
@@ -58,4 +60,26 @@ test("assigned quick-check keys are immutable descriptors and equivalent exact a
  const eq=p.questions.find(q=>q.fields[0]?.type==="equation")!,part=packageTask(p,eq).parts[0];
  const full={...part,acceptedAnswers:part.acceptedAnswers.map(value=>({value})),numericAnswer:null,options:[]};
  assert.equal(automaticPoints(full as never,{value:"2*("+eq.fields[0].expected+")=0"},eq.id),1);
+});
+
+test("reviewed solution images are typeset only for their original question and linked asset", () => {
+  assert(Object.keys(solutionImages).length > 0);
+  for (const [fileId, replacement] of Object.entries(solutionImages)) {
+    for (const uid of replacement.questionUids) {
+      const pack = contentPackages.find(candidate => candidate.questions.some(q => q.id === uid))!;
+      const question = pack.questions.find(q => q.id === uid)!;
+      assert(pack.assets?.some(asset => asset.file_id === fileId && asset.question_uid === uid && asset.role === "SOLUTION"));
+      const raw = question.solution_html;
+      assert(raw.includes(`/api/files/${fileId}`), uid);
+      const projection = projectSolutionImages(raw, uid, new Set([fileId]));
+      assert(projection.replaced.has(fileId), uid);
+      assert(!projection.html.includes(`/api/files/${fileId}`), uid);
+      assert.equal(projectSolutionImages(raw, "unrelated-question", new Set([fileId])).html, raw);
+      assert.equal(projectSolutionImages(raw, uid, new Set()).html, raw);
+      const rendered = squareHelp({ ...question, provenance: undefined }, "solution");
+      assert(!rendered.includes(fileId) && !rendered.includes("katex-error"), uid);
+      if (replacement.html.includes("<table>")) assert(rendered.includes("<table>"), uid);
+      if (replacement.html.includes("\\(")) assert(rendered.includes('class="katex"'), uid);
+    }
+  }
 });
