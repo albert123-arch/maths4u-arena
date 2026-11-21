@@ -55,10 +55,14 @@ test('the selected fifty families retain private provenance and do not replace t
 test('every complete quick answer works; missing and incorrect fields fail; review selects a fresh variant',()=>{
   for(const l of p.lessons){
     const dto=squarePublicLesson(packageTopic(l.id)!),qs=questionsForTopic(l.id);
-    assert.equal(dto.examples.length,4);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
+    assert.equal(dto.examples.length,7);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
+    assert.equal(dto.study?.sections.length,5);
+    assert.equal(dto.study?.extraPractice?.length,9);
+    assert.equal(dto.study?.extraPractice?.filter(q=>q.id.startsWith('S1-FINISH-')).length,4);
+    assert.equal(dto.study?.examPractice?.starters.length,2);
     assert.equal(qs.filter(q=>q.collection==='exam'&&q.variant_index===0).length,10);
     for(const forbidden of ['"expected"','source_problem_id','source_exam','ownerProvenance','archiveTaskId'])assert(!JSON.stringify(dto).includes(forbidden),forbidden);
-    for(const html of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution]),...dto.questions.map(q=>q.prompt)])assert(!html.includes('katex-error'),l.id);
+    for(const html of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution,...(e.steps??[])]),...dto.questions.map(q=>q.prompt)])assert(!html.includes('katex-error'),l.id);
     for(const q of qs){
       assert(!squareHelp(q,'solution').includes('katex-error'),q.id);assert.equal(squareMarkingRows(q).reduce((n,r)=>n+r.marks,0),q.marks);
       for(const raw of [q.answer_html,q.hint_html,...(q.parts??[]).flatMap(part=>part.marking_criteria.map(c=>c.description_html))])assert(!renderContent(raw).includes('katex-error'),q.id);

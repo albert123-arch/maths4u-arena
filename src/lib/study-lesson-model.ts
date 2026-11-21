@@ -24,6 +24,7 @@ export type StudyBlock =
 
 export type StudySection = {
   id: string;
+  previousIds?: string[];
   title: string;
   label: string;
   minutes: number;

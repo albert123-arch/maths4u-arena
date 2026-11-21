@@ -75,6 +75,7 @@ export function LessonStudy({ lesson, study, activeId, children }: {
         const previous = sections[index - 1], next = sections[index + 1];
         return <section key={section.id} id={section.id} className={styles.noteSection} tabIndex={-1} aria-labelledby={section.id + "-title"}>
           <header className={styles.sectionHeading}>
+            {section.previousIds?.map(id => <span key={id} id={id} className={styles.previousSectionAnchor} aria-hidden="true" />)}
             <p>Section {index + 1} of {sections.length} · {sectionInfo(section)}</p>
             <h2 id={section.id + "-title"}>{section.title}</h2>
             <MathContent html={section.intro} />
