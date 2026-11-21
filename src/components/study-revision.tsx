@@ -3,13 +3,13 @@ import { ButtonLink } from "./controls";
 import { PrintRevision } from "./print-revision";
 import styles from "./study-revision.module.css";
 
-export function StudyRevision({ title, revision, path, courseTitle, chapterTitle }: {
+export function StudyRevision({ title, revision, path, courseTitle, chapterTitle, returnSection = "review" }: {
   title: string; revision: { body: string; checks: string; examTip: string };
-  path: string; courseTitle: string; chapterTitle: string;
+  path: string; courseTitle: string; chapterTitle: string; returnSection?: "notes" | "review";
 }) {
   return <main className={styles.revisionPage}>
     <div className={styles.toolbar}>
-      <ButtonLink href={path + "#review"}>← Back to the lesson</ButtonLink>
+      <ButtonLink href={path + "#" + returnSection}>← Back to the lesson</ButtonLink>
       <PrintRevision />
     </div>
     <article className={styles.sheet}>

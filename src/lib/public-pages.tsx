@@ -13,7 +13,7 @@ import { topicContent } from './catalog';
 import { arenaOrigin, publicChapters, chapterMetadata, matchPublicChapter, furtherCourseName, learningStructuredData, safeJsonLd } from './public-chapters';
 import { Platform } from "@/components/platform";
 import { StudyRevision } from "@/components/study-revision";
-import { studyMetadata, studyRevision } from "./authored-study";
+import { hasOriginalRevisionStudy, studyLayout, studyMetadata, studyRevision } from "./authored-study";
 import type { DiscoveryProps } from "@/components/discovery-home";
 import { publicDiscovery } from "./discovery";
 import { learningDirections, type DiscoveryData } from "./discovery-model";
@@ -126,6 +126,14 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   if (parts[0] === "courses" && parts[2] === "topics" && parts[3]) {
     try{initial.topic = await publicTopic(locale, parts[3]);}
     catch(e){if(e instanceof AppError&&e.status===404)return privateArchivePage(parts,search);throw e;}
+    if (locale === "en" && parts[1] === initial.topic.course.slug && hasOriginalRevisionStudy(parts[3])) {
+      if (search.view === "revision") {
+        const revision = studyRevision(parts[3]);
+        if (revision) return <StudyRevision title={initial.topic.title} revision={revision} path={path}
+          courseTitle={initial.topic.course.title} chapterTitle={initial.topic.chapter.title} returnSection="notes" />;
+      }
+      if (search.view !== "legacy") initial.authoredStudy = studyLayout(parts[3]);
+    }
     initial.mode = ["MC", "SHORT", "WRITTEN"].includes(search.mode) ? search.mode as "MC" | "SHORT" | "WRITTEN" : "NOTES";
     if (initial.mode !== "NOTES") initial.catalog = await publicQuestions(locale, { ...search, topic: parts[3], mode: initial.mode });
   } else if (parts[0] === "courses") initial.courses = await publicCourses(locale, parts[1]);

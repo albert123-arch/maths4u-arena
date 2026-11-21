@@ -1,0 +1,2784 @@
+{
+  "orig_integration_power_integrals": {
+    "updatedOn": "2026-11-21",
+    "description": "Reverse power and chain rules, keep the original real domain, and use definite bounds or endpoint limits only when they are valid.",
+    "sections": [
+      {
+        "id": "reverse-rule",
+        "title": "How do I reverse differentiation?",
+        "label": "The reverse power rule",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>An antiderivative \\(F\\) of \\(f\\) satisfies \\(F^{\\prime}(x)=f(x)\\). An indefinite integral describes the family of these functions. The expression inside the integral is the <strong>integrand</strong>, and \\(\\mathrm{d}x\\) names the variable of integration.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[\\int kx^n\\,\\mathrm{d}x=\\frac{kx^{n+1}}{n+1}+C,\\qquad n\\ne-1.\\]<p>Increase the exponent by one and divide by the new exponent. Integrate sums term by term. A constant integrates as \\(\\int k\\,\\mathrm{d}x=kx+C\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S016-20261121-C01",
+            "title": "Reverse each power and keep the constant",
+            "prompt": "<p>Write \\(\\int(8x^3-6x+7)\\,\\mathrm{d}x\\) as \\(Ax^4+Bx^2+Dx+C\\). Find \\(A,B,D\\), where \\(C\\) is an arbitrary constant.</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "\\(A\\)",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "B",
+                "label": "\\(B\\)",
+                "type": "number",
+                "expected": "-3"
+              },
+              {
+                "key": "D",
+                "label": "\\(D\\)",
+                "type": "number",
+                "expected": "7"
+              }
+            ],
+            "hint": "<p>Increase each power by one, divide its coefficient by the new power and integrate the constant term as a multiple of \\(x\\).</p>",
+            "solution": "<ol><li>\\[\\int(8x^3-6x+7)\\,\\mathrm{d}x=\\frac{8x^4}{4}-\\frac{6x^2}{2}+7x+C.\\]</li><li>\\[=2x^4-3x^2+7x+C.\\]</li><li><p>Differentiating gives \\(8x^3-6x+7\\), so the coefficients are \\(2,-3,7\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep \\(+C\\) in an indefinite integral. The rule excludes \\(n=-1\\), since it would divide by zero. The integral of \\(x^{-1}\\) requires a different rule; do not write \\(\\frac{x^0}{0}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Differentiate your antiderivative to check it. You should recover the complete original integrand, including every coefficient and sign.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rewrite-powers",
+        "title": "How do I rewrite roots and fractions without losing the domain?",
+        "label": "Rewrite and retain restrictions",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>Expand finite polynomial products when needed, or divide every numerator term by the denominator. Convert roots and reciprocals into rational powers, then use the same power rule. Do not integrate the numerator and denominator separately.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S016-20261121-C02",
+            "title": "Divide every numerator term by the denominator",
+            "prompt": "<p>Write an antiderivative of \\(\\frac{2x^2+3}{\\sqrt{x}}\\) as \\(Ax^{\\frac{5}{2}}+Bx^{\\frac{1}{2}}+C\\). Find \\(A,B\\) and choose the original real domain.</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "\\(A\\)",
+                "type": "number",
+                "expected": "4/5"
+              },
+              {
+                "key": "B",
+                "label": "\\(B\\)",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "domain",
+                "label": "Original domain",
+                "type": "choice",
+                "expected": "positive",
+                "options": {
+                  "positive": "\\(x&gt;0\\)",
+                  "nonnegative": "\\(x\\ge0\\)",
+                  "nonzero": "\\(x\\ne0\\)"
+                }
+              }
+            ],
+            "hint": "<p>Rewrite the integrand as \\(2x^{\\frac{3}{2}}+3x^{-\\frac{1}{2}}\\). The square-root denominator must be real and nonzero.</p>",
+            "solution": "<ol><li>\\[\\int\\left(2x^{\\frac{3}{2}}+3x^{-\\frac{1}{2}}\\right)\\,\\mathrm{d}x=\\frac{4}{5}x^{\\frac{5}{2}}+6x^{\\frac{1}{2}}+C.\\]</li><li><p>The original domain is \\(x&gt;0\\). Although the antiderivative formula has a finite value at zero, the original integrand is not defined there.</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>Use the original real domain. An even root requires a nonnegative input; a denominator must also be nonzero. Odd roots can have negative inputs. For rational powers with odd denominator, use the real odd root, as in \\(x^{\\frac{4}{3}}=(\\sqrt[3]{x})^4\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "text",
+            "html": "<p>Algebraic cancellation does not restore a missing input. For example, \\(\\frac{x^2-1}{x-1}=x+1\\) only when \\(x\\ne1\\). Its antiderivative is \\(\\frac{x^2}{2}+x+C\\) on each interval separated by \\(1\\); the constants on those intervals may differ.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A simpler antiderivative may be defined at more inputs than the original integrand. Keep the original exclusions, and inspect any excluded point before using definite bounds that reach or cross it.</p>"
+          }
+        ]
+      },
+      {
+        "id": "linear-inner",
+        "title": "How do I integrate a power of a linear expression?",
+        "label": "Reverse the inner factor",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Differentiating a power of \\(ax+b\\) multiplies by \\(a\\). Reversing that process requires division by \\(a\\), as well as division by the new outer exponent.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[\\int k(ax+b)^n\\,\\mathrm{d}x=\\frac{k(ax+b)^{n+1}}{a(n+1)}+C,\\qquad a\\ne0,\\ n\\ne-1.\\]<p>Use this on intervals where the original integrand is real and defined. A negative \\(a\\) keeps its sign in the denominator.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_integration_power_integrals/power-rule-reversal.svg\" alt=\"A reverse-chain calculation is checked by differentiating the proposed antiderivative, including the inner derivative and the arbitrary constant.\" width=\"844\" height=\"510\"></p><p>Differentiating \\(\\frac{(2x+3)^4}{8}+C\\) recovers \\((2x+3)^3\\): the outer factor \\(4\\) and inner factor \\(2\\) cancel the denominator.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S016-20261121-C03",
+            "title": "Divide by the negative inner gradient",
+            "prompt": "<p>For \\(x\\ne5\\), write \\(\\int(5-x)^{-2}\\,\\mathrm{d}x=A(5-x)^p+C\\). Find \\(A,p\\).</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "\\(A\\)",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "p",
+                "label": "\\(p\\)",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>The new exponent is \\(-1\\), and the inner derivative is also \\(-1\\). Divide by both.</p>",
+            "solution": "<ol><li>\\[\\int(5-x)^{-2}\\,\\mathrm{d}x=\\frac{(5-x)^{-1}}{(-1)(-1)}+C=\\frac{1}{5-x}+C.\\]</li><li><p>Differentiating gives \\(-(5-x)^{-2}(-1)=(5-x)^{-2}\\). Thus \\(A=1\\) and \\(p=-1\\).</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>If \\(a=0\\), first treat the integrand as the constant \\(kb^n\\). When that is a finite real number, its integral is \\(kb^n x+C\\). The nonconstant linear-power formula is unnecessary and would divide by zero.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The formula does not apply unchanged to a nonlinear inner expression. For example, expand \\((x^2+1)^2=x^4+2x^2+1\\), then integrate to get \\(\\frac{x^5}{5}+\\frac{2x^3}{3}+x+C\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "definite-integrals",
+        "title": "How do I evaluate a definite integral?",
+        "label": "Bounds and signed values",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>For a continuous integrand on a finite closed interval, find an antiderivative first and then subtract its lower-bound value from its upper-bound value. This gives a number, not an arbitrary family.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[\\int_a^b f(x)\\,\\mathrm{d}x=\\left[F(x)\\right]_a^b=F(b)-F(a),\\qquad F^{\\prime}=f.\\]<p>The constants cancel, so no \\(+C\\) remains in the definite value. Put brackets around the whole lower-bound substitution before subtracting.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "P1-S016-20261121-C04",
+            "title": "Substitute upper minus lower and reverse the sign when needed",
+            "prompt": "<p>Evaluate \\(I=\\int_0^2(3x^2-4x+1)\\,\\mathrm{d}x\\), then the same integral with its bounds reversed.</p>",
+            "fields": [
+              {
+                "key": "forward",
+                "label": "\\(I\\)",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "reverse",
+                "label": "Integral from the upper bound back to the lower bound",
+                "type": "number",
+                "expected": "-2"
+              }
+            ],
+            "hint": "<p>An antiderivative is \\(x^3-2x^2+x\\). Substitute into this whole expression before subtracting.</p>",
+            "solution": "<ol><li>\\[I=\\left[x^3-2x^2+x\\right]_0^2=(8-8+2)-0=2.\\]</li><li>\\[\\int_2^0(3x^2-4x+1)\\,\\mathrm{d}x=-I=-2.\\]</li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>When all relevant integrals exist, the following rules hold:</p>\\[\\int_b^a f(x)\\,\\mathrm{d}x=-\\int_a^b f(x)\\,\\mathrm{d}x,\\qquad\\int_a^a f(x)\\,\\mathrm{d}x=0.\\]\\[\\int_a^c f(x)\\,\\mathrm{d}x=\\int_a^b f(x)\\,\\mathrm{d}x+\\int_b^c f(x)\\,\\mathrm{d}x.\\]<p>You can also take constant factors outside an integral and add or subtract integrals term by term.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep exact fractions and radicals until the final answer. A definite integral represents signed accumulation. Geometric area requires attention to where the graph lies above or below the axis.</p>"
+          }
+        ]
+      },
+      {
+        "id": "improper-endpoints",
+        "title": "What if a bound is infinite or the integrand is undefined?",
+        "label": "Improper integrals",
+        "minutes": 15,
+        "level": "core",
+        "intro": "<p>An infinite interval or an unbounded integrand requires an improper integral. An excluded endpoint must also be checked by a limit. Replace the problematic endpoint by a valid finite value, evaluate there, and then approach the endpoint. A finite limit means the integral <strong>converges</strong>; otherwise it <strong>diverges</strong>.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[\\int_0^b f(x)\\,\\mathrm{d}x=\\lim_{\\varepsilon\\to0^+}\\int_{\\varepsilon}^b f(x)\\,\\mathrm{d}x,\\qquad b&gt;0.\\]\\[\\int_a^{\\infty}f(x)\\,\\mathrm{d}x=\\lim_{R\\to\\infty}\\int_a^R f(x)\\,\\mathrm{d}x.\\]<p>For an improper upper finite endpoint, approach it from the left. For a lower endpoint of negative infinity, send a finite lower bound toward negative infinity. Each required limit must be finite.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_integration_power_integrals/improper-endpoint-comparison.svg\" alt=\"Two positive curves near zero compare a finite limiting accumulation with one that grows without bound.\" width=\"818\" height=\"594\"></p><p>Both curves become unbounded near zero. Yet \\(\\int_0^1x^{-\\frac{1}{2}}\\,\\mathrm{d}x=2\\), while \\(\\int_0^1x^{-\\frac{3}{2}}\\,\\mathrm{d}x\\) diverges. The limit of the accumulated integral decides.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "P1-S016-20261121-C05",
+            "title": "An undefined endpoint can converge or diverge",
+            "prompt": "<p>Find the improper integral \\(\\int_0^9x^{-\\frac{1}{2}}\\,\\mathrm{d}x\\). Then decide whether \\(\\int_0^1x^{-\\frac{4}{3}}\\,\\mathrm{d}x\\) converges or diverges.</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Value of the first integral",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "second",
+                "label": "Second integral",
+                "type": "choice",
+                "expected": "diverges",
+                "options": {
+                  "converges": "Converges to a finite value",
+                  "diverges": "Diverges"
+                }
+              }
+            ],
+            "hint": "<p>Replace zero by \\(\\varepsilon&gt;0\\), integrate, then take the limit as \\(\\varepsilon\\) tends to zero.</p>",
+            "solution": "<ol><li>\\[\\int_{\\varepsilon}^9x^{-\\frac{1}{2}}\\,\\mathrm{d}x=6-2\\sqrt{\\varepsilon}\\longrightarrow6.\\]</li><li>\\[\\int_{\\varepsilon}^1x^{-\\frac{4}{3}}\\,\\mathrm{d}x=\\left[-3x^{-\\frac{1}{3}}\\right]_{\\varepsilon}^1=-3+3\\varepsilon^{-\\frac{1}{3}}\\longrightarrow+\\infty.\\]</li><li><p>The first integral converges to \\(6\\); the second has no finite value and diverges.</p></li></ol>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "key",
+            "html": "<p>At an interior excluded point \\(c\\), split into a left and a right integral. Take the one-sided limits separately. Add the results only if both are finite. Do the same at every singularity; endpoint subtraction across the whole interval is not enough.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 7
+          },
+          {
+            "kind": "check",
+            "id": "P1-S016-20261121-C06",
+            "title": "An interior singularity needs two separate finite limits",
+            "prompt": "<p>Evaluate \\(\\int_{-1}^{8}\\frac{1}{(\\sqrt[3]{x})^2}\\,\\mathrm{d}x\\) as an improper integral. The cube root is the real cube root. Give the left contribution up to zero, the right contribution from zero and their sum.</p>",
+            "fields": [
+              {
+                "key": "left",
+                "label": "Left contribution",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "right",
+                "label": "Right contribution",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "total",
+                "label": "Total integral",
+                "type": "number",
+                "expected": "9"
+              }
+            ],
+            "hint": "<p>The integrand is undefined at zero. On each side an antiderivative is \\(3\\sqrt[3]{x}\\); evaluate the two one-sided limits independently.</p>",
+            "solution": "<ol><li>\\[\\lim_{u\\to0^-}\\int_{-1}^{u}x^{-\\frac{2}{3}}\\,\\mathrm{d}x=\\lim_{u\\to0^-}\\left(3\\sqrt[3]{u}+3\\right)=3.\\]</li><li>\\[\\lim_{v\\to0^+}\\int_v^8x^{-\\frac{2}{3}}\\,\\mathrm{d}x=\\lim_{v\\to0^+}\\left(6-3\\sqrt[3]{v}\\right)=6.\\]</li><li><p>Both contributions have finite limits, so the improper integral exists and equals \\(3+6=9\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not cancel positive and negative divergences or treat infinity as an ordinary endpoint value. A finite-looking answer from \\(F(b)-F(a)\\) does not establish convergence across an excluded input.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Integrand",
+        "definition": "<p>The function or expression inside the integration symbol.</p>"
+      },
+      {
+        "term": "Antiderivative",
+        "definition": "<p>A function \\(F\\) whose derivative is the given function \\(f\\).</p>"
+      },
+      {
+        "term": "Constant of integration",
+        "definition": "<p>The arbitrary constant \\(C\\) in a family of antiderivatives.</p>"
+      },
+      {
+        "term": "Definite integral",
+        "definition": "<p>A signed accumulation over stated bounds, with a numerical value when it exists.</p>"
+      },
+      {
+        "term": "Improper integral",
+        "definition": "<p>An integral requiring a limit because the interval is infinite or the original integrand has a problematic point.</p>"
+      },
+      {
+        "term": "Convergent",
+        "definition": "<p>Having a finite limit for every required improper contribution.</p>"
+      },
+      {
+        "term": "Divergent",
+        "definition": "<p>Failing to have the required finite improper-integral value.</p>"
+      },
+      {
+        "term": "Tail",
+        "definition": "<p>The remaining contribution beyond a finite upper cutoff.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Check an indefinite integral by differentiating",
+        "question": "<p>Find \\(\\int(6x^2-4x+3)\\,\\mathrm{d}x\\).</p>",
+        "solution": [
+          "<p>Integrate the three terms separately:</p>\\[\\int(6x^2-4x+3)\\,\\mathrm{d}x=\\frac{6x^3}{3}-\\frac{4x^2}{2}+3x+C.\\]",
+          "\\[=2x^3-2x^2+3x+C.\\]",
+          "<p>Differentiate the result:</p>\\[\\frac{\\mathrm{d}}{\\mathrm{d}x}\\left(2x^3-2x^2+3x+C\\right)=6x^2-4x+3.\\]",
+          "<p>Every constant \\(C\\) disappears on differentiation, so the indefinite integral is a family of functions.</p>"
+        ]
+      },
+      {
+        "title": "Rewrite a quotient as separate powers",
+        "question": "<p>For \\(x&gt;0\\), find \\(\\int\\frac{5x^2+6}{\\sqrt{x}}\\,\\mathrm{d}x\\).</p>",
+        "solution": [
+          "<p>Divide each numerator term by \\(x^{\\frac{1}{2}}\\):</p>\\[\\frac{5x^2+6}{\\sqrt{x}}=5x^{\\frac{3}{2}}+6x^{-\\frac{1}{2}}.\\]",
+          "\\[\\int\\left(5x^{\\frac{3}{2}}+6x^{-\\frac{1}{2}}\\right)\\,\\mathrm{d}x=\\frac{5}{\\frac{5}{2}}x^{\\frac{5}{2}}+\\frac{6}{\\frac{1}{2}}x^{\\frac{1}{2}}+C.\\]",
+          "\\[=2x^{\\frac{5}{2}}+12\\sqrt{x}+C,\\qquad x&gt;0.\\]",
+          "<p>The constant of integration does not change the original restriction from the denominator.</p>"
+        ]
+      },
+      {
+        "title": "Use real cube roots for negative inputs",
+        "question": "<p>Find an antiderivative of \\(4\\sqrt[3]{x}\\) valid for real inputs. Check its derivative at \\(x=-8\\).</p>",
+        "solution": [
+          "\\[\\int4x^{\\frac{1}{3}}\\,\\mathrm{d}x=\\frac{4}{\\frac{4}{3}}x^{\\frac{4}{3}}+C=3x^{\\frac{4}{3}}+C.\\]",
+          "<p>Here \\(x^{\\frac{4}{3}}\\) means \\((\\sqrt[3]{x})^4\\), using the real cube root. It is defined for negative as well as positive inputs.</p>",
+          "\\[F^{\\prime}(x)=4\\sqrt[3]{x},\\qquad F^{\\prime}(-8)=4(-2)=-8.\\]",
+          "<p>At zero, \\(F(x)=3|x|^{\\frac{4}{3}}+C\\) also has derivative zero, matching the continuous integrand. The formula therefore works across the whole real line.</p>"
+        ]
+      },
+      {
+        "title": "Reverse both parts of the chain rule",
+        "question": "<p>Find \\(\\int(2x+3)^3\\,\\mathrm{d}x\\) without expanding.</p>",
+        "solution": [
+          "<p>Increase the outer exponent to \\(4\\), divide by \\(4\\), then divide by the inner derivative \\(2\\):</p>\\[\\int(2x+3)^3\\,\\mathrm{d}x=\\frac{(2x+3)^4}{8}+C.\\]",
+          "<p>Check by differentiating the proposed antiderivative:</p>\\[\\frac{\\mathrm{d}}{\\mathrm{d}x}\\left(\\frac{(2x+3)^4}{8}\\right)=\\frac{1}{8}\\cdot4(2x+3)^3\\cdot2=(2x+3)^3.\\]",
+          "<p>Without the extra division by \\(2\\), the derivative would be twice the required integrand.</p>"
+        ]
+      },
+      {
+        "title": "A definite integral can be negative",
+        "question": "<p>Evaluate \\(\\int_{-1}^{2}(2x-3)\\,\\mathrm{d}x\\).</p>",
+        "solution": [
+          "<p>The integrand is continuous over the whole interval. An antiderivative is \\(F(x)=x^2-3x\\).</p>",
+          "\\[\\int_{-1}^{2}(2x-3)\\,\\mathrm{d}x=\\left[x^2-3x\\right]_{-1}^{2}.\\]",
+          "\\[F(2)=4-6=-2,\\qquad F(-1)=1+3=4.\\]",
+          "\\[F(2)-F(-1)=-2-4=-6.\\]",
+          "<p>This is signed accumulation, so a negative answer is possible. The constant cancels in \\((F(2)+C)-(F(-1)+C)\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare two powers at an improper lower endpoint",
+        "question": "<p>Determine whether \\(\\int_0^1x^{-\\frac{1}{2}}\\,\\mathrm{d}x\\) and \\(\\int_0^1x^{-\\frac{3}{2}}\\,\\mathrm{d}x\\) converge. Find any finite value.</p>",
+        "solution": [
+          "<p>Neither integrand is defined at zero. Replace that endpoint by \\(\\varepsilon&gt;0\\) before evaluating.</p>",
+          "\\[\\int_{\\varepsilon}^1x^{-\\frac{1}{2}}\\,\\mathrm{d}x=\\left[2\\sqrt{x}\\right]_{\\varepsilon}^1=2-2\\sqrt{\\varepsilon}\\longrightarrow2.\\]",
+          "<p>The first improper integral converges to \\(2\\), even though the curve becomes unbounded near zero.</p>",
+          "\\[\\int_{\\varepsilon}^1x^{-\\frac{3}{2}}\\,\\mathrm{d}x=\\left[-2x^{-\\frac{1}{2}}\\right]_{\\varepsilon}^1=2\\varepsilon^{-\\frac{1}{2}}-2\\longrightarrow+\\infty.\\]",
+          "<p>The second integral diverges: the limit is not finite. Infinity is not a number to substitute into an antiderivative.</p>"
+        ]
+      },
+      {
+        "title": "Replace an infinite endpoint by a finite bound first",
+        "question": "<p>Evaluate \\(\\int_2^{\\infty}3x^{-2}\\,\\mathrm{d}x\\). If it is approximated by integrating only up to \\(R\\ge2\\), find the smallest integer \\(R\\) that leaves a tail less than \\(0.1\\).</p>",
+        "solution": [
+          "\\[\\int_2^R3x^{-2}\\,\\mathrm{d}x=\\left[-\\frac{3}{x}\\right]_2^R=\\frac{3}{2}-\\frac{3}{R}.\\]",
+          "\\[\\lim_{R\\to\\infty}\\left(\\frac{3}{2}-\\frac{3}{R}\\right)=\\frac{3}{2}.\\]",
+          "<p>The remaining tail is the difference from this finite total:</p>\\[\\int_R^{\\infty}3x^{-2}\\,\\mathrm{d}x=\\frac{3}{R}.\\]",
+          "\\[\\frac{3}{R}&lt;0.1\\Longrightarrow R&gt;30.\\]<p>The smallest integer is \\(31\\); \\(R=30\\) gives equality and fails the strict inequality.</p>",
+          "<p>A different power need not converge at infinity. For example, \\(\\int_1^R x^{-\\frac{1}{2}}\\,\\mathrm{d}x=2\\sqrt{R}-2\\) grows without bound.</p>"
+        ]
+      },
+      {
+        "title": "Never cancel two divergent contributions across a singularity",
+        "question": "<p>Does \\(\\int_{-1}^{1}x^{-3}\\,\\mathrm{d}x\\) exist as an improper integral?</p>",
+        "solution": [
+          "<p>Zero is inside the interval and is excluded from the integrand. Split there and take the limits independently.</p>",
+          "\\[\\lim_{u\\to0^-}\\int_{-1}^{u}x^{-3}\\,\\mathrm{d}x=\\lim_{u\\to0^-}\\left(\\frac{1}{2}-\\frac{1}{2u^2}\\right)=-\\infty.\\]",
+          "\\[\\lim_{v\\to0^+}\\int_v^1x^{-3}\\,\\mathrm{d}x=\\lim_{v\\to0^+}\\left(-\\frac{1}{2}+\\frac{1}{2v^2}\\right)=+\\infty.\\]",
+          "<p>Both one-sided integrals must have finite values for their sum to define the ordinary improper integral. They do not, so the integral diverges.</p>",
+          "<p>Formal endpoint subtraction using \\(-\\frac{1}{2x^2}\\) would give zero. That calculation crosses an interior singularity and is invalid; opposite divergences cannot be cancelled.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Derivatives, rational powers and the chain rule",
+        "href": "/courses/maths4u-9709-p1/topics/orig_differentiation_derivatives"
+      },
+      {
+        "title": "Recovering a curve from its gradient",
+        "href": "/courses/maths4u-9709-p1/topics/orig_integration_curve_equations"
+      },
+      {
+        "title": "Signed integrals and geometric areas",
+        "href": "/courses/maths4u-9709-p1/topics/orig_integration_areas"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S016-20261121-P01",
+        "title": "Reverse each derivative and keep the constant",
+        "prompt": "<p>Write the general antiderivative of \\(12x^2-6x+5\\) as \\(Ax^3+Bx^2+Dx+C\\). Find \\(A,B,D\\). Explain on paper why the arbitrary constant is needed.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "\\(A\\)",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "b",
+            "label": "\\(B\\)",
+            "type": "number",
+            "expected": "-3"
+          },
+          {
+            "key": "d",
+            "label": "\\(D\\)",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>Increase each power by one and divide by its new value. A constant integrand is a multiple of \\(x^0\\).</p>",
+        "solution": "<ol><li>\\[\\int(12x^2-6x+5)\\,\\mathrm{d}x=4x^3-3x^2+5x+C.\\]</li><li><p>Differentiation returns \\(12x^2-6x+5\\). Every constant has derivative zero, so the derivative does not determine \\(C\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S016-20261121-P02",
+        "title": "Rewrite a quotient before integrating",
+        "prompt": "<p>For \\(x&gt;0\\), express \\(\\displaystyle\\int\\frac{6x^3+3\\sqrt{x}}{x^2}\\,\\mathrm{d}x\\) in the form \\(Ax^2+Bx^{-\\frac{1}{2}}+C\\). Find \\(A,B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "\\(A\\)",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "b",
+            "label": "\\(B\\)",
+            "type": "number",
+            "expected": "-6"
+          }
+        ],
+        "hint": "<p>Divide each numerator term by \\(x^2\\); the second power becomes \\(-\\frac{3}{2}\\).</p>",
+        "solution": "<ol><li>\\[\\frac{6x^3+3\\sqrt{x}}{x^2}=6x+3x^{-\\frac{3}{2}}\\qquad(x&gt;0).\\]</li><li>\\[\\int\\left(6x+3x^{-\\frac{3}{2}}\\right)\\,\\mathrm{d}x=3x^2-6x^{-\\frac{1}{2}}+C.\\]</li><li><p>Differentiate to check: the second coefficient becomes \\((-6)\\left(-\\frac{1}{2}\\right)=3\\), with power \\(-\\frac{3}{2}\\). The original domain stays \\(x&gt;0\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S016-20261121-P03",
+        "title": "Undo a negative inner multiplier",
+        "prompt": "<p>Find \\(K,m\\) such that \\(\\displaystyle\\int5(3-2x)^4\\,\\mathrm{d}x=K(3-2x)^m+C\\).</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "\\(K\\)",
+            "type": "number",
+            "expected": "-1/2",
+            "retry": [
+              {
+                "answer": "1",
+                "feedback": "<p>You divided by the new power. Also divide by the inner derivative \\(-2\\).</p>"
+              },
+              {
+                "answer": "1/2",
+                "feedback": "<p>The inner derivative is negative; keep that sign in the divisor.</p>"
+              }
+            ]
+          },
+          {
+            "key": "m",
+            "label": "\\(m\\)",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>The new power is \\(5\\). The derivative of the inside is \\(-2\\), so the divisor includes both factors.</p>",
+        "solution": "<ol><li>\\[\\int5(3-2x)^4\\,\\mathrm{d}x=\\frac{5(3-2x)^5}{(-2)(5)}+C=-\\frac{1}{2}(3-2x)^5+C.\\]</li><li>\\[\\frac{\\mathrm{d}}{\\mathrm{d}x}\\left[-\\frac{1}{2}(3-2x)^5\\right]=\\left(-\\frac{1}{2}\\right)(5)(-2)(3-2x)^4=5(3-2x)^4.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S016-20261121-P04",
+        "title": "Use brackets, reverse limits and join intervals",
+        "prompt": "<p>Let \\(f(x)=3x^2-4x\\). Find \\(I=\\displaystyle\\int_{-2}^{1}f(x)\\,\\mathrm{d}x\\) and \\(J=\\displaystyle\\int_{1}^{-2}f(x)\\,\\mathrm{d}x\\). You are also given \\(\\displaystyle\\int_1^3f(x)\\,\\mathrm{d}x=10\\). Use this to find \\(K=\\displaystyle\\int_{-2}^{3}f(x)\\,\\mathrm{d}x\\).</p>",
+        "fields": [
+          {
+            "key": "i",
+            "label": "\\(I\\)",
+            "type": "number",
+            "expected": "15",
+            "retry": [
+              {
+                "answer": "-17",
+                "feedback": "<p>Subtract the whole lower-endpoint value: \\((-1)-(-16)\\), not \\((-1)+(-16)\\).</p>"
+              }
+            ]
+          },
+          {
+            "key": "j",
+            "label": "\\(J\\)",
+            "type": "number",
+            "expected": "-15"
+          },
+          {
+            "key": "k",
+            "label": "\\(K\\)",
+            "type": "number",
+            "expected": "25"
+          }
+        ],
+        "hint": "<p>An antiderivative is \\(x^3-2x^2\\). Put brackets around the whole lower-endpoint value.</p>",
+        "solution": "<ol><li>\\[I=\\left[x^3-2x^2\\right]_{-2}^{1}=(-1)-(-16)=15.\\]</li><li>\\[J=-I=-15.\\]</li><li>\\[K=\\int_{-2}^{1}f(x)\\,\\mathrm{d}x+\\int_1^3f(x)\\,\\mathrm{d}x=15+10=25.\\]</li><li><p>These are signed integrals. No change of sign is made merely because part of the curve is below the axis.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S016-20261121-P05",
+        "title": "Use the real cube root on negative inputs",
+        "prompt": "<p>Evaluate \\(\\displaystyle\\int_{-8}^{-1}\\sqrt[3]{x}\\,\\mathrm{d}x\\) exactly. Interpret fractional powers through the real cube root.</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Signed integral",
+            "type": "number",
+            "expected": "-45/4"
+          }
+        ],
+        "hint": "<p>An antiderivative is \\(\\frac{3}{4}(\\sqrt[3]{x})^4\\). The integrand is negative throughout this interval.</p>",
+        "solution": "<ol><li>\\[F(x)=\\frac{3}{4}\\left(\\sqrt[3]{x}\\right)^4=\\frac{3}{4}x^{\\frac{4}{3}}.\\]</li><li>\\[F(-1)=\\frac{3}{4},\\qquad F(-8)=\\frac{3}{4}(-2)^4=12.\\]</li><li>\\[\\int_{-8}^{-1}\\sqrt[3]{x}\\,\\mathrm{d}x=\\frac{3}{4}-12=-\\frac{45}{4}.\\]</li><li><p>The sign agrees with the graph lying below the horizontal axis. A calculator that rejects a negative base raised to a fractional power should be used with the real cube-root expression instead.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S016-20261121-P06",
+        "title": "Check the assumptions before applying a formula",
+        "prompt": "<p>Answer each separate question.</p><p>(a) Find the coefficient of \\(x\\) in \\(\\displaystyle\\int(0x+4)^3\\,\\mathrm{d}x\\).</p><p>(b) Does the power rule \\(\\frac{x^{n+1}}{n+1}\\) apply when \\(n=-1\\)?</p><p>(c) After simplifying \\(\\frac{x^2-1}{x-1}\\), is the original excluded input restored?</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient in part (a)",
+            "type": "number",
+            "expected": "64"
+          },
+          {
+            "key": "rule",
+            "label": "Power rule for part (b)",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "no": "No: its divisor would be zero.",
+              "yes": "Yes: the answer is a constant."
+            }
+          },
+          {
+            "key": "domain",
+            "label": "Domain in part (c)",
+            "type": "choice",
+            "expected": "excluded",
+            "options": {
+              "excluded": "Keep \\(x\\ne1\\).",
+              "restored": "All real inputs become allowed."
+            }
+          }
+        ],
+        "hint": "<p>Treat a constant inside expression directly. A simplified formula has to keep restrictions from its original expression.</p>",
+        "solution": "<ol><li>\\[(0x+4)^3=64\\Longrightarrow\\int64\\,\\mathrm{d}x=64x+C.\\]</li><li><p>The linear-inner formula assumes a nonzero coefficient of \\(x\\). It is unnecessary here. The ordinary power formula also requires \\(n\\ne-1\\), since otherwise its denominator is zero.</p></li><li>\\[\\frac{x^2-1}{x-1}=x+1\\qquad(x\\ne1).\\]</li><li><p>An antiderivative on either side of the missing input is \\(\\frac{x^2}{2}+x+C\\). The constants on the two separate intervals need not be the same; algebraic cancellation does not restore the original domain.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S016-20261121-E01",
+          "title": "Two unbounded integrands can behave differently",
+          "marks": 6,
+          "question": "<p>Decide whether each improper integral has a finite value. For the first, give the exact value if it converges. Justify both conclusions using a lower endpoint \\(\\varepsilon&gt;0\\) before taking a one-sided limit.</p>\\[I=\\int_0^4x^{-\\frac{1}{2}}\\,\\mathrm{d}x,\\qquad J=\\int_0^4x^{-\\frac{3}{2}}\\,\\mathrm{d}x.\\]",
+          "hint": "<p>Integrate on \\([\\varepsilon,4]\\), where both functions are defined. Examine the lower-endpoint term as \\(\\varepsilon\\) approaches zero from above.</p>",
+          "solution": "<ol><li>\\[I=\\lim_{\\varepsilon\\to0^+}\\left[2\\sqrt{x}\\right]_{\\varepsilon}^{4}=\\lim_{\\varepsilon\\to0^+}(4-2\\sqrt{\\varepsilon})=4.\\]</li><li><p>The first integral converges even though the integrand becomes unbounded near zero.</p></li><li>\\[\\int_{\\varepsilon}^{4}x^{-\\frac{3}{2}}\\,\\mathrm{d}x=\\left[-2x^{-\\frac{1}{2}}\\right]_{\\varepsilon}^{4}=-1+\\frac{2}{\\sqrt{\\varepsilon}}.\\]</li><li><p>As \\(\\varepsilon\\to0^+\\), the last expression grows without bound. Thus \\(J\\) diverges to positive infinity; infinity is not a finite integral value.</p></li></ol>",
+          "marking": "<ul><li>1 mark: replace the first zero endpoint by a positive lower bound and state the limit.</li><li>1 mark: obtain the first antiderivative \\(2\\sqrt{x}\\).</li><li>1 mark: obtain the finite value and conclusion.</li><li>1 mark: obtain the second antiderivative \\(-2x^{-\\frac{1}{2}}\\).</li><li>1 mark: evaluate the second truncated integral with the correct sign.</li><li>1 mark: justify positive divergence from its lower-endpoint term.</li></ul>"
+        },
+        {
+          "id": "P1-S016-20261121-E02",
+          "title": "An infinite interval can have a finite integral",
+          "marks": 6,
+          "question": "<p>Evaluate \\(\\displaystyle I=\\int_1^{\\infty}\\frac{6}{x^2}\\,\\mathrm{d}x\\). For \\(R\\ge1\\), write the remaining tail \\(\\displaystyle T(R)=\\int_R^{\\infty}\\frac{6}{x^2}\\,\\mathrm{d}x\\) as \\(\\frac{k}{R}\\). Find \\(k\\), then find the least integer \\(R\\) for which \\(T(R)&lt;0.05\\).</p>",
+          "hint": "<p>Use a finite upper bound \\(M\\), then take \\(M\\to\\infty\\). The final inequality is strict.</p>",
+          "solution": "<ol><li>\\[I=\\lim_{M\\to\\infty}\\left[-\\frac{6}{x}\\right]_1^M=\\lim_{M\\to\\infty}\\left(6-\\frac{6}{M}\\right)=6.\\]</li><li>\\[T(R)=\\lim_{M\\to\\infty}\\left(-\\frac{6}{M}+\\frac{6}{R}\\right)=\\frac{6}{R}.\\]</li><li>\\[\\frac{6}{R}&lt;0.05\\Longleftrightarrow R&gt;120\\qquad(R&gt;0).\\]</li><li><p>The least integer is \\(121\\). At \\(R=120\\), the tail equals \\(0.05\\) and does not satisfy the strict inequality.</p></li></ol>",
+          "marking": "<ul><li>1 mark: replace infinity by a finite upper bound and state a limit.</li><li>1 mark: obtain the antiderivative \\(-\\frac{6}{x}\\).</li><li>1 mark: obtain the convergent total.</li><li>1 mark: derive the tail \\(\\frac{6}{R}\\).</li><li>1 mark: solve the strict inequality correctly.</li><li>1 mark: select the least allowed integer and exclude equality.</li></ul>"
+        },
+        {
+          "id": "P1-S016-20261121-E03",
+          "title": "Do not cross a singularity using endpoint subtraction",
+          "marks": 6,
+          "question": "<p>A student writes</p>\\[\\int_{-1}^{1}\\frac{1}{x^2}\\,\\mathrm{d}x=\\left[-\\frac{1}{x}\\right]_{-1}^{1}=-2.\\]<p>Identify the singular input. For \\(\\varepsilon&gt;0\\), express the left and right truncated integrals in the form \\(\\frac{A}{\\varepsilon}+B\\) and \\(\\frac{D}{\\varepsilon}+E\\). Decide whether the original improper integral converges.</p>",
+          "hint": "<p>Split at zero. Use intervals \\([-1,-\\varepsilon]\\) and \\([\\varepsilon,1]\\), and evaluate each separately.</p>",
+          "solution": "<ol><li><p>The integrand is undefined at \\(x=0\\), inside the interval. The ordinary endpoint-subtraction argument does not apply across this singularity.</p></li><li>\\[\\int_{-1}^{-\\varepsilon}\\frac{1}{x^2}\\,\\mathrm{d}x=\\left[-\\frac{1}{x}\\right]_{-1}^{-\\varepsilon}=\\frac{1}{\\varepsilon}-1.\\]</li><li>\\[\\int_{\\varepsilon}^{1}\\frac{1}{x^2}\\,\\mathrm{d}x=\\left[-\\frac{1}{x}\\right]_{\\varepsilon}^{1}=\\frac{1}{\\varepsilon}-1.\\]</li><li><p>Each expression tends to positive infinity as its endpoint approaches zero from the relevant side. An improper integral across an interior singularity converges only if both one-sided integrals converge separately. Here they do not, so there is no finite integral value.</p></li><li><p>The integrand is positive wherever defined. That also flags the student’s negative result as impossible, but the split limit calculation supplies the proof of divergence.</p></li></ol>",
+          "marking": "<ul><li>1 mark: identify the internal singularity and explain why ordinary endpoint subtraction is invalid.</li><li>1 mark: split into two appropriate one-sided integrals.</li><li>1 mark: evaluate the left truncated integral.</li><li>1 mark: evaluate the right truncated integral.</li><li>1 mark: justify divergence of each one-sided limit.</li><li>1 mark: state the resulting divergence of the full improper integral.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Integrate first, check the domain, then evaluate valid bounds or take the necessary limits.</p><h2>Reverse the power rule</h2>\\[\\int kx^n\\,\\mathrm{d}x=\\frac{kx^{n+1}}{n+1}+C,\\qquad n\\ne-1.\\]<p>Integrate sums term by term; \\(\\int k\\,\\mathrm{d}x=kx+C\\). Rewrite roots and quotients as powers. Keep the original domain and use real odd roots for allowed negative inputs. Check by differentiation.</p><h2>A linear expression inside a power</h2>\\[\\int k(ax+b)^n\\,\\mathrm{d}x=\\frac{k(ax+b)^{n+1}}{a(n+1)}+C.\\]<p>Require \\(a\\ne0\\), \\(n\\ne-1\\) and a real, defined integrand. If \\(a=0\\), integrate the resulting constant when it is defined. Preserve excluded inputs after algebraic cancellation.</p><h2>Definite bounds</h2>\\[\\int_a^b f(x)\\,\\mathrm{d}x=F(b)-F(a),\\qquad F^{\\prime}=f.\\]<p>Check the whole interval before using this directly. Constants cancel. Reverse the bounds to reverse the sign. Add adjacent integrals when they exist. A signed integral need not equal geometric area.</p><h2>Improper endpoints and interior breaks</h2><p>Replace an excluded or infinite bound by a valid finite bound; integrate, then take the appropriate one-sided or infinite limit. A finite limit means convergence.</p><p>Split at every interior singularity. Each one-sided contribution must converge separately. Never cancel divergences or substitute infinity as a number. A remaining tail can be found by subtracting the finite-cutoff integral from its convergent total.</p>",
+      "checks": "<ul><li>New exponent, coefficient and integration constant correct?</li><li>Original real domain and rule exceptions checked?</li><li>Upper minus lower applied to the full expression?</li><li>Every improper contribution shown to have a finite limit?</li></ul>",
+      "examTip": "<p>Every improper contribution shown to have a finite limit?</p>"
+    }
+  },
+  "orig_integration_curve_equations": {
+    "updatedOn": "2026-11-21",
+    "description": "Integrate the gradient to get a family, use heights and geometric conditions to select the curve, and retain the original domain.",
+    "sections": [
+      {
+        "id": "family-constant",
+        "title": "Why does a gradient function describe a whole family of curves?",
+        "label": "The missing constant",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Differentiation removes a constant vertical shift. On one connected interval, curves with the same derivative differ only by a constant. Knowing their slopes therefore does not tell you their heights.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[f^{\\prime}(x)=g(x)\\quad\\Longrightarrow\\quad f(x)=\\int g(x)\\,\\mathrm{d}x=F(x)+C.\\]<p>The arbitrary constant describes the vertical position of the curve. A point or another independent height condition can select it.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_integration_curve_equations/curve-family.svg\" alt=\"Several vertical shifts of the same parabola share one gradient function, while a marked point selects one curve.\" width=\"837\" height=\"521\"></p><p>Every curve \\(y=x^2+C\\) has derivative \\(2x\\). The point \\((1,4)\\) selects \\(C=3\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S017-20261121-C01",
+            "title": "Which condition chooses one member of the family?",
+            "prompt": "<p>A curve has gradient function \\(f^{\\prime}(x)=6x+1\\), so \\(f(x)=3x^2+x+C\\). Which single condition below determines \\(C\\)? Use that condition to find its value.</p>",
+            "fields": [
+              {
+                "key": "condition",
+                "label": "Condition that fixes the constant",
+                "type": "choice",
+                "expected": "point",
+                "options": {
+                  "point": "The curve passes through \\((1,6)\\).",
+                  "gradient": "The gradient at \\(x=2\\) is \\(13\\).",
+                  "stationary": "The stationary input is \\(-\\frac{1}{6}\\)."
+                }
+              },
+              {
+                "key": "C",
+                "label": "\\(C\\)",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Both derivative conditions hold for every value of \\(C\\). A point supplies the missing height.</p>",
+            "solution": "<ol><li><p>Use the point condition in the function:</p>\\[6=3(1)^2+1+C\\Longrightarrow C=2.\\]</li><li><p>The gradient \\(6x+1\\) does not contain \\(C\\). Neither its value at \\(2\\) nor its zero can distinguish the vertically shifted curves.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A gradient value alone cannot determine the vertical constant. If the given derivative already fixes that gradient, the information is a check rather than a new height condition.</p>"
+          }
+        ]
+      },
+      {
+        "id": "point-condition",
+        "title": "How do I use a point to recover the particular curve?",
+        "label": "Integrate, then use the point",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Integrate the complete gradient function and include \\(+C\\). Then substitute both coordinates of an allowed point into the recovered function. Do not substitute the point’s height into the derivative.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(F^{\\prime}(x)=g(x)\\) and the curve passes through \\((a,b)\\), then</p>\\[b=F(a)+C\\Longrightarrow C=b-F(a).\\]<p>Finish by writing the full function, not only the value of the constant.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S017-20261121-C02",
+            "title": "Substitute a negative input into the integrated function",
+            "prompt": "<p>A curve satisfies \\(f^{\\prime}(x)=9x^2-4x+1\\) and passes through \\((-1,5)\\). Write \\(f(x)=3x^3-2x^2+x+C\\). Find \\(C\\), then \\(f(2)\\).</p>",
+            "fields": [
+              {
+                "key": "C",
+                "label": "\\(C\\)",
+                "type": "number",
+                "expected": "11"
+              },
+              {
+                "key": "value",
+                "label": "\\(f(2)\\)",
+                "type": "number",
+                "expected": "29"
+              }
+            ],
+            "hint": "<p>Substitute both coordinates into the recovered function, keeping brackets around the negative input.</p>",
+            "solution": "<ol><li>\\[5=3(-1)^3-2(-1)^2-1+C=-6+C\\Longrightarrow C=11.\\]</li><li>\\[f(2)=24-8+2+11=29.\\]</li><li><p>Differentiating the recovered function returns \\(9x^2-4x+1\\), and the given point is satisfied.</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_integration_curve_equations/point-gradient-information.svg\" alt=\"A point on a parabola is labelled separately from the tangent gradient there, preventing confusion between function and derivative values.\" width=\"796\" height=\"526\"></p><p>For \\(f(x)=x^2+3\\), the statements \\(f(1)=4\\) and \\(f^{\\prime}(1)=2\\) give different information: a height and a tangent gradient.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check two things: differentiating your answer recovers the supplied gradient function, and the original point lies on the recovered curve.</p>"
+          }
+        ]
+      },
+      {
+        "id": "geometric-conditions",
+        "title": "How do tangent, normal and stationary conditions supply information?",
+        "label": "Translate the geometry",
+        "minutes": 10,
+        "level": "core",
+        "intro": "<p>Separate information about direction from information about height. A complete line equation can supply both, once its contact input is known.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<ul><li>A tangent gradient \\(m\\) at input \\(a\\) gives \\(f^{\\prime}(a)=m\\).</li><li>A finite nonzero normal gradient \\(m_N\\) gives \\(f^{\\prime}(a)=-\\frac{1}{m_N}\\).</li><li>A point \\((a,b)\\) gives \\(f(a)=b\\).</li><li>A stationary point \\((a,b)\\) gives both \\(f^{\\prime}(a)=0\\) and \\(f(a)=b\\).</li></ul><p>For a tangent line \\(y=mx+q\\) at input \\(a\\), the contact height is \\(ma+q\\). For a normal, use its line equation for the height and its negative reciprocal for the tangent direction.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "P1-S017-20261121-C03",
+            "title": "Use a normal line for direction and height",
+            "prompt": "<p>A curve has \\(f^{\\prime}(x)=4x+1\\). The line \\(x+9y=20\\) is a normal at an unknown contact point. Find that point and the constant \\(C\\) in \\(f(x)=2x^2+x+C\\).</p>",
+            "fields": [
+              {
+                "key": "contact",
+                "label": "Contact point",
+                "type": "pairs",
+                "expected": "(2,2)"
+              },
+              {
+                "key": "C",
+                "label": "\\(C\\)",
+                "type": "number",
+                "expected": "-8"
+              }
+            ],
+            "hint": "<p>The normal gradient is \\(-\\frac{1}{9}\\), so the tangent gradient is \\(9\\). Use that to locate the contact input, then use the line for its height.</p>",
+            "solution": "<ol><li>\\[4a+1=9\\Longrightarrow a=2.\\]</li><li>\\[2+9y=20\\Longrightarrow y=2.\\]</li><li>\\[2=2(2)^2+2+C=10+C\\Longrightarrow C=-8.\\]</li><li><p>The recovered curve passes through \\((2,2)\\) with tangent gradient \\(9\\), so its normal has the required direction and equation.</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>A vertical normal \\(x=a\\) means a horizontal tangent, so \\(f^{\\prime}(a)=0\\). It supplies no height by itself. A horizontal normal requires a vertical tangent; it cannot be handled by dividing by a zero normal gradient or by assigning an ordinary finite derivative there.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>When a stationary input or contact input is unknown, keep every allowed solution. A stated minimum or maximum may select a branch. If the required direction is impossible for the given derivative, changing \\(C\\) cannot repair it.</p>"
+          }
+        ]
+      },
+      {
+        "id": "linked-parameters",
+        "title": "What if the derivative contains an unknown coefficient?",
+        "label": "Linked parameters and constants",
+        "minutes": 7,
+        "level": "further",
+        "intro": "<p>An unknown coefficient in the derivative and the integration constant play different roles. Keep the coefficient as a constant while integrating. Then turn every supplied height or direction into an equation and solve the equations together.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "P1-S017-20261121-C04",
+            "title": "Two heights can determine a coefficient and the constant",
+            "prompt": "<p>A curve has \\(f^{\\prime}(x)=kx+3\\), where \\(k\\) is constant, and passes through \\((0,2)\\) and \\((2,14)\\). Find \\(k\\) and the integration constant \\(C\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "\\(k\\)",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "C",
+                "label": "\\(C\\)",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Integrate with \\(k\\) held constant, then substitute each point into \\(f(x)=\\frac{k}{2}x^2+3x+C\\).</p>",
+            "solution": "<ol><li>\\[f(0)=2\\Longrightarrow C=2.\\]</li><li>\\[f(2)=2k+6+2=14\\Longrightarrow k=3.\\]</li><li>\\[f(x)=\\frac{3}{2}x^2+3x+2.\\]<p>It satisfies both heights and has derivative \\(3x+3\\), as required.</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>Point conditions belong in \\(f\\); tangent, normal and stationary-direction conditions belong in \\(f^{\\prime}\\). A derivative condition may determine a coefficient, while a height condition determines the vertical constant. Two distinct height conditions can also determine both.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check all original conditions after solving. Do not assume that two statements are independent: two equivalent gradient statements still leave the vertical shift free.</p>"
+          }
+        ]
+      },
+      {
+        "id": "domain-checks",
+        "title": "Which domain and algebraic form should the final curve keep?",
+        "label": "Domains and final form",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Retain the interval supplied with the derivative and check that every used point belongs to it. Roots, denominators and cancelled factors may exclude inputs. A finite antiderivative value at an excluded endpoint does not automatically enlarge the original domain.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use \\(u=\\sqrt{x}\\) to rewrite a finished answer only after doing the calculus in \\(x\\). Replacing \\(x\\) by \\(u^2\\) inside an integral while leaving \\(\\mathrm{d}x\\) unchanged is not a valid change of variable.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>If the domain has separate intervals, each can have its own integration constant. A point on the left of an excluded input fixes the left constant only, unless an additional condition links the two parts. Algebraic cancellation preserves that gap.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "P1-S017-20261121-C05",
+            "title": "One point cannot fix the constant across a domain gap",
+            "prompt": "<p>A curve is defined on \\(\\mathbb{R}\\setminus\\{1\\}\\), with \\(f^{\\prime}(x)=\\frac{x^2-1}{x-1}\\) and \\(f(0)=4\\). On \\(x&lt;1\\), write \\(f(x)=\\frac{x^2}{2}+x+C_L\\). Find \\(C_L\\), then decide whether \\(f(2)\\) is determined.</p>",
+            "fields": [
+              {
+                "key": "constant",
+                "label": "\\(C_L\\)",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "right",
+                "label": "Is \\(f(2)\\) determined?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "no": "No; the right interval has a free constant.",
+                  "eight": "Yes; \\(f(2)=8\\).",
+                  "undefined": "No; \\(x=2\\) is excluded from the domain."
+                }
+              }
+            ],
+            "hint": "<p>Cancellation preserves the exclusion at \\(1\\). The left and right intervals need not share an integration constant.</p>",
+            "solution": "<ol><li>\\[f^{\\prime}(x)=x+1\\quad\\text{for }x\\ne1.\\]</li><li><p>On the left interval, \\(f(0)=C_L=4\\). On the right interval, the general form is \\(f(x)=\\frac{x^2}{2}+x+C_R\\), with \\(C_R\\) unrestricted by the given point.</p></li><li>\\[f(2)=4+C_R.\\]<p>The value exists on that interval but cannot be determined from the supplied information. The excluded input is \\(1\\), not \\(2\\).</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>A complete recovered curve includes its function equation, all determined parameter values and the original domain. If information leaves part of the family free, state which constant or component is undetermined.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Gradient function",
+        "definition": "<p>The derivative \\(f^{\\prime}(x)\\), which gives the local slope at each allowed input.</p>"
+      },
+      {
+        "term": "Family of curves",
+        "definition": "<p>Several functions sharing the same derivative on an interval but differing by a vertical constant.</p>"
+      },
+      {
+        "term": "Particular curve",
+        "definition": "<p>A member of the family selected by sufficient additional conditions.</p>"
+      },
+      {
+        "term": "Point condition",
+        "definition": "<p>A statement \\(f(a)=b\\) fixing the height at an allowed input.</p>"
+      },
+      {
+        "term": "Direction condition",
+        "definition": "<p>Information about a tangent, normal or stationary gradient.</p>"
+      },
+      {
+        "term": "Independent conditions",
+        "definition": "<p>Conditions that each add new information about the unknowns.</p>"
+      },
+      {
+        "term": "Domain component",
+        "definition": "<p>One connected interval of inputs, separated from others by excluded values.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "A point selects one vertical shift",
+        "question": "<p>A curve satisfies \\(f^{\\prime}(x)=2x\\) and passes through \\((1,4)\\). Find its equation.</p>",
+        "solution": [
+          "\\[f(x)=\\int2x\\,\\mathrm{d}x=x^2+C.\\]",
+          "<p>All values of \\(C\\) give the same derivative. The point supplies the missing height:</p>\\[4=1^2+C\\Longrightarrow C=3.\\]",
+          "\\[f(x)=x^2+3.\\]",
+          "<p>Its derivative is \\(2x\\), and \\(f(1)=4\\). Both original conditions are satisfied.</p>"
+        ]
+      },
+      {
+        "title": "Integrate before using the point coordinates",
+        "question": "<p>Find the curve with gradient function \\(f^{\\prime}(x)=4x^3-6x+2\\) that passes through \\((-1,7)\\).</p>",
+        "solution": [
+          "\\[f(x)=x^4-3x^2+2x+C.\\]",
+          "<p>Substitute the given input and height into this function:</p>\\[7=(-1)^4-3(-1)^2+2(-1)+C=-4+C.\\]",
+          "\\[C=11,\\qquad f(x)=x^4-3x^2+2x+11.\\]",
+          "<p>Differentiating gives the original gradient function. Substituting \\(x=-1\\) gives \\(1-3-2+11=7\\).</p>"
+        ]
+      },
+      {
+        "title": "A full normal equation can supply the missing contact point",
+        "question": "<p>A curve has \\(f^{\\prime}(x)=2x-4\\). The line \\(x+2y=7\\) is a normal at a point on the curve. Recover the curve equation.</p>",
+        "solution": [
+          "<p>The normal has gradient \\(-\\frac{1}{2}\\), so the tangent gradient at the contact is \\(2\\).</p>\\[2a-4=2\\Longrightarrow a=3.\\]",
+          "<p>The contact point lies on the normal line:</p>\\[3+2y=7\\Longrightarrow y=2.\\]",
+          "\\[f(x)=x^2-4x+C.\\]",
+          "\\[f(3)=9-12+C=2\\Longrightarrow C=5.\\]",
+          "\\[f(x)=x^2-4x+5.\\]<p>At \\((3,2)\\) the tangent gradient is \\(2\\), so the normal is \\(y-2=-\\frac{1}{2}(x-3)\\), exactly the given line.</p>"
+        ]
+      },
+      {
+        "title": "A stationary height can leave more than one curve",
+        "question": "<p>A curve has \\(f^{\\prime}(x)=3x^2-12\\), and one stationary point has height \\(4\\). Find every possible curve. Which one has a local minimum at height \\(4\\)?</p>",
+        "solution": [
+          "\\[f(x)=x^3-12x+C,\\qquad3x^2-12=0\\Longrightarrow x=\\pm2.\\]",
+          "\\[f^{\\prime\\prime}(x)=6x.\\]<p>The point at \\(x=-2\\) is a local maximum, while the point at \\(x=2\\) is a local minimum.</p>",
+          "<p>If the stated stationary point is at \\(x=-2\\),</p>\\[f(-2)=16+C=4\\Longrightarrow C=-12.\\]",
+          "<p>If it is at \\(x=2\\),</p>\\[f(2)=-16+C=4\\Longrightarrow C=20.\\]",
+          "<p>Both \\(f(x)=x^3-12x-12\\) and \\(f(x)=x^3-12x+20\\) satisfy the stationary-height condition. The second has its local minimum at \\((2,4)\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep an unknown coefficient while integrating",
+        "question": "<p>A curve has \\(f^{\\prime}(x)=kx+2\\), where \\(k\\) is constant, and passes through \\((0,1)\\) and \\((2,9)\\). Find its equation.</p>",
+        "solution": [
+          "<p>Treat \\(k\\) as constant when integrating with respect to \\(x\\):</p>\\[f(x)=\\frac{k}{2}x^2+2x+C.\\]",
+          "\\[f(0)=1\\Longrightarrow C=1.\\]",
+          "\\[f(2)=2k+4+1=9\\Longrightarrow k=2.\\]",
+          "\\[f(x)=x^2+2x+1.\\]",
+          "<p>Its derivative is \\(2x+2\\), and its values at \\(0\\) and \\(2\\) are \\(1\\) and \\(9\\). The two point conditions determine both unknown constants.</p>"
+        ]
+      },
+      {
+        "title": "Recover the function on the stated interval before rewriting it",
+        "question": "<p>For \\(x&gt;0\\), a curve has \\(f^{\\prime}(x)=\\frac{3x-3}{\\sqrt{x}}\\) and passes through \\((1,0)\\). Find \\(f(x)\\), then write it as a polynomial in \\(u=\\sqrt{x}\\). Does the recovered formula add \\(x=0\\) to the given domain?</p>",
+        "solution": [
+          "<p>First rewrite and integrate with respect to \\(x\\):</p>\\[f^{\\prime}(x)=3x^{\\frac{1}{2}}-3x^{-\\frac{1}{2}},\\qquad f(x)=2x^{\\frac{3}{2}}-6\\sqrt{x}+C.\\]",
+          "\\[f(1)=2-6+C=0\\Longrightarrow C=4.\\]",
+          "\\[f(x)=2x^{\\frac{3}{2}}-6\\sqrt{x}+4,\\qquad x&gt;0.\\]",
+          "<p>Now use \\(u=\\sqrt{x}&gt;0\\) to represent the completed answer:</p>\\[f(x)=2u^3-6u+4.\\]",
+          "<p>The expression has a finite limiting value \\(4\\) as \\(x\\) approaches zero from the right, but the specified domain is still \\(x&gt;0\\). A continuous extension would be a further choice, not a consequence of integration.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Power integration, definite integrals and improper endpoints",
+        "href": "/courses/maths4u-9709-p1/topics/orig_integration_power_integrals"
+      },
+      {
+        "title": "Tangents, normals and prescribed gradients",
+        "href": "/courses/maths4u-9709-p1/topics/orig_differentiation_tangents_normals"
+      },
+      {
+        "title": "Derivative signs, stationary points and ranges",
+        "href": "/courses/maths4u-9709-p1/topics/orig_differentiation_curve_behaviour"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S017-20261121-P01",
+        "title": "A point fixes the vertical position",
+        "prompt": "<p>A curve has gradient \\(f^{\\prime}(x)=6x-4\\) and passes through \\((2,7)\\). Write its equation as \\(f(x)=Ax^2+Bx+C\\) and find \\(A,B,C\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "\\(A\\)",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "b",
+            "label": "\\(B\\)",
+            "type": "number",
+            "expected": "-4"
+          },
+          {
+            "key": "c",
+            "label": "\\(C\\)",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>Integrate first. Then substitute both coordinates into the recovered function, not into the gradient.</p>",
+        "solution": "<ol><li>\\[f(x)=3x^2-4x+C.\\]</li><li>\\[7=3(2)^2-4(2)+C=4+C\\Longrightarrow C=3.\\]</li><li>\\[f(x)=3x^2-4x+3.\\]</li><li><p>Its derivative is \\(6x-4\\), and its value at \\(x=2\\) is \\(7\\), so both conditions hold.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S017-20261121-P02",
+        "title": "Recover a curve with roots and reciprocal powers",
+        "prompt": "<p>For \\(x&gt;0\\), \\(f^{\\prime}(x)=\\frac{3}{\\sqrt{x}}-\\frac{8}{x^3}\\) and \\(f(1)=5\\). Express the curve as \\(f(x)=A\\sqrt{x}+\\frac{B}{x^2}+C\\). Find \\(A,B,C\\) and \\(f(4)\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "\\(A\\)",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "b",
+            "label": "\\(B\\)",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "c",
+            "label": "\\(C\\)",
+            "type": "number",
+            "expected": "-5"
+          },
+          {
+            "key": "value",
+            "label": "\\(f(4)\\)",
+            "type": "number",
+            "expected": "29/4"
+          }
+        ],
+        "hint": "<p>Write the gradient as \\(3x^{-\\frac{1}{2}}-8x^{-3}\\), integrate term by term, then use the given value.</p>",
+        "solution": "<ol><li>\\[f(x)=6x^{\\frac{1}{2}}+4x^{-2}+C.\\]</li><li>\\[5=6+4+C\\Longrightarrow C=-5.\\]</li><li>\\[f(4)=6(2)+\\frac{4}{16}-5=\\frac{29}{4}.\\]</li><li><p>The original domain remains \\(x&gt;0\\). Differentiation restores both terms of the supplied gradient.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S017-20261121-P03",
+        "title": "Convert the normal direction before using the gradient",
+        "prompt": "<p>A curve satisfies \\(f^{\\prime}(x)=ax-3\\), passes through \\((2,1)\\), and has a normal of gradient \\(-\\frac{1}{5}\\) at that point. Find \\(a\\) and the integration constant \\(C\\) in \\(f(x)=\\frac{a}{2}x^2-3x+C\\). Also find \\(f(3)\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "\\(a\\)",
+            "type": "number",
+            "expected": "4",
+            "retry": [
+              {
+                "answer": "7/5",
+                "feedback": "<p>This uses the normal gradient as the curve gradient. First take its negative reciprocal to obtain the tangent gradient \\(5\\).</p>"
+              }
+            ]
+          },
+          {
+            "key": "c",
+            "label": "\\(C\\)",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "value",
+            "label": "\\(f(3)\\)",
+            "type": "number",
+            "expected": "8"
+          }
+        ],
+        "hint": "<p>The tangent gradient is the negative reciprocal of the finite nonzero normal gradient. The point condition supplies a separate equation.</p>",
+        "solution": "<ol><li>\\[m_T=-\\frac{1}{-\\frac{1}{5}}=5,\\qquad 2a-3=5\\Longrightarrow a=4.\\]</li><li>\\[f(x)=2x^2-3x+C,\\qquad1=8-6+C\\Longrightarrow C=-1.\\]</li><li>\\[f(x)=2x^2-3x-1,\\qquad f(3)=18-9-1=8.\\]</li><li><p>At the contact, the derivative is \\(5\\), whose product with the given normal gradient is \\(-1\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S017-20261121-P04",
+        "title": "A stationary point gives two conditions",
+        "prompt": "<p>A curve with \\(f^{\\prime}(x)=2x+k\\) has a stationary point at \\((-2,6)\\). Find \\(k,C\\) in \\(f(x)=x^2+kx+C\\), and classify the stationary point.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "\\(k\\)",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "c",
+            "label": "\\(C\\)",
+            "type": "number",
+            "expected": "10"
+          },
+          {
+            "key": "nature",
+            "label": "Nature",
+            "type": "choice",
+            "expected": "minimum",
+            "options": {
+              "minimum": "Minimum",
+              "maximum": "Maximum",
+              "neither": "Neither"
+            }
+          }
+        ],
+        "hint": "<p>Use a zero derivative to determine \\(k\\). Use the height \\(6\\) only after recovering the function.</p>",
+        "solution": "<ol><li>\\[f^{\\prime}(-2)=-4+k=0\\Longrightarrow k=4.\\]</li><li>\\[f(x)=x^2+4x+C,\\qquad6=4-8+C\\Longrightarrow C=10.\\]</li><li>\\[f(x)=(x+2)^2+6.\\]</li><li><p>The point is a minimum. Equivalently, \\(f^{\\prime\\prime}=2&gt;0\\) at its stationary input.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S017-20261121-P05",
+        "title": "One point need not determine both disconnected parts",
+        "prompt": "<p>A differentiable function is defined on \\(( -\\infty,2)\\cup(2,\\infty)\\), and</p>\\[f^{\\prime}(x)=\\frac{x^2-4}{x-2},\\qquad f(0)=1.\\]<p>Find \\(f(1)\\). Decide whether the supplied information determines \\(f(3)\\) uniquely and whether it defines \\(f(2)\\).</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "\\(f(1)\\)",
+            "type": "number",
+            "expected": "7/2"
+          },
+          {
+            "key": "unique",
+            "label": "Is \\(f(3)\\) determined uniquely?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "no": "No: the right interval has an independent constant.",
+              "yes": "Yes: one point determines every part of the domain."
+            }
+          },
+          {
+            "key": "defined",
+            "label": "Is \\(f(2)\\) defined?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "no": "No: the original domain excludes this input.",
+              "yes": "Yes: cancellation restores this input."
+            }
+          }
+        ],
+        "hint": "<p>The simplified gradient is \\(x+2\\), but keep \\(x\\ne2\\). The given point belongs only to the left interval.</p>",
+        "solution": "<ol><li>\\[f(x)=\\frac{x^2}{2}+2x+C_-\\quad(x&lt;2),\\qquad f(x)=\\frac{x^2}{2}+2x+C_+\\quad(x&gt;2).\\]</li><li>\\[f(0)=1\\Longrightarrow C_-=1,\\qquad f(1)=\\frac{1}{2}+2+1=\\frac{7}{2}.\\]</li><li><p>No condition fixes \\(C_+\\), so \\(f(3)\\) is not unique. The original domain excludes \\(2\\), so \\(f(2)\\) is not defined. An extension would require an additional condition.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S017-20261121-E01",
+          "title": "Two points determine a gradient parameter and a constant",
+          "marks": 7,
+          "question": "<p>A curve has gradient \\(f^{\\prime}(x)=kx^2-6x+4\\) and passes through \\((1,0)\\) and \\((3,0)\\). Find \\(k\\) and the constant \\(C\\) in its recovered equation. Then find \\(m,c\\) in the tangent equation \\(y=mx+c\\) at \\((1,0)\\).</p>",
+          "hint": "<p>Integrate with the parameter retained. Subtract the two point equations to eliminate the constant.</p>",
+          "solution": "<ol><li>\\[f(x)=\\frac{k}{3}x^3-3x^2+4x+C.\\]</li><li>\\[0=\\frac{k}{3}+1+C,\\qquad0=9k-15+C.\\]</li><li>\\[\\frac{26k}{3}-16=0\\Longrightarrow k=\\frac{24}{13},\\qquad C=-1-\\frac{8}{13}=-\\frac{21}{13}.\\]</li><li>\\[f(x)=\\frac{8}{13}x^3-3x^2+4x-\\frac{21}{13}.\\]</li><li>\\[m=f^{\\prime}(1)=\\frac{24}{13}-6+4=-\\frac{2}{13}.\\]</li><li>\\[y=-\\frac{2}{13}(x-1)=-\\frac{2}{13}x+\\frac{2}{13}.\\]</li><li><p>Substitution gives zero at both supplied inputs, and differentiating the recovered curve returns the given parameterised gradient.</p></li></ol>",
+          "marking": "<ul><li>1 mark: integrate the full gradient with a constant.</li><li>1 mark: form both point equations.</li><li>1 mark: eliminate the constant and find the gradient parameter.</li><li>1 mark: find the integration constant.</li><li>1 mark: state the complete recovered curve.</li><li>1 mark: obtain the tangent gradient at the specified point.</li><li>1 mark: form the correct tangent equation.</li></ul>"
+        },
+        {
+          "id": "P1-S017-20261121-E02",
+          "title": "A normal line supplies both position and direction",
+          "marks": 9,
+          "question": "<p>For \\(x&gt;0\\), a curve satisfies \\(f^{\\prime}(x)=\\frac{ax+2}{\\sqrt{x}}\\). The normal at the point whose input is \\(1\\) has equation \\(2x+3y=17\\).</p><p>Find \\(a\\), recover the curve with its integration constant \\(C\\), and express the result using \\(u=\\sqrt{x}\\). Find and classify the stationary point of the curve.</p>",
+          "hint": "<p>At the contact, substitute \\(x=1\\) into the normal line to obtain the height. Convert its gradient to the tangent gradient. Perform the calculus in \\(x\\), then use \\(u\\) to rewrite the final expression.</p>",
+          "solution": "<ol><li>\\[2(1)+3y=17\\Longrightarrow y=5,\\qquad m_N=-\\frac{2}{3},\\qquad m_T=\\frac{3}{2}.\\]</li><li>\\[f^{\\prime}(1)=a+2=\\frac{3}{2}\\Longrightarrow a=-\\frac{1}{2}.\\]</li><li>\\[f^{\\prime}(x)=-\\frac{1}{2}x^{\\frac{1}{2}}+2x^{-\\frac{1}{2}}\\Longrightarrow f(x)=-\\frac{1}{3}x^{\\frac{3}{2}}+4\\sqrt{x}+C.\\]</li><li>\\[5=-\\frac{1}{3}+4+C\\Longrightarrow C=\\frac{4}{3}.\\]</li><li>\\[u=\\sqrt{x}&gt;0:\\qquad f(x)=-\\frac{u^3}{3}+4u+\\frac{4}{3}.\\]</li><li>\\[f^{\\prime}(x)=\\frac{4-x}{2\\sqrt{x}}=0\\Longrightarrow x=4,\\qquad f(4)=\\frac{20}{3}.\\]</li><li><p>The denominator is positive throughout \\(x&gt;0\\). Thus the derivative is positive before \\(4\\) and negative after it: the stationary point is a maximum, in fact the global maximum on the stated domain.</p></li><li><p>The recovered curve remains restricted to \\(x&gt;0\\); the finite limit at zero does not add that input to the original curve.</p></li></ol>",
+          "marking": "<ul><li>1 mark: obtain the contact height from the normal line.</li><li>1 mark: convert the normal gradient to the tangent gradient.</li><li>1 mark: use the derivative condition to find the parameter.</li><li>1 mark: integrate both gradient terms with a constant.</li><li>1 mark: find the constant using the contact point.</li><li>1 mark: state the complete expression in the requested representation with its domain.</li><li>1 mark: find the allowed stationary input.</li><li>1 mark: calculate the stationary height.</li><li>1 mark: justify the classification.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>The derivative gives direction; an independent height condition fixes the vertical position.</p><h2>Recover the family and select a curve</h2>\\[f^{\\prime}=g,\\qquad f=F+C,\\qquad F^{\\prime}=g.\\]\\[f(a)=b\\Longrightarrow C=b-F(a).\\]<p>Integrate first, then substitute the point into the recovered function. Write the full equation and check both the derivative and the given height.</p><h2>Translate geometric information</h2><p>Tangent gradient \\(m\\): \\(f^{\\prime}(a)=m\\). Finite nonzero normal gradient \\(m_N\\): \\(f^{\\prime}(a)=-\\frac{1}{m_N}\\). Use the line equation for the contact height.</p><p>A stationary point \\((a,b)\\) gives \\(f^{\\prime}(a)=0\\) and \\(f(a)=b\\). A vertical normal supplies zero tangent gradient but no height. Handle a horizontal normal as a vertical-tangent exception.</p><h2>Keep linked conditions separate</h2><p>Hold unknown coefficients constant while integrating. Put heights into \\(f\\) and directions into \\(f^{\\prime}\\); solve for the coefficients and \\(C\\). Keep all valid contact inputs until a domain or nature condition selects them.</p><p>Gradient information alone cannot fix a vertical shift. Verify every original equation and any requested minimum or maximum.</p><h2>Retain the domain and final form</h2><p>Keep original intervals and excluded inputs, even after cancellation or when an antiderivative is finite at a boundary. Separate domain intervals may need independent constants.</p><p>After integrating in \\(x\\), an answer may be rewritten using \\(u=\\sqrt{x}\\), with its corresponding domain. This is an algebraic representation, not an unchanged-variable integration step.</p>",
+      "checks": "<ul><li>Whole gradient integrated with a constant?</li><li>Heights used in the function and directions in the derivative?</li><li>Every original condition and allowed branch checked?</li><li>Full curve and original domain stated, including any free constant?</li></ul>",
+      "examTip": "<p>Full curve and original domain stated, including any free constant?</p>"
+    }
+  },
+  "orig_integration_areas": {
+    "updatedOn": "2026-11-21",
+    "description": "Identify the region, choose a positive strip height or width, and use the correct boundaries before integrating.",
+    "sections": [
+      {
+        "id": "signed-versus-area",
+        "title": "Why can an integral be zero when the area is not?",
+        "label": "Signed integral or area?",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A definite integral adds signed contributions. For increasing limits \\(a&lt;b\\), a graph above the axis contributes positively and a graph below it contributes negatively. Geometric area adds the positive size of every part.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[I=\\int_a^b f(x)\\,\\mathrm{d}x,\\qquad A=\\int_a^b|f(x)|\\,\\mathrm{d}x.\\]<p>These are equal when the graph is on or above the axis. If it is entirely on or below the axis, \\(A=-I\\). If its sign changes, split the region before adding areas.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_integration_areas/signed-versus-geometric-area.svg\" alt=\"The graph crosses the axis at one; equal shaded regions on opposite sides of the axis have signed total zero and positive total area one.\" width=\"844\" height=\"519\"></p><p>For \\(y=x-1\\) on \\([0,2]\\), the signed contributions cancel, but the two geometric areas add to \\(1\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S018-20261121-C01",
+            "title": "Separate the signed result from the total area",
+            "prompt": "<p>For \\(f(x)=2x-1\\), find the signed integral and the geometric area between the graph and the axis on \\(0\\le x\\le2\\).</p>",
+            "fields": [
+              {
+                "key": "signed",
+                "label": "Signed integral",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "area",
+                "label": "Geometric area in square units",
+                "type": "number",
+                "expected": "5/2"
+              }
+            ],
+            "hint": "<p>The root is \\(\\frac{1}{2}\\). Calculate the two contributions separately before adding their positive areas.</p>",
+            "solution": "<ol><li>\\[\\int_0^2(2x-1)\\,\\mathrm{d}x=[x^2-x]_0^2=2.\\]</li><li>\\[\\int_0^{\\frac{1}{2}}(2x-1)\\,\\mathrm{d}x=-\\frac{1}{4},\\qquad\\int_{\\frac{1}{2}}^2(2x-1)\\,\\mathrm{d}x=\\frac{9}{4}.\\]</li><li>\\[A=\\frac{1}{4}+\\frac{9}{4}=\\frac{5}{2}.\\]<p>The signed integral subtracts the part below the axis; the geometric area adds both parts.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Taking the absolute value after one whole integral does not undo cancellation:</p>\\[\\left|\\int_a^b f(x)\\,\\mathrm{d}x\\right|\\ne\\int_a^b|f(x)|\\,\\mathrm{d}x\\quad\\text{in general}.\\]"
+          }
+        ]
+      },
+      {
+        "id": "axis-regions",
+        "title": "How do I find area above and below the axis?",
+        "label": "Axis crossings and signs",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Mark the region and its outer boundaries. Solve \\(f(x)=0\\), retaining every allowed root inside those boundaries. Test the sign on each interval. Use \\(f(x)\\) where it is positive and \\(-f(x)\\) where it is negative, then add the results.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A vertical strip has height “top minus bottom”. For the axis and a graph, that height is either \\(f(x)-0\\) or \\(0-f(x)\\). It must be nonnegative throughout the interval being integrated.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S018-20261121-C02",
+            "title": "Keep the area positive when the graph is below the axis",
+            "prompt": "<p>Find the area between \\(y=2x-6\\), the axis and the vertical lines \\(x=0\\) and \\(x=2\\).</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Area in square units",
+                "type": "number",
+                "expected": "8"
+              }
+            ],
+            "hint": "<p>The graph is below the axis throughout this interval. The vertical gap is \\(0-(2x-6)\\).</p>",
+            "solution": "<ol><li><p>At the endpoints the heights are \\(-6\\) and \\(-2\\); this straight line stays below the axis between them.</p></li><li>\\[A=\\int_0^2(6-2x)\\,\\mathrm{d}x=[6x-x^2]_0^2=8.\\]</li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A root may be a touch rather than a crossing. Do not change the sign of the integrand automatically at every root; check the sign on both sides.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>If a region reaches an undefined input or extends without bound, use the improper-integral limits from the earlier lesson. Each nonnegative area piece must converge. Ordinary endpoint substitution cannot justify a finite area across a singularity.</p>"
+          }
+        ]
+      },
+      {
+        "id": "between-curves",
+        "title": "How do I find the area between two graphs?",
+        "label": "Upper minus lower",
+        "minutes": 11,
+        "level": "core",
+        "intro": "<p>Solve the original intersection equation \\(f(x)=g(x)\\). Check any roots introduced by squaring or clearing a denominator against the original graphs and their domains. A region enclosed only by two graphs has intersection boundaries; supplied vertical lines may give different outer limits.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[A=\\int_a^b\\bigl(\\text{upper function}-\\text{lower function}\\bigr)\\,\\mathrm{d}x.\\]<p>Choose the order using a sketch or a test input between intersections. If the graphs change order, split the region and reverse the subtraction on the affected part.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S018-20261121-C03",
+            "title": "Find the intersections and then the vertical gap",
+            "prompt": "<p>Find the intersection inputs and the enclosed area between \\(y=3-x^2\\) and \\(y=x^2+1\\).</p>",
+            "fields": [
+              {
+                "key": "intersections",
+                "label": "Intersection inputs",
+                "type": "set",
+                "expected": "{-1,1}"
+              },
+              {
+                "key": "area",
+                "label": "Area in square units",
+                "type": "number",
+                "expected": "8/3"
+              }
+            ],
+            "hint": "<p>Solve the intersection equation, then test which graph is higher between the two inputs.</p>",
+            "solution": "<ol><li>\\[3-x^2=x^2+1\\Longrightarrow x^2=1\\Longrightarrow x=-1\\text{ or }x=1.\\]</li><li><p>The graph \\(3-x^2\\) is higher on \\(-1&lt;x&lt;1\\), so the vertical gap is \\(2-2x^2\\).</p></li><li>\\[A=\\int_{-1}^1(2-2x^2)\\,\\mathrm{d}x=\\left[2x-\\frac{2x^3}{3}\\right]_{-1}^1=\\frac{8}{3}.\\]</li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Show the intersection equation, the correct bounds and the gap in each integral. A calculator can check the arithmetic; the displayed setup explains which region you found.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>The signs of the two heights do not decide which graph is upper. Compare their actual values. If both axes measure lengths in the same unit, report the area in the corresponding square unit.</p>"
+          }
+        ]
+      },
+      {
+        "id": "horizontal-strips",
+        "title": "When should I use horizontal strips?",
+        "label": "Right minus left",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Choose horizontal strips when the boundaries are easier to write as \\(x\\) in terms of \\(y\\). Each strip is a thin rectangle: its width is the right coordinate minus the left coordinate, and its thickness is \\(\\mathrm{d}y\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[A=\\int_c^d\\bigl(x_{\\text{right}}(y)-x_{\\text{left}}(y)\\bigr)\\,\\mathrm{d}y.\\]<p>Use limits in \\(y\\). Keep the inverse branches that describe the actual region, and split at any height where its left or right boundary changes.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_integration_areas/strip-orientation.svg\" alt=\"The region between a parabola and a line is shown with a vertical strip and a horizontal strip, with different gaps and matching limits for each orientation.\" width=\"822\" height=\"569\"></p><p>The same first-quadrant region has vertical gap \\(2x-x^2\\) and horizontal gap \\(\\sqrt{y}-\\frac{y}{2}\\). The corresponding limits are \\(0\\le x\\le2\\) and \\(0\\le y\\le4\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "P1-S018-20261121-C04",
+            "title": "Use right minus left with limits in the same variable",
+            "prompt": "<p>The curves \\(x=y^2\\) and \\(x=3y\\) enclose a region. Find the lower and upper limits in \\(y\\), then its area using horizontal strips.</p>",
+            "fields": [
+              {
+                "key": "lower",
+                "label": "Lower \\(y\\)-limit",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "upper",
+                "label": "Upper \\(y\\)-limit",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "area",
+                "label": "Area in square units",
+                "type": "number",
+                "expected": "9/2"
+              }
+            ],
+            "hint": "<p>Solve \\(y^2=3y\\). Between these values, compare the horizontal positions \\(y^2\\) and \\(3y\\).</p>",
+            "solution": "<ol><li>\\[y^2=3y\\Longrightarrow y=0\\text{ or }y=3.\\]</li><li><p>For \\(0&lt;y&lt;3\\), the right boundary is \\(x=3y\\), and the left boundary is \\(x=y^2\\).</p></li><li>\\[A=\\int_0^3(3y-y^2)\\,\\mathrm{d}y=\\left[\\frac{3y^2}{2}-\\frac{y^3}{3}\\right]_0^3=\\frac{9}{2}.\\]</li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Changing the differential from \\(\\mathrm{d}x\\) to \\(\\mathrm{d}y\\) also changes the functions and limits. Reusing the old input bounds gives a different calculation.</p>"
+          }
+        ]
+      },
+      {
+        "id": "unknown-boundaries",
+        "title": "How do I find an unknown boundary?",
+        "label": "Form and check an area equation",
+        "minutes": 7,
+        "level": "further",
+        "intro": "<p>First decide where the unknown boundary lies relative to roots and intersections. Use the given position to form the correct sum of positive areas. Equate that expression to the stated area and solve.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "P1-S018-20261121-C05",
+            "title": "Filter the roots using the stated position of the boundary",
+            "prompt": "<p>The geometric area between \\(y=x-2\\), the axis and the vertical lines \\(x=0\\) and \\(x=b\\) is \\(4\\) square units, where \\(b&gt;2\\). Find both roots of the resulting quadratic equation, then the valid value of \\(b\\).</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "Roots of the quadratic equation",
+                "type": "set",
+                "expected": "{0,4}"
+              },
+              {
+                "key": "b",
+                "label": "Valid boundary \\(b\\)",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>The fixed part below the axis has area \\(2\\). The part to the right of the root has area \\(\\frac{(b-2)^2}{2}\\).</p>",
+            "solution": "<ol><li>\\[2+\\frac{(b-2)^2}{2}=4\\Longrightarrow(b-2)^2=4.\\]</li><li>\\[b=0\\text{ or }b=4.\\]</li><li><p>Only \\(b=4\\) satisfies \\(b&gt;2\\), the condition used to form this area expression. It gives area \\(2+2=4\\). The other algebraic root does not describe the stated region.</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>Keep every algebraic solution until you check it against the original domain, boundary direction and interval used in the area formula. Substitute each remaining solution into the original area expression.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>If the boundary position is not specified, consider its possible intervals separately. A formula derived for a boundary to the right of a crossing cannot be used unchanged to its left.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Signed integral",
+        "definition": "<p>A total that adds contributions above the axis and subtracts contributions below it, for increasing limits.</p>"
+      },
+      {
+        "term": "Geometric area",
+        "definition": "<p>The nonnegative size of a region; separate pieces are added without cancellation.</p>"
+      },
+      {
+        "term": "Boundary",
+        "definition": "<p>A curve, axis or line forming an edge of the required region.</p>"
+      },
+      {
+        "term": "Intersection",
+        "definition": "<p>A point belonging to both bounding graphs.</p>"
+      },
+      {
+        "term": "Vertical strip",
+        "definition": "<p>A thin rectangle with height equal to the upper function minus the lower function, integrated in \\(x\\).</p>"
+      },
+      {
+        "term": "Horizontal strip",
+        "definition": "<p>A thin rectangle with width equal to the right coordinate minus the left coordinate, integrated in \\(y\\).</p>"
+      },
+      {
+        "term": "Inverse branch",
+        "definition": "<p>The part of an inverted equation that describes the boundary in the required region.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Equal signed contributions can cancel",
+        "question": "<p>For \\(y=x-1\\), calculate the signed integral and the total area between the graph and the axis on \\(0\\le x\\le2\\).</p>",
+        "solution": [
+          "\\[I=\\int_0^2(x-1)\\,\\mathrm{d}x=\\left[\\frac{x^2}{2}-x\\right]_0^2=0.\\]",
+          "<p>The root is \\(x=1\\). The graph is below the axis before this root and above it afterwards.</p>\\[\\int_0^1(x-1)\\,\\mathrm{d}x=-\\frac{1}{2},\\qquad\\int_1^2(x-1)\\,\\mathrm{d}x=\\frac{1}{2}.\\]",
+          "<p>For geometric area, add the positive sizes of the two regions:</p>\\[A=\\frac{1}{2}+\\frac{1}{2}=1.\\]",
+          "<p>The integral is zero because the signed contributions cancel. The total area is one square unit.</p>"
+        ]
+      },
+      {
+        "title": "A touching root does not force a change of sign",
+        "question": "<p>Find the area between \\(y=-(x+1)^2\\), the axis and the vertical lines \\(x=-2\\) and \\(x=1\\).</p>",
+        "solution": [
+          "<p>Since \\(-(x+1)^2\\le0\\), the whole graph lies on or below the axis. It touches the axis at \\(x=-1\\) and stays below on both sides.</p>",
+          "<p>The positive vertical gap is \\(0-[-(x+1)^2]=(x+1)^2\\). One integral is sufficient:</p>\\[A=\\int_{-2}^1(x+1)^2\\,\\mathrm{d}x.\\]",
+          "\\[A=\\left[\\frac{(x+1)^3}{3}\\right]_{-2}^1=\\frac{8}{3}-\\left(-\\frac{1}{3}\\right)=3.\\]",
+          "<p>The area is three square units. Splitting at the touching root would give the same result, with no change in the gap formula.</p>"
+        ]
+      },
+      {
+        "title": "Find an enclosed area using vertical strips",
+        "question": "<p>Find the area enclosed by \\(y=x^2\\) and \\(y=2x\\).</p>",
+        "solution": [
+          "<p>Find the intersection inputs:</p>\\[x^2=2x\\Longrightarrow x(x-2)=0\\Longrightarrow x=0\\text{ or }x=2.\\]",
+          "<p>On \\(0&lt;x&lt;2\\), the line is higher than the parabola. The vertical strip has height \\(2x-x^2\\).</p>",
+          "\\[A=\\int_0^2(2x-x^2)\\,\\mathrm{d}x=\\left[x^2-\\frac{x^3}{3}\\right]_0^2=4-\\frac{8}{3}=\\frac{4}{3}.\\]",
+          "<p>The enclosed area is \\(\\frac{4}{3}\\) square units.</p>"
+        ]
+      },
+      {
+        "title": "Both graphs lie below the axis and change order",
+        "question": "<p>Find the area between \\(f(x)=x^2-6\\), \\(g(x)=-x^2-4\\) and the supplied vertical boundaries \\(x=-2\\), \\(x=2\\).</p>",
+        "solution": [
+          "<p>Both graphs lie below the axis on this interval. Their relative heights determine the gap:</p>\\[f(x)-g(x)=2x^2-2=0\\Longrightarrow x=\\pm1.\\]",
+          "<p>The function \\(f\\) is higher on the two outer intervals; \\(g\\) is higher on the middle interval. Keep the supplied outer boundaries.</p>",
+          "\\[\\begin{aligned}A={}&amp;\\int_{-2}^{-1}(2x^2-2)\\,\\mathrm{d}x\\\\&amp;+\\int_{-1}^{1}(2-2x^2)\\,\\mathrm{d}x\\\\&amp;+\\int_{1}^{2}(2x^2-2)\\,\\mathrm{d}x.\\end{aligned}\\]",
+          "<p>The outer pieces are equal by symmetry. For the right one,</p>\\[\\int_1^2(2x^2-2)\\,\\mathrm{d}x=\\left[\\frac{2x^3}{3}-2x\\right]_1^2=\\frac{8}{3}.\\]",
+          "\\[\\int_{-1}^1(2-2x^2)\\,\\mathrm{d}x=\\frac{8}{3}.\\]",
+          "\\[A=\\frac{8}{3}+\\frac{8}{3}+\\frac{8}{3}=8.\\]<p>Each piece is positive even though both bounding graphs have negative heights.</p>"
+        ]
+      },
+      {
+        "title": "Describe the same region with horizontal strips",
+        "question": "<p>Find the area enclosed by \\(y=x^2\\) and \\(y=2x\\) again, this time integrating with respect to \\(y\\).</p>",
+        "solution": [
+          "<p>The intersections are \\((0,0)\\) and \\((2,4)\\), so the limits in \\(y\\) are \\(0\\) and \\(4\\).</p>",
+          "<p>The region is in the first quadrant. Inverting the parabola uses its positive branch \\(x=\\sqrt{y}\\); the line becomes \\(x=\\frac{y}{2}\\).</p>",
+          "<p>For \\(0&lt;y&lt;4\\), the parabola is the right boundary and the line is the left boundary. Therefore,</p>\\[A=\\int_0^4\\left(\\sqrt{y}-\\frac{y}{2}\\right)\\,\\mathrm{d}y.\\]",
+          "\\[A=\\left[\\frac{2}{3}y^{\\frac{3}{2}}-\\frac{y^2}{4}\\right]_0^4=\\frac{16}{3}-4=\\frac{4}{3}.\\]",
+          "<p>The two strip directions give the same area. The functions, limits and differential all use the chosen variable.</p>"
+        ]
+      },
+      {
+        "title": "An area equation can produce an invalid boundary",
+        "question": "<p>The geometric area between \\(y=x-1\\), the axis and the vertical lines \\(x=0\\), \\(x=b\\) is \\(5\\) square units, where \\(b&gt;1\\). Find \\(b\\).</p>",
+        "solution": [
+          "<p>The part from \\(0\\) to \\(1\\) lies below the axis and has area \\(\\frac{1}{2}\\). Because \\(b&gt;1\\), the remaining part lies above it.</p>",
+          "\\[A=\\frac{1}{2}+\\int_1^b(x-1)\\,\\mathrm{d}x=\\frac{1}{2}+\\frac{(b-1)^2}{2}.\\]",
+          "\\[\\frac{1}{2}+\\frac{(b-1)^2}{2}=5\\Longrightarrow(b-1)^2=9\\Longrightarrow b=4\\text{ or }b=-2.\\]",
+          "<p>Reject \\(b=-2\\): it fails \\(b&gt;1\\), so it does not belong to the region used in this equation.</p>",
+          "\\[b=4,\\qquad A=\\frac{1}{2}+\\frac{9}{2}=5.\\]<p>Checking the original area confirms the valid boundary.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Power integration, definite integrals and improper endpoints",
+        "href": "/courses/maths4u-9709-p1/topics/orig_integration_power_integrals"
+      },
+      {
+        "title": "Simultaneous equations",
+        "href": "/courses/maths4u-9709-p1/topics/orig_quadratics_simultaneous"
+      },
+      {
+        "title": "Derivative signs, stationary points and ranges",
+        "href": "/courses/maths4u-9709-p1/topics/orig_differentiation_curve_behaviour"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S018-20261121-P01",
+        "title": "Cancellation changes the integral but not the geometric area",
+        "prompt": "<p>For \\(y=x-2\\) on \\(0\\le x\\le5\\), find the signed integral \\(I=\\displaystyle\\int_0^5(x-2)\\,\\mathrm{d}x\\) and the total geometric area \\(A\\) between the graph and the horizontal axis over that interval.</p>",
+        "fields": [
+          {
+            "key": "i",
+            "label": "\\(I\\)",
+            "type": "number",
+            "expected": "5/2"
+          },
+          {
+            "key": "area",
+            "label": "\\(A\\)",
+            "type": "number",
+            "expected": "13/2",
+            "retry": [
+              {
+                "answer": "5/2",
+                "feedback": "<p>This is the net integral. Add the magnitudes of the pieces on the two sides of \\(x=2\\).</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The graph crosses the axis at \\(x=2\\). The part below the axis has positive geometric area but a negative signed contribution.</p>",
+        "solution": "<ol><li>\\[I=\\left[\\frac{x^2}{2}-2x\\right]_0^5=\\frac{5}{2}.\\]</li><li>\\[A=-\\int_0^2(x-2)\\,\\mathrm{d}x+\\int_2^5(x-2)\\,\\mathrm{d}x=2+\\frac{9}{2}=\\frac{13}{2}.\\]</li><li><p>The geometric area is the sum of two positive pieces. Taking the absolute value of the net integral would still miss some area.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S018-20261121-P02",
+        "title": "A touching root does not force a sign reversal",
+        "prompt": "<p>Find the geometric area between \\(y=(x-1)^2(x+2)\\), the horizontal axis and the vertical lines \\(x=-2\\) and \\(x=2\\). Does the graph change sign at \\(x=1\\)?</p>",
+        "fields": [
+          {
+            "key": "area",
+            "label": "Geometric area",
+            "type": "number",
+            "expected": "8"
+          },
+          {
+            "key": "change",
+            "label": "Sign change at the touching root?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "no": "No: the squared factor remains nonnegative.",
+              "yes": "Yes: every root reverses the sign."
+            }
+          }
+        ],
+        "hint": "<p>On the stated interval, \\(x+2\\ge0\\) and \\((x-1)^2\\ge0\\). Check the sign before deciding to reverse any integral.</p>",
+        "solution": "<ol><li>\\[(x-1)^2(x+2)=x^3-3x+2\\ge0\\qquad(-2\\le x\\le2).\\]</li><li>\\[A=\\left[\\frac{x^4}{4}-\\frac{3x^2}{2}+2x\\right]_{-2}^{2}=2-(-6)=8.\\]</li><li><p>The function is positive on both sides of \\(1\\) within this interval and zero at \\(1\\). It touches the axis without changing sign. Splitting there is optional; neither part needs a negative sign.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S018-20261121-P03",
+        "title": "Find intersections before choosing the area limits",
+        "prompt": "<p>Find the intersection points of \\(y=x^2\\) and \\(y=x+2\\), then find the area enclosed by the two graphs.</p>",
+        "fields": [
+          {
+            "key": "points",
+            "label": "Intersection points",
+            "type": "pairs",
+            "expected": "(-1,1);(2,4)"
+          },
+          {
+            "key": "area",
+            "label": "Enclosed area",
+            "type": "number",
+            "expected": "9/2"
+          }
+        ],
+        "hint": "<p>Set the two heights equal. Between the intersection inputs, determine which graph is higher.</p>",
+        "solution": "<ol><li>\\[x^2=x+2\\Longleftrightarrow(x-2)(x+1)=0.\\]</li><li><p>The intersections are \\((-1,1)\\) and \\((2,4)\\). On the interval between them, the line is above the parabola.</p></li><li>\\[A=\\int_{-1}^{2}(x+2-x^2)\\,\\mathrm{d}x=\\left[\\frac{x^2}{2}+2x-\\frac{x^3}{3}\\right]_{-1}^{2}.\\]</li><li>\\[A=\\frac{10}{3}-\\left(-\\frac{7}{6}\\right)=\\frac{9}{2}.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S018-20261121-P04",
+        "title": "Upper minus lower also works below the axis",
+        "prompt": "<p>The graphs \\(y=x^2-5\\) and \\(y=-4\\) enclose a region below the horizontal axis. Which graph is the upper boundary between their intersections, and what is the area?</p>",
+        "fields": [
+          {
+            "key": "upper",
+            "label": "Upper boundary",
+            "type": "choice",
+            "expected": "line",
+            "options": {
+              "line": "\\(y=-4\\)",
+              "curve": "\\(y=x^2-5\\)"
+            }
+          },
+          {
+            "key": "area",
+            "label": "Enclosed area",
+            "type": "number",
+            "expected": "4/3"
+          }
+        ],
+        "hint": "<p>The vertical strip height is a difference of heights. It is positive even when both heights are negative.</p>",
+        "solution": "<ol><li>\\[x^2-5=-4\\Longrightarrow x=-1,1.\\]</li><li><p>Between these inputs, the line has height \\(-4\\), while the curve is at or below \\(-4\\). Thus the line is the upper boundary.</p></li><li>\\[A=\\int_{-1}^{1}\\bigl[-4-(x^2-5)\\bigr]\\,\\mathrm{d}x=\\int_{-1}^{1}(1-x^2)\\,\\mathrm{d}x=\\frac{4}{3}.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S018-20261121-P05",
+        "title": "A horizontal strip uses horizontal distances",
+        "prompt": "<p>A region is enclosed by \\(x=y^2\\) and \\(x=2y+3\\). Use horizontal strips to find the lower and upper \\(y\\)-limits and the enclosed area.</p>",
+        "fields": [
+          {
+            "key": "lower",
+            "label": "Lower integration limit",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "upper",
+            "label": "Upper integration limit",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "area",
+            "label": "Enclosed area",
+            "type": "number",
+            "expected": "32/3"
+          }
+        ],
+        "hint": "<p>Solve for the intersection values of \\(y\\). Subtract the left-hand \\(x\\)-value from the right-hand \\(x\\)-value.</p>",
+        "solution": "<ol><li>\\[y^2=2y+3\\Longleftrightarrow(y-3)(y+1)=0\\Longrightarrow y=-1,3.\\]</li><li><p>For \\(-1\\le y\\le3\\), the line is the right boundary and the parabola is the left boundary.</p></li><li>\\[A=\\int_{-1}^{3}(2y+3-y^2)\\,\\mathrm{d}y=\\left[y^2+3y-\\frac{y^3}{3}\\right]_{-1}^{3}.\\]</li><li>\\[A=9-\\left(-\\frac{5}{3}\\right)=\\frac{32}{3}.\\]</li><li><p>The limits and differential both use \\(y\\). Using intersection \\(x\\)-coordinates as these limits would describe a different calculation.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S018-20261121-E01",
+          "title": "Two enclosed pieces require a change of upper boundary",
+          "marks": 7,
+          "question": "<p>The curves \\(y=x^3-x\\) and \\(y=x\\) enclose two bounded regions. Find all their intersection points, each separate area and the total enclosed area. Also evaluate the signed difference integral from the leftmost intersection input to the rightmost.</p>",
+          "hint": "<p>Factor the height difference \\(x^3-2x\\) and test its sign on each interval. The same subtraction order cannot give positive strip heights on both sides of zero.</p>",
+          "solution": "<ol><li>\\[x^3-x=x\\Longleftrightarrow x(x^2-2)=0\\Longrightarrow x=-\\sqrt{2},0,\\sqrt{2}.\\]</li><li><p>Since \\(y=x\\) at every intersection, the points are \\((-\\sqrt{2},-\\sqrt{2})\\), \\((0,0)\\) and \\((\\sqrt{2},\\sqrt{2})\\).</p></li><li><p>The cubic is above the line on \\((-\\sqrt{2},0)\\), and the line is above the cubic on \\((0,\\sqrt{2})\\).</p></li><li>\\[A_L=\\int_{-\\sqrt{2}}^0(x^3-2x)\\,\\mathrm{d}x=\\left[\\frac{x^4}{4}-x^2\\right]_{-\\sqrt{2}}^0=1.\\]</li><li>\\[A_R=\\int_0^{\\sqrt{2}}(2x-x^3)\\,\\mathrm{d}x=\\left[x^2-\\frac{x^4}{4}\\right]_0^{\\sqrt{2}}=1.\\]</li><li>\\[A=A_L+A_R=2,\\qquad\\int_{-\\sqrt{2}}^{\\sqrt{2}}(x^3-2x)\\,\\mathrm{d}x=1-1=0.\\]</li><li><p>The zero signed result represents cancellation of equal contributions; it does not mean that no region is enclosed.</p></li></ol>",
+          "marking": "<ul><li>1 mark: solve the complete intersection equation.</li><li>1 mark: state all intersection coordinates.</li><li>1 mark: establish the upper boundary on each interval.</li><li>1 mark: evaluate the left area using positive strip height.</li><li>1 mark: evaluate the right area using positive strip height.</li><li>1 mark: obtain the total geometric area.</li><li>1 mark: distinguish the signed difference integral from the geometric total.</li></ul>"
+        },
+        {
+          "id": "P1-S018-20261121-E02",
+          "title": "An area condition selects the correct endpoint",
+          "marks": 7,
+          "question": "<p>The total geometric area between \\(y=x-3\\), the horizontal axis and the vertical lines \\(x=1\\) and \\(x=b\\) is \\(10\\), where \\(b&gt;3\\).</p><p>Find \\(b\\), the separate areas below and above the axis, and the signed integral \\(I=\\displaystyle\\int_1^b(x-3)\\,\\mathrm{d}x\\).</p>",
+          "hint": "<p>The crossing is at \\(x=3\\). The first geometric area is fixed; the second depends on the unknown endpoint. Apply \\(b&gt;3\\) after solving the area equation.</p>",
+          "solution": "<ol><li>\\[A_-=-\\int_1^3(x-3)\\,\\mathrm{d}x=2.\\]</li><li>\\[A_+=\\int_3^b(x-3)\\,\\mathrm{d}x=\\frac{(b-3)^2}{2}\\qquad(b&gt;3).\\]</li><li>\\[2+\\frac{(b-3)^2}{2}=10\\Longrightarrow(b-3)^2=16\\Longrightarrow b=7\\ \\text{or}\\ b=-1.\\]</li><li><p>The required endpoint satisfies \\(b&gt;3\\), so only \\(b=7\\) belongs to this region. The other algebraic root is rejected.</p></li><li>\\[A_-=2,\\qquad A_+=8,\\qquad I=-A_-+A_+=6.\\]</li><li><p>The geometric total is \\(2+8=10\\), while the signed integral subtracts the below-axis contribution.</p></li></ol>",
+          "marking": "<ul><li>1 mark: identify the sign-changing input and split the region.</li><li>1 mark: calculate the fixed below-axis area.</li><li>1 mark: express the variable above-axis area using the unknown endpoint.</li><li>1 mark: form and solve the total-area equation.</li><li>1 mark: apply the endpoint restriction and select the valid root.</li><li>1 mark: state the separate geometric areas.</li><li>1 mark: calculate the signed integral with the correct signs.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Choose the region and a positive gap before calculating its integral.</p><h2>Signed integral versus geometric area</h2>\\[I=\\int_a^b f(x)\\,\\mathrm{d}x,\\qquad A=\\int_a^b|f(x)|\\,\\mathrm{d}x.\\]<p>For \\(a&lt;b\\), contributions below the axis are negative in \\(I\\). Split where the sign changes and add positive pieces for area. Taking the modulus of the whole signed integral can hide cancellation. A touching root need not change the sign.</p><h2>Vertical strips: upper minus lower</h2>\\[A=\\int_a^b(\\text{upper}-\\text{lower})\\,\\mathrm{d}x.\\]<p>Solve the original intersection equation and check its roots. Keep supplied outer boundaries. Test the order between intersections and split where it changes. The rule also works when both graphs lie below the axis.</p><h2>Horizontal strips: right minus left</h2>\\[A=\\int_c^d(\\text{right}-\\text{left})\\,\\mathrm{d}y.\\]<p>Write the boundaries as \\(x\\) in terms of \\(y\\), using the correct branches. Use limits in \\(y\\) and split where a boundary changes. Choose the orientation that describes the region most clearly.</p><h2>Unknown bounds and final checks</h2><p>Form an equation for the total positive area. Check every algebraic root against the stated domain, boundary position and branch of the formula. If the position is unknown, consider separate intervals.</p><p>Verify nonnegative pieces and the requested region. Use square units for a geometric length model. At singular or infinite boundaries, each required improper area integral must converge.</p>",
+      "checks": "<ul><li>Region and all relevant crossings identified?</li><li>Positive gap and correct variable used on each piece?</li><li>Original domains and supplied boundaries retained?</li><li>Every boundary solution checked in the original area?</li></ul>",
+      "examTip": "<p>Every boundary solution checked in the original area?</p>"
+    }
+  },
+  "orig_integration_volumes": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose a perpendicular cross-section, measure its radii from the axis, and integrate its area without counting any part twice.",
+    "sections": [
+      {
+        "id": "disk-method",
+        "title": "How does rotating a region create a volume?",
+        "label": "Disks and distances",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A solid of revolution is the three-dimensional region swept out by one complete turn about an axis. Cut it perpendicular to that axis. When the original strip runs from the axis to a curve, the cross-section is a filled disk.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A disk of radius \\(R\\) has area \\(\\pi R^2\\). Adding thin disk volumes about the \\(x\\)-axis gives</p>\\[V=\\pi\\int_a^b R(x)^2\\,\\mathrm{d}x.\\]<p>For the region between \\(y=f(x)\\) and that axis, \\(R=|f(x)|\\), so \\(R^2=f(x)^2\\). Square the function before integrating.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S019-20261121-C01",
+            "title": "Square the radius before integrating",
+            "prompt": "<p>The region bounded by \\(y=\\sqrt{3x+2}\\), the \\(x\\)-axis and the lines \\(x=0\\), \\(x=2\\) is rotated through one complete turn about the \\(x\\)-axis. Find the exact volume.</p>",
+            "fields": [
+              {
+                "key": "volume",
+                "label": "Volume in cubic units",
+                "type": "number",
+                "expected": "10*pi"
+              }
+            ],
+            "hint": "<p>The cross-section is a disk. Its squared radius is \\(y^2=3x+2\\).</p>",
+            "solution": "<ol><li>\\[V=\\pi\\int_0^2(3x+2)\\,\\mathrm{d}x.\\]</li><li>\\[V=\\pi\\left[\\frac{3x^2}{2}+2x\\right]_0^2=\\pi(6+4)=10\\pi.\\]</li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The radius is a nonnegative distance from the rotation axis. A negative coordinate is not a negative radius. Also, integrating the radius itself finds neither the disk area nor the volume.</p>"
+          }
+        ]
+      },
+      {
+        "id": "washer-method",
+        "title": "How do I calculate a volume with a hole?",
+        "label": "Outer disk minus inner disk",
+        "minutes": 10,
+        "level": "core",
+        "intro": "<p>If the perpendicular strip stays on one side of the axis without reaching it, its rotation leaves a central hole. The cross-section is a washer: an outer disk with an inner disk removed.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[A=\\pi R^2-\\pi r^2=\\pi(R^2-r^2),\\qquad0\\le r\\le R.\\]\\[V=\\pi\\int_a^b\\bigl(R(x)^2-r(x)^2\\bigr)\\,\\mathrm{d}x.\\]<p>Measure both radii from the axis. The farther boundary supplies \\(R\\), and the nearer one supplies \\(r\\). Find intersections where needed, and retain any supplied end boundaries.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_integration_volumes/washer-cross-section.svg\" alt=\"An annular cross-section shows an outer disk of radius two with an inner disk of radius one removed, distinguishing the difference of squares from the square of the radial gap.\" width=\"796\" height=\"529\"></p><p>At \\(x=1\\) in the region between \\(y=x^2\\) and \\(y=2x\\), the radii are \\(2\\) and \\(1\\). The washer area is \\(3\\pi\\), not \\(\\pi\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "P1-S019-20261121-C02",
+            "title": "Subtract squared radii, not the squared gap",
+            "prompt": "<p>The region between \\(y=x+1\\), \\(y=1\\), \\(x=0\\) and \\(x=2\\) is rotated about the \\(x\\)-axis. Find the exact volume.</p>",
+            "fields": [
+              {
+                "key": "volume",
+                "label": "Volume in cubic units",
+                "type": "number",
+                "expected": "20*pi/3"
+              }
+            ],
+            "hint": "<p>The outer radius is \\(x+1\\), and the inner radius is \\(1\\). Expand \\((x+1)^2-1^2\\).</p>",
+            "solution": "<ol><li>\\[R=x+1,\\qquad r=1,\\qquad R^2-r^2=x^2+2x.\\]</li><li>\\[V=\\pi\\int_0^2(x^2+2x)\\,\\mathrm{d}x=\\pi\\left[\\frac{x^3}{3}+x^2\\right]_0^2=\\frac{20\\pi}{3}.\\]</li><li><p>Using \\([(x+1)-1]^2=x^2\\) would square the gap between the graphs instead of subtracting the disk areas.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "\\[R^2-r^2\\ne(R-r)^2\\quad\\text{in general}.\\]<p>Subtract the two disk areas; do not square the gap between the graphs. Below the axis, the lower graph may be the farther boundary.</p>"
+          }
+        ]
+      },
+      {
+        "id": "y-axis",
+        "title": "What changes when I rotate about the y-axis?",
+        "label": "Horizontal radii and limits",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>For disks or washers about the \\(y\\)-axis, use horizontal strips and integrate with respect to \\(y\\). Rewrite each required boundary as \\(x\\) in terms of \\(y\\), keeping the branch that belongs to the region.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[V=\\pi\\int_c^d\\bigl(R(y)^2-r(y)^2\\bigr)\\,\\mathrm{d}y.\\]<p>The radii are horizontal distances from the \\(y\\)-axis, and \\(c,d\\) are limits in \\(y\\). For an axis-to-curve region, set \\(r=0\\) and use \\(R=|x(y)|\\).</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_integration_volumes/revolution-axis-choice.svg\" alt=\"Two axis choices for one enclosed region show vertical slices with x limits and horizontal slices with y limits, leading to different volumes.\" width=\"822\" height=\"602\"></p><p>The same region between \\(y=x^2\\) and \\(y=2x\\) produces different washers about the two axes. Match the radii, limits and differential to the chosen axis.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S019-20261121-C03",
+            "title": "Use horizontal disks about the vertical axis",
+            "prompt": "<p>The region \\(0\\le x\\le\\sqrt{2y+1}\\), \\(0\\le y\\le3\\), is rotated about the \\(y\\)-axis. Find the exact volume.</p>",
+            "fields": [
+              {
+                "key": "volume",
+                "label": "Volume in cubic units",
+                "type": "number",
+                "expected": "12*pi"
+              }
+            ],
+            "hint": "<p>The radius is a horizontal distance. Use \\(x^2=2y+1\\) and integrate with respect to \\(y\\).</p>",
+            "solution": "<ol><li>\\[V=\\pi\\int_0^3(2y+1)\\,\\mathrm{d}y.\\]</li><li>\\[V=\\pi[y^2+y]_0^3=12\\pi.\\]</li><li><p>The limits \\(0\\) and \\(3\\) are heights in \\(y\\), matching \\(\\mathrm{d}y\\).</p></li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write the axis first, then a typical cross-section, its radii and its limits. Rearranging a boundary and squaring its radius are separate steps; do both explicitly when the algebra is easy to confuse.</p>"
+          }
+        ]
+      },
+      {
+        "id": "changing-radii",
+        "title": "When must I split the solid into separate parts?",
+        "label": "Changing radii and filled disks",
+        "minutes": 10,
+        "level": "further",
+        "intro": "<p>Inspect the perpendicular strip as it moves through the region. Split where a boundary changes, where a hole starts or ends, or where a different boundary becomes farther from the axis. Axis crossings and equal-distance equations can give different split points.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a vertical strip \\(L(x)\\le y\\le U(x)\\) that contains the \\(x\\)-axis,</p>\\[r=0,\\qquad R=\\max\\bigl(|L(x)|,|U(x)|\\bigr).\\]<p>It produces one filled disk. If both endpoints are on the same side, use the larger distance as \\(R\\) and the smaller as \\(r\\). Apply the same distance reasoning to horizontal strips about the \\(y\\)-axis.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "P1-S019-20261121-C04",
+            "title": "A strip crossing the axis produces one disk",
+            "prompt": "<p>The rectangle \\(0\\le x\\le2\\), \\(-1\\le y\\le3\\), is rotated about the \\(x\\)-axis. Find its outer and inner radii, then its volume.</p>",
+            "fields": [
+              {
+                "key": "outer",
+                "label": "Outer radius \\(R\\)",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "inner",
+                "label": "Inner radius \\(r\\)",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "volume",
+                "label": "Volume in cubic units",
+                "type": "number",
+                "expected": "18*pi"
+              }
+            ],
+            "hint": "<p>The vertical segment contains the axis. Its rotation fills a disk out to the larger distance from the axis.</p>",
+            "solution": "<ol><li>\\[R=\\max(1,3)=3,\\qquad r=0.\\]</li><li>\\[V=\\pi\\int_0^2 3^2\\,\\mathrm{d}x=18\\pi.\\]</li><li><p>The rotation of the lower part is already contained in the rotation of the upper part. Adding both disk volumes would count some material twice; subtracting them would create a hole that is not present.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Rotating the parts above and below an axis separately can produce overlapping disks. Adding their volumes counts that overlap twice. Determine the cross-section of the whole rotated strip first.</p>"
+          }
+        ]
+      },
+      {
+        "id": "volume-models",
+        "title": "How do I use a volume model to find an unknown?",
+        "label": "Capacity, parameters and checks",
+        "minutes": 7,
+        "level": "further",
+        "intro": "<p>Identify what the model measures: interior capacity, total enclosed volume or the material between two surfaces. Form the appropriate disk or washer integral, then use the stated volume to solve for an unknown height or scale.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "P1-S019-20261121-C05",
+            "title": "Choose the physically allowed radial scale",
+            "prompt": "<p>Coordinates are measured in centimetres. A container’s interior is formed by rotating \\(0\\le x\\le k\\sqrt{y}\\), \\(0\\le y\\le4\\), about the \\(y\\)-axis, where \\(k&gt;0\\). Its capacity is \\(32\\pi\\,\\mathrm{cm}^3\\). Find both roots of the equation for \\(k\\), then the allowed value.</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "Algebraic roots for the scale",
+                "type": "set",
+                "expected": "{-2,2}"
+              },
+              {
+                "key": "k",
+                "label": "Allowed scale \\(k\\)",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Use the squared radius \\(k^2y\\). The positive-scale condition must still be applied after solving.</p>",
+            "solution": "<ol><li>\\[V=\\pi\\int_0^4k^2y\\,\\mathrm{d}y=8\\pi k^2.\\]</li><li>\\[8\\pi k^2=32\\pi\\Longrightarrow k^2=4\\Longrightarrow k=\\pm2.\\]</li><li><p>The model requires \\(k&gt;0\\), so \\(k=2\\). This gives the stated capacity and a nonnegative radial boundary on the full height interval.</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>Retain every algebraic root until the physical restrictions and original domain are checked. Heights and radial scales may be required to be positive. Verify that the selected boundaries remain real and correctly ordered over the whole interval.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Use consistent length units before integrating. The result is in cubic units; for capacity, \\(1000\\,\\mathrm{cm}^3=1\\,\\mathrm{L}\\). Keep \\(\\pi\\) exact unless a rounded answer is requested. If a boundary is infinite or singular, test convergence of the radius-squared volume integral using limits.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>State the final physical quantity with its unit and substitute it back into the original volume model. For a hollow object, subtract the interior volume only over the interval where that cavity exists.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Solid of revolution",
+        "definition": "<p>The three-dimensional region swept out when a plane region makes one complete turn about an axis.</p>"
+      },
+      {
+        "term": "Cross-section",
+        "definition": "<p>The shape obtained by cutting the solid with a plane; here the cut is perpendicular to the rotation axis.</p>"
+      },
+      {
+        "term": "Disk",
+        "definition": "<p>A filled circular cross-section with no central hole.</p>"
+      },
+      {
+        "term": "Washer",
+        "definition": "<p>A circular cross-section with an inner disk removed.</p>"
+      },
+      {
+        "term": "Outer radius",
+        "definition": "<p>The greatest distance from the rotation axis reached by the cross-section.</p>"
+      },
+      {
+        "term": "Inner radius",
+        "definition": "<p>The radius of the central hole; zero for a filled disk.</p>"
+      },
+      {
+        "term": "Capacity",
+        "definition": "<p>The volume available inside a container.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "A graph below the axis still gives a positive radius",
+        "question": "<p>The region between \\(y=-\\sqrt{2x+1}\\), the \\(x\\)-axis and the lines \\(x=0\\), \\(x=4\\) is rotated about the \\(x\\)-axis. Find its volume.</p>",
+        "solution": [
+          "<p>A perpendicular cross-section is a disk. Its radius is the distance from the axis:</p>\\[R=|y|=\\sqrt{2x+1}.\\]",
+          "\\[R^2=2x+1,\\qquad V=\\pi\\int_0^4(2x+1)\\,\\mathrm{d}x.\\]",
+          "\\[V=\\pi[x^2+x]_0^4=20\\pi.\\]",
+          "<p>The volume is \\(20\\pi\\) cubic units. A negative graph height does not give a negative radius or volume.</p>"
+        ]
+      },
+      {
+        "title": "Rotate an enclosed region to form washers",
+        "question": "<p>The region enclosed by \\(y=x^2\\) and \\(y=2x\\) is rotated about the \\(x\\)-axis. Find the volume.</p>",
+        "solution": [
+          "\\[x^2=2x\\Longrightarrow x=0\\text{ or }x=2.\\]",
+          "<p>On \\(0&lt;x&lt;2\\), both graphs are above the axis. The farther boundary is \\(y=2x\\), so</p>\\[R=2x,\\qquad r=x^2.\\]",
+          "<p>Subtract the inner disk area from the outer disk area at each input:</p>\\[V=\\pi\\int_0^2\\bigl[(2x)^2-(x^2)^2\\bigr]\\,\\mathrm{d}x.\\]",
+          "\\[V=\\pi\\left[\\frac{4x^3}{3}-\\frac{x^5}{5}\\right]_0^2=\\pi\\left(\\frac{32}{3}-\\frac{32}{5}\\right)=\\frac{64\\pi}{15}.\\]"
+        ]
+      },
+      {
+        "title": "The lower graph can be the outer boundary",
+        "question": "<p>The region between \\(y=-x\\), \\(y=-2x\\), \\(x=1\\) and \\(x=3\\) is rotated about the \\(x\\)-axis. Find its volume.</p>",
+        "solution": [
+          "<p>Both graphs lie below the axis. The graph \\(y=-2x\\) is farther from the axis, although its height is lower:</p>\\[R=2x,\\qquad r=x.\\]",
+          "\\[V=\\pi\\int_1^3\\bigl[(2x)^2-x^2\\bigr]\\,\\mathrm{d}x=3\\pi\\int_1^3x^2\\,\\mathrm{d}x.\\]",
+          "\\[V=\\pi[x^3]_1^3=26\\pi.\\]",
+          "<p>Comparing distances, rather than calling the higher graph the outer one, gives a nonnegative cross-sectional area throughout.</p>"
+        ]
+      },
+      {
+        "title": "Rotate the same enclosed region about the other axis",
+        "question": "<p>Rotate the region enclosed by \\(y=x^2\\) and \\(y=2x\\) about the \\(y\\)-axis. Find the volume and compare it with the rotation about the \\(x\\)-axis.</p>",
+        "solution": [
+          "<p>The intersection points are \\((0,0)\\) and \\((2,4)\\). Horizontal cross-sections therefore use \\(0\\le y\\le4\\).</p>",
+          "<p>In this first-quadrant region, the right boundary is \\(x=\\sqrt{y}\\), using the positive branch. The left boundary is \\(x=\\frac{y}{2}\\). Thus</p>\\[R=\\sqrt{y},\\qquad r=\\frac{y}{2}.\\]",
+          "\\[V=\\pi\\int_0^4\\left(y-\\frac{y^2}{4}\\right)\\,\\mathrm{d}y.\\]",
+          "\\[V=\\pi\\left[\\frac{y^2}{2}-\\frac{y^3}{12}\\right]_0^4=\\pi\\left(8-\\frac{16}{3}\\right)=\\frac{8\\pi}{3}.\\]",
+          "<p>The original region is unchanged, but the rotation axis changes the cross-sections. Its two volumes are \\(\\frac{64\\pi}{15}\\) about the \\(x\\)-axis and \\(\\frac{8\\pi}{3}\\) about the \\(y\\)-axis.</p>"
+        ]
+      },
+      {
+        "title": "The outer radius and the presence of a hole can both change",
+        "question": "<p>Rotate the region between \\(y=x-2\\), \\(y=1\\) and the vertical lines \\(x=0\\), \\(x=3\\) about the \\(x\\)-axis. Find the volume.</p>",
+        "solution": [
+          "<p>For \\(0\\le x\\le2\\), the vertical segment reaches across the axis. It rotates into one filled disk. Compare its boundary distances:</p>\\[2-x=1\\Longrightarrow x=1.\\]",
+          "<p>For \\(0\\le x\\le1\\), use \\(R=2-x\\), \\(r=0\\). For \\(1\\le x\\le2\\), use \\(R=1\\), \\(r=0\\).</p>",
+          "<p>Beyond \\(x=2\\), the lower boundary is positive, so the slice has a central hole. Use \\(R=1\\) and \\(r=x-2\\) for the final interval.</p>",
+          "\\[\\begin{aligned}V=\\pi\\biggl(&amp;\\int_0^1(2-x)^2\\,\\mathrm{d}x+\\int_1^2 1\\,\\mathrm{d}x\\\\&amp;+\\int_2^3\\bigl[1-(x-2)^2\\bigr]\\,\\mathrm{d}x\\biggr).\\end{aligned}\\]",
+          "\\[\\begin{aligned}\\int_0^1(2-x)^2\\,\\mathrm{d}x&amp;=\\frac{7}{3},\\\\\\int_1^2 1\\,\\mathrm{d}x&amp;=1,\\\\\\int_2^3\\bigl[1-(x-2)^2\\bigr]\\,\\mathrm{d}x&amp;=\\frac{2}{3}.\\end{aligned}\\]",
+          "\\[V=\\pi\\left(\\frac{7}{3}+1+\\frac{2}{3}\\right)=4\\pi.\\]<p>Each slice of the solid is included exactly once.</p>"
+        ]
+      },
+      {
+        "title": "Use a capacity to recover the allowed height",
+        "question": "<p>Coordinates are measured in centimetres. A container’s interior is formed by rotating \\(0\\le x\\le\\sqrt{3y+4}\\), \\(0\\le y\\le h\\), about the \\(y\\)-axis, where \\(h&gt;0\\). Its capacity is \\(14\\pi\\,\\mathrm{cm}^3\\). Find \\(h\\).</p>",
+        "solution": [
+          "<p>The squared interior radius is \\(3y+4\\), so its capacity is</p>\\[V=\\pi\\int_0^h(3y+4)\\,\\mathrm{d}y=\\pi\\left(\\frac{3h^2}{2}+4h\\right).\\]",
+          "\\[\\frac{3h^2}{2}+4h=14\\Longrightarrow3h^2+8h-28=0.\\]",
+          "\\[(h-2)(3h+14)=0\\Longrightarrow h=2\\text{ or }h=-\\frac{14}{3}.\\]",
+          "<p>Only the positive height is allowed, so \\(h=2\\,\\mathrm{cm}\\). The radial expression is real and positive throughout \\(0\\le y\\le2\\).</p>",
+          "\\[V=\\pi\\left(\\frac{3(2)^2}{2}+4(2)\\right)=14\\pi\\,\\mathrm{cm}^3.\\]<p>This checks the capacity in the original model.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Signed integrals and geometric areas",
+        "href": "/courses/maths4u-9709-p1/topics/orig_integration_areas"
+      },
+      {
+        "title": "Power integration, definite integrals and improper endpoints",
+        "href": "/courses/maths4u-9709-p1/topics/orig_integration_power_integrals"
+      },
+      {
+        "title": "Connected rates, units and small-change estimates",
+        "href": "/courses/maths4u-9709-p1/topics/orig_differentiation_rates"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S019-20261121-P01",
+        "title": "Square the radius before integrating",
+        "prompt": "<p>The region between \\(y=\\sqrt{3x+1}\\), the horizontal axis, \\(x=0\\) and \\(x=2\\) is rotated fully about the horizontal axis. Coordinates are in centimetres. Find the volume.</p>",
+        "fields": [
+          {
+            "key": "volume",
+            "label": "Volume (cm³)",
+            "type": "number",
+            "expected": "8*pi"
+          }
+        ],
+        "hint": "<p>The radius is \\(\\sqrt{3x+1}\\), so the circular cross-section has area \\(\\pi(3x+1)\\).</p>",
+        "solution": "<ol><li>\\[V=\\pi\\int_0^2\\left(\\sqrt{3x+1}\\right)^2\\,\\mathrm{d}x=\\pi\\int_0^2(3x+1)\\,\\mathrm{d}x.\\]</li><li>\\[V=\\pi\\left[\\frac{3x^2}{2}+x\\right]_0^2=8\\pi\\,\\mathrm{cm^3}.\\]</li><li><p>The integration variable measures distance along the rotation axis; the final units are cubic.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S019-20261121-P02",
+        "title": "A negative height still gives a positive radius",
+        "prompt": "<p>The region between \\(y=-2x\\), the horizontal axis and the lines \\(x=1\\) and \\(x=3\\) is rotated about the horizontal axis. Coordinates are in centimetres. Find the volume.</p>",
+        "fields": [
+          {
+            "key": "volume",
+            "label": "Volume (cm³)",
+            "type": "number",
+            "expected": "104*pi/3"
+          }
+        ],
+        "hint": "<p>The radius is the distance from the curve to the axis: \\(|-2x|=2x\\) on this interval.</p>",
+        "solution": "<ol><li>\\[R=2x,\\qquad V=\\pi\\int_1^3(2x)^2\\,\\mathrm{d}x.\\]</li><li>\\[V=4\\pi\\left[\\frac{x^3}{3}\\right]_1^3=\\frac{104\\pi}{3}\\,\\mathrm{cm^3}.\\]</li><li><p>The rotated region has disks, with no inner hole. A negative curve height does not make the volume negative.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S019-20261121-P03",
+        "title": "Subtract the hole from every cross-section",
+        "prompt": "<p>The region between \\(y=4\\), \\(y=x+1\\), \\(x=0\\) and \\(x=2\\) is rotated about the horizontal axis. Coordinates are in centimetres. Find the volume.</p>",
+        "fields": [
+          {
+            "key": "volume",
+            "label": "Volume (cm³)",
+            "type": "number",
+            "expected": "70*pi/3",
+            "retry": [
+              {
+                "answer": "26*pi/3",
+                "feedback": "<p>This squares the radial gap. A washer needs \\(\\pi(R^2-r^2)\\), not \\(\\pi(R-r)^2\\).</p>"
+              },
+              {
+                "answer": "32*pi",
+                "feedback": "<p>This is the outer cylinder. Subtract the volume of the inner hole.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The outer radius is \\(4\\), and the inner radius is \\(x+1\\). The washer area uses the difference of their squares.</p>",
+        "solution": "<ol><li>\\[V=\\pi\\int_0^2\\bigl[16-(x+1)^2\\bigr]\\,\\mathrm{d}x.\\]</li><li>\\[V=\\pi\\left[16x-\\frac{(x+1)^3}{3}\\right]_0^2=\\pi\\left(32-\\frac{26}{3}\\right)=\\frac{70\\pi}{3}\\,\\mathrm{cm^3}.\\]</li><li><p>The inner radius remains smaller than the outer radius over the whole interval. Squaring the thickness \\(4-(x+1)\\) would calculate a different disk.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S019-20261121-P04",
+        "title": "Use horizontal disks about the vertical axis",
+        "prompt": "<p>The region between \\(x=y^2+1\\), the vertical axis, \\(y=0\\) and \\(y=1\\) is rotated about the vertical axis. Coordinates are in centimetres. Find the volume.</p>",
+        "fields": [
+          {
+            "key": "volume",
+            "label": "Volume (cm³)",
+            "type": "number",
+            "expected": "28*pi/15",
+            "retry": [
+              {
+                "answer": "28/15",
+                "feedback": "<p>The squared radius still needs the circle-area factor \\(\\pi\\).</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The radius is already written as a function of \\(y\\). Square the entire expression and integrate with respect to \\(y\\).</p>",
+        "solution": "<ol><li>\\[V=\\pi\\int_0^1(y^2+1)^2\\,\\mathrm{d}y=\\pi\\int_0^1(y^4+2y^2+1)\\,\\mathrm{d}y.\\]</li><li>\\[V=\\pi\\left[\\frac{y^5}{5}+\\frac{2y^3}{3}+y\\right]_0^1=\\frac{28\\pi}{15}\\,\\mathrm{cm^3}.\\]</li><li><p>These are \\(y\\)-limits and horizontal cross-sections. No extra change of variable is needed.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S019-20261121-P05",
+        "title": "One region creates different volumes about different axes",
+        "prompt": "<p>The graphs \\(y=x^2\\) and \\(y=3x\\) enclose a first-quadrant region. Coordinates are in centimetres. Find the volume obtained by rotating this region about each coordinate axis separately.</p>",
+        "fields": [
+          {
+            "key": "horizontal",
+            "label": "Volume about the horizontal axis (cm³)",
+            "type": "number",
+            "expected": "162*pi/5"
+          },
+          {
+            "key": "vertical",
+            "label": "Volume about the vertical axis (cm³)",
+            "type": "number",
+            "expected": "27*pi/2"
+          }
+        ],
+        "hint": "<p>For the horizontal axis, compare the two heights. For the vertical axis, rewrite both boundaries in terms of \\(y\\), choosing the positive square-root branch.</p>",
+        "solution": "<ol><li>\\[x^2=3x\\Longrightarrow x=0,3,\\qquad y=0,9.\\]</li><li>\\[V_x=\\pi\\int_0^3\\bigl[(3x)^2-(x^2)^2\\bigr]\\,\\mathrm{d}x=\\pi\\left[3x^3-\\frac{x^5}{5}\\right]_0^3=\\frac{162\\pi}{5}\\,\\mathrm{cm^3}.\\]</li><li><p>For horizontal strips, the right boundary is \\(x=\\sqrt{y}\\), and the left boundary is \\(x=\\frac{y}{3}\\). These are the outer and inner distances from the vertical axis.</p></li><li>\\[V_y=\\pi\\int_0^9\\left[y-\\frac{y^2}{9}\\right]\\,\\mathrm{d}y=\\pi\\left[\\frac{y^2}{2}-\\frac{y^3}{27}\\right]_0^9=\\frac{27\\pi}{2}\\,\\mathrm{cm^3}.\\]</li><li><p>Changing the axis changes the cross-sections, radii and limits. The two volumes need not agree.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S019-20261121-E01",
+          "title": "A strip crossing the axis must not be counted twice",
+          "marks": 8,
+          "question": "<p>The region between \\(y=x-2\\), \\(y=x+1\\), \\(x=0\\) and \\(x=3\\) is rotated fully about the horizontal axis. Coordinates are in centimetres.</p><p>Find the input where the outer radius changes from the lower boundary to the upper boundary, the boundary input beyond which an inner hole appears, and the total volume. Show the cross-sectional formula on each interval.</p>",
+          "hint": "<p>While the strip contains the axis, rotation makes one complete disk with the larger absolute endpoint distance as its radius. A washer appears only once both endpoints are on the same side of the axis.</p>",
+          "solution": "<ol><li><p>For \\(0\\le x\\le2\\), the strip reaches from \\(x-2\\le0\\) to \\(x+1&gt;0\\), so it crosses or touches the axis. Its outer distance is the larger of \\(2-x\\) and \\(x+1\\).</p></li><li>\\[2-x=x+1\\Longrightarrow x=\\frac{1}{2}.\\]</li><li><p>On \\(0\\le x\\le\\frac{1}{2}\\), the disk radius is \\(2-x\\). On \\(\\frac{1}{2}\\le x\\le2\\), the disk radius is \\(x+1\\). For \\(2&lt;x\\le3\\), the washer has outer radius \\(x+1\\) and inner radius \\(x-2\\).</p></li><li>\\[\\begin{aligned}\\frac{V}{\\pi}&amp;=\\int_0^{\\frac{1}{2}}(2-x)^2\\,\\mathrm{d}x\\\\&amp;\\quad+\\int_{\\frac{1}{2}}^2(x+1)^2\\,\\mathrm{d}x\\\\&amp;\\quad+\\int_2^3\\bigl[(x+1)^2-(x-2)^2\\bigr]\\,\\mathrm{d}x.\\end{aligned}\\]</li><li>\\[V=\\pi\\left(\\frac{37}{24}+\\frac{63}{8}+12\\right)=\\frac{257\\pi}{12}\\,\\mathrm{cm^3}.\\]</li><li><p>At the transition \\(x=2\\), the inner radius is zero; it becomes positive immediately to the right. Adding the separate rotations above and below the axis would count their overlapping disks twice.</p></li></ol>",
+          "marking": "<ul><li>1 mark: recognise that a strip crossing the axis gives one disk.</li><li>1 mark: find the change in outer-radius boundary.</li><li>1 mark: find where the inner hole starts.</li><li>1 mark: form the first disk integral.</li><li>1 mark: form the second disk integral.</li><li>1 mark: form the washer integral.</li><li>1 mark: evaluate the separate nonnegative contributions.</li><li>1 mark: give the total volume with cubic units.</li></ul>"
+        },
+        {
+          "id": "P1-S019-20261121-E02",
+          "title": "Use a volume condition to recover a physical length",
+          "marks": 6,
+          "question": "<p>A solid is formed by rotating the region between \\(y=\\sqrt{4x+9}\\), the horizontal axis, \\(x=0\\) and \\(x=h\\) about the horizontal axis. Coordinates are in centimetres, \\(h&gt;0\\), and the volume is \\(45\\pi\\,\\mathrm{cm^3}\\).</p><p>Find the length \\(h\\) and the radius of the circular end at \\(x=h\\).</p>",
+          "hint": "<p>Keep the unknown upper limit while integrating the square of the radius. Apply the positive-length condition to the resulting quadratic roots.</p>",
+          "solution": "<ol><li>\\[45\\pi=\\pi\\int_0^h(4x+9)\\,\\mathrm{d}x=\\pi(2h^2+9h).\\]</li><li>\\[2h^2+9h-45=0\\Longleftrightarrow(h-3)(2h+15)=0.\\]</li><li>\\[h=3\\quad\\text{or}\\quad h=-\\frac{15}{2}.\\]</li><li><p>The physical length is positive, so \\(h=3\\,\\mathrm{cm}\\). The other algebraic root does not describe the stated solid.</p></li><li>\\[R(h)=\\sqrt{4(3)+9}=\\sqrt{21}\\,\\mathrm{cm}.\\]</li><li><p>Check the volume: \\(\\pi\\bigl(2(3)^2+9(3)\\bigr)=45\\pi\\,\\mathrm{cm^3}\\). The radius is real and positive throughout the selected interval.</p></li></ol>",
+          "marking": "<ul><li>1 mark: form the disk integral with an unknown upper limit.</li><li>1 mark: integrate the squared radius correctly.</li><li>1 mark: obtain and solve the volume equation.</li><li>1 mark: select the positive physical length.</li><li>1 mark: evaluate the end radius.</li><li>1 mark: state the requested lengths with units and verify the physical interval.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Volume comes from the area of each perpendicular cross-section, not from the gap between graph heights.</p><h2>Choose the axis and the cross-section</h2>\\[V_x=\\pi\\int_a^b(R^2-r^2)\\,\\mathrm{d}x.\\]\\[V_y=\\pi\\int_c^d(R^2-r^2)\\,\\mathrm{d}y.\\]<p>About the \\(x\\)-axis, radii are vertical distances and limits are in \\(x\\). About the \\(y\\)-axis, use horizontal distances, boundaries in terms of \\(y\\) and limits in \\(y\\).</p><h2>Square each radius before subtracting</h2><p>For an axis-to-curve region, \\(r=0\\): the section is a disk. A hole gives a washer with \\(0\\le r\\le R\\).</p>\\[A=\\pi(R^2-r^2),\\quad\\text{not generally }\\pi(R-r)^2.\\]<p>Use distances, including below or left of an axis. Retain the actual inverse branch and the supplied region boundaries.</p><h2>Split when the cross-section changes</h2><p>A strip crossing the axis gives one disk, with radius equal to the greater endpoint distance. Do not add overlapping rotations of its two sides.</p><p>Split where a hole appears or disappears, the farther boundary changes, or a different curve supplies a boundary. Add volumes of separate slices only once.</p><h2>Check a physical model</h2><p>Choose interior capacity or material volume as requested. Solve the volume equation, retain all roots, then check positivity, domain and radius order. Substitute the accepted values back.</p><p>Use consistent lengths and cubic volume units; \\(1000\\,\\mathrm{cm}^3=1\\,\\mathrm{L}\\). Keep exact \\(\\pi\\) where required. Singular or infinite boundaries need a convergence check for the volume integral.</p>",
+      "checks": "<ul><li>Axis, slice direction and limits agree?</li><li>Radii measured from the axis, with the correct hole?</li><li>Squared radii subtracted and every slice counted once?</li><li>All roots, original domains and cubic units checked?</li></ul>",
+      "examTip": "<p>All roots, original domains and cubic units checked?</p>"
+    }
+  },
+  "orig_integration_accumulation": {
+    "updatedOn": "2026-11-21",
+    "description": "Recover functions from higher derivatives, translate each condition into the right equation, and use signed rates to track changing amounts.",
+    "sections": [
+      {
+        "id": "repeated-integration",
+        "title": "Why do two integrations need two constants?",
+        "label": "Recovering from a second derivative",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A second derivative tells you how the gradient changes. Integrating once recovers the first derivative with one arbitrary constant. Integrating again recovers the function and introduces another, independent constant.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[f^{\\prime\\prime}=g,\\qquad f^{\\prime}=G+C_1,\\qquad f=H+C_1x+C_2,\\]\\[G^{\\prime}=g,\\qquad H^{\\prime}=G.\\]<p>The first constant becomes a linear term after the second integration. The new constant controls a vertical shift. Use separate names until the supplied conditions determine them.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_integration_accumulation/repeated-integration.svg\" alt=\"Two integrations introduce independent constants, with a gradient condition applied to the first derivative and a height condition applied to the function.\" width=\"844\" height=\"524\"></p><p>For \\(f^{\\prime\\prime}=2\\), the family is \\(f=x^2+Ax+B\\). The gradient condition fixes \\(A\\); the point condition then fixes \\(B\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S020-20261121-C01",
+            "title": "Keep a different constant at each integration",
+            "prompt": "<p>A function satisfies \\(f^{\\prime\\prime}(x)=6\\), \\(f^{\\prime}(0)=-2\\) and \\(f(0)=5\\). Write \\(f^{\\prime}(x)=6x+A\\) and \\(f(x)=3x^2+Ax+B\\). Find \\(A\\), \\(B\\) and \\(f(2)\\).</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "\\(A\\)",
+                "type": "number",
+                "expected": "-2"
+              },
+              {
+                "key": "B",
+                "label": "\\(B\\)",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "value",
+                "label": "\\(f(2)\\)",
+                "type": "number",
+                "expected": "13"
+              }
+            ],
+            "hint": "<p>The gradient condition belongs in \\(f^{\\prime}\\); the height condition belongs in \\(f\\).</p>",
+            "solution": "<ol><li>\\[f^{\\prime}(0)=A=-2,\\qquad f(0)=B=5.\\]</li><li>\\[f(x)=3x^2-2x+5,\\qquad f(2)=12-4+5=13.\\]</li><li><p>Differentiating twice returns \\(6\\). The first constant became the linear term \\(-2x\\) in the function.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not reuse one constant for both integrations or drop the first constant when integrating again:</p>\\[\\int C_1\\,\\mathrm{d}x=C_1x+C_2.\\]"
+          }
+        ]
+      },
+      {
+        "id": "matching-conditions",
+        "title": "Which expression should each condition go into?",
+        "label": "Heights, gradients and stationary points",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Write each condition as an equation before substituting numbers. A height and a gradient at the same input are different pieces of information.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<ul><li>A point \\((a,b)\\) gives \\(f(a)=b\\).</li><li>A tangent gradient \\(m\\) at \\(a\\) gives \\(f^{\\prime}(a)=m\\).</li><li>A stationary point \\((a,b)\\) gives both \\(f^{\\prime}(a)=0\\) and \\(f(a)=b\\).</li></ul><p>A stationary point does not generally have zero second derivative. Use \\(f^{\\prime\\prime}\\) to classify it when that test is conclusive.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S020-20261121-C02",
+            "title": "A stationary point gives a direction and a height",
+            "prompt": "<p>A curve has \\(f^{\\prime\\prime}(x)=12x-2\\) and a stationary point at \\((1,1)\\). After two integrations, write \\(f(x)=2x^3-x^2+Ax+B\\). Find \\(A\\) and \\(B\\), then classify the given stationary point.</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "\\(A\\)",
+                "type": "number",
+                "expected": "-4"
+              },
+              {
+                "key": "B",
+                "label": "\\(B\\)",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "nature",
+                "label": "Nature of the stationary point",
+                "type": "choice",
+                "expected": "minimum",
+                "options": {
+                  "minimum": "Local minimum",
+                  "maximum": "Local maximum",
+                  "inconclusive": "The second-derivative test is inconclusive"
+                }
+              }
+            ],
+            "hint": "<p>Use \\(f^{\\prime}(1)=0\\) and \\(f(1)=1\\) as two separate equations.</p>",
+            "solution": "<ol><li>\\[f^{\\prime}(x)=6x^2-2x+A,\\qquad f^{\\prime}(1)=4+A=0\\Longrightarrow A=-4.\\]</li><li>\\[f(1)=2-1-4+B=1\\Longrightarrow B=4.\\]</li><li>\\[f^{\\prime\\prime}(1)=10&gt;0.\\]<p>The stationary point is a local minimum. Both its height and zero gradient hold in the recovered function.</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Two independent conditions can determine the two constants after repeated integration. An extra unknown coefficient may need another independent condition. Repeating the same gradient information does not fix a missing height. Keep the original interval and any excluded inputs throughout.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Differentiate the recovered function twice and check every original condition separately. If the conditions leave a constant free or contradict one another, state that instead of forcing a unique curve.</p>"
+          }
+        ]
+      },
+      {
+        "id": "linked-integrals",
+        "title": "How do I use unknown coefficients and definite-integral conditions?",
+        "label": "Linked constants and integrals",
+        "minutes": 10,
+        "level": "further",
+        "intro": "<p>A coefficient already present in the given derivative is different from a new integration constant. Hold all such parameters constant while integrating. Then use point, gradient or integral conditions to build simultaneous equations.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S020-20261121-C03",
+            "title": "A point and an integral determine different unknowns",
+            "prompt": "<p>A function satisfies \\(f^{\\prime}(x)=2kx\\), \\(f(0)=2\\) and \\(\\int_0^1f(x)\\,\\mathrm{d}x=3\\). Write \\(f(x)=kx^2+C\\). Find \\(C\\) and \\(k\\).</p>",
+            "fields": [
+              {
+                "key": "C",
+                "label": "\\(C\\)",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "k",
+                "label": "\\(k\\)",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>The point fixes \\(C\\). That constant then contributes \\(C\\) times the interval width to the integral.</p>",
+            "solution": "<ol><li>\\[f(0)=C=2.\\]</li><li>\\[\\int_0^1(kx^2+2)\\,\\mathrm{d}x=\\left[\\frac{kx^3}{3}+2x\\right]_0^1=\\frac{k}{3}+2=3.\\]</li><li>\\[k=3,\\qquad f(x)=3x^2+2.\\]<p>Its derivative is \\(6x\\), and its integral on the given interval is \\(1+2=3\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A constant inside the function being integrated does not vanish in a definite integral:</p>\\[\\int_a^b C\\,\\mathrm{d}x=C(b-a).\\]<p>Only an added constant in the antiderivative cancels in the endpoint subtraction. Do not discard the unknown height term in \\(f\\).</p>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>Keep the same parameter values across all conditions on the stated interval. Solve the equations together, then substitute the results back into every original point or integral condition.</p>"
+          }
+        ]
+      },
+      {
+        "id": "recognising-derivatives",
+        "title": "How can a known derivative help me integrate?",
+        "label": "Recognising derivative multiples",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>If a question gives a function to differentiate and then asks for a related integral, compare the complete derivative with the integrand. They may differ by a constant factor. Include the inner derivative when making this comparison.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(F^{\\prime}(x)=g(x)\\) and \\(\\lambda\\) is constant, then</p>\\[\\int\\lambda g(x)\\,\\mathrm{d}x=\\lambda F(x)+C,\\]\\[\\int_a^b\\lambda g(x)\\,\\mathrm{d}x=\\lambda\\bigl(F(b)-F(a)\\bigr).\\]<p>Check the proposed result by differentiation on the original domain.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "P1-S020-20261121-C04",
+            "title": "Recognise a constant multiple of a known derivative",
+            "prompt": "<p>Let \\(F(x)=(x^3+1)^2\\). Write \\(3x^2(x^3+1)=\\lambda F^{\\prime}(x)\\), then use this to evaluate \\(\\int_0^1 3x^2(x^3+1)\\,\\mathrm{d}x\\).</p>",
+            "fields": [
+              {
+                "key": "lambda",
+                "label": "\\(\\lambda\\)",
+                "type": "number",
+                "expected": "1/2"
+              },
+              {
+                "key": "integral",
+                "label": "Definite integral",
+                "type": "number",
+                "expected": "3/2"
+              }
+            ],
+            "hint": "<p>Differentiate the proposed function first. The inner derivative is \\(3x^2\\).</p>",
+            "solution": "<ol><li>\\[F^{\\prime}(x)=2(x^3+1)(3x^2)=6x^2(x^3+1),\\qquad\\lambda=\\frac{1}{2}.\\]</li><li>\\[\\int_0^1 3x^2(x^3+1)\\,\\mathrm{d}x=\\frac{1}{2}[F(1)-F(0)]=\\frac{1}{2}(4-1)=\\frac{3}{2}.\\]</li><li><p>The factor \\(\\frac{1}{2}\\) multiplies the whole endpoint difference.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The matching factor must be constant. If a factor involving \\(x\\) is missing, you cannot repair the integral by multiplying by a numerical constant. Expand a polynomial where practical, or use a derivative actually established by the question.</p>"
+          }
+        ]
+      },
+      {
+        "id": "net-accumulation",
+        "title": "How does a changing rate determine the amount present?",
+        "label": "Net accumulation and extrema",
+        "minutes": 10,
+        "level": "further",
+        "intro": "<p>Integrating a net rate gives a change, not automatically the final amount. For a tank, use inflow minus outflow. A negative net rate means the amount is falling, even if the amount itself is still positive.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[Q^{\\prime}(t)=q(t),\\qquad Q(t)=Q(t_0)+\\int_{t_0}^{t}q(s)\\,\\mathrm{d}s.\\]<p>The letter \\(s\\) is the variable inside the integral; \\(t\\) is the requested finishing time. Rate multiplied by time has the unit of the accumulated amount.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_integration_accumulation/net-rate-accumulation.svg\" alt=\"A decreasing net-rate line and its corresponding amount curve show positive and negative accumulated changes, the initial amount and the time of the maximum.\" width=\"807\" height=\"643\"></p><p>The net rate \\(6-2t\\) becomes zero at \\(t=3\\). The amount \\(5+6t-t^2\\) is then greatest, at \\(14\\,\\mathrm{L}\\), and later decreases to \\(10\\,\\mathrm{L}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "P1-S020-20261121-C05",
+            "title": "Find the amount, not only its net change",
+            "prompt": "<p>A tank initially contains \\(3\\,\\mathrm{L}\\). Its net rate of change is \\(q(t)=(4-t)\\,\\mathrm{L}\\,\\mathrm{min}^{-1}\\) for \\(0\\le t\\le6\\), where \\(t\\) is measured in minutes. Find the amount after six minutes and the greatest amount on this interval, together with the time when it occurs.</p>",
+            "fields": [
+              {
+                "key": "final",
+                "label": "Amount after six minutes (L)",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "time",
+                "label": "Time of the greatest amount (min)",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "maximum",
+                "label": "Greatest amount (L)",
+                "type": "number",
+                "expected": "11"
+              }
+            ],
+            "hint": "<p>Add the integrated net rate to the initial amount. The amount can have an interior maximum where the net rate changes from positive to negative.</p>",
+            "solution": "<ol><li>\\[V(t)=3+\\int_0^t(4-s)\\,\\mathrm{d}s=3+4t-\\frac{t^2}{2}.\\]</li><li>\\[V(6)=3+24-18=9\\,\\mathrm{L}.\\]</li><li>\\[q(t)=0\\Longrightarrow t=4.\\]<p>The rate is positive before this time and negative after it.</p></li><li>\\[V(0)=3,\\qquad V(4)=11,\\qquad V(6)=9.\\]<p>The greatest amount is \\(11\\,\\mathrm{L}\\), at \\(4\\,\\mathrm{min}\\). These amounts remain physically nonnegative throughout the stated interval.</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>To find a global maximum or minimum on a closed time interval, compare the amount at both endpoints and at every allowed stationary time where \\(q(t)=0\\). Include any other points where the model changes or the derivative is undefined. Keep every time that attains the same extreme value.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The greatest rate and the greatest amount need not occur together. Do not replace the signed net-rate integral by an integral of \\(|q|\\): that adds gains and losses instead of giving the net change.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Use the stated time interval and consistent units. A physical amount must respect the model’s restrictions, such as nonnegative contents and any capacity limit. Do not extend the formula beyond those restrictions without a new model.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Repeated integration",
+        "definition": "<p>Integrating more than once to recover lower derivatives and then the original function.</p>"
+      },
+      {
+        "term": "Independent constants",
+        "definition": "<p>Separate arbitrary values introduced by separate integrations.</p>"
+      },
+      {
+        "term": "Condition",
+        "definition": "<p>Given information about a function, derivative or integral that supplies an equation for unknowns.</p>"
+      },
+      {
+        "term": "Parameter",
+        "definition": "<p>A fixed but possibly unknown coefficient that is held constant while integrating.</p>"
+      },
+      {
+        "term": "Initial amount",
+        "definition": "<p>The amount already present at the starting time.</p>"
+      },
+      {
+        "term": "Net rate",
+        "definition": "<p>The signed rate of increase after subtracting decreases, such as inflow minus outflow.</p>"
+      },
+      {
+        "term": "Accumulation",
+        "definition": "<p>The change obtained by integrating a rate over time.</p>"
+      },
+      {
+        "term": "Dummy variable",
+        "definition": "<p>The temporary variable inside a definite integral; its name does not change the value.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Recover both the gradient and the function",
+        "question": "<p>A curve satisfies \\(f^{\\prime\\prime}(x)=2\\), \\(f^{\\prime}(1)=1\\) and \\(f(1)=4\\). Find its equation.</p>",
+        "solution": [
+          "<p>Integrate once and introduce the first constant:</p>\\[f^{\\prime}(x)=2x+A.\\]",
+          "\\[f^{\\prime}(1)=2+A=1\\Longrightarrow A=-1.\\]",
+          "<p>Integrate the complete first derivative and introduce a new constant:</p>\\[f(x)=x^2-x+B.\\]",
+          "\\[f(1)=1-1+B=4\\Longrightarrow B=4.\\]",
+          "\\[f(x)=x^2-x+4.\\]<p>Its second derivative is \\(2\\), its gradient at \\(1\\) is \\(1\\), and its height there is \\(4\\).</p>"
+        ]
+      },
+      {
+        "title": "Translate a stationary point into two equations",
+        "question": "<p>A curve has \\(f^{\\prime\\prime}(x)=12x\\) and a stationary point at \\((1,3)\\). Find the curve and classify that point.</p>",
+        "solution": [
+          "\\[f^{\\prime}(x)=6x^2+A,\\qquad f(x)=2x^3+Ax+B.\\]",
+          "<p>A stationary point has zero first derivative:</p>\\[f^{\\prime}(1)=6+A=0\\Longrightarrow A=-6.\\]",
+          "<p>Its stated height belongs in the function:</p>\\[f(1)=2-6+B=3\\Longrightarrow B=7.\\]",
+          "\\[f(x)=2x^3-6x+7,\\qquad f^{\\prime\\prime}(1)=12&gt;0.\\]",
+          "<p>The given point is a local minimum. Differentiating twice and checking \\(f^{\\prime}(1)=0\\), \\(f(1)=3\\) verifies every original condition.</p>"
+        ]
+      },
+      {
+        "title": "Keep an unknown coefficient while recovering a curve",
+        "question": "<p>A function satisfies \\(f^{\\prime}(x)=2kx+3\\), \\(f(0)=1\\) and \\(\\int_0^2f(x)\\,\\mathrm{d}x=\\frac{40}{3}\\). Find \\(k\\) and the function.</p>",
+        "solution": [
+          "<p>Treat \\(k\\) as constant when integrating:</p>\\[f(x)=kx^2+3x+C.\\]",
+          "\\[f(0)=1\\Longrightarrow C=1.\\]",
+          "\\[\\int_0^2(kx^2+3x+1)\\,\\mathrm{d}x=\\left[\\frac{kx^3}{3}+\\frac{3x^2}{2}+x\\right]_0^2=\\frac{8k}{3}+8.\\]",
+          "\\[\\frac{8k}{3}+8=\\frac{40}{3}\\Longrightarrow k=2.\\]",
+          "\\[f(x)=2x^2+3x+1.\\]<p>The derivative is \\(4x+3\\), the initial height is \\(1\\), and the required integral is \\(\\frac{16}{3}+8=\\frac{40}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Two definite integrals can determine a whole linear function",
+        "question": "<p>A function has constant derivative \\(f^{\\prime}(x)=a\\). Given \\(\\int_0^1f(x)\\,\\mathrm{d}x=4\\) and \\(\\int_1^2f(x)\\,\\mathrm{d}x=7\\), find \\(f(x)\\).</p>",
+        "solution": [
+          "\\[f(x)=ax+C.\\]",
+          "<p>The first integral gives</p>\\[\\left[\\frac{ax^2}{2}+Cx\\right]_0^1=\\frac{a}{2}+C=4.\\]",
+          "<p>The second integral gives a different equation:</p>\\[\\left[\\frac{ax^2}{2}+Cx\\right]_1^2=\\frac{3a}{2}+C=7.\\]",
+          "<p>Subtract the equations to obtain \\(a=3\\). Then</p>\\[C=4-\\frac{3}{2}=\\frac{5}{2}.\\]",
+          "\\[f(x)=3x+\\frac{5}{2}.\\]<p>Its two integrals are \\(\\frac{3}{2}+\\frac{5}{2}=4\\) and \\(\\frac{9}{2}+\\frac{5}{2}=7\\), as required.</p>"
+        ]
+      },
+      {
+        "title": "Use a derivative that has already been identified",
+        "question": "<p>Let \\(F(x)=(x^2+2)^3\\). Differentiate \\(F\\), then find \\(\\int2x(x^2+2)^2\\,\\mathrm{d}x\\) and \\(\\int_0^1 2x(x^2+2)^2\\,\\mathrm{d}x\\).</p>",
+        "solution": [
+          "<p>The chain rule gives</p>\\[F^{\\prime}(x)=3(x^2+2)^2(2x)=6x(x^2+2)^2.\\]",
+          "<p>The required integrand is one third of this derivative:</p>\\[2x(x^2+2)^2=\\frac{1}{3}F^{\\prime}(x).\\]",
+          "\\[\\int2x(x^2+2)^2\\,\\mathrm{d}x=\\frac{1}{3}(x^2+2)^3+C.\\]",
+          "\\[\\int_0^1 2x(x^2+2)^2\\,\\mathrm{d}x=\\frac{1}{3}(3^3-2^3)=\\frac{19}{3}.\\]",
+          "<p>Differentiating the proposed antiderivative confirms the factor. Expanding the integrand and integrating its powers would give the same definite value.</p>"
+        ]
+      },
+      {
+        "title": "Combine an initial amount with a changing net rate",
+        "question": "<p>A tank starts with \\(5\\,\\mathrm{L}\\). Water enters at \\(6\\,\\mathrm{L}\\,\\mathrm{min}^{-1}\\) and leaves at \\(2t\\,\\mathrm{L}\\,\\mathrm{min}^{-1}\\), for \\(0\\le t\\le5\\). Find the amount after five minutes and the maximum amount during this interval.</p>",
+        "solution": [
+          "<p>The net rate is inflow minus outflow:</p>\\[Q^{\\prime}(t)=6-2t.\\]",
+          "<p>Add the accumulated change to the initial amount:</p>\\[Q(t)=5+\\int_0^t(6-2s)\\,\\mathrm{d}s=5+6t-t^2.\\]",
+          "\\[Q(5)=5+30-25=10\\,\\mathrm{L}.\\]<p>The net change is \\(5\\,\\mathrm{L}\\); the final amount includes the \\(5\\,\\mathrm{L}\\) present initially.</p>",
+          "<p>The amount increases while the net rate is positive and decreases while it is negative:</p>\\[6-2t=0\\Longrightarrow t=3.\\]",
+          "\\[Q(0)=5,\\qquad Q(3)=14,\\qquad Q(5)=10.\\]",
+          "<p>The maximum is \\(14\\,\\mathrm{L}\\) at \\(t=3\\,\\mathrm{min}\\). The model stays nonnegative on the stated interval. At the maximum amount, inflow and outflow are equal; the amount itself is not zero.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Recovering a curve from its gradient",
+        "href": "/courses/maths4u-9709-p1/topics/orig_integration_curve_equations"
+      },
+      {
+        "title": "Derivative signs, stationary points and ranges",
+        "href": "/courses/maths4u-9709-p1/topics/orig_differentiation_curve_behaviour"
+      },
+      {
+        "title": "Connected rates, units and small-change estimates",
+        "href": "/courses/maths4u-9709-p1/topics/orig_differentiation_rates"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S020-20261121-P01",
+        "title": "Two integrations need two separate constants",
+        "prompt": "<p>A curve satisfies \\(f^{\\prime\\prime}(x)=12x-6\\), \\(f^{\\prime}(1)=5\\) and \\(f(1)=2\\). Recover it in the form \\(f(x)=ax^3+bx^2+cx+d\\), finding all four coefficients.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "\\(a\\)",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "b",
+            "label": "\\(b\\)",
+            "type": "number",
+            "expected": "-3"
+          },
+          {
+            "key": "c",
+            "label": "\\(c\\)",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "d",
+            "label": "\\(d\\)",
+            "type": "number",
+            "expected": "-2"
+          }
+        ],
+        "hint": "<p>The gradient condition fixes the first integration constant. Its contribution becomes a linear term in the recovered function.</p>",
+        "solution": "<ol><li>\\[f^{\\prime}(x)=6x^2-6x+A,\\qquad f^{\\prime}(1)=A=5.\\]</li><li>\\[f(x)=2x^3-3x^2+5x+B.\\]</li><li>\\[2=f(1)=2-3+5+B\\Longrightarrow B=-2.\\]</li><li>\\[f(x)=2x^3-3x^2+5x-2.\\]</li><li><p>Differentiating twice gives the supplied second derivative. Substitution also verifies both original conditions.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S020-20261121-P02",
+        "title": "Two height conditions can determine the two constants",
+        "prompt": "<p>A curve satisfies \\(f^{\\prime\\prime}(x)=6x\\), \\(f(0)=1\\) and \\(f(2)=5\\). Write it as \\(f(x)=x^3+Ax+B\\). Find \\(A,B\\) and the gradient at \\(x=2\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "\\(A\\)",
+            "type": "number",
+            "expected": "-2"
+          },
+          {
+            "key": "b",
+            "label": "\\(B\\)",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "gradient",
+            "label": "\\(f^{\\prime}(2)\\)",
+            "type": "number",
+            "expected": "10"
+          }
+        ],
+        "hint": "<p>Integrate twice before using the two height conditions. A condition on the function does not belong in its derivative.</p>",
+        "solution": "<ol><li>\\[f^{\\prime}(x)=3x^2+A,\\qquad f(x)=x^3+Ax+B.\\]</li><li>\\[f(0)=1\\Longrightarrow B=1,\\qquad5=8+2A+1\\Longrightarrow A=-2.\\]</li><li>\\[f(x)=x^3-2x+1,\\qquad f^{\\prime}(2)=3(2)^2-2=10.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S020-20261121-P03",
+        "title": "Determine a coefficient before classifying the recovered curve",
+        "prompt": "<p>A curve has constant second derivative \\(f^{\\prime\\prime}(x)=k\\), with \\(f^{\\prime}(0)=-3\\), \\(f(1)=2\\) and \\(f(3)=6\\). Write it as \\(f(x)=\\frac{k}{2}x^2-3x+B\\). Find \\(k,B\\) and the minimum point.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "\\(k\\)",
+            "type": "number",
+            "expected": "5/2"
+          },
+          {
+            "key": "b",
+            "label": "\\(B\\)",
+            "type": "number",
+            "expected": "15/4"
+          },
+          {
+            "key": "minimum",
+            "label": "Minimum point",
+            "type": "pairs",
+            "expected": "(6/5,39/20)"
+          }
+        ],
+        "hint": "<p>The initial gradient fixes the linear coefficient. Subtract the two point equations to find \\(k\\), then recover \\(B\\).</p>",
+        "solution": "<ol><li>\\[f^{\\prime}(x)=kx-3,\\qquad f(x)=\\frac{k}{2}x^2-3x+B.\\]</li><li>\\[2=\\frac{k}{2}-3+B,\\qquad6=\\frac{9k}{2}-9+B.\\]</li><li>\\[4=4k-6\\Longrightarrow k=\\frac{5}{2},\\qquad B=\\frac{15}{4}.\\]</li><li>\\[f^{\\prime}(x)=\\frac{5}{2}x-3=0\\Longrightarrow x=\\frac{6}{5}.\\]</li><li>\\[f\\left(\\frac{6}{5}\\right)=\\frac{39}{20}.\\]</li><li><p>The second derivative is the positive constant \\(\\frac{5}{2}\\), so this stationary point is a minimum of the upward-opening quadratic.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S020-20261121-P04",
+        "title": "Recognise a verified derivative and restore its multiplier",
+        "prompt": "<p>Let \\(F(x)=(x^2+1)^4\\). Differentiate it, then use that result to find \\(K\\) in</p>\\[\\int3x(x^2+1)^3\\,\\mathrm{d}x=KF(x)+C.\\]<p>Hence evaluate \\(\\displaystyle\\int_0^1 3x(x^2+1)^3\\,\\mathrm{d}x\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "\\(K\\)",
+            "type": "number",
+            "expected": "3/8",
+            "retry": [
+              {
+                "answer": "3/4",
+                "feedback": "<p>The outer derivative supplies \\(4\\), but the inner derivative supplies another factor \\(2x\\). Compare with the full derivative \\(8x(x^2+1)^3\\).</p>"
+              }
+            ]
+          },
+          {
+            "key": "integral",
+            "label": "Definite value",
+            "type": "number",
+            "expected": "45/8"
+          }
+        ],
+        "hint": "<p>The chain rule supplies the inner derivative \\(2x\\). Compare the whole derivative with the required integrand.</p>",
+        "solution": "<ol><li>\\[F^{\\prime}(x)=4(x^2+1)^3(2x)=8x(x^2+1)^3.\\]</li><li>\\[3x(x^2+1)^3=\\frac{3}{8}F^{\\prime}(x)\\Longrightarrow K=\\frac{3}{8}.\\]</li><li>\\[\\int_0^1 3x(x^2+1)^3\\,\\mathrm{d}x=\\frac{3}{8}\\bigl(F(1)-F(0)\\bigr)=\\frac{3}{8}(16-1)=\\frac{45}{8}.\\]</li><li><p>The method reverses an explicitly checked derivative relation. No change of integration variable is needed.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S020-20261121-P05",
+        "title": "Separate net change, final amount and greatest amount",
+        "prompt": "<p>A tank contains \\(10\\,\\mathrm{cm^3}\\) at \\(t=0\\). Its net rate of volume change is \\(q(t)=8-2t\\), measured in \\(\\mathrm{cm^3\\,min^{-1}}\\), for \\(0\\le t\\le6\\), with \\(t\\) in minutes.</p><p>Find the net change over this interval, the final volume, and the greatest volume with the time at which it occurs.</p>",
+        "fields": [
+          {
+            "key": "change",
+            "label": "Net change (cm³)",
+            "type": "number",
+            "expected": "12"
+          },
+          {
+            "key": "final",
+            "label": "Final volume (cm³)",
+            "type": "number",
+            "expected": "22",
+            "retry": [
+              {
+                "answer": "12",
+                "feedback": "<p>This is the net change. Add the initial \\(10\\,\\mathrm{cm^3}\\) to obtain the final amount.</p>"
+              }
+            ]
+          },
+          {
+            "key": "time",
+            "label": "Time of greatest volume (min)",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "maximum",
+            "label": "Greatest volume (cm³)",
+            "type": "number",
+            "expected": "26"
+          }
+        ],
+        "hint": "<p>Add the integral of the rate to the initial amount. Use the sign of the rate and the interval endpoints to find the greatest amount.</p>",
+        "solution": "<ol><li>\\[V(t)=10+\\int_0^t(8-2s)\\,\\mathrm{d}s=10+8t-t^2.\\]</li><li>\\[\\Delta V=\\int_0^6(8-2t)\\,\\mathrm{d}t=12\\,\\mathrm{cm^3},\\qquad V(6)=22\\,\\mathrm{cm^3}.\\]</li><li>\\[q(t)=0\\Longrightarrow t=4,\\qquad V(4)=26\\,\\mathrm{cm^3}.\\]</li><li><p>The rate is positive before \\(4\\) and negative after it, so the volume increases then decreases. The endpoint volumes are \\(V(0)=10\\) and \\(V(6)=22\\), both below \\(26\\). The stated model remains nonnegative throughout its interval.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S020-20261121-E01",
+          "title": "A definite-integral condition fixes an unknown curve parameter",
+          "marks": 7,
+          "question": "<p>A curve satisfies</p>\\[f^{\\prime\\prime}(x)=6x+a,\\qquad f^{\\prime}(0)=-1,\\qquad f(1)=2,\\qquad\\int_0^1f(x)\\,\\mathrm{d}x=1.\\]<p>Let \\(b=f(0)\\). Find \\(a,b\\), state the complete equation of the curve and find \\(f^{\\prime}(1)\\).</p>",
+          "hint": "<p>After two integrations, the point condition and integral condition give two equations in \\(a,b\\). The parameter already present in the integrand does not disappear when the new antiderivative constant cancels.</p>",
+          "solution": "<ol><li>\\[f^{\\prime}(x)=3x^2+ax-1,\\qquad f(x)=x^3+\\frac{a}{2}x^2-x+b.\\]</li><li>\\[f(1)=2\\Longrightarrow\\frac{a}{2}+b=2.\\]</li><li>\\[\\int_0^1f(x)\\,\\mathrm{d}x=\\frac{1}{4}+\\frac{a}{6}-\\frac{1}{2}+b=1\\Longrightarrow\\frac{a}{6}+b=\\frac{5}{4}.\\]</li><li>\\[\\frac{a}{3}=\\frac{3}{4}\\Longrightarrow a=\\frac{9}{4},\\qquad b=2-\\frac{9}{8}=\\frac{7}{8}.\\]</li><li>\\[f(x)=x^3+\\frac{9}{8}x^2-x+\\frac{7}{8},\\qquad f^{\\prime}(1)=3+\\frac{9}{4}-1=\\frac{17}{4}.\\]</li><li><p>Differentiating twice returns \\(6x+\\frac{9}{4}\\). Direct substitution verifies the initial gradient, the point at \\(x=1\\) and the signed integral condition.</p></li></ol>",
+          "marking": "<ul><li>1 mark: recover the first derivative and use its initial condition.</li><li>1 mark: recover the function with a second constant.</li><li>1 mark: form the point equation.</li><li>1 mark: form the definite-integral equation without losing the parameter in the integrand.</li><li>1 mark: solve the simultaneous equations for both unknowns.</li><li>1 mark: state the full recovered curve.</li><li>1 mark: obtain the requested gradient and check the original conditions.</li></ul>"
+        },
+        {
+          "id": "P1-S020-20261121-E02",
+          "title": "An endpoint can tie with an interior maximum",
+          "marks": 9,
+          "question": "<p>An accumulated amount \\(A(t)\\), measured in cubic centimetres, is modelled for \\(0\\le t\\le4\\), with time in minutes. It satisfies</p>\\[A^{\\prime\\prime}(t)=6t-12,\\qquad A^{\\prime}(0)=9,\\qquad A(0)=5.\\]<p>Here derivatives use minutes as the time unit. Recover \\(A(t)\\). Find its greatest and least values on the whole interval, every time when each is attained, and its net change from \\(0\\) to \\(4\\).</p>",
+          "hint": "<p>Use a fresh constant at each integration. Find stationary times from the rate, then compare all allowed stationary values and both endpoints. Keep ties.</p>",
+          "solution": "<ol><li>\\[A^{\\prime}(t)=3t^2-12t+C_1,\\qquad C_1=9.\\]</li><li>\\[A(t)=t^3-6t^2+9t+C_2,\\qquad C_2=5.\\]</li><li>\\[A^{\\prime}(t)=3(t-1)(t-3)=0\\Longrightarrow t=1,3.\\]</li><li><p>The rate is positive on \\((0,1)\\), negative on \\((1,3)\\) and positive on \\((3,4)\\). Compare the stationary times with both included endpoints.</p></li><li>\\[A(0)=5,\\quad A(1)=9,\\quad A(3)=5,\\quad A(4)=9.\\]</li><li><p>The greatest amount is \\(9\\,\\mathrm{cm^3}\\), attained at both \\(1\\) and \\(4\\) minutes. The least is \\(5\\,\\mathrm{cm^3}\\), attained at both \\(0\\) and \\(3\\) minutes. These bounds also show the quantity stays nonnegative throughout the model interval.</p></li><li>\\[\\Delta A=A(4)-A(0)=9-5=4\\,\\mathrm{cm^3}.\\]</li><li><p>The two integration constants represent different missing conditions. Net change is a difference of amounts; it is not the greatest amount reached during the interval.</p></li></ol>",
+          "marking": "<ul><li>1 mark: integrate the second derivative and determine the first constant.</li><li>1 mark: integrate again and determine the second constant.</li><li>1 mark: obtain every allowed stationary time.</li><li>1 mark: establish the rate sign pattern.</li><li>1 mark: compare both stationary values and both endpoint values.</li><li>1 mark: state the greatest amount with all its attaining times.</li><li>1 mark: state the least amount with all its attaining times.</li><li>1 mark: obtain the net change.</li><li>1 mark: retain the whole stated interval, correct units and a physically nonnegative amount.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Each integration introduces a new constant; each condition must be applied to the correct quantity.</p><h2>Integrate twice and retain both constants</h2>\\[f^{\\prime}=G+C_1,\\qquad f=H+C_1x+C_2,\\]\\[G^{\\prime}=f^{\\prime\\prime},\\qquad H^{\\prime}=G.\\]<p>The first constant becomes a linear term. Use independent names and preserve the original domain. Differentiate twice to check the result.</p><h2>Translate and link the conditions</h2><p>Height: \\(f(a)=b\\). Gradient: \\(f^{\\prime}(a)=m\\). Stationary point: both \\(f^{\\prime}(a)=0\\) and the given height.</p><p>Hold unknown coefficients constant while integrating. Point and definite-integral conditions can form simultaneous equations. A constant inside \\(f\\) contributes \\(C(b-a)\\) to its integral; it does not cancel like an added antiderivative constant.</p><h2>Recognise a derivative multiple</h2>\\[F^{\\prime}=g\\Longrightarrow\\int\\lambda g\\,\\mathrm{d}x=\\lambda F+C.\\]<p>The factor \\(\\lambda\\) must be constant. For definite limits, use \\(\\lambda(F(b)-F(a))\\). Keep the complete inner-derivative factor and verify by differentiation.</p><h2>Accumulate the net change</h2>\\[Q(t)=Q(t_0)+\\int_{t_0}^{t}q(s)\\,\\mathrm{d}s.\\]<p>Use the signed net rate and include the initial amount. Positive rate increases the amount; negative rate decreases it.</p><p>Compare endpoint amounts and all allowed stationary times, plus any model-change points. Retain ties for global extremes. Check the stated time interval, physical restrictions and matching units.</p>",
+      "checks": "<ul><li>New independent constant for each integration?</li><li>Each height, gradient and integral condition used correctly?</li><li>Complete derivative match and all original equations checked?</li><li>Initial amount, signed change, endpoint comparisons and units included?</li></ul>",
+      "examTip": "<p>Initial amount, signed change, endpoint comparisons and units included?</p>"
+    }
+  }
+}

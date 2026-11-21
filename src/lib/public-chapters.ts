@@ -58,7 +58,7 @@ export function matchPublicChapter(chapters: PublicChapter[], path: string, chap
   ));
 }
 
-const pure1ChapterDescriptions: Record<string, string> = {
+const chapterDescriptions: Record<string, string> = {
   "9709-p1-quadratics": "Study quadratics for Cambridge 9709 Pure Mathematics 1. Work through factorisation, completing the square, the discriminant, inequalities and simultaneous equations.",
   "9709-p1-functions": "Study functions for Cambridge 9709 Pure Mathematics 1. Work through domain and range, inverse and composite functions, and graph transformations.",
   "9709-p1-coordinate-geometry": "Study coordinate geometry for Cambridge 9709 Pure Mathematics 1. Find exact distances, gradients, line and circle equations, intersections and tangents.",
@@ -67,10 +67,12 @@ const pure1ChapterDescriptions: Record<string, string> = {
 
 export function chapterMetadata(ch: PublicChapter, lesson?: PublicLesson) {
   if (ch.courseCode === "9709") {
+    const course = ch.courseTitle.replace(/\s*\(9709\)/, "")
+      .replace("Pure Mathematics", "Pure").replace("Probability & Statistics", "Statistics");
     return {
-      title: (lesson?.title ?? ch.chapterTitle) + " | 9709 Pure 1 | Maths4U",
-      description: lesson?.description ?? lesson?.objective ?? pure1ChapterDescriptions[ch.key]
-        ?? "Study " + ch.chapterTitle + " for Cambridge 9709 Pure Mathematics 1.",
+      title: (lesson?.title ?? ch.chapterTitle) + " | 9709 " + course + " | Maths4U",
+      description: lesson?.description ?? lesson?.objective ?? chapterDescriptions[ch.key]
+        ?? "Study " + ch.chapterTitle + " for Cambridge 9709 " + course + ". Practise with worked examples and exam-style questions.",
     };
   }
   const course = furtherCourseName(ch.courseTitle), focus = lesson?.title.split(/,| and /)[0].trimEnd();
@@ -82,10 +84,10 @@ export function chapterMetadata(ch: PublicChapter, lesson?: PublicLesson) {
 }
 
 export function learningStructuredData(ch: PublicChapter, lesson?: PublicLesson) {
-  const path = lesson?.path ?? ch.chapterPath, isPure1 = ch.courseCode === "9709";
+  const path = lesson?.path ?? ch.chapterPath, is9709 = ch.courseCode === "9709";
   const crumbs = [
-    isPure1 ? { name: "AS & A Level", path: "/learn/a-level" } : { name: "Maths4U", path: "/" },
-    { name: isPure1 ? ch.courseTitle : "9231 " + furtherCourseName(ch.courseTitle), path: "/courses/" + ch.courseSlug },
+    is9709 ? { name: "AS & A Level", path: "/learn/a-level" } : { name: "Maths4U", path: "/" },
+    { name: is9709 ? ch.courseTitle : "9231 " + furtherCourseName(ch.courseTitle), path: "/courses/" + ch.courseSlug },
     { name: ch.chapterTitle, path: ch.chapterPath },
     ...(lesson ? [{ name: lesson.title, path: lesson.path }] : []),
   ];
@@ -97,7 +99,7 @@ export function learningStructuredData(ch: PublicChapter, lesson?: PublicLesson)
     {
       "@context": "https://schema.org", "@type": ["WebPage", "LearningResource"], name: lesson?.title ?? ch.chapterTitle,
       url: arenaOrigin + path, description: chapterMetadata(ch, lesson).description, inLanguage: "en", isAccessibleForFree: true,
-      educationalLevel: isPure1 ? "Cambridge International AS Level" : "A Level Further Mathematics",
+      educationalLevel: is9709 ? "Cambridge International AS Level" : "A Level Further Mathematics",
       learningResourceType: ["Notes", "Worked examples", "Practice questions"], about: "Cambridge International " + ch.courseCode + " " + ch.chapterTitle,
       ...(lesson ? { teaches: lesson.objective } : {}), dateModified: lesson?.modified ?? ch.modified,
       publisher: { "@type": "Organization", name: "Maths4U", url: arenaOrigin },

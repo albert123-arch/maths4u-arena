@@ -11,7 +11,7 @@ import { QuestionSupport } from "./question-support";
 import { AdminArchiveLinks } from './admin-archive-links';
 import type { SupportContent } from "@/lib/question-support-model";
 import { LessonPresentations } from "./lesson-presentations";
-import { ExtraStudyPractice, LessonStudy, StudyExampleList } from "./lesson-study";
+import { ExtraStudyPractice, LessonStudy, StudyExampleList, StudyWrittenQuestions } from "./lesson-study";
 import { useSquareProgress, SquareSaveNotice } from "./square-progress";
 import { firstStoredValue } from "@/lib/square-device-progress";
 import { TeacherTaskPreview } from "./teacher-task-preview";
@@ -131,13 +131,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
       <h2>{t("Примените метод · авторские экзаменационные задачи", "Apply it · original exam-style problems")}</h2>
       <p>{t("Запишите решение на бумаге и сравните его с разбором и критериями.", "Show your working on paper and compare it with the worked solution and marking guidance.")}</p>
       {examRoute && <h3>Start after this lesson</h3>}
-      {examRoute?.starters.map(q => <details key={q.id} id={q.id} className="exam-starter">
-        <summary><strong>{q.title}</strong> <span className="muted">{q.marks} marks</span></summary>
-        <MathContent html={q.question} />
-        {q.hint && <details><summary>Hint</summary><MathContent html={q.hint} /></details>}
-        <details><summary>Worked solution</summary><MathContent html={q.solution} /></details>
-        {q.marking && <details><summary>Marking guidance</summary><MathContent html={q.marking} /></details>}
-      </details>)}
+      {examRoute?.starters.length ? <StudyWrittenQuestions questions={examRoute.starters} /> : null}
       {readyExams.length > 0 && <div className="square-challenges">{readyExams.map(q =>
         <Button key={q.uid} onClick={() => choose(q)}><strong>{questionTitle(q)}</strong><span>{q.marks} {t("баллов за письменное решение →", "written marks →")}</span></Button>
       )}</div>}

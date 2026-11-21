@@ -1,3 +1,4 @@
+import study from '../content/original/9709-s1/variation-study.json';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
@@ -55,7 +56,7 @@ test('source scope, original reference privacy, book-style stems and all teacher
 test('every complete quick answer works; missing and incorrect fields fail; review selects a fresh variant',()=>{
   for(const l of p.lessons){
     const dto=squarePublicLesson(packageTopic(l.id)!),qs=questionsForTopic(l.id);
-    assert.equal(dto.examples.length,4);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
+    assert.equal(dto.examples.length,study[l.id as keyof typeof study].examples.length);assert(dto.study?.sections.length);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
     assert.equal(qs.filter(q=>q.collection==='exam'&&q.variant_index===0).length,10);
     for(const forbidden of ['"expected"','source_problem_id','source_exam','ownerProvenance','archiveTaskId'])assert(!JSON.stringify(dto).includes(forbidden),forbidden);
     for(const html of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution]),...dto.questions.map(q=>q.prompt)])assert(!html.includes('katex-error'),l.id);

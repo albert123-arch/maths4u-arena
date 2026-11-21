@@ -1,0 +1,2795 @@
+{
+  "orig_cross_topic_revision_algebra_functions": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose a useful quadratic form, keep the original domains visible, and turn algebraic roots into solutions that really belong to the problem.",
+    "sections": [
+      {
+        "id": "choose-form",
+        "title": "Which quadratic form makes the next step easier?",
+        "label": "Choose a useful form",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Start with what the question asks. Rewriting a quadratic can reveal the answer more clearly than expanding every expression at once.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<ul><li>Standard form \\(ax^2+bx+c\\) identifies the coefficients for a formula or discriminant.</li><li>Factorised form \\(a(x-r_1)(x-r_2)\\), when available over the reals, reveals roots and signs.</li><li>Completed-square form \\(a(x-h)^2+k\\) reveals the vertex \\((h,k)\\), the range and a possible inverse branch.</li></ul><p>For a genuine quadratic, \\(a\\ne0\\). When completing the square, factor \\(a\\) out of the quadratic and linear terms without changing the function’s scale.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S021-20261121-C01",
+            "title": "Choose a form that reveals the required information",
+            "prompt": "<p>For \\(q(x)=x^2+4x-5\\), find its roots and minimum value. Then choose the interval on which \\(q(x)\\le0\\).</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "Roots",
+                "type": "set",
+                "expected": "{-5,1}"
+              },
+              {
+                "key": "minimum",
+                "label": "Minimum value",
+                "type": "number",
+                "expected": "-9"
+              },
+              {
+                "key": "interval",
+                "label": "Solution of \\(q(x)\\le0\\)",
+                "type": "choice",
+                "expected": "between",
+                "options": {
+                  "between": "\\([-5,1]\\)",
+                  "outside": "\\(( -\\infty,-5]\\cup[1,\\infty)\\)",
+                  "open": "\\((-5,1)\\)"
+                }
+              }
+            ],
+            "hint": "<p>Factorise to locate the roots and complete the square to find the minimum. The coefficient of \\(x^2\\) is positive.</p>",
+            "solution": "<ol><li>\\[q(x)=(x+5)(x-1)=(x+2)^2-9.\\]</li><li><p>The roots are \\(-5\\) and \\(1\\). The minimum is \\(-9\\), attained at \\(x=-2\\).</p></li><li><p>The upward-opening parabola is on or below the axis between its roots. Therefore \\(-5\\le x\\le1\\), including both endpoints.</p></li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For an inequality, find where the expression has the required sign and include endpoints only when equality is allowed. Intersect that interval with any domain supplied in the question.</p>"
+          }
+        ]
+      },
+      {
+        "id": "inverse-domain",
+        "title": "How does the original domain choose the inverse?",
+        "label": "Range and inverse branch",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>A function needs to be one-to-one to have an inverse on its full range. A complete parabola fails this test, but a suitable restricted branch can pass it. Complete the square and identify the actual range before rearranging.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>From \\(y=a(x-h)^2+k\\), with \\(a\\ne0\\),</p>\\[x=h\\pm\\sqrt{\\frac{y-k}{a}}.\\]<p>Choose the sign that returns inputs in the original domain. The original range becomes the inverse domain, and the original domain becomes the inverse range. Strict endpoints stay strict.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_cross_topic_revision_algebra_functions/restricted-quadratic-branch.svg\" alt=\"A parabola’s forbidden left branch is distinguished from the allowed right branch, with one horizontal-line root rejected by the original domain.\" width=\"834\" height=\"528\"></p><p>The line \\(y=6\\) meets the full parabola at \\(x=-1\\) and \\(x=3\\), but the domain \\(x\\ge1\\) retains only \\(3\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S021-20261121-C02",
+            "title": "A left branch and a strict endpoint change the inverse",
+            "prompt": "<p>Let \\(g(x)=(x+3)^2-1\\), with domain \\(x&lt;-3\\). Select its inverse formula and inverse domain, then find \\(g^{-1}(8)\\).</p>",
+            "fields": [
+              {
+                "key": "formula",
+                "label": "Inverse formula",
+                "type": "choice",
+                "expected": "minus",
+                "options": {
+                  "minus": "\\(g^{-1}(x)=-3-\\sqrt{x+1}\\)",
+                  "plus": "\\(g^{-1}(x)=-3+\\sqrt{x+1}\\)",
+                  "reciprocal": "\\(g^{-1}(x)=\\frac{1}{(x+3)^2-1}\\)"
+                }
+              },
+              {
+                "key": "domain",
+                "label": "Domain of the inverse",
+                "type": "choice",
+                "expected": "strict",
+                "options": {
+                  "strict": "\\(x&gt;-1\\)",
+                  "closed": "\\(x\\ge-1\\)",
+                  "left": "\\(x&lt;-3\\)"
+                }
+              },
+              {
+                "key": "value",
+                "label": "\\(g^{-1}(8)\\)",
+                "type": "number",
+                "expected": "-6"
+              }
+            ],
+            "hint": "<p>The original inputs satisfy \\(x+3&lt;0\\), so choose the negative square-root branch. The vertex is excluded.</p>",
+            "solution": "<ol><li><p>On \\(x&lt;-3\\), the output satisfies \\(g(x)&gt;-1\\), and every value above \\(-1\\) occurs.</p></li><li>\\[y+1=(x+3)^2,\\qquad x+3=-\\sqrt{y+1}.\\]</li><li>\\[g^{-1}(x)=-3-\\sqrt{x+1},\\qquad x&gt;-1.\\]</li><li>\\[g^{-1}(8)=-3-3=-6.\\]<p>The value \\(-6\\) belongs to the original domain, and \\(g(-6)=8\\).</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_cross_topic_revision_algebra_functions/inverse-reflection.svg\" alt=\"The restricted quadratic and its inverse are reflected in the line y equals x, with swapped coordinates and explicitly marked domain endpoints.\" width=\"796\" height=\"532\"></p><p>The allowed point \\((3,6)\\) reflects to \\((6,3)\\) in the inverse graph. The included endpoint \\((1,2)\\) reflects to the included endpoint \\((2,1)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An inverse is not a reciprocal: \\(f^{-1}(x)\\) does not mean \\(\\frac{1}{f(x)}\\). The inverse identities also have domains:</p>\\[f^{-1}(f(x))=x\\quad\\text{for }x\\in\\operatorname{Dom}(f),\\]\\[f(f^{-1}(y))=y\\quad\\text{for }y\\in\\operatorname{Range}(f).\\]"
+          }
+        ]
+      },
+      {
+        "id": "composite-domain",
+        "title": "Which inputs are allowed in a composite function?",
+        "label": "Check both functions",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>In \\(f(g(x))\\), apply \\(g\\) first. The original input must be allowed by \\(g\\), and its output must be an allowed input for \\(f\\). Reversing the order usually changes both the expression and its domain.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[\\operatorname{Dom}(f\\circ g)=\\{x\\in\\operatorname{Dom}(g):g(x)\\in\\operatorname{Dom}(f)\\}.\\]<p>Check nonnegative square-root inputs, nonzero denominators and any stated branch restriction. If the composition is required on the whole supplied domain of \\(g\\), its entire range must lie in the domain of \\(f\\); otherwise state the needed input restriction.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "P1-S021-20261121-C03",
+            "title": "The inner rational output must be allowed by the square root",
+            "prompt": "<p>Let \\(f(u)=\\sqrt{u}\\) and \\(g(x)=\\frac{x+1}{x-2}\\), each with its natural real domain. Choose the allowed domain of \\(f(g(x))\\), then solve \\(f(g(x))=2\\).</p>",
+            "fields": [
+              {
+                "key": "domain",
+                "label": "Allowed composite domain",
+                "type": "choice",
+                "expected": "two",
+                "options": {
+                  "two": "\\(( -\\infty,-1]\\cup(2,\\infty)\\)",
+                  "middle": "\\([-1,2)\\)",
+                  "except": "\\(\\mathbb{R}\\setminus\\{2\\}\\)"
+                }
+              },
+              {
+                "key": "x",
+                "label": "Allowed solution",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>The denominator must be nonzero and the complete rational expression under the root must be nonnegative. Test signs around \\(-1\\) and \\(2\\).</p>",
+            "solution": "<ol><li>\\[x\\ne2,\\qquad\\frac{x+1}{x-2}\\ge0.\\]</li><li><p>The quotient is nonnegative for \\(x\\le-1\\) or \\(x&gt;2\\). At \\(-1\\) it is zero; at \\(2\\) it is undefined.</p></li><li>\\[\\frac{x+1}{x-2}=4\\Longrightarrow x+1=4x-8\\Longrightarrow x=3.\\]</li><li><p>This input belongs to the composite domain, and the original square root is \\(\\sqrt{4}=2\\).</p></li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write the composite domain before solving its equation or inequality. For example, a restriction \\(u\\ge h\\) on the outer function becomes \\(g(x)\\ge h\\), not automatically \\(x\\ge h\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "candidate-checks",
+        "title": "Which algebraic roots solve the original problem?",
+        "label": "Check every possible solution",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>An algebraic step can enlarge the set of possible answers. Squaring hides signs, clearing denominators can admit excluded inputs, and cancelling a factor can hide a hole. Keep the original restrictions beside the calculation.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(\\sqrt{A(x)}=B(x)\\), require both \\(A(x)\\ge0\\) and \\(B(x)\\ge0\\) before using \\(A(x)=B(x)^2\\). Then check the resulting values in the original equation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S021-20261121-C04",
+            "title": "Cancellation does not restore an excluded input",
+            "prompt": "<p>Solve \\(\\frac{x^2-4}{x-2}=4\\). Give the algebraic value obtained after cancellation and the final solution set for the original equation.</p>",
+            "fields": [
+              {
+                "key": "candidate",
+                "label": "Value obtained after cancellation",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "solutions",
+                "label": "Original solution set",
+                "type": "set",
+                "expected": "empty"
+              }
+            ],
+            "hint": "<p>Record the denominator restriction before cancelling \\(x-2\\). Check whether the resulting value satisfies it.</p>",
+            "solution": "<ol><li>\\[x\\ne2,\\qquad\\frac{(x-2)(x+2)}{x-2}=x+2\\quad\\text{only for }x\\ne2.\\]</li><li>\\[x+2=4\\Longrightarrow x=2.\\]</li><li><p>That input is excluded from the original equation, so there are no solutions. The final solution set is \\(\\varnothing\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not divide by an expression that might be zero without considering that case separately. A cancelled denominator remains excluded, while a divided factor can cause a valid zero solution to be lost.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>For each possible solution, check the original domain, any sign or interval condition, and the unsimplified equation. A rejected value needs a short reason. If none remain, the original problem has no solution.</p>"
+          }
+        ]
+      },
+      {
+        "id": "restricted-intersections",
+        "title": "When does a discriminant count too many intersections?",
+        "label": "Degree, roots and restrictions",
+        "minutes": 12,
+        "level": "further",
+        "intro": "<p>Equate the original graph expressions and collect terms. Before using a quadratic test, check whether a parameter can make the leading coefficient zero. For the genuine quadratic cases, the discriminant counts unrestricted real roots.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[ax^2+bx+c=0,\\quad a\\ne0:\\qquad\\Delta=b^2-4ac,\\]\\[x=\\frac{-b\\pm\\sqrt{\\Delta}}{2a}.\\]<p>There are two distinct real roots when \\(\\Delta&gt;0\\), one repeated real root when \\(\\Delta=0\\), and none when \\(\\Delta&lt;0\\). Check the resulting inputs against both graph domains afterwards.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "P1-S021-20261121-C05",
+            "title": "A repeated root at a strict boundary is not allowed",
+            "prompt": "<p>Consider \\(x^2-6x+k=0\\) with the restriction \\(x&gt;3\\). State the number of allowed solutions for \\(k=4\\), \\(k=9\\) and \\(k=12\\). Also give the allowed solution when \\(k=4\\).</p>",
+            "fields": [
+              {
+                "key": "four",
+                "label": "Number when \\(k=4\\)",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "nine",
+                "label": "Number when \\(k=9\\)",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "twelve",
+                "label": "Number when \\(k=12\\)",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "root",
+                "label": "Allowed root when \\(k=4\\)",
+                "type": "number",
+                "expected": "sqrt(5) + 3"
+              }
+            ],
+            "hint": "<p>Rewrite the equation as \\((x-3)^2=9-k\\), then apply the strict restriction to each root.</p>",
+            "solution": "<ol><li><p>For \\(k=4\\), the two algebraic roots are \\(3\\pm\\sqrt{5}\\). Only \\(3+\\sqrt{5}\\) is greater than \\(3\\).</p></li><li><p>For \\(k=9\\), the repeated root is \\(3\\), which the domain excludes. There are no allowed solutions.</p></li><li><p>For \\(k=12\\), a square would have to equal \\(-3\\), so there are no real roots at all.</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>If the leading coefficient vanishes, solve the remaining equation directly. A nonzero linear coefficient gives a linear equation. If both variable coefficients vanish, a true constant statement allows every input in the original domain; a false one allows none.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>One allowed intersection need not mean tangency: another real root may be outside the domain. For a claimed tangent, check the repeated contact input and its coordinates in both original graphs. An excluded endpoint is not a contact point.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Admissible solution",
+        "definition": "<p>A value that satisfies the original equation and every stated restriction.</p>"
+      },
+      {
+        "term": "Domain",
+        "definition": "<p>The set of inputs allowed in the original function.</p>"
+      },
+      {
+        "term": "Range",
+        "definition": "<p>The set of outputs actually reached on that domain.</p>"
+      },
+      {
+        "term": "One-to-one",
+        "definition": "<p>Different allowed inputs always produce different outputs.</p>"
+      },
+      {
+        "term": "Inverse branch",
+        "definition": "<p>The choice of inverse expression that returns inputs in the original restricted domain.</p>"
+      },
+      {
+        "term": "Composite function",
+        "definition": "<p>A function formed by applying one function to the output of another.</p>"
+      },
+      {
+        "term": "Discriminant",
+        "definition": "<p>The expression \\(b^2-4ac\\), used to count real roots when the equation is genuinely quadratic.</p>"
+      },
+      {
+        "term": "Excluded input",
+        "definition": "<p>An input forbidden by the original domain, even if later algebra hides the reason.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use different forms of the same quadratic",
+        "question": "<p>Write \\(q(x)=2x^2-8x+6\\) in factorised and completed-square forms. Use them to find the roots, the minimum and the solution of \\(q(x)\\le0\\).</p>",
+        "solution": [
+          "\\[q(x)=2(x^2-4x+3)=2(x-1)(x-3).\\]<p>The roots are \\(1\\) and \\(3\\).</p>",
+          "<p>Keep the leading factor when completing the square:</p>\\[\\begin{aligned}q(x)&amp;=2(x^2-4x)+6\\\\&amp;=2\\bigl((x-2)^2-4\\bigr)+6\\\\&amp;=2(x-2)^2-2.\\end{aligned}\\]",
+          "<p>The minimum is \\(-2\\), attained at \\(x=2\\). The vertex is \\((2,-2)\\).</p>",
+          "\\[q(x)\\le0\\Longleftrightarrow(x-2)^2\\le1\\Longleftrightarrow1\\le x\\le3.\\]",
+          "<p>All three expressions define the same function. The useful form depends on whether the question asks for roots, signs or the range.</p>"
+        ]
+      },
+      {
+        "title": "The domain selects one inverse branch",
+        "question": "<p>Let \\(f(x)=(x-1)^2+2\\), with domain \\(x\\ge1\\). Find its range and inverse, including the inverse domain. How many allowed solutions does \\(f(x)=k\\) have?</p>",
+        "solution": [
+          "<p>Since \\((x-1)^2\\ge0\\), and every nonnegative square is reached on this right branch, the range is \\([2,\\infty)\\).</p>",
+          "\\[y-2=(x-1)^2.\\]<p>The restriction gives \\(x-1\\ge0\\), so</p>\\[x=1+\\sqrt{y-2}.\\]",
+          "\\[f^{-1}(x)=1+\\sqrt{x-2},\\qquad x\\ge2.\\]<p>The inverse range is \\([1,\\infty)\\), the original domain.</p>",
+          "<p>For \\(k&lt;2\\), there is no solution. For \\(k=2\\), the allowed solution is \\(x=1\\). For \\(k&gt;2\\), only \\(x=1+\\sqrt{k-2}\\) belongs to the stated domain.</p>",
+          "<p>For example, \\(k=6\\) gives algebraic roots \\(-1\\) and \\(3\\), but only \\(3\\) is allowed. Thus \\(f^{-1}(6)=3\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the composite domain before solving its equation",
+        "question": "<p>Let \\(f(u)=\\frac{1}{u-2}\\) and \\(g(x)=\\sqrt{x+1}\\), with their natural real domains. Find the allowed domain of \\(f(g(x))\\), then solve \\(f(g(x))=1\\).</p>",
+        "solution": [
+          "<p>Apply \\(g\\) first, then \\(f\\):</p>\\[f(g(x))=\\frac{1}{\\sqrt{x+1}-2}.\\]",
+          "<p>The inner square root requires \\(x\\ge-1\\). Its output must also avoid the excluded outer input \\(2\\):</p>\\[\\sqrt{x+1}\\ne2\\Longrightarrow x\\ne3.\\]",
+          "<p>The allowed domain is \\([-1,3)\\cup(3,\\infty)\\).</p>",
+          "\\[\\frac{1}{\\sqrt{x+1}-2}=1\\Longrightarrow\\sqrt{x+1}=3\\Longrightarrow x=8.\\]",
+          "<p>The input \\(8\\) is allowed, and the original composite gives \\(\\frac{1}{3-2}=1\\). Therefore \\(x=8\\) is the solution.</p>"
+        ]
+      },
+      {
+        "title": "Check the sign that squaring would hide",
+        "question": "<p>Solve \\(\\sqrt{2x+3}=x\\) over the real numbers.</p>",
+        "solution": [
+          "<p>The square root requires \\(x\\ge-\\frac{3}{2}\\). Its value is nonnegative, so equality also requires \\(x\\ge0\\).</p>",
+          "\\[2x+3=x^2\\Longrightarrow x^2-2x-3=0\\Longrightarrow(x-3)(x+1)=0.\\]",
+          "<p>The algebraic possibilities are \\(x=3\\) and \\(x=-1\\). The second fails the required sign condition.</p>",
+          "\\[x=3:\\quad\\sqrt{9}=3;\\qquad x=-1:\\quad\\sqrt{1}=1\\ne-1.\\]",
+          "<p>The only solution of the original equation is \\(x=3\\). Squaring preserved the true solution but also allowed a false one.</p>"
+        ]
+      },
+      {
+        "title": "The discriminant does not finish a restricted intersection count",
+        "question": "<p>Find the number of intersections of \\(y=x^2+4\\), restricted to \\(x&gt;1\\), with \\(y=mx\\), for every real value of \\(m\\).</p>",
+        "solution": [
+          "\\[x^2-mx+4=0,\\qquad\\Delta=m^2-16.\\]<p>At an allowed input, \\(m=x+\\frac{4}{x}&gt;0\\). Combining this with \\(\\Delta\\ge0\\) gives \\(m\\ge4\\). There are no allowed intersections for \\(m&lt;4\\).</p>",
+          "<p>When \\(m=4\\), the equation is \\((x-2)^2=0\\). Its repeated root \\(2\\) is allowed, giving one intersection.</p>",
+          "<p>For \\(m&gt;4\\), write \\(p(x)=x^2-mx+4\\). Its vertex lies at \\(x=\\frac{m}{2}&gt;2\\), its minimum is negative, and</p>\\[p(1)=5-m.\\]",
+          "<p>If \\(4&lt;m&lt;5\\), the value at \\(1\\) is positive. Both roots lie to the right of \\(1\\), one on each side of the vertex, so both intersections are allowed.</p>",
+          "<p>If \\(m=5\\), the roots are \\(1\\) and \\(4\\). The strict boundary excludes \\(1\\), leaving one intersection. If \\(m&gt;5\\), then \\(p(1)&lt;0\\), so \\(1\\) lies between the two roots and only the larger root is allowed.</p>",
+          "\\[N(m)=\\begin{cases}0,&amp;m&lt;4,\\\\1,&amp;m=4,\\\\2,&amp;4&lt;m&lt;5,\\\\1,&amp;m\\ge5.\\end{cases}\\]<p>A positive discriminant gives two unrestricted real roots; their locations decide the allowed count.</p>"
+        ]
+      },
+      {
+        "title": "Check whether the equation is still quadratic",
+        "question": "<p>Classify the number of real solutions of \\((k-2)x^2+2x-1=0\\) for every real parameter \\(k\\).</p>",
+        "solution": [
+          "<p>First check the value that removes the quadratic term. For \\(k=2\\),</p>\\[2x-1=0\\Longrightarrow x=\\frac{1}{2}.\\]<p>This is one solution of a linear equation.</p>",
+          "<p>For \\(k\\ne2\\), the equation is quadratic, with</p>\\[\\Delta=2^2-4(k-2)(-1)=4(k-1).\\]",
+          "<p>If \\(k&lt;1\\), there are no real roots. If \\(k=1\\), the equation is \\(-(x-1)^2=0\\), giving the repeated root \\(1\\).</p>",
+          "<p>If \\(k&gt;1\\) and \\(k\\ne2\\), there are two distinct real roots:</p>\\[x=\\frac{-1\\pm\\sqrt{k-1}}{k-2}.\\]",
+          "<p>Thus the count is zero for \\(k&lt;1\\), one for \\(k=1\\) or \\(k=2\\), and two for \\(k&gt;1\\), \\(k\\ne2\\). Substituting \\(k=2\\) into a quadratic formula would be invalid.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Quadratic equations and factorisation",
+        "href": "/courses/maths4u-9709-p1/topics/orig_quadratics_factorisation"
+      },
+      {
+        "title": "Simultaneous equations",
+        "href": "/courses/maths4u-9709-p1/topics/orig_quadratics_simultaneous"
+      },
+      {
+        "title": "Derivative signs, stationary points and ranges",
+        "href": "/courses/maths4u-9709-p1/topics/orig_differentiation_curve_behaviour"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S021-20261121-P01",
+        "title": "A completed square fixes the inverse branch",
+        "prompt": "<p>Let \\(f(x)=2x^2-12x+23\\), with domain \\(x\\le3\\). Complete the square, state its range and find its inverse. Enter the vertex, \\(f^{-1}(13)\\), and the two inclusive endpoints of the solution to \\(f(x)\\le23\\).</p>",
+        "fields": [
+          {
+            "key": "vertex",
+            "label": "Vertex",
+            "type": "pairs",
+            "expected": "(3,5)"
+          },
+          {
+            "key": "inverse",
+            "label": "\\(f^{-1}(13)\\)",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "lower",
+            "label": "Lower endpoint",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "upper",
+            "label": "Upper endpoint",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>The original inputs are on the left of the vertex. The inverse must return an input no greater than \\(3\\).</p>",
+        "solution": "<ol><li>\\[f(x)=2(x-3)^2+5,\\qquad\\text{range }[5,\\infty).\\]</li><li>\\[f^{-1}(x)=3-\\sqrt{\\frac{x-5}{2}},\\qquad x\\ge5.\\]</li><li>\\[f^{-1}(13)=3-\\sqrt{4}=1.\\]</li><li>\\[2(x-3)^2+5\\le23\\Longrightarrow0\\le x\\le6.\\]</li><li><p>Intersect that candidate interval with \\(x\\le3\\). The final solution is \\(0\\le x\\le3\\), including both endpoints.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S021-20261121-P02",
+        "title": "Squaring creates a candidate that fails the original equation",
+        "prompt": "<p>Solve \\(\\sqrt{4-x}=x-2\\) over the real numbers. State the allowable interval before squaring, then enter every admissible solution.</p>",
+        "fields": [
+          {
+            "key": "lower",
+            "label": "Lower bound before squaring",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "upper",
+            "label": "Upper bound before squaring",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "solutions",
+            "label": "Every solution",
+            "type": "set",
+            "expected": "{3}",
+            "retry": [
+              {
+                "answer": "0,3",
+                "feedback": "<p>Squaring produced candidates. At \\(x=0\\), the original right-hand side is negative and cannot equal the principal square root.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The radicand must be nonnegative. The right-hand side must also be nonnegative because it equals a principal square root.</p>",
+        "solution": "<ol><li>\\[4-x\\ge0,\\quad x-2\\ge0\\Longrightarrow2\\le x\\le4.\\]</li><li>\\[4-x=(x-2)^2\\Longrightarrow x^2-3x=0\\Longrightarrow x=0\\text{ or }3.\\]</li><li><p>The candidate \\(0\\) is outside the allowable interval and gives \\(2=-2\\) in the original equation. At \\(x=3\\), both sides equal \\(1\\). The solution set is \\(\\{3\\}\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S021-20261121-P03",
+        "title": "A cancelled denominator still leaves a missing input",
+        "prompt": "<p>Let \\(f(u)=\\frac{1}{u-1}\\) and \\(g(x)=\\frac{x+2}{x-3}\\), each on its natural real domain. Simplify \\(f(g(x))\\), give every excluded input, and solve \\(f(g(x))=0\\).</p>",
+        "fields": [
+          {
+            "key": "excluded",
+            "label": "Excluded input set",
+            "type": "set",
+            "expected": "{3}"
+          },
+          {
+            "key": "solutions",
+            "label": "Solution set",
+            "type": "set",
+            "expected": "empty"
+          }
+        ],
+        "hint": "<p>First require \\(g\\) to exist, then require its output to differ from \\(1\\). Keep these restrictions after simplifying.</p>",
+        "solution": "<ol><li>\\[x\\ne3,\\qquad g(x)-1=\\frac{5}{x-3}\\ne0\\quad(x\\ne3).\\]</li><li>\\[f(g(x))=\\frac{1}{\\frac{5}{x-3}}=\\frac{x-3}{5},\\qquad x\\ne3.\\]</li><li><p>The simplified expression would be zero only at \\(x=3\\). That input was excluded by the original composition, so there are no solutions.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S021-20261121-P04",
+        "title": "Check whether the equation is still quadratic",
+        "prompt": "<p>Consider \\((k-1)x^2-2kx+k+1=0\\). Find the value of \\(k\\) at which it is not quadratic. For each listed value, give every real solution with \\(x\\ge0\\).</p>",
+        "fields": [
+          {
+            "key": "degenerate",
+            "label": "Value of k where degree changes",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "minus2",
+            "label": "Solutions when \\(k=-2\\)",
+            "type": "set",
+            "expected": "{1/3,1}"
+          },
+          {
+            "key": "zero",
+            "label": "Solutions when \\(k=0\\)",
+            "type": "set",
+            "expected": "{1}"
+          },
+          {
+            "key": "one",
+            "label": "Solutions when \\(k=1\\)",
+            "type": "set",
+            "expected": "{1}"
+          },
+          {
+            "key": "two",
+            "label": "Solutions when \\(k=2\\)",
+            "type": "set",
+            "expected": "{1,3}"
+          }
+        ],
+        "hint": "<p>Substitute the value that makes the leading coefficient zero before dividing by it. For the other values, factor the equation and apply \\(x\\ge0\\).</p>",
+        "solution": "<ol><li>\\[(k-1)x^2-2kx+k+1=(x-1)\\bigl((k-1)x-(k+1)\\bigr).\\]</li><li><p>At \\(k=1\\), the equation is \\(-2x+2=0\\), with the single root \\(x=1\\).</p></li><li>\\[k\\ne1:\\qquad x=1\\quad\\text{or}\\quad x=\\frac{k+1}{k-1}.\\]</li><li><p>For \\(k=-2\\), both \\(1\\) and \\(\\frac{1}{3}\\) are allowed. For \\(k=0\\), the second root is \\(-1\\), which is excluded. For \\(k=2\\), both \\(1\\) and \\(3\\) are allowed.</p></li><li><p>In the genuine quadratic case the discriminant is \\(4\\). This guarantees two distinct algebraic real roots, but the restriction can remove one. There are two admissible roots for \\(k\\le-1\\) or \\(k&gt;1\\), and one for \\(-1&lt;k\\le1\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S021-20261121-P05",
+        "title": "An open endpoint can remove the only repeated root",
+        "prompt": "<p>Let \\(f(x)=(x+2)^2-3\\), with the strict domain \\(x&gt;-2\\). Find the number of intersections with each horizontal line \\(y=-4\\), \\(y=-3\\) and \\(y=1\\). For \\(y=1\\), give the accepted intersection point.</p>",
+        "fields": [
+          {
+            "key": "low",
+            "label": "Number for \\(y=-4\\)",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "edge",
+            "label": "Number for \\(y=-3\\)",
+            "type": "number",
+            "expected": "0",
+            "retry": [
+              {
+                "answer": "1",
+                "feedback": "<p>The repeated root is \\(x=-2\\), but the strict domain is \\(x&gt;-2\\). The vertex is excluded.</p>"
+              }
+            ]
+          },
+          {
+            "key": "high",
+            "label": "Number for \\(y=1\\)",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "point",
+            "label": "Accepted intersection",
+            "type": "pairs",
+            "expected": "(0,1)"
+          }
+        ],
+        "hint": "<p>The vertex lies at an excluded input. A repeated algebraic root is counted only when it belongs to the stated domain.</p>",
+        "solution": "<ol><li><p>The range is \\((-3,\\infty)\\). Hence the lines \\(y=-4\\) and \\(y=-3\\) have no intersections with this restricted graph.</p></li><li>\\[(x+2)^2-3=1\\Longrightarrow(x+2)^2=4\\Longrightarrow x=0\\text{ or }-4.\\]</li><li><p>Only \\(0&gt;-2\\), so the one accepted point is \\((0,1)\\). The unrestricted parabola would have a vertex at \\((-2,-3)\\), but that point is absent here.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S021-20261121-E01",
+          "title": "A composite inequality and its inverse use the same branch",
+          "marks": 7,
+          "question": "<p>Let \\(f(x)=(x-2)^2+1\\), for \\(x\\ge2\\), and \\(g(x)=3x-1\\), for all real \\(x\\). Define \\(h(x)=f(g(x))\\) on the largest real domain where this expression is defined. Find the domain and range of \\(h\\), solve \\(h(x)\\le10\\), and find \\(h^{-1}(17)\\). Give the lower bound of the domain, the inclusive endpoints of the inequality solution and the requested inverse value.</p>",
+          "hint": "<p>Apply the domain of \\(f\\) to the output of \\(g\\). On that restricted domain, the expression inside the square is nonnegative.</p>",
+          "solution": "<ol><li>\\[3x-1\\ge2\\Longrightarrow x\\ge1,\\qquad h(x)=(3x-3)^2+1.\\]</li><li><p>As \\(x\\) runs through \\([1,\\infty)\\), \\(3x-3\\) runs through \\([0,\\infty)\\). The range of \\(h\\) is \\([1,\\infty)\\).</p></li><li>\\[(3x-3)^2+1\\le10\\Longrightarrow-3\\le3x-3\\le3\\Longrightarrow0\\le x\\le2.\\]</li><li><p>Intersect with the domain: \\(1\\le x\\le2\\).</p></li><li>\\[h^{-1}(y)=1+\\frac{\\sqrt{y-1}}{3},\\qquad y\\ge1.\\]</li><li>\\[h^{-1}(17)=1+\\frac{4}{3}=\\frac{7}{3}.\\]</li><li><p>Substitution gives \\(g(\\frac{7}{3})=6\\), an allowed input of \\(f\\), and \\(f(6)=17\\).</p></li></ol>",
+          "marking": "<ul><li>1 mark: require the inner output to belong to the outer domain.</li><li>1 mark: obtain the simplified composition and its range.</li><li>1 mark: solve the squared inequality.</li><li>1 mark: intersect with the original domain, retaining both inclusive endpoints.</li><li>1 mark: choose the positive branch in the inverse.</li><li>1 mark: state the inverse domain.</li><li>1 mark: evaluate the inverse and verify its original-domain condition.</li></ul>"
+        },
+        {
+          "id": "P1-S021-20261121-E02",
+          "title": "A discriminant can identify a contact outside the allowed graph",
+          "marks": 8,
+          "question": "<p>The restricted curve is \\(y=(x-3)^2\\), with \\(x\\ge3\\). A line has equation \\(y=mx\\). First find every value of \\(m\\) giving a repeated root of the unrestricted intersection equation. Then identify which of those values gives a contact point on the restricted curve. Find every accepted intersection when \\(m=4\\), and explain the number of accepted intersections for all real \\(m\\).</p>",
+          "hint": "<p>Use the discriminant to find algebraic repeated roots, then check their inputs. On the stated curve \\(x\\) is positive and \\((x-3)^2\\) is nonnegative.</p>",
+          "solution": "<ol><li>\\[(x-3)^2=mx\\Longrightarrow x^2-(m+6)x+9=0.\\]</li><li>\\[\\Delta=(m+6)^2-36=m(m+12)=0\\Longrightarrow m=0\\text{ or }-12.\\]</li><li><p>At \\(m=0\\), the repeated root is \\(x=3\\), giving the allowed point \\((3,0)\\). At \\(m=-12\\), the repeated root is \\(x=-3\\), which is excluded.</p></li><li>\\[m=4:\\qquad x^2-10x+9=(x-1)(x-9)=0.\\]</li><li><p>Only \\(x=9\\) belongs to the domain, so the accepted intersection is \\((9,36)\\).</p></li><li><p>If \\(m&lt;0\\), then \\(mx&lt;0\\) for \\(x\\ge3\\), while \\((x-3)^2\\ge0\\); no intersection is possible. If \\(m=0\\), there is the single boundary contact.</p></li><li><p>If \\(m&gt;0\\), the quadratic has positive discriminant, its value at \\(x=3\\) is \\(-3m&lt;0\\), and its leading coefficient is positive. Thus one root lies below \\(3\\) and one above \\(3\\). Exactly one is allowed. The final count is zero for \\(m&lt;0\\) and one for \\(m\\ge0\\).</p></li></ol>",
+          "marking": "<ul><li>1 mark: form the intersection equation.</li><li>1 mark: calculate and factor the discriminant.</li><li>1 mark: obtain both algebraic repeated-root parameter values.</li><li>1 mark: check their contact inputs against the restricted domain.</li><li>1 mark: solve the equation when the parameter is four.</li><li>1 mark: give the accepted coordinate pair only.</li><li>1 mark: justify the count for negative and zero parameter values.</li><li>1 mark: justify the count for positive parameter values.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Find the algebraic possibilities, then retain only those allowed by the original problem.</p><h2>Choose the useful quadratic form</h2><p>Standard form gives coefficients. Factorised form gives roots and signs. Completed-square form \\(a(x-h)^2+k\\) gives the vertex and helps with ranges and inverses.</p><p>Preserve the leading factor. For inequalities, check the sign intervals, the equality endpoints and the stated domain.</p><h2>Keep the inverse branch and its domain</h2>\\[y=a(x-h)^2+k\\Longrightarrow x=h\\pm\\sqrt{\\frac{y-k}{a}}.\\]<p>Use the sign required by the original input interval. Swap domain and range, preserving strict endpoints. Inverse identities hold only on their corresponding domains. An inverse is not a reciprocal.</p><h2>Check composites and algebraic steps</h2><p>For \\(f(g(x))\\), require both \\(x\\in\\operatorname{Dom}(g)\\) and \\(g(x)\\in\\operatorname{Dom}(f)\\). Keep denominator holes after cancellation.</p><p>Before squaring \\(\\sqrt{A}=B\\), require \\(A\\ge0\\) and \\(B\\ge0\\). Check every possible value in the original equation. Consider a possible zero factor before dividing by it.</p><h2>Count allowed intersections</h2>\\[a\\ne0:\\quad\\Delta=b^2-4ac,\\qquad x=\\frac{-b\\pm\\sqrt{\\Delta}}{2a}.\\]<p>Positive, zero and negative discriminants give two, one repeated and no unrestricted real roots. Apply original domains afterwards.</p><p>If \\(a=0\\), solve the remaining equation directly. Check strict boundaries and contact coordinates. One retained root alone does not establish tangency.</p>",
+      "checks": "<ul><li>Useful form chosen without changing the function?</li><li>Original and composite domains recorded first?</li><li>Every root checked after squaring, cancellation or division?</li><li>Degree changes, strict endpoints and contact points checked?</li></ul>",
+      "examTip": "<p>Degree changes, strict endpoints and contact points checked?</p>"
+    }
+  },
+  "orig_cross_topic_revision_geometry_calculus": {
+    "updatedOn": "2026-11-21",
+    "description": "Combine derivative gradients with perpendicular radii, then use squared distance and the actual domain to justify a nearest point.",
+    "sections": [
+      {
+        "id": "contact-data",
+        "title": "What information should I collect at a contact point?",
+        "label": "Point, gradient and radius",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Start by checking that the stated point belongs to every original curve involved. A correct gradient at the wrong point cannot establish a tangent. For a circle, identify its centre and ensure that its radius is positive.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>At \\(P=(a,f(a))\\), with finite derivative \\(m=f^{\\prime}(a)\\), the curve tangent is</p>\\[y-f(a)=m(x-a).\\]<p>When \\(m\\ne0\\), the normal gradient is \\(-\\frac{1}{m}\\). A circle tangent is perpendicular to the radius through its contact point, so the circle centre lies on this normal.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S022-20261121-C01",
+            "title": "Check the point, then use its local gradient",
+            "prompt": "<p>The point \\(P=(-1,2)\\) lies on \\(y=x^2+1\\). Write its tangent as \\(y=m_Tx+c_T\\) and its normal as \\(y=m_Nx+c_N\\). Find the four coefficients.</p>",
+            "fields": [
+              {
+                "key": "mt",
+                "label": "\\(m_T\\)",
+                "type": "number",
+                "expected": "-2"
+              },
+              {
+                "key": "ct",
+                "label": "\\(c_T\\)",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "mn",
+                "label": "\\(m_N\\)",
+                "type": "number",
+                "expected": "1/2"
+              },
+              {
+                "key": "cn",
+                "label": "\\(c_N\\)",
+                "type": "number",
+                "expected": "5/2"
+              }
+            ],
+            "hint": "<p>Verify the point height. Use \\(f^{\\prime}(x)=2x\\), then the negative reciprocal for the normal.</p>",
+            "solution": "<ol><li>\\[(-1)^2+1=2,\\qquad m_T=f^{\\prime}(-1)=-2.\\]</li><li>\\[y-2=-2(x+1)\\Longrightarrow y=-2x.\\]</li><li>\\[m_N=\\frac{1}{2},\\qquad y-2=\\frac{1}{2}(x+1)\\Longrightarrow y=\\frac{x}{2}+\\frac{5}{2}.\\]</li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_cross_topic_revision_geometry_calculus/common-tangent-contact.svg\" alt=\"A parabola and circle share a contact point; the labelled circle radius is perpendicular to the common tangent there.\" width=\"847\" height=\"585\"></p><p>At \\(P=(2,4)\\), the curve tangent has gradient \\(4\\), while the radius from \\(C=(6,3)\\) has gradient \\(-\\frac{1}{4}\\). Their common tangent is \\(y=4x-4\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep three checks separate: the point is on the original curves, the line passes through that point, and its direction is correct. Substitute into the final line equation as a quick consistency check.</p>"
+          }
+        ]
+      },
+      {
+        "id": "circle-contact",
+        "title": "How do I confirm or find a circle contact?",
+        "label": "Geometry and repeated roots",
+        "minutes": 10,
+        "level": "further",
+        "intro": "<p>Substitute a line into the circle equation. The resulting quadratic has two distinct real roots for a secant, a repeated root for a tangent and no real roots when the line misses the circle. Recover the point coordinates and check them in the original equations.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a circle with centre \\((h,k)\\), an unknown common contact on \\(y=f(x)\\) has coordinates \\((a,f(a))\\). If \\(f^{\\prime}(a)\\ne0\\), the normal condition is</p>\\[k-f(a)=-\\frac{h-a}{f^{\\prime}(a)}.\\]<p>For a horizontal tangent, use the vertical normal \\(x=a\\) instead. After finding a possible contact, compute \\(r^2=(a-h)^2+(f(a)-k)^2\\) and verify the original circle conditions.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S022-20261121-C02",
+            "title": "Use a repeated root to identify circle tangency",
+            "prompt": "<p>For the circle \\(x^2+y^2=5\\), find every value of \\(c\\) for which \\(y=2x+c\\) is a tangent. Also find the contact point when \\(c=5\\).</p>",
+            "fields": [
+              {
+                "key": "c",
+                "label": "Tangent values of \\(c\\)",
+                "type": "set",
+                "expected": "{-5,5}"
+              },
+              {
+                "key": "contact",
+                "label": "Contact point for \\(c=5\\)",
+                "type": "pairs",
+                "expected": "(-2,1)"
+              }
+            ],
+            "hint": "<p>Substitute the line into the circle. Tangency gives a repeated root of the resulting quadratic.</p>",
+            "solution": "<ol><li>\\[x^2+(2x+c)^2=5\\Longrightarrow5x^2+4cx+c^2-5=0.\\]</li><li>\\[\\Delta=16c^2-20(c^2-5)=4(25-c^2).\\]</li><li>\\[\\Delta=0\\Longrightarrow c=\\pm5.\\]</li><li><p>For \\(c=5\\), the equation becomes \\(5(x+2)^2=0\\), so \\(x=-2\\) and \\(y=1\\). The point satisfies both original equations.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A centre lying on a normal supplies the correct direction, but a specified circle must also have the correct radius and contain the point. Check every real contact value and reject any zero-radius construction.</p>"
+          }
+        ]
+      },
+      {
+        "id": "vertical-exceptions",
+        "title": "What if a tangent or radius is horizontal or vertical?",
+        "label": "Zero and undefined gradients",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Use the geometry directly when a line has zero gradient or no finite gradient. The negative-reciprocal rule applies only when the starting gradient is finite and nonzero.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<ul><li>Horizontal curve tangent: \\(y=f(a)\\); vertical normal: \\(x=a\\).</li><li>Vertical circle radius: horizontal tangent through the contact.</li><li>Horizontal circle radius: vertical tangent through the contact.</li></ul><p>A vertical tangent has no finite gradient. Its horizontal normal can still be written directly.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "P1-S022-20261121-C03",
+            "title": "A horizontal radius gives a vertical tangent",
+            "prompt": "<p>For the circle \\((x+2)^2+(y-3)^2=16\\), find the tangent and normal at \\(P=(2,3)\\).</p>",
+            "fields": [
+              {
+                "key": "tangent",
+                "label": "Tangent equation",
+                "type": "choice",
+                "expected": "vertical",
+                "options": {
+                  "vertical": "\\(x=2\\)",
+                  "horizontal": "\\(y=3\\)",
+                  "wrong": "\\(x=-2\\)"
+                }
+              },
+              {
+                "key": "normal",
+                "label": "Normal equation",
+                "type": "choice",
+                "expected": "horizontal",
+                "options": {
+                  "horizontal": "\\(y=3\\)",
+                  "vertical": "\\(x=2\\)",
+                  "wrong": "\\(y=-3\\)"
+                }
+              }
+            ],
+            "hint": "<p>The centre and the point have the same height. Sketch the radius before trying to use any gradient formula.</p>",
+            "solution": "<ol><li><p>The centre is \\((-2,3)\\), and the radius to \\((2,3)\\) is horizontal. Its length is \\(4\\), so the point is on the circle.</p></li><li><p>The tangent is perpendicular to this radius and passes through \\(P\\), giving \\(x=2\\). The normal is the radius line \\(y=3\\).</p></li><li><p>A vertical tangent has no finite gradient; it should not be represented by a numerical negative reciprocal of zero.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not assign a numerical value to \\(-\\frac{1}{0}\\). Write the vertical or horizontal line equation from its direction and the known contact coordinates.</p>"
+          }
+        ]
+      },
+      {
+        "id": "squared-distance",
+        "title": "Why is squared distance easier to minimise?",
+        "label": "Build a distance function",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>Let \\(P=(t,f(t))\\) move on the allowed part of a curve, and let \\(A=(u,v)\\) be fixed. The square root is increasing on nonnegative values, so the same point minimises the distance and its square.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[D(t)=(t-u)^2+(f(t)-v)^2,\\qquad d(t)=\\sqrt{D(t)}.\\]<p>State the allowed interval for \\(t\\), minimise \\(D\\), and then take the square root if the question asks for distance. Use the original curve to recover the other point coordinate.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_cross_topic_revision_geometry_calculus/squared-distance-minimum.svg\" alt=\"A fixed point and a parabola are paired with the squared-distance graph, showing the allowed interior minimum and the endpoint values.\" width=\"811\" height=\"578\"></p><p>For \\(A=(0,\\frac{5}{4})\\) and \\(0\\le t\\le2\\), the bound \\(D=(t^2-\\frac{3}{4})^2+1\\ge1\\) is attained at \\(t=\\frac{\\sqrt{3}}{2}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S022-20261121-C04",
+            "title": "Minimise the squared distance and then take the square root",
+            "prompt": "<p>A point \\(P=(t,t^2)\\), with \\(0\\le t\\le1\\), moves along a parabola. Find the point nearest to \\(A=(0,\\frac{3}{4})\\) and the minimum distance.</p>",
+            "fields": [
+              {
+                "key": "point",
+                "label": "Nearest point",
+                "type": "pairs",
+                "expected": "(1/2,1/4)"
+              },
+              {
+                "key": "distance",
+                "label": "Minimum distance",
+                "type": "number",
+                "expected": "sqrt(2)/2"
+              }
+            ],
+            "hint": "<p>Use \\(D(t)=t^2+(t^2-\\frac{3}{4})^2\\). Filter stationary inputs by the allowed interval and compare the endpoint values.</p>",
+            "solution": "<ol><li>\\[D(t)=t^4-\\frac{t^2}{2}+\\frac{9}{16},\\qquad D^{\\prime}(t)=t(4t^2-1).\\]</li><li><p>The derivative vanishes at \\(t=0\\) and \\(t=\\pm\\frac{1}{2}\\). The negative value is excluded.</p></li><li>\\[D(0)=\\frac{9}{16},\\qquad D\\left(\\frac{1}{2}\\right)=\\frac{1}{2},\\qquad D(1)=\\frac{17}{16}.\\]</li><li>\\[P=\\left(\\frac{1}{2},\\frac{1}{4}\\right),\\qquad d_{\\min}=\\sqrt{\\frac{1}{2}}=\\frac{\\sqrt{2}}{2}.\\]</li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>At a distinct interior nearest point on a smooth curve, the segment to the fixed point is normal to the curve. This follows from</p>\\[D^{\\prime}(t)=2(t-u)+2(f(t)-v)f^{\\prime}(t)=0.\\]<p>An endpoint minimum need not satisfy this normal condition.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Report everything requested: the allowed input, the full nearest point and the actual distance. A value of \\(D\\) alone is a squared distance.</p>"
+          }
+        ]
+      },
+      {
+        "id": "global-distance",
+        "title": "How do I know the nearest point really exists?",
+        "label": "Global comparisons and endpoints",
+        "minutes": 8,
+        "level": "further",
+        "intro": "<p>A stationary point is only a possible answer. On a closed interval where the distance is continuous, compare all allowed stationary values with both endpoint values and any defined points where the derivative does not exist. Keep all points tied for the least value.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "P1-S022-20261121-C05",
+            "title": "Changing endpoint inclusion can remove the nearest point",
+            "prompt": "<p>Let \\(P=(t,t+2)\\). Find the point on \\(2\\le t\\le4\\) nearest to the origin and its distance. Does a nearest point still exist if the interval is changed to \\(2&lt;t\\le4\\)?</p>",
+            "fields": [
+              {
+                "key": "point",
+                "label": "Nearest point on the closed interval",
+                "type": "pairs",
+                "expected": "(2,4)"
+              },
+              {
+                "key": "distance",
+                "label": "Minimum distance on the closed interval",
+                "type": "number",
+                "expected": "2*sqrt(5)"
+              },
+              {
+                "key": "open",
+                "label": "Nearest point on the changed interval?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "no": "No; the lower bound is approached but not attained.",
+                  "same": "Yes; the same endpoint is still available.",
+                  "right": "Yes; the right endpoint becomes nearest."
+                }
+              }
+            ],
+            "hint": "<p>The squared distance is \\(t^2+(t+2)^2\\). Check its derivative on the actual interval.</p>",
+            "solution": "<ol><li>\\[D(t)=2t^2+4t+4,\\qquad D^{\\prime}(t)=4t+4&gt;0\\quad\\text{for }t\\ge2.\\]</li><li><p>On the closed interval the minimum occurs at \\(t=2\\), giving \\(P=(2,4)\\) and distance \\(\\sqrt{20}=2\\sqrt{5}\\).</p></li><li><p>On \\(2&lt;t\\le4\\), every distance is larger than \\(2\\sqrt{5}\\), but distances approach that value as \\(t\\) approaches \\(2\\) from above. No allowed point attains it.</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>On an open or unbounded domain, examine the relevant boundary limits as well. A limiting value is not automatically attained. State separately the lower bound and whether any allowed point reaches it.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not keep an unrestricted minimiser outside the given interval, or turn an excluded endpoint into a nearest point. A positive second derivative at one stationary point proves a local minimum; a global claim also needs the allowed domain checked.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Contact point",
+        "definition": "<p>The point on the original curve where the stated tangent touches.</p>"
+      },
+      {
+        "term": "Normal",
+        "definition": "<p>The line through the contact point perpendicular to its tangent.</p>"
+      },
+      {
+        "term": "Secant",
+        "definition": "<p>A line that crosses a circle at two distinct points.</p>"
+      },
+      {
+        "term": "Repeated root",
+        "definition": "<p>A single algebraic input counted twice; for line-circle substitution it identifies tangency.</p>"
+      },
+      {
+        "term": "Squared distance",
+        "definition": "<p>The sum of the squared horizontal and vertical coordinate differences.</p>"
+      },
+      {
+        "term": "Global minimum",
+        "definition": "<p>The smallest value attained over the entire allowed domain.</p>"
+      },
+      {
+        "term": "Infimum",
+        "definition": "<p>The greatest lower bound; it may be approached without being attained.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Check a common contact using calculus and circle geometry",
+        "question": "<p>The point \\(P=(2,4)\\) is claimed to be a common contact of \\(y=x^2\\) and the circle \\((x-6)^2+(y-3)^2=17\\). Verify the point, find the common tangent and normal, and confirm the line-circle contact algebraically.</p>",
+        "solution": [
+          "<p>First check both original equations:</p>\\[4=2^2,\\qquad(2-6)^2+(4-3)^2=16+1=17.\\]",
+          "\\[f^{\\prime}(x)=2x,\\qquad m_T=f^{\\prime}(2)=4.\\]",
+          "\\[y-4=4(x-2)\\Longrightarrow y=4x-4.\\]",
+          "<p>The circle centre is \\(C=(6,3)\\), and its radius to \\(P\\) has gradient</p>\\[m_{CP}=\\frac{4-3}{2-6}=-\\frac{1}{4}.\\]<p>This is perpendicular to the curve tangent, so the same line is tangent to the circle at \\(P\\).</p>",
+          "\\[y-4=-\\frac{1}{4}(x-2)\\Longrightarrow x+4y=18.\\]<p>This common normal contains the centre, since \\(6+4(3)=18\\).</p>",
+          "<p>Substitute the tangent into the circle:</p>\\[(x-6)^2+(4x-7)^2=17\\Longrightarrow17(x-2)^2=0.\\]",
+          "<p>The repeated input \\(2\\) gives height \\(4\\), confirming the same single line-circle contact.</p>"
+        ]
+      },
+      {
+        "title": "An unknown contact point must have its normal through the centre",
+        "question": "<p>A circle with centre \\((5,0)\\) shares a tangent with \\(y=x^2+1\\) at an unknown point \\(P=(a,a^2+1)\\). Find every possible contact, the circle equation and the common tangent.</p>",
+        "solution": [
+          "<p>The tangent gradient is \\(2a\\). If \\(a=0\\), the tangent is horizontal and the normal is \\(x=0\\), which does not contain \\((5,0)\\). Thus \\(a\\ne0\\).</p>",
+          "<p>For a nonzero gradient, the centre must lie on the normal:</p>\\[0-(a^2+1)=-\\frac{1}{2a}(5-a).\\]",
+          "\\[2a^3+3a-5=0\\Longrightarrow(a-1)(2a^2+2a+5)=0.\\]",
+          "<p>The quadratic factor has discriminant \\(2^2-4(2)(5)=-36&lt;0\\). Therefore the only real contact input is \\(a=1\\), giving \\(P=(1,2)\\).</p>",
+          "\\[r^2=(1-5)^2+2^2=20,\\qquad(x-5)^2+y^2=20.\\]",
+          "\\[y-2=2(x-1)\\Longrightarrow y=2x.\\]",
+          "<p>The point lies on both curves, and substituting the tangent into the circle gives \\(5(x-1)^2=0\\). The positive radius and repeated contact confirm the construction.</p>"
+        ]
+      },
+      {
+        "title": "Handle horizontal and vertical lines directly",
+        "question": "<p>The curve \\(y=(x-3)^2+2\\) and the circle \\((x-3)^2+(y+1)^2=9\\) meet at \\(P=(3,2)\\). Find their common tangent and normal there. Also find the circle tangent at \\(Q=(6,-1)\\).</p>",
+        "solution": [
+          "<p>At \\(P\\), both original equations hold. The curve derivative is \\(2(x-3)\\), which is zero at \\(x=3\\).</p>",
+          "<p>The curve tangent is horizontal, \\(y=2\\), and its normal is vertical, \\(x=3\\).</p>",
+          "<p>The circle centre is \\((3,-1)\\). The radius to \\(P\\) is vertical, so its tangent is also \\(y=2\\).</p>",
+          "<p>At \\(Q=(6,-1)\\), the radius is horizontal and has length \\(3\\). The circle tangent is therefore \\(x=6\\), and its normal is \\(y=-1\\).</p>",
+          "<p>No division by a zero gradient is needed. A vertical line is written as \\(x=\\text{constant}\\), not in the form \\(y=mx+c\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a nearest point by comparing squared distances",
+        "question": "<p>For \\(P=(t,t^2)\\), with \\(0\\le t\\le2\\), find the point nearest to \\(A=(0,\\frac{5}{4})\\) and the minimum distance.</p>",
+        "solution": [
+          "<p>The squared distance is</p>\\[D(t)=t^2+\\left(t^2-\\frac{5}{4}\\right)^2=t^4-\\frac{3t^2}{2}+\\frac{25}{16}.\\]",
+          "\\[D^{\\prime}(t)=4t^3-3t=t(4t^2-3)=0.\\]",
+          "<p>The possibilities are \\(t=0\\) and \\(t=\\pm\\frac{\\sqrt{3}}{2}\\). Reject the negative input and retain both endpoints for comparison.</p>",
+          "\\[D(0)=\\frac{25}{16},\\qquad D\\left(\\frac{\\sqrt{3}}{2}\\right)=1,\\qquad D(2)=\\frac{185}{16}.\\]",
+          "\\[P=\\left(\\frac{\\sqrt{3}}{2},\\frac{3}{4}\\right),\\qquad d_{\\min}=\\sqrt{1}=1.\\]",
+          "<p>The completed-square form also confirms the global bound:</p>\\[D(t)=\\left(t^2-\\frac{3}{4}\\right)^2+1\\ge1.\\]<p>Equality occurs at the allowed point found above.</p>"
+        ]
+      },
+      {
+        "title": "The same curve can have an endpoint minimum or no nearest point",
+        "question": "<p>Keep \\(P=(t,t^2)\\) and \\(A=(0,\\frac{5}{4})\\), but first restrict \\(t\\) to \\([1,2]\\). Find the nearest point. Then decide what changes if the interval is \\((1,2]\\).</p>",
+        "solution": [
+          "<p>The previous interior minimiser \\(\\frac{\\sqrt{3}}{2}\\) is outside both new intervals. For every \\(t\\ge1\\),</p>\\[D^{\\prime}(t)=t(4t^2-3)&gt;0.\\]",
+          "<p>On the closed interval, the squared distance is least at \\(t=1\\):</p>\\[P=(1,1),\\qquad D(1)=\\frac{17}{16},\\qquad d_{\\min}=\\frac{\\sqrt{17}}{4}.\\]",
+          "<p>On \\((1,2]\\), the input \\(1\\) is excluded. Every allowed point has a greater distance, while</p>\\[d(t)\\longrightarrow\\frac{\\sqrt{17}}{4}\\quad\\text{as }t\\longrightarrow1^+.\\]",
+          "<p>No nearest point exists on the open-ended interval. The greatest lower bound is \\(\\frac{\\sqrt{17}}{4}\\), but it is not attained.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Tangents, normals and prescribed gradients",
+        "href": "/courses/maths4u-9709-p1/topics/orig_differentiation_tangents_normals"
+      },
+      {
+        "title": "Optimisation, transformations and linked conditions",
+        "href": "/courses/maths4u-9709-p1/topics/orig_differentiation_optimisation"
+      },
+      {
+        "title": "Quadratics, functions and admissible solutions",
+        "href": "/courses/maths4u-9709-p1/topics/orig_cross_topic_revision_algebra_functions"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S022-20261121-P01",
+        "title": "Match a derivative to a circle radius",
+        "prompt": "<p>The curve is \\(y=x^2+2x\\). Find its tangent and normal at \\(P=(1,3)\\), writing each as \\(y=mx+c\\). Show that a circle with centre \\(C=(-3,4)\\) can share this tangent at \\(P\\), and find its squared radius.</p>",
+        "fields": [
+          {
+            "key": "tm",
+            "label": "Tangent gradient",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "tc",
+            "label": "Tangent intercept",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "nm",
+            "label": "Normal gradient",
+            "type": "number",
+            "expected": "-1/4"
+          },
+          {
+            "key": "nc",
+            "label": "Normal intercept",
+            "type": "number",
+            "expected": "13/4"
+          },
+          {
+            "key": "r2",
+            "label": "Squared radius",
+            "type": "number",
+            "expected": "17"
+          }
+        ],
+        "hint": "<p>Check the contact point in the curve, then differentiate. The circle radius must lie along the normal through the contact point.</p>",
+        "solution": "<ol><li>\\[f(1)=3,\\qquad f^{\\prime}(x)=2x+2,\\qquad f^{\\prime}(1)=4.\\]</li><li>\\[y-3=4(x-1)\\Longrightarrow y=4x-1.\\]</li><li>\\[y-3=-\\frac{1}{4}(x-1)\\Longrightarrow y=-\\frac{x}{4}+\\frac{13}{4}.\\]</li><li>\\[m_{CP}=\\frac{3-4}{1-(-3)}=-\\frac{1}{4},\\qquad CP^2=4^2+(-1)^2=17.\\]</li><li><p>The required circle is \\((x+3)^2+(y-4)^2=17\\). It contains \\(P\\), and its radius there is perpendicular to the curve tangent.</p></li><li>\\[y=4x-1:\\quad(x+3)^2+(4x-5)^2-17=17(x-1)^2=0.\\]</li><li><p>The repeated intersection verifies that the line contacts the circle exactly at \\(P\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S022-20261121-P02",
+        "title": "Treat a horizontal tangent geometrically",
+        "prompt": "<p>The curve \\(y=(x+1)^2+2\\) has vertex \\(P=(-1,2)\\). Give the constant height of its tangent and the constant input of its normal. Find the squared radius of a circle centred at \\((-1,-2)\\) sharing this tangent at \\(P\\).</p>",
+        "fields": [
+          {
+            "key": "height",
+            "label": "Tangent height",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "input",
+            "label": "Normal input",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "r2",
+            "label": "Squared radius",
+            "type": "number",
+            "expected": "16"
+          }
+        ],
+        "hint": "<p>A zero tangent gradient gives a horizontal line. Its perpendicular is vertical; do not divide by zero.</p>",
+        "solution": "<ol><li>\\[f^{\\prime}(x)=2(x+1),\\qquad f^{\\prime}(-1)=0.\\]</li><li>\\[\\text{Tangent: }y=2,\\qquad\\text{normal: }x=-1.\\]</li><li><p>The radius from \\((-1,-2)\\) to \\((-1,2)\\) is vertical with length \\(4\\). The circle is \\((x+1)^2+(y+2)^2=16\\).</p></li><li><p>Putting \\(y=2\\) into the circle gives \\((x+1)^2=0\\), confirming the unique contact.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S022-20261121-P03",
+        "title": "Find both parallel tangents to a circle",
+        "prompt": "<p>A circle is \\((x-2)^2+(y+1)^2=25\\). Find every value of \\(c\\) for which \\(y=2x+c\\) is tangent to the circle. Give exact values.</p>",
+        "fields": [
+          {
+            "key": "c",
+            "label": "Every tangent intercept",
+            "type": "set",
+            "expected": "{-5-5*sqrt(5),-5+5*sqrt(5)}"
+          }
+        ],
+        "hint": "<p>Substitute the line into the circle and require the resulting quadratic to have a repeated root.</p>",
+        "solution": "<ol><li>\\[(x-2)^2+(2x+c+1)^2=25\\Longrightarrow5x^2+4cx+(c+1)^2-21=0.\\]</li><li>\\[\\Delta=16c^2-20\\bigl((c+1)^2-21\\bigr)=500-4(c+5)^2.\\]</li><li>\\[\\Delta=0\\Longrightarrow(c+5)^2=125\\Longrightarrow c=-5\\pm5\\sqrt5.\\]</li><li><p>For either intercept, the repeated contact input is \\(x=-\\frac{2c}{5}\\), and the height is \\(y=\\frac{c}{5}\\). These points satisfy the original circle and line equations. The two signs give the two parallel tangents on opposite sides of the centre.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S022-20261121-P04",
+        "title": "Report the distance after minimising its square",
+        "prompt": "<p>A point \\(P=(t,t^2)\\), with \\(t\\ge0\\), lies on a parabola. Find the point nearest to \\(A=(0,2)\\) and its distance from \\(A\\).</p>",
+        "fields": [
+          {
+            "key": "point",
+            "label": "Nearest point",
+            "type": "pairs",
+            "expected": "(sqrt(6)/2,3/2)"
+          },
+          {
+            "key": "distance",
+            "label": "Least distance",
+            "type": "number",
+            "expected": "sqrt(7)/2",
+            "retry": [
+              {
+                "answer": "7/4",
+                "feedback": "<p>This is the least squared distance. Take its positive square root to obtain the distance.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Minimise \\(Q(t)=AP^2\\). Justify the result on the whole nonnegative domain, then take the positive square root.</p>",
+        "solution": "<ol><li>\\[Q(t)=t^2+(t^2-2)^2=t^4-3t^2+4.\\]</li><li>\\[Q^{\\prime}(t)=2t(2t^2-3)=0\\Longrightarrow t=0\\text{ or }t=\\frac{\\sqrt6}{2}\\quad(t\\ge0).\\]</li><li><p>On the positive domain the derivative is negative before \\(\\frac{\\sqrt6}{2}\\) and positive after it. The endpoint gives \\(Q(0)=4\\), while \\(Q\\) tends to infinity as \\(t\\) increases without bound.</p></li><li>\\[Q\\left(\\frac{\\sqrt6}{2}\\right)=\\frac{7}{4},\\qquad P=\\left(\\frac{\\sqrt6}{2},\\frac{3}{2}\\right),\\qquad AP=\\frac{\\sqrt7}{2}.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S022-20261121-P05",
+        "title": "An excluded endpoint does not give a nearest point",
+        "prompt": "<p>A point \\(P=(t,t^2)\\) is restricted to \\(0&lt;t&lt;1\\). Consider its distance from the origin. Find the greatest lower bound of the distance, meaning the value it can approach but never go below. Give the complete set of inputs at which a minimum distance is attained.</p>",
+        "fields": [
+          {
+            "key": "bound",
+            "label": "Greatest lower bound of distance",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "inputs",
+            "label": "Inputs attaining a minimum",
+            "type": "set",
+            "expected": "empty",
+            "retry": [
+              {
+                "answer": "0",
+                "feedback": "<p>The input zero is excluded by \\(0&lt;t&lt;1\\). It gives a limiting distance, not an attained minimum.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Check whether the closest limiting endpoint actually belongs to the allowed domain.</p>",
+        "solution": "<ol><li>\\[Q(t)=t^2+t^4,\\qquad Q^{\\prime}(t)=2t+4t^3&gt;0\\quad(0&lt;t&lt;1).\\]</li><li><p>The distance is strictly increasing and positive throughout the allowed interval. As \\(t\\) approaches \\(0\\) from above, the distance approaches \\(0\\).</p></li><li><p>The lower bound is \\(0\\), but the input \\(0\\) is excluded. For every allowed input a smaller positive input gives a shorter distance, so no nearest point and no attained minimum exist.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S022-20261121-E01",
+          "title": "Recover an unknown point of common tangency",
+          "marks": 8,
+          "question": "<p>A circle with centre \\(C=(\\frac{3}{4},0)\\) shares a tangent with the parabola \\(y=x^2\\) at \\(P=(a,a^2)\\). Find \\(a\\), the squared radius, and the tangent in the form \\(y=mx+c\\). You may use</p>\\[8a^3+4a-3=(2a-1)(4a^2+2a+3).\\]",
+          "hint": "<p>The centre must lie on the normal at the contact point. Handle a horizontal tangent separately before using a negative reciprocal.</p>",
+          "solution": "<ol><li><p>If \\(a=0\\), the tangent is horizontal but \\(CP\\) is horizontal too, so this is impossible. If \\(a=\\frac{3}{4}\\), the radius is vertical while the tangent has nonzero finite gradient, so this is also impossible.</p></li><li>\\[m_T=2a,\\qquad m_{CP}=\\frac{a^2}{a-\\frac{3}{4}}.\\]</li><li>\\[(2a)\\frac{a^2}{a-\\frac{3}{4}}=-1\\Longrightarrow8a^3+4a-3=0.\\]</li><li>\\[(2a-1)(4a^2+2a+3)=0.\\]</li><li><p>The quadratic factor has discriminant \\(4-48=-44&lt;0\\). Thus the unique real contact input is \\(a=\\frac{1}{2}\\), giving \\(P=(\\frac{1}{2},\\frac{1}{4})\\).</p></li><li>\\[r^2=\\left(\\frac{1}{2}-\\frac{3}{4}\\right)^2+\\left(\\frac{1}{4}\\right)^2=\\frac{1}{8}.\\]</li><li>\\[y-\\frac{1}{4}=1\\left(x-\\frac{1}{2}\\right)\\Longrightarrow y=x-\\frac{1}{4}.\\]</li><li><p>The circle is \\((x-\\frac{3}{4})^2+y^2=\\frac{1}{8}\\). Substituting the tangent gives \\(2(x-\\frac{1}{2})^2=0\\), verifying the stated contact.</p></li></ol>",
+          "marking": "<ul><li>1 mark: identify the derivative tangent gradient.</li><li>1 mark: handle exceptional horizontal or vertical radius cases correctly.</li><li>1 mark: impose the radius–tangent perpendicular condition.</li><li>1 mark: obtain the stated cubic.</li><li>1 mark: find the unique real contact input.</li><li>1 mark: find the positive squared radius.</li><li>1 mark: obtain the complete tangent equation.</li><li>1 mark: verify the contact in both original geometric objects.</li></ul>"
+        },
+        {
+          "id": "P1-S022-20261121-E02",
+          "title": "Keep both points attaining the same global minimum",
+          "marks": 7,
+          "question": "<p>A point \\(P=(t,t^2)\\) is restricted to \\(-2\\le t\\le2\\). Find every point nearest to \\(A=(0,3)\\), the least distance, and justify that it is a global minimum on this interval.</p>",
+          "hint": "<p>The curve and distance are symmetric in the sign of \\(t\\). Keep both signs when they lie in the interval, and compare both endpoints.</p>",
+          "solution": "<ol><li>\\[Q(t)=t^2+(t^2-3)^2=t^4-5t^2+9.\\]</li><li>\\[Q^{\\prime}(t)=2t(2t^2-5)=0\\Longrightarrow t=0,\\quad t=\\pm\\frac{\\sqrt{10}}{2}.\\]</li><li><p>All three stationary inputs belong to \\([-2,2]\\). At the endpoints \\(Q(-2)=Q(2)=5\\); at \\(0\\), \\(Q(0)=9\\).</p></li><li>\\[Q\\left(\\pm\\frac{\\sqrt{10}}{2}\\right)=\\frac{11}{4}.\\]</li><li><p>Comparing all stationary inputs and both included endpoints gives the global minimum \\(\\frac{11}{4}\\) of the squared distance. It is attained at both symmetric inputs.</p></li><li>\\[P=\\left(\\pm\\frac{\\sqrt{10}}{2},\\frac{5}{2}\\right),\\qquad AP_{\\min}=\\frac{\\sqrt{11}}{2}.\\]</li><li><p>The sign choice changes the point, so both coordinate pairs are needed. The reported distance is the square root of the minimum squared distance.</p></li></ol>",
+          "marking": "<ul><li>1 mark: formulate the correct squared distance.</li><li>1 mark: differentiate and find all stationary inputs.</li><li>1 mark: keep both signs within the feasible interval.</li><li>1 mark: evaluate both endpoints and the remaining stationary input.</li><li>1 mark: justify the global minimum by the complete comparison.</li><li>1 mark: state both nearest coordinate pairs.</li><li>1 mark: take the positive square root to obtain the least distance.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>A geometric claim needs the correct point, the correct direction and the correct allowed domain.</p><h2>Collect and verify contact data</h2>\\[m=f^{\\prime}(a),\\qquad y-f(a)=m(x-a).\\]<p>Check the point in every original equation. A circle tangent is perpendicular to its radius, so the centre lies on the curve’s normal at a common contact. Keep the circle radius positive.</p><h2>Confirm circle tangency and exceptions</h2><p>Substitute the line into the circle: two distinct roots mean a secant; a repeated root means a tangent. Recover and verify the contact coordinates.</p><p>For finite nonzero gradient \\(m\\), the normal gradient is \\(-\\frac{1}{m}\\). A horizontal tangent has a vertical normal. A horizontal radius gives a vertical circle tangent; a vertical radius gives a horizontal tangent.</p><h2>Minimise the squared distance</h2>\\[D(t)=(t-u)^2+(f(t)-v)^2.\\]<p>For \\(P=(t,f(t))\\) and fixed \\(A=(u,v)\\), minimise \\(D\\) on the allowed domain. Solve \\(D^{\\prime}=0\\), filter the inputs and compare relevant values. Recover the point and report \\(d_{\\min}=\\sqrt{D_{\\min}}\\).</p><h2>Check global attainment</h2><p>Include closed endpoints and any defined points where the derivative is undefined. Keep every point tied for the global minimum. An interior normal condition does not apply automatically at an endpoint.</p><p>For open or infinite boundaries, inspect limits. If the lowest bound is never reached, state that no nearest point exists. An excluded endpoint remains excluded.</p>",
+      "checks": "<ul><li>Point belongs to every original curve and the line?</li><li>Perpendicular direction and horizontal/vertical exceptions checked?</li><li>Squared-distance inputs filtered and global values compared?</li><li>Full point, actual distance and attainment stated?</li></ul>",
+      "examTip": "<p>Full point, actual distance and attainment stated?</p>"
+    }
+  },
+  "orig_cross_topic_revision_trig_sectors": {
+    "updatedOn": "2026-11-21",
+    "description": "Find every allowed angle, match it to the correct geometric region, and optimise a sector only within its feasible dimensions.",
+    "sections": [
+      {
+        "id": "angle-branches",
+        "title": "How do I find every allowed trigonometric angle?",
+        "label": "All branches and transformed intervals",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>State the angle unit and interval first. An inverse-trigonometric calculator result gives one principal value, so use the graph, symmetry or periodicity to find every allowed branch. Check that a proposed sine or cosine value lies between \\(-1\\) and \\(1\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use a reference angle and the quadrant signs. Sine is positive in quadrants I and II, cosine in I and IV, and tangent in I and III; each is negative in the other two quadrants. Check axis angles directly.</p><p>Repeat the sine or cosine pattern every \\(2\\pi\\), or the tangent pattern every \\(\\pi\\), until the whole requested interval is covered. Retain allowed inputs and remove duplicate values.</p><p>For \\(u=a\\theta+b\\) with \\(a\\ne0\\), transform the interval for \\(u\\), solve there, then transform every solution back. Reverse the endpoint order if \\(a&lt;0\\). If \\(a=0\\), test the constant equation directly.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S023-20261121-C01",
+            "title": "Factor without losing a whole branch",
+            "prompt": "<p>Solve \\(2\\sin^2\\theta-\\sin\\theta=0\\) for \\(0\\le\\theta\\le2\\pi\\). Give all angles in radians.</p>",
+            "fields": [
+              {
+                "key": "theta",
+                "label": "All allowed angles (rad)",
+                "type": "set",
+                "expected": "{0,pi/6,5*pi/6,pi,2*pi}"
+              }
+            ],
+            "hint": "<p>Factor out \\(\\sin\\theta\\), but do not divide by it. Solve both factors separately.</p>",
+            "solution": "<ol><li>\\[\\sin\\theta(2\\sin\\theta-1)=0.\\]</li><li>\\[\\sin\\theta=0\\Longrightarrow\\theta=0,\\pi,2\\pi.\\]</li><li>\\[\\sin\\theta=\\frac{1}{2}\\Longrightarrow\\theta=\\frac{\\pi}{6},\\frac{5\\pi}{6}.\\]</li><li><p>All five inputs belong to the stated closed interval and satisfy the original equation. The endpoints \\(0\\) and \\(2\\pi\\) are distinct input values.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Factor an equation before dividing by \\(\\sin\\theta\\) or \\(\\cos\\theta\\); dividing can lose their zero cases. Keep included endpoints: \\(0\\) and \\(2\\pi\\) are different inputs even though they represent the same direction.</p>"
+          }
+        ]
+      },
+      {
+        "id": "radian-boundaries",
+        "title": "Which angle unit and boundary does the sector formula use?",
+        "label": "Radians, arcs and boundaries",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Convert degree angles to radians before using the arc or sector-area formulas. Match the calculator mode to the unit used in a trigonometric calculation.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[\\theta_{\\mathrm{rad}}=\\frac{\\pi}{180}\\theta_{\\mathrm{deg}},\\qquad s=r\\theta,\\qquad A_{\\mathrm{sector}}=\\frac{1}{2}r^2\\theta.\\]<p>For a proper sector, \\(r&gt;0\\) and \\(0&lt;\\theta&lt;2\\pi\\). Its perimeter is the arc plus two radii:</p>\\[P_{\\mathrm{sector}}=r\\theta+2r.\\]"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S023-20261121-C02",
+            "title": "Convert the angle before using the sector formulas",
+            "prompt": "<p>A sector has radius \\(7\\,\\mathrm{cm}\\) and angle \\(90^\\circ\\). Find the angle in radians, arc length, sector area and sector perimeter.</p>",
+            "fields": [
+              {
+                "key": "theta",
+                "label": "Angle in radians",
+                "type": "number",
+                "expected": "pi/2"
+              },
+              {
+                "key": "arc",
+                "label": "Arc length (cm)",
+                "type": "number",
+                "expected": "7*pi/2"
+              },
+              {
+                "key": "area",
+                "label": "Sector area (cm²)",
+                "type": "number",
+                "expected": "49*pi/4"
+              },
+              {
+                "key": "perimeter",
+                "label": "Sector perimeter (cm)",
+                "type": "number",
+                "expected": "7*pi/2 + 14"
+              }
+            ],
+            "hint": "<p>The sector boundary contains two radii as well as the arc.</p>",
+            "solution": "<ol><li>\\[\\theta=90\\times\\frac{\\pi}{180}=\\frac{\\pi}{2}.\\]</li><li>\\[s=r\\theta=\\frac{7\\pi}{2}\\,\\mathrm{cm},\\qquad A=\\frac{1}{2}r^2\\theta=\\frac{49\\pi}{4}\\,\\mathrm{cm}^2.\\]</li><li>\\[P=2r+s=\\left(14+\\frac{7\\pi}{2}\\right)\\,\\mathrm{cm}.\\]</li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>At a full turn, the region is a complete disk: its boundary is the circumference \\(2\\pi r\\), without two extra radial edges. The proper-sector perimeter model therefore excludes \\(\\theta=2\\pi\\). The zero-angle case is also degenerate.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>An angle in radians need not contain \\(\\pi\\): for example, \\(2\\) radians is a valid angle. Arc and perimeter results have length units; sector areas have square units.</p>"
+          }
+        ]
+      },
+      {
+        "id": "segments",
+        "title": "How do I distinguish a sector, a triangle and a segment?",
+        "label": "Match each angle with its region",
+        "minutes": 10,
+        "level": "core",
+        "intro": "<p>For \\(0&lt;\\theta&lt;\\pi\\), two radii and their chord form a nondegenerate triangle inside the minor sector. The minor segment is the part between that chord and the minor arc.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[A_{\\triangle}=\\frac{1}{2}r^2\\sin\\theta,\\qquad A_{\\mathrm{seg}}=\\frac{1}{2}r^2(\\theta-\\sin\\theta).\\]\\[c=2r\\sin\\frac{\\theta}{2},\\qquad P_{\\mathrm{seg}}=r\\theta+c.\\]<p>The area subtracts the triangle; the boundary adds the arc and chord. These minor-segment statements use \\(0&lt;\\theta&lt;\\pi\\). For a major region, identify the region or use its complement before calculating.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_cross_topic_revision_trig_sectors/sine-branches-sector-areas.svg\" alt=\"Two sectors with complementary-to-pi angles show equal inscribed triangle areas and different arc, sector and segment regions.\" width=\"783\" height=\"577\"></p><p>With radius \\(3\\), the angles \\(\\frac{\\pi}{4}\\) and \\(\\frac{3\\pi}{4}\\) give equal triangle areas but different sectors and minor segments.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "P1-S023-20261121-C03",
+            "title": "A segment uses an arc and a chord",
+            "prompt": "<p>A minor segment has radius \\(2\\,\\mathrm{cm}\\) and central angle \\(\\frac{\\pi}{2}\\). Find its area and its boundary length.</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Segment area (cm²)",
+                "type": "number",
+                "expected": "-2 + pi"
+              },
+              {
+                "key": "boundary",
+                "label": "Segment boundary length (cm)",
+                "type": "number",
+                "expected": "2*sqrt(2) + pi"
+              }
+            ],
+            "hint": "<p>Subtract the triangle from the sector for area. For the boundary, add the arc to the chord, not to two radii.</p>",
+            "solution": "<ol><li>\\[A_{\\mathrm{seg}}=\\frac{1}{2}(2)^2\\left(\\frac{\\pi}{2}-\\sin\\frac{\\pi}{2}\\right)=(\\pi-2)\\,\\mathrm{cm}^2.\\]</li><li>\\[s=2\\times\\frac{\\pi}{2}=\\pi,\\qquad c=2(2)\\sin\\frac{\\pi}{4}=2\\sqrt{2}.\\]</li><li>\\[P_{\\mathrm{seg}}=(\\pi+2\\sqrt{2})\\,\\mathrm{cm}.\\]</li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A positive triangle area smaller than \\(\\frac{r^2}{2}\\) gives two angles in \\((0,\\pi)\\); the maximum triangle area gives only \\(\\frac{\\pi}{2}\\). Extra geometric information may select a branch. Keep the surviving angle paired with its own calculated area.</p>"
+          }
+        ]
+      },
+      {
+        "id": "sector-model",
+        "title": "How do I build a sector model with fixed perimeter?",
+        "label": "Eliminate one variable",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Draw and label the boundary before writing its length. For a proper sector with fixed perimeter \\(P&gt;0\\), the two radii consume part of the available length, leaving the rest for the arc.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[P=r(\\theta+2),\\qquad\\theta=\\frac{P}{r}-2,\\qquad A=\\frac{Pr}{2}-r^2.\\]\\[0&lt;\\theta&lt;2\\pi\\Longleftrightarrow\\frac{P}{2+2\\pi}&lt;r&lt;\\frac{P}{2}.\\]<p>Substitute the perimeter relation before differentiating. The objective is now a quadratic in \\(r\\); no trigonometric derivative is needed.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_cross_topic_revision_trig_sectors/fixed-perimeter-sector.svg\" alt=\"A labelled proper sector and its quadratic area graph show the radius constraint, excluded degenerate endpoints and the feasible maximum.\" width=\"811\" height=\"577\"></p><p>For perimeter \\(18\\), the feasible radius interval is \\(\\frac{9}{\\pi+1}&lt;r&lt;9\\). The area \\(9r-r^2\\) reaches \\(\\frac{81}{4}\\) at \\(r=\\frac{9}{2}\\), with \\(\\theta=2\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S023-20261121-C04",
+            "title": "Check that the unrestricted vertex is a feasible sector",
+            "prompt": "<p>A proper sector has perimeter \\(14\\,\\mathrm{cm}\\), with \\(r&gt;0\\) and \\(0&lt;\\theta&lt;2\\pi\\). Find the radius, angle and greatest possible area.</p>",
+            "fields": [
+              {
+                "key": "radius",
+                "label": "Radius (cm)",
+                "type": "number",
+                "expected": "7/2"
+              },
+              {
+                "key": "theta",
+                "label": "Angle (rad)",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "area",
+                "label": "Greatest area (cm²)",
+                "type": "number",
+                "expected": "49/4"
+              }
+            ],
+            "hint": "<p>Eliminate the angle using \\(14=2r+r\\theta\\), then maximise the resulting quadratic in \\(r\\).</p>",
+            "solution": "<ol><li>\\[\\theta=\\frac{14}{r}-2,\\qquad A=\\frac{1}{2}r^2\\theta=7r-r^2.\\]</li><li>\\[A^{\\prime}(r)=7-2r=0\\Longrightarrow r=\\frac{7}{2}.\\]</li><li>\\[\\theta=2,\\qquad A=\\frac{49}{4}\\,\\mathrm{cm}^2.\\]</li><li><p>The angle satisfies \\(0&lt;2&lt;2\\pi\\), and</p>\\[A=\\frac{49}{4}-\\left(r-\\frac{7}{2}\\right)^2\\le\\frac{49}{4}.\\]<p>The bound is attained by an allowed sector.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The perimeter equation changes if the boundary contains a chord instead of two radii. Do not optimise the proper-sector model for a segment or a complete circle.</p>"
+          }
+        ]
+      },
+      {
+        "id": "constrained-optimum",
+        "title": "What if the sector has an extra angle or radius restriction?",
+        "label": "Feasible maxima and endpoints",
+        "minutes": 8,
+        "level": "further",
+        "intro": "<p>Translate every geometric restriction into the variable used in the objective function. A stationary point outside that interval is not an allowed answer. Since \\(r=\\frac{P}{\\theta+2}\\), increasing the angle decreases the radius when the perimeter is fixed.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "P1-S023-20261121-C05",
+            "title": "An angle cap can move the optimum to a boundary",
+            "prompt": "<p>A sector has perimeter \\(12\\,\\mathrm{cm}\\) and must satisfy \\(0&lt;\\theta\\le1\\) radian. Find the radius and greatest area. Would that greatest value still be attained if the requirement were \\(0&lt;\\theta&lt;1\\)?</p>",
+            "fields": [
+              {
+                "key": "radius",
+                "label": "Radius at the greatest area (cm)",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "area",
+                "label": "Greatest area (cm²)",
+                "type": "number",
+                "expected": "8"
+              },
+              {
+                "key": "strict",
+                "label": "Attained with the strict angle cap?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "no": "No; it is an upper bound that is approached but not reached.",
+                  "yes": "Yes; the same sector remains allowed.",
+                  "vertex": "Yes; use the unrestricted quadratic vertex instead."
+                }
+              }
+            ],
+            "hint": "<p>Convert the angle condition into a radius interval before checking the quadratic vertex.</p>",
+            "solution": "<ol><li>\\[\\theta=\\frac{12}{r}-2,\\qquad0&lt;\\theta\\le1\\Longrightarrow4\\le r&lt;6.\\]</li><li>\\[A=6r-r^2,\\qquad A^{\\prime}(r)=6-2r&lt;0\\quad\\text{for }r\\ge4.\\]</li><li><p>The largest area occurs at the included left endpoint:</p>\\[r=4\\,\\mathrm{cm},\\qquad\\theta=1,\\qquad A=8\\,\\mathrm{cm}^2.\\]</li><li><p>With \\(\\theta&lt;1\\), the radius must satisfy \\(r&gt;4\\), so every area is less than \\(8\\,\\mathrm{cm}^2\\). It approaches that value as \\(r\\) approaches \\(4\\) from above, but no allowed sector attains it.</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>Compare allowed stationary values, included boundary values and relevant limits. If the best value occurs at an excluded boundary, it may be approached without being attained. State the radius, angle, area and whether the requested maximum exists.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Return to the original perimeter and angle conditions at the end. The same quadratic can describe several different feasible intervals, with different answers.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Radian",
+        "definition": "<p>An angle measure for which arc length equals radius multiplied by the angle.</p>"
+      },
+      {
+        "term": "Trigonometric branch",
+        "definition": "<p>One of the different angle choices that produce the required trigonometric value.</p>"
+      },
+      {
+        "term": "Sector",
+        "definition": "<p>A region bounded by two radii and their chosen arc.</p>"
+      },
+      {
+        "term": "Chord",
+        "definition": "<p>The straight line segment joining two points on a circle.</p>"
+      },
+      {
+        "term": "Minor segment",
+        "definition": "<p>The region between a chord and its minor arc.</p>"
+      },
+      {
+        "term": "Feasible interval",
+        "definition": "<p>The values satisfying every geometric restriction in the model.</p>"
+      },
+      {
+        "term": "Attained maximum",
+        "definition": "<p>A greatest value actually reached by an allowed configuration.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Transform the interval as well as the angle",
+        "question": "<p>Solve \\(\\sin\\left(2\\theta-\\frac{\\pi}{6}\\right)=\\frac{\\sqrt{3}}{2}\\) for \\(0\\le\\theta\\le2\\pi\\).</p>",
+        "solution": [
+          "<p>Set \\(u=2\\theta-\\frac{\\pi}{6}\\). Transform both endpoints:</p>\\[-\\frac{\\pi}{6}\\le u\\le\\frac{23\\pi}{6}.\\]",
+          "<p>The sine is positive in the first and second quadrants. All solutions in this transformed interval are</p>\\[u=\\frac{\\pi}{3},\\frac{2\\pi}{3},\\frac{7\\pi}{3},\\frac{8\\pi}{3}.\\]",
+          "<p>Undo the transformation for every value:</p>\\[\\theta=\\frac{u+\\frac{\\pi}{6}}{2}.\\]",
+          "\\[\\theta=\\frac{\\pi}{4},\\frac{5\\pi}{12},\\frac{5\\pi}{4},\\frac{17\\pi}{12}.\\]",
+          "<p>All four values lie in the original interval and return the listed sine angles. Solving only one period of \\(u\\) would have missed two answers.</p>"
+        ]
+      },
+      {
+        "title": "Distinguish the arc, chord and sector boundary",
+        "question": "<p>A sector has radius \\(8\\,\\mathrm{cm}\\) and central angle \\(60^\\circ\\). Find its arc length, area, chord length and sector perimeter.</p>",
+        "solution": [
+          "\\[\\theta=60\\times\\frac{\\pi}{180}=\\frac{\\pi}{3}.\\]",
+          "\\[s=r\\theta=\\frac{8\\pi}{3}\\,\\mathrm{cm},\\qquad A_{\\mathrm{sector}}=\\frac{1}{2}(8)^2\\frac{\\pi}{3}=\\frac{32\\pi}{3}\\,\\mathrm{cm}^2.\\]",
+          "<p>Bisect the isosceles triangle formed by the two radii and the chord:</p>\\[c=2r\\sin\\frac{\\theta}{2}=16\\sin\\frac{\\pi}{6}=8\\,\\mathrm{cm}.\\]",
+          "<p>The sector perimeter uses two radii and the arc:</p>\\[P_{\\mathrm{sector}}=\\left(16+\\frac{8\\pi}{3}\\right)\\,\\mathrm{cm}.\\]",
+          "<p>The chord is a different boundary. Replacing the two radii by the chord would give the boundary of a segment, not this sector.</p>"
+        ]
+      },
+      {
+        "title": "Equal triangle areas can produce different sectors and segments",
+        "question": "<p>Two radii of length \\(3\\,\\mathrm{cm}\\) enclose an angle \\(0&lt;\\theta&lt;\\pi\\). Their triangle has area \\(\\frac{9\\sqrt{2}}{4}\\,\\mathrm{cm}^2\\). Find every possible angle, pairing each with its sector area and minor-segment area.</p>",
+        "solution": [
+          "\\[\\frac{1}{2}(3)^2\\sin\\theta=\\frac{9\\sqrt{2}}{4}\\Longrightarrow\\sin\\theta=\\frac{\\sqrt{2}}{2}.\\]",
+          "<p>The stated interval includes both the acute and obtuse branches:</p>\\[\\theta=\\frac{\\pi}{4}\\quad\\text{or}\\quad\\theta=\\frac{3\\pi}{4}.\\]",
+          "<p>For \\(\\theta=\\frac{\\pi}{4}\\),</p>\\[A_{\\mathrm{sector}}=\\frac{9\\pi}{8},\\qquad A_{\\mathrm{seg}}=\\frac{9\\pi}{8}-\\frac{9\\sqrt{2}}{4}.\\]",
+          "<p>For \\(\\theta=\\frac{3\\pi}{4}\\),</p>\\[A_{\\mathrm{sector}}=\\frac{27\\pi}{8},\\qquad A_{\\mathrm{seg}}=\\frac{27\\pi}{8}-\\frac{9\\sqrt{2}}{4}.\\]",
+          "<p>All areas are in square centimetres. The triangle area is the same because the sines agree; the sector and segment areas differ because the angles differ.</p>"
+        ]
+      },
+      {
+        "title": "Eliminate the angle before differentiating",
+        "question": "<p>A proper sector has perimeter \\(18\\,\\mathrm{cm}\\), radius \\(r&gt;0\\) and angle \\(0&lt;\\theta&lt;2\\pi\\). Find its greatest area and the corresponding radius and angle.</p>",
+        "solution": [
+          "\\[18=2r+r\\theta\\Longrightarrow\\theta=\\frac{18}{r}-2.\\]",
+          "<p>Use the proper-sector angle condition to restrict the radius:</p>\\[0&lt;\\frac{18}{r}-2&lt;2\\pi\\Longrightarrow\\frac{9}{\\pi+1}&lt;r&lt;9.\\]",
+          "\\[A=\\frac{1}{2}r^2\\left(\\frac{18}{r}-2\\right)=9r-r^2.\\]",
+          "\\[A^{\\prime}(r)=9-2r=0\\Longrightarrow r=\\frac{9}{2}.\\]",
+          "\\[\\theta=2,\\qquad A=\\frac{81}{4}\\,\\mathrm{cm}^2.\\]<p>The radius is feasible and the angle is a proper-sector angle.</p>",
+          "\\[A=\\frac{81}{4}-\\left(r-\\frac{9}{2}\\right)^2\\le\\frac{81}{4}.\\]<p>The upper bound is attained, proving the global maximum.</p>"
+        ]
+      },
+      {
+        "title": "Apply an extra angle restriction before choosing the maximum",
+        "question": "<p>Keep the perimeter \\(18\\,\\mathrm{cm}\\), but now require \\(0&lt;\\theta\\le\\frac{\\pi}{2}\\). Find the greatest area. What changes if the upper angle bound is strict?</p>",
+        "solution": [
+          "<p>The unrestricted optimum has angle \\(2\\), which exceeds \\(\\frac{\\pi}{2}\\). It is not allowed under the new condition.</p>",
+          "\\[0&lt;\\frac{18}{r}-2\\le\\frac{\\pi}{2}\\Longrightarrow\\frac{36}{4+\\pi}\\le r&lt;9.\\]",
+          "<p>The lower radius bound is greater than \\(\\frac{9}{2}\\), so</p>\\[A^{\\prime}(r)=9-2r&lt;0\\]<p>throughout the new interval. The greatest area is at the included smallest radius.</p>",
+          "\\[r=\\frac{36}{4+\\pi}\\,\\mathrm{cm},\\qquad\\theta=\\frac{\\pi}{2},\\qquad A_{\\max}=\\frac{324\\pi}{(4+\\pi)^2}\\,\\mathrm{cm}^2.\\]",
+          "<p>If \\(\\theta&lt;\\frac{\\pi}{2}\\), the lower radius endpoint is excluded. The same area is an upper bound approached as the angle increases towards \\(\\frac{\\pi}{2}\\), but it is not attained. There is then no greatest area.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Optimisation, transformations and linked conditions",
+        "href": "/courses/maths4u-9709-p1/topics/orig_differentiation_optimisation"
+      },
+      {
+        "title": "Quadratics, functions and admissible solutions",
+        "href": "/courses/maths4u-9709-p1/topics/orig_cross_topic_revision_algebra_functions"
+      },
+      {
+        "title": "Lines, circles and derivatives",
+        "href": "/courses/maths4u-9709-p1/topics/orig_cross_topic_revision_geometry_calculus"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S023-20261121-P01",
+        "title": "Keep each sine branch paired with its sector area",
+        "prompt": "<p>Two radii of length \\(6\\,\\mathrm{cm}\\) form a triangle of area \\(9\\sqrt3\\,\\mathrm{cm^2}\\). Its included angle satisfies \\(0&lt;\\theta&lt;\\pi\\). Find every possible angle and corresponding sector area. Enter ordered pairs \\((\\theta,A)\\), with angles in radians and areas in square centimetres.</p>",
+        "fields": [
+          {
+            "key": "designs",
+            "label": "Every pair of angle and sector area",
+            "type": "pairs",
+            "expected": "(pi/3,6*pi);(2*pi/3,12*pi)"
+          }
+        ],
+        "hint": "<p>The triangle uses \\(\\sin\\theta\\), whereas the sector uses \\(\\theta\\) itself. A positive sine value can give two angles in the stated interval.</p>",
+        "solution": "<ol><li>\\[\\frac{1}{2}(6)^2\\sin\\theta=9\\sqrt3\\Longrightarrow\\sin\\theta=\\frac{\\sqrt3}{2}.\\]</li><li>\\[\\theta=\\frac{\\pi}{3}\\quad\\text{or}\\quad\\frac{2\\pi}{3}.\\]</li><li>\\[A=\\frac{1}{2}(6)^2\\theta=18\\theta\\Longrightarrow A=6\\pi\\quad\\text{or}\\quad12\\pi.\\]</li><li><p>The pairs are \\((\\frac{\\pi}{3},6\\pi)\\) and \\((\\frac{2\\pi}{3},12\\pi)\\). Both triangles have the given area, but their sectors do not have equal areas.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S023-20261121-P02",
+        "title": "Do not divide away the zero-sine solutions",
+        "prompt": "<p>Solve \\(2\\sin\\theta\\cos\\theta=\\sin\\theta\\) for \\(0\\le\\theta\\le2\\pi\\). Give every angle in radians.</p>",
+        "fields": [
+          {
+            "key": "angles",
+            "label": "Every allowed angle (rad)",
+            "type": "set",
+            "expected": "{0,pi/3,pi,5*pi/3,2*pi}"
+          }
+        ],
+        "hint": "<p>Move everything to one side and factor. Dividing by \\(\\sin\\theta\\) would discard an entire family of solutions.</p>",
+        "solution": "<ol><li>\\[\\sin\\theta(2\\cos\\theta-1)=0.\\]</li><li>\\[\\sin\\theta=0\\Longrightarrow\\theta=0,\\pi,2\\pi.\\]</li><li>\\[\\cos\\theta=\\frac{1}{2}\\Longrightarrow\\theta=\\frac{\\pi}{3},\\frac{5\\pi}{3}.\\]</li><li><p>All five angles lie in the closed interval and satisfy the original equation. They are distinct inputs even though \\(0\\) and \\(2\\pi\\) point in the same direction on a circle.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S023-20261121-P03",
+        "title": "Use a chord for a segment boundary",
+        "prompt": "<p>A minor segment of a circle of radius \\(5\\,\\mathrm{cm}\\) is cut off by a chord subtending \\(\\frac{2\\pi}{3}\\) radians at the centre. Find its exact area and perimeter.</p>",
+        "fields": [
+          {
+            "key": "area",
+            "label": "Segment area (cm²)",
+            "type": "number",
+            "expected": "-25*sqrt(3)/4 + 25*pi/3"
+          },
+          {
+            "key": "perimeter",
+            "label": "Segment perimeter (cm)",
+            "type": "number",
+            "expected": "5*sqrt(3) + 10*pi/3"
+          }
+        ],
+        "hint": "<p>The segment is the sector minus the isosceles triangle. Its boundary is the arc plus the chord, not the arc plus two radii.</p>",
+        "solution": "<ol><li>\\[A_{\\text{sector}}=\\frac{1}{2}(5)^2\\frac{2\\pi}{3}=\\frac{25\\pi}{3}.\\]</li><li>\\[A_{\\text{triangle}}=\\frac{1}{2}(5)^2\\sin\\frac{2\\pi}{3}=\\frac{25\\sqrt3}{4}.\\]</li><li>\\[A_{\\text{segment}}=\\frac{25\\pi}{3}-\\frac{25\\sqrt3}{4}\\,\\mathrm{cm^2}.\\]</li><li>\\[\\text{Arc}=5\\frac{2\\pi}{3}=\\frac{10\\pi}{3},\\qquad\\text{chord}=2(5)\\sin\\frac{\\pi}{3}=5\\sqrt3.\\]</li><li>\\[\\text{Perimeter}=\\frac{10\\pi}{3}+5\\sqrt3\\,\\mathrm{cm}.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S023-20261121-P04",
+        "title": "Prove the sector maximum is feasible",
+        "prompt": "<p>A proper sector has perimeter \\(24\\,\\mathrm{cm}\\), including its two radial edges, with \\(0&lt;\\theta&lt;2\\pi\\). Find the radius, radian angle and greatest area.</p>",
+        "fields": [
+          {
+            "key": "radius",
+            "label": "Radius (cm)",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "angle",
+            "label": "Angle (rad)",
+            "type": "number",
+            "expected": "2",
+            "retry": [
+              {
+                "answer": "2*pi",
+                "feedback": "<p>The maximum occurs at two radians. A full turn is excluded by the stated proper-sector model.</p>"
+              }
+            ]
+          },
+          {
+            "key": "area",
+            "label": "Greatest area (cm²)",
+            "type": "number",
+            "expected": "36"
+          }
+        ],
+        "hint": "<p>Eliminate the angle using the perimeter. Complete the square in the radius and check the resulting angle lies in the stated interval.</p>",
+        "solution": "<ol><li>\\[24=r(\\theta+2)\\Longrightarrow\\theta=\\frac{24}{r}-2,\\qquad\\frac{12}{1+\\pi}&lt;r&lt;12.\\]</li><li>\\[A=\\frac{1}{2}r^2\\theta=12r-r^2=36-(r-6)^2\\le36.\\]</li><li><p>Equality is attained at \\(r=6\\,\\mathrm{cm}\\). The corresponding angle is \\(\\theta=2\\) radians, which belongs to \\((0,2\\pi)\\). Thus the global maximum is \\(36\\,\\mathrm{cm^2}\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S023-20261121-P05",
+        "title": "An angle cap removes the unrestricted optimum",
+        "prompt": "<p>A sector has perimeter \\(18\\,\\mathrm{cm}\\), including its two radii, and its angle satisfies \\(0&lt;\\theta\\le1\\) radian. Find the radius and angle giving the greatest area, and state that area.</p>",
+        "fields": [
+          {
+            "key": "radius",
+            "label": "Radius (cm)",
+            "type": "number",
+            "expected": "6",
+            "retry": [
+              {
+                "answer": "9/2",
+                "feedback": "<p>This unrestricted stationary radius gives an angle of two radians, outside \\(0&lt;\\theta\\le1\\). Use the feasible radius interval.</p>"
+              }
+            ]
+          },
+          {
+            "key": "angle",
+            "label": "Angle (rad)",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "area",
+            "label": "Greatest area (cm²)",
+            "type": "number",
+            "expected": "18"
+          }
+        ],
+        "hint": "<p>Translate the angle restriction into a radius interval before choosing a stationary point.</p>",
+        "solution": "<ol><li>\\[r=\\frac{18}{\\theta+2},\\qquad0&lt;\\theta\\le1\\Longrightarrow6\\le r&lt;9.\\]</li><li>\\[A=9r-r^2,\\qquad A^{\\prime}(r)=9-2r&lt;0\\quad(6\\le r&lt;9).\\]</li><li><p>The area decreases across the feasible radius interval. Its greatest value is at the included lower endpoint \\(r=6\\,\\mathrm{cm}\\), corresponding to \\(\\theta=1\\) radian.</p></li><li>\\[A=9(6)-6^2=18\\,\\mathrm{cm^2}.\\]</li><li><p>The unrestricted stationary radius \\(\\frac{9}{2}\\) would give \\(\\theta=2\\), which violates the angle cap.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S023-20261121-E01",
+          "title": "A reflex-sector constraint moves the maximum to a boundary",
+          "marks": 7,
+          "question": "<p>A sector has perimeter \\(20\\,\\mathrm{cm}\\), including its two radial edges. Its angle is restricted to \\(\\pi\\le\\theta\\le\\frac{3\\pi}{2}\\). Find the radius and angle giving the greatest area, and express that area exactly.</p>",
+          "hint": "<p>The larger permitted angle gives the smaller radius. Check the radius interval against the unrestricted stationary radius.</p>",
+          "solution": "<ol><li>\\[r=\\frac{20}{\\theta+2}\\Longrightarrow\\frac{40}{4+3\\pi}\\le r\\le\\frac{20}{2+\\pi}.\\]</li><li>\\[A=10r-r^2,\\qquad A^{\\prime}(r)=10-2r.\\]</li><li><p>Every feasible radius is less than \\(5\\), since \\(\\pi&gt;2\\) gives \\(\\frac{20}{2+\\pi}&lt;5\\). Therefore the derivative is positive throughout the interval.</p></li><li><p>The area is greatest at the largest permitted radius, \\(r=\\frac{20}{2+\\pi}\\), which corresponds to the included angle \\(\\theta=\\pi\\).</p></li><li>\\[A_{\\max}=\\frac{1}{2}\\left(\\frac{20}{2+\\pi}\\right)^2\\pi=\\frac{200\\pi}{(2+\\pi)^2}\\,\\mathrm{cm^2}.\\]</li><li><p>The angle \\(\\pi\\) describes a semicircle whose straight boundary is the two collinear radii together. It is valid here. The unrestricted optimum at angle \\(2\\) radians is outside the given interval.</p></li></ol>",
+          "marking": "<ul><li>1 mark: form the correct perimeter relationship.</li><li>1 mark: derive both feasible radius endpoints with the correct order.</li><li>1 mark: obtain area as a function of radius.</li><li>1 mark: differentiate and show that the derivative is positive throughout the feasible interval.</li><li>1 mark: choose the included maximum-radius endpoint.</li><li>1 mark: recover its permitted radian angle.</li><li>1 mark: give the exact greatest area with correct units.</li></ul>"
+        },
+        {
+          "id": "P1-S023-20261121-E02",
+          "title": "Compare two complete designs with the same perimeter",
+          "marks": 8,
+          "question": "<p>A proper sector has perimeter \\(10\\,\\mathrm{cm}\\), including its two radii. Its angle satisfies \\(\\sin\\theta=\\frac{1}{2}\\), with \\(0&lt;\\theta&lt;\\pi\\). Find both possible designs. Enter ordered pairs \\((\\theta,r)\\) and \\((\\theta,A)\\), using radians, centimetres and square centimetres respectively. State the angle of the design with greater area and justify the comparison.</p>",
+          "hint": "<p>Both sine branches are needed. Because the perimeter is fixed, the two designs have different radii; compare their complete area expressions.</p>",
+          "solution": "<ol><li>\\[\\theta_1=\\frac{\\pi}{6},\\qquad\\theta_2=\\frac{5\\pi}{6},\\qquad r=\\frac{10}{2+\\theta}.\\]</li><li>\\[r_1=\\frac{60}{12+\\pi},\\qquad r_2=\\frac{60}{12+5\\pi}.\\]</li><li>\\[A_1=\\frac{1}{2}r_1^2\\theta_1=\\frac{300\\pi}{(12+\\pi)^2},\\qquad A_2=\\frac{1500\\pi}{(12+5\\pi)^2}.\\]</li><li>\\[\\frac{A_2}{A_1}=\\frac{5(12+\\pi)^2}{(12+5\\pi)^2}.\\]</li><li>\\[5(12+\\pi)^2-(12+5\\pi)^2=576-20\\pi^2&gt;0,\\]</li><li><p>For example, \\(\\pi&lt;4\\) implies \\(20\\pi^2&lt;320&lt;576\\). Both denominators and areas are positive, so \\(A_2&gt;A_1\\). The design with angle \\(\\frac{5\\pi}{6}\\) has the greater area.</p></li><li><p>In each design, \\(r_i(2+\\theta_i)=10\\), and both angles satisfy the original sine equation and interval. Equal sine values alone would not justify an area comparison when the radii differ.</p></li></ol>",
+          "marking": "<ul><li>1 mark: find both permitted sine branches.</li><li>1 mark: connect the perimeter to radius and angle.</li><li>1 mark: find both radii.</li><li>1 mark: find the first sector area.</li><li>1 mark: find the second sector area.</li><li>1 mark: keep each radius and area paired with its own angle.</li><li>1 mark: justify which positive area is larger.</li><li>1 mark: state the winning angle and verify both designs against the original conditions.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Keep every allowed angle paired with its own dimensions and areas.</p><h2>Find all angles on the stated interval</h2><p>Use reference angles, quadrant signs and graph symmetry. Repeat sine/cosine patterns every \\(2\\pi\\), and tangent patterns every \\(\\pi\\), over the required interval. Keep included endpoints and remove duplicate values.</p><p>For \\(u=a\\theta+b\\), with \\(a\\ne0\\), transform the interval and then every answer back. Reverse endpoint order if \\(a&lt;0\\). Factor before dividing by a trigonometric expression.</p><h2>Use radians and the actual boundary</h2>\\[s=r\\theta,\\qquad A_{\\mathrm{sector}}=\\frac{1}{2}r^2\\theta,\\qquad P=r\\theta+2r.\\]<p>Convert degrees by multiplying by \\(\\frac{\\pi}{180}\\). The perimeter model requires a proper sector: \\(r&gt;0\\), \\(0&lt;\\theta&lt;2\\pi\\). A complete disk has circumference \\(2\\pi r\\), without two radial edges.</p><h2>Separate triangle and minor segment</h2>\\[A_{\\triangle}=\\frac{1}{2}r^2\\sin\\theta,\\qquad A_{\\mathrm{seg}}=\\frac{1}{2}r^2(\\theta-\\sin\\theta).\\]\\[c=2r\\sin\\frac{\\theta}{2},\\qquad P_{\\mathrm{seg}}=r\\theta+c.\\]<p>Use these minor-region statements for \\(0&lt;\\theta&lt;\\pi\\). Angles \\(\\theta\\) and \\(\\pi-\\theta\\) share a sine but usually give different sector and segment areas. At \\(\\frac{\\pi}{2}\\), the two branches coincide.</p><h2>Optimise only over feasible sectors</h2>\\[\\theta=\\frac{P}{r}-2,\\qquad A=\\frac{Pr}{2}-r^2.\\]\\[\\frac{P}{2+2\\pi}&lt;r&lt;\\frac{P}{2}.\\]<p>Add every angle or radius restriction before choosing a maximum. Compare allowed stationary values, included boundaries and limits. An excluded best boundary gives an unattained bound. Check the final radius, angle, perimeter and units.</p>",
+      "checks": "<ul><li>Correct angle unit and every interval branch included?</li><li>Each angle paired with its own area and dimensions?</li><li>Sector, triangle and segment boundaries distinguished?</li><li>Stationary value feasible and maximum actually attained?</li></ul>",
+      "examTip": "<p>Stationary value feasible and maximum actually attained?</p>"
+    }
+  },
+  "orig_cross_topic_revision_sequences_binomial": {
+    "updatedOn": "2026-11-21",
+    "description": "Extract the coefficient numbers, apply the progression rule in the question, and check every parameter and term count against its original conditions.",
+    "sections": [
+      {
+        "id": "coefficient-data",
+        "title": "How do coefficients become sequence data?",
+        "label": "Coefficient values and term positions",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Extract the requested <strong>numbers</strong> before using a sequence rule. A coefficient does not contain \\(x\\). For a positive integer \\(N\\), write</p>\\[(1+kx)^N=c_0+c_1x+\\cdots+c_Nx^N.\\]",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[c_0=1,\\qquad c_j=\\binom{N}{j}k^j\\quad(1\\le j\\le N).\\]<p>The complete term is \\(c_jx^j\\). Read the constant directly, including when \\(k=0\\). For a nonunit first term, retain its power as well.</p><p>If the full coefficient list starts a sequence, \\(c_0\\) is its first term. If the question selects different coefficients, map their positions explicitly.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_cross_topic_revision_sequences_binomial/coefficient-to-sequence.svg\" alt=\"The coefficients of a binomial expansion are mapped to the first two terms of a separately defined arithmetic progression.\" width=\"775\" height=\"550\"></p><p>The separate AP starts with \\(c_1=32\\) and \\(c_2=24\\), so \\(u_3=16\\). This differs from the next coefficient \\(c_3=8\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S024-20261121-C01",
+            "title": "A coefficient is a number, and its position is a separate choice",
+            "prompt": "<p>In \\((3-x)^3\\), let \\(c_j\\) be the coefficient of \\(x^j\\). The numbers \\(c_1,c_2\\) are the first two terms of an AP. Find \\(c_2\\), the common difference and the third term of that AP.</p>",
+            "fields": [
+              {
+                "key": "c2",
+                "label": "Coefficient \\(c_2\\)",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "d",
+                "label": "Common difference",
+                "type": "number",
+                "expected": "36"
+              },
+              {
+                "key": "u3",
+                "label": "Third AP term",
+                "type": "number",
+                "expected": "45"
+              }
+            ],
+            "hint": "<p>Expand first. Use the two specified coefficient values as the first two AP terms; the next AP term need not be the next coefficient.</p>",
+            "solution": "<ol><li>\\[(3-x)^3=27-27x+9x^2-x^3.\\]</li><li>\\[u_1=c_1=-27,\\qquad u_2=c_2=9.\\]</li><li>\\[d=9-(-27)=36,\\qquad u_3=9+36=45.\\]<p>The coefficient \\(c_2\\) is \\(9\\), while its binomial term is \\(9x^2\\). Also, \\(u_3=45\\) differs from \\(c_3=-1\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The parameter \\(k\\) inside a binomial is not automatically a GP ratio. It becomes the ratio only if the question says so or the coefficient relationships prove it.</p>"
+          }
+        ]
+      },
+      {
+        "id": "progression-conditions",
+        "title": "How do I test an AP or GP without losing zero cases?",
+        "label": "Differences, ratios and zero terms",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>For three consecutive AP terms \\(u,v,w\\), equate the two differences. This works even when a term is zero:</p>\\[v-u=w-v\\Longleftrightarrow2v=u+w.\\]",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a GP, one finite real multiplier must work twice:</p>\\[v=ur,\\qquad w=vr.\\]<p>If \\(u\\ne0\\), use \\(r=\\frac{v}{u}\\) and check the next multiplication. Then \\(v^2=uw\\) is an equivalent shortcut.</p><p>If \\(u=0\\), both later terms must also be zero. An all-zero sequence permits every finite ratio; a nonzero first term followed by zeros has ratio \\(0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S024-20261121-C02",
+            "title": "Check the recurrence when zeros appear",
+            "prompt": "<p>Which listed triple can be the first three terms of a GP with a finite real common ratio? Give that ratio. Then decide how many finite real ratios work for the all-zero sequence.</p>",
+            "fields": [
+              {
+                "key": "triple",
+                "label": "Valid triple",
+                "type": "choice",
+                "expected": "five-zero-zero",
+                "options": {
+                  "zero-zero-seven": "\\((0,0,7)\\)",
+                  "five-zero-zero": "\\((5,0,0)\\)",
+                  "zero-two-four": "\\((0,2,4)\\)"
+                }
+              },
+              {
+                "key": "ratio",
+                "label": "Common ratio for the valid listed triple",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "allzero",
+                "label": "Ratio for the all-zero sequence",
+                "type": "choice",
+                "expected": "any",
+                "options": {
+                  "any": "Every finite real ratio works; it is not uniquely determined.",
+                  "zero": "Only a zero ratio works.",
+                  "none": "No finite real ratio works."
+                }
+              }
+            ],
+            "hint": "<p>A finite multiplier always sends zero to zero. Test the two successive multiplications, not just the squared-middle-term shortcut.</p>",
+            "solution": "<ol><li><p>For \\((5,0,0)\\), the recurrence works with \\(r=0\\):</p>\\[5(0)=0,\\qquad0(0)=0.\\]</li><li><p>The other triples require a zero term to be followed by a nonzero term, which no finite ratio can produce.</p></li><li><p>For the all-zero sequence, \\(0r=0\\) for every finite real \\(r\\). Its common ratio is therefore not uniquely determined.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The condition \\(v^2=uw\\) alone can accept a false GP such as \\((0,0,3)\\). Also, dividing by a parameter before checking its zero case can remove a valid solution. Return to the original successive multiplications.</p>"
+          }
+        ]
+      },
+      {
+        "id": "parameter-branches",
+        "title": "How do I keep every valid parameter branch?",
+        "label": "Solve, check and pair the answers",
+        "minutes": 10,
+        "level": "core",
+        "intro": "<p>Write the coefficient equations first, then apply the stated AP or GP condition. Keep both signs from an even-power equation unless a given restriction selects one. Check each value in the original condition.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "text",
+            "html": "<p>When the binomial exponent is unknown, it must be a positive integer. For \\(N\\ge2\\), the first two nonconstant coefficients are</p>\\[c_1=Nk,\\qquad c_2=\\frac{N(N-1)}{2}k^2.\\]<p>Use both given equations to find \\(N\\) and \\(k\\). Check zero factors before dividing, and reject noninteger exponents. If \\(N=1\\), the \\(x^2\\) coefficient is zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For a nonzero GP, use \\(S_\\infty=\\frac{a}{1-r}\\) only after checking \\(\\lvert r\\rvert&lt;1\\). Apply this test to each parameter branch. Keep each surviving parameter paired with its own ratio and sum.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S024-20261121-C03",
+            "title": "Keep each parameter paired with its own sum",
+            "prompt": "<p>The coefficient of \\(x^2\\) in \\((1+kx)^6\\) is \\(\\frac{15}{4}\\). A separate GP has first term \\(2\\) and common ratio \\(k\\). Find every possible \\(k\\), then give the pairs \\((k,S_\\infty)\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "All possible values of the parameter",
+                "type": "set",
+                "expected": "{-1/2,1/2}"
+              },
+              {
+                "key": "sums",
+                "label": "Pairs \\((k,S_\\infty)\\)",
+                "type": "pairs",
+                "expected": "(-1/2,4/3);(1/2,4)"
+              }
+            ],
+            "hint": "<p>There are two signs when solving for the parameter. Check convergence and calculate the sum separately for each sign.</p>",
+            "solution": "<ol><li>\\[\\binom{6}{2}k^2=\\frac{15}{4}\\Longrightarrow15k^2=\\frac{15}{4}\\Longrightarrow k=\\pm\\frac{1}{2}.\\]</li><li><p>Both ratios have magnitude less than one, so both infinite sums exist.</p></li><li>\\[k=\\frac{1}{2}:\\quad S_\\infty=\\frac{2}{1-\\frac{1}{2}}=4.\\]</li><li>\\[k=-\\frac{1}{2}:\\quad S_\\infty=\\frac{2}{1+\\frac{1}{2}}=\\frac{4}{3}.\\]</li></ol>"
+          }
+        ]
+      },
+      {
+        "id": "series-sums",
+        "title": "Which sum formula applies, and what does the tail mean?",
+        "label": "Finite sums, convergence and signed tails",
+        "minutes": 10,
+        "level": "core",
+        "intro": "<p>Let \\(a\\) be the first term and \\(n\\) the positive integer number of terms included. For an AP with common difference \\(d\\),</p>\\[u_n=a+(n-1)d,\\qquad S_n=\\frac{n}{2}\\bigl(2a+(n-1)d\\bigr).\\]<p>For a GP, start with \\(u_1=a\\) and use \\(u_{n+1}=ru_n\\). When \\(r\\ne0\\), this gives \\(u_n=ar^{n-1}\\). If \\(r=0\\), the sequence is \\(a,0,0,\\ldots\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[S_n=\\frac{a(1-r^n)}{1-r}\\quad(r\\ne1),\\qquad S_n=na\\quad(r=1).\\]<p>For \\(r\\ne1\\), subtracting \\(rS_n\\) from \\(S_n\\) gives \\((1-r)S_n=a-ar^n\\), which explains the formula. If \\(a\\ne0\\), an infinite sum exists exactly when \\(\\lvert r\\rvert&lt;1\\):</p>\\[S_\\infty=\\frac{a}{1-r}.\\]<p>The all-zero sequence instead has sum zero for every finite ratio; handle it directly. If \\(r=0\\), every partial sum from the first onward equals \\(a\\).</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Define the <strong>signed remainder</strong> to mean the sum still to be added after the first \\(n\\) terms:</p>\\[R_n=S_\\infty-S_n=\\frac{ar^n}{1-r},\\qquad\\lvert R_n\\rvert=\\frac{\\lvert a\\rvert\\lvert r\\rvert^n}{\\lvert1-r\\rvert}.\\]<p>Use these formulas when \\(\\lvert r\\rvert&lt;1\\). The first omitted term is \\(u_{n+1}=ar^n\\). A negative remainder means the partial sum is above the infinite sum; absolute error ignores that direction.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_cross_topic_revision_sequences_binomial/alternating-gp-tail.svg\" alt=\"Partial sums of a negative-ratio geometric progression lie alternately above and below their infinite sum, with the signed and absolute tails shown.\" width=\"853\" height=\"565\"></p><p>For \\(a=6\\) and \\(r=-\\frac{1}{2}\\), the partial sums alternate around \\(4\\). The signed remainder is \\(R_n=4\\left(-\\frac{1}{2}\\right)^n\\), while its magnitude decreases.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "P1-S024-20261121-C04",
+            "title": "Separate finite sums from signed remainders",
+            "prompt": "<p>An AP has first term \\(5\\) and common difference \\(-3\\). A different GP has first term \\(4\\) and common ratio \\(-\\frac{1}{3}\\). Find the AP sum \\(S_4\\), the GP sum \\(S_3\\), the GP sum to infinity and its signed remainder \\(R_3=S_\\infty-S_3\\).</p>",
+            "fields": [
+              {
+                "key": "ap",
+                "label": "AP sum of four terms",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "gp",
+                "label": "GP sum of three terms",
+                "type": "number",
+                "expected": "28/9"
+              },
+              {
+                "key": "infinite",
+                "label": "GP sum to infinity",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "tail",
+                "label": "Signed GP remainder",
+                "type": "number",
+                "expected": "-1/9"
+              }
+            ],
+            "hint": "<p>Write a few terms to check the signs. A negative signed remainder means the partial sum is above the infinite sum.</p>",
+            "solution": "<ol><li>\\[S_{4,\\mathrm{AP}}=5+2-1-4=2.\\]</li><li>\\[S_{3,\\mathrm{GP}}=4-\\frac{4}{3}+\\frac{4}{9}=\\frac{28}{9}.\\]</li><li>\\[S_\\infty=\\frac{4}{1+\\frac{1}{3}}=3.\\]</li><li>\\[R_3=3-\\frac{28}{9}=-\\frac{1}{9}.\\]<p>The partial sum is too large by \\(\\frac{1}{9}\\); the absolute error is positive.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Some questions define signed error in the opposite order, \\(S_n-S_\\infty\\). Follow the order specified; it equals \\(-R_n\\) here. For an accuracy requirement, compare the <strong>absolute</strong> error with the bound.</p>"
+          }
+        ]
+      },
+      {
+        "id": "integer-thresholds",
+        "title": "How do I prove the least number of terms?",
+        "label": "Strict bounds and the preceding integer",
+        "minutes": 7,
+        "level": "further",
+        "intro": "<p>Translate an accuracy statement into \\(\\lvert R_n\\rvert&lt;\\varepsilon\\) or \\(\\lvert R_n\\rvert\\le\\varepsilon\\), using the stated inequality. Use powers, a table or a calculator to locate the first possible positive integer. Then check it and the preceding admissible integer.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "P1-S024-20261121-C05",
+            "title": "Prove that your integer is the first one that works",
+            "prompt": "<p>A GP has first term \\(8\\) and common ratio \\(\\frac{1}{2}\\). Find the least positive integer \\(n\\) for which \\(\\lvert S_\\infty-S_n\\rvert&lt;\\frac{1}{5}\\). Give the absolute errors at this \\(n\\) and at the preceding integer.</p>",
+            "fields": [
+              {
+                "key": "n",
+                "label": "Least number of terms",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "previous",
+                "label": "Absolute error at the preceding integer",
+                "type": "number",
+                "expected": "1/4"
+              },
+              {
+                "key": "current",
+                "label": "Absolute error at the least working integer",
+                "type": "number",
+                "expected": "1/8"
+              }
+            ],
+            "hint": "<p>The infinite sum is \\(16\\), so the absolute tail is \\(\\frac{16}{2^n}\\). Check consecutive powers of two.</p>",
+            "solution": "<ol><li>\\[S_\\infty=\\frac{8}{1-\\frac{1}{2}}=16,\\qquad\\lvert R_n\\rvert=\\frac{16}{2^n}.\\]</li><li>\\[n=6:\\quad\\lvert R_6\\rvert=\\frac{1}{4}&gt;\\frac{1}{5}.\\]</li><li>\\[n=7:\\quad\\lvert R_7\\rvert=\\frac{1}{8}&lt;\\frac{1}{5}.\\]</li><li><p>The absolute tail decreases each time another term is included. Since the preceding integer fails, the least value is \\(n=7\\).</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>For a nonzero GP with \\(0&lt;\\lvert r\\rvert&lt;1\\), the absolute tail decreases as \\(n\\) increases. This makes the two consecutive checks a proof of minimality. With ratio zero, or an all-zero sequence, the tail is already zero after the first term.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>State what \\(n\\) counts: it is the number of retained terms \\(u_1,\\ldots,u_n\\). The first omitted term has index \\(n+1\\). An equality at the error threshold fails a strict inequality.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Coefficient",
+        "definition": "<p>The numerical multiplier of a power of \\(x\\); for example, \\(24\\) in \\(24x^2\\).</p>"
+      },
+      {
+        "term": "Coefficient index",
+        "definition": "<p>The power attached to a coefficient: \\(c_0\\) is constant, while \\(c_2\\) multiplies \\(x^2\\).</p>"
+      },
+      {
+        "term": "Term position",
+        "definition": "<p>The place in a sequence, normally beginning with \\(u_1\\). The question determines which coefficient supplies that term.</p>"
+      },
+      {
+        "term": "Common difference",
+        "definition": "<p>The fixed amount added to obtain the next term of an arithmetic progression.</p>"
+      },
+      {
+        "term": "Common ratio",
+        "definition": "<p>The fixed multiplier used to obtain the next term of a geometric progression.</p>"
+      },
+      {
+        "term": "Partial sum",
+        "definition": "<p>The sum \\(S_n\\) of the first \\(n\\) terms.</p>"
+      },
+      {
+        "term": "Convergence",
+        "definition": "<p>The partial sums approach one finite value as more terms are included.</p>"
+      },
+      {
+        "term": "Signed remainder",
+        "definition": "<p>Here, \\(R_n=S_\\infty-S_n\\). Its sign says whether the partial sum is below or above the infinite sum.</p>"
+      },
+      {
+        "term": "Absolute error",
+        "definition": "<p>The nonnegative difference in size, \\(\\lvert S_\\infty-S_n\\rvert\\), used to test accuracy.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use selected coefficients to start a new AP",
+        "question": "<p>The coefficients of \\(x\\) and \\(x^2\\) in \\((2+x)^4\\) are the first two terms of an AP, in that order. Find its third term and the sum of its first five terms.</p>",
+        "solution": [
+          "<p>Keep the powers of the first term when extracting the coefficients:</p>\\[c_1=\\binom{4}{1}2^3=32,\\qquad c_2=\\binom{4}{2}2^2=24.\\]",
+          "\\[(2+x)^4=16+32x+24x^2+8x^3+x^4.\\]<p>The coefficient of \\(x^2\\) is \\(24\\); its complete term is \\(24x^2\\).</p>",
+          "\\[u_1=32,\\qquad u_2=24,\\qquad d=24-32=-8.\\]",
+          "\\[u_3=24-8=16.\\]<p>This is a term of the separately defined AP. It need not equal the next coefficient in the expansion, \\(c_3=8\\).</p>",
+          "\\[S_5=32+24+16+8+0=80.\\]"
+        ]
+      },
+      {
+        "title": "Reject a false GP created by a zero first term",
+        "question": "<p>The constant, \\(x\\) and \\(x^2\\) coefficients of \\((k+1)(1+2x)^2+3x^2\\), in that order, are the first three terms of a GP with a finite real common ratio. Find \\(k\\) and the ratio.</p>",
+        "solution": [
+          "\\[(k+1)(1+4x+4x^2)+3x^2\\]<p>gives the three coefficients</p>\\[u=k+1,\\qquad v=4(k+1),\\qquad w=4k+7.\\]",
+          "<p>A GP must satisfy \\(v^2=uw\\), so</p>\\[16(k+1)^2=(k+1)(4k+7).\\]",
+          "\\[(k+1)(12k+9)=0\\Longrightarrow k=-1\\quad\\text{or}\\quad k=-\\frac{3}{4}.\\]",
+          "<p>For \\(k=-1\\), the triple is \\((0,0,3)\\). No finite multiplier can turn its second term into the third, so this value is rejected.</p>",
+          "<p>For \\(k=-\\frac{3}{4}\\), the triple is</p>\\[\\left(\\frac{1}{4},1,4\\right).\\]<p>Both multiplications use \\(r=4\\), so</p>\\[k=-\\frac{3}{4},\\qquad r=4.\\]"
+        ]
+      },
+      {
+        "title": "Retain both solutions of an AP coefficient condition",
+        "question": "<p>The constant, \\(x\\) and \\(x^2\\) coefficients of \\((1+kx)^3\\), in that order, form an AP. Find every real value of \\(k\\).</p>",
+        "solution": [
+          "\\[(1+kx)^3=1+3kx+3k^2x^2+k^3x^3.\\]<p>The three numerical coefficients are \\(1,3k,3k^2\\).</p>",
+          "\\[2(3k)=1+3k^2\\Longrightarrow3k^2-6k+1=0.\\]",
+          "\\[k=\\frac{6\\pm\\sqrt{36-12}}{6}=1\\pm\\frac{\\sqrt{6}}{3}.\\]",
+          "<p>For either consistent choice of sign, the coefficients become</p>\\[1,\\quad3\\pm\\sqrt{6},\\quad5\\pm2\\sqrt{6}.\\]<p>The two successive differences both equal \\(2\\pm\\sqrt{6}\\). Both values of \\(k\\) satisfy the original AP condition.</p>"
+        ]
+      },
+      {
+        "title": "An even power gives two ratios and two infinite sums",
+        "question": "<p>The coefficient of \\(x^2\\) in \\((1+kx)^5\\) is \\(\\frac{10}{9}\\). A separate GP has first term \\(3\\) and common ratio \\(k\\). Find all possible pairs \\((k,S_\\infty)\\).</p>",
+        "solution": [
+          "\\[\\binom{5}{2}k^2=\\frac{10}{9}\\Longrightarrow k^2=\\frac{1}{9}\\Longrightarrow k=\\pm\\frac{1}{3}.\\]",
+          "<p>Each ratio satisfies \\(\\lvert k\\rvert&lt;1\\), so the infinite-sum formula applies to both branches:</p>\\[S_\\infty=\\frac{3}{1-k}.\\]",
+          "\\[k=\\frac{1}{3}\\Longrightarrow S_\\infty=\\frac{3}{1-\\frac{1}{3}}=\\frac{9}{2}.\\]",
+          "\\[k=-\\frac{1}{3}\\Longrightarrow S_\\infty=\\frac{3}{1+\\frac{1}{3}}=\\frac{9}{4}.\\]",
+          "<p>The answers must remain paired:</p>\\[\\left(k,S_\\infty\\right)=\\left(\\frac{1}{3},\\frac{9}{2}\\right)\\quad\\text{or}\\quad\\left(-\\frac{1}{3},\\frac{9}{4}\\right).\\]"
+        ]
+      },
+      {
+        "title": "Track which side of the infinite sum a partial sum lies on",
+        "question": "<p>A GP has first term \\(6\\) and common ratio \\(-\\frac{1}{2}\\). Find \\(S_4\\), \\(S_\\infty\\), the signed remainder \\(R_4=S_\\infty-S_4\\), and a formula for \\(R_n\\).</p>",
+        "solution": [
+          "\\[S_4=\\frac{6\\left(1-\\left(-\\frac{1}{2}\\right)^4\\right)}{1+\\frac{1}{2}}=\\frac{15}{4}.\\]",
+          "\\[S_\\infty=\\frac{6}{1+\\frac{1}{2}}=4.\\]",
+          "\\[R_4=4-\\frac{15}{4}=\\frac{1}{4}.\\]<p>The four-term sum is below the infinite sum.</p>",
+          "\\[R_n=\\frac{6\\left(-\\frac{1}{2}\\right)^n}{1+\\frac{1}{2}}=4\\left(-\\frac{1}{2}\\right)^n.\\]",
+          "<p>For contrast, \\(S_5=\\frac{33}{8}\\) and \\(R_5=-\\frac{1}{8}\\): the five-term sum is above the infinite sum. The signed tails alternate, but</p>\\[\\lvert R_n\\rvert=\\frac{4}{2^n}\\]<p>decreases.</p>"
+        ]
+      },
+      {
+        "title": "A strict bound can exclude an equality case",
+        "question": "<p>Continue with the GP having \\(a=6\\) and \\(r=-\\frac{1}{2}\\). Find the least positive integer \\(n\\) such that \\(\\lvert S_\\infty-S_n\\rvert&lt;\\frac{1}{4}\\).</p>",
+        "solution": [
+          "\\[\\frac{4}{2^n}&lt;\\frac{1}{4}\\Longleftrightarrow2^n&gt;16.\\]",
+          "<p>At \\(n=4\\), the error is \\(\\frac{1}{4}\\). Equality does not satisfy the strict bound.</p>",
+          "<p>At \\(n=5\\), the error is \\(\\frac{1}{8}&lt;\\frac{1}{4}\\).</p>",
+          "<p>The absolute error halves with each extra term. All earlier positive integers give larger errors, so the least number of terms is \\(n=5\\). The first omitted term is then the sixth term.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Arithmetic progressions: terms, sums and integer indices",
+        "href": "/courses/maths4u-9709-p1/topics/orig_series_arithmetic"
+      },
+      {
+        "title": "Geometric progressions: finite sums and convergence",
+        "href": "/courses/maths4u-9709-p1/topics/orig_series_geometric"
+      },
+      {
+        "title": "The general term, index bounds and Laurent powers",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_general_term"
+      },
+      {
+        "title": "Unknown constants, exponents and complete cases",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_parameters"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S024-20261121-P01",
+        "title": "Use coefficient numbers as the first two arithmetic terms",
+        "prompt": "<p>The coefficients of \\(x\\) and \\(x^2\\) in \\((1-3x)^4\\), in that order, are the first two terms of a new arithmetic progression. Find these coefficients, its sixth term and the sum of its first six terms.</p>",
+        "fields": [
+          {
+            "key": "c1",
+            "label": "Coefficient of \\(x\\)",
+            "type": "number",
+            "expected": "-12"
+          },
+          {
+            "key": "c2",
+            "label": "Coefficient of \\(x^2\\)",
+            "type": "number",
+            "expected": "54"
+          },
+          {
+            "key": "u6",
+            "label": "Sixth AP term",
+            "type": "number",
+            "expected": "318"
+          },
+          {
+            "key": "s6",
+            "label": "Sum of six AP terms",
+            "type": "number",
+            "expected": "918"
+          }
+        ],
+        "hint": "<p>The binomial index tells you which coefficient to extract. After extraction, use the separately stated progression rule.</p>",
+        "solution": "<ol><li>\\[c_1=\\binom{4}{1}(-3)=-12,\\qquad c_2=\\binom{4}{2}(-3)^2=54.\\]</li><li>\\[a=-12,\\qquad d=54-(-12)=66.\\]</li><li>\\[u_6=a+5d=-12+330=318.\\]</li><li>\\[S_6=\\frac{6}{2}(a+u_6)=3(-12+318)=918.\\]</li><li><p>The signs belong to the coefficients themselves. The AP is a new sequence specified by the question; later AP terms need not equal later polynomial coefficients.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S024-20261121-P02",
+        "title": "Retain both parameter values from an arithmetic condition",
+        "prompt": "<p>The constant, \\(x\\) and \\(x^2\\) coefficients of \\((1+kx)^5\\), in that order, form three consecutive terms of an arithmetic progression. Find every real value of \\(k\\).</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Every parameter value",
+            "type": "set",
+            "expected": "{(5-sqrt(15))/10,(5+sqrt(15))/10}"
+          }
+        ],
+        "hint": "<p>Extract all three coefficient numbers, then apply twice the middle equals the sum of the outer terms.</p>",
+        "solution": "<ol><li>\\[c_0=1,\\qquad c_1=5k,\\qquad c_2=10k^2.\\]</li><li>\\[2(5k)=1+10k^2\\Longrightarrow10k^2-10k+1=0.\\]</li><li>\\[k=\\frac{10\\pm\\sqrt{60}}{20}=\\frac{5\\pm\\sqrt{15}}{10}.\\]</li><li><p>Both values satisfy the original AP equation. No sign, convergence or other restriction was given to remove either one.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S024-20261121-P03",
+        "title": "A necessary geometric identity can accept a false zero case",
+        "prompt": "<p>Let \\(u,v,w\\) be the constant, \\(x\\) and \\(x^2\\) coefficients of \\((k-1)(1+x)^2+2kx^2\\), in that order. They must form a geometric triple: there must be a finite real number \\(r\\) such that \\(v=ru\\) and \\(w=rv\\). Find every permitted \\(k\\) and its ratio.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Every permitted parameter",
+            "type": "set",
+            "expected": "{3}",
+            "retry": [
+              {
+                "answer": "1,3",
+                "feedback": "<p>At \\(k=1\\), the triple is \\((0,0,2)\\). It passes the squared identity but cannot satisfy \\(w=rv\\) for a finite ratio.</p>"
+              }
+            ]
+          },
+          {
+            "key": "ratio",
+            "label": "Corresponding ratio",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>Use \\(v^2=uw\\) to find candidates, then check both original recurrence equations, especially when a coefficient is zero.</p>",
+        "solution": "<ol><li>\\[u=k-1,\\qquad v=2(k-1),\\qquad w=3k-1.\\]</li><li>\\[v^2-uw=4(k-1)^2-(k-1)(3k-1)=(k-1)(k-3).\\]</li><li><p>The algebraic candidates are \\(k=1\\) and \\(k=3\\). At \\(k=1\\), the triple is \\((0,0,2)\\). No finite ratio can send its second zero to the final \\(2\\), so this candidate is rejected.</p></li><li><p>At \\(k=3\\), the coefficients are \\((2,4,8)\\). They obey \\(v=2u\\) and \\(w=2v\\), so \\(k=3\\) and \\(r=2\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S024-20261121-P04",
+        "title": "An even-power coefficient leaves two convergent ratios",
+        "prompt": "<p>The coefficient of \\(x^2\\) in \\((1+kx)^4\\) is \\(\\frac{3}{8}\\). A geometric progression has first term \\(4\\) and common ratio \\(k\\). Find every possible ratio and corresponding sum to infinity. Enter ordered pairs \\((k,S_\\infty)\\).</p>",
+        "fields": [
+          {
+            "key": "pairs",
+            "label": "Every ratio and infinite sum",
+            "type": "pairs",
+            "expected": "(-1/4,16/5);(1/4,16/3)"
+          }
+        ],
+        "hint": "<p>The coefficient determines \\(k^2\\), not its sign. Test convergence separately for both roots.</p>",
+        "solution": "<ol><li>\\[6k^2=\\frac{3}{8}\\Longrightarrow k^2=\\frac{1}{16}\\Longrightarrow k=\\pm\\frac{1}{4}.\\]</li><li><p>Both ratios have absolute value less than \\(1\\), so both progressions converge.</p></li><li>\\[k=-\\frac{1}{4}:\\quad S_\\infty=\\frac{4}{1+\\frac{1}{4}}=\\frac{16}{5}.\\]</li><li>\\[k=\\frac{1}{4}:\\quad S_\\infty=\\frac{4}{1-\\frac{1}{4}}=\\frac{16}{3}.\\]</li><li><p>Convergence does not require a positive ratio. The negative-ratio progression alternates in sign.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S024-20261121-P05",
+        "title": "A strict error bound fails at equality",
+        "prompt": "<p>A GP has first term \\(3\\) and common ratio \\(-\\frac{1}{2}\\). Let \\(S_n\\) be its first \\(n\\) terms. Find the least positive integer \\(n\\) for which \\(|S_\\infty-S_n|&lt;\\frac{1}{16}\\), then find \\(S_n\\) and the signed omitted tail \\(S_\\infty-S_n\\) at that index.</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "Least number of terms",
+            "type": "number",
+            "expected": "6",
+            "retry": [
+              {
+                "answer": "5",
+                "feedback": "<p>At five terms the error equals the stated bound. The question requires a strictly smaller error.</p>"
+              }
+            ]
+          },
+          {
+            "key": "sum",
+            "label": "Partial sum at that index",
+            "type": "number",
+            "expected": "63/32"
+          },
+          {
+            "key": "tail",
+            "label": "Signed omitted tail",
+            "type": "number",
+            "expected": "1/32"
+          }
+        ],
+        "hint": "<p>Use the absolute value for the error tolerance, but retain the sign when reporting the omitted tail. Check the immediately preceding index.</p>",
+        "solution": "<ol><li>\\[S_\\infty=\\frac{3}{1+\\frac{1}{2}}=2,\\qquad R_n=2\\left(-\\frac{1}{2}\\right)^n,\\qquad |R_n|=\\frac{2}{2^n}.\\]</li><li>\\[|R_5|=\\frac{1}{16}\\quad\\text{fails the strict inequality},\\qquad |R_6|=\\frac{1}{32}&lt;\\frac{1}{16}.\\]</li><li><p>The absolute tails decrease strictly, so the least index is \\(n=6\\).</p></li><li>\\[R_6=\\frac{1}{32},\\qquad S_6=2-\\frac{1}{32}=\\frac{63}{32}.\\]</li><li><p>At odd indices the tail is negative, but its absolute value remains the approximation error. A negative signed tail by itself does not mean the error is small.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S024-20261121-E01",
+          "title": "Recover a binomial exponent before building a geometric model",
+          "marks": 8,
+          "question": "<p>In \\((1+kx)^m\\), where \\(m\\) is a positive integer, the coefficients of \\(x\\) and \\(x^2\\) are \\(12\\) and \\(60\\). Find \\(m,k\\). A GP then has first term \\(12\\) and ratio \\(\\frac{1}{k}\\). Find its sum to infinity and the least positive integer \\(N\\) for which the absolute omitted tail after \\(N\\) terms is less than \\(\\frac{3}{4}\\).</p>",
+          "hint": "<p>The nonzero linear coefficient permits a ratio of the two coefficient equations. Keep the binomial exponent and the later term count as separate variables.</p>",
+          "solution": "<ol><li>\\[mk=12,\\qquad\\frac{m(m-1)}{2}k^2=60.\\]</li><li><p>The quadratic coefficient is nonzero, so \\(m\\ge2\\). Also \\(k\\ne0\\).</p></li><li>\\[\\frac{60}{12^2}=\\frac{m-1}{2m}\\Longrightarrow\\frac{5}{12}=\\frac{m-1}{2m}\\Longrightarrow m=6.\\]</li><li>\\[k=\\frac{12}{6}=2,\\qquad r=\\frac{1}{2},\\qquad S_\\infty=\\frac{12}{1-\\frac{1}{2}}=24.\\]</li><li>\\[|R_N|=24\\left(\\frac{1}{2}\\right)^N.\\]</li><li>\\[|R_5|=\\frac{3}{4}\\quad\\text{does not qualify},\\qquad |R_6|=\\frac{3}{8}&lt;\\frac{3}{4}.\\]</li><li><p>The positive errors decrease strictly, so \\(N=6\\) is the least allowed count. Direct coefficient checks give \\(6(2)=12\\) and \\(\\binom{6}{2}(2)^2=60\\).</p></li></ol>",
+          "marking": "<ul><li>1 mark: form both coefficient equations.</li><li>1 mark: retain the nonzero coefficient conditions and positive-integer exponent.</li><li>1 mark: eliminate the parameter to find the exponent.</li><li>1 mark: recover the parameter and check both coefficients.</li><li>1 mark: identify the new ratio and justify convergence.</li><li>1 mark: obtain the sum to infinity.</li><li>1 mark: compare the exact errors at the proposed and preceding indices.</li><li>1 mark: justify the least integer count, respecting the strict inequality.</li></ul>"
+        },
+        {
+          "id": "P1-S024-20261121-E02",
+          "title": "Convergence selects one algebraically valid arithmetic branch",
+          "marks": 8,
+          "question": "<p>The constant, \\(x\\) and \\(x^2\\) coefficients of \\((1+kx)^4\\), in that order, form an AP. A GP with first term \\(2\\) and common ratio \\(k\\) has a sum to infinity. Find the permitted \\(k\\) and this infinite sum. Find the least positive integer \\(N\\) for which the omitted tail has absolute value less than \\(\\frac{1}{100}\\).</p>",
+          "hint": "<p>First use the AP condition to find both parameter candidates. Then apply the stated infinite-sum condition to the separate GP.</p>",
+          "solution": "<ol><li>\\[c_0=1,\\quad c_1=4k,\\quad c_2=6k^2,\\qquad 2(4k)=1+6k^2.\\]</li><li>\\[6k^2-8k+1=0\\Longrightarrow k=\\frac{4\\pm\\sqrt{10}}{6}.\\]</li><li><p>The plus root exceeds \\(1\\), so it cannot give the stated infinite sum for a nonzero first term. The minus root satisfies \\(0&lt;k&lt;1\\), so it is the permitted ratio.</p></li><li>\\[S_\\infty=\\frac{2}{1-\\frac{4-\\sqrt{10}}{6}}=\\frac{12}{2+\\sqrt{10}}=2\\sqrt{10}-4.\\]</li><li>\\[R_N=(2\\sqrt{10}-4)\\left(\\frac{4-\\sqrt{10}}{6}\\right)^N&gt;0.\\]</li><li>\\[R_2=\\frac{7\\sqrt{10}-22}{3}\\approx0.0453145&gt;0.01,\\]</li><li>\\[R_3=\\frac{25\\sqrt{10}-79}{9}\\approx0.00632683&lt;0.01.\\]</li><li><p>Since the ratio lies strictly between \\(0\\) and \\(1\\), these tails decrease strictly. Therefore \\(N=3\\) is the least count satisfying the error bound. The accepted parameter still satisfies the original coefficient AP equation.</p></li></ol>",
+          "marking": "<ul><li>1 mark: identify the three coefficient numbers.</li><li>1 mark: form and solve the AP equation.</li><li>1 mark: retain both algebraic candidates before checking convergence.</li><li>1 mark: reject the divergent ratio and justify the retained one.</li><li>1 mark: obtain the exact infinite sum.</li><li>1 mark: form the omitted-tail expression.</li><li>1 mark: check both the proposed and preceding term counts.</li><li>1 mark: justify minimality using the decreasing positive errors.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Extract coefficient numbers, apply the specified progression rule, then check parameters and integer indices.</p><h2>Keep coefficients separate from progression terms</h2><p>In \\((1+kx)^m\\), with positive integer \\(m\\),</p>\\[C_0=1,\\qquad C_j=\\binom{m}{j}k^j\\quad(1\\le j\\le m).\\]<p>The coefficient is a number; the term includes its power of \\(x\\). A new progression follows the rule stated in the question. Later terms need not be later polynomial coefficients.</p><h2>Impose the original progression conditions</h2>\\[\\mathrm{AP}:\\quad2v=u+w.\\qquad\\mathrm{GP}:\\quad v=ru,\\quad w=rv.\\]<p>For a GP, \\(v^2=uw\\) is necessary; check the recurrence when zeros occur. Do not divide by a possibly zero term. Retain every parameter branch until the original conditions select it.</p><h2>Use sums with their conditions</h2>\\[u_n=a+(n-1)d,\\qquad S_n=\\frac{n}{2}\\bigl(2a+(n-1)d\\bigr).\\]\\[\\mathrm{GP}:\\quad S_n=\\frac{a(1-r^n)}{1-r}\\quad(r\\ne1);\\qquad S_n=na\\quad(r=1).\\]<p>For nonzero \\(a\\), an infinite GP sum requires \\(|r|&lt;1\\) and is \\(\\frac{a}{1-r}\\). A negative ratio can converge. If the first term is zero, the finite-ratio recurrence gives the all-zero sequence.</p><h2>Separate a signed tail from the error</h2>\\[R_n=S_\\infty-S_n=\\frac{ar^n}{1-r},\\qquad E_n=|R_n|\\quad(|r|&lt;1).\\]<p>Use the absolute tail for an error tolerance. Test the proposed integer and its predecessor; equality fails a strict inequality. For \\(0&lt;|r|&lt;1\\) and nonzero first term, the errors decrease strictly. If \\(r=0\\), the tail is zero after the first term.</p>",
+      "checks": "<ul><li>Correct coefficient indices and signs extracted?</li><li>AP/GP conditions checked, including zero cases?</li><li>All parameter branches tested for convergence and other restrictions?</li><li>Exact tail, strict inequality and least integer verified?</li></ul>",
+      "examTip": "<p>Exact tail, strict inequality and least integer verified?</p>"
+    }
+  },
+  "orig_cross_topic_revision_calculus_models": {
+    "updatedOn": "2026-11-21",
+    "description": "Recover the missing curve or amount, identify the region and variable, then distinguish a total quantity from its local rate of change.",
+    "sections": [
+      {
+        "id": "recover-model",
+        "title": "What must I recover before finding an area or volume?",
+        "label": "Gradient to curve, then to model",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A gradient function gives how the height changes; it does not give the height itself. Integrate first, include the constant, and use the supplied point or level condition to determine it. Keep the original domain of the curve.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[f^{\\prime}(x)=g(x)\\Longrightarrow f(x)=\\int g(x)\\,\\mathrm{d}x.\\]<p>The indefinite integral includes an unknown constant. For a power,</p>\\[\\int x^p\\,\\mathrm{d}x=\\frac{x^{p+1}}{p+1}+C\\quad(p\\ne-1),\\]<p>on an interval where the expression is defined. Substitute a point into \\(f\\), and a gradient condition into \\(f^{\\prime}\\). Check the recovered function against every condition.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S025-20261121-C01",
+            "title": "Recover the constant before using the curve",
+            "prompt": "<p>A curve satisfies \\(h^{\\prime}(x)=3x^2-2\\) and \\(h(1)=4\\). Write \\(h(x)=x^3-2x+C\\). Find \\(C\\), then find \\(h(2)\\).</p>",
+            "fields": [
+              {
+                "key": "constant",
+                "label": "Constant of integration",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "height",
+                "label": "Value of \\(h(2)\\)",
+                "type": "number",
+                "expected": "9"
+              }
+            ],
+            "hint": "<p>The point condition gives the height of the curve, so substitute into the integrated expression.</p>",
+            "solution": "<ol><li>\\[h(x)=\\int(3x^2-2)\\,\\mathrm{d}x=x^3-2x+C.\\]</li><li>\\[4=1-2+C\\Longrightarrow C=5.\\]</li><li>\\[h(2)=8-4+5=9.\\]<p>Differentiating the recovered expression returns the supplied gradient, and substituting \\(x=1\\) returns the supplied height.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The constant recovered in the curve changes its height and its later area or volume. Do not drop it because a new antiderivative constant will cancel in a definite integral. For example, integrating a constant height \\(C\\) over \\([a,b]\\) contributes \\(C(b-a)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "region-boundaries",
+        "title": "Which curves and bounds define the required region?",
+        "label": "Intersections, order and geometric area",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Sketch and label the region after recovering the curve. Use the stated vertical boundaries, or solve the boundary equations simultaneously to find their intersections. Retain only points allowed by the original domains.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>On an interval where \\(U(x)\\) is the upper boundary and \\(L(x)\\) the lower boundary,</p>\\[A=\\int_a^b\\bigl(U(x)-L(x)\\bigr)\\,\\mathrm{d}x.\\]<p>Check their order on each interval. If the order changes, split the integral and add the positive areas. For an axis-bounded region, split at sign changes: a signed integral can cancel positive and negative contributions.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S025-20261121-C02",
+            "title": "Identify the actual region boundaries",
+            "prompt": "<p>Coordinates are in centimetres. Find the intersection inputs and the area enclosed by \\(y=x^2-2x+2\\) and \\(y=2\\).</p>",
+            "fields": [
+              {
+                "key": "bounds",
+                "label": "Intersection inputs",
+                "type": "set",
+                "expected": "{0,2}"
+              },
+              {
+                "key": "area",
+                "label": "Enclosed area (cm²)",
+                "type": "number",
+                "expected": "4/3"
+              }
+            ],
+            "hint": "<p>Equate the two heights, then check which boundary is above the other between the intersections.</p>",
+            "solution": "<ol><li>\\[x^2-2x+2=2\\Longrightarrow x(x-2)=0\\Longrightarrow x=0,2.\\]</li><li>\\[2-(x^2-2x+2)=2x-x^2=x(2-x)\\ge0\\quad(0\\le x\\le2).\\]</li><li>\\[A=\\int_0^2(2x-x^2)\\,\\mathrm{d}x=\\left[x^2-\\frac{x^3}{3}\\right]_0^2=\\frac{4}{3}\\,\\mathrm{cm}^2.\\]</li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep the requested quantity visible beside the sketch. A stationary input solves \\(f^{\\prime}(x)=0\\); an axis crossing solves \\(f(x)=0\\); a curve-line boundary solves \\(f(x)=\\ell(x)\\). These equations answer different questions.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rotation-model",
+        "title": "How does rotating the region change the integral?",
+        "label": "Strip heights and squared radii",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>A vertical strip rotated about the \\(x\\)-axis forms a disk or washer. Radii are nonnegative distances to the axis. If the strip lies on one side of the axis, use the larger distance as the outer radius and the smaller distance as the inner radius.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[S(x)=\\pi\\bigl(R(x)^2-r(x)^2\\bigr),\\qquad V=\\int_a^b S(x)\\,\\mathrm{d}x.\\]<p>A disk has \\(r=0\\). If a strip crosses the axis, its rotation is one disk with radius equal to the greatest distance reached; do not count overlapping disks twice. Split where the radius rule changes.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_cross_topic_revision_calculus_models/region-height-and-washers.svg\" alt=\"The recovered region and one perpendicular washer compare a vertical difference of heights with a difference of squared distances to the axis.\" width=\"743\" height=\"619\"></p><p>For \\(f(x)=(x-2)^2+1\\) below \\(y=5\\), the area strip has height \\(5-f(x)\\). Its rotation has washer area \\(\\pi\\bigl(25-f(x)^2\\bigr)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "P1-S025-20261121-C03",
+            "title": "Rotate the region, not just its vertical gap",
+            "prompt": "<p>Coordinates are in centimetres. The region between \\(y=2\\) and \\(y=x^2-2x+2\\), for \\(0\\le x\\le2\\), is rotated about the \\(x\\)-axis. Find the washer area at \\(x=1\\) and the volume of the whole solid.</p>",
+            "fields": [
+              {
+                "key": "slice",
+                "label": "Washer area at the stated input (cm²)",
+                "type": "number",
+                "expected": "3*pi"
+              },
+              {
+                "key": "volume",
+                "label": "Volume of the whole solid (cm³)",
+                "type": "number",
+                "expected": "64*pi/15"
+              }
+            ],
+            "hint": "<p>Both boundaries are above the axis. The outer radius is \\(2\\), while the inner radius is the curve height.</p>",
+            "solution": "<ol><li><p>At \\(x=1\\), the radii are \\(R=2\\) and \\(r=1\\), so</p>\\[S=\\pi(2^2-1^2)=3\\pi\\,\\mathrm{cm}^2.\\]</li><li>\\[V=\\pi\\int_0^2\\left[4-(x^2-2x+2)^2\\right]\\,\\mathrm{d}x.\\]</li><li>\\[4-(x^2-2x+2)^2=-x^4+4x^3-8x^2+8x.\\]</li><li>\\[V=\\pi\\left[-\\frac{x^5}{5}+x^4-\\frac{8x^3}{3}+4x^2\\right]_0^2=\\frac{64\\pi}{15}\\,\\mathrm{cm}^3.\\]</li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A washer uses \\(\\pi(R^2-r^2)\\), not \\(\\pi(R-r)^2\\). The planar area uses heights, while the volume uses cross-sectional areas. Check square units for area and cubic units for volume.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>For rotation about the \\(y\\)-axis, use horizontal strips: express the distances as functions of \\(y\\), integrate with respect to \\(y\\), and use the corresponding \\(y\\)-bounds. The same disk and washer reasoning applies.</p>"
+          }
+        ]
+      },
+      {
+        "id": "accumulated-volume",
+        "title": "Does greatest volume mean greatest rate of growth?",
+        "label": "Accumulation and spatial derivatives",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>For a continuous cross-sectional area \\(S(x)\\ge0\\), define the volume accumulated from the fixed start \\(a\\) to a variable boundary \\(k\\):</p>\\[V(k)=\\int_a^k S(x)\\,\\mathrm{d}x.\\]<p>After integrating in \\(x\\), the result is a function of \\(k\\). Differentiating that expression gives</p>\\[V^{\\prime}(k)=S(k).\\]",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Maximise \\(V(k)\\) for the greatest accumulated volume. Maximise \\(V^{\\prime}(k)\\) for the greatest increase per unit length. A nonnegative cross-sectional area makes the accumulated volume nondecreasing.</p><p>If \\(k\\) is in centimetres and \\(V\\) in cubic centimetres, \\(V^{\\prime}(k)\\) has units of square centimetres. At a domain endpoint, interpret the spatial growth from the allowed side.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_cross_topic_revision_calculus_models/accumulated-volume-vs-slice.svg\" alt=\"A decreasing cross-sectional area is compared with the increasing accumulated volume of a tapering solid.\" width=\"856\" height=\"584\"></p><p>For radius \\(2-x\\), the spatial growth \\(V^{\\prime}(k)=\\pi(2-k)^2\\) is greatest at the start. The accumulated volume is greatest at the end, where \\(V(2)=\\frac{8\\pi}{3}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "text",
+            "html": "<p>A time rate needs a further relationship. If the boundary moves according to \\(k=k(t)\\), use the chain rule at the same instant:</p>\\[\\frac{\\mathrm{d}V}{\\mathrm{d}t}=\\frac{\\mathrm{d}V}{\\mathrm{d}k}\\frac{\\mathrm{d}k}{\\mathrm{d}t}.\\]<p>Without the boundary speed, a spatial derivative alone does not determine volume per second.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "P1-S025-20261121-C04",
+            "title": "Convert a spatial derivative into a time rate only when justified",
+            "prompt": "<p>A solid has disk radius \\(3-2x\\) centimetres for \\(0\\le x\\le\\frac{3}{2}\\), where \\(x\\) is measured in centimetres. Let \\(V(k)\\) be its volume from \\(x=0\\) to \\(x=k\\). Find the value of \\(k\\) giving the greatest volume, and \\(\\frac{\\mathrm{d}V}{\\mathrm{d}k}\\) at \\(k=1\\). If a moving boundary has \\(\\frac{\\mathrm{d}k}{\\mathrm{d}t}=\\frac{1}{4}\\,\\mathrm{cm\\,s^{-1}}\\) at that instant, find \\(\\frac{\\mathrm{d}V}{\\mathrm{d}t}\\).</p>",
+            "fields": [
+              {
+                "key": "boundary",
+                "label": "Boundary giving the greatest volume (cm)",
+                "type": "number",
+                "expected": "3/2"
+              },
+              {
+                "key": "spatial",
+                "label": "Spatial derivative at the stated boundary (cm²)",
+                "type": "number",
+                "expected": "pi"
+              },
+              {
+                "key": "time",
+                "label": "Volume rate at that instant (cm³/s)",
+                "type": "number",
+                "expected": "pi/4"
+              }
+            ],
+            "hint": "<p>The spatial derivative is the area of the next disk. A time rate additionally needs the speed of the boundary.</p>",
+            "solution": "<ol><li>\\[V^{\\prime}(k)=\\pi(3-2k)^2\\ge0\\quad\\left(0\\le k\\le\\frac{3}{2}\\right).\\]<p>It is positive before the final endpoint, so the greatest volume occurs at \\(k=\\frac{3}{2}\\,\\mathrm{cm}\\).</p></li><li>\\[V^{\\prime}(1)=\\pi(3-2)^2=\\pi\\,\\mathrm{cm}^2.\\]</li><li>\\[\\frac{\\mathrm{d}V}{\\mathrm{d}t}=\\frac{\\mathrm{d}V}{\\mathrm{d}k}\\frac{\\mathrm{d}k}{\\mathrm{d}t}=\\pi\\times\\frac{1}{4}=\\frac{\\pi}{4}\\,\\mathrm{cm}^3\\mathrm{s}^{-1}.\\]</li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the feasible boundary interval before choosing a maximum. Include its allowed endpoints. A zero derivative at one endpoint can coexist with the greatest accumulated volume there.</p>"
+          }
+        ]
+      },
+      {
+        "id": "time-amount",
+        "title": "How do I recover an amount from a changing rate?",
+        "label": "Initial amount, net change and extrema",
+        "minutes": 9,
+        "level": "further",
+        "intro": "<p>Let \\(q(t)\\) be the signed net rate and \\(Q(t)\\) the amount present. If separate inflow and outflow rates are given, first form inflow minus outflow in matching units.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[Q(t)=Q(t_0)+\\int_{t_0}^{t}q(s)\\,\\mathrm{d}s,\\qquad Q^{\\prime}(t)=q(t).\\]<p>The integral is the <strong>net change</strong>. Add the initial amount to obtain the amount present. The letter \\(s\\) is the integration variable; \\(t\\) is the endpoint time.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "text",
+            "html": "<p>If the question asks for <strong>total increase</strong>, integrate the net rate only over intervals where it is positive. Net change also includes the negative-rate intervals. These are changes in the amount present; separate gross inflow and outflow totals cannot be recovered from their difference alone.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "P1-S025-20261121-C05",
+            "title": "Add the initial amount and check the time interval",
+            "prompt": "<p>A tank initially contains \\(3\\) litres. Its net rate of change is \\(4-t\\) litres per minute for \\(0\\le t\\le6\\), with \\(t\\) in minutes. Find the amount at \\(t=6\\), the greatest amount, the time at which it occurs and the total increase over intervals when the amount is rising.</p>",
+            "fields": [
+              {
+                "key": "final",
+                "label": "Amount at the final time (L)",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "maximum",
+                "label": "Greatest amount (L)",
+                "type": "number",
+                "expected": "11"
+              },
+              {
+                "key": "time",
+                "label": "Time of the greatest amount (min)",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "increase",
+                "label": "Total increase over positive-rate intervals (L)",
+                "type": "number",
+                "expected": "8"
+              }
+            ],
+            "hint": "<p>Integrate the signed net rate and add the initial amount. Compare the stationary time with both endpoints.</p>",
+            "solution": "<ol><li>\\[Q(t)=3+\\int_0^t(4-s)\\,\\mathrm{d}s=3+4t-\\frac{t^2}{2}.\\]</li><li>\\[Q^{\\prime}(t)=4-t=0\\Longrightarrow t=4.\\]</li><li>\\[Q(0)=3,\\qquad Q(4)=11,\\qquad Q(6)=9.\\]</li><li><p>The greatest amount is \\(11\\,\\mathrm{L}\\) at \\(t=4\\,\\mathrm{min}\\). The rate is positive before that time and negative afterwards. The amount stays nonnegative throughout the stated interval.</p></li><li><p>The rate is positive only for \\(0\\le t&lt;4\\), so the total increase is</p>\\[\\int_0^4(4-t)\\,\\mathrm{d}t=8\\,\\mathrm{L}.\\]<p>The later decrease makes the net change only \\(9-3=6\\,\\mathrm{L}\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A negative net rate means the amount is decreasing, not that the amount is negative. An amount can be greatest when its rate is zero. The greatest rate is a separate optimisation question.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For the continuous, differentiable models here, compare every allowed solution of \\(q(t)=0\\) with both included time endpoints. Retain every time if the greatest value is tied. Check the stated time interval and physical restrictions, such as a nonnegative amount; do not extend the model beyond them.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Constant of integration",
+        "definition": "<p>The unknown constant retained when recovering a function from its derivative; a point or level condition can determine it.</p>"
+      },
+      {
+        "term": "Boundary",
+        "definition": "<p>An edge of the specified region, supplied directly or found where its defining curves meet.</p>"
+      },
+      {
+        "term": "Cross-section",
+        "definition": "<p>The two-dimensional slice of a solid perpendicular to the direction used for integration.</p>"
+      },
+      {
+        "term": "Washer",
+        "definition": "<p>A circular cross-section with a central hole; its area is the outer disk area minus the inner disk area.</p>"
+      },
+      {
+        "term": "Accumulated quantity",
+        "definition": "<p>The total built up from a fixed starting point to a variable endpoint.</p>"
+      },
+      {
+        "term": "Spatial derivative",
+        "definition": "<p>Change with respect to a position or length, rather than with respect to time.</p>"
+      },
+      {
+        "term": "Net rate",
+        "definition": "<p>The signed rate after opposite contributions, such as inflow and outflow, have been combined.</p>"
+      },
+      {
+        "term": "Net change",
+        "definition": "<p>The signed difference between the final and initial amounts.</p>"
+      },
+      {
+        "term": "Global maximum",
+        "definition": "<p>The greatest value over the whole allowed domain, including every allowed endpoint.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Recover the curve that will define the region",
+        "question": "<p>A curve has gradient \\(\\frac{\\mathrm{d}y}{\\mathrm{d}x}=2x-4\\) and passes through \\((0,5)\\). Find its equation and its least height.</p>",
+        "solution": [
+          "\\[y=\\int(2x-4)\\,\\mathrm{d}x=x^2-4x+C.\\]",
+          "<p>The point supplies a height condition:</p>\\[5=0-0+C\\Longrightarrow C=5.\\]",
+          "\\[y=x^2-4x+5=(x-2)^2+1.\\]",
+          "<p>The least height is \\(1\\), attained at \\(x=2\\). In particular, the whole curve lies above the \\(x\\)-axis.</p>",
+          "<p>Check both original facts: differentiating gives \\(2x-4\\), and at \\(x=0\\) the height is \\(5\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the recovered curve to find a bounded area",
+        "question": "<p>Coordinates are in centimetres. Find the area enclosed by the recovered curve \\(y=x^2-4x+5\\) and the horizontal line \\(y=5\\).</p>",
+        "solution": [
+          "<p>Find where the two boundaries meet:</p>\\[x^2-4x+5=5\\Longrightarrow x(x-4)=0\\Longrightarrow x=0,4.\\]",
+          "<p>Between them, the vertical strip height is</p>\\[5-(x^2-4x+5)=4x-x^2=x(4-x)\\ge0.\\]<p>The line is the upper boundary.</p>",
+          "\\[A=\\int_0^4(4x-x^2)\\,\\mathrm{d}x.\\]",
+          "\\[A=\\left[2x^2-\\frac{x^3}{3}\\right]_0^4=32-\\frac{64}{3}=\\frac{32}{3}\\,\\mathrm{cm}^2.\\]",
+          "<p>The limits came from curve-line intersections, not from setting the derivative to zero. The derivative zero at \\(x=2\\) locates the curve minimum, not a boundary of this region.</p>"
+        ]
+      },
+      {
+        "title": "The same region gives a washer integral after rotation",
+        "question": "<p>Coordinates are in centimetres. Rotate the region between \\(y=5\\) and \\(y=x^2-4x+5\\), for \\(0\\le x\\le4\\), through one full turn about the \\(x\\)-axis. Find the volume.</p>",
+        "solution": [
+          "<p>Both boundaries are positive, and the region has a hole after rotation. Its radii are</p>\\[R=5,\\qquad r=x^2-4x+5.\\]",
+          "\\[V=\\pi\\int_0^4\\left[25-(x^2-4x+5)^2\\right]\\,\\mathrm{d}x.\\]",
+          "<p>Square the whole inner radius before subtracting:</p>\\[25-(x^2-4x+5)^2=-x^4+8x^3-26x^2+40x.\\]",
+          "\\[V=\\pi\\left[-\\frac{x^5}{5}+2x^4-\\frac{26x^3}{3}+20x^2\\right]_0^4=\\frac{1088\\pi}{15}\\,\\mathrm{cm}^3.\\]",
+          "<p>A quick slice check at \\(x=2\\) gives \\(R=5\\), \\(r=1\\) and area \\(24\\pi\\). Squaring the gap instead would give \\(16\\pi\\), which is a different cross-section.</p>"
+        ]
+      },
+      {
+        "title": "Greatest accumulated volume is different from greatest growth",
+        "question": "<p>A solid has disk radius \\(2-x\\) centimetres for \\(0\\le x\\le2\\), with \\(x\\) in centimetres. Let \\(V(k)\\) be its volume between \\(x=0\\) and \\(x=k\\), where \\(0\\le k\\le2\\). Find \\(V(k)\\), its greatest value, and where volume grows fastest per unit increase in \\(k\\).</p>",
+        "solution": [
+          "\\[V(k)=\\pi\\int_0^k(2-x)^2\\,\\mathrm{d}x=\\pi\\left(4k-2k^2+\\frac{k^3}{3}\\right).\\]",
+          "\\[V^{\\prime}(k)=\\pi(2-k)^2.\\]<p>This is cross-sectional area in square centimetres, or equivalently volume per centimetre of added length.</p>",
+          "<p>The derivative is positive for \\(0\\le k&lt;2\\), so volume increases to the final endpoint:</p>\\[V_{\\max}=V(2)=\\frac{8\\pi}{3}\\,\\mathrm{cm}^3.\\]",
+          "<p>The spatial growth \\(\\pi(2-k)^2\\) decreases over this interval. Its greatest value is \\(4\\pi\\,\\mathrm{cm}^2\\) at \\(k=0\\), interpreted from the allowed right-hand side.</p>",
+          "<p>At \\(k=2\\), the accumulated volume is greatest even though the final cross-sectional area is zero. The two questions maximise different functions.</p>"
+        ]
+      },
+      {
+        "title": "Recover an amount from a signed rate",
+        "question": "<p>A tank initially contains \\(7\\) litres. Its net rate is \\(6-2t\\) litres per minute for \\(0\\le t\\le5\\), with time \\(t\\) in minutes. Find the final amount, the net change and the greatest amount during this interval.</p>",
+        "solution": [
+          "<p>Integrate the rate and include the initial amount:</p>\\[Q(t)=7+\\int_0^t(6-2s)\\,\\mathrm{d}s=7+6t-t^2.\\]",
+          "\\[Q(5)=7+30-25=12\\,\\mathrm{L}.\\]<p>The net change is \\(12-7=5\\,\\mathrm{L}\\), not the final amount.</p>",
+          "\\[Q^{\\prime}(t)=6-2t=0\\Longrightarrow t=3.\\]<p>The amount increases before this time and decreases afterwards.</p>",
+          "<p>Compare the allowed stationary time with both endpoints:</p>\\[Q(0)=7,\\qquad Q(3)=16,\\qquad Q(5)=12.\\]",
+          "<p>The greatest amount is \\(16\\,\\mathrm{L}\\) at \\(t=3\\,\\mathrm{min}\\). The highest net rate instead occurs at \\(t=0\\), where it is \\(6\\,\\mathrm{L\\,min^{-1}}\\). The amount remains positive throughout the modelled interval.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Recovering a curve from its gradient",
+        "href": "/courses/maths4u-9709-p1/topics/orig_integration_curve_equations"
+      },
+      {
+        "title": "Signed integrals and geometric areas",
+        "href": "/courses/maths4u-9709-p1/topics/orig_integration_areas"
+      },
+      {
+        "title": "Volumes of revolution about either coordinate axis",
+        "href": "/courses/maths4u-9709-p1/topics/orig_integration_volumes"
+      },
+      {
+        "title": "Constants, parameters and repeated integration",
+        "href": "/courses/maths4u-9709-p1/topics/orig_integration_accumulation"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S025-20261121-P01",
+        "title": "Recover the ordinate before finding the region",
+        "prompt": "<p>A curve has \\(y^{\\prime}=6x-6\\) and passes through \\((0,4)\\). Write it as \\(y=3x^2-6x+C\\). Find \\(C\\), its stationary point and the area enclosed by the curve and \\(y=4\\).</p>",
+        "fields": [
+          {
+            "key": "c",
+            "label": "Integration constant",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "point",
+            "label": "Stationary point",
+            "type": "pairs",
+            "expected": "(1,1)"
+          },
+          {
+            "key": "area",
+            "label": "Enclosed area",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>Use the point to determine the constant. Find the intersections before integrating the vertical separation.</p>",
+        "solution": "<ol><li>\\[y=\\int(6x-6)\\,dx=3x^2-6x+C,\\qquad y(0)=4\\Longrightarrow C=4.\\]</li><li>\\[y^{\\prime}=0\\Longrightarrow x=1,\\qquad y(1)=1.\\]</li><li><p>Since \\(y^{\\prime\\prime}=6&gt;0\\), \\((1,1)\\) is a minimum. Intersections with the line satisfy \\(3x^2-6x=0\\), giving \\(x=0,2\\).</p></li><li>\\[A=\\int_0^2\\bigl(4-(3x^2-6x+4)\\bigr)\\,dx=\\left[3x^2-x^3\\right]_0^2=4.\\]</li><li><p>The result is \\(4\\) square units. The derivative supplied the curve, but it is the recovered ordinate that determines the region.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S025-20261121-P02",
+        "title": "Separate signed integral and total area",
+        "prompt": "<p>For \\(f(x)=x^2-1\\) on \\([-2,2]\\), find \\(\\int_{-2}^{2}f(x)\\,dx\\) and the total area between the curve and the \\(x\\)-axis.</p>",
+        "fields": [
+          {
+            "key": "integral",
+            "label": "Signed integral",
+            "type": "number",
+            "expected": "4/3"
+          },
+          {
+            "key": "area",
+            "label": "Total area",
+            "type": "number",
+            "expected": "4",
+            "retry": [
+              {
+                "answer": "4/3",
+                "feedback": "<p>This is the signed integral. Split at the two zeros and add positive areas.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The curve changes sign at two points. The total area adds the magnitudes of all three pieces.</p>",
+        "solution": "<ol><li>\\[\\int_{-2}^{2}(x^2-1)\\,dx=\\left[\\frac{x^3}{3}-x\\right]_{-2}^{2}=\\frac{4}{3}.\\]</li><li><p>The curve is below the axis for \\(-1&lt;x&lt;1\\) and above it on the two outer intervals. Symmetry lets us calculate on the right half.</p></li><li>\\[A=2\\left(\\int_0^1(1-x^2)\\,dx+\\int_1^2(x^2-1)\\,dx\\right)=2\\left(\\frac{2}{3}+\\frac{4}{3}\\right)=4.\\]</li><li><p>The absolute value of the final signed integral would still be \\(\\frac{4}{3}\\); it would not recover the cancelled area.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S025-20261121-P03",
+        "title": "Use two distances from the rotation axis",
+        "prompt": "<p>The region between \\(y=3\\) and \\(y=x+1\\), for \\(0\\le x\\le2\\), is rotated about the \\(x\\)-axis. Find its volume.</p>",
+        "fields": [
+          {
+            "key": "volume",
+            "label": "Volume",
+            "type": "number",
+            "expected": "28*pi/3",
+            "retry": [
+              {
+                "answer": "8*pi/3",
+                "feedback": "<p>That squares the gap. Use the difference of squared radii: \\(3^2-(x+1)^2\\).</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The outer radius is \\(3\\), and the inner radius is \\(x+1\\). A washer has area equal to the difference of the two disk areas.</p>",
+        "solution": "<ol><li>\\[V=\\pi\\int_0^2\\left(3^2-(x+1)^2\\right)\\,dx.\\]</li><li>\\[V=\\pi\\left[9x-\\frac{(x+1)^3}{3}\\right]_0^2=\\pi\\left(18-\\frac{26}{3}\\right)=\\frac{28\\pi}{3}.\\]</li><li><p>The answer is in cubic units. Squaring the separation \\(3-(x+1)\\) would create a different solid because it ignores the hole.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S025-20261121-P04",
+        "title": "Largest cross-section and largest volume",
+        "prompt": "<p>A solid has disk radius \\(\\sqrt{4x-x^2}\\) cm at position \\(x\\), measured in cm, for \\(0\\le x\\le4\\). Its volume up to position \\(k\\) is \\(V(k)=\\pi\\int_0^k(4x-x^2)\\,dx\\). Find the position and area of the largest disk, and the position and value of the greatest accumulated volume.</p>",
+        "fields": [
+          {
+            "key": "disk_position",
+            "label": "Position of largest disk (cm)",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "disk_area",
+            "label": "Largest disk area (cm²)",
+            "type": "number",
+            "expected": "4*pi"
+          },
+          {
+            "key": "volume_position",
+            "label": "Position of greatest volume (cm)",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "volume",
+            "label": "Greatest accumulated volume (cm³)",
+            "type": "number",
+            "expected": "32*pi/3"
+          }
+        ],
+        "hint": "<p>Maximise the disk-area function separately from the volume function. The volume keeps accumulating while disk area is positive.</p>",
+        "solution": "<ol><li>\\[A(k)=V^{\\prime}(k)=\\pi(4k-k^2)=\\pi\\bigl(4-(k-2)^2\\bigr).\\]</li><li><p>The largest disk is at \\(k=2\\) cm, with area \\(4\\pi\\) cm\\(^2\\).</p></li><li>\\[V(k)=\\pi\\left(2k^2-\\frac{k^3}{3}\\right).\\]</li><li><p>Disk area is positive for \\(0&lt;k&lt;4\\). Therefore \\(V\\) increases throughout this interval and reaches its greatest value at the allowed endpoint \\(k=4\\).</p></li><li>\\[V(4)=\\pi\\left(32-\\frac{64}{3}\\right)=\\frac{32\\pi}{3}\\ \\text{cm}^3.\\]</li><li><p>Here \\(V^{\\prime}(k)\\) has units of volume per unit length, equivalent to area. It is not a rate per second.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S025-20261121-P05",
+        "title": "The final amount need not be the greatest amount",
+        "prompt": "<p>A tank contains \\(4\\) L at \\(t=0\\). Its net inflow rate is \\(9-3t\\) L/min for \\(0\\le t\\le5\\), with \\(t\\) in minutes. Find the net change over five minutes, the final amount, and the greatest amount and when it occurs.</p>",
+        "fields": [
+          {
+            "key": "change",
+            "label": "Net change (L)",
+            "type": "number",
+            "expected": "15/2"
+          },
+          {
+            "key": "final",
+            "label": "Final amount (L)",
+            "type": "number",
+            "expected": "23/2",
+            "retry": [
+              {
+                "answer": "15/2",
+                "feedback": "<p>This is the net change. Add the initial \\(4\\) L to obtain the final amount.</p>"
+              }
+            ]
+          },
+          {
+            "key": "max",
+            "label": "Greatest amount (L)",
+            "type": "number",
+            "expected": "35/2"
+          },
+          {
+            "key": "time",
+            "label": "Time of greatest amount (min)",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>Add the initial amount after integrating the net rate. A negative net rate decreases the amount but does not make the amount itself negative.</p>",
+        "solution": "<ol><li>\\[Q(t)=4+\\int_0^t(9-3s)\\,ds=4+9t-\\frac{3}{2}t^2.\\]</li><li>\\[Q(5)-Q(0)=\\frac{15}{2}\\ \\text{L},\\qquad Q(5)=\\frac{23}{2}\\ \\text{L}.\\]</li><li><p>The net rate changes from positive to negative at \\(t=3\\). Compare this candidate with both allowed endpoints.</p></li><li>\\[Q(0)=4,\\quad Q(3)=\\frac{35}{2},\\quad Q(5)=\\frac{23}{2}.\\]</li><li><p>The greatest amount is \\(\\frac{35}{2}\\) L at \\(t=3\\) min. All amounts remain positive on the stated interval, so the model does not predict an empty tank.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S025-20261121-E01",
+          "title": "One recovered region, three different calculations",
+          "marks": 8,
+          "question": "<p>A curve has \\(y^{\\prime}=2x-2\\) and passes through \\((0,3)\\). The region enclosed by this curve and \\(y=3\\) is rotated about the \\(x\\)-axis. Find the enclosed area, the resulting volume, and the position and area of the largest washer cross-section.</p>",
+          "hint": "<p>Recover the curve first. The plane region uses the separation; the solid uses the difference of squared distances from the axis.</p>",
+          "solution": "<ol><li>\\[y=x^2-2x+C,\\qquad C=3,\\qquad y=(x-1)^2+2.\\]</li><li>\\[y=3\\Longrightarrow x(x-2)=0\\Longrightarrow x=0,2.\\]</li><li>\\[A=\\int_0^2(2x-x^2)\\,dx=\\left[x^2-\\frac{x^3}{3}\\right]_0^2=\\frac{4}{3}.\\]</li><li><p>Throughout this region the outer radius is \\(3\\), and the inner radius is the positive curve ordinate.</p></li><li>\\[V=\\pi\\int_0^2\\left(9-(x^2-2x+3)^2\\right)\\,dx=\\pi\\int_0^2(-x^4+4x^3-10x^2+12x)\\,dx.\\]</li><li>\\[V=\\pi\\left[-\\frac{x^5}{5}+x^4-\\frac{10x^3}{3}+6x^2\\right]_0^2=\\frac{104\\pi}{15}.\\]</li><li><p>The washer area is \\(\\pi(9-y^2)\\). Since \\(y\\ge2&gt;0\\), it is greatest where \\(y\\) is smallest: at \\(x=1\\), where \\(y=2\\).</p></li><li>\\[A_{\\mathrm{washer,max}}=\\pi(9-4)=5\\pi.\\]</li><li><p>The plane area and cross-sectional area have square units; volume has cubic units. They describe different geometric objects.</p></li></ol>",
+          "marking": "<ul><li>1 mark: recover the curve and its constant.</li><li>1 mark: obtain both intersections and the correct upper boundary.</li><li>1 mark: form and evaluate the enclosed-area integral.</li><li>1 mark: identify the washer radii.</li><li>1 mark: expand the volume integrand correctly.</li><li>1 mark: obtain the exact volume.</li><li>1 mark: justify the largest washer position using the positive minimum inner radius.</li><li>1 mark: obtain the largest washer area and distinguish units.</li></ul>"
+        },
+        {
+          "id": "P1-S025-20261121-E02",
+          "title": "A local peak is not the global greatest amount",
+          "marks": 9,
+          "question": "<p>A container has \\(8\\) L at \\(t=0\\). Its net inflow rate is \\(3t^2-12t+9\\) L/min on \\(0\\le t\\le5\\). Find the final amount, the greatest amount and its time, the least amount and every time it occurs, and the total increase accumulated over the intervals when the net rate is positive.</p>",
+          "hint": "<p>Integrate with the initial condition, find where the net rate is zero, then compare all candidates and both endpoints. The last part asks only for intervals with positive net rate.</p>",
+          "solution": "<ol><li>\\[Q(t)=8+\\int_0^t(3s^2-12s+9)\\,ds=t^3-6t^2+9t+8.\\]</li><li>\\[Q^{\\prime}(t)=3(t-1)(t-3).\\]</li><li><p>The amount increases on \\((0,1)\\), decreases on \\((1,3)\\), then increases on \\((3,5)\\).</p></li><li>\\[Q(0)=8,\\quad Q(1)=12,\\quad Q(3)=8,\\quad Q(5)=28.\\]</li><li><p>The final amount is \\(28\\) L. The greatest amount is also \\(28\\) L, at \\(t=5\\) min. The least amount is \\(8\\) L at both \\(t=0\\) and \\(t=3\\) min. The local peak at \\(t=1\\) is not the global greatest amount.</p></li><li>\\[\\text{Total increase}=\\int_0^1Q^{\\prime}(t)\\,dt+\\int_3^5Q^{\\prime}(t)\\,dt=(12-8)+(28-8)=24\\ \\text{L}.\\]</li><li><p>The amount falls by \\(4\\) L between the two stationary times. Thus the signed net change is \\(24-4=20\\) L, which agrees with \\(Q(5)-Q(0)\\). The positive-part integral measures total increase during net-inflow periods; a net-rate model alone does not identify separate gross inflow and outflow.</p></li></ol>",
+          "marking": "<ul><li>1 mark: integrate the rate and include the initial amount.</li><li>1 mark: find both zero-rate times.</li><li>1 mark: establish the three derivative signs.</li><li>1 mark: evaluate the amount at both stationary times and both endpoints.</li><li>1 mark: report the final amount and global greatest amount with its time.</li><li>1 mark: report the global least amount and both times.</li><li>1 mark: choose precisely the two intervals with positive net rate.</li><li>1 mark: obtain their total increase.</li><li>1 mark: distinguish total increase, net change and separate gross flows.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Name the target, keep its units and check the allowed domain.</p><h2>Recover the curve, then identify the region</h2><p>Integrate the derivative, retain \\(C\\), then use a point to determine it. Find intersections and check boundary order; split wherever it changes.</p>\\[A=\\int_a^b\\bigl(y_{\\rm upper}-y_{\\rm lower}\\bigr)\\,dx.\\]<p>A signed integral can cancel positive and negative pieces. Total area adds their positive magnitudes.</p><h2>For rotation, measure radii from the axis</h2>\\[V=\\pi\\int_a^b\\bigl(R(x)^2-r(x)^2\\bigr)\\,dx.\\]<p>Radii are nonnegative distances from the axis. An axis-crossing strip gives a disk; split where the radius rule changes. About the \\(y\\)-axis use horizontal radii and \\(dy\\). Area has square units; volume has cubic units.</p><h2>Accumulated volume and local cross-section differ</h2>\\[V(k)=\\int_a^k A(x)\\,dx,\\qquad \\frac{dV}{dk}=A(k).\\]<p>Here \\(k\\) is a length, so \\(V^{\\prime}(k)\\) is an area. Nonnegative slices make volume nondecreasing. The greatest volume and greatest slice can occur at different positions.</p>\\[\\frac{dV}{dt}=\\frac{dV}{dk}\\frac{dk}{dt}.\\]<p>A time rate also needs the boundary speed.</p><h2>Integrate a net rate and include the initial amount</h2>\\[Q(t)=Q(t_0)+\\int_{t_0}^t r(s)\\,ds,\\qquad Q^{\\prime}(t)=r(t).\\]<p>The rate sign shows increase or decrease. Compare feasible stationary times and allowed endpoints, including ties. A local peak need not be the greatest amount. Net change is signed; total increase integrates only positive-rate intervals. Gross inflow and outflow need separate information.</p>",
+      "checks": "<ul><li>Correct target: ordinate, gradient, area, volume, amount or rate?</li><li>Constants, intersections, domain and boundaries checked?</li><li>Radii measured from the rotation axis and squared separately?</li><li>Initial amount, all feasible extrema and correct units included?</li></ul>",
+      "examTip": "<p>Initial amount, all feasible extrema and correct units included?</p>"
+    }
+  }
+}

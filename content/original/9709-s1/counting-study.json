@@ -1,0 +1,1085 @@
+{
+  "orig_9709_s1_count_distinct_arrangements": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose an ordered sample space, then handle leading zeroes, blocks, distances and relative order without double-counting.",
+    "sections": [
+      {
+        "id": "distinct_arrangements-method-1",
+        "title": "A choice and an ordered programme differ",
+        "label": "Select and arrange",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Work with exact integer counts and identify what makes two outcomes different. Probability applications also use the conditional sample space from the preceding chapter. All arrangements here are in a line or in labelled rows; circular arrangements are excluded.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>The product rule counts a staged construction</h3><p>Multiply the number of choices at each stage when each permitted partial construction has the stated number of continuations. Add disjoint cases when that number depends on an earlier choice. Mutually exclusive cases are not multiplied together.</p>\n<h3>Factorials and ordered selections</h3><p>For non-negative integers, n! multiplies 1 through n, with 0!=1. For r distinct objects chosen and placed in order from n distinct objects,</p>\\[{}^nP_r=\\frac{n!}{(n-r)!},\\qquad0\\le r\\le n.\\]<p>Without repetition, the choices decrease after each position. If repetitions are allowed, the same count may remain available.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-46-C1",
+            "title": "Select and arrange",
+            "prompt": "<p>From seven different posters choose three. Give the number of selections and the number of ordered displays.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Selections",
+                "type": "number",
+                "expected": "35"
+              },
+              {
+                "key": "value2",
+                "label": "Ordered displays",
+                "type": "number",
+                "expected": "210"
+              }
+            ],
+            "hint": "<p>A selection ignores order. Each selection can be displayed in six orders.</p>",
+            "solution": "<p>A selection ignores order. Each selection can be displayed in six orders.</p><ul><li>Selections: \\(35\\)</li><li>Ordered displays: \\(210\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "distinct_arrangements-method-2",
+        "title": "An even last digit changes the first choices",
+        "label": "Treat zero separately",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Leading zero and end conditions interact</h3><p>A number cannot start with zero. For an even number with distinct digits, split the last digit into zero and non-zero even cases: they leave different numbers of non-zero first choices.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-46-C2",
+            "title": "Treat zero separately",
+            "prompt": "<p>Use distinct digits from \\(\\{0,1,2,3,4\\}\\) to make a three-digit even integer. How many are possible?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "30",
+                "retry": [
+                  {
+                    "answer": "36",
+                    "feedback": "<p>For a nonzero final digit, remove zero from the leading choices.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>A final zero leaves four leading choices and three middle choices. A final \\(2\\) or \\(4\\) leaves three leading and three middle choices for each ending.</p>",
+            "solution": "<p>A final zero leaves four leading choices and three middle choices. A final \\(2\\) or \\(4\\) leaves three leading and three middle choices for each ending.</p><ul><li>Answer: \\(30\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "distinct_arrangements-method-3",
+        "title": "A named pair is a block with two orders",
+        "label": "Join two neighbours",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Blocks, exact separation and relative order</h3><p>For two named objects together, treat them as one unit, arrange the units and restore their two internal orders. For exactly g objects between them, their positions differ by g+1. A relative order such as A before B is not an adjacency requirement.</p><p><img alt=\"A pair of named objects forms one block with two possible internal orders\" src=\"/assets/original/s1-counting/block-orders.svg\"/></p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-46-C3",
+            "title": "Join two neighbours",
+            "prompt": "<p>Six different pupils stand in a line. How many orders put Amira and Ben together?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "240"
+              }
+            ],
+            "hint": "<p>Treat the named pair as one unit. Five units can be ordered, with two internal orders for the pair.</p>",
+            "solution": "<p>Treat the named pair as one unit. Five units can be ordered, with two internal orders for the pair.</p><ul><li>Answer: \\(240\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "distinct_arrangements-method-4",
+        "title": "Relative order does not require consecutive places",
+        "label": "Fix a relative order",
+        "minutes": 7,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Swapping the two named books pairs each desired order with one order in which they appear the other way round.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-46-C4",
+            "title": "Fix a relative order",
+            "prompt": "<p>Six different books are put in a row. How many orders have the history book somewhere before the geography book?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "360"
+              }
+            ],
+            "hint": "<p>Swapping the two named books pairs each desired order with one order in which they appear the other way round.</p>",
+            "solution": "<p>Swapping the two named books pairs each desired order with one order in which they appear the other way round.</p><ul><li>Answer: \\(360\\)</li></ul>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<ul><li>Do not use combinations when the order matters.</li><li>Handle zero separately when forming numbers.</li><li>A block has internal orders only for distinguishable members.</li><li>Exactly g objects between two names differs from a minimum gap.</li></ul>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "A choice and an ordered programme differ",
+        "question": "<p>Three of six different talks are selected. How many selections are possible, and how many ordered three-talk programmes?</p>",
+        "solution": [
+          "\\[\\begin{aligned}\\text{selections}&=\\binom63=20,\\\\\\text{programmes}&=6\\times5\\times4=120.\\end{aligned}\\]",
+          "<p>Each selection gives 3!=6 different programmes. Selecting a set does not assign its order.</p>"
+        ]
+      },
+      {
+        "title": "An even last digit changes the first choices",
+        "question": "<p>Form a four-digit number from 0 to 5 without repeating a digit. Count all such numbers and the even ones.</p>",
+        "solution": [
+          "<p>There are five non-zero first choices, then five, four and three choices.</p>",
+          "\\[5\\times5\\times4\\times3=300.\\]",
+          "<p>For even numbers split on the final digit.</p>",
+          "\\[\\begin{aligned}\\text{last }0&:5\\times4\\times3=60,\\\\\\text{last }2\\text{ or }4&:2\\times4\\times4\\times3=96.\\end{aligned}\\]",
+          "<p>The even count is 156. Using five first choices in the second case would reuse its non-zero final digit.</p>"
+        ]
+      },
+      {
+        "title": "A named pair is a block with two orders",
+        "question": "<p>Six different people, including A and B, stand in a line. Find the counts with A and B adjacent and with them apart.</p>",
+        "solution": [
+          "\\[\\begin{aligned}\\text{adjacent}&=2(5!)=240,\\\\\\text{apart}&=6!-240=480.\\end{aligned}\\]",
+          "<p>The five units are the pair-block and the four other people. The factor 2 restores AB and BA.</p>"
+        ]
+      },
+      {
+        "title": "Relative order does not require consecutive places",
+        "question": "<p>Six different objects include A, B and C. How many linear orders have A before B before C?</p>",
+        "solution": [
+          "<p>Every choice of their three positions has exactly one allowed order of A, B, C. Fill the other three positions freely.</p>",
+          "\\[\\binom63\\,3!=120.\\]",
+          "<p>Equivalently, one of the \\(3!\\) equally frequent relative orders is allowed, so the count is \\(\\frac{6!}{3!}\\).</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Repeated symbols, blocks and gap methods",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_count_repeated_objects"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Combination",
+        "definition": "<p>An unordered choice of a specified size.</p>"
+      },
+      {
+        "term": "Permutation",
+        "definition": "<p>An arrangement in which the order matters.</p>"
+      },
+      {
+        "term": "Disjoint cases",
+        "definition": "<p>Cases with no shared outcomes. Add their counts.</p>"
+      },
+      {
+        "term": "Conditional sample space",
+        "definition": "<p>The outcomes that still satisfy the given event.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>The product rule counts a staged construction</h2><p>Multiply the number of choices at each stage when each permitted partial construction has the stated number of continuations. Add disjoint cases when that number depends on an earlier choice. Mutually exclusive cases are not multiplied together.</p><h2>Factorials and ordered selections</h2><p>For non-negative integers, n! multiplies 1 through n, with 0!=1. For r distinct objects chosen and placed in order from n distinct objects,</p>\\[{}^nP_r=\\frac{n!}{(n-r)!},\\qquad0\\le r\\le n.\\]<h2>Leading zero and end conditions interact</h2><p>A number cannot start with zero. For an even number with distinct digits, split the last digit into zero and non-zero even cases: they leave different numbers of non-zero first choices.</p><h2>Blocks, exact separation and relative order</h2><p>For two named objects together, treat them as one unit, arrange the units and restore their two internal orders. For exactly g objects between them, their positions differ by g+1. A relative order such as A before B is not an adjacency requirement.</p>",
+      "checks": "<ol><li>Decide whether order, object identity and group labels matter.</li><li>Choose a disjoint case split or a staged construction.</li><li>Count each allowed outcome once and restore internal orders if needed.</li><li>Check restrictions, impossible cases and any overcounting factor.</li><li>For a probability, use the same kind of equally likely outcome in numerator and denominator.</li></ol>",
+      "examTip": "<p>Do not use combinations when the order matters.</p>"
+    }
+  },
+  "orig_9709_s1_count_repeated_objects": {
+    "updatedOn": "2026-11-21",
+    "description": "Count distinct visible patterns and use gaps to separate identical objects or enforce exactly one adjacent pair.",
+    "sections": [
+      {
+        "id": "repeated_objects-method-1",
+        "title": "Fix a repeated symbol, then recount",
+        "label": "Recount after fixing a letter",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Work with exact integer counts and identify what makes two outcomes different. Probability applications also use the conditional sample space from the preceding chapter. All arrangements here are in a line or in labelled rows; circular arrangements are excluded.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Identical symbols do not acquire hidden labels</h3><p>If n symbols have repeated multiplicities a,b,…, the number of distinct full patterns is</p>\\[\\frac{n!}{a!b!\\cdots}.\\]<p>Swapping two identical A tiles does not create a new pattern. Physical tile selections may require a different model; the final lesson makes that distinction explicit.</p>\n<h3>Apply restrictions after deciding what is identical</h3><p>If an A must be first, remove one A and recount the remaining multiplicities. A block AA has only one internal pattern; a block AB of distinct symbols has two if either order is allowed.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-47-C1",
+            "title": "Recount after fixing a letter",
+            "prompt": "<p>How many distinct arrangements of BALLOON begin with L?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "360"
+              }
+            ],
+            "hint": "<p>One L is already fixed. In the remaining six letters only the two O symbols are identical.</p>",
+            "solution": "<p>One L is already fixed. In the remaining six letters only the two O symbols are identical.</p><ul><li>Answer: \\(360\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "repeated_objects-method-2",
+        "title": "Two pair-events overlap",
+        "label": "Count just one paired run",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Exactly one adjacent pair is a separate event</h3><p>With three identical red counters, a pair and a single red must occupy distinct gaps of the ordinary objects. Their gap roles differ, even though the red counters do not. Do not include a triple or count the same pair twice. If two pair-events overlap, remove their common arrangements with the correct multiplicity.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-47-C2",
+            "title": "Count just one paired run",
+            "prompt": "<p>Arrange AABB. How many distinct arrangements have exactly one of the pairs AA and BB adjacent?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>There are three orders for each pair-block event and two orders with both pairs adjacent. Each of the two separate events therefore contributes one order.</p>",
+            "solution": "<p>There are three orders for each pair-block event and two orders with both pairs adjacent. Each of the two separate events therefore contributes one order.</p><ul><li>Answer: \\(2\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "repeated_objects-method-3",
+        "title": "Separate two identical counters with ordinary objects",
+        "label": "Separate identical counters",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Arrange the ordinary objects, then choose gaps</h3><p>n distinct ordinary objects leave n+1 gaps, including both ends. Place at most one identical special object in each chosen gap to prevent adjacency. If the ends must be ordinary, use only the n−1 internal gaps.</p><p><img alt=\"Four ordinary objects create five gaps including both ends\" src=\"/assets/original/s1-counting/available-gaps.svg\"/></p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-47-C3",
+            "title": "Separate identical counters",
+            "prompt": "<p>Arrange four distinct blue counters and two identical red counters in a row. How many orders keep the red counters apart?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "240"
+              }
+            ],
+            "hint": "<p>Order the blue counters first. They create five gaps, of which any two can each receive one red counter.</p>",
+            "solution": "<p>Order the blue counters first. They create five gaps, of which any two can each receive one red counter.</p><ul><li>Answer: \\(240\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "repeated_objects-method-4",
+        "title": "A pair and a single need different gaps",
+        "label": "Choose different gaps",
+        "minutes": 7,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>There are four gaps after ordering the blue counters. Choose the gap for the pair and a different gap for the single.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-47-C4",
+            "title": "Choose different gaps",
+            "prompt": "<p>Arrange three different blue counters and three identical red counters. How many orders have a red pair and a separate single red counter?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "72"
+              }
+            ],
+            "hint": "<p>There are four gaps after ordering the blue counters. Choose the gap for the pair and a different gap for the single.</p>",
+            "solution": "<p>There are four gaps after ordering the blue counters. Choose the gap for the pair and a different gap for the single.</p><ul><li>Answer: \\(72\\)</li></ul>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<ul><li>Do not label identical tiles and then forget to remove overcounting.</li><li>Remove a fixed symbol before applying the repeated-factor denominator.</li><li>The end gaps count unless the ends are restricted.</li><li>Exactly one adjacent pair excludes both no pair and a triple.</li></ul>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Fix a repeated symbol, then recount",
+        "question": "<p>Arrange A,A,A,B,B,C in a line. Count all distinct patterns and those beginning with A.</p>",
+        "solution": [
+          "\\[\\begin{aligned}\\text{all}&=\\frac{6!}{3!2!}=60,\\\\\\text{first A}&=\\frac{5!}{2!2!}=30.\\end{aligned}\\]",
+          "<p>After fixing the first A, two As remain. Dividing the remaining patterns by 3! would remove too many orders.</p>"
+        ]
+      },
+      {
+        "title": "Two pair-events overlap",
+        "question": "<p>Arrange A,A,B,B,C,D. Find the counts with both AA and BB together, with exactly one pair together, and the latter probability given at least one pair is together in a uniform random pattern.</p>",
+        "solution": [
+          "<p>AA together gives \\(\\frac{5!}{2!}=60\\); BB together also gives 60. Both together gives \\(4!=24\\). Let E mean exactly one pair together and H mean at least one pair together.</p>",
+          "\\[\\begin{aligned}N(E)&=60+60-2(24)\\\\&=72,\\\\N(H)&=60+60-24=96,\\\\\\mathrm P(E\\mid H)&=\\frac{72}{96}=\\frac{3}{4}.\\end{aligned}\\]"
+        ]
+      },
+      {
+        "title": "Separate two identical counters with ordinary objects",
+        "question": "<p>Arrange four different numbered counters and two identical red counters. Count arrangements with the reds separated and with the reds adjacent.</p>",
+        "solution": [
+          "<p>Arrange the numbered counters in \\(4!\\) ways. There are five gaps for two separated reds.</p>",
+          "\\[\\begin{aligned}\\text{separated}&=4!\\binom52=240,\\\\\\text{adjacent}&=5!=120.\\end{aligned}\\]",
+          "<p>The counts sum to \\(360=\\frac{6!}{2!}\\), the total number of patterns.</p>"
+        ]
+      },
+      {
+        "title": "A pair and a single need different gaps",
+        "question": "<p>Arrange three different ordinary counters and three identical red counters. Count no adjacent reds, exactly one red pair with the third red separate, and all three reds together.</p>",
+        "solution": [
+          "\\[\\begin{aligned}\\text{no pair}&=3!\\binom43=24,\\\\\\text{one pair}&=3!\\times4\\times3=72,\\\\\\text{triple}&=4!=24.\\end{aligned}\\]",
+          "<p>In the middle case choose the pair-gap, then a different single-gap. The three cases total \\(120=\\frac{6!}{3!}\\).</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Distinct objects, factorials and position restrictions",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_count_distinct_arrangements"
+      },
+      {
+        "title": "Combinations, composition and named-member restrictions",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_count_selections"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Combination",
+        "definition": "<p>An unordered choice of a specified size.</p>"
+      },
+      {
+        "term": "Permutation",
+        "definition": "<p>An arrangement in which the order matters.</p>"
+      },
+      {
+        "term": "Disjoint cases",
+        "definition": "<p>Cases with no shared outcomes. Add their counts.</p>"
+      },
+      {
+        "term": "Conditional sample space",
+        "definition": "<p>The outcomes that still satisfy the given event.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Identical symbols do not acquire hidden labels</h2><p>If n symbols have repeated multiplicities a,b,…, the number of distinct full patterns is</p>\\[\\frac{n!}{a!b!\\cdots}.\\]<h2>Apply restrictions after deciding what is identical</h2><p>If an A must be first, remove one A and recount the remaining multiplicities. A block AA has only one internal pattern; a block AB of distinct symbols has two if either order is allowed.</p><h2>Arrange the ordinary objects, then choose gaps</h2><p>n distinct ordinary objects leave n+1 gaps, including both ends. Place at most one identical special object in each chosen gap to prevent adjacency. If the ends must be ordinary, use only the n−1 internal gaps.</p><h2>Exactly one adjacent pair is a separate event</h2><p>With three identical red counters, a pair and a single red must occupy distinct gaps of the ordinary objects. Their gap roles differ, even though the red counters do not. Do not include a triple or count the same pair twice. If two pair-events overlap, remove their common arrangements with the correct multiplicity.</p>",
+      "checks": "<ol><li>Decide whether order, object identity and group labels matter.</li><li>Choose a disjoint case split or a staged construction.</li><li>Count each allowed outcome once and restore internal orders if needed.</li><li>Check restrictions, impossible cases and any overcounting factor.</li><li>For a probability, use the same kind of equally likely outcome in numerator and denominator.</li></ol>",
+      "examTip": "<p>Do not label identical tiles and then forget to remove overcounting.</p>"
+    }
+  },
+  "orig_9709_s1_count_selections": {
+    "updatedOn": "2026-11-21",
+    "description": "Build unordered selections once, using disjoint compositions, complements and explicit membership conditions.",
+    "sections": [
+      {
+        "id": "selections-method-1",
+        "title": "A prescribed composition uses a product",
+        "label": "Choose the required composition",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Work with exact integer counts and identify what makes two outcomes different. Probability applications also use the conditional sample space from the preceding chapter. All arrangements here are in a line or in labelled rows; circular arrangements are excluded.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>An unordered selection has no internal order</h3>\\[{}^nC_r=\\binom nr=\\frac{n!}{r!(n-r)!}.\\]<p>Each r-subset of distinct objects has r! orders, which explains the division. Choosing people for different named offices is an ordered assignment, not just a subset.</p>\n<h3>Compose a group from disjoint categories</h3><p>Multiply category choices for one fixed composition. For at least or at most conditions, sum over all allowed integer compositions or subtract a disjoint complement. Every case must use the required total group size.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-48-C1",
+            "title": "Choose the required composition",
+            "prompt": "<p>Five pupils play tennis and four play badminton. The groups are disjoint. How many teams contain two from each group?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "60"
+              }
+            ],
+            "hint": "<p>Choose two from each group independently and multiply the two combination counts.</p>",
+            "solution": "<p>Choose two from each group independently and multiply the two combination counts.</p><ul><li>Answer: \\(60\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "selections-method-2",
+        "title": "Partition by the number of named members",
+        "label": "Include exactly one named pupil",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Exactly one, not both, and both-or-neither differ</h3><p>For two named members, split selections into neither, exactly one and both. A rule that they cannot both serve still allows exactly one; an all-or-none rule does not. Named-member conditions should be applied before filling the remaining places.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-48-C2",
+            "title": "Include exactly one named pupil",
+            "prompt": "<p>A team of three is chosen from eight pupils including Amir and Ben. How many teams contain exactly one of Amir and Ben?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "30"
+              }
+            ],
+            "hint": "<p>Choose which named pupil is included, then choose the other two from the six remaining pupils.</p>",
+            "solution": "<p>Choose which named pupil is included, then choose the other two from the six remaining pupils.</p><ul><li>Answer: \\(30\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "selections-method-3",
+        "title": "At least two specialists has three compositions",
+        "label": "List every allowed composition",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The number of editors can be two, three or four. Add the three disjoint counts.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-48-C3",
+            "title": "List every allowed composition",
+            "prompt": "<p>A panel of four is selected from four editors and five designers. How many selections have at least two editors?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "81"
+              }
+            ],
+            "hint": "<p>The number of editors can be two, three or four. Add the three disjoint counts.</p>",
+            "solution": "<p>The number of editors can be two, three or four. Add the three disjoint counts.</p><ul><li>Answer: \\(81\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "selections-method-4",
+        "title": "Two similar-sounding restrictions allow different teams",
+        "label": "Exclude the forbidden joint event",
+        "minutes": 7,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>A construction must have a constant overcount to divide it away</h3><p>Choosing one person of each category first and then extra people may count a final group a different number of times depending on its composition. Division by one guessed factor cannot repair a variable overcount. Use final compositions instead.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-48-C4",
+            "title": "Exclude the forbidden joint event",
+            "prompt": "<p>Choose a committee of three from seven people, including Dina and Ellis. The two named people cannot both serve. How many committees are allowed?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "30"
+              }
+            ],
+            "hint": "<p>Subtract the committees that contain both named people from all committees.</p>",
+            "solution": "<p>Subtract the committees that contain both named people from all committees.</p><ul><li>Answer: \\(30\\)</li></ul>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<ul><li>Do not multiply an unordered group count by its internal orders.</li><li>Include every feasible composition exactly once.</li><li>Cannot both serve does not mean both are absent.</li><li>A variable overcount cannot be corrected by one constant divisor.</li></ul>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "A prescribed composition uses a product",
+        "question": "<p>Choose two engineers from five and three designers from six. Everyone is different and no offices are assigned. How many teams are possible?</p>",
+        "solution": [
+          "\\[\\binom52\\binom63=10\\times20=200.\\]",
+          "<p>Within-team order is irrelevant. No further factor of 5! is needed.</p>"
+        ]
+      },
+      {
+        "title": "Partition by the number of named members",
+        "question": "<p>Select three of seven different people including A and B. Count selections containing exactly one of them, both, and neither.</p>",
+        "solution": [
+          "\\[\\begin{aligned}\\text{exactly one}&=2\\binom52=20,\\\\\\text{both}&=\\binom51=5,\\\\\\text{neither}&=\\binom53=10.\\end{aligned}\\]",
+          "<p>The three disjoint counts sum to 35=\\(\\binom73\\).</p>"
+        ]
+      },
+      {
+        "title": "At least two specialists has three compositions",
+        "question": "<p>Choose four people from six specialists and four trainees, with at least two specialists. Count the allowed teams.</p>",
+        "solution": [
+          "\\[\\begin{aligned}N&=\\binom62\\binom42+\\binom63\\binom41\\\\&\\quad+\\binom64\\binom40\\\\&=90+80+15=185.\\end{aligned}\\]",
+          "<p>The complement gives the same result: 210−1−24=185. Zero and exactly one specialist are the forbidden compositions.</p>"
+        ]
+      },
+      {
+        "title": "Two similar-sounding restrictions allow different teams",
+        "question": "<p>Choose four of ten different people including A and B. Count teams if they cannot both serve. Separately count teams if either both serve or neither serves.</p>",
+        "solution": [
+          "\\[\\begin{aligned}\\text{cannot both}&=\\binom{10}{4}-\\binom82\\\\&=182,\\\\\\text{both or neither}&=\\binom82+\\binom84\\\\&=98.\\end{aligned}\\]",
+          "<p>The first condition allows teams containing exactly one of the two names; the second excludes those teams.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Repeated symbols, blocks and gap methods",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_count_repeated_objects"
+      },
+      {
+        "title": "Labelled groups, unnamed divisions and rows of seats",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_count_allocations"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Combination",
+        "definition": "<p>An unordered choice of a specified size.</p>"
+      },
+      {
+        "term": "Permutation",
+        "definition": "<p>An arrangement in which the order matters.</p>"
+      },
+      {
+        "term": "Disjoint cases",
+        "definition": "<p>Cases with no shared outcomes. Add their counts.</p>"
+      },
+      {
+        "term": "Conditional sample space",
+        "definition": "<p>The outcomes that still satisfy the given event.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>An unordered selection has no internal order</h2><p>Each r-subset of distinct objects has r! orders, which explains the division. Choosing people for different named offices is an ordered assignment, not just a subset.</p>\\[{}^nC_r=\\binom nr=\\frac{n!}{r!(n-r)!}.\\]<h2>Compose a group from disjoint categories</h2><p>Multiply category choices for one fixed composition. For at least or at most conditions, sum over all allowed integer compositions or subtract a disjoint complement. Every case must use the required total group size.</p><h2>Exactly one, not both, and both-or-neither differ</h2><p>For two named members, split selections into neither, exactly one and both. A rule that they cannot both serve still allows exactly one; an all-or-none rule does not. Named-member conditions should be applied before filling the remaining places.</p><h2>A construction must have a constant overcount to divide it away</h2><p>Choosing one person of each category first and then extra people may count a final group a different number of times depending on its composition. Division by one guessed factor cannot repair a variable overcount. Use final compositions instead.</p>",
+      "checks": "<ol><li>Decide whether order, object identity and group labels matter.</li><li>Choose a disjoint case split or a staged construction.</li><li>Count each allowed outcome once and restore internal orders if needed.</li><li>Check restrictions, impossible cases and any overcounting factor.</li><li>For a probability, use the same kind of equally likely outcome in numerator and denominator.</li></ol>",
+      "examTip": "<p>Do not multiply an unordered group count by its internal orders.</p>"
+    }
+  },
+  "orig_9709_s1_count_allocations": {
+    "updatedOn": "2026-11-21",
+    "description": "Identify which group swaps create a new allocation, and distinguish numbered positions from group membership.",
+    "sections": [
+      {
+        "id": "allocations-method-1",
+        "title": "Two unnamed triples have a twofold label symmetry",
+        "label": "Read the group labels",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Work with exact integer counts and identify what makes two outcomes different. Probability applications also use the conditional sample space from the preceding chapter. All arrangements here are in a line or in labelled rows; circular arrangements are excluded.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Named groups are distinct destinations</h3><p>For labelled groups of prescribed sizes a,b,…, with no internal order, choose members successively or use \\(\\frac{n!}{a!b!\\cdots}\\). Do not divide for swapping destinations that are actually named.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-49-C1",
+            "title": "Read the group labels",
+            "prompt": "<p>Split six different people into two groups of three. Give the number when the groups are named and when they are unnamed.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Named groups",
+                "type": "number",
+                "expected": "20"
+              },
+              {
+                "key": "value2",
+                "label": "Unnamed groups",
+                "type": "number",
+                "expected": "10"
+              }
+            ],
+            "hint": "<p>Choose the first triple. With unnamed groups, each division has been counted twice.</p>",
+            "solution": "<p>Choose the first triple. With unnamed groups, each division has been counted twice.</p><ul><li>Named groups: \\(20\\)</li><li>Unnamed groups: \\(10\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "allocations-method-2",
+        "title": "An unequal third group does not supply another symmetry",
+        "label": "Only equal groups can swap",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Only equivalent unnamed groups can be exchanged</h3><p>For non-empty unnamed groups of equal size, remove the permutations of those group labels. With different prescribed sizes, groups are already distinguished by size. Divide only for equal-size groups, not automatically by the factorial of the total number of groups.</p><p><img alt=\"Exchanging two unnamed triples does not create a different division\" src=\"/assets/original/s1-counting/group-swap.svg\"/></p>\n<h3>Fixing one person can avoid a symmetry correction</h3><p>For two unnamed equal-sized teams, identify one team as the team containing a particular person. Choose that person’s teammates and let the rest form the other team. This counts every division exactly once.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-49-C2",
+            "title": "Only equal groups can swap",
+            "prompt": "<p>Divide eight different pupils into unnamed groups of sizes three, three and two. How many divisions are possible?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "280"
+              }
+            ],
+            "hint": "<p>Choose the pair, then choose one of the two triples. Exchanging those triples leaves the same division.</p>",
+            "solution": "<p>Choose the pair, then choose one of the two triples. Exchanging those triples leaves the same division.</p><ul><li>Answer: \\(280\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "allocations-method-3",
+        "title": "Sharing a row is weaker than adjacency",
+        "label": "Share a row",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Rows and empty seats need their actual labels</h3><p>In labelled rows of numbered seats, every position is different. After choosing a group for one row, restore the orders within the rows. Empty positions have no personal identities: do not multiply by a factorial of identical empty slots. Adjacency within a row does not cross to the next row.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-49-C3",
+            "title": "Share a row",
+            "prompt": "<p>Seat five different pupils on six labelled seats in two rows of three. How many seatings put A and B in the same row?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "288"
+              }
+            ],
+            "hint": "<p>Select one of the two rows and an ordered pair of its three seats. Then seat the other three in three of the four remaining seats.</p>",
+            "solution": "<p>Select one of the two rows and an ordered pair of its three seats. Then seat the other three in three of the four remaining seats.</p><ul><li>Answer: \\(288\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "allocations-method-4",
+        "title": "Empty positions are indistinguishable gaps",
+        "label": "Seats may be empty",
+        "minutes": 7,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Assign one of the unused seats to each pupil in order. The empty seats carry no extra labels.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-49-C4",
+            "title": "Seats may be empty",
+            "prompt": "<p>Four different pupils sit in six labelled seats. How many seatings are possible?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "360"
+              }
+            ],
+            "hint": "<p>Assign one of the unused seats to each pupil in order. The empty seats carry no extra labels.</p>",
+            "solution": "<p>Assign one of the unused seats to each pupil in order. The empty seats carry no extra labels.</p><ul><li>Answer: \\(360\\)</li></ul>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<ul><li>Named destinations must not be swapped away.</li><li>Only equal-size unnamed groups share the same label symmetry.</li><li>Membership alone does not assign numbered seats.</li><li>Identical empty slots are not different passengers.</li></ul>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Two unnamed triples have a twofold label symmetry",
+        "question": "<p>Divide six different people into two teams of three. Count allocations to named teams East and West, then divisions with no team names.</p>",
+        "solution": [
+          "\\[\\begin{aligned}\\text{named}&=\\binom63=20,\\\\\\text{unnamed}&=\\frac{20}{2!}=10.\\end{aligned}\\]",
+          "<p>Alternatively, choose two partners for A: \\(\\binom52=10\\). The other three people form the other team.</p>"
+        ]
+      },
+      {
+        "title": "An unequal third group does not supply another symmetry",
+        "question": "<p>Nine different people form groups of sizes 4,4,1. Count allocations to named groups of those sizes and divisions without group names.</p>",
+        "solution": [
+          "\\[\\begin{aligned}\\text{named}&=\\binom94\\binom54=630,\\\\\\text{unnamed}&=\\frac{630}{2!}=315.\\end{aligned}\\]",
+          "<p>Only the two four-person groups can be exchanged. The singleton is distinguished by its size, so division by \\(3!\\) would be incorrect.</p>"
+        ]
+      },
+      {
+        "title": "Sharing a row is weaker than adjacency",
+        "question": "<p>Six different people fill two labelled rows of three numbered seats. Count arrangements with A and B in the same row, with them adjacent, and find the adjacent probability conditional on sharing a row.</p>",
+        "solution": [
+          "<p>Let S mean same row and J mean adjacent. For S choose the row, place A and B in two distinct seats, then seat the other four people.</p>",
+          "\\[\\begin{aligned}N(S)&=2({}^3P_2)4!=288,\\\\N(J)&=2\\times2\\times2\\times4!=192,\\\\\\mathrm P(J\\mid S)&=\\frac{192}{288}=\\frac{2}{3}.\\end{aligned}\\]",
+          "<p>For J choose the row, the left or right adjacent pair, the order AB or BA, then arrange the others. The two edge positions in a row are not adjacent to each other.</p>"
+        ]
+      },
+      {
+        "title": "Empty positions are indistinguishable gaps",
+        "question": "<p>A rack has seven positions in a line. Place four different cases, leaving three empty positions. Count all arrangements, those with all empties consecutive, and those with no adjacent empty positions.</p>",
+        "solution": [
+          "\\[\\begin{aligned}\\text{all}&={}^7P_4=840,\\\\\\text{empty block}&=5!=120,\\\\\\text{no adjacency}&=4!\\binom53=240.\\end{aligned}\\]",
+          "<p>The final two events are not complements when there are three empty positions; a run of two empties is a further possibility.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Combinations, composition and named-member restrictions",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_count_selections"
+      },
+      {
+        "title": "Mixed constructions and conditional counting probabilities",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_count_mixed_counting"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Combination",
+        "definition": "<p>An unordered choice of a specified size.</p>"
+      },
+      {
+        "term": "Permutation",
+        "definition": "<p>An arrangement in which the order matters.</p>"
+      },
+      {
+        "term": "Disjoint cases",
+        "definition": "<p>Cases with no shared outcomes. Add their counts.</p>"
+      },
+      {
+        "term": "Conditional sample space",
+        "definition": "<p>The outcomes that still satisfy the given event.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Named groups are distinct destinations</h2><p>For labelled groups of prescribed sizes a,b,…, with no internal order, choose members successively or use \\(\\frac{n!}{a!b!\\cdots}\\). Do not divide for swapping destinations that are actually named.</p><h2>Only equivalent unnamed groups can be exchanged</h2><p>For non-empty unnamed groups of equal size, remove the permutations of those group labels. With different prescribed sizes, groups are already distinguished by size. Divide only for equal-size groups, not automatically by the factorial of the total number of groups.</p><h2>Fixing one person can avoid a symmetry correction</h2><p>For two unnamed equal-sized teams, identify one team as the team containing a particular person. Choose that person’s teammates and let the rest form the other team. This counts every division exactly once.</p><h2>Rows and empty seats need their actual labels</h2><p>In labelled rows of numbered seats, every position is different. After choosing a group for one row, restore the orders within the rows. Empty positions have no personal identities: do not multiply by a factorial of identical empty slots. Adjacency within a row does not cross to the next row.</p>",
+      "checks": "<ol><li>Decide whether order, object identity and group labels matter.</li><li>Choose a disjoint case split or a staged construction.</li><li>Count each allowed outcome once and restore internal orders if needed.</li><li>Check restrictions, impossible cases and any overcounting factor.</li><li>For a probability, use the same kind of equally likely outcome in numerator and denominator.</li></ol>",
+      "examTip": "<p>Named destinations must not be swapped away.</p>"
+    }
+  },
+  "orig_9709_s1_count_mixed_counting": {
+    "updatedOn": "2026-11-21",
+    "description": "Combine choosing and ordering, match physical sample spaces, and handle overlapping restrictions before conditioning.",
+    "sections": [
+      {
+        "id": "mixed_counting-method-1",
+        "title": "A selected name changes the available positions",
+        "label": "Selection changes the order count",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Work with exact integer counts and identify what makes two outcomes different. Probability applications also use the conditional sample space from the preceding chapter. All arrangements here are in a line or in labelled rows; circular arrangements are excluded.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Choose and then arrange only when both stages matter</h3><p>If a condition depends on whether a named object was selected, split on that membership first. A single multiplication works only if every permitted selection has the same number of allowed orders.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-50-C1",
+            "title": "Selection changes the order count",
+            "prompt": "<p>Choose and order two of five speakers. If A is chosen, A must speak first. How many programmes are possible?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "16"
+              }
+            ],
+            "hint": "<p>Four programmes start with A. Without A, there are four choices for the first speaker and three for the second.</p>",
+            "solution": "<p>Four programmes start with A. Without A, there are four choices for the first speaker and three for the second.</p><ul><li>Answer: \\(16\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "mixed_counting-method-2",
+        "title": "Four patterns arise from six physical subsets",
+        "label": "Count physical outcomes",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Visible patterns need not be equally likely</h3><p>Different physical tiles carrying the same letter can produce the same visible selection. A uniform random physical subset weights each pattern by how many physical subsets realise it. Do not divide by the number of visible patterns unless uniformity over those patterns is stated.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-50-C2",
+            "title": "Count physical outcomes",
+            "prompt": "<p>Choose two counters from three red and two blue counters, with all physical pairs equally likely. Find the probability both are red.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "3/10"
+              }
+            ],
+            "hint": "<p>The numerator counts pairs from the three red counters. The denominator counts all pairs of the five counters.</p>",
+            "solution": "<p>The numerator counts pairs from the three red counters. The denominator counts all pairs of the five counters.</p><ul><li>Answer: \\(\\frac{3}{10}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "mixed_counting-method-3",
+        "title": "One person belongs to both adjacency events",
+        "label": "Correct the overlap",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Overlapping adjacency events share arrangements</h3><p>If E means AB adjacent and F means BC adjacent, their intersection requires B between A and C in a three-person block. It is not two independent pair-blocks. Exactly one needs the intersection removed twice; a union removes it once.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-50-C3",
+            "title": "Correct the overlap",
+            "prompt": "<p>Four different pupils stand in line. Count the arrangements in which X is adjacent to Y or to Z, including both.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "20"
+              }
+            ],
+            "hint": "<p>Each adjacency event has twice three factorial orders. In the overlap X is in the middle of a block with Y and Z. There are four overlap orders.</p>",
+            "solution": "<p>Each adjacency event has twice three factorial orders. In the overlap X is in the middle of a block with Y and Z. There are four overlap orders.</p><ul><li>Answer: \\(20\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "mixed_counting-method-4",
+        "title": "A complete pair leaves singles from different pairs",
+        "label": "Use the conditional sample space",
+        "minutes": 7,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>A conditional count has a restricted denominator</h3>\\[\\mathrm P(E\\mid H)=\\frac{N(E\\cap H)}{N(H)}.\\]<p>This count ratio is valid when the original elementary outcomes are equally likely and \\(N(H)&gt;0\\). Use physical subsets on both sides, or arrangements on both sides. In paired-member selections, count complete pairs and single representatives from other pairs without accidentally completing another pair.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-50-C4",
+            "title": "Use the conditional sample space",
+            "prompt": "<p>Choose two from two boys and three girls. Given at least one girl was chosen, find the probability both selected pupils are girls.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "1/3"
+              }
+            ],
+            "hint": "<p>Exclude the all-boy pair from the denominator. The numerator is the number of two-girl pairs.</p>",
+            "solution": "<p>Exclude the all-boy pair from the denominator. The numerator is the number of two-girl pairs.</p><ul><li>Answer: \\(\\frac{1}{3}\\)</li></ul>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<ul><li>Some selections have different numbers of allowed orders.</li><li>A uniform physical subset does not make all visible patterns equiprobable.</li><li>Overlapping blocks cannot be counted as disjoint blocks.</li><li>A conditional denominator counts the condition, not the whole original space.</li></ul>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "A selected name changes the available positions",
+        "question": "<p>Choose four of seven different objects and arrange them in a line. If A is chosen, A must be first. How many arrangements are possible?</p>",
+        "solution": [
+          "\\[\\begin{aligned}\\text{A included}&=\\binom63\\,3!=120,\\\\\\text{A absent}&={}^6P_4=360,\\\\\\text{total}&=480.\\end{aligned}\\]",
+          "<p>The two cases are disjoint. They do not have the same number of arrangements per chosen subset.</p>"
+        ]
+      },
+      {
+        "title": "Four patterns arise from six physical subsets",
+        "question": "<p>There are physical tiles A1,A2,B,C, where A1 and A2 both display A. Two tiles are chosen uniformly. List the visible patterns and find the probabilities of at least one A and exactly one A.</p>",
+        "solution": [
+          "<p>The patterns are AA, AB, AC, BC. Their physical multiplicities are 1,2,2,1, totalling six equally likely subsets.</p>",
+          "\\[\\begin{aligned}\\mathrm P(\\text{at least one A})&=\\frac{5}{6},\\\\\\mathrm P(\\text{exactly one A})&=\\frac{4}{6}=\\frac{2}{3}.\\end{aligned}\\]",
+          "<p>The four visible patterns are not equally likely.</p>"
+        ]
+      },
+      {
+        "title": "One person belongs to both adjacency events",
+        "question": "<p>Six different people include A,B,C. In a uniform random line, E means AB adjacent and F means BC adjacent. Count their intersection and exactly-one event, then find \\(\\mathrm P(E\\mid E\\cup F)\\).</p>",
+        "solution": [
+          "<p>Each single event has \\(2(5!)=240\\) arrangements. Both require ABC or CBA as one block, giving \\(2(4!)=48\\). Let X mean exactly one of E and F occurs, and let \\(H=E\\cup F\\).</p>",
+          "\\[\\begin{aligned}N(X)&=240+240-2(48)\\\\&=384,\\\\N(H)&=240+240-48\\\\&=432,\\\\\\mathrm P(E\\mid H)&=\\frac{240}{432}=\\frac{5}{9}.\\end{aligned}\\]"
+        ]
+      },
+      {
+        "title": "A complete pair leaves singles from different pairs",
+        "question": "<p>Four pairs of distinct people form a pool of eight. Choose a four-person team. Count teams with exactly one complete pair and with two complete pairs; find the probability of exactly one given at least one complete pair.</p>",
+        "solution": [
+          "<p>Let E mean exactly one complete pair and H mean at least one complete pair.</p>",
+          "\\[\\begin{aligned}N(E)&=4\\binom32\\,2^2=48,\\\\N(\\text{two pairs})&=\\binom42=6,\\\\\\mathrm P(E\\mid H)&=\\frac{48}{54}=\\frac{8}{9}.\\end{aligned}\\]",
+          "<p>The remaining two members in the first case come from different remaining pairs. The 16 teams with no complete pair complete the total 70=\\(\\binom84\\).</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Labelled groups, unnamed divisions and rows of seats",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_count_allocations"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Combination",
+        "definition": "<p>An unordered choice of a specified size.</p>"
+      },
+      {
+        "term": "Permutation",
+        "definition": "<p>An arrangement in which the order matters.</p>"
+      },
+      {
+        "term": "Disjoint cases",
+        "definition": "<p>Cases with no shared outcomes. Add their counts.</p>"
+      },
+      {
+        "term": "Conditional sample space",
+        "definition": "<p>The outcomes that still satisfy the given event.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose and then arrange only when both stages matter</h2><p>If a condition depends on whether a named object was selected, split on that membership first. A single multiplication works only if every permitted selection has the same number of allowed orders.</p><h2>Visible patterns need not be equally likely</h2><p>Different physical tiles carrying the same letter can produce the same visible selection. A uniform random physical subset weights each pattern by how many physical subsets realise it. Do not divide by the number of visible patterns unless uniformity over those patterns is stated.</p><h2>Overlapping adjacency events share arrangements</h2><p>If E means AB adjacent and F means BC adjacent, their intersection requires B between A and C in a three-person block. It is not two independent pair-blocks. Exactly one needs the intersection removed twice; a union removes it once.</p><h2>A conditional count has a restricted denominator</h2><p>This count ratio is valid when the original elementary outcomes are equally likely and \\(N(H)&gt;0\\). Use physical subsets on both sides, or arrangements on both sides. In paired-member selections, count complete pairs and single representatives from other pairs without accidentally completing another pair.</p>\\[\\mathrm P(E\\mid H)=\\frac{N(E\\cap H)}{N(H)}.\\]",
+      "checks": "<ol><li>Decide whether order, object identity and group labels matter.</li><li>Choose a disjoint case split or a staged construction.</li><li>Count each allowed outcome once and restore internal orders if needed.</li><li>Check restrictions, impossible cases and any overcounting factor.</li><li>For a probability, use the same kind of equally likely outcome in numerator and denominator.</li></ol>",
+      "examTip": "<p>Some selections have different numbers of allowed orders.</p>"
+    }
+  }
+}

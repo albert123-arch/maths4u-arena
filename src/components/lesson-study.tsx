@@ -17,9 +17,10 @@ const level = (section: StudySection) => levelNames[section.level];
 const sectionInfo = (section: StudySection) => level(section) + " · about " + section.minutes + " min";
 const exampleAnchor = (index: number) => "worked-example-" + (index + 1);
 const subscribeToHydration = () => () => {};
+type StudyTeaching = { topic: Pick<SquareLesson["topic"], "path" | "lessonId">; examples: SquareLesson["examples"] };
 
 export function LessonStudy({ lesson, study, activeId, children }: {
-  lesson: SquareLesson; study: StudyLesson; activeId: string; children?: ReactNode;
+  lesson: StudyTeaching; study: StudyLesson; activeId: string; children?: ReactNode;
 }) {
   const { sections, glossary, related } = study;
   const interactive = useSyncExternalStore(subscribeToHydration, () => true, () => false);
@@ -89,10 +90,10 @@ export function LessonStudy({ lesson, study, activeId, children }: {
             </nav>
           ) : null}
           <nav aria-label={section.label + " navigation"} className={styles.sectionNavigation}>
-            {previous && <a className="ui-button ui-button--outline" href={"#" + previous.id}>← {previous.label}</a>}
-            {next?.level === "extension" && <a className="ui-button ui-button--outline" href={"#" + next.id}>Extension · {next.label} →</a>}
+            {previous && <a className="ui-button ui-button--outline" href={"#" + previous.id}>{"← " + previous.label}</a>}
+            {next?.level === "extension" && <a className="ui-button ui-button--outline" href={"#" + next.id}>{"Extension · " + next.label + " →"}</a>}
             {next && next.level !== "extension"
-              ? <a className="ui-button ui-button--primary" href={"#" + next.id}>Next · {next.label} →</a>
+              ? <a className="ui-button ui-button--primary" href={"#" + next.id}>{"Next · " + next.label + " →"}</a>
               : <a className="ui-button ui-button--primary" href="#practice">Go to practice →</a>}
           </nav>
         </section>;
@@ -115,7 +116,7 @@ export function StudyExampleList({ study, examples }: { study: StudyLesson; exam
 }
 
 const labels = { key: "Key idea", mistake: "Common mistake", tip: "Exam tip" };
-function LessonBlock({ block, lesson }: { block: StudyBlock; lesson: SquareLesson }) {
+function LessonBlock({ block, lesson }: { block: StudyBlock; lesson: StudyTeaching }) {
   switch (block.kind) {
     case "example":
       return <ExampleSteps example={lesson.examples[block.index]} id={exampleAnchor(block.index)} tryFirst={block.tryFirst} />;
@@ -176,6 +177,16 @@ export function ExtraStudyPractice({ checks, lessonId }: { checks: StudyCheck[];
   </details>;
 }
 
+export function StudyWrittenQuestions({ questions }: { questions: NonNullable<StudyLesson["examPractice"]>["starters"] }) {
+  return questions.map(q => <details key={q.id} id={q.id} className="exam-starter">
+    <summary><strong>{q.title}</strong> <span className="muted">{q.marks} marks</span></summary>
+    <MathContent html={q.question} />
+    {q.hint && <details><summary>Hint</summary><MathContent html={q.hint} /></details>}
+    <details><summary>Worked solution</summary><MathContent html={q.solution} /></details>
+    {q.marking && <details><summary>Marking guidance</summary><MathContent html={q.marking} /></details>}
+  </details>);
+}
+
 function YourTurn({ check, lessonId, supplementary = false }: { check: StudyCheck; lessonId: string; supplementary?: boolean }) {
   const id = useId(), lens = useView();
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -217,8 +228,9 @@ function YourTurn({ check, lessonId, supplementary = false }: { check: StudyChec
     {fields.map(field => {
       const fieldId = id + "-" + field.key;
       const format = answerFormat(field);
+      const label = field.labelHtml ? <span dangerouslySetInnerHTML={{ __html: field.labelHtml }} /> : field.label;
       if (field.options) return <fieldset key={field.key} className={styles.checkChoices}>
-        <legend>{field.label}</legend>
+        <legend>{label}</legend>
         {Object.entries(field.options).map(([value, html]) => <label key={value}>
           <Input type="radio" name={fieldId} value={value} checked={answers[field.key] === value}
             disabled={busy || preview} onChange={() => change(field.key, value)} />
@@ -226,16 +238,18 @@ function YourTurn({ check, lessonId, supplementary = false }: { check: StudyChec
         </label>)}
       </fieldset>;
       return <div key={field.key}>
-        <label htmlFor={fieldId}>{field.label}</label>
+        <label htmlFor={fieldId}>{label}</label>
         <div className={simple ? styles.answerRow : styles.studyInput}>
           <Input id={fieldId} value={answers[field.key] ?? ""} readOnly={busy || preview} required maxLength={400}
-            autoComplete="off" spellCheck={false} placeholder={field.inverseAngle ? "Exact angle" : format.placeholder}
+            autoComplete="off" spellCheck={false} placeholder={field.inverseAngle ? "Exact value" : format.placeholder}
             aria-describedby={fieldId + "-format " + id + "-result"}
             aria-invalid={simple && result ? result.status !== "correct" : undefined}
             onChange={event => change(field.key, event.target.value)} />
           {simple && actions}
         </div>
-        <p className={styles.format} id={fieldId + "-format"}>{field.inverseAngle ? "Enter the exact expression. You can type asin or acos for inverse trig." : format.en}</p>
+        <p className={styles.format} id={fieldId + "-format"}>{field.inverseAngle
+          ? (field.type === "set" ? "Give all exact angles. You can type asin, acos or atan." : "Give the exact angle. You can type asin, acos or atan.")
+          : format.en}</p>
       </div>;
     })}
     {!simple && <div className={styles.actions}>{actions}</div>}

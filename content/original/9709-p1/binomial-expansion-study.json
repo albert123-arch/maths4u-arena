@@ -1,0 +1,3219 @@
+{
+  "orig_binomial_expansion_expansion": {
+    "updatedOn": "2026-11-21",
+    "description": "Build a finite expansion from its coefficient pattern, keep signs and fractions inside their powers, and know exactly what changes after a substitution.",
+    "sections": [
+      {
+        "id": "binomial-expansions-pattern",
+        "title": "Why do the middle coefficients appear?",
+        "label": "Pattern and Pascal",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A <strong>binomial</strong> has two terms, such as \\(1+x\\), \\(2-x\\) or \\(3+\\frac{x}{2}\\). A positive integer power means multiplying that bracket by itself repeatedly.</p>\\[(1+x)^2=(1+x)(1+x)=1+2x+x^2.\\]<p>The middle coefficient is \\(2\\) because there are two ways to choose one \\(x\\) from the two brackets. In \\((1+x)^3\\), there are three ways to choose exactly one \\(x\\) and three ways to choose exactly two.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>In \\((A+B)^n\\), choose either \\(A\\) or \\(B\\) from each of the \\(n\\) brackets. Choosing \\(B\\) from exactly \\(r\\) brackets produces \\(A^{n-r}B^r\\). Its binomial coefficient counts how many selections produce that contribution.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>For small powers, Pascal’s triangle gives the coefficients. Start with a single \\(1\\), labelled row \\(n=0\\). Each later row has \\(1\\) at both ends; each inside number is the sum of the two numbers above it. Use the row whose label matches the power.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_binomial_expansion_expansion/binomial-pascal.svg\" alt=\"Pascal triangle with rows zero through five and a highlighted addition producing an interior coefficient.\" width=\"823\" height=\"473\"></p><p>Row \\(n=4\\) gives \\(1,4,6,4,1\\). The next row gives \\(1,5,10,10,5,1\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S006-20261121-C01",
+            "title": "Read the row that matches the power",
+            "prompt": "<p>In the expansion of \\((1+x)^5\\), how many nonzero terms are there? Find the coefficient of \\(x^2\\).</p>",
+            "fields": [
+              {
+                "key": "count",
+                "label": "Number of nonzero terms",
+                "type": "number",
+                "expected": "6",
+                "retry": [
+                  {
+                    "answer": "5",
+                    "feedback": "<p>Include the constant term. The powers are \\(0,1,2,3,4,5\\).</p>"
+                  }
+                ]
+              },
+              {
+                "key": "coefficient",
+                "label": "Coefficient of \\(x^2\\)",
+                "type": "number",
+                "expected": "10"
+              }
+            ],
+            "hint": "<p>The row labelled \\(n=5\\) starts \\(1,5,10\\). The constant counts as a term.</p>",
+            "solution": "<ol><li>\\[(1+x)^5=1+5x+10x^2+10x^3+5x^4+x^5.\\]</li><li><p>There are six nonzero terms. The coefficient of \\(x^2\\) is \\(10\\); the whole term is \\(10x^2\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The coefficient of \\(x^2\\) is a number; the term includes the variable. In \\(10x^2\\), the coefficient is \\(10\\), not \\(10x^2\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-expansions-theorem",
+        "title": "How do I expand without repeated multiplication?",
+        "label": "The binomial rule",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Use \\(\\binom{n}{r}\\), also written \\({}^{n}C_r\\), for a binomial coefficient. The factorial symbol means multiply the positive integers down to one; for example, \\(4!=4\\cdot3\\cdot2\\cdot1=24\\). By definition, \\(0!=1\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[\\binom{n}{r}=\\frac{n!}{r!(n-r)!},\\qquad r=0,1,\\ldots,n.\\]\\[(A+B)^n=\\sum_{r=0}^{n}\\binom{n}{r}A^{n-r}B^r.\\]<p>The sum symbol means add the contribution for each listed integer \\(r\\). Here \\(n\\) is a positive integer.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Write the coefficients from \\(\\binom{n}{0}\\) to \\(\\binom{n}{n}\\). Alongside them, decrease the power of the <em>complete</em> first term from \\(n\\) to \\(0\\), and increase the power of the complete second term from \\(0\\) to \\(n\\). Multiply, then simplify each contribution.</p>\\[(A+B)^3=A^3+3A^2B+3AB^2+B^3.\\]<p>The two exponents in each contribution add to \\(n\\). There are \\(n+1\\) contributions before simplifying; substitution may make some zero or combine like terms. For \\((a+bx)^n\\) with nonzero constants \\(a,b\\), all \\(n+1\\) powers of \\(x\\) appear.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>For example, \\(\\binom{6}{2}=\\frac{6\\cdot5}{2\\cdot1}=15\\). You can also use the calculator’s combination function. For a full expansion, small Pascal rows are often quicker.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S006-20261121-C02",
+            "title": "Power the whole second term",
+            "prompt": "<p>Write \\((1+3x)^3=1+Ax+Bx^2+Cx^3\\). Find \\(A\\), \\(B\\) and \\(C\\).</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "\\(A\\)",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "B",
+                "label": "\\(B\\)",
+                "type": "number",
+                "expected": "27",
+                "retry": [
+                  {
+                    "answer": "9",
+                    "feedback": "<p>The square applies to both factors: \\((3x)^2=9x^2\\). Multiply by the binomial coefficient \\(3\\) afterwards.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "C",
+                "label": "\\(C\\)",
+                "type": "number",
+                "expected": "27"
+              }
+            ],
+            "hint": "<p>Use the coefficients \\(1,3,3,1\\), then apply the powers to \\(3x\\), not only to \\(x\\).</p>",
+            "solution": "<ol><li>\\[(1+3x)^3=1+3(3x)+3(3x)^2+(3x)^3.\\]</li><li>\\[=1+9x+27x^2+27x^3.\\]</li><li>\\[A=9,\\quad B=27,\\quad C=27.\\]</li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A calculator can find \\({}^{n}C_r\\). Show the coefficient multiplied by both complete powers before simplifying; that line makes your method and sign choices clear.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Boundary checks: \\(n=1\\) gives \\(A+B\\). For \\(n=0\\), the expansion is the constant \\(1\\); as a numerical power, \\((A+B)^0=1\\) requires \\(A+B\\ne0\\). The assessed finite-expansion method here uses positive integer powers. Fractional or negative outer powers need a different theorem.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-expansions-signs",
+        "title": "What changes when a term is negative?",
+        "label": "Signs and whole terms",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Rewrite a subtraction as addition of a negative term. In \\((2-x)^4\\), use \\(2\\) and \\(-x\\). Keep brackets around \\(-x\\) until its power has been applied.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[(-u)^{2k}=u^{2k},\\qquad (-u)^{2k+1}=-u^{2k+1}.\\]<p>Even powers remove a negative sign. Odd powers keep it. For positive constants \\(a,b\\), the coefficients in \\((a-bx)^n\\) alternate in sign when written in ascending powers of \\(x\\).</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_binomial_expansion_expansion/binomial-sign-ledger.svg\" alt=\"A five-row ledger aligns binomial coefficients, powers of two, powers of negative x, and simplified contributions.\" width=\"837\" height=\"493\"></p><p>For \\((2-x)^4\\), the coefficient row is \\(1,4,6,4,1\\). The complete powers produce \\(16,-32x,24x^2,-8x^3,x^4\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "P1-S006-20261121-C03",
+            "title": "Keep the sign inside the power",
+            "prompt": "<p>In \\((1-2x)^4=1+Ax+Bx^2+Cx^3+16x^4\\), find \\(A\\), \\(B\\) and \\(C\\).</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "\\(A\\)",
+                "type": "number",
+                "expected": "-8"
+              },
+              {
+                "key": "B",
+                "label": "\\(B\\)",
+                "type": "number",
+                "expected": "24",
+                "retry": [
+                  {
+                    "answer": "-24",
+                    "feedback": "<p>An even power removes the negative sign: \\((-2x)^2=4x^2\\).</p>"
+                  }
+                ]
+              },
+              {
+                "key": "C",
+                "label": "\\(C\\)",
+                "type": "number",
+                "expected": "-32"
+              }
+            ],
+            "hint": "<p>Use \\(-2x\\) as the complete second term. Its even powers are positive.</p>",
+            "solution": "<ol><li>\\[(1-2x)^4=1+4(-2x)+6(-2x)^2+4(-2x)^3+(-2x)^4.\\]</li><li>\\[=1-8x+24x^2-32x^3+16x^4.\\]</li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not put a minus sign in front of every term. Also, \\((-x)^2=x^2\\) but \\(-x^2\\) means \\(-(x^2)\\). The brackets change what is squared.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>If the first term is negative too, calculate both signs. For example, \\((-1+x)^3=-1+3x-3x^2+x^3\\). A memorised “start positive, then alternate” rule does not cover every bracket.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-expansions-scales",
+        "title": "What if the first term is not one?",
+        "label": "Constants and fractions",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>The same formula works when the first term is \\(2\\), \\(3\\) or a fraction. It also works when either term contains a variable. Identify the two complete terms before expanding.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[\\left(\\frac{x}{q}\\right)^r=\\frac{x^r}{q^r}\\qquad(q\\ne0).\\]<p>A power applies to every factor in its bracket, including a denominator and a negative sign.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S006-20261121-C04",
+            "title": "A fractional term must be squared and cubed",
+            "prompt": "<p>Write \\(\\left(2+\\frac{x}{2}\\right)^3=8+Ax+Bx^2+Cx^3\\). Find the three coefficients exactly.</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "\\(A\\)",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "B",
+                "label": "\\(B\\)",
+                "type": "number",
+                "expected": "3/2"
+              },
+              {
+                "key": "C",
+                "label": "\\(C\\)",
+                "type": "number",
+                "expected": "1/8",
+                "retry": [
+                  {
+                    "answer": "1/2",
+                    "feedback": "<p>The denominator is cubed too: \\(\\left(\\frac{x}{2}\\right)^3=\\frac{x^3}{8}\\).</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>The middle terms are \\(3(2)^2\\left(\\frac{x}{2}\\right)\\) and \\(3(2)\\left(\\frac{x}{2}\\right)^2\\).</p>",
+            "solution": "<ol><li>\\[\\left(2+\\frac{x}{2}\\right)^3=8+3(4)\\frac{x}{2}+3(2)\\frac{x^2}{4}+\\frac{x^3}{8}.\\]</li><li>\\[=8+6x+\\frac{3}{2}x^2+\\frac{1}{8}x^3.\\]</li></ol>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If you factor out a constant before expanding, raise that constant to the outer power too:</p>\\[(a+bx)^n=a^n\\left(1+\\frac{b}{a}x\\right)^n\\qquad(a\\ne0).\\]<p>The outside factor is \\(a^n\\), not \\(a\\). Multiply every term of the resulting expansion by it.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>When the variable is in the first term, the direct formula may start with descending powers. For example, expanding \\((2x+1)^3\\) gives \\(8x^3+12x^2+6x+1\\). If asked for ascending powers, reorder it as \\(1+6x+12x^2+8x^3\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-expansions-substitution",
+        "title": "How do I reuse an expansion after substitution?",
+        "label": "Substitution and order",
+        "minutes": 11,
+        "level": "core",
+        "intro": "<p>A formula written using a temporary variable remains true when that variable is replaced by another expression for which the original expressions are defined. Replace it everywhere, use brackets, then simplify the powers.</p>",
+        "blocks": [
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_binomial_expansion_expansion/binomial-substitution.svg\" alt=\"Four aligned terms show a substitution from y to x squared and the resulting doubled exponents.\" width=\"837\" height=\"466\"></p><p>Replacing \\(y\\) by \\(x^2\\) maps \\(1,y,y^2,y^3\\) to \\(1,x^2,x^4,x^6\\). The coefficients stay \\(1,3,3,1\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "key",
+            "html": "<p><strong>Ascending powers</strong> means the exponent of the stated variable increases from left to right. <strong>First three nonzero terms</strong> means the first three contributions whose coefficients are not zero; it does not always mean the constant, linear and quadratic terms.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "P1-S006-20261121-C07",
+            "title": "Collect a cancellation before counting terms",
+            "prompt": "<p>Find the terms up to and including \\(x^3\\) in \\((1+x-x^2)^3\\), in the form \\(1+Ax+Bx^2+Cx^3\\). Find \\(A,B,C\\).</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "\\(A\\)",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "B",
+                "label": "\\(B\\)",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "C",
+                "label": "\\(C\\)",
+                "type": "number",
+                "expected": "-5"
+              }
+            ],
+            "hint": "<p>Use \\(u=x-x^2\\) in \\(1+3u+3u^2+u^3\\), then combine contributions to each power.</p>",
+            "solution": "<ol><li>\\[3u=3x-3x^2,\\qquad 3u^2=3x^2-6x^3+3x^4.\\]</li><li>\\[u^3=x^3-3x^4+3x^5-x^6.\\]</li><li><p>The requested terms combine to \\(1+3x+0x^2-5x^3\\), so \\(A=3\\), \\(B=0\\), \\(C=-5\\).</p></li><li><p>Through \\(x^2\\) there are only two nonzero terms, \\(1+3x\\). The first three nonzero terms extend to \\(-5x^3\\).</p></li></ol>"
+          },
+          {
+            "kind": "example",
+            "index": 7
+          },
+          {
+            "kind": "check",
+            "id": "P1-S006-20261121-C05",
+            "title": "Substitution changes the powers that appear",
+            "prompt": "<p>Expand \\((1-3x^2)^3\\). Enter the coefficients of \\(x^2\\), \\(x^4\\) and \\(x^3\\), and the highest power of \\(x\\).</p>",
+            "fields": [
+              {
+                "key": "x2",
+                "label": "Coefficient of \\(x^2\\)",
+                "type": "number",
+                "expected": "-9"
+              },
+              {
+                "key": "x4",
+                "label": "Coefficient of \\(x^4\\)",
+                "type": "number",
+                "expected": "27"
+              },
+              {
+                "key": "x3",
+                "label": "Coefficient of \\(x^3\\)",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "degree",
+                "label": "Highest power",
+                "type": "number",
+                "expected": "6",
+                "retry": [
+                  {
+                    "answer": "3",
+                    "feedback": "<p>The outer exponent is \\(3\\), but the variable is squared inside: \\((x^2)^3=x^6\\).</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Set \\(u=-3x^2\\) in \\((1+u)^3=1+3u+3u^2+u^3\\).</p>",
+            "solution": "<ol><li>\\[(1-3x^2)^3=1+3(-3x^2)+3(-3x^2)^2+(-3x^2)^3.\\]</li><li>\\[=1-9x^2+27x^4-27x^6.\\]</li><li><p>No \\(x^3\\) term appears, so its coefficient is \\(0\\). The highest power is \\(6\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>For polynomial substitutions, collect all contributions to each requested power before stopping. If the substituted expression has a nonzero constant, later powers can still contribute to low powers of \\(x\\).</p><p>Substitute into the powers as well as the first occurrence: if \\(t=-2x^2\\), then \\(t^2=4x^4\\), not \\(-2x^4\\). A missing power has coefficient \\(0\\).</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Replacing \\(x\\) by \\(-x\\) keeps even-power terms unchanged and reverses the signs of odd-power terms. If a substitution contains a fraction or a square root, keep its original domain restriction; expansion does not remove it. Finding a selected term with such substitutions is developed in the next topic.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-expansions-exact",
+        "title": "When is the answer exact, and how can I check it?",
+        "label": "Exactness and checks",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For a positive integer power, a complete finite binomial expansion is an identity: it equals the original bracket at every real value allowed by the original expression. For \\((a+bx)^n\\) with real constants \\(a,b\\), there is no restriction on \\(x\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>“Find the first three terms” asks for part of an expansion. That shorter polynomial is generally not equal to the original expression. To write an exact equality, include the omitted terms or name their exact remainder.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 8
+          },
+          {
+            "kind": "check",
+            "id": "P1-S006-20261121-C06",
+            "title": "Test an equality after stopping early",
+            "prompt": "<p>Let \\(P(x)=(2+x)^4\\). Its first three terms in ascending powers of \\(x\\) form \\(Q(x)=16+32x+24x^2\\).</p><p>Find \\(P(1)\\) and \\(Q(1)\\). Is \\(P(x)=Q(x)\\) true for every real \\(x\\)?</p>",
+            "fields": [
+              {
+                "key": "P",
+                "label": "\\(P(1)\\)",
+                "type": "number",
+                "expected": "81"
+              },
+              {
+                "key": "Q",
+                "label": "\\(Q(1)\\)",
+                "type": "number",
+                "expected": "72"
+              },
+              {
+                "key": "identity",
+                "label": "Does the equality hold for every real value?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>Evaluate the original bracket and the shorter polynomial separately at \\(x=1\\).</p>",
+            "solution": "<ol><li>\\[P(1)=3^4=81,\\qquad Q(1)=16+32+24=72.\\]</li><li>\\[P(x)=16+32x+24x^2+8x^3+x^4.\\]</li><li><p>The omitted terms contribute \\(9\\) at \\(x=1\\). One counterexample disproves the claimed equality for every real value.</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Check a full expansion efficiently:</p><ol><li>Set \\(x=0\\): does the constant match the original bracket?</li><li>Check the highest power and its coefficient.</li><li>Try a convenient value, such as \\(x=1\\), on both sides to catch sign or arithmetic errors.</li></ol><p>A mismatch proves something is wrong. Agreement at one or two values is only a check, not a proof that two polynomials are identical; the expansion method supplies the proof.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Answer the exact request: full expansion, first few terms, a coefficient, or a value. Keep fractions exact unless a numerical accuracy is requested. Write the terms in the requested order before moving on.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Binomial",
+        "definition": "<p>An expression with two terms.</p>"
+      },
+      {
+        "term": "Expansion",
+        "definition": "<p>An equivalent expression obtained by multiplying out brackets.</p>"
+      },
+      {
+        "term": "Coefficient",
+        "definition": "<p>The number multiplying a power of the variable; in \\(-12x^2\\), it is \\(-12\\).</p>"
+      },
+      {
+        "term": "Binomial coefficient",
+        "definition": "<p>The selection count \\(\\binom{n}{r}\\) used before the complete term powers are evaluated.</p>"
+      },
+      {
+        "term": "Factorial",
+        "definition": "<p>\\(n!=n(n-1)\\cdots2\\cdot1\\) for a positive integer; \\(0!=1\\).</p>"
+      },
+      {
+        "term": "Ascending powers",
+        "definition": "<p>Terms ordered from the smallest exponent of the stated variable to the largest.</p>"
+      },
+      {
+        "term": "Identity",
+        "definition": "<p>An equality true for every input in its stated domain.</p>"
+      },
+      {
+        "term": "Remainder",
+        "definition": "<p>The terms left out when an expansion is stopped early.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Build a small expansion from its coefficient row",
+        "question": "<p>Expand \\((1+t)^4\\) in ascending powers of \\(t\\).</p>",
+        "solution": [
+          "<p>The row labelled \\(n=4\\) is \\(1,4,6,4,1\\).</p>",
+          "<p>Pair it with the powers \\(t^0,t^1,t^2,t^3,t^4\\). Since \\(t^0\\) supplies the constant term, write it as \\(1\\).</p>",
+          "\\[(1+t)^4=1+4t+6t^2+4t^3+t^4.\\]",
+          "<p>The coefficients are the numbers \\(1,4,6,4,1\\). For example, \\(6t^2\\) is a term and \\(6\\) is its coefficient.</p>"
+        ]
+      },
+      {
+        "title": "Use a coefficient, then two complete powers",
+        "question": "<p>Expand \\((1+2x)^4\\) completely.</p>",
+        "solution": [
+          "<p>Here the two terms are \\(1\\) and \\(2x\\); the power is \\(4\\).</p>",
+          "\\[(1+2x)^4=1+4(2x)+6(2x)^2+4(2x)^3+(2x)^4.\\]",
+          "\\[(2x)^2=4x^2,\\quad (2x)^3=8x^3,\\quad (2x)^4=16x^4.\\]",
+          "\\[(1+2x)^4=1+8x+24x^2+32x^3+16x^4.\\]",
+          "<p>The binomial coefficient for the square is \\(6\\), but the coefficient of \\(x^2\\) in this expansion is \\(6\\cdot4=24\\).</p>"
+        ]
+      },
+      {
+        "title": "Track both the decreasing powers and the negative sign",
+        "question": "<p>Expand \\((2-x)^4\\) in ascending powers of \\(x\\).</p>",
+        "solution": [
+          "<p>Use \\(A=2\\) and \\(B=-x\\), with coefficients \\(1,4,6,4,1\\).</p>",
+          "\\[(2-x)^4=2^4+4(2^3)(-x)+6(2^2)(-x)^2+4(2)(-x)^3+(-x)^4.\\]",
+          "<p>The powers of \\(2\\) decrease from \\(4\\) to \\(0\\). The powers of \\(-x\\) increase from \\(0\\) to \\(4\\).</p>",
+          "\\[(2-x)^4=16-32x+24x^2-8x^3+x^4.\\]",
+          "<p>The constant is \\(2^4=16\\). The last coefficient is positive because \\((-x)^4=x^4\\).</p>"
+        ]
+      },
+      {
+        "title": "Expand with a fractional second term",
+        "question": "<p>Expand \\(\\left(3+\\frac{x}{2}\\right)^3\\), leaving all coefficients exact.</p>",
+        "solution": [
+          "\\[\\left(3+\\frac{x}{2}\\right)^3=3^3+3(3^2)\\left(\\frac{x}{2}\\right)+3(3)\\left(\\frac{x}{2}\\right)^2+\\left(\\frac{x}{2}\\right)^3.\\]",
+          "\\[=27+\\frac{27}{2}x+\\frac{9}{4}x^2+\\frac{1}{8}x^3.\\]",
+          "<p>Alternatively, factor the bracket first:</p>\\[\\left(3+\\frac{x}{2}\\right)^3=27\\left(1+\\frac{x}{6}\\right)^3.\\]",
+          "<p>Expanding the unit bracket and multiplying every term by \\(27\\) gives the same result. Factoring is a choice; the direct formula already handles a first term other than \\(1\\).</p>"
+        ]
+      },
+      {
+        "title": "The denominator and the sign both have powers",
+        "question": "<p>Expand \\(\\left(2-\\frac{x}{3}\\right)^3\\).</p>",
+        "solution": [
+          "<p>Use the complete second term \\(-\\frac{x}{3}\\).</p>",
+          "\\[\\left(2-\\frac{x}{3}\\right)^3=8+3(4)\\left(-\\frac{x}{3}\\right)+3(2)\\left(-\\frac{x}{3}\\right)^2+\\left(-\\frac{x}{3}\\right)^3.\\]",
+          "\\[\\left(-\\frac{x}{3}\\right)^2=\\frac{x^2}{9},\\qquad \\left(-\\frac{x}{3}\\right)^3=-\\frac{x^3}{27}.\\]",
+          "\\[\\left(2-\\frac{x}{3}\\right)^3=8-4x+\\frac{2}{3}x^2-\\frac{1}{27}x^3.\\]"
+        ]
+      },
+      {
+        "title": "Replace a temporary variable by a square",
+        "question": "<p>Use the expansion of \\((1+y)^3\\) to expand \\((1+x^2)^3\\).</p>",
+        "solution": [
+          "\\[(1+y)^3=1+3y+3y^2+y^3.\\]",
+          "<p>Substitute \\(y=x^2\\) into every occurrence of \\(y\\).</p>",
+          "\\[(1+x^2)^3=1+3x^2+3(x^2)^2+(x^2)^3.\\]",
+          "\\[=1+3x^2+3x^4+x^6.\\]",
+          "<p>Ascending powers need not be consecutive. Here the odd powers have coefficient \\(0\\).</p>"
+        ]
+      },
+      {
+        "title": "Collect powers after a polynomial substitution",
+        "question": "<p>Find the terms up to and including \\(x^3\\) in the expansion of \\((1+2x-x^2)^4\\).</p>",
+        "solution": [
+          "<p>Set \\(u=2x-x^2\\). Then \\((1+u)^4=1+4u+6u^2+4u^3+u^4\\).</p>",
+          "\\[4u=8x-4x^2,\\qquad 6u^2=24x^2-24x^3+6x^4.\\]",
+          "\\[4u^3=32x^3-48x^4+24x^5-4x^6.\\]",
+          "<p>The lowest power in \\(u^4\\) is \\(x^4\\), so it cannot contribute to the requested terms. Collect the powers through \\(x^3\\):</p>\\[1+8x+(-4+24)x^2+(-24+32)x^3=1+8x+20x^2+8x^3.\\]",
+          "<p>These are the terms up to and including \\(x^3\\). Higher powers remain in the full expansion. We could ignore \\(u^4\\) only because \\(u\\) has no constant term.</p>"
+        ]
+      },
+      {
+        "title": "Evaluate an expansion with a square root",
+        "question": "<p>Write \\((2+\\sqrt{3})^3\\) in the form \\(a+b\\sqrt{3}\\), where \\(a,b\\) are integers.</p>",
+        "solution": [
+          "\\[(2+t)^3=8+12t+6t^2+t^3.\\]",
+          "<p>Substitute \\(t=\\sqrt{3}\\). Then \\(t^2=3\\) and \\(t^3=3\\sqrt{3}\\).</p>",
+          "\\[(2+\\sqrt{3})^3=8+12\\sqrt{3}+18+3\\sqrt{3}=26+15\\sqrt{3}.\\]",
+          "<p>Thus \\(a=26\\) and \\(b=15\\). Keep the square root exact and combine like terms.</p>"
+        ]
+      },
+      {
+        "title": "Keep an exact remainder when you stop early",
+        "question": "<p>For \\(P(x)=(1+x)^4\\), let \\(Q(x)\\) be its first three terms in ascending powers of \\(x\\). Find \\(Q(x)\\), the exact difference \\(P(x)-Q(x)\\), and both values at \\(x=0.1\\).</p>",
+        "solution": [
+          "\\[P(x)=1+4x+6x^2+4x^3+x^4,\\qquad Q(x)=1+4x+6x^2.\\]",
+          "\\[P(x)-Q(x)=4x^3+x^4.\\]",
+          "\\[Q(0.1)=1+0.4+0.06=1.46.\\]",
+          "\\[P(0.1)-Q(0.1)=0.004+0.0001=0.0041.\\]",
+          "\\[P(0.1)=1.4641.\\]",
+          "<p>The full expansion is exact. Using only \\(Q\\) gives an approximation here; the omitted terms determine its error. A finite binomial identity has no condition such as \\(|x|&lt;1\\).</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "The general term, index bounds and Laurent powers",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_general_term"
+      },
+      {
+        "title": "Approximations, remainders and coupled coefficient models",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_approximations"
+      },
+      {
+        "title": "Binomial models and event probabilities",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_bg_binomial_models"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S006-20261121-P01",
+        "title": "Use factorial notation for a coefficient",
+        "prompt": "<p>Find \\(\\binom{7}{2}\\), then state the coefficient of \\(x^2\\) in \\((1+x)^7\\) and the number of nonzero terms in its full expansion.</p>",
+        "fields": [
+          {
+            "key": "choose",
+            "label": "\\(\\binom{7}{2}\\)",
+            "type": "number",
+            "expected": "21"
+          },
+          {
+            "key": "coefficient",
+            "label": "Coefficient of \\(x^2\\)",
+            "type": "number",
+            "expected": "21"
+          },
+          {
+            "key": "count",
+            "label": "Number of nonzero terms",
+            "type": "number",
+            "expected": "8"
+          }
+        ],
+        "hint": "<p>Cancel the factorials before multiplying. The constant term is included in the count.</p>",
+        "solution": "<ol><li>\\[\\binom{7}{2}=\\frac{7!}{2!5!}=\\frac{7\\cdot6}{2}=21.\\]</li><li><p>The \\(x^2\\) contribution is \\(21(1)^5x^2=21x^2\\). The powers run from \\(0\\) through \\(7\\), giving eight nonzero terms.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S006-20261121-P02",
+        "title": "Expand a scaled linear term",
+        "prompt": "<p>Write \\((1+4x)^3=1+Ax+Bx^2+Cx^3\\). Find all three coefficients.</p>",
+        "fields": [
+          {
+            "key": "A",
+            "label": "\\(A\\)",
+            "type": "number",
+            "expected": "12"
+          },
+          {
+            "key": "B",
+            "label": "\\(B\\)",
+            "type": "number",
+            "expected": "48"
+          },
+          {
+            "key": "C",
+            "label": "\\(C\\)",
+            "type": "number",
+            "expected": "64"
+          }
+        ],
+        "hint": "<p>Use \\(1+3u+3u^2+u^3\\), where \\(u=4x\\).</p>",
+        "solution": "<ol><li>\\[(1+4x)^3=1+3(4x)+3(4x)^2+(4x)^3.\\]</li><li>\\[=1+12x+48x^2+64x^3.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S006-20261121-P03",
+        "title": "Two nonunit terms and a subtraction",
+        "prompt": "<p>Expand \\((3-2x)^3=A+Bx+Cx^2+Dx^3\\). Find \\(A,B,C,D\\).</p>",
+        "fields": [
+          {
+            "key": "A",
+            "label": "\\(A\\)",
+            "type": "number",
+            "expected": "27"
+          },
+          {
+            "key": "B",
+            "label": "\\(B\\)",
+            "type": "number",
+            "expected": "-54"
+          },
+          {
+            "key": "C",
+            "label": "\\(C\\)",
+            "type": "number",
+            "expected": "36"
+          },
+          {
+            "key": "D",
+            "label": "\\(D\\)",
+            "type": "number",
+            "expected": "-8"
+          }
+        ],
+        "hint": "<p>Use \\(3\\) and \\(-2x\\) as the complete terms.</p>",
+        "solution": "<ol><li>\\[(3-2x)^3=27+3(9)(-2x)+3(3)(-2x)^2+(-2x)^3.\\]</li><li>\\[=27-54x+36x^2-8x^3.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S006-20261121-P04",
+        "title": "The first term can be fractional",
+        "prompt": "<p>Write \\(\\left(\\frac{1}{2}+x\\right)^4=A+Bx+Cx^2+Dx^3+x^4\\). Find the four coefficients exactly.</p>",
+        "fields": [
+          {
+            "key": "A",
+            "label": "\\(A\\)",
+            "type": "number",
+            "expected": "1/16"
+          },
+          {
+            "key": "B",
+            "label": "\\(B\\)",
+            "type": "number",
+            "expected": "1/2"
+          },
+          {
+            "key": "C",
+            "label": "\\(C\\)",
+            "type": "number",
+            "expected": "3/2"
+          },
+          {
+            "key": "D",
+            "label": "\\(D\\)",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>Decrease the power of \\(\\frac{1}{2}\\) from \\(4\\) to \\(0\\) across the expansion.</p>",
+        "solution": "<ol><li>\\[\\left(\\frac{1}{2}+x\\right)^4=\\frac{1}{16}+4\\left(\\frac{1}{8}\\right)x+6\\left(\\frac{1}{4}\\right)x^2+4\\left(\\frac{1}{2}\\right)x^3+x^4.\\]</li><li>\\[=\\frac{1}{16}+\\frac{1}{2}x+\\frac{3}{2}x^2+2x^3+x^4.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S006-20261121-P05",
+        "title": "A cubed substitution leaves missing powers",
+        "prompt": "<p>Expand \\((2-x^3)^3\\). Find the coefficients of \\(x^3\\), \\(x^6\\) and \\(x^4\\), and the highest power of \\(x\\).</p>",
+        "fields": [
+          {
+            "key": "x3",
+            "label": "Coefficient of \\(x^3\\)",
+            "type": "number",
+            "expected": "-12"
+          },
+          {
+            "key": "x6",
+            "label": "Coefficient of \\(x^6\\)",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "x4",
+            "label": "Coefficient of \\(x^4\\)",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "degree",
+            "label": "Highest power",
+            "type": "number",
+            "expected": "9"
+          }
+        ],
+        "hint": "<p>Use \\(-x^3\\) as the second term, and apply \\((x^3)^r=x^{3r}\\).</p>",
+        "solution": "<ol><li>\\[(2-x^3)^3=8+3(4)(-x^3)+3(2)(-x^3)^2+(-x^3)^3.\\]</li><li>\\[=8-12x^3+6x^6-x^9.\\]</li><li><p>The \\(x^4\\) coefficient is \\(0\\), and the highest power is \\(9\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S006-20261121-P06",
+        "title": "Repair an expansion and explain a check",
+        "prompt": "<p>A student claims \\((2-x)^3=8-12x+6x^2-2x^3\\). The first three coefficients are correct. Find the correct coefficient of \\(x^3\\), and the correct value of \\((2-x)^3\\) at \\(x=1\\). Would testing only \\(x=0\\) detect this error?</p>",
+        "fields": [
+          {
+            "key": "last",
+            "label": "Correct coefficient of \\(x^3\\)",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "value",
+            "label": "Value at \\(x=1\\)",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "detect",
+            "label": "Does \\(x=0\\) detect the error?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          }
+        ],
+        "hint": "<p>The final contribution is \\((-x)^3\\). At \\(x=0\\), every nonconstant term vanishes.</p>",
+        "solution": "<ol><li>\\[(2-x)^3=8-12x+6x^2-x^3.\\]</li><li>\\[(2-1)^3=1,\\qquad 8-12+6-1=1.\\]</li><li><p>The incorrect polynomial gives \\(0\\) at \\(x=1\\), so that value catches the error. Both expressions give \\(8\\) at \\(x=0\\); testing only that value would miss it.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S006-20261121-E01",
+          "title": "An exact expansion with a negative fraction",
+          "marks": 5,
+          "question": "<p>Expand \\(\\left(3-\\frac{x}{2}\\right)^4\\) completely in ascending powers of \\(x\\). Write your answer as \\(81+Ax+Bx^2+Cx^3+Dx^4\\), and enter the four coefficients exactly.</p>",
+          "hint": "<p>Keep \\(-\\frac{x}{2}\\) in brackets until each power is evaluated.</p>",
+          "solution": "<ol><li>\\[\\left(3-\\frac{x}{2}\\right)^4=81+4(27)\\left(-\\frac{x}{2}\\right)+6(9)\\left(-\\frac{x}{2}\\right)^2+4(3)\\left(-\\frac{x}{2}\\right)^3+\\left(-\\frac{x}{2}\\right)^4.\\]</li><li>\\[=81-54x+\\frac{27}{2}x^2-\\frac{3}{2}x^3+\\frac{1}{16}x^4.\\]</li></ol>",
+          "marking": "<ul><li>1 mark: use the coefficient row \\(1,4,6,4,1\\) with complete powers.</li><li>1 mark: obtain \\(-54x\\).</li><li>1 mark: obtain \\(\\frac{27}{2}x^2\\).</li><li>1 mark: obtain \\(-\\frac{3}{2}x^3\\).</li><li>1 mark: obtain \\(\\frac{1}{16}x^4\\) and present the complete expansion in ascending powers.</li></ul>"
+        },
+        {
+          "id": "P1-S006-20261121-E02",
+          "title": "Distinguish nonzero terms from consecutive powers",
+          "marks": 6,
+          "question": "<p>The expansion of \\((1+z)^5\\) starts \\(1+5z+10z^2+10z^3\\).</p><p>Find the first four nonzero terms of \\((1-2x^2)^5\\), in ascending powers of \\(x\\), in the form \\(1+Ax^2+Bx^4+Cx^6\\). Also give the coefficient of \\(x^3\\) and the highest power of \\(x\\) in the full expansion.</p>",
+          "hint": "<p>Set \\(z=-2x^2\\). For the highest power, use the final contribution \\((-2x^2)^5\\).</p>",
+          "solution": "<ol><li>\\[1+5(-2x^2)+10(-2x^2)^2+10(-2x^2)^3=1-10x^2+40x^4-80x^6.\\]</li><li><p>Only even powers occur, so the coefficient of \\(x^3\\) is \\(0\\).</p></li><li>\\[(-2x^2)^5=-32x^{10}.\\]</li><li><p>The highest power is \\(10\\). The two further terms of the full expansion are \\(80x^8-32x^{10}\\); they are not part of the requested first four terms.</p></li></ol>",
+          "marking": "<ul><li>1 mark: substitute \\(z=-2x^2\\) into each complete power.</li><li>1 mark: obtain \\(-10x^2\\).</li><li>1 mark: obtain \\(40x^4\\).</li><li>1 mark: obtain \\(-80x^6\\).</li><li>1 mark: identify the missing \\(x^3\\) term and give coefficient \\(0\\).</li><li>1 mark: obtain highest power \\(10\\) from the final contribution.</li></ul>"
+        },
+        {
+          "id": "P1-S006-20261121-E03",
+          "title": "Find exactly what stopping early leaves out",
+          "marks": 6,
+          "question": "<p>Let \\(P(x)=(2-3x)^4\\), and let \\(Q(x)\\) consist of its first three terms in ascending powers of \\(x\\). Write \\(Q(x)=16+Ax+Bx^2\\) and \\(P(x)-Q(x)=Cx^3+Dx^4\\).</p><p>Find \\(A,B,C,D\\), then calculate the exact difference \\(P\\left(\\frac{1}{10}\\right)-Q\\left(\\frac{1}{10}\\right)\\).</p>",
+          "hint": "<p>Find all five contributions before separating the first three from the remainder.</p>",
+          "solution": "<ol><li>\\[P(x)=16+4(8)(-3x)+6(4)(-3x)^2+4(2)(-3x)^3+(-3x)^4.\\]</li><li>\\[P(x)=16-96x+216x^2-216x^3+81x^4.\\]</li><li>\\[Q(x)=16-96x+216x^2,\\qquad P(x)-Q(x)=-216x^3+81x^4.\\]</li><li>\\[P\\left(\\frac{1}{10}\\right)-Q\\left(\\frac{1}{10}\\right)=-\\frac{216}{1000}+\\frac{81}{10000}=-\\frac{2079}{10000}.\\]</li><li><p>The negative difference means the first-three-term value is larger than the exact value at this input.</p></li></ol>",
+          "marking": "<ul><li>1 mark: use complete binomial contributions with \\(2\\) and \\(-3x\\).</li><li>1 mark: obtain \\(A=-96\\) and \\(B=216\\).</li><li>1 mark: obtain \\(C=-216\\).</li><li>1 mark: obtain \\(D=81\\).</li><li>1 mark: substitute \\(x=\\frac{1}{10}\\) into the exact remainder.</li><li>1 mark: simplify to \\(-\\frac{2079}{10000}\\).</li></ul>"
+        },
+        {
+          "id": "P1-S006-20261121-E04",
+          "title": "Use the expansion for an exact surd value",
+          "marks": 4,
+          "question": "<p>Use a binomial expansion to express \\((3-\\sqrt{2})^3\\) in the form \\(a+b\\sqrt{2}\\), where \\(a,b\\) are integers.</p>",
+          "hint": "<p>Use complete terms \\(3\\) and \\(-\\sqrt{2}\\). The square is positive; the cube is negative.</p>",
+          "solution": "<ol><li>\\[(3-\\sqrt{2})^3=27+3(9)(-\\sqrt{2})+3(3)(-\\sqrt{2})^2+(-\\sqrt{2})^3.\\]</li><li>\\[=27-27\\sqrt{2}+18-2\\sqrt{2}=45-29\\sqrt{2}.\\]</li><li><p>Therefore \\(a=45\\) and \\(b=-29\\).</p></li></ol>",
+          "marking": "<ul><li>1 mark: use the four binomial contributions with complete terms.</li><li>1 mark: evaluate \\((-\\sqrt{2})^2=2\\) and \\((-\\sqrt{2})^3=-2\\sqrt{2}\\).</li><li>1 mark: combine the rational terms to obtain \\(45\\).</li><li>1 mark: combine the square-root terms to obtain \\(-29\\sqrt{2}\\).</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Choose the two complete terms; keep their powers and signs together.</p><h2>The finite rule</h2>\\[(A+B)^n=\\sum_{r=0}^{n}\\binom{n}{r}A^{n-r}B^r.\\]\\[\\binom{n}{r}=\\frac{n!}{r!(n-r)!},\\qquad 0!=1.\\]<p>Positive integer \\(n\\); \\(r=0,1,\\ldots,n\\). Powers add to \\(n\\). There are \\(n+1\\) contributions before simplification.</p><h2>Small rows and complete powers</h2><p>Pascal rows: \\(n=3:\\ 1,3,3,1\\); \\(n=4:\\ 1,4,6,4,1\\).</p>\\[(A+B)^3=A^3+3A^2B+3AB^2+B^3.\\]<p>Power the whole term: \\((-2x)^2=4x^2\\), \\(\\left(-\\frac{x}{3}\\right)^3=-\\frac{x^3}{27}\\). Factoring \\(a\\) from a bracket raised to \\(n\\) puts \\(a^n\\) outside.</p><h2>Signs, substitution and order</h2>\\[(2-x)^4=16-32x+24x^2-8x^3+x^4.\\]\\[(1+x^2)^3=1+3x^2+3x^4+x^6.\\]<p>After polynomial substitution, collect each power before truncating. Ascending powers can have gaps; missing coefficients are \\(0\\). Keep surds exact and preserve original domain restrictions.</p><h2>Exactness and checks</h2><p>A full positive-integer expansion is exact throughout its original domain. First few terms omit a remainder; do not present them as the full identity. Check the constant at \\(x=0\\), the highest power, and a convenient input. Matching one value does not prove an identity.</p><p>\\(n=1\\): the bracket itself. \\(n=0\\): the constant \\(1\\), with nonzero base for numerical exponentiation.</p>",
+      "checks": "<ul><li>Right Pascal row or combination?</li><li>Both complete terms raised to their powers?</li><li>Signs, denominators and substitutions correct?</li><li>Requested order, number of terms and exactness clear?</li></ul>",
+      "examTip": "<p>Requested order, number of terms and exactness clear?</p>"
+    }
+  },
+  "orig_binomial_expansion_general_term": {
+    "updatedOn": "2026-11-21",
+    "description": "Find only the term you need. Match its exponent, check its index, then calculate its coefficient with every sign and domain restriction intact.",
+    "sections": [
+      {
+        "id": "binomial-general-term-index",
+        "title": "Which index gives the requested term?",
+        "label": "Index and term number",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>When you need one term, a full expansion is unnecessary. The general term describes one contribution for each integer index \\(r\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[T_{r+1}=\\binom{n}{r}A^{n-r}B^r,\\qquad r=0,1,\\ldots,n.\\]<p>Use the two complete terms \\(A,B\\) exactly as written. The first contribution uses \\(r=0\\), so its term number is \\(r+1\\).</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_binomial_expansion_general_term/binomial-term-index.svg\" alt=\"A ledger separates zero-based index, one-based term number, binomial coefficient and final contribution.\" width=\"844\" height=\"480\"></p><p>For \\((2+x)^5\\), indices \\(0,1,2\\) correspond to terms \\(T_1,T_2,T_3\\). The binomial coefficients \\(1,5,10\\) become final coefficients \\(32,80,80\\) after the powers of \\(2\\) are included.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S007-20261121-C01",
+            "title": "Turn a position into an index",
+            "prompt": "<p>Find the fourth term in the standard binomial order of \\((1-2x)^5\\). Give its index \\(r\\), coefficient and power of \\(x\\).</p>",
+            "fields": [
+              {
+                "key": "r",
+                "label": "Index \\(r\\)",
+                "type": "number",
+                "expected": "3",
+                "retry": [
+                  {
+                    "answer": "4",
+                    "feedback": "<p>The term number is \\(r+1\\), so the fourth term uses \\(r=3\\).</p>"
+                  }
+                ]
+              },
+              {
+                "key": "coefficient",
+                "label": "Coefficient",
+                "type": "number",
+                "expected": "-80"
+              },
+              {
+                "key": "power",
+                "label": "Power of \\(x\\)",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>The first term has index \\(0\\). The fourth term therefore uses \\(r=3\\).</p>",
+            "solution": "<ol><li>\\[T_4=\\binom{5}{3}(1)^2(-2x)^3=10(-8x^3)=-80x^3.\\]</li><li><p>The index is \\(3\\), the coefficient is \\(-80\\), and the power is \\(3\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The fifth term uses \\(r=4\\), not \\(5\\). Also, “term number” needs an ordering: the standard formula starts with \\(A^n\\); ascending powers of \\(x\\) may use a different order.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-general-term-coefficient",
+        "title": "How do I select a coefficient?",
+        "label": "Match the power",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Write the general contribution, simplify its power of the requested variable, then set that exponent equal to the target. Check that the resulting index is an integer between \\(0\\) and \\(n\\). Only then calculate its coefficient.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[(ax^p+bx^q)^n:\\quad T_{r+1}=\\binom{n}{r}a^{n-r}b^r x^{p(n-r)+qr}.\\]\\[\\text{Exponent}=pn+(q-p)r.\\]<p>For target \\(x^m\\), solve \\(pn+(q-p)r=m\\). When \\(p\\ne q\\), at most one index can give that exponent.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S007-20261121-C02",
+            "title": "Find one coefficient without a full expansion",
+            "prompt": "<p>Find the coefficient of \\(x^4\\) in \\((2+3x)^6\\). Give the required index and the coefficient.</p>",
+            "fields": [
+              {
+                "key": "r",
+                "label": "Index \\(r\\)",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "coefficient",
+                "label": "Coefficient of \\(x^4\\)",
+                "type": "number",
+                "expected": "4860",
+                "retry": [
+                  {
+                    "answer": "15",
+                    "feedback": "<p>\\(15\\) is only the binomial coefficient. Also multiply by \\(2^2\\) and \\(3^4\\).</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>The power of \\(x\\) is \\(r\\). Evaluate \\(\\binom{6}{4}2^2 3^4\\).</p>",
+            "solution": "<ol><li>\\[T_{r+1}=\\binom{6}{r}2^{6-r}(3x)^r.\\]</li><li>\\[r=4,\\qquad T_5=\\binom{6}{4}2^2 3^4x^4=4860x^4.\\]</li><li><p>The requested coefficient is \\(4860\\), without the \\(x^4\\).</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>A coefficient is the number multiplying the requested power. A term includes that power. For example, the coefficient of \\(x^3\\) in \\(-720x^3\\) is \\(-720\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Show the exponent equation and the selected coefficient product. A calculator can evaluate \\(\\binom{n}{r}\\), but it cannot decide which index matches the question for you.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-general-term-laurent",
+        "title": "How do negative powers and constant terms work?",
+        "label": "Laurent powers and missing terms",
+        "minutes": 10,
+        "level": "core",
+        "intro": "<p>A finite expression containing negative integer powers, such as \\(x^2+x^{-1}\\), is sometimes called a <strong>Laurent polynomial</strong>. Rewrite reciprocals as powers before combining exponents. Negative powers require \\(x\\ne0\\).</p>",
+        "blocks": [
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_binomial_expansion_general_term/binomial-target-power.svg\" alt=\"Discrete exponent positions for a Laurent binomial show a valid target and a missing constant power.\" width=\"844\" height=\"521\"></p><p>The exponent \\(10-3r\\) takes only \\(10,7,4,1,-2,-5\\) for \\(r=0,1,\\ldots,5\\). The power \\(4\\) is present; the power \\(0\\) is not.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "key",
+            "html": "<p>“Independent of \\(x\\)” means exponent \\(0\\). Solve the exponent equation; do not substitute \\(x=0\\) into an expression with a denominator.</p><p>If the required index is fractional, negative or greater than \\(n\\), that power is absent and its coefficient is \\(0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S007-20261121-C03",
+            "title": "A constant may appear while another power is missing",
+            "prompt": "<p>In \\(\\left(x^3-\\frac{2}{x}\\right)^4\\), where \\(x\\ne0\\), find the index of the constant term, its coefficient, and the coefficient of \\(x^2\\).</p>",
+            "fields": [
+              {
+                "key": "r",
+                "label": "Constant-term index \\(r\\)",
+                "type": "number",
+                "expected": "3",
+                "retry": [
+                  {
+                    "answer": "0",
+                    "feedback": "<p>A constant needs exponent zero, not index zero. Solve \\(12-4r=0\\).</p>"
+                  }
+                ]
+              },
+              {
+                "key": "constant",
+                "label": "Constant term",
+                "type": "number",
+                "expected": "-32"
+              },
+              {
+                "key": "x2",
+                "label": "Coefficient of \\(x^2\\)",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>The exponent is \\(3(4-r)-r=12-4r\\). Match it to \\(0\\), then to \\(2\\).</p>",
+            "solution": "<ol><li>\\[T_{r+1}=\\binom{4}{r}(-2)^r x^{12-4r}.\\]</li><li>\\[12-4r=0\\Longrightarrow r=3,\\qquad T_4=4(-2)^3=-32.\\]</li><li>\\[12-4r=2\\Longrightarrow r=\\frac{5}{2}.\\]</li><li><p>The second index is not an integer, so no \\(x^2\\) term occurs. Its coefficient is \\(0\\).</p></li></ol>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>For \\(x^k(ax^p+bx^q)^n\\), include the outside shift \\(k\\): match \\(k+pn+(q-p)r\\) to the target. It changes the power, not the coefficient.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-general-term-fractional",
+        "title": "What if the bracket contains a square root?",
+        "label": "Fractional powers and domains",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>The outer power is still a positive integer, so the expansion is finite. Write roots as rational powers and use the same index method. The original expression decides which real inputs are allowed.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For real square roots, \\(\\sqrt{x}\\) requires \\(x\\ge0\\). If \\(x\\) or \\(\\sqrt{x}\\) also occurs in a denominator, exclude zero. Thus both \\(\\sqrt{x}+\\frac{2}{x}\\) and \\(\\sqrt{x}+\\frac{1}{\\sqrt{x}}\\) require \\(x&gt;0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "P1-S007-20261121-C04",
+            "title": "Keep the original square-root domain",
+            "prompt": "<p>Find the constant term in \\(\\left(\\sqrt{x}-\\frac{1}{x}\\right)^6\\). State its index and the real domain of the original expression.</p>",
+            "fields": [
+              {
+                "key": "r",
+                "label": "Index \\(r\\)",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "constant",
+                "label": "Constant term",
+                "type": "number",
+                "expected": "15"
+              },
+              {
+                "key": "domain",
+                "label": "Original real domain",
+                "type": "choice",
+                "expected": "positive",
+                "options": {
+                  "positive": "\\(x&gt;0\\)",
+                  "nonzero": "\\(x\\ne0\\)",
+                  "nonnegative": "\\(x\\ge0\\)"
+                }
+              }
+            ],
+            "hint": "<p>The square root requires \\(x\\ge0\\), and the denominator excludes zero. The combined exponent is \\(3-\\frac{3r}{2}\\).</p>",
+            "solution": "<ol><li>\\[T_{r+1}=\\binom{6}{r}(-1)^r x^{\\frac{6-r}{2}-r}=\\binom{6}{r}(-1)^r x^{3-\\frac{3r}{2}}.\\]</li><li>\\[3-\\frac{3r}{2}=0\\Longrightarrow r=2,\\qquad T_3=\\binom{6}{2}=15.\\]</li><li><p>The original real domain is \\(x&gt;0\\); finding a constant contribution does not remove that restriction.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not confuse a fractional power of \\(x\\) inside the bracket with a fractional outer power. Here \\(\\left(\\sqrt{x}+\\frac{2}{x}\\right)^6\\) has six factors and a finite expansion. This lesson does not use the infinite binomial theorem for fractional outer powers.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-general-term-order",
+        "title": "How do I check the order and keep every valid case?",
+        "label": "Order and complete cases",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>The exponent changes by \\(q-p\\) when \\(r\\) increases by one. If \\(q-p&gt;0\\), the formula order is ascending. If \\(q-p&lt;0\\), reverse it for ascending powers. Check the variable named in the question.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "P1-S007-20261121-C05",
+            "title": "Ascending order can reverse the index order",
+            "prompt": "<p>Write the first two terms of \\(\\left(x+\\frac{1}{x}\\right)^3\\) in ascending powers of \\(x\\), where \\(x\\ne0\\). Give each coefficient and exponent.</p>",
+            "fields": [
+              {
+                "key": "c1",
+                "label": "First coefficient",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "p1",
+                "label": "First exponent",
+                "type": "number",
+                "expected": "-3"
+              },
+              {
+                "key": "c2",
+                "label": "Second coefficient",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "p2",
+                "label": "Second exponent",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>The exponents in binomial index order are \\(3,1,-1,-3\\). Start at the smallest exponent for ascending order.</p>",
+            "solution": "<ol><li>\\[\\left(x+\\frac{1}{x}\\right)^3=x^3+3x+\\frac{3}{x}+\\frac{1}{x^3}.\\]</li><li><p>In ascending powers, the first two terms are \\(x^{-3}+3x^{-1}\\). Their coefficients are \\(1,3\\), and their exponents are \\(-3,-1\\).</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>If \\(p=q\\), every contribution has the same power and must be combined:</p>\\[(ax^p+bx^p)^n=(a+b)^n x^{pn}.\\]<p>For example, \\((2x-x)^4=x^4\\). One selected contribution does not give the final coefficient because all five contributions belong to the same power.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>An allowed exponent index can still produce coefficient zero when a parameter is zero. When comparing coefficients, write their expressions first and solve the resulting equation without dividing away a possible zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 7
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the index, original domain, term order and any parameter conditions. Substitute candidate parameter values back into the original coefficient relation. A statement that one coefficient is a multiple of another may allow both to be zero; a ratio requires a nonzero denominator.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Index",
+        "definition": "<p>The integer \\(r\\) choosing one contribution, from \\(0\\) to \\(n\\).</p>"
+      },
+      {
+        "term": "Term number",
+        "definition": "<p>The position \\(r+1\\) in the chosen standard binomial order.</p>"
+      },
+      {
+        "term": "General term",
+        "definition": "<p>A formula describing each contribution as its index varies.</p>"
+      },
+      {
+        "term": "Constant term",
+        "definition": "<p>A contribution with exponent \\(0\\), independent of the variable.</p>"
+      },
+      {
+        "term": "Laurent polynomial",
+        "definition": "<p>A finite sum that may contain negative integer powers.</p>"
+      },
+      {
+        "term": "Absent power",
+        "definition": "<p>A power with final coefficient zero because no valid contribution produces it.</p>"
+      },
+      {
+        "term": "Domain",
+        "definition": "<p>The set of real inputs for which the original expression is defined.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "The fifth term has index four",
+        "question": "<p>Find the fifth term in the standard binomial order of \\((2+x)^6\\).</p>",
+        "solution": [
+          "<p>The first term uses \\(r=0\\), so the fifth uses \\(r=4\\).</p>",
+          "\\[T_5=\\binom{6}{4}2^{6-4}x^4.\\]",
+          "\\[T_5=15\\cdot4x^4=60x^4.\\]",
+          "<p>Report the whole term \\(60x^4\\). Its coefficient alone is \\(60\\).</p>"
+        ]
+      },
+      {
+        "title": "Match the power before calculating the number",
+        "question": "<p>Find the coefficient of \\(x^3\\) in \\((3-2x)^5\\).</p>",
+        "solution": [
+          "\\[T_{r+1}=\\binom{5}{r}3^{5-r}(-2x)^r.\\]",
+          "<p>The power of \\(x\\) is \\(r\\). To obtain \\(x^3\\), set \\(r=3\\).</p>",
+          "\\[T_4=\\binom{5}{3}3^2(-2)^3x^3=10\\cdot9\\cdot(-8)x^3=-720x^3.\\]",
+          "<p>The coefficient is \\(-720\\). The minus sign comes from an odd power of \\(-2\\).</p>"
+        ]
+      },
+      {
+        "title": "Both terms contribute to the exponent",
+        "question": "<p>Find the coefficient of \\(x^4\\) in \\(\\left(2x^2-\\frac{1}{x}\\right)^5\\), where \\(x\\ne0\\). Does the expansion have a constant term?</p>",
+        "solution": [
+          "\\[T_{r+1}=\\binom{5}{r}(2x^2)^{5-r}(-x^{-1})^r.\\]",
+          "\\[T_{r+1}=\\binom{5}{r}2^{5-r}(-1)^r x^{10-3r}.\\]",
+          "\\[10-3r=4\\Longrightarrow r=2.\\]",
+          "\\[T_3=\\binom{5}{2}2^3(-1)^2x^4=80x^4.\\]",
+          "<p>The coefficient is \\(80\\). A constant would require \\(10-3r=0\\), so \\(r=\\frac{10}{3}\\). This is not an integer; the constant coefficient is \\(0\\).</p>"
+        ]
+      },
+      {
+        "title": "A constant term is found by setting the exponent to zero",
+        "question": "<p>Find the term independent of \\(x\\) in \\(\\left(3x-\\frac{2}{x^2}\\right)^6\\), where \\(x\\ne0\\).</p>",
+        "solution": [
+          "\\[T_{r+1}=\\binom{6}{r}3^{6-r}(-2)^r x^{6-3r}.\\]",
+          "\\[6-3r=0\\Longrightarrow r=2.\\]",
+          "<p>This is an integer from \\(0\\) through \\(6\\), so it selects an actual contribution.</p>",
+          "\\[T_3=\\binom{6}{2}3^4(-2)^2=15\\cdot81\\cdot4=4860.\\]",
+          "<p>The constant term is \\(4860\\). We did not put \\(x=0\\), which is outside the original domain.</p>"
+        ]
+      },
+      {
+        "title": "An outside power shifts every exponent",
+        "question": "<p>Find the constant term in \\(x^2\\left(2x-\\frac{1}{x}\\right)^4\\), where \\(x\\ne0\\).</p>",
+        "solution": [
+          "<p>A contribution from the bracket has exponent \\(4-2r\\). Multiplication by \\(x^2\\) changes it to \\(6-2r\\).</p>",
+          "\\[x^2T_{r+1}=\\binom{4}{r}2^{4-r}(-1)^r x^{6-2r}.\\]",
+          "\\[6-2r=0\\Longrightarrow r=3.\\]",
+          "\\[\\text{Constant term}=\\binom{4}{3}2(-1)^3=-8.\\]"
+        ]
+      },
+      {
+        "title": "A fractional exponent still gives a linear index equation",
+        "question": "<p>Find the constant term in \\(\\left(\\sqrt{x}+\\frac{2}{x}\\right)^6\\), for \\(x&gt;0\\).</p>",
+        "solution": [
+          "\\[\\sqrt{x}=x^{\\frac{1}{2}},\\qquad \\frac{2}{x}=2x^{-1}.\\]",
+          "\\[T_{r+1}=\\binom{6}{r}2^r x^{\\frac{6-r}{2}-r}=\\binom{6}{r}2^r x^{3-\\frac{3r}{2}}.\\]",
+          "\\[3-\\frac{3r}{2}=0\\Longrightarrow r=2.\\]",
+          "\\[\\text{Constant term}=\\binom{6}{2}2^2=60.\\]",
+          "<p>The allowed index is an integer even though the exponent formula contains a fraction. The original domain remains \\(x&gt;0\\).</p>"
+        ]
+      },
+      {
+        "title": "Choose the order after identifying the powers",
+        "question": "<p>Find the first three terms in ascending powers of \\(x\\) of \\(\\left(x^2+\\frac{1}{x}\\right)^4\\), where \\(x\\ne0\\).</p>",
+        "solution": [
+          "\\[T_{r+1}=\\binom{4}{r}x^{8-3r}.\\]",
+          "<p>For \\(r=0,1,2,3,4\\), the exponents are \\(8,5,2,-1,-4\\). Ascending powers therefore start at \\(r=4\\), then \\(3\\), then \\(2\\).</p>",
+          "\\[r=4:\\ x^{-4},\\qquad r=3:\\ 4x^{-1},\\qquad r=2:\\ 6x^2.\\]",
+          "<p>The requested terms are \\(x^{-4}+4x^{-1}+6x^2\\), or \\(\\frac{1}{x^4}+\\frac{4}{x}+6x^2\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep a zero parameter as a possible solution",
+        "question": "<p>In \\(\\left(2x+\\frac{a}{x^2}\\right)^6\\), where \\(x\\ne0\\), the constant coefficient is \\(\\frac{5}{4}\\) times the coefficient of \\(x^3\\). Find all real values of \\(a\\).</p>",
+        "solution": [
+          "\\[T_{r+1}=\\binom{6}{r}2^{6-r}a^r x^{6-3r}.\\]",
+          "<p>The constant uses \\(r=2\\); its coefficient is \\(15\\cdot16a^2=240a^2\\). The \\(x^3\\) term uses \\(r=1\\); its coefficient is \\(6\\cdot32a=192a\\).</p>",
+          "\\[240a^2=\\frac{5}{4}(192a)=240a.\\]",
+          "\\[a(a-1)=0\\Longrightarrow a=0\\text{ or }a=1.\\]",
+          "<p>At \\(a=0\\), both compared coefficients are zero, so the stated equality still holds. Dividing by \\(a\\) would lose this valid solution. At \\(a=1\\), the coefficients are \\(240\\) and \\(192\\), which also satisfy the condition.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Finite binomial expansions, signs and substitutions",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_expansion"
+      },
+      {
+        "title": "Coefficients in products, missing powers and parity",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_products"
+      },
+      {
+        "title": "Unknown constants, exponents and complete cases",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_parameters"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S007-20261121-P01",
+        "title": "A specified term with a negative second term",
+        "prompt": "<p>Find the third term in the standard binomial order of \\((3-x)^7\\). Give its index and coefficient.</p>",
+        "fields": [
+          {
+            "key": "r",
+            "label": "Index \\(r\\)",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "coefficient",
+            "label": "Coefficient",
+            "type": "number",
+            "expected": "5103"
+          }
+        ],
+        "hint": "<p>Use \\(r=2\\), so the negative sign is squared.</p>",
+        "solution": "<ol><li>\\[T_3=\\binom{7}{2}3^5(-x)^2=21\\cdot243x^2=5103x^2.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S007-20261121-P02",
+        "title": "A power substitution creates gaps",
+        "prompt": "<p>Find the coefficients of \\(x^6\\) and \\(x^7\\) in \\((1-2x^2)^5\\).</p>",
+        "fields": [
+          {
+            "key": "x6",
+            "label": "Coefficient of \\(x^6\\)",
+            "type": "number",
+            "expected": "-80"
+          },
+          {
+            "key": "x7",
+            "label": "Coefficient of \\(x^7\\)",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>The exponent is \\(2r\\). Solve one index equation for each target.</p>",
+        "solution": "<ol><li>\\[T_{r+1}=\\binom{5}{r}(-2)^r x^{2r}.\\]</li><li>\\[2r=6\\Longrightarrow r=3,\\qquad \\binom{5}{3}(-2)^3=-80.\\]</li><li>\\[2r=7\\Longrightarrow r=\\frac{7}{2}.\\]</li><li><p>The second index is not an integer, so the \\(x^7\\) coefficient is \\(0\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S007-20261121-P03",
+        "title": "An integer index can still be out of range",
+        "prompt": "<p>In \\(\\left(2x^3+\\frac{1}{x^2}\\right)^4\\), where \\(x\\ne0\\), find the coefficient of \\(x^2\\) and the coefficient of \\(x^{-13}\\). Why is the second coefficient zero?</p>",
+        "fields": [
+          {
+            "key": "x2",
+            "label": "Coefficient of \\(x^2\\)",
+            "type": "number",
+            "expected": "24"
+          },
+          {
+            "key": "negative",
+            "label": "Coefficient of \\(x^{-13}\\)",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "reason",
+            "label": "Reason for the missing second power",
+            "type": "choice",
+            "expected": "bounds",
+            "options": {
+              "bounds": "Its required index is greater than the outer power.",
+              "fractional": "Its required index is not an integer.",
+              "negative": "Negative powers cannot occur."
+            }
+          }
+        ],
+        "hint": "<p>The exponent is \\(12-5r\\), with \\(r=0,1,2,3,4\\).</p>",
+        "solution": "<ol><li>\\[12-5r=2\\Longrightarrow r=2,\\qquad \\binom{4}{2}2^2=24.\\]</li><li>\\[12-5r=-13\\Longrightarrow r=5.\\]</li><li><p>The allowed indices stop at \\(4\\). Thus \\(x^{-13}\\) is absent and its coefficient is \\(0\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S007-20261121-P04",
+        "title": "Include an outside exponent in a constant-term question",
+        "prompt": "<p>Find the constant term in \\(x^3\\left(x-\\frac{2}{x}\\right)^5\\), where \\(x\\ne0\\). Give the selected index and the constant coefficient.</p>",
+        "fields": [
+          {
+            "key": "r",
+            "label": "Index \\(r\\)",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "constant",
+            "label": "Constant term",
+            "type": "number",
+            "expected": "80"
+          }
+        ],
+        "hint": "<p>The exponent after the outside multiplication is \\(3+(5-r)-r\\).</p>",
+        "solution": "<ol><li>\\[x^3T_{r+1}=\\binom{5}{r}(-2)^r x^{8-2r}.\\]</li><li>\\[8-2r=0\\Longrightarrow r=4.\\]</li><li>\\[\\text{Constant term}=\\binom{5}{4}(-2)^4=80.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S007-20261121-P05",
+        "title": "Select two powers in a square-root expression",
+        "prompt": "<p>For \\(x&gt;0\\), find the constant term and the coefficient of \\(x^{-2}\\) in \\(\\left(\\sqrt{x}+\\frac{1}{\\sqrt{x}}\\right)^8\\).</p>",
+        "fields": [
+          {
+            "key": "constant",
+            "label": "Constant term",
+            "type": "number",
+            "expected": "70"
+          },
+          {
+            "key": "negative",
+            "label": "Coefficient of \\(x^{-2}\\)",
+            "type": "number",
+            "expected": "28"
+          }
+        ],
+        "hint": "<p>The exponent simplifies to \\(4-r\\).</p>",
+        "solution": "<ol><li>\\[T_{r+1}=\\binom{8}{r}x^{\\frac{8-r}{2}-\\frac{r}{2}}=\\binom{8}{r}x^{4-r}.\\]</li><li>\\[4-r=0\\Longrightarrow r=4,\\qquad \\binom{8}{4}=70.\\]</li><li>\\[4-r=-2\\Longrightarrow r=6,\\qquad \\binom{8}{6}=28.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S007-20261121-P06",
+        "title": "Combine contributions with the same power",
+        "prompt": "<p>Find the coefficients of \\(x^{10}\\) and \\(x^8\\) in \\((2x^2-x^2)^5\\).</p>",
+        "fields": [
+          {
+            "key": "x10",
+            "label": "Coefficient of \\(x^{10}\\)",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "x8",
+            "label": "Coefficient of \\(x^8\\)",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>Simplify the two like terms inside the bracket before raising the result to the fifth power.</p>",
+        "solution": "<ol><li>\\[(2x^2-x^2)^5=(x^2)^5=x^{10}.\\]</li><li><p>The coefficient of \\(x^{10}\\) is \\(1\\), and the coefficient of \\(x^8\\) is \\(0\\). All binomial contributions have power \\(10\\), so a single contribution would not give the final coefficient.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S007-20261121-E01",
+          "title": "Select three powers in a Laurent expansion",
+          "marks": 6,
+          "question": "<p>For \\(x\\ne0\\), find the coefficients of \\(x^3\\), \\(x^0\\) and \\(x^4\\) in \\(\\left(3x^2-\\frac{2}{x}\\right)^6\\). Show the index equation used for each target.</p>",
+          "hint": "<p>Combine both powers of \\(x\\) before setting the exponent equal to each target.</p>",
+          "solution": "<ol><li>\\[T_{r+1}=\\binom{6}{r}3^{6-r}(-2)^r x^{12-3r}.\\]</li><li>\\[12-3r=3\\Longrightarrow r=3,\\qquad \\binom{6}{3}3^3(-2)^3=-4320.\\]</li><li>\\[12-3r=0\\Longrightarrow r=4,\\qquad \\binom{6}{4}3^2(-2)^4=2160.\\]</li><li>\\[12-3r=4\\Longrightarrow r=\\frac{8}{3}.\\]</li><li><p>The last index is not an integer, so the \\(x^4\\) coefficient is \\(0\\).</p></li></ol>",
+          "marking": "<ul><li>1 mark: obtain the general coefficient and exponent \\(12-3r\\).</li><li>1 mark: select \\(r=3\\) for \\(x^3\\).</li><li>1 mark: obtain coefficient \\(-4320\\).</li><li>1 mark: select \\(r=4\\) and obtain constant \\(2160\\).</li><li>1 mark: obtain \\(r=\\frac{8}{3}\\) for the last target.</li><li>1 mark: reject the noninteger index and state coefficient \\(0\\).</li></ul>"
+        },
+        {
+          "id": "P1-S007-20261121-E02",
+          "title": "Use fractional powers and report the correct position",
+          "marks": 5,
+          "question": "<p>For \\(x&gt;0\\), find the constant coefficient and the coefficient of \\(x^{-3}\\) in \\(\\left(2\\sqrt{x}-\\frac{1}{x}\\right)^6\\). State the term number of the \\(x^{-3}\\) contribution in standard binomial order.</p>",
+          "hint": "<p>The exponent is \\(3-\\frac{3r}{2}\\). The coefficient also contains \\(2^{6-r}\\).</p>",
+          "solution": "<ol><li>\\[T_{r+1}=\\binom{6}{r}2^{6-r}(-1)^r x^{3-\\frac{3r}{2}}.\\]</li><li>\\[3-\\frac{3r}{2}=0\\Longrightarrow r=2,\\qquad \\binom{6}{2}2^4=240.\\]</li><li>\\[3-\\frac{3r}{2}=-3\\Longrightarrow r=4,\\qquad \\binom{6}{4}2^2=60.\\]</li><li><p>The latter contribution has term number \\(r+1=5\\), so it is \\(T_5=60x^{-3}\\).</p></li></ol>",
+          "marking": "<ul><li>1 mark: obtain the general coefficient and exponent.</li><li>1 mark: select \\(r=2\\) for the constant.</li><li>1 mark: obtain constant \\(240\\).</li><li>1 mark: select \\(r=4\\) and obtain coefficient \\(60\\).</li><li>1 mark: report term number \\(5\\).</li></ul>"
+        },
+        {
+          "id": "P1-S007-20261121-E03",
+          "title": "Find all parameter values, including a zero case",
+          "marks": 5,
+          "question": "<p>In \\(\\left(x^2+\\frac{k}{x}\\right)^6\\), where \\(x\\ne0\\), the constant coefficient equals four times the coefficient of \\(x^6\\). Find all real values of \\(k\\).</p>",
+          "hint": "<p>The constant uses \\(r=4\\); the \\(x^6\\) contribution uses \\(r=2\\). Factor the resulting equation without dividing by \\(k\\).</p>",
+          "solution": "<ol><li>\\[T_{r+1}=\\binom{6}{r}k^r x^{12-3r}.\\]</li><li>\\[\\text{Constant coefficient}=15k^4,\\qquad \\text{coefficient of }x^6=15k^2.\\]</li><li>\\[15k^4=4(15k^2)\\Longrightarrow k^2(k^2-4)=0.\\]</li><li>\\[k=0,\\quad k=-2,\\quad k=2.\\]</li><li><p>At \\(k=0\\), both coefficients are zero. At either nonzero value, the coefficients are \\(240\\) and \\(60\\). Every listed value satisfies the stated equality.</p></li></ol>",
+          "marking": "<ul><li>1 mark: select indices \\(4\\) and \\(2\\).</li><li>1 mark: obtain \\(15k^4\\) and \\(15k^2\\).</li><li>1 mark: form and factor the coefficient equation.</li><li>1 mark: find the nonzero values \\(-2,2\\).</li><li>1 mark: retain and verify the valid zero value.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Match the exponent first. Calculate the coefficient only after checking the index.</p><h2>General term and position</h2>\\[T_{r+1}=\\binom{n}{r}A^{n-r}B^r,\\qquad r=0,1,\\ldots,n.\\]<p>The first contribution has \\(r=0\\); the \\(j\\)th has \\(r=j-1\\). Keep both complete terms inside their powers.</p><h2>Select a power</h2>\\[(ax^p+bx^q)^n:\\quad T_{r+1}=\\binom{n}{r}a^{n-r}b^r x^{pn+(q-p)r}.\\]<p>For \\(x^m\\), solve \\(pn+(q-p)r=m\\). Include an outside factor \\(x^k\\) by adding \\(k\\) to the exponent. A constant has \\(m=0\\).</p><p>Reject noninteger or out-of-range indices: that power is absent. An allowed index can still have a zero coefficient.</p><h2>Domain and order</h2><p>Negative integer powers: \\(x\\ne0\\). Square root: \\(x\\ge0\\); a denominator may exclude zero. Preserve the original domain.</p><p>Exponent step \\(q-p&gt;0\\): formula order is ascending. Step \\(q-p&lt;0\\): reverse it. If \\(p=q\\), combine the like terms inside the bracket first.</p><h2>One useful model and final checks</h2>\\[\\left(2x^2-\\frac{1}{x}\\right)^5:\\quad T_{r+1}=\\binom{5}{r}2^{5-r}(-1)^r x^{10-3r}.\\]<p>For \\(x^4\\): \\(r=2\\), coefficient \\(80\\). For a constant: \\(r=\\frac{10}{3}\\), so none occurs.</p><p>Report a coefficient without its variable. Solve parameter equations without dividing away zero; recheck every candidate in the original relation.</p>",
+      "checks": "<ul><li>Integer index inside the bounds?</li><li>Both powers and any outside shift included?</li><li>Correct sign and complete numerical coefficient?</li><li>Domain, ordering and zero cases checked?</li></ul>",
+      "examTip": "<p>Domain, ordering and zero cases checked?</p>"
+    }
+  },
+  "orig_binomial_expansion_products": {
+    "updatedOn": "2026-11-21",
+    "description": "Find a coefficient by matching the powers that can produce it. Keep every contribution, use zero coefficients for gaps, and simplify opposite-sign factors when their structure allows it.",
+    "sections": [
+      {
+        "id": "binomial-products-target",
+        "title": "Which products can make the required power?",
+        "label": "Match exponent pairs",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Multiplying expansions means choosing one term from each factor. Their coefficients multiply, and their exponents add. Several different pairs can produce the same final power, so add every contributing product.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[(a_ix^i)(b_jx^j)=a_i b_j x^{i+j}.\\]<p>For the coefficient of \\(x^m\\), list all available exponent pairs with \\(i+j=m\\). Multiply each pair of coefficients, then add the results.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S008-20261121-C01",
+            "title": "Collect every pair that makes the target power",
+            "prompt": "<p>Find the coefficient of \\(x^2\\) in \\((1-3x+2x^2)(4+2x-x^2)\\). How many nonzero term pairs contribute to it?</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient of \\(x^2\\)",
+                "type": "number",
+                "expected": "1",
+                "retry": [
+                  {
+                    "answer": "-6",
+                    "feedback": "<p>The linear-by-linear product is only one contribution. Include constant-by-quadratic products from both directions.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "count",
+                "label": "Number of contributing pairs",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Use exponent pairs \\((0,2),(1,1),(2,0)\\), one exponent from each factor.</p>",
+            "solution": "<ol><li>\\[1(-x^2)+(-3x)(2x)+(2x^2)(4)=(-1-6+8)x^2=x^2.\\]</li><li><p>There are three nonzero pairs. Their coefficients add to \\(1\\).</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>The notation \\([x^m]P(x)\\) means “the coefficient of \\(x^m\\) in \\(P(x)\\)”. It is a label for a coefficient, not multiplication or evaluation. For ordinary polynomials:</p>\\[[x^m](AB)=a_0b_m+a_1b_{m-1}+\\cdots+a_mb_0.\\]<p>Here \\(a_i,b_j\\) are the coefficients in the two factors. Treat a missing power as coefficient \\(0\\). You can use a small pair list instead of memorising this formula.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The coefficient of \\(x^m\\) in a product is generally not the product of the two \\(x^m\\) coefficients: that pair produces \\(x^{2m}\\). Include constant-by-target contributions as well.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-products-linear",
+        "title": "How does a linear multiplier change the target?",
+        "label": "A linear multiplier",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Let \\(C_j\\) be the coefficient of \\(x^j\\) in \\(F(x)\\). In \\((a+bx)F(x)\\), the constant \\(a\\) leaves exponents unchanged, while \\(bx\\) raises each exponent by one.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[[x^m]\\bigl((a+bx)F(x)\\bigr)=aC_m+bC_{m-1}.\\]<p>Use the coefficient one power lower for the linear multiplier. For an ordinary polynomial, an index below zero has coefficient \\(0\\).</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_binomial_expansion_products/binomial-product-pairs.svg\" alt=\"Two highlighted exponent pairs produce the target cubic term and their numerical contributions are added.\" width=\"844\" height=\"480\"></p><p>To reach \\(x^3\\) in \\((1+2x)(1+x)^4\\), use \\(1\\cdot4x^3\\) and \\(2x\\cdot6x^2\\). Their coefficients sum to \\(16\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S008-20261121-C02",
+            "title": "A linear multiplier shifts the required coefficient",
+            "prompt": "<p>Find the coefficient of \\(x^3\\) in \\((3-x)(1+2x)^4\\). Give the contribution from \\(3\\), the contribution from \\(-x\\), and their total.</p>",
+            "fields": [
+              {
+                "key": "constant",
+                "label": "Contribution from the constant multiplier",
+                "type": "number",
+                "expected": "96"
+              },
+              {
+                "key": "linear",
+                "label": "Contribution from the linear multiplier",
+                "type": "number",
+                "expected": "-24",
+                "retry": [
+                  {
+                    "answer": "-32",
+                    "feedback": "<p>Multiplication by \\(x\\) raises the power by one. Use the \\(x^2\\) term, not the \\(x^3\\) term.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "total",
+                "label": "Final coefficient of \\(x^3\\)",
+                "type": "number",
+                "expected": "72"
+              }
+            ],
+            "hint": "<p>You need the \\(x^3\\) coefficient and the \\(x^2\\) coefficient of \\((1+2x)^4\\).</p>",
+            "solution": "<ol><li>\\[(1+2x)^4=1+8x+24x^2+32x^3+16x^4.\\]</li><li>\\[3(32x^3)+(-x)(24x^2)=(96-24)x^3=72x^3.\\]</li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write the two contributing products before adding their coefficients. This shows which shifted powers you selected and makes a missed sign easy to find.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-products-polynomial",
+        "title": "How do I handle a polynomial multiplier or a missing power?",
+        "label": "More multiplier terms",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Each extra term in a multiplier adds another possible shift. For a quadratic multiplier, use three coefficients from the expanded factor.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[[x^m]\\bigl((a+bx+cx^2)F(x)\\bigr)=aC_m+bC_{m-1}+cC_{m-2}.\\]<p>A gap in the multiplier gives a zero contribution, not a change in the other indices.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "P1-S008-20261121-C03",
+            "title": "A quadratic multiplier gives three contributions",
+            "prompt": "<p>Find the coefficient of \\(x^3\\) in \\((1-2x+x^2)(1+3x)^3\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient of \\(x^3\\)",
+                "type": "number",
+                "expected": "-18"
+              }
+            ],
+            "hint": "<p>The needed coefficients from the binomial are those of \\(x^3,x^2,x\\).</p>",
+            "solution": "<ol><li>\\[(1+3x)^3=1+9x+27x^2+27x^3.\\]</li><li>\\[1(27)+(-2)(27)+1(9)=27-54+9=-18.\\]</li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>For example, \\((1+x^2)F(x)\\) uses \\(C_m+C_{m-2}\\); there is no \\(C_{m-1}\\) contribution because the multiplier has no linear term. Likewise, if \\(F(x)=(1+x^2)^n\\), its odd-power coefficients are zero.</p><p>An outside factor \\(x^k\\) shifts the whole target: the coefficient of \\(x^m\\) in \\(x^kP(x)\\) is the coefficient of \\(x^{m-k}\\) in \\(P(x)\\). Account for that shift before listing pairs. A negative outside power raises the required inner power: for \\(x\\ne0\\), \\([x^2]\\left(\\frac{P(x)}{x}\\right)=[x^3]P(x)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A final coefficient can be zero because no valid pair exists, or because nonzero contributions cancel. Do the pair calculation before deciding which explanation applies.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-products-binomial",
+        "title": "How much of each binomial expansion do I need?",
+        "label": "Two binomial factors",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>For \\((a+bx)^n(c+dx)^p\\), select the necessary coefficients from each factor using the binomial theorem. Pair exponents that sum to the target and include each pair exactly once.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S008-20261121-C04",
+            "title": "Pair terms from two binomial expansions",
+            "prompt": "<p>Find the coefficient of \\(x^2\\) in \\((1+x)^4(1-2x)^3\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient of \\(x^2\\)",
+                "type": "number",
+                "expected": "-6"
+              }
+            ],
+            "hint": "<p>Use \\((0,2),(1,1),(2,0)\\). Terms above degree two cannot contribute because both factors contain only nonnegative powers.</p>",
+            "solution": "<ol><li><p>The required coefficients from the first factor are \\(1,4,6\\); those from the second are \\(1,-6,12\\).</p></li><li>\\[1(12)+4(-6)+6(1)=12-24+6=-6.\\]</li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>If both factors contain only nonnegative powers, terms above degree \\(m\\) cannot contribute to \\(x^m\\). You may stop each expansion there for that coefficient calculation.</p><p>If negative powers occur, list the pairs first. A higher power in one factor can combine with a negative power in the other to reach a lower target.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A truncated coefficient list can give an exact selected coefficient even though it is not the full expansion. Label it as the terms needed for the calculation, and keep the original domain if reciprocals occur.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-products-parity",
+        "title": "Can symmetry or factorisation remove most of the work?",
+        "label": "Odd and even powers",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>Replacing \\(x\\) by \\(-x\\) changes the sign of every odd power and leaves every even power unchanged. This gives a quick way to see cancellations. These are consequences of algebra; you can derive them instead of learning extra coefficient identities.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a polynomial \\(F\\), adding \\(F(x)+F(-x)\\) cancels odd powers and doubles even-power coefficients. Subtracting \\(F(x)-F(-x)\\) cancels even powers and doubles odd-power coefficients.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "P1-S008-20261121-C05",
+            "title": "Adding and subtracting keep different powers",
+            "prompt": "<p>Let \\(F(x)=(1+2x)^4+(1-2x)^4\\) and \\(G(x)=(1+2x)^4-(1-2x)^4\\).</p><p>Find the coefficients of \\(x^3\\) and \\(x^2\\) in \\(F\\), and the coefficient of \\(x^3\\) in \\(G\\).</p>",
+            "fields": [
+              {
+                "key": "F3",
+                "label": "Coefficient of \\(x^3\\) in \\(F\\)",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "F2",
+                "label": "Coefficient of \\(x^2\\) in \\(F\\)",
+                "type": "number",
+                "expected": "48"
+              },
+              {
+                "key": "G3",
+                "label": "Coefficient of \\(x^3\\) in \\(G\\)",
+                "type": "number",
+                "expected": "64"
+              }
+            ],
+            "hint": "<p>Replacing \\(x\\) by \\(-x\\) reverses odd-power signs and keeps even-power signs.</p>",
+            "solution": "<ol><li><p>In \\((1+2x)^4\\), the coefficients of \\(x^2\\) and \\(x^3\\) are \\(24\\) and \\(32\\). In \\((1-2x)^4\\), they are \\(24\\) and \\(-32\\).</p></li><li>\\[F:\\quad x^3\\text{ coefficient}=32-32=0,\\quad x^2\\text{ coefficient}=24+24=48.\\]</li><li>\\[G:\\quad x^3\\text{ coefficient}=32-(-32)=64.\\]</li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>A product needs a different argument. When opposite-sign brackets have the same positive integer outer power, combine them first:</p>"
+          },
+          {
+            "kind": "key",
+            "html": "\\[(a+b)^n(a-b)^n=(a^2-b^2)^n.\\]<p>In particular, \\((1+cx)^n(1-cx)^n=(1-c^2x^2)^n\\), so only even powers of \\(x\\) occur.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_binomial_expansion_products/binomial-product-parity.svg\" alt=\"A difference-of-squares transformation leads to a coefficient strip with only even exponent positions.\" width=\"844\" height=\"493\"></p><p>Equal fourth powers combine to \\((1-x^2)^4\\). Its powers are \\(0,2,4,6,8\\), so every odd-power coefficient is \\(0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "P1-S008-20261121-C06",
+            "title": "Combine equal opposite-sign powers first",
+            "prompt": "<p>Find the coefficients of \\(x^4\\) and \\(x^3\\) in \\((1+3x)^3(1-3x)^3\\).</p>",
+            "fields": [
+              {
+                "key": "x4",
+                "label": "Coefficient of \\(x^4\\)",
+                "type": "number",
+                "expected": "243"
+              },
+              {
+                "key": "x3",
+                "label": "Coefficient of \\(x^3\\)",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>First use \\((1+3x)(1-3x)=1-9x^2\\).</p>",
+            "solution": "<ol><li>\\[(1+3x)^3(1-3x)^3=(1-9x^2)^3.\\]</li><li><p>The \\(x^4\\) contribution is \\(\\binom{3}{2}(-9x^2)^2=243x^4\\). Only even powers occur, so the \\(x^3\\) coefficient is \\(0\\).</p></li></ol>"
+          },
+          {
+            "kind": "example",
+            "index": 7
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not apply the equal-power shortcut unchanged to unequal powers. Pair the common number of factors, then keep and multiply the leftover factor. Also distinguish a sum from a product: they produce cancellations for different reasons.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Contribution",
+        "definition": "<p>One pair of multiplied terms that produces the target power.</p>"
+      },
+      {
+        "term": "Target power",
+        "definition": "<p>The exponent requested in the question.</p>"
+      },
+      {
+        "term": "Multiplier",
+        "definition": "<p>A factor whose terms shift powers in another expansion.</p>"
+      },
+      {
+        "term": "Missing power",
+        "definition": "<p>A power whose coefficient is zero in the stated expression.</p>"
+      },
+      {
+        "term": "Parity",
+        "definition": "<p>Whether an integer exponent is odd or even.</p>"
+      },
+      {
+        "term": "Cancellation",
+        "definition": "<p>Contributions of opposite signs adding to zero.</p>"
+      },
+      {
+        "term": "Truncation",
+        "definition": "<p>Keeping only a specified part of an expansion.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "A coefficient comes from a sum of products",
+        "question": "<p>Find the coefficient of \\(x^2\\) in \\((1+2x+3x^2)(2-x+4x^2)\\).</p>",
+        "solution": [
+          "<p>A product has power \\(2\\) only when its exponents add to \\(2\\). The pairs are \\((0,2),(1,1),(2,0)\\).</p>",
+          "\\[1(4x^2)+(2x)(-x)+(3x^2)(2)=4x^2-2x^2+6x^2.\\]",
+          "\\[\\text{Coefficient of }x^2=4-2+6=8.\\]",
+          "<p>No other pair of terms can produce \\(x^2\\), so the remaining products need not be calculated.</p>"
+        ]
+      },
+      {
+        "title": "A linear factor needs two neighbouring coefficients",
+        "question": "<p>Find the coefficient of \\(x^3\\) in \\((1+2x)(1+x)^4\\).</p>",
+        "solution": [
+          "<p>The constant \\(1\\) needs an \\(x^3\\) term from the binomial; the \\(2x\\) needs an \\(x^2\\) term.</p>",
+          "\\[(1+x)^4=1+4x+6x^2+4x^3+x^4.\\]",
+          "\\[1(4x^3)+(2x)(6x^2)=(4+12)x^3.\\]",
+          "<p>The coefficient is \\(16\\).</p>"
+        ]
+      },
+      {
+        "title": "A quadratic factor needs three neighbouring coefficients",
+        "question": "<p>Find the coefficient of \\(x^3\\) in \\((2+x-x^2)(1-x)^5\\).</p>",
+        "solution": [
+          "<p>From \\((1-x)^5\\), we need coefficients of \\(x^3,x^2,x\\):</p>\\[\\binom{5}{3}(-1)^3=-10,\\quad \\binom{5}{2}(-1)^2=10,\\quad \\binom{5}{1}(-1)=-5.\\]",
+          "<p>Match them to the multiplier terms \\(2,x,-x^2\\), respectively.</p>",
+          "\\[\\text{Coefficient of }x^3=2(-10)+1(10)+(-1)(-5)=-5.\\]",
+          "<p>The last contribution is positive because both participating coefficients are negative.</p>"
+        ]
+      },
+      {
+        "title": "Two expanded brackets have several valid pairs",
+        "question": "<p>Find the coefficient of \\(x^3\\) in \\((1+3x)^3(1-x)^4\\).</p>",
+        "solution": [
+          "<p>The first factor has coefficients \\(1,9,27,27\\). The second has coefficients \\(1,-4,6,-4,1\\), listed from the constant upwards.</p>",
+          "<p>Use exponent pairs \\((0,3),(1,2),(2,1),(3,0)\\).</p>",
+          "\\[1(-4)+9(6)+27(-4)+27(1)=-4+54-108+27=-31.\\]",
+          "<p>The coefficient is \\(-31\\). Include the constant contribution from each end of the list.</p>"
+        ]
+      },
+      {
+        "title": "A negative power can bring a higher power down",
+        "question": "<p>Find the coefficient of \\(x\\) in \\((1+x)^5\\left(1-\\frac{1}{x^2}\\right)\\), where \\(x\\ne0\\).</p>",
+        "solution": [
+          "<p>The multiplier has powers \\(0\\) and \\(-2\\). The pairs reaching power \\(1\\) are \\((1,0)\\) and \\((3,-2)\\).</p>",
+          "<p>In \\((1+x)^5\\), the \\(x\\) coefficient is \\(5\\), and the \\(x^3\\) coefficient is \\(10\\).</p>",
+          "\\[(5x)(1)+(10x^3)(-x^{-2})=(5-10)x=-5x.\\]",
+          "<p>The coefficient is \\(-5\\). Stopping the first expansion at \\(x\\) would miss the contribution from \\(x^3\\). The original domain remains \\(x\\ne0\\).</p>"
+        ]
+      },
+      {
+        "title": "See which powers cancel when the signs change",
+        "question": "<p>Find the nonzero terms of \\((1+x)^5+(1-x)^5\\) and \\((1+x)^5-(1-x)^5\\).</p>",
+        "solution": [
+          "\\[(1+x)^5=1+5x+10x^2+10x^3+5x^4+x^5.\\]",
+          "\\[(1-x)^5=1-5x+10x^2-10x^3+5x^4-x^5.\\]",
+          "<p>Adding cancels each odd-power pair and doubles each even-power pair:</p>\\[(1+x)^5+(1-x)^5=2+20x^2+10x^4.\\]",
+          "<p>Subtracting cancels each even-power pair and doubles each odd-power pair:</p>\\[(1+x)^5-(1-x)^5=10x+20x^3+2x^5.\\]"
+        ]
+      },
+      {
+        "title": "Use a difference of squares before expanding",
+        "question": "<p>Find the coefficient of \\(x^4\\) in \\((1+x)^4(1-x)^4\\).</p>",
+        "solution": [
+          "\\[(1+x)^4(1-x)^4=\\bigl((1+x)(1-x)\\bigr)^4=(1-x^2)^4.\\]",
+          "<p>The desired contribution uses the square of \\(-x^2\\):</p>\\[\\binom{4}{2}(-x^2)^2=6x^4.\\]",
+          "<p>The coefficient is \\(6\\). The full expression has only even powers:</p>\\[(1-x^2)^4=1-4x^2+6x^4-4x^6+x^8.\\]"
+        ]
+      },
+      {
+        "title": "Unequal outer powers leave an extra factor",
+        "question": "<p>Find the coefficient of \\(x^3\\) in \\((1+x)^5(1-x)^3\\).</p>",
+        "solution": [
+          "<p>Pair three copies of each opposite-sign bracket. Two copies of \\(1+x\\) remain:</p>\\[(1+x)^5(1-x)^3=(1-x^2)^3(1+x)^2.\\]",
+          "<p>The first factor has only even powers. The only pair producing \\(x^3\\) is its \\(-3x^2\\) multiplied by the second factor’s \\(2x\\).</p>",
+          "\\[(-3x^2)(2x)=-6x^3.\\]",
+          "<p>The coefficient is \\(-6\\). Unequal outer powers need not give an expression containing only even powers.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "The general term, index bounds and Laurent powers",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_general_term"
+      },
+      {
+        "title": "Unknown constants, exponents and complete cases",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_parameters"
+      },
+      {
+        "title": "Approximations, remainders and coupled coefficient models",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_approximations"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S008-20261121-P01",
+        "title": "Include both routes to the target power",
+        "prompt": "<p>Find the coefficient of \\(x^3\\) in \\((2+x)(1-x)^5\\). Show the contributions before adding them.</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient of \\(x^3\\)",
+            "type": "number",
+            "expected": "-10",
+            "retry": [
+              {
+                "answer": "-20",
+                "feedback": "<p>You have counted the constant times the cubic term. Also include \\(x\\) times the quadratic term.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The constant \\(2\\) multiplies the cubic term; \\(x\\) multiplies the quadratic term.</p>",
+        "solution": "<ol><li>\\[(1-x)^5=1-5x+10x^2-10x^3+5x^4-x^5.\\]</li><li><p>The only exponent pairs are \\((0,3)\\) and \\((1,2)\\).</p>\\[2(-10)+1(10)=-10.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S008-20261121-P02",
+        "title": "Include all three contribution pairs",
+        "prompt": "<p>Find the coefficient of \\(x^2\\) in \\((1-3x+2x^2)(1+2x)^4\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient of \\(x^2\\)",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>Pair powers \\((0,2)\\), \\((1,1)\\) and \\((2,0)\\). Keep each multiplier sign.</p>",
+        "solution": "<ol><li><p>The needed coefficients in the second factor are \\(1,8,24\\), from</p>\\[(1+2x)^4=1+8x+24x^2+32x^3+16x^4.\\]</li><li>\\[[x^2]\\bigl((1-3x+2x^2)(1+2x)^4\\bigr)=1(24)-3(8)+2(1)=2.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S008-20261121-P03",
+        "title": "A missing odd power can be supplied by another factor",
+        "prompt": "<p>Find the coefficient of \\(x^3\\) in \\((1+x^2)^4(1-2x)\\). Also give the exponent of the term selected from \\((1+x^2)^4\\) for the nonzero contribution.</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient of \\(x^3\\)",
+            "type": "number",
+            "expected": "-8",
+            "retry": [
+              {
+                "answer": "0",
+                "feedback": "<p>The first factor has no cubic term, but its \\(x^2\\) term combines with \\(-2x\\).</p>"
+              }
+            ]
+          },
+          {
+            "key": "power",
+            "label": "Selected exponent from the first factor",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>The first factor has only even powers. The \\(-2x\\) term can turn a quadratic term into a cubic term.</p>",
+        "solution": "<ol><li>\\[(1+x^2)^4=1+4x^2+6x^4+4x^6+x^8.\\]</li><li><p>The contribution from the constant in the second factor is zero. The other contribution is</p>\\[(4x^2)(-2x)=-8x^3.\\]</li><li><p>The requested coefficient is \\(-8\\), and the selected exponent from the first factor is \\(2\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S008-20261121-P04",
+        "title": "Use a difference of squares before expanding",
+        "prompt": "<p>Find the coefficients of \\(x^4\\) and \\(x^3\\) in \\((1+x)^3(1-x)^3\\).</p>",
+        "fields": [
+          {
+            "key": "x4",
+            "label": "Coefficient of \\(x^4\\)",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "x3",
+            "label": "Coefficient of \\(x^3\\)",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>Both factors have the same outer power. Combine the brackets first.</p>",
+        "solution": "<ol><li>\\[(1+x)^3(1-x)^3=\\bigl((1+x)(1-x)\\bigr)^3=(1-x^2)^3.\\]</li><li>\\[(1-x^2)^3=1-3x^2+3x^4-x^6.\\]</li><li><p>The coefficients are \\(3\\) and \\(0\\). Every surviving exponent is even.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S008-20261121-P05",
+        "title": "Account for an outside power first",
+        "prompt": "<p>For \\(x\\ne0\\), find the coefficient of \\(x^2\\) in \\(\\frac{(1+3x)^4(1-x)}{x}\\).</p>",
+        "fields": [
+          {
+            "key": "innerPower",
+            "label": "Required exponent in the two-bracket product",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "coefficient",
+            "label": "Coefficient of \\(x^2\\)",
+            "type": "number",
+            "expected": "54"
+          }
+        ],
+        "hint": "<p>The outside \\(x^{-1}\\) shifts every exponent down by one. Find the cubic coefficient of the numerator.</p>",
+        "solution": "<ol><li><p>Inside the numerator, target exponent \\(2+1=3\\). Stopping at the quadratic terms would lose a required contribution.</p>\\[(1+3x)^4=1+12x+54x^2+108x^3+81x^4.\\]</li><li>\\[[x^3]\\bigl((1+3x)^4(1-x)\\bigr)=108-54=54.\\]</li><li><p>Dividing by \\(x\\) changes \\(54x^3\\) to \\(54x^2\\); it does not change the coefficient. The original domain remains \\(x\\ne0\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S008-20261121-P06",
+        "title": "Include negative powers in the exponent search",
+        "prompt": "<p>For \\(x\\ne0\\), find the coefficient of \\(x^3\\) in \\(\\left(x^2+\\frac{1}{x}\\right)^4(1-2x)\\). State the domain of the original expression.</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient of \\(x^3\\)",
+            "type": "number",
+            "expected": "-12",
+            "retry": [
+              {
+                "answer": "6",
+                "feedback": "<p>Include the coefficient \\(-2\\) from the second factor.</p>"
+              }
+            ]
+          },
+          {
+            "key": "domain",
+            "label": "Original domain",
+            "type": "choice",
+            "expected": "nonzero",
+            "options": {
+              "all": "All real \\(x\\)",
+              "nonzero": "Real \\(x\\ne0\\)",
+              "positive": "Only \\(x&gt;0\\)"
+            }
+          }
+        ],
+        "hint": "<p>In the first factor the exponents are \\(8-3r\\), with \\(r=0,1,2,3,4\\). Look for exponents \\(3\\) and \\(2\\).</p>",
+        "solution": "<ol><li>\\[\\left(x^2+\\frac{1}{x}\\right)^4=x^8+4x^5+6x^2+4x^{-1}+x^{-4}.\\]</li><li><p>There is no \\(x^3\\) term in the first factor. The other route is</p>\\[(6x^2)(-2x)=-12x^3.\\]</li><li><p>The coefficient is \\(-12\\). Negative integer powers are defined for negative values too, but \\(x=0\\) remains excluded.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S008-20261121-E01",
+          "title": "A cancellation determines the multiplier",
+          "marks": 4,
+          "question": "<p>The coefficient of \\(x^2\\) in \\((1+kx)(1-2x)^5\\) is zero, where \\(k\\) is real.</p><p>Find \\(k\\), then find the coefficient of \\(x^3\\) in the same product. Show the contributing pairs.</p>",
+          "hint": "<p>The needed coefficients of \\((1-2x)^5\\) are \\(1,-10,40,-80\\). Write the quadratic coefficient as a linear expression in \\(k\\).</p>",
+          "solution": "<ol><li><p>Through the cubic term, the binomial contributions are</p>\\[1+5(-2x)+10(-2x)^2+10(-2x)^3=1-10x+40x^2-80x^3.\\]</li><li><p>Higher terms do not affect the requested coefficients. For the quadratic coefficient,</p>\\[40-10k=0\\quad\\Longrightarrow\\quad k=4.\\]</li><li><p>The cubic coefficient is</p>\\[-80+40k=-80+160=80.\\]</li></ol>",
+          "marking": "<ul><li>1 mark: Form the quadratic coefficient \\(40-10k\\) using both pairs.</li><li>1 mark: Solve to obtain \\(k=4\\).</li><li>1 mark: Form the cubic coefficient \\(-80+40k\\).</li><li>1 mark: Evaluate the requested coefficient as \\(80\\).</li></ul>"
+        },
+        {
+          "id": "P1-S008-20261121-E02",
+          "title": "Use parity, then check a cancellation",
+          "marks": 6,
+          "question": "<p>Let \\(F(x)=(1+x)^6+(1-x)^6\\) and \\(G(x)=(1-x^2)F(x)\\).</p><p>Explain on paper why \\(G\\) has no odd-power terms. Find its coefficients of \\(x^2\\), \\(x^4\\) and \\(x^6\\).</p>",
+          "hint": "<p>Odd powers have opposite signs in the two expansions defining \\(F\\); even powers add. Multiplication by \\(x^2\\) preserves whether an exponent is even.</p>",
+          "solution": "<ol><li>\\[F(x)=2+30x^2+30x^4+2x^6.\\]</li><li><p>The odd contributions cancel in \\(F\\). Both exponents in the multiplier are even, so every exponent in \\(G\\) is also even.</p></li><li>\\[[x^2]G=30-2=28,\\qquad [x^4]G=30-30=0.\\]</li><li>\\[[x^6]G=2-30=-28.\\]</li><li><p>As a full check,</p>\\[G(x)=2+28x^2-28x^6-2x^8.\\]<p>The quadratic and sextic coefficients have opposite signs; the quartic term cancels completely.</p></li></ol>",
+          "marking": "<ul><li>1 mark: Explain cancellation of the odd powers in the sum defining the first polynomial.</li><li>1 mark: Obtain \\(F(x)=2+30x^2+30x^4+2x^6\\).</li><li>1 mark: Calculate the quadratic coefficient \\(28\\).</li><li>1 mark: Include both quartic contributions to obtain \\(0\\).</li><li>1 mark: Calculate the sextic coefficient \\(-28\\).</li><li>1 mark: Explain that multiplication by an even-power polynomial preserves the absence of odd powers.</li></ul>"
+        },
+        {
+          "id": "P1-S008-20261121-E03",
+          "title": "Two binomials contribute several routes",
+          "marks": 6,
+          "question": "<p>Find the coefficients of \\(x^3\\) and \\(x^4\\) in \\((1+2x)^3(1-x)^4\\). Write the exponent pairs used for each coefficient.</p>",
+          "hint": "<p>Make two short coefficient rows, with an entry for every power. For a target exponent, multiply entries whose exponents add to that target.</p>",
+          "solution": "<ol><li>\\[(1+2x)^3=1+6x+12x^2+8x^3.\\]</li><li>\\[(1-x)^4=1-4x+6x^2-4x^3+x^4.\\]</li><li><p>For \\(x^3\\), use \\((0,3),(1,2),(2,1),(3,0)\\):</p>\\[1(-4)+6(6)+12(-4)+8(1)=-8.\\]</li><li><p>For \\(x^4\\), use \\((0,4),(1,3),(2,2),(3,1)\\):</p>\\[1(1)+6(-4)+12(6)+8(-4)=17.\\]</li><li><p>The first factor has degree three, so there is no additional \\((4,0)\\) contribution.</p></li></ol>",
+          "marking": "<ul><li>1 mark: Obtain the first complete coefficient row.</li><li>1 mark: Obtain the required coefficients of the second factor, retaining signs.</li><li>1 mark: Include all four cubic contribution pairs.</li><li>1 mark: Obtain the cubic coefficient \\(-8\\).</li><li>1 mark: Include all four quartic contribution pairs, without inventing a fourth-degree term in the cubic factor.</li><li>1 mark: Obtain the quartic coefficient \\(17\\).</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Choose the target power, list the pairs, multiply their coefficients, then add.</p><h2>Match exponents</h2>\\[(a_ix^i)(b_jx^j)=a_i b_jx^{i+j}.\\]<p>For \\(x^m\\), use all available pairs \\(i+j=m\\). Missing powers have coefficient \\(0\\). Include constant contributions from both ends. Cancellation can also make the final coefficient zero.</p><h2>Common multipliers</h2><p>Let \\(C_j\\) be the coefficient of \\(x^j\\) in \\(F\\).</p>\\[[x^m]\\bigl((a+bx)F\\bigr)=aC_m+bC_{m-1}.\\]\\[[x^m]\\bigl((a+bx+cx^2)F\\bigr)=aC_m+bC_{m-1}+cC_{m-2}.\\]<p>An outside \\(x^k\\) changes the target in \\(F\\) to \\(m-k\\).</p><h2>Keep enough terms</h2><p>For nonnegative powers only, ignore terms above the target degree. With negative powers, list pairs first: \\(x^3\\cdot x^{-2}=x\\). Preserve original domain restrictions.</p><p>Two binomial factors: obtain each required coefficient, then sum all target-producing products. A selected coefficient can be exact even when the lists are truncated.</p><h2>Derive the odd-and-even shortcuts</h2><p>\\(F(x)+F(-x)\\): odd powers cancel; even coefficients double. \\(F(x)-F(-x)\\): even powers cancel; odd coefficients double.</p>\\[(a+b)^n(a-b)^n=(a^2-b^2)^n.\\]<p>Thus \\((1+cx)^n(1-cx)^n\\) has only even powers. With unequal outer powers, keep the leftover factor.</p>",
+      "checks": "<ul><li>All pairs reach the requested exponent?</li><li>Signs and constant contributions included?</li><li>Missing powers kept as zeros?</li><li>Truncation and any symmetry shortcut justified?</li></ul>",
+      "examTip": "<p>Truncation and any symmetry shortcut justified?</p>"
+    }
+  },
+  "orig_binomial_expansion_parameters": {
+    "updatedOn": "2026-11-21",
+    "description": "Turn coefficient information into equations, retain every possible branch, and check that each solution satisfies the original algebra and the stated restrictions.",
+    "sections": [
+      {
+        "id": "binomial-parameters-constants",
+        "title": "How does a coefficient reveal an unknown constant?",
+        "label": "Build the coefficient equation",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Start by selecting the required power. Write its complete coefficient in terms of the unknown, then equate it to the value given in the question. The unknown can appear in either term of the bracket. We write \\(C_r=[x^r]F(x)\\) for the coefficient of \\(x^r\\) in an expression \\(F(x)\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\((a+bx)^n\\), with positive integer \\(n\\) and \\(0\\le r\\le n\\), the \\(x^r\\) contribution is</p>\\[\\binom{n}{r}a^{n-r}b^r x^r.\\]<p>Include the power of the first constant as well as the scale on \\(x\\). A coefficient equation concerns the numerical part only.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S009-20261121-C01",
+            "title": "Keep both square-root branches",
+            "prompt": "<p>The coefficient of \\(x^2\\) in \\((3+bx)^4\\) is \\(216\\). Find all real values of \\(b\\).</p>",
+            "fields": [
+              {
+                "key": "b",
+                "label": "All values of \\(b\\)",
+                "type": "set",
+                "expected": "{-2,2}"
+              }
+            ],
+            "hint": "<p>The coefficient is \\(\\binom{4}{2}3^2b^2\\), not just \\(6b^2\\).</p>",
+            "solution": "<ol><li>\\[\\binom{4}{2}3^2b^2=216\\Longrightarrow54b^2=216\\Longrightarrow b^2=4.\\]</li><li>\\[b=-2\\text{ or }b=2.\\]</li><li><p>Both values produce coefficient \\(216\\). No sign restriction was given.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If \\(a^2=c&gt;0\\), both \\(a=\\sqrt{c}\\) and \\(a=-\\sqrt{c}\\) are candidates. Keep them until the question’s sign or domain conditions select a branch.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>If the first constant in a bracket is zero, simplify the bracket directly. For example, \\((0+bx)^n=b^nx^n\\). Lower coefficients then vanish; do not use a formula requiring division by that first constant.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-parameters-zero",
+        "title": "Which solutions can division accidentally remove?",
+        "label": "Zero cases and ratios",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>An equality such as \\(C_2=C_1\\) or \\(C_2=3C_1\\) can hold when both coefficients are zero. Move all terms to one side and factor before cancelling a parameter that might be zero.</p>",
+        "blocks": [
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_binomial_expansion_parameters/parameter-branches.svg\" alt=\"A factored coefficient equation branches into zero and nonzero parameter solutions, each checked in the original equality.\" width=\"844\" height=\"500\"></p><p>The equation \\(10a^2=5a\\) has two branches: \\(a=0\\) and \\(a=\\frac{1}{2}\\). Dividing by \\(a\\) would discard the first branch.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "P1-S009-20261121-C02",
+            "title": "A coefficient equality may allow zero",
+            "prompt": "<p>In \\((1+kx)^4\\), the coefficients of \\(x\\) and \\(x^2\\) are equal. Find all real values of \\(k\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "All values of \\(k\\)",
+                "type": "set",
+                "expected": "{0,2/3}"
+              }
+            ],
+            "hint": "<p>Write \\(4k=6k^2\\), then factor without dividing by \\(k\\).</p>",
+            "solution": "<ol><li>\\[4k=6k^2\\Longrightarrow2k(3k-2)=0.\\]</li><li>\\[k=0\\text{ or }k=\\frac{2}{3}.\\]</li><li><p>At \\(k=0\\), both coefficients are zero. At \\(k=\\frac{2}{3}\\), both are \\(\\frac{8}{3}\\).</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>An equality of coefficients and a ratio condition are different. The equation \\(C_2=C_1\\) may permit both zero. The statement \\(\\frac{C_2}{C_1}=1\\) requires \\(C_1\\ne0\\) before any algebra.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Likewise, a parameter in a denominator is restricted from the start. A bracket containing \\(\\frac{x}{k}\\) requires \\(k\\ne0\\), even if a later multiplied equation happens to produce \\(k=0\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write “if this factor is zero” and check that case before dividing. If the question already says the parameter or denominator is nonzero, state that restriction and then simplify.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-parameters-exponents",
+        "title": "How do I find an unknown outer power?",
+        "label": "Integer exponents and boundaries",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>The finite binomial theorem here uses a positive integer outer power. An algebraic root is only a candidate: it must also satisfy that integer condition. A nonzero \\(x^r\\) coefficient requires \\(n\\ge r\\).</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "P1-S009-20261121-C03",
+            "title": "The outer power must be a positive integer",
+            "prompt": "<p>The coefficient of \\(x^2\\) in \\((1+x)^n\\) is \\(36\\), where \\(n\\) is a positive integer. Find \\(n\\).</p>",
+            "fields": [
+              {
+                "key": "n",
+                "label": "\\(n\\)",
+                "type": "number",
+                "expected": "9"
+              }
+            ],
+            "hint": "<p>A nonzero quadratic coefficient requires \\(n\\ge2\\). Solve \\(\\frac{n(n-1)}{2}=36\\).</p>",
+            "solution": "<ol><li>\\[n(n-1)=72\\Longrightarrow n^2-n-72=(n-9)(n+8)=0.\\]</li><li><p>The candidates are \\(9\\) and \\(-8\\). Only the positive integer \\(n=9\\) is allowed, and \\(\\binom{9}{2}=36\\).</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>If \\(n&lt;r\\), the coefficient of \\(x^r\\) in \\((a+bx)^n\\) is \\(0\\). When comparing coefficients and the question does not require them to be nonzero, inspect these small-power cases before dividing factorial expressions.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "text",
+            "html": "<p>Do not put a negative integer into a factorial formula such as \\((n-r)!\\). For indices beyond the finite expansion, read the coefficient as zero from the polynomial itself.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-parameters-linked",
+        "title": "How do two coefficients determine linked unknowns?",
+        "label": "Ratios and simultaneous equations",
+        "minutes": 10,
+        "level": "core",
+        "intro": "<p>Label the needed coefficients first, then write one equation for each condition. If a known coefficient is nonzero, a ratio can remove common factors. Otherwise use substitution or elimination while keeping zero cases.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\((1+ax)^n\\), with \\(n\\ge2\\),</p>\\[C_1=na,\\qquad C_2=\\frac{n(n-1)}{2}a^2.\\]<p>When \\(C_1\\ne0\\), their ratio is</p>\\[\\frac{C_2}{C_1}=\\frac{(n-1)a}{2}.\\]<p>This ratio is a consequence of the coefficient formulas, not a replacement for checking its denominator.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "P1-S009-20261121-C04",
+            "title": "Two coefficients determine the scale and exponent",
+            "prompt": "<p>In \\((1+px)^n\\), the coefficients of \\(x\\) and \\(x^2\\) are \\(8\\) and \\(28\\), respectively. Here \\(n\\) is a positive integer. Find \\(n\\) and \\(p\\).</p>",
+            "fields": [
+              {
+                "key": "n",
+                "label": "\\(n\\)",
+                "type": "number",
+                "expected": "8"
+              },
+              {
+                "key": "p",
+                "label": "\\(p\\)",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Use \\(np=8\\). Since the linear coefficient is nonzero, divide the quadratic coefficient equation by the linear one.</p>",
+            "solution": "<ol><li>\\[np=8,\\qquad\\frac{n(n-1)}{2}p^2=28.\\]</li><li>\\[\\frac{(n-1)p}{2}=\\frac{28}{8}=\\frac{7}{2}\\Longrightarrow(n-1)p=7.\\]</li><li><p>Subtracting this from \\(np=8\\) gives \\(p=1\\). Thus \\(n=8\\).</p></li><li>\\[8(1)=8,\\qquad\\binom{8}{2}(1)^2=28.\\]</li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_binomial_expansion_parameters/parameter-feasibility.svg\" alt=\"Two coefficient conditions are compared: one produces an integer outer power, and the other fails the integer requirement.\" width=\"844\" height=\"507\"></p><p>With \\(C_1=6\\), the condition \\(C_2=15\\) gives \\((n,a)=(6,1)\\). Changing \\(C_2\\) to \\(14\\) gives the inadmissible noninteger candidate \\(n=\\frac{9}{2}\\).</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>For a product, extract each coefficient by matching exponent pairs, then solve the resulting simultaneous equations. Keep each second parameter paired with the first parameter value that produced it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "P1-S009-20261121-C05",
+            "title": "Keep simultaneous solutions in their correct pairs",
+            "prompt": "<p>The coefficients of \\(x\\) and \\(x^2\\) in \\((1+ax)^2(1+bx)\\) are \\(5\\) and \\(8\\), respectively. Find every ordered pair \\((a,b)\\).</p>",
+            "fields": [
+              {
+                "key": "pairs",
+                "label": "All pairs \\((a,b)\\)",
+                "type": "pairs",
+                "expected": "(2,1);(4/3,7/3)"
+              }
+            ],
+            "hint": "<p>The coefficient equations are \\(2a+b=5\\) and \\(a^2+2ab=8\\). Substitute \\(b=5-2a\\).</p>",
+            "solution": "<ol><li>\\[a^2+2a(5-2a)=8\\Longrightarrow3a^2-10a+8=0.\\]</li><li>\\[(3a-4)(a-2)=0\\Longrightarrow a=\\frac{4}{3}\\text{ or }a=2.\\]</li><li>\\[a=\\frac{4}{3}\\Longrightarrow b=\\frac{7}{3},\\qquad a=2\\Longrightarrow b=1.\\]</li><li><p>For \\((2,1)\\), the coefficients are \\(4+1=5\\) and \\(4+4=8\\). For \\(\\left(\\frac{4}{3},\\frac{7}{3}\\right)\\), they are \\(\\frac{8}{3}+\\frac{7}{3}=5\\) and \\(\\frac{16}{9}+\\frac{56}{9}=8\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Two possible values of \\(a\\) and two of \\(b\\) do not automatically give four solutions. Report the ordered pairs that satisfy both original equations.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-parameters-checks",
+        "title": "How do I decide which candidates really work?",
+        "label": "Admissibility and impossibility",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Finish by checking every original condition: integer outer power, allowed parameter signs, nonzero denominators and each stated coefficient relation. Use an unused sign or coefficient condition to select among branches.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "example",
+            "index": 7
+          },
+          {
+            "kind": "check",
+            "id": "P1-S009-20261121-C06",
+            "title": "An impossible coefficient is a valid conclusion",
+            "prompt": "<p>The coefficient of \\(x^2\\) in \\((2+tx)^4\\) is claimed to be \\(-24\\). Find all real values of \\(t\\), or enter “no solutions”.</p>",
+            "fields": [
+              {
+                "key": "t",
+                "label": "All real values of \\(t\\)",
+                "type": "set",
+                "expected": "empty"
+              }
+            ],
+            "hint": "<p>Write the coefficient as a positive constant times \\(t^2\\).</p>",
+            "solution": "<ol><li>\\[\\binom{4}{2}2^2t^2=24t^2.\\]</li><li>\\[24t^2=-24\\Longrightarrow t^2=-1.\\]</li><li><p>A real square cannot be negative, so no real parameter satisfies the condition.</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>“No solution” may be the correct conclusion. A required real square may be negative; an outer power may be noninteger; or the candidate pairs may fail one of the original conditions. Explain the specific obstruction.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>When coefficients are given numerically, substituting a candidate into their original formulas is usually quicker than expanding the whole polynomial. Check both equations in a linked problem, not only the one used last.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep exact fractions and roots while solving. Rounding a candidate outer power to a nearby integer does not make it admissible. If a parameter is restricted, show why any rejected candidate fails.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Parameter",
+        "definition": "<p>A constant whose value is to be found or restricted.</p>"
+      },
+      {
+        "term": "Candidate",
+        "definition": "<p>A value produced by algebra that still needs checking against the original conditions.</p>"
+      },
+      {
+        "term": "Branch",
+        "definition": "<p>One possible case, such as a positive or negative root or a zero factor.</p>"
+      },
+      {
+        "term": "Admissible",
+        "definition": "<p>Satisfying every stated condition and original domain restriction.</p>"
+      },
+      {
+        "term": "Coefficient ratio",
+        "definition": "<p>One coefficient divided by another, requiring the denominator coefficient to be nonzero.</p>"
+      },
+      {
+        "term": "Ordered pair",
+        "definition": "<p>Two parameter values recorded together in a specified order.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Turn the complete coefficient into an equation",
+        "question": "<p>The coefficient of \\(x^2\\) in \\((2+ax)^4\\) is \\(216\\). Find all real values of \\(a\\).</p>",
+        "solution": [
+          "\\[\\text{Coefficient of }x^2=\\binom{4}{2}2^{4-2}a^2=24a^2.\\]",
+          "\\[24a^2=216\\Longrightarrow a^2=9.\\]",
+          "\\[a=-3\\text{ or }a=3.\\]",
+          "<p>Both give \\(24(9)=216\\). A positive coefficient does not force the parameter to be positive when the parameter is squared.</p>"
+        ]
+      },
+      {
+        "title": "Factor before cancelling a parameter",
+        "question": "<p>In \\((1+ax)^5\\), the coefficients of \\(x^2\\) and \\(x\\) are equal. Find all real values of \\(a\\).</p>",
+        "solution": [
+          "\\[C_1=5a,\\qquad C_2=10a^2.\\]",
+          "\\[10a^2=5a\\Longrightarrow5a(2a-1)=0.\\]",
+          "\\[a=0\\text{ or }a=\\frac{1}{2}.\\]",
+          "<p>At \\(a=0\\), both coefficients are \\(0\\). At \\(a=\\frac{1}{2}\\), both are \\(\\frac{5}{2}\\). Dividing by \\(a\\) at the start would lose the zero solution.</p>"
+        ]
+      },
+      {
+        "title": "Solve for an integer outer power",
+        "question": "<p>The coefficient of \\(x^2\\) in \\((1+x)^n\\) is \\(45\\). Find the positive integer \\(n\\).</p>",
+        "solution": [
+          "<p>Since the coefficient is nonzero, \\(n\\ge2\\).</p>",
+          "\\[\\binom{n}{2}=\\frac{n(n-1)}{2}=45.\\]",
+          "\\[n^2-n-90=(n-10)(n+9)=0.\\]",
+          "<p>The candidates are \\(10\\) and \\(-9\\). The allowed value is \\(n=10\\), and \\(\\binom{10}{2}=45\\).</p>"
+        ]
+      },
+      {
+        "title": "A missing-coefficient boundary can satisfy an equality",
+        "question": "<p>In \\((1+x)^n\\), the coefficient of \\(x^3\\) equals twice the coefficient of \\(x^2\\). Find all positive integers \\(n\\).</p>",
+        "solution": [
+          "<p>Check small powers before dividing coefficients. At \\(n=1\\), both requested coefficients are \\(0\\), so the equality holds. At \\(n=2\\), they are \\(0\\) and \\(1\\), so it fails.</p>",
+          "<p>For \\(n\\ge3\\), the quadratic coefficient is nonzero, so division is valid:</p>\\[\\frac{\\binom{n}{3}}{\\binom{n}{2}}=\\frac{n-2}{3}=2.\\]",
+          "\\[n-2=6\\Longrightarrow n=8.\\]",
+          "<p>At \\(n=8\\), the coefficients are \\(56\\) and \\(28\\). Thus all allowed values are \\(n=1\\) and \\(n=8\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a ratio only after its denominator is known to be nonzero",
+        "question": "<p>In \\((1+ax)^n\\), the coefficients of \\(x\\) and \\(x^2\\) are \\(6\\) and \\(15\\), respectively. Find the positive integer \\(n\\) and the real constant \\(a\\).</p>",
+        "solution": [
+          "\\[na=6,\\qquad\\frac{n(n-1)}{2}a^2=15.\\]",
+          "<p>The first coefficient is \\(6\\), so division by it is safe:</p>\\[\\frac{(n-1)a}{2}=\\frac{15}{6}=\\frac{5}{2}\\Longrightarrow(n-1)a=5.\\]",
+          "<p>Subtracting from \\(na=6\\) gives \\(a=1\\); then \\(n=6\\).</p>",
+          "\\[6(1)=6,\\qquad\\binom{6}{2}(1)^2=15.\\]"
+        ]
+      },
+      {
+        "title": "Two product coefficients give paired parameter values",
+        "question": "<p>In \\((1+ax)^3(1+bx)\\), the coefficients of \\(x\\) and \\(x^2\\) are \\(5\\) and \\(6\\), respectively. Find all ordered pairs \\((a,b)\\).</p>",
+        "solution": [
+          "<p>Match the contributions to each power:</p>\\[3a+b=5,\\qquad3a^2+3ab=6.\\]",
+          "\\[b=5-3a\\Longrightarrow3a^2+3a(5-3a)=6.\\]",
+          "\\[2a^2-5a+2=(2a-1)(a-2)=0.\\]",
+          "\\[a=\\frac{1}{2}\\Longrightarrow b=\\frac{7}{2},\\qquad a=2\\Longrightarrow b=-1.\\]",
+          "<p>Check each complete pair. For \\(\\left(\\frac{1}{2},\\frac{7}{2}\\right)\\), the coefficients are \\(5\\) and \\(\\frac{3}{4}+\\frac{21}{4}=6\\). For \\((2,-1)\\), they are \\(6-1=5\\) and \\(12-6=6\\). Both pairs work.</p>"
+        ]
+      },
+      {
+        "title": "Use an extra sign condition to select a branch",
+        "question": "<p>The constant coefficient of \\((a+x)^4\\) is \\(81\\), and its linear coefficient is negative. Find \\(a\\).</p>",
+        "solution": [
+          "\\[a^4=81\\Longrightarrow a=-3\\text{ or }a=3.\\]",
+          "\\[\\text{Linear coefficient}=4a^3.\\]",
+          "<p>For \\(a=3\\), this is \\(108&gt;0\\). For \\(a=-3\\), it is \\(-108&lt;0\\). The required value is \\(a=-3\\).</p>"
+        ]
+      },
+      {
+        "title": "A real solution may fail the integer condition",
+        "question": "<p>Could \\((1+ax)^n\\), with \\(n\\) a positive integer, have linear coefficient \\(6\\) and quadratic coefficient \\(14\\)?</p>",
+        "solution": [
+          "\\[na=6,\\qquad\\frac{n(n-1)}{2}a^2=14.\\]",
+          "\\[\\frac{(n-1)a}{2}=\\frac{14}{6}=\\frac{7}{3}\\Longrightarrow(n-1)a=\\frac{14}{3}.\\]",
+          "\\[a=6-\\frac{14}{3}=\\frac{4}{3},\\qquad n=6\\div\\frac{4}{3}=\\frac{9}{2}.\\]",
+          "<p>This is not an integer. The algebraic candidate is inadmissible, so no positive-integer finite binomial expansion has both stated coefficients.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "The general term, index bounds and Laurent powers",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_general_term"
+      },
+      {
+        "title": "Coefficients in products, missing powers and parity",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_products"
+      },
+      {
+        "title": "Approximations, remainders and coupled coefficient models",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_approximations"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S009-20261121-P01",
+        "title": "Keep both signs until another condition chooses one",
+        "prompt": "<p>In \\((1+ax)^5\\), the coefficient of \\(x^2\\) is \\(90\\), where \\(a\\) is real. Find all possible values of \\(a\\). For the positive value, find the coefficient of \\(x^3\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "All real values of \\(a\\)",
+            "type": "set",
+            "expected": "{-3,3}"
+          },
+          {
+            "key": "cubic",
+            "label": "Coefficient of \\(x^3\\) when \\(a>0\\)",
+            "type": "number",
+            "expected": "270"
+          }
+        ],
+        "hint": "<p>The quadratic coefficient is \\(\\binom{5}{2}a^2\\). Taking a square root gives two candidates.</p>",
+        "solution": "<ol><li>\\[10a^2=90\\quad\\Longrightarrow\\quad a^2=9\\quad\\Longrightarrow\\quad a=\\pm3.\\]</li><li><p>Both signs give quadratic coefficient \\(90\\). With \\(a=3\\),</p>\\[[x^3](1+3x)^5=\\binom{5}{3}3^3=270.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S009-20261121-P02",
+        "title": "Do not divide away an allowed zero",
+        "prompt": "<p>The coefficients of \\(x\\) and \\(x^2\\) in \\((2+kx)^4\\) are equal. Find all real values of \\(k\\), and the common coefficient for the nonzero value.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "All real values of \\(k\\)",
+            "type": "set",
+            "expected": "{0,4/3}",
+            "retry": [
+              {
+                "answer": "4/3",
+                "feedback": "<p>Check \\(k=0\\) in the original bracket before cancelling \\(k\\).</p>"
+              }
+            ]
+          },
+          {
+            "key": "coefficient",
+            "label": "Common coefficient for the nonzero value",
+            "type": "number",
+            "expected": "128/3"
+          }
+        ],
+        "hint": "<p>Write the coefficients as \\(32k\\) and \\(24k^2\\), then factor their difference.</p>",
+        "solution": "<ol><li>\\[32k=24k^2\\quad\\Longrightarrow\\quad8k(3k-4)=0.\\]</li><li>\\[k=0\\quad\\text{or}\\quad k=\\frac{4}{3}.\\]</li><li><p>When \\(k=0\\), the whole expression is \\(16\\), so both requested coefficients are zero. This satisfies the condition.</p></li><li><p>For the other value,</p>\\[32\\cdot\\frac{4}{3}=\\frac{128}{3}=24\\left(\\frac{4}{3}\\right)^2.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S009-20261121-P03",
+        "title": "An algebraic root may not be a valid exponent",
+        "prompt": "<p>The coefficient of \\(x^2\\) in \\((1+x)^n\\) is \\(28\\), where \\(n\\) is a positive integer. Find \\(n\\), then the coefficient of \\(x^3\\).</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "\\(n\\)",
+            "type": "number",
+            "expected": "8"
+          },
+          {
+            "key": "cubic",
+            "label": "Coefficient of \\(x^3\\)",
+            "type": "number",
+            "expected": "56"
+          }
+        ],
+        "hint": "<p>A nonzero quadratic coefficient requires \\(n\\ge2\\). Use \\(\\frac{n(n-1)}{2}=28\\).</p>",
+        "solution": "<ol><li>\\[n^2-n-56=0\\quad\\Longrightarrow\\quad(n-8)(n+7)=0.\\]</li><li><p>The algebraic candidates are \\(8\\) and \\(-7\\). Only \\(n=8\\) is a positive integer.</p></li><li>\\[[x^3](1+x)^8=\\binom{8}{3}=56.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S009-20261121-P04",
+        "title": "Two coefficients determine two unknowns",
+        "prompt": "<p>In \\((1+px)^n\\), the coefficients of \\(x\\) and \\(x^2\\) are \\(12\\) and \\(60\\), respectively. Here \\(n\\) is a positive integer and \\(p\\) is real. Find \\(n\\), \\(p\\) and the coefficient of \\(x^3\\).</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "\\(n\\)",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "p",
+            "label": "\\(p\\)",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "cubic",
+            "label": "Coefficient of \\(x^3\\)",
+            "type": "number",
+            "expected": "160"
+          }
+        ],
+        "hint": "<p>Use \\(np=12\\) to write \\(p=\\frac{12}{n}\\), then substitute into the quadratic coefficient. The nonzero data justify the required divisions.</p>",
+        "solution": "<ol><li>\\[np=12,\\qquad \\frac{n(n-1)}{2}p^2=60.\\]</li><li><p>The quadratic coefficient is nonzero, so \\(n\\ge2\\); also \\(p\\ne0\\). Substitution gives</p>\\[72\\frac{n-1}{n}=60.\\]</li><li>\\[72n-72=60n\\quad\\Longrightarrow\\quad n=6,\\qquad p=2.\\]</li><li><p>Check: \\(6(2)=12\\) and \\(15(2^2)=60\\). The cubic coefficient is</p>\\[\\binom{6}{3}2^3=160.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S009-20261121-P05",
+        "title": "Use both original conditions",
+        "prompt": "<p>The constant term in \\((a+x)^4\\) is \\(16\\), and the coefficient of \\(x\\) is \\(32\\). Find all real values of \\(a\\), then the coefficient of \\(x^2\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "All admissible values of \\(a\\)",
+            "type": "set",
+            "expected": "{2}"
+          },
+          {
+            "key": "quadratic",
+            "label": "Coefficient of \\(x^2\\)",
+            "type": "number",
+            "expected": "24"
+          }
+        ],
+        "hint": "<p>The first condition allows two signs. Test them in the linear coefficient \\(4a^3\\).</p>",
+        "solution": "<ol><li>\\[a^4=16\\quad\\Longrightarrow\\quad a=2\\ \\text{or}\\ a=-2.\\]</li><li><p>The linear condition is \\(4a^3=32\\). It holds for \\(a=2\\); \\(a=-2\\) gives \\(-32\\), so it is rejected.</p></li><li>\\[[x^2](2+x)^4=\\binom{4}{2}2^2=24.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S009-20261121-P06",
+        "title": "Recognise impossible coefficient data",
+        "prompt": "<p>Find all real values of \\(b\\) for which the coefficient of \\(x^2\\) in \\((1+bx)^3\\) is \\(-6\\). If there are none, enter “no solutions”.</p>",
+        "fields": [
+          {
+            "key": "b",
+            "label": "All real values of \\(b\\)",
+            "type": "set",
+            "expected": "empty"
+          }
+        ],
+        "hint": "<p>The quadratic coefficient is \\(3b^2\\). What sign can this have when \\(b\\) is real?</p>",
+        "solution": "<ol><li>\\[3b^2=-6\\quad\\Longrightarrow\\quad b^2=-2.\\]</li><li><p>A real square is nonnegative. There are no real values satisfying the coefficient condition.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S009-20261121-E01",
+          "title": "Small exponents can create an extra case",
+          "marks": 6,
+          "question": "<p>For a positive integer \\(n\\), the coefficient of \\(x^3\\) in \\((1+2x)^n\\) is twice the coefficient of \\(x^2\\). A power that does not occur has coefficient zero.</p><p>Find every possible \\(n\\). For the larger value, find the coefficient of \\(x^4\\).</p>",
+          "hint": "<p>Check \\(n=1\\) and \\(n=2\\) directly. Then use the coefficient formulas for \\(n\\ge3\\), where cancelling their nonzero factors is valid.</p>",
+          "solution": "<ol><li><p>For \\(n=1\\), both coefficients are zero, so the condition holds. For \\(n=2\\), they are \\(0\\) and \\(4\\); \\(0\\ne2(4)\\), so this value fails.</p></li><li><p>For \\(n\\ge3\\),</p>\\[8\\frac{n(n-1)(n-2)}{6}=2\\left(4\\frac{n(n-1)}{2}\\right).\\]</li><li><p>Divide by the nonzero common factor \\(4n(n-1)\\):</p>\\[\\frac{n-2}{3}=1\\quad\\Longrightarrow\\quad n=5.\\]</li><li><p>At \\(n=5\\), the coefficients are \\(80\\) and \\(40\\), so the relation holds. The complete set is \\(\\{1,5\\}\\).</p></li><li>\\[[x^4](1+2x)^5=\\binom{5}{4}2^4=80.\\]</li></ol>",
+          "marking": "<ul><li>1 mark: check the small-exponent cases and retain the valid value \\(n=1\\).</li><li>1 mark: form the cubic and quadratic coefficient equation for \\(n\\ge3\\).</li><li>1 mark: simplify using a justified nonzero common factor.</li><li>1 mark: obtain \\(n=5\\) and give the complete set.</li><li>1 mark: verify the coefficient relation for the nontrivial value.</li><li>1 mark: obtain the quartic coefficient \\(80\\).</li></ul>"
+        },
+        {
+          "id": "P1-S009-20261121-E02",
+          "title": "Retain matched pairs of coupled parameters",
+          "marks": 6,
+          "question": "<p>In \\((1+ax)^4(1+bx)^2\\), the coefficients of \\(x\\) and \\(x^2\\) are \\(2\\) and \\(-1\\), respectively. Find all real pairs \\((a,b)\\). For the pair with \\(a&gt;0\\), find the coefficient of \\(x^3\\).</p>",
+          "hint": "<p>The linear coefficient is \\(4a+2b\\). The quadratic coefficient has three contributions: \\(6a^2+8ab+b^2\\).</p>",
+          "solution": "<ol><li>\\[4a+2b=2\\quad\\Longrightarrow\\quad b=1-2a.\\]</li><li>\\[6a^2+8ab+b^2=-1.\\]</li><li><p>Substitute the expression for \\(b\\):</p>\\[-6a^2+4a+1=-1\\quad\\Longrightarrow\\quad(3a+1)(a-1)=0.\\]</li><li><p>Reconstruct the matched values:</p>\\[(a,b)=(1,-1)\\quad\\text{or}\\quad\\left(-\\frac{1}{3},\\frac{5}{3}\\right).\\]</li><li><p>Both pairs satisfy the original equations. For the fractional pair, the linear coefficient is \\(-\\frac{4}{3}+\\frac{10}{3}=2\\), and the quadratic coefficient is \\(\\frac{6-40+25}{9}=-1\\).</p></li><li><p>For \\(a=1,b=-1\\), the cubic coefficient is</p>\\[4a^3+12a^2b+4ab^2=4-12+4=-4.\\]</li></ol>",
+          "marking": "<ul><li>1 mark: form the linear relation and express one parameter in terms of the other.</li><li>1 mark: include all three quadratic coefficient contributions.</li><li>1 mark: obtain and factor the quadratic equation for the first parameter.</li><li>2 marks: give both correctly paired parameter values and verify them in the original conditions.</li><li>1 mark: obtain the cubic coefficient \\(-4\\) for the positive first parameter.</li></ul>"
+        },
+        {
+          "id": "P1-S009-20261121-E03",
+          "title": "A later coefficient selects one sign",
+          "marks": 6,
+          "question": "<p>For \\(x\\ne0\\), the constant term in \\(\\left(kx^2-\\frac{1}{x}\\right)^6\\) is \\(135\\), and its coefficient of \\(x^3\\) is negative.</p><p>Find all real candidates from the constant-term condition, determine the value of \\(k\\) satisfying both conditions, and find the coefficient of \\(x^6\\).</p>",
+          "hint": "<p>The exponent of \\(x\\) is \\(12-3r\\). The constant term uses \\(r=4\\); the cubic term uses \\(r=3\\), so its dependence on \\(k\\) has an odd power.</p>",
+          "solution": "<ol><li>\\[T_{r+1}=\\binom{6}{r}k^{6-r}(-1)^r x^{12-3r}.\\]</li><li><p>For the constant term, \\(r=4\\), so</p>\\[15k^2=135\\quad\\Longrightarrow\\quad k=\\pm3.\\]</li><li><p>The cubic coefficient, at \\(r=3\\), is \\(-20k^3\\). It is \\(-540\\) when \\(k=3\\), but \\(540\\) when \\(k=-3\\). The negative-coefficient condition selects \\(k=3\\).</p></li><li><p>For \\(x^6\\), solve \\(12-3r=6\\), giving \\(r=2\\):</p>\\[\\binom{6}{2}3^4(-1)^2=15(81)=1215.\\]</li><li><p>The original restriction \\(x\\ne0\\) remains in force.</p></li></ol>",
+          "marking": "<ul><li>1 mark: derive the correct exponent and select the constant-term index.</li><li>1 mark: form \\(15k^2=135\\).</li><li>1 mark: retain both candidates \\(k=\\pm3\\).</li><li>1 mark: derive the cubic coefficient \\(-20k^3\\).</li><li>1 mark: use its sign to select \\(k=3\\).</li><li>1 mark: select the sextic index and obtain coefficient \\(1215\\).</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Extract, equate, solve all cases, then check the original conditions.</p><h2>Coefficient equation</h2>\\[[x^r](a+bx)^n=\\binom{n}{r}a^{n-r}b^r\\qquad(0\\le r\\le n).\\]<p>Include both constants. If a bracket constant is zero, simplify the bracket directly. Even powers can give positive and negative parameter branches.</p><h2>Zero and denominator cases</h2><p>Factor before dividing by a parameter. \\(C_2=C_1\\) may allow both coefficients to be zero; \\(\\frac{C_2}{C_1}=1\\) requires \\(C_1\\ne0\\). A parameter in an original denominator must stay nonzero.</p><h2>Unknown integer power</h2><p>Require positive integer \\(n\\). A nonzero \\(x^r\\) coefficient needs \\(n\\ge r\\). For \\(n&lt;r\\), the coefficient is zero: check small-power boundaries before cancelling.</p><p>For \\((1+ax)^n\\), \\(n\\ge2\\):</p>\\[C_1=na,\\qquad C_2=\\frac{n(n-1)}{2}a^2.\\]\\[\\frac{C_2}{C_1}=\\frac{(n-1)a}{2}\\qquad(C_1\\ne0).\\]<h2>Linked parameters and final checks</h2><p>For products, sum every contribution to each coefficient. Solve the resulting simultaneous equations and preserve ordered pairs. Check every pair in both original equations.</p><p>Reject only for a stated reason: a forbidden sign, zero denominator, noninteger exponent, inconsistent coefficient or impossible real square. Never round an exponent into an allowed integer.</p>",
+      "checks": "<ul><li>Complete coefficient expressions?</li><li>Zero and both sign branches considered?</li><li>Positive integer exponent and original domains checked?</li><li>Every paired solution checked in every original condition?</li></ul>",
+      "examTip": "<p>Every paired solution checked in every original condition?</p>"
+    }
+  },
+  "orig_binomial_expansion_approximations": {
+    "updatedOn": "2026-11-21",
+    "description": "Match the numerical input, calculate what the truncated expansion leaves out, and use exact bounds and parameter restrictions to justify the final answer.",
+    "sections": [
+      {
+        "id": "binomial-approximations-input",
+        "title": "Which value belongs in the expansion?",
+        "label": "Match the numerical input",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A short binomial expansion estimates a numerical power by retaining only the requested terms. First equate the bracket’s base to the number you need. If the bracket is \\(1+cx\\), solve \\(1+cx=\\text{target base}\\); do not substitute the target itself for \\(x\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a positive integer \\(n\\), the quadratic truncation of \\((1+x)^n\\) is</p>\\[Q_2(x)=1+nx+\\frac{n(n-1)}{2}x^2.\\]<p>Use this as an approximation when omitted terms remain. Their size, not the length of the formula, decides its accuracy.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "P1-S010-20261121-C01",
+            "title": "Match the target base before substituting",
+            "prompt": "<p>Use the terms through \\(t^2\\) in \\((1+3t)^4\\) to approximate \\(1.06^4\\). Give the required value of \\(t\\) and the exact value of the retained polynomial.</p>",
+            "fields": [
+              {
+                "key": "t",
+                "label": "Value of \\(t\\)",
+                "type": "number",
+                "expected": "1/50",
+                "retry": [
+                  {
+                    "answer": "0.06",
+                    "feedback": "<p>The increment is \\(3t\\), so divide \\(0.06\\) by \\(3\\).</p>"
+                  }
+                ]
+              },
+              {
+                "key": "approximation",
+                "label": "Retained-polynomial value",
+                "type": "number",
+                "expected": "1577/1250"
+              }
+            ],
+            "hint": "<p>Solve \\(1+3t=1.06\\). The retained polynomial is \\(1+12t+54t^2\\).</p>",
+            "solution": "<ol><li>\\[3t=0.06\\Longrightarrow t=0.02=\\frac{1}{50}.\\]</li><li>\\[1+12(0.02)+54(0.02)^2=1+0.24+0.0216=1.2616.\\]</li><li><p>Thus \\(1.06^4\\approx1.2616\\) using the specified terms. This is the exact value of the shorter polynomial, not the exact value of the original fourth power.</p></li></ol>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If you factor the base, raise the outside factor to the outer power. For \\(a\\ne0\\),</p>\\[(a+h)^n=a^n\\left(1+\\frac{h}{a}\\right)^n.\\]<p>The retained polynomial and its remainder are both multiplied by \\(a^n\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-approximations-remainder",
+        "title": "How far is the approximation from the true value?",
+        "label": "The exact finite remainder",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Let \\(P\\) be the full finite expansion and \\(Q_j\\) its terms through degree \\(j\\). Define the signed remainder by \\(R_j=P-Q_j\\). It is exactly the sum of the omitted terms.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[P(x)=Q_j(x)+R_j(x).\\]<p>Positive \\(R_j\\): the approximation is below the true value. Negative \\(R_j\\): it is above. Absolute error is \\(|R_j|\\).</p>\\[\\text{Relative error}=\\frac{|R_j|}{|P|},\\qquad\\text{percentage error}=100\\frac{|R_j|}{|P|}\\%.\\]<p>Relative and percentage errors require \\(P\\ne0\\).</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_binomial_expansion_approximations/binomial-approximation-error.svg\" alt=\"The full sixth-power curve and its quadratic truncation are compared near zero, with their exact vertical error highlighted.\" width=\"845\" height=\"511\"></p><p>At \\(x=0.04\\), the quadratic value for \\((1+x)^6\\) is \\(1.264\\); the exact value is \\(1.265319018496\\). The omitted polynomial gives their positive difference \\(0.001319018496\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "P1-S010-20261121-C02",
+            "title": "Read the sign of the exact remainder",
+            "prompt": "<p>Let \\(P(x)=(1+x)^3\\), approximated by \\(Q(x)=1+3x\\). At \\(x=-0.05\\), find the signed remainder \\(R=P-Q\\). Is \\(Q\\) an underestimate or an overestimate?</p>",
+            "fields": [
+              {
+                "key": "remainder",
+                "label": "Signed remainder",
+                "type": "number",
+                "expected": "59/8000"
+              },
+              {
+                "key": "direction",
+                "label": "Direction of the approximation",
+                "type": "choice",
+                "expected": "under",
+                "options": {
+                  "under": "Underestimate",
+                  "over": "Overestimate",
+                  "exact": "Exact"
+                }
+              }
+            ],
+            "hint": "<p>The exact remainder is \\(R(x)=3x^2+x^3\\). A positive \\(P-Q\\) means the true value is larger.</p>",
+            "solution": "<ol><li>\\[R(-0.05)=3(0.05)^2-(0.05)^3=0.0075-0.000125=0.007375.\\]</li><li><p>Since \\(R&gt;0\\), the approximation is an underestimate. Here \\(Q=0.85\\) and \\(P=0.857375\\).</p></li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A positive-integer binomial expansion is a finite identity on its original domain. It has no convergence restriction such as \\(|x|&lt;1\\). A truncation can still be a poor approximation; check its actual remainder or a justified bound.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-approximations-bounds",
+        "title": "Can I guarantee an error or a rounded answer?",
+        "label": "Bounds, degree and rounding",
+        "minutes": 10,
+        "level": "core",
+        "intro": "<p>For a whole input interval, bound each omitted term. If \\(R(x)=\\sum c_rx^r\\) has positive integer powers and \\(|x|\\le h\\), the triangle inequality gives</p>\\[|R(x)|\\le\\sum |c_r|h^r.\\]<p>This bound allows for all omitted terms, including mixed signs. On \\(0\\le x\\le h\\), nonnegative coefficients also tell you \\(R\\ge0\\).</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "P1-S010-20261121-C03",
+            "title": "Bound every omitted term on the interval",
+            "prompt": "<p>Approximate \\((1+x)^4\\) by \\(Q(x)=1+4x+6x^2\\) for \\(0\\le x\\le0.02\\). Find the largest absolute error on this interval and state whether \\(Q\\le(1+x)^4\\) throughout it.</p>",
+            "fields": [
+              {
+                "key": "bound",
+                "label": "Largest absolute error",
+                "type": "number",
+                "expected": "201/6250000"
+              },
+              {
+                "key": "direction",
+                "label": "Is the retained polynomial at most the true value?",
+                "type": "choice",
+                "expected": "yes",
+                "options": {
+                  "yes": "Yes, throughout the interval.",
+                  "no": "No."
+                }
+              }
+            ],
+            "hint": "<p>The remainder is \\(4x^3+x^4\\). Each omitted term is nonnegative and increases as \\(x\\) increases on this interval.</p>",
+            "solution": "<ol><li>\\[0\\le R(x)=4x^3+x^4\\le4(0.02)^3+(0.02)^4=0.00003216.\\]</li><li><p>The upper value is attained at \\(x=0.02\\), so it is the largest absolute error. Also \\(R\\ge0\\), hence \\(Q\\le(1+x)^4\\).</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>To justify rounding, turn the remainder bound into an interval for the true value. Every value in that interval must round to the same result. Check the nearby midpoints between rounded values.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "text",
+            "html": "<p>To prove a truncation is the least sufficient one, show that it meets the strict error requirement and that all shorter choices fail. With positive omitted terms at a positive input, shorter truncations have larger errors. With mixed signs, compare the actual remainders; do not assume every added term reduces the absolute error.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-approximations-depth",
+        "title": "How many inner terms survive a division or cancellation?",
+        "label": "Plan the expansion depth",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Plan backward from the final power. Multiplication by \\(x^{-s}\\) lowers each exponent by \\(s\\). To retain terms through degree \\(j\\) after that shift, the inner expansion may need terms through degree \\(j+s\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Subtracting matching low-degree terms can remove the apparent beginning of an expansion. Expand far enough first, perform the subtraction, then shift powers and identify the final remainder.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "P1-S010-20261121-C04",
+            "title": "A denominator determines how far to expand first",
+            "prompt": "<p>For \\(x\\ne0\\), simplify \\(F(x)=\\frac{(1+3x)^3-1-9x}{x^2}\\). Find its constant and linear coefficients. What degree must the numerator expansion reach to recover the linear term of \\(F\\)?</p>",
+            "fields": [
+              {
+                "key": "constant",
+                "label": "Constant coefficient",
+                "type": "number",
+                "expected": "27"
+              },
+              {
+                "key": "linear",
+                "label": "Linear coefficient",
+                "type": "number",
+                "expected": "27"
+              },
+              {
+                "key": "degree",
+                "label": "Required numerator degree",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Division by \\(x^2\\) lowers every exponent by two.</p>",
+            "solution": "<ol><li>\\[(1+3x)^3=1+9x+27x^2+27x^3.\\]</li><li>\\[F(x)=\\frac{27x^2+27x^3}{x^2}=27+27x\\qquad(x\\ne0).\\]</li><li><p>The numerator must include its cubic term. The simplified polynomial gives an extension at zero, but zero remains excluded from the original fraction.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Cancellation does not change the original domain. A fraction with denominator \\(x^2\\) still excludes \\(x=0\\), even if its simplified polynomial has a value there.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-approximations-models",
+        "title": "What if a coefficient is itself a model with a parameter?",
+        "label": "Coupled coefficient models",
+        "minutes": 11,
+        "level": "core",
+        "intro": "<p>A coefficient extracted from a product may be a quadratic function of a parameter. First collect every contribution to the requested power. Then treat the resulting coefficient function as an algebra problem, preserving the parameter’s domain.</p><p>Write \\([x^r]F(x)\\) for the coefficient of \\(x^r\\) in \\(F\\). The input \\(x\\) used in the expansion and a model parameter such as \\(k\\) have different roles.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "P1-S010-20261121-C05",
+            "title": "Keep an open parameter interval open",
+            "prompt": "<p>Let \\(C(k)\\) be the coefficient of \\(x^2\\) in \\((1+kx)^2(1+(2-k)x)^2\\), where \\(0&lt;k&lt;1\\).</p><p>Find the lower and upper bounds of its range, state whether either is attained, and find the allowed \\(k\\) for which \\(C(k)=5\\).</p>",
+            "fields": [
+              {
+                "key": "lower",
+                "label": "Lower range bound",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "upper",
+                "label": "Upper range bound",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "endpoints",
+                "label": "Are the bounds attained?",
+                "type": "choice",
+                "expected": "neither",
+                "options": {
+                  "neither": "Neither bound is attained.",
+                  "both": "Both bounds are attained.",
+                  "upper": "Only the upper bound is attained."
+                }
+              },
+              {
+                "key": "k",
+                "label": "Allowed value of \\(k\\)",
+                "type": "number",
+                "expected": "1 - sqrt(2)/2"
+              }
+            ],
+            "hint": "<p>Collect the three quadratic contributions and complete the square: \\(C(k)=6-2(k-1)^2\\).</p>",
+            "solution": "<ol><li>\\[C(k)=k^2+4k(2-k)+(2-k)^2=6-2(k-1)^2.\\]</li><li><p>For \\(0&lt;k&lt;1\\), we have \\(0&lt;(k-1)^2&lt;1\\). Hence \\(4&lt;C(k)&lt;6\\), with neither endpoint attained.</p></li><li>\\[6-2(k-1)^2=5\\Longrightarrow k=1\\pm\\frac{\\sqrt{2}}{2}.\\]</li><li><p>Only \\(k=1-\\frac{\\sqrt{2}}{2}\\) belongs to \\((0,1)\\).</p></li></ol>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>For a restricted range, complete the square and track the allowed square values. For a specified coefficient, solve for every parameter branch and check the original interval. Open endpoints are not attained unless another allowed input gives the same value.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_binomial_expansion_approximations/binomial-model-range.svg\" alt=\"A quadratic coefficient model shows two positive intersections, a tangency boundary and an excluded zero-root boundary.\" width=\"803\" height=\"510\"></p><p>For \\(C(k)=6(k-1)^2-2\\), a horizontal level \\(m\\) meets the curve twice at positive \\(k\\) precisely when \\(-2&lt;m&lt;4\\). The lower boundary is a repeated root; at the upper boundary one root is zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 7
+          },
+          {
+            "kind": "check",
+            "id": "P1-S010-20261121-C06",
+            "title": "Two positive roots need two strict conditions",
+            "prompt": "<p>The coefficient of \\(x^2\\) in \\((1+kx)^2(1+(k-3)x)^2\\) is \\(m\\). Find the interval of \\(m\\) for which there are two distinct positive values of \\(k\\).</p><p>Enter its lower and upper bounds and choose the endpoint rule.</p>",
+            "fields": [
+              {
+                "key": "lower",
+                "label": "Lower bound",
+                "type": "number",
+                "expected": "-9/2"
+              },
+              {
+                "key": "upper",
+                "label": "Upper bound",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "strict",
+                "label": "Endpoint rule",
+                "type": "choice",
+                "expected": "open",
+                "options": {
+                  "open": "Both endpoints excluded.",
+                  "closed": "Both endpoints included.",
+                  "left": "Lower included; upper excluded."
+                }
+              }
+            ],
+            "hint": "<p>The coefficient is \\(6k^2-18k+9=6\\left(k-\\frac{3}{2}\\right)^2-\\frac{9}{2}\\). Solve for both roots and require the smaller one to be positive.</p>",
+            "solution": "<ol><li>\\[k=\\frac{3}{2}\\pm\\sqrt{\\frac{2m+9}{12}}.\\]</li><li><p>Distinct real roots need \\(2m+9&gt;0\\), so \\(m&gt;-\\frac{9}{2}\\).</p></li><li>\\[\\frac{3}{2}-\\sqrt{\\frac{2m+9}{12}}&gt;0\\Longrightarrow\\frac{2m+9}{12}&lt;\\frac{9}{4}\\Longrightarrow m&lt;9.\\]</li><li>\\[-\\frac{9}{2}&lt;m&lt;9.\\]</li><li><p>At the lower endpoint the roots coincide; at the upper endpoint one root is zero. Neither endpoint is allowed.</p></li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Translate each word into a separate condition. “Real” requires a nonnegative square-root input; “distinct” excludes a repeated root; “positive” excludes zero and negative roots. Check endpoints explicitly before writing the final interval.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Truncation",
+        "definition": "<p>An expansion stopped after a specified degree or number of terms.</p>"
+      },
+      {
+        "term": "Signed remainder",
+        "definition": "<p>The true value minus the retained-polynomial value.</p>"
+      },
+      {
+        "term": "Absolute error",
+        "definition": "<p>The nonnegative magnitude of the signed remainder.</p>"
+      },
+      {
+        "term": "Relative error",
+        "definition": "<p>Absolute error divided by the magnitude of the true value, when nonzero.</p>"
+      },
+      {
+        "term": "Error bound",
+        "definition": "<p>A justified upper limit on the absolute error over a specified set of inputs.</p>"
+      },
+      {
+        "term": "Rounding boundary",
+        "definition": "<p>A midpoint separating values that round to neighbouring results.</p>"
+      },
+      {
+        "term": "Coefficient model",
+        "definition": "<p>A coefficient viewed as a function of a parameter.</p>"
+      },
+      {
+        "term": "Attained endpoint",
+        "definition": "<p>A boundary value produced by at least one allowed input.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Choose the increment and retain the requested terms",
+        "question": "<p>Use the terms through \\(x^2\\) in \\((1+x)^6\\) to approximate \\(1.04^6\\).</p>",
+        "solution": [
+          "\\[1+x=1.04\\Longrightarrow x=0.04.\\]",
+          "\\[Q_2(x)=1+6x+\\binom{6}{2}x^2=1+6x+15x^2.\\]",
+          "\\[Q_2(0.04)=1+0.24+0.024=1.264.\\]",
+          "<p>Therefore \\(1.04^6\\approx1.264\\) using the specified quadratic approximation. Its exact error is found from the omitted terms below.</p>"
+        ]
+      },
+      {
+        "title": "Preserve the outside scale when the base is not near one",
+        "question": "<p>Use a quadratic binomial approximation to estimate \\(4.01^3\\).</p>",
+        "solution": [
+          "\\[4.01=4(1+0.0025),\\qquad4.01^3=64(1+0.0025)^3.\\]",
+          "<p>For \\((1+u)^3\\), the quadratic polynomial is \\(1+3u+3u^2\\).</p>",
+          "\\[64\\bigl(1+3(0.0025)+3(0.0025)^2\\bigr)=64.4812.\\]",
+          "<p>The omitted contribution is \\(64(0.0025)^3=0.000001\\), so the exact value is \\(64.481201\\). The outside factor multiplies the error as well as the retained terms.</p>"
+        ]
+      },
+      {
+        "title": "Signed, absolute and percentage errors are different",
+        "question": "<p>Approximate \\((1+x)^6\\) by \\(Q_2(x)=1+6x+15x^2\\). At \\(x=-0.1\\), find the signed remainder, absolute error and percentage error.</p>",
+        "solution": [
+          "\\[R_2(x)=20x^3+15x^4+6x^5+x^6.\\]",
+          "\\[Q_2(-0.1)=0.55,\\qquad R_2(-0.1)=-0.02+0.0015-0.00006+0.000001=-0.018559.\\]",
+          "\\[P(-0.1)=Q_2(-0.1)+R_2(-0.1)=0.531441.\\]",
+          "<p>The signed remainder is \\(-0.018559\\), so \\(Q_2\\) is an overestimate. The absolute error is \\(0.018559\\).</p>",
+          "\\[\\text{Percentage error}=100\\frac{0.018559}{0.531441}\\%\\approx3.49\\%.\\]",
+          "<p>The percentage is rounded to three significant figures. Its denominator is the magnitude of the true value, not the approximation.</p>"
+        ]
+      },
+      {
+        "title": "Bound a whole interval by bounding every omitted term",
+        "question": "<p>For \\(0\\le x\\le0.04\\), bound the error when \\((1+x)^6\\) is approximated by \\(1+6x+15x^2\\).</p>",
+        "solution": [
+          "\\[R_2(x)=20x^3+15x^4+6x^5+x^6.\\]",
+          "<p>Every term is nonnegative and increases as \\(x\\) increases on this interval. Replace each power by its value at \\(0.04\\):</p>",
+          "\\[0\\le R_2(x)\\le20(0.04)^3+15(0.04)^4+6(0.04)^5+(0.04)^6.\\]",
+          "\\[0\\le R_2(x)\\le0.001319018496&lt;0.00132.\\]",
+          "<p>The exact upper bound is reached at \\(x=0.04\\). Thus the quadratic approximation is at most the true value, and its absolute error is less than \\(0.00132\\) throughout the interval.</p>"
+        ]
+      },
+      {
+        "title": "Choose enough terms and check the rounding interval",
+        "question": "<p>Approximate \\(1.03^4\\) using a truncation of \\((1+x)^4\\) at \\(x=0.03\\). Find the least retained degree that gives absolute error below \\(10^{-4}\\), and justify the correct answer to three decimal places.</p>",
+        "solution": [
+          "<p>Keeping degree two gives \\(Q_2=1+0.12+0.0054=1.1254\\). Its exact remainder is</p>\\[R_2=4(0.03)^3+(0.03)^4=0.00010881&gt;10^{-4}.\\]",
+          "<p>All contributions are positive at this input. Any earlier truncation omits still more positive terms, so it also fails the error requirement.</p>",
+          "\\[Q_3=1.1254+4(0.03)^3=1.125508,\\qquad R_3=(0.03)^4=0.00000081&lt;10^{-4}.\\]",
+          "<p>The least degree is \\(3\\), meaning four retained terms including the constant.</p>",
+          "\\[1.125508&lt;1.03^4&lt;1.125509.\\]",
+          "<p>This whole interval lies between the rounding boundaries \\(1.1255\\) and \\(1.1265\\), so the correct three-decimal-place value is \\(1.126\\).</p>",
+          "<p>The quadratic value \\(1.1254\\) would round to \\(1.125\\), despite its error being below half a thousandth. The true value crosses the midpoint \\(1.1255\\); an error threshold alone does not guarantee the same rounding.</p>"
+        ]
+      },
+      {
+        "title": "Expand farther before dividing by a power",
+        "question": "<p>For \\(x\\ne0\\), find the terms through \\(x^2\\) in \\(F(x)=\\frac{(1+2x)^4-1-8x}{x^2}\\). Use its linear truncation at \\(x=0.01\\) and find the exact omitted error.</p>",
+        "solution": [
+          "<p>Division by \\(x^2\\) lowers powers by two, so the numerator must be expanded through degree four.</p>",
+          "\\[(1+2x)^4=1+8x+24x^2+32x^3+16x^4.\\]",
+          "\\[F(x)=24+32x+16x^2\\qquad(x\\ne0).\\]",
+          "\\[Q_1(0.01)=24.32,\\qquad R_1(0.01)=16(0.01)^2=0.0016.\\]",
+          "<p>The exact value is \\(24.3216\\). Expanding the numerator only through degree two would have kept just the constant after division and lost both needed higher terms.</p>"
+        ]
+      },
+      {
+        "title": "A coefficient becomes a quadratic model on a restricted domain",
+        "question": "<p>Let \\(C(k)\\) be the coefficient of \\(x^2\\) in \\((1+kx)^3(1+(3-k)x)^2\\), where \\(0&lt;k&lt;3\\). Find the range of \\(C\\), then solve \\(C(k)=19\\) in the allowed domain.</p>",
+        "solution": [
+          "<p>The quadratic coefficient collects three contributions:</p>\\[C(k)=3k^2+6k(3-k)+(3-k)^2.\\]",
+          "\\[C(k)=-2k^2+12k+9=27-2(k-3)^2.\\]",
+          "<p>For \\(0&lt;k&lt;3\\), the square satisfies \\(0&lt;(k-3)^2&lt;9\\). Therefore</p>\\[9&lt;C(k)&lt;27.\\]",
+          "\\[27-2(k-3)^2=19\\Longrightarrow(k-3)^2=4\\Longrightarrow k=1\\text{ or }k=5.\\]",
+          "<p>Only \\(k=1\\) belongs to \\((0,3)\\). Neither range endpoint is attained because the parameter interval excludes both endpoints.</p>"
+        ]
+      },
+      {
+        "title": "Require two distinct positive parameter values",
+        "question": "<p>The coefficient of \\(x^2\\) in \\((1+kx)^2(1+(k-2)x)^2\\) is \\(m\\). Find the values of \\(m\\) for which the coefficient equation has two distinct positive solutions for \\(k\\).</p>",
+        "solution": [
+          "\\[C(k)=k^2+4k(k-2)+(k-2)^2=6k^2-12k+4=6(k-1)^2-2.\\]",
+          "\\[6(k-1)^2-2=m\\Longrightarrow k=1\\pm\\sqrt{\\frac{m+2}{6}}.\\]",
+          "<p>Two distinct real roots require \\(m+2&gt;0\\), so \\(m&gt;-2\\).</p>",
+          "<p>The larger root is then positive. The smaller root must also be positive:</p>\\[1-\\sqrt{\\frac{m+2}{6}}&gt;0\\Longrightarrow\\frac{m+2}{6}&lt;1\\Longrightarrow m&lt;4.\\]",
+          "\\[-2&lt;m&lt;4.\\]",
+          "<p>At \\(m=-2\\), there is one repeated root \\(k=1\\). At \\(m=4\\), the roots are \\(0\\) and \\(2\\). These boundaries fail “two distinct positive”, so both inequalities are strict.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Finite binomial expansions, signs and substitutions",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_expansion"
+      },
+      {
+        "title": "Coefficients in products, missing powers and parity",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_products"
+      },
+      {
+        "title": "Unknown constants, exponents and complete cases",
+        "href": "/courses/maths4u-9709-p1/topics/orig_binomial_expansion_parameters"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "P1-S010-20261121-P01",
+        "title": "Match the small input to the base",
+        "prompt": "<p>Use the terms through \\(x^2\\) in \\((1+x)^5\\) to estimate \\(1.02^5\\). Give the substituted value of \\(x\\) and the value of the retained polynomial.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Substituted \\(x\\)",
+            "type": "number",
+            "expected": "1/50"
+          },
+          {
+            "key": "estimate",
+            "label": "Value of the retained polynomial",
+            "type": "number",
+            "expected": "138/125"
+          }
+        ],
+        "hint": "<p>Solve \\(1+x=1.02\\), then use \\(1+5x+10x^2\\).</p>",
+        "solution": "<ol><li>\\[x=0.02,\\qquad Q_2(x)=1+5x+10x^2.\\]</li><li>\\[Q_2(0.02)=1+0.1+0.004=1.104.\\]</li><li><p>Thus \\(1.02^5\\approx1.104\\) with this specified truncation. The omitted positive terms mean this estimate is below the true value.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S010-20261121-P02",
+        "title": "Keep the non-unit base in every coefficient",
+        "prompt": "<p>Use terms through \\(x^2\\) in \\((3+x)^4\\) to estimate \\(3.01^4\\). Enter the constant term of the expansion and the value of this retained polynomial.</p>",
+        "fields": [
+          {
+            "key": "constant",
+            "label": "Constant term",
+            "type": "number",
+            "expected": "81"
+          },
+          {
+            "key": "estimate",
+            "label": "Value of the retained polynomial",
+            "type": "number",
+            "expected": "410427/5000"
+          }
+        ],
+        "hint": "<p>Use \\(x=0.01\\). The first three terms are \\(3^4+4(3^3)x+6(3^2)x^2\\).</p>",
+        "solution": "<ol><li>\\[(3+x)^4=81+108x+54x^2+12x^3+x^4.\\]</li><li>\\[Q_2(0.01)=81+1.08+0.0054=82.0854.\\]</li><li><p>The constant is \\(81\\), and the requested estimate is \\(82.0854\\). This is the value of the truncation; a separate error check is needed for any claimed rounding accuracy.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S010-20261121-P03",
+        "title": "A negative input can reverse the error sign",
+        "prompt": "<p>Let \\(F(x)=(1+x)^4\\), \\(Q_2(x)=1+4x+6x^2\\), and \\(R(x)=F(x)-Q_2(x)\\). Find \\(R(-0.1)\\) exactly. Does \\(Q_2(-0.1)\\) overestimate or underestimate \\(F(-0.1)\\)?</p>",
+        "fields": [
+          {
+            "key": "remainder",
+            "label": "\\(R(-0.1)\\)",
+            "type": "number",
+            "expected": "-39/10000"
+          },
+          {
+            "key": "direction",
+            "label": "Direction of the estimate",
+            "type": "choice",
+            "expected": "over",
+            "options": {
+              "over": "Overestimate",
+              "under": "Underestimate",
+              "exact": "Exact value"
+            }
+          }
+        ],
+        "hint": "<p>Keep the sign when cubing the input. The remainder is \\(4x^3+x^4\\).</p>",
+        "solution": "<ol><li>\\[R(-0.1)=4(-0.1)^3+(-0.1)^4=-0.004+0.0001=-0.0039.\\]</li><li><p>Since \\(F-Q_2&lt;0\\), the retained polynomial is above the true value. Indeed, \\(Q_2(-0.1)=0.66\\) and \\(F(-0.1)=0.6561\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S010-20261121-P04",
+        "title": "Bound every omitted term on an interval",
+        "prompt": "<p>For \\(0\\le x\\le0.05\\), approximate \\((1+x)^5\\) by \\(Q_2(x)=1+5x+10x^2\\). Find the maximum absolute error over this interval and the value of \\(x\\) where it occurs.</p>",
+        "fields": [
+          {
+            "key": "error",
+            "label": "Maximum absolute error",
+            "type": "number",
+            "expected": "4101/3200000"
+          },
+          {
+            "key": "x",
+            "label": "Input at the maximum error",
+            "type": "number",
+            "expected": "1/20"
+          }
+        ],
+        "hint": "<p>The remainder is \\(10x^3+5x^4+x^5\\). Every term is nonnegative and increases as \\(x\\) increases on the stated interval.</p>",
+        "solution": "<ol><li>\\[0\\le R(x)=10x^3+5x^4+x^5\\le10(0.05)^3+5(0.05)^4+(0.05)^5.\\]</li><li>\\[R(0.05)=0.00125+0.00003125+0.0000003125=0.0012815625.\\]</li><li><p>This upper bound is attained at \\(x=0.05\\), which is included in the interval. Here \\(|R|=R\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S010-20261121-P05",
+        "title": "Check the rounding interval",
+        "prompt": "<p>For \\(F(x)=(1+x)^4\\), use \\(Q_2(x)=1+4x+6x^2\\) and its exact remainder to determine \\(1.01^4\\) correct to four decimal places. Give the absolute error of \\(Q_2(0.01)\\) as well.</p>",
+        "fields": [
+          {
+            "key": "rounded",
+            "label": "Value to four decimal places",
+            "type": "approximate",
+            "expected": "1.0406",
+            "absolute_tolerance": 1e-08
+          },
+          {
+            "key": "error",
+            "label": "Exact absolute error of the quadratic estimate",
+            "type": "number",
+            "expected": "401/100000000"
+          }
+        ],
+        "hint": "<p>Find \\(Q_2(0.01)\\) and \\(4(0.01)^3+(0.01)^4\\). Compare the corrected value with the rounding boundaries around the proposed answer.</p>",
+        "solution": "<ol><li>\\[Q_2(0.01)=1.0406,\\qquad R(0.01)=0.00000401.\\]</li><li>\\[1.01^4=1.04060401.\\]</li><li><p>This value lies strictly between \\(1.04055\\) and \\(1.04065\\), so it rounds to \\(1.0406\\) to four decimal places. The error is \\(0.00000401\\).</p></li><li><p>In other problems, inspect the interval around the actual estimate; a small error must not cross a rounding boundary.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "P1-S010-20261121-P06",
+        "title": "Truncate after the negative-power shift",
+        "prompt": "<p>For \\(x\\ne0\\), define \\(F(x)=\\frac{(1+x)^5-1-5x}{x^2}\\). Retain the constant and linear terms of \\(F\\) to estimate \\(F(0.02)\\). Find that estimate and its exact absolute error.</p>",
+        "fields": [
+          {
+            "key": "estimate",
+            "label": "Constant-and-linear estimate",
+            "type": "number",
+            "expected": "51/5"
+          },
+          {
+            "key": "error",
+            "label": "Exact absolute error",
+            "type": "number",
+            "expected": "251/125000"
+          }
+        ],
+        "hint": "<p>Division by \\(x^2\\) lowers every numerator exponent by two. The cubic term of the numerator becomes the linear term in \\(F\\).</p>",
+        "solution": "<ol><li>\\[(1+x)^5-1-5x=10x^2+10x^3+5x^4+x^5.\\]</li><li>\\[F(x)=10+10x+5x^2+x^3\\qquad(x\\ne0).\\]</li><li>\\[Q_1(0.02)=10.2,\\qquad R(0.02)=5(0.02)^2+(0.02)^3=0.002008.\\]</li><li><p>The error is positive, so its absolute value is \\(0.002008\\). The original expression remains undefined at \\(x=0\\).</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "P1-S010-20261121-E01",
+          "title": "Find the fewest terms that meet an error target",
+          "marks": 5,
+          "question": "<p>Approximate \\(1.04^5\\) by retaining the first terms in ascending powers of \\(x\\) from \\((1+x)^5\\), with \\(x=0.04\\). Find the lowest retained degree giving an absolute error less than \\(0.00001\\). State the number of terms, the resulting approximation and its exact error.</p>",
+          "hint": "<p>Test the remainder after the cubic term and after the quartic term. At this positive input every omitted term is positive.</p>",
+          "solution": "<ol><li>\\[(1+x)^5=1+5x+10x^2+10x^3+5x^4+x^5.\\]</li><li><p>After degree three the error is</p>\\[5(0.04)^4+(0.04)^5=0.0000129024&gt;0.00001.\\]</li><li><p>After degree four the error is</p>\\[(0.04)^5=0.0000001024&lt;0.00001.\\]</li><li><p>Earlier truncations omit these positive terms and additional positive terms, so they also fail. Degree four is therefore the lowest possible degree, giving five retained terms.</p></li><li>\\[Q_4(0.04)=1+0.2+0.016+0.00064+0.0000128=1.2166528.\\]</li></ol>",
+          "marking": "<ul><li>1 mark: obtain the needed finite expansion and omitted terms.</li><li>1 mark: show that the cubic truncation fails the error target.</li><li>1 mark: show that the quartic truncation meets the target.</li><li>1 mark: justify minimality and identify five retained terms.</li><li>1 mark: give the approximation and its exact error.</li></ul>"
+        },
+        {
+          "id": "P1-S010-20261121-E02",
+          "title": "Translate bracket restrictions into a coefficient range",
+          "marks": 6,
+          "question": "<p>Let \\(C(k)\\) be the coefficient of \\(x^2\\) in \\((1+kx)^4(1+(2-k)x)^2\\). Both linear coefficients inside the two brackets are strictly positive.</p><p>Show on paper that \\(C(k)=4+12k-k^2\\). Find the exact range of \\(C\\), state whether either endpoint is attained, and find every allowed \\(k\\) for which \\(C(k)=13\\).</p>",
+          "hint": "<p>The bracket conditions give \\(0&lt;k&lt;2\\). Extract all three quadratic contributions and complete the square in \\(k\\).</p>",
+          "solution": "<ol><li>\\[C(k)=6k^2+8k(2-k)+(2-k)^2=4+12k-k^2.\\]</li><li>\\[C(k)=40-(k-6)^2.\\]</li><li><p>For \\(0&lt;k&lt;2\\), we have \\(-6&lt;k-6&lt;-4\\), so \\(16&lt;(k-6)^2&lt;36\\). Thus the exact range is</p>\\[4&lt;C(k)&lt;24.\\]<p>Every intermediate value is attained because this quadratic is continuous and strictly increasing on the interval. Neither endpoint is included.</p></li><li>\\[C(k)=13\\quad\\Longrightarrow\\quad(k-6)^2=27\\quad\\Longrightarrow\\quad k=6\\pm3\\sqrt{3}.\\]</li><li><p>Only \\(6-3\\sqrt{3}\\) lies between \\(0\\) and \\(2\\). The positive-sign candidate violates the bracket conditions.</p></li></ol>",
+          "marking": "<ul><li>1 mark: obtain all three contributions to the quadratic coefficient.</li><li>1 mark: simplify and complete the square.</li><li>1 mark: translate the positive bracket coefficients into \\(0&lt;k&lt;2\\).</li><li>1 mark: obtain the open coefficient range \\((4,24)\\).</li><li>1 mark: obtain both algebraic candidates from \\(C(k)=13\\).</li><li>1 mark: retain only \\(6-3\\sqrt{3}\\) after checking the original restrictions.</li></ul>"
+        },
+        {
+          "id": "P1-S010-20261121-E03",
+          "title": "A minimum can be attained while the required interval is open",
+          "marks": 7,
+          "question": "<p>The coefficient of \\(x^2\\) in \\((1+kx)^3(1+(k-1)x)^3\\) is \\(m\\), where \\(k\\) and \\(m\\) are real.</p><p>Find the range of \\(m\\) for which the coefficient equation has two distinct positive values of \\(k\\). Explain both excluded endpoints. Then find those two values when \\(m=0\\).</p>",
+          "hint": "<p>Extract the coefficient as \\(15k^2-15k+3\\). Its minimum controls distinct real roots. Use the smaller root from the completed-square form to check that both are positive.</p>",
+          "solution": "<ol><li>\\[m=3k^2+9k(k-1)+3(k-1)^2=15k^2-15k+3.\\]</li><li>\\[m=15\\left(k-\\frac{1}{2}\\right)^2-\\frac{3}{4}.\\]</li><li><p>Two distinct real solutions require \\(m&gt;-\\frac{3}{4}\\). Write \\(d=\\sqrt{\\frac{m+\\frac{3}{4}}{15}}&gt;0\\). The roots are \\(k=\\frac{1}{2}\\pm d\\). Both are positive exactly when the smaller one is positive:</p>\\[\\frac{1}{2}-d&gt;0\\quad\\Longleftrightarrow\\quad\\frac{m+\\frac{3}{4}}{15}&lt;\\frac{1}{4}\\quad\\Longleftrightarrow\\quad m&lt;3.\\]</li><li>\\[-\\frac{3}{4}&lt;m&lt;3.\\]</li><li><p>At \\(m=-\\frac{3}{4}\\), the minimum is attained, but there is only the repeated solution \\(k=\\frac{1}{2}\\). At \\(m=3\\), the roots are \\(0\\) and \\(1\\), so one is not strictly positive. Both endpoints are excluded for the stated question.</p></li><li><p>For \\(m=0\\),</p>\\[5k^2-5k+1=0\\quad\\Longrightarrow\\quad k=\\frac{5\\pm\\sqrt{5}}{10}.\\]<p>Both values are positive and distinct.</p></li></ol>",
+          "marking": "<ul><li>1 mark: obtain \\(15k^2-15k+3\\) from the product.</li><li>1 mark: find the minimum \\(-\\frac{3}{4}\\) by completing the square.</li><li>1 mark: require a strict lower bound for two distinct roots.</li><li>1 mark: use positivity of both roots to obtain \\(m&lt;3\\).</li><li>1 mark: explain why the zero root excludes the upper endpoint.</li><li>1 mark: state the complete open interval and explain the repeated-root endpoint.</li><li>1 mark: obtain both exact positive roots when \\(m=0\\).</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>A full finite expansion is exact; a short estimate needs a remainder check.</p><h2>Match the input and measure the error</h2><p>Solve for the input from the target base. If factoring out \\(a\\), retain the multiplier \\(a^n\\).</p>\\[P=Q+R,\\qquad\\text{absolute error}=|R|.\\]<p>\\(R&gt;0\\): underestimate; \\(R&lt;0\\): overestimate. Percentage error is \\(100\\frac{|R|}{|P|}\\%\\) for \\(P\\ne0\\). Finite identities have no infinite-series convergence restriction.</p><h2>Bound, count and round</h2>\\[R(x)=\\sum c_rx^r,\\ |x|\\le h\\quad\\Longrightarrow\\quad |R(x)|\\le\\sum|c_r|h^r.\\]<p>For positive powers, bound every omitted term. To prove the least degree, show it passes and shorter choices fail. Count the constant as a term. To guarantee rounding, the whole true-value interval must stay within one pair of rounding boundaries.</p><h2>Expand far enough before simplifying</h2><p>An outside \\(x^{-s}\\) lowers degrees by \\(s\\): a final degree \\(j\\) may need inner degree \\(j+s\\). Subtract cancellations before identifying the final remainder. Preserve original denominator restrictions.</p><h2>Coupled coefficient models</h2><p>Collect every product contribution, complete the square, and apply the original parameter interval. Check both solution branches and whether range endpoints are attained.</p>\\[6(k-1)^2-2=m\\Longrightarrow k=1\\pm\\sqrt{\\frac{m+2}{6}}.\\]<p>Two distinct positive roots require \\(m&gt;-2\\) and the smaller root positive, giving \\(m&lt;4\\). Thus \\(-2&lt;m&lt;4\\); verify each excluded boundary.</p>",
+      "checks": "<ul><li>Correct substituted input and outside factor?</li><li>Every omitted term included in the error?</li><li>Strict accuracy and rounding boundaries checked?</li><li>All parameter branches and endpoint conditions checked?</li></ul>",
+      "examTip": "<p>All parameter branches and endpoint conditions checked?</p>"
+    }
+  }
+}

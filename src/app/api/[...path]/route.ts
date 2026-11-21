@@ -36,7 +36,7 @@ import { adminArchiveContext, planCourseTree, applyCourseTree, disableCourseTree
 import { squarePublicLesson } from "@/lib/square-content";
 import { publicLearningTopic } from "@/lib/public-learning-topic";
 import { assertLessonVisible } from "@/lib/content-access";
-import { gradeStudyCheck } from "@/lib/authored-study";
+import { gradeStudyCheck, hasOriginalRevisionStudy } from "@/lib/authored-study";
 import { inRequestView, requestView, rolePreview } from "@/lib/request-view";
 import { resolveRequestView, guardViewRequest, enterView, exitView, touchView } from "@/lib/view-lens";
 import { previewMaterial, checkPreview } from "@/lib/view-preview";
@@ -124,10 +124,10 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
         lessonId: z.string().min(1).max(80), id: z.string().min(1).max(80),
         answer: value.optional(),
         answers: z.record(z.string().min(1).max(60), value)
-          .refine(fields => Object.keys(fields).length >= 1 && Object.keys(fields).length <= 6).optional(),
+          .refine(fields => Object.keys(fields).length >= 1 && Object.keys(fields).length <= 8).optional(),
       }).strict().refine(data => !!data.answer !== !!data.answers).parse(input);
       const lesson = await publicLearningTopic(lessonId);
-      ensure(lesson?.packageKey, 404, "NOT_FOUND");
+      ensure(lesson?.packageKey || hasOriginalRevisionStudy(lessonId), 404, "NOT_FOUND");
       await assertLessonVisible(null, lessonId);
       const result = gradeStudyCheck(lessonId, id, answer ?? answers!);
       ensure(result, 404, "NOT_FOUND");

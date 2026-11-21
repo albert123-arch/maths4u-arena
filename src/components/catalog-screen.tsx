@@ -5,6 +5,7 @@ import { Button, ButtonLink, Input, Select } from "./controls";
 import Link from "next/link";
 import { useContext, useState, useEffect, useRef } from "react";
 import { TopicStudyPanel, StudyStatus } from "./study-panel";
+import { ExtraStudyPractice, LessonStudy, StudyWrittenQuestions } from "./lesson-study";
 import type { CatalogDto, PracticeMode, courseCatalog, topicContent } from "@/lib/catalog";
 import { ActorContext, PublicLocaleContext, api, ActionButton, Empty, ErrorNotice, Heading, MaterialAsset, MathContent, useLocale, useResource } from "./ui";
 import { displayTitle, programKey, programName, programOrder } from "@/lib/public-presentation";
@@ -140,6 +141,7 @@ export function TopicScreen({ id, initial }: { id: string; initial?: PublicPageD
   useEffect(()=>{if(r.data?.redirectTo)window.location.replace(r.data.redirectTo);},[r.data?.redirectTo]);
   if (r.error) return <ErrorNotice error={r.error} />; if (!r.data) return <CatalogSkeleton />;
   const topic = r.data, prefix = publicLocale === "ru" ? "/ru" : "", path = `${prefix}/courses/${topic.course.slug}/topics/${id}`;
+  const authored = initial?.authoredStudy;
   const tabs = [{ id: "NOTES" as const, title: t("Материалы и примеры", "Notes & examples"), count: null },
     { id: "MC" as const, title: t("Выбор ответа", "Multiple choice"), count: topic.questionCounts.MC },
     { id: "SHORT" as const, title: t("Короткий ответ", "Short answer"), count: topic.questionCounts.SHORT },
@@ -148,10 +150,18 @@ export function TopicScreen({ id, initial }: { id: string; initial?: PublicPageD
   return <><nav className="breadcrumbs"><Link href="/courses">{t("Курсы", "Courses")}</Link><span> / </span><Link href={`${prefix}/courses/${topic.course.slug}`}>{topic.course.title}</Link><span> / </span><Link href={`${prefix}/courses/${topic.course.slug}?chapter=${topic.chapter.id}`}>{topic.chapter.title}</Link></nav>
     <Heading title={topic.title}>{manage && <ButtonLink href={"/teacher/works/new?topic=" + topic.id}>{t("Задание из темы", "Assign from this topic")} →</ButtonLink>}</Heading><div className="row spread topic-neighbours">{topic.previous ? <Link href={`${prefix}/courses/${topic.course.slug}/topics/${topic.previous.id}`}>← {topic.previous.title}</Link> : <span />}{topic.next && <Link href={`${prefix}/courses/${topic.course.slug}/topics/${topic.next.id}`}>{topic.next.title} →</Link>}</div>
     <nav className="practice-tabs topic-tabs" aria-label={t("Материалы темы", "Topic activities")}>{tabs.map(tab => <Button key={tab.id} aria-pressed={mode === tab.id} className={mode === tab.id ? "selected" : "secondary"} onClick={() => choose(tab.id)}>{tab.title}{tab.count !== null && <span className="tab-count">{tab.count}</span>}</Button>)}</nav>
-    {mode === "NOTES" ? <><section className="card topic-theory"><h2>{t("Материалы", "Notes")}</h2>{topic.body ? <MathContent html={topic.body} /> : <p className="muted">{t("В источнике нет теории для этой темы.", "The source provides no notes for this topic.")}</p>}
+    {mode === "NOTES" ? <>{authored ? <div className="square-lesson">
+      <LessonStudy lesson={{ topic: { lessonId: id, path }, examples: authored.examples }}
+        study={authored.study} activeId={authored.study.sections[0].id} />
+    </div> : <section className="card topic-theory"><h2>{t("Материалы", "Notes")}</h2>{topic.body ? <MathContent html={topic.body} /> : <p className="muted">{t("В источнике нет теории для этой темы.", "The source provides no notes for this topic.")}</p>}
       <h2>{t("Разобранные примеры", "Worked examples")}</h2>{topic.examples ? <MathContent html={topic.examples} /> : <p className="muted">{t("Разобранные примеры не предоставлены.", "No worked examples were provided.")}</p>}
-    </section>{manage && <LessonPresentations key={id} lessonId={id} />}{actor && !manage && <TopicStudyPanel lessonId={id} />}
-      <section className="card topic-start"><h2>{t("Перейти к практике", "Practise this topic")}</h2><div className="topic-shortcuts">{tabs.filter(tab => tab.count !== null && tab.count > 0).map(tab => <Button className="secondary" key={tab.id} onClick={() => choose(tab.id)}>{tab.title} · {tab.count} →</Button>)}</div></section>
+    </section>}{manage && <LessonPresentations key={id} lessonId={id} />}{actor && !manage && <TopicStudyPanel lessonId={id} />}
+      <section className="card topic-start" id="practice"><h2>{t("Перейти к практике", "Practise this topic")}</h2><div className="topic-shortcuts">{tabs.filter(tab => tab.count !== null && tab.count > 0).map(tab => <Button className="secondary" key={tab.id} onClick={() => choose(tab.id)}>{tab.title} · {tab.count} →</Button>)}</div>
+        {authored?.study.extraPractice && <ExtraStudyPractice checks={authored.study.extraPractice} lessonId={id} />}
+      </section>
+      {authored?.study.examPractice?.starters.length ? <section className="card square-lesson" id="challenge">
+        <h2>Exam-style practice</h2><StudyWrittenQuestions questions={authored.study.examPractice.starters} />
+      </section> : null}
     </> : <><p className="muted">{mode === "MC" ? t("Выберите ответ и отправьте его на проверку.", "Choose an answer, then submit it to check.") : mode === "SHORT" ? t("Введите короткий ответ. Результат появится после отправки.", "Enter a short answer. Your result appears after submission.") : t("Решите на бумаге, сравните с решением или MS и отметьте свой результат. Отправка решения и файлов доступна в заданиях учителя.", "Work on paper, compare with the solution or mark scheme, and record your result. Submit solutions and files in your teacher’s assignments.")}</p>
       <div className={manage ? "catalog-with-basket" : ""}><section className="card"><CatalogTasks key={`${id}/${mode}`} topicId={id} mode={mode} embedded practice initial={initial?.mode === mode ? initial : undefined} /></section>{manage && <aside><BasketPanel compact /></aside>}</div></>}
   </>;

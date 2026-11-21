@@ -1,3 +1,4 @@
+import study from '../content/original/9709-p1/trigonometry-study.json';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
@@ -12,8 +13,28 @@ import {checkExact} from '../src/lib/exact-answer';
 import {packageTask} from '../src/lib/content-packages';
 import {contentPackageSchema} from '../src/lib/content-package-schema';
 import {renderContent} from '../src/lib/content';
+import {gradeStudyCheck} from '../src/lib/authored-study';
 
 const p=contentPackage('9709-p1-trigonometry');
+
+test('rounded Your turn angle sets accept every requested endpoint and degree notation', () => {
+  const equations = 'orig_trigonometry_equations';
+  const quadratics = 'orig_trigonometry_quadratic_equations';
+  assert.equal(gradeStudyCheck(equations, 'TR-20261121-L4-C09', 'x = 2.730 or x = 0.412')?.status, 'correct');
+  assert.equal(gradeStudyCheck(equations, 'TR-20261121-L4-P09', '±75.5°')?.status, 'correct');
+  assert.equal(gradeStudyCheck(quadratics, 'TR-20261121-L5-P05', '{0°,131.8°,228.2°,360°}')?.status, 'correct');
+  assert.equal(gradeStudyCheck(quadratics, 'TR-20261121-L5-P05', '{0,131.8,228.2}')?.status, 'retry');
+  assert.equal(gradeStudyCheck(quadratics, 'TR-20261121-L5-P10', '0.375, 2.767')?.status, 'correct');
+});
+
+test('an exact angle set accepts equivalent inverse tangent notation and requires both angles', () => {
+  const lesson = 'orig_trigonometry_quadratic_equations';
+  const check = 'TR-20261121-L5-P06';
+  assert.equal(gradeStudyCheck(lesson, check, 'x = π/4 or x = arctan(-3)')?.status, 'correct');
+  assert.equal(gradeStudyCheck(lesson, check, '{-tan⁻¹(3),π/4}')?.status, 'correct');
+  assert.equal(gradeStudyCheck(lesson, check, 'π/4')?.status, 'retry');
+  assert.equal(gradeStudyCheck(lesson, check, '{atan(3),π/4}')?.status, 'retry');
+});
 test('Trigonometry preserves lesson identities and the entire owner bank without answer or marking edits',async()=>{
   assert.deepEqual(p.lessons.map(l=>l.id),['orig_trigonometry_ratios','orig_trigonometry_graphs','orig_trigonometry_identities','orig_trigonometry_equations','orig_trigonometry_quadratic_equations']);
   assert.equal(p.questions.length,240);assert.equal(p.questions.filter(q=>q.variant_index===0).length,50);assert.equal(p.questions.filter(q=>(q.variant_index??0)>0).length,150);
@@ -31,7 +52,7 @@ test('Trigonometry preserves lesson identities and the entire owner bank without
 test('every complete quick answer works; missing and incorrect fields fail; review selects a fresh variant',()=>{
   for(const l of p.lessons){
     const dto=squarePublicLesson(packageTopic(l.id)!),qs=questionsForTopic(l.id);
-    assert.equal(dto.examples.length,4);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
+    assert.equal(dto.examples.length,study[l.id as keyof typeof study].examples.length);assert(dto.study?.sections.length);assert.equal(qs.filter(q=>q.collection!=='exam').length,8);
     assert.equal(qs.filter(q=>q.collection==='exam'&&q.variant_index===0).length,10);
     for(const forbidden of ['"expected"','source_problem_id','source_exam','ownerProvenance','archiveTaskId'])assert(!JSON.stringify(dto).includes(forbidden),forbidden);
     for(const html of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution]),...dto.questions.map(q=>q.prompt)])assert(!html.includes('katex-error'),l.id);

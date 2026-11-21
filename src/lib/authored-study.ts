@@ -2,6 +2,20 @@ import quadratics from "../../content/original/9709-p1/quadratics-study.json";
 import functions from "../../content/original/9709-p1/functions-study.json";
 import coordinateGeometry from "../../content/original/9709-p1/coordinate-geometry-study.json";
 import circularMeasure from "../../content/original/9709-p1/circular-measure-study.json";
+import trigonometry from "../../content/original/9709-p1/trigonometry-study.json";
+import series from "../../content/original/9709-p1/series-study.json";
+import binomialExpansion from "../../content/original/9709-p1/binomial-expansion-study.json";
+import differentiation from "../../content/original/9709-p1/differentiation-study.json";
+import integration from "../../content/original/9709-p1/integration-study.json";
+import crossTopic from "../../content/original/9709-p1/cross-topic-revision-study.json";
+import representation from "../../content/original/9709-s1/representation-study.json";
+import centralTendency from "../../content/original/9709-s1/central-tendency-study.json";
+import variation from "../../content/original/9709-s1/variation-study.json";
+import probability from "../../content/original/9709-s1/probability-study.json";
+import counting from "../../content/original/9709-s1/counting-study.json";
+import distributions from "../../content/original/9709-s1/distributions-study.json";
+import binomialGeometric from "../../content/original/9709-s1/binomial-geometric-study.json";
+import normal from "../../content/original/9709-s1/normal-study.json";
 import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
 import { renderContent } from "./content";
 import { checkExact, checkExactInverseAngle, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
@@ -24,11 +38,20 @@ type AuthoredLesson = Omit<StudyLesson, "sections" | "extraPractice"> & {
   extraPractice?: AuthoredCheck[];
 };
 
-const lessons = { ...quadratics, ...functions, ...coordinateGeometry, ...circularMeasure } as Record<string, AuthoredLesson>;
+const lessons = {
+  ...quadratics, ...functions, ...coordinateGeometry, ...circularMeasure, ...trigonometry,
+  ...series, ...binomialExpansion, ...differentiation, ...integration, ...crossTopic,
+  ...representation, ...centralTendency, ...variation, ...probability,
+  ...counting, ...distributions, ...binomialGeometric, ...normal,
+} as Record<string, AuthoredLesson>;
 const examPaths = examPracticePaths as Record<string, Omit<StudyExamPractice, "starters"> & { starters?: StudyExamPractice["starters"] }>;
 
 function lessonById(id: string) {
   return Object.hasOwn(lessons, id) ? lessons[id] : undefined;
+}
+
+export function hasOriginalRevisionStudy(lessonId: string) {
+  return Object.hasOwn(crossTopic, lessonId);
 }
 
 export function studyMetadata(lessonId: string) {
@@ -72,6 +95,7 @@ function publicCheck(check: AuthoredCheck): { kind: "check" } & StudyCheck {
     hint: renderContent(check.hint),
     fields: authoredFields(check).map(({ key, label, type, variables, dimension, options, inverseAngle }) => ({
       key, label, type, variables, dimension,
+      ...(/[\\$]/.test(label) && { labelHtml: renderContent(label) }),
       ...(options && { options: Object.fromEntries(Object.entries(options).map(([value, html]) => [value, renderContent(html)])) }),
       ...(inverseAngle && { inverseAngle: true }),
     })),
@@ -91,7 +115,7 @@ function publicBlock(block: AuthoredBlock): StudyBlock {
 export function studyLayout(lessonId: string) {
   const lesson = lessonById(lessonId);
   if (!lesson) return undefined;
-  const path = examPaths[lessonId];
+  const path = examPaths[lessonId] ?? lesson.examPractice;
   const study: StudyLesson = {
     sections: lesson.sections.map(section => ({
       ...section,
@@ -146,7 +170,7 @@ function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck):
     try { return studyAnswerMatches({ ...field, expected: retry.answer }, answer, check.prompt); }
     catch { return false; }
   });
-  const exactAngleHint = field.inverseAngle ? "<p>Give the exact angle using inverse sine or inverse cosine.</p>" : "";
+  const exactAngleHint = field.inverseAngle ? "<p>Use exact inverse trigonometric notation where needed.</p>" : "";
   return { status: "retry", feedback: renderContent(matching?.feedback ?? exactAngleHint + check.hint) };
 }
 

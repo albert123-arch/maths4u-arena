@@ -348,17 +348,17 @@ function equation(raw:string,variables:string[]) { const sides=raw.split("="); i
 export type ExactField = { key: string; label: string; type: string; expected: string | string[]; variables?: string[]; options?: Record<string, string>; dimension?: number; factor_variable?: string; form?: "expanded"; absolute_tolerance?:number; minimum?:number; maximum?:number };
 
 /** A study exercise can name one exact inverse-trig constant to compare symbolically. */
-export type InverseAngle = { fn: "asin" | "acos"; argument: string };
+export type InverseAngle = { fn: "asin" | "acos" | "atan"; argument: string };
 
 export function checkExactInverseAngle(field: ExactField, input: string, angle: InverseAngle) {
   if (typeof field.expected !== "string") return fail();
   const expectedArgument = poly(angle.argument);
   function expression(raw: string) {
     const text = normalize(raw.replace(/\\!/g, "")
-      .replace(/\\?arc(sin|cos)/g, "a$1")
-      .replace(/\\?(sin|cos)\s*(?:\^\{?-1\}?|⁻¹)/g, "a$1"));
+      .replace(/\\?arc(sin|cos|tan)/g, "a$1")
+      .replace(/\\?(sin|cos|tan)\s*(?:\^\{?-1\}?|⁻¹)/g, "a$1"));
     if (text.includes("z")) return fail();
-    const calls = /a(?:sin|cos)\(/g;
+    const calls = /a(sin|cos|tan)\(/g;
     let result = "", from = 0;
     for (let match = calls.exec(text); match; match = calls.exec(text)) {
       let end = calls.lastIndex, depth = 1;
@@ -370,15 +370,35 @@ export function checkExactInverseAngle(field: ExactField, input: string, angle: 
       const argument = text.slice(calls.lastIndex, end - 1);
       const value = poly(argument);
       const sameFunction = match[0] === angle.fn + "(";
-      const sameAngle = sameFunction ? same(value, expectedArgument)
-        : numeric(argument) >= 0 && numeric(angle.argument) >= 0
-          && same(padd(pmul(value, value), pmul(expectedArgument, expectedArgument)), poly("1"));
-      if (!sameAngle) return undefined;
-      result += text.slice(from, match.index) + "z";
+      let constant: string;
+      if (sameFunction && same(value, expectedArgument)) constant = "z";
+      else if (sameFunction && angle.fn !== "acos" && !padd(value, expectedArgument).size) constant = "(-z)";
+      else if (!sameFunction && match[1] !== "tan" && angle.fn !== "atan"
+          && numeric(argument) >= 0 && numeric(angle.argument) >= 0
+          && same(padd(pmul(value, value), pmul(expectedArgument, expectedArgument)), poly("1"))) constant = "z";
+      else return undefined;
+      result += text.slice(from, match.index) + constant;
       from = end;
       calls.lastIndex = end;
     }
     return result + text.slice(from);
+  }
+  if (field.type === "set") {
+    function angleSet(raw: string) {
+      if (raw.length > 400) return fail();
+      const values = statedValues(raw.replace(/\\(?:left|right)/g, "").replace(/\\([{}])/g, "$1"),
+        field.variables ?? [], false).trim();
+      const set = values.startsWith("{") && values.endsWith("}") ? values.slice(1, -1) : values;
+      const keys = new Set<string>();
+      for (const value of split(set, ",")) {
+        const angleExpression = expression(value);
+        if (angleExpression === undefined) return undefined;
+        keys.add(JSON.stringify(polynomialKey(angleExpression, ["z"])));
+      }
+      return JSON.stringify([...keys].sort());
+    }
+    const actual = angleSet(input);
+    return actual !== undefined && actual === angleSet(field.expected);
   }
   const answer = expression(scalarAnswerValue(field, input));
   const expected = expression(field.expected);
@@ -466,7 +486,12 @@ export function checkExact(field: ExactField, input: string, prompt?: string): b
     for(const value of split(s,",")){const p=polynomialKey(value);if(p.length && (p.length!==1 || p[0][0]!==0 || p[0][1].length!==1 || p[0][1][0][0]!==1 || p[0][1][0][2]!=="1"))return false;}
     return setKey(input)===setKey(expected);
   }
-  if (field.type === "set") return answerSetKey(field, input, prompt) === setKey(expected);
+  if (field.type === "set") {
+    const values = /\bdegrees\b/i.test(field.label)
+      ? input.replace(/(?:°|\^\{?\\circ\}?)(?=\s*(?:[,;}]|$|\b(?:or|and)\b))/g, "")
+      : input;
+    return answerSetKey(field, values, prompt) === setKey(expected);
+  }
   if (field.type === "pairs") return pairsKey(input, field.dimension, isCoordinateField(field)) === pairsKey(expected, field.dimension);
   if (field.type === "equation") return proportional(equation(input,field.variables??[]),equation(expected,field.variables??[]));
   if (field.type === "factors") {

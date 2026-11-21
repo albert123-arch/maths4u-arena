@@ -1,0 +1,2816 @@
+{
+  "orig_9709_s1_ct_centre_raw": {
+    "updatedOn": "2026-11-21",
+    "description": "Calculate each centre from the information it uses, keep every tied mode, and choose a summary that answers the question. Distinguish a raw mode from a grouped modal class and support mixed questions with a short spread application.",
+    "sections": [
+      {
+        "id": "mean-total",
+        "title": "How do I calculate a mean or recover a total?",
+        "label": "Every value contributes",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The mean, median and mode describe different aspects of a dataset’s centre. Name the measure you use instead of writing only “average”. For \\(n\\ge1\\) numerical observations, the arithmetic mean is</p>\\[\\bar{x}=\\frac{\\sum x_i}{n}=\\frac{T}{n}.\\]<p>The symbol \\(\\sum\\) means add the values. Count every recorded observation, including repeats and zeros.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[T=n\\bar{x}.\\]<p>Use this reverse relationship when a mean and count are given. If a record is added or removed, update both the total and the count. If an existing record is corrected, subtract the wrong value and add its replacement; the count stays unchanged.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-S031-20261121-C01",
+            "title": "Recover a missing observation from the mean",
+            "prompt": "<p>Five completion times, in seconds, are \\(8,9,11,12,x\\). Their mean is exactly \\(11\\) seconds. Find their total and the missing time \\(x\\).</p>",
+            "fields": [
+              {
+                "key": "total",
+                "label": "Total of the five times (s)",
+                "type": "number",
+                "expected": "55"
+              },
+              {
+                "key": "missing",
+                "label": "Missing time (s)",
+                "type": "number",
+                "expected": "15"
+              }
+            ],
+            "hint": "<p>Reverse the mean formula: total equals count multiplied by mean. Then subtract every known observation.</p>",
+            "solution": "<ol><li>\\[T=5(11)=55\\,\\mathrm{s}.\\]</li><li>\\[8+9+11+12=40,\\qquad x=55-40=15\\,\\mathrm{s}.\\]</li><li><p>The completed list totals \\(55\\) seconds, so its mean is \\(\\frac{55}{5}=11\\) seconds.</p></li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A mean need not be an observed value and can be fractional even for integer counts. Check that it lies between the smallest and largest records, and keep full intermediate totals before rounding.</p>"
+          }
+        ]
+      },
+      {
+        "id": "ordered-median",
+        "title": "How do I find the median?",
+        "label": "Order first, then select positions",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>The median is determined by ordered positions, so put the complete list in increasing order first. Repeated values remain separate observations.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For an odd count, take the observation in position \\(\\frac{n+1}{2}\\). For an even count, average the values in positions \\(\\frac{n}{2}\\) and \\(\\frac{n}{2}+1\\).</p><p>The positions identify which records to use; the median is their value or their arithmetic mean.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-S031-20261121-C02",
+            "title": "Order before choosing the middle",
+            "prompt": "<p>Two recorded-time samples, in seconds, are</p>\\[A:\\quad17,4,11,8,8,14;\\qquad B:\\quad5,13,7,7,11.\\]<p>Find the median of each sample.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Median of A (s)",
+                "type": "number",
+                "expected": "19/2"
+              },
+              {
+                "key": "b",
+                "label": "Median of B (s)",
+                "type": "number",
+                "expected": "7"
+              }
+            ],
+            "hint": "<p>Put each list in increasing order. A has two middle positions; B has one.</p>",
+            "solution": "<ol><li>\\[A:\\quad4,8,8,11,14,17.\\]<p>The third and fourth observations are \\(8\\) and \\(11\\), so</p>\\[M_A=\\frac{8+11}{2}=\\frac{19}{2}\\,\\mathrm{s}.\\]</li><li>\\[B:\\quad5,7,7,11,13.\\]<p>The third observation is the median: \\(M_B=7\\,\\mathrm{s}\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not take the middle item of an unordered list. For an even count, average the two middle <strong>values</strong>, not their position numbers or the smallest and largest values.</p>"
+          }
+        ]
+      },
+      {
+        "id": "modes",
+        "title": "What counts as a mode or a modal class?",
+        "label": "Raw frequencies and grouped densities",
+        "minutes": 11,
+        "level": "core",
+        "intro": "<p>For raw values or named categories, count how often each occurs. Every value tied for the greatest frequency is a mode when that greatest frequency exceeds one. Two tied modes are called bimodal.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p><strong>Raw-data convention in this course:</strong> if every value occurs once, report <strong>no mode</strong>. Otherwise retain every value tied at the greatest frequency; do not choose only the smallest, largest or first one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "text",
+            "html": "<p><strong>Grouped convention in this course:</strong> for unequal-width numerical classes, a modal class has the greatest <strong>frequency density</strong>, so it is a tallest histogram bar:</p>\\[d=\\frac{f}{\\text{class width}}.\\]<p>This is different from simply finding the class with greatest frequency. Some tables or questions define “modal class” by greatest frequency; follow an explicit definition. When all widths are equal, the two rankings agree.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_9709_s1_ct_centre_raw/modal-class-density.svg\" alt=\"An unequal-width histogram labels class widths, frequencies and densities, distinguishing the tallest middle bar from the largest-area last bar.\" width=\"832\" height=\"618\"></p><p>The middle class has greatest density \\(3\\) and is the modal class under this course’s convention. The last class has greatest frequency \\(24\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-S031-20261121-C03",
+            "title": "Report every tied mode and distinguish a modal class",
+            "prompt": "<p>Find all modes of \\(2,3,3,5,5,8\\). Also state the mode result for \\(1,6,10,12\\), using this course’s convention that an all-unique list has no mode.</p><p>A separate grouped dataset has the classes below. Using the course convention that modal classes have greatest frequency density, give every modal class number and the class number with greatest frequency.</p><table><thead><tr><th>Class number</th><th>Interval</th><th>Frequency</th></tr></thead><tbody><tr><td>\\(1\\)</td><td>\\(0\\le x&lt;2\\)</td><td>\\(8\\)</td></tr><tr><td>\\(2\\)</td><td>\\(2\\le x&lt;6\\)</td><td>\\(16\\)</td></tr><tr><td>\\(3\\)</td><td>\\(6\\le x&lt;12\\)</td><td>\\(12\\)</td></tr></tbody></table>",
+            "fields": [
+              {
+                "key": "tied",
+                "label": "All modes of the repeated-value list",
+                "type": "set",
+                "expected": "{3,5}"
+              },
+              {
+                "key": "unique",
+                "label": "Mode result for the all-unique list",
+                "type": "set",
+                "expected": "empty"
+              },
+              {
+                "key": "classes",
+                "label": "All modal class numbers under the stated convention",
+                "type": "set",
+                "expected": "{1,2}"
+              },
+              {
+                "key": "frequency",
+                "label": "Class number with greatest frequency",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Count occurrences for raw modes. For the grouped table, calculate each width and divide its frequency by that width.</p>",
+            "solution": "<ol><li><p>Both \\(3\\) and \\(5\\) occur twice, while the other listed values occur once. The two modes are \\(3\\) and \\(5\\).</p></li><li><p>Every value in \\(1,6,10,12\\) occurs once, so the result is <strong>no mode</strong> under the stated convention.</p></li><li>\\[d_1=\\frac{8}{2}=4,\\qquad d_2=\\frac{16}{4}=4,\\qquad d_3=\\frac{12}{6}=2.\\]</li><li><p>Classes \\(1\\) and \\(2\\) tie for greatest density, so retain both as modal classes. Class \\(2\\) alone has greatest frequency, \\(16\\).</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Retain all classes tied at the greatest density. If every class has the same density, say there is no unique modal class. A grouped modal interval does not identify an exact raw-data modal value.</p>"
+          }
+        ]
+      },
+      {
+        "id": "choosing-centre",
+        "title": "Which measure answers the question best?",
+        "label": "Typical values, totals and categories",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>Choose the centre for the purpose, not just because it is easiest to calculate. The mean uses every magnitude and connects directly to a total. The median uses positions and is less sensitive to the size of an existing extreme observation. The mode identifies the most common value or category.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<table><thead><tr><th>Purpose</th><th>Useful centre</th><th>Reason</th></tr></thead><tbody><tr><td>Recover a total or describe an equal share</td><td>Mean</td><td>Count multiplied by mean gives the total.</td></tr><tr><td>Describe a typical numerical value when a few magnitudes are extreme</td><td>Median</td><td>The ordered middle is less influenced by how far an extreme value lies.</td></tr><tr><td>Identify the most popular named category</td><td>Mode</td><td>Category frequencies are meaningful; averaging nominal labels is not.</td></tr></tbody></table>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_9709_s1_ct_centre_raw/mean-median-extreme.svg\" alt=\"Two versions of the same seven-record sample show the mean moving towards an enlarged extreme observation while the ordered middle stays fixed.\" width=\"880\" height=\"662\"></p><p>Replacing the existing largest time \\(16\\) by \\(58\\) changes the mean from \\(10\\) to \\(16\\) seconds, while the median and mode remain \\(10\\) in this example.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "S1-S031-20261121-C04",
+            "title": "Choose a centre for the question being asked",
+            "prompt": "<p>Seven completion times, in seconds, are</p>\\[3,4,5,5,6,7,40.\\]<p>Calculate the mean and median. Choose a measure to describe a typical completion time without the single very long time dominating the result. Then choose the measure that, multiplied by seven, recovers the exact total duration of these recorded tasks.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean (s)",
+                "type": "number",
+                "expected": "10"
+              },
+              {
+                "key": "median",
+                "label": "Median (s)",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "typical",
+                "label": "Measure suited to the stated typical-time purpose",
+                "type": "choice",
+                "expected": "median",
+                "options": {
+                  "median": "Median",
+                  "mean": "Mean",
+                  "maximum": "Maximum"
+                }
+              },
+              {
+                "key": "total",
+                "label": "Measure that recovers the total when multiplied by seven",
+                "type": "choice",
+                "expected": "mean",
+                "options": {
+                  "mean": "Mean",
+                  "median": "Median",
+                  "mode": "Mode"
+                }
+              }
+            ],
+            "hint": "<p>The ordered middle is the fourth observation. The mean uses every value and is linked directly to the total.</p>",
+            "solution": "<ol><li>\\[T=3+4+5+5+6+7+40=70,\\qquad\\bar{t}=\\frac{70}{7}=10\\,\\mathrm{s}.\\]</li><li><p>The fourth observation gives median \\(5\\,\\mathrm{s}\\). It is the suitable measure for the stated typical-time description.</p></li><li><p>The exact total is \\(7\\bar{t}=7(10)=70\\,\\mathrm{s}\\). Multiplying the median or mode by seven would give \\(35\\), which is not the total. The long recorded time still contributes to the work actually completed.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>“Less sensitive” does not mean “never changes”. Adding or removing a record changes the count and may move the median positions; moving a value across the middle may also change the median. An unusual record is not automatically an error. For nominal categories, numerical codes are labels, so their mean or median is not a meaningful centre.</p>"
+          }
+        ]
+      },
+      {
+        "id": "spread-bridge",
+        "title": "How do mixed questions add spread to the mean?",
+        "label": "Application: descriptive variance and SD",
+        "minutes": 7,
+        "level": "extension",
+        "intro": "<p><strong>Extension bridge:</strong> later lessons develop measures of variation in detail. This short application supplies the formulas needed when a question asks for both a centre and a measure of spread.</p><p>Descriptive variance is the average squared distance from the mean, using the number of observations \\(n\\) as divisor. Standard deviation is its square root.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[\\sigma^2=\\frac{\\sum(x_i-\\bar{x})^2}{n}=\\frac{\\sum x_i^2}{n}-\\bar{x}^{\\,2},\\qquad\\sigma=\\sqrt{\\sigma^2}.\\]<p>Variance has squared measurement units; standard deviation has the original units. Two datasets can have the same mean and different spread.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "S1-S031-20261121-C05",
+            "title": "Application: add a descriptive measure of spread",
+            "prompt": "<p><strong>Application after the centre methods:</strong> four masses, in grams, are \\(1,3,5,7\\). Find the mean, descriptive variance using divisor \\(n=4\\), and standard deviation. Give exact answers.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean (g)",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "variance",
+                "label": "Descriptive variance (g²)",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "sd",
+                "label": "Standard deviation (g)",
+                "type": "number",
+                "expected": "sqrt(5)"
+              }
+            ],
+            "hint": "<p>Calculate both the total and the sum of squares. Use \\(\\sigma^2=\\frac{\\sum x_i^2}{n}-\\bar{x}^{\\,2}\\), then take a square root for standard deviation.</p>",
+            "solution": "<ol><li>\\[\\bar{x}=\\frac{1+3+5+7}{4}=4\\,\\mathrm{g}.\\]</li><li>\\[\\sum x_i^2=1^2+3^2+5^2+7^2=84.\\]</li><li>\\[\\sigma^2=\\frac{84}{4}-4^2=5\\,\\mathrm{g}^2,\\qquad\\sigma=\\sqrt{5}\\,\\mathrm{g}.\\]</li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>These descriptive questions use divisor \\(n\\). If using a calculator, choose the corresponding population/descriptive standard deviation rather than a result based on \\(n-1\\). Distinguish \\(\\sum x_i^2\\), the sum of squares, from \\((\\sum x_i)^2\\), the square of the total. Square a supplied standard deviation only when variance is needed.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Mean",
+        "definition": "<p>The total of every numerical observation divided by the number of observations.</p>"
+      },
+      {
+        "term": "Median",
+        "definition": "<p>The middle of an ordered list, averaging the two middle values for an even count.</p>"
+      },
+      {
+        "term": "Mode",
+        "definition": "<p>A value or category with greatest frequency; this course reports no mode when every value occurs once.</p>"
+      },
+      {
+        "term": "Bimodal",
+        "definition": "<p>Having exactly two modes, both tied at the greatest frequency.</p>"
+      },
+      {
+        "term": "Modal class",
+        "definition": "<p>Here, a grouped class with greatest frequency density; follow an explicit different definition when a question supplies one.</p>"
+      },
+      {
+        "term": "Frequency density",
+        "definition": "<p>The class frequency divided by its width, \\(d=\\frac{f}{w}\\).</p>"
+      },
+      {
+        "term": "Nominal category",
+        "definition": "<p>A category label without a meaningful numerical order or measurement scale.</p>"
+      },
+      {
+        "term": "Descriptive variance",
+        "definition": "<p>The mean squared distance from the data mean, using the record count \\(n\\) as divisor.</p>"
+      },
+      {
+        "term": "Standard deviation",
+        "definition": "<p>The square root of variance, in the original measurement units.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use every observation and the correct count",
+        "question": "<p>Seven completion times, in seconds, are \\(6,\\ 8,\\ 9,\\ 10,\\ 10,\\ 11,\\ 16\\). Find their mean. An eighth time of \\(18\\) seconds is then recorded; find the new mean.</p>",
+        "solution": [
+          "<p>Add every observation, including both occurrences of \\(10\\):</p>\\[T=6+8+9+10+10+11+16=70\\,\\mathrm{s}.\\]",
+          "\\[\\bar{t}=\\frac{70}{7}=10\\,\\mathrm{s}.\\]",
+          "<p>After adding the new record, both the total and the count change:</p>\\[T_{\\mathrm{new}}=70+18=88,\\qquad n_{\\mathrm{new}}=8.\\]",
+          "\\[\\bar{t}_{\\mathrm{new}}=\\frac{88}{8}=11\\,\\mathrm{s}.\\]<p>The added time exceeds the old mean, so an increased mean is sensible.</p>"
+        ]
+      },
+      {
+        "title": "Find the median of an unordered even sample",
+        "question": "<p>Eight times, in seconds, are \\(15,7,12,9,11,9,18,13\\). Find the median.</p>",
+        "solution": [
+          "<p>Keep both occurrences of \\(9\\) and order the records:</p>\\[7,9,9,11,12,13,15,18.\\]",
+          "<p>With \\(n=8\\), the middle positions are \\(\\frac{8}{2}=4\\) and \\(5\\). Their values are \\(11\\) and \\(12\\).</p>",
+          "\\[M=\\frac{11+12}{2}=\\frac{23}{2}=11.5\\,\\mathrm{s}.\\]<p>The median need not be an observed value when the count is even.</p>"
+        ]
+      },
+      {
+        "title": "Keep tied modes and recognise no mode",
+        "question": "<p>Find the modes of these two numerical lists:</p>\\[A:\\quad4,4,6,9,9,12;\\qquad B:\\quad2,5,8,11.\\]<p>Use the course’s no-mode convention for an all-unique list. A separate colour survey records blue \\(7\\), green \\(4\\) and red \\(7\\) responses. Identify its modal categories.</p>",
+        "solution": [
+          "<p>In A, \\(4\\) and \\(9\\) each occur twice; \\(6\\) and \\(12\\) each occur once. The greatest frequency is \\(2\\), so the modes are</p>\\[\\{4,9\\}.\\]",
+          "<p>In B, every value occurs once. Under the stated convention, there is <strong>no mode</strong>.</p>",
+          "<p>The colour survey has two categories tied at frequency \\(7\\): blue and red. A mode can describe a category even when adding or averaging the category labels has no meaning.</p>"
+        ]
+      },
+      {
+        "title": "Use density for this course’s unequal-width modal class",
+        "question": "<p>A separate sample of \\(50\\) completion times is grouped as follows.</p><table><thead><tr><th>Time \\(t\\), in seconds</th><th>Frequency</th></tr></thead><tbody><tr><td>\\(0\\le t&lt;4\\)</td><td>\\(8\\)</td></tr><tr><td>\\(4\\le t&lt;10\\)</td><td>\\(18\\)</td></tr><tr><td>\\(10\\le t&lt;22\\)</td><td>\\(24\\)</td></tr></tbody></table><p>Using the course’s greatest-density convention, find the modal class. Also identify the class with greatest frequency.</p>",
+        "solution": [
+          "<p>The widths are \\(4\\), \\(6\\) and \\(12\\) seconds. Calculate density separately for each class:</p>\\[d_1=\\frac{8}{4}=2,\\qquad d_2=\\frac{18}{6}=3,\\qquad d_3=\\frac{24}{12}=2.\\]",
+          "<p>The greatest density is \\(3\\), so the modal class under this convention is</p>\\[4\\le t&lt;10.\\]",
+          "<p>The greatest frequency is \\(24\\), in \\(10\\le t&lt;22\\). Its larger width explains why it can contain more observations without having the tallest histogram bar.</p>",
+          "<p>The grouped table identifies a modal interval under the stated rule. It does not reveal an exact modal time among the original records.</p>"
+        ]
+      },
+      {
+        "title": "Let the purpose decide between mean and median",
+        "question": "<p>The recorded times \\(6,\\ 8,\\ 9,\\ 10,\\ 10,\\ 11,\\ 16\\) seconds have mean, median and mode all equal to \\(10\\). Replace the existing \\(16\\)-second record by \\(58\\) seconds, keeping seven records. Recalculate the three centres, then choose a summary for a typical time and a summary that preserves the total.</p>",
+        "solution": [
+          "\\[T_{\\mathrm{new}}=70-16+58=112\\,\\mathrm{s},\\qquad\\bar{t}_{\\mathrm{new}}=\\frac{112}{7}=16\\,\\mathrm{s}.\\]",
+          "<p>The new ordered list is \\(6,8,9,10,10,11,58\\). Its fourth value is still \\(10\\), and \\(10\\) is still the only repeated value. The median and mode remain \\(10\\,\\mathrm{s}\\).</p>",
+          "<p>For a typical time that is less influenced by this extreme magnitude, report the median \\(10\\,\\mathrm{s}\\). Explain why the mean is higher rather than silently dropping the long record.</p>",
+          "<p>To describe the exact total or an equal share of that total, the mean is appropriate:</p>\\[7(16)=112\\,\\mathrm{s}.\\]<p>The two centres answer different questions. This replacement left the middle position unchanged; adding or removing a record could change it.</p>"
+        ]
+      },
+      {
+        "title": "Application: measure spread around a known mean",
+        "question": "<p><strong>Application:</strong> three heights are \\(2,5,8\\,\\mathrm{cm}\\). Find their mean, descriptive variance using divisor \\(3\\), and standard deviation.</p>",
+        "solution": [
+          "\\[\\bar{x}=\\frac{2+5+8}{3}=5\\,\\mathrm{cm}.\\]",
+          "<p>The deviations from the mean are \\(-3,0,3\\). Squaring prevents their signs from cancelling:</p>\\[\\sigma^2=\\frac{(-3)^2+0^2+3^2}{3}=6\\,\\mathrm{cm}^2.\\]",
+          "<p>The sum-of-squares formula gives the same result:</p>\\[\\sigma^2=\\frac{2^2+5^2+8^2}{3}-5^2=\\frac{93}{3}-25=6\\,\\mathrm{cm}^2.\\]",
+          "\\[\\sigma=\\sqrt{6}\\,\\mathrm{cm}.\\]<p>Standard deviation has the original measurement units; variance has squared units.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Histograms, class boundaries and grouped estimates",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_rep_histograms"
+      },
+      {
+        "title": "Frequency tables, grouped estimates and median interpolation",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_ct_frequency"
+      },
+      {
+        "title": "Weighted means and combined moments",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_ct_combining"
+      },
+      {
+        "title": "Range, quartiles and raw-data variance",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_var_raw_moments"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "S1-S031-20261121-P01",
+        "title": "Three centres need not agree",
+        "prompt": "<p>Signed measurement errors, in centimetres, are</p>\\[-6,-2,-2,0,3,7.\\]<p>Find the exact mean, median and every mode.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean (cm)",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "median",
+            "label": "Median (cm)",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "modes",
+            "label": "Every mode (cm)",
+            "type": "set",
+            "expected": "{-2}"
+          }
+        ],
+        "hint": "<p>Keep the negative signs in the total. The six ordered observations have two middle positions, not one.</p>",
+        "solution": "<ol><li>\\[\\sum x=-6-2-2+0+3+7=0,\\qquad\\bar{x}=\\frac{0}{6}=0\\ \\text{cm}.\\]</li><li>\\[M=\\frac{-2+0}{2}=-1\\ \\text{cm}.\\]</li><li><p>The value \\(-2\\) cm occurs twice; every other value occurs once. The only mode is \\(-2\\) cm. A mean of zero does not imply that all errors are zero.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S031-20261121-P02",
+        "title": "Retain all tied modes and recognise the no-mode case",
+        "prompt": "<p>Give every mode for each dataset.</p>\\[A:1,1,3,3,5,5,8;\\qquad B:2,4,6,9.\\]<p>Use this chapter’s convention: if every value occurs once, there is no mode; otherwise give every value tied for greatest frequency. You may type “no mode”.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Every mode of A",
+            "type": "set",
+            "expected": "{1,3,5}"
+          },
+          {
+            "key": "b",
+            "label": "Every mode of B",
+            "type": "set",
+            "expected": "empty"
+          }
+        ],
+        "hint": "<p>Count the frequency of each distinct value. A tie at the greatest repeated frequency is not the same as a list with no repeats.</p>",
+        "solution": "<ol><li><p>For A, each of \\(1,3,5\\) occurs twice, while \\(8\\) occurs once. Its complete modal set is \\(\\{1,3,5\\}\\).</p></li><li><p>For B, all four distinct values occur once. Under the stated convention, B has no mode.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S031-20261121-P03",
+        "title": "An extreme observation affects different summaries differently",
+        "prompt": "<p>Five repair costs, in pounds, are \\(10,12,14,14,70\\). The cost \\(70\\) is then corrected to \\(170\\). Find the original mean, corrected mean and corrected median. Which measure, multiplied by the count of five, recovers the total corrected cost exactly?</p>",
+        "fields": [
+          {
+            "key": "before",
+            "label": "Original mean (£)",
+            "type": "number",
+            "expected": "24"
+          },
+          {
+            "key": "after",
+            "label": "Corrected mean (£)",
+            "type": "number",
+            "expected": "44"
+          },
+          {
+            "key": "median",
+            "label": "Corrected median (£)",
+            "type": "number",
+            "expected": "14"
+          },
+          {
+            "key": "total",
+            "label": "Measure that recovers the total when multiplied by five",
+            "type": "choice",
+            "expected": "mean",
+            "options": {
+              "mean": "Mean",
+              "median": "Median",
+              "mode": "Mode"
+            }
+          }
+        ],
+        "hint": "<p>The total rises by the change in the corrected value. Check whether its position crosses either central observation.</p>",
+        "solution": "<ol><li>\\[T=10+12+14+14+70=120,\\qquad\\bar{x}=\\frac{120}{5}=\\text{£}24.\\]</li><li>\\[T_{\\rm corrected}=120-70+170=220,\\qquad\\bar{x}_{\\rm corrected}=\\frac{220}{5}=\\text{£}44.\\]</li><li><p>The ordered corrected data are \\(10,12,14,14,170\\). The median remains \\(\\text{£}14\\), and the mode also remains \\(\\text{£}14\\).</p></li><li><p>The mean rises by \\(\\text{£}20\\), while the median is unchanged because the middle position is unchanged. The corrected mean still satisfies \\(5\\times44=220\\); an extreme value does not make the mean useless when the total is the question.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S031-20261121-P04",
+        "title": "State the modal-class convention when widths differ",
+        "prompt": "<p>The grouped continuous data have:</p><table><thead><tr><th>Class number</th><th>Interval</th><th>Frequency</th></tr></thead><tbody><tr><td>\\(1\\)</td><td>\\(0\\le x&lt;2\\)</td><td>6</td></tr><tr><td>\\(2\\)</td><td>\\(2\\le x&lt;8\\)</td><td>12</td></tr><tr><td>\\(3\\)</td><td>\\(8\\le x&lt;12\\)</td><td>12</td></tr></tbody></table><p>In this course, a modal class is a class with greatest frequency density. Give every modal class number, then every class number with greatest frequency.</p>",
+        "fields": [
+          {
+            "key": "modal",
+            "label": "All modal class numbers",
+            "type": "set",
+            "expected": "{1,3}"
+          },
+          {
+            "key": "frequency",
+            "label": "All greatest-frequency class numbers",
+            "type": "set",
+            "expected": "{2,3}"
+          }
+        ],
+        "hint": "<p>The widths are \\(2,6,4\\). Divide each frequency by its own width before identifying the density peaks.</p>",
+        "solution": "<ol><li>\\[d_1=\\frac{6}{2}=3,\\qquad d_2=\\frac{12}{6}=2,\\qquad d_3=\\frac{12}{4}=3.\\]</li><li><p>Classes \\(1\\) and \\(3\\) tie for greatest density, so both are modal classes under the stated convention. Classes \\(2\\) and \\(3\\) tie for greatest frequency, \\(12\\).</p></li><li><p>With unequal widths, “greatest frequency” and “greatest frequency density” can give different answers. A grouped modal class does not identify an exact raw modal value within it.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S031-20261121-P05",
+        "title": "Mixed application: equal centres can hide different spreads",
+        "prompt": "<p><strong>Mixed application — descriptive variance and standard deviation.</strong> Two sets of lengths, in centimetres, are</p>\\[A:7,8,9;\\qquad B:2,8,14.\\]<p>Both means are \\(8\\) cm. Using divisor \\(n=3\\), find the variance and standard deviation of each sample. Which has the more tightly grouped observations?</p>",
+        "fields": [
+          {
+            "key": "va",
+            "label": "Variance A (cm²)",
+            "type": "number",
+            "expected": "2/3"
+          },
+          {
+            "key": "sa",
+            "label": "Standard deviation A (cm)",
+            "type": "number",
+            "expected": "sqrt(6)/3"
+          },
+          {
+            "key": "vb",
+            "label": "Variance B (cm²)",
+            "type": "number",
+            "expected": "24"
+          },
+          {
+            "key": "sb",
+            "label": "Standard deviation B (cm)",
+            "type": "number",
+            "expected": "2*sqrt(6)"
+          },
+          {
+            "key": "consistent",
+            "label": "More tightly grouped lengths",
+            "type": "choice",
+            "expected": "a",
+            "options": {
+              "a": "A",
+              "b": "B",
+              "equal": "Equal means imply equal spread."
+            }
+          }
+        ],
+        "hint": "<p>Calculate the average squared distance from the mean. Then take the square root to obtain the standard deviation.</p>",
+        "solution": "<ol><li>\\[\\sigma_A^2=\\frac{(7-8)^2+(8-8)^2+(9-8)^2}{3}=\\frac{2}{3}\\ \\text{cm}^{2}.\\]</li><li>\\[\\sigma_A=\\sqrt{\\frac{2}{3}}=\\frac{\\sqrt{6}}{3}\\ \\text{cm}.\\]</li><li>\\[\\sigma_B^2=\\frac{(2-8)^2+(8-8)^2+(14-8)^2}{3}=24\\ \\text{cm}^{2},\\quad\\sigma_B=2\\sqrt{6}\\ \\text{cm}.\\]</li><li><p>A has less spread despite the equal means. Variance uses squared units; standard deviation uses the original length unit.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "S1-S031-20261121-E01",
+          "title": "Different questions can favour different centres",
+          "marks": 8,
+          "question": "<p>Recorded delivery times, in minutes, are</p>\\[A:8,9,10,10,11,12,50;\\]\\[B:12,13,14,14,15,16,17.\\]<p>Find each exact mean and median. Which sample has the lower typical time by the median? Which has the lower total recorded time across its seven deliveries? Explain why these conclusions can differ.</p>",
+          "hint": "<p>Keep the total for each sample as well as its mean. The long A delivery changes its total without changing the middle observation.</p>",
+          "solution": "<ol><li>\\[T_A=110,\\quad T_B=101,\\quad\\bar{x}_A=\\frac{110}{7},\\quad\\bar{x}_B=\\frac{101}{7}\\ \\text{min}.\\]</li><li><p>Both lists are ordered and contain seven times. Their medians are the fourth observations: \\(10\\) min for A and \\(14\\) min for B.</p></li><li><p>A has the lower typical time by the median. B has the lower observed total, \\(101\\) min rather than \\(110\\) min, and therefore the lower mean for these equal sample sizes.</p></li><li><p>A’s long \\(50\\)-minute delivery raises its mean. The median can describe a typical delivery with less sensitivity to that value; the total and mean answer the different question of how much time the recorded deliveries consumed altogether.</p></li><li><p>Neither conclusion establishes which method will be faster on every future delivery, and the long record should not be discarded merely because it changes the mean.</p></li></ol>",
+          "marking": "<ul><li>1 mark: obtain both sample counts and totals.</li><li>1 mark: obtain the exact mean of A.</li><li>1 mark: obtain the exact mean of B.</li><li>1 mark: locate both ordered median positions.</li><li>1 mark: obtain both medians.</li><li>1 mark: identify the lower typical time by the median.</li><li>1 mark: identify the lower total and relate it to the mean.</li><li>1 mark: explain the difference in purpose and the effect of the extreme observation.</li></ul>"
+        },
+        {
+          "id": "S1-S031-20261121-E02",
+          "title": "Use a measure that makes sense for categories",
+          "marks": 5,
+          "question": "<p>Students reported their usual travel method. Each student selected exactly one category.</p><table><thead><tr><th>Category</th><th>Frequency</th></tr></thead><tbody><tr><td>Bus</td><td>12</td></tr><tr><td>Walking</td><td>9</td></tr><tr><td>Cycling</td><td>12</td></tr><tr><td>Car</td><td>3</td></tr></tbody></table><p>Find the total number of students, identify every modal category, and find the fraction using one of those modal categories. A spreadsheet labels the categories with the numerical codes \\(1,2,3,4\\). Does the mean of those codes give a meaningful average travel method?</p>",
+          "hint": "<p>The modal categories tie at the greatest frequency. Distinguish numerical measurements from numbers used only as labels.</p>",
+          "solution": "<ol><li>\\[N=12+9+12+3=36.\\]</li><li><p>Bus and cycling each occur \\(12\\) times, the greatest frequency. Both are modes.</p></li><li>\\[\\text{fraction in the modal categories}=\\frac{12+12}{36}=\\frac{2}{3}.\\]</li><li><p>The category codes have no measurement scale or natural order. Relabelling the same categories would change their arithmetic mean without changing anybody’s travel method. The modes provide a meaningful description of the most common categories.</p></li></ol>",
+          "marking": "<ul><li>1 mark: sum all category frequencies.</li><li>1 mark: identify both tied modal categories.</li><li>1 mark: add the frequencies of both modal categories.</li><li>1 mark: obtain the fraction of the full sample.</li><li>1 mark: explain why the arbitrary category codes do not support a meaningful mean.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Calculate the requested centre, state all tied modes, and justify the choice using the purpose of the question.</p><h2>Mean and median use different information</h2>\\[\\bar{x}=\\frac{\\sum x}{n},\\qquad\\sum x=n\\bar{x}.\\]<p>The mean uses every numerical observation. For the median, order all values and keep repeats. For odd \\(n\\), take position \\(\\frac{n+1}{2}\\). For even \\(n\\), average the two middle values. Positions are not the answer values.</p><h2>State every mode and the grouped convention</h2><p>The mode is a most frequent observed value. If the greatest frequency exceeds one, include every tied value. If every value occurs once, this chapter uses “no mode”.</p><p>For grouped continuous data, this course defines modal classes by greatest density \\(d=\\frac{f}{w}\\). Unequal widths can make the greatest-frequency class different. Retain all density ties; equal densities give no unique modal class. Grouping does not reveal an exact modal raw value.</p><h2>Choose the centre for the question</h2><p>The median is less sensitive to the size of an extreme value; the mean recovers the total when multiplied by the count. The mode describes the most common category. Numerical category codes do not create a meaningful measurement mean.</p><p>Explain the purpose and quote units. A higher centre is not universally better, and an outlier does not automatically invalidate the mean.</p><h2>Mixed application: centre does not determine spread</h2>\\[\\sigma^2=\\frac{\\sum(x-\\bar{x})^2}{n}=\\frac{\\sum x^2}{n}-\\bar{x}^{\\,2},\\qquad\\sigma=\\sqrt{\\sigma^2}.\\]<p>Here descriptive variance uses divisor \\(n\\). Standard deviation uses the original units; variance uses squared units. Equal means need not imply equal consistency. This bridge supports mixed questions; the variation chapter develops it further.</p>",
+      "checks": "<ul><li>Every observation included in the total and count?</li><li>Median positions found after ordering?</li><li>Every tied mode and the stated class convention used?</li><li>Choice explained in context, with spread considered separately?</li></ul>",
+      "examTip": "<p>Choice explained in context, with spread considered separately?</p>"
+    }
+  },
+  "orig_9709_s1_ct_coding": {
+    "updatedOn": "2026-11-21",
+    "description": "Reverse the coding before restoring summaries. Track the mean and spread separately, then use counts, sums and sums of squares to recover missing information and check whether the data are possible.",
+    "sections": [
+      {
+        "id": "translation-coding",
+        "title": "What does subtracting an origin change?",
+        "label": "Translation, totals and spread",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Coding applies one rule to every numerical observation, often making large values easier to calculate with. The mean describes location. Standard deviation describes spread, and variance is the square of standard deviation.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a translation \\(u=x-a\\), write the inverse \\(x=a+u\\). Then</p>\\[\\bar{x}=a+\\bar{u},\\qquad\\sum x=na+\\sum u,\\qquad\\sigma_x=\\sigma_u.\\]<p>A shift adds the origin once to the mean and once per observation to the total. It does not change distances between values or their spread.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>When coded records or totals are supplied, calculate their summaries first. Descriptive variance is the mean squared distance from the mean, and uses divisor \\(n\\):</p>\\[\\bar{u}=\\frac{\\sum u}{n},\\qquad\\sigma_u^2=\\frac{\\sum u^2}{n}-\\bar{u}^{\\,2},\\qquad\\sigma_u=\\sqrt{\\sigma_u^2}.\\]<p>Here \\(\\sum u^2\\) means square each coded value before adding.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-S032-20261121-C01",
+            "title": "Restore an origin once for every record",
+            "prompt": "<p>Seven numerical heights \\(x\\), measured in centimetres, are coded by \\(u=x-30\\). The coded sum is \\(\\sum u=-21\\), and the coded standard deviation is \\(3\\). Find the original total, mean and standard deviation.</p>",
+            "fields": [
+              {
+                "key": "total",
+                "label": "Original total (cm)",
+                "type": "number",
+                "expected": "189"
+              },
+              {
+                "key": "mean",
+                "label": "Original mean (cm)",
+                "type": "number",
+                "expected": "27"
+              },
+              {
+                "key": "sd",
+                "label": "Original standard deviation (cm)",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Write \\(x=u+30\\). Add \\(30\\) once to the mean, but once per observation to the total. Translation leaves spread unchanged.</p>",
+            "solution": "<ol><li>\\[\\sum x=\\sum u+7(30)=-21+210=189\\,\\mathrm{cm}.\\]</li><li>\\[\\bar{x}=30+\\frac{-21}{7}=27\\,\\mathrm{cm}.\\]</li><li>\\[\\sigma_x=\\sigma_u=3\\,\\mathrm{cm}.\\]</li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The origin is a convenient reference, sometimes called an assumed mean. It need not be the actual mean. Do not add the origin only once when restoring a total of many records.</p>"
+          }
+        ]
+      },
+      {
+        "id": "scale-changes",
+        "title": "How do I undo a change of scale?",
+        "label": "Write the inverse before using summaries",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>A general code subtracts an origin and divides by a nonzero scale. Reverse it before deciding whether to multiply or divide a summary:</p>\\[u=\\frac{x-a}{b}\\quad\\Longleftrightarrow\\quad x=a+bu,\\qquad b\\ne0.\\]",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[\\bar{x}=a+b\\bar{u},\\qquad\\sum x=na+b\\sum u,\\]\\[\\sigma_x^2=b^2\\sigma_u^2,\\qquad\\sigma_x=|b|\\sigma_u.\\]<p>Translation affects location, while the absolute scale affects distances. If starting from original summaries instead,</p>\\[\\bar{u}=\\frac{\\bar{x}-a}{b},\\qquad\\sigma_u=\\frac{\\sigma_x}{|b|}.\\]"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_9709_s1_ct_coding/translation-and-scale.svg\" alt=\"A coded dataset is decoded under translation, positive scaling and negative scaling, with mean and standard deviation tracked separately.\" width=\"849\" height=\"702\"></p><p>Translation moves every value equally. With \\(x=45+4u\\), the coded mean \\(1\\) becomes \\(49\\), while coded SD \\(\\sqrt{2}\\) becomes \\(4\\sqrt{2}\\). A negative scale reverses order but keeps spread nonnegative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-S032-20261121-C02",
+            "title": "Decode the mean and both spread measures",
+            "prompt": "<p>Numerical masses \\(x\\), in grams, are coded by</p>\\[u=\\frac{x-100}{3}.\\]<p>The coded mean is \\(-2\\) and coded standard deviation is \\(\\frac{5}{2}\\). Find the original mean, variance and standard deviation.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Original mean (g)",
+                "type": "number",
+                "expected": "94"
+              },
+              {
+                "key": "variance",
+                "label": "Original variance (g²)",
+                "type": "number",
+                "expected": "225/4"
+              },
+              {
+                "key": "sd",
+                "label": "Original standard deviation (g)",
+                "type": "number",
+                "expected": "15/2"
+              }
+            ],
+            "hint": "<p>Reverse the coding first. The mean receives both the shift and scale; SD receives the absolute scale and variance receives its square.</p>",
+            "solution": "<ol><li>\\[x=100+3u,\\qquad\\bar{x}=100+3(-2)=94\\,\\mathrm{g}.\\]</li><li>\\[\\sigma_x=3\\left(\\frac{5}{2}\\right)=\\frac{15}{2}\\,\\mathrm{g}.\\]</li><li>\\[\\sigma_x^2=3^2\\left(\\frac{5}{2}\\right)^2=\\frac{225}{4}\\,\\mathrm{g}^2.\\]</li></ol>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use the factor in the <strong>inverse</strong> rule to decode original summaries. Restore the original measurement units in the answer. Variance has squared units; standard deviation has the original units.</p>"
+          }
+        ]
+      },
+      {
+        "id": "negative-multipliers",
+        "title": "What changes when the multiplier is negative?",
+        "label": "Reversed order and both scale signs",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>For \\(x=a+bu\\) with \\(b&lt;0\\), a larger coded value gives a smaller original value. Decode each observation and reorder before using ranked positions. The mean follows the signed multiplier; SD follows its absolute value.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "key",
+            "html": "<p>If the scale is unknown and \\(\\sigma_u&gt;0\\), then</p>\\[|b|=\\frac{\\sigma_x}{\\sigma_u}.\\]<p>This usually leaves two signs. Use each sign in the mean equation, keep the matching origin, then apply any supplied sign restriction. If \\(\\sigma_u=0\\), consistency requires \\(\\sigma_x=0\\); spread alone cannot identify the scale.</p>"
+          },
+          {
+            "kind": "check",
+            "id": "S1-S032-20261121-C03",
+            "title": "Keep both signs of an unknown scale",
+            "prompt": "<p>Original and coded numerical observations are related by \\(x=a+bu\\), where \\(b\\ne0\\). Their summaries are</p>\\[\\bar{u}=2,\\quad\\sigma_u=3,\\qquad\\bar{x}=10,\\quad\\sigma_x=6.\\]<p>Find every ordered pair \\((a,b)\\). No sign restriction on \\(b\\) is given.</p>",
+            "fields": [
+              {
+                "key": "parameters",
+                "label": "All pairs \\((a,b)\\)",
+                "type": "pairs",
+                "expected": "(6,2);(14,-2)"
+              }
+            ],
+            "hint": "<p>The SD equation determines \\(|b|\\). Use each possible sign separately in the mean equation and keep its matching value of \\(a\\).</p>",
+            "solution": "<ol><li>\\[6=|b|(3)\\Longrightarrow |b|=2\\Longrightarrow b=2\\text{ or }b=-2.\\]</li><li>\\[10=a+2b\\Longrightarrow a=10-2b.\\]</li><li><p>For \\(b=2\\), \\(a=6\\). For \\(b=-2\\), \\(a=14\\). Hence</p>\\[(a,b)=(6,2)\\text{ or }(14,-2).\\]</li><li><p>Both pairs give mean \\(10\\) and SD \\(6\\), and both scales are nonzero. Keep the parameter values paired.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not report a negative SD or discard a negative scale without a stated reason. A zero scale is not permitted in the invertible coding rule \\(u=\\frac{x-a}{b}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "two-origins",
+        "title": "How can two coded totals reveal the count?",
+        "label": "Two origins for the same observations",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Two different origins can give independent equations for the same count and raw total. The summaries must describe the same observations.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "\\[\\sum(x-a)=T-na,\\qquad\\sum(x-c)=T-nc.\\]<p>Subtract to eliminate the raw total:</p>\\[\\sum(x-a)-\\sum(x-c)=n(c-a).\\]<p>For distinct origins, solve for \\(n\\), then recover \\(T\\) and \\(\\bar{x}=\\frac{T}{n}\\). Check that \\(n\\) is a positive integer and satisfies both original equations.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-S032-20261121-C04",
+            "title": "Check that a recovered sample size is possible",
+            "prompt": "<p>The same numerical heights \\(x\\), in centimetres, satisfy</p>\\[\\sum(x-8)=63,\\qquad\\sum(x-13)=28.\\]<p>Find the number of observations and their mean. A separate proposed dataset instead has the two totals \\(62\\) and \\(28\\) at those same origins. Could that second proposal describe a dataset?</p>",
+            "fields": [
+              {
+                "key": "count",
+                "label": "Number of observations in the first dataset",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "mean",
+                "label": "Mean of the first dataset (cm)",
+                "type": "number",
+                "expected": "17"
+              },
+              {
+                "key": "possible",
+                "label": "Feasibility of the separate proposal",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "no": "No: the required number of observations is not an integer.",
+                  "yes": "Yes: any positive real number can be a sample size.",
+                  "zero": "Yes: it describes an empty dataset."
+                }
+              }
+            ],
+            "hint": "<p>The difference between the two coded sums is the count multiplied by the difference between the origins. Check the count before using it.</p>",
+            "solution": "<ol><li>\\[63-28=(13-8)n\\Longrightarrow35=5n\\Longrightarrow n=7.\\]</li><li>\\[\\sum x=63+7(8)=119,\\qquad\\bar{x}=\\frac{119}{7}=17\\,\\mathrm{cm}.\\]</li><li><p>For the separate proposal,</p>\\[62-28=5n\\Longrightarrow n=\\frac{34}{5}.\\]<p>A finite dataset cannot contain this non-integer number of observations, so the proposal is inconsistent.</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Identical origins do not provide a new count equation: matching totals repeat the same information, while different totals are inconsistent. First-moment totals alone generally leave spread undetermined.</p>"
+          }
+        ]
+      },
+      {
+        "id": "moment-application",
+        "title": "How can two totals recover missing observations?",
+        "label": "Sum and sum of squares",
+        "minutes": 12,
+        "level": "further",
+        "intro": "<p><strong>Exam application:</strong> use two separate totals: the sum of values and the sum of their squares. The variation chapter develops variance in detail; here its descriptive formula supports coded-total problems, using divisor \\(n\\). For coded summaries \\(S_u=\\sum u_i\\) and \\(Q_u=\\sum u_i^2\\),</p>\\[\\bar{u}=\\frac{S_u}{n},\\qquad\\sigma_u^2=\\frac{Q_u}{n}-\\left(\\frac{S_u}{n}\\right)^2.\\]<p>For any real dataset with \\(n&gt;0\\), a necessary check is \\(Q_u\\ge\\frac{S_u^2}{n}\\). A negative variance is impossible. For a single observation, variance must be zero.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>From \\(x=a+bu\\), expand the square before summing:</p>\\[x^2=a^2+2abu+b^2u^2.\\]<p>Therefore</p>\\[\\sum x=na+b\\sum u,\\]\\[\\sum x^2=na^2+2ab\\sum u+b^2\\sum u^2.\\]<p>Keep the cross term. If the original mean and variance are supplied instead, use</p>\\[\\sum x=n\\bar{x},\\qquad\\sum x^2=n\\bigl(\\sigma_x^2+\\bar{x}^{\\,2}\\bigr).\\]"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_9709_s1_ct_coding/coding-moment-decoding.svg\" alt=\"Coded first and second moments are decoded with the full square expansion, including the cross term, then checked through the original mean and variance.\" width=\"853\" height=\"679\"></p><p>With \\(n=5\\), \\(\\sum u=5\\), \\(\\sum u^2=15\\) and \\(x=45+4u\\), the original totals are \\(\\sum x=245\\) and \\(\\sum x^2=12165\\). They give mean \\(49\\) and variance \\(32\\).</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Subtract the known records from both raw totals. If the remaining observations satisfy \\(p+q=T\\) and \\(p^2+q^2=R\\), then</p>\\[pq=\\frac{T^2-R}{2},\\qquad z^2-Tz+pq=0.\\]<p>The quadratic gives the two values. Keep both labelled assignments unless an order or other restriction selects one. The check</p>\\[(p-q)^2=2R-T^2\\ge0\\]<p>is necessary for real values. Equality allows two equal observations unless the question forbids them. A sum alone usually does not determine both observations.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "S1-S032-20261121-C05",
+            "title": "Application: recover both labelled observations",
+            "prompt": "<p><strong>Application:</strong> four numerical observations are \\(3,8,p,q\\). Their mean is \\(7\\), and their descriptive variance, using divisor \\(4\\), is \\(\\frac{23}{2}\\). Find \\(p+q\\) and every ordered pair \\((p,q)\\). No order between the labelled records is stated. If the variance had not been supplied, would the mean alone determine the pair?</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Sum of the missing observations",
+                "type": "number",
+                "expected": "17"
+              },
+              {
+                "key": "records",
+                "label": "All labelled pairs \\((p,q)\\)",
+                "type": "pairs",
+                "expected": "(5,12);(12,5)"
+              },
+              {
+                "key": "unique",
+                "label": "What would the mean alone determine?",
+                "type": "choice",
+                "expected": "sum",
+                "options": {
+                  "sum": "Only their sum, so the pair would not be unique.",
+                  "equal": "A unique pair with equal values.",
+                  "order": "A unique pair because the first label must be smaller."
+                }
+              }
+            ],
+            "hint": "<p>Recover the full total and sum of squares, then subtract the known records. Use their remaining sum and sum of squares to form a quadratic.</p>",
+            "solution": "<ol><li>\\[\\sum x=4(7)=28\\Longrightarrow p+q=28-3-8=17.\\]</li><li>\\[\\sum x^2=4\\left(\\frac{23}{2}+7^2\\right)=242.\\]\\[p^2+q^2=242-3^2-8^2=169.\\]</li><li>\\[pq=\\frac{17^2-169}{2}=60.\\]\\[z^2-17z+60=(z-5)(z-12)=0.\\]</li><li>\\[(p,q)=(5,12)\\text{ or }(12,5).\\]<p>Both give total \\(28\\) and sum of squares \\(242\\), so both recover the stated mean and variance.</p></li><li><p>Without the variance, the known information would give only \\(p+q=17\\). It would not select a unique pair of real observations.</p></li></ol>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The sum of squares \\(\\sum x^2\\) is not the square of the total \\((\\sum x)^2\\). A nonnegative variance does not automatically verify every condition: also check the count, real roots, any integer or sign restrictions, the labels and both original moment equations.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Coded value",
+        "definition": "<p>A number obtained by applying the same stated transformation to each original observation.</p>"
+      },
+      {
+        "term": "Origin",
+        "definition": "<p>The constant subtracted before scaling; it is a convenient reference and need not be the actual mean.</p>"
+      },
+      {
+        "term": "Scale",
+        "definition": "<p>The nonzero multiplier or divisor used by the coding rule. Check its direction before transforming summaries.</p>"
+      },
+      {
+        "term": "Inverse coding",
+        "definition": "<p>The rule restoring original observations, such as \\(x=a+bu\\) from \\(u=\\frac{x-a}{b}\\).</p>"
+      },
+      {
+        "term": "Sum of squares",
+        "definition": "<p>The total \\(\\sum x_i^2\\), formed by squaring each observation before adding.</p>"
+      },
+      {
+        "term": "Descriptive variance",
+        "definition": "<p>The average squared distance from the mean, using the count \\(n\\) as divisor.</p>"
+      },
+      {
+        "term": "Standard deviation",
+        "definition": "<p>The nonnegative square root of variance, expressed in the original data units when the coding is reversed.</p>"
+      },
+      {
+        "term": "Labelled observations",
+        "definition": "<p>Missing records with different names; their labels do not put their values in increasing order unless the question says so.</p>"
+      },
+      {
+        "term": "Consistent totals",
+        "definition": "<p>Summaries that can belong to a dataset satisfying all stated count and value restrictions.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Translate the data without changing its spread",
+        "question": "<p>Five numerical heights \\(x\\), in centimetres, are \\(44,45,46,47,48\\). Code them using \\(u=x-45\\). Calculate the coded mean and descriptive standard deviation, then restore the original total, mean and standard deviation.</p>",
+        "solution": [
+          "\\[u:\\quad-1,0,1,2,3,\\qquad\\sum u=5,\\qquad\\bar{u}=\\frac{5}{5}=1.\\]",
+          "\\[\\sum u^2=(-1)^2+0^2+1^2+2^2+3^2=15.\\]\\[\\sigma_u^2=\\frac{15}{5}-1^2=2,\\qquad\\sigma_u=\\sqrt{2}.\\]",
+          "<p>The inverse rule is \\(x=45+u\\). Add the origin once for every record:</p>\\[\\sum x=5(45)+5=230\\,\\mathrm{cm}.\\]",
+          "\\[\\bar{x}=45+1=46\\,\\mathrm{cm}.\\]",
+          "<p>Every pairwise difference is unchanged by adding \\(45\\), so</p>\\[\\sigma_x=\\sigma_u=\\sqrt{2}\\,\\mathrm{cm}.\\]<p>The chosen origin \\(45\\) is not the original mean \\(46\\).</p>"
+        ]
+      },
+      {
+        "title": "Reverse a code with a positive scale",
+        "question": "<p>A different set of numerical heights \\(x\\), in centimetres, is coded by</p>\\[u=\\frac{x-45}{4}.\\]<p>The coded observations are \\(-1,0,1,2,3\\), with mean \\(1\\), variance \\(2\\) and SD \\(\\sqrt{2}\\). Find the original observations, mean, variance and SD.</p>",
+        "solution": [
+          "\\[4u=x-45\\Longrightarrow x=45+4u.\\]",
+          "\\[x:\\quad41,45,49,53,57.\\]",
+          "\\[\\bar{x}=45+4(1)=49\\,\\mathrm{cm}.\\]",
+          "\\[\\sigma_x^2=4^2(2)=32\\,\\mathrm{cm}^2,\\qquad\\sigma_x=4\\sqrt{2}\\,\\mathrm{cm}.\\]<p>The shift changes location; the scale multiplies distances from the mean.</p>"
+        ]
+      },
+      {
+        "title": "Decode a negative scale and restore the order",
+        "question": "<p>Five coded numerical heights are \\(-1,0,1,2,3\\), with coded mean \\(1\\) and SD \\(\\sqrt{2}\\). The coding rule is</p>\\[u=\\frac{45-x}{4},\\]<p>where \\(x\\) is the numerical height in centimetres. Find the original values in increasing order, the mean and the SD.</p>",
+        "solution": [
+          "\\[4u=45-x\\Longrightarrow x=45-4u.\\]",
+          "<p>Following the coded values in their given order gives</p>\\[49,45,41,37,33.\\]<p>The negative multiplier reverses the order. The increasing original list is</p>\\[33,37,41,45,49.\\]",
+          "\\[\\bar{x}=45-4(1)=41\\,\\mathrm{cm}.\\]",
+          "\\[\\sigma_x=|-4|\\sqrt{2}=4\\sqrt{2}\\,\\mathrm{cm}.\\]<p>Its variance is \\(32\\,\\mathrm{cm}^2\\). A standard deviation cannot become negative because the code reverses order.</p>"
+        ]
+      },
+      {
+        "title": "Use two origins to recover the same sample size",
+        "question": "<p>The same dataset of numerical heights \\(x\\), in centimetres, gives</p>\\[\\sum(x-20)=84,\\qquad\\sum(x-23)=60.\\]<p>Find its number of observations and original mean.</p>",
+        "solution": [
+          "<p>Write the two equations using the same raw total \\(T\\) and count \\(n\\):</p>\\[T-20n=84,\\qquad T-23n=60.\\]",
+          "<p>Subtract the second equation from the first:</p>\\[3n=24\\Longrightarrow n=8.\\]",
+          "\\[T=84+20(8)=244\\,\\mathrm{cm},\\qquad\\bar{x}=\\frac{244}{8}=\\frac{61}{2}\\,\\mathrm{cm}.\\]",
+          "<p>The count is a positive integer, and the second equation checks:</p>\\[244-23(8)=60.\\]<p>These two first-moment totals determine the count and mean, but do not determine the standard deviation.</p>"
+        ]
+      },
+      {
+        "title": "Application: use both moments, then keep every permitted pair",
+        "question": "<p><strong>Application:</strong> five numerical observations are \\(2,6,10,p,q\\). Their mean is \\(8\\), and their descriptive variance, using divisor \\(5\\), is \\(14\\). Find every labelled pair \\((p,q)\\). Then state the answer if the extra condition \\(p&lt;q\\) is imposed.</p>",
+        "solution": [
+          "\\[\\sum x=5(8)=40,\\qquad\\sum x^2=5(14+8^2)=390.\\]",
+          "<p>Subtract the known contributions from each total separately:</p>\\[p+q=40-(2+6+10)=22,\\]\\[p^2+q^2=390-(2^2+6^2+10^2)=250.\\]",
+          "\\[(p+q)^2=p^2+q^2+2pq\\Longrightarrow pq=\\frac{22^2-250}{2}=117.\\]",
+          "<p>The two missing values are roots of</p>\\[z^2-22z+117=(z-9)(z-13)=0.\\]<p>Without an order condition, retain</p>\\[(p,q)=(9,13)\\text{ or }(13,9).\\]",
+          "<p>Both labelled pairs give total \\(40\\) and sum of squares \\(390\\), hence</p>\\[\\bar{x}=8,\\qquad\\sigma_x^2=\\frac{390}{5}-8^2=14.\\]",
+          "<p>If \\(p&lt;q\\) is imposed, only \\((9,13)\\) is permitted. Two moments can determine two values without determining which label receives which one.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Mean, median, mode and choosing a centre",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_ct_centre_raw"
+      },
+      {
+        "title": "Weighted means and combined moments",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_ct_combining"
+      },
+      {
+        "title": "Range, quartiles and raw-data variance",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_var_raw_moments"
+      },
+      {
+        "title": "Quadratic equations and factorisation",
+        "href": "/courses/maths4u-9709-p1/topics/orig_quadratics_factorisation"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "S1-S032-20261121-P01",
+        "title": "Undo a translation",
+        "prompt": "<p>Twelve masses \\(x\\), measured in grams, are coded by \\(u=x-75\\). The summaries are \\(\\sum u=-18\\) and \\(\\sum u^2=99\\). Find the original mean, original total and descriptive standard deviation.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Original mean (g)",
+            "type": "number",
+            "expected": "147/2"
+          },
+          {
+            "key": "total",
+            "label": "Original total (g)",
+            "type": "number",
+            "expected": "882"
+          },
+          {
+            "key": "sd",
+            "label": "Original standard deviation (g)",
+            "type": "number",
+            "expected": "sqrt(6)"
+          }
+        ],
+        "hint": "<p>Find the coded mean first. A translation moves every value equally, so it does not change distances from the mean.</p>",
+        "solution": "<ol><li>\\[\\bar{u}=\\frac{-18}{12}=-\\frac{3}{2},\\qquad\\bar{x}=75-\\frac{3}{2}=\\frac{147}{2}\\ \\text{g}.\\]</li><li>\\[\\sum x=12(75)-18=882\\ \\text{g}.\\]</li><li>\\[\\sigma_u^2=\\frac{99}{12}-\\left(-\\frac{3}{2}\\right)^2=6,\\qquad\\sigma_x=\\sqrt{6}\\ \\text{g}.\\]</li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S032-20261121-P02",
+        "title": "Decode a scale and reconstruct a square-sum",
+        "prompt": "<p>Six lengths \\(x\\), in centimetres, are coded by \\(u=\\frac{x-18}{4}\\). Given \\(\\sum u=9\\) and \\(\\sum u^2=25\\), find the original mean, variance and sum of squares. Use descriptive variance with divisor \\(6\\).</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Original mean (cm)",
+            "type": "number",
+            "expected": "24"
+          },
+          {
+            "key": "variance",
+            "label": "Original variance (cm²)",
+            "type": "number",
+            "expected": "92/3"
+          },
+          {
+            "key": "squares",
+            "label": "Original sum of squares (cm²)",
+            "type": "number",
+            "expected": "3640"
+          }
+        ],
+        "hint": "<p>Write \\(x=18+4u\\). When squaring this expression, keep its cross-term.</p>",
+        "solution": "<ol><li>\\[\\bar{u}=\\frac{9}{6}=\\frac{3}{2},\\qquad\\bar{x}=18+4\\left(\\frac{3}{2}\\right)=24\\ \\text{cm}.\\]</li><li>\\[\\sigma_u^2=\\frac{25}{6}-\\frac{9}{4}=\\frac{23}{12},\\qquad\\sigma_x^2=16\\left(\\frac{23}{12}\\right)=\\frac{92}{3}\\ \\text{cm}^{2}.\\]</li><li>\\[\\sum x^2=6(18)^2+2(18)(4)\\sum u+4^2\\sum u^2\\]</li><li>\\[=1944+144(9)+16(25)=3640\\ \\text{cm}^{2}.\\]</li><li><p>This also equals \\(6\\left(\\frac{92}{3}+24^2\\right)\\), providing a check from the variance formula.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S032-20261121-P03",
+        "title": "A negative code still gives a positive SD",
+        "prompt": "<p>Eight observations satisfy \\(v=30-2x\\), with \\(\\sum v=40\\) and \\(\\sum v^2=232\\). Find the mean and descriptive standard deviation of \\(x\\).</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Original mean",
+            "type": "number",
+            "expected": "25/2"
+          },
+          {
+            "key": "sd",
+            "label": "Original standard deviation",
+            "type": "number",
+            "expected": "1"
+          }
+        ],
+        "hint": "<p>Rearrange to \\(x=15-\\frac{v}{2}\\). Use the absolute value of the multiplier for standard deviation.</p>",
+        "solution": "<ol><li>\\[\\bar{v}=\\frac{40}{8}=5,\\quad\\sigma_v^2=\\frac{232}{8}-5^2=4,\\quad\\sigma_v=2.\\]</li><li>\\[\\bar{x}=15-\\frac{5}{2}=\\frac{25}{2},\\qquad\\sigma_x=\\left|-\\frac{1}{2}\\right|(2)=1.\\]</li><li><p>The order of observations reverses under this transformation, but distances remain non-negative.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S032-20261121-P04",
+        "title": "Recover the count from two origins",
+        "prompt": "<p>The same \\(n\\) observations satisfy</p>\\[\\sum(x-12)=56,\\qquad\\sum(x-19)=-28.\\]<p>Find \\(n\\), the original total and the exact mean.</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "Number of observations",
+            "type": "number",
+            "expected": "12"
+          },
+          {
+            "key": "total",
+            "label": "Original total",
+            "type": "number",
+            "expected": "200"
+          },
+          {
+            "key": "mean",
+            "label": "Original mean",
+            "type": "number",
+            "expected": "50/3"
+          }
+        ],
+        "hint": "<p>Each observation contributes a difference of \\(7\\) between the two coded sums.</p>",
+        "solution": "<ol><li>\\[56-(-28)=n(19-12),\\qquad84=7n,\\qquad n=12.\\]</li><li>\\[\\sum x=56+12(12)=200,\\qquad\\bar{x}=\\frac{200}{12}=\\frac{50}{3}.\\]</li><li><p>The count is a positive integer. Substituting into the second summary gives \\(200-19(12)=-28\\), as required.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S032-20261121-P05",
+        "title": "Separate impossible information from insufficient information",
+        "prompt": "<p>Report A claims \\(n=5\\), \\(\\sum u=15\\) and \\(\\sum u^2=40\\) for real observations. Report B gives only \\(p+q=10\\) for two unknown positive observations. Classify each report.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Report A",
+            "type": "choice",
+            "expected": "impossible",
+            "options": {
+              "impossible": "Impossible: the summaries would give negative variance.",
+              "unique": "Enough information to recover five unique observations.",
+              "valid": "Valid: a negative descriptive variance is allowed."
+            }
+          },
+          {
+            "key": "b",
+            "label": "Report B",
+            "type": "choice",
+            "expected": "insufficient",
+            "options": {
+              "insufficient": "Possible, but it does not determine the two values uniquely.",
+              "unique": "The values must both be five.",
+              "impossible": "No two positive values can have this sum."
+            }
+          }
+        ],
+        "hint": "<p>For A, calculate \\(\\frac{\\sum u^2}{n}-\\left(\\frac{\\sum u}{n}\\right)^2\\). For B, find two different pairs satisfying the given sum.</p>",
+        "solution": "<ol><li>\\[\\frac{40}{5}-\\left(\\frac{15}{5}\\right)^2=8-9=-1.\\]</li><li><p>A real dataset cannot have negative variance, so A is impossible. A small numerical rounding error should be distinguished from this exact contradiction.</p></li><li><p>For B, both \\((p,q)=(1,9)\\) and \\((3,7)\\) satisfy the conditions. A further independent condition, such as a sum of squares, can determine the unordered pair; a further ordering rule may still be needed to identify the labelled values uniquely.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "S1-S032-20261121-E01",
+          "title": "Recover two missing original measurements",
+          "marks": 8,
+          "question": "<p>Six lengths \\(x\\), in centimetres, are coded by \\(u=\\frac{x-10}{2}\\). The summaries are \\(\\sum u=-6\\) and \\(\\sum u^2=16\\). Four lengths are \\(4,6,9,11\\); the other two are \\(a\\) and \\(b\\), where \\(a&lt;b\\). Find the original total, original sum of squares, both missing lengths and the descriptive standard deviation.</p>",
+          "hint": "<p>Use \\(x=10+2u\\) to recover both moments. Subtract the contributions of the four known observations, then solve for the missing pair.</p>",
+          "solution": "<ol><li>\\[\\sum x=6(10)+2(-6)=48\\ \\text{cm}.\\]</li><li>\\[\\sum x^2=6(100)+40(-6)+4(16)=424\\ \\text{cm}^{2}.\\]</li><li>\\[a+b=48-(4+6+9+11)=18,\\]</li><li>\\[a^2+b^2=424-(16+36+81+121)=170.\\]</li><li>\\[2ab=(a+b)^2-(a^2+b^2)=324-170=154,\\quad ab=77.\\]</li><li>\\[t^2-18t+77=(t-7)(t-11)=0.\\]</li><li><p>Since \\(a&lt;b\\), \\(a=7\\) cm and \\(b=11\\) cm. A missing observation may equal a known observation; there is no distinctness restriction.</p></li><li>\\[\\bar{x}=8,\\qquad\\sigma_x=\\sqrt{\\frac{424}{6}-64}=\\frac{2\\sqrt{15}}{3}\\ \\text{cm}.\\]</li><li><p>Substitution of all six values into the original code gives \\(\\sum u=-6\\) and \\(\\sum u^2=16\\), so both conditions are restored.</p></li></ol>",
+          "marking": "<ul><li>1 mark: invert the coding and recover the original total.</li><li>1 mark: expand the square correctly and recover the original square-sum.</li><li>1 mark: obtain the sum of the missing values.</li><li>1 mark: obtain the sum of their squares.</li><li>1 mark: derive their product or an equivalent quadratic.</li><li>1 mark: solve and apply the requested ordering.</li><li>1 mark: calculate the original descriptive variance.</li><li>1 mark: obtain the exact non-negative SD and retain units.</li></ul>"
+        },
+        {
+          "id": "S1-S032-20261121-E02",
+          "title": "Keep both possible signs of an unknown scale",
+          "marks": 6,
+          "question": "<p>Ten real observations have mean \\(45\\) and descriptive variance \\(36\\). They are coded by \\(v=\\frac{x-a}{b}\\), where \\(b\\ne0\\). The coded summaries are \\(\\sum v=20\\) and \\(\\sum v^2=80\\). Find the coded standard deviation, \\(|b|\\), and every possible ordered pair \\((a,b)\\).</p>",
+          "hint": "<p>Variance determines \\(b^2\\), not its sign. For each admissible sign, use \\(45=a+b\\bar{v}\\).</p>",
+          "solution": "<ol><li>\\[\\bar{v}=\\frac{20}{10}=2,\\qquad\\sigma_v^2=\\frac{80}{10}-2^2=4,\\qquad\\sigma_v=2.\\]</li><li>\\[36=b^2(4),\\qquad b^2=9,\\qquad|b|=3.\\]</li><li><p>For \\(b=3\\), \\(45=a+6\\) gives \\(a=39\\). For \\(b=-3\\), \\(45=a-6\\) gives \\(a=51\\).</p></li><li>\\[(a,b)=(39,3)\\quad\\text{or}\\quad(51,-3).\\]</li><li><p>Both are valid reversible codings and restore the given mean and variance. A requirement \\(b&gt;0\\) would select the first pair, but no such restriction is given.</p></li></ol>",
+          "marking": "<ul><li>1 mark: calculate the coded mean.</li><li>1 mark: calculate the coded variance and SD.</li><li>1 mark: relate original and coded variances.</li><li>1 mark: retain both possible signs of the scale.</li><li>1 mark: calculate the matching origin for each sign.</li><li>1 mark: give the complete paired answer and justify admissibility.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Reverse the coding, keep the two moments separate, and restore every count, sign and ordering condition.</p><h2>Write the inverse before calculating</h2>\\[u=\\frac{x-a}{b}\\quad\\Longrightarrow\\quad x=a+bu\\qquad(b\\ne0).\\]\\[\\bar{x}=a+b\\bar{u},\\qquad\\sum x=na+b\\sum u.\\]<p>Apply one rule to every observation. The chosen origin \\(a\\) need not equal the mean. An offset changes the total once for each observation.</p><h2>Location and spread transform differently</h2>\\[\\sigma_u^2=\\frac{\\sum u^2}{n}-\\bar{u}^{\\,2},\\qquad\\sigma_x^2=b^2\\sigma_u^2,\\qquad\\sigma_x=|b|\\sigma_u.\\]<p>Translation does not change spread. Negative scaling reverses order, but standard deviation stays non-negative. Use descriptive divisor \\(n\\), retain exact values, and keep coded and original summaries separate.</p><h2>Two origins can reveal the count</h2>\\[\\sum(x-a)-\\sum(x-c)=n(c-a).\\]<p>The summaries must describe the same observations. Use different origins, then check that the recovered count is a positive integer and satisfies both original equations. Identical origins provide no new count equation.</p><h2>Use two moments to recover missing values</h2>\\[\\sum x^2=na^2+2ab\\sum u+b^2\\sum u^2.\\]<p>Subtract known observations from both moments. If missing values have sum \\(S\\) and square-sum \\(Q\\), then</p>\\[pq=\\frac{S^2-Q}{2},\\qquad t^2-St+pq=0.\\]<p>Keep every permitted branch and apply any ordering. A sum alone is usually insufficient. Negative variance is impossible; non-negative variance alone does not verify every stated restriction.</p>",
+      "checks": "<ul><li>Inverse coding written in the correct direction?</li><li>Absolute scale for SD; squared scale for variance?</li><li>Square-sum kept distinct from the square of a sum?</li><li>All solutions checked in the original conditions?</li></ul>",
+      "examTip": "<p>All solutions checked in the original conditions?</p>"
+    }
+  },
+  "orig_9709_s1_ct_frequency": {
+    "updatedOn": "2026-11-21",
+    "description": "Read frequencies as repeated observations. Calculate exact summaries where the values are known, use explicit models where grouping hides them, and recover missing counts from the information supplied.",
+    "sections": [
+      {
+        "id": "discrete-frequency",
+        "title": "How do I use a discrete frequency table?",
+        "label": "Exact discrete summaries",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A discrete frequency table states each observed value \\(x\\) and how often it occurs, \\(f\\). It keeps the original values and their repetitions, so their summaries can be calculated exactly. Let \\(T\\) be their total.</p>\\[N=\\sum f,\\qquad T=\\sum fx,\\qquad\\bar{x}=\\frac{\\sum fx}{N}.\\]<p>First order the values. Cumulative frequencies tell you which row contains each observation. For odd \\(N\\), use position \\(\\frac{N+1}{2}\\); for even \\(N\\), average the values at positions \\(\\frac{N}{2}\\) and \\(\\frac{N}{2}+1\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The median is a value, not a frequency or a row number. The mode is each observed value tied for the greatest frequency. In this course, use “no mode” when every value occurs once; otherwise retain every tied modal value.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_9709_s1_ct_frequency/frequency-table-positions.svg\" alt=\"A discrete frequency table and its ten ordered observations, highlighting the two central positions and their different values.\" width=\"844\" height=\"679\"></p><p>The fifth and sixth observations contain \\(1\\) and \\(2\\). Their average is the exact median \\(\\frac{3}{2}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-S033-20261121-C01",
+            "title": "Locate the observations before averaging",
+            "prompt": "<p>The table records the number of faults found in each of several inspections. Find the total count, exact mean, median and mode.</p><table><thead><tr><th>Faults \\(x\\)</th><th>Frequency \\(f\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(1\\)</td></tr><tr><td>\\(2\\)</td><td>\\(3\\)</td></tr><tr><td>\\(3\\)</td><td>\\(5\\)</td></tr><tr><td>\\(5\\)</td><td>\\(2\\)</td></tr></tbody></table>",
+            "fields": [
+              {
+                "key": "count",
+                "label": "Number of inspections",
+                "type": "number",
+                "expected": "11"
+              },
+              {
+                "key": "mean",
+                "label": "Exact mean",
+                "type": "number",
+                "expected": "31/11"
+              },
+              {
+                "key": "median",
+                "label": "Median",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "mode",
+                "label": "Mode",
+                "type": "set",
+                "expected": "{3}"
+              }
+            ],
+            "hint": "<p>Add frequencies to count inspections. Then form the weighted total. Use the central position in the ordered list, not the middle row of the table.</p>",
+            "solution": "<ol><li>\\[N=1+3+5+2=11,\\qquad \\sum fx=1(0)+3(2)+5(3)+2(5)=31.\\]</li><li>\\[\\bar{x}=\\frac{31}{11}.\\]</li><li><p>The median is observation \\(\\frac{11+1}{2}=6\\). Cumulative frequencies are \\(1,4,9,11\\), so the sixth observation is \\(3\\). The greatest frequency is \\(5\\), also at \\(x=3\\), so the mode is \\(3\\).</p></li></ol>"
+          }
+        ]
+      },
+      {
+        "id": "grouped-estimates",
+        "title": "What does grouping let me estimate?",
+        "label": "Midpoint estimates",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A grouped table gives counts in intervals, not the individual measurements. To estimate moments, replace each observation in a class by its midpoint \\(m=\\frac{L+U}{2}\\). Keep the class frequency as its weight:</p>\\[\\bar{x}_{\\mathrm{est}}=\\frac{\\sum fm}{N},\\qquad \\sigma_{\\mathrm{est}}^2=\\frac{\\sum fm^2}{N}-(\\bar{x}_{\\mathrm{est}})^2,\\qquad \\sigma_{\\mathrm{est}}=\\sqrt{\\sigma_{\\mathrm{est}}^2}.\\]<p>Here variance means the descriptive average squared distance from the mean, using divisor \\(N\\). Variance has squared units; standard deviation has the original units. With actual discrete values \\(x\\) instead of midpoints \\(m\\), the same calculation gives exact descriptive moments.</p>",
+        "blocks": [
+          {
+            "kind": "mistake",
+            "html": "<p>Calculate \\(fm^2=f\\times m^2\\), not \\((fm)^2\\). Divide by the total frequency, not the number of classes. Keep full precision until the final answer.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-S033-20261121-C02",
+            "title": "Estimate both centre and spread",
+            "prompt": "<p>Plant heights \\(h\\), in centimetres, are grouped below. Use class midpoints to estimate the mean, descriptive variance and standard deviation.</p><table><thead><tr><th>Height \\(h\\)</th><th>Frequency</th></tr></thead><tbody><tr><td>\\(2\\le h&lt;6\\)</td><td>\\(3\\)</td></tr><tr><td>\\(6\\le h&lt;10\\)</td><td>\\(5\\)</td></tr><tr><td>\\(10\\le h&lt;18\\)</td><td>\\(2\\)</td></tr></tbody></table>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Estimated mean (cm)",
+                "type": "number",
+                "expected": "8"
+              },
+              {
+                "key": "variance",
+                "label": "Estimated descriptive variance (cm²)",
+                "type": "number",
+                "expected": "12"
+              },
+              {
+                "key": "sd",
+                "label": "Estimated standard deviation (cm)",
+                "type": "number",
+                "expected": "2*sqrt(3)"
+              }
+            ],
+            "hint": "<p>The midpoints are \\(4,8,14\\). Build separate columns for \\(fm\\) and \\(fm^2\\), then divide each total by the full frequency.</p>",
+            "solution": "<ol><li>\\[N=10,\\qquad \\sum fm=3(4)+5(8)+2(14)=80.\\]</li><li>\\[\\sum fm^2=3(4^2)+5(8^2)+2(14^2)=760.\\]</li><li>\\[\\bar{h}_{\\mathrm{est}}=\\frac{80}{10}=8\\,\\mathrm{cm}.\\]</li><li>\\[\\sigma_{\\mathrm{est}}^2=\\frac{760}{10}-8^2=12\\,\\mathrm{cm}^2,\\qquad \\sigma_{\\mathrm{est}}=2\\sqrt{3}\\,\\mathrm{cm}.\\]</li><li><p>These are exact summaries of the repeated-midpoint list. They estimate the original-data summaries, which the grouped table does not reveal.</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>The repeated-midpoint list gives exact <em>model</em> moments, which estimate the raw data. A uniform-within-class model instead spreads values across each class; it supports median interpolation later in this lesson. These are different models. The midpoint variance above is not the variance of that full uniform model.</p><p>In the interactive, one possible raw dataset has mean \\(21\\,\\mathrm{cm}\\) and median \\(22\\,\\mathrm{cm}\\); another has mean \\(29\\,\\mathrm{cm}\\) and median \\(28\\,\\mathrm{cm}\\). Both produce the same grouped table. Grouping alone does not tell you whether a midpoint estimate is above or below the true value.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>If asked for a grouped modal class, this course uses the greatest frequency density \\(\\frac{f}{w}\\), where \\(w\\) is class width. A question that explicitly defines it by greatest frequency must be followed as stated. Equal-width classes give the same result under either rule; a modal class does not identify an exact raw mode.</p>"
+          }
+        ]
+      },
+      {
+        "id": "missing-frequency",
+        "title": "How do I find a missing frequency?",
+        "label": "One missing frequency",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Write the total count and weighted total with the unknown included, then use</p>\\[\\sum fx=N\\bar{x}.\\]<p>For a grouped midpoint estimate, replace \\(x\\) by \\(m\\) and use the stated estimated mean. Solve the equation, then check every frequency is a non-negative integer, the total is positive, and any extra condition such as a positive frequency is satisfied.</p>",
+        "blocks": [
+          {
+            "kind": "tip",
+            "html": "<p>Substitute your result into the original mean equation. A contradiction means no possible table; an identity can leave a frequency undetermined. Do not force a numerical answer when the information does not select one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-S033-20261121-C03",
+            "title": "Check a frequency and an impossible mean",
+            "prompt": "<p>A discrete table has values \\(2,4,8\\) with respective frequencies \\(3,k,2\\), where \\(k\\) is a non-negative integer. The exact mean is \\(\\frac{21}{5}\\). Find \\(k\\). Could a separate table with the same fixed values and frequencies \\(3,k,2\\) have exact mean \\(4\\)?</p>",
+            "fields": [
+              {
+                "key": "frequency",
+                "label": "Frequency \\(k\\)",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "possible",
+                "label": "Could the separate mean be exactly \\(4\\)?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "no": "No: the mean equation is inconsistent.",
+                  "zero": "Yes, with \\(k=0\\).",
+                  "any": "Yes, with any non-negative frequency."
+                }
+              }
+            ],
+            "hint": "<p>The unknown frequency belongs in both the weighted total and the count. For the second question, form a new equation rather than reusing the first answer.</p>",
+            "solution": "<ol><li>\\[N=5+k,\\qquad\\sum fx=3(2)+4k+2(8)=22+4k.\\]</li><li>\\[\\frac{22+4k}{5+k}=\\frac{21}{5}\\Longrightarrow110+20k=105+21k\\Longrightarrow k=5.\\]</li><li><p>This gives \\(N=10\\) and total \\(42\\), so the original mean is \\(\\frac{42}{10}=\\frac{21}{5}\\). The frequency is a valid integer.</p></li><li><p>For exact mean \\(4\\),</p>\\[22+4k=4(5+k)\\Longrightarrow22=20.\\]<p>This is impossible for every allowed \\(k\\).</p></li></ol>"
+          }
+        ]
+      },
+      {
+        "id": "median-interpolation",
+        "title": "How do I interpolate a grouped median?",
+        "label": "Boundaries and interpolation",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Use the underlying continuous boundaries. For measurements rounded to the nearest unit, each recorded value represents an interval extending half a unit on either side; use the stated rule at exact ties. Different recording precision changes that half-unit adjustment. Leave already continuous boundaries unchanged, and do not close a genuine empty interval just because it is a gap.</p><p>For straight cumulative segments, assume a uniform spread within each class. Locate the median level \\(\\frac{N}{2}\\). In a class with lower boundary \\(L\\), previous cumulative count \\(C\\), positive frequency \\(f\\) and width \\(w\\), the required fraction of the class is \\(\\frac{\\frac{N}{2}-C}{f}\\), so</p>\\[\\widehat{M}=L+\\frac{\\frac{N}{2}-C}{f}\\,w.\\]",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\frac{N}{2}\\) for this grouped cumulative level, including when \\(N\\) is odd. The raw-data position \\(\\frac{N+1}{2}\\) answers a different question. Interpolation estimates the unknown raw median; it does not reveal the original central records.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_9709_s1_ct_frequency/grouped-median-interpolation.svg\" alt=\"A cumulative frequency graph of twenty plant heights, showing the median target of ten, the middle class and the interpolated height of twenty-four centimetres.\" width=\"811\" height=\"752\"></p><p>For heights in \\([10,20),[20,30),[30,50)\\) with frequencies \\(6,10,4\\), the target is \\(10\\) and \\(\\widehat{M}=20+\\frac{10-6}{10}(10)=24\\,\\mathrm{cm}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-S033-20261121-C04",
+            "title": "Use the grouped level even when the count is odd",
+            "prompt": "<p>Recorded lengths \\(x\\), in centimetres, have the following <strong>continuous class boundaries</strong>. Assume a uniform spread within each class, so the cumulative graph consists of straight segments. Find its median target level and estimated median length.</p><table><thead><tr><th>Length \\(x\\)</th><th>Frequency</th></tr></thead><tbody><tr><td>\\(5\\le x&lt;15\\)</td><td>\\(3\\)</td></tr><tr><td>\\(15\\le x&lt;25\\)</td><td>\\(8\\)</td></tr><tr><td>\\(25\\le x&lt;45\\)</td><td>\\(4\\)</td></tr></tbody></table>",
+            "fields": [
+              {
+                "key": "level",
+                "label": "Cumulative-frequency level for the median",
+                "type": "number",
+                "expected": "15/2"
+              },
+              {
+                "key": "median",
+                "label": "Estimated median length (cm)",
+                "type": "number",
+                "expected": "165/8"
+              }
+            ],
+            "hint": "<p>Use \\(\\frac{N}{2}\\) as a continuous cumulative level. Locate that level between the cumulative totals, then find the corresponding fraction of the class width.</p>",
+            "solution": "<ol><li>\\[N=3+8+4=15,\\qquad\\frac{N}{2}=\\frac{15}{2}.\\]</li><li><p>Cumulative frequencies are \\(3,11,15\\). The target lies in the class \\(15\\le x&lt;25\\), with \\(L=15\\), prior count \\(C=3\\), frequency \\(f=8\\) and width \\(w=10\\).</p></li><li>\\[\\widehat{M}=15+\\frac{\\frac{15}{2}-3}{8}(10)=15+\\frac{45}{8}=\\frac{165}{8}\\,\\mathrm{cm}.\\]</li><li><p>The original list of fifteen observations would have an exact median at position \\(8\\). That unknown raw value is different information from this grouped-model estimate.</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>If the target is an ordinary boundary between increasing segments, read that boundary directly. A zero-frequency class produces a flat segment. If its height equals \\(\\frac{N}{2}\\), every cutoff on that segment satisfies \\(C(x)=\\frac{N}{2}\\); a unique crossing needs an additional convention. Never divide by a zero class frequency. If the question instead supplies a smooth freehand curve, read an estimate from that curve rather than assuming straight-line interpolation.</p>"
+          }
+        ]
+      },
+      {
+        "id": "linked-frequencies",
+        "title": "How do I recover two unknown frequencies?",
+        "label": "Linked conditions",
+        "minutes": 6,
+        "level": "further",
+        "intro": "<p>Two unknown frequencies generally need two independent conditions. A total count, exact mean or cumulative count can supply an equation. Translate words such as “below” carefully: observations equal to the cutoff do not belong in a strict-below count.</p><p>Solve the equations together and verify every original condition. If a condition involves an interpolated median, first write \\(N\\) using all frequencies. After solving, check that the median target really lies in the class you used, with positive frequency. Dependent equations may leave several tables possible; inconsistent equations give none.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "S1-S033-20261121-C05",
+            "title": "Use a cumulative count as the second equation",
+            "prompt": "<p>A discrete table lists values \\(1,2,4,7\\) with frequencies \\(3,p,q,2\\). Exactly seven observations are below \\(4\\), and the exact mean is \\(3\\). Find \\(p\\), \\(q\\) and the median.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Frequency \\(p\\)",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "q",
+                "label": "Frequency \\(q\\)",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "median",
+                "label": "Median",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Translate “below \\(4\\)” into a sum of frequencies first. Then use the exact mean equation and locate the median in the recovered table.</p>",
+            "solution": "<ol><li>\\[3+p=7\\Longrightarrow p=4.\\]</li><li>\\[N=3+4+q+2=9+q,\\qquad\\sum fx=3(1)+4(2)+4q+2(7)=25+4q.\\]</li><li>\\[25+4q=3(9+q)\\Longrightarrow q=2.\\]</li><li><p>The recovered table has \\(N=11\\), total \\(33\\), and seven observations below \\(4\\). Both frequencies are non-negative integers and both original conditions hold.</p></li><li><p>The median is observation \\(6\\). Cumulative frequencies \\(3,7,9,11\\) place it at \\(x=2\\), so the median is \\(2\\).</p></li></ol>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Frequency",
+        "definition": "<p>The number of observations with a particular value or in a particular class.</p>"
+      },
+      {
+        "term": "Cumulative frequency",
+        "definition": "<p>The running total of frequencies through the ordered values or class boundaries.</p>"
+      },
+      {
+        "term": "Weighted total",
+        "definition": "<p>The total of the observations: \\(\\sum fx\\) for a discrete frequency table.</p>"
+      },
+      {
+        "term": "Class midpoint",
+        "definition": "<p>The value \\(m=\\frac{L+U}{2}\\), used to represent each record in a class when estimating moments.</p>"
+      },
+      {
+        "term": "Moment",
+        "definition": "<p>An average of values or their powers. The mean and average squared value determine descriptive variance.</p>"
+      },
+      {
+        "term": "Continuous class boundaries",
+        "definition": "<p>The actual limits of a measurement interval, found from any stated recording precision.</p>"
+      },
+      {
+        "term": "Interpolation",
+        "definition": "<p>Estimating a value between known boundary points using a stated model.</p>"
+      },
+      {
+        "term": "Uniform within a class",
+        "definition": "<p>A model that spreads the class count evenly across its width, giving a straight cumulative segment.</p>"
+      },
+      {
+        "term": "Median class",
+        "definition": "<p>An increasing class interval that contains the target cumulative level for a grouped median.</p>"
+      },
+      {
+        "term": "Independent conditions",
+        "definition": "<p>Conditions that provide genuinely different information, rather than repeating the same equation.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "A median between two rows",
+        "question": "<p>A school records the number \\(x\\) of late arrivals in each of ten weeks. Find the exact mean, median and mode from this table.</p><table><thead><tr><th>Late arrivals \\(x\\)</th><th>Weeks \\(f\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(2\\)</td></tr><tr><td>\\(1\\)</td><td>\\(3\\)</td></tr><tr><td>\\(2\\)</td><td>\\(4\\)</td></tr><tr><td>\\(4\\)</td><td>\\(1\\)</td></tr></tbody></table>",
+        "solution": [
+          "<p>Count every week, including weeks with no late arrivals:</p>\\[N=2+3+4+1=10.\\]",
+          "\\[\\sum fx=2(0)+3(1)+4(2)+1(4)=15,\\qquad\\bar{x}=\\frac{15}{10}=\\frac{3}{2}.\\]",
+          "<p>The cumulative counts are \\(2,5,9,10\\). The fifth observation is \\(1\\), and the sixth is \\(2\\), so</p>\\[\\text{median}=\\frac{1+2}{2}=\\frac{3}{2}.\\]",
+          "<p>The greatest frequency is \\(4\\), attached to the observed value \\(2\\). The mode is \\(2\\), not \\(4\\).</p>"
+        ]
+      },
+      {
+        "title": "Build two midpoint columns",
+        "question": "<p>The grouped table gives heights \\(h\\), in centimetres, of twenty young plants. Use class midpoints to estimate the mean, descriptive variance and standard deviation.</p><table><thead><tr><th>Height \\(h\\)</th><th>Frequency \\(f\\)</th></tr></thead><tbody><tr><td>\\(10\\le h&lt;20\\)</td><td>\\(6\\)</td></tr><tr><td>\\(20\\le h&lt;30\\)</td><td>\\(10\\)</td></tr><tr><td>\\(30\\le h&lt;50\\)</td><td>\\(4\\)</td></tr></tbody></table>",
+        "solution": [
+          "<p>The intervals already give continuous boundaries. Their midpoints are \\(15,25,40\\); the final class is wider than the others.</p>",
+          "<table><thead><tr><th>\\(m\\)</th><th>\\(f\\)</th><th>\\(fm\\)</th><th>\\(fm^2\\)</th></tr></thead><tbody><tr><td>\\(15\\)</td><td>\\(6\\)</td><td>\\(90\\)</td><td>\\(1350\\)</td></tr><tr><td>\\(25\\)</td><td>\\(10\\)</td><td>\\(250\\)</td><td>\\(6250\\)</td></tr><tr><td>\\(40\\)</td><td>\\(4\\)</td><td>\\(160\\)</td><td>\\(6400\\)</td></tr><tr><td>Total</td><td>\\(20\\)</td><td>\\(500\\)</td><td>\\(14000\\)</td></tr></tbody></table>",
+          "\\[\\bar{h}_{\\mathrm{est}}=\\frac{500}{20}=25\\,\\mathrm{cm}.\\]",
+          "\\[\\sigma_{\\mathrm{est}}^2=\\frac{14000}{20}-25^2=75\\,\\mathrm{cm}^2,\\qquad\\sigma_{\\mathrm{est}}=5\\sqrt{3}\\,\\mathrm{cm}.\\]",
+          "<p>These results treat all six plants in the first class as height \\(15\\,\\mathrm{cm}\\), and similarly for the other classes. They do not recover the original twenty heights.</p>"
+        ]
+      },
+      {
+        "title": "Put the unknown frequency in both sums",
+        "question": "<p>A discrete table has values \\(1,3,6\\) with respective frequencies \\(2,k,4\\). The exact mean is \\(4\\). Find the non-negative integer frequency \\(k\\), then find the median.</p>",
+        "solution": [
+          "\\[N=2+k+4=6+k,\\qquad\\sum fx=2(1)+3k+4(6)=26+3k.\\]",
+          "\\[\\frac{26+3k}{6+k}=4\\Longrightarrow26+3k=24+4k\\Longrightarrow k=2.\\]",
+          "<p>The frequency is an allowed integer. Recheck the original mean:</p>\\[N=8,\\qquad\\sum fx=32,\\qquad\\frac{32}{8}=4.\\]",
+          "<p>Cumulative frequencies are \\(2,4,8\\). Observations \\(4\\) and \\(5\\) are \\(3\\) and \\(6\\), so</p>\\[\\text{median}=\\frac{3+6}{2}=\\frac{9}{2}.\\]"
+        ]
+      },
+      {
+        "title": "Restore the boundaries before interpolating",
+        "question": "<p>Lengths were rounded to the nearest centimetre, with half-way values rounded up. The recorded groups and frequencies are shown below. Use a uniform spread within each underlying class to estimate the median length.</p><table><thead><tr><th>Recorded length in centimetres</th><th>Frequency</th></tr></thead><tbody><tr><td>\\(20\\text{–}29\\)</td><td>\\(6\\)</td></tr><tr><td>\\(30\\text{–}39\\)</td><td>\\(10\\)</td></tr><tr><td>\\(40\\text{–}59\\)</td><td>\\(4\\)</td></tr></tbody></table>",
+        "solution": [
+          "<p>The true class boundaries are \\(19.5,29.5,39.5,59.5\\). For example, values from \\(29.5\\) up to but not including \\(39.5\\) round into the middle recorded group.</p>",
+          "\\[N=20,\\qquad\\frac{N}{2}=10.\\]<p>Cumulative frequencies \\(6,16,20\\) place the target level in the middle class.</p>",
+          "\\[L=29.5,\\qquad C=6,\\qquad f=10,\\qquad w=10.\\]",
+          "\\[\\widehat{M}=29.5+\\frac{10-6}{10}(10)=33.5\\,\\mathrm{cm}.\\]",
+          "<p>The estimate is four centimetres into the middle class. Its midpoint is \\(34.5\\,\\mathrm{cm}\\), which is a different quantity.</p>"
+        ]
+      },
+      {
+        "title": "Recover two frequencies from two conditions",
+        "question": "<p>A discrete table has values \\(1,3,5,8\\) with frequencies \\(2,p,q,1\\). Exactly six observations are below \\(5\\), and the exact mean is \\(4\\). Find \\(p\\), \\(q\\) and the median.</p>",
+        "solution": [
+          "<p>The cumulative condition uses only the first two values:</p>\\[2+p=6\\Longrightarrow p=4.\\]",
+          "\\[N=2+4+q+1=7+q,\\qquad\\sum fx=2(1)+4(3)+5q+1(8)=22+5q.\\]",
+          "\\[22+5q=4(7+q)\\Longrightarrow q=6.\\]",
+          "<p>Both frequencies are valid integers. The total count is \\(13\\), the weighted total is \\(52\\), and</p>\\[\\frac{52}{13}=4,\\qquad 2+4=6.\\]<p>Both original conditions are satisfied.</p>",
+          "<p>The median is observation \\(7\\). Cumulative frequencies \\(2,6,12,13\\) place it at \\(x=5\\), so the median is \\(5\\).</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Mean, median, mode and choosing a centre",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_ct_centre_raw"
+      },
+      {
+        "title": "Histograms, boundaries and grouped estimates",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_rep_histograms"
+      },
+      {
+        "title": "Cumulative frequency and percentiles",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_rep_cumulative"
+      },
+      {
+        "title": "Variance from frequency tables",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_var_frequency_synthesis"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "S1-S033-20261121-P01",
+        "title": "Use the observations represented by the table",
+        "prompt": "<p>A discrete frequency table records the number of defects in batches.</p><table><thead><tr><th>Defects</th><th>Frequency</th></tr></thead><tbody><tr><td>0</td><td>2</td></tr><tr><td>3</td><td>3</td></tr><tr><td>7</td><td>5</td></tr></tbody></table><p>Find the total number of batches, the exact mean, the median and every mode.</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "Number of batches",
+            "type": "number",
+            "expected": "10"
+          },
+          {
+            "key": "mean",
+            "label": "Mean defects per batch",
+            "type": "number",
+            "expected": "22/5"
+          },
+          {
+            "key": "median",
+            "label": "Median",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "modes",
+            "label": "Every mode",
+            "type": "set",
+            "expected": "{7}"
+          }
+        ],
+        "hint": "<p>The fifth and sixth observations can belong to different rows. Locate both using cumulative frequencies.</p>",
+        "solution": "<ol><li>\\[N=2+3+5=10,\\qquad\\sum fx=0(2)+3(3)+7(5)=44.\\]</li><li>\\[\\bar{x}=\\frac{44}{10}=\\frac{22}{5}.\\]</li><li><p>The cumulative frequencies are \\(2,5,10\\). The fifth observation is \\(3\\), and the sixth is \\(7\\), so the median is \\(\\frac{3+7}{2}=5\\). A median need not be an observed value.</p></li><li><p>The value \\(7\\) has the greatest frequency, \\(5\\), so the complete modal set is \\(\\{7\\}\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S033-20261121-P02",
+        "title": "Estimate moments and a median from grouped data",
+        "prompt": "<p>Grouped lengths \\(x\\), in centimetres, have the following frequencies.</p><table><thead><tr><th>Length</th><th>Frequency</th></tr></thead><tbody><tr><td>\\(0\\le x&lt;6\\)</td><td>4</td></tr><tr><td>\\(6\\le x&lt;10\\)</td><td>10</td></tr><tr><td>\\(10\\le x&lt;18\\)</td><td>6</td></tr></tbody></table><p>Use class midpoints to estimate the mean and descriptive variance. Assuming uniform spread within each class, estimate the median by linear interpolation. Give the model results as exact fractions.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Estimated mean (cm)",
+            "type": "number",
+            "expected": "44/5"
+          },
+          {
+            "key": "variance",
+            "label": "Estimated variance (cm²)",
+            "type": "number",
+            "expected": "379/25"
+          },
+          {
+            "key": "median",
+            "label": "Interpolated median (cm)",
+            "type": "number",
+            "expected": "42/5"
+          }
+        ],
+        "hint": "<p>Midpoints are \\(3,8,14\\). For the median, locate cumulative level \\(10\\), then interpolate within its class.</p>",
+        "solution": "<ol><li>\\[N=20,\\quad\\sum fm=4(3)+10(8)+6(14)=176,\\quad\\bar{x}\\approx\\frac{176}{20}=\\frac{44}{5}\\ \\text{cm}.\\]</li><li>\\[\\sum fm^2=4(9)+10(64)+6(196)=1852.\\]</li><li>\\[\\sigma^2\\approx\\frac{1852}{20}-\\left(\\frac{44}{5}\\right)^2=\\frac{379}{25}\\ \\text{cm}^{2}.\\]</li><li>\\[\\widehat{M}=6+\\frac{10-4}{10}(4)=\\frac{42}{5}\\ \\text{cm}.\\]</li><li><p>The fractions are exact calculations within the stated models. The original raw mean, variance and median remain unknown.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S033-20261121-P03",
+        "title": "An unknown frequency changes the denominator",
+        "prompt": "<p>Values \\(2,5,8\\) have frequencies \\(3,k,4\\), respectively. The mean is \\(\\frac{26}{5}\\). Find \\(k\\) and the total count. Separately, could any non-negative integer \\(k\\) make the mean exactly \\(5\\)?</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Unknown frequency",
+            "type": "number",
+            "expected": "8"
+          },
+          {
+            "key": "n",
+            "label": "Total count",
+            "type": "number",
+            "expected": "15"
+          },
+          {
+            "key": "possible",
+            "label": "Can the mean be exactly five?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "no": "No: the mean equation would be inconsistent.",
+              "yes": "Yes: choose any sufficiently large frequency.",
+              "zero": "Yes: choose a frequency of zero."
+            }
+          }
+        ],
+        "hint": "<p>Write the denominator as \\(7+k\\), then multiply both sides by it. Test the separate target mean in its own equation.</p>",
+        "solution": "<ol><li>\\[\\frac{3(2)+5k+4(8)}{7+k}=\\frac{26}{5}\\quad\\Longrightarrow\\quad190+25k=182+26k.\\]</li><li>\\[k=8,\\qquad N=15,\\qquad\\bar{x}=\\frac{78}{15}=\\frac{26}{5}.\\]</li><li><p>The recovered frequency is a non-negative integer and the total is positive.</p></li><li>\\[\\frac{38+5k}{7+k}=5\\quad\\Longrightarrow\\quad38+5k=35+5k,\\]</li><li><p>which is impossible. Increasing a finite frequency does not make this mean exactly \\(5\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S033-20261121-P04",
+        "title": "Use continuous boundaries for rounded measurements",
+        "prompt": "<p>Masses were recorded to the nearest gram and grouped as follows.</p><table><thead><tr><th>Recorded mass (g)</th><th>Frequency</th></tr></thead><tbody><tr><td>\\(10\\text{–}19\\)</td><td>3</td></tr><tr><td>\\(20\\text{–}29\\)</td><td>9</td></tr><tr><td>\\(30\\text{–}49\\)</td><td>8</td></tr></tbody></table><p>Use continuous class boundaries halfway between adjacent possible recorded integers, and assume uniform spread within each continuous class. State the lower and upper boundaries of the median class, then give the interpolated median as an exact fraction.</p>",
+        "fields": [
+          {
+            "key": "lower",
+            "label": "Lower boundary of the median class (g)",
+            "type": "number",
+            "expected": "39/2"
+          },
+          {
+            "key": "upper",
+            "label": "Upper boundary of the median class (g)",
+            "type": "number",
+            "expected": "59/2"
+          },
+          {
+            "key": "median",
+            "label": "Interpolated median (g)",
+            "type": "number",
+            "expected": "491/18"
+          }
+        ],
+        "hint": "<p>The model boundaries are \\(9.5,19.5,29.5,49.5\\). Use total count \\(20\\) and cumulative level \\(10\\).</p>",
+        "solution": "<ol><li><p>Cumulative frequencies are \\(3,12,20\\). The target level \\(10\\) lies in the second continuous class, from \\(19.5\\) to \\(29.5\\) g, of width \\(10\\) g.</p></li><li>\\[\\widehat{M}=\\frac{39}{2}+\\frac{10-3}{9}(10)=\\frac{39}{2}+\\frac{70}{9}=\\frac{491}{18}\\ \\text{g}.\\]</li><li><p>The boundary adjustment follows the stated rounding precision. It is not a rule for closing arbitrary gaps between classes. The result estimates the underlying raw median.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S033-20261121-P05",
+        "title": "A flat cumulative segment does not select one crossing",
+        "prompt": "<p>Classes \\([0,5),[5,10),[10,20)\\) have frequencies \\(5,0,5\\). Draw the cumulative-frequency model using straight segments between class boundaries. The median target is cumulative level \\(\\frac{N}{2}=5\\). Give the endpoints of the full interval where the model has cumulative frequency \\(5\\). Does this crossing method identify one unique measurement without a further convention?</p>",
+        "fields": [
+          {
+            "key": "lower",
+            "label": "Left endpoint of the crossing interval",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "upper",
+            "label": "Right endpoint of the crossing interval",
+            "type": "number",
+            "expected": "10"
+          },
+          {
+            "key": "unique",
+            "label": "Is one unique crossing selected?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "no": "No: every measurement in the interval has the target cumulative level.",
+              "yes": "Yes: divide by the middle class frequency.",
+              "middle": "Yes: the midpoint of the gap must be the raw median."
+            }
+          }
+        ],
+        "hint": "<p>The zero-frequency class creates a horizontal segment. Do not divide by its frequency.</p>",
+        "solution": "<ol><li><p>The boundary points are \\((0,0),(5,5),(10,5),(20,10)\\). The cumulative curve is horizontal at height \\(5\\) throughout \\([5,10]\\).</p></li><li><p>Every point on that segment meets the target. The crossing method alone does not choose one cutoff; a stated quantile convention would be needed to select an endpoint or another single value.</p></li><li><p>The unknown raw median is also not determined by the grouped table. In particular, the midpoint of the empty class is not forced to be that raw median.</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "S1-S033-20261121-E01",
+          "title": "Recover two frequencies before locating the median",
+          "marks": 6,
+          "question": "<p>A discrete frequency table is incomplete.</p><table><thead><tr><th>Value</th><th>Frequency</th></tr></thead><tbody><tr><td>1</td><td>3</td></tr><tr><td>4</td><td>\\(p\\)</td></tr><tr><td>7</td><td>\\(q\\)</td></tr><tr><td>9</td><td>2</td></tr></tbody></table><p>There are \\(16\\) observations and their mean is \\(\\frac{83}{16}\\). Find \\(p\\) and \\(q\\), then the median and every mode.</p>",
+          "hint": "<p>One equation comes from the count and another from the weighted total. Rebuild the cumulative frequencies after solving them.</p>",
+          "solution": "<ol><li>\\[3+p+q+2=16\\quad\\Longrightarrow\\quad p+q=11.\\]</li><li>\\[3+4p+7q+18=83\\quad\\Longrightarrow\\quad4p+7q=62.\\]</li><li><p>Subtract \\(4(p+q)=44\\) to obtain \\(3q=18\\). Thus \\(q=6\\) and \\(p=5\\), both valid integer frequencies.</p></li><li><p>Cumulative frequencies are \\(3,8,14,16\\). The eighth observation is \\(4\\), and the ninth is \\(7\\), giving</p>\\[M=\\frac{4+7}{2}=\\frac{11}{2}.\\]</li><li><p>The greatest frequency is \\(6\\), attached to value \\(7\\), so \\(7\\) is the only mode. The completed table restores count \\(16\\) and weighted total \\(83\\).</p></li></ol>",
+          "marking": "<ul><li>1 mark: form the total-frequency equation.</li><li>1 mark: form the weighted-total equation.</li><li>1 mark: solve for both frequencies and check their validity.</li><li>1 mark: locate the two central observations.</li><li>1 mark: obtain the median.</li><li>1 mark: identify every modal value.</li></ul>"
+        },
+        {
+          "id": "S1-S033-20261121-E02",
+          "title": "A grouped median determines a missing frequency",
+          "marks": 8,
+          "question": "<p>A grouped length table, in centimetres, is</p><table><thead><tr><th>Length</th><th>Frequency</th></tr></thead><tbody><tr><td>\\(0\\le x&lt;4\\)</td><td>4</td></tr><tr><td>\\(4\\le x&lt;10\\)</td><td>\\(k\\)</td></tr><tr><td>\\(10\\le x&lt;18\\)</td><td>6</td></tr></tbody></table><p>The piecewise uniform model has median exactly \\(8\\) cm. Find the positive integer \\(k\\), the total count, the midpoint estimate of the mean and the model estimate of the fraction of lengths at least \\(12\\) cm. Give exact fractions.</p>",
+          "hint": "<p>The count is \\(k+10\\), so the target cumulative level depends on the unknown frequency. The median lies in the middle class.</p>",
+          "solution": "<ol><li>\\[8=4+\\frac{\\frac{k+10}{2}-4}{k}(6)=7+\\frac{6}{k}.\\]</li><li>\\[k=6,\\qquad N=16.\\]</li><li><p>The median target is now \\(8\\), strictly between the cumulative counts \\(4\\) and \\(10\\), confirming the selected class and positive denominator.</p></li><li>\\[\\bar{x}\\approx\\frac{4(2)+6(7)+6(14)}{16}=\\frac{134}{16}=\\frac{67}{8}\\ \\text{cm}.\\]</li><li><p>Only the last class contributes to the requested tail. Under the uniform model, the fraction of that class at least \\(12\\) cm is \\(\\frac{18-12}{18-10}=\\frac{3}{4}\\), so</p>\\[\\text{estimated overall fraction}=\\frac{6}{16}\\cdot\\frac{3}{4}=\\frac{9}{32}.\\]</li><li><p>The midpoint mean and within-class tail fraction estimate properties of the original data; they do not reveal the exact original values or tail count.</p></li></ol>",
+          "marking": "<ul><li>2 marks: form the median equation with the unknown count and class frequency.</li><li>1 mark: solve for the valid integer frequency.</li><li>1 mark: recover the count and verify the median class.</li><li>1 mark: calculate the weighted midpoint total.</li><li>1 mark: obtain the estimated mean.</li><li>1 mark: find the within-class tail proportion.</li><li>1 mark: weight that proportion by the class fraction of the full dataset.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Use frequencies as counts, identify what grouping hides, and state the model behind each estimate.</p><h2>Discrete frequencies give exact summaries</h2>\\[N=\\sum f,\\qquad\\bar{x}=\\frac{\\sum fx}{N}.\\]<p>Order the values and use cumulative frequencies to locate observations. For an even count, average the two middle values; they may lie in different rows. The mode is the observed value with greatest frequency. Retain all ties; use “no mode” when every value occurs once.</p><h2>Midpoints estimate the original moments</h2>\\[m=\\frac{L+U}{2},\\qquad\\bar{x}\\approx\\frac{\\sum fm}{N},\\qquad\\sigma^2\\approx\\frac{\\sum fm^2}{N}-\\bar{x}^{\\,2}.\\]<p>Use each class midpoint with its frequency. Square the midpoint before multiplying by frequency. These are exact moments of the midpoint model and estimates of raw-data moments. The table does not show every original value. Variance uses squared units.</p><h2>Unknown frequencies belong in both totals</h2>\\[\\sum fx=N\\bar{x}.\\]<p>Keep unknown frequencies in both the weighted sum and total count. Two unknowns generally need two independent conditions, such as a total, mean or cumulative count. Check non-negative integer frequencies, a positive total and every original condition. An inconsistent equation has no solution; an identity may leave a frequency undetermined.</p><h2>Interpolate at the grouped median level</h2>\\[\\widehat{M}=L+\\frac{\\frac{N}{2}-C}{f}\\,w.\\]<p>Use the lower continuous boundary \\(L\\), prior cumulative count \\(C\\), class frequency \\(f&gt;0\\) and width \\(w\\). This assumes uniform spread in the class. Use the stated recording precision for boundaries. A flat segment at the target level gives an interval of crossings unless a convention selects one. The raw median remains unknown.</p>",
+      "checks": "<ul><li>Total frequency used as the denominator?</li><li>Both central values checked for an even discrete count?</li><li>Midpoint and interpolation results identified as estimates?</li><li>Class boundaries, integer counts and model assumptions checked?</li></ul>",
+      "examTip": "<p>Class boundaries, integer counts and model assumptions checked?</p>"
+    }
+  },
+  "orig_9709_s1_ct_combining": {
+    "updatedOn": "2026-11-21",
+    "description": "Combine two groups by restoring the information behind their summaries: counts, totals and sums of squares. Keep the units consistent, then use the same mean and variance rules on the complete list.",
+    "sections": [
+      {
+        "id": "weighted-means",
+        "title": "How do I combine two group means?",
+        "label": "Weighted means",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Pooling puts two groups of records into one list. The groups must be disjoint: do not count the same record twice, although different records may have equal values. The measurements must describe the same quantity in compatible units.</p><p>Let the positive group sizes be \\(n_A,n_B\\), their means be \\(\\mu_A,\\mu_B\\), and the combined mean be \\(\\mu\\). Recover each total first:</p>\\[T_A=n_A\\mu_A,\\qquad T_B=n_B\\mu_B.\\]\\[N=n_A+n_B,\\qquad\\mu=\\frac{n_A\\mu_A+n_B\\mu_B}{N}.\\]",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Each observation has equal weight, so each group’s mean is weighted by its number of observations. Simply averaging the two means works when their counts are equal, or when the means themselves are equal.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_9709_s1_ct_combining/weighted-centre.svg\" alt=\"Two groups of plant heights on one scale, showing their different record counts and the combined mean closer to the larger group’s mean.\" width=\"848\" height=\"635\"></p><p>Four records with mean \\(12\\,\\mathrm{cm}\\) and six with mean \\(17\\,\\mathrm{cm}\\) have combined mean \\(15\\,\\mathrm{cm}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-S034-20261121-C01",
+            "title": "Give every observation equal weight",
+            "prompt": "<p>Two disjoint groups took the same test. Group A contains three scores with mean \\(10\\); group B contains seven scores with mean \\(20\\). Find the combined mean score. Separately, two other disjoint groups contain two and five scores, but both have mean \\(16\\). Find their combined mean.</p>",
+            "fields": [
+              {
+                "key": "unequal",
+                "label": "Combined mean for the first pair",
+                "type": "number",
+                "expected": "17"
+              },
+              {
+                "key": "equalmeans",
+                "label": "Combined mean when both group means are equal",
+                "type": "number",
+                "expected": "16"
+              }
+            ],
+            "hint": "<p>Recover each total by multiplying its count and mean. For the second pair, every group has the same centre even though their sizes differ.</p>",
+            "solution": "<ol><li>\\[T_A=3(10)=30,\\qquad T_B=7(20)=140,\\qquad N=10.\\]</li><li>\\[\\mu=\\frac{30+140}{10}=17.\\]</li><li><p>For the separate pair,</p>\\[\\mu=\\frac{2(16)+5(16)}{2+5}=16.\\]<p>Equal means give that same combined mean for any positive group sizes.</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>Counts, means and variances do not generally determine the combined median or mode. Those depend on how the individual values are arranged and repeated. Pooling also differs from forming pairwise sums: the original observations remain separate records.</p>"
+          }
+        ]
+      },
+      {
+        "id": "combined-moments",
+        "title": "How do I combine variances and standard deviations?",
+        "label": "Three totals",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For one group, write its count as \\(n\\), total as \\(T=\\sum x\\), and sum of squares as \\(Q=\\sum x^2\\). Its descriptive variance uses divisor \\(n\\):</p>\\[\\mu=\\frac{T}{n},\\qquad\\sigma^2=\\frac{Q}{n}-\\mu^2,\\qquad\\sigma=\\sqrt{\\sigma^2}.\\]<p>Rearranging gives the quantities that can be added across groups:</p>\\[T=n\\mu,\\qquad Q=n(\\sigma^2+\\mu^2).\\]<p>Add counts, totals and sums of squares separately. Then calculate the combined summaries from</p>\\[N=n_A+n_B,\\quad T=T_A+T_B,\\quad Q=Q_A+Q_B,\\]\\[\\mu=\\frac{T}{N},\\qquad\\sigma^2=\\frac{Q}{N}-\\mu^2.\\]",
+        "blocks": [
+          {
+            "kind": "mistake",
+            "html": "<p>If SD is supplied, square it before reconstructing \\(Q\\). Add sums of squares, not squared totals. Keep full precision through the subtraction, and take the square root only when SD is requested.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-S034-20261121-C02",
+            "title": "Recover the sums of squares",
+            "prompt": "<p>Two disjoint groups of lengths use centimetres. A contains two observations with mean \\(4\\,\\mathrm{cm}\\) and descriptive SD \\(1\\,\\mathrm{cm}\\). B contains three observations with mean \\(9\\,\\mathrm{cm}\\) and descriptive SD \\(2\\,\\mathrm{cm}\\). Find the combined sum of squares, mean, variance and SD.</p>",
+            "fields": [
+              {
+                "key": "squares",
+                "label": "Combined sum of squares (cm²)",
+                "type": "number",
+                "expected": "289"
+              },
+              {
+                "key": "mean",
+                "label": "Combined mean (cm)",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "variance",
+                "label": "Combined descriptive variance (cm²)",
+                "type": "number",
+                "expected": "44/5"
+              },
+              {
+                "key": "sd",
+                "label": "Combined standard deviation (cm)",
+                "type": "number",
+                "expected": "2*sqrt(55)/5"
+              }
+            ],
+            "hint": "<p>Square each supplied SD to obtain its variance. For each group, recover the sum of squares using \\(Q=n(\\sigma^2+\\mu^2)\\).</p>",
+            "solution": "<ol><li>\\[Q_A=2(1^2+4^2)=34,\\qquad Q_B=3(2^2+9^2)=255.\\]</li><li>\\[Q=34+255=289\\,\\mathrm{cm}^2,\\qquad T=2(4)+3(9)=35\\,\\mathrm{cm}.\\]</li><li>\\[N=5,\\qquad\\mu=\\frac{35}{5}=7\\,\\mathrm{cm}.\\]</li><li>\\[\\sigma^2=\\frac{289}{5}-7^2=\\frac{44}{5}\\,\\mathrm{cm}^2,\\qquad\\sigma=\\frac{2\\sqrt{55}}{5}\\,\\mathrm{cm}.\\]</li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>The same method works backwards: subtract a known group’s count, total and sum of squares from the combined quantities to recover the other group. Its recovered count must be positive, and its variance must be non-negative. A negative variance indicates inconsistent information or an arithmetic error.</p>"
+          }
+        ]
+      },
+      {
+        "id": "within-between",
+        "title": "Why can combining groups increase spread?",
+        "label": "Within and between",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>There are two sources of variation: differences within each group, and the gap between the group centres. For two nonempty groups, the combined variance splits into</p>\\[V_{\\mathrm{within}}=\\frac{n_A\\sigma_A^2+n_B\\sigma_B^2}{N},\\]\\[V_{\\mathrm{between}}=\\frac{n_A(\\mu_A-\\mu)^2+n_B(\\mu_B-\\mu)^2}{N},\\]\\[\\sigma^2=V_{\\mathrm{within}}+V_{\\mathrm{between}}.\\]<p>For two groups, the between-group part also simplifies to</p>\\[V_{\\mathrm{between}}=\\frac{n_A n_B}{N^2}(\\mu_A-\\mu_B)^2.\\]<p>This decomposition follows by writing each deviation from the combined mean as its deviation from its own group mean plus the difference between the means. Within each group, deviations from that group’s mean sum to zero.</p>",
+        "blocks": [
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_9709_s1_ct_combining/within-between-variance.svg\" alt=\"A decomposition of the combined plant-height variance into variation within the groups and variation between their means.\" width=\"767\" height=\"691\"></p><p>The weighted within-group variance is \\(6\\,\\mathrm{cm}^2\\); separation of the group means adds another \\(6\\,\\mathrm{cm}^2\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-S034-20261121-C03",
+            "title": "Can two constant groups give positive spread?",
+            "prompt": "<p>Group A contains three lengths, all \\(5\\,\\mathrm{cm}\\). Group B contains three different records, all \\(11\\,\\mathrm{cm}\\). Calculate the within-group contribution, between-group contribution and total descriptive variance of the six pooled records.</p>",
+            "fields": [
+              {
+                "key": "within",
+                "label": "Within-group variance contribution (cm²)",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "between",
+                "label": "Between-group variance contribution (cm²)",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "variance",
+                "label": "Combined descriptive variance (cm²)",
+                "type": "number",
+                "expected": "9"
+              }
+            ],
+            "hint": "<p>Each group has zero internal variance. Find the combined mean, then measure the distance from each group mean to that combined mean.</p>",
+            "solution": "<ol><li>\\[\\mu=\\frac{3(5)+3(11)}{6}=8\\,\\mathrm{cm}.\\]</li><li>\\[V_{\\mathrm{within}}=\\frac{3(0)+3(0)}{6}=0\\,\\mathrm{cm}^2.\\]</li><li>\\[V_{\\mathrm{between}}=\\frac{3(5-8)^2+3(11-8)^2}{6}=9\\,\\mathrm{cm}^2.\\]</li><li>\\[\\sigma^2=0+9=9\\,\\mathrm{cm}^2.\\]<p>The complete list contains two different values, so its variance is positive even though both groups separately are constant.</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>When group means are equal, the between-group part is zero, so a size-weighted average of their variances is enough. Equal counts alone do not remove the effect of different means. With counts and internal variances fixed, moving the means farther apart increases the combined variance.</p>"
+          }
+        ]
+      },
+      {
+        "id": "unknown-count",
+        "title": "Can a target mean determine the group size?",
+        "label": "Unknown counts",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>If B has unknown positive integer size \\(k\\) and the required combined mean is \\(m\\), write</p>\\[n_A\\mu_A+k\\mu_B=m(n_A+k).\\]<p>Solve and check the integer and positivity conditions. With different group means and both groups nonempty, the combined mean lies strictly between them. That is a necessary check; it does not guarantee an integer group size.</p>",
+        "blocks": [
+          {
+            "kind": "tip",
+            "html": "<p>Check before dividing. If both group means equal the target, every positive group size gives that target, so the count is undetermined. If both means are equal but the target differs, no group size works. If the means differ, an endpoint target cannot be reached while both groups remain nonempty.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-S034-20261121-C04",
+            "title": "A target between the means is not enough",
+            "prompt": "<p>A contains six measurements with mean \\(9\\,\\mathrm{cm}\\). B contains \\(k\\) other measurement records with mean \\(16\\,\\mathrm{cm}\\), where \\(k\\) is a positive integer. Find \\(k\\) when the combined mean is \\(13\\,\\mathrm{cm}\\). Could the same setup instead give an exact combined mean of \\(12\\,\\mathrm{cm}\\)?</p>",
+            "fields": [
+              {
+                "key": "count",
+                "label": "Group size \\(k\\) for target mean \\(13\\,\\mathrm{cm}\\)",
+                "type": "number",
+                "expected": "8"
+              },
+              {
+                "key": "possible",
+                "label": "Can the target be exactly \\(12\\,\\mathrm{cm}\\)?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "no": "No: it requires a non-integer group size.",
+                  "yes": "Yes: every target between the means is achievable.",
+                  "equal": "Yes: it requires equal group sizes."
+                }
+              }
+            ],
+            "hint": "<p>Keep \\(k\\) in both the total and the combined count. Solve each target equation separately, then enforce the integer condition.</p>",
+            "solution": "<ol><li>\\[54+16k=13(6+k)\\Longrightarrow3k=24\\Longrightarrow k=8.\\]</li><li>\\[\\frac{54+8(16)}{6+8}=\\frac{182}{14}=13.\\]</li><li><p>For the separate target \\(12\\),</p>\\[54+16k=12(6+k)\\Longrightarrow4k=18\\Longrightarrow k=\\frac{9}{2}.\\]<p>This is positive but not an integer, so no finite group with the stated conditions exists.</p></li></ol>"
+          }
+        ]
+      },
+      {
+        "id": "decode-before-pooling",
+        "title": "What if the groups use different codes or units?",
+        "label": "Decode, convert, combine",
+        "minutes": 7,
+        "level": "further",
+        "intro": "<p>Restore each group to the same original scale before pooling. For a code \\(u=\\frac{x-a}{b}\\), where \\(b\\ne0\\), write \\(x=a+bu\\). From coded totals,</p>\\[\\bar{u}=\\frac{\\sum u}{n},\\qquad\\sigma_u^2=\\frac{\\sum u^2}{n}-\\bar{u}^{\\,2}.\\]\\[\\mu_x=a+b\\bar{u},\\qquad\\sigma_x^2=b^2\\sigma_u^2,\\qquad\\sigma_x=|b|\\sigma_u.\\]<p>Apply any unit conversion to the restored means and SDs, and its square to variances. Then form \\(n,T,Q\\) in one common unit. Different numerical codes cannot be treated as one shared measurement scale.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "S1-S034-20261121-C05",
+            "title": "Decode two different rules before pooling",
+            "prompt": "<p>Two disjoint groups record lengths \\(x\\), in centimetres. A has two observations coded by \\(u=x-10\\), with coded mean \\(2\\) and coded SD \\(2\\). B has two observations coded by \\(v=\\frac{30-x}{2}\\), with coded mean \\(3\\) and coded SD \\(1\\). Find the combined original mean, variance and SD.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Combined original mean (cm)",
+                "type": "number",
+                "expected": "18"
+              },
+              {
+                "key": "variance",
+                "label": "Combined original variance (cm²)",
+                "type": "number",
+                "expected": "40"
+              },
+              {
+                "key": "sd",
+                "label": "Combined original SD (cm)",
+                "type": "number",
+                "expected": "2*sqrt(10)"
+              }
+            ],
+            "hint": "<p>Write the two inverse rules separately. The negative scale changes the mean with its sign but multiplies SD by its absolute value.</p>",
+            "solution": "<ol><li><p>For A, \\(x=10+u\\), so \\(\\mu_A=12\\,\\mathrm{cm}\\) and \\(\\sigma_A^2=4\\,\\mathrm{cm}^2\\).</p></li><li><p>For B, \\(x=30-2v\\), so \\(\\mu_B=24\\,\\mathrm{cm}\\) and \\(\\sigma_B=2\\,\\mathrm{cm}\\), giving \\(\\sigma_B^2=4\\,\\mathrm{cm}^2\\).</p></li><li>\\[N=4,\\qquad T=2(12)+2(24)=72,\\qquad\\mu=18\\,\\mathrm{cm}.\\]</li><li>\\[Q=2(4+12^2)+2(4+24^2)=1456.\\]</li><li>\\[\\sigma^2=\\frac{1456}{4}-18^2=40\\,\\mathrm{cm}^2,\\qquad\\sigma=2\\sqrt{10}\\,\\mathrm{cm}.\\]</li></ol>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Disjoint groups",
+        "definition": "<p>Groups containing different records, so no record is counted twice. Numerical values may still repeat.</p>"
+      },
+      {
+        "term": "Pooled data",
+        "definition": "<p>The complete list formed by putting the two groups of original records together.</p>"
+      },
+      {
+        "term": "Weighted mean",
+        "definition": "<p>A mean in which each group centre is weighted by its number of observations.</p>"
+      },
+      {
+        "term": "Moment",
+        "definition": "<p>An average of values or their powers. The mean and average squared value determine descriptive variance.</p>"
+      },
+      {
+        "term": "Sum of squares",
+        "definition": "<p>The total \\(Q=\\sum x^2\\), formed by squaring each observation before adding.</p>"
+      },
+      {
+        "term": "Descriptive variance",
+        "definition": "<p>The average squared distance of the given observations from their mean, using their full count as the divisor.</p>"
+      },
+      {
+        "term": "Within-group variation",
+        "definition": "<p>The variation of records around their own group mean.</p>"
+      },
+      {
+        "term": "Between-group variation",
+        "definition": "<p>The contribution caused by the group means differing from the combined mean.</p>"
+      },
+      {
+        "term": "Common scale",
+        "definition": "<p>One measurement unit and one original coding scale used consistently for both groups.</p>"
+      },
+      {
+        "term": "Feasible count",
+        "definition": "<p>A number of observations satisfying the original equations and the stated integer and positivity conditions.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Restore totals before combining means",
+        "question": "<p>Group A contains four plant heights with mean \\(12\\,\\mathrm{cm}\\). Group B contains six other plant heights with mean \\(17\\,\\mathrm{cm}\\). Find the mean height of all ten plants.</p>",
+        "solution": [
+          "\\[T_A=4(12)=48\\,\\mathrm{cm},\\qquad T_B=6(17)=102\\,\\mathrm{cm}.\\]",
+          "\\[N=4+6=10,\\qquad T=48+102=150\\,\\mathrm{cm}.\\]",
+          "\\[\\mu=\\frac{150}{10}=15\\,\\mathrm{cm}.\\]",
+          "<p>The simple average \\(\\frac{12+17}{2}=14.5\\) gives each group equal weight. Here the larger group must contribute more records, so the correct mean is closer to \\(17\\) than to \\(12\\).</p>"
+        ]
+      },
+      {
+        "title": "Combine mean and SD through three totals",
+        "question": "<p>Two disjoint groups of plant heights are summarised below. Find the combined descriptive variance and standard deviation.</p><table><thead><tr><th>Group</th><th>Count</th><th>Mean in centimetres</th><th>SD in centimetres</th></tr></thead><tbody><tr><td>A</td><td>\\(4\\)</td><td>\\(12\\)</td><td>\\(3\\)</td></tr><tr><td>B</td><td>\\(6\\)</td><td>\\(17\\)</td><td>\\(2\\)</td></tr></tbody></table>",
+        "solution": [
+          "<p>Square the SDs, then recover each sum of squares:</p>\\[Q_A=4(3^2+12^2)=612,\\qquad Q_B=6(2^2+17^2)=1758.\\]",
+          "<table><thead><tr><th>Group</th><th>Count \\(n\\)</th><th>Total \\(T\\)</th><th>Sum of squares \\(Q\\)</th></tr></thead><tbody><tr><td>A</td><td>\\(4\\)</td><td>\\(48\\)</td><td>\\(612\\)</td></tr><tr><td>B</td><td>\\(6\\)</td><td>\\(102\\)</td><td>\\(1758\\)</td></tr><tr><td>Combined</td><td>\\(10\\)</td><td>\\(150\\)</td><td>\\(2370\\)</td></tr></tbody></table><p>The totals use centimetres and the sums of squares use squared centimetres.</p>",
+          "\\[\\mu=\\frac{150}{10}=15\\,\\mathrm{cm}.\\]",
+          "\\[\\sigma^2=\\frac{2370}{10}-15^2=12\\,\\mathrm{cm}^2,\\qquad\\sigma=2\\sqrt{3}\\,\\mathrm{cm}.\\]",
+          "<p>Neither the simple average nor the size-weighted average of the two SDs gives this result. The group means are different, which creates additional spread.</p>"
+        ]
+      },
+      {
+        "title": "Separate internal spread from different centres",
+        "question": "<p>Two disjoint groups have counts \\(4,6\\), means \\(12,17\\,\\mathrm{cm}\\), and descriptive variances \\(9,4\\,\\mathrm{cm}^2\\), respectively. Separate the combined variance into within-group and between-group contributions. Then translate every record in B down by \\(5\\,\\mathrm{cm}\\) and find the new combined variance.</p>",
+        "solution": [
+          "\\[\\mu=\\frac{4(12)+6(17)}{10}=15\\,\\mathrm{cm}.\\]",
+          "\\[V_{\\mathrm{within}}=\\frac{4(9)+6(4)}{10}=6\\,\\mathrm{cm}^2.\\]",
+          "\\[V_{\\mathrm{between}}=\\frac{4(12-15)^2+6(17-15)^2}{10}=6\\,\\mathrm{cm}^2.\\]",
+          "\\[\\sigma^2=6+6=12\\,\\mathrm{cm}^2.\\]",
+          "<p>After translating B, both means are \\(12\\,\\mathrm{cm}\\). Translation leaves B’s internal variance unchanged. The between-group contribution becomes zero, so the new combined variance is \\(6\\,\\mathrm{cm}^2\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a positive integer group size",
+        "question": "<p>Group A contains five measurements with mean \\(8\\,\\mathrm{cm}\\). Group B contains \\(k\\) other measurement records with mean \\(14\\,\\mathrm{cm}\\). The combined mean is \\(12\\,\\mathrm{cm}\\). Find \\(k\\), which must be a positive integer.</p>",
+        "solution": [
+          "\\[T=5(8)+14k=40+14k,\\qquad N=5+k.\\]",
+          "\\[40+14k=12(5+k)\\Longrightarrow2k=20\\Longrightarrow k=10.\\]",
+          "<p>The answer is a positive integer. Check it in the original combined mean:</p>\\[\\frac{5(8)+10(14)}{5+10}=\\frac{180}{15}=12\\,\\mathrm{cm}.\\]",
+          "<p>The target lies strictly between \\(8\\) and \\(14\\), as it must when both groups are nonempty and their means differ.</p>"
+        ]
+      },
+      {
+        "title": "Decode and convert before pooling",
+        "question": "<p>Two disjoint groups of lengths use different units and codes. Find the combined mean and descriptive variance in centimetres.</p><table><thead><tr><th>Group</th><th>Count</th><th>Original unit and code</th><th>Coded summaries</th></tr></thead><tbody><tr><td>A</td><td>\\(3\\)</td><td>\\(x\\) in cm, \\(u=\\frac{x-20}{2}\\)</td><td>\\(\\sum u=3,\\ \\sum u^2=5\\)</td></tr><tr><td>B</td><td>\\(2\\)</td><td>\\(y\\) in mm, \\(v=\\frac{y-300}{20}\\)</td><td>\\(\\sum v=-3,\\ \\sum v^2=5\\)</td></tr></tbody></table>",
+        "solution": [
+          "<p>For A, first calculate the coded mean and variance:</p>\\[\\bar{u}=\\frac{3}{3}=1,\\qquad \\sigma_u^2=\\frac{5}{3}-1^2=\\frac{2}{3}.\\]<p>Using \\(x=20+2u\\),</p>\\[\\mu_A=22\\,\\mathrm{cm},\\qquad\\sigma_A^2=2^2\\left(\\frac{2}{3}\\right)=\\frac{8}{3}\\,\\mathrm{cm}^2.\\]",
+          "<p>For B,</p>\\[\\bar{v}=-\\frac{3}{2},\\qquad\\sigma_v^2=\\frac{5}{2}-\\left(-\\frac{3}{2}\\right)^2=\\frac{1}{4}.\\]<p>Using \\(y=300+20v\\),</p>\\[\\mu_B=270\\,\\mathrm{mm},\\qquad\\sigma_B^2=20^2\\left(\\frac{1}{4}\\right)=100\\,\\mathrm{mm}^2.\\]",
+          "<p>Convert B to centimetres. Dividing every length by \\(10\\) divides variance by \\(100\\):</p>\\[\\mu_B=27\\,\\mathrm{cm},\\qquad\\sigma_B^2=1\\,\\mathrm{cm}^2.\\]",
+          "\\[N=5,\\qquad T=3(22)+2(27)=120\\,\\mathrm{cm}.\\]\\[Q=3\\left(\\frac{8}{3}+22^2\\right)+2(1+27^2)=2920\\,\\mathrm{cm}^2.\\]",
+          "\\[\\mu=\\frac{120}{5}=24\\,\\mathrm{cm},\\qquad\\sigma^2=\\frac{2920}{5}-24^2=8\\,\\mathrm{cm}^2.\\]",
+          "<p>The two coded sums could not be added directly: their origins, scales and original units were different.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Mean, median, mode and choosing a centre",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_ct_centre_raw"
+      },
+      {
+        "title": "Coded data and scale changes",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_ct_coding"
+      },
+      {
+        "title": "Frequency tables and grouped estimates",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_ct_frequency"
+      },
+      {
+        "title": "Range, quartiles and raw-data variance",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_var_raw_moments"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "S1-S034-20261121-P01",
+        "title": "Weight each group by its count",
+        "prompt": "<p>Two disjoint groups record the same quantity in the same units. A has \\(5\\) observations with mean \\(12\\); B has \\(15\\) observations with mean \\(20\\). Find the combined count and mean. Why would the unweighted average of the two means be inappropriate here?</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "Combined count",
+            "type": "number",
+            "expected": "20"
+          },
+          {
+            "key": "mean",
+            "label": "Combined mean",
+            "type": "number",
+            "expected": "18"
+          },
+          {
+            "key": "reason",
+            "label": "Reason for weighting",
+            "type": "choice",
+            "expected": "counts",
+            "options": {
+              "counts": "The groups have different counts and different means.",
+              "larger": "The larger group must be counted twice.",
+              "never": "Group means can never be combined."
+            }
+          }
+        ],
+        "hint": "<p>Recover the total for each group by multiplying its mean by its count.</p>",
+        "solution": "<ol><li>\\[N=5+15=20,\\qquad T_A=5(12)=60,\\qquad T_B=15(20)=300.\\]</li><li>\\[\\bar{x}=\\frac{60+300}{20}=18.\\]</li><li><p>An unweighted average would give \\(16\\), treating the groups as equally large. The combined mean is closer to \\(20\\), the mean of the larger group.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S034-20261121-P02",
+        "title": "Reconstruct both square-sums",
+        "prompt": "<p>Two disjoint groups of lengths, in centimetres, have these summaries.</p><table><thead><tr><th>Group</th><th>Count</th><th>Mean (cm)</th><th>Descriptive SD (cm)</th></tr></thead><tbody><tr><td>A</td><td>4</td><td>7</td><td>2</td></tr><tr><td>B</td><td>6</td><td>12</td><td>3</td></tr></tbody></table><p>Find the combined mean, descriptive variance and standard deviation.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Combined mean (cm)",
+            "type": "number",
+            "expected": "10"
+          },
+          {
+            "key": "variance",
+            "label": "Combined variance (cm²)",
+            "type": "number",
+            "expected": "13"
+          },
+          {
+            "key": "sd",
+            "label": "Combined standard deviation (cm)",
+            "type": "number",
+            "expected": "sqrt(13)"
+          }
+        ],
+        "hint": "<p>For each group use \\(T=n\\bar{x}\\) and \\(Q=n(\\sigma^2+\\bar{x}^{\\,2})\\). Add totals before recalculating.</p>",
+        "solution": "<ol><li>\\[T=4(7)+6(12)=100,\\qquad N=10,\\qquad\\bar{x}=10\\ \\text{cm}.\\]</li><li>\\[Q_A=4(2^2+7^2)=212,\\qquad Q_B=6(3^2+12^2)=918.\\]</li><li>\\[\\sigma^2=\\frac{212+918}{10}-10^2=13\\ \\text{cm}^{2},\\qquad\\sigma=\\sqrt{13}\\ \\text{cm}.\\]</li><li><p>The spread within both groups and the difference between their means contribute to the pooled variance. Neither an unweighted nor a count-weighted average of the SDs is a general formula for this result.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S034-20261121-P03",
+        "title": "Find a count and reject an endpoint target",
+        "prompt": "<p>Group A has \\(8\\) observations with mean \\(9\\). A disjoint group B has a positive integer number \\(n\\) of observations with mean \\(15\\). All measure the same quantity. The combined mean is \\(13\\). Find \\(n\\). Separately, could any finite positive \\(n\\) make the combined mean exactly \\(15\\)?</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "Number of observations in B",
+            "type": "number",
+            "expected": "16"
+          },
+          {
+            "key": "endpoint",
+            "label": "Is the separate target of fifteen attainable?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "no": "No: positive groups with distinct means give a mean strictly between them.",
+              "yes": "Yes: choose a sufficiently large finite group B.",
+              "equal": "Yes: choose equal group sizes."
+            }
+          }
+        ],
+        "hint": "<p>The unknown count occurs in both the numerator and denominator of the combined mean.</p>",
+        "solution": "<ol><li>\\[72+15n=13(8+n)\\quad\\Longrightarrow\\quad2n=32\\quad\\Longrightarrow\\quad n=16.\\]</li><li>\\[\\frac{72+15(16)}{8+16}=\\frac{312}{24}=13.\\]</li><li><p>The count is a positive integer. For the separate target \\(15\\), the equation becomes \\(72+15n=120+15n\\), a contradiction. The lower-mean group remains present for every finite \\(n\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S034-20261121-P04",
+        "title": "Decode both groups before pooling",
+        "prompt": "<p>Two disjoint groups contain lengths in centimetres. For A, \\(n_A=3\\) and \\(u=\\frac{x-10}{2}\\), with \\(\\sum u=3\\) and \\(\\sum u^2=11\\). For B, \\(n_B=5\\) and \\(v=\\frac{30-y}{2}\\), with \\(\\sum v=10\\) and \\(\\sum v^2=30\\). Find each original total, then the combined mean and descriptive variance.</p>",
+        "fields": [
+          {
+            "key": "ta",
+            "label": "Original total A (cm)",
+            "type": "number",
+            "expected": "36"
+          },
+          {
+            "key": "tb",
+            "label": "Original total B (cm)",
+            "type": "number",
+            "expected": "130"
+          },
+          {
+            "key": "mean",
+            "label": "Combined mean (cm)",
+            "type": "number",
+            "expected": "83/4"
+          },
+          {
+            "key": "variance",
+            "label": "Combined variance (cm²)",
+            "type": "number",
+            "expected": "879/16"
+          }
+        ],
+        "hint": "<p>The inverse rules are \\(x=10+2u\\) and \\(y=30-2v\\). Expand each squared rule separately before combining the moments.</p>",
+        "solution": "<ol><li>\\[T_A=3(10)+2(3)=36,\\qquad Q_A=3(100)+40(3)+4(11)=464.\\]</li><li>\\[T_B=5(30)-2(10)=130,\\qquad Q_B=5(900)-120(10)+4(30)=3420.\\]</li><li>\\[N=8,\\qquad T=166,\\qquad Q=3884,\\qquad\\bar{x}=\\frac{166}{8}=\\frac{83}{4}\\ \\text{cm}.\\]</li><li>\\[\\sigma^2=\\frac{3884}{8}-\\left(\\frac{83}{4}\\right)^2=\\frac{879}{16}\\ \\text{cm}^{2}.\\]</li><li><p>The original measurement totals are compatible. The two coded totals have different origins and directions, so adding them directly would not give the original pooled mean.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S034-20261121-P05",
+        "title": "Convert units before combining summaries",
+        "prompt": "<p>Two disjoint groups measure lengths. A has \\(4\\) observations with mean \\(160\\) cm and descriptive SD \\(10\\) cm. B has \\(6\\) observations with mean \\(1.8\\) m and descriptive SD \\(0.2\\) m. Find the combined mean, variance and standard deviation, using centimetres.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Combined mean (cm)",
+            "type": "number",
+            "expected": "172"
+          },
+          {
+            "key": "variance",
+            "label": "Combined variance (cm²)",
+            "type": "number",
+            "expected": "376"
+          },
+          {
+            "key": "sd",
+            "label": "Combined standard deviation (cm)",
+            "type": "number",
+            "expected": "2*sqrt(94)"
+          }
+        ],
+        "hint": "<p>Convert B’s mean and SD to centimetres before reconstructing its total and square-sum. Variance scales by the square of the conversion factor.</p>",
+        "solution": "<ol><li><p>In centimetres, B has mean \\(180\\) and SD \\(20\\), so its variance is \\(400\\ \\text{cm}^{2}\\).</p></li><li>\\[T=4(160)+6(180)=1720,\\qquad\\bar{x}=\\frac{1720}{10}=172\\ \\text{cm}.\\]</li><li>\\[Q=4(160^2+10^2)+6(180^2+20^2)=102800+196800=299600.\\]</li><li>\\[\\sigma^2=\\frac{299600}{10}-172^2=376\\ \\text{cm}^{2},\\qquad\\sigma=2\\sqrt{94}\\ \\text{cm}.\\]</li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "S1-S034-20261121-E01",
+          "title": "Recover a hidden group from pooled moments",
+          "marks": 7,
+          "question": "<p>Ten masses have mean \\(14\\) g and descriptive variance \\(30\\ \\text{g}^{2}\\). They consist of disjoint groups A and B. A contains \\(6\\) masses with mean \\(10\\) g and descriptive variance \\(4\\ \\text{g}^{2}\\). Find B’s total, sum of squares, mean, variance and standard deviation.</p>",
+          "hint": "<p>Reconstruct the full count and both full totals, then subtract A’s contributions. Recalculate B’s summaries using its own count.</p>",
+          "solution": "<ol><li>\\[N=10,\\quad T=10(14)=140,\\quad Q=10(30+14^2)=2260.\\]</li><li>\\[n_A=6,\\quad T_A=6(10)=60,\\quad Q_A=6(4+10^2)=624.\\]</li><li>\\[n_B=4,\\quad T_B=140-60=80,\\quad Q_B=2260-624=1636.\\]</li><li>\\[\\bar{x}_B=\\frac{80}{4}=20\\ \\text{g},\\quad\\sigma_B^2=\\frac{1636}{4}-20^2=9\\ \\text{g}^{2},\\quad\\sigma_B=3\\ \\text{g}.\\]</li><li><p>The recovered count is positive and the variance non-negative. Recombining the groups gives total \\(140\\) g and square-sum \\(2260\\ \\text{g}^{2}\\), restoring both original combined summaries.</p></li></ol>",
+          "marking": "<ul><li>1 mark: reconstruct the combined first moment.</li><li>1 mark: reconstruct the combined square-sum.</li><li>1 mark: reconstruct A’s two moment totals.</li><li>1 mark: subtract counts and both moment totals.</li><li>1 mark: obtain B’s mean.</li><li>1 mark: obtain B’s variance.</li><li>1 mark: take the non-negative square root and check the reconstruction.</li></ul>"
+        },
+        {
+          "id": "S1-S034-20261121-E02",
+          "title": "Zero spread inside each group can hide pooled spread",
+          "marks": 7,
+          "question": "<p>Two disjoint score groups are combined. A contains four copies of score \\(6\\); B contains \\(k\\) copies of score \\(18\\), where \\(k\\) is a positive integer. The combined mean is \\(14\\). Find \\(k\\), the combined descriptive variance, standard deviation and median. Explain why the pooled variance is positive although each separate group has variance zero.</p>",
+          "hint": "<p>Recover the count from the mean equation. Then calculate squared distances from the combined mean, and locate both middle values in the complete ordered list.</p>",
+          "solution": "<ol><li>\\[4(6)+18k=14(4+k)\\quad\\Longrightarrow\\quad4k=32\\quad\\Longrightarrow\\quad k=8.\\]</li><li>\\[N=12,\\qquad\\sigma^2=\\frac{4(6-14)^2+8(18-14)^2}{12}=\\frac{256+128}{12}=32.\\]</li><li>\\[\\sigma=\\sqrt{32}=4\\sqrt{2}.\\]</li><li><p>The sixth and seventh ordered observations are both \\(18\\), so the combined median is \\(18\\).</p></li><li><p>Every value equals its own group mean, so the within-group contribution is zero. The positive variance comes entirely from the difference between the group centres.</p></li></ol>",
+          "marking": "<ul><li>1 mark: form the weighted-mean equation.</li><li>1 mark: recover the positive integer count.</li><li>1 mark: calculate squared distances from the combined mean.</li><li>1 mark: divide by the full count to obtain the variance.</li><li>1 mark: obtain the exact standard deviation.</li><li>1 mark: locate both central observations and state the median.</li><li>1 mark: explain the between-group source of spread.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Combine two disjoint datasets through their counts and compatible moment totals, then calculate the required summaries.</p><h2>Recover totals before averaging groups</h2>\\[N=n_A+n_B,\\qquad\\bar{x}=\\frac{n_A\\bar{x}_A+n_B\\bar{x}_B}{N}.\\]<p>Each observation receives equal weight, so each group mean is weighted by its count. For two positive counts and different means, the combined mean lies strictly between them. An unweighted average agrees when counts are equal or the group means coincide.</p><h2>Add both moment totals</h2>\\[T_i=n_i\\bar{x}_i,\\qquad Q_i=n_i(\\sigma_i^2+\\bar{x}_i^{\\,2}).\\]\\[\\bar{x}=\\frac{T_A+T_B}{N},\\qquad\\sigma^2=\\frac{Q_A+Q_B}{N}-\\bar{x}^{\\,2}.\\]<p>Use descriptive variance with divisor equal to the group count. Reconstruct a square-sum using variance, not SD. Take the square root only after finding the combined variance. Subtract counts and both totals to recover a hidden group.</p><h2>Two sources contribute to pooled spread</h2>\\[\\sigma^2=\\frac{n_A\\sigma_A^2+n_B\\sigma_B^2}{N}+\\frac{n_An_B}{N^2}(\\bar{x}_A-\\bar{x}_B)^2.\\]<p>The first term describes spread within groups. The second describes separation of their centres. Even two constant groups can have positive pooled variance. Averaging SDs is not a general pooling rule. Pooling records is different from adding random variables.</p><h2>Restore units and check reverse problems</h2><p>Decode each group separately and convert both to the same measurement units before adding totals. Under a scale factor \\(c\\), SD changes by \\(|c|\\) and variance by \\(c^2\\).</p><p>For an unknown group count, keep it in both the weighted total and the total count. Check the target mean, integer and positivity conditions, and the original equation. Equal group means may leave the count undetermined. Summary moments alone generally do not reveal a pooled median or mode.</p>",
+      "checks": "<ul><li>Same quantity and units; each record counted once?</li><li>Both counts and both moment totals combined?</li><li>Between-group separation included in the variance?</li><li>Unknown counts and recovered summaries checked?</li></ul>",
+      "examTip": "<p>Unknown counts and recovered summaries checked?</p>"
+    }
+  },
+  "orig_9709_s1_ct_changes": {
+    "updatedOn": "2026-11-21",
+    "description": "Identify exactly which records changed, then update the count, total and sum of squares. Use those quantities to correct summaries, recover missing values and test every allowed solution.",
+    "sections": [
+      {
+        "id": "corrected-records",
+        "title": "How do I correct one recorded value?",
+        "label": "Replace a record",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Keep track of three quantities: the number of observations \\(n\\), the total \\(T=\\sum x\\), and the sum of squares \\(Q=\\sum x^2\\). For a nonempty dataset,</p>\\[\\mu=\\frac{T}{n},\\qquad\\sigma^2=\\frac{Q}{n}-\\mu^2,\\qquad\\sigma=\\sqrt{\\sigma^2}.\\]<p>All variances here are descriptive, using the full count as the divisor. If only summaries are given, restore \\(T=n\\mu\\) and \\(Q=n(\\sigma^2+\\mu^2)\\).</p><p>Replacing an incorrect value \\(a\\) by its correct value \\(b\\) keeps the same record:</p>\\[n_{\\mathrm{new}}=n,\\qquad T_{\\mathrm{new}}=T-a+b,\\qquad Q_{\\mathrm{new}}=Q-a^2+b^2.\\]",
+        "blocks": [
+          {
+            "kind": "mistake",
+            "html": "<p>The sum-of-squares change is \\(b^2-a^2\\), not \\((b-a)^2\\). Recalculate variance using the corrected mean as well as the corrected sum of squares.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_9709_s1_ct_changes/correction-moment-ledger.svg\" alt=\"A correction ledger for the four observations three, five, seven and nine, replacing nine by thirteen and separately updating the total and sum of squares.\" width=\"856\" height=\"690\"></p><p>Replacing \\(9\\) by \\(13\\) changes the total by \\(4\\), the sum of squares by \\(88\\), and leaves the count unchanged.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-S035-20261121-C01",
+            "title": "Replace a value without adding a record",
+            "prompt": "<p>Six numerical records have mean \\(10\\) and descriptive variance \\(9\\). One recorded value \\(12\\) should be \\(6\\). Find the corrected count, sum of squares, mean and variance.</p>",
+            "fields": [
+              {
+                "key": "count",
+                "label": "Corrected count",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "squares",
+                "label": "Corrected sum of squares",
+                "type": "number",
+                "expected": "546"
+              },
+              {
+                "key": "mean",
+                "label": "Corrected mean",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "variance",
+                "label": "Corrected descriptive variance",
+                "type": "number",
+                "expected": "10"
+              }
+            ],
+            "hint": "<p>Recover the old total and sum of squares first. Replace the contribution of the wrong value in both totals, keeping the count unchanged.</p>",
+            "solution": "<ol><li>\\[T=6(10)=60,\\qquad Q=6(9+10^2)=654.\\]</li><li>\\[n_{\\mathrm{new}}=6,\\quad T_{\\mathrm{new}}=60-12+6=54,\\quad Q_{\\mathrm{new}}=654-12^2+6^2=546.\\]</li><li>\\[\\mu_{\\mathrm{new}}=\\frac{54}{6}=9,\\qquad\\sigma_{\\mathrm{new}}^2=\\frac{546}{6}-9^2=10.\\]</li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>The change in mean also gives</p>\\[b-a=n(\\mu_{\\mathrm{new}}-\\mu).\\]<p>This can recover an unknown count, which must be a positive integer. If the mean change is zero, check the equation directly before dividing; a genuine one-value correction with \\(a\\ne b\\) cannot leave the mean unchanged.</p>"
+          }
+        ]
+      },
+      {
+        "id": "added-removed",
+        "title": "What changes when a record is added or removed?",
+        "label": "Add, remove, deduplicate",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Adding a new observation or removing an existing one changes the number of records:</p><table><thead><tr><th>Operation</th><th>New count</th><th>New total</th><th>New sum of squares</th></tr></thead><tbody><tr><td>Add a new value \\(b\\)</td><td>\\(n+1\\)</td><td>\\(T+b\\)</td><td>\\(Q+b^2\\)</td></tr><tr><td>Remove one value \\(a\\)</td><td>\\(n-1\\)</td><td>\\(T-a\\)</td><td>\\(Q-a^2\\)</td></tr></tbody></table><p>Use the new count in both the mean and variance. After removal, at least one observation must remain for these summaries to exist. A one-observation dataset has variance zero; an empty dataset has no mean or variance.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>An erroneous duplicate means one record was entered an extra time: remove only the extra copy. Separate genuine records can have equal values, so equal values alone do not justify deletion.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-S035-20261121-C02",
+            "title": "Remove only the extra copy",
+            "prompt": "<p>Five recorded observations have \\(T=35\\) and \\(Q=315\\). One value \\(7\\) was entered twice by mistake, and exactly one extra copy must be deleted. Find the corrected count, mean and descriptive variance. Separately, would a mean and variance exist if the only observation in a dataset were removed?</p>",
+            "fields": [
+              {
+                "key": "count",
+                "label": "Corrected count",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "mean",
+                "label": "Corrected mean",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "variance",
+                "label": "Corrected descriptive variance",
+                "type": "number",
+                "expected": "35/2"
+              },
+              {
+                "key": "empty",
+                "label": "Mean and variance after removing the only observation",
+                "type": "choice",
+                "expected": "undefined",
+                "options": {
+                  "undefined": "Both are undefined because no observations remain.",
+                  "zero": "Both are zero.",
+                  "same": "Both retain their previous values."
+                }
+              }
+            ],
+            "hint": "<p>A deletion changes the count as well as both totals. Remove one contribution of \\(7\\), not every occurrence of that value.</p>",
+            "solution": "<ol><li>\\[n_{\\mathrm{new}}=4,\\qquad T_{\\mathrm{new}}=35-7=28,\\qquad Q_{\\mathrm{new}}=315-7^2=266.\\]</li><li>\\[\\mu_{\\mathrm{new}}=\\frac{28}{4}=7,\\qquad\\sigma_{\\mathrm{new}}^2=\\frac{266}{4}-7^2=\\frac{35}{2}.\\]</li><li><p>Removing the sole observation leaves count \\(0\\). The formulas would divide by zero, so the empty dataset has no mean or descriptive variance.</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>For a new median, sort the updated raw records and locate their new central positions. For a new mode, recount the frequencies. Counts and moment totals alone generally do not determine those summaries.</p>"
+          }
+        ]
+      },
+      {
+        "id": "unchanged-mean",
+        "title": "Can the mean stay unchanged while SD changes?",
+        "label": "Unchanged mean",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Adding a value equal to the current mean leaves that mean unchanged. The added squared deviation is zero, but there is one more record to share the existing squared deviations:</p>\\[\\sigma_{\\mathrm{new}}^2=\\frac{n}{n+1}\\sigma^2.\\]<p>If the original variance is positive, it decreases; if all original observations are equal, it remains zero. Similarly, removing an existing observation equal to the mean leaves the mean unchanged and gives</p>\\[\\sigma_{\\mathrm{new}}^2=\\frac{n}{n-1}\\sigma^2,\\qquad n&gt;1.\\]<p>The divisor change matters even when the centre does not move.</p>",
+        "blocks": [
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-S035-20261121-C03",
+            "title": "Keep the mean but change the spread",
+            "prompt": "<p>The observations are \\(1,3,5,7\\). Add a fifth observation equal to their original mean. Find the new mean, descriptive variance and standard deviation.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "New mean",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "variance",
+                "label": "New descriptive variance",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "sd",
+                "label": "New standard deviation",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>The old mean is \\(4\\). The added value contributes zero squared deviation from that same mean, but the divisor increases.</p>",
+            "solution": "<ol><li>\\[\\mu=4,\\qquad \\sigma^2=\\frac{1^2+3^2+5^2+7^2}{4}-4^2=5.\\]</li><li><p>Add the value \\(4\\). The mean remains \\(4\\), while</p>\\[\\sigma_{\\mathrm{new}}^2=\\frac{4}{5}(5)=4,\\qquad\\sigma_{\\mathrm{new}}=2.\\]</li><li><p>The original SD was \\(\\sqrt{5}\\). An unchanged mean has not kept the SD unchanged.</p></li></ol>"
+          }
+        ]
+      },
+      {
+        "id": "missing-observations",
+        "title": "How do two missing observations come from mean and variance?",
+        "label": "Recover missing values",
+        "minutes": 7,
+        "level": "further",
+        "intro": "<p>First recover the full \\(T\\) and \\(Q\\). Subtract the known records and their squares separately. If the remaining information is</p>\\[p+q=S,\\qquad p^2+q^2=R,\\]<p>then</p>\\[pq=\\frac{S^2-R}{2}.\\]<p>Each missing value is a root of</p>\\[z^2-Sz+\\frac{S^2-R}{2}=0.\\]",
+        "blocks": [
+          {
+            "kind": "tip",
+            "html": "<p>Check that real missing values can exist:</p>\\[(p-q)^2=2R-S^2\\ge0.\\]<p>A negative result means no real pair; zero gives equal values. A positive result gives two values, and both labelled assignments remain possible unless an order or context restriction selects one. A positive proposed overall variance alone is not sufficient.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-S035-20261121-C04",
+            "title": "Recover the labelled pair and reject impossible moments",
+            "prompt": "<p>Four numerical observations are \\(0,6,p,q\\). Their mean is \\(5\\), and their descriptive variance is \\(13\\). Find every labelled pair \\((p,q)\\). A separate proposal gives the same known records and mean but variance \\(8\\). Could that proposal have real missing observations?</p>",
+            "fields": [
+              {
+                "key": "pair",
+                "label": "All pairs \\((p,q)\\)",
+                "type": "pairs",
+                "expected": "(4,10);(10,4)"
+              },
+              {
+                "key": "possible",
+                "label": "Can the separate variance proposal be realised?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "no": "No: it would require a negative squared difference.",
+                  "yes": "Yes: any positive overall variance is feasible.",
+                  "equal": "Yes: it forces the two missing values to be equal."
+                }
+              }
+            ],
+            "hint": "<p>Restore the full total and sum of squares, then subtract the known contributions. The missing sum and sum of squares must also be compatible with real values.</p>",
+            "solution": "<ol><li>\\[p+q=4(5)-0-6=14.\\]\\[p^2+q^2=4(13+5^2)-0^2-6^2=116.\\]</li><li>\\[pq=\\frac{14^2-116}{2}=40,\\qquad z^2-14z+40=(z-4)(z-10)=0.\\]</li><li>\\[(p,q)=(4,10)\\text{ or }(10,4).\\]<p>Either pair gives total \\(20\\), sum of squares \\(152\\), mean \\(5\\) and variance \\(13\\).</p></li><li><p>For the separate variance \\(8\\), the missing sum of squares would be</p>\\[R=4(8+25)-36=96.\\]\\[(p-q)^2=2R-(p+q)^2=192-196=-4.\\]<p>A real square cannot be negative, so there is no real pair.</p></li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>The mean alone usually determines only the missing sum. Keep every valid branch, then check the original mean, variance and any restrictions such as non-negative, integer, distinct or ordered observations.</p>"
+          }
+        ]
+      },
+      {
+        "id": "variance-constraint",
+        "title": "Which added values satisfy a variance limit?",
+        "label": "Variance as a quadratic",
+        "minutes": 7,
+        "level": "further",
+        "intro": "<p>This application uses completing the square and quadratic inequalities. If one real value \\(t\\) is added to \\(n\\) original observations, start with</p>\\[V(t)=\\frac{Q+t^2}{n+1}-\\left(\\frac{T+t}{n+1}\\right)^2.\\]<p>Expanding and completing the square gives a quadratic you can solve without differentiation. Equivalently, if the original mean is \\(\\mu\\) and variance is \\(\\sigma^2\\),</p>\\[V(t)=\\frac{n}{n+1}\\sigma^2+\\frac{n}{(n+1)^2}(t-\\mu)^2.\\]<p>Its minimum occurs at \\(t=\\mu\\), with value \\(\\frac{n}{n+1}\\sigma^2\\). This minimum is positive unless all the original records are equal.</p>",
+        "blocks": [
+          {
+            "kind": "text",
+            "html": "<p><img src=\"/assets/study/9709/orig_9709_s1_ct_changes/added-value-variance.svg\" alt=\"A variance parabola for adding one real observation to one, four and seven, with its minimum and both intersections with variance six marked.\" width=\"919\" height=\"710\"></p><p>For original observations \\(1,4,7\\), the variance is \\(V(t)=\\frac{9}{2}+\\frac{3}{16}(t-4)^2\\). The bound \\(V(t)\\le6\\) keeps the whole interval between \\(4-2\\sqrt{2}\\) and \\(4+2\\sqrt{2}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "S1-S035-20261121-C05",
+            "title": "Find the real interval, then apply the count restriction",
+            "prompt": "<p>Two observed counts are \\(0\\) and \\(4\\). A third count \\(t\\) is added. First treat \\(t\\) as real and find the lower and upper endpoints of the complete interval on which the new descriptive variance is at most \\(4\\). Then list all allowed values when \\(t\\) must be a non-negative integer.</p>",
+            "fields": [
+              {
+                "key": "lower",
+                "label": "Lower endpoint of the unrestricted real interval",
+                "type": "number",
+                "expected": "2 - sqrt(6)"
+              },
+              {
+                "key": "upper",
+                "label": "Upper endpoint of the unrestricted real interval",
+                "type": "number",
+                "expected": "2 + sqrt(6)"
+              },
+              {
+                "key": "counts",
+                "label": "All permitted count values",
+                "type": "set",
+                "expected": "{0,1,2,3,4}"
+              }
+            ],
+            "hint": "<p>There are three records after adding \\(t\\). Express the variance in terms of \\(t\\), complete the square and retain both bounds before applying the original count restriction.</p>",
+            "solution": "<ol><li>\\[n_{\\mathrm{new}}=3,\\qquad T=4+t,\\qquad Q=16+t^2.\\]\\[V(t)=\\frac{16+t^2}{3}-\\left(\\frac{4+t}{3}\\right)^2=\\frac{8}{3}+\\frac{2}{9}(t-2)^2.\\]</li><li>\\[V(t)\\le4\\Longleftrightarrow\\frac{2}{9}(t-2)^2\\le\\frac{4}{3}\\Longleftrightarrow(t-2)^2\\le6.\\]</li><li>\\[2-\\sqrt{6}\\le t\\le2+\\sqrt{6}.\\]<p>Both endpoints are included because the variance is allowed to equal \\(4\\).</p></li><li><p>Since \\(2\\lt \\sqrt{6}\\lt 3\\), the real interval begins between \\(-1\\) and \\(0\\) and ends between \\(4\\) and \\(5\\). Its non-negative integers are</p>\\[t\\in\\{0,1,2,3,4\\}.\\]</li></ol>"
+          },
+          {
+            "kind": "text",
+            "html": "<p>For a non-strict upper bound \\(V(t)\\le c\\), subtract the minimum and isolate the square. A bound below the minimum gives no solutions; a bound equal to the minimum gives one value. For a larger bound, retain both endpoints and every value between them. For the strict condition \\(V(t)\\lt c\\), a bound equal to the minimum gives no solutions; a larger bound excludes its boundary values. An exact target above the minimum has two real solutions before any context restrictions are applied.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Replacement",
+        "definition": "<p>Changing the value in one existing record. The number of records stays the same.</p>"
+      },
+      {
+        "term": "Insertion",
+        "definition": "<p>Adding a new observation, increasing the count by one.</p>"
+      },
+      {
+        "term": "Deletion",
+        "definition": "<p>Removing one existing observation, decreasing the count by one.</p>"
+      },
+      {
+        "term": "Erroneous duplicate",
+        "definition": "<p>An extra entry of the same record, as distinct from two genuine records that happen to have equal values.</p>"
+      },
+      {
+        "term": "Sum of squares",
+        "definition": "<p>The total \\(Q=\\sum x^2\\), obtained by squaring individual observations before adding.</p>"
+      },
+      {
+        "term": "Descriptive variance",
+        "definition": "<p>The average squared deviation of the given records from their mean, using their actual count as divisor.</p>"
+      },
+      {
+        "term": "Labelled pair",
+        "definition": "<p>An assignment such as \\((p,q)\\), where swapping the two values changes the assignment unless the values are equal.</p>"
+      },
+      {
+        "term": "Feasible observations",
+        "definition": "<p>Values that satisfy both original moment equations and all stated restrictions.</p>"
+      },
+      {
+        "term": "Completed-square form",
+        "definition": "<p>A constant plus a positive multiple of a square, showing the minimum of the variance model.</p>"
+      },
+      {
+        "term": "Context restriction",
+        "definition": "<p>An additional requirement such as non-negative, integer, distinct or ordered observations.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Correct both totals",
+        "question": "<p>The four recorded observations are \\(3,5,7,9\\). The final value should be \\(13\\), not \\(9\\). Find the corrected mean and descriptive variance.</p>",
+        "solution": [
+          "\\[n=4,\\qquad T=3+5+7+9=24,\\qquad Q=3^2+5^2+7^2+9^2=164.\\]",
+          "<p>The correction replaces one record, so the count stays \\(4\\):</p>\\[T_{\\mathrm{new}}=24-9+13=28,\\]\\[Q_{\\mathrm{new}}=164-9^2+13^2=252.\\]",
+          "\\[\\mu_{\\mathrm{new}}=\\frac{28}{4}=7,\\qquad\\sigma_{\\mathrm{new}}^2=\\frac{252}{4}-7^2=14.\\]",
+          "<p>Directly checking the corrected list \\(3,5,7,13\\) gives those same totals. The sum of squares increased by \\(13^2-9^2=88\\), not by \\((13-9)^2=16\\).</p>"
+        ]
+      },
+      {
+        "title": "Delete one erroneous duplicate",
+        "question": "<p>The recorded list is \\(2,5,5,8,10\\). One of the two entries \\(5\\) is an extra copy of the same record. Remove exactly one copy, then find the corrected mean, median and descriptive variance.</p>",
+        "solution": [
+          "\\[n=5,\\qquad T=30,\\qquad Q=2^2+5^2+5^2+8^2+10^2=218.\\]",
+          "\\[n_{\\mathrm{new}}=4,\\qquad T_{\\mathrm{new}}=30-5=25,\\qquad Q_{\\mathrm{new}}=218-5^2=193.\\]",
+          "\\[\\mu_{\\mathrm{new}}=\\frac{25}{4},\\qquad\\sigma_{\\mathrm{new}}^2=\\frac{193}{4}-\\left(\\frac{25}{4}\\right)^2=\\frac{147}{16}.\\]",
+          "<p>The corrected ordered list is \\(2,5,8,10\\). Its two middle values are \\(5\\) and \\(8\\), so</p>\\[\\text{median}=\\frac{5+8}{2}=\\frac{13}{2}.\\]<p>The valid remaining record \\(5\\) is retained.</p>"
+        ]
+      },
+      {
+        "title": "Insert the mean and update the divisor",
+        "question": "<p>The three observations are \\(1,4,7\\). Add a fourth observation equal to their mean. Compare the original and new means and descriptive variances.</p>",
+        "solution": [
+          "\\[\\mu=\\frac{1+4+7}{3}=4,\\qquad\\sigma^2=\\frac{(1-4)^2+(4-4)^2+(7-4)^2}{3}=6.\\]",
+          "<p>The added value is \\(4\\), so the new total is \\(16\\) and the new count is \\(4\\). The mean remains \\(4\\).</p>",
+          "<p>The added value has zero deviation from that mean. The squared deviations still total \\(18\\), but now</p>\\[\\sigma_{\\mathrm{new}}^2=\\frac{18}{4}=\\frac{9}{2}=\\frac{3}{4}(6).\\]",
+          "<p>The mean is unchanged while the positive variance decreases. The SD changes from \\(\\sqrt{6}\\) to \\(\\frac{3}{\\sqrt{2}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find both missing values from two moments",
+        "question": "<p>The five observations are \\(2,4,8,p,q\\). Their mean is \\(6\\), and their descriptive variance is \\(8\\). Find all labelled pairs \\((p,q)\\). Then state which pair satisfies \\(p\\lt q\\).</p>",
+        "solution": [
+          "\\[T=5(6)=30,\\qquad Q=5(8+6^2)=220.\\]",
+          "\\[p+q=30-2-4-8=16,\\]\\[p^2+q^2=220-2^2-4^2-8^2=136.\\]",
+          "\\[pq=\\frac{(p+q)^2-(p^2+q^2)}{2}=\\frac{16^2-136}{2}=60.\\]",
+          "<p>The missing observations are the roots of</p>\\[z^2-16z+60=(z-6)(z-10)=0.\\]<p>Thus the labelled pairs are \\((6,10)\\) and \\((10,6)\\). The condition \\(p\\lt q\\) selects \\((6,10)\\).</p>",
+          "<p>Either labelled assignment gives total \\(30\\) and sum of squares \\(220\\). Hence the original mean is \\(6\\) and variance is \\(\\frac{220}{5}-6^2=8\\), as required.</p>"
+        ]
+      },
+      {
+        "title": "Complete the variance square",
+        "question": "<p>Add one real observation \\(t\\) to \\(1,4,7\\). Find the minimum possible descriptive variance and the value of \\(t\\) that gives it. Then find every real \\(t\\) for which the variance is at most \\(6\\).</p>",
+        "solution": [
+          "\\[n_{\\mathrm{new}}=4,\\qquad T=12+t,\\qquad Q=66+t^2.\\]",
+          "\\[V(t)=\\frac{66+t^2}{4}-\\left(\\frac{12+t}{4}\\right)^2=\\frac{3t^2-24t+120}{16}.\\]",
+          "\\[V(t)=\\frac{9}{2}+\\frac{3}{16}(t-4)^2.\\]<p>A real square is non-negative. The minimum is \\(\\frac{9}{2}\\), attained only at \\(t=4\\).</p>",
+          "\\[V(t)\\le6\\Longleftrightarrow\\frac{3}{16}(t-4)^2\\le\\frac{3}{2}\\Longleftrightarrow(t-4)^2\\le8.\\]",
+          "\\[-2\\sqrt{2}\\le t-4\\le2\\sqrt{2},\\]\\[4-2\\sqrt{2}\\le t\\le4+2\\sqrt{2}.\\]<p>This includes both endpoints. A target variance below \\(\\frac{9}{2}\\) would be impossible.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Mean, median, mode and choosing a centre",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_ct_centre_raw"
+      },
+      {
+        "title": "Weighted means and combined moments",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_ct_combining"
+      },
+      {
+        "title": "Range, quartiles and raw-data variance",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_var_raw_moments"
+      },
+      {
+        "title": "Quadratic equations and factorisation",
+        "href": "/courses/maths4u-9709-p1/topics/orig_quadratics_factorisation"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "S1-S035-20261121-P01",
+        "title": "Replace the entry, not the whole dataset",
+        "prompt": "<p>Five lengths, in centimetres, have recorded mean \\(6\\) and recorded sum of squares \\(220\\). One entry of \\(2\\) should have been \\(7\\). Find the corrected count, mean, descriptive variance and standard deviation.</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "Corrected count",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "mean",
+            "label": "Corrected mean (cm)",
+            "type": "number",
+            "expected": "7"
+          },
+          {
+            "key": "variance",
+            "label": "Corrected descriptive variance (cm²)",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "sd",
+            "label": "Corrected standard deviation (cm)",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>A replacement leaves the count unchanged. Recover the old total, then remove the incorrect value and its square before inserting the correct ones.</p>",
+        "solution": "<ol><li>\\[n=5,\\qquad T=5(6)=30,\\qquad T_{\\mathrm{new}}=30-2+7=35.\\]</li><li>\\[Q_{\\mathrm{new}}=220-2^2+7^2=265.\\]</li><li>\\[\\bar{x}_{\\mathrm{new}}=\\frac{35}{5}=7\\ \\text{cm},\\qquad V_{\\mathrm{new}}=\\frac{265}{5}-7^2=4\\ \\text{cm}^{2}.\\]</li><li>\\[\\sigma_{\\mathrm{new}}=\\sqrt{4}=2\\ \\text{cm}.\\]</li><li><p>The sum of squares changes by \\(7^2-2^2=45\\), not by \\((7-2)^2=25\\).</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S035-20261121-P02",
+        "title": "The same mean can accompany different spread",
+        "prompt": "<p>A list of five observations has total \\(50\\), sum of squares \\(590\\), and contains one observation equal to \\(10\\). Consider two separate changes to this original list: A removes that observation; B adds a new observation equal to \\(10\\). Find each new count and descriptive variance. How do the two new means compare with the original mean?</p>",
+        "fields": [
+          {
+            "key": "na",
+            "label": "Count after removal",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "va",
+            "label": "Variance after removal",
+            "type": "number",
+            "expected": "45/2"
+          },
+          {
+            "key": "nb",
+            "label": "Count after addition",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "vb",
+            "label": "Variance after addition",
+            "type": "number",
+            "expected": "15"
+          },
+          {
+            "key": "means",
+            "label": "The two new means",
+            "type": "choice",
+            "expected": "unchanged",
+            "options": {
+              "unchanged": "Both remain \\(10\\).",
+              "opposite": "Removal decreases the mean and addition increases it.",
+              "equalspread": "They remain equal because the variances are equal."
+            }
+          }
+        ],
+        "hint": "<p>Start again from the original list for each case. Update the count along with both totals. The value being added or removed equals the original mean.</p>",
+        "solution": "<ol><li>\\[\\bar{x}=\\frac{50}{5}=10,\\qquad V=\\frac{590}{5}-10^2=18.\\]</li><li><p>For A, remove exactly one record:</p>\\[n_A=4,\\quad T_A=50-10=40,\\quad Q_A=590-100=490.\\]</li><li>\\[\\bar{x}_A=10,\\qquad V_A=\\frac{490}{4}-10^2=\\frac{45}{2}.\\]</li><li><p>For B, return to the original list and add a record:</p>\\[n_B=6,\\quad T_B=60,\\quad Q_B=690.\\]</li><li>\\[\\bar{x}_B=10,\\qquad V_B=\\frac{690}{6}-10^2=15.\\]</li><li><p>The mean stays the same in both cases. The sum of squared deviations from that unchanged mean remains \\(90\\), but its divisor changes from \\(5\\) to \\(4\\) or \\(6\\). Therefore the variances differ.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S035-20261121-P03",
+        "title": "Remove only the extra copy",
+        "prompt": "<p>The recorded list is \\(3,4,4,7,12\\). An audit finds that one observation of \\(4\\) was accidentally entered twice. Remove only its extra copy. Find the corrected count, mean, median and descriptive standard deviation.</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "Corrected count",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "mean",
+            "label": "Corrected mean",
+            "type": "number",
+            "expected": "13/2"
+          },
+          {
+            "key": "median",
+            "label": "Corrected median",
+            "type": "number",
+            "expected": "11/2"
+          },
+          {
+            "key": "sd",
+            "label": "Corrected standard deviation",
+            "type": "number",
+            "expected": "7/2"
+          }
+        ],
+        "hint": "<p>A duplicate is one extra record, not evidence that every occurrence of its value is wrong. Write the remaining ordered list before finding the median.</p>",
+        "solution": "<ol><li><p>The corrected list is \\(3,4,7,12\\). It has \\(n=4\\), total \\(T=26\\), and sum of squares \\(Q=218\\).</p></li><li>\\[\\bar{x}=\\frac{26}{4}=\\frac{13}{2},\\qquad \\text{median}=\\frac{4+7}{2}=\\frac{11}{2}.\\]</li><li>\\[V=\\frac{218}{4}-\\left(\\frac{13}{2}\\right)^2=\\frac{49}{4},\\qquad \\sigma=\\frac{7}{2}.\\]</li><li><p>Removing both entries of \\(4\\) would delete a genuine observation as well as the extra copy.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S035-20261121-P04",
+        "title": "Recover an ordered pair from two moments",
+        "prompt": "<p>The six observations \\(1,4,6,9,p,q\\) have mean \\(6\\) and descriptive variance \\(\\frac{32}{3}\\). Given that \\(p&lt;q\\), find the sum and sum of squares of the missing observations, then give the ordered pair \\((p,q)\\).</p>",
+        "fields": [
+          {
+            "key": "sum",
+            "label": "Missing-value sum",
+            "type": "number",
+            "expected": "16"
+          },
+          {
+            "key": "squares",
+            "label": "Missing-value sum of squares",
+            "type": "number",
+            "expected": "146"
+          },
+          {
+            "key": "pair",
+            "label": "Ordered pair \\((p,q)\\)",
+            "type": "pairs",
+            "expected": "(5,11)"
+          }
+        ],
+        "hint": "<p>Restore the full total and sum of squares first. Then use \\((p+q)^2=p^2+q^2+2pq\\) to form a quadratic with roots \\(p\\) and \\(q\\).</p>",
+        "solution": "<ol><li>\\[T=6(6)=36,\\qquad p+q=36-(1+4+6+9)=16.\\]</li><li>\\[Q=6\\left(\\frac{32}{3}+6^2\\right)=280,\\qquad p^2+q^2=280-(1+16+36+81)=146.\\]</li><li>\\[pq=\\frac{16^2-146}{2}=55.\\]</li><li>\\[z^2-16z+55=(z-5)(z-11)=0.\\]</li><li><p>The order condition selects \\((p,q)=(5,11)\\). The completed list has total \\(36\\) and sum of squares \\(280\\), which restore the stated mean and variance.</p></li></ol>"
+      },
+      {
+        "kind": "check",
+        "id": "S1-S035-20261121-P05",
+        "title": "A positive proposed variance does not guarantee feasibility",
+        "prompt": "<p>A claim is made that the four real observations \\(2,12,p,q\\) have mean \\(6\\) and descriptive variance \\(11\\). Find the sum and sum of squares that \\(p,q\\) would need. Decide whether any real pair can satisfy the claim.</p>",
+        "fields": [
+          {
+            "key": "sum",
+            "label": "Required missing-value sum",
+            "type": "number",
+            "expected": "10"
+          },
+          {
+            "key": "squares",
+            "label": "Required missing-value sum of squares",
+            "type": "number",
+            "expected": "40"
+          },
+          {
+            "key": "feasible",
+            "label": "Can a real pair exist?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "no": "No: the two required moments contradict each other.",
+              "yes": "Yes: every positive overall variance is possible.",
+              "unique": "Yes: only \\(p=q=5\\)."
+            }
+          }
+        ],
+        "hint": "<p>For any real pair, \\((p-q)^2=2(p^2+q^2)-(p+q)^2\\) must be non-negative.</p>",
+        "solution": "<ol><li>\\[T=4(6)=24,\\qquad p+q=24-(2+12)=10.\\]</li><li>\\[Q=4(11+6^2)=188,\\qquad p^2+q^2=188-(2^2+12^2)=40.\\]</li><li>\\[(p-q)^2=2(40)-10^2=-20.\\]</li><li><p>A real square cannot be negative, so no real pair exists. Although the claimed whole-list variance is positive, it is incompatible with the two known observations. The repeated pair \\(5,5\\) has sum of squares \\(50\\), not \\(40\\).</p></li></ol>"
+      }
+    ],
+    "examPractice": {
+      "needs": {},
+      "starters": [
+        {
+          "id": "S1-S035-20261121-E01",
+          "title": "Recover the count before a correction and an addition",
+          "marks": 7,
+          "question": "<p>A list of \\(n\\) masses, in grams, has recorded mean \\(12\\) and descriptive standard deviation \\(2\\). One recorded mass of \\(8\\) should have been \\(20\\). Correcting this entry increases the mean to \\(13\\). Find \\(n\\), the corrected sum of squares and the corrected standard deviation. Then a genuinely new observation of \\(13\\) g is added to the corrected list. Find its new descriptive variance.</p>",
+          "hint": "<p>The replacement changes the total by \\(12\\) but keeps \\(n\\) fixed. Use the change in mean to recover \\(n\\). Carry out the later addition only after completing the correction.</p>",
+          "solution": "<ol><li>\\[12n-8+20=13n\\quad\\Longrightarrow\\quad n=12.\\]</li><li>\\[T_{\\mathrm{old}}=144,\\qquad Q_{\\mathrm{old}}=12(2^2+12^2)=1776.\\]</li><li>\\[T_{\\mathrm{corrected}}=156,\\qquad Q_{\\mathrm{corrected}}=1776-8^2+20^2=2112.\\]</li><li>\\[V_{\\mathrm{corrected}}=\\frac{2112}{12}-13^2=7\\ \\text{g}^{2},\\qquad \\sigma_{\\mathrm{corrected}}=\\sqrt{7}\\ \\text{g}.\\]</li><li><p>Now add the new record, increasing the count:</p>\\[n_{\\mathrm{new}}=13,\\quad T_{\\mathrm{new}}=169,\\quad Q_{\\mathrm{new}}=2112+13^2=2281.\\]</li><li>\\[\\bar{x}_{\\mathrm{new}}=13\\ \\text{g},\\qquad V_{\\mathrm{new}}=\\frac{2281}{13}-13^2=\\frac{84}{13}\\ \\text{g}^{2}.\\]</li><li><p>The mean remains \\(13\\) g. Its variance decreases from \\(7\\) because an extra observation at the mean adds zero squared deviation while increasing the divisor.</p></li></ol>",
+          "marking": "<ul><li>1 mark: relate the replacement to the change in mean.</li><li>1 mark: recover the positive integer count.</li><li>1 mark: reconstruct the original sum of squares using the squared SD.</li><li>1 mark: update the sum of squares and obtain the corrected variance.</li><li>1 mark: take the correct square root with units.</li><li>1 mark: update the count and both totals for the later addition.</li><li>1 mark: calculate the final variance and explain the unchanged mean.</li></ul>"
+        },
+        {
+          "id": "S1-S035-20261121-E02",
+          "title": "Use the whole variance condition, including restrictions",
+          "marks": 9,
+          "question": "<p>Add a real observation \\(t\\) to \\(2,5,8,11\\). Let \\(V(t)\\) be the descriptive variance of all five observations. Find the minimum possible variance and the value of \\(t\\) attaining it. Find every real \\(t\\) for which \\(V(t)=10\\), and describe where \\(V(t)\\le10\\). In a separate version, \\(t\\) must be a non-negative integer: list every allowed \\(t\\) with \\(V(t)\\le10\\), then find the minimum variance under this integer restriction and every integer that attains it.</p>",
+          "hint": "<p>Use the new count of five and complete the square. A non-negative square identifies the real minimum; the nearest allowed integers to the centre identify the integer minimum.</p>",
+          "solution": "<ol><li>\\[n=5,\\qquad T=26+t,\\qquad Q=214+t^2.\\]</li><li>\\[V(t)=\\frac{214+t^2}{5}-\\left(\\frac{26+t}{5}\\right)^2=9+\\frac{4}{25}\\left(t-\\frac{13}{2}\\right)^2.\\]</li><li><p>The square is non-negative, so the real minimum is \\(9\\), attained only at \\(t=\\frac{13}{2}\\).</p></li><li>\\[V(t)=10\\quad\\Longleftrightarrow\\quad\\left(t-\\frac{13}{2}\\right)^2=\\frac{25}{4}\\quad\\Longleftrightarrow\\quad t=4\\ \\text{or}\\ t=9.\\]</li><li>\\[V(t)\\le10\\quad\\Longleftrightarrow\\quad\\left|t-\\frac{13}{2}\\right|\\le\\frac{5}{2}\\quad\\Longleftrightarrow\\quad4\\le t\\le9.\\]</li><li><p>With the separate integer restriction, the complete allowed set is \\(\\{4,5,6,7,8,9\\}\\).</p></li><li><p>The integers closest to \\(\\frac{13}{2}\\) are \\(6\\) and \\(7\\), both a distance \\(\\frac{1}{2}\\) away. Therefore</p>\\[V_{\\mathrm{integer,min}}=9+\\frac{4}{25}\\left(\\frac{1}{2}\\right)^2=\\frac{226}{25},\\]</li><li><p>attained at both \\(t=6\\) and \\(t=7\\). The unequal original observations prevent zero variance even when the extra value is optimally chosen.</p></li></ol>",
+          "marking": "<ul><li>1 mark: update the count, total and sum of squares.</li><li>2 marks: derive the variance and complete the square correctly.</li><li>1 mark: state the real minimum and where it occurs.</li><li>1 mark: solve the equality with both branches.</li><li>1 mark: obtain the closed interval for the inequality.</li><li>1 mark: list every allowed integer.</li><li>1 mark: identify both nearest integers to the real minimiser.</li><li>1 mark: calculate the restricted minimum variance.</li></ul>"
+        }
+      ]
+    },
+    "revision": {
+      "body": "<p>Track the count and both moment totals. Make the change before recalculating the summaries.</p><h2>Recover the information behind the summaries</h2><p>Let \\(n\\) be the count, \\(T=\\sum x\\) the total and \\(Q=\\sum x^2\\) the sum of squares.</p>\\[T=n\\bar{x},\\qquad Q=n(V+\\bar{x}^{\\,2}),\\qquad V=\\frac{Q}{n}-\\bar{x}^{\\,2}.\\]<p>Use descriptive variance \\(V\\) with divisor \\(n&gt;0\\). SD is \\(\\sqrt{V}\\); a supplied SD must be squared when restoring \\(Q\\).</p><h2>Update exactly the records that changed</h2><p>Replace \\(a\\) by \\(b\\): keep \\(n\\), use \\(T-a+b\\) and \\(Q-a^2+b^2\\). The sum of squares change is \\(b^2-a^2\\), not \\((b-a)^2\\).</p><p>Add \\(t\\): use \\(n+1,\\ T+t,\\ Q+t^2\\). Remove \\(a\\): use \\(n-1,\\ T-a,\\ Q-a^2\\), leaving at least one record. A duplicate means one extra copy: remove only that copy. Reorder the actual list to check a median.</p><h2>Recover two missing observations</h2><p>Subtract known records from the required totals to find \\(s=p+q\\) and \\(r=p^2+q^2\\). Then \\(pq=\\frac{s^2-r}{2}\\), and the two missing values solve</p>\\[z^2-sz+\\frac{s^2-r}{2}=0.\\]<p>Real values require \\((p-q)^2=2r-s^2\\ge0\\). Keep every valid assignment, apply any order or context restriction, and restore both original moments. A mean alone usually leaves the pair undetermined.</p><h2>Choose an additional real observation</h2><p>Adding \\(t\\) to \\(n\\) records with mean \\(\\bar{x}\\) and variance \\(V\\) gives</p>\\[V_{\\mathrm{new}}=\\frac{nV}{n+1}+\\frac{n}{(n+1)^2}(t-\\bar{x})^2.\\]<p>The real minimum is \\(\\frac{nV}{n+1}\\), at \\(t=\\bar{x}\\). Adding the old mean keeps the mean, reduces positive variance and leaves zero variance unchanged. Solve a target condition completely, then apply integer or range restrictions; they can change the minimum.</p>",
+      "checks": "<ul><li>Replacement, addition or removal identified correctly?</li><li>Count and both totals updated in the right order?</li><li>All real branches and original restrictions checked?</li><li>Variance, SD, units and requested accuracy distinguished?</li></ul>",
+      "examTip": "<p>Variance, SD, units and requested accuracy distinguished?</p>"
+    }
+  }
+}

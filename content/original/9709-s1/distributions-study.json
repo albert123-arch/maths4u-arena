@@ -1,0 +1,1159 @@
+{
+  "orig_9709_s1_dist_tables_parameters": {
+    "updatedOn": "2026-11-21",
+    "description": "Build a valid table and recover unknown probabilities from total probability and moments.",
+    "sections": [
+      {
+        "id": "tables_parameters-method-1",
+        "title": "Weights must be normalised",
+        "label": "Normalise the weights",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Use exact fractions, mutually exclusive outcomes and conditional probabilities. Selection models also use combinations from the preceding chapter. This chapter covers finite discrete distributions; named binomial and geometric models follow in the next chapter.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>A variable attaches a number to an outcome</h3><p>A random variable X records a numerical result of a chance experiment. Its possible values form its support. Capital X denotes the variable; lower-case x denotes a value it can take. A finite distribution lists every possible value once and assigns its total probability.</p>\n<h3>Check the table before using it</h3>\\[0\\le p(x)\\le1,\\qquad\\sum_xp(x)=1.\\]<p>The probabilities, not the values of X, sum to one. A parameter obtained from an equation is acceptable only if every table entry remains non-negative. Negative values of X are allowed; negative probabilities are not.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-51-C1",
+            "title": "Normalise the weights",
+            "prompt": "<p>For three outcomes the probabilities are \\(2k,3k,k\\). Find \\(k\\).</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "1/6"
+              }
+            ],
+            "hint": "<p>The probabilities add to one, so \\(6k=1\\).</p>",
+            "solution": "<p>The probabilities add to one, so \\(6k=1\\).</p><ul><li>Answer: \\(\\frac{1}{6}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "tables_parameters-method-2",
+        "title": "Recover two unknown probabilities",
+        "label": "Recover a missing entry",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Unknown entries require independent equations</h3><p>Normalisation supplies one equation. A stated mean or second moment can supply another. Solve, reconstruct the full table, then test every entry and the stated moment. If variance is supplied, first recover the second moment by adding the square of the mean.</p><p><img alt=\"A discrete distribution with separated probability bars and total mass one\" src=\"/assets/original/s1-distributions/probability-bars.svg\"/></p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-51-C2",
+            "title": "Recover a missing entry",
+            "prompt": "<p>The probabilities for \\(X=-1,0,3\\) are \\(\\frac14,b,\\frac12\\). Find \\(b\\).</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "1/4"
+              }
+            ],
+            "hint": "<p>Subtract the two known entries from one.</p>",
+            "solution": "<p>Subtract the two known entries from one.</p><ul><li>Answer: \\(\\frac{1}{4}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "tables_parameters-method-3",
+        "title": "A second moment is not a mean",
+        "label": "Use the second moment",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Expectation is a weighted long-run average</h3>\\[\\mathrm E(X)=\\sum_x xp(x).\\]<p>Multiply each value by its probability and add. The mean need not itself be a possible outcome, and it need not be the most probable value. Over n comparable repetitions, the expected frequency of a value is \\(np(x)\\); it is not a guarantee about a particular run.</p>\n<h3>Variance uses the second moment</h3>\\[\\begin{aligned}\\mathrm E(X^2)&amp;=\\sum_xx^2p(x),\\\\\\operatorname{Var}(X)&amp;=\\mathrm E(X^2)-[\\mathrm E(X)]^2.\\end{aligned}\\]<p>Square the value before weighting it. Do not square the probability. Variance is non-negative and has squared units; the standard deviation is its non-negative square root. Keep fractions exact until a requested final rounding.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-51-C3",
+            "title": "Use the second moment",
+            "prompt": "<p>A variable is \\(-1\\) with probability \\(\\frac13\\) and \\(2\\) otherwise. Find its variance.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>The first moment is \\(1\\) and the second moment is \\(3\\). Subtract the square of the mean.</p>",
+            "solution": "<p>The first moment is \\(1\\) and the second moment is \\(3\\). Subtract the square of the mean.</p><ul><li>Answer: \\(2\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "tables_parameters-method-4",
+        "title": "Normalisation and a mean determine a parameter",
+        "label": "Identify a parameter by its mean",
+        "minutes": 7,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The weighted mean is \\(\\frac12+4(\\frac12-p)\\). Equate this to the given mean.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-51-C4",
+            "title": "Identify a parameter by its mean",
+            "prompt": "<p>The probabilities at \\(0,1,4\\) are \\(p,\\frac12,\\frac12-p\\). The mean is \\(\\frac32\\). Find \\(p\\).</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "1/4"
+              }
+            ],
+            "hint": "<p>The weighted mean is \\(\\frac12+4(\\frac12-p)\\). Equate this to the given mean.</p>",
+            "solution": "<p>The weighted mean is \\(\\frac12+4(\\frac12-p)\\). Equate this to the given mean.</p><ul><li>Answer: \\(\\frac{1}{4}\\)</li></ul>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<ul><li>The mean is not the unweighted average of the listed values.</li><li>\\(\\mathrm E(X^2)\\) differs from the square of \\(\\mathrm E(X)\\).</li><li>Do not square probabilities when finding the second moment.</li><li>A normalised table can still be invalid if one entry is negative.</li></ul>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Weights must be normalised",
+        "question": "<p>X has the following distribution, with positive k.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(-3\\)</th><th scope=\"col\">\\(0\\)</th><th scope=\"col\">\\(2\\)</th></tr></thead><tbody><tr><td>\\(\\mathrm P(X=x)\\)</td><td>\\(k\\)</td><td>\\(3 k\\)</td><td>\\(2 k\\)</td></tr></tbody></table></div><p>Find k, \\(\\mathrm E(X)\\), \\(\\operatorname{Var}(X)\\), and \\(\\mathrm P(X&gt;\\mathrm E(X))\\).</p>",
+        "solution": [
+          "<p>Sum the probability coefficients, then divide one by that sum. Form the weighted moments. For the final probability, compare each possible value with the exact mean and add only the entries above it.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(-3\\)</td><td>\\(\\frac{1}{6}\\)</td></tr><tr><td>\\(0\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{1}{3}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(-3\\)</td><td>\\(- \\frac{1}{2}\\)</td><td>\\(\\frac{3}{2}\\)</td></tr><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{2}{3}\\)</td><td>\\(\\frac{4}{3}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{1}{6},\\\\\\mathrm E(X^2)&=\\frac{17}{6},\\\\\\operatorname{Var}(X)&=\\frac{17}{6}-(\\frac{1}{6})^2\\\\&=\\frac{101}{36}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Normalising constant k: \\(\\frac{1}{6}\\).</p>",
+          "<p>Expected value: \\(\\frac{1}{6}\\).</p>",
+          "<p>Variance: \\(\\frac{101}{36}\\).</p><p>Probability above the mean: \\(\\frac{1}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover two unknown probabilities",
+        "question": "<p>X has mean \\(\\frac{8}{3}\\) and this distribution.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(0\\)</th><th scope=\"col\">\\(3\\)</th><th scope=\"col\">\\(7\\)</th></tr></thead><tbody><tr><td>\\(\\mathrm P(X=x)\\)</td><td>\\(\\frac{1}{3}\\)</td><td>\\(p\\)</td><td>\\(q\\)</td></tr></tbody></table></div><p>Find p, q, \\(\\mathrm E(X)\\) and \\(\\operatorname{Var}(X)\\).</p>",
+        "solution": [
+          "<p>Use normalisation and the stated moment as separate equations. Solve simultaneously and check that both probabilities lie between zero and one. Use squared values in a second-moment equation.</p>",
+          "\\[\\begin{aligned}p+q&=\\frac{2}{3},\\\\3p+7q&=\\frac{8}{3}.\\end{aligned}\\]",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(\\frac{1}{3}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{1}{6}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{3}{2}\\)</td><td>\\(\\frac{9}{2}\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{7}{6}\\)</td><td>\\(\\frac{49}{6}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{8}{3},\\\\\\mathrm E(X^2)&=\\frac{38}{3},\\\\\\operatorname{Var}(X)&=\\frac{38}{3}-(\\frac{8}{3})^2\\\\&=\\frac{50}{9}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Probability p: \\(\\frac{1}{2}\\).</p>",
+          "<p>Probability q: \\(\\frac{1}{6}\\).</p><p>Expected value: \\(\\frac{8}{3}\\).</p><p>Variance: \\(\\frac{50}{9}\\).</p>"
+        ]
+      },
+      {
+        "title": "A second moment is not a mean",
+        "question": "<p>X has second moment \\(3\\) and this distribution.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(-3\\)</th><th scope=\"col\">\\(0\\)</th><th scope=\"col\">\\(2\\)</th></tr></thead><tbody><tr><td>\\(\\mathrm P(X=x)\\)</td><td>\\(p\\)</td><td>\\(\\frac{1}{2}\\)</td><td>\\(q\\)</td></tr></tbody></table></div><p>Find p, q, \\(\\mathrm E(X)\\) and \\(\\operatorname{Var}(X)\\).</p>",
+        "solution": [
+          "<p>Use normalisation and the stated moment as separate equations. Solve simultaneously and check that both probabilities lie between zero and one. Use squared values in a second-moment equation.</p>",
+          "\\[\\begin{aligned}p+q&=\\frac{1}{2},\\\\9p+4q&=3.\\end{aligned}\\]",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(-3\\)</td><td>\\(\\frac{1}{5}\\)</td></tr><tr><td>\\(0\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{3}{10}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(-3\\)</td><td>\\(- \\frac{3}{5}\\)</td><td>\\(\\frac{9}{5}\\)</td></tr><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{3}{5}\\)</td><td>\\(\\frac{6}{5}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=0,\\\\\\mathrm E(X^2)&=3,\\\\\\operatorname{Var}(X)&=3-(0)^2\\\\&=3.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Probability p: \\(\\frac{1}{5}\\).</p>",
+          "<p>Probability q: \\(\\frac{3}{10}\\).</p><p>Expected value: \\(0\\).</p><p>Variance: \\(3\\).</p>"
+        ]
+      },
+      {
+        "title": "Normalisation and a mean determine a parameter",
+        "question": "<p>X takes values −1, 0, 2 with probabilities t, 1−3t, 2t respectively. Its mean is \\(\\frac{3}{5}\\). Find t, \\(\\mathrm P(X=0)\\), \\(\\mathrm E(X^2)\\), \\(\\operatorname{Var}(X)\\), then choose the correct variance rule.</p>",
+        "solution": [
+          "<p>The mean equation is \\(-t+4t=3t\\). Check \\(0\\le t\\le\\frac13\\), then reconstruct the table. Variance subtracts the square of the mean, not the mean itself.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(-1\\)</td><td>\\(\\frac{1}{5}\\)</td></tr><tr><td>\\(0\\)</td><td>\\(\\frac{2}{5}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{2}{5}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(-1\\)</td><td>\\(- \\frac{1}{5}\\)</td><td>\\(\\frac{1}{5}\\)</td></tr><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{4}{5}\\)</td><td>\\(\\frac{8}{5}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{3}{5},\\\\\\mathrm E(X^2)&=\\frac{9}{5},\\\\\\operatorname{Var}(X)&=\\frac{9}{5}-(\\frac{3}{5})^2\\\\&=\\frac{36}{25}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Parameter t: \\(\\frac{1}{5}\\).</p>",
+          "<p>Probability of zero: \\(\\frac{2}{5}\\).</p>",
+          "<p>Second moment: \\(\\frac{9}{5}\\).</p><p>Variance: \\(\\frac{36}{25}\\).</p><p>Correct conclusion: Subtract the square of the mean from the second moment.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Distributions from finite experiments",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_dist_finite_experiments"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Support",
+        "definition": "<p>The values a variable can take with positive probability.</p>"
+      },
+      {
+        "term": "Probability mass",
+        "definition": "<p>The probability attached to one discrete value.</p>"
+      },
+      {
+        "term": "Expected value",
+        "definition": "<p>The sum of each value times its probability.</p>"
+      },
+      {
+        "term": "Second moment",
+        "definition": "<p>The expected value of the square. Use it to calculate variance.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>A variable attaches a number to an outcome</h2><p>A random variable X records a numerical result of a chance experiment. Its possible values form its support. Capital X denotes the variable; lower-case x denotes a value it can take. A finite distribution lists every possible value once and assigns its total probability.</p><h2>Check the table before using it</h2><p>The probabilities, not the values of X, sum to one. A parameter obtained from an equation is acceptable only if every table entry remains non-negative. Negative values of X are allowed; negative probabilities are not.</p>\\[0\\le p(x)\\le1,\\qquad\\sum_xp(x)=1.\\]<h2>Expectation is a weighted long-run average</h2><p>Multiply each value by its probability and add. The mean need not itself be a possible outcome, and it need not be the most probable value. Over n comparable repetitions, the expected frequency of a value is \\(np(x)\\); it is not a guarantee about a particular run.</p>\\[\\mathrm E(X)=\\sum_x xp(x).\\]<h2>Variance uses the second moment</h2><p>Square the value before weighting it. Do not square the probability. Variance is non-negative and has squared units; the standard deviation is its non-negative square root. Keep fractions exact until a requested final rounding.</p>\\[\\begin{aligned}\\mathrm E(X^2)&amp;=\\sum_xx^2p(x),\\\\\\operatorname{Var}(X)&amp;=\\mathrm E(X^2)-[\\mathrm E(X)]^2.\\end{aligned}\\]<h2>Unknown entries require independent equations</h2><p>Normalisation supplies one equation. A stated mean or second moment can supply another. Solve, reconstruct the full table, then test every entry and the stated moment. If variance is supplied, first recover the second moment by adding the square of the mean.</p>",
+      "checks": "<ol><li>Define the numerical random variable and list its possible values.</li><li>Choose elementary outcomes and justify their probabilities.</li><li>Combine every route giving the same value; check non-negative probabilities summing to one.</li><li>Find the weighted first and second moments, then subtract the square of the mean.</li><li>For a condition, restrict and renormalise the table before recalculating its moments.</li><li>Interpret the result in its units and check any parameter against the original model.</li></ol>",
+      "examTip": "<p>The mean is not the unweighted average of the listed values.</p>"
+    }
+  },
+  "orig_9709_s1_dist_finite_experiments": {
+    "updatedOn": "2026-11-21",
+    "description": "Aggregate elementary outcomes correctly for sums, differences, minima and counts of successes.",
+    "sections": [
+      {
+        "id": "finite_experiments-method-1",
+        "title": "Equal elementary pairs can give an uneven sum",
+        "label": "Aggregate ordered pairs",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Use exact fractions, mutually exclusive outcomes and conditional probabilities. Selection models also use combinations from the preceding chapter. This chapter covers finite discrete distributions; named binomial and geometric models follow in the next chapter.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Start with the experiment, not a familiar-looking table</h3><p>For two independent uniform choices, a grid of ordered elementary pairs is equally likely. The numerical result need not be uniform: several pairs can give one value. With biased choices, multiply the actual branch probabilities instead of counting grid cells alone.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-52-C1",
+            "title": "Aggregate ordered pairs",
+            "prompt": "<p>Two independent draws are uniform on \\(\\{1,2,3,4\\}\\). Find the probability their sum is \\(5\\).</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "1/4"
+              }
+            ],
+            "hint": "<p>The pairs \\((1,4),(2,3),(3,2),(4,1)\\) give the required sum. There are sixteen equally likely ordered pairs.</p>",
+            "solution": "<p>The pairs \\((1,4),(2,3),(3,2),(4,1)\\) give the required sum. There are sixteen equally likely ordered pairs.</p><ul><li>Answer: \\(\\frac{1}{4}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "finite_experiments-method-2",
+        "title": "An absolute difference aggregates both orders",
+        "label": "Count both directions",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Aggregate equal results</h3><p>If X is a sum, product, minimum or absolute difference, evaluate X on every permitted outcome. Add the probabilities of all outcomes with the same result. A repeated face label still represents separate physical faces when the selection is uniform over faces.</p><p><img alt=\"Nine equally likely ordered pairs aggregate into six possible sum values\" src=\"/assets/original/s1-distributions/sum-grid.svg\"/></p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-52-C2",
+            "title": "Count both directions",
+            "prompt": "<p>Choose twice independently from \\(\\{1,2,3\\}\\), uniformly. Find the probability the absolute difference is \\(1\\).</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "4/9"
+              }
+            ],
+            "hint": "<p>A difference of one arises from two neighbouring pairs in either order, out of nine possible ordered pairs.</p>",
+            "solution": "<p>A difference of one arises from two neighbouring pairs in either order, out of nine possible ordered pairs.</p><ul><li>Answer: \\(\\frac{4}{9}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "finite_experiments-method-3",
+        "title": "A minimum need not be uniform",
+        "label": "Translate a minimum event",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Check support and symmetry</h3><p>An absolute difference cannot be negative. The largest minimum cannot exceed the largest original value. A maximum or minimum usually has an uneven distribution. Symmetry can check a table but does not replace its construction.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-52-C3",
+            "title": "Translate a minimum event",
+            "prompt": "<p>Two independent scores are uniform on the integers from \\(1\\) to \\(5\\). Find the probability their minimum exceeds \\(3\\).</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "4/25"
+              }
+            ],
+            "hint": "<p>Both scores must be in \\(\\{4,5\\}\\). Multiply their independent probabilities.</p>",
+            "solution": "<p>Both scores must be in \\(\\{4,5\\}\\). Multiply their independent probabilities.</p><ul><li>Answer: \\(\\frac{4}{25}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "finite_experiments-method-4",
+        "title": "Independent does not mean identical",
+        "label": "Keep different probabilities",
+        "minutes": 7,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Different trial probabilities need their own branches</h3><p>A count of successes from three independent trials can be found using eight success/failure paths. If success probabilities differ, the probabilities of paths with the same success count can differ too. Do not apply an identical-trial model without checking its assumptions.</p>\n<h3>Calculate moments from the resulting table</h3><p>Once paths are aggregated, use the same weighted-moment method as in the first lesson. This also works when the result is not a sum. A correct mean alone does not prove that the probability table is correct.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-52-C4",
+            "title": "Keep different probabilities",
+            "prompt": "<p>Two independent attempts have success probabilities \\(\\frac14\\) and \\(\\frac12\\). Find the probability of exactly one success.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "1/2"
+              }
+            ],
+            "hint": "<p>Add success then failure and failure then success.</p>",
+            "solution": "<p>Add success then failure and failure then success.</p><ul><li>Answer: \\(\\frac{1}{2}\\)</li></ul>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<ul><li>Different numerical results need not be equally likely.</li><li>Ordered pairs and unordered selections are different sample spaces.</li><li>Keep separate physical faces even when labels repeat.</li><li>Independent trials need not have the same success probability.</li></ul>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Equal elementary pairs can give an uneven sum",
+        "question": "<p>A fair spinner has three equally likely sectors labelled 0, 2, 5. Spin it twice independently. X is the sum of the two labels.</p><p>Find \\(\\mathrm P(X=5)\\), \\(\\mathrm E(X)\\) and \\(\\operatorname{Var}(X)\\).</p>",
+        "solution": [
+          "<p>List the nine ordered pairs, each with probability \\(\\frac{1}{9}\\). Evaluate the specified function on each pair, then aggregate equal results. The resulting values are not assumed equally likely.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(\\frac{1}{9}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{2}{9}\\)</td></tr><tr><td>\\(4\\)</td><td>\\(\\frac{1}{9}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{2}{9}\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{2}{9}\\)</td></tr><tr><td>\\(10\\)</td><td>\\(\\frac{1}{9}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{4}{9}\\)</td><td>\\(\\frac{8}{9}\\)</td></tr><tr><td>\\(4\\)</td><td>\\(\\frac{4}{9}\\)</td><td>\\(\\frac{16}{9}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{10}{9}\\)</td><td>\\(\\frac{50}{9}\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{14}{9}\\)</td><td>\\(\\frac{98}{9}\\)</td></tr><tr><td>\\(10\\)</td><td>\\(\\frac{10}{9}\\)</td><td>\\(\\frac{100}{9}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{14}{3},\\\\\\mathrm E(X^2)&=\\frac{272}{9},\\\\\\operatorname{Var}(X)&=\\frac{272}{9}-(\\frac{14}{3})^2\\\\&=\\frac{76}{9}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Probability of the stated sum: \\(\\frac{2}{9}\\).</p>",
+          "<p>Expected value: \\(\\frac{14}{3}\\).</p>",
+          "<p>Variance: \\(\\frac{76}{9}\\).</p>"
+        ]
+      },
+      {
+        "title": "An absolute difference aggregates both orders",
+        "question": "<p>A fair spinner has three equally likely sectors labelled 1, 3, 6. Spin it twice independently. X is the absolute difference of the two labels.</p><p>Find \\(\\mathrm P(X=0)\\), \\(\\mathrm E(X)\\), \\(\\operatorname{Var}(X)\\), and \\(\\mathrm P(X\\ge 3 \\mid  X&gt;0)\\).</p>",
+        "solution": [
+          "<p>List the nine ordered pairs, each with probability \\(\\frac{1}{9}\\). Evaluate the specified function on each pair, then aggregate equal results. The resulting values are not assumed equally likely.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(\\frac{1}{3}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{2}{9}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{2}{9}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{2}{9}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{4}{9}\\)</td><td>\\(\\frac{8}{9}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{2}{3}\\)</td><td>\\(2\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{10}{9}\\)</td><td>\\(\\frac{50}{9}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{20}{9},\\\\\\mathrm E(X^2)&=\\frac{76}{9},\\\\\\operatorname{Var}(X)&=\\frac{76}{9}-(\\frac{20}{9})^2\\\\&=\\frac{284}{81}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Probability of zero difference: \\(\\frac{1}{3}\\).</p>",
+          "<p>Expected value: \\(\\frac{20}{9}\\).</p>",
+          "<p>Variance: \\(\\frac{284}{81}\\).</p><p>Conditional probability: \\(\\frac{2}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "A minimum need not be uniform",
+        "question": "<p>A fair spinner has three equally likely sectors labelled 2, 4, 7. Spin it twice independently. X is the smaller value of the two labels.</p><p>Find \\(\\mathrm P(X=2)\\), \\(\\mathrm E(X)\\) and \\(\\operatorname{Var}(X)\\).</p>",
+        "solution": [
+          "<p>List the nine ordered pairs, each with probability \\(\\frac{1}{9}\\). Evaluate the specified function on each pair, then aggregate equal results. The resulting values are not assumed equally likely.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(2\\)</td><td>\\(\\frac{5}{9}\\)</td></tr><tr><td>\\(4\\)</td><td>\\(\\frac{1}{3}\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{1}{9}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(2\\)</td><td>\\(\\frac{10}{9}\\)</td><td>\\(\\frac{20}{9}\\)</td></tr><tr><td>\\(4\\)</td><td>\\(\\frac{4}{3}\\)</td><td>\\(\\frac{16}{3}\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{7}{9}\\)</td><td>\\(\\frac{49}{9}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{29}{9},\\\\\\mathrm E(X^2)&=13,\\\\\\operatorname{Var}(X)&=13-(\\frac{29}{9})^2\\\\&=\\frac{212}{81}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Probability of the smallest label: \\(\\frac{5}{9}\\).</p>",
+          "<p>Expected value: \\(\\frac{29}{9}\\).</p>",
+          "<p>Variance: \\(\\frac{212}{81}\\).</p>"
+        ]
+      },
+      {
+        "title": "Independent does not mean identical",
+        "question": "<p>Three independent trials have success probabilities \\(\\frac{1}{3}\\), \\(\\frac{1}{2}\\), \\(\\frac{3}{4}\\). X is the total number of successes. Find \\(\\mathrm P(X=2)\\), \\(\\mathrm E(X)\\) and \\(\\operatorname{Var}(X)\\), then choose the valid model statement.</p>",
+        "solution": [
+          "<p>Multiply the actual success/failure probabilities along each of the eight paths. Add paths with the same success count. Independence permits multiplication but does not make unequal trials identical.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(\\frac{1}{12}\\)</td></tr><tr><td>\\(1\\)</td><td>\\(\\frac{3}{8}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{5}{12}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{1}{8}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(1\\)</td><td>\\(\\frac{3}{8}\\)</td><td>\\(\\frac{3}{8}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{5}{6}\\)</td><td>\\(\\frac{5}{3}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{3}{8}\\)</td><td>\\(\\frac{9}{8}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{19}{12},\\\\\\mathrm E(X^2)&=\\frac{19}{6},\\\\\\operatorname{Var}(X)&=\\frac{19}{6}-(\\frac{19}{12})^2\\\\&=\\frac{95}{144}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Probability of two successes: \\(\\frac{5}{12}\\).</p>",
+          "<p>Expected value: \\(\\frac{19}{12}\\).</p>",
+          "<p>Variance: \\(\\frac{95}{144}\\).</p><p>Correct conclusion: Use the actual probability of each of the eight paths.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Discrete variables, tables and unknown probabilities",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_dist_tables_parameters"
+      },
+      {
+        "title": "Sampling without replacement and stopping positions",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_dist_without_replacement"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Support",
+        "definition": "<p>The values a variable can take with positive probability.</p>"
+      },
+      {
+        "term": "Probability mass",
+        "definition": "<p>The probability attached to one discrete value.</p>"
+      },
+      {
+        "term": "Expected value",
+        "definition": "<p>The sum of each value times its probability.</p>"
+      },
+      {
+        "term": "Second moment",
+        "definition": "<p>The expected value of the square. Use it to calculate variance.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Start with the experiment, not a familiar-looking table</h2><p>For two independent uniform choices, a grid of ordered elementary pairs is equally likely. The numerical result need not be uniform: several pairs can give one value. With biased choices, multiply the actual branch probabilities instead of counting grid cells alone.</p><h2>Aggregate equal results</h2><p>If X is a sum, product, minimum or absolute difference, evaluate X on every permitted outcome. Add the probabilities of all outcomes with the same result. A repeated face label still represents separate physical faces when the selection is uniform over faces.</p><h2>Check support and symmetry</h2><p>An absolute difference cannot be negative. The largest minimum cannot exceed the largest original value. A maximum or minimum usually has an uneven distribution. Symmetry can check a table but does not replace its construction.</p><h2>Different trial probabilities need their own branches</h2><p>A count of successes from three independent trials can be found using eight success/failure paths. If success probabilities differ, the probabilities of paths with the same success count can differ too. Do not apply an identical-trial model without checking its assumptions.</p><h2>Calculate moments from the resulting table</h2><p>Once paths are aggregated, use the same weighted-moment method as in the first lesson. This also works when the result is not a sum. A correct mean alone does not prove that the probability table is correct.</p>",
+      "checks": "<ol><li>Define the numerical random variable and list its possible values.</li><li>Choose elementary outcomes and justify their probabilities.</li><li>Combine every route giving the same value; check non-negative probabilities summing to one.</li><li>Find the weighted first and second moments, then subtract the square of the mean.</li><li>For a condition, restrict and renormalise the table before recalculating its moments.</li><li>Interpret the result in its units and check any parameter against the original model.</li></ol>",
+      "examTip": "<p>Different numerical results need not be equally likely.</p>"
+    }
+  },
+  "orig_9709_s1_dist_without_replacement": {
+    "updatedOn": "2026-11-21",
+    "description": "Construct distributions from physical subsets and finite stopping rules without continuing a stopped path.",
+    "sections": [
+      {
+        "id": "without_replacement-method-1",
+        "title": "The full table counts marked subsets",
+        "label": "Use feasible compositions",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Use exact fractions, mutually exclusive outcomes and conditional probabilities. Selection models also use combinations from the preceding chapter. This chapter covers finite discrete distributions; named binomial and geometric models follow in the next chapter.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Sampling changes the available objects</h3><p>Without replacement, a later draw depends on what has already been removed. For a uniformly selected unordered subset, every physical subset of the stated size has equal probability. Equal labels do not merge the underlying objects before probabilities are counted.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-53-C1",
+            "title": "Use feasible compositions",
+            "prompt": "<p>Draw three counters without replacement from four red and three blue. Find the probability of exactly two red counters.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "18/35"
+              }
+            ],
+            "hint": "<p>Count the choices of two red counters and one blue counter. Divide by all three-counter selections.</p>",
+            "solution": "<p>Count the choices of two red counters and one blue counter. Divide by all three-counter selections.</p><ul><li>Answer: \\(\\frac{18}{35}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "without_replacement-method-2",
+        "title": "Equal labels still belong to different physical counters",
+        "label": "Count identical labels as physical objects",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Count every feasible composition</h3><p>If a population contains R marked and B unmarked objects and n are selected, the probability of r marked objects is obtained by choosing r of the marked objects and n−r of the others, then dividing by all n-subsets. Include only feasible integer values of r.</p>\\[\\mathrm P(X=r)=\\frac{\\binom Rr\\binom B{n-r}}{\\binom{R+B}n}.\\]<p>This is a counting construction; no new named-distribution formula is required. A sequential tree gives the same result if all orders producing a composition are included.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-53-C2",
+            "title": "Count identical labels as physical objects",
+            "prompt": "<p>Five counters include two white counters. A pair is sampled without replacement. Find the probability both are white.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "1/10"
+              }
+            ],
+            "hint": "<p>Only one physical pair uses both white counters. All ten physical pairs are equally likely.</p>",
+            "solution": "<p>Only one physical pair uses both white counters. All ten physical pairs are equally likely.</p><ul><li>Answer: \\(\\frac{1}{10}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "without_replacement-method-3",
+        "title": "The first marked draw includes the success",
+        "label": "Stop at the first marked counter",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>A stopping variable records a position</h3><p>If X is the draw on which the first marked object appears, X counts draws, not preceding failures. If X is the position of the last marked object, all marked objects must have appeared by that position. Find the minimum and maximum possible positions before calculating.</p><p><img alt=\"The first marked draw has positions one to four and a decreasing probability table\" src=\"/assets/original/s1-distributions/stopping-positions.svg\"/></p>\n<h3>Do not continue a terminal path</h3><p>Multiply probabilities along a path only until its stopping condition is met. Add all terminal paths with the same draw count. In a finite bag the process must stop by a definite final draw; check that the terminal probabilities sum to one.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-53-C3",
+            "title": "Stop at the first marked counter",
+            "prompt": "<p>Two of five shuffled counters are marked. Find the probability the first marked counter appears second.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "3/10"
+              }
+            ],
+            "hint": "<p>The first must be unmarked and the second marked. Multiply \\(\\frac35\\cdot\\frac24\\).</p>",
+            "solution": "<p>The first must be unmarked and the second marked. Multiply \\(\\frac35\\cdot\\frac24\\).</p><ul><li>Answer: \\(\\frac{3}{10}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "without_replacement-method-4",
+        "title": "The final marked position has a finite bound",
+        "label": "Fix the last marked position",
+        "minutes": 7,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Conditioning changes the support</h3><p>Given that the stopping position lies in a range, discard positions outside it and divide the retained probabilities by their sum. The conditional mean and variance use this new normalised table.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-53-C4",
+            "title": "Fix the last marked position",
+            "prompt": "<p>Two marked counters are in a random ordering of seven counters. Find the probability the last marked counter appears in position four.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "1/7"
+              }
+            ],
+            "hint": "<p>One marked position is fixed at four. There are three choices for the earlier one, among \\(\\binom72\\) position pairs.</p>",
+            "solution": "<p>One marked position is fixed at four. There are three choices for the earlier one, among \\(\\binom72\\) position pairs.</p><ul><li>Answer: \\(\\frac{1}{7}\\)</li></ul>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<ul><li>A uniform physical subset is not a uniform visible pattern.</li><li>A stopping position includes the successful draw.</li><li>Do not replace changing denominators by independent trial probabilities.</li><li>Only the original possible positions can remain after conditioning.</li></ul>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "The full table counts marked subsets",
+        "question": "<p>A bag contains 2 marked and 3 unmarked counters. Select two physical counters uniformly without replacement. X is the number marked. Find \\(\\mathrm P(X=0)\\), \\(\\mathrm P(X=1)\\), \\(\\mathrm P(X=2)\\), \\(\\mathrm E(X)\\) and \\(\\operatorname{Var}(X)\\).</p>",
+        "solution": [
+          "<p>List unordered subsets of physical counters, each with probability \\(\\frac{1}{10}\\). Equal labels retain their physical multiplicities. Group subsets by their numerical result, then calculate the moments.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(\\frac{3}{10}\\)</td></tr><tr><td>\\(1\\)</td><td>\\(\\frac{3}{5}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{1}{10}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(1\\)</td><td>\\(\\frac{3}{5}\\)</td><td>\\(\\frac{3}{5}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{1}{5}\\)</td><td>\\(\\frac{2}{5}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{4}{5},\\\\\\mathrm E(X^2)&=1,\\\\\\operatorname{Var}(X)&=1-(\\frac{4}{5})^2\\\\&=\\frac{9}{25}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Probability of 0 marked: \\(\\frac{3}{10}\\).</p>",
+          "<p>Probability of 1 marked: \\(\\frac{3}{5}\\).</p>",
+          "<p>Probability of 2 marked: \\(\\frac{1}{10}\\).</p><p>Expected value: \\(\\frac{4}{5}\\).</p><p>Variance: \\(\\frac{9}{25}\\).</p>"
+        ]
+      },
+      {
+        "title": "Equal labels still belong to different physical counters",
+        "question": "<p>Four different physical counters are labelled 1, 2, 2, 5. Select two uniformly without replacement. X is the sum of their labels. Find the number of physical subsets, \\(\\mathrm P(X=4)\\), \\(\\mathrm E(X)\\) and \\(\\operatorname{Var}(X)\\).</p>",
+        "solution": [
+          "<p>List unordered subsets of physical counters, each with probability \\(\\frac{1}{6}\\). Equal labels retain their physical multiplicities. Group subsets by their numerical result, then calculate the moments.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(3\\)</td><td>\\(\\frac{1}{3}\\)</td></tr><tr><td>\\(4\\)</td><td>\\(\\frac{1}{6}\\)</td></tr><tr><td>\\(6\\)</td><td>\\(\\frac{1}{6}\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{1}{3}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(3\\)</td><td>\\(1\\)</td><td>\\(3\\)</td></tr><tr><td>\\(4\\)</td><td>\\(\\frac{2}{3}\\)</td><td>\\(\\frac{8}{3}\\)</td></tr><tr><td>\\(6\\)</td><td>\\(1\\)</td><td>\\(6\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{7}{3}\\)</td><td>\\(\\frac{49}{3}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=5,\\\\\\mathrm E(X^2)&=28,\\\\\\operatorname{Var}(X)&=28-(5)^2\\\\&=3.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Physical two-counter subsets: \\(6\\).</p>",
+          "<p>Probability of the stated sum: \\(\\frac{1}{6}\\).</p>",
+          "<p>Expected value: \\(5\\).</p><p>Variance: \\(3\\).</p>"
+        ]
+      },
+      {
+        "title": "The first marked draw includes the success",
+        "question": "<p>A bag contains 2 marked and 4 unmarked counters. Draw without replacement until the first marked counter appears. X is its draw position.</p><p>Find the largest possible X, \\(\\mathrm P(X=3)\\), \\(\\mathrm E(X)\\) and \\(\\operatorname{Var}(X)\\).</p>",
+        "solution": [
+          "<p>In a random ordering, every subset of marked positions is equally likely. Take its minimum for the first marked draw or its maximum for the last. This gives the terminal distribution without continuing a stopped path.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(1\\)</td><td>\\(\\frac{1}{3}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{4}{15}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{1}{5}\\)</td></tr><tr><td>\\(4\\)</td><td>\\(\\frac{2}{15}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{1}{15}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(1\\)</td><td>\\(\\frac{1}{3}\\)</td><td>\\(\\frac{1}{3}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{8}{15}\\)</td><td>\\(\\frac{16}{15}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{3}{5}\\)</td><td>\\(\\frac{9}{5}\\)</td></tr><tr><td>\\(4\\)</td><td>\\(\\frac{8}{15}\\)</td><td>\\(\\frac{32}{15}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{1}{3}\\)</td><td>\\(\\frac{5}{3}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{7}{3},\\\\\\mathrm E(X^2)&=7,\\\\\\operatorname{Var}(X)&=7-(\\frac{7}{3})^2\\\\&=\\frac{14}{9}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Largest possible position: \\(5\\).</p>",
+          "<p>Probability of position three: \\(\\frac{1}{5}\\).</p>",
+          "<p>Expected value: \\(\\frac{7}{3}\\).</p><p>Variance: \\(\\frac{14}{9}\\).</p>"
+        ]
+      },
+      {
+        "title": "The final marked position has a finite bound",
+        "question": "<p>A bag contains 2 marked and 3 unmarked counters. Draw without replacement until the last marked counter appears. X is its draw position.</p><p>Find \\(\\mathrm P(X=5)\\), \\(\\mathrm E(X)\\), \\(\\operatorname{Var}(X)\\), and \\(\\mathrm P(X=5 \\mid  X\\ge 4)\\).</p>",
+        "solution": [
+          "<p>In a random ordering, every subset of marked positions is equally likely. Take its minimum for the first marked draw or its maximum for the last. This gives the terminal distribution without continuing a stopped path.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(2\\)</td><td>\\(\\frac{1}{10}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{1}{5}\\)</td></tr><tr><td>\\(4\\)</td><td>\\(\\frac{3}{10}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{2}{5}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(2\\)</td><td>\\(\\frac{1}{5}\\)</td><td>\\(\\frac{2}{5}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{3}{5}\\)</td><td>\\(\\frac{9}{5}\\)</td></tr><tr><td>\\(4\\)</td><td>\\(\\frac{6}{5}\\)</td><td>\\(\\frac{24}{5}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(2\\)</td><td>\\(10\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=4,\\\\\\mathrm E(X^2)&=17,\\\\\\operatorname{Var}(X)&=17-(4)^2\\\\&=1.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Probability of the final possible position: \\(\\frac{2}{5}\\).</p>",
+          "<p>Expected value: \\(4\\).</p>",
+          "<p>Variance: \\(1\\).</p><p>Final position given the last two positions: \\(\\frac{4}{7}\\).</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Distributions from finite experiments",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_dist_finite_experiments"
+      },
+      {
+        "title": "Conditional models and finite-stage experiments",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_dist_conditional_processes"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Support",
+        "definition": "<p>The values a variable can take with positive probability.</p>"
+      },
+      {
+        "term": "Probability mass",
+        "definition": "<p>The probability attached to one discrete value.</p>"
+      },
+      {
+        "term": "Expected value",
+        "definition": "<p>The sum of each value times its probability.</p>"
+      },
+      {
+        "term": "Second moment",
+        "definition": "<p>The expected value of the square. Use it to calculate variance.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Sampling changes the available objects</h2><p>Without replacement, a later draw depends on what has already been removed. For a uniformly selected unordered subset, every physical subset of the stated size has equal probability. Equal labels do not merge the underlying objects before probabilities are counted.</p><h2>Count every feasible composition</h2><p>If a population contains R marked and B unmarked objects and n are selected, the probability of r marked objects is obtained by choosing r of the marked objects and n−r of the others, then dividing by all n-subsets. Include only feasible integer values of r.</p>\\[\\mathrm P(X=r)=\\frac{\\binom Rr\\binom B{n-r}}{\\binom{R+B}n}.\\]<h2>A stopping variable records a position</h2><p>If X is the draw on which the first marked object appears, X counts draws, not preceding failures. If X is the position of the last marked object, all marked objects must have appeared by that position. Find the minimum and maximum possible positions before calculating.</p><h2>Do not continue a terminal path</h2><p>Multiply probabilities along a path only until its stopping condition is met. Add all terminal paths with the same draw count. In a finite bag the process must stop by a definite final draw; check that the terminal probabilities sum to one.</p><h2>Conditioning changes the support</h2><p>Given that the stopping position lies in a range, discard positions outside it and divide the retained probabilities by their sum. The conditional mean and variance use this new normalised table.</p>",
+      "checks": "<ol><li>Define the numerical random variable and list its possible values.</li><li>Choose elementary outcomes and justify their probabilities.</li><li>Combine every route giving the same value; check non-negative probabilities summing to one.</li><li>Find the weighted first and second moments, then subtract the square of the mean.</li><li>For a condition, restrict and renormalise the table before recalculating its moments.</li><li>Interpret the result in its units and check any parameter against the original model.</li></ol>",
+      "examTip": "<p>A uniform physical subset is not a uniform visible pattern.</p>"
+    }
+  },
+  "orig_9709_s1_dist_conditional_processes": {
+    "updatedOn": "2026-11-21",
+    "description": "Build mixtures and changing-content models, then renormalise and recompute moments under a condition.",
+    "sections": [
+      {
+        "id": "conditional_processes-method-1",
+        "title": "Weight the bag before combining its scores",
+        "label": "Keep route weights",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Use exact fractions, mutually exclusive outcomes and conditional probabilities. Selection models also use combinations from the preceding chapter. This chapter covers finite discrete distributions; named binomial and geometric models follow in the next chapter.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>A hidden first choice creates a mixture</h3><p>If a bag or machine is chosen first, weight each of its possible final results by the probability of reaching it. A simple average of two tables is justified only when the initial choices are equally likely.</p>\\[\\begin{aligned}\\mathrm P(X=x)&amp;=\\mathrm P(A)\\mathrm P(X=x\\mid A)\\\\&amp;\\quad+\\mathrm P(A')\\mathrm P(X=x\\mid A').\\end{aligned}\\]\n "
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-54-C1",
+            "title": "Keep route weights",
+            "prompt": "<p>Route A is chosen with probability \\(\\frac14\\). Success has probability \\(\\frac12\\) on A and \\(\\frac13\\) on B. Find the overall success probability.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "3/8"
+              }
+            ],
+            "hint": "<p>Weight each route's success probability by its route probability, then add the two contributions.</p>",
+            "solution": "<p>Weight each route's success probability by its route probability, then add the two contributions.</p><ul><li>Answer: \\(\\frac{3}{8}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "conditional_processes-method-2",
+        "title": "A transfer changes the next sample",
+        "label": "Update after a transfer",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>A transfer changes the destination</h3><p>Track the item actually transferred, the resulting contents and the next sample size. Each branch can have a different conditional table. Combine branches only after calculating their probabilities.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-54-C2",
+            "title": "Update after a transfer",
+            "prompt": "<p>Bag A has two red and one blue counter. Bag B has one red and two blue. Move one random counter from A to B, then draw from B. Find the probability of red.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "5/12"
+              }
+            ],
+            "hint": "<p>Moving red gives two reds among four in B. Moving blue gives one red among four. Weight the two cases by the transfer probabilities.</p>",
+            "solution": "<p>Moving red gives two reds among four in B. Moving blue gives one red among four. Weight the two cases by the transfer probabilities.</p><ul><li>Answer: \\(\\frac{5}{12}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "conditional_processes-method-3",
+        "title": "Condition before taking moments",
+        "label": "Renormalise the support",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Restrict and renormalise</h3><p>For an event H with positive probability, retain the outcomes satisfying H and divide each retained probability by \\(\\mathrm P(H)\\).</p>\\[\\mathrm P(X=x\\mid H)=\\frac{\\mathrm P(\\{X=x\\}\\cap H)}{\\mathrm P(H)}.\\]<p>For conditions on X itself, the numerator is the original table entry for each retained value. Conditional expectation is the weighted mean of this new table, not the original mean divided by \\(\\mathrm P(H)\\).</p>\n<h3>Reverse conditioning keeps the route information</h3><p>The final distribution alone can lose which bag or route produced a result. Keep route-labelled probabilities when finding a posterior such as the chance a transferred item was marked given the observed final count.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-54-C3",
+            "title": "Renormalise the support",
+            "prompt": "<p>For \\(X=0,1,2\\) the probabilities are \\(\\frac12,\\frac16,\\frac13\\). Find \\(\\mathrm P(X=2\\mid X&gt;0)\\).</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "2/3"
+              }
+            ],
+            "hint": "<p>After restricting to \\(X&gt;0\\), only values one and two remain. Divide by their combined probability.</p>",
+            "solution": "<p>After restricting to \\(X&gt;0\\), only values one and two remain. Divide by their combined probability.</p><ul><li>Answer: \\(\\frac{2}{3}\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "conditional_processes-method-4",
+        "title": "Only played trials belong to a terminal path",
+        "label": "End the trial sequence correctly",
+        "minutes": 7,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>A stop-and-retry rule has terminal rewards</h3><p>A success may end a game early while a failure leads to another trial. Label complete terminal paths by their actual reward. Do not include an unplayed second trial after a first-stage success.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-54-C4",
+            "title": "End the trial sequence correctly",
+            "prompt": "<p>There are at most two independent attempts. Stop after the first success. Each attempt succeeds with probability \\(\\frac25\\). Find the probability of success on attempt two.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "6/25"
+              }
+            ],
+            "hint": "<p>The second attempt is played after a first failure. Multiply the first failure and the second success probabilities.</p>",
+            "solution": "<p>The second attempt is played after a first failure. Multiply the first failure and the second success probabilities.</p><ul><li>Answer: \\(\\frac{6}{25}\\)</li></ul>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<ul><li>A mixture uses the initial choice weights, not an automatic half-and-half average.</li><li>Recount the destination after a transfer.</li><li>Conditional moments must use a normalised conditional table.</li><li>Do not discard route labels before a reverse probability is calculated.</li></ul>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Weight the bag before combining its scores",
+        "question": "<p>Choose bag A with probability \\(\\frac{2}{5}\\), otherwise bag B. A contains physical tiles labelled 0, 1, 1; B contains 0, 0, 5. Choose one tile uniformly from the selected bag. X is its score. Find \\(\\mathrm P(X&gt;0)\\), \\(\\mathrm E(X)\\), \\(\\operatorname{Var}(X)\\), and \\(\\mathrm P(A \\mid  X&gt;0)\\).</p>",
+        "solution": [
+          "<p>Weight each bag table by its selection probability before adding equal scores. For the posterior, the numerator keeps only positive results reached through A; the denominator includes positive results from both bags.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(\\frac{8}{15}\\)</td></tr><tr><td>\\(1\\)</td><td>\\(\\frac{4}{15}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{1}{5}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(1\\)</td><td>\\(\\frac{4}{15}\\)</td><td>\\(\\frac{4}{15}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(1\\)</td><td>\\(5\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{19}{15},\\\\\\mathrm E(X^2)&=\\frac{79}{15},\\\\\\operatorname{Var}(X)&=\\frac{79}{15}-(\\frac{19}{15})^2\\\\&=\\frac{824}{225}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Probability of a positive score: \\(\\frac{7}{15}\\).</p>",
+          "<p>Expected value: \\(\\frac{19}{15}\\).</p>",
+          "<p>Variance: \\(\\frac{824}{225}\\).</p><p>Bag A given a positive score: \\(\\frac{4}{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "A transfer changes the next sample",
+        "question": "<p>Source bag has 2 marked and 2 unmarked counters; destination bag has 1 marked and 3 unmarked. Transfer one random source counter to the destination, then choose two destination counters uniformly without replacement. X is the number marked in that pair. Find \\(\\mathrm P(X=1)\\), \\(\\mathrm E(X)\\), \\(\\operatorname{Var}(X)\\), and the probability the transferred counter was marked given \\(X=1\\).</p>",
+        "solution": [
+          "<p>Split on the colour transferred. Rebuild the destination on each branch and count physical pairs there. Retain the marked-transfer branch weight for the reverse probability.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(\\frac{9}{20}\\)</td></tr><tr><td>\\(1\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{1}{20}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(1\\)</td><td>\\(\\frac{1}{2}\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{1}{10}\\)</td><td>\\(\\frac{1}{5}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{3}{5},\\\\\\mathrm E(X^2)&=\\frac{7}{10},\\\\\\operatorname{Var}(X)&=\\frac{7}{10}-(\\frac{3}{5})^2\\\\&=\\frac{17}{50}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Probability of one marked in the pair: \\(\\frac{1}{2}\\).</p>",
+          "<p>Expected value: \\(\\frac{3}{5}\\).</p>",
+          "<p>Variance: \\(\\frac{17}{50}\\).</p><p>Marked transfer given one marked in the pair: \\(\\frac{3}{5}\\).</p>"
+        ]
+      },
+      {
+        "title": "Condition before taking moments",
+        "question": "<p>X has the following distribution.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{1}{3}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{1}{6}\\)</td></tr></tbody></table></div><p>Given \\(X&gt;0\\), find the probability of the largest value, the conditional mean and conditional variance. Also give \\(\\mathrm P(X&gt;0)\\) in the original model.</p>",
+        "solution": [
+          "<p>Remove non-positive values and divide each retained probability by \\(\\frac{1}{2}\\). The table below is the conditional distribution. Use it, rather than the original table, for both moments.</p>",
+          "<p>Write \\(H=\\{X&gt;0\\}\\) and \\(p_H(x)=\\mathrm P(X=x\\mid H)\\). The moments below are conditional on H.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x\\mid H)\\)</th></tr></thead><tbody><tr><td>\\(2\\)</td><td>\\(\\frac{2}{3}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{1}{3}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp_H(x)\\)</th><th scope=\"col\">\\(x^2p_H(x)\\)</th></tr></thead><tbody><tr><td>\\(2\\)</td><td>\\(\\frac{4}{3}\\)</td><td>\\(\\frac{8}{3}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{5}{3}\\)</td><td>\\(\\frac{25}{3}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X\\mid H)&=3,\\\\\\mathrm E(X^2\\mid H)&=11,\\\\\\operatorname{Var}(X\\mid H)&=11-(3)^2\\\\&=2.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Original probability of the condition: \\(\\frac{1}{2}\\).</p>",
+          "<p>Conditional probability of the largest value: \\(\\frac{1}{3}\\).</p><p>Expected value: \\(3\\).</p><p>Variance: \\(2\\).</p>"
+        ]
+      },
+      {
+        "title": "Only played trials belong to a terminal path",
+        "question": "<p>A game ends immediately with reward 2 after a first-stage success, whose probability is \\(\\frac{2}{5}\\). Otherwise a second stage succeeds with probability \\(\\frac{1}{3}\\), giving reward 1; failure gives 0. X is the reward. Find \\(\\mathrm P(X=1)\\), \\(\\mathrm E(X)\\), \\(\\operatorname{Var}(X)\\), and \\(\\mathrm P(X=2 \\mid  X&gt;0)\\).</p>",
+        "solution": [
+          "<p>The first success is already terminal. Reward one needs first-stage failure followed by second-stage success. The zero branch needs both failures. There is no second trial on the reward-two branch.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(\\frac{2}{5}\\)</td></tr><tr><td>\\(1\\)</td><td>\\(\\frac{1}{5}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{2}{5}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(1\\)</td><td>\\(\\frac{1}{5}\\)</td><td>\\(\\frac{1}{5}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{4}{5}\\)</td><td>\\(\\frac{8}{5}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=1,\\\\\\mathrm E(X^2)&=\\frac{9}{5},\\\\\\operatorname{Var}(X)&=\\frac{9}{5}-(1)^2\\\\&=\\frac{4}{5}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Probability of reward one: \\(\\frac{1}{5}\\).</p>",
+          "<p>Expected value: \\(1\\).</p>",
+          "<p>Variance: \\(\\frac{4}{5}\\).</p><p>Reward two given positive reward: \\(\\frac{2}{3}\\).</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Sampling without replacement and stopping positions",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_dist_without_replacement"
+      },
+      {
+        "title": "Inverse problems, rewards and decisions",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_dist_inverse_applications"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Support",
+        "definition": "<p>The values a variable can take with positive probability.</p>"
+      },
+      {
+        "term": "Probability mass",
+        "definition": "<p>The probability attached to one discrete value.</p>"
+      },
+      {
+        "term": "Expected value",
+        "definition": "<p>The sum of each value times its probability.</p>"
+      },
+      {
+        "term": "Second moment",
+        "definition": "<p>The expected value of the square. Use it to calculate variance.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>A hidden first choice creates a mixture</h2><p>If a bag or machine is chosen first, weight each of its possible final results by the probability of reaching it. A simple average of two tables is justified only when the initial choices are equally likely.</p>\\[\\begin{aligned}\\mathrm P(X=x)&amp;=\\mathrm P(A)\\mathrm P(X=x\\mid A)\\\\&amp;\\quad+\\mathrm P(A')\\mathrm P(X=x\\mid A').\\end{aligned}\\]<h2>A transfer changes the destination</h2><p>Track the item actually transferred, the resulting contents and the next sample size. Each branch can have a different conditional table. Combine branches only after calculating their probabilities.</p><h2>Restrict and renormalise</h2><p>For an event H with positive probability, retain the outcomes satisfying H and divide each retained probability by \\(\\mathrm P(H)\\).</p>\\[\\mathrm P(X=x\\mid H)=\\frac{\\mathrm P(\\{X=x\\}\\cap H)}{\\mathrm P(H)}.\\]<h2>Reverse conditioning keeps the route information</h2><p>The final distribution alone can lose which bag or route produced a result. Keep route-labelled probabilities when finding a posterior such as the chance a transferred item was marked given the observed final count.</p><h2>A stop-and-retry rule has terminal rewards</h2><p>A success may end a game early while a failure leads to another trial. Label complete terminal paths by their actual reward. Do not include an unplayed second trial after a first-stage success.</p>",
+      "checks": "<ol><li>Define the numerical random variable and list its possible values.</li><li>Choose elementary outcomes and justify their probabilities.</li><li>Combine every route giving the same value; check non-negative probabilities summing to one.</li><li>Find the weighted first and second moments, then subtract the square of the mean.</li><li>For a condition, restrict and renormalise the table before recalculating its moments.</li><li>Interpret the result in its units and check any parameter against the original model.</li></ol>",
+      "examTip": "<p>A mixture uses the initial choice weights, not an automatic half-and-half average.</p>"
+    }
+  },
+  "orig_9709_s1_dist_inverse_applications": {
+    "updatedOn": "2026-11-21",
+    "description": "Recover unknown scores, construct reward tables and compare expected gain with variability.",
+    "sections": [
+      {
+        "id": "inverse_applications-method-1",
+        "title": "Rebuild the table after a negative transformation",
+        "label": "Transform each possible value",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Use exact fractions, mutually exclusive outcomes and conditional probabilities. Selection models also use combinations from the preceding chapter. This chapter covers finite discrete distributions; named binomial and geometric models follow in the next chapter.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>A transformed variable needs a transformed table</h3><p>To handle \\(Y=aX+b\\), apply the transformation to each possible value and keep its probability. Combine any values that become equal. A negative multiplier reverses the ordering; it does not create negative probabilities. Calculate moments directly from the new table. This chapter does not require rules for sums of independent random variables from Statistics 2.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-55-C1",
+            "title": "Transform each possible value",
+            "prompt": "<p>The values \\(-1\\) and \\(3\\) are equally likely for \\(X\\). Find the mean of \\(Y=5-2X\\).</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>The transformed values are seven and minus one, with the same probabilities.</p>",
+            "solution": "<p>The transformed values are seven and minus one, with the same probabilities.</p><ul><li>Answer: \\(3\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "inverse_applications-method-2",
+        "title": "Recover an unknown score before squaring it",
+        "label": "Recover the missing score",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>A missing value is different from a missing probability</h3><p>When a possible score is unknown, its probability remains attached to that score. Substitute the unknown value into the weighted-mean equation and solve. Check the support restrictions, then recompute the second moment and variance.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-55-C2",
+            "title": "Recover the missing score",
+            "prompt": "<p>The values zero and \\(t\\) have equal probability. The mean is \\(2\\). Find \\(t\\).</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>Half of the unknown score is equal to the mean.</p>",
+            "solution": "<p>Half of the unknown score is equal to the mean.</p><ul><li>Answer: \\(4\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "inverse_applications-method-3",
+        "title": "A fair fee and a profitable game differ",
+        "label": "Find a fair fee",
+        "minutes": 6,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>Distinguish gross reward from net gain</h3><p>Net gain is reward minus entry fee, including the loss on a zero-reward outcome. A fair fee gives zero expected net gain; equivalently it equals the expected gross reward. Fairness is a long-run mean statement, not a promise of equal winning and losing chances.</p>\n"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-55-C3",
+            "title": "Find a fair fee",
+            "prompt": "<p>A game pays \\(8\\) pounds on a win and nothing otherwise. The win probability is \\(\\frac14\\). What single entry fee makes the expected net gain zero?</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer (£)",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>The fair fee equals the expected gross prize.</p>",
+            "solution": "<p>The fair fee equals the expected gross prize.</p><ul><li>Answer: \\(2\\)</li></ul>"
+          }
+        ]
+      },
+      {
+        "id": "inverse_applications-method-4",
+        "title": "Equal means do not give equal risk",
+        "label": "Compare variation",
+        "minutes": 7,
+        "level": "core",
+        "intro": "",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<h3>A mean does not describe the risk</h3><p>Two games can have the same expected gain but very different variances and chances of a loss. If a decision rule asks for equal expectation and smaller variance, compare both quantities. Without a stated preference, a larger mean alone does not settle every player's choice.</p>\n<h3>Use exact answers and meaningful units</h3><p>Expectations have the units of the reward; variances have squared units. A probability such as \\(\\mathrm P\\bigl(X&gt;\\mathrm E(X)\\bigr)\\) uses the values exceeding the mean, even if the mean is not on the support. State which values were included.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "S1-FINISH-55-C4",
+            "title": "Compare variation",
+            "prompt": "<p>A random prize is equally likely to be \\(0\\) or \\(8\\) pounds. Find the variance.</p>",
+            "fields": [
+              {
+                "key": "value1",
+                "label": "Answer (£²)",
+                "type": "number",
+                "expected": "16"
+              }
+            ],
+            "hint": "<p>Both values are four pounds from the mean. The two squared deviations are equal.</p>",
+            "solution": "<p>Both values are four pounds from the mean. The two squared deviations are equal.</p><ul><li>Answer: \\(16\\)</li></ul>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<ul><li>Do not attach an unknown score to the wrong probability.</li><li>A negative transformation reverses value order but preserves probabilities.</li><li>Subtract the entry fee on every outcome, including a zero reward.</li><li>Equal expectation does not imply equal variability.</li></ul>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Rebuild the table after a negative transformation",
+        "question": "<p>X has this table.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(-2\\)</td><td>\\(\\frac{1}{5}\\)</td></tr><tr><td>\\(0\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{3}{10}\\)</td></tr></tbody></table></div><p>Define \\(Y=-2X+3\\). Give the corresponding Y-value for each listed X in that order, then \\(\\mathrm E(Y)\\) and \\(\\operatorname{Var}(Y)\\).</p>",
+        "solution": [
+          "<p>Transform every listed value and keep its probability. The negative coefficient reverses the order, so sort the new table before reading it. Calculate the new moments directly.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(Y=x)\\)</th></tr></thead><tbody><tr><td>\\(-3\\)</td><td>\\(\\frac{3}{10}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{1}{5}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(-3\\)</td><td>\\(- \\frac{9}{10}\\)</td><td>\\(\\frac{27}{10}\\)</td></tr><tr><td>\\(3\\)</td><td>\\(\\frac{3}{2}\\)</td><td>\\(\\frac{9}{2}\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{7}{5}\\)</td><td>\\(\\frac{49}{5}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(Y)&=2,\\\\\\mathrm E(Y^2)&=17,\\\\\\operatorname{Var}(Y)&=17-(2)^2\\\\&=13.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Y when \\(X=-2\\): \\(7\\).</p>",
+          "<p>Y when \\(X=0\\): \\(3\\).</p>",
+          "<p>Y when \\(X=3\\): \\(-3\\).</p><p>Expected value: \\(2\\).</p><p>Variance: \\(13\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover an unknown score before squaring it",
+        "question": "<p>X has values 0, 2, a with probabilities \\(\\frac{1}{3}\\), \\(\\frac{1}{2}\\), \\(\\frac{1}{6}\\). Its mean is \\(\\frac{7}{3}\\). Find a, \\(\\mathrm E(X^2)\\), \\(\\operatorname{Var}(X)\\), and \\(\\mathrm P(X&gt;\\mathrm E(X))\\).</p>",
+        "solution": [
+          "<p>Use the mean equation to recover a before calculating its squared contribution. The probability stays attached to a. Check which possible values exceed the recovered mean.</p>",
+          "\\[\\frac{1}{6}a=\\frac{4}{3}.\\]",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(\\frac{1}{3}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(8\\)</td><td>\\(\\frac{1}{6}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(0\\)</td><td>\\(0\\)</td><td>\\(0\\)</td></tr><tr><td>\\(2\\)</td><td>\\(1\\)</td><td>\\(2\\)</td></tr><tr><td>\\(8\\)</td><td>\\(\\frac{4}{3}\\)</td><td>\\(\\frac{32}{3}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{7}{3},\\\\\\mathrm E(X^2)&=\\frac{38}{3},\\\\\\operatorname{Var}(X)&=\\frac{38}{3}-(\\frac{7}{3})^2\\\\&=\\frac{65}{9}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Unknown score a: \\(8\\).</p>",
+          "<p>Second moment: \\(\\frac{38}{3}\\).</p><p>Variance: \\(\\frac{65}{9}\\).</p><p>Probability above the mean: \\(\\frac{1}{6}\\).</p>"
+        ]
+      },
+      {
+        "title": "A fair fee and a profitable game differ",
+        "question": "<p>A game pays gross rewards 0, 5, 12 pounds with probabilities \\(\\frac{1}{2}\\), \\(\\frac{1}{3}\\), \\(\\frac{1}{6}\\). The entry fee is 3 pounds. X is net gain. Find the fair entry fee, \\(\\mathrm E(X)\\), \\(\\operatorname{Var}(X)\\), and \\(\\mathrm P(X&gt;0)\\).</p>",
+        "solution": [
+          "<p>The fair fee is the weighted gross reward. For this actual game subtract the stated fee on every outcome, including the zero gross reward. The table below is for net gain in pounds, so variance is in squared pounds.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(-3\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{1}{3}\\)</td></tr><tr><td>\\(9\\)</td><td>\\(\\frac{1}{6}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(-3\\)</td><td>\\(- \\frac{3}{2}\\)</td><td>\\(\\frac{9}{2}\\)</td></tr><tr><td>\\(2\\)</td><td>\\(\\frac{2}{3}\\)</td><td>\\(\\frac{4}{3}\\)</td></tr><tr><td>\\(9\\)</td><td>\\(\\frac{3}{2}\\)</td><td>\\(\\frac{27}{2}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=\\frac{2}{3},\\\\\\mathrm E(X^2)&=\\frac{58}{3},\\\\\\operatorname{Var}(X)&=\\frac{58}{3}-(\\frac{2}{3})^2\\\\&=\\frac{170}{9}.\\end{aligned}\\]",
+          "<h4>Complete answers</h4><p>Fair entry fee: \\(\\frac{11}{3}\\).</p>",
+          "<p>Expected value: \\(\\frac{2}{3}\\).</p>",
+          "<p>Variance: \\(\\frac{170}{9}\\).</p><p>Probability of positive net gain: \\(\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Equal means do not give equal risk",
+        "question": "<p>Game A gives either -1, 7 pounds of net gain, each equally likely. Game B gives either 1, 5 pounds, each equally likely. Find each mean and variance. A player wants equal expected gain with smaller variance: select the appropriate conclusion.</p>",
+        "solution": [
+          "<p>Use both complete net-gain tables. Equal expectations do not make the distributions or their variances equal. Under the stated rule, compare variance only after checking the means agree.</p>",
+          "<h4>Game A</h4><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(-1\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{1}{2}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(-1\\)</td><td>\\(- \\frac{1}{2}\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(7\\)</td><td>\\(\\frac{7}{2}\\)</td><td>\\(\\frac{49}{2}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=3,\\\\\\mathrm E(X^2)&=25,\\\\\\operatorname{Var}(X)&=25-(3)^2\\\\&=16.\\end{aligned}\\]",
+          "<h4>Game B</h4><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(\\mathrm P(X=x)\\)</th></tr></thead><tbody><tr><td>\\(1\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{1}{2}\\)</td></tr></tbody></table></div>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">\\(xp(x)\\)</th><th scope=\"col\">\\(x^2p(x)\\)</th></tr></thead><tbody><tr><td>\\(1\\)</td><td>\\(\\frac{1}{2}\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><td>\\(5\\)</td><td>\\(\\frac{5}{2}\\)</td><td>\\(\\frac{25}{2}\\)</td></tr></tbody></table></div>",
+          "\\[\\begin{aligned}\\mathrm E(X)&=3,\\\\\\mathrm E(X^2)&=13,\\\\\\operatorname{Var}(X)&=13-(3)^2\\\\&=4.\\end{aligned}\\]<h4>Complete answers</h4><p>Expected gain A: \\(3\\).</p><p>Variance A: \\(16\\).</p><p>Expected gain B: \\(3\\).</p><p>Variance B: \\(4\\).</p><p>Correct conclusion: Choose B: the means agree and its variance is smaller.</p>"
+        ]
+      }
+    ],
+    "related": [
+      {
+        "title": "Conditional models and finite-stage experiments",
+        "href": "/courses/maths4u-9709-s1/topics/orig_9709_s1_dist_conditional_processes"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Support",
+        "definition": "<p>The values a variable can take with positive probability.</p>"
+      },
+      {
+        "term": "Probability mass",
+        "definition": "<p>The probability attached to one discrete value.</p>"
+      },
+      {
+        "term": "Expected value",
+        "definition": "<p>The sum of each value times its probability.</p>"
+      },
+      {
+        "term": "Second moment",
+        "definition": "<p>The expected value of the square. Use it to calculate variance.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>A missing value is different from a missing probability</h2><p>When a possible score is unknown, its probability remains attached to that score. Substitute the unknown value into the weighted-mean equation and solve. Check the support restrictions, then recompute the second moment and variance.</p><h2>A transformed variable needs a transformed table</h2><p>To handle \\(Y=aX+b\\), apply the transformation to each possible value and keep its probability. Combine any values that become equal. A negative multiplier reverses the ordering; it does not create negative probabilities. Calculate moments directly from the new table. This chapter does not require rules for sums of independent random variables from Statistics 2.</p><h2>Distinguish gross reward from net gain</h2><p>Net gain is reward minus entry fee, including the loss on a zero-reward outcome. A fair fee gives zero expected net gain; equivalently it equals the expected gross reward. Fairness is a long-run mean statement, not a promise of equal winning and losing chances.</p><h2>A mean does not describe the risk</h2><p>Two games can have the same expected gain but very different variances and chances of a loss. If a decision rule asks for equal expectation and smaller variance, compare both quantities. Without a stated preference, a larger mean alone does not settle every player's choice.</p><h2>Use exact answers and meaningful units</h2><p>Expectations have the units of the reward; variances have squared units. A probability such as \\(\\mathrm P\\bigl(X&gt;\\mathrm E(X)\\bigr)\\) uses the values exceeding the mean, even if the mean is not on the support. State which values were included.</p>",
+      "checks": "<ol><li>Define the numerical random variable and list its possible values.</li><li>Choose elementary outcomes and justify their probabilities.</li><li>Combine every route giving the same value; check non-negative probabilities summing to one.</li><li>Find the weighted first and second moments, then subtract the square of the mean.</li><li>For a condition, restrict and renormalise the table before recalculating its moments.</li><li>Interpret the result in its units and check any parameter against the original model.</li></ol>",
+      "examTip": "<p>Do not attach an unknown score to the wrong probability.</p>"
+    }
+  }
+}

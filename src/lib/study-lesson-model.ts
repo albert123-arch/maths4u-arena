@@ -12,7 +12,7 @@ export type StudyCheck = {
   id: string;
   title?: string;
   prompt: string;
-  fields: (SquareField & { inverseAngle?: boolean })[];
+  fields: (SquareField & { inverseAngle?: boolean; labelHtml?: string })[];
   hint: string;
 };
 
