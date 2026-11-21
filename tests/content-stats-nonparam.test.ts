@@ -29,7 +29,7 @@ test("Non-parametric: exact signs, all ranks, paired thresholds and MF19 reflect
 });
 test("Non-parametric: every complete key, field omission, rendering, rubric and review family",()=>{
  for(const l of p.lessons){
-  const topic=packageTopic(l.id)!,dto=squarePublicLesson(topic);assert.equal(dto.examples.length,4);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);
+  const topic=packageTopic(l.id)!,dto=squarePublicLesson(topic);assert.equal(dto.examples.length,7);assert(dto.study);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);
   assert(dto.questions.filter(q=>q.collection==="exam").length>=2);
   const raw=JSON.stringify(dto);for(const hidden of ['"expected"','"original_uid"','"ownerProvenance"','"verification"','Maths4U Original'])assert(!raw.includes(hidden),hidden);
   for(const text of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution])])assert(!text.includes("katex-error"),l.id);

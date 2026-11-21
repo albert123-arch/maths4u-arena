@@ -39,7 +39,7 @@ test("Vectors: all coordinates and normalised coefficients are required, with ex
 test("Vectors complete answers, fresh variants, notes and guidance have valid mathematics rendering",()=>{
  for(const lesson of p.lessons){
   const topic=packageTopic(lesson.id)!,dto=squarePublicLesson(topic);
-  assert.equal(dto.examples.length,4);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);
+  assert.equal(dto.examples.length,7);assert(dto.study);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);
   assert(dto.questions.filter(q=>q.collection==="exam").length>=6);
   const raw=JSON.stringify(dto);
   for(const hidden of ['"expected"','"ownerProvenance"','source_uid','source_title','source_exam','teacher_note','"verification"','Maths4U Original'])assert(!raw.includes(hidden),hidden);

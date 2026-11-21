@@ -32,7 +32,7 @@ test('Momentum preserves all 39 owner identities, 91 parts, 307 marks and the 16
 
 test('Momentum checks every field of complete answers, protects provenance and renders mathematical feedback',()=>{
  for(const l of p.lessons){
-  const dto=squarePublicLesson(packageTopic(l.id)!);assert.equal(dto.examples.length,4);assert.equal(dto.questions.filter(q=>q.collection!=='exam').length,8);assert(dto.questions.filter(q=>q.collection==='exam').length>=6);
+  const dto=squarePublicLesson(packageTopic(l.id)!);assert.equal(dto.examples.length,7);assert(dto.study);assert.equal(dto.questions.filter(q=>q.collection!=='exam').length,8);assert(dto.questions.filter(q=>q.collection==='exam').length>=6);
   for(const hidden of ['"expected"','"source_uid"','"ownerProvenance"','"verification"','source_archive'])assert(!JSON.stringify(dto).includes(hidden));
   for(const text of [l.objective,l.before,l.ideas,l.method,...l.examples.flatMap(e=>[e.question,e.solution]),dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution])]){
    assert(!text.includes('katex-error'),l.id);assert(!/[\x00-\x08\x0B\x0C\x0E-\x1F\uFFFD]/.test(text),'Invalid character in '+l.id);

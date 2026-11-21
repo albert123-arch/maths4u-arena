@@ -20,7 +20,7 @@ test("Series: all 68 supplied new identities, four book-sequenced lessons, no un
 test("Series: complete keys, incomplete/wrong formulae, all KaTeX and private source projections",()=>{
  for(const lesson of p.lessons){
   const dto=squarePublicLesson(packageTopic(lesson.id)!);
-  assert.equal(dto.examples.length,4);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);
+  assert.equal(dto.examples.length,7);assert(dto.study);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);
   assert(dto.questions.filter(q=>q.collection==="exam").length>=6);
   const json=JSON.stringify(dto);
   for(const hidden of ['"expected"','"ownerProvenance"','original_uid','original_exam','teacher_note','"verification"','Maths4U Original'])assert(!json.includes(hidden),hidden);

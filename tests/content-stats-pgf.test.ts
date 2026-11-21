@@ -23,7 +23,7 @@ test("PGF: full probability polynomials and rational functions, factorial moment
 });
 test("PGF: every complete key, every omission and wrong field, hidden provenance, rendering and fresh review",()=>{
  for(const l of p.lessons){
-  const dto=squarePublicLesson(packageTopic(l.id)!);assert.equal(dto.examples.length,4);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);assert(dto.questions.filter(q=>q.collection==="exam").length>=6);
+  const dto=squarePublicLesson(packageTopic(l.id)!);assert.equal(dto.examples.length,7);assert(dto.study);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);assert(dto.questions.filter(q=>q.collection==="exam").length>=6);
   for(const hidden of ['"expected"','"source_uid"','"ownerProvenance"','"verification"','Maths4U Original'])assert(!JSON.stringify(dto).includes(hidden));
   for(const text of [dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution])])assert(!text.includes("katex-error"),l.id);
   for(const e of dto.examples)assert(e.question.includes('class="katex"'),e.title+" question has typeset mathematics");

@@ -31,7 +31,7 @@ test("four lessons reuse the complete-answer/review engine without leaking keys 
  const p=contentPackages[0];
  for(const l of p.lessons){
   const topic=packageTopic(l.id)!,dto=squarePublicLesson(topic),raw=JSON.stringify(dto),questions=questionsForTopic(l.id);
-  assert.equal(dto.examples.length,4);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);
+  assert.equal(dto.examples.length,7);assert(dto.study);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);
   for(const forbidden of ['"expected"','"ownerProvenance"','"original_id"','original_source_url','original_exam','"verification"','teacher_review','Maths4U Original','FM June'])assert(!raw.includes(forbidden),forbidden);
   for(const q of questions){
    for(const text of [q.prompt_html,squareHelp(q,"hint"),squareHelp(q,"solution"),...squareMarkingRows(q).map(r=>r.html)])assert(!text.includes("katex-error"),q.id);

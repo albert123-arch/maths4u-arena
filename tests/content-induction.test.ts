@@ -29,6 +29,7 @@ test("Induction: independently authored identities, complete lessons and origina
 test("Induction: complete algebraic steps accept equivalent forms; every missing or wrong field fails",()=>{
  for(const lesson of p.lessons){
   const topic=packageTopic(lesson.id)!,dto=squarePublicLesson(topic);
+  assert.equal(dto.examples.length,7);assert(dto.study);
   assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);
   const raw=JSON.stringify(dto);
   for(const hidden of ['"expected"','"ownerProvenance"','"verification"','"sourceSha256"','Maths4U Original'])assert(!raw.includes(hidden),hidden);

@@ -25,7 +25,7 @@ test("Hooke law: complete calibration, signs, load changes, taut intervals and c
 });
 test("Hooke law: every complete key, omitted/wrong fields, protected provenance, KaTeX, marking and review",()=>{
  for(const l of p.lessons){
-  const dto=squarePublicLesson(packageTopic(l.id)!);assert.equal(dto.examples.length,4);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);assert(dto.questions.filter(q=>q.collection==="exam").length>=6);
+  const dto=squarePublicLesson(packageTopic(l.id)!);assert.equal(dto.examples.length,7);assert(dto.study);assert.equal(dto.questions.filter(q=>q.collection!=="exam").length,8);assert(dto.questions.filter(q=>q.collection==="exam").length>=6);
   for(const hidden of ['"expected"','"source_uid"','"ownerProvenance"','"verification"','source_archive'])assert(!JSON.stringify(dto).includes(hidden));
   for(const text of [l.objective,l.before,l.ideas,l.method,...l.examples.flatMap(e=>[e.question,e.solution]),dto.notes,...dto.examples.flatMap(e=>[e.question,e.solution])]){assert(!text.includes("katex-error"),l.id);assert(!/[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(text),"Control character in "+l.id);}
   for(const e of dto.examples)assert((e.question+e.solution).includes('class="katex"'),e.title);
