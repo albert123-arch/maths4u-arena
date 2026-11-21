@@ -1,0 +1,1643 @@
+{
+  "fm_projectiles_components": {
+    "updatedOn": "2026-11-21",
+    "description": "Use common time for horizontal and vertical motion, and choose physical time roots for projectile events.",
+    "sections": [
+      {
+        "id": "split-the-motion",
+        "title": "How do horizontal and vertical motion differ?",
+        "label": "Resolve the motion",
+        "intro": "<p>In the particle model there is only a constant downward gravitational acceleration. The model neglects air resistance, spin and finite size. Use the same clock for both axes.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Take up as positive. With launch components \\(u_x,u_y\\), use \\(x=u_xt\\), \\(y=u_yt-\\frac12gt^2\\), \\(v_x=u_x\\) and \\(v_y=u_y-gt\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "components-split-the-motion-check",
+            "title": "Use the same time in two directions",
+            "prompt": "<p>A practice ball is projected with horizontal velocity \\(10\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(17\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the horizontal and vertical displacements after \\(1\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Horizontal displacement",
+                "type": "number",
+                "expected": "10"
+              },
+              {
+                "key": "y",
+                "label": "Vertical displacement",
+                "type": "number",
+                "expected": "12",
+                "retry": [
+                  {
+                    "answer": "17",
+                    "feedback": "<p>Include the contribution from vertical acceleration.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Use one shared time, with different accelerations along the axes.</p>",
+            "solution": "<p>Choose right and up positive. The horizontal acceleration is zero and the vertical acceleration is \\(-g\\).</p><p>At the stated time, \\(x=10\\times 1=10\\).</p><p>Vertically, \\(y=17\\times 1-5\\left(1\\right)^2=12\\). The two displacements are \\(10\\,\\mathrm m\\) and \\(12\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Adding a horizontal gravity term invents a force in that direction.</p>"
+          }
+        ]
+      },
+      {
+        "id": "apex-and-maximum-height",
+        "title": "What stops changing sign at the highest point?",
+        "label": "Find maximum height",
+        "intro": "<p>As the particle rises, \\(v_y\\) is positive. It becomes negative once the particle starts descending.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Set \\(v_y=0\\) to find the time of maximum height. The horizontal component need not vanish.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/projectiles/apex-and-components.svg",
+              "alt": "A parabolic path rises to H, and the tangent there points horizontally.",
+              "caption": "<p>At the apex the horizontal motion continues, even though \\(v_y=0\\).</p>",
+              "width": 480,
+              "height": 265
+            }
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "components-apex-and-maximum-height-check",
+            "title": "Find the highest point",
+            "prompt": "<p>A practice ball is projected with horizontal velocity \\(11\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(16\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time and the maximum height above the launch point.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time to apex",
+                "type": "number",
+                "expected": "8/5",
+                "retry": [
+                  {
+                    "answer": "16/5",
+                    "feedback": "<p>The apex is midway through flight only when the endpoint returns to launch level. The requested time is to the apex.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "height",
+                "label": "Rise above launch",
+                "type": "number",
+                "expected": "64/5"
+              }
+            ],
+            "hint": "<p>At the top only the vertical component is zero.</p>",
+            "solution": "<p>At the top the vertical velocity satisfies \\(v_y=16-10t=0\\).</p><p>\\(t=\\frac{8}{5}\\) seconds. The horizontal velocity remains \\(11\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Substitute this time into the vertical displacement, giving the maximum height \\(\\frac{64}{5}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not set the full speed to zero at the apex.</p>"
+          }
+        ]
+      },
+      {
+        "id": "choose-the-correct-time-root",
+        "title": "Which crossing does the question mean?",
+        "label": "Choose the event time",
+        "intro": "<p>A specified height may be crossed twice. Find both possibilities on the flight interval and check whether the vertical velocity is positive or negative.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(v_y=u_y-gt\\) to distinguish rising and falling. A positive root may still lie beyond the first contact.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "components-choose-the-correct-time-root-check",
+            "title": "Choose the descending event",
+            "prompt": "<p>A practice ball is projected with horizontal velocity \\(12\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(\\frac{35}{2}\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). At what time does it cross height \\(\\frac{25}{2}\\,\\mathrm m\\) above launch while descending? Find its horizontal distance at that time too.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time while descending",
+                "type": "number",
+                "expected": "5/2",
+                "retry": [
+                  {
+                    "answer": "1",
+                    "feedback": "<p>That is the earlier crossing. At that time the vertical component is positive.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "range",
+                "label": "Horizontal distance",
+                "type": "number",
+                "expected": "30"
+              }
+            ],
+            "hint": "<p>Two roots can both be physically real. Select the one with the requested velocity sign.</p>",
+            "solution": "<p>Set the vertical displacement equal to the stated height: \\(- 5 t^{2} + \\frac{35 t}{2}=\\frac{25}{2}\\).</p><p>The two times are \\(1\\,\\mathrm s\\) and \\(\\frac{5}{2}\\,\\mathrm s\\). The vertical velocity at the later time is negative.</p><p>The descending time is \\(\\frac{5}{2}\\,\\mathrm s\\). Constant horizontal velocity places it \\(30\\,\\mathrm m\\) from launch horizontally.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An earlier crossing is not a falling crossing just because the projectile eventually lands.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "components-choose-the-correct-time-root-follow-up",
+            "title": "Choose the descending event",
+            "prompt": "<p>A practice ball is projected with horizontal velocity \\(18\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(\\frac{55}{2}\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). At what time does it cross height \\(35\\,\\mathrm m\\) above launch while descending? Find its horizontal distance at that time too.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time while descending",
+                "type": "number",
+                "expected": "7/2",
+                "retry": [
+                  {
+                    "answer": "2",
+                    "feedback": "<p>That is the earlier crossing. At that time the vertical component is positive.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "range",
+                "label": "Horizontal distance",
+                "type": "number",
+                "expected": "63"
+              }
+            ],
+            "hint": "<p>Two roots can both be physically real. Select the one with the requested velocity sign.</p>",
+            "solution": "<p>Set the vertical displacement equal to the stated height: \\(- 5 t^{2} + \\frac{55 t}{2}=35\\).</p><p>The two times are \\(2\\,\\mathrm s\\) and \\(\\frac{7}{2}\\,\\mathrm s\\). The vertical velocity at the later time is negative.</p><p>The descending time is \\(\\frac{7}{2}\\,\\mathrm s\\). Constant horizontal velocity places it \\(63\\,\\mathrm m\\) from launch horizontally.</p>"
+          }
+        ]
+      },
+      {
+        "id": "speed-and-direction",
+        "title": "How do I find the direction while descending?",
+        "label": "Recombine velocity",
+        "intro": "<p>Velocity components are signed. The speed uses their squared magnitudes. The direction needs both a reference axis and which side of that axis the motion points.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>With \\(v_x>0\\) and \\(v_y<0\\), speed is \\(\\sqrt{v_x^2+v_y^2}\\) and the angle below horizontal has tangent \\(\\frac{|v_y|}{v_x}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "components-speed-and-direction-check",
+            "title": "Find the direction of motion from the components",
+            "prompt": "<p>A practice ball is projected with horizontal velocity \\(14\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(17\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its exact speed and the tangent of its angle below the horizontal after \\(\\frac{5}{2}\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Exact speed",
+                "type": "number",
+                "expected": "2*sqrt(65)"
+              },
+              {
+                "key": "tan",
+                "label": "Tangent of angle below horizontal",
+                "type": "number",
+                "expected": "4/7",
+                "retry": [
+                  {
+                    "answer": "-4/7",
+                    "feedback": "<p>The direction is already stated as below the horizontal. Its acute angle has positive tangent.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Use the velocity components at the requested time, not the launch angle.</p>",
+            "solution": "<p>The horizontal velocity is \\(14\\,\\mathrm{m\\,s^{-1}}\\) and the signed vertical velocity is \\(-8\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Combine perpendicular components using Pythagoras. Speed is \\(2 \\sqrt{65}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The direction is below the horizontal, with tangent \\(\\frac{4}{7}\\). The speed is \\(2 \\sqrt{65}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The initial launch angle does not stay constant.</p>"
+          }
+        ]
+      },
+      {
+        "id": "level-and-lower-landings",
+        "title": "How do I find time of flight and range?",
+        "label": "Find the landing",
+        "intro": "<p>Use the landing height in the vertical equation. If launch and landing are at the same level with \\(u_y>0\\), then the non-zero flight time is \\(\\frac{2u_y}{g}\\).</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For an elevated launch use the actual negative vertical displacement. Then use \\(x=u_xt\\) with the physical impact time.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "components-level-and-lower-landings-check",
+            "title": "Find the range on level ground",
+            "prompt": "<p>A practice ball is projected with horizontal velocity \\(10\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(13\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). It lands back on the same horizontal level. Find the time of flight and range.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time of flight",
+                "type": "number",
+                "expected": "13/5",
+                "retry": [
+                  {
+                    "answer": "0",
+                    "feedback": "<p>Zero is the launch time. Use the later root.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "range",
+                "label": "Range",
+                "type": "number",
+                "expected": "26"
+              }
+            ],
+            "hint": "<p>Solve for the positive time at zero vertical displacement. Then apply the horizontal equation.</p>",
+            "solution": "<p>Return to the launch level gives \\(- 5 t^{2} + 13 t=0\\).</p><p>Factor out time. Zero is the launch time, so the landing time is \\(\\frac{13}{5}\\,\\mathrm s\\).</p><p>Time of flight is \\(\\frac{13}{5}\\,\\mathrm s\\) and the horizontal range is \\(26\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The level-ground range formula does not apply to a landing below the launch point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "components-level-and-lower-landings-follow-up",
+            "title": "Find the range on level ground",
+            "prompt": "<p>A practice ball is projected with horizontal velocity \\(14\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(17\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). It lands back on the same horizontal level. Find the time of flight and range.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time of flight",
+                "type": "number",
+                "expected": "17/5",
+                "retry": [
+                  {
+                    "answer": "0",
+                    "feedback": "<p>Zero is the launch time. Use the later root.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "range",
+                "label": "Range",
+                "type": "number",
+                "expected": "238/5"
+              }
+            ],
+            "hint": "<p>Solve for the positive time at zero vertical displacement. Then apply the horizontal equation.</p>",
+            "solution": "<p>Return to the launch level gives \\(- 5 t^{2} + 17 t=0\\).</p><p>Factor out time. Zero is the launch time, so the landing time is \\(\\frac{17}{5}\\,\\mathrm s\\).</p><p>Time of flight is \\(\\frac{17}{5}\\,\\mathrm s\\) and the horizontal range is \\(\\frac{238}{5}\\,\\mathrm m\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use the same time in two directions",
+        "question": "<p>A practice ball is projected with horizontal velocity \\(8\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(14\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the horizontal and vertical displacements after \\(\\frac{2}{3}\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Choose right and up positive. The horizontal acceleration is zero and the vertical acceleration is \\(-g\\).</p>",
+          "<p>At the stated time, \\(x=8\\times \\frac{2}{3}=\\frac{16}{3}\\).</p>",
+          "<p>Vertically, \\(y=14\\times \\frac{2}{3}-5\\left(\\frac{2}{3}\\right)^2=\\frac{64}{9}\\). The two displacements are \\(\\frac{16}{3}\\,\\mathrm m\\) and \\(\\frac{64}{9}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the highest point",
+        "question": "<p>A practice ball is projected with horizontal velocity \\(9\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(13\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time and the maximum height above the launch point.</p>",
+        "solution": [
+          "<p>At the top the vertical velocity satisfies \\(v_y=13-10t=0\\).</p>",
+          "<p>\\(t=\\frac{13}{10}\\) seconds. The horizontal velocity remains \\(9\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Substitute this time into the vertical displacement, giving the maximum height \\(\\frac{169}{20}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Choose the descending event",
+        "question": "<p>A practice ball is projected with horizontal velocity \\(9\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(\\frac{25}{2}\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). At what time does it cross height \\(5\\,\\mathrm m\\) above launch while descending? Find its horizontal distance at that time too.</p>",
+        "solution": [
+          "<p>Set the vertical displacement equal to the stated height: \\(- 5 t^{2} + \\frac{25 t}{2}=5\\).</p>",
+          "<p>The two times are \\(\\frac{1}{2}\\,\\mathrm s\\) and \\(2\\,\\mathrm s\\). The vertical velocity at the later time is negative.</p>",
+          "<p>The descending time is \\(2\\,\\mathrm s\\). Constant horizontal velocity places it \\(18\\,\\mathrm m\\) from launch horizontally.</p>"
+        ]
+      },
+      {
+        "title": "Choose the descending event",
+        "question": "<p>A practice ball is projected with horizontal velocity \\(15\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(\\frac{45}{2}\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). At what time does it cross height \\(\\frac{45}{2}\\,\\mathrm m\\) above launch while descending? Find its horizontal distance at that time too.</p>",
+        "solution": [
+          "<p>Set the vertical displacement equal to the stated height: \\(- 5 t^{2} + \\frac{45 t}{2}=\\frac{45}{2}\\).</p>",
+          "<p>The two times are \\(\\frac{3}{2}\\,\\mathrm s\\) and \\(3\\,\\mathrm s\\). The vertical velocity at the later time is negative.</p>",
+          "<p>The descending time is \\(3\\,\\mathrm s\\). Constant horizontal velocity places it \\(45\\,\\mathrm m\\) from launch horizontally.</p>"
+        ]
+      },
+      {
+        "title": "Find the direction of motion from the components",
+        "question": "<p>A practice ball is projected with horizontal velocity \\(12\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(16\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its exact speed and the tangent of its angle below the horizontal after \\(2\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>The horizontal velocity is \\(12\\,\\mathrm{m\\,s^{-1}}\\) and the signed vertical velocity is \\(-4\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Combine perpendicular components using Pythagoras. Speed is \\(4 \\sqrt{10}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The direction is below the horizontal, with tangent \\(\\frac{1}{3}\\). The speed is \\(4 \\sqrt{10}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Land below a horizontal launch",
+        "question": "<p>A practice ball leaves a ledge horizontally at \\(10\\,\\mathrm{m\\,s^{-1}}\\). The ground is \\(\\frac{45}{4}\\,\\mathrm m\\) below the ledge. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its first impact time and horizontal distance.</p>",
+        "solution": [
+          "<p>The upwards velocity starts at zero. In the vertical equation use \\(y=- \\frac{45}{4}\\).</p>",
+          "<p>So \\(5t^2=\\frac{45}{4}\\) gives \\(\\frac{3}{2}\\,\\mathrm s\\) after launch. The negative root is outside the flight interval.</p>",
+          "<p>The time to the ground is \\(\\frac{3}{2}\\,\\mathrm s\\) and the horizontal distance is \\(15\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Land below a horizontal launch",
+        "question": "<p>A practice ball leaves a ledge horizontally at \\(14\\,\\mathrm{m\\,s^{-1}}\\). The ground is \\(\\frac{125}{4}\\,\\mathrm m\\) below the ledge. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its first impact time and horizontal distance.</p>",
+        "solution": [
+          "<p>The upwards velocity starts at zero. In the vertical equation use \\(y=- \\frac{125}{4}\\).</p>",
+          "<p>So \\(5t^2=\\frac{125}{4}\\) gives \\(\\frac{5}{2}\\,\\mathrm s\\) after launch. The negative root is outside the flight interval.</p>",
+          "<p>The time to the ground is \\(\\frac{5}{2}\\,\\mathrm s\\) and the horizontal distance is \\(35\\,\\mathrm m\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "components-split-the-motion-extra",
+        "title": "Use the same time in two directions",
+        "prompt": "<p>A practice ball is projected with horizontal velocity \\(12\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(20\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the horizontal and vertical displacements after \\(\\frac{4}{3}\\,\\mathrm s\\).</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Horizontal displacement",
+            "type": "number",
+            "expected": "16"
+          },
+          {
+            "key": "y",
+            "label": "Vertical displacement",
+            "type": "number",
+            "expected": "160/9",
+            "retry": [
+              {
+                "answer": "80/3",
+                "feedback": "<p>Include the contribution from vertical acceleration.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Use one shared time, with different accelerations along the axes.</p>",
+        "solution": "<p>Choose right and up positive. The horizontal acceleration is zero and the vertical acceleration is \\(-g\\).</p><p>At the stated time, \\(x=12\\times \\frac{4}{3}=16\\).</p><p>Vertically, \\(y=20\\times \\frac{4}{3}-5\\left(\\frac{4}{3}\\right)^2=\\frac{160}{9}\\). The two displacements are \\(16\\,\\mathrm m\\) and \\(\\frac{160}{9}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "components-apex-and-maximum-height-extra",
+        "title": "Find the highest point",
+        "prompt": "<p>A practice ball is projected with horizontal velocity \\(13\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(19\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time and the maximum height above the launch point.</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Time to apex",
+            "type": "number",
+            "expected": "19/10",
+            "retry": [
+              {
+                "answer": "19/5",
+                "feedback": "<p>The apex is midway through flight only when the endpoint returns to launch level. The requested time is to the apex.</p>"
+              }
+            ]
+          },
+          {
+            "key": "height",
+            "label": "Rise above launch",
+            "type": "number",
+            "expected": "361/20"
+          }
+        ],
+        "hint": "<p>At the top only the vertical component is zero.</p>",
+        "solution": "<p>At the top the vertical velocity satisfies \\(v_y=19-10t=0\\).</p><p>\\(t=\\frac{19}{10}\\) seconds. The horizontal velocity remains \\(13\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Substitute this time into the vertical displacement, giving the maximum height \\(\\frac{361}{20}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "components-choose-the-correct-time-root-extra",
+        "title": "Choose the descending event",
+        "prompt": "<p>A practice ball is projected with horizontal velocity \\(21\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(\\frac{65}{2}\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). At what time does it cross height \\(50\\,\\mathrm m\\) above launch while descending? Find its horizontal distance at that time too.</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Time while descending",
+            "type": "number",
+            "expected": "4",
+            "retry": [
+              {
+                "answer": "5/2",
+                "feedback": "<p>That is the earlier crossing. At that time the vertical component is positive.</p>"
+              }
+            ]
+          },
+          {
+            "key": "range",
+            "label": "Horizontal distance",
+            "type": "number",
+            "expected": "84"
+          }
+        ],
+        "hint": "<p>Two roots can both be physically real. Select the one with the requested velocity sign.</p>",
+        "solution": "<p>Set the vertical displacement equal to the stated height: \\(- 5 t^{2} + \\frac{65 t}{2}=50\\).</p><p>The two times are \\(\\frac{5}{2}\\,\\mathrm s\\) and \\(4\\,\\mathrm s\\). The vertical velocity at the later time is negative.</p><p>The descending time is \\(4\\,\\mathrm s\\). Constant horizontal velocity places it \\(84\\,\\mathrm m\\) from launch horizontally.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "components-speed-and-direction-extra",
+        "title": "Find the direction of motion from the components",
+        "prompt": "<p>A practice ball is projected with horizontal velocity \\(16\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(18\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its exact speed and the tangent of its angle below the horizontal after \\(3\\,\\mathrm s\\).</p>",
+        "fields": [
+          {
+            "key": "speed",
+            "label": "Exact speed",
+            "type": "number",
+            "expected": "20"
+          },
+          {
+            "key": "tan",
+            "label": "Tangent of angle below horizontal",
+            "type": "number",
+            "expected": "3/4",
+            "retry": [
+              {
+                "answer": "-3/4",
+                "feedback": "<p>The direction is already stated as below the horizontal. Its acute angle has positive tangent.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Use the velocity components at the requested time, not the launch angle.</p>",
+        "solution": "<p>The horizontal velocity is \\(16\\,\\mathrm{m\\,s^{-1}}\\) and the signed vertical velocity is \\(-12\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Combine perpendicular components using Pythagoras. Speed is \\(20\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The direction is below the horizontal, with tangent \\(\\frac{3}{4}\\). The speed is \\(20\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "components-level-and-lower-landings-extra",
+        "title": "Land below a horizontal launch",
+        "prompt": "<p>A practice ball leaves a ledge horizontally at \\(18\\,\\mathrm{m\\,s^{-1}}\\). The ground is \\(\\frac{245}{4}\\,\\mathrm m\\) below the ledge. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its first impact time and horizontal distance.</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Impact time",
+            "type": "number",
+            "expected": "7/2",
+            "retry": [
+              {
+                "answer": "-7/2",
+                "feedback": "<p>A negative time is outside the post-launch flight.</p>"
+              }
+            ]
+          },
+          {
+            "key": "distance",
+            "label": "Horizontal distance",
+            "type": "number",
+            "expected": "63"
+          }
+        ],
+        "hint": "<p>Find the time from the vertical drop, then use constant horizontal velocity.</p>",
+        "solution": "<p>The upwards velocity starts at zero. In the vertical equation use \\(y=- \\frac{245}{4}\\).</p><p>So \\(5t^2=\\frac{245}{4}\\) gives \\(\\frac{7}{2}\\,\\mathrm s\\) after launch. The negative root is outside the flight interval.</p><p>The time to the ground is \\(\\frac{7}{2}\\,\\mathrm s\\) and the horizontal distance is \\(63\\,\\mathrm m\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Apex",
+        "definition": "<p>The highest point of the path.</p>"
+      },
+      {
+        "term": "Range",
+        "definition": "<p>The horizontal displacement from launch to landing.</p>"
+      },
+      {
+        "term": "Component",
+        "definition": "<p>The signed part measured along one axis.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Horizontal</th><td>\\(x=u_xt\\) and \\(v_x=u_x\\).</td></tr><tr><th scope=\"row\">Vertical</th><td>\\(y=u_yt-\\frac12gt^2\\) and \\(v_y=u_y-gt\\).</td></tr><tr><th scope=\"row\">Highest point</th><td>Use \\(v_y=0\\), then find \\(y\\).</td></tr><tr><th scope=\"row\">Impact</th><td>Use the required landing height and check the physical root.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For \\(u_x=8,\\ u_y=15,\\ g=10\\) in SI units, find the level-ground range.</p><p><strong>Check</strong> The non-zero time is \\(3\\,\\mathrm s\\), so the range is \\(24\\,\\mathrm m\\).</p>",
+      "checks": "<ul><li>Adding a horizontal gravity term invents a force in that direction.</li><li>Do not set the full speed to zero at the apex.</li></ul>",
+      "examTip": "<p>Write a shared time before substituting into both axes.</p>"
+    },
+    "related": [
+      {
+        "title": "Cartesian trajectories, targets and obstacles",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_projectiles_trajectories"
+      }
+    ]
+  },
+  "fm_projectiles_trajectories": {
+    "updatedOn": "2026-11-21",
+    "description": "Eliminate time, recover unknown launch settings and use a trajectory to decide clearance and impact positions.",
+    "sections": [
+      {
+        "id": "eliminate-time",
+        "title": "How do I turn two time equations into one path?",
+        "label": "Eliminate time",
+        "intro": "<p>The two component equations describe a position at a given time. To describe the path directly, eliminate time using the simpler horizontal equation.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For non-zero \\(u_x\\), \\(t=\\frac{x}{u_x}\\) gives \\(y=\\frac{u_y}{u_x}x-\\frac{g}{2u_x^2}x^2\\), relative to launch.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "trajectories-eliminate-time-check",
+            "title": "Eliminate time to find a Cartesian trajectory",
+            "prompt": "<p>A practice ball is projected with horizontal velocity \\(9\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(20\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Write the trajectory as \\(y=Ax-Cx^2\\). Find \\(A\\) and \\(C\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "20/9"
+              },
+              {
+                "key": "c",
+                "label": "Coefficient C",
+                "type": "number",
+                "expected": "5/81",
+                "retry": [
+                  {
+                    "answer": "-5/81",
+                    "feedback": "<p>The formula already subtracts the quadratic term. C itself is positive.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>The horizontal equation is easiest to rearrange for time when the horizontal speed is non-zero.</p>",
+            "solution": "<p>The horizontal equation gives \\(t=\\frac{x}{9}\\).</p><p>Substitute for time in \\(y=- 5 t^{2} + 20 t\\). This gives \\(y=- \\frac{5 x^{2}}{81} + \\frac{20 x}{9}\\).</p><p>Thus \\(A=\\frac{20}{9}\\) and \\(C=\\frac{5}{81}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The coordinate equation describes the path only on the physically valid flight stage.</p>"
+          }
+        ]
+      },
+      {
+        "id": "recover-launch-velocity",
+        "title": "What do the trajectory coefficients tell me about launch?",
+        "label": "Read the coefficients",
+        "intro": "<p>The initial slope is the tangent of the launch angle for a rightward launch. The curvature coefficient also depends on horizontal speed, so the two coefficients together determine both components.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Read \\(C=\\frac{g}{2u_x^2}\\) and \\(A=\\frac{u_y}{u_x}\\) in \\(y=Ax-Cx^2\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "trajectories-recover-launch-velocity-check",
+            "title": "Recover the launch from its trajectory",
+            "prompt": "<p>A right-moving practice ball follows \\(y=- \\frac{5 x^{2}}{256} + \\frac{11 x}{16}\\), with coordinates measured from launch. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its exact launch speed and the tangent of its launch angle above the horizontal.</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Exact launch speed",
+                "type": "number",
+                "expected": "sqrt(377)",
+                "retry": [
+                  {
+                    "answer": "16",
+                    "feedback": "<p>The horizontal speed is one component of the launch velocity. Use both components.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "tan",
+                "label": "Tangent of launch angle",
+                "type": "number",
+                "expected": "11/16"
+              }
+            ],
+            "hint": "<p>Identify the quadratic coefficient to recover the horizontal speed, then use the slope at launch.</p>",
+            "solution": "<p>The quadratic coefficient in magnitude is \\(\\frac{g}{2u_x^2}\\). Taking the positive square root gives horizontal speed \\(16\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The linear coefficient is \\(\\frac{u_y}{u_x}\\), so the vertical component is \\(11\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The exact launch speed is \\(\\sqrt{377}\\,\\mathrm{m\\,s^{-1}}\\) and the tangent of the angle is \\(\\frac{11}{16}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The horizontal component by itself is not the launch speed unless the vertical component is zero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "fit-two-target-coordinates",
+        "title": "How do I find the trajectory from two measured positions?",
+        "label": "Use two independent points",
+        "intro": "<p>When launch is the origin, the constant term is already known. Two distinct non-zero horizontal coordinates let you solve for the other two coefficients.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>At each observed point, divide by its non-zero \\(x\\)-coordinate to obtain \\(\\frac yx=A-Cx\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "trajectories-fit-two-target-coordinates-check",
+            "title": "Find an unknown trajectory from two positions",
+            "prompt": "<p>The trajectory from the origin is \\(y=Ax-Cx^2\\). In metre coordinates its path passes through \\((4,\\frac{44}{9})\\) and \\((8,\\frac{56}{9})\\). Find both coefficients.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "5/3"
+              },
+              {
+                "key": "c",
+                "label": "Coefficient C",
+                "type": "number",
+                "expected": "1/9"
+              }
+            ],
+            "hint": "<p>After dividing each equation by its x-coordinate, subtract to eliminate A.</p>",
+            "solution": "<p>Substitute the coordinates of each point. This gives two linear equations in the unknown coefficients.</p><p>Divide each fitted equation by its non-zero horizontal coordinate. The reduced equations are \\(A - 4 C=\\frac{11}{9}\\) and \\(A - 8 C=\\frac{7}{9}\\).</p><p>Subtract to find \\(C=\\frac{1}{9}\\), then substitute to find \\(A=\\frac{5}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The launch point alone does not constrain either coefficient beyond the known zero intercept.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "trajectories-fit-two-target-coordinates-follow-up",
+            "title": "Find an unknown trajectory from two positions",
+            "prompt": "<p>The trajectory from the origin is \\(y=Ax-Cx^2\\). In metre coordinates its path passes through \\((6,\\frac{118}{11})\\) and \\((10,\\frac{470}{33})\\). Find both coefficients.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "7/3"
+              },
+              {
+                "key": "c",
+                "label": "Coefficient C",
+                "type": "number",
+                "expected": "1/11"
+              }
+            ],
+            "hint": "<p>After dividing each equation by its x-coordinate, subtract to eliminate A.</p>",
+            "solution": "<p>Substitute the coordinates of each point. This gives two linear equations in the unknown coefficients.</p><p>Divide each fitted equation by its non-zero horizontal coordinate. The reduced equations are \\(A - 6 C=\\frac{59}{33}\\) and \\(A - 10 C=\\frac{47}{33}\\).</p><p>Subtract to find \\(C=\\frac{1}{11}\\), then substitute to find \\(A=\\frac{7}{3}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "solve-a-clearance-interval",
+        "title": "Over which positions is the ball high enough?",
+        "label": "Solve a height inequality",
+        "intro": "<p>A level reference line can cut the trajectory at two positions. Find the intersection points, then check where the path lies above the line.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For ‘at least’, solve \\(y(x)-h\\ge0\\), include equality, and restrict to the physical flight.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/projectiles/height-window.svg",
+              "alt": "The path crosses a fixed height line at two positions x₁ and x₂.",
+              "caption": "<p>A height clearance applies between the two intersections. Whether the endpoints count depends on the wording.</p>",
+              "width": 480,
+              "height": 265
+            }
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "trajectories-solve-a-clearance-interval-check",
+            "title": "Find the full interval clearing a height line",
+            "prompt": "<p>The height above level ground is \\(y=- \\frac{x^{2}}{8} + \\frac{15 x}{8}\\). On the flight, find the inclusive interval of horizontal positions where the height is at least \\(\\frac{9}{2}\\,\\mathrm m\\). Enter its two endpoints.</p>",
+            "fields": [
+              {
+                "key": "left",
+                "label": "Left endpoint",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "right",
+                "label": "Right endpoint",
+                "type": "number",
+                "expected": "12"
+              }
+            ],
+            "hint": "<p>Solve the equality first, then determine the sign between the roots. At least includes equality.</p>",
+            "solution": "<p>Subtract the required height from the trajectory. The clearance inequality factors as \\(\\left(\\frac{3}{8} - \\frac{x}{8}\\right) \\left(x - 12\\right)\\ge0\\).</p><p>The downward-opening parabola is at or above the line between its two intersections, including the endpoints.</p><p>The interval is \\(3\\le x\\le 12\\). Both endpoints are inside the physical flight.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The roots delimit the interval. The answer is not just the two roots.</p>"
+          }
+        ]
+      },
+      {
+        "id": "intersect-inclined-ground",
+        "title": "How does a sloping landing change the equation?",
+        "label": "Match both heights",
+        "intro": "<p>At landing, the projectile and the slope have the same vertical coordinate at the same horizontal coordinate.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Set \\(y_{\\rm path}(x)=y_{\\rm slope}(x)\\), then take the first physical point after launch.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "trajectories-intersect-inclined-ground-check",
+            "title": "Intersect the trajectory with rising ground",
+            "prompt": "<p>A projected ball has trajectory \\(y=- \\frac{x^{2}}{13} + \\frac{5 x}{3}\\) from the origin. A slope through launch has equation \\(y=\\frac{x}{2}\\). Find the non-zero horizontal displacement where the ball meets the slope and the height there.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Horizontal distance at impact",
+                "type": "number",
+                "expected": "91/6",
+                "retry": [
+                  {
+                    "answer": "65/3",
+                    "feedback": "<p>This is the level-ground root. Set the trajectory equal to the height of the slope.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "height",
+                "label": "Impact height",
+                "type": "number",
+                "expected": "91/12"
+              }
+            ],
+            "hint": "<p>For an inclined ground line the endpoint need not have zero vertical displacement.</p>",
+            "solution": "<p>Set the two height equations equal rather than using a level-ground range.</p><p>Factor out \\(x\\). The zero root describes launch. The other solution is \\(x=\\frac{91}{6}\\).</p><p>The impact is at horizontal distance \\(\\frac{91}{6}\\,\\mathrm m\\) and height \\(\\frac{91}{12}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Returning to launch height and meeting a sloped line are different events.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "trajectories-intersect-inclined-ground-follow-up",
+            "title": "Intersect the trajectory with rising ground",
+            "prompt": "<p>A projected ball has trajectory \\(y=- \\frac{x^{2}}{15} + \\frac{7 x}{3}\\) from the origin. A slope through launch has equation \\(y=x\\). Find the non-zero horizontal displacement where the ball meets the slope and the height there.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Horizontal distance at impact",
+                "type": "number",
+                "expected": "20",
+                "retry": [
+                  {
+                    "answer": "35",
+                    "feedback": "<p>This is the level-ground root. Set the trajectory equal to the height of the slope.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "height",
+                "label": "Impact height",
+                "type": "number",
+                "expected": "20"
+              }
+            ],
+            "hint": "<p>For an inclined ground line the endpoint need not have zero vertical displacement.</p>",
+            "solution": "<p>Set the two height equations equal rather than using a level-ground range.</p><p>Factor out \\(x\\). The zero root describes launch. The other solution is \\(x=20\\).</p><p>The impact is at horizontal distance \\(20\\,\\mathrm m\\) and height \\(20\\,\\mathrm m\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Eliminate time to find a Cartesian trajectory",
+        "question": "<p>A practice ball is projected with horizontal velocity \\(7\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(17\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Write the trajectory as \\(y=Ax-Cx^2\\). Find \\(A\\) and \\(C\\).</p>",
+        "solution": [
+          "<p>The horizontal equation gives \\(t=\\frac{x}{7}\\).</p>",
+          "<p>Substitute for time in \\(y=- 5 t^{2} + 17 t\\). This gives \\(y=- \\frac{5 x^{2}}{49} + \\frac{17 x}{7}\\).</p>",
+          "<p>Thus \\(A=\\frac{17}{7}\\) and \\(C=\\frac{5}{49}\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover the launch from its trajectory",
+        "question": "<p>A right-moving practice ball follows \\(y=- \\frac{x^{2}}{45} + \\frac{3 x}{5}\\), with coordinates measured from launch. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its exact launch speed and the tangent of its launch angle above the horizontal.</p>",
+        "solution": [
+          "<p>The quadratic coefficient in magnitude is \\(\\frac{g}{2u_x^2}\\). Taking the positive square root gives horizontal speed \\(15\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The linear coefficient is \\(\\frac{u_y}{u_x}\\), so the vertical component is \\(9\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The exact launch speed is \\(3 \\sqrt{34}\\,\\mathrm{m\\,s^{-1}}\\) and the tangent of the angle is \\(\\frac{3}{5}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find an unknown trajectory from two positions",
+        "question": "<p>The trajectory from the origin is \\(y=Ax-Cx^2\\). In metre coordinates its path passes through \\((3,\\frac{23}{8})\\) and \\((7,\\frac{77}{24})\\). Find both coefficients.</p>",
+        "solution": [
+          "<p>Substitute the coordinates of each point. This gives two linear equations in the unknown coefficients.</p>",
+          "<p>Divide each fitted equation by its non-zero horizontal coordinate. The reduced equations are \\(A - 3 C=\\frac{23}{24}\\) and \\(A - 7 C=\\frac{11}{24}\\).</p>",
+          "<p>Subtract to find \\(C=\\frac{1}{8}\\), then substitute to find \\(A=\\frac{4}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find an unknown trajectory from two positions",
+        "question": "<p>The trajectory from the origin is \\(y=Ax-Cx^2\\). In metre coordinates its path passes through \\((5,\\frac{15}{2})\\) and \\((9,\\frac{99}{10})\\). Find both coefficients.</p>",
+        "solution": [
+          "<p>Substitute the coordinates of each point. This gives two linear equations in the unknown coefficients.</p>",
+          "<p>Divide each fitted equation by its non-zero horizontal coordinate. The reduced equations are \\(A - 5 C=\\frac{3}{2}\\) and \\(A - 9 C=\\frac{11}{10}\\).</p>",
+          "<p>Subtract to find \\(C=\\frac{1}{10}\\), then substitute to find \\(A=2\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the full interval clearing a height line",
+        "question": "<p>The height above level ground is \\(y=- \\frac{x^{2}}{7} + \\frac{11 x}{7}\\). On the flight, find the inclusive interval of horizontal positions where the height is at least \\(\\frac{18}{7}\\,\\mathrm m\\). Enter its two endpoints.</p>",
+        "solution": [
+          "<p>Subtract the required height from the trajectory. The clearance inequality factors as \\(\\left(\\frac{2}{7} - \\frac{x}{7}\\right) \\left(x - 9\\right)\\ge0\\).</p>",
+          "<p>The downward-opening parabola is at or above the line between its two intersections, including the endpoints.</p>",
+          "<p>The interval is \\(2\\le x\\le 9\\). Both endpoints are inside the physical flight.</p>"
+        ]
+      },
+      {
+        "title": "Intersect the trajectory with rising ground",
+        "question": "<p>A projected ball has trajectory \\(y=- \\frac{x^{2}}{12} + \\frac{4 x}{3}\\) from the origin. A slope through launch has equation \\(y=\\frac{x}{4}\\). Find the non-zero horizontal displacement where the ball meets the slope and the height there.</p>",
+        "solution": [
+          "<p>Set the two height equations equal rather than using a level-ground range.</p>",
+          "<p>Factor out \\(x\\). The zero root describes launch. The other solution is \\(x=13\\).</p>",
+          "<p>The impact is at horizontal distance \\(13\\,\\mathrm m\\) and height \\(\\frac{13}{4}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Intersect the trajectory with rising ground",
+        "question": "<p>A projected ball has trajectory \\(y=- \\frac{x^{2}}{14} + 2 x\\) from the origin. A slope through launch has equation \\(y=\\frac{3 x}{4}\\). Find the non-zero horizontal displacement where the ball meets the slope and the height there.</p>",
+        "solution": [
+          "<p>Set the two height equations equal rather than using a level-ground range.</p>",
+          "<p>Factor out \\(x\\). The zero root describes launch. The other solution is \\(x=\\frac{35}{2}\\).</p>",
+          "<p>The impact is at horizontal distance \\(\\frac{35}{2}\\,\\mathrm m\\) and height \\(\\frac{105}{8}\\,\\mathrm m\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "trajectories-eliminate-time-extra",
+        "title": "Eliminate time to find a Cartesian trajectory",
+        "prompt": "<p>A practice ball is projected with horizontal velocity \\(11\\,\\mathrm{m\\,s^{-1}}\\) and upwards velocity \\(23\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Write the trajectory as \\(y=Ax-Cx^2\\). Find \\(A\\) and \\(C\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "type": "number",
+            "expected": "23/11"
+          },
+          {
+            "key": "c",
+            "label": "Coefficient C",
+            "type": "number",
+            "expected": "5/121",
+            "retry": [
+              {
+                "answer": "-5/121",
+                "feedback": "<p>The formula already subtracts the quadratic term. C itself is positive.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The horizontal equation is easiest to rearrange for time when the horizontal speed is non-zero.</p>",
+        "solution": "<p>The horizontal equation gives \\(t=\\frac{x}{11}\\).</p><p>Substitute for time in \\(y=- 5 t^{2} + 23 t\\). This gives \\(y=- \\frac{5 x^{2}}{121} + \\frac{23 x}{11}\\).</p><p>Thus \\(A=\\frac{23}{11}\\) and \\(C=\\frac{5}{121}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "trajectories-recover-launch-velocity-extra",
+        "title": "Recover the launch from its trajectory",
+        "prompt": "<p>A right-moving practice ball follows \\(y=- \\frac{5 x^{2}}{289} + \\frac{13 x}{17}\\), with coordinates measured from launch. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its exact launch speed and the tangent of its launch angle above the horizontal.</p>",
+        "fields": [
+          {
+            "key": "speed",
+            "label": "Exact launch speed",
+            "type": "number",
+            "expected": "sqrt(458)",
+            "retry": [
+              {
+                "answer": "17",
+                "feedback": "<p>The horizontal speed is one component of the launch velocity. Use both components.</p>"
+              }
+            ]
+          },
+          {
+            "key": "tan",
+            "label": "Tangent of launch angle",
+            "type": "number",
+            "expected": "13/17"
+          }
+        ],
+        "hint": "<p>Identify the quadratic coefficient to recover the horizontal speed, then use the slope at launch.</p>",
+        "solution": "<p>The quadratic coefficient in magnitude is \\(\\frac{g}{2u_x^2}\\). Taking the positive square root gives horizontal speed \\(17\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The linear coefficient is \\(\\frac{u_y}{u_x}\\), so the vertical component is \\(13\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The exact launch speed is \\(\\sqrt{458}\\,\\mathrm{m\\,s^{-1}}\\) and the tangent of the angle is \\(\\frac{13}{17}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "trajectories-fit-two-target-coordinates-extra",
+        "title": "Find an unknown trajectory from two positions",
+        "prompt": "<p>The trajectory from the origin is \\(y=Ax-Cx^2\\). In metre coordinates its path passes through \\((7,\\frac{175}{12})\\) and \\((11,\\frac{77}{4})\\). Find both coefficients.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "type": "number",
+            "expected": "8/3"
+          },
+          {
+            "key": "c",
+            "label": "Coefficient C",
+            "type": "number",
+            "expected": "1/12"
+          }
+        ],
+        "hint": "<p>After dividing each equation by its x-coordinate, subtract to eliminate A.</p>",
+        "solution": "<p>Substitute the coordinates of each point. This gives two linear equations in the unknown coefficients.</p><p>Divide each fitted equation by its non-zero horizontal coordinate. The reduced equations are \\(A - 7 C=\\frac{25}{12}\\) and \\(A - 11 C=\\frac{7}{4}\\).</p><p>Subtract to find \\(C=\\frac{1}{12}\\), then substitute to find \\(A=\\frac{8}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "trajectories-solve-a-clearance-interval-extra",
+        "title": "Find the full interval clearing a height line",
+        "prompt": "<p>The height above level ground is \\(y=- \\frac{x^{2}}{9} + \\frac{19 x}{9}\\). On the flight, find the inclusive interval of horizontal positions where the height is at least \\(\\frac{20}{3}\\,\\mathrm m\\). Enter its two endpoints.</p>",
+        "fields": [
+          {
+            "key": "left",
+            "label": "Left endpoint",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "right",
+            "label": "Right endpoint",
+            "type": "number",
+            "expected": "15"
+          }
+        ],
+        "hint": "<p>Solve the equality first, then determine the sign between the roots. At least includes equality.</p>",
+        "solution": "<p>Subtract the required height from the trajectory. The clearance inequality factors as \\(\\left(\\frac{4}{9} - \\frac{x}{9}\\right) \\left(x - 15\\right)\\ge0\\).</p><p>The downward-opening parabola is at or above the line between its two intersections, including the endpoints.</p><p>The interval is \\(4\\le x\\le 15\\). Both endpoints are inside the physical flight.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "trajectories-intersect-inclined-ground-extra",
+        "title": "Intersect the trajectory with rising ground",
+        "prompt": "<p>A projected ball has trajectory \\(y=- \\frac{x^{2}}{16} + \\frac{8 x}{3}\\) from the origin. A slope through launch has equation \\(y=\\frac{5 x}{4}\\). Find the non-zero horizontal displacement where the ball meets the slope and the height there.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Horizontal distance at impact",
+            "type": "number",
+            "expected": "68/3",
+            "retry": [
+              {
+                "answer": "128/3",
+                "feedback": "<p>This is the level-ground root. Set the trajectory equal to the height of the slope.</p>"
+              }
+            ]
+          },
+          {
+            "key": "height",
+            "label": "Impact height",
+            "type": "number",
+            "expected": "85/3"
+          }
+        ],
+        "hint": "<p>For an inclined ground line the endpoint need not have zero vertical displacement.</p>",
+        "solution": "<p>Set the two height equations equal rather than using a level-ground range.</p><p>Factor out \\(x\\). The zero root describes launch. The other solution is \\(x=\\frac{68}{3}\\).</p><p>The impact is at horizontal distance \\(\\frac{68}{3}\\,\\mathrm m\\) and height \\(\\frac{85}{3}\\,\\mathrm m\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Trajectory",
+        "definition": "<p>The path traced by the particle.</p>"
+      },
+      {
+        "term": "Clearance",
+        "definition": "<p>The amount by which the projectile lies above a stated height.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Path from origin</th><td>\\(y=Ax-Cx^2\\) with \\(A=\\frac{u_y}{u_x}\\) and \\(C=\\frac{g}{2u_x^2}\\).</td></tr><tr><th scope=\"row\">Recover components</th><td>Take positive \\(u_x=\\sqrt{\\frac{g}{2C}}\\) for a rightward launch, then \\(u_y=Au_x\\).</td></tr><tr><th scope=\"row\">Obstacle</th><td>Use the full height inequality and its physical interval.</td></tr><tr><th scope=\"row\">Slope</th><td>Equate the two height equations.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>If \\(y=x-\\frac{x^2}{20}\\), find the non-zero level-ground range.</p><p><strong>Check</strong> Setting \\(y=0\\) gives \\(x=20\\,\\mathrm m\\) after discarding the launch point.</p>",
+      "checks": "<ul><li>The coordinate equation describes the path only on the physically valid flight stage.</li><li>The horizontal component by itself is not the launch speed unless the vertical component is zero.</li></ul>",
+      "examTip": "<p>Use a clear origin, especially when the given heights are measured from different levels.</p>"
+    },
+    "related": [
+      {
+        "title": "Components, velocity and flight events",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_projectiles_components"
+      },
+      {
+        "title": "Meetings, rebounds and release into free flight",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_projectiles_stages"
+      }
+    ]
+  },
+  "fm_projectiles_stages": {
+    "updatedOn": "2026-11-21",
+    "description": "Synchronise meeting events, start a new stage after contact or release, and check the first physical event.",
+    "sections": [
+      {
+        "id": "meet-at-the-same-time",
+        "title": "What does it mean for two projectiles to meet?",
+        "label": "Use one common clock",
+        "intro": "<p>Equal height alone is insufficient. Compare both position coordinates on a clock common to the two balls.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For simultaneous launches, use the same elapsed time \\(t\\) in both flights and test both coordinate equations.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "stages-meet-at-the-same-time-check",
+            "title": "Synchronise two airborne balls",
+            "prompt": "<p>Ball A is thrown right from the origin with initial horizontal and upwards velocity components \\(7\\,\\mathrm{m\\,s^{-1}}\\) and \\(21\\,\\mathrm{m\\,s^{-1}}\\). Ball B begins at the same time and level \\(6\\,\\mathrm m\\) to the right, with initial components \\(4\\,\\mathrm{m\\,s^{-1}}\\) and \\(21\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time from A's launch to their meeting and its height above launch.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time from A's launch",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "height",
+                "label": "Meeting height",
+                "type": "number",
+                "expected": "22"
+              }
+            ],
+            "hint": "<p>For a meeting both coordinates must agree at one clock time.</p>",
+            "solution": "<p>Use clock time \\(t\\) for A and \\(t\\) for B.</p><p>Equating horizontal positions gives \\(7 t=4 t + 6\\), so \\(t=2\\). At this time both balls have been launched.</p><p>Substitute each ball's own elapsed time into its vertical equation. Both heights equal \\(22\\,\\mathrm m\\). The meeting occurs \\(2\\,\\mathrm s\\) after A launches.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Identical horizontal positions can occur while the objects remain vertically separated.</p>"
+          }
+        ]
+      },
+      {
+        "id": "account-for-a-launch-delay",
+        "title": "How does a delayed launch change the equations?",
+        "label": "Use the correct elapsed times",
+        "intro": "<p>If the second launch occurs \\(d\\) seconds later, a common time \\(t\\) from the first launch corresponds to \\(t-d\\) for the second.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check \\(t\\ge d\\) before using the second ball's flight formula. Substitute the two elapsed times into their own vertical equations.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "stages-account-for-a-launch-delay-check",
+            "title": "Synchronise two airborne balls",
+            "prompt": "<p>Ball A is thrown right from the origin with initial horizontal and upwards velocity components \\(7\\,\\mathrm{m\\,s^{-1}}\\) and \\(21\\,\\mathrm{m\\,s^{-1}}\\). Ball B is thrown right from the same origin \\(1\\,\\mathrm s\\) later with components \\(14\\,\\mathrm{m\\,s^{-1}}\\) and \\(27\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time from A's launch to their meeting and its height above launch.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time from A's launch",
+                "type": "number",
+                "expected": "2",
+                "retry": [
+                  {
+                    "answer": "1",
+                    "feedback": "<p>That is the time from B's launch. Use the common clock starting with A.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "height",
+                "label": "Meeting height",
+                "type": "number",
+                "expected": "22"
+              }
+            ],
+            "hint": "<p>For a meeting both coordinates must agree at one clock time.</p>",
+            "solution": "<p>Use clock time \\(t\\) for A and \\(t-1\\) for B.</p><p>Equating horizontal positions gives \\(7 t=14 t - 14\\), so \\(t=2\\). At this time both balls have been launched.</p><p>Substitute each ball's own elapsed time into its vertical equation. Both heights equal \\(22\\,\\mathrm m\\). The meeting occurs \\(2\\,\\mathrm s\\) after A launches.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Substituting one elapsed time into both models ignores the launch delay.</p>"
+          }
+        ]
+      },
+      {
+        "id": "restart-after-a-bounce",
+        "title": "What carries over into a rebound on a smooth floor?",
+        "label": "Restart the flight",
+        "intro": "<p>A smooth horizontal floor changes only the vertical velocity during the impact. The ball starts the second flight at the contact point.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>With coefficient of restitution \\(e\\), the upward component after impact equals \\(e\\) times the incoming downward speed.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/projectiles/two-flight-stages.svg",
+              "alt": "A descending arc reaches B on the ground, then a rising arc leads to the next landing.",
+              "caption": "<p>Use the velocity immediately after the bounce to begin the second free-flight calculation.</p>",
+              "width": 480,
+              "height": 265
+            }
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stages-restart-after-a-bounce-check",
+            "title": "Start a new stage after a smooth-floor bounce",
+            "prompt": "<p>A ball meets a fixed smooth horizontal floor with horizontal speed \\(11\\,\\mathrm{m\\,s^{-1}}\\) and downwards speed \\(18\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{4}{9}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its upwards speed immediately after the bounce and horizontal distance to its next landing on the floor.</p>",
+            "fields": [
+              {
+                "key": "uy",
+                "label": "Vertical speed just after impact",
+                "type": "number",
+                "expected": "8",
+                "retry": [
+                  {
+                    "answer": "-8",
+                    "feedback": "<p>The rebound has positive vertical velocity because the floor impulse has reversed it.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "range",
+                "label": "Distance before the next landing",
+                "type": "number",
+                "expected": "88/5"
+              }
+            ],
+            "hint": "<p>Apply restitution to the vertical component only. Then use ordinary projectile motion with the new initial velocity.</p>",
+            "solution": "<p>The floor impulse is vertical. The horizontal component remains unchanged, and restitution gives upwards component \\(8\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Restart time at the bounce. The condition \\(- 5 t^{2} + 8 t=0\\) has a non-zero solution \\(\\frac{8}{5}\\,\\mathrm s\\).</p><p>The upwards speed after impact is \\(8\\,\\mathrm{m\\,s^{-1}}\\) and the horizontal distance in the second flight is \\(\\frac{88}{5}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not multiply the whole velocity or the horizontal component by the coefficient of restitution.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stages-restart-after-a-bounce-follow-up",
+            "title": "Start a new stage after a smooth-floor bounce",
+            "prompt": "<p>A ball meets a fixed smooth horizontal floor with horizontal speed \\(15\\,\\mathrm{m\\,s^{-1}}\\) and downwards speed \\(24\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{2}{3}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its upwards speed immediately after the bounce and horizontal distance to its next landing on the floor.</p>",
+            "fields": [
+              {
+                "key": "uy",
+                "label": "Vertical speed just after impact",
+                "type": "number",
+                "expected": "16",
+                "retry": [
+                  {
+                    "answer": "-16",
+                    "feedback": "<p>The rebound has positive vertical velocity because the floor impulse has reversed it.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "range",
+                "label": "Distance before the next landing",
+                "type": "number",
+                "expected": "48"
+              }
+            ],
+            "hint": "<p>Apply restitution to the vertical component only. Then use ordinary projectile motion with the new initial velocity.</p>",
+            "solution": "<p>The floor impulse is vertical. The horizontal component remains unchanged, and restitution gives upwards component \\(16\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Restart time at the bounce. The condition \\(- 5 t^{2} + 16 t=0\\) has a non-zero solution \\(\\frac{16}{5}\\,\\mathrm s\\).</p><p>The upwards speed after impact is \\(16\\,\\mathrm{m\\,s^{-1}}\\) and the horizontal distance in the second flight is \\(48\\,\\mathrm m\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-the-velocity-at-release",
+        "title": "Which initial velocity is used after release?",
+        "label": "Use the tangent at release",
+        "intro": "<p>A smooth guide can steer an object before it is released. Its launch position and the tangent velocity at release become the starting data for free flight.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use a local clock beginning at release. Gravity acts vertically after release, and the horizontal component then stays constant.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stages-use-the-velocity-at-release-check",
+            "title": "Use the tangent velocity at release",
+            "prompt": "<p>A ball leaves a guide with speed \\(2 \\sqrt{41}\\,\\mathrm{m\\,s^{-1}}\\). The tangent direction at release is right and upwards with tangent \\(\\frac{4}{5}\\). The ball then moves freely. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the horizontal and vertical displacements \\(2\\,\\mathrm s\\) after it leaves the guide.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Horizontal displacement from release",
+                "type": "number",
+                "expected": "20"
+              },
+              {
+                "key": "y",
+                "label": "Vertical displacement from release",
+                "type": "number",
+                "expected": "-4"
+              }
+            ],
+            "hint": "<p>Start a fresh clock at the instant the ball leaves the guide. Use its tangent, not an old direction within the guide.</p>",
+            "solution": "<p>The free-flight initial velocity is the tangent velocity at release. Its rightwards and upwards components are \\(10\\,\\mathrm{m\\,s^{-1}}\\) and \\(8\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Once free, the ball’s horizontal velocity is constant and its vertical acceleration is \\(-g\\).</p><p>The rightwards displacement is \\(20\\,\\mathrm m\\) and the signed upwards displacement is \\(-4\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An acceleration formula for the guide is no longer the flight model after release.</p>"
+          }
+        ]
+      },
+      {
+        "id": "compare-the-first-events",
+        "title": "How do I find which contact happens first?",
+        "label": "Choose the earliest valid time",
+        "intro": "<p>Find candidate times for each boundary while assuming free flight. Reject those that are negative or occur after another boundary is reached.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The earliest valid contact ends the current stage. A root of a later hypothetical event is not part of that flight.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stages-compare-the-first-events-check",
+            "title": "Compare two candidate first events",
+            "prompt": "<p>A ball is launched \\(\\frac{75}{4}\\,\\mathrm m\\) above horizontal ground with rightwards speed \\(10\\,\\mathrm{m\\,s^{-1}}\\) and upwards speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). A vertical screen begins at ground level \\(30\\,\\mathrm m\\) horizontally from launch and extends above the whole path. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which does the ball hit first, and at what time?</p>",
+            "fields": [
+              {
+                "key": "event",
+                "label": "First event",
+                "type": "choice",
+                "expected": "ground",
+                "options": {
+                  "screen": "Screen",
+                  "ground": "Ground"
+                }
+              },
+              {
+                "key": "time",
+                "label": "Time to the first event",
+                "type": "number",
+                "expected": "5/2",
+                "retry": [
+                  {
+                    "answer": "3",
+                    "feedback": "<p>That is the later candidate. The assumed free flight ends at the first valid contact.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Find both candidate times on the same clock and stop the free-flight equations at the earliest physical event.</p>",
+            "solution": "<p>The absolute height is \\(Y=- 5 t^{2} + 5 t + \\frac{75}{4}\\). Ground contact has one positive time, \\(\\frac{5}{2}\\,\\mathrm s\\).</p><p>The screen's horizontal position would be reached at \\(3\\,\\mathrm s\\). Compare before substituting the final height.</p><p>The first event is the ground at \\(\\frac{5}{2}\\,\\mathrm s\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Solving one boundary equation in isolation can overlook a prior contact.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stages-compare-the-first-events-follow-up",
+            "title": "Compare two candidate first events",
+            "prompt": "<p>A ball is launched \\(\\frac{175}{4}\\,\\mathrm m\\) above horizontal ground with rightwards speed \\(12\\,\\mathrm{m\\,s^{-1}}\\) and upwards speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). A vertical screen begins at ground level \\(48\\,\\mathrm m\\) horizontally from launch and extends above the whole path. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which does the ball hit first, and at what time?</p>",
+            "fields": [
+              {
+                "key": "event",
+                "label": "First event",
+                "type": "choice",
+                "expected": "ground",
+                "options": {
+                  "screen": "Screen",
+                  "ground": "Ground"
+                }
+              },
+              {
+                "key": "time",
+                "label": "Time to the first event",
+                "type": "number",
+                "expected": "7/2",
+                "retry": [
+                  {
+                    "answer": "4",
+                    "feedback": "<p>That is the later candidate. The assumed free flight ends at the first valid contact.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Find both candidate times on the same clock and stop the free-flight equations at the earliest physical event.</p>",
+            "solution": "<p>The absolute height is \\(Y=- 5 t^{2} + 5 t + \\frac{175}{4}\\). Ground contact has one positive time, \\(\\frac{7}{2}\\,\\mathrm s\\).</p><p>The screen's horizontal position would be reached at \\(4\\,\\mathrm s\\). Compare before substituting the final height.</p><p>The first event is the ground at \\(\\frac{7}{2}\\,\\mathrm s\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Synchronise two airborne balls",
+        "question": "<p>Ball A is thrown right from the origin with initial horizontal and upwards velocity components \\(6\\,\\mathrm{m\\,s^{-1}}\\) and \\(18\\,\\mathrm{m\\,s^{-1}}\\). Ball B begins at the same time and level \\(\\frac{9}{2}\\,\\mathrm m\\) to the right, with initial components \\(3\\,\\mathrm{m\\,s^{-1}}\\) and \\(18\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time from A's launch to their meeting and its height above launch.</p>",
+        "solution": [
+          "<p>Use clock time \\(t\\) for A and \\(t\\) for B.</p>",
+          "<p>Equating horizontal positions gives \\(6 t=3 t + \\frac{9}{2}\\), so \\(t=\\frac{3}{2}\\). At this time both balls have been launched.</p>",
+          "<p>Substitute each ball's own elapsed time into its vertical equation. Both heights equal \\(\\frac{63}{4}\\,\\mathrm m\\). The meeting occurs \\(\\frac{3}{2}\\,\\mathrm s\\) after A launches.</p>"
+        ]
+      },
+      {
+        "title": "Synchronise two airborne balls",
+        "question": "<p>Ball A is thrown right from the origin with initial horizontal and upwards velocity components \\(6\\,\\mathrm{m\\,s^{-1}}\\) and \\(18\\,\\mathrm{m\\,s^{-1}}\\). Ball B is thrown right from the same origin \\(\\frac{1}{2}\\,\\mathrm s\\) later with components \\(9\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{83}{4}\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time from A's launch to their meeting and its height above launch.</p>",
+        "solution": [
+          "<p>Use clock time \\(t\\) for A and \\(t-\\frac{1}{2}\\) for B.</p>",
+          "<p>Equating horizontal positions gives \\(6 t=9 t - \\frac{9}{2}\\), so \\(t=\\frac{3}{2}\\). At this time both balls have been launched.</p>",
+          "<p>Substitute each ball's own elapsed time into its vertical equation. Both heights equal \\(\\frac{63}{4}\\,\\mathrm m\\). The meeting occurs \\(\\frac{3}{2}\\,\\mathrm s\\) after A launches.</p>"
+        ]
+      },
+      {
+        "title": "Start a new stage after a smooth-floor bounce",
+        "question": "<p>A ball meets a fixed smooth horizontal floor with horizontal speed \\(9\\,\\mathrm{m\\,s^{-1}}\\) and downwards speed \\(15\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{1}{3}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its upwards speed immediately after the bounce and horizontal distance to its next landing on the floor.</p>",
+        "solution": [
+          "<p>The floor impulse is vertical. The horizontal component remains unchanged, and restitution gives upwards component \\(5\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Restart time at the bounce. The condition \\(- 5 t^{2} + 5 t=0\\) has a non-zero solution \\(1\\,\\mathrm s\\).</p>",
+          "<p>The upwards speed after impact is \\(5\\,\\mathrm{m\\,s^{-1}}\\) and the horizontal distance in the second flight is \\(9\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Start a new stage after a smooth-floor bounce",
+        "question": "<p>A ball meets a fixed smooth horizontal floor with horizontal speed \\(13\\,\\mathrm{m\\,s^{-1}}\\) and downwards speed \\(21\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{5}{9}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its upwards speed immediately after the bounce and horizontal distance to its next landing on the floor.</p>",
+        "solution": [
+          "<p>The floor impulse is vertical. The horizontal component remains unchanged, and restitution gives upwards component \\(\\frac{35}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Restart time at the bounce. The condition \\(- 5 t^{2} + \\frac{35 t}{3}=0\\) has a non-zero solution \\(\\frac{7}{3}\\,\\mathrm s\\).</p>",
+          "<p>The upwards speed after impact is \\(\\frac{35}{3}\\,\\mathrm{m\\,s^{-1}}\\) and the horizontal distance in the second flight is \\(\\frac{91}{3}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the tangent velocity at release",
+        "question": "<p>A ball leaves a guide with speed \\(10\\,\\mathrm{m\\,s^{-1}}\\). The tangent direction at release is right and upwards with tangent \\(\\frac{3}{4}\\). The ball then moves freely. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the horizontal and vertical displacements \\(1\\,\\mathrm s\\) after it leaves the guide.</p>",
+        "solution": [
+          "<p>The free-flight initial velocity is the tangent velocity at release. Its rightwards and upwards components are \\(8\\,\\mathrm{m\\,s^{-1}}\\) and \\(6\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Once free, the ball’s horizontal velocity is constant and its vertical acceleration is \\(-g\\).</p>",
+          "<p>The rightwards displacement is \\(8\\,\\mathrm m\\) and the signed upwards displacement is \\(1\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare two candidate first events",
+        "question": "<p>A ball is launched \\(10\\,\\mathrm m\\) above horizontal ground with rightwards speed \\(9\\,\\mathrm{m\\,s^{-1}}\\) and upwards speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). A vertical screen begins at ground level \\(\\frac{27}{2}\\,\\mathrm m\\) horizontally from launch and extends above the whole path. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which does the ball hit first, and at what time?</p>",
+        "solution": [
+          "<p>The absolute height is \\(Y=- 5 t^{2} + 5 t + 10\\). Ground contact has one positive time, \\(2\\,\\mathrm s\\).</p>",
+          "<p>The screen's horizontal position would be reached at \\(\\frac{3}{2}\\,\\mathrm s\\). Compare before substituting the final height.</p>",
+          "<p>The first event is the screen at \\(\\frac{3}{2}\\,\\mathrm s\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare two candidate first events",
+        "question": "<p>A ball is launched \\(30\\,\\mathrm m\\) above horizontal ground with rightwards speed \\(11\\,\\mathrm{m\\,s^{-1}}\\) and upwards speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). A vertical screen begins at ground level \\(\\frac{55}{2}\\,\\mathrm m\\) horizontally from launch and extends above the whole path. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which does the ball hit first, and at what time?</p>",
+        "solution": [
+          "<p>The absolute height is \\(Y=- 5 t^{2} + 5 t + 30\\). Ground contact has one positive time, \\(3\\,\\mathrm s\\).</p>",
+          "<p>The screen's horizontal position would be reached at \\(\\frac{5}{2}\\,\\mathrm s\\). Compare before substituting the final height.</p>",
+          "<p>The first event is the screen at \\(\\frac{5}{2}\\,\\mathrm s\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stages-meet-at-the-same-time-extra",
+        "title": "Synchronise two airborne balls",
+        "prompt": "<p>Ball A is thrown right from the origin with initial horizontal and upwards velocity components \\(8\\,\\mathrm{m\\,s^{-1}}\\) and \\(24\\,\\mathrm{m\\,s^{-1}}\\). Ball B begins at the same time and level \\(\\frac{15}{2}\\,\\mathrm m\\) to the right, with initial components \\(5\\,\\mathrm{m\\,s^{-1}}\\) and \\(24\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time from A's launch to their meeting and its height above launch.</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Time from A's launch",
+            "type": "number",
+            "expected": "5/2"
+          },
+          {
+            "key": "height",
+            "label": "Meeting height",
+            "type": "number",
+            "expected": "115/4"
+          }
+        ],
+        "hint": "<p>For a meeting both coordinates must agree at one clock time.</p>",
+        "solution": "<p>Use clock time \\(t\\) for A and \\(t\\) for B.</p><p>Equating horizontal positions gives \\(8 t=5 t + \\frac{15}{2}\\), so \\(t=\\frac{5}{2}\\). At this time both balls have been launched.</p><p>Substitute each ball's own elapsed time into its vertical equation. Both heights equal \\(\\frac{115}{4}\\,\\mathrm m\\). The meeting occurs \\(\\frac{5}{2}\\,\\mathrm s\\) after A launches.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stages-account-for-a-launch-delay-extra",
+        "title": "Synchronise two airborne balls",
+        "prompt": "<p>Ball A is thrown right from the origin with initial horizontal and upwards velocity components \\(8\\,\\mathrm{m\\,s^{-1}}\\) and \\(24\\,\\mathrm{m\\,s^{-1}}\\). Ball B is thrown right from the same origin \\(\\frac{3}{2}\\,\\mathrm s\\) later with components \\(20\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{135}{4}\\,\\mathrm{m\\,s^{-1}}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time from A's launch to their meeting and its height above launch.</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Time from A's launch",
+            "type": "number",
+            "expected": "5/2",
+            "retry": [
+              {
+                "answer": "1",
+                "feedback": "<p>That is the time from B's launch. Use the common clock starting with A.</p>"
+              }
+            ]
+          },
+          {
+            "key": "height",
+            "label": "Meeting height",
+            "type": "number",
+            "expected": "115/4"
+          }
+        ],
+        "hint": "<p>For a meeting both coordinates must agree at one clock time.</p>",
+        "solution": "<p>Use clock time \\(t\\) for A and \\(t-\\frac{3}{2}\\) for B.</p><p>Equating horizontal positions gives \\(8 t=20 t - 30\\), so \\(t=\\frac{5}{2}\\). At this time both balls have been launched.</p><p>Substitute each ball's own elapsed time into its vertical equation. Both heights equal \\(\\frac{115}{4}\\,\\mathrm m\\). The meeting occurs \\(\\frac{5}{2}\\,\\mathrm s\\) after A launches.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stages-restart-after-a-bounce-extra",
+        "title": "Start a new stage after a smooth-floor bounce",
+        "prompt": "<p>A ball meets a fixed smooth horizontal floor with horizontal speed \\(17\\,\\mathrm{m\\,s^{-1}}\\) and downwards speed \\(27\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{7}{9}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its upwards speed immediately after the bounce and horizontal distance to its next landing on the floor.</p>",
+        "fields": [
+          {
+            "key": "uy",
+            "label": "Vertical speed just after impact",
+            "type": "number",
+            "expected": "21",
+            "retry": [
+              {
+                "answer": "-21",
+                "feedback": "<p>The rebound has positive vertical velocity because the floor impulse has reversed it.</p>"
+              }
+            ]
+          },
+          {
+            "key": "range",
+            "label": "Distance before the next landing",
+            "type": "number",
+            "expected": "357/5"
+          }
+        ],
+        "hint": "<p>Apply restitution to the vertical component only. Then use ordinary projectile motion with the new initial velocity.</p>",
+        "solution": "<p>The floor impulse is vertical. The horizontal component remains unchanged, and restitution gives upwards component \\(21\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Restart time at the bounce. The condition \\(- 5 t^{2} + 21 t=0\\) has a non-zero solution \\(\\frac{21}{5}\\,\\mathrm s\\).</p><p>The upwards speed after impact is \\(21\\,\\mathrm{m\\,s^{-1}}\\) and the horizontal distance in the second flight is \\(\\frac{357}{5}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stages-use-the-velocity-at-release-extra",
+        "title": "Use the tangent velocity at release",
+        "prompt": "<p>A ball leaves a guide with speed \\(2 \\sqrt{61}\\,\\mathrm{m\\,s^{-1}}\\). The tangent direction at release is right and upwards with tangent \\(\\frac{5}{6}\\). The ball then moves freely. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the horizontal and vertical displacements \\(3\\,\\mathrm s\\) after it leaves the guide.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Horizontal displacement from release",
+            "type": "number",
+            "expected": "36"
+          },
+          {
+            "key": "y",
+            "label": "Vertical displacement from release",
+            "type": "number",
+            "expected": "-15"
+          }
+        ],
+        "hint": "<p>Start a fresh clock at the instant the ball leaves the guide. Use its tangent, not an old direction within the guide.</p>",
+        "solution": "<p>The free-flight initial velocity is the tangent velocity at release. Its rightwards and upwards components are \\(12\\,\\mathrm{m\\,s^{-1}}\\) and \\(10\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Once free, the ball’s horizontal velocity is constant and its vertical acceleration is \\(-g\\).</p><p>The rightwards displacement is \\(36\\,\\mathrm m\\) and the signed upwards displacement is \\(-15\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stages-compare-the-first-events-extra",
+        "title": "Compare two candidate first events",
+        "prompt": "<p>A ball is launched \\(60\\,\\mathrm m\\) above horizontal ground with rightwards speed \\(13\\,\\mathrm{m\\,s^{-1}}\\) and upwards speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). A vertical screen begins at ground level \\(\\frac{91}{2}\\,\\mathrm m\\) horizontally from launch and extends above the whole path. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which does the ball hit first, and at what time?</p>",
+        "fields": [
+          {
+            "key": "event",
+            "label": "First event",
+            "type": "choice",
+            "expected": "screen",
+            "options": {
+              "screen": "Screen",
+              "ground": "Ground"
+            }
+          },
+          {
+            "key": "time",
+            "label": "Time to the first event",
+            "type": "number",
+            "expected": "7/2",
+            "retry": [
+              {
+                "answer": "4",
+                "feedback": "<p>That is the later candidate. The assumed free flight ends at the first valid contact.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Find both candidate times on the same clock and stop the free-flight equations at the earliest physical event.</p>",
+        "solution": "<p>The absolute height is \\(Y=- 5 t^{2} + 5 t + 60\\). Ground contact has one positive time, \\(4\\,\\mathrm s\\).</p><p>The screen's horizontal position would be reached at \\(\\frac{7}{2}\\,\\mathrm s\\). Compare before substituting the final height.</p><p>The first event is the screen at \\(\\frac{7}{2}\\,\\mathrm s\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Impact",
+        "definition": "<p>A brief contact that can change velocity abruptly.</p>"
+      },
+      {
+        "term": "Restitution",
+        "definition": "<p>The ratio of normal separation speed to normal approach speed.</p>"
+      },
+      {
+        "term": "Local clock",
+        "definition": "<p>Elapsed time measured from the start of the current stage.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Meeting</th><td>Check both coordinates at the same common clock time.</td></tr><tr><th scope=\"row\">Delay</th><td>Use \\(t-d\\) for the motion that starts at time \\(d\\).</td></tr><tr><th scope=\"row\">Smooth-floor impact</th><td>Keep horizontal velocity and reverse and scale the vertical component.</td></tr><tr><th scope=\"row\">Release</th><td>Use the actual tangent velocity at the release point.</td></tr><tr><th scope=\"row\">First event</th><td>Compare all valid times before starting the next stage.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A ball hits a smooth floor with vertical velocity \\(-12\\,\\mathrm{m\\,s^{-1}}\\) and \\(e=\\frac34\\). Find the new vertical velocity.</p><p><strong>Check</strong> It is \\(9\\,\\mathrm{m\\,s^{-1}}\\) upwards.</p>",
+      "checks": "<ul><li>Identical horizontal positions can occur while the objects remain vertically separated.</li><li>Substituting one elapsed time into both models ignores the launch delay.</li></ul>",
+      "examTip": "<p>Before calculating a later stage, write its starting position, velocity components and zero time.</p>"
+    },
+    "related": [
+      {
+        "title": "Cartesian trajectories, targets and obstacles",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_projectiles_trajectories"
+      }
+    ]
+  }
+}

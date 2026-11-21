@@ -44,6 +44,7 @@ import study9231Fp2Differentiation from "../../content/original/9231-fp2/differe
 import study9231Fp2Integration from "../../content/original/9231-fp2/integration-study.json";
 import study9231Fp2Complex from "../../content/original/9231-fp2/complex-study.json";
 import study9231Fp2Ode from "../../content/original/9231-fp2/ode-study.json";
+import study9231MechanicsProjectiles from "../../content/original/9231-mechanics/projectiles-study.json";
 import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
 import { renderContent } from "./content";
 import { checkExact, checkExactInverseAngle, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
@@ -86,6 +87,7 @@ const lessons = {
   ...study9231Fp2Integration,
   ...study9231Fp2Complex,
   ...study9231Fp2Ode,
+  ...study9231MechanicsProjectiles,
 } as Record<string, AuthoredLesson>;
 const examPaths = examPracticePaths as Record<string, Omit<StudyExamPractice, "starters"> & { starters?: StudyExamPractice["starters"] }>;
 
