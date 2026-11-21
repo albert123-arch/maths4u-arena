@@ -1,0 +1,2740 @@
+{
+  "orig_9709_p3_de_forming": {
+    "updatedOn": "2026-11-21",
+    "description": "Translate proportional rates, gains and losses into a differential equation, and use observations to determine its constants.",
+    "sections": [
+      {
+        "id": "signed-rate",
+        "title": "How do I turn a decrease into an equation?",
+        "label": "Define the variables and sign",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Name the measured quantity and what it changes with before writing a derivative. The words “decreases by” describe the positive magnitude of a negative derivative.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(q\\) decreases at a rate proportional to itself, write \\(\\frac{\\mathrm dq}{\\mathrm dt}=-kq\\) with \\(k>0\\). Use one observed pair of amount and instantaneous rate to determine \\(k\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "forming-signed-rate-check",
+            "title": "Calibrate a proportional decrease",
+            "prompt": "<p>The amount \\(q\\) of dye in a display cell is measured in milligrams. It decreases at a rate proportional to the amount present. When \\(q=12\\), its rate of change is \\(-2\\,\\mathrm{mg\\,min^{-1}}\\). Write the model as \\(\\frac{\\mathrm dq}{\\mathrm dt}=-kq\\). Find \\(k\\) and the signed rate when \\(q=16\\).</p>",
+            "hint": "<p>Use the sign of the rate before finding the proportionality constant.</p>",
+            "solution": "<p>A decrease has a negative signed derivative. Use \\(\\frac{\\mathrm dq}{\\mathrm dt}=-kq\\) with \\(k>0\\).</p><p>The calibration gives \\(2=12 k\\), so \\(k=\\frac{1}{6}\\) per minute.</p><p>At the new amount the derivative is \\(-kq=- \\frac{8}{3}\\) milligrams per minute.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Constant k",
+                "type": "number",
+                "expected": "1/6",
+                "retry": [
+                  {
+                    "answer": "-1/6",
+                    "feedback": "<p>The minus sign already appears in the model. Keep k positive.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "rate",
+                "label": "Signed rate",
+                "type": "number",
+                "expected": "-8/3",
+                "retry": [
+                  {
+                    "answer": "8/3",
+                    "feedback": "<p>The rate of decrease is positive as a magnitude. The derivative is negative.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not use a negative proportionality constant as well as the explicit minus sign. That would model growth.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>State the units of the constant by comparing the two sides of the rate equation.</p>"
+          }
+        ]
+      },
+      {
+        "id": "inverse-rate",
+        "title": "Where does an inverse proportion go?",
+        "label": "Write the divisor",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>In “the rate is inversely proportional to the square of the distance”, the square belongs in the denominator. The distance is positive in this setting.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(R\\propto d^{-2}\\) becomes \\(R=\\frac{k}{d^2}\\). Solve for \\(k\\) by multiplying by \\(d^2\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "forming-inverse-rate-check",
+            "title": "Write an inverse rate model",
+            "prompt": "<p>The output \\(I\\) of a device increases at a rate inversely proportional to the square of the distance \\(d\\) from a fixed source. At \\(d=4\\) its rate of increase is \\(3\\). Find \\(k\\) in \\(\\frac{\\mathrm dI}{\\mathrm dt}=\\frac{k}{d^2}\\) and the rate when \\(d=6\\).</p>",
+            "hint": "<p>Check that increasing the distance decreases the rate.</p>",
+            "solution": "<p>Inversely proportional places the square of the distance beneath the fraction bar.</p><p>Multiply the observed rate by \\(d^2\\) to obtain \\(k=48\\).</p><p>The predicted rate at the new distance is \\(\\frac{48}{6^{2}}\\) or \\(\\frac{4}{3}\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Constant k",
+                "type": "number",
+                "expected": "48"
+              },
+              {
+                "key": "rate",
+                "label": "Rate at the new distance",
+                "type": "number",
+                "expected": "4/3"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Only the quantity named in the proportionality phrase goes in the denominator. A greater positive distance gives a smaller rate.</p>"
+          }
+        ]
+      },
+      {
+        "id": "net-rate",
+        "title": "How do I put gains and losses in one equation?",
+        "label": "Combine signed rates",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Add the contributions affecting the same quantity. If a loss is stated as a positive magnitude, subtract it.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The net rate equals gain rate minus loss rate. Solve “net rate = 0” to find a balance value, then use the sign to determine whether the quantity is rising or falling.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "forming-net-rate-check",
+            "title": "Combine gain and loss rates",
+            "prompt": "<p>An illuminated track gains \\(19\\) units of charge per minute and loses \\(4\\) times the current charge \\(q\\) each minute. Find the signed derivative at \\(q=4\\) and the charge for which the derivative is zero.</p>",
+            "hint": "<p>Write rate in minus rate out, then set the derivative to zero for balance.</p>",
+            "solution": "<p>The gain and loss are both rates. Subtract the loss to write \\(\\frac{\\mathrm dq}{\\mathrm dt}=19 - 4 q\\).</p><p>Substitute the observed charge to obtain \\(\\frac{\\mathrm dq}{\\mathrm dt}=3\\).</p><p>At balance, \\(19=4 q\\), so \\(q=\\frac{19}{4}\\).</p>",
+            "fields": [
+              {
+                "key": "rate",
+                "label": "Signed rate",
+                "type": "number",
+                "expected": "3",
+                "retry": [
+                  {
+                    "answer": "35",
+                    "feedback": "<p>A loss is subtracted from the gain.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "balance",
+                "label": "Charge at balance",
+                "type": "number",
+                "expected": "19/4"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A statement about the net rate does not say the inlet or outlet is zero. They can be equal and non-zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "forming-net-rate-second",
+            "title": "Combine gain and loss rates",
+            "prompt": "<p>An illuminated track gains \\(27\\) units of charge per minute and loses \\(8\\) times the current charge \\(q\\) each minute. Find the signed derivative at \\(q=8\\) and the charge for which the derivative is zero.</p>",
+            "hint": "<p>Write rate in minus rate out, then set the derivative to zero for balance.</p>",
+            "solution": "<p>The gain and loss are both rates. Subtract the loss to write \\(\\frac{\\mathrm dq}{\\mathrm dt}=27 - 8 q\\).</p><p>Substitute the observed charge to obtain \\(\\frac{\\mathrm dq}{\\mathrm dt}=-37\\).</p><p>At balance, \\(27=8 q\\), so \\(q=\\frac{27}{8}\\).</p>",
+            "fields": [
+              {
+                "key": "rate",
+                "label": "Signed rate",
+                "type": "number",
+                "expected": "-37",
+                "retry": [
+                  {
+                    "answer": "91",
+                    "feedback": "<p>A loss is subtracted from the gain.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "balance",
+                "label": "Charge at balance",
+                "type": "number",
+                "expected": "27/8"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "difference-from-target",
+        "title": "What changes when the model has a target level?",
+        "label": "Use the signed difference",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Choose the order of subtraction explicitly. A rate directed towards a target should reverse sign on opposite sides of the target.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a quantity \\(T\\) moving towards a fixed value \\(L\\), write \\(\\frac{\\mathrm dT}{\\mathrm dt}=-k(T-L)\\) with \\(k>0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "forming-difference-from-target-check",
+            "title": "Use the signed difference from a target",
+            "prompt": "<p>A study pod adjusts to a target temperature of \\(12^\\circ\\mathrm C\\). The model is \\(\\frac{\\mathrm dT}{\\mathrm dt}=-k(T-12)\\). At \\(T=17\\) the signed rate is \\(-3\\). Find \\(k\\) and the signed rate at \\(T=8\\).</p>",
+            "hint": "<p>Test the sign by asking in which direction the temperature moves towards the target.</p>",
+            "solution": "<p>Use the difference from the target. At the observed temperature this difference is \\(5\\).</p><p>The falling rate gives \\(k=\\frac{3}{5}\\).</p><p>Below the target, the bracket is negative. The model gives \\(\\frac{\\mathrm dT}{\\mathrm dt}=\\frac{12}{5}\\), so the temperature rises.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Constant k",
+                "type": "number",
+                "expected": "3/5"
+              },
+              {
+                "key": "rate",
+                "label": "Rate below target",
+                "type": "number",
+                "expected": "12/5",
+                "retry": [
+                  {
+                    "answer": "-12/5",
+                    "feedback": "<p>Below the target the negative bracket reverses the sign.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Proportional to the difference means use the whole bracket. Substituting the target should make the rate zero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "connected-rates",
+        "title": "How can I change the quantity whose rate is measured?",
+        "label": "Use the chain rule",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>An equation linking two quantities lets you relate the two rates. Differentiate the linking equation with respect to time.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(A=f(r)\\), then \\(\\frac{\\mathrm dA}{\\mathrm dt}=f^\\prime(r)\\frac{\\mathrm dr}{\\mathrm dt}\\). Isolate the rate you need when the multiplier is non-zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "forming-connected-rates-check",
+            "title": "Translate an area rate into a radius rate",
+            "prompt": "<p>In a scale model the area \\(A\\) of a patch satisfies \\(A=3 r^{2}\\). The area decreases uniformly at \\(3\\) square centimetres per minute. Find \\(\\frac{\\mathrm dr}{\\mathrm dt}\\) when \\(r=4\\).</p>",
+            "hint": "<p>Differentiate the area with respect to r, then multiply by the rate of change of r.</p>",
+            "solution": "<p>The area derivative is \\(\\frac{\\mathrm dA}{\\mathrm dt}=6r\\frac{\\mathrm dr}{\\mathrm dt}\\) by the chain rule.</p><p>Set this derivative equal to \\(-3\\) and put \\(r=4\\).</p><p>The required radius rate is \\(\\frac{\\mathrm dr}{\\mathrm dt}=- \\frac{1}{8}\\) centimetres per minute.</p>",
+            "fields": [
+              {
+                "key": "rate",
+                "label": "Radius rate",
+                "type": "number",
+                "expected": "-1/8",
+                "retry": [
+                  {
+                    "answer": "1/8",
+                    "feedback": "<p>A shrinking patch has a negative radius rate.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A rate in square centimetres per minute is not a radius rate. Include the chain factor before substituting.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "forming-connected-rates-second",
+            "title": "Translate an area rate into a radius rate",
+            "prompt": "<p>In a scale model the area \\(A\\) of a patch satisfies \\(A=6 r^{2}\\). The area decreases uniformly at \\(7\\) square centimetres per minute. Find \\(\\frac{\\mathrm dr}{\\mathrm dt}\\) when \\(r=8\\).</p>",
+            "hint": "<p>Differentiate the area with respect to r, then multiply by the rate of change of r.</p>",
+            "solution": "<p>The area derivative is \\(\\frac{\\mathrm dA}{\\mathrm dt}=12r\\frac{\\mathrm dr}{\\mathrm dt}\\) by the chain rule.</p><p>Set this derivative equal to \\(-7\\) and put \\(r=8\\).</p><p>The required radius rate is \\(\\frac{\\mathrm dr}{\\mathrm dt}=- \\frac{7}{96}\\) centimetres per minute.</p>",
+            "fields": [
+              {
+                "key": "rate",
+                "label": "Radius rate",
+                "type": "number",
+                "expected": "-7/96",
+                "retry": [
+                  {
+                    "answer": "7/96",
+                    "feedback": "<p>A shrinking patch has a negative radius rate.</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Calibrate a proportional decrease",
+        "question": "<p>The amount \\(q\\) of dye in a display cell is measured in milligrams. It decreases at a rate proportional to the amount present. When \\(q=9\\), its rate of change is \\(-3\\,\\mathrm{mg\\,min^{-1}}\\). Write the model as \\(\\frac{\\mathrm dq}{\\mathrm dt}=-kq\\). Find \\(k\\) and the signed rate when \\(q=12\\).</p>",
+        "solution": [
+          "<p>A decrease has a negative signed derivative. Use \\(\\frac{\\mathrm dq}{\\mathrm dt}=-kq\\) with \\(k>0\\).</p>",
+          "<p>The calibration gives \\(3=9 k\\), so \\(k=\\frac{1}{3}\\) per minute.</p>",
+          "<p>At the new amount the derivative is \\(-kq=-4\\) milligrams per minute.</p>"
+        ]
+      },
+      {
+        "title": "Write an inverse rate model",
+        "question": "<p>The output \\(I\\) of a device increases at a rate inversely proportional to the distance \\(d\\) from a fixed source. At \\(d=3\\) its rate of increase is \\(2\\). Find \\(k\\) in \\(\\frac{\\mathrm dI}{\\mathrm dt}=\\frac{k}{d}\\) and the rate when \\(d=5\\).</p>",
+        "solution": [
+          "<p>Inversely proportional places the distance beneath the fraction bar.</p>",
+          "<p>Multiply the observed rate by \\(d\\) to obtain \\(k=6\\).</p>",
+          "<p>The predicted rate at the new distance is \\(\\frac{6}{5^{1}}\\) or \\(\\frac{6}{5}\\).</p>"
+        ]
+      },
+      {
+        "title": "Combine gain and loss rates",
+        "question": "<p>An illuminated track gains \\(17\\) units of charge per minute and loses \\(3\\) times the current charge \\(q\\) each minute. Find the signed derivative at \\(q=3\\) and the charge for which the derivative is zero.</p>",
+        "solution": [
+          "<p>The gain and loss are both rates. Subtract the loss to write \\(\\frac{\\mathrm dq}{\\mathrm dt}=17 - 3 q\\).</p>",
+          "<p>Substitute the observed charge to obtain \\(\\frac{\\mathrm dq}{\\mathrm dt}=8\\).</p>",
+          "<p>At balance, \\(17=3 q\\), so \\(q=\\frac{17}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Combine gain and loss rates",
+        "question": "<p>An illuminated track gains \\(21\\) units of charge per minute and loses \\(5\\) times the current charge \\(q\\) each minute. Find the signed derivative at \\(q=5\\) and the charge for which the derivative is zero.</p>",
+        "solution": [
+          "<p>The gain and loss are both rates. Subtract the loss to write \\(\\frac{\\mathrm dq}{\\mathrm dt}=21 - 5 q\\).</p>",
+          "<p>Substitute the observed charge to obtain \\(\\frac{\\mathrm dq}{\\mathrm dt}=-4\\).</p>",
+          "<p>At balance, \\(21=5 q\\), so \\(q=\\frac{21}{5}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the signed difference from a target",
+        "question": "<p>A study pod adjusts to a target temperature of \\(10^\\circ\\mathrm C\\). The model is \\(\\frac{\\mathrm dT}{\\mathrm dt}=-k(T-10)\\). At \\(T=14\\) the signed rate is \\(-2\\). Find \\(k\\) and the signed rate at \\(T=7\\).</p>",
+        "solution": [
+          "<p>Use the difference from the target. At the observed temperature this difference is \\(4\\).</p>",
+          "<p>The falling rate gives \\(k=\\frac{1}{2}\\).</p>",
+          "<p>Below the target, the bracket is negative. The model gives \\(\\frac{\\mathrm dT}{\\mathrm dt}=\\frac{3}{2}\\), so the temperature rises.</p>"
+        ]
+      },
+      {
+        "title": "Translate an area rate into a radius rate",
+        "question": "<p>In a scale model the area \\(A\\) of a patch satisfies \\(A=2 r^{2}\\). The area decreases uniformly at \\(2\\) square centimetres per minute. Find \\(\\frac{\\mathrm dr}{\\mathrm dt}\\) when \\(r=3\\).</p>",
+        "solution": [
+          "<p>The area derivative is \\(\\frac{\\mathrm dA}{\\mathrm dt}=4r\\frac{\\mathrm dr}{\\mathrm dt}\\) by the chain rule.</p>",
+          "<p>Set this derivative equal to \\(-2\\) and put \\(r=3\\).</p>",
+          "<p>The required radius rate is \\(\\frac{\\mathrm dr}{\\mathrm dt}=- \\frac{1}{6}\\) centimetres per minute.</p>"
+        ]
+      },
+      {
+        "title": "Translate an area rate into a radius rate",
+        "question": "<p>In a scale model the area \\(A\\) of a patch satisfies \\(A=5 r^{2}\\). The area decreases uniformly at \\(4\\) square centimetres per minute. Find \\(\\frac{\\mathrm dr}{\\mathrm dt}\\) when \\(r=5\\).</p>",
+        "solution": [
+          "<p>The area derivative is \\(\\frac{\\mathrm dA}{\\mathrm dt}=10r\\frac{\\mathrm dr}{\\mathrm dt}\\) by the chain rule.</p>",
+          "<p>Set this derivative equal to \\(-4\\) and put \\(r=5\\).</p>",
+          "<p>The required radius rate is \\(\\frac{\\mathrm dr}{\\mathrm dt}=- \\frac{2}{25}\\) centimetres per minute.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Rate of change",
+        "definition": "<p>A derivative giving the signed change in a quantity per unit of its independent variable.</p>"
+      },
+      {
+        "term": "Direct proportion",
+        "definition": "<p>Multiplication by a fixed constant.</p>"
+      },
+      {
+        "term": "Inverse proportion",
+        "definition": "<p>Division of a fixed constant by a quantity or expression.</p>"
+      },
+      {
+        "term": "Net rate",
+        "definition": "<p>The rate entering minus the rate leaving.</p>"
+      },
+      {
+        "term": "Balance",
+        "definition": "<p>A value for which the signed net rate is zero.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When you see</th><th scope=\"col\">What to do</th></tr></thead><tbody><tr><th scope=\"row\">Decrease proportional to amount</th><td>\\(\\frac{\\mathrm dq}{\\mathrm dt}=-kq\\) with \\(k>0\\).</td></tr><tr><th scope=\"row\">Inverse square</th><td>\\(R=\\frac{k}{d^2}\\) for \\(d>0\\).</td></tr><tr><th scope=\"row\">Gain and loss</th><td>Subtract the loss magnitude from the gain rate.</td></tr><tr><th scope=\"row\">Rates linked by area</th><td>\\(\\frac{\\mathrm dA}{\\mathrm dt}=\\frac{\\mathrm dA}{\\mathrm dr}\\frac{\\mathrm dr}{\\mathrm dt}\\).</td></tr></tbody></table></div><h2>Try a quick check</h2><p>At \\(q=8\\) the rate is \\(-4\\) and \\(\\frac{\\mathrm dq}{\\mathrm dt}=-kq\\). Find \\(k\\).</p><p><strong>Check</strong> \\(k=\\frac12\\) in inverse time units.</p>",
+      "checks": "<ul><li>Do not use a negative proportionality constant as well as the explicit minus sign. That would model growth.</li><li>Only the quantity named in the proportionality phrase goes in the denominator. A greater positive distance gives a smaller rate.</li></ul>",
+      "examTip": "<p>At a balance value check that the full derivative equals zero. State the sign and units when evaluating a rate.</p>"
+    },
+    "related": [
+      {
+        "title": "General solutions by integration",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_de_general"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "forming-signed-rate-more",
+        "title": "Calibrate a proportional decrease",
+        "prompt": "<p>The amount \\(q\\) of dye in a display cell is measured in milligrams. It decreases at a rate proportional to the amount present. When \\(q=15\\), its rate of change is \\(-5\\,\\mathrm{mg\\,min^{-1}}\\). Write the model as \\(\\frac{\\mathrm dq}{\\mathrm dt}=-kq\\). Find \\(k\\) and the signed rate when \\(q=20\\).</p>",
+        "hint": "<p>Use the sign of the rate before finding the proportionality constant.</p>",
+        "solution": "<p>A decrease has a negative signed derivative. Use \\(\\frac{\\mathrm dq}{\\mathrm dt}=-kq\\) with \\(k>0\\).</p><p>The calibration gives \\(5=15 k\\), so \\(k=\\frac{1}{3}\\) per minute.</p><p>At the new amount the derivative is \\(-kq=- \\frac{20}{3}\\) milligrams per minute.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Constant k",
+            "type": "number",
+            "expected": "1/3",
+            "retry": [
+              {
+                "answer": "-1/3",
+                "feedback": "<p>The minus sign already appears in the model. Keep k positive.</p>"
+              }
+            ]
+          },
+          {
+            "key": "rate",
+            "label": "Signed rate",
+            "type": "number",
+            "expected": "-20/3",
+            "retry": [
+              {
+                "answer": "20/3",
+                "feedback": "<p>The rate of decrease is positive as a magnitude. The derivative is negative.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "forming-inverse-rate-more",
+        "title": "Write an inverse rate model",
+        "prompt": "<p>The output \\(I\\) of a device increases at a rate inversely proportional to the distance \\(d\\) from a fixed source. At \\(d=2\\) its rate of increase is \\(4\\). Find \\(k\\) in \\(\\frac{\\mathrm dI}{\\mathrm dt}=\\frac{k}{d}\\) and the rate when \\(d=4\\).</p>",
+        "hint": "<p>Check that increasing the distance decreases the rate.</p>",
+        "solution": "<p>Inversely proportional places the distance beneath the fraction bar.</p><p>Multiply the observed rate by \\(d\\) to obtain \\(k=8\\).</p><p>The predicted rate at the new distance is \\(\\frac{8}{4^{1}}\\) or \\(2\\).</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Constant k",
+            "type": "number",
+            "expected": "8"
+          },
+          {
+            "key": "rate",
+            "label": "Rate at the new distance",
+            "type": "number",
+            "expected": "2"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "forming-net-rate-more",
+        "title": "Combine gain and loss rates",
+        "prompt": "<p>An illuminated track gains \\(29\\) units of charge per minute and loses \\(9\\) times the current charge \\(q\\) each minute. Find the signed derivative at \\(q=9\\) and the charge for which the derivative is zero.</p>",
+        "hint": "<p>Write rate in minus rate out, then set the derivative to zero for balance.</p>",
+        "solution": "<p>The gain and loss are both rates. Subtract the loss to write \\(\\frac{\\mathrm dq}{\\mathrm dt}=29 - 9 q\\).</p><p>Substitute the observed charge to obtain \\(\\frac{\\mathrm dq}{\\mathrm dt}=-52\\).</p><p>At balance, \\(29=9 q\\), so \\(q=\\frac{29}{9}\\).</p>",
+        "fields": [
+          {
+            "key": "rate",
+            "label": "Signed rate",
+            "type": "number",
+            "expected": "-52",
+            "retry": [
+              {
+                "answer": "110",
+                "feedback": "<p>A loss is subtracted from the gain.</p>"
+              }
+            ]
+          },
+          {
+            "key": "balance",
+            "label": "Charge at balance",
+            "type": "number",
+            "expected": "29/9"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "forming-difference-from-target-more",
+        "title": "Use the signed difference from a target",
+        "prompt": "<p>A study pod adjusts to a target temperature of \\(14^\\circ\\mathrm C\\). The model is \\(\\frac{\\mathrm dT}{\\mathrm dt}=-k(T-14)\\). At \\(T=20\\) the signed rate is \\(-4\\). Find \\(k\\) and the signed rate at \\(T=9\\).</p>",
+        "hint": "<p>Test the sign by asking in which direction the temperature moves towards the target.</p>",
+        "solution": "<p>Use the difference from the target. At the observed temperature this difference is \\(6\\).</p><p>The falling rate gives \\(k=\\frac{2}{3}\\).</p><p>Below the target, the bracket is negative. The model gives \\(\\frac{\\mathrm dT}{\\mathrm dt}=\\frac{10}{3}\\), so the temperature rises.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Constant k",
+            "type": "number",
+            "expected": "2/3"
+          },
+          {
+            "key": "rate",
+            "label": "Rate below target",
+            "type": "number",
+            "expected": "10/3",
+            "retry": [
+              {
+                "answer": "-10/3",
+                "feedback": "<p>Below the target the negative bracket reverses the sign.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "forming-connected-rates-more",
+        "title": "Translate an area rate into a radius rate",
+        "prompt": "<p>In a scale model the area \\(A\\) of a patch satisfies \\(A=8 r^{2}\\). The area decreases uniformly at \\(8\\) square centimetres per minute. Find \\(\\frac{\\mathrm dr}{\\mathrm dt}\\) when \\(r=9\\).</p>",
+        "hint": "<p>Differentiate the area with respect to r, then multiply by the rate of change of r.</p>",
+        "solution": "<p>The area derivative is \\(\\frac{\\mathrm dA}{\\mathrm dt}=16r\\frac{\\mathrm dr}{\\mathrm dt}\\) by the chain rule.</p><p>Set this derivative equal to \\(-8\\) and put \\(r=9\\).</p><p>The required radius rate is \\(\\frac{\\mathrm dr}{\\mathrm dt}=- \\frac{1}{18}\\) centimetres per minute.</p>",
+        "fields": [
+          {
+            "key": "rate",
+            "label": "Radius rate",
+            "type": "number",
+            "expected": "-1/18",
+            "retry": [
+              {
+                "answer": "1/18",
+                "feedback": "<p>A shrinking patch has a negative radius rate.</p>"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "orig_9709_p3_de_general": {
+    "updatedOn": "2026-11-21",
+    "description": "Recover a family of curves from its gradient. Choose an antiderivative, keep one arbitrary constant and check by differentiating.",
+    "sections": [
+      {
+        "id": "power-rule",
+        "title": "How can I recover y when the gradient depends only on x?",
+        "label": "Integrate a power and a constant",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Solving the differential equation means finding a function that gives the stated derivative. If the right side only depends on \\(x\\), integrate directly.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\int x^n\\,\\mathrm dx=\\frac{x^{n+1}}{n+1}+C\\) when \\(n\ne-1\\). Integrate a sum term by term.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "general-power-rule-check",
+            "title": "Integrate a polynomial gradient",
+            "prompt": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=5 x^{2} - 4\\) has a general solution of the form \\(y=ax^3+bx+C\\). Find the two displayed coefficients.</p>",
+            "hint": "<p>Choose the antiderivative of each term separately and keep one arbitrary constant.</p>",
+            "solution": "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p><p>Raise each power by one and divide its coefficient by the new power. The constant gradient integrates to a multiple of x.</p><p>Write \\(y=\\frac{5 x^{3}}{3} - 4 x+C\\). Differentiation removes \\(C\\) and gives \\(5 x^{2} - 4\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "5/3",
+                "retry": [
+                  {
+                    "answer": "-5/3",
+                    "feedback": "<p>Differentiate your result to check the sign of this term.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "-4"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A constant on the right-hand side integrates to a term in x. The arbitrary integration constant is a separate term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "exponential-rule",
+        "title": "How do I handle an exponential rate?",
+        "label": "Undo the chain multiplier",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>The exponential retains its argument on integration. Its coefficient changes to undo the constant introduced by differentiation.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(k\ne0\\), an antiderivative of \\(\\mathrm e^{kx}\\) is \\(\\frac1k\\mathrm e^{kx}\\). Check the coefficient by differentiating.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "general-exponential-rule-check",
+            "title": "Reverse the chain factor of an exponential",
+            "prompt": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=4 e^{5 x} - 2\\) has a general solution of the form \\(y=a\\mathrm e^{5x}+bx+C\\). Find the two displayed coefficients.</p>",
+            "hint": "<p>Choose the antiderivative of each term separately and keep one arbitrary constant.</p>",
+            "solution": "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p><p>Differentiating the exponential brings out its inner coefficient. Divide by that coefficient when integrating.</p><p>Write \\(y=- 2 x + \\frac{4 e^{5 x}}{5}+C\\). Differentiation removes \\(C\\) and gives \\(4 e^{5 x} - 2\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "4/5",
+                "retry": [
+                  {
+                    "answer": "-4/5",
+                    "feedback": "<p>Differentiate your result to check the sign of this term.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "-2"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not increase the exponent as with a power of x. The linear exponent remains the same.</p>"
+          }
+        ]
+      },
+      {
+        "id": "logarithm-rule",
+        "title": "When does the solution contain a logarithm?",
+        "label": "Integrate a linear reciprocal",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Check whether the numerator is a multiple of the derivative of the denominator. This is why a reciprocal of a linear expression gives a logarithm.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\int\\frac{a}{bx+c}\\,\\mathrm dx=\\frac ab\\ln|bx+c|+C\\) for \\(b\ne0\\) on an interval avoiding \\(bx+c=0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "general-logarithm-rule-check",
+            "title": "Spot a logarithmic antiderivative",
+            "prompt": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=2 + \\frac{5}{4 x + 1}\\) has a general solution of the form \\(y=a\\ln|4x+1|+bx+C\\). Find the two displayed coefficients.</p>",
+            "hint": "<p>Choose the antiderivative of each term separately and keep one arbitrary constant.</p>",
+            "solution": "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p><p>The numerator is constant and the denominator is linear. Divide by the derivative of the denominator when integrating the reciprocal.</p><p>Write \\(y=\\frac{5}{4}\\ln|4x+1|+2x+C\\). Differentiation removes \\(C\\) and gives \\(2 + \\frac{5}{4 x + 1}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "5/4",
+                "retry": [
+                  {
+                    "answer": "-5/4",
+                    "feedback": "<p>Differentiate your result to check the sign of this term.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "2"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A solution obtained by integrating through a reciprocal is defined separately on either side of its pole.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "general-logarithm-rule-second",
+            "title": "Spot a logarithmic antiderivative",
+            "prompt": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=2 + \\frac{17}{6 x + 1}\\) has a general solution of the form \\(y=a\\ln|6x+1|+bx+C\\). Find the two displayed coefficients.</p>",
+            "hint": "<p>Choose the antiderivative of each term separately and keep one arbitrary constant.</p>",
+            "solution": "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p><p>The numerator is constant and the denominator is linear. Divide by the derivative of the denominator when integrating the reciprocal.</p><p>Write \\(y=\\frac{17}{6}\\ln|6x+1|+2x+C\\). Differentiation removes \\(C\\) and gives \\(2 + \\frac{17}{6 x + 1}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "17/6",
+                "retry": [
+                  {
+                    "answer": "-17/6",
+                    "feedback": "<p>Differentiate your result to check the sign of this term.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "2"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the sign of the linear expression before replacing the absolute value with a positive argument.</p>"
+          }
+        ]
+      },
+      {
+        "id": "trig-rule",
+        "title": "Which signs go with sine and cosine?",
+        "label": "Integrate sine and cosine",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Recall which derivative gives sine with a minus sign. Use the same inner multiplier for the antiderivative.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(a\ne0\\), \\(\\int\\sin(ax)\\,\\mathrm dx=-\\frac{\\cos(ax)}a+C\\) and \\(\\int\\cos(ax)\\,\\mathrm dx=\\frac{\\sin(ax)}a+C\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "general-trig-rule-check",
+            "title": "Integrate sine and cosine terms",
+            "prompt": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=5 \\sin{\\left(4 x \\right)} + 2 \\cos{\\left(5 x \\right)}\\) has a general solution of the form \\(y=a\\cos(4x)+b\\sin(5x)+C\\). Find the two displayed coefficients.</p>",
+            "hint": "<p>Choose the antiderivative of each term separately and keep one arbitrary constant.</p>",
+            "solution": "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p><p>The cosine term has a negative coefficient because its derivative is negative sine. Adjust for each inner multiplier.</p><p>Write \\(y=\\frac{2 \\sin{\\left(5 x \\right)}}{5} - \\frac{5 \\cos{\\left(4 x \\right)}}{4}+C\\). Differentiation removes \\(C\\) and gives \\(5 \\sin{\\left(4 x \\right)} + 2 \\cos{\\left(5 x \\right)}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "-5/4",
+                "retry": [
+                  {
+                    "answer": "5/4",
+                    "feedback": "<p>Differentiate your result to check the sign of this term.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "2/5"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If a squared trig function appears, consider a double-angle identity before choosing the antiderivative.</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-family",
+        "title": "How do I check the whole family of curves?",
+        "label": "Differentiate back to the gradient",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Differentiating checks that all members of a family solve the same equation, since the arbitrary additive constant vanishes.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(F^\\prime(x)=f(x)\\) then \\(y=F(x)+C\\) solves \\(\\frac{\\mathrm dy}{\\mathrm dx}=f(x)\\) for every constant \\(C\\). For a gradient containing a product or composite, use an appropriate method from Integration.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "general-check-family-check",
+            "title": "Check the derivative and the arbitrary constant",
+            "prompt": "<p>The family of curves satisfies \\(y=C + 3 x^{3} - 3 x^{2} + 5\\). Find the gradient at \\(x=2\\). What is the coefficient of \\(x\\) in the derivative?</p>",
+            "hint": "<p>The free constant translates the curve vertically and does not affect the gradient.</p>",
+            "solution": "<p>Differentiate each term. The two constant terms have derivative zero.</p><p>The derivative is \\(\\frac{\\mathrm dy}{\\mathrm dx}=9 x^{2} - 6 x\\). Its linear coefficient is \\(-6\\).</p><p>Substituting the requested input gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=24\\).</p>",
+            "fields": [
+              {
+                "key": "gradient",
+                "label": "Gradient at the given input",
+                "type": "number",
+                "expected": "24"
+              },
+              {
+                "key": "coef",
+                "label": "Linear coefficient",
+                "type": "number",
+                "expected": "-6"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A gradient can define a family. Without a specific point, there is no reason to set the integration constant equal to zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "general-check-family-second",
+            "title": "Check the derivative and the arbitrary constant",
+            "prompt": "<p>The family of curves satisfies \\(y=C + 7 x^{3} - 7 x^{2} + 17\\). Find the gradient at \\(x=5\\). What is the coefficient of \\(x\\) in the derivative?</p>",
+            "hint": "<p>The free constant translates the curve vertically and does not affect the gradient.</p>",
+            "solution": "<p>Differentiate each term. The two constant terms have derivative zero.</p><p>The derivative is \\(\\frac{\\mathrm dy}{\\mathrm dx}=21 x^{2} - 14 x\\). Its linear coefficient is \\(-14\\).</p><p>Substituting the requested input gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=455\\).</p>",
+            "fields": [
+              {
+                "key": "gradient",
+                "label": "Gradient at the given input",
+                "type": "number",
+                "expected": "455"
+              },
+              {
+                "key": "coef",
+                "label": "Linear coefficient",
+                "type": "number",
+                "expected": "-14"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Integrate a polynomial gradient",
+        "question": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=3 x^{2} - 2\\) has a general solution of the form \\(y=ax^3+bx+C\\). Find the two displayed coefficients.</p>",
+        "solution": [
+          "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p>",
+          "<p>Raise each power by one and divide its coefficient by the new power. The constant gradient integrates to a multiple of x.</p>",
+          "<p>Write \\(y=x^{3} - 2 x+C\\). Differentiation removes \\(C\\) and gives \\(3 x^{2} - 2\\).</p>"
+        ]
+      },
+      {
+        "title": "Reverse the chain factor of an exponential",
+        "question": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=2 e^{3 x} - 2\\) has a general solution of the form \\(y=a\\mathrm e^{3x}+bx+C\\). Find the two displayed coefficients.</p>",
+        "solution": [
+          "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p>",
+          "<p>Differentiating the exponential brings out its inner coefficient. Divide by that coefficient when integrating.</p>",
+          "<p>Write \\(y=- 2 x + \\frac{2 e^{3 x}}{3}+C\\). Differentiation removes \\(C\\) and gives \\(2 e^{3 x} - 2\\).</p>"
+        ]
+      },
+      {
+        "title": "Spot a logarithmic antiderivative",
+        "question": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=2 + \\frac{3}{2 x + 1}\\) has a general solution of the form \\(y=a\\ln|2x+1|+bx+C\\). Find the two displayed coefficients.</p>",
+        "solution": [
+          "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p>",
+          "<p>The numerator is constant and the denominator is linear. Divide by the derivative of the denominator when integrating the reciprocal.</p>",
+          "<p>Write \\(y=\\frac{3}{2}\\ln|2x+1|+2x+C\\). Differentiation removes \\(C\\) and gives \\(2 + \\frac{3}{2 x + 1}\\).</p>"
+        ]
+      },
+      {
+        "title": "Spot a logarithmic antiderivative",
+        "question": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=2 + \\frac{7}{3 x + 1}\\) has a general solution of the form \\(y=a\\ln|3x+1|+bx+C\\). Find the two displayed coefficients.</p>",
+        "solution": [
+          "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p>",
+          "<p>The numerator is constant and the denominator is linear. Divide by the derivative of the denominator when integrating the reciprocal.</p>",
+          "<p>Write \\(y=\\frac{7}{3}\\ln|3x+1|+2x+C\\). Differentiation removes \\(C\\) and gives \\(2 + \\frac{7}{3 x + 1}\\).</p>"
+        ]
+      },
+      {
+        "title": "Integrate sine and cosine terms",
+        "question": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=3 \\sin{\\left(2 x \\right)} + 2 \\cos{\\left(3 x \\right)}\\) has a general solution of the form \\(y=a\\cos(2x)+b\\sin(3x)+C\\). Find the two displayed coefficients.</p>",
+        "solution": [
+          "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p>",
+          "<p>The cosine term has a negative coefficient because its derivative is negative sine. Adjust for each inner multiplier.</p>",
+          "<p>Write \\(y=\\frac{2 \\sin{\\left(3 x \\right)}}{3} - \\frac{3 \\cos{\\left(2 x \\right)}}{2}+C\\). Differentiation removes \\(C\\) and gives \\(3 \\sin{\\left(2 x \\right)} + 2 \\cos{\\left(3 x \\right)}\\).</p>"
+        ]
+      },
+      {
+        "title": "Check the derivative and the arbitrary constant",
+        "question": "<p>The family of curves satisfies \\(y=C + 2 x^{3} - 2 x^{2} + 2\\). Find the gradient at \\(x=-1\\). What is the coefficient of \\(x\\) in the derivative?</p>",
+        "solution": [
+          "<p>Differentiate each term. The two constant terms have derivative zero.</p>",
+          "<p>The derivative is \\(\\frac{\\mathrm dy}{\\mathrm dx}=6 x^{2} - 4 x\\). Its linear coefficient is \\(-4\\).</p>",
+          "<p>Substituting the requested input gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=10\\).</p>"
+        ]
+      },
+      {
+        "title": "Check the derivative and the arbitrary constant",
+        "question": "<p>The family of curves satisfies \\(y=C + 4 x^{3} - 4 x^{2} + 8\\). Find the gradient at \\(x=3\\). What is the coefficient of \\(x\\) in the derivative?</p>",
+        "solution": [
+          "<p>Differentiate each term. The two constant terms have derivative zero.</p>",
+          "<p>The derivative is \\(\\frac{\\mathrm dy}{\\mathrm dx}=12 x^{2} - 8 x\\). Its linear coefficient is \\(-8\\).</p>",
+          "<p>Substituting the requested input gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=84\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Differential equation",
+        "definition": "<p>An equation involving a derivative of an unknown function.</p>"
+      },
+      {
+        "term": "First order",
+        "definition": "<p>The highest derivative in the equation is the first derivative.</p>"
+      },
+      {
+        "term": "General solution",
+        "definition": "<p>A family of functions described by an arbitrary constant, on the relevant interval.</p>"
+      },
+      {
+        "term": "Antiderivative",
+        "definition": "<p>A function whose derivative is the given expression.</p>"
+      },
+      {
+        "term": "Primitive",
+        "definition": "<p>Another name for an antiderivative.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When you see</th><th scope=\"col\">What to do</th></tr></thead><tbody><tr><th scope=\"row\">\\(f(x)\\) only</th><td>Integrate with respect to x and keep one constant.</td></tr><tr><th scope=\"row\">Linear exponential</th><td>Divide by the multiplier in its exponent.</td></tr><tr><th scope=\"row\">Linear reciprocal</th><td>Use a logarithm with the chain multiplier accounted for.</td></tr><tr><th scope=\"row\">Sine or cosine</th><td>Check the sign by differentiating.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Find the general solution for \\(\\frac{\\mathrm dy}{\\mathrm dx}=6x+4\\).</p><p><strong>Check</strong> \\(y=3x^2+4x+C\\).</p>",
+      "checks": "<ul><li>A constant on the right-hand side integrates to a term in x. The arbitrary integration constant is a separate term.</li><li>Do not increase the exponent as with a power of x. The linear exponent remains the same.</li></ul>",
+      "examTip": "<p>Differentiate your final result. Its derivative should match every term of the original rate.</p>"
+    },
+    "related": [
+      {
+        "title": "Forming a differential equation",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_de_forming"
+      },
+      {
+        "title": "Separating variables",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_de_separation"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "general-power-rule-more",
+        "title": "Integrate a polynomial gradient",
+        "prompt": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=7 x^{2} - 3\\) has a general solution of the form \\(y=ax^3+bx+C\\). Find the two displayed coefficients.</p>",
+        "hint": "<p>Choose the antiderivative of each term separately and keep one arbitrary constant.</p>",
+        "solution": "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p><p>Raise each power by one and divide its coefficient by the new power. The constant gradient integrates to a multiple of x.</p><p>Write \\(y=\\frac{7 x^{3}}{3} - 3 x+C\\). Differentiation removes \\(C\\) and gives \\(7 x^{2} - 3\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient a",
+            "type": "number",
+            "expected": "7/3",
+            "retry": [
+              {
+                "answer": "-7/3",
+                "feedback": "<p>Differentiate your result to check the sign of this term.</p>"
+              }
+            ]
+          },
+          {
+            "key": "b",
+            "label": "Coefficient b",
+            "type": "number",
+            "expected": "-3"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "general-exponential-rule-more",
+        "title": "Reverse the chain factor of an exponential",
+        "prompt": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=3 e^{7 x} - 2\\) has a general solution of the form \\(y=a\\mathrm e^{7x}+bx+C\\). Find the two displayed coefficients.</p>",
+        "hint": "<p>Choose the antiderivative of each term separately and keep one arbitrary constant.</p>",
+        "solution": "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p><p>Differentiating the exponential brings out its inner coefficient. Divide by that coefficient when integrating.</p><p>Write \\(y=- 2 x + \\frac{3 e^{7 x}}{7}+C\\). Differentiation removes \\(C\\) and gives \\(3 e^{7 x} - 2\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient a",
+            "type": "number",
+            "expected": "3/7",
+            "retry": [
+              {
+                "answer": "-3/7",
+                "feedback": "<p>Differentiate your result to check the sign of this term.</p>"
+              }
+            ]
+          },
+          {
+            "key": "b",
+            "label": "Coefficient b",
+            "type": "number",
+            "expected": "-2"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "general-logarithm-rule-more",
+        "title": "Spot a logarithmic antiderivative",
+        "prompt": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=2 + \\frac{19}{8 x + 1}\\) has a general solution of the form \\(y=a\\ln|8x+1|+bx+C\\). Find the two displayed coefficients.</p>",
+        "hint": "<p>Choose the antiderivative of each term separately and keep one arbitrary constant.</p>",
+        "solution": "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p><p>The numerator is constant and the denominator is linear. Divide by the derivative of the denominator when integrating the reciprocal.</p><p>Write \\(y=\\frac{19}{8}\\ln|8x+1|+2x+C\\). Differentiation removes \\(C\\) and gives \\(2 + \\frac{19}{8 x + 1}\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient a",
+            "type": "number",
+            "expected": "19/8",
+            "retry": [
+              {
+                "answer": "-19/8",
+                "feedback": "<p>Differentiate your result to check the sign of this term.</p>"
+              }
+            ]
+          },
+          {
+            "key": "b",
+            "label": "Coefficient b",
+            "type": "number",
+            "expected": "2"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "general-trig-rule-more",
+        "title": "Integrate sine and cosine terms",
+        "prompt": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=7 \\sin{\\left(3 x \\right)} + 2 \\cos{\\left(7 x \\right)}\\) has a general solution of the form \\(y=a\\cos(3x)+b\\sin(7x)+C\\). Find the two displayed coefficients.</p>",
+        "hint": "<p>Choose the antiderivative of each term separately and keep one arbitrary constant.</p>",
+        "solution": "<p>The right-hand side depends only on \\(x\\), so integrate with respect to \\(x\\).</p><p>The cosine term has a negative coefficient because its derivative is negative sine. Adjust for each inner multiplier.</p><p>Write \\(y=\\frac{2 \\sin{\\left(7 x \\right)}}{7} - \\frac{7 \\cos{\\left(3 x \\right)}}{3}+C\\). Differentiation removes \\(C\\) and gives \\(7 \\sin{\\left(3 x \\right)} + 2 \\cos{\\left(7 x \\right)}\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient a",
+            "type": "number",
+            "expected": "-7/3",
+            "retry": [
+              {
+                "answer": "7/3",
+                "feedback": "<p>Differentiate your result to check the sign of this term.</p>"
+              }
+            ]
+          },
+          {
+            "key": "b",
+            "label": "Coefficient b",
+            "type": "number",
+            "expected": "2/7"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "general-check-family-more",
+        "title": "Check the derivative and the arbitrary constant",
+        "prompt": "<p>The family of curves satisfies \\(y=C + 8 x^{3} - 8 x^{2} + 20\\). Find the gradient at \\(x=6\\). What is the coefficient of \\(x\\) in the derivative?</p>",
+        "hint": "<p>The free constant translates the curve vertically and does not affect the gradient.</p>",
+        "solution": "<p>Differentiate each term. The two constant terms have derivative zero.</p><p>The derivative is \\(\\frac{\\mathrm dy}{\\mathrm dx}=24 x^{2} - 16 x\\). Its linear coefficient is \\(-16\\).</p><p>Substituting the requested input gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=768\\).</p>",
+        "fields": [
+          {
+            "key": "gradient",
+            "label": "Gradient at the given input",
+            "type": "number",
+            "expected": "768"
+          },
+          {
+            "key": "coef",
+            "label": "Linear coefficient",
+            "type": "number",
+            "expected": "-16"
+          }
+        ]
+      }
+    ]
+  },
+  "orig_9709_p3_de_separation": {
+    "updatedOn": "2026-11-21",
+    "description": "Recognise separable equations, integrate each variable on its own side, and check restrictions introduced when dividing.",
+    "sections": [
+      {
+        "id": "separate-factors",
+        "title": "How can I put each variable on its own side?",
+        "label": "Separate powers",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Look for a product of a function of \\(x\\) and a function of \\(y\\). Move the y factor to the same side as \\(\\mathrm dy\\). If a variable is absent, its factor can be one.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(\\frac{\\mathrm dy}{\\mathrm dx}=f(x)g(y)\\) on a branch where \\(g(y)\ne0\\), integrate \\(\\int\\frac{1}{g(y)}\\,\\mathrm dy=\\int f(x)\\,\\mathrm dx\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "separation-separate-factors-check",
+            "title": "Separate a reciprocal power of y",
+            "prompt": "<p>For \\(x>0,\\ y>0\\), \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{3 x^{3}}{y^{2}}\\). The general solution can be written as \\(y^{3}=ax^{4}+C\\). Find \\(a\\).</p>",
+            "hint": "<p>Write one differential with each variable. The left side is integrated with respect to y.</p>",
+            "solution": "<p>Multiply by the power of \\(y\\) from the denominator to isolate \\(y\\) terms on the left.</p><p>Integrating gives \\(\\frac{y^{3}}{3}=\\frac{3 x^{4}}{4}+C_1\\).</p><p>Multiply by \\(3\\) and rename the arbitrary constant. The result is \\(y^{3}=C + \\frac{9 x^{4}}{4}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "9/4",
+                "retry": [
+                  {
+                    "answer": "3/4",
+                    "feedback": "<p>Multiply the entire equation by the denominator on the left.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Integrate each side with respect to its own variable. Multiplying the integrated equation by a constant also multiplies any integration constant, which can be renamed.</p>"
+          }
+        ]
+      },
+      {
+        "id": "log-branches",
+        "title": "When should I keep absolute values?",
+        "label": "Integrate reciprocals",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Dividing by a y factor can produce the reciprocal \\(\\frac1y\\). Its antiderivative is logarithmic on any non-zero branch.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\int\\frac1y\\,\\mathrm dy=\\ln|y|+C\\). Drop the absolute values only when the sign is known and the resulting argument is positive.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "separation-log-branches-check",
+            "title": "Recognise logarithms on both sides",
+            "prompt": "<p>For \\(x>0,\\ y>0\\), \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{10 y}{3 x + 2}\\). Write the integrated relation as \\(\\ln y=a\\ln(3 x + 2)+C\\). Find \\(a\\).</p>",
+            "hint": "<p>Track each logarithm’s multiplier. The conditions let you drop both sets of absolute values.</p>",
+            "solution": "<p>Divide by \\(y\\), which is positive, so the left integrand is \\(\\frac{1}{y}\\).</p><p>The right-hand side is a constant over a linear expression. Its antiderivative contains a factor \\(\\frac{1}{3}\\).</p><p>Therefore \\(\\ln y=C + \\frac{10 \\log{\\left(3 x + 2 \\right)}}{3}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "10/3",
+                "retry": [
+                  {
+                    "answer": "10",
+                    "feedback": "<p>Divide by the derivative of the linear denominator.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The logarithm may appear on both sides. Look for a chain multiplier on each side.</p>"
+          }
+        ]
+      },
+      {
+        "id": "split-partial-fractions",
+        "title": "What if the separated denominator has two factors?",
+        "label": "Split the rational side",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Separate first to see exactly which rational expression needs integrating. Write the appropriate partial fractions in its own variable.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For two distinct linear factors, choose one constant numerator for each denominator. Clear denominators to determine those constants before integrating.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "separation-split-partial-fractions-check",
+            "title": "Use partial fractions after separation",
+            "prompt": "<p>A positive function satisfies \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(y + 5\\right) \\left(3 y + 9\\right)\\). Find \\(a,b\\) such that the integrated relation is \\(a\\ln(y + 3)+b\\ln(y + 5)=3x+C\\).</p>",
+            "hint": "<p>Evaluate the numerator identity at the root of each linear factor.</p>",
+            "solution": "<p>Divide by the product of the positive linear factors.</p><p>The partial fractions of \\(\\frac{1}{\\left(y + 3\\right) \\left(y + 5\\right)}\\) are \\(- \\frac{1}{2 \\left(y + 5\\right)} + \\frac{1}{2 \\left(y + 3\\right)}\\) when written with separate denominators.</p><p>Integrating gives \\(\\frac{\\log{\\left(y + 3 \\right)}}{2} - \\frac{\\log{\\left(y + 5 \\right)}}{2}=C + 3 x\\), so the two coefficients have opposite signs.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "1/2"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "-1/2",
+                "retry": [
+                  {
+                    "answer": "1/2",
+                    "feedback": "<p>The coefficient of y must cancel when you recombine the fractions.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not integrate a product as a product of integrals. The equivalent sum is what can be integrated term by term.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "separation-split-partial-fractions-second",
+            "title": "Use partial fractions after separation",
+            "prompt": "<p>A positive function satisfies \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(y + 13\\right) \\left(7 y + 49\\right)\\). Find \\(a,b\\) such that the integrated relation is \\(a\\ln(y + 7)+b\\ln(y + 13)=7x+C\\).</p>",
+            "hint": "<p>Evaluate the numerator identity at the root of each linear factor.</p>",
+            "solution": "<p>Divide by the product of the positive linear factors.</p><p>The partial fractions of \\(\\frac{1}{\\left(y + 7\\right) \\left(y + 13\\right)}\\) are \\(- \\frac{1}{6 \\left(y + 13\\right)} + \\frac{1}{6 \\left(y + 7\\right)}\\) when written with separate denominators.</p><p>Integrating gives \\(\\frac{\\log{\\left(y + 7 \\right)}}{6} - \\frac{\\log{\\left(y + 13 \\right)}}{6}=C + 7 x\\), so the two coefficients have opposite signs.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "1/6"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "-1/6",
+                "retry": [
+                  {
+                    "answer": "1/6",
+                    "feedback": "<p>The coefficient of y must cancel when you recombine the fractions.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>After integration, keep one arbitrary constant. Multiplying the relation through can simplify several logarithms.</p>"
+          }
+        ]
+      },
+      {
+        "id": "trigonometric-side",
+        "title": "What if one side contains a trigonometric function?",
+        "label": "Choose each integration method",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>The antiderivative method can differ on each side. A logarithm in \\(y\\) can occur alongside a sine in \\(x\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>On the trigonometric side, account for the inner coefficient. A composite or product can instead call for substitution or integration by parts.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "separation-trigonometric-side-check",
+            "title": "Separate a trigonometric factor in x",
+            "prompt": "<p>On an interval where \\(y>-1\\), \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(3 y + 3\\right) \\cos{\\left(4 x \\right)}\\). Write the integrated relation as \\(\\ln(y+1)=a\\sin(4x)+C\\). Find \\(a\\).</p>",
+            "hint": "<p>Find a sine whose derivative is the given multiple of cosine.</p>",
+            "solution": "<p>Separate using \\(\\frac{1}{y+1}\\) on the \\(y\\) side. This division is allowed by the condition.</p><p>Integrate both sides. The inner multiplier in the cosine term must be accounted for.</p><p>The integrated relation is \\(\\ln(y+1)=C + \\frac{3 \\sin{\\left(4 x \\right)}}{4}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "3/4"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not put both variables on one side when integrating. Each resulting equation should involve one variable on each side plus the constant.</p>"
+          }
+        ]
+      },
+      {
+        "id": "lost-equilibria",
+        "title": "Which solutions can division leave out?",
+        "label": "Check zero factors separately",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Separation by division assumes the divisor is non-zero. A value where the original rate is zero for every input may itself be a solution.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(g(a)=0\\) in \\(\\frac{\\mathrm dy}{\\mathrm dx}=f(x)g(y)\\), substitute the constant function \\(y=a\\) into the original equation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "separation-lost-equilibria-check",
+            "title": "Recover constant solutions before dividing",
+            "prompt": "<p>Find every constant solution of \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(y - 2\\right) \\left(y + 4\\right)\\) by giving the set of its possible \\(y\\) values.</p>",
+            "hint": "<p>Check all values excluded when a variable factor is divided out.</p>",
+            "solution": "<p>A constant function has derivative zero on its whole interval.</p><p>Set both factors of \\(\\left(y - 2\\right) \\left(y + 4\\right)\\) equal to zero in turn.</p><p>The two constant functions are \\(y=-4\\) and \\(y=2\\). Each makes the original derivative equation read \\(0=0\\).</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Set of constant y-values",
+                "type": "set",
+                "expected": "{-4,2}",
+                "variables": [
+                  "y"
+                ],
+                "retry": [
+                  {
+                    "answer": "{-4}",
+                    "feedback": "<p>Check the other factor as well.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A zero of the x factor at one input usually gives one horizontal tangent, not a constant solution. A zero y factor can give a whole constant solution.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "separation-lost-equilibria-second",
+            "title": "Recover constant solutions before dividing",
+            "prompt": "<p>Find every constant solution of \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(y - 6\\right) \\left(y + 8\\right)\\) by giving the set of its possible \\(y\\) values.</p>",
+            "hint": "<p>Check all values excluded when a variable factor is divided out.</p>",
+            "solution": "<p>A constant function has derivative zero on its whole interval.</p><p>Set both factors of \\(\\left(y - 6\\right) \\left(y + 8\\right)\\) equal to zero in turn.</p><p>The two constant functions are \\(y=-8\\) and \\(y=6\\). Each makes the original derivative equation read \\(0=0\\).</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Set of constant y-values",
+                "type": "set",
+                "expected": "{-8,6}",
+                "variables": [
+                  "y"
+                ],
+                "retry": [
+                  {
+                    "answer": "{-8}",
+                    "feedback": "<p>Check the other factor as well.</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Separate a reciprocal power of y",
+        "question": "<p>For \\(x>0,\\ y>0\\), \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{2 x^{2}}{y}\\). The general solution can be written as \\(y^{2}=ax^{3}+C\\). Find \\(a\\).</p>",
+        "solution": [
+          "<p>Multiply by the power of \\(y\\) from the denominator to isolate \\(y\\) terms on the left.</p>",
+          "<p>Integrating gives \\(\\frac{y^{2}}{2}=\\frac{2 x^{3}}{3}+C_1\\).</p>",
+          "<p>Multiply by \\(2\\) and rename the arbitrary constant. The result is \\(y^{2}=C + \\frac{4 x^{3}}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Recognise logarithms on both sides",
+        "question": "<p>For \\(x>0,\\ y>0\\), \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{3 y}{2 x + 1}\\). Write the integrated relation as \\(\\ln y=a\\ln(2 x + 1)+C\\). Find \\(a\\).</p>",
+        "solution": [
+          "<p>Divide by \\(y\\), which is positive, so the left integrand is \\(\\frac{1}{y}\\).</p>",
+          "<p>The right-hand side is a constant over a linear expression. Its antiderivative contains a factor \\(\\frac{1}{2}\\).</p>",
+          "<p>Therefore \\(\\ln y=C + \\frac{3 \\log{\\left(2 x + 1 \\right)}}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use partial fractions after separation",
+        "question": "<p>A positive function satisfies \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(y + 4\\right) \\left(2 y + 4\\right)\\). Find \\(a,b\\) such that the integrated relation is \\(a\\ln(y + 2)+b\\ln(y + 4)=2x+C\\).</p>",
+        "solution": [
+          "<p>Divide by the product of the positive linear factors.</p>",
+          "<p>The partial fractions of \\(\\frac{1}{\\left(y + 2\\right) \\left(y + 4\\right)}\\) are \\(- \\frac{1}{2 \\left(y + 4\\right)} + \\frac{1}{2 \\left(y + 2\\right)}\\) when written with separate denominators.</p>",
+          "<p>Integrating gives \\(\\frac{\\log{\\left(y + 2 \\right)}}{2} - \\frac{\\log{\\left(y + 4 \\right)}}{2}=C + 2 x\\), so the two coefficients have opposite signs.</p>"
+        ]
+      },
+      {
+        "title": "Use partial fractions after separation",
+        "question": "<p>A positive function satisfies \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(y + 7\\right) \\left(4 y + 16\\right)\\). Find \\(a,b\\) such that the integrated relation is \\(a\\ln(y + 4)+b\\ln(y + 7)=4x+C\\).</p>",
+        "solution": [
+          "<p>Divide by the product of the positive linear factors.</p>",
+          "<p>The partial fractions of \\(\\frac{1}{\\left(y + 4\\right) \\left(y + 7\\right)}\\) are \\(- \\frac{1}{3 \\left(y + 7\\right)} + \\frac{1}{3 \\left(y + 4\\right)}\\) when written with separate denominators.</p>",
+          "<p>Integrating gives \\(\\frac{\\log{\\left(y + 4 \\right)}}{3} - \\frac{\\log{\\left(y + 7 \\right)}}{3}=C + 4 x\\), so the two coefficients have opposite signs.</p>"
+        ]
+      },
+      {
+        "title": "Separate a trigonometric factor in x",
+        "question": "<p>On an interval where \\(y>-1\\), \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(2 y + 2\\right) \\cos{\\left(3 x \\right)}\\). Write the integrated relation as \\(\\ln(y+1)=a\\sin(3x)+C\\). Find \\(a\\).</p>",
+        "solution": [
+          "<p>Separate using \\(\\frac{1}{y+1}\\) on the \\(y\\) side. This division is allowed by the condition.</p>",
+          "<p>Integrate both sides. The inner multiplier in the cosine term must be accounted for.</p>",
+          "<p>The integrated relation is \\(\\ln(y+1)=C + \\frac{2 \\sin{\\left(3 x \\right)}}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover constant solutions before dividing",
+        "question": "<p>Find every constant solution of \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(y - 1\\right) \\left(y + 3\\right)\\) by giving the set of its possible \\(y\\) values.</p>",
+        "solution": [
+          "<p>A constant function has derivative zero on its whole interval.</p>",
+          "<p>Set both factors of \\(\\left(y - 1\\right) \\left(y + 3\\right)\\) equal to zero in turn.</p>",
+          "<p>The two constant functions are \\(y=-3\\) and \\(y=1\\). Each makes the original derivative equation read \\(0=0\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover constant solutions before dividing",
+        "question": "<p>Find every constant solution of \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(y - 3\\right) \\left(y + 5\\right)\\) by giving the set of its possible \\(y\\) values.</p>",
+        "solution": [
+          "<p>A constant function has derivative zero on its whole interval.</p>",
+          "<p>Set both factors of \\(\\left(y - 3\\right) \\left(y + 5\\right)\\) equal to zero in turn.</p>",
+          "<p>The two constant functions are \\(y=-5\\) and \\(y=3\\). Each makes the original derivative equation read \\(0=0\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Separable",
+        "definition": "<p>The derivative can be written as a product of a function of the input and a function of the output.</p>"
+      },
+      {
+        "term": "Implicit solution",
+        "definition": "<p>A relation between the variables before isolating the dependent variable.</p>"
+      },
+      {
+        "term": "Branch",
+        "definition": "<p>A single continuous choice of the dependent variable on an interval.</p>"
+      },
+      {
+        "term": "Equilibrium",
+        "definition": "<p>A constant solution that gives a zero rate in the original equation.</p>"
+      },
+      {
+        "term": "Partial fractions",
+        "definition": "<p>A rewrite of a rational expression as simpler terms that can be integrated separately.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When you see</th><th scope=\"col\">What to do</th></tr></thead><tbody><tr><th scope=\"row\">\\(f(x)g(y)\\)</th><td>Move each factor to its own variable side and integrate.</td></tr><tr><th scope=\"row\">A reciprocal y factor</th><td>\\(\\int\\frac1y\\,\\mathrm dy=\\ln|y|+C\\).</td></tr><tr><th scope=\"row\">Two linear factors</th><td>Use partial fractions on that side.</td></tr><tr><th scope=\"row\">A zero excluded by division</th><td>Check the corresponding constant solution separately.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Separate and integrate \\(\\frac{\\mathrm dy}{\\mathrm dx}=5xy\\) for \\(y>0\\).</p><p><strong>Check</strong> \\(\\ln y=\\frac52x^2+C\\).</p>",
+      "checks": "<ul><li>Integrate each side with respect to its own variable. Multiplying the integrated equation by a constant also multiplies any integration constant, which can be renamed.</li><li>The logarithm may appear on both sides. Look for a chain multiplier on each side.</li></ul>",
+      "examTip": "<p>Write the separated form before integrating and preserve restrictions used to divide.</p>"
+    },
+    "related": [
+      {
+        "title": "General solutions by integration",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_de_general"
+      },
+      {
+        "title": "Initial conditions and particular solutions",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_de_particular"
+      },
+      {
+        "title": "Integration using partial fractions",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_int_partial_fractions"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "separation-separate-factors-more",
+        "title": "Separate a reciprocal power of y",
+        "prompt": "<p>For \\(x>0,\\ y>0\\), \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 x^{2}}{y^{3}}\\). The general solution can be written as \\(y^{4}=ax^{3}+C\\). Find \\(a\\).</p>",
+        "hint": "<p>Write one differential with each variable. The left side is integrated with respect to y.</p>",
+        "solution": "<p>Multiply by the power of \\(y\\) from the denominator to isolate \\(y\\) terms on the left.</p><p>Integrating gives \\(\\frac{y^{4}}{4}=\\frac{4 x^{3}}{3}+C_1\\).</p><p>Multiply by \\(4\\) and rename the arbitrary constant. The result is \\(y^{4}=C + \\frac{16 x^{3}}{3}\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient a",
+            "type": "number",
+            "expected": "16/3",
+            "retry": [
+              {
+                "answer": "4/3",
+                "feedback": "<p>Multiply the entire equation by the denominator on the left.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "separation-log-branches-more",
+        "title": "Recognise logarithms on both sides",
+        "prompt": "<p>For \\(x>0,\\ y>0\\), \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{2 y}{4 x + 3}\\). Write the integrated relation as \\(\\ln y=a\\ln(4 x + 3)+C\\). Find \\(a\\).</p>",
+        "hint": "<p>Track each logarithm’s multiplier. The conditions let you drop both sets of absolute values.</p>",
+        "solution": "<p>Divide by \\(y\\), which is positive, so the left integrand is \\(\\frac{1}{y}\\).</p><p>The right-hand side is a constant over a linear expression. Its antiderivative contains a factor \\(\\frac{1}{4}\\).</p><p>Therefore \\(\\ln y=C + \\frac{\\log{\\left(4 x + 3 \\right)}}{2}\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient a",
+            "type": "number",
+            "expected": "1/2",
+            "retry": [
+              {
+                "answer": "2",
+                "feedback": "<p>Divide by the derivative of the linear denominator.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "separation-split-partial-fractions-more",
+        "title": "Use partial fractions after separation",
+        "prompt": "<p>A positive function satisfies \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(y + 15\\right) \\left(8 y + 64\\right)\\). Find \\(a,b\\) such that the integrated relation is \\(a\\ln(y + 8)+b\\ln(y + 15)=8x+C\\).</p>",
+        "hint": "<p>Evaluate the numerator identity at the root of each linear factor.</p>",
+        "solution": "<p>Divide by the product of the positive linear factors.</p><p>The partial fractions of \\(\\frac{1}{\\left(y + 8\\right) \\left(y + 15\\right)}\\) are \\(- \\frac{1}{7 \\left(y + 15\\right)} + \\frac{1}{7 \\left(y + 8\\right)}\\) when written with separate denominators.</p><p>Integrating gives \\(\\frac{\\log{\\left(y + 8 \\right)}}{7} - \\frac{\\log{\\left(y + 15 \\right)}}{7}=C + 8 x\\), so the two coefficients have opposite signs.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient a",
+            "type": "number",
+            "expected": "1/7"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient b",
+            "type": "number",
+            "expected": "-1/7",
+            "retry": [
+              {
+                "answer": "1/7",
+                "feedback": "<p>The coefficient of y must cancel when you recombine the fractions.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "separation-trigonometric-side-more",
+        "title": "Separate a trigonometric factor in x",
+        "prompt": "<p>On an interval where \\(y>-1\\), \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(4 y + 4\\right) \\cos{\\left(5 x \\right)}\\). Write the integrated relation as \\(\\ln(y+1)=a\\sin(5x)+C\\). Find \\(a\\).</p>",
+        "hint": "<p>Find a sine whose derivative is the given multiple of cosine.</p>",
+        "solution": "<p>Separate using \\(\\frac{1}{y+1}\\) on the \\(y\\) side. This division is allowed by the condition.</p><p>Integrate both sides. The inner multiplier in the cosine term must be accounted for.</p><p>The integrated relation is \\(\\ln(y+1)=C + \\frac{4 \\sin{\\left(5 x \\right)}}{5}\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient a",
+            "type": "number",
+            "expected": "4/5"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "separation-lost-equilibria-more",
+        "title": "Recover constant solutions before dividing",
+        "prompt": "<p>Find every constant solution of \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(y - 7\\right) \\left(y + 9\\right)\\) by giving the set of its possible \\(y\\) values.</p>",
+        "hint": "<p>Check all values excluded when a variable factor is divided out.</p>",
+        "solution": "<p>A constant function has derivative zero on its whole interval.</p><p>Set both factors of \\(\\left(y - 7\\right) \\left(y + 9\\right)\\) equal to zero in turn.</p><p>The two constant functions are \\(y=-9\\) and \\(y=7\\). Each makes the original derivative equation read \\(0=0\\).</p>",
+        "fields": [
+          {
+            "key": "solutions",
+            "label": "Set of constant y-values",
+            "type": "set",
+            "expected": "{-9,7}",
+            "variables": [
+              "y"
+            ],
+            "retry": [
+              {
+                "answer": "{-9}",
+                "feedback": "<p>Check the other factor as well.</p>"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "orig_9709_p3_de_particular": {
+    "updatedOn": "2026-11-21",
+    "description": "Use a given point to find the integration constant, choose a branch, and state where a particular solution is valid.",
+    "sections": [
+      {
+        "id": "insert-the-point",
+        "title": "How do I choose one curve from the family?",
+        "label": "Find the constant from a point",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>The initial point gives an input and output on the same curve. Put both into the integrated relation before using it to predict further values.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>First write the family with its free constant. Then use the condition to find the constant and rewrite the particular solution.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "particular-insert-the-point-check",
+            "title": "Use a condition away from zero",
+            "prompt": "<p>Solve \\(\\frac{\\mathrm dy}{\\mathrm dx}=6 x + 4\\) with \\(y=15\\) at \\(x=2\\). Find the integration constant in \\(y=C + 3 x^{2} + 4 x\\) and the value at \\(x=3\\).</p>",
+            "hint": "<p>A condition away from zero usually means C is different from the given y-value.</p>",
+            "solution": "<p>Integrate first to obtain \\(y=C + 3 x^{2} + 4 x\\).</p><p>Insert both coordinates of the given condition. The resulting constant is \\(C=-5\\).</p><p>Use that value to obtain \\(y=3 x^{2} + 4 x - 5\\), then find \\(y=34\\) at the requested input.</p>",
+            "fields": [
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "-5"
+              },
+              {
+                "key": "prediction",
+                "label": "Requested y-value",
+                "type": "number",
+                "expected": "34"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The output value at a non-zero input is not generally the integration constant.</p>"
+          }
+        ]
+      },
+      {
+        "id": "signed-amplitude",
+        "title": "How do I choose the coefficient after exponentiating?",
+        "label": "Restore the sign",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Exponentiating a logarithm of an absolute value determines a magnitude. A signed coefficient lets the curve match the initial value.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\ln|y|=F(x)+C\\) gives \\(y=A\\mathrm e^{F(x)}\\) on a non-zero branch, where the sign of \\(A\\) comes from the point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "particular-signed-amplitude-check",
+            "title": "Choose the correct sign after exponentiating",
+            "prompt": "<p>Solve \\(\\frac{\\mathrm dy}{\\mathrm dx}=3 y\\) with \\(y=-3\\) at \\(x=0\\). Give the coefficient \\(A\\) in \\(y=A\\mathrm e^{3x}\\) and state its sign.</p>",
+            "hint": "<p>Keep the sign required by the initial y-value after removing absolute values.</p>",
+            "solution": "<p>On a branch with \\(y\ne0\\), separation gives \\(\\ln|y|=C + 3 x\\).</p><p>Exponentiating gives \\(|y|=\\mathrm e^C\\mathrm e^{3x}\\). Restore the sign as part of the coefficient \\(A\\).</p><p>At \\(x=0\\) the exponential is one, so \\(A=-3\\) and \\(y=- 3 e^{3 x}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "-3",
+                "retry": [
+                  {
+                    "answer": "3",
+                    "feedback": "<p>The exponential is positive. The sign of y must come from A.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "sign",
+                "label": "Sign of A",
+                "type": "choice",
+                "expected": "neg",
+                "options": {
+                  "pos": "Positive",
+                  "neg": "Negative"
+                }
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using \\(A=\\mathrm e^C\\) on a negative branch loses the minus sign. The point fixes both magnitude and sign.</p>"
+          }
+        ]
+      },
+      {
+        "id": "square-root-branch",
+        "title": "Which square root fits the solution?",
+        "label": "Choose the root using the initial sign",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Solving a squared relation for \\(y\\) yields two algebraic signs. The chosen function must pass through the given point and stay on its admissible interval.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the non-zero initial \\(y\\) or the sign of the shifted output, such as \\(y+b\\), to determine the sign in front of the square root.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "particular-square-root-branch-check",
+            "title": "Select the square-root branch",
+            "prompt": "<p>For \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{2 x}{y}\\), use \\(y=-6\\) at \\(x=2\\). Find \\(C\\) in \\(y^2=C + 2 x^{2}\\), then give the exact value at \\(x=3\\).</p>",
+            "hint": "<p>Both signs solve the squared relation. Select the one compatible with the given solution.</p>",
+            "solution": "<p>Multiply by \\(y\\) and integrate. After multiplying through by two, \\(y^2=C + 2 x^{2}\\).</p><p>The initial point gives \\(C=28\\).</p><p>The negative square root agrees with the given point. Use \\(y=- \\sqrt{2 x^{2} + 28}\\) to obtain \\(y=- \\sqrt{46}\\).</p>",
+            "fields": [
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "28"
+              },
+              {
+                "key": "value",
+                "label": "Exact y-value",
+                "type": "number",
+                "expected": "-sqrt(46)",
+                "retry": [
+                  {
+                    "answer": "sqrt(46)",
+                    "feedback": "<p>Choose the branch that agrees with the initial sign.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A particular solution through a point has one branch. A final \\(\\pm\\) retains a branch that fails the condition.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "particular-square-root-branch-second",
+            "title": "Select the square-root branch",
+            "prompt": "<p>For \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{6 x}{y}\\), use \\(y=-10\\) at \\(x=0\\). Find \\(C\\) in \\(y^2=C + 6 x^{2}\\), then give the exact value at \\(x=1\\).</p>",
+            "hint": "<p>Both signs solve the squared relation. Select the one compatible with the given solution.</p>",
+            "solution": "<p>Multiply by \\(y\\) and integrate. After multiplying through by two, \\(y^2=C + 6 x^{2}\\).</p><p>The initial point gives \\(C=100\\).</p><p>The negative square root agrees with the given point. Use \\(y=- \\sqrt{6 x^{2} + 100}\\) to obtain \\(y=- \\sqrt{106}\\).</p>",
+            "fields": [
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "100"
+              },
+              {
+                "key": "value",
+                "label": "Exact y-value",
+                "type": "number",
+                "expected": "-sqrt(106)",
+                "retry": [
+                  {
+                    "answer": "sqrt(106)",
+                    "feedback": "<p>Choose the branch that agrees with the initial sign.</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "singular-endpoints",
+        "title": "Why can a real square root still be outside the domain?",
+        "label": "Exclude an undefined derivative",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>The integrated relation can be meaningful at a point where the original derivative equation is not defined. Check both expressions.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If the right-hand side contains \\(\\frac1y\\), the radicand for a branch \\(y=\\sqrt{g(x)}\\) must be strictly positive. A zero radicand would give the excluded value \\(y=0\\).</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_de_particular/open-branch-endpoint.svg",
+              "caption": "<p>The initial point selects the upper branch.</p>",
+              "alt": "Two square-root branches meet the x-axis at the open point (5, 0). The marked initial point is on the upper branch at x = 0.",
+              "width": 472,
+              "height": 250
+            }
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "particular-singular-endpoints-check",
+            "title": "Exclude a singular endpoint",
+            "prompt": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=- \\frac{3}{2 y}\\) has a solution with \\(y=3 \\sqrt{2}\\) at \\(x=0\\). Give the complete x-interval containing zero on which this solution satisfies the differential equation.</p>",
+            "hint": "<p>An endpoint where the original derivative is undefined is outside the solution interval.</p>",
+            "solution": "<p>Separate and integrate to obtain \\(y^2=C - 3 x\\). Using the condition gives \\(C=18\\).</p><p>Choose the positive root to agree with the initial point. The radicand must be strictly positive, since the equation divides by \\(y\\).</p><p>Hence the interval is \\(x<6\\). The equality endpoint is excluded.</p>",
+            "fields": [
+              {
+                "key": "domain",
+                "label": "Allowed x-values",
+                "type": "set",
+                "expected": "(-inf,6)",
+                "variables": [
+                  "x"
+                ],
+                "retry": [
+                  {
+                    "answer": "(-inf,6]",
+                    "feedback": "<p>At the endpoint y = 0 and the original derivative is undefined.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Check the interval containing the given input. An algebraic endpoint does not automatically belong to the differential equation solution.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>If the question asks when a quantity disappears, the endpoint can be a limiting prediction even if the differential equation is undefined at that instant.</p>"
+          }
+        ]
+      },
+      {
+        "id": "implicit-or-explicit",
+        "title": "When is an implicit relation useful?",
+        "label": "Follow the requested form",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>An implicit relation may be simpler for calculating a quantity or giving the required answer. Use the correct branch if the question asks for an explicit result.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check an implicit solution by differentiating both sides on its interval, then compare the recovered derivative with the original equation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "particular-implicit-or-explicit-check",
+            "title": "Keep an implicit answer when allowed",
+            "prompt": "<p>Given \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{3}{y + 4}\\) and \\(y=2\\) at \\(x=0\\), find \\(C\\) in \\((y + 4)^2=C + 6 x\\). Also find the value of the squared left side at \\(x=2\\).</p>",
+            "hint": "<p>Substitute into the squared relation without taking a square root when only the squared quantity is requested.</p>",
+            "solution": "<p>Multiply through by \\(y + 4\\) and integrate. Completing the square gives the stated relation with one free constant.</p><p>At the initial point, \\(C=36\\). An implicit particular solution is \\((y + 4)^2=6 x + 36\\).</p><p>Substituting the requested x-value gives the squared quantity \\(48\\).</p>",
+            "fields": [
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "36"
+              },
+              {
+                "key": "value",
+                "label": "Squared quantity",
+                "type": "number",
+                "expected": "48"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Substitution into an implicit relation can give an extraneous branch if you later infer a sign without using the initial point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "particular-implicit-or-explicit-second",
+            "title": "Keep an implicit answer when allowed",
+            "prompt": "<p>Given \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{7}{y + 8}\\) and \\(y=6\\) at \\(x=0\\), find \\(C\\) in \\((y + 8)^2=C + 14 x\\). Also find the value of the squared left side at \\(x=6\\).</p>",
+            "hint": "<p>Substitute into the squared relation without taking a square root when only the squared quantity is requested.</p>",
+            "solution": "<p>Multiply through by \\(y + 8\\) and integrate. Completing the square gives the stated relation with one free constant.</p><p>At the initial point, \\(C=196\\). An implicit particular solution is \\((y + 8)^2=14 x + 196\\).</p><p>Substituting the requested x-value gives the squared quantity \\(280\\).</p>",
+            "fields": [
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "196"
+              },
+              {
+                "key": "value",
+                "label": "Squared quantity",
+                "type": "number",
+                "expected": "280"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use a condition away from zero",
+        "question": "<p>Solve \\(\\frac{\\mathrm dy}{\\mathrm dx}=4 x + 3\\) with \\(y=11\\) at \\(x=1\\). Find the integration constant in \\(y=C + 2 x^{2} + 3 x\\) and the value at \\(x=2\\).</p>",
+        "solution": [
+          "<p>Integrate first to obtain \\(y=C + 2 x^{2} + 3 x\\).</p>",
+          "<p>Insert both coordinates of the given condition. The resulting constant is \\(C=6\\).</p>",
+          "<p>Use that value to obtain \\(y=2 x^{2} + 3 x + 6\\), then find \\(y=20\\) at the requested input.</p>"
+        ]
+      },
+      {
+        "title": "Choose the correct sign after exponentiating",
+        "question": "<p>Solve \\(\\frac{\\mathrm dy}{\\mathrm dx}=2 y\\) with \\(y=6\\) at \\(x=0\\). Give the coefficient \\(A\\) in \\(y=A\\mathrm e^{2x}\\) and state its sign.</p>",
+        "solution": [
+          "<p>On a branch with \\(y\ne0\\), separation gives \\(\\ln|y|=C + 2 x\\).</p>",
+          "<p>Exponentiating gives \\(|y|=\\mathrm e^C\\mathrm e^{2x}\\). Restore the sign as part of the coefficient \\(A\\).</p>",
+          "<p>At \\(x=0\\) the exponential is one, so \\(A=6\\) and \\(y=6 e^{2 x}\\).</p>"
+        ]
+      },
+      {
+        "title": "Select the square-root branch",
+        "question": "<p>For \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{x}{y}\\), use \\(y=5\\) at \\(x=1\\). Find \\(C\\) in \\(y^2=C + x^{2}\\), then give the exact value at \\(x=2\\).</p>",
+        "solution": [
+          "<p>Multiply by \\(y\\) and integrate. After multiplying through by two, \\(y^2=C + x^{2}\\).</p>",
+          "<p>The initial point gives \\(C=24\\).</p>",
+          "<p>The positive square root agrees with the given point. Use \\(y=\\sqrt{x^{2} + 24}\\) to obtain \\(y=2 \\sqrt{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "Select the square-root branch",
+        "question": "<p>For \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{3 x}{y}\\), use \\(y=7\\) at \\(x=3\\). Find \\(C\\) in \\(y^2=C + 3 x^{2}\\), then give the exact value at \\(x=4\\).</p>",
+        "solution": [
+          "<p>Multiply by \\(y\\) and integrate. After multiplying through by two, \\(y^2=C + 3 x^{2}\\).</p>",
+          "<p>The initial point gives \\(C=22\\).</p>",
+          "<p>The positive square root agrees with the given point. Use \\(y=\\sqrt{3 x^{2} + 22}\\) to obtain \\(y=\\sqrt{70}\\).</p>"
+        ]
+      },
+      {
+        "title": "Exclude a singular endpoint",
+        "question": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=- \\frac{1}{y}\\) has a solution with \\(y=\\sqrt{10}\\) at \\(x=0\\). Give the complete x-interval containing zero on which this solution satisfies the differential equation.</p>",
+        "solution": [
+          "<p>Separate and integrate to obtain \\(y^2=C - 2 x\\). Using the condition gives \\(C=10\\).</p>",
+          "<p>Choose the positive root to agree with the initial point. The radicand must be strictly positive, since the equation divides by \\(y\\).</p>",
+          "<p>Hence the interval is \\(x<5\\). The equality endpoint is excluded.</p>"
+        ]
+      },
+      {
+        "title": "Keep an implicit answer when allowed",
+        "question": "<p>Given \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{2}{y + 3}\\) and \\(y=1\\) at \\(x=0\\), find \\(C\\) in \\((y + 3)^2=C + 4 x\\). Also find the value of the squared left side at \\(x=1\\).</p>",
+        "solution": [
+          "<p>Multiply through by \\(y + 3\\) and integrate. Completing the square gives the stated relation with one free constant.</p>",
+          "<p>At the initial point, \\(C=16\\). An implicit particular solution is \\((y + 3)^2=4 x + 16\\).</p>",
+          "<p>Substituting the requested x-value gives the squared quantity \\(20\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep an implicit answer when allowed",
+        "question": "<p>Given \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4}{y + 5}\\) and \\(y=3\\) at \\(x=0\\), find \\(C\\) in \\((y + 5)^2=C + 8 x\\). Also find the value of the squared left side at \\(x=3\\).</p>",
+        "solution": [
+          "<p>Multiply through by \\(y + 5\\) and integrate. Completing the square gives the stated relation with one free constant.</p>",
+          "<p>At the initial point, \\(C=64\\). An implicit particular solution is \\((y + 5)^2=8 x + 64\\).</p>",
+          "<p>Substituting the requested x-value gives the squared quantity \\(88\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Initial condition",
+        "definition": "<p>A prescribed value of the dependent variable at a given input.</p>"
+      },
+      {
+        "term": "Particular solution",
+        "definition": "<p>The solution selected by the given condition.</p>"
+      },
+      {
+        "term": "Explicit solution",
+        "definition": "<p>A formula with the dependent variable isolated.</p>"
+      },
+      {
+        "term": "Admissible branch",
+        "definition": "<p>A choice of sign or interval that fits the initial point and the original differential equation.</p>"
+      },
+      {
+        "term": "Singular endpoint",
+        "definition": "<p>An endpoint where the solution or the original differential equation cannot be continued in the stated form.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When you see</th><th scope=\"col\">What to do</th></tr></thead><tbody><tr><th scope=\"row\">One given point</th><td>Substitute both coordinates into the integrated family.</td></tr><tr><th scope=\"row\">Exponent with absolute values</th><td>Choose the sign of the multiplicative constant.</td></tr><tr><th scope=\"row\">Squared relation</th><td>Use the initial point to decide which square root is admissible.</td></tr><tr><th scope=\"row\">Original denominator</th><td>Exclude its zeros even when the integrated relation is defined there.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Given \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{3x}{y}\\) and \\(y(0)=-4\\), write the explicit solution.</p><p><strong>Check</strong> \\(y=-\\sqrt{3x^2+16}\\).</p>",
+      "checks": "<ul><li>The output value at a non-zero input is not generally the integration constant.</li><li>Using \\(A=\\mathrm e^C\\) on a negative branch loses the minus sign. The point fixes both magnitude and sign.</li></ul>",
+      "examTip": "<p>Check that your chosen branch passes through the given point and that the original derivative exists throughout your interval.</p>"
+    },
+    "related": [
+      {
+        "title": "Separating variables",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_de_separation"
+      },
+      {
+        "title": "Interpreting solutions in context",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_de_interpretation"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "particular-insert-the-point-more",
+        "title": "Use a condition away from zero",
+        "prompt": "<p>Solve \\(\\frac{\\mathrm dy}{\\mathrm dx}=8 x + 5\\) with \\(y=59\\) at \\(x=3\\). Find the integration constant in \\(y=C + 4 x^{2} + 5 x\\) and the value at \\(x=4\\).</p>",
+        "hint": "<p>A condition away from zero usually means C is different from the given y-value.</p>",
+        "solution": "<p>Integrate first to obtain \\(y=C + 4 x^{2} + 5 x\\).</p><p>Insert both coordinates of the given condition. The resulting constant is \\(C=8\\).</p><p>Use that value to obtain \\(y=4 x^{2} + 5 x + 8\\), then find \\(y=92\\) at the requested input.</p>",
+        "fields": [
+          {
+            "key": "c",
+            "label": "Constant C",
+            "type": "number",
+            "expected": "8"
+          },
+          {
+            "key": "prediction",
+            "label": "Requested y-value",
+            "type": "number",
+            "expected": "92"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "particular-signed-amplitude-more",
+        "title": "Choose the correct sign after exponentiating",
+        "prompt": "<p>Solve \\(\\frac{\\mathrm dy}{\\mathrm dx}=4 y\\) with \\(y=4\\) at \\(x=0\\). Give the coefficient \\(A\\) in \\(y=A\\mathrm e^{4x}\\) and state its sign.</p>",
+        "hint": "<p>Keep the sign required by the initial y-value after removing absolute values.</p>",
+        "solution": "<p>On a branch with \\(y\ne0\\), separation gives \\(\\ln|y|=C + 4 x\\).</p><p>Exponentiating gives \\(|y|=\\mathrm e^C\\mathrm e^{4x}\\). Restore the sign as part of the coefficient \\(A\\).</p><p>At \\(x=0\\) the exponential is one, so \\(A=4\\) and \\(y=4 e^{4 x}\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "type": "number",
+            "expected": "4",
+            "retry": [
+              {
+                "answer": "-4",
+                "feedback": "<p>The exponential is positive. The sign of y must come from A.</p>"
+              }
+            ]
+          },
+          {
+            "key": "sign",
+            "label": "Sign of A",
+            "type": "choice",
+            "expected": "pos",
+            "options": {
+              "pos": "Positive",
+              "neg": "Negative"
+            }
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "particular-square-root-branch-more",
+        "title": "Select the square-root branch",
+        "prompt": "<p>For \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{7 x}{y}\\), use \\(y=11\\) at \\(x=0\\). Find \\(C\\) in \\(y^2=C + 7 x^{2}\\), then give the exact value at \\(x=1\\).</p>",
+        "hint": "<p>Both signs solve the squared relation. Select the one compatible with the given solution.</p>",
+        "solution": "<p>Multiply by \\(y\\) and integrate. After multiplying through by two, \\(y^2=C + 7 x^{2}\\).</p><p>The initial point gives \\(C=121\\).</p><p>The positive square root agrees with the given point. Use \\(y=\\sqrt{7 x^{2} + 121}\\) to obtain \\(y=8 \\sqrt{2}\\).</p>",
+        "fields": [
+          {
+            "key": "c",
+            "label": "Constant C",
+            "type": "number",
+            "expected": "121"
+          },
+          {
+            "key": "value",
+            "label": "Exact y-value",
+            "type": "number",
+            "expected": "8*sqrt(2)",
+            "retry": [
+              {
+                "answer": "-8*sqrt(2)",
+                "feedback": "<p>Choose the branch that agrees with the initial sign.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "particular-singular-endpoints-more",
+        "title": "Exclude a singular endpoint",
+        "prompt": "<p>The equation \\(\\frac{\\mathrm dy}{\\mathrm dx}=- \\frac{2}{y}\\) has a solution with \\(y=4 \\sqrt{2}\\) at \\(x=0\\). Give the complete x-interval containing zero on which this solution satisfies the differential equation.</p>",
+        "hint": "<p>An endpoint where the original derivative is undefined is outside the solution interval.</p>",
+        "solution": "<p>Separate and integrate to obtain \\(y^2=C - 4 x\\). Using the condition gives \\(C=32\\).</p><p>Choose the positive root to agree with the initial point. The radicand must be strictly positive, since the equation divides by \\(y\\).</p><p>Hence the interval is \\(x<8\\). The equality endpoint is excluded.</p>",
+        "fields": [
+          {
+            "key": "domain",
+            "label": "Allowed x-values",
+            "type": "set",
+            "expected": "(-inf,8)",
+            "variables": [
+              "x"
+            ],
+            "retry": [
+              {
+                "answer": "(-inf,8]",
+                "feedback": "<p>At the endpoint y = 0 and the original derivative is undefined.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "particular-implicit-or-explicit-more",
+        "title": "Keep an implicit answer when allowed",
+        "prompt": "<p>Given \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{8}{y + 9}\\) and \\(y=7\\) at \\(x=0\\), find \\(C\\) in \\((y + 9)^2=C + 16 x\\). Also find the value of the squared left side at \\(x=7\\).</p>",
+        "hint": "<p>Substitute into the squared relation without taking a square root when only the squared quantity is requested.</p>",
+        "solution": "<p>Multiply through by \\(y + 9\\) and integrate. Completing the square gives the stated relation with one free constant.</p><p>At the initial point, \\(C=256\\). An implicit particular solution is \\((y + 9)^2=16 x + 256\\).</p><p>Substituting the requested x-value gives the squared quantity \\(368\\).</p>",
+        "fields": [
+          {
+            "key": "c",
+            "label": "Constant C",
+            "type": "number",
+            "expected": "256"
+          },
+          {
+            "key": "value",
+            "label": "Squared quantity",
+            "type": "number",
+            "expected": "368"
+          }
+        ]
+      }
+    ]
+  },
+  "orig_9709_p3_de_interpretation": {
+    "updatedOn": "2026-11-21",
+    "description": "Use a solved model to find times and rates, distinguish limits from thresholds, and state where a model remains meaningful.",
+    "sections": [
+      {
+        "id": "read-the-limit",
+        "title": "How do I read the limiting level and the direction of approach?",
+        "label": "Separate a level and a correction",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>A decaying exponential correction to a level shrinks towards zero. Its sign locates the curve above or below the level.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(Q=L+A\\mathrm e^{-kt}\\) with \\(k>0\\), the limit is \\(L\\). If \\(A\ne0\\) the model never equals \\(L\\) at a finite time.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_de_interpretation/approach-to-a-level.svg",
+              "caption": "<p>The sign of the correction tells you which side of the limit the model stays on.</p>",
+              "alt": "Temperature versus time. An upper curve starts at 36 and decreases towards 12. A lower curve rises towards 12. Neither touches the dashed line T = 12.",
+              "width": 472,
+              "height": 250
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "interpretation-read-the-limit-check",
+            "title": "Identify the limiting level and the direction",
+            "prompt": "<p>A temperature model is \\(T=15 - 15 e^{- \\frac{t}{2}}\\) for \\(t\\ge0\\). Find the limiting temperature and decide whether the temperature approaches it from above or below.</p>",
+            "hint": "<p>The sign of the exponential term gives the side. Its size tends to zero.</p>",
+            "solution": "<p>The exponential has a negative exponent coefficient, so it tends to zero as time increases.</p><p>The constant term remains, giving a limiting temperature of \\(15\\) degrees Celsius.</p><p>The correction term is negative at every finite time, so the temperature approaches from below.</p>",
+            "fields": [
+              {
+                "key": "limit",
+                "label": "Limiting temperature",
+                "type": "number",
+                "expected": "15"
+              },
+              {
+                "key": "side",
+                "label": "Side of the limiting level",
+                "type": "choice",
+                "expected": "below",
+                "options": {
+                  "above": "From above",
+                  "below": "From below"
+                }
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The limiting level is not the initial value. The initial value is \\(L+A\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "threshold-time",
+        "title": "How can I find the time a target is reached?",
+        "label": "Isolate the decaying quantity",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Work with the difference from the limiting level. A threshold is reachable only if it lies on the modelled branch and between its initial and limiting levels, with the correct endpoint inclusion.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Solve for the exponential before taking logs. Check the sign and units of the resulting time.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "interpretation-threshold-time-check",
+            "title": "Calculate a threshold time exactly",
+            "prompt": "<p>A sampling signal is \\(S=18 + 20 e^{- \\frac{2 t}{3}}\\) for \\(t\\ge0\\). It reaches \\(\\frac{74}{3}\\) at \\(t=a\\ln b\\) with \\(b>1\\). Give \\(a,b\\), using the integer \\(b\\) obtained by isolating the exponential and taking its reciprocal.</p>",
+            "hint": "<p>Work with the excess above the limiting level, then isolate the exponential.</p>",
+            "solution": "<p>Subtract the constant level and divide by the initial offset. This gives \\(e^{- \\frac{2 t}{3}}=\\frac{1}{3}\\).</p><p>Take logarithms. Equivalently, invert first to make the exponent positive and the argument an integer.</p><p>The time is \\(t=\\frac{3 \\log{\\left(3 \\right)}}{2}\\). It is positive because the signal falls towards its limit.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Multiplier a",
+                "type": "number",
+                "expected": "3/2",
+                "retry": [
+                  {
+                    "answer": "-3/2",
+                    "feedback": "<p>A negative time lies outside the stated model. Isolate the reciprocal before taking logarithms.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "b",
+                "label": "Integer argument b",
+                "type": "number",
+                "expected": "3"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Taking a log of the whole sum does not split it into logs of the terms. Subtract the constant level first.</p>"
+          }
+        ]
+      },
+      {
+        "id": "finite-stop",
+        "title": "When should a model stop at a finite time?",
+        "label": "Decide whether to include the endpoint",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A solution may produce a negative quantity after a certain time even though the equation is algebraically defined there. Use the context to decide where the description stops.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Solve for the boundary of the physical interval. Check whether the question includes that boundary and whether the differential equation itself holds there.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "interpretation-finite-stop-check",
+            "title": "Stop a model when its quantity reaches zero",
+            "prompt": "<p>An ice layer melts according to \\(h=6 - \\frac{3 t}{2}\\), where \\(h\\) is its thickness in millimetres and \\(t\\) is time in minutes. Include the instant it disappears. Give the valid time interval from the start and the thickness after one minute.</p>",
+            "hint": "<p>A negative thickness is outside the meaning of the model.</p>",
+            "solution": "<p>The model starts at \\(t=0\\) with positive thickness.</p><p>Solve \\(h=0\\) to find \\(t=4\\). The interval of validity is \\(0\\le t\\le 4\\).</p><p>At one minute, the thickness is \\(\\frac{9}{2}\\) millimetres.</p>",
+            "fields": [
+              {
+                "key": "domain",
+                "label": "Allowed t-values",
+                "type": "set",
+                "expected": "[0,4]",
+                "variables": [
+                  "t"
+                ],
+                "retry": [
+                  {
+                    "answer": "[0,4)",
+                    "feedback": "<p>The prompt includes the moment when thickness first becomes zero.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "thickness",
+                "label": "Thickness after one minute",
+                "type": "number",
+                "expected": "9/2"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not extend a model for a thickness, mass or volume to negative values without justification.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "interpretation-finite-stop-second",
+            "title": "Stop a model when its quantity reaches zero",
+            "prompt": "<p>An ice layer melts according to \\(h=28 - \\frac{7 t}{2}\\), where \\(h\\) is its thickness in millimetres and \\(t\\) is time in minutes. Include the instant it disappears. Give the valid time interval from the start and the thickness after one minute.</p>",
+            "hint": "<p>A negative thickness is outside the meaning of the model.</p>",
+            "solution": "<p>The model starts at \\(t=0\\) with positive thickness.</p><p>Solve \\(h=0\\) to find \\(t=8\\). The interval of validity is \\(0\\le t\\le 8\\).</p><p>At one minute, the thickness is \\(\\frac{49}{2}\\) millimetres.</p>",
+            "fields": [
+              {
+                "key": "domain",
+                "label": "Allowed t-values",
+                "type": "set",
+                "expected": "[0,8]",
+                "variables": [
+                  "t"
+                ],
+                "retry": [
+                  {
+                    "answer": "[0,8)",
+                    "feedback": "<p>The prompt includes the moment when thickness first becomes zero.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "thickness",
+                "label": "Thickness after one minute",
+                "type": "number",
+                "expected": "49/2"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "signed-model-rate",
+        "title": "How can I give a rate at a given level?",
+        "label": "Use the original relation or differentiate",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>The value of the function and its rate of change answer different questions. At a requested level, substitute that level into the differential equation or differentiate the explicit solution.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Calculate a signed derivative. If the wording asks “how fast is it decreasing?”, report the positive magnitude and state the direction.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "interpretation-signed-model-rate-check",
+            "title": "Evaluate the rate at a specified level",
+            "prompt": "<p>A coating thickness follows \\(h=\\frac{1}{3 t + \\frac{1}{5}}\\) for \\(t\\ge0\\). Give the time when \\(h=2\\) and the signed rate at that time.</p>",
+            "hint": "<p>Find the rate by differentiation, then substitute the given level.</p>",
+            "solution": "<p>Take reciprocals to solve \\(3 t + \\frac{1}{5}=\\frac{1}{2}\\). This gives \\(t=\\frac{1}{10}\\).</p><p>Differentiate the reciprocal using the chain rule to get \\(\\frac{\\mathrm dh}{\\mathrm dt}=-3h^2\\).</p><p>The signed rate at the specified level is \\(\\frac{\\mathrm dh}{\\mathrm dt}=-12\\).</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time at the specified level",
+                "type": "number",
+                "expected": "1/10"
+              },
+              {
+                "key": "rate",
+                "label": "Signed rate at that level",
+                "type": "number",
+                "expected": "-12",
+                "retry": [
+                  {
+                    "answer": "12",
+                    "feedback": "<p>The quantity decreases, so the signed rate is negative.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A measured change over a time interval gives an average rate. An instantaneous rate is the derivative evaluated at a single input.</p>"
+          }
+        ]
+      },
+      {
+        "id": "validity-of-model",
+        "title": "How do I explain a model limitation precisely?",
+        "label": "Compare with the stated constraints",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Name the feature of the model that causes a conflict with the real situation. A finite capacity cannot support unlimited exponential growth.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Calculate when the model reaches the stated restriction if enough information is given. State the real-world meaning and time units.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "interpretation-validity-of-model-check",
+            "title": "Recognise when extrapolation fails",
+            "prompt": "<p>A preview service predicts \\(N=3 e^{\\frac{t}{4}}\\) simultaneous streams at time \\(t\\). The hardware can serve at most \\(15\\) streams. Would continuing the same exponential model indefinitely be valid? Give the positive multiplier \\(a\\) in the capacity time \\(t=a\\ln b\\) after isolating the original exponential.</p>",
+            "hint": "<p>Compare the long-term mathematical behaviour with the fixed limit in the situation.</p>",
+            "solution": "<p>The exponential increases without bound. The hardware capacity is fixed and finite.</p><p>Solving the threshold equation gives \\(e^{\\frac{t}{4}}=5\\).</p><p>Then \\(t=\\frac1{\\frac{1}{4}}\\ln\\left(5\\right)\\), so \\(a=4\\). This is where the model first reaches the capacity.</p>",
+            "fields": [
+              {
+                "key": "valid",
+                "label": "Is unlimited extrapolation valid?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              },
+              {
+                "key": "a",
+                "label": "Multiplier of the natural logarithm",
+                "type": "number",
+                "expected": "4"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A limit in the mathematics can be a useful model prediction. A real-world cap that the formula eventually exceeds is a different kind of restriction.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "interpretation-validity-of-model-second",
+            "title": "Recognise when extrapolation fails",
+            "prompt": "<p>A preview service predicts \\(N=7 e^{\\frac{t}{8}}\\) simultaneous streams at time \\(t\\). The hardware can serve at most \\(27\\) streams. Would continuing the same exponential model indefinitely be valid? Give the positive multiplier \\(a\\) in the capacity time \\(t=a\\ln b\\) after isolating the original exponential.</p>",
+            "hint": "<p>Compare the long-term mathematical behaviour with the fixed limit in the situation.</p>",
+            "solution": "<p>The exponential increases without bound. The hardware capacity is fixed and finite.</p><p>Solving the threshold equation gives \\(e^{\\frac{t}{8}}=\\frac{27}{7}\\).</p><p>Then \\(t=\\frac1{\\frac{1}{8}}\\ln\\left(\\frac{27}{7}\\right)\\), so \\(a=8\\). This is where the model first reaches the capacity.</p>",
+            "fields": [
+              {
+                "key": "valid",
+                "label": "Is unlimited extrapolation valid?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              },
+              {
+                "key": "a",
+                "label": "Multiplier of the natural logarithm",
+                "type": "number",
+                "expected": "8"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Give a concrete reason tied to the context. For a capacity bound, identify the crossing at which the formula first predicts more than is possible.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Identify the limiting level and the direction",
+        "question": "<p>A temperature model is \\(T=12 + 24 e^{- \\frac{2 t}{5}}\\) for \\(t\\ge0\\). Find the limiting temperature and decide whether the temperature approaches it from above or below.</p>",
+        "solution": [
+          "<p>The exponential has a negative exponent coefficient, so it tends to zero as time increases.</p>",
+          "<p>The constant term remains, giving a limiting temperature of \\(12\\) degrees Celsius.</p>",
+          "<p>The correction term is positive at every finite time, so the temperature approaches from above.</p>"
+        ]
+      },
+      {
+        "title": "Calculate a threshold time exactly",
+        "question": "<p>A sampling signal is \\(S=15 + 16 e^{- \\frac{t}{2}}\\) for \\(t\\ge0\\). It reaches \\(23\\) at \\(t=a\\ln b\\) with \\(b>1\\). Give \\(a,b\\), using the integer \\(b\\) obtained by isolating the exponential and taking its reciprocal.</p>",
+        "solution": [
+          "<p>Subtract the constant level and divide by the initial offset. This gives \\(e^{- \\frac{t}{2}}=\\frac{1}{2}\\).</p>",
+          "<p>Take logarithms. Equivalently, invert first to make the exponent positive and the argument an integer.</p>",
+          "<p>The time is \\(t=2 \\log{\\left(2 \\right)}\\). It is positive because the signal falls towards its limit.</p>"
+        ]
+      },
+      {
+        "title": "Stop a model when its quantity reaches zero",
+        "question": "<p>An ice layer melts according to \\(h=3 - t\\), where \\(h\\) is its thickness in millimetres and \\(t\\) is time in minutes. Include the instant it disappears. Give the valid time interval from the start and the thickness after one minute.</p>",
+        "solution": [
+          "<p>The model starts at \\(t=0\\) with positive thickness.</p>",
+          "<p>Solve \\(h=0\\) to find \\(t=3\\). The interval of validity is \\(0\\le t\\le 3\\).</p>",
+          "<p>At one minute, the thickness is \\(2\\) millimetres.</p>"
+        ]
+      },
+      {
+        "title": "Stop a model when its quantity reaches zero",
+        "question": "<p>An ice layer melts according to \\(h=10 - 2 t\\), where \\(h\\) is its thickness in millimetres and \\(t\\) is time in minutes. Include the instant it disappears. Give the valid time interval from the start and the thickness after one minute.</p>",
+        "solution": [
+          "<p>The model starts at \\(t=0\\) with positive thickness.</p>",
+          "<p>Solve \\(h=0\\) to find \\(t=5\\). The interval of validity is \\(0\\le t\\le 5\\).</p>",
+          "<p>At one minute, the thickness is \\(8\\) millimetres.</p>"
+        ]
+      },
+      {
+        "title": "Evaluate the rate at a specified level",
+        "question": "<p>A coating thickness follows \\(h=\\frac{1}{2 t + \\frac{1}{4}}\\) for \\(t\\ge0\\). Give the time when \\(h=1\\) and the signed rate at that time.</p>",
+        "solution": [
+          "<p>Take reciprocals to solve \\(2 t + \\frac{1}{4}=1\\). This gives \\(t=\\frac{3}{8}\\).</p>",
+          "<p>Differentiate the reciprocal using the chain rule to get \\(\\frac{\\mathrm dh}{\\mathrm dt}=-2h^2\\).</p>",
+          "<p>The signed rate at the specified level is \\(\\frac{\\mathrm dh}{\\mathrm dt}=-2\\).</p>"
+        ]
+      },
+      {
+        "title": "Recognise when extrapolation fails",
+        "question": "<p>A preview service predicts \\(N=2 e^{\\frac{t}{3}}\\) simultaneous streams at time \\(t\\). The hardware can serve at most \\(12\\) streams. Would continuing the same exponential model indefinitely be valid? Give the positive multiplier \\(a\\) in the capacity time \\(t=a\\ln b\\) after isolating the original exponential.</p>",
+        "solution": [
+          "<p>The exponential increases without bound. The hardware capacity is fixed and finite.</p>",
+          "<p>Solving the threshold equation gives \\(e^{\\frac{t}{3}}=6\\).</p>",
+          "<p>Then \\(t=\\frac1{\\frac{1}{3}}\\ln\\left(6\\right)\\), so \\(a=3\\). This is where the model first reaches the capacity.</p>"
+        ]
+      },
+      {
+        "title": "Recognise when extrapolation fails",
+        "question": "<p>A preview service predicts \\(N=4 e^{\\frac{t}{5}}\\) simultaneous streams at time \\(t\\). The hardware can serve at most \\(18\\) streams. Would continuing the same exponential model indefinitely be valid? Give the positive multiplier \\(a\\) in the capacity time \\(t=a\\ln b\\) after isolating the original exponential.</p>",
+        "solution": [
+          "<p>The exponential increases without bound. The hardware capacity is fixed and finite.</p>",
+          "<p>Solving the threshold equation gives \\(e^{\\frac{t}{5}}=\\frac{9}{2}\\).</p>",
+          "<p>Then \\(t=\\frac1{\\frac{1}{5}}\\ln\\left(\\frac{9}{2}\\right)\\), so \\(a=5\\). This is where the model first reaches the capacity.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Threshold",
+        "definition": "<p>A specified level that a quantity reaches or crosses.</p>"
+      },
+      {
+        "term": "Long-term limit",
+        "definition": "<p>The value a solution approaches as time increases without bound.</p>"
+      },
+      {
+        "term": "Horizontal asymptote",
+        "definition": "<p>The horizontal line approached by the graph at large input.</p>"
+      },
+      {
+        "term": "Physical interval",
+        "definition": "<p>The part of the mathematical domain on which the model describes the stated situation.</p>"
+      },
+      {
+        "term": "Extrapolate",
+        "definition": "<p>Use a model further than the range supported by its assumptions or measurements.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When you see</th><th scope=\"col\">What to do</th></tr></thead><tbody><tr><th scope=\"row\">Decaying exponential</th><td>The correction tends to zero. Use its sign for the side of approach.</td></tr><tr><th scope=\"row\">Threshold</th><td>Set the quantity equal to the stated level, isolate the exponential and take a log if needed.</td></tr><tr><th scope=\"row\">Signed rate</th><td>Use the equation or differentiate at the requested level.</td></tr><tr><th scope=\"row\">Validity</th><td>Name the time interval, endpoint and reason the model stops.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A signal follows \\(S=6+16\\mathrm e^{-t}\\). Find the limit and the time at \\(S=10\\).</p><p><strong>Check</strong> \\(S\to6\\) from above, and \\(t=\\ln4\\).</p>",
+      "checks": "<ul><li>The limiting level is not the initial value. The initial value is \\(L+A\\).</li><li>Taking a log of the whole sum does not split it into logs of the terms. Subtract the constant level first.</li></ul>",
+      "examTip": "<p>Give a numerical prediction in context and distinguish a finite crossing time from a level approached only in the limit.</p>"
+    },
+    "related": [
+      {
+        "title": "Initial conditions and particular solutions",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_de_particular"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "interpretation-read-the-limit-more",
+        "title": "Identify the limiting level and the direction",
+        "prompt": "<p>A temperature model is \\(T=18 + 30 e^{- \\frac{4 t}{7}}\\) for \\(t\\ge0\\). Find the limiting temperature and decide whether the temperature approaches it from above or below.</p>",
+        "hint": "<p>The sign of the exponential term gives the side. Its size tends to zero.</p>",
+        "solution": "<p>The exponential has a negative exponent coefficient, so it tends to zero as time increases.</p><p>The constant term remains, giving a limiting temperature of \\(18\\) degrees Celsius.</p><p>The correction term is positive at every finite time, so the temperature approaches from above.</p>",
+        "fields": [
+          {
+            "key": "limit",
+            "label": "Limiting temperature",
+            "type": "number",
+            "expected": "18"
+          },
+          {
+            "key": "side",
+            "label": "Side of the limiting level",
+            "type": "choice",
+            "expected": "above",
+            "options": {
+              "above": "From above",
+              "below": "From below"
+            }
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "interpretation-threshold-time-more",
+        "title": "Calculate a threshold time exactly",
+        "prompt": "<p>A sampling signal is \\(S=21 + 24 e^{- \\frac{3 t}{4}}\\) for \\(t\\ge0\\). It reaches \\(27\\) at \\(t=a\\ln b\\) with \\(b>1\\). Give \\(a,b\\), using the integer \\(b\\) obtained by isolating the exponential and taking its reciprocal.</p>",
+        "hint": "<p>Work with the excess above the limiting level, then isolate the exponential.</p>",
+        "solution": "<p>Subtract the constant level and divide by the initial offset. This gives \\(e^{- \\frac{3 t}{4}}=\\frac{1}{4}\\).</p><p>Take logarithms. Equivalently, invert first to make the exponent positive and the argument an integer.</p><p>The time is \\(t=\\frac{4 \\log{\\left(4 \\right)}}{3}\\). It is positive because the signal falls towards its limit.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Multiplier a",
+            "type": "number",
+            "expected": "4/3",
+            "retry": [
+              {
+                "answer": "-4/3",
+                "feedback": "<p>A negative time lies outside the stated model. Isolate the reciprocal before taking logarithms.</p>"
+              }
+            ]
+          },
+          {
+            "key": "b",
+            "label": "Integer argument b",
+            "type": "number",
+            "expected": "4"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "interpretation-finite-stop-more",
+        "title": "Stop a model when its quantity reaches zero",
+        "prompt": "<p>An ice layer melts according to \\(h=36 - 4 t\\), where \\(h\\) is its thickness in millimetres and \\(t\\) is time in minutes. Include the instant it disappears. Give the valid time interval from the start and the thickness after one minute.</p>",
+        "hint": "<p>A negative thickness is outside the meaning of the model.</p>",
+        "solution": "<p>The model starts at \\(t=0\\) with positive thickness.</p><p>Solve \\(h=0\\) to find \\(t=9\\). The interval of validity is \\(0\\le t\\le 9\\).</p><p>At one minute, the thickness is \\(32\\) millimetres.</p>",
+        "fields": [
+          {
+            "key": "domain",
+            "label": "Allowed t-values",
+            "type": "set",
+            "expected": "[0,9]",
+            "variables": [
+              "t"
+            ],
+            "retry": [
+              {
+                "answer": "[0,9)",
+                "feedback": "<p>The prompt includes the moment when thickness first becomes zero.</p>"
+              }
+            ]
+          },
+          {
+            "key": "thickness",
+            "label": "Thickness after one minute",
+            "type": "number",
+            "expected": "32"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "interpretation-signed-model-rate-more",
+        "title": "Evaluate the rate at a specified level",
+        "prompt": "<p>A coating thickness follows \\(h=\\frac{1}{4 t + \\frac{1}{6}}\\) for \\(t\\ge0\\). Give the time when \\(h=3\\) and the signed rate at that time.</p>",
+        "hint": "<p>Find the rate by differentiation, then substitute the given level.</p>",
+        "solution": "<p>Take reciprocals to solve \\(4 t + \\frac{1}{6}=\\frac{1}{3}\\). This gives \\(t=\\frac{1}{24}\\).</p><p>Differentiate the reciprocal using the chain rule to get \\(\\frac{\\mathrm dh}{\\mathrm dt}=-4h^2\\).</p><p>The signed rate at the specified level is \\(\\frac{\\mathrm dh}{\\mathrm dt}=-36\\).</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Time at the specified level",
+            "type": "number",
+            "expected": "1/24"
+          },
+          {
+            "key": "rate",
+            "label": "Signed rate at that level",
+            "type": "number",
+            "expected": "-36",
+            "retry": [
+              {
+                "answer": "36",
+                "feedback": "<p>The quantity decreases, so the signed rate is negative.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "interpretation-validity-of-model-more",
+        "title": "Recognise when extrapolation fails",
+        "prompt": "<p>A preview service predicts \\(N=8 e^{\\frac{t}{9}}\\) simultaneous streams at time \\(t\\). The hardware can serve at most \\(30\\) streams. Would continuing the same exponential model indefinitely be valid? Give the positive multiplier \\(a\\) in the capacity time \\(t=a\\ln b\\) after isolating the original exponential.</p>",
+        "hint": "<p>Compare the long-term mathematical behaviour with the fixed limit in the situation.</p>",
+        "solution": "<p>The exponential increases without bound. The hardware capacity is fixed and finite.</p><p>Solving the threshold equation gives \\(e^{\\frac{t}{9}}=\\frac{15}{4}\\).</p><p>Then \\(t=\\frac1{\\frac{1}{9}}\\ln\\left(\\frac{15}{4}\\right)\\), so \\(a=9\\). This is where the model first reaches the capacity.</p>",
+        "fields": [
+          {
+            "key": "valid",
+            "label": "Is unlimited extrapolation valid?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          },
+          {
+            "key": "a",
+            "label": "Multiplier of the natural logarithm",
+            "type": "number",
+            "expected": "9"
+          }
+        ]
+      }
+    ]
+  }
+}

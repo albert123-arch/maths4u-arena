@@ -59,6 +59,7 @@ export function matchPublicChapter(chapters: PublicChapter[], path: string, chap
 }
 
 const chapterDescriptions: Record<string, string> = {
+  "9709-p3-differential-equations": "Model rates, separate variables, apply initial conditions and interpret first-order differential equations for Cambridge 9709 Pure 3.",
   "9709-p3-vectors": "Use vector components, lines, scalar products, angles and perpendicular feet with step-by-step practice for Cambridge 9709 Pure 3.",
   "9709-p3-numerical-methods": "Locate roots by sign changes and iteration. Learn rounding bounds, fixed-point equations and convergence diagrams for Cambridge 9709 Pure 3.",
   "9709-p1-quadratics": "Study quadratics for Cambridge 9709 Pure Mathematics 1. Work through factorisation, completing the square, the discriminant, inequalities and simultaneous equations.",
