@@ -15,6 +15,10 @@ export const notationProgressRevisions = [{
   key: "9709-p3-numerical-methods", fromVersion: "1.0.1", toVersion: "1.0.2",
   fromFingerprint: "256c3e723597f73753631fec4c6285d48de91e46c64e92b5185eabf77f96dd61",
   toFingerprint: "16904a23cf3ebf62ae21b27416d094c5b9d58e30c8e9cb682e1f3377af3e0599",
+}, {
+  key: "9709-p3-vectors", fromVersion: "1.0.0", toVersion: "1.0.1",
+  fromFingerprint: "9a45b48f00dbb581deefd2fd0e66e39645d628bdbbaef35db65a64ae0223d7dd",
+  toFingerprint: "f9388a6c512b6557cded6783483a760c219dc2f967aceff90cc21aa4e23a30a9",
 }] as const;
 
 export function notationProgressPolicy(p: ContentPackage) {
