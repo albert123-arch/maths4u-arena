@@ -1,0 +1,2504 @@
+{
+  "fp1_vectors_products": {
+    "updatedOn": "2026-11-21",
+    "description": "Find a vector product, check its orientation and use it to calculate area, height, volume or coplanarity in three dimensions.",
+    "sections": [
+      {
+        "id": "compute-a-normal",
+        "title": "How do I find a vector perpendicular to two directions?",
+        "label": "Use the vector product",
+        "intro": "<p>The vector product takes two directions in three dimensions and gives a signed normal.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Form the component differences in cyclic order. Check zero scalar products with both original vectors.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "products-compute-a-normal-check",
+            "title": "Compute the right-handed vector product",
+            "prompt": "<p>Find \\(\\mathbf u\\times\\mathbf v\\) for \\(\\mathbf u=\\left[\\begin{matrix}3\\\\1\\\\-1\\end{matrix}\\right]\\) and \\(\\mathbf v=\\left[\\begin{matrix}1\\\\-2\\\\3\\end{matrix}\\right]\\).</p>",
+            "fields": [
+              {
+                "key": "result_x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "result_y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "-10"
+              },
+              {
+                "key": "result_z",
+                "label": "Value of z",
+                "type": "number",
+                "expected": "-7"
+              }
+            ],
+            "hint": "<p>Organise the three component differences in cyclic order.</p>",
+            "solution": "<p>Use the component differences from the two rows. The first is \\(3\\) minus \\(2\\).</p><p>The full vector product is \\(\\left[\\begin{matrix}1\\\\-10\\\\-7\\end{matrix}\\right]\\).</p><p>Its dot products with both original vectors are zero. Its direction also depends on the order.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A scalar product returns a number. A vector product returns a three-component direction.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reverse-the-order",
+        "title": "What changes if I reverse the order?",
+        "label": "Check orientation separately",
+        "intro": "<p>Orientation follows the right-hand rule from the first direction to the second.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathbf v\\times\\mathbf u=-(\\mathbf u\\times\\mathbf v)\\). The magnitudes agree.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "products-reverse-the-order-check",
+            "title": "Reverse the normal when the order of vectors changes",
+            "prompt": "<p>The vector \\(\\mathbf u\\times\\mathbf v\\) is \\(\\left[\\begin{matrix}1\\\\-10\\\\-7\\end{matrix}\\right]\\). Find the x- and z-components of \\(\\mathbf v\\times\\mathbf u\\).</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "z",
+                "label": "Value of z",
+                "type": "number",
+                "expected": "7"
+              }
+            ],
+            "hint": "<p>Negate every component, without reversing the order of the components.</p>",
+            "solution": "<p>Reversing the factor order reverses the right-handed direction.</p><p>The new vector is \\(\\left[\\begin{matrix}-1\\\\10\\\\7\\end{matrix}\\right]\\). Its magnitude is unchanged.</p><p>The requested x- and z-components are \\(-1\\) and \\(7\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Negate all three components without changing their positions.</p>"
+          }
+        ]
+      },
+      {
+        "id": "triangle-area",
+        "title": "How does the vector product give a triangle area?",
+        "label": "Take half the magnitude",
+        "intro": "<p>Two side displacements from one vertex make a parallelogram. The triangle covers half of it.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use half the magnitude of the vector product. Use displacements having the same starting vertex.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "products-triangle-area-check",
+            "title": "Use half the parallelogram area for a triangle",
+            "prompt": "<p>Find the area of triangle ABC with \\(A=\\)\\(\\left(2,2,0\\right)\\), \\(B=\\)\\(\\left(5,2,0\\right)\\) and \\(C=\\)\\(\\left(3,6,0\\right)\\).</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Triangle area",
+                "type": "number",
+                "expected": "6"
+              }
+            ],
+            "hint": "<p>Use vectors sharing the same starting vertex.</p>",
+            "solution": "<p>Use the two vectors measured from A: \\(\\left[\\begin{matrix}3\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}1\\\\4\\\\0\\end{matrix}\\right]\\).</p><p>Their cross product is \\(\\left[\\begin{matrix}0\\\\0\\\\12\\end{matrix}\\right]\\). Its magnitude is the parallelogram area.</p><p>The triangle occupies half that area, giving \\(6\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Vector components can be signed. Area is non-negative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "products-triangle-area-follow-up",
+            "title": "Use half the parallelogram area for a triangle",
+            "prompt": "<p>Find the area of triangle ABC with \\(A=\\)\\(\\left(4,2,0\\right)\\), \\(B=\\)\\(\\left(9,2,0\\right)\\) and \\(C=\\)\\(\\left(5,8,0\\right)\\).</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Triangle area",
+                "type": "number",
+                "expected": "15"
+              }
+            ],
+            "hint": "<p>Use vectors sharing the same starting vertex.</p>",
+            "solution": "<p>Use the two vectors measured from A: \\(\\left[\\begin{matrix}5\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}1\\\\6\\\\0\\end{matrix}\\right]\\).</p><p>Their cross product is \\(\\left[\\begin{matrix}0\\\\0\\\\30\\end{matrix}\\right]\\). Its magnitude is the parallelogram area.</p><p>The triangle occupies half that area, giving \\(15\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "test-coplanarity",
+        "title": "How can I test a fourth point for coplanarity?",
+        "label": "Test its displacement against a normal",
+        "intro": "<p>Three non-collinear points determine a plane. Find its non-zero normal from two displacements.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The fourth point is coplanar if its displacement from the same reference point has zero dot product with the normal.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "products-test-coplanarity-check",
+            "title": "Use a scalar product with a cross-product normal",
+            "prompt": "<p>The points \\(A=\\)\\(\\left(2,0,0\\right)\\), \\(B=\\)\\(\\left(3,0,1\\right)\\), \\(C=\\)\\(\\left(2,2,1\\right)\\) and \\(D=\\)\\(\\left(k,3,4\\right)\\) are coplanar. Find \\(k\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Value of k",
+                "type": "number",
+                "expected": "9/2"
+              }
+            ],
+            "hint": "<p>Use displacements from the same reference point.</p>",
+            "solution": "<p>The first three points are not collinear because the cross product of their two direction vectors is \\(\\left[\\begin{matrix}-2\\\\-1\\\\2\\end{matrix}\\right]\\).</p><p>The displacement from A to D lies in their plane if its dot product with this normal is zero.</p><p>Solve \\(9 - 2 k=0\\) to obtain \\(k=\\frac{9}{2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If the original directions are parallel, their zero vector product cannot define a plane.</p>"
+          }
+        ]
+      },
+      {
+        "id": "measure-a-volume",
+        "title": "How can a vector product help find a tetrahedron volume?",
+        "label": "Use base area and normal height",
+        "intro": "<p>The base triangle has half the cross-product magnitude as its area. Project the fourth point onto the same normal to find the height.</p>",
+        "minutes": 7,
+        "level": "further",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The volume is one sixth of the absolute scalar triple product. The factor combines triangle and pyramid factors.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "products-measure-a-volume-check",
+            "title": "Find tetrahedron volume from a projected height",
+            "prompt": "<p>Find the volume of the tetrahedron with vertices at the origin, \\(\\left(3,0,0\\right)\\), \\(\\left(0,4,0\\right)\\) and \\(\\left(1,2,2\\right)\\).</p>",
+            "fields": [
+              {
+                "key": "volume",
+                "label": "Tetrahedron volume",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>Use the absolute volume, then account for both the triangular base and pyramid factor.</p>",
+            "solution": "<p>Use the first two displacements for the base triangle. The cross-product magnitude gives twice its area.</p><p>The height of the last point above the base plane is the magnitude of its normal projection.</p><p>One third of base area times height gives \\(4\\). Equivalently take one sixth of the absolute scalar triple product.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The signed triple product may be negative. The volume cannot be.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "products-measure-a-volume-follow-up",
+            "title": "Find tetrahedron volume from a projected height",
+            "prompt": "<p>Find the volume of the tetrahedron with vertices at the origin, \\(\\left(5,0,0\\right)\\), \\(\\left(0,6,0\\right)\\) and \\(\\left(1,2,4\\right)\\).</p>",
+            "fields": [
+              {
+                "key": "volume",
+                "label": "Tetrahedron volume",
+                "type": "number",
+                "expected": "20"
+              }
+            ],
+            "hint": "<p>Use the absolute volume, then account for both the triangular base and pyramid factor.</p>",
+            "solution": "<p>Use the first two displacements for the base triangle. The cross-product magnitude gives twice its area.</p><p>The height of the last point above the base plane is the magnitude of its normal projection.</p><p>One third of base area times height gives \\(20\\). Equivalently take one sixth of the absolute scalar triple product.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Compute the right-handed vector product",
+        "question": "<p>Find \\(\\mathbf u\\times\\mathbf v\\) for \\(\\mathbf u=\\left[\\begin{matrix}2\\\\1\\\\-1\\end{matrix}\\right]\\) and \\(\\mathbf v=\\left[\\begin{matrix}1\\\\-2\\\\2\\end{matrix}\\right]\\).</p>",
+        "solution": [
+          "<p>Use the component differences from the two rows. The first is \\(2\\) minus \\(2\\).</p>",
+          "<p>The full vector product is \\(\\left[\\begin{matrix}0\\\\-5\\\\-5\\end{matrix}\\right]\\).</p>",
+          "<p>Its dot products with both original vectors are zero. Its direction also depends on the order.</p>"
+        ]
+      },
+      {
+        "title": "Reverse the normal when the order of vectors changes",
+        "question": "<p>The vector \\(\\mathbf u\\times\\mathbf v\\) is \\(\\left[\\begin{matrix}0\\\\-5\\\\-5\\end{matrix}\\right]\\). Find the x- and z-components of \\(\\mathbf v\\times\\mathbf u\\).</p>",
+        "solution": [
+          "<p>Reversing the factor order reverses the right-handed direction.</p>",
+          "<p>The new vector is \\(\\left[\\begin{matrix}0\\\\5\\\\5\\end{matrix}\\right]\\). Its magnitude is unchanged.</p>",
+          "<p>The requested x- and z-components are \\(0\\) and \\(5\\).</p>"
+        ]
+      },
+      {
+        "title": "Use half the parallelogram area for a triangle",
+        "question": "<p>Find the area of triangle ABC with \\(A=\\)\\(\\left(1,2,0\\right)\\), \\(B=\\)\\(\\left(3,2,0\\right)\\) and \\(C=\\)\\(\\left(2,5,0\\right)\\).</p>",
+        "solution": [
+          "<p>Use the two vectors measured from A: \\(\\left[\\begin{matrix}2\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}1\\\\3\\\\0\\end{matrix}\\right]\\).</p>",
+          "<p>Their cross product is \\(\\left[\\begin{matrix}0\\\\0\\\\6\\end{matrix}\\right]\\). Its magnitude is the parallelogram area.</p>",
+          "<p>The triangle occupies half that area, giving \\(3\\).</p>"
+        ]
+      },
+      {
+        "title": "Use half the parallelogram area for a triangle",
+        "question": "<p>Find the area of triangle ABC with \\(A=\\)\\(\\left(3,2,0\\right)\\), \\(B=\\)\\(\\left(7,2,0\\right)\\) and \\(C=\\)\\(\\left(4,7,0\\right)\\).</p>",
+        "solution": [
+          "<p>Use the two vectors measured from A: \\(\\left[\\begin{matrix}4\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}1\\\\5\\\\0\\end{matrix}\\right]\\).</p>",
+          "<p>Their cross product is \\(\\left[\\begin{matrix}0\\\\0\\\\20\\end{matrix}\\right]\\). Its magnitude is the parallelogram area.</p>",
+          "<p>The triangle occupies half that area, giving \\(10\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a scalar product with a cross-product normal",
+        "question": "<p>The points \\(A=\\)\\(\\left(1,0,0\\right)\\), \\(B=\\)\\(\\left(2,0,1\\right)\\), \\(C=\\)\\(\\left(1,2,1\\right)\\) and \\(D=\\)\\(\\left(k,2,3\\right)\\) are coplanar. Find \\(k\\).</p>",
+        "solution": [
+          "<p>The first three points are not collinear because the cross product of their two direction vectors is \\(\\left[\\begin{matrix}-2\\\\-1\\\\2\\end{matrix}\\right]\\).</p>",
+          "<p>The displacement from A to D lies in their plane if its dot product with this normal is zero.</p>",
+          "<p>Solve \\(6 - 2 k=0\\) to obtain \\(k=3\\).</p>"
+        ]
+      },
+      {
+        "title": "Find tetrahedron volume from a projected height",
+        "question": "<p>Find the volume of the tetrahedron with vertices at the origin, \\(\\left(2,0,0\\right)\\), \\(\\left(0,3,0\\right)\\) and \\(\\left(1,2,1\\right)\\).</p>",
+        "solution": [
+          "<p>Use the first two displacements for the base triangle. The cross-product magnitude gives twice its area.</p>",
+          "<p>The height of the last point above the base plane is the magnitude of its normal projection.</p>",
+          "<p>One third of base area times height gives \\(1\\). Equivalently take one sixth of the absolute scalar triple product.</p>"
+        ]
+      },
+      {
+        "title": "Find tetrahedron volume from a projected height",
+        "question": "<p>Find the volume of the tetrahedron with vertices at the origin, \\(\\left(4,0,0\\right)\\), \\(\\left(0,5,0\\right)\\) and \\(\\left(1,2,3\\right)\\).</p>",
+        "solution": [
+          "<p>Use the first two displacements for the base triangle. The cross-product magnitude gives twice its area.</p>",
+          "<p>The height of the last point above the base plane is the magnitude of its normal projection.</p>",
+          "<p>One third of base area times height gives \\(10\\). Equivalently take one sixth of the absolute scalar triple product.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "products-compute-a-normal-extra",
+        "title": "Compute the right-handed vector product",
+        "prompt": "<p>Find \\(\\mathbf u\\times\\mathbf v\\) for \\(\\mathbf u=\\left[\\begin{matrix}4\\\\1\\\\-1\\end{matrix}\\right]\\) and \\(\\mathbf v=\\left[\\begin{matrix}1\\\\-2\\\\4\\end{matrix}\\right]\\).</p>",
+        "fields": [
+          {
+            "key": "result_x",
+            "label": "Value of x",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "result_y",
+            "label": "Value of y",
+            "type": "number",
+            "expected": "-17"
+          },
+          {
+            "key": "result_z",
+            "label": "Value of z",
+            "type": "number",
+            "expected": "-9"
+          }
+        ],
+        "hint": "<p>Organise the three component differences in cyclic order.</p>",
+        "solution": "<p>Use the component differences from the two rows. The first is \\(4\\) minus \\(2\\).</p><p>The full vector product is \\(\\left[\\begin{matrix}2\\\\-17\\\\-9\\end{matrix}\\right]\\).</p><p>Its dot products with both original vectors are zero. Its direction also depends on the order.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "products-reverse-the-order-extra",
+        "title": "Reverse the normal when the order of vectors changes",
+        "prompt": "<p>The vector \\(\\mathbf u\\times\\mathbf v\\) is \\(\\left[\\begin{matrix}2\\\\-17\\\\-9\\end{matrix}\\right]\\). Find the x- and z-components of \\(\\mathbf v\\times\\mathbf u\\).</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Value of x",
+            "type": "number",
+            "expected": "-2"
+          },
+          {
+            "key": "z",
+            "label": "Value of z",
+            "type": "number",
+            "expected": "9"
+          }
+        ],
+        "hint": "<p>Negate every component, without reversing the order of the components.</p>",
+        "solution": "<p>Reversing the factor order reverses the right-handed direction.</p><p>The new vector is \\(\\left[\\begin{matrix}-2\\\\17\\\\9\\end{matrix}\\right]\\). Its magnitude is unchanged.</p><p>The requested x- and z-components are \\(-2\\) and \\(9\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "products-triangle-area-extra",
+        "title": "Use half the parallelogram area for a triangle",
+        "prompt": "<p>Find the area of triangle ABC with \\(A=\\)\\(\\left(5,2,0\\right)\\), \\(B=\\)\\(\\left(11,2,0\\right)\\) and \\(C=\\)\\(\\left(6,9,0\\right)\\).</p>",
+        "fields": [
+          {
+            "key": "area",
+            "label": "Triangle area",
+            "type": "number",
+            "expected": "21"
+          }
+        ],
+        "hint": "<p>Use vectors sharing the same starting vertex.</p>",
+        "solution": "<p>Use the two vectors measured from A: \\(\\left[\\begin{matrix}6\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}1\\\\7\\\\0\\end{matrix}\\right]\\).</p><p>Their cross product is \\(\\left[\\begin{matrix}0\\\\0\\\\42\\end{matrix}\\right]\\). Its magnitude is the parallelogram area.</p><p>The triangle occupies half that area, giving \\(21\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "products-test-coplanarity-extra",
+        "title": "Use a scalar product with a cross-product normal",
+        "prompt": "<p>The points \\(A=\\)\\(\\left(3,0,0\\right)\\), \\(B=\\)\\(\\left(4,0,1\\right)\\), \\(C=\\)\\(\\left(3,2,1\\right)\\) and \\(D=\\)\\(\\left(k,4,5\\right)\\) are coplanar. Find \\(k\\).</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Value of k",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Use displacements from the same reference point.</p>",
+        "solution": "<p>The first three points are not collinear because the cross product of their two direction vectors is \\(\\left[\\begin{matrix}-2\\\\-1\\\\2\\end{matrix}\\right]\\).</p><p>The displacement from A to D lies in their plane if its dot product with this normal is zero.</p><p>Solve \\(12 - 2 k=0\\) to obtain \\(k=6\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "products-measure-a-volume-extra",
+        "title": "Find tetrahedron volume from a projected height",
+        "prompt": "<p>Find the volume of the tetrahedron with vertices at the origin, \\(\\left(6,0,0\\right)\\), \\(\\left(0,7,0\\right)\\) and \\(\\left(1,2,5\\right)\\).</p>",
+        "fields": [
+          {
+            "key": "volume",
+            "label": "Tetrahedron volume",
+            "type": "number",
+            "expected": "35"
+          }
+        ],
+        "hint": "<p>Use the absolute volume, then account for both the triangular base and pyramid factor.</p>",
+        "solution": "<p>Use the first two displacements for the base triangle. The cross-product magnitude gives twice its area.</p><p>The height of the last point above the base plane is the magnitude of its normal projection.</p><p>One third of base area times height gives \\(35\\). Equivalently take one sixth of the absolute scalar triple product.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Vector product",
+        "definition": "<p>Right-handed normal vector from two spatial vectors.</p>"
+      },
+      {
+        "term": "Orientation",
+        "definition": "<p>Handedness determined by the order of the vectors.</p>"
+      },
+      {
+        "term": "Normal",
+        "definition": "<p>Non-zero perpendicular vector.</p>"
+      },
+      {
+        "term": "Coplanar",
+        "definition": "<p>In the same plane.</p>"
+      },
+      {
+        "term": "Scalar triple product",
+        "definition": "<p>The dot product of one vector with the vector product of the other two.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Check a normal</th><td>Both original directions give zero dot product.</td></tr><tr><th scope=\"row\">Reverse order</th><td>The cross product changes sign.</td></tr><tr><th scope=\"row\">Triangle area</th><td>Use half the cross-product magnitude.</td></tr><tr><th scope=\"row\">Coplanarity</th><td>Dot the normal with a displacement to the fourth point.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Find the vector product of \\(\\left[\\begin{matrix}2\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}0\\\\3\\\\0\\end{matrix}\\right]\\).</p><p><strong>Check</strong> \\(\\left[\\begin{matrix}0\\\\0\\\\6\\end{matrix}\\right]\\). The triangle area associated with them is three.</p>",
+      "checks": "<ul><li>A scalar product returns a number. A vector product returns a three-component direction.</li><li>Negate all three components without changing their positions.</li></ul>",
+      "examTip": "<p>Use a normal that is non-zero before applying distance or area formulae.</p>"
+    },
+    "related": [
+      {
+        "title": "Lines and common perpendiculars",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_vectors_lines"
+      }
+    ]
+  },
+  "fp1_vectors_lines": {
+    "updatedOn": "2026-11-21",
+    "description": "Check line membership and intersections using independent parameters. Locate feet and common perpendiculars by scalar products.",
+    "sections": [
+      {
+        "id": "one-parameter-on-one-line",
+        "title": "How can I tell whether a point is on a line?",
+        "label": "Use one parameter for all coordinates",
+        "intro": "<p>A known point and one non-zero direction specify the line. The parameter selects the position.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Solve a coordinate with non-zero direction component and then check the others at that same parameter.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "lines-one-parameter-on-one-line-check",
+            "title": "Use one line parameter in all three coordinates",
+            "prompt": "<p>Does \\(\\left(3,1,5\\right)\\) lie on \\(\\mathbf r=\\left[\\begin{matrix}2\\\\-1\\\\2\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\2\\\\2\\end{matrix}\\right]\\)? Give the parameter obtained from the x-coordinate and decide.</p>",
+            "fields": [
+              {
+                "key": "param",
+                "label": "Line parameter",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "member",
+                "label": "Does the point lie on the line?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>Check the same value in every coordinate, including any constant coordinate.</p>",
+            "solution": "<p>The first coordinate fixes the candidate parameter at \\(1\\).</p><p>The same parameter must also produce the y- and z-coordinates.</p><p>Substitution into the whole vector equation gives \\(\\left(3,1,4\\right)\\). The third coordinate differs from the given point, so it is not on the line.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Even a constant coordinate must be checked for membership.</p>"
+          }
+        ]
+      },
+      {
+        "id": "separate-line-parameters",
+        "title": "What determines a common point of two lines?",
+        "label": "Use a separate parameter on each line",
+        "intro": "<p>A common point need not occur at the same value of both parameters.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Solve two coordinate equalities, check the third and give the point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "lines-separate-line-parameters-check",
+            "title": "Solve for separate parameters at a common point",
+            "prompt": "<p>Find both parameters and the x-coordinate where \\(\\mathbf r=\\left[\\begin{matrix}2\\\\-1\\\\2\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\2\\\\2\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}1\\\\7\\\\6\\end{matrix}\\right]+t\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\) intersect.</p>",
+            "fields": [
+              {
+                "key": "s",
+                "label": "Value of s",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "t",
+                "label": "Value of t",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "x",
+                "label": "Common x-coordinate",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Solve two equations, then use the third as an independent check.</p>",
+            "solution": "<p>Set the three coordinate equations equal. The two parameters refer to different lines.</p><p>Solving the first two equations gives \\(s=3\\) and \\(t=2\\). The third equation agrees.</p><p>Substitution gives the common point \\(\\left(5,5,8\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Solving just two equations might leave the third unsatisfied.</p>"
+          }
+        ]
+      },
+      {
+        "id": "skew-or-crossing",
+        "title": "What makes two non-parallel lines skew?",
+        "label": "Check the whole position",
+        "intro": "<p>Two non-parallel lines have at most one common point. If its third coordinate fails, the lines are skew.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A non-zero scalar triple product of both directions with a displacement between the lines also proves they are skew.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "lines-skew-or-crossing-check",
+            "title": "Decide when non-parallel lines are skew",
+            "prompt": "<p>For lines \\(\\mathbf r=\\left[\\begin{matrix}2\\\\-1\\\\2\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\2\\\\2\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}3\\\\6\\\\10\\end{matrix}\\right]+t\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\), solve equality of x- and y-coordinates. Do the lines intersect?</p>",
+            "fields": [
+              {
+                "key": "s",
+                "label": "Value of s from x and y",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "t",
+                "label": "Value of t from x and y",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "meets",
+                "label": "Do the lines intersect?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>A solution to two coordinate equations need not satisfy the third.</p>",
+            "solution": "<p>The directional vectors are not parallel. Solve the x and y equations to get \\(s=3\\) and \\(t=1\\).</p><p>At these values the z-coordinates differ by \\(3\\).</p><p>There is no common point, so these non-parallel lines are skew.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Non-parallel lines in space need not cross.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "lines-skew-or-crossing-follow-up",
+            "title": "Decide when non-parallel lines are skew",
+            "prompt": "<p>For lines \\(\\mathbf r=\\left[\\begin{matrix}4\\\\-1\\\\2\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\2\\\\4\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}7\\\\10\\\\26\\end{matrix}\\right]+t\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\), solve equality of x- and y-coordinates. Do the lines intersect?</p>",
+            "fields": [
+              {
+                "key": "s",
+                "label": "Value of s from x and y",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "t",
+                "label": "Value of t from x and y",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "meets",
+                "label": "Do the lines intersect?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>A solution to two coordinate equations need not satisfy the third.</p>",
+            "solution": "<p>The directional vectors are not parallel. Solve the x and y equations to get \\(s=5\\) and \\(t=1\\).</p><p>At these values the z-coordinates differ by \\(5\\).</p><p>There is no common point, so these non-parallel lines are skew.</p>"
+          }
+        ]
+      },
+      {
+        "id": "perpendicular-foot",
+        "title": "How do I find the nearest point on a line?",
+        "label": "Impose perpendicularity",
+        "intro": "<p>Take a variable point on the line. The shortest segment to the external point is perpendicular to its direction.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Solve the zero scalar-product equation to find the foot parameter and calculate the joining vector length.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "lines-perpendicular-foot-check",
+            "title": "Find a foot by imposing perpendicularity",
+            "prompt": "<p>From point \\(\\left(6,-3,2\\right)\\), find the foot on \\(\\mathbf r=\\left[\\begin{matrix}2\\\\-1\\\\2\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\2\\\\2\\end{matrix}\\right]\\) and the shortest distance. Give the foot parameter and exact distance.</p>",
+            "fields": [
+              {
+                "key": "t",
+                "label": "Value of t at the foot",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "distance",
+                "label": "Exact distance",
+                "type": "number",
+                "expected": "2*sqrt(5)"
+              }
+            ],
+            "hint": "<p>Use a scalar product to find the parameter, then measure the length of the perpendicular segment.</p>",
+            "solution": "<p>Let the foot be on the line with parameter t. Its vector to the given point must be perpendicular to the line’s direction.</p><p>Set the scalar product to zero and solve, giving \\(t=0\\). The foot is \\(\\left(2,-1,2\\right)\\).</p><p>The joining vector is \\(\\left[\\begin{matrix}4\\\\-2\\\\0\\end{matrix}\\right]\\), whose magnitude is \\(2 \\sqrt{5}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Matching just one coordinate does not normally give the perpendicular foot.</p>"
+          }
+        ]
+      },
+      {
+        "id": "shortest-join",
+        "title": "How do I find the shortest join between skew lines?",
+        "label": "Use both perpendicular equations",
+        "intro": "<p>Take a variable point on each line. The shortest joining vector is perpendicular to both line directions.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use two zero scalar products to find the endpoint parameters. If the directions are parallel instead, project a displacement perpendicular to one of them.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_vectors_lines/shortest-join-of-two-lines.svg",
+              "caption": "<p>The shortest joining segment is perpendicular to both spatial directions.</p>",
+              "alt": "Two skew lines with a dashed shortest segment joining one point on each line, drawn schematically.",
+              "width": 465,
+              "height": 194
+            }
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "lines-shortest-join-check",
+            "title": "Find both ends of a common perpendicular",
+            "prompt": "<p>Find the parameters of the endpoints of the common perpendicular between \\(\\mathbf r=\\left[\\begin{matrix}0\\\\0\\\\0\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}0\\\\2\\\\3\\end{matrix}\\right]+t\\left[\\begin{matrix}0\\\\1\\\\0\\end{matrix}\\right]\\). Give its length.</p>",
+            "fields": [
+              {
+                "key": "s",
+                "label": "Value of s",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "t",
+                "label": "Value of t",
+                "type": "number",
+                "expected": "-2"
+              },
+              {
+                "key": "length",
+                "label": "Length of perpendicular",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Write the vector joining arbitrary points, then impose both perpendicular conditions.</p>",
+            "solution": "<p>If the joining vector is perpendicular to both directions, it has zero x- and y-components here.</p><p>The x-coordinate condition gives \\(s=0\\) and the y-coordinate condition gives \\(t=-2\\).</p><p>The endpoints then differ only in z, with length \\(3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A zero vector product cannot define a skew-line normal. Classify the lines before normalising.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "lines-shortest-join-follow-up",
+            "title": "Find both ends of a common perpendicular",
+            "prompt": "<p>Find the parameters of the endpoints of the common perpendicular between \\(\\mathbf r=\\left[\\begin{matrix}0\\\\0\\\\0\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}0\\\\4\\\\5\\end{matrix}\\right]+t\\left[\\begin{matrix}0\\\\1\\\\0\\end{matrix}\\right]\\). Give its length.</p>",
+            "fields": [
+              {
+                "key": "s",
+                "label": "Value of s",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "t",
+                "label": "Value of t",
+                "type": "number",
+                "expected": "-4"
+              },
+              {
+                "key": "length",
+                "label": "Length of perpendicular",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Write the vector joining arbitrary points, then impose both perpendicular conditions.</p>",
+            "solution": "<p>If the joining vector is perpendicular to both directions, it has zero x- and y-components here.</p><p>The x-coordinate condition gives \\(s=0\\) and the y-coordinate condition gives \\(t=-4\\).</p><p>The endpoints then differ only in z, with length \\(5\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use one line parameter in all three coordinates",
+        "question": "<p>Does \\(\\left(3,3,4\\right)\\) lie on \\(\\mathbf r=\\left[\\begin{matrix}1\\\\-1\\\\2\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\2\\\\1\\end{matrix}\\right]\\)? Give the parameter obtained from the x-coordinate and decide.</p>",
+        "solution": [
+          "<p>The first coordinate fixes the candidate parameter at \\(2\\).</p>",
+          "<p>The same parameter must also produce the y- and z-coordinates.</p>",
+          "<p>Substitution into the whole vector equation gives \\(\\left(3,3,4\\right)\\). This is the given point.</p>"
+        ]
+      },
+      {
+        "title": "Solve for separate parameters at a common point",
+        "question": "<p>Find both parameters and the x-coordinate where \\(\\mathbf r=\\left[\\begin{matrix}1\\\\-1\\\\2\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\2\\\\1\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}1\\\\4\\\\3\\end{matrix}\\right]+t\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\) intersect.</p>",
+        "solution": [
+          "<p>Set the three coordinate equations equal. The two parameters refer to different lines.</p>",
+          "<p>Solving the first two equations gives \\(s=2\\) and \\(t=1\\). The third equation agrees.</p>",
+          "<p>Substitution gives the common point \\(\\left(3,3,4\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Decide when non-parallel lines are skew",
+        "question": "<p>For lines \\(\\mathbf r=\\left[\\begin{matrix}1\\\\-1\\\\2\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\2\\\\1\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}1\\\\4\\\\5\\end{matrix}\\right]+t\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\), solve equality of x- and y-coordinates. Do the lines intersect?</p>",
+        "solution": [
+          "<p>The directional vectors are not parallel. Solve the x and y equations to get \\(s=2\\) and \\(t=1\\).</p>",
+          "<p>At these values the z-coordinates differ by \\(2\\).</p>",
+          "<p>There is no common point, so these non-parallel lines are skew.</p>"
+        ]
+      },
+      {
+        "title": "Decide when non-parallel lines are skew",
+        "question": "<p>For lines \\(\\mathbf r=\\left[\\begin{matrix}3\\\\-1\\\\2\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\2\\\\3\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}5\\\\8\\\\17\\end{matrix}\\right]+t\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\), solve equality of x- and y-coordinates. Do the lines intersect?</p>",
+        "solution": [
+          "<p>The directional vectors are not parallel. Solve the x and y equations to get \\(s=4\\) and \\(t=1\\).</p>",
+          "<p>At these values the z-coordinates differ by \\(4\\).</p>",
+          "<p>There is no common point, so these non-parallel lines are skew.</p>"
+        ]
+      },
+      {
+        "title": "Find a foot by imposing perpendicularity",
+        "question": "<p>From point \\(\\left(2,-4,1\\right)\\), find the foot on \\(\\mathbf r=\\left[\\begin{matrix}1\\\\-1\\\\2\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\2\\\\1\\end{matrix}\\right]\\) and the shortest distance. Give the foot parameter and exact distance.</p>",
+        "solution": [
+          "<p>Let the foot be on the line with parameter t. Its vector to the given point must be perpendicular to the line’s direction.</p>",
+          "<p>Set the scalar product to zero and solve, giving \\(t=-1\\). The foot is \\(\\left(0,-3,1\\right)\\).</p>",
+          "<p>The joining vector is \\(\\left[\\begin{matrix}2\\\\-1\\\\0\\end{matrix}\\right]\\), whose magnitude is \\(\\sqrt{5}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find both ends of a common perpendicular",
+        "question": "<p>Find the parameters of the endpoints of the common perpendicular between \\(\\mathbf r=\\left[\\begin{matrix}0\\\\0\\\\0\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}0\\\\1\\\\2\\end{matrix}\\right]+t\\left[\\begin{matrix}0\\\\1\\\\0\\end{matrix}\\right]\\). Give its length.</p>",
+        "solution": [
+          "<p>If the joining vector is perpendicular to both directions, it has zero x- and y-components here.</p>",
+          "<p>The x-coordinate condition gives \\(s=0\\) and the y-coordinate condition gives \\(t=-1\\).</p>",
+          "<p>The endpoints then differ only in z, with length \\(2\\).</p>"
+        ]
+      },
+      {
+        "title": "Find both ends of a common perpendicular",
+        "question": "<p>Find the parameters of the endpoints of the common perpendicular between \\(\\mathbf r=\\left[\\begin{matrix}0\\\\0\\\\0\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}0\\\\3\\\\4\\end{matrix}\\right]+t\\left[\\begin{matrix}0\\\\1\\\\0\\end{matrix}\\right]\\). Give its length.</p>",
+        "solution": [
+          "<p>If the joining vector is perpendicular to both directions, it has zero x- and y-components here.</p>",
+          "<p>The x-coordinate condition gives \\(s=0\\) and the y-coordinate condition gives \\(t=-3\\).</p>",
+          "<p>The endpoints then differ only in z, with length \\(4\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "lines-one-parameter-on-one-line-extra",
+        "title": "Use one line parameter in all three coordinates",
+        "prompt": "<p>Does \\(\\left(3,-1,2\\right)\\) lie on \\(\\mathbf r=\\left[\\begin{matrix}3\\\\-1\\\\2\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\2\\\\3\\end{matrix}\\right]\\)? Give the parameter obtained from the x-coordinate and decide.</p>",
+        "fields": [
+          {
+            "key": "param",
+            "label": "Line parameter",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "member",
+            "label": "Does the point lie on the line?",
+            "type": "choice",
+            "expected": "yes",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          }
+        ],
+        "hint": "<p>Check the same value in every coordinate, including any constant coordinate.</p>",
+        "solution": "<p>The first coordinate fixes the candidate parameter at \\(0\\).</p><p>The same parameter must also produce the y- and z-coordinates.</p><p>Substitution into the whole vector equation gives \\(\\left(3,-1,2\\right)\\). This is the given point.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "lines-separate-line-parameters-extra",
+        "title": "Solve for separate parameters at a common point",
+        "prompt": "<p>Find both parameters and the x-coordinate where \\(\\mathbf r=\\left[\\begin{matrix}3\\\\-1\\\\2\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\2\\\\3\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}1\\\\10\\\\11\\end{matrix}\\right]+t\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\) intersect.</p>",
+        "fields": [
+          {
+            "key": "s",
+            "label": "Value of s",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "t",
+            "label": "Value of t",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "x",
+            "label": "Common x-coordinate",
+            "type": "number",
+            "expected": "7"
+          }
+        ],
+        "hint": "<p>Solve two equations, then use the third as an independent check.</p>",
+        "solution": "<p>Set the three coordinate equations equal. The two parameters refer to different lines.</p><p>Solving the first two equations gives \\(s=4\\) and \\(t=3\\). The third equation agrees.</p><p>Substitution gives the common point \\(\\left(7,7,14\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "lines-skew-or-crossing-extra",
+        "title": "Decide when non-parallel lines are skew",
+        "prompt": "<p>For lines \\(\\mathbf r=\\left[\\begin{matrix}5\\\\-1\\\\2\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\2\\\\5\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}9\\\\12\\\\37\\end{matrix}\\right]+t\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\), solve equality of x- and y-coordinates. Do the lines intersect?</p>",
+        "fields": [
+          {
+            "key": "s",
+            "label": "Value of s from x and y",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "t",
+            "label": "Value of t from x and y",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "meets",
+            "label": "Do the lines intersect?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          }
+        ],
+        "hint": "<p>A solution to two coordinate equations need not satisfy the third.</p>",
+        "solution": "<p>The directional vectors are not parallel. Solve the x and y equations to get \\(s=6\\) and \\(t=1\\).</p><p>At these values the z-coordinates differ by \\(6\\).</p><p>There is no common point, so these non-parallel lines are skew.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "lines-perpendicular-foot-extra",
+        "title": "Find a foot by imposing perpendicularity",
+        "prompt": "<p>From point \\(\\left(10,-2,5\\right)\\), find the foot on \\(\\mathbf r=\\left[\\begin{matrix}3\\\\-1\\\\2\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\2\\\\3\\end{matrix}\\right]\\) and the shortest distance. Give the foot parameter and exact distance.</p>",
+        "fields": [
+          {
+            "key": "t",
+            "label": "Value of t at the foot",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "distance",
+            "label": "Exact distance",
+            "type": "number",
+            "expected": "3*sqrt(5)"
+          }
+        ],
+        "hint": "<p>Use a scalar product to find the parameter, then measure the length of the perpendicular segment.</p>",
+        "solution": "<p>Let the foot be on the line with parameter t. Its vector to the given point must be perpendicular to the line’s direction.</p><p>Set the scalar product to zero and solve, giving \\(t=1\\). The foot is \\(\\left(4,1,5\\right)\\).</p><p>The joining vector is \\(\\left[\\begin{matrix}6\\\\-3\\\\0\\end{matrix}\\right]\\), whose magnitude is \\(3 \\sqrt{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "lines-shortest-join-extra",
+        "title": "Find both ends of a common perpendicular",
+        "prompt": "<p>Find the parameters of the endpoints of the common perpendicular between \\(\\mathbf r=\\left[\\begin{matrix}0\\\\0\\\\0\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}0\\\\5\\\\6\\end{matrix}\\right]+t\\left[\\begin{matrix}0\\\\1\\\\0\\end{matrix}\\right]\\). Give its length.</p>",
+        "fields": [
+          {
+            "key": "s",
+            "label": "Value of s",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "t",
+            "label": "Value of t",
+            "type": "number",
+            "expected": "-5"
+          },
+          {
+            "key": "length",
+            "label": "Length of perpendicular",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Write the vector joining arbitrary points, then impose both perpendicular conditions.</p>",
+        "solution": "<p>If the joining vector is perpendicular to both directions, it has zero x- and y-components here.</p><p>The x-coordinate condition gives \\(s=0\\) and the y-coordinate condition gives \\(t=-5\\).</p><p>The endpoints then differ only in z, with length \\(6\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Line parameter",
+        "definition": "<p>Number selecting a point on a line.</p>"
+      },
+      {
+        "term": "Skew lines",
+        "definition": "<p>Non-parallel spatial lines with no common point.</p>"
+      },
+      {
+        "term": "Foot",
+        "definition": "<p>Point where the perpendicular from an external point meets a line.</p>"
+      },
+      {
+        "term": "Common perpendicular",
+        "definition": "<p>Join perpendicular to both lines.</p>"
+      },
+      {
+        "term": "Coincident lines",
+        "definition": "<p>Different descriptions of exactly the same line.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Membership</th><td>Use the same parameter in all coordinates.</td></tr><tr><th scope=\"row\">Two lines</th><td>Use separate parameters and check all three coordinates.</td></tr><tr><th scope=\"row\">Point to line</th><td>Set a joining scalar product to zero.</td></tr><tr><th scope=\"row\">Skew lines</th><td>Use both perpendicularity conditions.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Does \\(\\left(5,2,4\\right)\\) lie on \\(\\mathbf r=\\left[\\begin{matrix}1\\\\0\\\\1\\end{matrix}\\right]+t\\left[\\begin{matrix}2\\\\1\\\\1\\end{matrix}\\right]\\)?</p><p><strong>Check</strong> No. The first two coordinates give \\(t=2\\), which yields z equal to three.</p>",
+      "checks": "<ul><li>Even a constant coordinate must be checked for membership.</li><li>Solving just two equations might leave the third unsatisfied.</li></ul>",
+      "examTip": "<p>Substitute a found parameter into the whole vector equation before accepting it.</p>"
+    },
+    "related": [
+      {
+        "title": "Vector products, orientation and area",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_vectors_products"
+      },
+      {
+        "title": "Describing and intersecting planes",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_vectors_planes"
+      }
+    ]
+  },
+  "fp1_vectors_planes": {
+    "updatedOn": "2026-11-21",
+    "description": "Convert between plane forms, find intersections with lines or planes and identify parallel and coincident cases.",
+    "sections": [
+      {
+        "id": "plane-from-three-points",
+        "title": "What determines a plane from three points?",
+        "label": "Find two independent displacements",
+        "intro": "<p>Use displacements from the same reference point. Their vector product is a normal unless the three points are collinear.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Dot the normal with a known point to find the constant of the Cartesian equation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "planes-plane-from-three-points-check",
+            "title": "Build a normal from two in-plane directions",
+            "prompt": "<p>The plane contains \\(\\left(2,2,-1\\right)\\), \\(\\left(3,3,-1\\right)\\) and \\(\\left(2,3,1\\right)\\). Use \\(\\overrightarrow{AB}\\times\\overrightarrow{AC}\\) as the normal. Give its components and the right-hand constant in the Cartesian equation.</p>",
+            "fields": [
+              {
+                "key": "result_x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "result_y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "-2"
+              },
+              {
+                "key": "result_z",
+                "label": "Value of z",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "d",
+                "label": "Constant d",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>Use point differences before computing the cross product.</p>",
+            "solution": "<p>Form two displacements from the first point. They are \\(\\left[\\begin{matrix}1\\\\1\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}0\\\\1\\\\2\\end{matrix}\\right]\\).</p><p>Their cross product is \\(\\left[\\begin{matrix}2\\\\-2\\\\1\\end{matrix}\\right]\\), which is non-zero and perpendicular to the plane.</p><p>Take its dot product with a known point to find the constant \\(-1\\). The equation is \\(2 x - 2 y + z=-1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A normal determines orientation, while the plane position also requires an offset.</p>"
+          }
+        ]
+      },
+      {
+        "id": "convert-the-form",
+        "title": "How do the parametric and scalar-product forms agree?",
+        "label": "Remove both direction terms",
+        "intro": "<p>Two independent directions span the plane through a known point. Its normal is perpendicular to both.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Dot the entire vector equation with the normal. The parameter terms vanish and the fixed offset remains.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "planes-convert-the-form-check",
+            "title": "Convert a parametric plane to a scalar-product equation",
+            "prompt": "<p>The plane is \\(\\mathbf r=\\left[\\begin{matrix}2\\\\2\\\\-1\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\1\\\\0\\end{matrix}\\right]+t\\left[\\begin{matrix}0\\\\1\\\\2\\end{matrix}\\right]\\). Find the constant and the z coefficient in its Cartesian equation, using the normal \\(\\left[\\begin{matrix}2\\\\-2\\\\1\\end{matrix}\\right]\\).</p>",
+            "fields": [
+              {
+                "key": "constant",
+                "label": "Right-hand constant",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "coef",
+                "label": "Coefficient of z",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Dot the entire vector equation with the normal, including its offset.</p>",
+            "solution": "<p>The offset point is \\(\\left(2,2,-1\\right)\\). The supplied normal is perpendicular to the two direction vectors.</p><p>Taking the dot product with the normal sends both direction terms to zero.</p><p>The remaining constant is \\(-1\\). The equivalent Cartesian equation is \\(2 x - 2 y + z=-1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Two parallel directions do not span a plane.</p>"
+          }
+        ]
+      },
+      {
+        "id": "line-of-intersection",
+        "title": "Why do non-parallel planes meet in a line?",
+        "label": "Use both equations at once",
+        "intro": "<p>Independent planes give two simultaneous conditions in three coordinates.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Eliminate one coordinate to obtain an anchor and direction. The line direction is perpendicular to both normals.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "planes-line-of-intersection-check",
+            "title": "Subtract two plane equations to expose a line",
+            "prompt": "<p>Find the fixed y-coordinate and the z-coordinate when \\(x=0\\) on the intersection of \\(x + y + z=5\\) and \\(x - y + z=1\\).</p>",
+            "fields": [
+              {
+                "key": "y",
+                "label": "Fixed value of y",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "z",
+                "label": "Value of z at x = 0",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Eliminate a coordinate and keep one free parameter for the intersection line.</p>",
+            "solution": "<p>Subtract the equations. This gives \\(2y=4\\), hence \\(y=2\\).</p><p>Substitute back to get \\(x+z=3\\). The intersection is the line satisfying both equations.</p><p>At \\(x=0\\) its z-coordinate is \\(3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The direction alone does not specify where the line lies.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "planes-line-of-intersection-follow-up",
+            "title": "Subtract two plane equations to expose a line",
+            "prompt": "<p>Find the fixed y-coordinate and the z-coordinate when \\(x=0\\) on the intersection of \\(x + y + z=9\\) and \\(x - y + z=1\\).</p>",
+            "fields": [
+              {
+                "key": "y",
+                "label": "Fixed value of y",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "z",
+                "label": "Value of z at x = 0",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Eliminate a coordinate and keep one free parameter for the intersection line.</p>",
+            "solution": "<p>Subtract the equations. This gives \\(2y=8\\), hence \\(y=4\\).</p><p>Substitute back to get \\(x+z=5\\). The intersection is the line satisfying both equations.</p><p>At \\(x=0\\) its z-coordinate is \\(5\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "substitute-line-into-plane",
+        "title": "When does a line meet a plane once?",
+        "label": "Solve for its line parameter",
+        "intro": "<p>A line substituted into the plane gives one equation in its parameter.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A non-zero coefficient gives a unique crossing. If the coefficient is zero, compare the constants to distinguish contained and parallel cases.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "planes-substitute-line-into-plane-check",
+            "title": "Substitute a line into a plane equation",
+            "prompt": "<p>Find the line parameter and the z-coordinate at the intersection of \\(\\mathbf r=\\left[\\begin{matrix}2\\\\2\\\\-1\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\2\\\\-1\\end{matrix}\\right]\\) and \\(2 x - 2 y + z=-10\\).</p>",
+            "fields": [
+              {
+                "key": "t",
+                "label": "Value of t",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "z",
+                "label": "Intersection z-coordinate",
+                "type": "number",
+                "expected": "-4"
+              }
+            ],
+            "hint": "<p>Insert the complete line coordinates into the plane instead of comparing direction vectors alone.</p>",
+            "solution": "<p>Substituting the line into the plane equation gives one linear equation in the parameter.</p><p>The coefficient of the parameter is \\(-3\\), non-zero, so the solution is unique.</p><p>Solving gives \\(t=3\\). The intersection is \\(\\left(5,8,-4\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Checking the direction alone cannot tell whether a parallel line lies in the plane.</p>"
+          }
+        ]
+      },
+      {
+        "id": "compare-parallel-planes",
+        "title": "How can parallel equations name the same plane?",
+        "label": "Scale all coefficients consistently",
+        "intro": "<p>Parallel normals give a shared orientation. Plane locations may still differ.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>To test coincidence, multiply the entire equation by the same non-zero factor, including its right-hand constant.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "planes-compare-parallel-planes-check",
+            "title": "Distinguish different parallel planes from one plane twice",
+            "prompt": "<p>Are \\(x + 2 y - z=3\\) and \\(3 x + 6 y - 3 z=10\\) the same plane? Give the multiplier relating the second normal to the first.</p>",
+            "fields": [
+              {
+                "key": "same",
+                "label": "Do the planes coincide?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              },
+              {
+                "key": "factor",
+                "label": "Multiplier of first normal",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Scale the entire equation, including its right-hand constant, before comparing.</p>",
+            "solution": "<p>The normal of the second plane is \\(3\\) times the normal of the first. The planes are parallel or coincident.</p><p>Apply the same multiplier to the right-hand constant. It gives \\(9\\).</p><p>This differs from the second constant, so the planes are distinct and parallel.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Scaling only the left-hand side changes the plane unless the right-hand constant is zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "planes-compare-parallel-planes-follow-up",
+            "title": "Distinguish different parallel planes from one plane twice",
+            "prompt": "<p>Are \\(x + 2 y - z=5\\) and \\(5 x + 10 y - 5 z=26\\) the same plane? Give the multiplier relating the second normal to the first.</p>",
+            "fields": [
+              {
+                "key": "same",
+                "label": "Do the planes coincide?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              },
+              {
+                "key": "factor",
+                "label": "Multiplier of first normal",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Scale the entire equation, including its right-hand constant, before comparing.</p>",
+            "solution": "<p>The normal of the second plane is \\(5\\) times the normal of the first. The planes are parallel or coincident.</p><p>Apply the same multiplier to the right-hand constant. It gives \\(25\\).</p><p>This differs from the second constant, so the planes are distinct and parallel.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Build a normal from two in-plane directions",
+        "question": "<p>The plane contains \\(\\left(1,2,-1\\right)\\), \\(\\left(2,3,-1\\right)\\) and \\(\\left(1,3,1\\right)\\). Use \\(\\overrightarrow{AB}\\times\\overrightarrow{AC}\\) as the normal. Give its components and the right-hand constant in the Cartesian equation.</p>",
+        "solution": [
+          "<p>Form two displacements from the first point. They are \\(\\left[\\begin{matrix}1\\\\1\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}0\\\\1\\\\2\\end{matrix}\\right]\\).</p>",
+          "<p>Their cross product is \\(\\left[\\begin{matrix}2\\\\-2\\\\1\\end{matrix}\\right]\\), which is non-zero and perpendicular to the plane.</p>",
+          "<p>Take its dot product with a known point to find the constant \\(-3\\). The equation is \\(2 x - 2 y + z=-3\\).</p>"
+        ]
+      },
+      {
+        "title": "Convert a parametric plane to a scalar-product equation",
+        "question": "<p>The plane is \\(\\mathbf r=\\left[\\begin{matrix}1\\\\2\\\\-1\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\1\\\\0\\end{matrix}\\right]+t\\left[\\begin{matrix}0\\\\1\\\\2\\end{matrix}\\right]\\). Find the constant and the z coefficient in its Cartesian equation, using the normal \\(\\left[\\begin{matrix}2\\\\-2\\\\1\\end{matrix}\\right]\\).</p>",
+        "solution": [
+          "<p>The offset point is \\(\\left(1,2,-1\\right)\\). The supplied normal is perpendicular to the two direction vectors.</p>",
+          "<p>Taking the dot product with the normal sends both direction terms to zero.</p>",
+          "<p>The remaining constant is \\(-3\\). The equivalent Cartesian equation is \\(2 x - 2 y + z=-3\\).</p>"
+        ]
+      },
+      {
+        "title": "Subtract two plane equations to expose a line",
+        "question": "<p>Find the fixed y-coordinate and the z-coordinate when \\(x=0\\) on the intersection of \\(x + y + z=3\\) and \\(x - y + z=1\\).</p>",
+        "solution": [
+          "<p>Subtract the equations. This gives \\(2y=2\\), hence \\(y=1\\).</p>",
+          "<p>Substitute back to get \\(x+z=2\\). The intersection is the line satisfying both equations.</p>",
+          "<p>At \\(x=0\\) its z-coordinate is \\(2\\).</p>"
+        ]
+      },
+      {
+        "title": "Subtract two plane equations to expose a line",
+        "question": "<p>Find the fixed y-coordinate and the z-coordinate when \\(x=0\\) on the intersection of \\(x + y + z=7\\) and \\(x - y + z=1\\).</p>",
+        "solution": [
+          "<p>Subtract the equations. This gives \\(2y=6\\), hence \\(y=3\\).</p>",
+          "<p>Substitute back to get \\(x+z=4\\). The intersection is the line satisfying both equations.</p>",
+          "<p>At \\(x=0\\) its z-coordinate is \\(4\\).</p>"
+        ]
+      },
+      {
+        "title": "Substitute a line into a plane equation",
+        "question": "<p>Find the line parameter and the z-coordinate at the intersection of \\(\\mathbf r=\\left[\\begin{matrix}1\\\\2\\\\-1\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\2\\\\-1\\end{matrix}\\right]\\) and \\(2 x - 2 y + z=-9\\).</p>",
+        "solution": [
+          "<p>Substituting the line into the plane equation gives one linear equation in the parameter.</p>",
+          "<p>The coefficient of the parameter is \\(-3\\), non-zero, so the solution is unique.</p>",
+          "<p>Solving gives \\(t=2\\). The intersection is \\(\\left(3,6,-3\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Distinguish different parallel planes from one plane twice",
+        "question": "<p>Are \\(x + 2 y - z=2\\) and \\(2 x + 4 y - 2 z=4\\) the same plane? Give the multiplier relating the second normal to the first.</p>",
+        "solution": [
+          "<p>The normal of the second plane is \\(2\\) times the normal of the first. The planes are parallel or coincident.</p>",
+          "<p>Apply the same multiplier to the right-hand constant. It gives \\(4\\).</p>",
+          "<p>This matches the second constant, so the planes coincide.</p>"
+        ]
+      },
+      {
+        "title": "Distinguish different parallel planes from one plane twice",
+        "question": "<p>Are \\(x + 2 y - z=4\\) and \\(4 x + 8 y - 4 z=16\\) the same plane? Give the multiplier relating the second normal to the first.</p>",
+        "solution": [
+          "<p>The normal of the second plane is \\(4\\) times the normal of the first. The planes are parallel or coincident.</p>",
+          "<p>Apply the same multiplier to the right-hand constant. It gives \\(16\\).</p>",
+          "<p>This matches the second constant, so the planes coincide.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "planes-plane-from-three-points-extra",
+        "title": "Build a normal from two in-plane directions",
+        "prompt": "<p>The plane contains \\(\\left(3,2,-1\\right)\\), \\(\\left(4,3,-1\\right)\\) and \\(\\left(3,3,1\\right)\\). Use \\(\\overrightarrow{AB}\\times\\overrightarrow{AC}\\) as the normal. Give its components and the right-hand constant in the Cartesian equation.</p>",
+        "fields": [
+          {
+            "key": "result_x",
+            "label": "Value of x",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "result_y",
+            "label": "Value of y",
+            "type": "number",
+            "expected": "-2"
+          },
+          {
+            "key": "result_z",
+            "label": "Value of z",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "d",
+            "label": "Constant d",
+            "type": "number",
+            "expected": "1"
+          }
+        ],
+        "hint": "<p>Use point differences before computing the cross product.</p>",
+        "solution": "<p>Form two displacements from the first point. They are \\(\\left[\\begin{matrix}1\\\\1\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}0\\\\1\\\\2\\end{matrix}\\right]\\).</p><p>Their cross product is \\(\\left[\\begin{matrix}2\\\\-2\\\\1\\end{matrix}\\right]\\), which is non-zero and perpendicular to the plane.</p><p>Take its dot product with a known point to find the constant \\(1\\). The equation is \\(2 x - 2 y + z=1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "planes-convert-the-form-extra",
+        "title": "Convert a parametric plane to a scalar-product equation",
+        "prompt": "<p>The plane is \\(\\mathbf r=\\left[\\begin{matrix}3\\\\2\\\\-1\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\1\\\\0\\end{matrix}\\right]+t\\left[\\begin{matrix}0\\\\1\\\\2\\end{matrix}\\right]\\). Find the constant and the z coefficient in its Cartesian equation, using the normal \\(\\left[\\begin{matrix}2\\\\-2\\\\1\\end{matrix}\\right]\\).</p>",
+        "fields": [
+          {
+            "key": "constant",
+            "label": "Right-hand constant",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "coef",
+            "label": "Coefficient of z",
+            "type": "number",
+            "expected": "1"
+          }
+        ],
+        "hint": "<p>Dot the entire vector equation with the normal, including its offset.</p>",
+        "solution": "<p>The offset point is \\(\\left(3,2,-1\\right)\\). The supplied normal is perpendicular to the two direction vectors.</p><p>Taking the dot product with the normal sends both direction terms to zero.</p><p>The remaining constant is \\(1\\). The equivalent Cartesian equation is \\(2 x - 2 y + z=1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "planes-line-of-intersection-extra",
+        "title": "Subtract two plane equations to expose a line",
+        "prompt": "<p>Find the fixed y-coordinate and the z-coordinate when \\(x=0\\) on the intersection of \\(x + y + z=11\\) and \\(x - y + z=1\\).</p>",
+        "fields": [
+          {
+            "key": "y",
+            "label": "Fixed value of y",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "z",
+            "label": "Value of z at x = 0",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Eliminate a coordinate and keep one free parameter for the intersection line.</p>",
+        "solution": "<p>Subtract the equations. This gives \\(2y=10\\), hence \\(y=5\\).</p><p>Substitute back to get \\(x+z=6\\). The intersection is the line satisfying both equations.</p><p>At \\(x=0\\) its z-coordinate is \\(6\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "planes-substitute-line-into-plane-extra",
+        "title": "Substitute a line into a plane equation",
+        "prompt": "<p>Find the line parameter and the z-coordinate at the intersection of \\(\\mathbf r=\\left[\\begin{matrix}3\\\\2\\\\-1\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\2\\\\-1\\end{matrix}\\right]\\) and \\(2 x - 2 y + z=-11\\).</p>",
+        "fields": [
+          {
+            "key": "t",
+            "label": "Value of t",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "z",
+            "label": "Intersection z-coordinate",
+            "type": "number",
+            "expected": "-5"
+          }
+        ],
+        "hint": "<p>Insert the complete line coordinates into the plane instead of comparing direction vectors alone.</p>",
+        "solution": "<p>Substituting the line into the plane equation gives one linear equation in the parameter.</p><p>The coefficient of the parameter is \\(-3\\), non-zero, so the solution is unique.</p><p>Solving gives \\(t=4\\). The intersection is \\(\\left(7,10,-5\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "planes-compare-parallel-planes-extra",
+        "title": "Distinguish different parallel planes from one plane twice",
+        "prompt": "<p>Are \\(x + 2 y - z=6\\) and \\(6 x + 12 y - 6 z=36\\) the same plane? Give the multiplier relating the second normal to the first.</p>",
+        "fields": [
+          {
+            "key": "same",
+            "label": "Do the planes coincide?",
+            "type": "choice",
+            "expected": "yes",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          },
+          {
+            "key": "factor",
+            "label": "Multiplier of first normal",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Scale the entire equation, including its right-hand constant, before comparing.</p>",
+        "solution": "<p>The normal of the second plane is \\(6\\) times the normal of the first. The planes are parallel or coincident.</p><p>Apply the same multiplier to the right-hand constant. It gives \\(36\\).</p><p>This matches the second constant, so the planes coincide.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Normal form",
+        "definition": "<p>Scalar-product equation using a normal and an offset.</p>"
+      },
+      {
+        "term": "Cartesian plane",
+        "definition": "<p>One linear equation in three coordinates.</p>"
+      },
+      {
+        "term": "Parametric plane",
+        "definition": "<p>A fixed point and two independent directions with separate parameters.</p>"
+      },
+      {
+        "term": "Anchor",
+        "definition": "<p>A known point on a line or plane.</p>"
+      },
+      {
+        "term": "Coincident planes",
+        "definition": "<p>Equations describing exactly the same set of points.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Three points</th><td>Cross independent side directions, then use one point for the constant.</td></tr><tr><th scope=\"row\">Parametric form</th><td>Dot with a normal to eliminate the parameters.</td></tr><tr><th scope=\"row\">Line and plane</th><td>Substitute the line and inspect its parameter coefficient.</td></tr><tr><th scope=\"row\">Two planes</th><td>Check the normals and solve both constraints together.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Does \\(\\left(2,1,3\\right)\\) lie on \\(x+2y-z=1\\)?</p><p><strong>Check</strong> Yes. The left-hand side is \\(2+2-3=1\\).</p>",
+      "checks": "<ul><li>A normal determines orientation, while the plane position also requires an offset.</li><li>Two parallel directions do not span a plane.</li></ul>",
+      "examTip": "<p>Rescale both sides together whenever choosing a simpler normal.</p>"
+    },
+    "related": [
+      {
+        "title": "Lines and common perpendiculars",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_vectors_lines"
+      },
+      {
+        "title": "Angles, projections and distances",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_vectors_distances"
+      }
+    ]
+  },
+  "fp1_vectors_distances": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose a perpendicular component for a distance, find a reflection, and compare line and plane angles.",
+    "sections": [
+      {
+        "id": "normal-projection",
+        "title": "How do I convert a plane equation into a distance?",
+        "label": "Project along a normal",
+        "intro": "<p>Subtract the plane’s constant from the scalar product at the given point. The result is the signed excess along a non-unit normal.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Divide its magnitude by the length of the normal. Find the foot by moving along the normal line to the plane.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_vectors_distances/point-to-plane-normal.svg",
+              "caption": "<p>Move along the normal to reach the closest point on the plane.</p>",
+              "alt": "Point P is above a plane. A dashed normal segment ends at the foot on the plane.",
+              "width": 465,
+              "height": 194
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "distances-normal-projection-check",
+            "title": "Project a point onto the normal of the plane",
+            "prompt": "<p>Find the shortest distance from \\(\\left(5,8,9\\right)\\) to \\(x + 2 y + 2 z=12\\) and the x-coordinate of its foot.</p>",
+            "fields": [
+              {
+                "key": "distance",
+                "label": "Shortest distance",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "x",
+                "label": "Foot x-coordinate",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>The normal is not necessarily a unit vector. Divide by its magnitude for a distance.</p>",
+            "solution": "<p>The signed normal excess is \\(\\mathbf n\\cdot\\mathbf p-d=27\\).</p><p>Divide by the magnitude of the normal to find distance \\(9\\).</p><p>Move along the negative normal to the plane. The foot is \\(\\left(2,2,3\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using the normal excess itself as a distance misses its scale unless the normal is a unit vector.</p>"
+          }
+        ]
+      },
+      {
+        "id": "continue-to-the-reflection",
+        "title": "How does a perpendicular foot give a reflection?",
+        "label": "Continue beyond the foot by the same displacement",
+        "intro": "<p>The line between a point and its reflection is perpendicular to the plane. Its midpoint lies on the plane.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The reflection’s vector is twice the foot vector minus the original point vector.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "distances-continue-to-the-reflection-check",
+            "title": "Use the foot as the midpoint of a reflection",
+            "prompt": "<p>Reflect \\(\\left(4,6,7\\right)\\) across \\(x + 2 y + 2 z=12\\). Give the resulting Cartesian coordinates.</p>",
+            "fields": [
+              {
+                "key": "result_x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "result_y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "-2"
+              },
+              {
+                "key": "result_z",
+                "label": "Value of z",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>After finding the foot, continue the same displacement once more.</p>",
+            "solution": "<p>A perpendicular through the point meets the plane at \\(\\left(2,2,3\\right)\\).</p><p>The reflection lies the same distance beyond this foot, in the opposite normal direction.</p><p>Use twice the foot minus the original point, obtaining \\(\\left(0,-2,-1\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The nearest point and the reflected point coincide only if the original point is already on the plane.</p>"
+          }
+        ]
+      },
+      {
+        "id": "angle-between-directions",
+        "title": "How can a dot product give the smaller line angle?",
+        "label": "Use the absolute dot product",
+        "intro": "<p>Line equations may choose either sign for their direction vector. Geometrically the smaller angle is independent of those choices.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Divide the absolute dot product by the product of the magnitudes to find its cosine.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "distances-angle-between-directions-check",
+            "title": "Find the acute angle between two directions",
+            "prompt": "<p>Two lines have directions \\(\\left[\\begin{matrix}1\\\\3\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\). Give the exact cosine of the smaller angle between them.</p>",
+            "fields": [
+              {
+                "key": "cosine",
+                "label": "Exact cosine of smaller angle",
+                "type": "number",
+                "expected": "sqrt(15)/30"
+              }
+            ],
+            "hint": "<p>Use an absolute dot product to choose the smaller angle between unoriented lines.</p>",
+            "solution": "<p>Only the direction vectors are needed. The scale or signs of those vectors do not change the smaller angle.</p><p>Take the absolute scalar product and divide by both magnitudes.</p><p>This gives cosine \\(\\frac{\\sqrt{15}}{30}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The positions of the lines do not affect the angle between their directions.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "distances-angle-between-directions-follow-up",
+            "title": "Find the acute angle between two directions",
+            "prompt": "<p>Two lines have directions \\(\\left[\\begin{matrix}1\\\\5\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\). Give the exact cosine of the smaller angle between them.</p>",
+            "fields": [
+              {
+                "key": "cosine",
+                "label": "Exact cosine of smaller angle",
+                "type": "number",
+                "expected": "sqrt(39)/26"
+              }
+            ],
+            "hint": "<p>Use an absolute dot product to choose the smaller angle between unoriented lines.</p>",
+            "solution": "<p>Only the direction vectors are needed. The scale or signs of those vectors do not change the smaller angle.</p><p>Take the absolute scalar product and divide by both magnitudes.</p><p>This gives cosine \\(\\frac{\\sqrt{39}}{26}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "line-versus-plane",
+        "title": "Why does the line–plane formula use a sine?",
+        "label": "Take the complement of the normal angle",
+        "intro": "<p>The angle between a direction and the plane is complementary to its smaller angle with the plane normal.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For the smaller line–plane angle take the absolute dot product of direction and normal, divide by both magnitudes and use the result as its sine.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "distances-line-versus-plane-check",
+            "title": "Find a line–plane angle using its complement",
+            "prompt": "<p>Find the exact sine of the smaller angle between a line in direction \\(\\left[\\begin{matrix}1\\\\2\\\\2\\end{matrix}\\right]\\) and \\(x + 2 y + 2 z=12\\).</p>",
+            "fields": [
+              {
+                "key": "sine",
+                "label": "Exact sine of smaller angle",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>The plane’s normal is perpendicular to the plane, so use the complementary angle.</p>",
+            "solution": "<p>The angle to the plane is complementary to its smaller angle with the plane normal.</p><p>The cosine of that normal angle therefore equals the sine of the angle to the plane.</p><p>Divide the absolute scalar product by the product of the magnitudes, obtaining \\(1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If the dot product is zero, the line is parallel to the plane, making the line–plane angle zero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "angle-between-normals",
+        "title": "Which vectors determine the smaller angle between planes?",
+        "label": "Use their normals",
+        "intro": "<p>A normal fixes the orientation of a plane, so two normals identify the smaller angle between the planes.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the absolute dot product divided by both normal magnitudes as the cosine of the smaller plane angle.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "distances-angle-between-normals-check",
+            "title": "Use the normals for the smaller angle between planes",
+            "prompt": "<p>The planes are \\(x + 2 y + 2 z=12\\) and \\(x + y + 2 z=3\\). Give the exact cosine of the smaller angle between them.</p>",
+            "fields": [
+              {
+                "key": "cosine",
+                "label": "Exact cosine of the smaller angle",
+                "type": "number",
+                "expected": "7*sqrt(6)/18"
+              }
+            ],
+            "hint": "<p>Do not use the right-hand constants of the plane equations when computing an angle.</p>",
+            "solution": "<p>Choose one normal to each plane. Their scalar product is \\(7\\).</p><p>For the smaller plane angle, take the absolute value of the dot product.</p><p>Divide by the product of the two normal magnitudes to obtain \\(\\frac{7 \\sqrt{6}}{18}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Plane constants affect position, not the angle between two normals.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "distances-angle-between-normals-follow-up",
+            "title": "Use the normals for the smaller angle between planes",
+            "prompt": "<p>The planes are \\(x + 2 y + 2 z=14\\) and \\(x + y + 4 z=5\\). Give the exact cosine of the smaller angle between them.</p>",
+            "fields": [
+              {
+                "key": "cosine",
+                "label": "Exact cosine of the smaller angle",
+                "type": "number",
+                "expected": "11*sqrt(2)/18"
+              }
+            ],
+            "hint": "<p>Do not use the right-hand constants of the plane equations when computing an angle.</p>",
+            "solution": "<p>Choose one normal to each plane. Their scalar product is \\(11\\).</p><p>For the smaller plane angle, take the absolute value of the dot product.</p><p>Divide by the product of the two normal magnitudes to obtain \\(\\frac{11 \\sqrt{2}}{18}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Project a point onto the normal of the plane",
+        "question": "<p>Find the shortest distance from \\(\\left(3,6,7\\right)\\) to \\(x + 2 y + 2 z=11\\) and the x-coordinate of its foot.</p>",
+        "solution": [
+          "<p>The signed normal excess is \\(\\mathbf n\\cdot\\mathbf p-d=18\\).</p>",
+          "<p>Divide by the magnitude of the normal to find distance \\(6\\).</p>",
+          "<p>Move along the negative normal to the plane. The foot is \\(\\left(1,2,3\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the foot as the midpoint of a reflection",
+        "question": "<p>Reflect \\(\\left(2,4,5\\right)\\) across \\(x + 2 y + 2 z=11\\). Give the resulting Cartesian coordinates.</p>",
+        "solution": [
+          "<p>A perpendicular through the point meets the plane at \\(\\left(1,2,3\\right)\\).</p>",
+          "<p>The reflection lies the same distance beyond this foot, in the opposite normal direction.</p>",
+          "<p>Use twice the foot minus the original point, obtaining \\(\\left(0,0,1\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the acute angle between two directions",
+        "question": "<p>Two lines have directions \\(\\left[\\begin{matrix}1\\\\2\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\). Give the exact cosine of the smaller angle between them.</p>",
+        "solution": [
+          "<p>Only the direction vectors are needed. The scale or signs of those vectors do not change the smaller angle.</p>",
+          "<p>Take the absolute scalar product and divide by both magnitudes.</p>",
+          "<p>This gives cosine \\(0\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the acute angle between two directions",
+        "question": "<p>Two lines have directions \\(\\left[\\begin{matrix}1\\\\4\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\). Give the exact cosine of the smaller angle between them.</p>",
+        "solution": [
+          "<p>Only the direction vectors are needed. The scale or signs of those vectors do not change the smaller angle.</p>",
+          "<p>Take the absolute scalar product and divide by both magnitudes.</p>",
+          "<p>This gives cosine \\(\\frac{\\sqrt{102}}{51}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a line–plane angle using its complement",
+        "question": "<p>Find the exact sine of the smaller angle between a line in direction \\(\\left[\\begin{matrix}1\\\\1\\\\2\\end{matrix}\\right]\\) and \\(x + 2 y + 2 z=11\\).</p>",
+        "solution": [
+          "<p>The angle to the plane is complementary to its smaller angle with the plane normal.</p>",
+          "<p>The cosine of that normal angle therefore equals the sine of the angle to the plane.</p>",
+          "<p>Divide the absolute scalar product by the product of the magnitudes, obtaining \\(\\frac{7 \\sqrt{6}}{18}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the normals for the smaller angle between planes",
+        "question": "<p>The planes are \\(x + 2 y + 2 z=11\\) and \\(x + y + z=2\\). Give the exact cosine of the smaller angle between them.</p>",
+        "solution": [
+          "<p>Choose one normal to each plane. Their scalar product is \\(5\\).</p>",
+          "<p>For the smaller plane angle, take the absolute value of the dot product.</p>",
+          "<p>Divide by the product of the two normal magnitudes to obtain \\(\\frac{5 \\sqrt{3}}{9}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the normals for the smaller angle between planes",
+        "question": "<p>The planes are \\(x + 2 y + 2 z=13\\) and \\(x + y + 3 z=4\\). Give the exact cosine of the smaller angle between them.</p>",
+        "solution": [
+          "<p>Choose one normal to each plane. Their scalar product is \\(9\\).</p>",
+          "<p>For the smaller plane angle, take the absolute value of the dot product.</p>",
+          "<p>Divide by the product of the two normal magnitudes to obtain \\(\\frac{3 \\sqrt{11}}{11}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "distances-normal-projection-extra",
+        "title": "Project a point onto the normal of the plane",
+        "prompt": "<p>Find the shortest distance from \\(\\left(7,10,11\\right)\\) to \\(x + 2 y + 2 z=13\\) and the x-coordinate of its foot.</p>",
+        "fields": [
+          {
+            "key": "distance",
+            "label": "Shortest distance",
+            "type": "number",
+            "expected": "12"
+          },
+          {
+            "key": "x",
+            "label": "Foot x-coordinate",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>The normal is not necessarily a unit vector. Divide by its magnitude for a distance.</p>",
+        "solution": "<p>The signed normal excess is \\(\\mathbf n\\cdot\\mathbf p-d=36\\).</p><p>Divide by the magnitude of the normal to find distance \\(12\\).</p><p>Move along the negative normal to the plane. The foot is \\(\\left(3,2,3\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "distances-continue-to-the-reflection-extra",
+        "title": "Use the foot as the midpoint of a reflection",
+        "prompt": "<p>Reflect \\(\\left(6,8,9\\right)\\) across \\(x + 2 y + 2 z=13\\). Give the resulting Cartesian coordinates.</p>",
+        "fields": [
+          {
+            "key": "result_x",
+            "label": "Value of x",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "result_y",
+            "label": "Value of y",
+            "type": "number",
+            "expected": "-4"
+          },
+          {
+            "key": "result_z",
+            "label": "Value of z",
+            "type": "number",
+            "expected": "-3"
+          }
+        ],
+        "hint": "<p>After finding the foot, continue the same displacement once more.</p>",
+        "solution": "<p>A perpendicular through the point meets the plane at \\(\\left(3,2,3\\right)\\).</p><p>The reflection lies the same distance beyond this foot, in the opposite normal direction.</p><p>Use twice the foot minus the original point, obtaining \\(\\left(0,-4,-3\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "distances-angle-between-directions-extra",
+        "title": "Find the acute angle between two directions",
+        "prompt": "<p>Two lines have directions \\(\\left[\\begin{matrix}1\\\\6\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\). Give the exact cosine of the smaller angle between them.</p>",
+        "fields": [
+          {
+            "key": "cosine",
+            "label": "Exact cosine of smaller angle",
+            "type": "number",
+            "expected": "2*sqrt(222)/111"
+          }
+        ],
+        "hint": "<p>Use an absolute dot product to choose the smaller angle between unoriented lines.</p>",
+        "solution": "<p>Only the direction vectors are needed. The scale or signs of those vectors do not change the smaller angle.</p><p>Take the absolute scalar product and divide by both magnitudes.</p><p>This gives cosine \\(\\frac{2 \\sqrt{222}}{111}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "distances-line-versus-plane-extra",
+        "title": "Find a line–plane angle using its complement",
+        "prompt": "<p>Find the exact sine of the smaller angle between a line in direction \\(\\left[\\begin{matrix}1\\\\3\\\\2\\end{matrix}\\right]\\) and \\(x + 2 y + 2 z=13\\).</p>",
+        "fields": [
+          {
+            "key": "sine",
+            "label": "Exact sine of smaller angle",
+            "type": "number",
+            "expected": "11*sqrt(14)/42"
+          }
+        ],
+        "hint": "<p>The plane’s normal is perpendicular to the plane, so use the complementary angle.</p>",
+        "solution": "<p>The angle to the plane is complementary to its smaller angle with the plane normal.</p><p>The cosine of that normal angle therefore equals the sine of the angle to the plane.</p><p>Divide the absolute scalar product by the product of the magnitudes, obtaining \\(\\frac{11 \\sqrt{14}}{42}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "distances-angle-between-normals-extra",
+        "title": "Use the normals for the smaller angle between planes",
+        "prompt": "<p>The planes are \\(x + 2 y + 2 z=15\\) and \\(x + y + 5 z=6\\). Give the exact cosine of the smaller angle between them.</p>",
+        "fields": [
+          {
+            "key": "cosine",
+            "label": "Exact cosine of the smaller angle",
+            "type": "number",
+            "expected": "13*sqrt(3)/27"
+          }
+        ],
+        "hint": "<p>Do not use the right-hand constants of the plane equations when computing an angle.</p>",
+        "solution": "<p>Choose one normal to each plane. Their scalar product is \\(13\\).</p><p>For the smaller plane angle, take the absolute value of the dot product.</p><p>Divide by the product of the two normal magnitudes to obtain \\(\\frac{13 \\sqrt{3}}{27}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Normal projection",
+        "definition": "<p>Component of a vector parallel to the normal.</p>"
+      },
+      {
+        "term": "Perpendicular distance",
+        "definition": "<p>Shortest distance measured along a perpendicular.</p>"
+      },
+      {
+        "term": "Reflection",
+        "definition": "<p>Point the same perpendicular distance on the other side of the plane.</p>"
+      },
+      {
+        "term": "Complement",
+        "definition": "<p>Angle that adds to the original angle to make a right angle.</p>"
+      },
+      {
+        "term": "Smaller angle",
+        "definition": "<p>Non-obtuse angle when directions are unoriented.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Distance to plane</th><td>\\(\\dfrac{|\\mathbf n\\cdot\\mathbf p-d|}{|\\mathbf n|}\\)</td></tr><tr><th scope=\"row\">Reflection</th><td>Twice the foot vector minus the original point vector.</td></tr><tr><th scope=\"row\">Smaller line–line or plane–plane angle</th><td>Use the cosine from two directions or two normals.</td></tr><tr><th scope=\"row\">Line–plane angle</th><td>Use the sine from direction and normal.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Find the distance from \\(\\left(0,0,5\\right)\\) to \\(2z=4\\).</p><p><strong>Check</strong> \\(3\\). The normal coefficient must be divided out.</p>",
+      "checks": "<ul><li>Using the normal excess itself as a distance misses its scale unless the normal is a unit vector.</li><li>The nearest point and the reflected point coincide only if the original point is already on the plane.</li></ul>",
+      "examTip": "<p>Identify whether the angle uses two directions, two normals or a direction and normal before choosing sine or cosine.</p>"
+    },
+    "related": [
+      {
+        "title": "Describing and intersecting planes",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_vectors_planes"
+      },
+      {
+        "title": "Parameters and exceptional configurations",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_vectors_parameters"
+      }
+    ]
+  },
+  "fp1_vectors_parameters": {
+    "updatedOn": "2026-11-21",
+    "description": "Keep exceptional parameter values when solving for a line–plane crossing, distance or coincident planes.",
+    "sections": [
+      {
+        "id": "exception-before-division",
+        "title": "What if a line–plane equation loses its parameter term?",
+        "label": "Test the vanishing coefficient first",
+        "intro": "<p>A unique line crossing requires a non-zero coefficient of its own line parameter. A family can lose that coefficient at special values.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>At each such value check the constant too. A zero constant contains the line, while a non-zero constant leaves a distinct parallel line.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "parameters-exception-before-division-check",
+            "title": "Check the values that make the parameter equation vanish",
+            "prompt": "<p>Consider \\(\\mathbf r=\\left[\\begin{matrix}k\\\\0\\\\1\\end{matrix}\\right]+t\\left[\\begin{matrix}k \\left(k - 3\\right)\\\\1\\\\1\\end{matrix}\\right]\\) and the plane \\(x=0\\). Give the value of k giving a contained line and the value giving a distinct parallel line.</p>",
+            "fields": [
+              {
+                "key": "contained",
+                "label": "k for a contained line",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "parallel",
+                "label": "k for a distinct parallel line",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Check zero coefficients before dividing by a factor involving a parameter.</p>",
+            "solution": "<p>An intersection uses \\(k+t k(k-3)=0\\). The t coefficient vanishes at \\(k=0\\) and \\(k=3\\).</p><p>At zero the starting x-coordinate also vanishes, so every point of the line is in the plane.</p><p>At \\(k=3\\) the starting x-coordinate is non-zero, so there is no crossing.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Dividing by the coefficient before checking it silently loses exceptional cases.</p>"
+          }
+        ]
+      },
+      {
+        "id": "both-sides-of-distance",
+        "title": "Why can a fixed distance give two parameter values?",
+        "label": "Solve both signed alternatives",
+        "intro": "<p>The distance is the magnitude of a signed normal displacement. Both sides of a plane can be the same positive distance from it.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use both signs when rearranging the absolute value. Test the resulting points in the complete distance relation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "parameters-both-sides-of-distance-check",
+            "title": "Keep the two planes at a fixed distance",
+            "prompt": "<p>Find all real k such that \\(\\left(k,1,2\\right)\\) is at distance \\(3\\) from \\(x + 2 y + 2 z=4\\).</p>",
+            "fields": [
+              {
+                "key": "values",
+                "label": "Set of k-values",
+                "type": "set",
+                "expected": "{-11,7}",
+                "variables": [
+                  "k"
+                ]
+              }
+            ],
+            "hint": "<p>A fixed positive distance normally gives alternatives on opposite sides of the plane.</p>",
+            "solution": "<p>The distance condition is \\(\\left|k + 2\\right|=9\\).</p><p>Use both signs on the right-hand side.</p><p>The two values are \\(k=-11\\) and \\(k=7\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Taking just the positive sign normally gives only one side of the plane.</p>"
+          }
+        ]
+      },
+      {
+        "id": "parallel-case-distance",
+        "title": "What changes when two moving directions become parallel?",
+        "label": "Reclassify before measuring distance",
+        "intro": "<p>The vector product of two directions gives a usable normal only if the directions are non-parallel.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For parallel directions project a displacement perpendicular to the common direction instead. A skew limit need not equal this separate distance.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "parameters-parallel-case-distance-check",
+            "title": "Recompute distance when a cross product vanishes",
+            "prompt": "<p>Find the distance between \\(\\mathbf r=\\left[\\begin{matrix}0\\\\0\\\\0\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}0\\\\3\\\\4\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\k\\\\0\\end{matrix}\\right]\\) for non-zero k and for k = 0.</p>",
+            "fields": [
+              {
+                "key": "skew",
+                "label": "Distance for non-zero k",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "parallel",
+                "label": "Distance for zero k",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>A specialised formula for skew lines cannot be applied after the directions become parallel.</p>",
+            "solution": "<p>For non-zero k, the directions span the xy-plane. The shortest direction is vertical and the z gap is \\(4\\).</p><p>At zero both directions are horizontal along x. The cross product used before is zero and cannot be normalised.</p><p>The shortest gap is now the whole yz displacement, with length \\(5\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not substitute directly into a formula that divides by a zero vector magnitude.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "parameters-parallel-case-distance-follow-up",
+            "title": "Recompute distance when a cross product vanishes",
+            "prompt": "<p>Find the distance between \\(\\mathbf r=\\left[\\begin{matrix}0\\\\0\\\\0\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}0\\\\5\\\\6\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\k\\\\0\\end{matrix}\\right]\\) for non-zero k and for k = 0.</p>",
+            "fields": [
+              {
+                "key": "skew",
+                "label": "Distance for non-zero k",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "parallel",
+                "label": "Distance for zero k",
+                "type": "number",
+                "expected": "sqrt(61)"
+              }
+            ],
+            "hint": "<p>A specialised formula for skew lines cannot be applied after the directions become parallel.</p>",
+            "solution": "<p>For non-zero k, the directions span the xy-plane. The shortest direction is vertical and the z gap is \\(6\\).</p><p>At zero both directions are horizontal along x. The cross product used before is zero and cannot be normalised.</p><p>The shortest gap is now the whole yz displacement, with length \\(\\sqrt{61}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "coincident-plane-case",
+        "title": "When can the common part of two planes become a whole plane?",
+        "label": "Check whether the constraints duplicate",
+        "intro": "<p>A new parameter can make a second constraint proportional to the first. Compare normals and constants together.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A non-parallel pair gives a line. Coincident equations describe the same plane, so testing only for a line misses that case.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "parameters-coincident-plane-case-check",
+            "title": "Identify when two plane constraints become identical",
+            "prompt": "<p>For \\(x + y + z=5\\) and \\(x \\left(k - 3\\right) + y + z=5\\), find k for coincident planes. Otherwise give the fixed x-coordinate of their intersection.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Coincident value of k",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "x",
+                "label": "Fixed x-coordinate in the non-coincident case",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Two plane equations can collapse to one at an exceptional value.</p>",
+            "solution": "<p>Subtract the plane equations to obtain \\((k - 4)x=0\\).</p><p>If \\(k=4\\) this gives no new condition and the two planes coincide.</p><p>Otherwise \\(x=0\\) and the remaining relation gives a line in that plane.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>When a factor relating the plane equations is zero, the corresponding coordinate need not be zero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "point-parameter-membership",
+        "title": "How do I check which point in a family lies on the plane?",
+        "label": "Evaluate the original plane expression",
+        "intro": "<p>A changing coordinate can make a family of points pass through a plane. Use the normal equation instead of treating the parameter as a line coefficient by default.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Substitute the whole point vector and solve the resulting scalar equation. Then give the requested coordinate at that parameter value.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "parameters-point-parameter-membership-check",
+            "title": "Use the normal component to test a family of points",
+            "prompt": "<p>A plane has normal \\(\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\) and equation \\(2 x - y + z=2\\). For which k is \\(\\left(2,k,2\\right)\\) in the plane? Give the signed change in the left-hand side when k increases by one.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Value of k",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "change",
+                "label": "Signed change in left-hand side",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>Check membership by evaluating the whole plane expression.</p>",
+            "solution": "<p>The point lies in the plane when its scalar product with the normal is the stated constant.</p><p>This gives \\(6 - k=2\\) and hence \\(k=4\\).</p><p>Only the coefficient of the changing y-coordinate affects the signed change. It gives \\(-1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep the fixed coordinates in the scalar product, even when only one coordinate depends on the parameter.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "parameters-point-parameter-membership-follow-up",
+            "title": "Use the normal component to test a family of points",
+            "prompt": "<p>A plane has normal \\(\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\) and equation \\(2 x - y + z=4\\). For which k is \\(\\left(4,k,2\\right)\\) in the plane? Give the signed change in the left-hand side when k increases by one.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Value of k",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "change",
+                "label": "Signed change in left-hand side",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>Check membership by evaluating the whole plane expression.</p>",
+            "solution": "<p>The point lies in the plane when its scalar product with the normal is the stated constant.</p><p>This gives \\(10 - k=4\\) and hence \\(k=6\\).</p><p>Only the coefficient of the changing y-coordinate affects the signed change. It gives \\(-1\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Check the values that make the parameter equation vanish",
+        "question": "<p>Consider \\(\\mathbf r=\\left[\\begin{matrix}k\\\\0\\\\1\\end{matrix}\\right]+t\\left[\\begin{matrix}k \\left(k - 2\\right)\\\\1\\\\1\\end{matrix}\\right]\\) and the plane \\(x=0\\). Give the value of k giving a contained line and the value giving a distinct parallel line.</p>",
+        "solution": [
+          "<p>An intersection uses \\(k+t k(k-2)=0\\). The t coefficient vanishes at \\(k=0\\) and \\(k=2\\).</p>",
+          "<p>At zero the starting x-coordinate also vanishes, so every point of the line is in the plane.</p>",
+          "<p>At \\(k=2\\) the starting x-coordinate is non-zero, so there is no crossing.</p>"
+        ]
+      },
+      {
+        "title": "Keep the two planes at a fixed distance",
+        "question": "<p>Find all real k such that \\(\\left(k,0,1\\right)\\) is at distance \\(2\\) from \\(x + 2 y + 2 z=3\\).</p>",
+        "solution": [
+          "<p>The distance condition is \\(\\left|k - 1\\right|=6\\).</p>",
+          "<p>Use both signs on the right-hand side.</p>",
+          "<p>The two values are \\(k=-5\\) and \\(k=7\\).</p>"
+        ]
+      },
+      {
+        "title": "Recompute distance when a cross product vanishes",
+        "question": "<p>Find the distance between \\(\\mathbf r=\\left[\\begin{matrix}0\\\\0\\\\0\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}0\\\\2\\\\3\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\k\\\\0\\end{matrix}\\right]\\) for non-zero k and for k = 0.</p>",
+        "solution": [
+          "<p>For non-zero k, the directions span the xy-plane. The shortest direction is vertical and the z gap is \\(3\\).</p>",
+          "<p>At zero both directions are horizontal along x. The cross product used before is zero and cannot be normalised.</p>",
+          "<p>The shortest gap is now the whole yz displacement, with length \\(\\sqrt{13}\\).</p>"
+        ]
+      },
+      {
+        "title": "Recompute distance when a cross product vanishes",
+        "question": "<p>Find the distance between \\(\\mathbf r=\\left[\\begin{matrix}0\\\\0\\\\0\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}0\\\\4\\\\5\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\k\\\\0\\end{matrix}\\right]\\) for non-zero k and for k = 0.</p>",
+        "solution": [
+          "<p>For non-zero k, the directions span the xy-plane. The shortest direction is vertical and the z gap is \\(5\\).</p>",
+          "<p>At zero both directions are horizontal along x. The cross product used before is zero and cannot be normalised.</p>",
+          "<p>The shortest gap is now the whole yz displacement, with length \\(\\sqrt{41}\\).</p>"
+        ]
+      },
+      {
+        "title": "Identify when two plane constraints become identical",
+        "question": "<p>For \\(x + y + z=4\\) and \\(x \\left(k - 2\\right) + y + z=4\\), find k for coincident planes. Otherwise give the fixed x-coordinate of their intersection.</p>",
+        "solution": [
+          "<p>Subtract the plane equations to obtain \\((k - 3)x=0\\).</p>",
+          "<p>If \\(k=3\\) this gives no new condition and the two planes coincide.</p>",
+          "<p>Otherwise \\(x=0\\) and the remaining relation gives a line in that plane.</p>"
+        ]
+      },
+      {
+        "title": "Use the normal component to test a family of points",
+        "question": "<p>A plane has normal \\(\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\) and equation \\(2 x - y + z=1\\). For which k is \\(\\left(1,k,2\\right)\\) in the plane? Give the signed change in the left-hand side when k increases by one.</p>",
+        "solution": [
+          "<p>The point lies in the plane when its scalar product with the normal is the stated constant.</p>",
+          "<p>This gives \\(4 - k=1\\) and hence \\(k=3\\).</p>",
+          "<p>Only the coefficient of the changing y-coordinate affects the signed change. It gives \\(-1\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the normal component to test a family of points",
+        "question": "<p>A plane has normal \\(\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\) and equation \\(2 x - y + z=3\\). For which k is \\(\\left(3,k,2\\right)\\) in the plane? Give the signed change in the left-hand side when k increases by one.</p>",
+        "solution": [
+          "<p>The point lies in the plane when its scalar product with the normal is the stated constant.</p>",
+          "<p>This gives \\(8 - k=3\\) and hence \\(k=5\\).</p>",
+          "<p>Only the coefficient of the changing y-coordinate affects the signed change. It gives \\(-1\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "parameters-exception-before-division-extra",
+        "title": "Check the values that make the parameter equation vanish",
+        "prompt": "<p>Consider \\(\\mathbf r=\\left[\\begin{matrix}k\\\\0\\\\1\\end{matrix}\\right]+t\\left[\\begin{matrix}k \\left(k - 4\\right)\\\\1\\\\1\\end{matrix}\\right]\\) and the plane \\(x=0\\). Give the value of k giving a contained line and the value giving a distinct parallel line.</p>",
+        "fields": [
+          {
+            "key": "contained",
+            "label": "k for a contained line",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "parallel",
+            "label": "k for a distinct parallel line",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>Check zero coefficients before dividing by a factor involving a parameter.</p>",
+        "solution": "<p>An intersection uses \\(k+t k(k-4)=0\\). The t coefficient vanishes at \\(k=0\\) and \\(k=4\\).</p><p>At zero the starting x-coordinate also vanishes, so every point of the line is in the plane.</p><p>At \\(k=4\\) the starting x-coordinate is non-zero, so there is no crossing.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "parameters-both-sides-of-distance-extra",
+        "title": "Keep the two planes at a fixed distance",
+        "prompt": "<p>Find all real k such that \\(\\left(k,2,3\\right)\\) is at distance \\(4\\) from \\(x + 2 y + 2 z=5\\).</p>",
+        "fields": [
+          {
+            "key": "values",
+            "label": "Set of k-values",
+            "type": "set",
+            "expected": "{-17,7}",
+            "variables": [
+              "k"
+            ]
+          }
+        ],
+        "hint": "<p>A fixed positive distance normally gives alternatives on opposite sides of the plane.</p>",
+        "solution": "<p>The distance condition is \\(\\left|k + 5\\right|=12\\).</p><p>Use both signs on the right-hand side.</p><p>The two values are \\(k=-17\\) and \\(k=7\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "parameters-parallel-case-distance-extra",
+        "title": "Recompute distance when a cross product vanishes",
+        "prompt": "<p>Find the distance between \\(\\mathbf r=\\left[\\begin{matrix}0\\\\0\\\\0\\end{matrix}\\right]+s\\left[\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right]\\) and \\(\\mathbf r=\\left[\\begin{matrix}0\\\\6\\\\7\\end{matrix}\\right]+t\\left[\\begin{matrix}1\\\\k\\\\0\\end{matrix}\\right]\\) for non-zero k and for k = 0.</p>",
+        "fields": [
+          {
+            "key": "skew",
+            "label": "Distance for non-zero k",
+            "type": "number",
+            "expected": "7"
+          },
+          {
+            "key": "parallel",
+            "label": "Distance for zero k",
+            "type": "number",
+            "expected": "sqrt(85)"
+          }
+        ],
+        "hint": "<p>A specialised formula for skew lines cannot be applied after the directions become parallel.</p>",
+        "solution": "<p>For non-zero k, the directions span the xy-plane. The shortest direction is vertical and the z gap is \\(7\\).</p><p>At zero both directions are horizontal along x. The cross product used before is zero and cannot be normalised.</p><p>The shortest gap is now the whole yz displacement, with length \\(\\sqrt{85}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "parameters-coincident-plane-case-extra",
+        "title": "Identify when two plane constraints become identical",
+        "prompt": "<p>For \\(x + y + z=6\\) and \\(x \\left(k - 4\\right) + y + z=6\\), find k for coincident planes. Otherwise give the fixed x-coordinate of their intersection.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Coincident value of k",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "x",
+            "label": "Fixed x-coordinate in the non-coincident case",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>Two plane equations can collapse to one at an exceptional value.</p>",
+        "solution": "<p>Subtract the plane equations to obtain \\((k - 5)x=0\\).</p><p>If \\(k=5\\) this gives no new condition and the two planes coincide.</p><p>Otherwise \\(x=0\\) and the remaining relation gives a line in that plane.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "parameters-point-parameter-membership-extra",
+        "title": "Use the normal component to test a family of points",
+        "prompt": "<p>A plane has normal \\(\\left[\\begin{matrix}2\\\\-1\\\\1\\end{matrix}\\right]\\) and equation \\(2 x - y + z=5\\). For which k is \\(\\left(5,k,2\\right)\\) in the plane? Give the signed change in the left-hand side when k increases by one.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Value of k",
+            "type": "number",
+            "expected": "7"
+          },
+          {
+            "key": "change",
+            "label": "Signed change in left-hand side",
+            "type": "number",
+            "expected": "-1"
+          }
+        ],
+        "hint": "<p>Check membership by evaluating the whole plane expression.</p>",
+        "solution": "<p>The point lies in the plane when its scalar product with the normal is the stated constant.</p><p>This gives \\(12 - k=5\\) and hence \\(k=7\\).</p><p>Only the coefficient of the changing y-coordinate affects the signed change. It gives \\(-1\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Exceptional parameter",
+        "definition": "<p>A value where the geometric configuration changes type.</p>"
+      },
+      {
+        "term": "Contained line",
+        "definition": "<p>A line whose every point is on a plane.</p>"
+      },
+      {
+        "term": "Parallel distinct",
+        "definition": "<p>Same direction or orientation without shared points.</p>"
+      },
+      {
+        "term": "Signed excess",
+        "definition": "<p>Normal scalar product minus the plane’s right-hand constant.</p>"
+      },
+      {
+        "term": "Coincident",
+        "definition": "<p>Two constraints defining exactly the same point set.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Before dividing</th><td>Write and test zero factors as separate cases.</td></tr><tr><th scope=\"row\">Line in plane</th><td>Both parameter coefficient and constant must vanish.</td></tr><tr><th scope=\"row\">Distance equation</th><td>Solve both signs when a non-zero magnitude is given.</td></tr><tr><th scope=\"row\">Parallel line pair</th><td>Use a perpendicular offset instead of a skew cross product.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For the line with coordinates \\((k+kt,t,1)\\), what happens at \\(k=0\\) relative to \\(x=0\\)?</p><p><strong>Check</strong> The line is entirely contained in the plane because every member has zero x-coordinate.</p>",
+      "checks": "<ul><li>Dividing by the coefficient before checking it silently loses exceptional cases.</li><li>Taking just the positive sign normally gives only one side of the plane.</li></ul>",
+      "examTip": "<p>Classify each exceptional value in the original geometry and verify any ordinary solution by substitution.</p>"
+    },
+    "related": [
+      {
+        "title": "Angles, projections and distances",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_vectors_distances"
+      }
+    ]
+  }
+}
