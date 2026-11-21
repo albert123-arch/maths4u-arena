@@ -43,6 +43,10 @@ export const notationProgressRevisions = [{
   key: "9709-m1-newtons-laws", fromVersion: "1.0.0", toVersion: "1.0.1",
   fromFingerprint: "7b6e036f3429f5eca7c68d2518fabb377c40c6150644065713df9efe24bd8605",
   toFingerprint: "7f6b425e3c7e26b2668e41e950751f5e822c029e5d9aac0b26237952736bc74e",
+}, {
+  key: "9709-m1-energy-work-power", fromVersion: "1.0.0", toVersion: "1.0.1",
+  fromFingerprint: "021a8bcb9b736af1dc0cbd4aa903b3c258d0c6b8140f74ffaf8e453bab575063",
+  toFingerprint: "58f4adbc5cc1981c07b785f3cf9b21e658002fe2adf87fc6deb818470bf0c7e7",
 }] as const;
 
 export function notationProgressPolicy(p: ContentPackage) {
