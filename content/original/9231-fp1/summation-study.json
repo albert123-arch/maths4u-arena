@@ -1,0 +1,1910 @@
+{
+  "fp1_series_power_sums": {
+    "updatedOn": "2026-11-21",
+    "description": "Read inclusive sigma limits and derive the standard sums of integers, squares and cubes from consecutive differences.",
+    "sections": [
+      {
+        "id": "count-the-terms",
+        "title": "What does each limit in sigma notation mean?",
+        "label": "Read inclusive limits",
+        "intro": "<p>The index runs through every integer from the lower limit through the upper limit. A summand is the expression evaluated at one index.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The count from p to q is \\(q-p+1\\). To use a standard sum beginning at one, subtract the part ending immediately before p.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "power-sums-count-the-terms-check",
+            "title": "Read the limits before counting the terms",
+            "prompt": "<p>Find the number of terms in \\(\\sum_{r=3}^{8}r\\) and evaluate the sum.</p>",
+            "fields": [
+              {
+                "key": "count",
+                "label": "Number of terms",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "sum",
+                "label": "Finite sum",
+                "type": "number",
+                "expected": "33"
+              }
+            ],
+            "hint": "<p>Both endpoint indices contribute, so the count includes one extra.</p>",
+            "solution": "<p>The indices start at \\(3\\) and end at \\(8\\), inclusive, so the count is \\(6\\).</p><p>Use the sum from one to the upper end, then subtract the sum up to \\(2\\).</p><p>This gives \\(33\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The upper index is not the number of terms when the starting index is greater than one.</p>"
+          }
+        ]
+      },
+      {
+        "id": "subtract-consecutive-squares",
+        "title": "How do squared differences give the sum of integers?",
+        "label": "Sum the difference of squares",
+        "intro": "<p>A difference of consecutive squares simplifies to a linear expression. Sum it across the whole range.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\((r+1)^2-r^2=2r+1\\) gives a telescoping left side. The right side has twice the desired sum and one copy of one for each index.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "power-sums-subtract-consecutive-squares-check",
+            "title": "Isolate a power from a difference of consecutive powers",
+            "prompt": "<p>Sum \\(- r^{2} + \\left(r + 1\\right)^{2}=2 r + 1\\) for \\(r=1,\\ldots,5\\). Find the sum of its left-hand side and hence \\(\\sum_{r=1}^{5}r\\).</p>",
+            "fields": [
+              {
+                "key": "edge",
+                "label": "Sum of the differences",
+                "type": "number",
+                "expected": "35"
+              },
+              {
+                "key": "sum",
+                "label": "Sum of the requested powers",
+                "type": "number",
+                "expected": "15"
+              }
+            ],
+            "hint": "<p>Write the first and last differences, then identify which interior values cancel.</p>",
+            "solution": "<p>Consecutive powers cancel on the left, leaving \\((6)^{2}-1=35\\) as the boundary difference.</p><p>The right side is \\(2 r + 1\\) for each term. Summing its terms below degree \\(1\\) gives \\(5\\).</p><p>The largest power has multiplier \\(2\\). Subtract the lower-power total then divide by this multiplier to get \\(15\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Remember to subtract the constant contributions before dividing by two.</p>"
+          }
+        ]
+      },
+      {
+        "id": "subtract-consecutive-cubes",
+        "title": "How can I derive the sum of squares?",
+        "label": "Isolate the square coefficient",
+        "intro": "<p>The difference of cubes gives an expression whose largest power is a square. The remaining linear and constant totals are already known.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\((r+1)^3-r^3=3r^2+3r+1\\). Sum from one to n and retain only the first and last cubes on the left.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "power-sums-subtract-consecutive-cubes-check",
+            "title": "Isolate a power from a difference of consecutive powers",
+            "prompt": "<p>Sum \\(- r^{3} + \\left(r + 1\\right)^{3}=3 r^{2} + 3 r + 1\\) for \\(r=1,\\ldots,5\\). Find the sum of its left-hand side and hence \\(\\sum_{r=1}^{5}r^{2}\\).</p>",
+            "fields": [
+              {
+                "key": "edge",
+                "label": "Sum of the differences",
+                "type": "number",
+                "expected": "215"
+              },
+              {
+                "key": "sum",
+                "label": "Sum of the requested powers",
+                "type": "number",
+                "expected": "55"
+              }
+            ],
+            "hint": "<p>Write the first and last differences, then identify which interior values cancel.</p>",
+            "solution": "<p>Consecutive powers cancel on the left, leaving \\((6)^{3}-1=215\\) as the boundary difference.</p><p>The right side is \\(3 r^{2} + 3 r + 1\\) for each term. Summing its terms below degree \\(2\\) gives \\(50\\).</p><p>The largest power has multiplier \\(3\\). Subtract the lower-power total then divide by this multiplier to get \\(55\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The final positive cube is at \\(n+1\\), not at n.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "power-sums-subtract-consecutive-cubes-follow-up",
+            "title": "Isolate a power from a difference of consecutive powers",
+            "prompt": "<p>Sum \\(- r^{3} + \\left(r + 1\\right)^{3}=3 r^{2} + 3 r + 1\\) for \\(r=1,\\ldots,7\\). Find the sum of its left-hand side and hence \\(\\sum_{r=1}^{7}r^{2}\\).</p>",
+            "fields": [
+              {
+                "key": "edge",
+                "label": "Sum of the differences",
+                "type": "number",
+                "expected": "511"
+              },
+              {
+                "key": "sum",
+                "label": "Sum of the requested powers",
+                "type": "number",
+                "expected": "140"
+              }
+            ],
+            "hint": "<p>Write the first and last differences, then identify which interior values cancel.</p>",
+            "solution": "<p>Consecutive powers cancel on the left, leaving \\((8)^{3}-1=511\\) as the boundary difference.</p><p>The right side is \\(3 r^{2} + 3 r + 1\\) for each term. Summing its terms below degree \\(2\\) gives \\(91\\).</p><p>The largest power has multiplier \\(3\\). Subtract the lower-power total then divide by this multiplier to get \\(140\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "subtract-fourth-powers",
+        "title": "Why does the fourth-power difference produce cubes?",
+        "label": "Use the highest surviving power",
+        "intro": "<p>When expanding a difference of consecutive powers, the top power cancels. The binomial coefficient of the next term determines the multiplier.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\((r+1)^4-r^4=4r^3+6r^2+4r+1\\). Use the previously known totals before isolating the sum of cubes.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "power-sums-subtract-fourth-powers-check",
+            "title": "Isolate a power from a difference of consecutive powers",
+            "prompt": "<p>Sum \\(- r^{4} + \\left(r + 1\\right)^{4}=4 r^{3} + 6 r^{2} + 4 r + 1\\) for \\(r=1,\\ldots,5\\). Find the sum of its left-hand side and hence \\(\\sum_{r=1}^{5}r^{3}\\).</p>",
+            "fields": [
+              {
+                "key": "edge",
+                "label": "Sum of the differences",
+                "type": "number",
+                "expected": "1295"
+              },
+              {
+                "key": "sum",
+                "label": "Sum of the requested powers",
+                "type": "number",
+                "expected": "225"
+              }
+            ],
+            "hint": "<p>Write the first and last differences, then identify which interior values cancel.</p>",
+            "solution": "<p>Consecutive powers cancel on the left, leaving \\((6)^{4}-1=1295\\) as the boundary difference.</p><p>The right side is \\(4 r^{3} + 6 r^{2} + 4 r + 1\\) for each term. Summing its terms below degree \\(3\\) gives \\(395\\).</p><p>The largest power has multiplier \\(4\\). Subtract the lower-power total then divide by this multiplier to get \\(225\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep the square and linear contributions as separate sums, with their original coefficients.</p>"
+          }
+        ]
+      },
+      {
+        "id": "square-a-triangular-total",
+        "title": "Can a cube sum telescope directly?",
+        "label": "Compare consecutive squared totals",
+        "intro": "<p>The square of a triangular total can itself be treated as a function of the last index.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(A_r=\\left(\\frac{r(r+1)}2\\right)^2\\) satisfies \\(A_r-A_{r-1}=r^3\\). Use a difference of squares to show it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "power-sums-square-a-triangular-total-check",
+            "title": "Derive a cube sum from successive triangular squares",
+            "prompt": "<p>Define \\(A_r=\\frac{r^{2} \\left(r + 1\\right)^{2}}{4}\\). Find \\(A_r-A_{r-1}\\) as a polynomial in \\(r\\) and evaluate \\(\\sum_{r=2}^{5}r^{3}\\).</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Expanded polynomial in r",
+                "type": "polynomial",
+                "expected": "r^3",
+                "variables": [
+                  "r"
+                ]
+              },
+              {
+                "key": "sum",
+                "label": "Requested sum",
+                "type": "number",
+                "expected": "224"
+              }
+            ],
+            "hint": "<p>Use a difference of squares and keep the correct first boundary.</p>",
+            "solution": "<p>Factor the difference as \\(\\frac{r^2}{4}\\big((r+1)^2-(r-1)^2\\big)\\).</p><p>The bracket simplifies to \\(4r\\), so the difference is \\(r^3\\).</p><p>Sum from two. Only \\(A_5-A_1\\) remains, giving \\(224\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>This identity is between successive values of A. It is not a claim that sums usually commute with squaring.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "power-sums-square-a-triangular-total-follow-up",
+            "title": "Derive a cube sum from successive triangular squares",
+            "prompt": "<p>Define \\(A_r=\\frac{r^{2} \\left(r + 1\\right)^{2}}{4}\\). Find \\(A_r-A_{r-1}\\) as a polynomial in \\(r\\) and evaluate \\(\\sum_{r=2}^{7}r^{3}\\).</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Expanded polynomial in r",
+                "type": "polynomial",
+                "expected": "r^3",
+                "variables": [
+                  "r"
+                ]
+              },
+              {
+                "key": "sum",
+                "label": "Requested sum",
+                "type": "number",
+                "expected": "783"
+              }
+            ],
+            "hint": "<p>Use a difference of squares and keep the correct first boundary.</p>",
+            "solution": "<p>Factor the difference as \\(\\frac{r^2}{4}\\big((r+1)^2-(r-1)^2\\big)\\).</p><p>The bracket simplifies to \\(4r\\), so the difference is \\(r^3\\).</p><p>Sum from two. Only \\(A_7-A_1\\) remains, giving \\(783\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Read the limits before counting the terms",
+        "question": "<p>Find the number of terms in \\(\\sum_{r=2}^{6}r\\) and evaluate the sum.</p>",
+        "solution": [
+          "<p>The indices start at \\(2\\) and end at \\(6\\), inclusive, so the count is \\(5\\).</p>",
+          "<p>Use the sum from one to the upper end, then subtract the sum up to \\(1\\).</p>",
+          "<p>This gives \\(20\\).</p>"
+        ]
+      },
+      {
+        "title": "Isolate a power from a difference of consecutive powers",
+        "question": "<p>Sum \\(- r^{2} + \\left(r + 1\\right)^{2}=2 r + 1\\) for \\(r=1,\\ldots,4\\). Find the sum of its left-hand side and hence \\(\\sum_{r=1}^{4}r\\).</p>",
+        "solution": [
+          "<p>Consecutive powers cancel on the left, leaving \\((5)^{2}-1=24\\) as the boundary difference.</p>",
+          "<p>The right side is \\(2 r + 1\\) for each term. Summing its terms below degree \\(1\\) gives \\(4\\).</p>",
+          "<p>The largest power has multiplier \\(2\\). Subtract the lower-power total then divide by this multiplier to get \\(10\\).</p>"
+        ]
+      },
+      {
+        "title": "Isolate a power from a difference of consecutive powers",
+        "question": "<p>Sum \\(- r^{3} + \\left(r + 1\\right)^{3}=3 r^{2} + 3 r + 1\\) for \\(r=1,\\ldots,4\\). Find the sum of its left-hand side and hence \\(\\sum_{r=1}^{4}r^{2}\\).</p>",
+        "solution": [
+          "<p>Consecutive powers cancel on the left, leaving \\((5)^{3}-1=124\\) as the boundary difference.</p>",
+          "<p>The right side is \\(3 r^{2} + 3 r + 1\\) for each term. Summing its terms below degree \\(2\\) gives \\(34\\).</p>",
+          "<p>The largest power has multiplier \\(3\\). Subtract the lower-power total then divide by this multiplier to get \\(30\\).</p>"
+        ]
+      },
+      {
+        "title": "Isolate a power from a difference of consecutive powers",
+        "question": "<p>Sum \\(- r^{3} + \\left(r + 1\\right)^{3}=3 r^{2} + 3 r + 1\\) for \\(r=1,\\ldots,6\\). Find the sum of its left-hand side and hence \\(\\sum_{r=1}^{6}r^{2}\\).</p>",
+        "solution": [
+          "<p>Consecutive powers cancel on the left, leaving \\((7)^{3}-1=342\\) as the boundary difference.</p>",
+          "<p>The right side is \\(3 r^{2} + 3 r + 1\\) for each term. Summing its terms below degree \\(2\\) gives \\(69\\).</p>",
+          "<p>The largest power has multiplier \\(3\\). Subtract the lower-power total then divide by this multiplier to get \\(91\\).</p>"
+        ]
+      },
+      {
+        "title": "Isolate a power from a difference of consecutive powers",
+        "question": "<p>Sum \\(- r^{4} + \\left(r + 1\\right)^{4}=4 r^{3} + 6 r^{2} + 4 r + 1\\) for \\(r=1,\\ldots,4\\). Find the sum of its left-hand side and hence \\(\\sum_{r=1}^{4}r^{3}\\).</p>",
+        "solution": [
+          "<p>Consecutive powers cancel on the left, leaving \\((5)^{4}-1=624\\) as the boundary difference.</p>",
+          "<p>The right side is \\(4 r^{3} + 6 r^{2} + 4 r + 1\\) for each term. Summing its terms below degree \\(3\\) gives \\(224\\).</p>",
+          "<p>The largest power has multiplier \\(4\\). Subtract the lower-power total then divide by this multiplier to get \\(100\\).</p>"
+        ]
+      },
+      {
+        "title": "Derive a cube sum from successive triangular squares",
+        "question": "<p>Define \\(A_r=\\frac{r^{2} \\left(r + 1\\right)^{2}}{4}\\). Find \\(A_r-A_{r-1}\\) as a polynomial in \\(r\\) and evaluate \\(\\sum_{r=2}^{4}r^{3}\\).</p>",
+        "solution": [
+          "<p>Factor the difference as \\(\\frac{r^2}{4}\\big((r+1)^2-(r-1)^2\\big)\\).</p>",
+          "<p>The bracket simplifies to \\(4r\\), so the difference is \\(r^3\\).</p>",
+          "<p>Sum from two. Only \\(A_4-A_1\\) remains, giving \\(99\\).</p>"
+        ]
+      },
+      {
+        "title": "Derive a cube sum from successive triangular squares",
+        "question": "<p>Define \\(A_r=\\frac{r^{2} \\left(r + 1\\right)^{2}}{4}\\). Find \\(A_r-A_{r-1}\\) as a polynomial in \\(r\\) and evaluate \\(\\sum_{r=2}^{6}r^{3}\\).</p>",
+        "solution": [
+          "<p>Factor the difference as \\(\\frac{r^2}{4}\\big((r+1)^2-(r-1)^2\\big)\\).</p>",
+          "<p>The bracket simplifies to \\(4r\\), so the difference is \\(r^3\\).</p>",
+          "<p>Sum from two. Only \\(A_6-A_1\\) remains, giving \\(440\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "power-sums-count-the-terms-extra",
+        "title": "Read the limits before counting the terms",
+        "prompt": "<p>Find the number of terms in \\(\\sum_{r=4}^{10}r\\) and evaluate the sum.</p>",
+        "fields": [
+          {
+            "key": "count",
+            "label": "Number of terms",
+            "type": "number",
+            "expected": "7"
+          },
+          {
+            "key": "sum",
+            "label": "Finite sum",
+            "type": "number",
+            "expected": "49"
+          }
+        ],
+        "hint": "<p>Both endpoint indices contribute, so the count includes one extra.</p>",
+        "solution": "<p>The indices start at \\(4\\) and end at \\(10\\), inclusive, so the count is \\(7\\).</p><p>Use the sum from one to the upper end, then subtract the sum up to \\(3\\).</p><p>This gives \\(49\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "power-sums-subtract-consecutive-squares-extra",
+        "title": "Isolate a power from a difference of consecutive powers",
+        "prompt": "<p>Sum \\(- r^{2} + \\left(r + 1\\right)^{2}=2 r + 1\\) for \\(r=1,\\ldots,6\\). Find the sum of its left-hand side and hence \\(\\sum_{r=1}^{6}r\\).</p>",
+        "fields": [
+          {
+            "key": "edge",
+            "label": "Sum of the differences",
+            "type": "number",
+            "expected": "48"
+          },
+          {
+            "key": "sum",
+            "label": "Sum of the requested powers",
+            "type": "number",
+            "expected": "21"
+          }
+        ],
+        "hint": "<p>Write the first and last differences, then identify which interior values cancel.</p>",
+        "solution": "<p>Consecutive powers cancel on the left, leaving \\((7)^{2}-1=48\\) as the boundary difference.</p><p>The right side is \\(2 r + 1\\) for each term. Summing its terms below degree \\(1\\) gives \\(6\\).</p><p>The largest power has multiplier \\(2\\). Subtract the lower-power total then divide by this multiplier to get \\(21\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "power-sums-subtract-consecutive-cubes-extra",
+        "title": "Isolate a power from a difference of consecutive powers",
+        "prompt": "<p>Sum \\(- r^{3} + \\left(r + 1\\right)^{3}=3 r^{2} + 3 r + 1\\) for \\(r=1,\\ldots,8\\). Find the sum of its left-hand side and hence \\(\\sum_{r=1}^{8}r^{2}\\).</p>",
+        "fields": [
+          {
+            "key": "edge",
+            "label": "Sum of the differences",
+            "type": "number",
+            "expected": "728"
+          },
+          {
+            "key": "sum",
+            "label": "Sum of the requested powers",
+            "type": "number",
+            "expected": "204"
+          }
+        ],
+        "hint": "<p>Write the first and last differences, then identify which interior values cancel.</p>",
+        "solution": "<p>Consecutive powers cancel on the left, leaving \\((9)^{3}-1=728\\) as the boundary difference.</p><p>The right side is \\(3 r^{2} + 3 r + 1\\) for each term. Summing its terms below degree \\(2\\) gives \\(116\\).</p><p>The largest power has multiplier \\(3\\). Subtract the lower-power total then divide by this multiplier to get \\(204\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "power-sums-subtract-fourth-powers-extra",
+        "title": "Isolate a power from a difference of consecutive powers",
+        "prompt": "<p>Sum \\(- r^{4} + \\left(r + 1\\right)^{4}=4 r^{3} + 6 r^{2} + 4 r + 1\\) for \\(r=1,\\ldots,6\\). Find the sum of its left-hand side and hence \\(\\sum_{r=1}^{6}r^{3}\\).</p>",
+        "fields": [
+          {
+            "key": "edge",
+            "label": "Sum of the differences",
+            "type": "number",
+            "expected": "2400"
+          },
+          {
+            "key": "sum",
+            "label": "Sum of the requested powers",
+            "type": "number",
+            "expected": "441"
+          }
+        ],
+        "hint": "<p>Write the first and last differences, then identify which interior values cancel.</p>",
+        "solution": "<p>Consecutive powers cancel on the left, leaving \\((7)^{4}-1=2400\\) as the boundary difference.</p><p>The right side is \\(4 r^{3} + 6 r^{2} + 4 r + 1\\) for each term. Summing its terms below degree \\(3\\) gives \\(636\\).</p><p>The largest power has multiplier \\(4\\). Subtract the lower-power total then divide by this multiplier to get \\(441\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "power-sums-square-a-triangular-total-extra",
+        "title": "Derive a cube sum from successive triangular squares",
+        "prompt": "<p>Define \\(A_r=\\frac{r^{2} \\left(r + 1\\right)^{2}}{4}\\). Find \\(A_r-A_{r-1}\\) as a polynomial in \\(r\\) and evaluate \\(\\sum_{r=2}^{8}r^{3}\\).</p>",
+        "fields": [
+          {
+            "key": "polynomial",
+            "label": "Expanded polynomial in r",
+            "type": "polynomial",
+            "expected": "r^3",
+            "variables": [
+              "r"
+            ]
+          },
+          {
+            "key": "sum",
+            "label": "Requested sum",
+            "type": "number",
+            "expected": "1295"
+          }
+        ],
+        "hint": "<p>Use a difference of squares and keep the correct first boundary.</p>",
+        "solution": "<p>Factor the difference as \\(\\frac{r^2}{4}\\big((r+1)^2-(r-1)^2\\big)\\).</p><p>The bracket simplifies to \\(4r\\), so the difference is \\(r^3\\).</p><p>Sum from two. Only \\(A_8-A_1\\) remains, giving \\(1295\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Summand",
+        "definition": "<p>The expression being added at one index.</p>"
+      },
+      {
+        "term": "Index",
+        "definition": "<p>The integer variable in the sum.</p>"
+      },
+      {
+        "term": "Inclusive limits",
+        "definition": "<p>Both listed endpoints occur in the sum.</p>"
+      },
+      {
+        "term": "Consecutive difference",
+        "definition": "<p>A value at the next index minus the one at this index.</p>"
+      },
+      {
+        "term": "Boundary term",
+        "definition": "<p>A term left when interior terms have cancelled.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\sum_{r=1}^{n}r\\)</th><td>\\(\\frac{n(n+1)}2\\)</td></tr><tr><th scope=\"row\">\\(\\sum_{r=1}^{n}r^2\\)</th><td>\\(\\frac{n(n+1)(2n+1)}6\\)</td></tr><tr><th scope=\"row\">\\(\\sum_{r=1}^{n}r^3\\)</th><td>\\(\\frac{n^2(n+1)^2}4\\)</td></tr><tr><th scope=\"row\">Difference method</th><td>Expand, sum and remove lower-power totals to isolate the desired sum.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Find the sum of squares from one through four.</p><p><strong>Check</strong> \\(1+4+9+16=30\\).</p>",
+      "checks": "<ul><li>The upper index is not the number of terms when the starting index is greater than one.</li><li>Remember to subtract the constant contributions before dividing by two.</li></ul>",
+      "examTip": "<p>Write the exact telescoped endpoints before substituting standard results.</p>"
+    },
+    "related": [
+      {
+        "title": "Using power sums and finite limits",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_series_finite_sums"
+      }
+    ]
+  },
+  "fp1_series_finite_sums": {
+    "updatedOn": "2026-11-21",
+    "description": "Use standard sums on polynomial, shifted and alternating ranges. Recover terms and blocks from partial sums.",
+    "sections": [
+      {
+        "id": "expand-to-standard-sums",
+        "title": "When should I expand a summand before using the formulae?",
+        "label": "Separate powers",
+        "intro": "<p>Standard results cover constants, integers, squares and cubes. Expand a polynomial summand to express it as a linear combination of these parts.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The sum of a linear combination is the same combination of the separate sums with the same index limits.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "finite-sums-expand-to-standard-sums-check",
+            "title": "Expand the summand before using standard results",
+            "prompt": "<p>Find \\(\\sum_{r=1}^{n}\\left(r + 5\\right) \\left(3 r - 1\\right)\\) as a polynomial in \\(n\\).</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Polynomial in n",
+                "type": "polynomial",
+                "expected": "n^3 + 17*n^2/2 + 5*n/2",
+                "variables": [
+                  "n"
+                ]
+              }
+            ],
+            "hint": "<p>Multiplying two separate sums would count terms with different indices.</p>",
+            "solution": "<p>Expand to \\(3 r^{2} + 14 r - 5\\).</p><p>Sum the quadratic and linear terms separately and count \\(n\\) copies of the constant.</p><p>Combine the standard results to obtain \\(n^{3} + \\frac{17 n^{2}}{2} + \\frac{5 n}{2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not multiply two standard sums to reproduce the sum of products at matching indices.</p>"
+          }
+        ]
+      },
+      {
+        "id": "subtract-before-lower-limit",
+        "title": "Which partial sum do I subtract for a later range?",
+        "label": "Stop just before the first retained index",
+        "intro": "<p>The partial sum to the upper index also includes earlier terms. Subtract precisely the terms that occur before the requested start.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a block from p to q inclusive use \\(S_q-S_{p-1}\\) after substituting the actual expressions for both limits.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "finite-sums-subtract-before-lower-limit-check",
+            "title": "Subtract the sum before the lower limit",
+            "prompt": "<p>Find the number of terms and the value of \\(\\sum_{r=n+1}^{2 n + 1}\\left(3 r + 5\\right)\\) as polynomials in \\(n\\).</p>",
+            "fields": [
+              {
+                "key": "count",
+                "label": "Term count as a polynomial in n",
+                "type": "polynomial",
+                "expected": "n + 1",
+                "variables": [
+                  "n"
+                ]
+              },
+              {
+                "key": "polynomial",
+                "label": "Sum as a polynomial in n",
+                "type": "polynomial",
+                "expected": "9*n^2/2 + 25*n/2 + 8",
+                "variables": [
+                  "n"
+                ]
+              }
+            ],
+            "hint": "<p>The lower limit is included, so subtract only the terms before it.</p>",
+            "solution": "<p>The term count is upper index minus lower index plus one, giving \\(n + 1\\).</p><p>Subtract the sum up to \\(n\\) from the sum up to \\(2 n + 1\\).</p><p>The result is \\(\\frac{9 n^{2}}{2} + \\frac{25 n}{2} + 8\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Subtracting the sum through p also deletes the first term you were meant to include.</p>"
+          }
+        ]
+      },
+      {
+        "id": "pair-by-parity",
+        "title": "How do I handle the two parities in an alternating sum?",
+        "label": "Pair successive terms",
+        "intro": "<p>An even number of terms groups into adjacent pairs. An odd number leaves one unpaired term at the end.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Simplify the difference within a pair first and then use standard sums for the pair index.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "finite-sums-pair-by-parity-check",
+            "title": "Pair an alternating sum, then handle a leftover term",
+            "prompt": "<p>Let \\(A_m=\\sum_{r=1}^{m}(-1)^{r-1}\\left(r + 3\\right)^2\\). Find \\(A_{2n}\\) and \\(A_{2n+1}\\) as polynomials in \\(n\\).</p>",
+            "fields": [
+              {
+                "key": "even",
+                "label": "Even sum polynomial in n",
+                "type": "polynomial",
+                "expected": "-2*n^2 - 7*n",
+                "variables": [
+                  "n"
+                ]
+              },
+              {
+                "key": "odd",
+                "label": "Odd sum polynomial in n",
+                "type": "polynomial",
+                "expected": "2*n^2 + 9*n + 16",
+                "variables": [
+                  "n"
+                ]
+              }
+            ],
+            "hint": "<p>Use adjacent pairs first. For an odd upper index include one extra positive term.</p>",
+            "solution": "<p>An adjacent pair is the odd-index term minus the even-index term. For pair \\(r\\) this simplifies to \\(- 4 r - 5\\).</p><p>There are \\(n\\) complete pairs, giving \\(A_{2n}=- 2 n^{2} - 7 n\\).</p><p>The next unpaired term has positive sign. Adding it gives \\(A_{2n+1}=2 n^{2} + 9 n + 16\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The index of a pair is not the index of either of its members. Use consecutive lower and upper indices carefully.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "finite-sums-pair-by-parity-follow-up",
+            "title": "Pair an alternating sum, then handle a leftover term",
+            "prompt": "<p>Let \\(A_m=\\sum_{r=1}^{m}(-1)^{r-1}\\left(r + 5\\right)^2\\). Find \\(A_{2n}\\) and \\(A_{2n+1}\\) as polynomials in \\(n\\).</p>",
+            "fields": [
+              {
+                "key": "even",
+                "label": "Even sum polynomial in n",
+                "type": "polynomial",
+                "expected": "-2*n^2 - 11*n",
+                "variables": [
+                  "n"
+                ]
+              },
+              {
+                "key": "odd",
+                "label": "Odd sum polynomial in n",
+                "type": "polynomial",
+                "expected": "2*n^2 + 13*n + 36",
+                "variables": [
+                  "n"
+                ]
+              }
+            ],
+            "hint": "<p>Use adjacent pairs first. For an odd upper index include one extra positive term.</p>",
+            "solution": "<p>An adjacent pair is the odd-index term minus the even-index term. For pair \\(r\\) this simplifies to \\(- 4 r - 9\\).</p><p>There are \\(n\\) complete pairs, giving \\(A_{2n}=- 2 n^{2} - 11 n\\).</p><p>The next unpaired term has positive sign. Adding it gives \\(A_{2n+1}=2 n^{2} + 13 n + 36\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "recover-a-term",
+        "title": "Why do consecutive partial sums reveal a single term?",
+        "label": "Subtract the sum one term earlier",
+        "intro": "<p>Let \\(S_n\\) be the total of the first n terms. Its predecessor includes all those terms except the nth.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(u_n=S_n-S_{n-1}\\) for a single term, or the difference of two partial sums for a whole block.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "finite-sums-recover-a-term-check",
+            "title": "Recover a term and a later block from a partial sum",
+            "prompt": "<p>The partial sum is \\(S_n=n \\left(n + 3\\right) \\left(2 n + 5\\right)\\). Find \\(u_n\\) and \\(\\sum_{r=n+1}^{2n}u_r\\) as polynomials in \\(n\\).</p>",
+            "fields": [
+              {
+                "key": "term",
+                "label": "Nth term polynomial in n",
+                "type": "polynomial",
+                "expected": "6*n^2 + 16*n + 6",
+                "variables": [
+                  "n"
+                ]
+              },
+              {
+                "key": "block",
+                "label": "Later block polynomial in n",
+                "type": "polynomial",
+                "expected": "14*n^3 + 33*n^2 + 15*n",
+                "variables": [
+                  "n"
+                ]
+              }
+            ],
+            "hint": "<p>A partial sum and a single term are different quantities. Subtract adjacent partial sums to isolate one term.</p>",
+            "solution": "<p>The nth term is \\(S_n-S_{n-1}\\). Subtracting yields \\(u_n=6 n^{2} + 16 n + 6\\).</p><p>The later block uses \\(S_{2n}-S_n\\), since the term at n is not in the block.</p><p>Simplify to \\(14 n^{3} + 33 n^{2} + 15 n\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A formula for \\(S_n\\) does not usually give the nth term on its own.</p>"
+          }
+        ]
+      },
+      {
+        "id": "shift-a-square",
+        "title": "Which terms do I keep when a shifted square is expanded?",
+        "label": "Use the linear cross term",
+        "intro": "<p>A square of a shifted linear expression contributes one term of each degree from zero to two.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Expand \\((ar+b)^2=a^2r^2+2abr+b^2\\) first. In each standard sum keep the coefficients outside.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "finite-sums-shift-a-square-check",
+            "title": "Separate the middle term of a shifted square",
+            "prompt": "<p>Find the coefficient of \\(r\\) when \\(\\left(3 r + 5\\right)^{2}\\) is expanded, then find \\(\\sum_{r=1}^{n}\\left(3 r + 5\\right)^{2}\\) as a polynomial in \\(n\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Linear coefficient",
+                "type": "number",
+                "expected": "30"
+              },
+              {
+                "key": "polynomial",
+                "label": "Sum polynomial in n",
+                "type": "polynomial",
+                "expected": "3*n^3 + 39*n^2/2 + 83*n/2",
+                "variables": [
+                  "n"
+                ]
+              }
+            ],
+            "hint": "<p>Use all three terms of the binomial expansion.</p>",
+            "solution": "<p>The expansion includes \\(2ab=30\\) as the coefficient of \\(r\\).</p><p>Use separate formulae for squares, first powers and constants. The constant is added \\(n\\) times.</p><p>The sum simplifies to \\(3 n^{3} + \\frac{39 n^{2}}{2} + \\frac{83 n}{2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The constant contributes once per index, and the cross term contributes an entire first-power sum.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "finite-sums-shift-a-square-follow-up",
+            "title": "Separate the middle term of a shifted square",
+            "prompt": "<p>Find the coefficient of \\(r\\) when \\(\\left(5 r + 9\\right)^{2}\\) is expanded, then find \\(\\sum_{r=1}^{n}\\left(5 r + 9\\right)^{2}\\) as a polynomial in \\(n\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Linear coefficient",
+                "type": "number",
+                "expected": "90"
+              },
+              {
+                "key": "polynomial",
+                "label": "Sum polynomial in n",
+                "type": "polynomial",
+                "expected": "25*n^3/3 + 115*n^2/2 + 781*n/6",
+                "variables": [
+                  "n"
+                ]
+              }
+            ],
+            "hint": "<p>Use all three terms of the binomial expansion.</p>",
+            "solution": "<p>The expansion includes \\(2ab=90\\) as the coefficient of \\(r\\).</p><p>Use separate formulae for squares, first powers and constants. The constant is added \\(n\\) times.</p><p>The sum simplifies to \\(\\frac{25 n^{3}}{3} + \\frac{115 n^{2}}{2} + \\frac{781 n}{6}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Expand the summand before using standard results",
+        "question": "<p>Find \\(\\sum_{r=1}^{n}\\left(r + 3\\right) \\left(2 r - 1\\right)\\) as a polynomial in \\(n\\).</p>",
+        "solution": [
+          "<p>Expand to \\(2 r^{2} + 5 r - 3\\).</p>",
+          "<p>Sum the quadratic and linear terms separately and count \\(n\\) copies of the constant.</p>",
+          "<p>Combine the standard results to obtain \\(\\frac{2 n^{3}}{3} + \\frac{7 n^{2}}{2} - \\frac{n}{6}\\).</p>"
+        ]
+      },
+      {
+        "title": "Subtract the sum before the lower limit",
+        "question": "<p>Find the number of terms and the value of \\(\\sum_{r=n+1}^{2 n}\\left(2 r + 3\\right)\\) as polynomials in \\(n\\).</p>",
+        "solution": [
+          "<p>The term count is upper index minus lower index plus one, giving \\(n\\).</p>",
+          "<p>Subtract the sum up to \\(n\\) from the sum up to \\(2 n\\).</p>",
+          "<p>The result is \\(3 n^{2} + 4 n\\).</p>"
+        ]
+      },
+      {
+        "title": "Pair an alternating sum, then handle a leftover term",
+        "question": "<p>Let \\(A_m=\\sum_{r=1}^{m}(-1)^{r-1}\\left(r + 2\\right)^2\\). Find \\(A_{2n}\\) and \\(A_{2n+1}\\) as polynomials in \\(n\\).</p>",
+        "solution": [
+          "<p>An adjacent pair is the odd-index term minus the even-index term. For pair \\(r\\) this simplifies to \\(- 4 r - 3\\).</p>",
+          "<p>There are \\(n\\) complete pairs, giving \\(A_{2n}=- 2 n^{2} - 5 n\\).</p>",
+          "<p>The next unpaired term has positive sign. Adding it gives \\(A_{2n+1}=2 n^{2} + 7 n + 9\\).</p>"
+        ]
+      },
+      {
+        "title": "Pair an alternating sum, then handle a leftover term",
+        "question": "<p>Let \\(A_m=\\sum_{r=1}^{m}(-1)^{r-1}\\left(r + 4\\right)^2\\). Find \\(A_{2n}\\) and \\(A_{2n+1}\\) as polynomials in \\(n\\).</p>",
+        "solution": [
+          "<p>An adjacent pair is the odd-index term minus the even-index term. For pair \\(r\\) this simplifies to \\(- 4 r - 7\\).</p>",
+          "<p>There are \\(n\\) complete pairs, giving \\(A_{2n}=- 2 n^{2} - 9 n\\).</p>",
+          "<p>The next unpaired term has positive sign. Adding it gives \\(A_{2n+1}=2 n^{2} + 11 n + 25\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a term and a later block from a partial sum",
+        "question": "<p>The partial sum is \\(S_n=n \\left(n + 2\\right) \\left(2 n + 3\\right)\\). Find \\(u_n\\) and \\(\\sum_{r=n+1}^{2n}u_r\\) as polynomials in \\(n\\).</p>",
+        "solution": [
+          "<p>The nth term is \\(S_n-S_{n-1}\\). Subtracting yields \\(u_n=6 n^{2} + 8 n + 1\\).</p>",
+          "<p>The later block uses \\(S_{2n}-S_n\\), since the term at n is not in the block.</p>",
+          "<p>Simplify to \\(14 n^{3} + 21 n^{2} + 6 n\\).</p>"
+        ]
+      },
+      {
+        "title": "Separate the middle term of a shifted square",
+        "question": "<p>Find the coefficient of \\(r\\) when \\(\\left(2 r + 3\\right)^{2}\\) is expanded, then find \\(\\sum_{r=1}^{n}\\left(2 r + 3\\right)^{2}\\) as a polynomial in \\(n\\).</p>",
+        "solution": [
+          "<p>The expansion includes \\(2ab=12\\) as the coefficient of \\(r\\).</p>",
+          "<p>Use separate formulae for squares, first powers and constants. The constant is added \\(n\\) times.</p>",
+          "<p>The sum simplifies to \\(\\frac{4 n^{3}}{3} + 8 n^{2} + \\frac{47 n}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Separate the middle term of a shifted square",
+        "question": "<p>Find the coefficient of \\(r\\) when \\(\\left(4 r + 7\\right)^{2}\\) is expanded, then find \\(\\sum_{r=1}^{n}\\left(4 r + 7\\right)^{2}\\) as a polynomial in \\(n\\).</p>",
+        "solution": [
+          "<p>The expansion includes \\(2ab=56\\) as the coefficient of \\(r\\).</p>",
+          "<p>Use separate formulae for squares, first powers and constants. The constant is added \\(n\\) times.</p>",
+          "<p>The sum simplifies to \\(\\frac{16 n^{3}}{3} + 36 n^{2} + \\frac{239 n}{3}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "finite-sums-expand-to-standard-sums-extra",
+        "title": "Expand the summand before using standard results",
+        "prompt": "<p>Find \\(\\sum_{r=1}^{n}\\left(r + 7\\right) \\left(4 r - 1\\right)\\) as a polynomial in \\(n\\).</p>",
+        "fields": [
+          {
+            "key": "polynomial",
+            "label": "Polynomial in n",
+            "type": "polynomial",
+            "expected": "4*n^3/3 + 31*n^2/2 + 43*n/6",
+            "variables": [
+              "n"
+            ]
+          }
+        ],
+        "hint": "<p>Multiplying two separate sums would count terms with different indices.</p>",
+        "solution": "<p>Expand to \\(4 r^{2} + 27 r - 7\\).</p><p>Sum the quadratic and linear terms separately and count \\(n\\) copies of the constant.</p><p>Combine the standard results to obtain \\(\\frac{4 n^{3}}{3} + \\frac{31 n^{2}}{2} + \\frac{43 n}{6}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "finite-sums-subtract-before-lower-limit-extra",
+        "title": "Subtract the sum before the lower limit",
+        "prompt": "<p>Find the number of terms and the value of \\(\\sum_{r=n+1}^{2 n + 2}\\left(4 r + 7\\right)\\) as polynomials in \\(n\\).</p>",
+        "fields": [
+          {
+            "key": "count",
+            "label": "Term count as a polynomial in n",
+            "type": "polynomial",
+            "expected": "n + 2",
+            "variables": [
+              "n"
+            ]
+          },
+          {
+            "key": "polynomial",
+            "label": "Sum as a polynomial in n",
+            "type": "polynomial",
+            "expected": "6*n^2 + 25*n + 26",
+            "variables": [
+              "n"
+            ]
+          }
+        ],
+        "hint": "<p>The lower limit is included, so subtract only the terms before it.</p>",
+        "solution": "<p>The term count is upper index minus lower index plus one, giving \\(n + 2\\).</p><p>Subtract the sum up to \\(n\\) from the sum up to \\(2 n + 2\\).</p><p>The result is \\(6 n^{2} + 25 n + 26\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "finite-sums-pair-by-parity-extra",
+        "title": "Pair an alternating sum, then handle a leftover term",
+        "prompt": "<p>Let \\(A_m=\\sum_{r=1}^{m}(-1)^{r-1}\\left(r + 6\\right)^2\\). Find \\(A_{2n}\\) and \\(A_{2n+1}\\) as polynomials in \\(n\\).</p>",
+        "fields": [
+          {
+            "key": "even",
+            "label": "Even sum polynomial in n",
+            "type": "polynomial",
+            "expected": "-2*n^2 - 13*n",
+            "variables": [
+              "n"
+            ]
+          },
+          {
+            "key": "odd",
+            "label": "Odd sum polynomial in n",
+            "type": "polynomial",
+            "expected": "2*n^2 + 15*n + 49",
+            "variables": [
+              "n"
+            ]
+          }
+        ],
+        "hint": "<p>Use adjacent pairs first. For an odd upper index include one extra positive term.</p>",
+        "solution": "<p>An adjacent pair is the odd-index term minus the even-index term. For pair \\(r\\) this simplifies to \\(- 4 r - 11\\).</p><p>There are \\(n\\) complete pairs, giving \\(A_{2n}=- 2 n^{2} - 13 n\\).</p><p>The next unpaired term has positive sign. Adding it gives \\(A_{2n+1}=2 n^{2} + 15 n + 49\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "finite-sums-recover-a-term-extra",
+        "title": "Recover a term and a later block from a partial sum",
+        "prompt": "<p>The partial sum is \\(S_n=n \\left(n + 4\\right) \\left(2 n + 7\\right)\\). Find \\(u_n\\) and \\(\\sum_{r=n+1}^{2n}u_r\\) as polynomials in \\(n\\).</p>",
+        "fields": [
+          {
+            "key": "term",
+            "label": "Nth term polynomial in n",
+            "type": "polynomial",
+            "expected": "6*n^2 + 24*n + 15",
+            "variables": [
+              "n"
+            ]
+          },
+          {
+            "key": "block",
+            "label": "Later block polynomial in n",
+            "type": "polynomial",
+            "expected": "14*n^3 + 45*n^2 + 28*n",
+            "variables": [
+              "n"
+            ]
+          }
+        ],
+        "hint": "<p>A partial sum and a single term are different quantities. Subtract adjacent partial sums to isolate one term.</p>",
+        "solution": "<p>The nth term is \\(S_n-S_{n-1}\\). Subtracting yields \\(u_n=6 n^{2} + 24 n + 15\\).</p><p>The later block uses \\(S_{2n}-S_n\\), since the term at n is not in the block.</p><p>Simplify to \\(14 n^{3} + 45 n^{2} + 28 n\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "finite-sums-shift-a-square-extra",
+        "title": "Separate the middle term of a shifted square",
+        "prompt": "<p>Find the coefficient of \\(r\\) when \\(\\left(6 r + 11\\right)^{2}\\) is expanded, then find \\(\\sum_{r=1}^{n}\\left(6 r + 11\\right)^{2}\\) as a polynomial in \\(n\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Linear coefficient",
+            "type": "number",
+            "expected": "132"
+          },
+          {
+            "key": "polynomial",
+            "label": "Sum polynomial in n",
+            "type": "polynomial",
+            "expected": "12*n^3 + 84*n^2 + 193*n",
+            "variables": [
+              "n"
+            ]
+          }
+        ],
+        "hint": "<p>Use all three terms of the binomial expansion.</p>",
+        "solution": "<p>The expansion includes \\(2ab=132\\) as the coefficient of \\(r\\).</p><p>Use separate formulae for squares, first powers and constants. The constant is added \\(n\\) times.</p><p>The sum simplifies to \\(12 n^{3} + 84 n^{2} + 193 n\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Partial sum",
+        "definition": "<p>Sum of the initial terms through a stated index.</p>"
+      },
+      {
+        "term": "Block",
+        "definition": "<p>Consecutive terms between two given limits.</p>"
+      },
+      {
+        "term": "Alternating sign",
+        "definition": "<p>Successive terms have alternating plus and minus multipliers.</p>"
+      },
+      {
+        "term": "Pairing",
+        "definition": "<p>Grouping each odd-index term with the next even-index term.</p>"
+      },
+      {
+        "term": "Linear combination",
+        "definition": "<p>Terms added with fixed multipliers.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Expand a polynomial summand</th><td>Sum each power separately.</td></tr><tr><th scope=\"row\">Later block</th><td>\\(S_q-S_{p-1}\\) from p through q.</td></tr><tr><th scope=\"row\">Alternating</th><td>Sum complete pairs and check for a leftover term.</td></tr><tr><th scope=\"row\">Recover a term</th><td>\\(u_n=S_n-S_{n-1}\\).</td></tr></tbody></table></div><h2>Try a quick check</h2><p>If \\(S_n=n^2+2n\\), find \\(u_n\\).</p><p><strong>Check</strong> \\(u_n=(n^2+2n)-((n-1)^2+2(n-1))=2n+1\\).</p>",
+      "checks": "<ul><li>Do not multiply two standard sums to reproduce the sum of products at matching indices.</li><li>Subtracting the sum through p also deletes the first term you were meant to include.</li></ul>",
+      "examTip": "<p>When using a block difference, write out the first retained index and check that it has not been subtracted.</p>"
+    },
+    "related": [
+      {
+        "title": "Deriving power-sum formulae",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_series_power_sums"
+      },
+      {
+        "title": "Telescoping sums from differences",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_series_differences"
+      }
+    ]
+  },
+  "fp1_series_differences": {
+    "updatedOn": "2026-11-21",
+    "description": "Expose cancelling terms using partial fractions and other differences, then account for every surviving endpoint.",
+    "sections": [
+      {
+        "id": "one-index-shift",
+        "title": "Why do adjacent terms cancel?",
+        "label": "Write the first and final differences",
+        "intro": "<p>When a term is one value minus its successor, the successor appears again with positive sign in the next term.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The finite sum of \\(F(r)-F(r+1)\\) from p to q leaves \\(F(p)-F(q+1)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "differences-one-index-shift-check",
+            "title": "Write a partial fraction as a one-step difference",
+            "prompt": "<p>Let \\(u_r=\\frac{1}{\\left(r + 1\\right) \\left(r + 2\\right)}\\). Find \\(\\sum_{r=1}^{5}u_r\\).</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Finite sum",
+                "type": "number",
+                "expected": "5/14"
+              }
+            ],
+            "hint": "<p>Write the first two and final pair terms before cancelling.</p>",
+            "solution": "<p>Decompose the term as \\(- \\frac{3}{3 r + 6} + \\frac{3}{3 r + 3}\\). Verify by using the common denominator.</p><p>The negative fraction of each term cancels the next positive fraction.</p><p>Keep \\(\\frac{1}{2}\\) from the first term and subtract \\(\\frac{1}{7}\\) from the last, giving \\(\\frac{5}{14}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The final negative term has index one more than the upper summation endpoint.</p>"
+          }
+        ]
+      },
+      {
+        "id": "several-survivors",
+        "title": "How many terms survive when the shift is larger than one?",
+        "label": "Compare boundary groups",
+        "intro": "<p>Two terms separated by more than one index cancel further apart in the list. The missing partners leave several terms at each end.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a shift of d, compare the two full index ranges. Keep each unpaired positive and negative term.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "differences-several-survivors-check",
+            "title": "Keep as many boundary terms as the shift",
+            "prompt": "<p>Find the sum of \\(u_r=\\frac{9}{\\left(r + 3\\right) \\left(r + 6\\right)}\\) from \\(r=1\\) to \\(5\\).</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Finite sum",
+                "type": "number",
+                "expected": "623/660"
+              }
+            ],
+            "hint": "<p>A shift of more than one leaves more than one term at each end.</p>",
+            "solution": "<p>Split the fraction into \\(- \\frac{3}{r + 6} + \\frac{3}{r + 3}\\). The difference has a shift of \\(3\\).</p><p>The first \\(3\\) positive terms survive and sum to \\(\\frac{37}{20}\\). The last \\(3\\) negative terms have total magnitude \\(\\frac{299}{330}\\).</p><p>Subtract the two boundary totals for \\(\\frac{623}{660}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Cancelling only a first and last term loses entire boundary groups when the shift exceeds one.</p>"
+          }
+        ]
+      },
+      {
+        "id": "three-factors",
+        "title": "Can three factors telescope without decomposing into three fractions?",
+        "label": "Try two shifted two-factor fractions",
+        "intro": "<p>A product of three consecutive linear factors may be the common denominator of two simpler terms.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Look for two adjacent two-factor denominators sharing the middle factor. Subtract and verify the original numerator.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "differences-three-factors-check",
+            "title": "Spot a difference of two simpler products",
+            "prompt": "<p>Calculate \\(\\sum_{r=1}^{5}\\frac{6}{\\left(r + 3\\right) \\left(r + 4\\right) \\left(r + 5\\right)}\\).</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Finite sum",
+                "type": "number",
+                "expected": "7/60"
+              }
+            ],
+            "hint": "<p>Start with fractions whose denominators match at the next index.</p>",
+            "solution": "<p>Keep the middle linear factor in both simpler fractions. Their difference is \\(- \\frac{3}{\\left(r + 4\\right) \\left(r + 5\\right)} + \\frac{3}{\\left(r + 3\\right) \\left(r + 4\\right)}\\).</p><p>Bringing this expression over one denominator recovers the given summand.</p><p>The sum telescopes to \\(\\frac{7}{60}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The difference of the two remaining linear expressions may introduce a fixed multiplier. Keep it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "differences-three-factors-follow-up",
+            "title": "Spot a difference of two simpler products",
+            "prompt": "<p>Calculate \\(\\sum_{r=1}^{7}\\frac{10}{\\left(r + 5\\right) \\left(r + 6\\right) \\left(r + 7\\right)}\\).</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Finite sum",
+                "type": "number",
+                "expected": "25/273"
+              }
+            ],
+            "hint": "<p>Start with fractions whose denominators match at the next index.</p>",
+            "solution": "<p>Keep the middle linear factor in both simpler fractions. Their difference is \\(- \\frac{5}{\\left(r + 6\\right) \\left(r + 7\\right)} + \\frac{5}{\\left(r + 5\\right) \\left(r + 6\\right)}\\).</p><p>Bringing this expression over one denominator recovers the given summand.</p><p>The sum telescopes to \\(\\frac{25}{273}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "weighted-difference",
+        "title": "What if a geometric factor is part of the cancelling expression?",
+        "label": "Move the full term together",
+        "intro": "<p>A function F can contain both a geometric multiplier and a rational term. The whole expression shifts its index.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find the endpoint values by substituting into every occurrence of the index in F.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "differences-weighted-difference-check",
+            "title": "Keep a geometric factor together with its index",
+            "prompt": "<p>Using \\(F(r)=\\frac{3^{- r}}{r + 3}\\), find \\(\\sum_{r=1}^{5}F(r)-F(r+1)\\).</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Finite sum",
+                "type": "number",
+                "expected": "2183/26244"
+              }
+            ],
+            "hint": "<p>Treat F as a complete expression. The last index is one beyond the upper summation index.</p>",
+            "solution": "<p>The successive term is \\(\\frac{3^{- r - 1}}{r + 4}\\). The exponent and reciprocal both advance by one.</p><p>Every interior \\(F(r)\\) cancels with its occurrence in the previous difference.</p><p>The last negative term is \\(F(6)\\). The total is \\(\\frac{1}{12}\\) minus \\(\\frac{1}{6561}\\), giving \\(\\frac{2183}{26244}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Changing the reciprocal index while leaving the exponential unchanged can prevent the cancellation.</p>"
+          }
+        ]
+      },
+      {
+        "id": "logarithms-telescope",
+        "title": "How do logarithms produce a difference?",
+        "label": "Use the quotient law",
+        "intro": "<p>A logarithm of a positive ratio becomes the difference of the logarithms of its positive numerator and denominator.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check positivity of the arguments. Then compare neighbouring numerator and denominator terms and keep the uncancelled logs.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "differences-logarithms-telescope-check",
+            "title": "Rewrite logarithms so the arguments telescope",
+            "prompt": "<p>Express \\(\\sum_{r=1}^{5}\\ln\\left(\\frac{r+4}{r+3}\\right)\\) as \\(\\ln A\\). Give the exact argument \\(A\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Argument A",
+                "type": "number",
+                "expected": "9/4"
+              }
+            ],
+            "hint": "<p>Use the quotient law and cancel the interior logarithms before combining the endpoints.</p>",
+            "solution": "<p>Split each logarithm into the log of the numerator minus the log of the denominator. All arguments are positive.</p><p>Successive logarithms cancel. The last numerator is \\(9\\) and the first denominator is \\(4\\).</p><p>Combine the two remaining logarithms to obtain \\(\\ln\\left(\\frac{9}{4}\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Taking the logarithm of a difference does not produce a difference of logarithms.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "differences-logarithms-telescope-follow-up",
+            "title": "Rewrite logarithms so the arguments telescope",
+            "prompt": "<p>Express \\(\\sum_{r=1}^{7}\\ln\\left(\\frac{r+6}{r+5}\\right)\\) as \\(\\ln A\\). Give the exact argument \\(A\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Argument A",
+                "type": "number",
+                "expected": "13/6"
+              }
+            ],
+            "hint": "<p>Use the quotient law and cancel the interior logarithms before combining the endpoints.</p>",
+            "solution": "<p>Split each logarithm into the log of the numerator minus the log of the denominator. All arguments are positive.</p><p>Successive logarithms cancel. The last numerator is \\(13\\) and the first denominator is \\(6\\).</p><p>Combine the two remaining logarithms to obtain \\(\\ln\\left(\\frac{13}{6}\\right)\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Write a partial fraction as a one-step difference",
+        "question": "<p>Let \\(u_r=\\frac{4}{\\left(2 r + 1\\right) \\left(2 r + 3\\right)}\\). Find \\(\\sum_{r=1}^{4}u_r\\).</p>",
+        "solution": [
+          "<p>Decompose the term as \\(- \\frac{2}{2 r + 3} + \\frac{2}{2 r + 1}\\). Verify by using the common denominator.</p>",
+          "<p>The negative fraction of each term cancels the next positive fraction.</p>",
+          "<p>Keep \\(\\frac{2}{3}\\) from the first term and subtract \\(\\frac{2}{11}\\) from the last, giving \\(\\frac{16}{33}\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep as many boundary terms as the shift",
+        "question": "<p>Find the sum of \\(u_r=\\frac{4}{\\left(r + 2\\right) \\left(r + 4\\right)}\\) from \\(r=1\\) to \\(4\\).</p>",
+        "solution": [
+          "<p>Split the fraction into \\(- \\frac{2}{r + 4} + \\frac{2}{r + 2}\\). The difference has a shift of \\(2\\).</p>",
+          "<p>The first \\(2\\) positive terms survive and sum to \\(\\frac{7}{6}\\). The last \\(2\\) negative terms have total magnitude \\(\\frac{15}{28}\\).</p>",
+          "<p>Subtract the two boundary totals for \\(\\frac{53}{84}\\).</p>"
+        ]
+      },
+      {
+        "title": "Spot a difference of two simpler products",
+        "question": "<p>Calculate \\(\\sum_{r=1}^{4}\\frac{4}{\\left(r + 2\\right) \\left(r + 3\\right) \\left(r + 4\\right)}\\).</p>",
+        "solution": [
+          "<p>Keep the middle linear factor in both simpler fractions. Their difference is \\(- \\frac{2}{\\left(r + 3\\right) \\left(r + 4\\right)} + \\frac{2}{\\left(r + 2\\right) \\left(r + 3\\right)}\\).</p>",
+          "<p>Bringing this expression over one denominator recovers the given summand.</p>",
+          "<p>The sum telescopes to \\(\\frac{11}{84}\\).</p>"
+        ]
+      },
+      {
+        "title": "Spot a difference of two simpler products",
+        "question": "<p>Calculate \\(\\sum_{r=1}^{6}\\frac{8}{\\left(r + 4\\right) \\left(r + 5\\right) \\left(r + 6\\right)}\\).</p>",
+        "solution": [
+          "<p>Keep the middle linear factor in both simpler fractions. Their difference is \\(- \\frac{4}{\\left(r + 5\\right) \\left(r + 6\\right)} + \\frac{4}{\\left(r + 4\\right) \\left(r + 5\\right)}\\).</p>",
+          "<p>Bringing this expression over one denominator recovers the given summand.</p>",
+          "<p>The sum telescopes to \\(\\frac{17}{165}\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep a geometric factor together with its index",
+        "question": "<p>Using \\(F(r)=\\frac{2^{- r}}{r + 2}\\), find \\(\\sum_{r=1}^{4}F(r)-F(r+1)\\).</p>",
+        "solution": [
+          "<p>The successive term is \\(\\frac{2^{- r - 1}}{r + 3}\\). The exponent and reciprocal both advance by one.</p>",
+          "<p>Every interior \\(F(r)\\) cancels with its occurrence in the previous difference.</p>",
+          "<p>The last negative term is \\(F(5)\\). The total is \\(\\frac{1}{6}\\) minus \\(\\frac{1}{224}\\), giving \\(\\frac{109}{672}\\).</p>"
+        ]
+      },
+      {
+        "title": "Rewrite logarithms so the arguments telescope",
+        "question": "<p>Express \\(\\sum_{r=1}^{4}\\ln\\left(\\frac{r+3}{r+2}\\right)\\) as \\(\\ln A\\). Give the exact argument \\(A\\).</p>",
+        "solution": [
+          "<p>Split each logarithm into the log of the numerator minus the log of the denominator. All arguments are positive.</p>",
+          "<p>Successive logarithms cancel. The last numerator is \\(7\\) and the first denominator is \\(3\\).</p>",
+          "<p>Combine the two remaining logarithms to obtain \\(\\ln\\left(\\frac{7}{3}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Rewrite logarithms so the arguments telescope",
+        "question": "<p>Express \\(\\sum_{r=1}^{6}\\ln\\left(\\frac{r+5}{r+4}\\right)\\) as \\(\\ln A\\). Give the exact argument \\(A\\).</p>",
+        "solution": [
+          "<p>Split each logarithm into the log of the numerator minus the log of the denominator. All arguments are positive.</p>",
+          "<p>Successive logarithms cancel. The last numerator is \\(11\\) and the first denominator is \\(5\\).</p>",
+          "<p>Combine the two remaining logarithms to obtain \\(\\ln\\left(\\frac{11}{5}\\right)\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "differences-one-index-shift-extra",
+        "title": "Write a partial fraction as a one-step difference",
+        "prompt": "<p>Let \\(u_r=\\frac{16}{\\left(4 r + 5\\right) \\left(4 r + 9\\right)}\\). Find \\(\\sum_{r=1}^{6}u_r\\).</p>",
+        "fields": [
+          {
+            "key": "sum",
+            "label": "Finite sum",
+            "type": "number",
+            "expected": "32/99"
+          }
+        ],
+        "hint": "<p>Write the first two and final pair terms before cancelling.</p>",
+        "solution": "<p>Decompose the term as \\(- \\frac{4}{4 r + 9} + \\frac{4}{4 r + 5}\\). Verify by using the common denominator.</p><p>The negative fraction of each term cancels the next positive fraction.</p><p>Keep \\(\\frac{4}{9}\\) from the first term and subtract \\(\\frac{4}{33}\\) from the last, giving \\(\\frac{32}{99}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "differences-several-survivors-extra",
+        "title": "Keep as many boundary terms as the shift",
+        "prompt": "<p>Find the sum of \\(u_r=\\frac{8}{\\left(r + 4\\right) \\left(r + 6\\right)}\\) from \\(r=1\\) to \\(6\\).</p>",
+        "fields": [
+          {
+            "key": "sum",
+            "label": "Finite sum",
+            "type": "number",
+            "expected": "127/165"
+          }
+        ],
+        "hint": "<p>A shift of more than one leaves more than one term at each end.</p>",
+        "solution": "<p>Split the fraction into \\(- \\frac{4}{r + 6} + \\frac{4}{r + 4}\\). The difference has a shift of \\(2\\).</p><p>The first \\(2\\) positive terms survive and sum to \\(\\frac{22}{15}\\). The last \\(2\\) negative terms have total magnitude \\(\\frac{23}{33}\\).</p><p>Subtract the two boundary totals for \\(\\frac{127}{165}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "differences-three-factors-extra",
+        "title": "Spot a difference of two simpler products",
+        "prompt": "<p>Calculate \\(\\sum_{r=1}^{8}\\frac{12}{\\left(r + 6\\right) \\left(r + 7\\right) \\left(r + 8\\right)}\\).</p>",
+        "fields": [
+          {
+            "key": "sum",
+            "label": "Finite sum",
+            "type": "number",
+            "expected": "23/280"
+          }
+        ],
+        "hint": "<p>Start with fractions whose denominators match at the next index.</p>",
+        "solution": "<p>Keep the middle linear factor in both simpler fractions. Their difference is \\(- \\frac{6}{\\left(r + 7\\right) \\left(r + 8\\right)} + \\frac{6}{\\left(r + 6\\right) \\left(r + 7\\right)}\\).</p><p>Bringing this expression over one denominator recovers the given summand.</p><p>The sum telescopes to \\(\\frac{23}{280}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "differences-weighted-difference-extra",
+        "title": "Keep a geometric factor together with its index",
+        "prompt": "<p>Using \\(F(r)=\\frac{4^{- r}}{r + 4}\\), find \\(\\sum_{r=1}^{6}F(r)-F(r+1)\\).</p>",
+        "fields": [
+          {
+            "key": "sum",
+            "label": "Finite sum",
+            "type": "number",
+            "expected": "45051/901120"
+          }
+        ],
+        "hint": "<p>Treat F as a complete expression. The last index is one beyond the upper summation index.</p>",
+        "solution": "<p>The successive term is \\(\\frac{4^{- r - 1}}{r + 5}\\). The exponent and reciprocal both advance by one.</p><p>Every interior \\(F(r)\\) cancels with its occurrence in the previous difference.</p><p>The last negative term is \\(F(7)\\). The total is \\(\\frac{1}{20}\\) minus \\(\\frac{1}{180224}\\), giving \\(\\frac{45051}{901120}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "differences-logarithms-telescope-extra",
+        "title": "Rewrite logarithms so the arguments telescope",
+        "prompt": "<p>Express \\(\\sum_{r=1}^{8}\\ln\\left(\\frac{r+7}{r+6}\\right)\\) as \\(\\ln A\\). Give the exact argument \\(A\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Argument A",
+            "type": "number",
+            "expected": "15/7"
+          }
+        ],
+        "hint": "<p>Use the quotient law and cancel the interior logarithms before combining the endpoints.</p>",
+        "solution": "<p>Split each logarithm into the log of the numerator minus the log of the denominator. All arguments are positive.</p><p>Successive logarithms cancel. The last numerator is \\(15\\) and the first denominator is \\(7\\).</p><p>Combine the two remaining logarithms to obtain \\(\\ln\\left(\\frac{15}{7}\\right)\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Telescoping sum",
+        "definition": "<p>A finite sum whose interior contributions cancel in pairs.</p>"
+      },
+      {
+        "term": "Partial fractions",
+        "definition": "<p>A sum of simpler rational terms giving the original fraction when combined.</p>"
+      },
+      {
+        "term": "Shift",
+        "definition": "<p>Difference between the indices of cancelling copies of F.</p>"
+      },
+      {
+        "term": "Geometric factor",
+        "definition": "<p>A factor changing by the same multiplier at each index.</p>"
+      },
+      {
+        "term": "Quotient law",
+        "definition": "<p>The log of a positive quotient is the difference of the logs.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">One index shift</th><td>\\(\\sum_{r=p}^q\\big(F(r)-F(r+1)\\big)=F(p)-F(q+1)\\)</td></tr><tr><th scope=\"row\">Larger shift</th><td>Count all unmatched boundary terms at each end.</td></tr><tr><th scope=\"row\">Three factors</th><td>Try two fractions sharing a middle factor.</td></tr><tr><th scope=\"row\">Log quotient</th><td>Check positivity, split and cancel.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Find \\(\\sum_{r=2}^{5}\\frac1{r(r+1)}\\).</p><p><strong>Check</strong> \\(\\frac12-\\frac16=\\frac13\\).</p>",
+      "checks": "<ul><li>The final negative term has index one more than the upper summation endpoint.</li><li>Cancelling only a first and last term loses entire boundary groups when the shift exceeds one.</li></ul>",
+      "examTip": "<p>Show enough first and last terms to make the cancellation and the limits unambiguous.</p>"
+    },
+    "related": [
+      {
+        "title": "Using power sums and finite limits",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_series_finite_sums"
+      },
+      {
+        "title": "Convergence, remainders and bounds",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_series_convergence"
+      }
+    ]
+  },
+  "fp1_series_convergence": {
+    "updatedOn": "2026-11-21",
+    "description": "Find the sum to infinity from partial sums. Work with exact errors, strict cutoffs, exceptional parameters and moving blocks.",
+    "sections": [
+      {
+        "id": "limit-of-the-partial-sums",
+        "title": "What quantity must have a limit for a series to converge?",
+        "label": "Find the complete finite sum first",
+        "intro": "<p>Convergence means that the sequence of complete partial sums approaches a finite number. A small individual term is not enough to establish that.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find \\(S_n\\) before taking \\(n\\to\\infty\\). The exact remainder is \\(S_\\infty-S_n\\) for a convergent series.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "convergence-limit-of-the-partial-sums-check",
+            "title": "Subtract the finite sum from its limit",
+            "prompt": "<p>Find the sum to infinity of \\(\\sum_{r=1}^{\\infty}\\frac{4}{\\left(r + 3\\right) \\left(r + 4\\right)}\\) and the exact error after the first \\(6\\) terms.</p>",
+            "fields": [
+              {
+                "key": "limit",
+                "label": "Sum to infinity",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "error",
+                "label": "Exact error",
+                "type": "number",
+                "expected": "2/5"
+              }
+            ],
+            "hint": "<p>Keep the finite boundary until you have written the exact error.</p>",
+            "solution": "<p>The term telescopes as \\(- \\frac{4}{r + 4} + \\frac{4}{r + 3}\\), so \\(S_n=1 - \\frac{4}{n + 4}\\).</p><p>The final reciprocal tends to zero. This leaves \\(S_\\infty=1\\).</p><p>Subtracting \\(S_n\\) from this level gives \\(\\frac{4}{n + 4}\\). At \\(6\\) terms the error is \\(\\frac{2}{5}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Taking a limit of the summand answers a different question from taking a limit of the sum.</p>"
+          }
+        ]
+      },
+      {
+        "id": "strict-remainder-target",
+        "title": "How do I find the first integer inside an error bound?",
+        "label": "Keep the direction and strictness",
+        "intro": "<p>Use a formula for the difference from the limit. If it can have either sign, compare its magnitude with the tolerance.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a positive decreasing remainder, solve the exact inequality and identify the first positive integer satisfying it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "convergence-strict-remainder-target-check",
+            "title": "Find the least integer that meets a strict cutoff",
+            "prompt": "<p>For the partial sums \\(S_n=1 - \\frac{4}{n + 4}\\), find the least positive integer \\(n\\) for which the difference from the limit is strictly less than \\(\\frac{4}{13}\\).</p>",
+            "fields": [
+              {
+                "key": "n",
+                "label": "Least positive integer n",
+                "type": "number",
+                "expected": "10"
+              }
+            ],
+            "hint": "<p>An integer giving exact equality does not satisfy a strict inequality.</p>",
+            "solution": "<p>The limit is \\(1\\). The positive error is \\(\\frac{4}{n + 4}\\).</p><p>At \\(n=9\\) the error equals the stated tolerance. The error then decreases strictly.</p><p>Equality is excluded, so the first accepted integer is \\(10\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If equality occurs at an integer and the bound is strict, the next integer is the first candidate.</p>"
+          }
+        ]
+      },
+      {
+        "id": "nonzero-limit-of-f",
+        "title": "What if the last boundary does not tend to zero?",
+        "label": "Keep the full limiting level",
+        "intro": "<p>A boundary term may contain both a vanishing part and a constant. Use the limit of the whole term.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(F(n+1)-F(1)\\) take the limit of the varying part before subtracting the fixed initial value.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "convergence-nonzero-limit-of-f-check",
+            "title": "Keep the limiting value of a non-vanishing boundary",
+            "prompt": "<p>Let \\(F(r)=2 + \\frac{3}{r + 3}\\). Find \\(\\sum_{r=1}^{\\infty}F(r+1)-F(r)\\).</p>",
+            "fields": [
+              {
+                "key": "limit",
+                "label": "Sum to infinity",
+                "type": "number",
+                "expected": "-3/4"
+              }
+            ],
+            "hint": "<p>Take the limit of the entire boundary term, including any constant part.</p>",
+            "solution": "<p>The finite sum is \\(F(n+1)-F(1)\\).</p><p>The upper term tends to \\(2\\), not to zero.</p><p>Subtract \\(\\frac{11}{4}\\) for the infinite total \\(- \\frac{3}{4}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not drop a rational boundary merely because it contains a denominator growing with n. Compare numerator and denominator.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "convergence-nonzero-limit-of-f-follow-up",
+            "title": "Keep the limiting value of a non-vanishing boundary",
+            "prompt": "<p>Let \\(F(r)=4 + \\frac{5}{r + 5}\\). Find \\(\\sum_{r=1}^{\\infty}F(r+1)-F(r)\\).</p>",
+            "fields": [
+              {
+                "key": "limit",
+                "label": "Sum to infinity",
+                "type": "number",
+                "expected": "-5/6"
+              }
+            ],
+            "hint": "<p>Take the limit of the entire boundary term, including any constant part.</p>",
+            "solution": "<p>The finite sum is \\(F(n+1)-F(1)\\).</p><p>The upper term tends to \\(4\\), not to zero.</p><p>Subtract \\(\\frac{29}{6}\\) for the infinite total \\(- \\frac{5}{6}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "exceptional-geometric-values",
+        "title": "When should I test parameter endpoints separately?",
+        "label": "Read the actual partial sum",
+        "intro": "<p>A formula involving a geometric factor can degenerate at a parameter endpoint. Test the resulting partial sums directly.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the usual geometric limit when the magnitude of the ratio is less than one. Then inspect each boundary and any constant prefactor.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "convergence-exceptional-geometric-values-check",
+            "title": "Check the degenerate geometric endpoint separately",
+            "prompt": "<p>For real \\(q\\) let \\(u_r=q^r-q^{r+1}\\). Give all values of \\(q\\) for which the series converges and give the infinite sum when \\(q=- \\frac{2}{3}\\).</p>",
+            "fields": [
+              {
+                "key": "q_range",
+                "label": "Allowed q-values",
+                "type": "set",
+                "expected": "(-1,1]",
+                "variables": [
+                  "q"
+                ]
+              },
+              {
+                "key": "limit",
+                "label": "Infinite sum for the stated q",
+                "type": "number",
+                "expected": "-2/3"
+              }
+            ],
+            "hint": "<p>Use the explicit partial sum. Test both endpoints and keep any degenerate case.</p>",
+            "solution": "<p>The partial sum is \\(q-q^{n+1}\\). When \\(|q|<1\\) it tends to \\(q\\).</p><p>At \\(q=1\\) every term is zero, so it also converges. At \\(q=-1\\) the partial sums oscillate. For \\(|q|>1\\) their magnitudes grow without bound.</p><p>Thus the parameter interval is \\(-1<q\\le1\\). With \\(q=- \\frac{2}{3}\\), the sum is \\(- \\frac{2}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A ratio test for one form cannot override a special value that makes every term zero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "scaled-moving-block",
+        "title": "How can a shrinking block have a non-zero scaled limit?",
+        "label": "Scale the exact boundary expression",
+        "intro": "<p>A block with both limits depending on n can shrink to zero even while its rescaled value approaches a non-zero number.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write its exact telescoped expression, multiply by the requested scale and then divide by the leading power in each denominator.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "convergence-scaled-moving-block-check",
+            "title": "Find a scaled limit of a block with moving endpoints",
+            "prompt": "<p>Let \\(u_r=\\frac{4}{\\left(r + 3\\right) \\left(r + 4\\right)}\\). Find \\(\\lim_{n\\to\\infty}n\\sum_{r=3 n + 1}^{5 n}u_r\\).</p>",
+            "fields": [
+              {
+                "key": "limit",
+                "label": "Scaled limit",
+                "type": "number",
+                "expected": "8/15"
+              }
+            ],
+            "hint": "<p>Determine the power of n in each boundary before taking the limit.</p>",
+            "solution": "<p>The block telescopes to \\(\\frac{4}{3 n + 4}\\) minus \\(\\frac{4}{5 n + 4}\\). Both terms tend to zero by themselves.</p><p>Multiply by \\(n\\) before taking limits. Divide each denominator by \\(n\\).</p><p>The result tends to \\(\\frac{4}{3}\\) minus \\(\\frac{4}{5}\\), so the limit is \\(\\frac{8}{15}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Taking the block limit first loses the rate of shrinkage and makes the later scaling invalid.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "convergence-scaled-moving-block-follow-up",
+            "title": "Find a scaled limit of a block with moving endpoints",
+            "prompt": "<p>Let \\(u_r=\\frac{6}{\\left(r + 5\\right) \\left(r + 6\\right)}\\). Find \\(\\lim_{n\\to\\infty}n\\sum_{r=5 n + 1}^{7 n}u_r\\).</p>",
+            "fields": [
+              {
+                "key": "limit",
+                "label": "Scaled limit",
+                "type": "number",
+                "expected": "12/35"
+              }
+            ],
+            "hint": "<p>Determine the power of n in each boundary before taking the limit.</p>",
+            "solution": "<p>The block telescopes to \\(\\frac{6}{5 n + 6}\\) minus \\(\\frac{6}{7 n + 6}\\). Both terms tend to zero by themselves.</p><p>Multiply by \\(n\\) before taking limits. Divide each denominator by \\(n\\).</p><p>The result tends to \\(\\frac{6}{5}\\) minus \\(\\frac{6}{7}\\), so the limit is \\(\\frac{12}{35}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Subtract the finite sum from its limit",
+        "question": "<p>Find the sum to infinity of \\(\\sum_{r=1}^{\\infty}\\frac{3}{\\left(r + 2\\right) \\left(r + 3\\right)}\\) and the exact error after the first \\(5\\) terms.</p>",
+        "solution": [
+          "<p>The term telescopes as \\(- \\frac{3}{r + 3} + \\frac{3}{r + 2}\\), so \\(S_n=1 - \\frac{3}{n + 3}\\).</p>",
+          "<p>The final reciprocal tends to zero. This leaves \\(S_\\infty=1\\).</p>",
+          "<p>Subtracting \\(S_n\\) from this level gives \\(\\frac{3}{n + 3}\\). At \\(5\\) terms the error is \\(\\frac{3}{8}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the least integer that meets a strict cutoff",
+        "question": "<p>For the partial sums \\(S_n=1 - \\frac{3}{n + 3}\\), find the least positive integer \\(n\\) for which the difference from the limit is strictly less than \\(\\frac{3}{10}\\).</p>",
+        "solution": [
+          "<p>The limit is \\(1\\). The positive error is \\(\\frac{3}{n + 3}\\).</p>",
+          "<p>At \\(n=7\\) the error equals the stated tolerance. The error then decreases strictly.</p>",
+          "<p>Equality is excluded, so the first accepted integer is \\(8\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the limiting value of a non-vanishing boundary",
+        "question": "<p>Let \\(F(r)=1 + \\frac{2}{r + 2}\\). Find \\(\\sum_{r=1}^{\\infty}F(r+1)-F(r)\\).</p>",
+        "solution": [
+          "<p>The finite sum is \\(F(n+1)-F(1)\\).</p>",
+          "<p>The upper term tends to \\(1\\), not to zero.</p>",
+          "<p>Subtract \\(\\frac{5}{3}\\) for the infinite total \\(- \\frac{2}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the limiting value of a non-vanishing boundary",
+        "question": "<p>Let \\(F(r)=3 + \\frac{4}{r + 4}\\). Find \\(\\sum_{r=1}^{\\infty}F(r+1)-F(r)\\).</p>",
+        "solution": [
+          "<p>The finite sum is \\(F(n+1)-F(1)\\).</p>",
+          "<p>The upper term tends to \\(3\\), not to zero.</p>",
+          "<p>Subtract \\(\\frac{19}{5}\\) for the infinite total \\(- \\frac{4}{5}\\).</p>"
+        ]
+      },
+      {
+        "title": "Check the degenerate geometric endpoint separately",
+        "question": "<p>For real \\(q\\) let \\(u_r=q^r-q^{r+1}\\). Give all values of \\(q\\) for which the series converges and give the infinite sum when \\(q=\\frac{1}{2}\\).</p>",
+        "solution": [
+          "<p>The partial sum is \\(q-q^{n+1}\\). When \\(|q|<1\\) it tends to \\(q\\).</p>",
+          "<p>At \\(q=1\\) every term is zero, so it also converges. At \\(q=-1\\) the partial sums oscillate. For \\(|q|>1\\) their magnitudes grow without bound.</p>",
+          "<p>Thus the parameter interval is \\(-1<q\\le1\\). With \\(q=\\frac{1}{2}\\), the sum is \\(\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a scaled limit of a block with moving endpoints",
+        "question": "<p>Let \\(u_r=\\frac{3}{\\left(r + 2\\right) \\left(r + 3\\right)}\\). Find \\(\\lim_{n\\to\\infty}n\\sum_{r=2 n + 1}^{4 n}u_r\\).</p>",
+        "solution": [
+          "<p>The block telescopes to \\(\\frac{3}{2 n + 3}\\) minus \\(\\frac{3}{4 n + 3}\\). Both terms tend to zero by themselves.</p>",
+          "<p>Multiply by \\(n\\) before taking limits. Divide each denominator by \\(n\\).</p>",
+          "<p>The result tends to \\(\\frac{3}{2}\\) minus \\(\\frac{3}{4}\\), so the limit is \\(\\frac{3}{4}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a scaled limit of a block with moving endpoints",
+        "question": "<p>Let \\(u_r=\\frac{5}{\\left(r + 4\\right) \\left(r + 5\\right)}\\). Find \\(\\lim_{n\\to\\infty}n\\sum_{r=4 n + 1}^{6 n}u_r\\).</p>",
+        "solution": [
+          "<p>The block telescopes to \\(\\frac{5}{4 n + 5}\\) minus \\(\\frac{5}{6 n + 5}\\). Both terms tend to zero by themselves.</p>",
+          "<p>Multiply by \\(n\\) before taking limits. Divide each denominator by \\(n\\).</p>",
+          "<p>The result tends to \\(\\frac{5}{4}\\) minus \\(\\frac{5}{6}\\), so the limit is \\(\\frac{5}{12}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "convergence-limit-of-the-partial-sums-extra",
+        "title": "Subtract the finite sum from its limit",
+        "prompt": "<p>Find the sum to infinity of \\(\\sum_{r=1}^{\\infty}\\frac{5}{\\left(r + 4\\right) \\left(r + 5\\right)}\\) and the exact error after the first \\(7\\) terms.</p>",
+        "fields": [
+          {
+            "key": "limit",
+            "label": "Sum to infinity",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "error",
+            "label": "Exact error",
+            "type": "number",
+            "expected": "5/12"
+          }
+        ],
+        "hint": "<p>Keep the finite boundary until you have written the exact error.</p>",
+        "solution": "<p>The term telescopes as \\(- \\frac{5}{r + 5} + \\frac{5}{r + 4}\\), so \\(S_n=1 - \\frac{5}{n + 5}\\).</p><p>The final reciprocal tends to zero. This leaves \\(S_\\infty=1\\).</p><p>Subtracting \\(S_n\\) from this level gives \\(\\frac{5}{n + 5}\\). At \\(7\\) terms the error is \\(\\frac{5}{12}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "convergence-strict-remainder-target-extra",
+        "title": "Find the least integer that meets a strict cutoff",
+        "prompt": "<p>For the partial sums \\(S_n=1 - \\frac{5}{n + 5}\\), find the least positive integer \\(n\\) for which the difference from the limit is strictly less than \\(\\frac{5}{16}\\).</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "Least positive integer n",
+            "type": "number",
+            "expected": "12"
+          }
+        ],
+        "hint": "<p>An integer giving exact equality does not satisfy a strict inequality.</p>",
+        "solution": "<p>The limit is \\(1\\). The positive error is \\(\\frac{5}{n + 5}\\).</p><p>At \\(n=11\\) the error equals the stated tolerance. The error then decreases strictly.</p><p>Equality is excluded, so the first accepted integer is \\(12\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "convergence-nonzero-limit-of-f-extra",
+        "title": "Keep the limiting value of a non-vanishing boundary",
+        "prompt": "<p>Let \\(F(r)=5 + \\frac{6}{r + 6}\\). Find \\(\\sum_{r=1}^{\\infty}F(r+1)-F(r)\\).</p>",
+        "fields": [
+          {
+            "key": "limit",
+            "label": "Sum to infinity",
+            "type": "number",
+            "expected": "-6/7"
+          }
+        ],
+        "hint": "<p>Take the limit of the entire boundary term, including any constant part.</p>",
+        "solution": "<p>The finite sum is \\(F(n+1)-F(1)\\).</p><p>The upper term tends to \\(5\\), not to zero.</p><p>Subtract \\(\\frac{41}{7}\\) for the infinite total \\(- \\frac{6}{7}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "convergence-exceptional-geometric-values-extra",
+        "title": "Check the degenerate geometric endpoint separately",
+        "prompt": "<p>For real \\(q\\) let \\(u_r=q^r-q^{r+1}\\). Give all values of \\(q\\) for which the series converges and give the infinite sum when \\(q=\\frac{2}{3}\\).</p>",
+        "fields": [
+          {
+            "key": "q_range",
+            "label": "Allowed q-values",
+            "type": "set",
+            "expected": "(-1,1]",
+            "variables": [
+              "q"
+            ]
+          },
+          {
+            "key": "limit",
+            "label": "Infinite sum for the stated q",
+            "type": "number",
+            "expected": "2/3"
+          }
+        ],
+        "hint": "<p>Use the explicit partial sum. Test both endpoints and keep any degenerate case.</p>",
+        "solution": "<p>The partial sum is \\(q-q^{n+1}\\). When \\(|q|<1\\) it tends to \\(q\\).</p><p>At \\(q=1\\) every term is zero, so it also converges. At \\(q=-1\\) the partial sums oscillate. For \\(|q|>1\\) their magnitudes grow without bound.</p><p>Thus the parameter interval is \\(-1<q\\le1\\). With \\(q=\\frac{2}{3}\\), the sum is \\(\\frac{2}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "convergence-scaled-moving-block-extra",
+        "title": "Find a scaled limit of a block with moving endpoints",
+        "prompt": "<p>Let \\(u_r=\\frac{7}{\\left(r + 6\\right) \\left(r + 7\\right)}\\). Find \\(\\lim_{n\\to\\infty}n\\sum_{r=6 n + 1}^{8 n}u_r\\).</p>",
+        "fields": [
+          {
+            "key": "limit",
+            "label": "Scaled limit",
+            "type": "number",
+            "expected": "7/24"
+          }
+        ],
+        "hint": "<p>Determine the power of n in each boundary before taking the limit.</p>",
+        "solution": "<p>The block telescopes to \\(\\frac{7}{6 n + 7}\\) minus \\(\\frac{7}{8 n + 7}\\). Both terms tend to zero by themselves.</p><p>Multiply by \\(n\\) before taking limits. Divide each denominator by \\(n\\).</p><p>The result tends to \\(\\frac{7}{6}\\) minus \\(\\frac{7}{8}\\), so the limit is \\(\\frac{7}{24}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Convergence",
+        "definition": "<p>Partial sums approach a finite limit.</p>"
+      },
+      {
+        "term": "Remainder",
+        "definition": "<p>Infinite total minus the partial sum.</p>"
+      },
+      {
+        "term": "Tolerance",
+        "definition": "<p>Maximum allowed magnitude of an approximation error.</p>"
+      },
+      {
+        "term": "Boundary case",
+        "definition": "<p>An exceptional parameter value on the edge of an interval.</p>"
+      },
+      {
+        "term": "Moving block",
+        "definition": "<p>Sum with both indices varying with a parameter.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Infinite sum</th><td>Derive the finite expression, then take its limit.</td></tr><tr><th scope=\"row\">Tolerance</th><td>\\(|S_\\infty-S_n|<\\varepsilon\\) or the exact condition requested.</td></tr><tr><th scope=\"row\">Parameter endpoints</th><td>Inspect the explicit finite expression separately.</td></tr><tr><th scope=\"row\">Scaled limit</th><td>Multiply by the scale before taking the limit.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>If \\(S_n=2-\\frac1{n+1}\\), find its limit and the least n giving an error strictly below \\(\\frac{1}{5}\\).</p><p><strong>Check</strong> The limit is two. The error equals the tolerance at \\(n=4\\) and first falls below it at \\(n=5\\).</p>",
+      "checks": "<ul><li>Taking a limit of the summand answers a different question from taking a limit of the sum.</li><li>If equality occurs at an integer and the bound is strict, the next integer is the first candidate.</li></ul>",
+      "examTip": "<p>Use the sign and magnitude of the exact remainder to justify the first acceptable integer.</p>"
+    },
+    "related": [
+      {
+        "title": "Telescoping sums from differences",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_series_differences"
+      }
+    ]
+  }
+}
