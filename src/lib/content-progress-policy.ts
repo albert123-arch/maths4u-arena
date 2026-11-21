@@ -27,6 +27,10 @@ export const notationProgressRevisions = [{
   key: "9709-p3-complex-numbers", fromVersion: "1.0.0", toVersion: "1.0.1",
   fromFingerprint: "e5edb108cf32fa60ad83eed351cc944cc00887a502c823d0433c9eb4ba8ef9f8",
   toFingerprint: "c5c3ed98f30b93a82e2a0f8a6c0efe352aa9e50d90e96c0bbf87276542bf853c",
+}, {
+  key: "9709-m1-forces-and-equilibrium", fromVersion: "1.0.0", toVersion: "1.0.1",
+  fromFingerprint: "9035dd1bf8dd98be0493171c2ef334176fec9af6eb86acd084f8712bf7e376d4",
+  toFingerprint: "62977900677abfeccc6bd2eb2c9d9001cca4f7c6f98f9506c26e1eb3c8c9795f",
 }] as const;
 
 export function notationProgressPolicy(p: ContentPackage) {
