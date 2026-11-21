@@ -1,0 +1,2804 @@
+{
+  "fp1_matrices_operations": {
+    "updatedOn": "2026-11-21",
+    "description": "Add conformable matrices, use row-by-column multiplication and compare the dimensions and order of products.",
+    "sections": [
+      {
+        "id": "match-the-entries",
+        "title": "When can two matrices be added or subtracted?",
+        "label": "Match row and column positions",
+        "intro": "<p>Both matrices must have the same number of rows and columns. A scalar multiplier changes every entry, without changing dimensions.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Do the scalar multiplications first, then combine corresponding entries. The zero matrix leaves any same-sized matrix unchanged under addition.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "operations-match-the-entries-check",
+            "title": "Add and subtract entries in matching positions",
+            "prompt": "<p>Let \\(A=\\left[\\begin{matrix}2 & -2\\\\3 & 3\\end{matrix}\\right]\\) and \\(B=\\left[\\begin{matrix}0 & 3\\\\-1 & 1\\end{matrix}\\right]\\). Find all entries of \\(2A-B\\).</p>",
+            "fields": [
+              {
+                "key": "entry_1_1",
+                "label": "Row 1, column 1",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "entry_1_2",
+                "label": "Row 1, column 2",
+                "type": "number",
+                "expected": "-7"
+              },
+              {
+                "key": "entry_2_1",
+                "label": "Row 2, column 1",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "entry_2_2",
+                "label": "Row 2, column 2",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Matrix subtraction acts entry by entry after matching dimensions.</p>",
+            "solution": "<p>Both matrices have two rows and two columns. Double every entry of A first.</p><p>Subtract the entry of B at the same row and column. For example the top-right entry is \\(2(-2)-3=-7\\).</p><p>The resulting matrix is \\(\\left[\\begin{matrix}4 & -7\\\\7 & 5\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Matrix addition does not mix rows or columns. Subtract only the matching entry.</p>"
+          }
+        ]
+      },
+      {
+        "id": "inner-dimensions",
+        "title": "Which dimensions determine whether a product exists?",
+        "label": "Match the inner dimensions",
+        "intro": "<p>A row of the first matrix and a column of the second must contain the same number of entries for their dot product.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>An \\(m\\times p\\) matrix multiplied by a \\(p\\times n\\) matrix gives an \\(m\\times n\\) matrix.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "operations-inner-dimensions-check",
+            "title": "Multiply a rectangular matrix row by column",
+            "prompt": "<p>Calculate \\(AB\\) for \\(A=\\left[\\begin{matrix}2 & -1 & 2\\\\0 & 3 & 1\\end{matrix}\\right]\\) and \\(B=\\left[\\begin{matrix}1 & 2\\\\-1 & 2\\\\2 & 0\\end{matrix}\\right]\\).</p>",
+            "fields": [
+              {
+                "key": "entry_1_1",
+                "label": "Row 1, column 1",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "entry_1_2",
+                "label": "Row 1, column 2",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "entry_2_1",
+                "label": "Row 2, column 1",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "entry_2_2",
+                "label": "Row 2, column 2",
+                "type": "number",
+                "expected": "6"
+              }
+            ],
+            "hint": "<p>Each answer uses one row of the first matrix and one column of the second.</p>",
+            "solution": "<p>A has three columns and B has three rows. The inner dimensions agree, leaving two rows and two columns.</p><p>For the top-right entry use the first row of A and second column of B. The sum of their products is \\(2\\).</p><p>Doing this for the remaining entries gives \\(\\left[\\begin{matrix}7 & 2\\\\-1 & 6\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The matching inner dimension controls the multiplication sum. The remaining outer dimensions control the shape.</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-the-order",
+        "title": "Why can reversing the order change the answer?",
+        "label": "Compare rows with columns in the stated order",
+        "intro": "<p>A product specifies which matrix supplies rows. Reversing factors changes all those pairings, and it may even make the product undefined.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Compare the two products entry by entry if both exist. One differing entry is sufficient to prove the matrices differ.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "operations-check-the-order-check",
+            "title": "Compare multiplication in the opposite order",
+            "prompt": "<p>For \\(A=\\left[\\begin{matrix}2 & -2\\\\3 & 3\\end{matrix}\\right]\\) and \\(B=\\left[\\begin{matrix}0 & 3\\\\-1 & 1\\end{matrix}\\right]\\), give the top-left entry of \\(AB\\) and of \\(BA\\).</p>",
+            "fields": [
+              {
+                "key": "ab",
+                "label": "Top-left entry of AB",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "ba",
+                "label": "Top-left entry of BA",
+                "type": "number",
+                "expected": "9"
+              }
+            ],
+            "hint": "<p>Changing the order changes which numbers form each dot product.</p>",
+            "solution": "<p>For AB use the first row of A against the first column of B. The result is \\(2\\).</p><p>For BA the roles switch. Use the first row of B against the first column of A for \\(9\\).</p><p>The entries differ for this choice, so the two whole products are unequal.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Ordinary scalar multiplication commutes, but you cannot assume that for a matrix product.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "operations-check-the-order-follow-up",
+            "title": "Compare multiplication in the opposite order",
+            "prompt": "<p>For \\(A=\\left[\\begin{matrix}4 & -2\\\\3 & 5\\end{matrix}\\right]\\) and \\(B=\\left[\\begin{matrix}0 & 5\\\\-1 & 1\\end{matrix}\\right]\\), give the top-left entry of \\(AB\\) and of \\(BA\\).</p>",
+            "fields": [
+              {
+                "key": "ab",
+                "label": "Top-left entry of AB",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "ba",
+                "label": "Top-left entry of BA",
+                "type": "number",
+                "expected": "15"
+              }
+            ],
+            "hint": "<p>Changing the order changes which numbers form each dot product.</p>",
+            "solution": "<p>For AB use the first row of A against the first column of B. The result is \\(2\\).</p><p>For BA the roles switch. Use the first row of B against the first column of A for \\(15\\).</p><p>The entries differ for this choice, so the two whole products are unequal.</p>"
+          }
+        ]
+      },
+      {
+        "id": "identity-size",
+        "title": "How large should an identity matrix be?",
+        "label": "Match the side of multiplication",
+        "intro": "<p>An identity has ones along the leading diagonal and zeros elsewhere. Its size is chosen so that the multiplication exists.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For an \\(m\\times n\\) matrix A, \\(I_mA=A\\) and \\(AI_n=A\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "operations-identity-size-check",
+            "title": "Choose the identity of the correct size",
+            "prompt": "<p>The matrix \\(A=\\left[\\begin{matrix}3 & 1 & 0\\\\-1 & 4 & 2\\end{matrix}\\right]\\) is multiplied on the right by an identity matrix. Give the dimension of that identity, and give the entry in row two, column three of the product.</p>",
+            "fields": [
+              {
+                "key": "size",
+                "label": "Number of rows of the identity",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "entry",
+                "label": "Row two, column three",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>The identity leaves the matrix unchanged, but its size depends on the side of multiplication.</p>",
+            "solution": "<p>To multiply on the right of a matrix with three columns, use an identity of size three.</p><p>Its third column is \\(\\left[\\begin{matrix}0\\\\0\\\\1\\end{matrix}\\right]\\). The dot product with the second row picks out its third entry.</p><p>So the product is the original matrix and the requested entry is \\(2\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A rectangular matrix may need two different identity sizes on the two sides.</p>"
+          }
+        ]
+      },
+      {
+        "id": "product-equations",
+        "title": "How do I recover the unknown column in a product?",
+        "label": "Write one equation per row",
+        "intro": "<p>Equating a matrix–column product to a given output gives one scalar equation for each row.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Expand the row products, solve the simultaneous equations and substitute the recovered coordinates into the original matrix product.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "operations-product-equations-check",
+            "title": "Read a product as two simultaneous equations",
+            "prompt": "<p>Let \\(A=\\left[\\begin{matrix}2 & -2\\\\3 & 3\\end{matrix}\\right]\\). The product with column \\(\\left[\\begin{matrix}x\\\\y\\end{matrix}\\right]\\) is \\(\\left[\\begin{matrix}6\\\\9\\end{matrix}\\right]\\). Find \\(x,y\\).</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Use one equation for each row instead of treating the column as a scalar.</p>",
+            "solution": "<p>Equate the first and second row products to the corresponding target entries.</p><p>Eliminate one variable from the two equations. This gives \\(x=3\\) and \\(y=0\\).</p><p>Check by multiplying A by the recovered column. The product is \\(\\left[\\begin{matrix}6\\\\9\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not divide by a matrix as if it were a scalar. The equations or a suitable inverse give the solution.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "operations-product-equations-follow-up",
+            "title": "Read a product as two simultaneous equations",
+            "prompt": "<p>Let \\(A=\\left[\\begin{matrix}4 & -2\\\\3 & 5\\end{matrix}\\right]\\). The product with column \\(\\left[\\begin{matrix}x\\\\y\\end{matrix}\\right]\\) is \\(\\left[\\begin{matrix}16\\\\25\\end{matrix}\\right]\\). Find \\(x,y\\).</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Use one equation for each row instead of treating the column as a scalar.</p>",
+            "solution": "<p>Equate the first and second row products to the corresponding target entries.</p><p>Eliminate one variable from the two equations. This gives \\(x=5\\) and \\(y=2\\).</p><p>Check by multiplying A by the recovered column. The product is \\(\\left[\\begin{matrix}16\\\\25\\end{matrix}\\right]\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Add and subtract entries in matching positions",
+        "question": "<p>Let \\(A=\\left[\\begin{matrix}1 & -2\\\\3 & 2\\end{matrix}\\right]\\) and \\(B=\\left[\\begin{matrix}0 & 2\\\\-1 & 1\\end{matrix}\\right]\\). Find all entries of \\(2A-B\\).</p>",
+        "solution": [
+          "<p>Both matrices have two rows and two columns. Double every entry of A first.</p>",
+          "<p>Subtract the entry of B at the same row and column. For example the top-right entry is \\(2(-2)-2=-6\\).</p>",
+          "<p>The resulting matrix is \\(\\left[\\begin{matrix}2 & -6\\\\7 & 3\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Multiply a rectangular matrix row by column",
+        "question": "<p>Calculate \\(AB\\) for \\(A=\\left[\\begin{matrix}1 & -1 & 2\\\\0 & 2 & 1\\end{matrix}\\right]\\) and \\(B=\\left[\\begin{matrix}1 & 2\\\\-1 & 1\\\\2 & 0\\end{matrix}\\right]\\).</p>",
+        "solution": [
+          "<p>A has three columns and B has three rows. The inner dimensions agree, leaving two rows and two columns.</p>",
+          "<p>For the top-right entry use the first row of A and second column of B. The sum of their products is \\(1\\).</p>",
+          "<p>Doing this for the remaining entries gives \\(\\left[\\begin{matrix}6 & 1\\\\0 & 2\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare multiplication in the opposite order",
+        "question": "<p>For \\(A=\\left[\\begin{matrix}1 & -2\\\\3 & 2\\end{matrix}\\right]\\) and \\(B=\\left[\\begin{matrix}0 & 2\\\\-1 & 1\\end{matrix}\\right]\\), give the top-left entry of \\(AB\\) and of \\(BA\\).</p>",
+        "solution": [
+          "<p>For AB use the first row of A against the first column of B. The result is \\(2\\).</p>",
+          "<p>For BA the roles switch. Use the first row of B against the first column of A for \\(6\\).</p>",
+          "<p>The entries differ for this choice, so the two whole products are unequal.</p>"
+        ]
+      },
+      {
+        "title": "Compare multiplication in the opposite order",
+        "question": "<p>For \\(A=\\left[\\begin{matrix}3 & -2\\\\3 & 4\\end{matrix}\\right]\\) and \\(B=\\left[\\begin{matrix}0 & 4\\\\-1 & 1\\end{matrix}\\right]\\), give the top-left entry of \\(AB\\) and of \\(BA\\).</p>",
+        "solution": [
+          "<p>For AB use the first row of A against the first column of B. The result is \\(2\\).</p>",
+          "<p>For BA the roles switch. Use the first row of B against the first column of A for \\(12\\).</p>",
+          "<p>The entries differ for this choice, so the two whole products are unequal.</p>"
+        ]
+      },
+      {
+        "title": "Choose the identity of the correct size",
+        "question": "<p>The matrix \\(A=\\left[\\begin{matrix}2 & 1 & 0\\\\-1 & 3 & 2\\end{matrix}\\right]\\) is multiplied on the right by an identity matrix. Give the dimension of that identity, and give the entry in row two, column three of the product.</p>",
+        "solution": [
+          "<p>To multiply on the right of a matrix with three columns, use an identity of size three.</p>",
+          "<p>Its third column is \\(\\left[\\begin{matrix}0\\\\0\\\\1\\end{matrix}\\right]\\). The dot product with the second row picks out its third entry.</p>",
+          "<p>So the product is the original matrix and the requested entry is \\(2\\).</p>"
+        ]
+      },
+      {
+        "title": "Read a product as two simultaneous equations",
+        "question": "<p>Let \\(A=\\left[\\begin{matrix}1 & -2\\\\3 & 2\\end{matrix}\\right]\\). The product with column \\(\\left[\\begin{matrix}x\\\\y\\end{matrix}\\right]\\) is \\(\\left[\\begin{matrix}4\\\\4\\end{matrix}\\right]\\). Find \\(x,y\\).</p>",
+        "solution": [
+          "<p>Equate the first and second row products to the corresponding target entries.</p>",
+          "<p>Eliminate one variable from the two equations. This gives \\(x=2\\) and \\(y=-1\\).</p>",
+          "<p>Check by multiplying A by the recovered column. The product is \\(\\left[\\begin{matrix}4\\\\4\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Read a product as two simultaneous equations",
+        "question": "<p>Let \\(A=\\left[\\begin{matrix}3 & -2\\\\3 & 4\\end{matrix}\\right]\\). The product with column \\(\\left[\\begin{matrix}x\\\\y\\end{matrix}\\right]\\) is \\(\\left[\\begin{matrix}10\\\\16\\end{matrix}\\right]\\). Find \\(x,y\\).</p>",
+        "solution": [
+          "<p>Equate the first and second row products to the corresponding target entries.</p>",
+          "<p>Eliminate one variable from the two equations. This gives \\(x=4\\) and \\(y=1\\).</p>",
+          "<p>Check by multiplying A by the recovered column. The product is \\(\\left[\\begin{matrix}10\\\\16\\end{matrix}\\right]\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "operations-match-the-entries-extra",
+        "title": "Add and subtract entries in matching positions",
+        "prompt": "<p>Let \\(A=\\left[\\begin{matrix}3 & -2\\\\3 & 4\\end{matrix}\\right]\\) and \\(B=\\left[\\begin{matrix}0 & 4\\\\-1 & 1\\end{matrix}\\right]\\). Find all entries of \\(2A-B\\).</p>",
+        "fields": [
+          {
+            "key": "entry_1_1",
+            "label": "Row 1, column 1",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "entry_1_2",
+            "label": "Row 1, column 2",
+            "type": "number",
+            "expected": "-8"
+          },
+          {
+            "key": "entry_2_1",
+            "label": "Row 2, column 1",
+            "type": "number",
+            "expected": "7"
+          },
+          {
+            "key": "entry_2_2",
+            "label": "Row 2, column 2",
+            "type": "number",
+            "expected": "7"
+          }
+        ],
+        "hint": "<p>Matrix subtraction acts entry by entry after matching dimensions.</p>",
+        "solution": "<p>Both matrices have two rows and two columns. Double every entry of A first.</p><p>Subtract the entry of B at the same row and column. For example the top-right entry is \\(2(-2)-4=-8\\).</p><p>The resulting matrix is \\(\\left[\\begin{matrix}6 & -8\\\\7 & 7\\end{matrix}\\right]\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "operations-inner-dimensions-extra",
+        "title": "Multiply a rectangular matrix row by column",
+        "prompt": "<p>Calculate \\(AB\\) for \\(A=\\left[\\begin{matrix}3 & -1 & 2\\\\0 & 4 & 1\\end{matrix}\\right]\\) and \\(B=\\left[\\begin{matrix}1 & 2\\\\-1 & 3\\\\2 & 0\\end{matrix}\\right]\\).</p>",
+        "fields": [
+          {
+            "key": "entry_1_1",
+            "label": "Row 1, column 1",
+            "type": "number",
+            "expected": "8"
+          },
+          {
+            "key": "entry_1_2",
+            "label": "Row 1, column 2",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "entry_2_1",
+            "label": "Row 2, column 1",
+            "type": "number",
+            "expected": "-2"
+          },
+          {
+            "key": "entry_2_2",
+            "label": "Row 2, column 2",
+            "type": "number",
+            "expected": "12"
+          }
+        ],
+        "hint": "<p>Each answer uses one row of the first matrix and one column of the second.</p>",
+        "solution": "<p>A has three columns and B has three rows. The inner dimensions agree, leaving two rows and two columns.</p><p>For the top-right entry use the first row of A and second column of B. The sum of their products is \\(3\\).</p><p>Doing this for the remaining entries gives \\(\\left[\\begin{matrix}8 & 3\\\\-2 & 12\\end{matrix}\\right]\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "operations-check-the-order-extra",
+        "title": "Compare multiplication in the opposite order",
+        "prompt": "<p>For \\(A=\\left[\\begin{matrix}5 & -2\\\\3 & 6\\end{matrix}\\right]\\) and \\(B=\\left[\\begin{matrix}0 & 6\\\\-1 & 1\\end{matrix}\\right]\\), give the top-left entry of \\(AB\\) and of \\(BA\\).</p>",
+        "fields": [
+          {
+            "key": "ab",
+            "label": "Top-left entry of AB",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "ba",
+            "label": "Top-left entry of BA",
+            "type": "number",
+            "expected": "18"
+          }
+        ],
+        "hint": "<p>Changing the order changes which numbers form each dot product.</p>",
+        "solution": "<p>For AB use the first row of A against the first column of B. The result is \\(2\\).</p><p>For BA the roles switch. Use the first row of B against the first column of A for \\(18\\).</p><p>The entries differ for this choice, so the two whole products are unequal.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "operations-identity-size-extra",
+        "title": "Choose the identity of the correct size",
+        "prompt": "<p>The matrix \\(A=\\left[\\begin{matrix}4 & 1 & 0\\\\-1 & 5 & 2\\end{matrix}\\right]\\) is multiplied on the right by an identity matrix. Give the dimension of that identity, and give the entry in row two, column three of the product.</p>",
+        "fields": [
+          {
+            "key": "size",
+            "label": "Number of rows of the identity",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "entry",
+            "label": "Row two, column three",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>The identity leaves the matrix unchanged, but its size depends on the side of multiplication.</p>",
+        "solution": "<p>To multiply on the right of a matrix with three columns, use an identity of size three.</p><p>Its third column is \\(\\left[\\begin{matrix}0\\\\0\\\\1\\end{matrix}\\right]\\). The dot product with the second row picks out its third entry.</p><p>So the product is the original matrix and the requested entry is \\(2\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "operations-product-equations-extra",
+        "title": "Read a product as two simultaneous equations",
+        "prompt": "<p>Let \\(A=\\left[\\begin{matrix}5 & -2\\\\3 & 6\\end{matrix}\\right]\\). The product with column \\(\\left[\\begin{matrix}x\\\\y\\end{matrix}\\right]\\) is \\(\\left[\\begin{matrix}24\\\\36\\end{matrix}\\right]\\). Find \\(x,y\\).</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Value of x",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "y",
+            "label": "Value of y",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>Use one equation for each row instead of treating the column as a scalar.</p>",
+        "solution": "<p>Equate the first and second row products to the corresponding target entries.</p><p>Eliminate one variable from the two equations. This gives \\(x=6\\) and \\(y=3\\).</p><p>Check by multiplying A by the recovered column. The product is \\(\\left[\\begin{matrix}24\\\\36\\end{matrix}\\right]\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Entry",
+        "definition": "<p>A number in one row and one column.</p>"
+      },
+      {
+        "term": "Conformable",
+        "definition": "<p>Dimensions allow the stated matrix operation.</p>"
+      },
+      {
+        "term": "Dot product",
+        "definition": "<p>Sum of products of corresponding members of a row and column.</p>"
+      },
+      {
+        "term": "Identity",
+        "definition": "<p>Square matrix with ones on its diagonal and zeros elsewhere.</p>"
+      },
+      {
+        "term": "Zero matrix",
+        "definition": "<p>A matrix of its stated shape whose entries are all zero.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Addition or subtraction</th><td>Match dimensions and combine corresponding entries.</td></tr><tr><th scope=\"row\">Product</th><td>\\((m\\times p)(p\\times n)\\longrightarrow m\\times n\\).</td></tr><tr><th scope=\"row\">Identity on the right</th><td>Choose the identity size from the number of columns.</td></tr><tr><th scope=\"row\">Unknown column</th><td>Read a scalar equation from each row.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>What size is the product of a \\(2\\times3\\) matrix and a \\(3\\times1\\) matrix?</p><p><strong>Check</strong> \\(2\\times1\\). The inner dimensions are both three.</p>",
+      "checks": "<ul><li>Matrix addition does not mix rows or columns. Subtract only the matching entry.</li><li>The matching inner dimension controls the multiplication sum. The remaining outer dimensions control the shape.</li></ul>",
+      "examTip": "<p>Write the expected dimensions beside the product before calculating any entries.</p>"
+    },
+    "related": [
+      {
+        "title": "Undoing matrix equations",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_matrices_inverses"
+      }
+    ]
+  },
+  "fp1_matrices_inverses": {
+    "updatedOn": "2026-11-21",
+    "description": "Find two- and three-dimensional matrix inverses and undo products on the correct side, including composite inverses.",
+    "sections": [
+      {
+        "id": "two-by-two-inverse",
+        "title": "What makes a two-by-two matrix invertible?",
+        "label": "Check determinant before inverting",
+        "intro": "<p>The inverse exists only for a non-zero determinant and must give the identity when multiplied on either side of the original matrix.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a two-by-two matrix, swap the diagonal entries, negate the off-diagonal entries and divide by the determinant.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "inverses-two-by-two-inverse-check",
+            "title": "Compute an inverse by its determinant and four entries",
+            "prompt": "<p>Find the inverse of \\(A=\\left[\\begin{matrix}3 & 1\\\\3 & 5\\end{matrix}\\right]\\).</p>",
+            "fields": [
+              {
+                "key": "entry_1_1",
+                "label": "Row 1, column 1",
+                "type": "number",
+                "expected": "5/12"
+              },
+              {
+                "key": "entry_1_2",
+                "label": "Row 1, column 2",
+                "type": "number",
+                "expected": "-1/12"
+              },
+              {
+                "key": "entry_2_1",
+                "label": "Row 2, column 1",
+                "type": "number",
+                "expected": "-1/4"
+              },
+              {
+                "key": "entry_2_2",
+                "label": "Row 2, column 2",
+                "type": "number",
+                "expected": "1/4"
+              }
+            ],
+            "hint": "<p>The determinant divides every entry, including the off-diagonal ones.</p>",
+            "solution": "<p>The determinant is \\(12\\), which is non-zero.</p><p>Swap the diagonal entries and negate the two off-diagonal entries to obtain \\(\\left[\\begin{matrix}5 & -1\\\\-3 & 3\\end{matrix}\\right]\\).</p><p>Divide each entry by the determinant. The inverse is \\(\\left[\\begin{matrix}\\frac{5}{12} & - \\frac{1}{12}\\\\- \\frac{1}{4} & \\frac{1}{4}\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Apply the determinant divisor to all four entries. A zero determinant means there is no inverse.</p>"
+          }
+        ]
+      },
+      {
+        "id": "three-columns-of-inverse",
+        "title": "How can I build the inverse of a three-by-three matrix?",
+        "label": "Solve for each unit image",
+        "intro": "<p>The jth column of the inverse must be mapped by A to the jth column of the identity. Solve those systems separately when the structure makes this efficient.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a triangular matrix, solve from the bottom upward if it is upper triangular. For a general invertible matrix, the cofactor matrix transposed and divided by the determinant also gives the inverse.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "inverses-three-columns-of-inverse-check",
+            "title": "Find a triangular inverse by solving three columns",
+            "prompt": "<p>Find the inverse of \\(A=\\left[\\begin{matrix}1 & 3 & 2\\\\0 & 1 & 2\\\\0 & 0 & 1\\end{matrix}\\right]\\).</p>",
+            "fields": [
+              {
+                "key": "entry_1_1",
+                "label": "Row 1, column 1",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "entry_1_2",
+                "label": "Row 1, column 2",
+                "type": "number",
+                "expected": "-3"
+              },
+              {
+                "key": "entry_1_3",
+                "label": "Row 1, column 3",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "entry_2_1",
+                "label": "Row 2, column 1",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "entry_2_2",
+                "label": "Row 2, column 2",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "entry_2_3",
+                "label": "Row 2, column 3",
+                "type": "number",
+                "expected": "-2"
+              },
+              {
+                "key": "entry_3_1",
+                "label": "Row 3, column 1",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "entry_3_2",
+                "label": "Row 3, column 2",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "entry_3_3",
+                "label": "Row 3, column 3",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Each column of the inverse must map to its matching unit column under A.</p>",
+            "solution": "<p>The diagonal product gives determinant one. The columns of the inverse solve \\(A\\mathbf{x}=\\mathbf{e}_j\\) for each unit column.</p><p>For the third column solve from the bottom upward. This gives \\(\\left[\\begin{matrix}4\\\\-2\\\\1\\end{matrix}\\right]\\).</p><p>Do the same for the first two unit columns to obtain \\(\\left[\\begin{matrix}1 & -3 & 4\\\\0 & 1 & -2\\\\0 & 0 & 1\\end{matrix}\\right]\\). Verify by multiplication.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>In the cofactor method, transpose before dividing. In the column method, put each solution in its own column.</p>"
+          }
+        ]
+      },
+      {
+        "id": "undo-from-left",
+        "title": "Which side undoes a left multiplier?",
+        "label": "Use the cancellation next to A",
+        "intro": "<p>The order of factors prevents moving an inverse freely across other matrices. For a left multiplier, place the inverse in front of the full equation.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(AX=C\\) gives \\(X=A^{-1}C\\) when A is invertible.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "inverses-undo-from-left-check",
+            "title": "Remove a left multiplier on the left",
+            "prompt": "<p>Given \\(A=\\left[\\begin{matrix}3 & 1\\\\3 & 5\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}5 & 10\\\\1 & 26\\end{matrix}\\right]\\), solve \\(AX=C\\) for \\(X\\).</p>",
+            "fields": [
+              {
+                "key": "entry_1_1",
+                "label": "Row 1, column 1",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "entry_1_2",
+                "label": "Row 1, column 2",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "entry_2_1",
+                "label": "Row 2, column 1",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "entry_2_2",
+                "label": "Row 2, column 2",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>Place the inverse next to the factor it cancels, on the same side of both products.</p>",
+            "solution": "<p>The determinant of A is non-zero. Multiply the whole equation by the inverse of A on the left.</p><p>The inverse and A cancel as adjacent factors. This gives \\(X=A^{-1}C\\).</p><p>Compute that product to obtain \\(\\left[\\begin{matrix}2 & 2\\\\-1 & 4\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Reversing the order of the solution generally gives a different result.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "inverses-undo-from-left-follow-up",
+            "title": "Remove a left multiplier on the left",
+            "prompt": "<p>Given \\(A=\\left[\\begin{matrix}5 & 1\\\\3 & 7\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}19 & 16\\\\5 & 48\\end{matrix}\\right]\\), solve \\(AX=C\\) for \\(X\\).</p>",
+            "fields": [
+              {
+                "key": "entry_1_1",
+                "label": "Row 1, column 1",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "entry_1_2",
+                "label": "Row 1, column 2",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "entry_2_1",
+                "label": "Row 2, column 1",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "entry_2_2",
+                "label": "Row 2, column 2",
+                "type": "number",
+                "expected": "6"
+              }
+            ],
+            "hint": "<p>Place the inverse next to the factor it cancels, on the same side of both products.</p>",
+            "solution": "<p>The determinant of A is non-zero. Multiply the whole equation by the inverse of A on the left.</p><p>The inverse and A cancel as adjacent factors. This gives \\(X=A^{-1}C\\).</p><p>Compute that product to obtain \\(\\left[\\begin{matrix}4 & 2\\\\-1 & 6\\end{matrix}\\right]\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "undo-from-right",
+        "title": "What changes for a right multiplier?",
+        "label": "Apply the inverse on the right",
+        "intro": "<p>Keep a right multiplier on the right when undoing it. The inverse needs to meet the factor it cancels.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(XA=C\\) gives \\(X=CA^{-1}\\) for invertible A.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "inverses-undo-from-right-check",
+            "title": "Remove a right multiplier on the right",
+            "prompt": "<p>Given \\(A=\\left[\\begin{matrix}3 & 1\\\\3 & 5\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}3 & -3\\\\21 & 15\\end{matrix}\\right]\\), solve \\(XA=C\\) for \\(X\\).</p>",
+            "fields": [
+              {
+                "key": "entry_1_1",
+                "label": "Row 1, column 1",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "entry_1_2",
+                "label": "Row 1, column 2",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "entry_2_1",
+                "label": "Row 2, column 1",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "entry_2_2",
+                "label": "Row 2, column 2",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Do not put the inverse on the left merely because it appears first in another example.</p>",
+            "solution": "<p>Here A acts on the right of X, so multiply by its inverse from the right.</p><p>This gives \\(X=CA^{-1}\\).</p><p>The resulting product is \\(\\left[\\begin{matrix}2 & -1\\\\5 & 2\\end{matrix}\\right]\\). Multiplying it by A from the right returns C.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Applying the inverse on the opposite side does not put it beside the factor to be removed.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reverse-all-factors",
+        "title": "Why is a composite inverse reversed?",
+        "label": "Undo the most recent map first",
+        "intro": "<p>The most recent operation must be undone before the previous one. In matrix multiplication this appears as a reversal of the factor order.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\((ABC)^{-1}=C^{-1}B^{-1}A^{-1}\\) when every factor is invertible. Verify by cancelling adjacent inverse factors in the product.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "inverses-reverse-all-factors-check",
+            "title": "Reverse the order of three factors",
+            "prompt": "<p>Let \\(A=\\left[\\begin{matrix}3 & 1\\\\3 & 5\\end{matrix}\\right]\\), \\(B=\\left[\\begin{matrix}1 & 3\\\\0 & 1\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}1 & 0\\\\2 & 1\\end{matrix}\\right]\\). Find the determinant and top-left entry of \\((ABC)^{-1}\\).</p>",
+            "fields": [
+              {
+                "key": "det",
+                "label": "Determinant of inverse product",
+                "type": "number",
+                "expected": "1/12"
+              },
+              {
+                "key": "entry",
+                "label": "Top-left entry",
+                "type": "number",
+                "expected": "7/6"
+              }
+            ],
+            "hint": "<p>Reverse the factor order, keeping the individual inverse of each factor.</p>",
+            "solution": "<p>Undo the three maps in reverse order: \\((ABC)^{-1}=C^{-1}B^{-1}A^{-1}\\).</p><p>Multiply the three inverses in that order. The product is \\(\\left[\\begin{matrix}\\frac{7}{6} & - \\frac{5}{6}\\\\- \\frac{31}{12} & \\frac{23}{12}\\end{matrix}\\right]\\).</p><p>Its determinant is the reciprocal of \\((\\det A)(\\det B)(\\det C)\\), giving \\(\\frac{1}{12}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep inverse and transpose rules separate. Both reverse products, but they act differently on each matrix.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "inverses-reverse-all-factors-follow-up",
+            "title": "Reverse the order of three factors",
+            "prompt": "<p>Let \\(A=\\left[\\begin{matrix}5 & 1\\\\3 & 7\\end{matrix}\\right]\\), \\(B=\\left[\\begin{matrix}1 & 5\\\\0 & 1\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}1 & 0\\\\4 & 1\\end{matrix}\\right]\\). Find the determinant and top-left entry of \\((ABC)^{-1}\\).</p>",
+            "fields": [
+              {
+                "key": "det",
+                "label": "Determinant of inverse product",
+                "type": "number",
+                "expected": "1/32"
+              },
+              {
+                "key": "entry",
+                "label": "Top-left entry",
+                "type": "number",
+                "expected": "11/16"
+              }
+            ],
+            "hint": "<p>Reverse the factor order, keeping the individual inverse of each factor.</p>",
+            "solution": "<p>Undo the three maps in reverse order: \\((ABC)^{-1}=C^{-1}B^{-1}A^{-1}\\).</p><p>Multiply the three inverses in that order. The product is \\(\\left[\\begin{matrix}\\frac{11}{16} & - \\frac{13}{16}\\\\- \\frac{91}{32} & \\frac{109}{32}\\end{matrix}\\right]\\).</p><p>Its determinant is the reciprocal of \\((\\det A)(\\det B)(\\det C)\\), giving \\(\\frac{1}{32}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Compute an inverse by its determinant and four entries",
+        "question": "<p>Find the inverse of \\(A=\\left[\\begin{matrix}2 & 1\\\\3 & 4\\end{matrix}\\right]\\).</p>",
+        "solution": [
+          "<p>The determinant is \\(5\\), which is non-zero.</p>",
+          "<p>Swap the diagonal entries and negate the two off-diagonal entries to obtain \\(\\left[\\begin{matrix}4 & -1\\\\-3 & 2\\end{matrix}\\right]\\).</p>",
+          "<p>Divide each entry by the determinant. The inverse is \\(\\left[\\begin{matrix}\\frac{4}{5} & - \\frac{1}{5}\\\\- \\frac{3}{5} & \\frac{2}{5}\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a triangular inverse by solving three columns",
+        "question": "<p>Find the inverse of \\(A=\\left[\\begin{matrix}1 & 2 & 2\\\\0 & 1 & 1\\\\0 & 0 & 1\\end{matrix}\\right]\\).</p>",
+        "solution": [
+          "<p>The diagonal product gives determinant one. The columns of the inverse solve \\(A\\mathbf{x}=\\mathbf{e}_j\\) for each unit column.</p>",
+          "<p>For the third column solve from the bottom upward. This gives \\(\\left[\\begin{matrix}0\\\\-1\\\\1\\end{matrix}\\right]\\).</p>",
+          "<p>Do the same for the first two unit columns to obtain \\(\\left[\\begin{matrix}1 & -2 & 0\\\\0 & 1 & -1\\\\0 & 0 & 1\\end{matrix}\\right]\\). Verify by multiplication.</p>"
+        ]
+      },
+      {
+        "title": "Remove a left multiplier on the left",
+        "question": "<p>Given \\(A=\\left[\\begin{matrix}2 & 1\\\\3 & 4\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}1 & 7\\\\-1 & 18\\end{matrix}\\right]\\), solve \\(AX=C\\) for \\(X\\).</p>",
+        "solution": [
+          "<p>The determinant of A is non-zero. Multiply the whole equation by the inverse of A on the left.</p>",
+          "<p>The inverse and A cancel as adjacent factors. This gives \\(X=A^{-1}C\\).</p>",
+          "<p>Compute that product to obtain \\(\\left[\\begin{matrix}1 & 2\\\\-1 & 3\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Remove a left multiplier on the left",
+        "question": "<p>Given \\(A=\\left[\\begin{matrix}4 & 1\\\\3 & 6\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}11 & 13\\\\3 & 36\\end{matrix}\\right]\\), solve \\(AX=C\\) for \\(X\\).</p>",
+        "solution": [
+          "<p>The determinant of A is non-zero. Multiply the whole equation by the inverse of A on the left.</p>",
+          "<p>The inverse and A cancel as adjacent factors. This gives \\(X=A^{-1}C\\).</p>",
+          "<p>Compute that product to obtain \\(\\left[\\begin{matrix}3 & 2\\\\-1 & 5\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Remove a right multiplier on the right",
+        "question": "<p>Given \\(A=\\left[\\begin{matrix}2 & 1\\\\3 & 4\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}1 & -2\\\\14 & 12\\end{matrix}\\right]\\), solve \\(XA=C\\) for \\(X\\).</p>",
+        "solution": [
+          "<p>Here A acts on the right of X, so multiply by its inverse from the right.</p>",
+          "<p>This gives \\(X=CA^{-1}\\).</p>",
+          "<p>The resulting product is \\(\\left[\\begin{matrix}2 & -1\\\\4 & 2\\end{matrix}\\right]\\). Multiplying it by A from the right returns C.</p>"
+        ]
+      },
+      {
+        "title": "Reverse the order of three factors",
+        "question": "<p>Let \\(A=\\left[\\begin{matrix}2 & 1\\\\3 & 4\\end{matrix}\\right]\\), \\(B=\\left[\\begin{matrix}1 & 2\\\\0 & 1\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}1 & 0\\\\1 & 1\\end{matrix}\\right]\\). Find the determinant and top-left entry of \\((ABC)^{-1}\\).</p>",
+        "solution": [
+          "<p>Undo the three maps in reverse order: \\((ABC)^{-1}=C^{-1}B^{-1}A^{-1}\\).</p>",
+          "<p>Multiply the three inverses in that order. The product is \\(\\left[\\begin{matrix}2 & -1\\\\- \\frac{13}{5} & \\frac{7}{5}\\end{matrix}\\right]\\).</p>",
+          "<p>Its determinant is the reciprocal of \\((\\det A)(\\det B)(\\det C)\\), giving \\(\\frac{1}{5}\\).</p>"
+        ]
+      },
+      {
+        "title": "Reverse the order of three factors",
+        "question": "<p>Let \\(A=\\left[\\begin{matrix}4 & 1\\\\3 & 6\\end{matrix}\\right]\\), \\(B=\\left[\\begin{matrix}1 & 4\\\\0 & 1\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}1 & 0\\\\3 & 1\\end{matrix}\\right]\\). Find the determinant and top-left entry of \\((ABC)^{-1}\\).</p>",
+        "solution": [
+          "<p>Undo the three maps in reverse order: \\((ABC)^{-1}=C^{-1}B^{-1}A^{-1}\\).</p>",
+          "<p>Multiply the three inverses in that order. The product is \\(\\left[\\begin{matrix}\\frac{6}{7} & - \\frac{17}{21}\\\\- \\frac{19}{7} & \\frac{55}{21}\\end{matrix}\\right]\\).</p>",
+          "<p>Its determinant is the reciprocal of \\((\\det A)(\\det B)(\\det C)\\), giving \\(\\frac{1}{21}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "inverses-two-by-two-inverse-extra",
+        "title": "Compute an inverse by its determinant and four entries",
+        "prompt": "<p>Find the inverse of \\(A=\\left[\\begin{matrix}4 & 1\\\\3 & 6\\end{matrix}\\right]\\).</p>",
+        "fields": [
+          {
+            "key": "entry_1_1",
+            "label": "Row 1, column 1",
+            "type": "number",
+            "expected": "2/7"
+          },
+          {
+            "key": "entry_1_2",
+            "label": "Row 1, column 2",
+            "type": "number",
+            "expected": "-1/21"
+          },
+          {
+            "key": "entry_2_1",
+            "label": "Row 2, column 1",
+            "type": "number",
+            "expected": "-1/7"
+          },
+          {
+            "key": "entry_2_2",
+            "label": "Row 2, column 2",
+            "type": "number",
+            "expected": "4/21"
+          }
+        ],
+        "hint": "<p>The determinant divides every entry, including the off-diagonal ones.</p>",
+        "solution": "<p>The determinant is \\(21\\), which is non-zero.</p><p>Swap the diagonal entries and negate the two off-diagonal entries to obtain \\(\\left[\\begin{matrix}6 & -1\\\\-3 & 4\\end{matrix}\\right]\\).</p><p>Divide each entry by the determinant. The inverse is \\(\\left[\\begin{matrix}\\frac{2}{7} & - \\frac{1}{21}\\\\- \\frac{1}{7} & \\frac{4}{21}\\end{matrix}\\right]\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "inverses-three-columns-of-inverse-extra",
+        "title": "Find a triangular inverse by solving three columns",
+        "prompt": "<p>Find the inverse of \\(A=\\left[\\begin{matrix}1 & 4 & 2\\\\0 & 1 & 3\\\\0 & 0 & 1\\end{matrix}\\right]\\).</p>",
+        "fields": [
+          {
+            "key": "entry_1_1",
+            "label": "Row 1, column 1",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "entry_1_2",
+            "label": "Row 1, column 2",
+            "type": "number",
+            "expected": "-4"
+          },
+          {
+            "key": "entry_1_3",
+            "label": "Row 1, column 3",
+            "type": "number",
+            "expected": "10"
+          },
+          {
+            "key": "entry_2_1",
+            "label": "Row 2, column 1",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "entry_2_2",
+            "label": "Row 2, column 2",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "entry_2_3",
+            "label": "Row 2, column 3",
+            "type": "number",
+            "expected": "-3"
+          },
+          {
+            "key": "entry_3_1",
+            "label": "Row 3, column 1",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "entry_3_2",
+            "label": "Row 3, column 2",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "entry_3_3",
+            "label": "Row 3, column 3",
+            "type": "number",
+            "expected": "1"
+          }
+        ],
+        "hint": "<p>Each column of the inverse must map to its matching unit column under A.</p>",
+        "solution": "<p>The diagonal product gives determinant one. The columns of the inverse solve \\(A\\mathbf{x}=\\mathbf{e}_j\\) for each unit column.</p><p>For the third column solve from the bottom upward. This gives \\(\\left[\\begin{matrix}10\\\\-3\\\\1\\end{matrix}\\right]\\).</p><p>Do the same for the first two unit columns to obtain \\(\\left[\\begin{matrix}1 & -4 & 10\\\\0 & 1 & -3\\\\0 & 0 & 1\\end{matrix}\\right]\\). Verify by multiplication.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "inverses-undo-from-left-extra",
+        "title": "Remove a left multiplier on the left",
+        "prompt": "<p>Given \\(A=\\left[\\begin{matrix}6 & 1\\\\3 & 8\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}29 & 19\\\\7 & 62\\end{matrix}\\right]\\), solve \\(AX=C\\) for \\(X\\).</p>",
+        "fields": [
+          {
+            "key": "entry_1_1",
+            "label": "Row 1, column 1",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "entry_1_2",
+            "label": "Row 1, column 2",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "entry_2_1",
+            "label": "Row 2, column 1",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "entry_2_2",
+            "label": "Row 2, column 2",
+            "type": "number",
+            "expected": "7"
+          }
+        ],
+        "hint": "<p>Place the inverse next to the factor it cancels, on the same side of both products.</p>",
+        "solution": "<p>The determinant of A is non-zero. Multiply the whole equation by the inverse of A on the left.</p><p>The inverse and A cancel as adjacent factors. This gives \\(X=A^{-1}C\\).</p><p>Compute that product to obtain \\(\\left[\\begin{matrix}5 & 2\\\\-1 & 7\\end{matrix}\\right]\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "inverses-undo-from-right-extra",
+        "title": "Remove a right multiplier on the right",
+        "prompt": "<p>Given \\(A=\\left[\\begin{matrix}4 & 1\\\\3 & 6\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}5 & -4\\\\30 & 18\\end{matrix}\\right]\\), solve \\(XA=C\\) for \\(X\\).</p>",
+        "fields": [
+          {
+            "key": "entry_1_1",
+            "label": "Row 1, column 1",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "entry_1_2",
+            "label": "Row 1, column 2",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "entry_2_1",
+            "label": "Row 2, column 1",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "entry_2_2",
+            "label": "Row 2, column 2",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>Do not put the inverse on the left merely because it appears first in another example.</p>",
+        "solution": "<p>Here A acts on the right of X, so multiply by its inverse from the right.</p><p>This gives \\(X=CA^{-1}\\).</p><p>The resulting product is \\(\\left[\\begin{matrix}2 & -1\\\\6 & 2\\end{matrix}\\right]\\). Multiplying it by A from the right returns C.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "inverses-reverse-all-factors-extra",
+        "title": "Reverse the order of three factors",
+        "prompt": "<p>Let \\(A=\\left[\\begin{matrix}6 & 1\\\\3 & 8\\end{matrix}\\right]\\), \\(B=\\left[\\begin{matrix}1 & 6\\\\0 & 1\\end{matrix}\\right]\\) and \\(C=\\left[\\begin{matrix}1 & 0\\\\5 & 1\\end{matrix}\\right]\\). Find the determinant and top-left entry of \\((ABC)^{-1}\\).</p>",
+        "fields": [
+          {
+            "key": "det",
+            "label": "Determinant of inverse product",
+            "type": "number",
+            "expected": "1/45"
+          },
+          {
+            "key": "entry",
+            "label": "Top-left entry",
+            "type": "number",
+            "expected": "26/45"
+          }
+        ],
+        "hint": "<p>Reverse the factor order, keeping the individual inverse of each factor.</p>",
+        "solution": "<p>Undo the three maps in reverse order: \\((ABC)^{-1}=C^{-1}B^{-1}A^{-1}\\).</p><p>Multiply the three inverses in that order. The product is \\(\\left[\\begin{matrix}\\frac{26}{45} & - \\frac{37}{45}\\\\- \\frac{133}{45} & \\frac{191}{45}\\end{matrix}\\right]\\).</p><p>Its determinant is the reciprocal of \\((\\det A)(\\det B)(\\det C)\\), giving \\(\\frac{1}{45}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Inverse matrix",
+        "definition": "<p>Matrix that multiplies the original to the identity.</p>"
+      },
+      {
+        "term": "Invertible",
+        "definition": "<p>A square matrix whose determinant is non-zero.</p>"
+      },
+      {
+        "term": "Singular",
+        "definition": "<p>A square matrix with determinant zero.</p>"
+      },
+      {
+        "term": "Cofactor",
+        "definition": "<p>A minor determinant with its alternating position sign.</p>"
+      },
+      {
+        "term": "Adjugate",
+        "definition": "<p>Transpose of the cofactor matrix.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Two by two</th><td>Swap diagonals, negate off-diagonals and divide by the determinant.</td></tr><tr><th scope=\"row\">Three by three</th><td>Use the adjugate formula or solve each unit-column equation.</td></tr><tr><th scope=\"row\">Left multiplier</th><td>\\(AX=C\\Rightarrow X=A^{-1}C\\).</td></tr><tr><th scope=\"row\">Composite inverse</th><td>Reverse the order and invert every factor.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>If \\(A,B\\) are invertible and \\(ABX=I\\), find \\(X\\).</p><p><strong>Check</strong> \\(X=B^{-1}A^{-1}\\).</p>",
+      "checks": "<ul><li>Apply the determinant divisor to all four entries. A zero determinant means there is no inverse.</li><li>In the cofactor method, transpose before dividing. In the column method, put each solution in its own column.</li></ul>",
+      "examTip": "<p>Check an inverse by multiplying to the identity. For an equation, substitute the candidate on the original side.</p>"
+    },
+    "related": [
+      {
+        "title": "Working with matrix products",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_matrices_operations"
+      },
+      {
+        "title": "Determinants, restrictions and scale",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_matrices_determinants"
+      }
+    ]
+  },
+  "fp1_matrices_determinants": {
+    "updatedOn": "2026-11-21",
+    "description": "Evaluate determinants using cofactors and row operations, find singular cases and interpret orientation, area and volume.",
+    "sections": [
+      {
+        "id": "solve-for-singularity",
+        "title": "How does a determinant locate a singular parameter?",
+        "label": "Set the determinant to zero",
+        "intro": "<p>A determinant assigns a signed number to a square matrix. A non-zero result certifies that the map is invertible.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a two-by-two matrix with entries \\(a,b,c,d\\) in row order, the determinant is \\(ad-bc\\). Set it to zero to find singular cases.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "determinants-solve-for-singularity-check",
+            "title": "Identify the unique singular parameter",
+            "prompt": "<p>Find the value of \\(k\\) for which \\(A=\\left[\\begin{matrix}3 & 4\\\\k & 2\\end{matrix}\\right]\\) is singular. Find the determinant when \\(k=0\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Value of k",
+                "type": "number",
+                "expected": "3/2"
+              },
+              {
+                "key": "det",
+                "label": "Determinant when k = 0",
+                "type": "number",
+                "expected": "6"
+              }
+            ],
+            "hint": "<p>Set the determinant, not an individual entry, equal to zero.</p>",
+            "solution": "<p>The determinant is \\(6 - 4 k\\). A matrix is singular if and only if its determinant is zero.</p><p>Solve this linear equation to get \\(k=\\frac{3}{2}\\).</p><p>For zero k the determinant is \\(6\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A zero entry alone does not imply the determinant is zero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "cofactor-expansion",
+        "title": "Which row makes a three-by-three determinant simplest?",
+        "label": "Expand along a sparse row or column",
+        "intro": "<p>A cofactor is the determinant of the smaller matrix left by removing one row and column, with a position-dependent sign.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Multiply each chosen-row entry by its cofactor and add the results. A zero entry contributes nothing.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "determinants-cofactor-expansion-check",
+            "title": "Choose a sparse row for a cofactor expansion",
+            "prompt": "<p>Find the determinant of \\(A=\\left[\\begin{matrix}3 & 1 & -2\\\\0 & 4 & 0\\\\1 & -1 & 2\\end{matrix}\\right]\\). Give the determinant of the minor obtained by deleting the second row and second column as well.</p>",
+            "fields": [
+              {
+                "key": "minor",
+                "label": "Minor determinant",
+                "type": "number",
+                "expected": "8"
+              },
+              {
+                "key": "det",
+                "label": "Determinant of A",
+                "type": "number",
+                "expected": "32"
+              }
+            ],
+            "hint": "<p>The middle entry’s sign is positive because row plus column is even.</p>",
+            "solution": "<p>The second row contains two zeros, leaving one term.</p><p>The centre entry has positive cofactor sign. The minor determinant is \\(8\\).</p><p>Multiplying by the centre entry gives \\(\\det A=32\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The cofactor signs alternate across each row and column. They do not depend on the actual entry values.</p>"
+          }
+        ]
+      },
+      {
+        "id": "row-effects",
+        "title": "What happens after a row operation?",
+        "label": "Track swaps, additions and scaling",
+        "intro": "<p>A row swap changes the determinant’s sign. Scaling one row scales the determinant by that factor. Adding a multiple of another row leaves it unchanged.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Keep a running multiplier or sign each time you simplify a matrix before expanding.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "determinants-row-effects-check",
+            "title": "Track the effect of two row operations on a determinant",
+            "prompt": "<p>Begin with \\(A=\\left[\\begin{matrix}3 & 1\\\\-1 & 4\\end{matrix}\\right]\\). Swap rows one and two. Then add \\(3\\) times the first row of the new matrix to its second row. Find the determinant after each step.</p>",
+            "fields": [
+              {
+                "key": "swap",
+                "label": "Determinant after swapping",
+                "type": "number",
+                "expected": "-13"
+              },
+              {
+                "key": "final",
+                "label": "Final determinant",
+                "type": "number",
+                "expected": "-13"
+              }
+            ],
+            "hint": "<p>Keep track of whether an operation swaps, scales or adds rows.</p>",
+            "solution": "<p>The original determinant is \\(13\\). Swapping reverses the sign to \\(-13\\).</p><p>Adding a multiple of one row to another does not change the determinant.</p><p>The determinant after both operations is therefore \\(-13\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A row operation need not preserve the determinant. Only addition of a multiple of a different row does so without adjustment.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "determinants-row-effects-follow-up",
+            "title": "Track the effect of two row operations on a determinant",
+            "prompt": "<p>Begin with \\(A=\\left[\\begin{matrix}5 & 1\\\\-1 & 6\\end{matrix}\\right]\\). Swap rows one and two. Then add \\(5\\) times the first row of the new matrix to its second row. Find the determinant after each step.</p>",
+            "fields": [
+              {
+                "key": "swap",
+                "label": "Determinant after swapping",
+                "type": "number",
+                "expected": "-31"
+              },
+              {
+                "key": "final",
+                "label": "Final determinant",
+                "type": "number",
+                "expected": "-31"
+              }
+            ],
+            "hint": "<p>Keep track of whether an operation swaps, scales or adds rows.</p>",
+            "solution": "<p>The original determinant is \\(31\\). Swapping reverses the sign to \\(-31\\).</p><p>Adding a multiple of one row to another does not change the determinant.</p><p>The determinant after both operations is therefore \\(-31\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "signed-area-factor",
+        "title": "Why does an area scale use the magnitude?",
+        "label": "Separate orientation and size",
+        "intro": "<p>The determinant’s sign records whether a plane transformation reverses orientation. Its magnitude measures area scale.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Multiply the starting area by \\(|\\det A|\\). A negative determinant reverses orientation but cannot make the area negative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "determinants-signed-area-factor-check",
+            "title": "Distinguish orientation from a positive area scale",
+            "prompt": "<p>A plane transformation uses \\(A=\\left[\\begin{matrix}3 & 1\\\\1 & -3\\end{matrix}\\right]\\). A region has area \\(6\\). Give the area of its image and state whether orientation is preserved.</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Image area",
+                "type": "number",
+                "expected": "60"
+              },
+              {
+                "key": "orientation",
+                "label": "Orientation preserved?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>An area is positive even when the transformation reverses orientation.</p>",
+            "solution": "<p>The determinant is \\(-10\\), so the orientation reverses.</p><p>Use the absolute determinant as the area scale. It is \\(10\\).</p><p>The image area is \\(60\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not apply a one-coordinate stretch factor to an arbitrary two-dimensional area calculation.</p>"
+          }
+        ]
+      },
+      {
+        "id": "volume-factor",
+        "title": "What does a three-dimensional determinant measure?",
+        "label": "Use the magnitude for volume",
+        "intro": "<p>A linear transformation in three dimensions scales volumes by the magnitude of its determinant. The sign describes orientation.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a triangular matrix compute the determinant from its diagonal product. Then use its absolute value for the scale.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "determinants-volume-factor-check",
+            "title": "Use a three-dimensional determinant to scale volume",
+            "prompt": "<p>A transformation uses \\(A=\\left[\\begin{matrix}3 & 0 & 1\\\\0 & 2 & 1\\\\0 & 0 & -1\\end{matrix}\\right]\\). Find its volume scale factor and the image volume of a solid with volume \\(5\\).</p>",
+            "fields": [
+              {
+                "key": "scale",
+                "label": "Volume scale factor",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "volume",
+                "label": "Image volume",
+                "type": "number",
+                "expected": "30"
+              }
+            ],
+            "hint": "<p>The off-diagonal entries can shear a solid without changing the volume factor.</p>",
+            "solution": "<p>The determinant of a triangular matrix is the product on its diagonal. Here it is \\(-6\\).</p><p>The volume scale factor is its magnitude, \\(6\\).</p><p>The resulting volume is \\(30\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Upper-triangular off-diagonal entries may change a shape while leaving the determinant at its diagonal product.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "determinants-volume-factor-follow-up",
+            "title": "Use a three-dimensional determinant to scale volume",
+            "prompt": "<p>A transformation uses \\(A=\\left[\\begin{matrix}5 & 0 & 1\\\\0 & 2 & 1\\\\0 & 0 & -1\\end{matrix}\\right]\\). Find its volume scale factor and the image volume of a solid with volume \\(7\\).</p>",
+            "fields": [
+              {
+                "key": "scale",
+                "label": "Volume scale factor",
+                "type": "number",
+                "expected": "10"
+              },
+              {
+                "key": "volume",
+                "label": "Image volume",
+                "type": "number",
+                "expected": "70"
+              }
+            ],
+            "hint": "<p>The off-diagonal entries can shear a solid without changing the volume factor.</p>",
+            "solution": "<p>The determinant of a triangular matrix is the product on its diagonal. Here it is \\(-10\\).</p><p>The volume scale factor is its magnitude, \\(10\\).</p><p>The resulting volume is \\(70\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Identify the unique singular parameter",
+        "question": "<p>Find the value of \\(k\\) for which \\(A=\\left[\\begin{matrix}2 & 3\\\\k & 1\\end{matrix}\\right]\\) is singular. Find the determinant when \\(k=0\\).</p>",
+        "solution": [
+          "<p>The determinant is \\(2 - 3 k\\). A matrix is singular if and only if its determinant is zero.</p>",
+          "<p>Solve this linear equation to get \\(k=\\frac{2}{3}\\).</p>",
+          "<p>For zero k the determinant is \\(2\\).</p>"
+        ]
+      },
+      {
+        "title": "Choose a sparse row for a cofactor expansion",
+        "question": "<p>Find the determinant of \\(A=\\left[\\begin{matrix}2 & 1 & -2\\\\0 & 3 & 0\\\\1 & -1 & 2\\end{matrix}\\right]\\). Give the determinant of the minor obtained by deleting the second row and second column as well.</p>",
+        "solution": [
+          "<p>The second row contains two zeros, leaving one term.</p>",
+          "<p>The centre entry has positive cofactor sign. The minor determinant is \\(6\\).</p>",
+          "<p>Multiplying by the centre entry gives \\(\\det A=18\\).</p>"
+        ]
+      },
+      {
+        "title": "Track the effect of two row operations on a determinant",
+        "question": "<p>Begin with \\(A=\\left[\\begin{matrix}2 & 1\\\\-1 & 3\\end{matrix}\\right]\\). Swap rows one and two. Then add \\(2\\) times the first row of the new matrix to its second row. Find the determinant after each step.</p>",
+        "solution": [
+          "<p>The original determinant is \\(7\\). Swapping reverses the sign to \\(-7\\).</p>",
+          "<p>Adding a multiple of one row to another does not change the determinant.</p>",
+          "<p>The determinant after both operations is therefore \\(-7\\).</p>"
+        ]
+      },
+      {
+        "title": "Track the effect of two row operations on a determinant",
+        "question": "<p>Begin with \\(A=\\left[\\begin{matrix}4 & 1\\\\-1 & 5\\end{matrix}\\right]\\). Swap rows one and two. Then add \\(4\\) times the first row of the new matrix to its second row. Find the determinant after each step.</p>",
+        "solution": [
+          "<p>The original determinant is \\(21\\). Swapping reverses the sign to \\(-21\\).</p>",
+          "<p>Adding a multiple of one row to another does not change the determinant.</p>",
+          "<p>The determinant after both operations is therefore \\(-21\\).</p>"
+        ]
+      },
+      {
+        "title": "Distinguish orientation from a positive area scale",
+        "question": "<p>A plane transformation uses \\(A=\\left[\\begin{matrix}2 & 1\\\\1 & -2\\end{matrix}\\right]\\). A region has area \\(5\\). Give the area of its image and state whether orientation is preserved.</p>",
+        "solution": [
+          "<p>The determinant is \\(-5\\), so the orientation reverses.</p>",
+          "<p>Use the absolute determinant as the area scale. It is \\(5\\).</p>",
+          "<p>The image area is \\(25\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a three-dimensional determinant to scale volume",
+        "question": "<p>A transformation uses \\(A=\\left[\\begin{matrix}2 & 0 & 1\\\\0 & 2 & 1\\\\0 & 0 & -1\\end{matrix}\\right]\\). Find its volume scale factor and the image volume of a solid with volume \\(4\\).</p>",
+        "solution": [
+          "<p>The determinant of a triangular matrix is the product on its diagonal. Here it is \\(-4\\).</p>",
+          "<p>The volume scale factor is its magnitude, \\(4\\).</p>",
+          "<p>The resulting volume is \\(16\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a three-dimensional determinant to scale volume",
+        "question": "<p>A transformation uses \\(A=\\left[\\begin{matrix}4 & 0 & 1\\\\0 & 2 & 1\\\\0 & 0 & -1\\end{matrix}\\right]\\). Find its volume scale factor and the image volume of a solid with volume \\(6\\).</p>",
+        "solution": [
+          "<p>The determinant of a triangular matrix is the product on its diagonal. Here it is \\(-8\\).</p>",
+          "<p>The volume scale factor is its magnitude, \\(8\\).</p>",
+          "<p>The resulting volume is \\(48\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "determinants-solve-for-singularity-extra",
+        "title": "Identify the unique singular parameter",
+        "prompt": "<p>Find the value of \\(k\\) for which \\(A=\\left[\\begin{matrix}4 & 5\\\\k & 3\\end{matrix}\\right]\\) is singular. Find the determinant when \\(k=0\\).</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Value of k",
+            "type": "number",
+            "expected": "12/5"
+          },
+          {
+            "key": "det",
+            "label": "Determinant when k = 0",
+            "type": "number",
+            "expected": "12"
+          }
+        ],
+        "hint": "<p>Set the determinant, not an individual entry, equal to zero.</p>",
+        "solution": "<p>The determinant is \\(12 - 5 k\\). A matrix is singular if and only if its determinant is zero.</p><p>Solve this linear equation to get \\(k=\\frac{12}{5}\\).</p><p>For zero k the determinant is \\(12\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "determinants-cofactor-expansion-extra",
+        "title": "Choose a sparse row for a cofactor expansion",
+        "prompt": "<p>Find the determinant of \\(A=\\left[\\begin{matrix}4 & 1 & -2\\\\0 & 5 & 0\\\\1 & -1 & 2\\end{matrix}\\right]\\). Give the determinant of the minor obtained by deleting the second row and second column as well.</p>",
+        "fields": [
+          {
+            "key": "minor",
+            "label": "Minor determinant",
+            "type": "number",
+            "expected": "10"
+          },
+          {
+            "key": "det",
+            "label": "Determinant of A",
+            "type": "number",
+            "expected": "50"
+          }
+        ],
+        "hint": "<p>The middle entry’s sign is positive because row plus column is even.</p>",
+        "solution": "<p>The second row contains two zeros, leaving one term.</p><p>The centre entry has positive cofactor sign. The minor determinant is \\(10\\).</p><p>Multiplying by the centre entry gives \\(\\det A=50\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "determinants-row-effects-extra",
+        "title": "Track the effect of two row operations on a determinant",
+        "prompt": "<p>Begin with \\(A=\\left[\\begin{matrix}6 & 1\\\\-1 & 7\\end{matrix}\\right]\\). Swap rows one and two. Then add \\(6\\) times the first row of the new matrix to its second row. Find the determinant after each step.</p>",
+        "fields": [
+          {
+            "key": "swap",
+            "label": "Determinant after swapping",
+            "type": "number",
+            "expected": "-43"
+          },
+          {
+            "key": "final",
+            "label": "Final determinant",
+            "type": "number",
+            "expected": "-43"
+          }
+        ],
+        "hint": "<p>Keep track of whether an operation swaps, scales or adds rows.</p>",
+        "solution": "<p>The original determinant is \\(43\\). Swapping reverses the sign to \\(-43\\).</p><p>Adding a multiple of one row to another does not change the determinant.</p><p>The determinant after both operations is therefore \\(-43\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "determinants-signed-area-factor-extra",
+        "title": "Distinguish orientation from a positive area scale",
+        "prompt": "<p>A plane transformation uses \\(A=\\left[\\begin{matrix}4 & 1\\\\1 & -4\\end{matrix}\\right]\\). A region has area \\(7\\). Give the area of its image and state whether orientation is preserved.</p>",
+        "fields": [
+          {
+            "key": "area",
+            "label": "Image area",
+            "type": "number",
+            "expected": "119"
+          },
+          {
+            "key": "orientation",
+            "label": "Orientation preserved?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          }
+        ],
+        "hint": "<p>An area is positive even when the transformation reverses orientation.</p>",
+        "solution": "<p>The determinant is \\(-17\\), so the orientation reverses.</p><p>Use the absolute determinant as the area scale. It is \\(17\\).</p><p>The image area is \\(119\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "determinants-volume-factor-extra",
+        "title": "Use a three-dimensional determinant to scale volume",
+        "prompt": "<p>A transformation uses \\(A=\\left[\\begin{matrix}6 & 0 & 1\\\\0 & 2 & 1\\\\0 & 0 & -1\\end{matrix}\\right]\\). Find its volume scale factor and the image volume of a solid with volume \\(8\\).</p>",
+        "fields": [
+          {
+            "key": "scale",
+            "label": "Volume scale factor",
+            "type": "number",
+            "expected": "12"
+          },
+          {
+            "key": "volume",
+            "label": "Image volume",
+            "type": "number",
+            "expected": "96"
+          }
+        ],
+        "hint": "<p>The off-diagonal entries can shear a solid without changing the volume factor.</p>",
+        "solution": "<p>The determinant of a triangular matrix is the product on its diagonal. Here it is \\(-12\\).</p><p>The volume scale factor is its magnitude, \\(12\\).</p><p>The resulting volume is \\(96\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Determinant",
+        "definition": "<p>Signed scale associated with a square matrix.</p>"
+      },
+      {
+        "term": "Minor determinant",
+        "definition": "<p>Determinant after deleting one row and column.</p>"
+      },
+      {
+        "term": "Cofactor sign",
+        "definition": "<p>Positive or negative sign attached to a position in a determinant expansion.</p>"
+      },
+      {
+        "term": "Orientation",
+        "definition": "<p>Order of a frame of directions, possibly reversed by a map.</p>"
+      },
+      {
+        "term": "Scale factor",
+        "definition": "<p>Positive magnitude multiplying an area or volume.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Two by two</th><td>Use \\(ad-bc\\).</td></tr><tr><th scope=\"row\">Cofactor expansion</th><td>Choose a sparse row and apply the alternating signs.</td></tr><tr><th scope=\"row\">Singularity</th><td>\\(\\det A=0\\) is the exceptional case.</td></tr><tr><th scope=\"row\">Area or volume</th><td>Multiply the original measure by \\(|\\det A|\\).</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A transformation has determinant \\(-3\\). What happens to an area of \\(5\\)?</p><p><strong>Check</strong> Its image has area \\(15\\) and reversed orientation.</p>",
+      "checks": "<ul><li>A zero entry alone does not imply the determinant is zero.</li><li>The cofactor signs alternate across each row and column. They do not depend on the actual entry values.</li></ul>",
+      "examTip": "<p>Use absolute determinant for area and volume, and give the sign separately when describing orientation.</p>"
+    },
+    "related": [
+      {
+        "title": "Undoing matrix equations",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_matrices_inverses"
+      },
+      {
+        "title": "Building plane transformations",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_matrices_plane_maps"
+      }
+    ]
+  },
+  "fp1_matrices_plane_maps": {
+    "updatedOn": "2026-11-21",
+    "description": "Build plane matrices from unit images, compose transformations in order, recover a map and transform a line.",
+    "sections": [
+      {
+        "id": "unit-images",
+        "title": "How do the basis images determine a plane matrix?",
+        "label": "Put the images into columns",
+        "intro": "<p>An input column is a linear combination of the two standard unit columns. Knowing their images determines every output.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The first unit-column image gives the first column of the matrix. The second gives the second column.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "plane-maps-unit-images-check",
+            "title": "Build a matrix from the images of the unit columns",
+            "prompt": "<p>The images of \\(\\left[\\begin{matrix}1\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}0\\\\1\\end{matrix}\\right]\\) are \\(\\left[\\begin{matrix}3\\\\2\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}1\\\\-2\\end{matrix}\\right]\\) respectively. Find the image of \\(\\left[\\begin{matrix}2\\\\1\\end{matrix}\\right]\\).</p>",
+            "fields": [
+              {
+                "key": "image_x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "image_y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Images of unit inputs give columns in the matrix, in order.</p>",
+            "solution": "<p>The two supplied images are the first and second columns of the map matrix \\(\\left[\\begin{matrix}3 & 1\\\\2 & -2\\end{matrix}\\right]\\).</p><p>The input point is the first unit column multiplied by \\(2\\) plus the second multiplied by \\(1\\).</p><p>The corresponding combination of image columns is \\(\\left[\\begin{matrix}7\\\\2\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not turn the unit images into rows. That generally gives a different map.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rotation-or-reflection",
+        "title": "How can I build a standard transformation without memorising it?",
+        "label": "Track both unit directions",
+        "intro": "<p>Use the definition of a rotation or reflection to locate the images of the positive coordinate axes.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A rotation preserves lengths and orientation. A reflection preserves lengths and reverses orientation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "plane-maps-rotation-or-reflection-check",
+            "title": "Track both coordinates under a standard plane map",
+            "prompt": "<p>Apply a reflection in the line y = x to the point \\(\\left[\\begin{matrix}2\\\\1\\end{matrix}\\right]\\). Enter the image coordinates.</p>",
+            "fields": [
+              {
+                "key": "image_x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "image_y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Visualise where each positive coordinate axis points after the map.</p>",
+            "solution": "<p>Work out the images of the two unit vectors. They are \\(\\left[\\begin{matrix}0\\\\1\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}1\\\\0\\end{matrix}\\right]\\).</p><p>Put these in order as columns to obtain \\(\\left[\\begin{matrix}0 & 1\\\\1 & 0\\end{matrix}\\right]\\).</p><p>The product by the original point gives \\(\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Check the sign of the rotation by mentally moving the positive x-axis through the given angle.</p>"
+          }
+        ]
+      },
+      {
+        "id": "combine-maps",
+        "title": "Which factor acts first in a composition?",
+        "label": "Apply the rightmost matrix first",
+        "intro": "<p>The input is a column on the far right. The factor closest to it acts first; each subsequent factor acts on the previous image.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If A acts first and B acts second, the composite matrix is \\(BA\\). Verify with a single test point.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_matrices_plane_maps/shear-before-stretch.svg",
+              "caption": "<p>Follow the point from input to shear to stretch in that order.</p>",
+              "alt": "The point (1, 2) moves to (5, 2) under the shear, then to (10, 2) under the stretch. All three points have the same height.",
+              "width": 466,
+              "height": 220
+            }
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "plane-maps-combine-maps-check",
+            "title": "Apply a shear before a stretch",
+            "prompt": "<p>Apply the shear \\(A=\\left[\\begin{matrix}1 & 3\\\\0 & 1\\end{matrix}\\right]\\) and then the stretch \\(B=\\left[\\begin{matrix}3 & 0\\\\0 & 1\\end{matrix}\\right]\\). Find the top-right entry of the composition and the image of \\(\\left[\\begin{matrix}2\\\\1\\end{matrix}\\right]\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Top-right entry of BA",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "image_x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "15"
+              },
+              {
+                "key": "image_y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>The rightmost factor acts first when it multiplies a column.</p>",
+            "solution": "<p>The first action touches the input first, so the composition is \\(BA\\).</p><p>Multiplication gives \\(\\left[\\begin{matrix}3 & 9\\\\0 & 1\\end{matrix}\\right]\\). Compare with applying the maps to the input one by one.</p><p>The image of the point is \\(\\left[\\begin{matrix}15\\\\1\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The chronological order of the written instruction is opposite to the left-to-right order of the factors multiplying a column.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "plane-maps-combine-maps-follow-up",
+            "title": "Apply a shear before a stretch",
+            "prompt": "<p>Apply the shear \\(A=\\left[\\begin{matrix}1 & 5\\\\0 & 1\\end{matrix}\\right]\\) and then the stretch \\(B=\\left[\\begin{matrix}5 & 0\\\\0 & 1\\end{matrix}\\right]\\). Find the top-right entry of the composition and the image of \\(\\left[\\begin{matrix}4\\\\-1\\end{matrix}\\right]\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Top-right entry of BA",
+                "type": "number",
+                "expected": "25"
+              },
+              {
+                "key": "image_x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "-5"
+              },
+              {
+                "key": "image_y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>The rightmost factor acts first when it multiplies a column.</p>",
+            "solution": "<p>The first action touches the input first, so the composition is \\(BA\\).</p><p>Multiplication gives \\(\\left[\\begin{matrix}5 & 25\\\\0 & 1\\end{matrix}\\right]\\). Compare with applying the maps to the input one by one.</p><p>The image of the point is \\(\\left[\\begin{matrix}-5\\\\-1\\end{matrix}\\right]\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "build-from-independent-inputs",
+        "title": "Can I find a matrix from two non-standard inputs?",
+        "label": "Solve a matrix equation",
+        "intro": "<p>Two independent input columns form an invertible matrix X when placed side by side. Put their corresponding images into Y in the same order.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The map matrix satisfies \\(AX=Y\\), hence \\(A=YX^{-1}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "plane-maps-build-from-independent-inputs-check",
+            "title": "Recover a transformation from two independent images",
+            "prompt": "<p>A map sends \\(\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]\\) to \\(\\left[\\begin{matrix}5\\\\7\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}3\\\\-1\\end{matrix}\\right]\\) to \\(\\left[\\begin{matrix}8\\\\-7\\end{matrix}\\right]\\). Find its matrix.</p>",
+            "fields": [
+              {
+                "key": "entry_1_1",
+                "label": "Row 1, column 1",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "entry_1_2",
+                "label": "Row 1, column 2",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "entry_2_1",
+                "label": "Row 2, column 1",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "entry_2_2",
+                "label": "Row 2, column 2",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>Only images of the two standard unit inputs are themselves the columns of A.</p>",
+            "solution": "<p>Put the two input columns into matrix \\(X\\) and the image columns into matrix \\(Y\\).</p><p>The map matrix \\(A\\) satisfies \\(AX=Y\\). The input columns are independent, so X is invertible.</p><p>Multiply on the right by \\(X^{-1}\\) to get \\(A=\\left[\\begin{matrix}3 & 1\\\\-1 & 4\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Two parallel inputs do not determine a general plane matrix. Check independence before inverting.</p>"
+          }
+        ]
+      },
+      {
+        "id": "image-of-a-line",
+        "title": "How can I transform an entire straight line?",
+        "label": "Express old coordinates using new ones",
+        "intro": "<p>A point on a line satisfies its original equation in the original coordinates. The inverse transformation writes those coordinates in terms of the image coordinates.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Substitute the inverse coordinate formulae into the original equation to obtain the image line. Alternatively transform two distinct points and join their images if they remain distinct.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "plane-maps-image-of-a-line-check",
+            "title": "Substitute the inverse coordinates to transform a line",
+            "prompt": "<p>The map uses \\(A=\\left[\\begin{matrix}1 & 0\\\\3 & 1\\end{matrix}\\right]\\). Find the gradient and intercept of the image of \\(y=2 x + 4\\).</p>",
+            "fields": [
+              {
+                "key": "gradient",
+                "label": "Gradient of the image",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "intercept",
+                "label": "Intercept of the image",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>An equation for the image uses new coordinates. Use the inverse map to replace the old ones.</p>",
+            "solution": "<p>The image coordinates satisfy \\(x'=x\\) and \\(y'=3x+y\\).</p><p>Use the inverse relations \\(x=x'\\) and \\(y=y'-3x'\\) in the original line.</p><p>The image is \\(y'=5x'+4\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Substituting the forward map directly usually gives the preimage rather than the image.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "plane-maps-image-of-a-line-follow-up",
+            "title": "Substitute the inverse coordinates to transform a line",
+            "prompt": "<p>The map uses \\(A=\\left[\\begin{matrix}1 & 0\\\\5 & 1\\end{matrix}\\right]\\). Find the gradient and intercept of the image of \\(y=4 x + 6\\).</p>",
+            "fields": [
+              {
+                "key": "gradient",
+                "label": "Gradient of the image",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "intercept",
+                "label": "Intercept of the image",
+                "type": "number",
+                "expected": "6"
+              }
+            ],
+            "hint": "<p>An equation for the image uses new coordinates. Use the inverse map to replace the old ones.</p>",
+            "solution": "<p>The image coordinates satisfy \\(x'=x\\) and \\(y'=5x+y\\).</p><p>Use the inverse relations \\(x=x'\\) and \\(y=y'-5x'\\) in the original line.</p><p>The image is \\(y'=9x'+6\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Build a matrix from the images of the unit columns",
+        "question": "<p>The images of \\(\\left[\\begin{matrix}1\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}0\\\\1\\end{matrix}\\right]\\) are \\(\\left[\\begin{matrix}2\\\\2\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}1\\\\-1\\end{matrix}\\right]\\) respectively. Find the image of \\(\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]\\).</p>",
+        "solution": [
+          "<p>The two supplied images are the first and second columns of the map matrix \\(\\left[\\begin{matrix}2 & 1\\\\2 & -1\\end{matrix}\\right]\\).</p>",
+          "<p>The input point is the first unit column multiplied by \\(1\\) plus the second multiplied by \\(2\\).</p>",
+          "<p>The corresponding combination of image columns is \\(\\left[\\begin{matrix}4\\\\0\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Track both coordinates under a standard plane map",
+        "question": "<p>Apply a 90° anticlockwise rotation about the origin to the point \\(\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]\\). Enter the image coordinates.</p>",
+        "solution": [
+          "<p>Work out the images of the two unit vectors. They are \\(\\left[\\begin{matrix}0\\\\1\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}-1\\\\0\\end{matrix}\\right]\\).</p>",
+          "<p>Put these in order as columns to obtain \\(\\left[\\begin{matrix}0 & -1\\\\1 & 0\\end{matrix}\\right]\\).</p>",
+          "<p>The product by the original point gives \\(\\left[\\begin{matrix}-2\\\\1\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Apply a shear before a stretch",
+        "question": "<p>Apply the shear \\(A=\\left[\\begin{matrix}1 & 2\\\\0 & 1\\end{matrix}\\right]\\) and then the stretch \\(B=\\left[\\begin{matrix}2 & 0\\\\0 & 1\\end{matrix}\\right]\\). Find the top-right entry of the composition and the image of \\(\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]\\).</p>",
+        "solution": [
+          "<p>The first action touches the input first, so the composition is \\(BA\\).</p>",
+          "<p>Multiplication gives \\(\\left[\\begin{matrix}2 & 4\\\\0 & 1\\end{matrix}\\right]\\). Compare with applying the maps to the input one by one.</p>",
+          "<p>The image of the point is \\(\\left[\\begin{matrix}10\\\\2\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Apply a shear before a stretch",
+        "question": "<p>Apply the shear \\(A=\\left[\\begin{matrix}1 & 4\\\\0 & 1\\end{matrix}\\right]\\) and then the stretch \\(B=\\left[\\begin{matrix}4 & 0\\\\0 & 1\\end{matrix}\\right]\\). Find the top-right entry of the composition and the image of \\(\\left[\\begin{matrix}3\\\\0\\end{matrix}\\right]\\).</p>",
+        "solution": [
+          "<p>The first action touches the input first, so the composition is \\(BA\\).</p>",
+          "<p>Multiplication gives \\(\\left[\\begin{matrix}4 & 16\\\\0 & 1\\end{matrix}\\right]\\). Compare with applying the maps to the input one by one.</p>",
+          "<p>The image of the point is \\(\\left[\\begin{matrix}12\\\\0\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a transformation from two independent images",
+        "question": "<p>A map sends \\(\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]\\) to \\(\\left[\\begin{matrix}4\\\\5\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}2\\\\-1\\end{matrix}\\right]\\) to \\(\\left[\\begin{matrix}3\\\\-5\\end{matrix}\\right]\\). Find its matrix.</p>",
+        "solution": [
+          "<p>Put the two input columns into matrix \\(X\\) and the image columns into matrix \\(Y\\).</p>",
+          "<p>The map matrix \\(A\\) satisfies \\(AX=Y\\). The input columns are independent, so X is invertible.</p>",
+          "<p>Multiply on the right by \\(X^{-1}\\) to get \\(A=\\left[\\begin{matrix}2 & 1\\\\-1 & 3\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Substitute the inverse coordinates to transform a line",
+        "question": "<p>The map uses \\(A=\\left[\\begin{matrix}1 & 0\\\\2 & 1\\end{matrix}\\right]\\). Find the gradient and intercept of the image of \\(y=x + 3\\).</p>",
+        "solution": [
+          "<p>The image coordinates satisfy \\(x'=x\\) and \\(y'=2x+y\\).</p>",
+          "<p>Use the inverse relations \\(x=x'\\) and \\(y=y'-2x'\\) in the original line.</p>",
+          "<p>The image is \\(y'=3x'+3\\).</p>"
+        ]
+      },
+      {
+        "title": "Substitute the inverse coordinates to transform a line",
+        "question": "<p>The map uses \\(A=\\left[\\begin{matrix}1 & 0\\\\4 & 1\\end{matrix}\\right]\\). Find the gradient and intercept of the image of \\(y=3 x + 5\\).</p>",
+        "solution": [
+          "<p>The image coordinates satisfy \\(x'=x\\) and \\(y'=4x+y\\).</p>",
+          "<p>Use the inverse relations \\(x=x'\\) and \\(y=y'-4x'\\) in the original line.</p>",
+          "<p>The image is \\(y'=7x'+5\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "plane-maps-unit-images-extra",
+        "title": "Build a matrix from the images of the unit columns",
+        "prompt": "<p>The images of \\(\\left[\\begin{matrix}1\\\\0\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}0\\\\1\\end{matrix}\\right]\\) are \\(\\left[\\begin{matrix}4\\\\2\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}1\\\\-3\\end{matrix}\\right]\\) respectively. Find the image of \\(\\left[\\begin{matrix}3\\\\0\\end{matrix}\\right]\\).</p>",
+        "fields": [
+          {
+            "key": "image_x",
+            "label": "Value of x",
+            "type": "number",
+            "expected": "12"
+          },
+          {
+            "key": "image_y",
+            "label": "Value of y",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Images of unit inputs give columns in the matrix, in order.</p>",
+        "solution": "<p>The two supplied images are the first and second columns of the map matrix \\(\\left[\\begin{matrix}4 & 1\\\\2 & -3\\end{matrix}\\right]\\).</p><p>The input point is the first unit column multiplied by \\(3\\) plus the second multiplied by \\(0\\).</p><p>The corresponding combination of image columns is \\(\\left[\\begin{matrix}12\\\\6\\end{matrix}\\right]\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "plane-maps-rotation-or-reflection-extra",
+        "title": "Track both coordinates under a standard plane map",
+        "prompt": "<p>Apply a 90° anticlockwise rotation about the origin to the point \\(\\left[\\begin{matrix}3\\\\0\\end{matrix}\\right]\\). Enter the image coordinates.</p>",
+        "fields": [
+          {
+            "key": "image_x",
+            "label": "Value of x",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "image_y",
+            "label": "Value of y",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>Visualise where each positive coordinate axis points after the map.</p>",
+        "solution": "<p>Work out the images of the two unit vectors. They are \\(\\left[\\begin{matrix}0\\\\1\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}-1\\\\0\\end{matrix}\\right]\\).</p><p>Put these in order as columns to obtain \\(\\left[\\begin{matrix}0 & -1\\\\1 & 0\\end{matrix}\\right]\\).</p><p>The product by the original point gives \\(\\left[\\begin{matrix}0\\\\3\\end{matrix}\\right]\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "plane-maps-combine-maps-extra",
+        "title": "Apply a shear before a stretch",
+        "prompt": "<p>Apply the shear \\(A=\\left[\\begin{matrix}1 & 6\\\\0 & 1\\end{matrix}\\right]\\) and then the stretch \\(B=\\left[\\begin{matrix}6 & 0\\\\0 & 1\\end{matrix}\\right]\\). Find the top-right entry of the composition and the image of \\(\\left[\\begin{matrix}5\\\\-2\\end{matrix}\\right]\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Top-right entry of BA",
+            "type": "number",
+            "expected": "36"
+          },
+          {
+            "key": "image_x",
+            "label": "Value of x",
+            "type": "number",
+            "expected": "-42"
+          },
+          {
+            "key": "image_y",
+            "label": "Value of y",
+            "type": "number",
+            "expected": "-2"
+          }
+        ],
+        "hint": "<p>The rightmost factor acts first when it multiplies a column.</p>",
+        "solution": "<p>The first action touches the input first, so the composition is \\(BA\\).</p><p>Multiplication gives \\(\\left[\\begin{matrix}6 & 36\\\\0 & 1\\end{matrix}\\right]\\). Compare with applying the maps to the input one by one.</p><p>The image of the point is \\(\\left[\\begin{matrix}-42\\\\-2\\end{matrix}\\right]\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "plane-maps-build-from-independent-inputs-extra",
+        "title": "Recover a transformation from two independent images",
+        "prompt": "<p>A map sends \\(\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]\\) to \\(\\left[\\begin{matrix}6\\\\9\\end{matrix}\\right]\\) and \\(\\left[\\begin{matrix}4\\\\-1\\end{matrix}\\right]\\) to \\(\\left[\\begin{matrix}15\\\\-9\\end{matrix}\\right]\\). Find its matrix.</p>",
+        "fields": [
+          {
+            "key": "entry_1_1",
+            "label": "Row 1, column 1",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "entry_1_2",
+            "label": "Row 1, column 2",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "entry_2_1",
+            "label": "Row 2, column 1",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "entry_2_2",
+            "label": "Row 2, column 2",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>Only images of the two standard unit inputs are themselves the columns of A.</p>",
+        "solution": "<p>Put the two input columns into matrix \\(X\\) and the image columns into matrix \\(Y\\).</p><p>The map matrix \\(A\\) satisfies \\(AX=Y\\). The input columns are independent, so X is invertible.</p><p>Multiply on the right by \\(X^{-1}\\) to get \\(A=\\left[\\begin{matrix}4 & 1\\\\-1 & 5\\end{matrix}\\right]\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "plane-maps-image-of-a-line-extra",
+        "title": "Substitute the inverse coordinates to transform a line",
+        "prompt": "<p>The map uses \\(A=\\left[\\begin{matrix}1 & 0\\\\6 & 1\\end{matrix}\\right]\\). Find the gradient and intercept of the image of \\(y=5 x + 7\\).</p>",
+        "fields": [
+          {
+            "key": "gradient",
+            "label": "Gradient of the image",
+            "type": "number",
+            "expected": "11"
+          },
+          {
+            "key": "intercept",
+            "label": "Intercept of the image",
+            "type": "number",
+            "expected": "7"
+          }
+        ],
+        "hint": "<p>An equation for the image uses new coordinates. Use the inverse map to replace the old ones.</p>",
+        "solution": "<p>The image coordinates satisfy \\(x'=x\\) and \\(y'=6x+y\\).</p><p>Use the inverse relations \\(x=x'\\) and \\(y=y'-6x'\\) in the original line.</p><p>The image is \\(y'=11x'+7\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Unit column",
+        "definition": "<p>Coordinate column with one entry equal to one and the other zero.</p>"
+      },
+      {
+        "term": "Composition",
+        "definition": "<p>Applying transformations one after another.</p>"
+      },
+      {
+        "term": "Independent directions",
+        "definition": "<p>Two directions that do not lie on the same line through the origin.</p>"
+      },
+      {
+        "term": "Image",
+        "definition": "<p>Output of a transformation.</p>"
+      },
+      {
+        "term": "Preimage",
+        "definition": "<p>Input or original set that maps to a specified output.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Build a matrix</th><td>Use the unit images as columns.</td></tr><tr><th scope=\"row\">Compose</th><td>Put the first action next to the input column on the right.</td></tr><tr><th scope=\"row\">Two independent inputs</th><td>\\(A=YX^{-1}\\) from input and image column matrices.</td></tr><tr><th scope=\"row\">Transform a line</th><td>Use inverse coordinate expressions in the original equation.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Which product applies B first and A second?</p><p><strong>Check</strong> \\(AB\\). B is the factor touching the input first.</p>",
+      "checks": "<ul><li>Do not turn the unit images into rows. That generally gives a different map.</li><li>Check the sign of the rotation by mentally moving the positive x-axis through the given angle.</li></ul>",
+      "examTip": "<p>For a composite, test one point or unit column both ways to confirm the order.</p>"
+    },
+    "related": [
+      {
+        "title": "Determinants, restrictions and scale",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_matrices_determinants"
+      },
+      {
+        "title": "Invariant sets and maps in space",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_matrices_invariants"
+      }
+    ]
+  },
+  "fp1_matrices_invariants": {
+    "updatedOn": "2026-11-21",
+    "description": "Distinguish fixed points from invariant lines, check vertical directions and use three-coordinate transformations.",
+    "sections": [
+      {
+        "id": "fixed-points",
+        "title": "How do I find all points that stay exactly where they are?",
+        "label": "Solve a fixed-point equation",
+        "intro": "<p>A fixed point has its original coordinates after applying the map. Set the image equal to the original coordinate column.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Solve \\((A-I)\\mathbf v=\\mathbf0\\). A free variable can describe an entire fixed line.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "invariants-fixed-points-check",
+            "title": "Find fixed points by solving the two coordinate equations",
+            "prompt": "<p>For \\(A=\\left[\\begin{matrix}1 & 3\\\\0 & -1\\end{matrix}\\right]\\), which axis consists entirely of fixed points? Give the other coordinate shared by every fixed point.</p>",
+            "fields": [
+              {
+                "key": "axis",
+                "label": "Axis of fixed points",
+                "type": "choice",
+                "expected": "xaxis",
+                "options": {
+                  "xaxis": "x-axis",
+                  "yaxis": "y-axis"
+                }
+              },
+              {
+                "key": "y",
+                "label": "Value of y at a fixed point",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Solve Av = v, which is stronger than requiring the image to remain on its original line.</p>",
+            "solution": "<p>Set the image column equal to the original one. This gives \\(3y=0\\) and \\(-y=y\\).</p><p>Hence \\(y=0\\) and x is unrestricted.</p><p>Every point on the x-axis is fixed. A point off that axis changes its y-coordinate.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The origin is fixed by every linear transformation, but it need not be the only fixed point.</p>"
+          }
+        ]
+      },
+      {
+        "id": "stay-on-one-line",
+        "title": "Can a line be invariant even while points move along it?",
+        "label": "Distinguish equality of sets from equality of points",
+        "intro": "<p>A line is invariant if it is mapped onto itself. Individual points can move to different positions on the same line.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a line through the origin, a non-zero image parallel to a direction vector is enough to preserve it as a line.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "invariants-stay-on-one-line-check",
+            "title": "Distinguish an invariant line from a line of fixed points",
+            "prompt": "<p>The transformation uses \\(A=\\left[\\begin{matrix}3 & 0\\\\0 & 4\\end{matrix}\\right]\\). Give the multiplier on the y-axis, and decide whether the whole y-axis is fixed point by point.</p>",
+            "fields": [
+              {
+                "key": "factor",
+                "label": "Multiplier on the y-axis",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "fixed",
+                "label": "Every point fixed?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>A line can map onto itself even if particular positions on it change.</p>",
+            "solution": "<p>A point of the y-axis has x-coordinate zero. Applying A leaves that coordinate zero and multiplies y by \\(4\\).</p><p>The output remains on the axis, so the line is invariant.</p><p>The multiplier is not one. Except for the origin, the points move along the line.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A zero image of its direction collapses the whole line to a point. That does not map the line onto itself.</p>"
+          }
+        ]
+      },
+      {
+        "id": "keep-the-offset",
+        "title": "How do I test a line that does not pass through the origin?",
+        "label": "Use a general point with the offset",
+        "intro": "<p>An affine line has a direction and an offset. Preserving the direction alone does not guarantee that the line stays where it was.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check that a general image point obeys the original line equation and that the direction is not collapsed.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_matrices_invariants/fixed-height-shear.svg",
+              "caption": "<p>A shear can preserve a line without fixing the points on it.</p>",
+              "alt": "The point (1, 2) moves along the horizontal line to (5, 2). The line stays the same even though the point moves.",
+              "width": 466,
+              "height": 220
+            }
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "invariants-keep-the-offset-check",
+            "title": "Check a horizontal line that misses the origin",
+            "prompt": "<p>The shear uses \\(A=\\left[\\begin{matrix}1 & 3\\\\0 & 1\\end{matrix}\\right]\\). Decide whether the line \\(y=3\\) is invariant and find the x-coordinate of the image of \\(\\left[\\begin{matrix}1\\\\3\\end{matrix}\\right]\\).</p>",
+            "fields": [
+              {
+                "key": "line",
+                "label": "Is the line invariant?",
+                "type": "choice",
+                "expected": "yes",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              },
+              {
+                "key": "x",
+                "label": "Image x-coordinate",
+                "type": "number",
+                "expected": "10"
+              }
+            ],
+            "hint": "<p>To check an affine line, test a general point on it and account for its offset from the origin.</p>",
+            "solution": "<p>The matrix leaves every y-coordinate unchanged. The image of every point on the horizontal line stays on that line.</p><p>The inverse shear also keeps the same line, so the line maps onto itself.</p><p>The x-coordinate changes to \\(10\\) for the given point.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not check only the point chosen for convenience. Verify the whole line stays invariant.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "invariants-keep-the-offset-follow-up",
+            "title": "Check a horizontal line that misses the origin",
+            "prompt": "<p>The shear uses \\(A=\\left[\\begin{matrix}1 & 5\\\\0 & 1\\end{matrix}\\right]\\). Decide whether the line \\(y=5\\) is invariant and find the x-coordinate of the image of \\(\\left[\\begin{matrix}1\\\\5\\end{matrix}\\right]\\).</p>",
+            "fields": [
+              {
+                "key": "line",
+                "label": "Is the line invariant?",
+                "type": "choice",
+                "expected": "yes",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              },
+              {
+                "key": "x",
+                "label": "Image x-coordinate",
+                "type": "number",
+                "expected": "26"
+              }
+            ],
+            "hint": "<p>To check an affine line, test a general point on it and account for its offset from the origin.</p>",
+            "solution": "<p>The matrix leaves every y-coordinate unchanged. The image of every point on the horizontal line stays on that line.</p><p>The inverse shear also keeps the same line, so the line maps onto itself.</p><p>The x-coordinate changes to \\(26\\) for the given point.</p>"
+          }
+        ]
+      },
+      {
+        "id": "finite-and-vertical-directions",
+        "title": "Why should I check the vertical line separately?",
+        "label": "Solve for finite slopes, then use the vertical direction",
+        "intro": "<p>The direction vector with first entry one represents every finite slope. No finite slope represents a vertical line.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For finite slope m, require the image of the column with entries one and m to be parallel to that column. Test the vertical unit direction separately.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "invariants-finite-and-vertical-directions-check",
+            "title": "Find finite invariant slopes and check the vertical axis",
+            "prompt": "<p>Find the slopes of all invariant lines through the origin for \\(A=\\left[\\begin{matrix}5 & 1\\\\6 & 4\\end{matrix}\\right]\\). Is the vertical line through the origin invariant?</p>",
+            "fields": [
+              {
+                "key": "slopes",
+                "label": "Set of m-values",
+                "type": "set",
+                "expected": "{2,-3}",
+                "variables": [
+                  "m"
+                ]
+              },
+              {
+                "key": "vertical",
+                "label": "Vertical line invariant?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>Test the vertical direction independently of the finite-slope equation.</p>",
+            "solution": "<p>A finite slope \\(m\\) has a direction column \\(\\left[\\begin{matrix}1\\\\m\\end{matrix}\\right]\\). The image must be parallel to it.</p><p>Equating cross products of the coordinates gives \\(m^{2} + m - 6=0\\), with the two slopes \\(2\\) and \\(-3\\).</p><p>The image of the vertical direction is \\(\\left[\\begin{matrix}1\\\\4\\end{matrix}\\right]\\). Its first coordinate is non-zero, so the vertical line is not invariant.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An equation for finite slopes cannot rule out an additional vertical invariant line.</p>"
+          }
+        ]
+      },
+      {
+        "id": "maps-with-three-coordinates",
+        "title": "Which coordinates change in a spatial map?",
+        "label": "Read the axis or plane of the map",
+        "intro": "<p>A rotation about a coordinate axis leaves its coordinate unchanged and rotates the two perpendicular coordinates. A reflection in a coordinate plane reverses the perpendicular coordinate.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Build the three-dimensional matrix from the three unit images. Track their order and the given direction of rotation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "invariants-maps-with-three-coordinates-check",
+            "title": "Read a three-coordinate transformation along an axis or plane",
+            "prompt": "<p>Find the image of \\(\\left[\\begin{matrix}2\\\\1\\\\6\\end{matrix}\\right]\\) under reflection in the xz-plane.</p>",
+            "fields": [
+              {
+                "key": "image_x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "image_y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "image_z",
+                "label": "Value of z",
+                "type": "number",
+                "expected": "6"
+              }
+            ],
+            "hint": "<p>Identify the unaffected coordinate before changing the others.</p>",
+            "solution": "<p>Use a two-coordinate rule on the affected axes. The x and z positions stay fixed while y changes sign.</p><p>The three unit images give the matrix \\(\\left[\\begin{matrix}1 & 0 & 0\\\\0 & -1 & 0\\\\0 & 0 & 1\\end{matrix}\\right]\\).</p><p>Its product with the given column is \\(\\left[\\begin{matrix}2\\\\-1\\\\6\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The unaffected coordinate should appear unchanged. Do not reverse the orientation of the rotation when changing axes.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "invariants-maps-with-three-coordinates-follow-up",
+            "title": "Read a three-coordinate transformation along an axis or plane",
+            "prompt": "<p>Find the image of \\(\\left[\\begin{matrix}4\\\\-1\\\\8\\end{matrix}\\right]\\) under reflection in the xz-plane.</p>",
+            "fields": [
+              {
+                "key": "image_x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "image_y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "image_z",
+                "label": "Value of z",
+                "type": "number",
+                "expected": "8"
+              }
+            ],
+            "hint": "<p>Identify the unaffected coordinate before changing the others.</p>",
+            "solution": "<p>Use a two-coordinate rule on the affected axes. The x and z positions stay fixed while y changes sign.</p><p>The three unit images give the matrix \\(\\left[\\begin{matrix}1 & 0 & 0\\\\0 & -1 & 0\\\\0 & 0 & 1\\end{matrix}\\right]\\).</p><p>Its product with the given column is \\(\\left[\\begin{matrix}4\\\\1\\\\8\\end{matrix}\\right]\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find fixed points by solving the two coordinate equations",
+        "question": "<p>For \\(A=\\left[\\begin{matrix}1 & 2\\\\0 & -1\\end{matrix}\\right]\\), which axis consists entirely of fixed points? Give the other coordinate shared by every fixed point.</p>",
+        "solution": [
+          "<p>Set the image column equal to the original one. This gives \\(2y=0\\) and \\(-y=y\\).</p>",
+          "<p>Hence \\(y=0\\) and x is unrestricted.</p>",
+          "<p>Every point on the x-axis is fixed. A point off that axis changes its y-coordinate.</p>"
+        ]
+      },
+      {
+        "title": "Distinguish an invariant line from a line of fixed points",
+        "question": "<p>The transformation uses \\(A=\\left[\\begin{matrix}2 & 0\\\\0 & 3\\end{matrix}\\right]\\). Give the multiplier on the y-axis, and decide whether the whole y-axis is fixed point by point.</p>",
+        "solution": [
+          "<p>A point of the y-axis has x-coordinate zero. Applying A leaves that coordinate zero and multiplies y by \\(3\\).</p>",
+          "<p>The output remains on the axis, so the line is invariant.</p>",
+          "<p>The multiplier is not one. Except for the origin, the points move along the line.</p>"
+        ]
+      },
+      {
+        "title": "Check a horizontal line that misses the origin",
+        "question": "<p>The shear uses \\(A=\\left[\\begin{matrix}1 & 2\\\\0 & 1\\end{matrix}\\right]\\). Decide whether the line \\(y=2\\) is invariant and find the x-coordinate of the image of \\(\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]\\).</p>",
+        "solution": [
+          "<p>The matrix leaves every y-coordinate unchanged. The image of every point on the horizontal line stays on that line.</p>",
+          "<p>The inverse shear also keeps the same line, so the line maps onto itself.</p>",
+          "<p>The x-coordinate changes to \\(5\\) for the given point.</p>"
+        ]
+      },
+      {
+        "title": "Check a horizontal line that misses the origin",
+        "question": "<p>The shear uses \\(A=\\left[\\begin{matrix}1 & 4\\\\0 & 1\\end{matrix}\\right]\\). Decide whether the line \\(y=4\\) is invariant and find the x-coordinate of the image of \\(\\left[\\begin{matrix}1\\\\4\\end{matrix}\\right]\\).</p>",
+        "solution": [
+          "<p>The matrix leaves every y-coordinate unchanged. The image of every point on the horizontal line stays on that line.</p>",
+          "<p>The inverse shear also keeps the same line, so the line maps onto itself.</p>",
+          "<p>The x-coordinate changes to \\(17\\) for the given point.</p>"
+        ]
+      },
+      {
+        "title": "Find finite invariant slopes and check the vertical axis",
+        "question": "<p>Find the slopes of all invariant lines through the origin for \\(A=\\left[\\begin{matrix}3 & 1\\\\2 & 2\\end{matrix}\\right]\\). Is the vertical line through the origin invariant?</p>",
+        "solution": [
+          "<p>A finite slope \\(m\\) has a direction column \\(\\left[\\begin{matrix}1\\\\m\\end{matrix}\\right]\\). The image must be parallel to it.</p>",
+          "<p>Equating cross products of the coordinates gives \\(m^{2} + m - 2=0\\), with the two slopes \\(1\\) and \\(-2\\).</p>",
+          "<p>The image of the vertical direction is \\(\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]\\). Its first coordinate is non-zero, so the vertical line is not invariant.</p>"
+        ]
+      },
+      {
+        "title": "Read a three-coordinate transformation along an axis or plane",
+        "question": "<p>Find the image of \\(\\left[\\begin{matrix}1\\\\2\\\\5\\end{matrix}\\right]\\) under a quarter-turn about the z-axis mapping the positive x-axis towards the positive y-axis.</p>",
+        "solution": [
+          "<p>Use a two-coordinate rule on the affected axes. The x and y positions rotate while z is unchanged.</p>",
+          "<p>The three unit images give the matrix \\(\\left[\\begin{matrix}0 & -1 & 0\\\\1 & 0 & 0\\\\0 & 0 & 1\\end{matrix}\\right]\\).</p>",
+          "<p>Its product with the given column is \\(\\left[\\begin{matrix}-2\\\\1\\\\5\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Read a three-coordinate transformation along an axis or plane",
+        "question": "<p>Find the image of \\(\\left[\\begin{matrix}3\\\\0\\\\7\\end{matrix}\\right]\\) under a quarter-turn about the z-axis mapping the positive x-axis towards the positive y-axis.</p>",
+        "solution": [
+          "<p>Use a two-coordinate rule on the affected axes. The x and y positions rotate while z is unchanged.</p>",
+          "<p>The three unit images give the matrix \\(\\left[\\begin{matrix}0 & -1 & 0\\\\1 & 0 & 0\\\\0 & 0 & 1\\end{matrix}\\right]\\).</p>",
+          "<p>Its product with the given column is \\(\\left[\\begin{matrix}0\\\\3\\\\7\\end{matrix}\\right]\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "invariants-fixed-points-extra",
+        "title": "Find fixed points by solving the two coordinate equations",
+        "prompt": "<p>For \\(A=\\left[\\begin{matrix}1 & 4\\\\0 & -1\\end{matrix}\\right]\\), which axis consists entirely of fixed points? Give the other coordinate shared by every fixed point.</p>",
+        "fields": [
+          {
+            "key": "axis",
+            "label": "Axis of fixed points",
+            "type": "choice",
+            "expected": "xaxis",
+            "options": {
+              "xaxis": "x-axis",
+              "yaxis": "y-axis"
+            }
+          },
+          {
+            "key": "y",
+            "label": "Value of y at a fixed point",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>Solve Av = v, which is stronger than requiring the image to remain on its original line.</p>",
+        "solution": "<p>Set the image column equal to the original one. This gives \\(4y=0\\) and \\(-y=y\\).</p><p>Hence \\(y=0\\) and x is unrestricted.</p><p>Every point on the x-axis is fixed. A point off that axis changes its y-coordinate.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "invariants-stay-on-one-line-extra",
+        "title": "Distinguish an invariant line from a line of fixed points",
+        "prompt": "<p>The transformation uses \\(A=\\left[\\begin{matrix}4 & 0\\\\0 & 5\\end{matrix}\\right]\\). Give the multiplier on the y-axis, and decide whether the whole y-axis is fixed point by point.</p>",
+        "fields": [
+          {
+            "key": "factor",
+            "label": "Multiplier on the y-axis",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "fixed",
+            "label": "Every point fixed?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          }
+        ],
+        "hint": "<p>A line can map onto itself even if particular positions on it change.</p>",
+        "solution": "<p>A point of the y-axis has x-coordinate zero. Applying A leaves that coordinate zero and multiplies y by \\(5\\).</p><p>The output remains on the axis, so the line is invariant.</p><p>The multiplier is not one. Except for the origin, the points move along the line.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "invariants-keep-the-offset-extra",
+        "title": "Check a horizontal line that misses the origin",
+        "prompt": "<p>The shear uses \\(A=\\left[\\begin{matrix}1 & 6\\\\0 & 1\\end{matrix}\\right]\\). Decide whether the line \\(y=6\\) is invariant and find the x-coordinate of the image of \\(\\left[\\begin{matrix}1\\\\6\\end{matrix}\\right]\\).</p>",
+        "fields": [
+          {
+            "key": "line",
+            "label": "Is the line invariant?",
+            "type": "choice",
+            "expected": "yes",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          },
+          {
+            "key": "x",
+            "label": "Image x-coordinate",
+            "type": "number",
+            "expected": "37"
+          }
+        ],
+        "hint": "<p>To check an affine line, test a general point on it and account for its offset from the origin.</p>",
+        "solution": "<p>The matrix leaves every y-coordinate unchanged. The image of every point on the horizontal line stays on that line.</p><p>The inverse shear also keeps the same line, so the line maps onto itself.</p><p>The x-coordinate changes to \\(37\\) for the given point.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "invariants-finite-and-vertical-directions-extra",
+        "title": "Find finite invariant slopes and check the vertical axis",
+        "prompt": "<p>Find the slopes of all invariant lines through the origin for \\(A=\\left[\\begin{matrix}7 & 1\\\\12 & 6\\end{matrix}\\right]\\). Is the vertical line through the origin invariant?</p>",
+        "fields": [
+          {
+            "key": "slopes",
+            "label": "Set of m-values",
+            "type": "set",
+            "expected": "{3,-4}",
+            "variables": [
+              "m"
+            ]
+          },
+          {
+            "key": "vertical",
+            "label": "Vertical line invariant?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          }
+        ],
+        "hint": "<p>Test the vertical direction independently of the finite-slope equation.</p>",
+        "solution": "<p>A finite slope \\(m\\) has a direction column \\(\\left[\\begin{matrix}1\\\\m\\end{matrix}\\right]\\). The image must be parallel to it.</p><p>Equating cross products of the coordinates gives \\(m^{2} + m - 12=0\\), with the two slopes \\(3\\) and \\(-4\\).</p><p>The image of the vertical direction is \\(\\left[\\begin{matrix}1\\\\6\\end{matrix}\\right]\\). Its first coordinate is non-zero, so the vertical line is not invariant.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "invariants-maps-with-three-coordinates-extra",
+        "title": "Read a three-coordinate transformation along an axis or plane",
+        "prompt": "<p>Find the image of \\(\\left[\\begin{matrix}5\\\\-2\\\\9\\end{matrix}\\right]\\) under a quarter-turn about the z-axis mapping the positive x-axis towards the positive y-axis.</p>",
+        "fields": [
+          {
+            "key": "image_x",
+            "label": "Value of x",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "image_y",
+            "label": "Value of y",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "image_z",
+            "label": "Value of z",
+            "type": "number",
+            "expected": "9"
+          }
+        ],
+        "hint": "<p>Identify the unaffected coordinate before changing the others.</p>",
+        "solution": "<p>Use a two-coordinate rule on the affected axes. The x and y positions rotate while z is unchanged.</p><p>The three unit images give the matrix \\(\\left[\\begin{matrix}0 & -1 & 0\\\\1 & 0 & 0\\\\0 & 0 & 1\\end{matrix}\\right]\\).</p><p>Its product with the given column is \\(\\left[\\begin{matrix}2\\\\5\\\\9\\end{matrix}\\right]\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Fixed point",
+        "definition": "<p>A point whose coordinates do not change.</p>"
+      },
+      {
+        "term": "Invariant line",
+        "definition": "<p>A line mapped onto itself. Its points may move.</p>"
+      },
+      {
+        "term": "Direction vector",
+        "definition": "<p>Non-zero column parallel to a line.</p>"
+      },
+      {
+        "term": "Vertical direction",
+        "definition": "<p>Direction with zero first coordinate, not a finite slope.</p>"
+      },
+      {
+        "term": "Coordinate plane",
+        "definition": "<p>Plane defined by setting one coordinate to zero.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Fixed points</th><td>\\(A\\mathbf v=\\mathbf v\\).</td></tr><tr><th scope=\"row\">Line through origin</th><td>Check its direction maps to a non-zero multiple of itself.</td></tr><tr><th scope=\"row\">Offset line</th><td>Check the image of a general point as well as the direction.</td></tr><tr><th scope=\"row\">Spatial map</th><td>Identify which coordinate stays fixed or changes sign.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A shear maps \\((x,y)\\) to \\((x+2y,y)\\). Is \\(y=3\\) invariant and are its points fixed?</p><p><strong>Check</strong> The line is invariant, while each of its points moves six units horizontally.</p>",
+      "checks": "<ul><li>The origin is fixed by every linear transformation, but it need not be the only fixed point.</li><li>A zero image of its direction collapses the whole line to a point. That does not map the line onto itself.</li></ul>",
+      "examTip": "<p>Check finite slopes and the vertical direction separately, and distinguish an invariant set from fixed points.</p>"
+    },
+    "related": [
+      {
+        "title": "Building plane transformations",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_matrices_plane_maps"
+      }
+    ]
+  }
+}

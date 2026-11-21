@@ -34,6 +34,7 @@ import normal from "../../content/original/9709-s1/normal-study.json";
 import study9231Fp1Roots from "../../content/original/9231-fp1/roots-study.json";
 import study9231Fp1Rational from "../../content/original/9231-fp1/rational-study.json";
 import study9231Fp1Summation from "../../content/original/9231-fp1/summation-study.json";
+import study9231Fp1Matrices1 from "../../content/original/9231-fp1/matrices1-study.json";
 import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
 import { renderContent } from "./content";
 import { checkExact, checkExactInverseAngle, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
@@ -66,6 +67,7 @@ const lessons = {
   ...study9231Fp1Roots,
   ...study9231Fp1Rational,
   ...study9231Fp1Summation,
+  ...study9231Fp1Matrices1,
 } as Record<string, AuthoredLesson>;
 const examPaths = examPracticePaths as Record<string, Omit<StudyExamPractice, "starters"> & { starters?: StudyExamPractice["starters"] }>;
 
