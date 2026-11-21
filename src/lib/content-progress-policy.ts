@@ -19,6 +19,10 @@ export const notationProgressRevisions = [{
   key: "9709-p3-vectors", fromVersion: "1.0.0", toVersion: "1.0.1",
   fromFingerprint: "9a45b48f00dbb581deefd2fd0e66e39645d628bdbbaef35db65a64ae0223d7dd",
   toFingerprint: "f9388a6c512b6557cded6783483a760c219dc2f967aceff90cc21aa4e23a30a9",
+}, {
+  key: "9709-p3-differential-equations", fromVersion: "1.0.0", toVersion: "1.0.1",
+  fromFingerprint: "5b393538354dbd1d5f0b686be82d205d3194a270bec0d44fc12965f5f65e09b0",
+  toFingerprint: "fff64573bfdf86bf41421bc61742f7597b5e8d620e9c96bfb024be2d8132873d",
 }] as const;
 
 export function notationProgressPolicy(p: ContentPackage) {
