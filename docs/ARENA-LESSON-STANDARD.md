@@ -6,6 +6,8 @@ Applies to new and revised Arena teaching pages. The five 9709 Pure Mathematics 
 
 Use the Quadratics edition of 20 November 2026 as the starting point. Open the [chapter](https://arena.maths4u.sbs/courses/maths4u-9709-p1/chapters/quadratics), the [factorisation lesson at the method](https://arena.maths4u.sbs/courses/maths4u-9709-p1/topics/orig_quadratics_factorisation#factorise) and its [one-page revision sheet](https://arena.maths4u.sbs/courses/maths4u-9709-p1/topics/orig_quadratics_factorisation?view=revision).
 
+For Cambridge 9709 chapters, check the current Cambridge syllabus for scope and compare the matching Save My Exams notes for how they introduce a method, explain when to choose it and address common mistakes. Write Maths4U explanations, examples and diagrams independently.
+
 In the reference section a student solves $3x^2=6x$, sees why taking out $3x$ preserves the zero root, then independently solves $2x^2=14x$. The next method has its own example and check. Keep that relationship when writing a different chapter. Choose the number of sections and examples to fit the mathematics.
 
 For each method, draft one row before writing the page. Fill the final column with the mistake the feedback will recognise.
