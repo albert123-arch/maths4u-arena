@@ -1,0 +1,2033 @@
+{
+  "fm_momentum_direct": {
+    "updatedOn": "2026-11-21",
+    "description": "Use signed approaches, momentum and restitution, and check impulse directions and kinetic energy after direct impacts.",
+    "sections": [
+      {
+        "id": "signed-momentum-change",
+        "title": "Why can impulse have a negative sign?",
+        "label": "Use signed velocities",
+        "intro": "<p>The impulse along a chosen axis equals the change in signed momentum along that axis.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For one particle of constant mass, \\(I=m(v-u)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "direct-signed-momentum-change-check",
+            "title": "Use a signed velocity change for impulse",
+            "prompt": "<p>A sphere of mass \\(4\\) kilograms initially moves rightwards at \\(6\\,\\mathrm{m\\,s^{-1}}\\). A short impulse makes it move leftwards at \\(3\\,\\mathrm{m\\,s^{-1}}\\). Taking right as positive, find the signed impulse.</p>",
+            "fields": [
+              {
+                "key": "impulse",
+                "label": "Signed rightwards impulse",
+                "type": "number",
+                "expected": "-36",
+                "retry": [
+                  {
+                    "answer": "-12",
+                    "feedback": "<p>The final velocity is negative because the ball moves left. Use signed velocities.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>A reversal of direction changes momentum by more than the change in speed suggests.</p>",
+            "solution": "<p>Write the initial and final velocities using the same sign convention: \\(6\\,\\mathrm{m\\,s^{-1}}\\) and \\(-3\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The impulse is final momentum minus initial momentum, giving \\(-36\\,\\mathrm{N\\,s}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Subtracting speeds instead of signed velocities loses reversals.</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-two-direct-impact-equations",
+        "title": "Which two equations determine the outgoing velocities?",
+        "label": "Conserve and compare",
+        "intro": "<p>If the external impulse along the line of centres is negligible, conserve total momentum in that direction.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>With positive axis from A to B, use \\(v_B-v_A=e(u_A-u_B)\\) when A approaches B along that direction.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/momentum/direct-before-impact.svg",
+              "alt": "Spheres A and B lie on a common line. Their two incoming velocity arrows point towards each other.",
+              "caption": "<p>Choose one positive direction for both spheres. With right positive, the arrows shown give a positive velocity for A and a negative velocity for B.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "direct-use-two-direct-impact-equations-check",
+            "title": "Resolve a direct impact with signed momentum",
+            "prompt": "<p>Spheres A and B of masses \\(3\\) and \\(5\\) kilograms collide directly on a smooth horizontal track. Positive is from A towards B at contact. Their incoming signed velocities are \\(7\\,\\mathrm{m\\,s^{-1}}\\) and \\(-1\\,\\mathrm{m\\,s^{-1}}\\), respectively. The coefficient of restitution is \\(\\frac{3}{7}\\). Find both outgoing signed velocities.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Outgoing A velocity",
+                "type": "number",
+                "expected": "-1/7"
+              },
+              {
+                "key": "b",
+                "label": "Outgoing B velocity",
+                "type": "number",
+                "expected": "23/7"
+              }
+            ],
+            "hint": "<p>Use the relative approach and separation speeds along the line of impact, together with total momentum.</p>",
+            "solution": "<p>Momentum along the line is conserved. With outgoing velocities \\(v_A\\) and \\(v_B\\), use \\(3v_A+5v_B=16\\).</p><p>Apply restitution to the separation speed, \\(v_B-v_A=\\frac{24}{7}\\). Solving gives \\(- \\frac{1}{7}\\,\\mathrm{m\\,s^{-1}}\\) for A and \\(\\frac{23}{7}\\,\\mathrm{m\\,s^{-1}}\\) for B.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not take separate momentum conservation equations for each sphere.</p>"
+          }
+        ]
+      },
+      {
+        "id": "infer-an-unknown-coefficient",
+        "title": "What do measured outgoing velocities tell me about restitution?",
+        "label": "Find the missing velocity first",
+        "intro": "<p>Once the incoming velocities and one outgoing velocity are known, momentum gives the other. Restitution follows from the ratio of relative speeds.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A record must satisfy both momentum and the restitution relation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "direct-infer-an-unknown-coefficient-check",
+            "title": "Resolve a direct impact with signed momentum",
+            "prompt": "<p>Spheres A and B of masses \\(3\\) and \\(5\\) kilograms collide directly on a smooth horizontal track. Positive is from A towards B at contact. Their incoming signed velocities are \\(7\\,\\mathrm{m\\,s^{-1}}\\) and \\(-1\\,\\mathrm{m\\,s^{-1}}\\), respectively. The outgoing velocity of B is \\(\\frac{23}{7}\\,\\mathrm{m\\,s^{-1}}\\). Find the signed outgoing velocity of A and coefficient of restitution.</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Outgoing A velocity",
+                "type": "number",
+                "expected": "-1/7"
+              },
+              {
+                "key": "restitution",
+                "label": "Coefficient of restitution",
+                "type": "number",
+                "expected": "3/7"
+              }
+            ],
+            "hint": "<p>Use the relative approach and separation speeds along the line of impact, together with total momentum.</p>",
+            "solution": "<p>Use the momentum equation with the known outgoing velocity of B. A leaves with signed velocity \\(- \\frac{1}{7}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The separation speed is \\(\\frac{24}{7}\\,\\mathrm{m\\,s^{-1}}\\) and approach speed \\(8\\,\\mathrm{m\\,s^{-1}}\\). Their ratio gives \\(e=\\frac{3}{7}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The ratio of one object's outgoing to incoming speed is not generally restitution for two moving spheres.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "direct-infer-an-unknown-coefficient-follow-up",
+            "title": "Resolve a direct impact with signed momentum",
+            "prompt": "<p>Spheres A and B of masses \\(5\\) and \\(7\\) kilograms collide directly on a smooth horizontal track. Positive is from A towards B at contact. Their incoming signed velocities are \\(9\\,\\mathrm{m\\,s^{-1}}\\) and \\(-2\\,\\mathrm{m\\,s^{-1}}\\), respectively. The outgoing velocity of B is \\(\\frac{41}{7}\\,\\mathrm{m\\,s^{-1}}\\). Find the signed outgoing velocity of A and coefficient of restitution.</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Outgoing A velocity",
+                "type": "number",
+                "expected": "-2"
+              },
+              {
+                "key": "restitution",
+                "label": "Coefficient of restitution",
+                "type": "number",
+                "expected": "5/7"
+              }
+            ],
+            "hint": "<p>Use the relative approach and separation speeds along the line of impact, together with total momentum.</p>",
+            "solution": "<p>Use the momentum equation with the known outgoing velocity of B. A leaves with signed velocity \\(-2\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The separation speed is \\(\\frac{55}{7}\\,\\mathrm{m\\,s^{-1}}\\) and approach speed \\(11\\,\\mathrm{m\\,s^{-1}}\\). Their ratio gives \\(e=\\frac{5}{7}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "measure-kinetic-energy-loss",
+        "title": "Does momentum conservation imply no energy loss?",
+        "label": "Compare system energies",
+        "intro": "<p>With non-unit restitution, the speeds can change so that total kinetic energy falls while total momentum remains unchanged.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\Delta K=K_f-K_i\\) for a signed change and \\(K_i-K_f\\) for a positive loss.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "direct-measure-kinetic-energy-loss-check",
+            "title": "Resolve a direct impact with signed momentum",
+            "prompt": "<p>Spheres A and B of masses \\(3\\) and \\(5\\) kilograms collide directly on a smooth horizontal track. Positive is from A towards B at contact. Their incoming signed velocities are \\(7\\,\\mathrm{m\\,s^{-1}}\\) and \\(-1\\,\\mathrm{m\\,s^{-1}}\\), respectively. The coefficient of restitution is \\(\\frac{3}{7}\\). Find the total kinetic energy lost and the signed impulse on A.</p>",
+            "fields": [
+              {
+                "key": "lost",
+                "label": "Kinetic energy lost",
+                "type": "number",
+                "expected": "2400/49"
+              },
+              {
+                "key": "impulse",
+                "label": "Impulse on A",
+                "type": "number",
+                "expected": "-150/7"
+              }
+            ],
+            "hint": "<p>Use the relative approach and separation speeds along the line of impact, together with total momentum.</p>",
+            "solution": "<p>Momentum along the line is conserved. With outgoing velocities \\(v_A\\) and \\(v_B\\), use \\(3v_A+5v_B=16\\).</p><p>Apply restitution to the separation speed, \\(v_B-v_A=\\frac{24}{7}\\). Solving gives \\(- \\frac{1}{7}\\,\\mathrm{m\\,s^{-1}}\\) for A and \\(\\frac{23}{7}\\,\\mathrm{m\\,s^{-1}}\\) for B.</p><p>Subtract the final system KE from the initial system KE. The energy lost is \\(\\frac{2400}{49}\\,\\mathrm J\\).</p><p>The signed impulse on A is \\(- \\frac{150}{7}\\,\\mathrm{N\\,s}\\). The impulse on B is equal and opposite.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use both spheres’ energies in the system loss.</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-the-restitution-bound",
+        "title": "Can measured post-impact readings be inconsistent?",
+        "label": "Check relative speeds",
+        "intro": "<p>Conservation of momentum alone is not enough to validate a proposed collision. It must also keep separation consistent with the assumed model.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Require \\(0\\le e\\le1\\). Unit restitution is perfectly elastic. At zero restitution the normal separation speed immediately after impact is zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "direct-check-the-restitution-bound-check",
+            "title": "Validate a proposed post-impact record",
+            "prompt": "<p>Two spheres of masses \\(4\\) and \\(3\\) kilograms approach along their line of centres with signed velocities \\(4\\,\\mathrm{m\\,s^{-1}}\\) and \\(0\\,\\mathrm{m\\,s^{-1}}\\). A proposed pair of outgoing readings is \\(\\frac{4}{7}\\,\\mathrm{m\\,s^{-1}}\\) for A and \\(\\frac{32}{7}\\,\\mathrm{m\\,s^{-1}}\\) for B. Find the inferred restitution coefficient and classify the record.</p>",
+            "fields": [
+              {
+                "key": "e",
+                "label": "Inferred coefficient",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "valid",
+                "label": "Classification",
+                "type": "choice",
+                "expected": "one",
+                "options": {
+                  "zero": "Zero restitution",
+                  "one": "Perfectly elastic",
+                  "between": "Partially elastic",
+                  "invalid": "Invalid in the collision model"
+                }
+              }
+            ],
+            "hint": "<p>Check the restitution bound even if the proposed readings conserve momentum.</p>",
+            "solution": "<p>The incoming relative approach speed is \\(4\\,\\mathrm{m\\,s^{-1}}\\). The proposed separation velocity of B relative to A is \\(4\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Their quotient gives \\(e=1\\). Unit restitution gives the perfectly elastic case in this model.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Equal normal velocities at the instant after impact do not generally imply a permanent bond.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "direct-check-the-restitution-bound-follow-up",
+            "title": "Validate a proposed post-impact record",
+            "prompt": "<p>Two spheres of masses \\(6\\) and \\(5\\) kilograms approach along their line of centres with signed velocities \\(6\\,\\mathrm{m\\,s^{-1}}\\) and \\(0\\,\\mathrm{m\\,s^{-1}}\\). A proposed pair of outgoing readings is \\(- \\frac{3}{22}\\,\\mathrm{m\\,s^{-1}}\\) for A and \\(\\frac{81}{11}\\,\\mathrm{m\\,s^{-1}}\\) for B. Find the inferred restitution coefficient and classify the record.</p>",
+            "fields": [
+              {
+                "key": "e",
+                "label": "Inferred coefficient",
+                "type": "number",
+                "expected": "5/4"
+              },
+              {
+                "key": "valid",
+                "label": "Classification",
+                "type": "choice",
+                "expected": "invalid",
+                "options": {
+                  "zero": "Zero restitution",
+                  "one": "Perfectly elastic",
+                  "between": "Partially elastic",
+                  "invalid": "Invalid in the collision model"
+                }
+              }
+            ],
+            "hint": "<p>Check the restitution bound even if the proposed readings conserve momentum.</p>",
+            "solution": "<p>The incoming relative approach speed is \\(6\\,\\mathrm{m\\,s^{-1}}\\). The proposed separation velocity of B relative to A is \\(\\frac{15}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Their quotient gives \\(e=\\frac{5}{4}\\). The inferred coefficient is outside the physical interval from zero to one.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use a signed velocity change for impulse",
+        "question": "<p>A sphere of mass \\(3\\) kilograms initially moves rightwards at \\(5\\,\\mathrm{m\\,s^{-1}}\\). A short impulse makes it move leftwards at \\(2\\,\\mathrm{m\\,s^{-1}}\\). Taking right as positive, find the signed impulse.</p>",
+        "solution": [
+          "<p>Write the initial and final velocities using the same sign convention: \\(5\\,\\mathrm{m\\,s^{-1}}\\) and \\(-2\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The impulse is final momentum minus initial momentum, giving \\(-21\\,\\mathrm{N\\,s}\\).</p>"
+        ]
+      },
+      {
+        "title": "Resolve a direct impact with signed momentum",
+        "question": "<p>Spheres A and B of masses \\(2\\) and \\(4\\) kilograms collide directly on a smooth horizontal track. Positive is from A towards B at contact. Their incoming signed velocities are \\(6\\,\\mathrm{m\\,s^{-1}}\\) and \\(- \\frac{1}{2}\\,\\mathrm{m\\,s^{-1}}\\), respectively. The coefficient of restitution is \\(\\frac{2}{7}\\). Find both outgoing signed velocities.</p>",
+        "solution": [
+          "<p>Momentum along the line is conserved. With outgoing velocities \\(v_A\\) and \\(v_B\\), use \\(2v_A+4v_B=10\\).</p>",
+          "<p>Apply restitution to the separation speed, \\(v_B-v_A=\\frac{13}{7}\\). Solving gives \\(\\frac{3}{7}\\,\\mathrm{m\\,s^{-1}}\\) for A and \\(\\frac{16}{7}\\,\\mathrm{m\\,s^{-1}}\\) for B.</p>"
+        ]
+      },
+      {
+        "title": "Resolve a direct impact with signed momentum",
+        "question": "<p>Spheres A and B of masses \\(2\\) and \\(4\\) kilograms collide directly on a smooth horizontal track. Positive is from A towards B at contact. Their incoming signed velocities are \\(6\\,\\mathrm{m\\,s^{-1}}\\) and \\(- \\frac{1}{2}\\,\\mathrm{m\\,s^{-1}}\\), respectively. The outgoing velocity of B is \\(\\frac{16}{7}\\,\\mathrm{m\\,s^{-1}}\\). Find the signed outgoing velocity of A and coefficient of restitution.</p>",
+        "solution": [
+          "<p>Use the momentum equation with the known outgoing velocity of B. A leaves with signed velocity \\(\\frac{3}{7}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The separation speed is \\(\\frac{13}{7}\\,\\mathrm{m\\,s^{-1}}\\) and approach speed \\(\\frac{13}{2}\\,\\mathrm{m\\,s^{-1}}\\). Their ratio gives \\(e=\\frac{2}{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "Resolve a direct impact with signed momentum",
+        "question": "<p>Spheres A and B of masses \\(4\\) and \\(6\\) kilograms collide directly on a smooth horizontal track. Positive is from A towards B at contact. Their incoming signed velocities are \\(8\\,\\mathrm{m\\,s^{-1}}\\) and \\(- \\frac{3}{2}\\,\\mathrm{m\\,s^{-1}}\\), respectively. The outgoing velocity of B is \\(\\frac{313}{70}\\,\\mathrm{m\\,s^{-1}}\\). Find the signed outgoing velocity of A and coefficient of restitution.</p>",
+        "solution": [
+          "<p>Use the momentum equation with the known outgoing velocity of B. A leaves with signed velocity \\(- \\frac{67}{70}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The separation speed is \\(\\frac{38}{7}\\,\\mathrm{m\\,s^{-1}}\\) and approach speed \\(\\frac{19}{2}\\,\\mathrm{m\\,s^{-1}}\\). Their ratio gives \\(e=\\frac{4}{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "Resolve a direct impact with signed momentum",
+        "question": "<p>Spheres A and B of masses \\(2\\) and \\(4\\) kilograms collide directly on a smooth horizontal track. Positive is from A towards B at contact. Their incoming signed velocities are \\(6\\,\\mathrm{m\\,s^{-1}}\\) and \\(- \\frac{1}{2}\\,\\mathrm{m\\,s^{-1}}\\), respectively. The coefficient of restitution is \\(\\frac{2}{7}\\). Find the total kinetic energy lost and the signed impulse on A.</p>",
+        "solution": [
+          "<p>Momentum along the line is conserved. With outgoing velocities \\(v_A\\) and \\(v_B\\), use \\(2v_A+4v_B=10\\).</p>",
+          "<p>Apply restitution to the separation speed, \\(v_B-v_A=\\frac{13}{7}\\). Solving gives \\(\\frac{3}{7}\\,\\mathrm{m\\,s^{-1}}\\) for A and \\(\\frac{16}{7}\\,\\mathrm{m\\,s^{-1}}\\) for B.</p>",
+          "<p>Subtract the final system KE from the initial system KE. The energy lost is \\(\\frac{2535}{98}\\,\\mathrm J\\).</p>",
+          "<p>The signed impulse on A is \\(- \\frac{78}{7}\\,\\mathrm{N\\,s}\\). The impulse on B is equal and opposite.</p>"
+        ]
+      },
+      {
+        "title": "Validate a proposed post-impact record",
+        "question": "<p>Two spheres of masses \\(3\\) and \\(2\\) kilograms approach along their line of centres with signed velocities \\(3\\,\\mathrm{m\\,s^{-1}}\\) and \\(0\\,\\mathrm{m\\,s^{-1}}\\). A proposed pair of outgoing readings is \\(\\frac{9}{5}\\,\\mathrm{m\\,s^{-1}}\\) for A and \\(\\frac{9}{5}\\,\\mathrm{m\\,s^{-1}}\\) for B. Find the inferred restitution coefficient and classify the record.</p>",
+        "solution": [
+          "<p>The incoming relative approach speed is \\(3\\,\\mathrm{m\\,s^{-1}}\\). The proposed separation velocity of B relative to A is \\(0\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Their quotient gives \\(e=0\\). Zero restitution gives equal normal speeds immediately afterwards.</p>"
+        ]
+      },
+      {
+        "title": "Validate a proposed post-impact record",
+        "question": "<p>Two spheres of masses \\(5\\) and \\(4\\) kilograms approach along their line of centres with signed velocities \\(5\\,\\mathrm{m\\,s^{-1}}\\) and \\(0\\,\\mathrm{m\\,s^{-1}}\\). A proposed pair of outgoing readings is \\(1\\,\\mathrm{m\\,s^{-1}}\\) for A and \\(5\\,\\mathrm{m\\,s^{-1}}\\) for B. Find the inferred restitution coefficient and classify the record.</p>",
+        "solution": [
+          "<p>The incoming relative approach speed is \\(5\\,\\mathrm{m\\,s^{-1}}\\). The proposed separation velocity of B relative to A is \\(4\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Their quotient gives \\(e=\\frac{4}{5}\\). The coefficient is between zero and one, as for a partially elastic impact.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "direct-signed-momentum-change-extra",
+        "title": "Use a signed velocity change for impulse",
+        "prompt": "<p>A sphere of mass \\(5\\) kilograms initially moves rightwards at \\(7\\,\\mathrm{m\\,s^{-1}}\\). A short impulse makes it move leftwards at \\(4\\,\\mathrm{m\\,s^{-1}}\\). Taking right as positive, find the signed impulse.</p>",
+        "fields": [
+          {
+            "key": "impulse",
+            "label": "Signed rightwards impulse",
+            "type": "number",
+            "expected": "-55",
+            "retry": [
+              {
+                "answer": "-15",
+                "feedback": "<p>The final velocity is negative because the ball moves left. Use signed velocities.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>A reversal of direction changes momentum by more than the change in speed suggests.</p>",
+        "solution": "<p>Write the initial and final velocities using the same sign convention: \\(7\\,\\mathrm{m\\,s^{-1}}\\) and \\(-4\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The impulse is final momentum minus initial momentum, giving \\(-55\\,\\mathrm{N\\,s}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "direct-use-two-direct-impact-equations-extra",
+        "title": "Resolve a direct impact with signed momentum",
+        "prompt": "<p>Spheres A and B of masses \\(4\\) and \\(6\\) kilograms collide directly on a smooth horizontal track. Positive is from A towards B at contact. Their incoming signed velocities are \\(8\\,\\mathrm{m\\,s^{-1}}\\) and \\(- \\frac{3}{2}\\,\\mathrm{m\\,s^{-1}}\\), respectively. The coefficient of restitution is \\(\\frac{4}{7}\\). Find both outgoing signed velocities.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Outgoing A velocity",
+            "type": "number",
+            "expected": "-67/70"
+          },
+          {
+            "key": "b",
+            "label": "Outgoing B velocity",
+            "type": "number",
+            "expected": "313/70"
+          }
+        ],
+        "hint": "<p>Use the relative approach and separation speeds along the line of impact, together with total momentum.</p>",
+        "solution": "<p>Momentum along the line is conserved. With outgoing velocities \\(v_A\\) and \\(v_B\\), use \\(4v_A+6v_B=23\\).</p><p>Apply restitution to the separation speed, \\(v_B-v_A=\\frac{38}{7}\\). Solving gives \\(- \\frac{67}{70}\\,\\mathrm{m\\,s^{-1}}\\) for A and \\(\\frac{313}{70}\\,\\mathrm{m\\,s^{-1}}\\) for B.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "direct-infer-an-unknown-coefficient-extra",
+        "title": "Resolve a direct impact with signed momentum",
+        "prompt": "<p>Spheres A and B of masses \\(6\\) and \\(8\\) kilograms collide directly on a smooth horizontal track. Positive is from A towards B at contact. Their incoming signed velocities are \\(10\\,\\mathrm{m\\,s^{-1}}\\) and \\(- \\frac{5}{2}\\,\\mathrm{m\\,s^{-1}}\\), respectively. The outgoing velocity of B is \\(\\frac{365}{49}\\,\\mathrm{m\\,s^{-1}}\\). Find the signed outgoing velocity of A and coefficient of restitution.</p>",
+        "fields": [
+          {
+            "key": "velocity",
+            "label": "Outgoing A velocity",
+            "type": "number",
+            "expected": "-160/49"
+          },
+          {
+            "key": "restitution",
+            "label": "Coefficient of restitution",
+            "type": "number",
+            "expected": "6/7"
+          }
+        ],
+        "hint": "<p>Use the relative approach and separation speeds along the line of impact, together with total momentum.</p>",
+        "solution": "<p>Use the momentum equation with the known outgoing velocity of B. A leaves with signed velocity \\(- \\frac{160}{49}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The separation speed is \\(\\frac{75}{7}\\,\\mathrm{m\\,s^{-1}}\\) and approach speed \\(\\frac{25}{2}\\,\\mathrm{m\\,s^{-1}}\\). Their ratio gives \\(e=\\frac{6}{7}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "direct-measure-kinetic-energy-loss-extra",
+        "title": "Resolve a direct impact with signed momentum",
+        "prompt": "<p>Spheres A and B of masses \\(4\\) and \\(6\\) kilograms collide directly on a smooth horizontal track. Positive is from A towards B at contact. Their incoming signed velocities are \\(8\\,\\mathrm{m\\,s^{-1}}\\) and \\(- \\frac{3}{2}\\,\\mathrm{m\\,s^{-1}}\\), respectively. The coefficient of restitution is \\(\\frac{4}{7}\\). Find the total kinetic energy lost and the signed impulse on A.</p>",
+        "fields": [
+          {
+            "key": "lost",
+            "label": "Kinetic energy lost",
+            "type": "number",
+            "expected": "35739/490"
+          },
+          {
+            "key": "impulse",
+            "label": "Impulse on A",
+            "type": "number",
+            "expected": "-1254/35"
+          }
+        ],
+        "hint": "<p>Use the relative approach and separation speeds along the line of impact, together with total momentum.</p>",
+        "solution": "<p>Momentum along the line is conserved. With outgoing velocities \\(v_A\\) and \\(v_B\\), use \\(4v_A+6v_B=23\\).</p><p>Apply restitution to the separation speed, \\(v_B-v_A=\\frac{38}{7}\\). Solving gives \\(- \\frac{67}{70}\\,\\mathrm{m\\,s^{-1}}\\) for A and \\(\\frac{313}{70}\\,\\mathrm{m\\,s^{-1}}\\) for B.</p><p>Subtract the final system KE from the initial system KE. The energy lost is \\(\\frac{35739}{490}\\,\\mathrm J\\).</p><p>The signed impulse on A is \\(- \\frac{1254}{35}\\,\\mathrm{N\\,s}\\). The impulse on B is equal and opposite.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "direct-check-the-restitution-bound-extra",
+        "title": "Validate a proposed post-impact record",
+        "prompt": "<p>Two spheres of masses \\(7\\) and \\(6\\) kilograms approach along their line of centres with signed velocities \\(7\\,\\mathrm{m\\,s^{-1}}\\) and \\(0\\,\\mathrm{m\\,s^{-1}}\\). A proposed pair of outgoing readings is \\(\\frac{63}{13}\\,\\mathrm{m\\,s^{-1}}\\) for A and \\(\\frac{98}{39}\\,\\mathrm{m\\,s^{-1}}\\) for B. Find the inferred restitution coefficient and classify the record.</p>",
+        "fields": [
+          {
+            "key": "e",
+            "label": "Inferred coefficient",
+            "type": "number",
+            "expected": "-1/3"
+          },
+          {
+            "key": "valid",
+            "label": "Classification",
+            "type": "choice",
+            "expected": "invalid",
+            "options": {
+              "zero": "Zero restitution",
+              "one": "Perfectly elastic",
+              "between": "Partially elastic",
+              "invalid": "Invalid in the collision model"
+            }
+          }
+        ],
+        "hint": "<p>Check the restitution bound even if the proposed readings conserve momentum.</p>",
+        "solution": "<p>The incoming relative approach speed is \\(7\\,\\mathrm{m\\,s^{-1}}\\). The proposed separation velocity of B relative to A is \\(- \\frac{7}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Their quotient gives \\(e=- \\frac{1}{3}\\). The inferred coefficient is outside the physical interval from zero to one.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Impulse",
+        "definition": "<p>Change in momentum produced by a brief net force.</p>"
+      },
+      {
+        "term": "Restitution",
+        "definition": "<p>Ratio of separation speed to approach speed along the contact line.</p>"
+      },
+      {
+        "term": "Perfectly elastic",
+        "definition": "<p>An impact with coefficient of restitution one in this model.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Impulse</th><td>\\(I=m(v-u)\\).</td></tr><tr><th scope=\"row\">Momentum</th><td>Conserve the total when external impulse is negligible along the chosen axis.</td></tr><tr><th scope=\"row\">Restitution</th><td>Compare the two relative velocities along the contact line.</td></tr><tr><th scope=\"row\">Energy</th><td>Calculate KE loss separately.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A \\(2\\,\\mathrm{kg}\\) sphere reverses from \\(+6\\) to \\(-1\\,\\mathrm{m\\,s^{-1}}\\). Find the signed impulse.</p><p><strong>Check</strong> \\(-14\\,\\mathrm{N\\,s}\\).</p>",
+      "checks": "<ul><li>Subtracting speeds instead of signed velocities loses reversals.</li><li>Do not take separate momentum conservation equations for each sphere.</li></ul>",
+      "examTip": "<p>Draw a positive direction once and use it for both spheres and both times.</p>"
+    },
+    "related": [
+      {
+        "title": "Smooth fixed surfaces and rebound geometry",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_momentum_surfaces"
+      }
+    ]
+  },
+  "fm_momentum_surfaces": {
+    "updatedOn": "2026-11-21",
+    "description": "Reverse and scale the normal component, preserve tangential motion and use the post-impact direction in further calculations.",
+    "sections": [
+      {
+        "id": "identify-wall-normal",
+        "title": "Which component can a smooth wall change?",
+        "label": "Split normal and tangent",
+        "intro": "<p>A smooth wall exerts a perpendicular impulse, so the tangential component of the sphere’s momentum cannot change during that collision.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Reverse and scale the normal component. Preserve the signed tangent component.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/momentum/wall-normal-components.svg",
+              "alt": "An incident path approaches a vertical wall at P. Its rebounding path leaves the wall while continuing in the same tangential sense.",
+              "caption": "<p>The smooth wall changes only the normal component. The two path angles are measured relative to the wall itself.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-identify-wall-normal-check",
+            "title": "Apply restitution normal to a smooth wall",
+            "prompt": "<p>A sphere of mass \\(\\frac{3}{2}\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-5\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(3\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{1}{3}\\). Give both outgoing signed components.</p>",
+            "fields": [
+              {
+                "key": "normal",
+                "label": "Outgoing normal component",
+                "type": "number",
+                "expected": "5/3",
+                "retry": [
+                  {
+                    "answer": "-5/3",
+                    "feedback": "<p>The ball moves away from the wall after impact, so the normal component is positive.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "parallel",
+                "label": "Outgoing parallel component",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Separate the normal direction from the tangent. The wall supplies impulse, so do not conserve the ball’s normal momentum.</p>",
+            "solution": "<p>Reverse the normal component and multiply its magnitude by the restitution coefficient.</p><p>There is no tangential impulse. The final normal component is \\(\\frac{5}{3}\\,\\mathrm{m\\,s^{-1}}\\) and the parallel component remains \\(3\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not multiply the whole velocity by restitution.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rebuild-rebound-direction",
+        "title": "How do I state the rebound speed and angle?",
+        "label": "Combine outgoing components",
+        "intro": "<p>Use the two outgoing components to form a right triangle, then measure the angle from the reference requested.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>An angle to the wall uses the tangent component adjacent to it and the normal component opposite.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-rebuild-rebound-direction-check",
+            "title": "Apply restitution normal to a smooth wall",
+            "prompt": "<p>A sphere of mass \\(\\frac{3}{2}\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-5\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(3\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{1}{3}\\). Find its exact speed and the tangent of its acute rebound angle to the wall.</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Exact rebound speed",
+                "type": "number",
+                "expected": "sqrt(106)/3"
+              },
+              {
+                "key": "tangent",
+                "label": "Tangent of rebound angle to wall",
+                "type": "number",
+                "expected": "5/9"
+              }
+            ],
+            "hint": "<p>Separate the normal direction from the tangent. The wall supplies impulse, so do not conserve the ball’s normal momentum.</p>",
+            "solution": "<p>The two outgoing components are \\(\\frac{5}{3}\\,\\mathrm{m\\,s^{-1}}\\) normal and \\(3\\,\\mathrm{m\\,s^{-1}}\\) parallel.</p><p>Pythagoras gives exact speed \\(\\frac{\\sqrt{106}}{3}\\,\\mathrm{m\\,s^{-1}}\\). The angle to the wall has tangent \\(\\frac{5}{9}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An angle to the wall is complementary to its angle to the normal.</p>"
+          }
+        ]
+      },
+      {
+        "id": "infer-wall-restitution",
+        "title": "How can I use a rebound angle to find restitution?",
+        "label": "Recover the normal speed",
+        "intro": "<p>On a smooth wall the tangential speed carried through the collision links the rebound angle to the outgoing normal speed.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Compare this normal speed with the incoming normal speed to obtain restitution.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-infer-wall-restitution-check",
+            "title": "Apply restitution normal to a smooth wall",
+            "prompt": "<p>A sphere of mass \\(\\frac{3}{2}\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-5\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(3\\,\\mathrm{m\\,s^{-1}}\\). The tangent of the angle its outgoing velocity makes with the wall is \\(\\frac{5}{9}\\). Find the coefficient of restitution and the magnitude of the impulse.</p>",
+            "fields": [
+              {
+                "key": "e",
+                "label": "Coefficient of restitution",
+                "type": "number",
+                "expected": "1/3"
+              },
+              {
+                "key": "impulse",
+                "label": "Impulse magnitude",
+                "type": "number",
+                "expected": "10"
+              }
+            ],
+            "hint": "<p>Separate the normal direction from the tangent. The wall supplies impulse, so do not conserve the ball’s normal momentum.</p>",
+            "solution": "<p>Smooth contact leaves the velocity parallel to the wall unchanged. The outgoing normal component is the tangent of the rebound angle multiplied by that parallel speed.</p><p>This gives normal rebound speed \\(\\frac{5}{3}\\,\\mathrm{m\\,s^{-1}}\\), so \\(e=\\frac{1}{3}\\).</p><p>The change of normal momentum gives impulse magnitude \\(10\\,\\mathrm{N\\,s}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Compare normals, not two whole speed magnitudes.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-infer-wall-restitution-follow-up",
+            "title": "Apply restitution normal to a smooth wall",
+            "prompt": "<p>A sphere of mass \\(\\frac{5}{2}\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-7\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(4\\,\\mathrm{m\\,s^{-1}}\\). The tangent of the angle its outgoing velocity makes with the wall is \\(\\frac{7}{6}\\). Find the coefficient of restitution and the magnitude of the impulse.</p>",
+            "fields": [
+              {
+                "key": "e",
+                "label": "Coefficient of restitution",
+                "type": "number",
+                "expected": "2/3"
+              },
+              {
+                "key": "impulse",
+                "label": "Impulse magnitude",
+                "type": "number",
+                "expected": "175/6"
+              }
+            ],
+            "hint": "<p>Separate the normal direction from the tangent. The wall supplies impulse, so do not conserve the ball’s normal momentum.</p>",
+            "solution": "<p>Smooth contact leaves the velocity parallel to the wall unchanged. The outgoing normal component is the tangent of the rebound angle multiplied by that parallel speed.</p><p>This gives normal rebound speed \\(\\frac{14}{3}\\,\\mathrm{m\\,s^{-1}}\\), so \\(e=\\frac{2}{3}\\).</p><p>The change of normal momentum gives impulse magnitude \\(\\frac{175}{6}\\,\\mathrm{N\\,s}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "normal-impulse-and-energy-loss",
+        "title": "Why does tangential motion cancel in the energy loss?",
+        "label": "Compare the changed parts",
+        "intro": "<p>The wall changes the sphere's normal momentum. Its unchanged tangential speed contributes the same energy before and after.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Compute impulse and KE change from the normal components.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-normal-impulse-and-energy-loss-check",
+            "title": "Apply restitution normal to a smooth wall",
+            "prompt": "<p>A sphere of mass \\(\\frac{3}{2}\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-5\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(3\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{1}{3}\\). Find the energy loss and impulse magnitude.</p>",
+            "fields": [
+              {
+                "key": "loss",
+                "label": "Energy lost",
+                "type": "number",
+                "expected": "50/3"
+              },
+              {
+                "key": "impulse",
+                "label": "Impulse magnitude",
+                "type": "number",
+                "expected": "10"
+              }
+            ],
+            "hint": "<p>Separate the normal direction from the tangent. The wall supplies impulse, so do not conserve the ball’s normal momentum.</p>",
+            "solution": "<p>Only the normal velocity changes, from \\(-5\\,\\mathrm{m\\,s^{-1}}\\) to \\(\\frac{5}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The tangential KE cancels. The energy loss is \\(\\frac{50}{3}\\,\\mathrm J\\) and impulse magnitude \\(10\\,\\mathrm{N\\,s}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Momentum of the sphere alone is not conserved in the normal direction.</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-the-rebound-to-start-a-flight",
+        "title": "What changes if the surface is the floor?",
+        "label": "Restart free flight after impact",
+        "intro": "<p>A smooth horizontal floor affects vertical velocity only. Once contact ends, the outgoing components initialise a new projectile stage.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use gravity after the bounce and the unchanged horizontal speed in the new flight.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-use-the-rebound-to-start-a-flight-check",
+            "title": "Find the maximum height after an oblique floor impact",
+            "prompt": "<p>A ball strikes a fixed smooth level floor with horizontal speed \\(5\\,\\mathrm{m\\,s^{-1}}\\) and downwards speed \\(6\\,\\mathrm{m\\,s^{-1}}\\). Restitution is \\(\\frac{3}{7}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its vertical rise and the horizontal distance to the next impact.</p>",
+            "fields": [
+              {
+                "key": "rise",
+                "label": "Maximum rise after impact",
+                "type": "number",
+                "expected": "81/245"
+              },
+              {
+                "key": "distance",
+                "label": "Horizontal travel before next impact",
+                "type": "number",
+                "expected": "18/7"
+              }
+            ],
+            "hint": "<p>Apply restitution during contact, then apply gravity only during the flight.</p>",
+            "solution": "<p>Horizontal speed is unchanged, and restitution gives upwards speed \\(\\frac{18}{7}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Use vertical constant acceleration after the impact. The height gain is \\(\\frac{81}{245}\\,\\mathrm m\\) and the non-zero return time is \\(\\frac{18}{35}\\,\\mathrm s\\).</p><p>The horizontal distance before the next impact is \\(\\frac{18}{7}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not treat the impulse as if it acts throughout the flight.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-use-the-rebound-to-start-a-flight-follow-up",
+            "title": "Find the maximum height after an oblique floor impact",
+            "prompt": "<p>A ball strikes a fixed smooth level floor with horizontal speed \\(7\\,\\mathrm{m\\,s^{-1}}\\) and downwards speed \\(8\\,\\mathrm{m\\,s^{-1}}\\). Restitution is \\(\\frac{5}{7}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its vertical rise and the horizontal distance to the next impact.</p>",
+            "fields": [
+              {
+                "key": "rise",
+                "label": "Maximum rise after impact",
+                "type": "number",
+                "expected": "80/49"
+              },
+              {
+                "key": "distance",
+                "label": "Horizontal travel before next impact",
+                "type": "number",
+                "expected": "8"
+              }
+            ],
+            "hint": "<p>Apply restitution during contact, then apply gravity only during the flight.</p>",
+            "solution": "<p>Horizontal speed is unchanged, and restitution gives upwards speed \\(\\frac{40}{7}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Use vertical constant acceleration after the impact. The height gain is \\(\\frac{80}{49}\\,\\mathrm m\\) and the non-zero return time is \\(\\frac{8}{7}\\,\\mathrm s\\).</p><p>The horizontal distance before the next impact is \\(8\\,\\mathrm m\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Apply restitution normal to a smooth wall",
+        "question": "<p>A sphere of mass \\(1\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-4\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(\\frac{5}{2}\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{1}{6}\\). Give both outgoing signed components.</p>",
+        "solution": [
+          "<p>Reverse the normal component and multiply its magnitude by the restitution coefficient.</p>",
+          "<p>There is no tangential impulse. The final normal component is \\(\\frac{2}{3}\\,\\mathrm{m\\,s^{-1}}\\) and the parallel component remains \\(\\frac{5}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Apply restitution normal to a smooth wall",
+        "question": "<p>A sphere of mass \\(1\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-4\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(\\frac{5}{2}\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{1}{6}\\). Find its exact speed and the tangent of its acute rebound angle to the wall.</p>",
+        "solution": [
+          "<p>The two outgoing components are \\(\\frac{2}{3}\\,\\mathrm{m\\,s^{-1}}\\) normal and \\(\\frac{5}{2}\\,\\mathrm{m\\,s^{-1}}\\) parallel.</p>",
+          "<p>Pythagoras gives exact speed \\(\\frac{\\sqrt{241}}{6}\\,\\mathrm{m\\,s^{-1}}\\). The angle to the wall has tangent \\(\\frac{4}{15}\\).</p>"
+        ]
+      },
+      {
+        "title": "Apply restitution normal to a smooth wall",
+        "question": "<p>A sphere of mass \\(1\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-4\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(\\frac{5}{2}\\,\\mathrm{m\\,s^{-1}}\\). The tangent of the angle its outgoing velocity makes with the wall is \\(\\frac{4}{15}\\). Find the coefficient of restitution and the magnitude of the impulse.</p>",
+        "solution": [
+          "<p>Smooth contact leaves the velocity parallel to the wall unchanged. The outgoing normal component is the tangent of the rebound angle multiplied by that parallel speed.</p>",
+          "<p>This gives normal rebound speed \\(\\frac{2}{3}\\,\\mathrm{m\\,s^{-1}}\\), so \\(e=\\frac{1}{6}\\).</p>",
+          "<p>The change of normal momentum gives impulse magnitude \\(\\frac{14}{3}\\,\\mathrm{N\\,s}\\).</p>"
+        ]
+      },
+      {
+        "title": "Apply restitution normal to a smooth wall",
+        "question": "<p>A sphere of mass \\(2\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-6\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(\\frac{7}{2}\\,\\mathrm{m\\,s^{-1}}\\). The tangent of the angle its outgoing velocity makes with the wall is \\(\\frac{6}{7}\\). Find the coefficient of restitution and the magnitude of the impulse.</p>",
+        "solution": [
+          "<p>Smooth contact leaves the velocity parallel to the wall unchanged. The outgoing normal component is the tangent of the rebound angle multiplied by that parallel speed.</p>",
+          "<p>This gives normal rebound speed \\(3\\,\\mathrm{m\\,s^{-1}}\\), so \\(e=\\frac{1}{2}\\).</p>",
+          "<p>The change of normal momentum gives impulse magnitude \\(18\\,\\mathrm{N\\,s}\\).</p>"
+        ]
+      },
+      {
+        "title": "Apply restitution normal to a smooth wall",
+        "question": "<p>A sphere of mass \\(1\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-4\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(\\frac{5}{2}\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{1}{6}\\). Find the energy loss and impulse magnitude.</p>",
+        "solution": [
+          "<p>Only the normal velocity changes, from \\(-4\\,\\mathrm{m\\,s^{-1}}\\) to \\(\\frac{2}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The tangential KE cancels. The energy loss is \\(\\frac{70}{9}\\,\\mathrm J\\) and impulse magnitude \\(\\frac{14}{3}\\,\\mathrm{N\\,s}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the maximum height after an oblique floor impact",
+        "question": "<p>A ball strikes a fixed smooth level floor with horizontal speed \\(4\\,\\mathrm{m\\,s^{-1}}\\) and downwards speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). Restitution is \\(\\frac{2}{7}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its vertical rise and the horizontal distance to the next impact.</p>",
+        "solution": [
+          "<p>Horizontal speed is unchanged, and restitution gives upwards speed \\(\\frac{10}{7}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Use vertical constant acceleration after the impact. The height gain is \\(\\frac{5}{49}\\,\\mathrm m\\) and the non-zero return time is \\(\\frac{2}{7}\\,\\mathrm s\\).</p>",
+          "<p>The horizontal distance before the next impact is \\(\\frac{8}{7}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the maximum height after an oblique floor impact",
+        "question": "<p>A ball strikes a fixed smooth level floor with horizontal speed \\(6\\,\\mathrm{m\\,s^{-1}}\\) and downwards speed \\(7\\,\\mathrm{m\\,s^{-1}}\\). Restitution is \\(\\frac{4}{7}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its vertical rise and the horizontal distance to the next impact.</p>",
+        "solution": [
+          "<p>Horizontal speed is unchanged, and restitution gives upwards speed \\(4\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Use vertical constant acceleration after the impact. The height gain is \\(\\frac{4}{5}\\,\\mathrm m\\) and the non-zero return time is \\(\\frac{4}{5}\\,\\mathrm s\\).</p>",
+          "<p>The horizontal distance before the next impact is \\(\\frac{24}{5}\\,\\mathrm m\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "surfaces-identify-wall-normal-extra",
+        "title": "Apply restitution normal to a smooth wall",
+        "prompt": "<p>A sphere of mass \\(2\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-6\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(\\frac{7}{2}\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{1}{2}\\). Give both outgoing signed components.</p>",
+        "fields": [
+          {
+            "key": "normal",
+            "label": "Outgoing normal component",
+            "type": "number",
+            "expected": "3",
+            "retry": [
+              {
+                "answer": "-3",
+                "feedback": "<p>The ball moves away from the wall after impact, so the normal component is positive.</p>"
+              }
+            ]
+          },
+          {
+            "key": "parallel",
+            "label": "Outgoing parallel component",
+            "type": "number",
+            "expected": "7/2"
+          }
+        ],
+        "hint": "<p>Separate the normal direction from the tangent. The wall supplies impulse, so do not conserve the ball’s normal momentum.</p>",
+        "solution": "<p>Reverse the normal component and multiply its magnitude by the restitution coefficient.</p><p>There is no tangential impulse. The final normal component is \\(3\\,\\mathrm{m\\,s^{-1}}\\) and the parallel component remains \\(\\frac{7}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "surfaces-rebuild-rebound-direction-extra",
+        "title": "Apply restitution normal to a smooth wall",
+        "prompt": "<p>A sphere of mass \\(2\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-6\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(\\frac{7}{2}\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{1}{2}\\). Find its exact speed and the tangent of its acute rebound angle to the wall.</p>",
+        "fields": [
+          {
+            "key": "speed",
+            "label": "Exact rebound speed",
+            "type": "number",
+            "expected": "sqrt(85)/2"
+          },
+          {
+            "key": "tangent",
+            "label": "Tangent of rebound angle to wall",
+            "type": "number",
+            "expected": "6/7"
+          }
+        ],
+        "hint": "<p>Separate the normal direction from the tangent. The wall supplies impulse, so do not conserve the ball’s normal momentum.</p>",
+        "solution": "<p>The two outgoing components are \\(3\\,\\mathrm{m\\,s^{-1}}\\) normal and \\(\\frac{7}{2}\\,\\mathrm{m\\,s^{-1}}\\) parallel.</p><p>Pythagoras gives exact speed \\(\\frac{\\sqrt{85}}{2}\\,\\mathrm{m\\,s^{-1}}\\). The angle to the wall has tangent \\(\\frac{6}{7}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "surfaces-infer-wall-restitution-extra",
+        "title": "Apply restitution normal to a smooth wall",
+        "prompt": "<p>A sphere of mass \\(3\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-8\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(\\frac{9}{2}\\,\\mathrm{m\\,s^{-1}}\\). The tangent of the angle its outgoing velocity makes with the wall is \\(\\frac{40}{27}\\). Find the coefficient of restitution and the magnitude of the impulse.</p>",
+        "fields": [
+          {
+            "key": "e",
+            "label": "Coefficient of restitution",
+            "type": "number",
+            "expected": "5/6"
+          },
+          {
+            "key": "impulse",
+            "label": "Impulse magnitude",
+            "type": "number",
+            "expected": "44"
+          }
+        ],
+        "hint": "<p>Separate the normal direction from the tangent. The wall supplies impulse, so do not conserve the ball’s normal momentum.</p>",
+        "solution": "<p>Smooth contact leaves the velocity parallel to the wall unchanged. The outgoing normal component is the tangent of the rebound angle multiplied by that parallel speed.</p><p>This gives normal rebound speed \\(\\frac{20}{3}\\,\\mathrm{m\\,s^{-1}}\\), so \\(e=\\frac{5}{6}\\).</p><p>The change of normal momentum gives impulse magnitude \\(44\\,\\mathrm{N\\,s}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "surfaces-normal-impulse-and-energy-loss-extra",
+        "title": "Apply restitution normal to a smooth wall",
+        "prompt": "<p>A sphere of mass \\(2\\) kilograms strikes a fixed smooth vertical wall. Before impact its signed velocity perpendicular to the wall is \\(-6\\,\\mathrm{m\\,s^{-1}}\\), taking away from the wall as positive. Its signed component parallel to the wall is \\(\\frac{7}{2}\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution is \\(\\frac{1}{2}\\). Find the energy loss and impulse magnitude.</p>",
+        "fields": [
+          {
+            "key": "loss",
+            "label": "Energy lost",
+            "type": "number",
+            "expected": "27"
+          },
+          {
+            "key": "impulse",
+            "label": "Impulse magnitude",
+            "type": "number",
+            "expected": "18"
+          }
+        ],
+        "hint": "<p>Separate the normal direction from the tangent. The wall supplies impulse, so do not conserve the ball’s normal momentum.</p>",
+        "solution": "<p>Only the normal velocity changes, from \\(-6\\,\\mathrm{m\\,s^{-1}}\\) to \\(3\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The tangential KE cancels. The energy loss is \\(27\\,\\mathrm J\\) and impulse magnitude \\(18\\,\\mathrm{N\\,s}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "surfaces-use-the-rebound-to-start-a-flight-extra",
+        "title": "Find the maximum height after an oblique floor impact",
+        "prompt": "<p>A ball strikes a fixed smooth level floor with horizontal speed \\(8\\,\\mathrm{m\\,s^{-1}}\\) and downwards speed \\(9\\,\\mathrm{m\\,s^{-1}}\\). Restitution is \\(\\frac{6}{7}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its vertical rise and the horizontal distance to the next impact.</p>",
+        "fields": [
+          {
+            "key": "rise",
+            "label": "Maximum rise after impact",
+            "type": "number",
+            "expected": "729/245"
+          },
+          {
+            "key": "distance",
+            "label": "Horizontal travel before next impact",
+            "type": "number",
+            "expected": "432/35"
+          }
+        ],
+        "hint": "<p>Apply restitution during contact, then apply gravity only during the flight.</p>",
+        "solution": "<p>Horizontal speed is unchanged, and restitution gives upwards speed \\(\\frac{54}{7}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Use vertical constant acceleration after the impact. The height gain is \\(\\frac{729}{245}\\,\\mathrm m\\) and the non-zero return time is \\(\\frac{54}{35}\\,\\mathrm s\\).</p><p>The horizontal distance before the next impact is \\(\\frac{432}{35}\\,\\mathrm m\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Normal",
+        "definition": "<p>The direction perpendicular to the surface.</p>"
+      },
+      {
+        "term": "Tangent",
+        "definition": "<p>The direction parallel to the surface at contact.</p>"
+      },
+      {
+        "term": "Rebound angle",
+        "definition": "<p>The angle of the outgoing motion relative to the specified reference.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Smooth surface</th><td>Tangent unchanged.</td></tr><tr><th scope=\"row\">Normal</th><td>Reverse and multiply by restitution.</td></tr><tr><th scope=\"row\">Direction</th><td>Combine the outgoing components after applying restitution.</td></tr><tr><th scope=\"row\">Energy</th><td>Only the changed component contributes to the loss.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>An incoming normal velocity of \\(-8\\,\\mathrm{m\\,s^{-1}}\\) strikes a wall with \\(e=\\frac34\\). Find the new normal velocity.</p><p><strong>Check</strong> \\(+6\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+      "checks": "<ul><li>Do not multiply the whole velocity by restitution.</li><li>An angle to the wall is complementary to its angle to the normal.</li></ul>",
+      "examTip": "<p>State whether the required angle is to the wall or the normal.</p>"
+    },
+    "related": [
+      {
+        "title": "Signed impulse, direct impact and energy",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_momentum_direct"
+      },
+      {
+        "title": "Oblique impacts between smooth spheres",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_momentum_spheres"
+      }
+    ]
+  },
+  "fm_momentum_spheres": {
+    "updatedOn": "2026-11-21",
+    "description": "Use the line of centres to calculate velocities, directions, impulses and energy in oblique impacts.",
+    "sections": [
+      {
+        "id": "resolve-on-the-line-of-centres",
+        "title": "Which axis carries the mutual impulse?",
+        "label": "Choose the contact axes",
+        "intro": "<p>Two smooth spheres touch along the line joining their centres. The impulse acts along that line.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Preserve each tangential component independently. Apply momentum and restitution along the normal.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/momentum/oblique-line-of-centres.svg",
+              "alt": "Two spheres touch along an oblique dashed line. Impulses point away from contact along that line.",
+              "caption": "<p>The forces exchanged at contact produce normal impulses. The perpendicular components of the velocities are unchanged.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "spheres-resolve-on-the-line-of-centres-check",
+            "title": "Solve the change along the line of centres",
+            "prompt": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(3\\) and \\(4\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(6,\\frac{4}{3}\\right)\\) and \\(\\left(-1,- \\frac{5}{2}\\right)\\). Restitution is \\(\\frac{1}{3}\\). Give both component pairs after impact.</p>",
+            "fields": [
+              {
+                "key": "an",
+                "label": "A normal",
+                "type": "number",
+                "expected": "2/3"
+              },
+              {
+                "key": "at",
+                "label": "A tangent",
+                "type": "number",
+                "expected": "4/3"
+              },
+              {
+                "key": "bn",
+                "label": "B normal",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "bt",
+                "label": "B tangent",
+                "type": "number",
+                "expected": "-5/2"
+              }
+            ],
+            "hint": "<p>Use restitution and momentum along the line of centres. Each tangential velocity is unchanged separately.</p>",
+            "solution": "<p>Resolve along the line of centres. The mutual impulses act only along that line, so the two tangential components remain \\(\\frac{4}{3}\\,\\mathrm{m\\,s^{-1}}\\) and \\(- \\frac{5}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Conservation of normal momentum and restitution give outgoing normal components \\(\\frac{2}{3}\\,\\mathrm{m\\,s^{-1}}\\) and \\(3\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The outgoing pairs for A and B are \\(\\left(\\frac{2}{3},\\frac{4}{3}\\right)\\) and \\(\\left(3,- \\frac{5}{2}\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not conserve each sphere’s normal momentum separately.</p>"
+          }
+        ]
+      },
+      {
+        "id": "find-outgoing-speed-and-direction",
+        "title": "How do I reconstruct a direction after the normal calculation?",
+        "label": "Combine the outgoing components",
+        "intro": "<p>After finding the normal components, retain the corresponding original tangential component for each sphere.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use Pythagoras for speed and the signs of the normal and tangent components for direction.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "spheres-find-outgoing-speed-and-direction-check",
+            "title": "Solve the change along the line of centres",
+            "prompt": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(3\\) and \\(4\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(6,\\frac{4}{3}\\right)\\) and \\(\\left(-1,- \\frac{5}{2}\\right)\\). The coefficient of restitution is \\(\\frac{1}{3}\\). Find the exact speed of B and the tangent of the acute angle its outgoing velocity makes with the line of centres.</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Exact speed of sphere B",
+                "type": "number",
+                "expected": "sqrt(61)/2"
+              },
+              {
+                "key": "tangent",
+                "label": "Tangent of acute angle to line of centres",
+                "type": "number",
+                "expected": "5/6"
+              }
+            ],
+            "hint": "<p>Use restitution and momentum along the line of centres. Each tangential velocity is unchanged separately.</p>",
+            "solution": "<p>Resolve along the line of centres. The mutual impulses act only along that line, so the two tangential components remain \\(\\frac{4}{3}\\,\\mathrm{m\\,s^{-1}}\\) and \\(- \\frac{5}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Conservation of normal momentum and restitution give outgoing normal components \\(\\frac{2}{3}\\,\\mathrm{m\\,s^{-1}}\\) and \\(3\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Combine B’s two components for speed \\(\\frac{\\sqrt{61}}{2}\\,\\mathrm{m\\,s^{-1}}\\). Its tangential component is negative and normal component positive, so the acute angle to the line has tangent \\(\\frac{5}{6}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using the incoming angle with the outgoing speed generally gives incorrect components.</p>"
+          }
+        ]
+      },
+      {
+        "id": "fit-restitution-from-deflection",
+        "title": "Can an outgoing direction reveal the coefficient?",
+        "label": "Use the tangent as a fixed measurement",
+        "intro": "<p>An outgoing direction and unchanged tangent can determine the outgoing normal speed.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find the missing normal velocity by momentum, then use the separation-to-approach ratio.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "spheres-fit-restitution-from-deflection-check",
+            "title": "Solve the change along the line of centres",
+            "prompt": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(3\\) and \\(4\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(6,\\frac{4}{3}\\right)\\) and \\(\\left(-1,- \\frac{5}{2}\\right)\\). After impact the tangent of the acute angle of B's velocity to the positive contact direction is \\(\\frac{5}{6}\\). Its outgoing normal component is positive. Find the coefficient of restitution and A's outgoing normal component.</p>",
+            "fields": [
+              {
+                "key": "restitution",
+                "label": "Coefficient of restitution",
+                "type": "number",
+                "expected": "1/3"
+              },
+              {
+                "key": "an",
+                "label": "A's outgoing normal component",
+                "type": "number",
+                "expected": "2/3"
+              }
+            ],
+            "hint": "<p>Use restitution and momentum along the line of centres. Each tangential velocity is unchanged separately.</p>",
+            "solution": "<p>Use the unchanged tangential speed of B with the given angle to recover its positive normal speed \\(3\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Conservation of normal momentum gives A's signed normal velocity \\(\\frac{2}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The separation speed along the contact direction is \\(\\frac{7}{3}\\,\\mathrm{m\\,s^{-1}}\\). Divide by approach speed \\(7\\,\\mathrm{m\\,s^{-1}}\\) to get \\(e=\\frac{1}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A deflection angle alone must be interpreted relative to the normal or tangent.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "spheres-fit-restitution-from-deflection-follow-up",
+            "title": "Solve the change along the line of centres",
+            "prompt": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(5\\) and \\(6\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(8,2\\right)\\) and \\(\\left(-2,- \\frac{7}{2}\\right)\\). After impact the tangent of the acute angle of B's velocity to the positive contact direction is \\(\\frac{231}{368}\\). Its outgoing normal component is positive. Find the coefficient of restitution and A's outgoing normal component.</p>",
+            "fields": [
+              {
+                "key": "restitution",
+                "label": "Coefficient of restitution",
+                "type": "number",
+                "expected": "2/3"
+              },
+              {
+                "key": "an",
+                "label": "A's outgoing normal component",
+                "type": "number",
+                "expected": "-12/11"
+              }
+            ],
+            "hint": "<p>Use restitution and momentum along the line of centres. Each tangential velocity is unchanged separately.</p>",
+            "solution": "<p>Use the unchanged tangential speed of B with the given angle to recover its positive normal speed \\(\\frac{184}{33}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Conservation of normal momentum gives A's signed normal velocity \\(- \\frac{12}{11}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The separation speed along the contact direction is \\(\\frac{20}{3}\\,\\mathrm{m\\,s^{-1}}\\). Divide by approach speed \\(10\\,\\mathrm{m\\,s^{-1}}\\) to get \\(e=\\frac{2}{3}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "oblique-impulses-and-energy",
+        "title": "Which components contribute to impulse and loss?",
+        "label": "Use the changed normal parts",
+        "intro": "<p>Both mutual impulses are equal and opposite along the line of centres. The tangential energy of each sphere is the same before and after.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Compare the normal momenta to find an individual impulse, and compare total normal kinetic energies for loss.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "spheres-oblique-impulses-and-energy-check",
+            "title": "Solve the change along the line of centres",
+            "prompt": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(3\\) and \\(4\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(6,\\frac{4}{3}\\right)\\) and \\(\\left(-1,- \\frac{5}{2}\\right)\\). Restitution is \\(\\frac{1}{3}\\). Find the magnitude of the impulse on A and the total kinetic energy lost.</p>",
+            "fields": [
+              {
+                "key": "impulse",
+                "label": "Impulse magnitude",
+                "type": "number",
+                "expected": "16"
+              },
+              {
+                "key": "loss",
+                "label": "Total kinetic energy lost",
+                "type": "number",
+                "expected": "112/3"
+              }
+            ],
+            "hint": "<p>Use restitution and momentum along the line of centres. Each tangential velocity is unchanged separately.</p>",
+            "solution": "<p>Resolve along the line of centres. The mutual impulses act only along that line, so the two tangential components remain \\(\\frac{4}{3}\\,\\mathrm{m\\,s^{-1}}\\) and \\(- \\frac{5}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Conservation of normal momentum and restitution give outgoing normal components \\(\\frac{2}{3}\\,\\mathrm{m\\,s^{-1}}\\) and \\(3\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The magnitude of the normal momentum change of A is \\(16\\,\\mathrm{N\\,s}\\).</p><p>The unchanged tangential energies cancel. The total KE lost is \\(\\frac{112}{3}\\,\\mathrm J\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not add individual impulse magnitudes when finding the impulse on one sphere.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rotate-to-contact-axes",
+        "title": "What if the line of centres is oblique to both coordinate axes?",
+        "label": "Resolve into a temporary frame",
+        "intro": "<p>Choose perpendicular unit directions along the contact line and its tangent. Resolve into this frame for the impact.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>After the normal calculation, reconstruct components in the coordinates originally requested.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "spheres-rotate-to-contact-axes-check",
+            "title": "Rotate the collision frame and return to x and y",
+            "prompt": "<p>Sphere A and sphere B of masses \\(4\\) and \\(6\\) kilograms have incoming component pairs \\(\\left(- \\frac{2}{5},\\frac{39}{5}\\right)\\) and \\(\\left(\\frac{18}{5},- \\frac{1}{5}\\right)\\) on a smooth level plane. The line from A to B at impact has unit direction \\(\\left(\\frac{3}{5},\\frac{4}{5}\\right)\\) and restitution is \\(\\frac{2}{5}\\). Find A’s two outgoing components in the original axes.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "A's outgoing x-component",
+                "type": "number",
+                "expected": "-302/125"
+              },
+              {
+                "key": "y",
+                "label": "A's outgoing y-component",
+                "type": "number",
+                "expected": "639/125"
+              }
+            ],
+            "hint": "<p>Choose normal and tangent to match the contact geometry. Rotate back only after resolving the normal collision.</p>",
+            "solution": "<p>The normal direction is \\(\\left(\\frac{3}{5},\\frac{4}{5}\\right)\\) and one tangent direction is \\(\\left(- \\frac{4}{5},\\frac{3}{5}\\right)\\). Take the components along these perpendicular directions before applying restitution.</p><p>The two incoming normal components are \\(6\\,\\mathrm{m\\,s^{-1}}\\) and \\(2\\,\\mathrm{m\\,s^{-1}}\\). Solving the normal equations gives A's outward-frame normal value \\(\\frac{66}{25}\\,\\mathrm{m\\,s^{-1}}\\). Its tangential component remains \\(5\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Combine the two perpendicular components in the original axes. A leaves with component pair \\(\\left(- \\frac{302}{125},\\frac{639}{125}\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Unchanged tangent does not mean unchanged original x- or y-component.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "spheres-rotate-to-contact-axes-follow-up",
+            "title": "Rotate the collision frame and return to x and y",
+            "prompt": "<p>Sphere A and sphere B of masses \\(6\\) and \\(8\\) kilograms have incoming component pairs \\(\\left(- \\frac{4}{5},\\frac{53}{5}\\right)\\) and \\(\\left(\\frac{32}{5},\\frac{1}{5}\\right)\\) on a smooth level plane. The line from A to B at impact has unit direction \\(\\left(\\frac{3}{5},\\frac{4}{5}\\right)\\) and restitution is \\(\\frac{4}{5}\\). Find A’s two outgoing components in the original axes.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "A's outgoing x-component",
+                "type": "number",
+                "expected": "-572/175"
+              },
+              {
+                "key": "y",
+                "label": "A's outgoing y-component",
+                "type": "number",
+                "expected": "1279/175"
+              }
+            ],
+            "hint": "<p>Choose normal and tangent to match the contact geometry. Rotate back only after resolving the normal collision.</p>",
+            "solution": "<p>The normal direction is \\(\\left(\\frac{3}{5},\\frac{4}{5}\\right)\\) and one tangent direction is \\(\\left(- \\frac{4}{5},\\frac{3}{5}\\right)\\). Take the components along these perpendicular directions before applying restitution.</p><p>The two incoming normal components are \\(8\\,\\mathrm{m\\,s^{-1}}\\) and \\(4\\,\\mathrm{m\\,s^{-1}}\\). Solving the normal equations gives A's outward-frame normal value \\(\\frac{136}{35}\\,\\mathrm{m\\,s^{-1}}\\). Its tangential component remains \\(7\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Combine the two perpendicular components in the original axes. A leaves with component pair \\(\\left(- \\frac{572}{175},\\frac{1279}{175}\\right)\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Solve the change along the line of centres",
+        "question": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(2\\) and \\(3\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(5,1\\right)\\) and \\(\\left(- \\frac{1}{2},-2\\right)\\). Restitution is \\(\\frac{1}{6}\\). Give both component pairs after impact.</p>",
+        "solution": [
+          "<p>Resolve along the line of centres. The mutual impulses act only along that line, so the two tangential components remain \\(1\\,\\mathrm{m\\,s^{-1}}\\) and \\(-2\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Conservation of normal momentum and restitution give outgoing normal components \\(\\frac{23}{20}\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{31}{15}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The outgoing pairs for A and B are \\(\\left(\\frac{23}{20},1\\right)\\) and \\(\\left(\\frac{31}{15},-2\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Solve the change along the line of centres",
+        "question": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(2\\) and \\(3\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(5,1\\right)\\) and \\(\\left(- \\frac{1}{2},-2\\right)\\). The coefficient of restitution is \\(\\frac{1}{6}\\). Find the exact speed of B and the tangent of the acute angle its outgoing velocity makes with the line of centres.</p>",
+        "solution": [
+          "<p>Resolve along the line of centres. The mutual impulses act only along that line, so the two tangential components remain \\(1\\,\\mathrm{m\\,s^{-1}}\\) and \\(-2\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Conservation of normal momentum and restitution give outgoing normal components \\(\\frac{23}{20}\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{31}{15}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Combine B’s two components for speed \\(\\frac{\\sqrt{1861}}{15}\\,\\mathrm{m\\,s^{-1}}\\). Its tangential component is negative and normal component positive, so the acute angle to the line has tangent \\(\\frac{30}{31}\\).</p>"
+        ]
+      },
+      {
+        "title": "Solve the change along the line of centres",
+        "question": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(2\\) and \\(3\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(5,1\\right)\\) and \\(\\left(- \\frac{1}{2},-2\\right)\\). After impact the tangent of the acute angle of B's velocity to the positive contact direction is \\(\\frac{30}{31}\\). Its outgoing normal component is positive. Find the coefficient of restitution and A's outgoing normal component.</p>",
+        "solution": [
+          "<p>Use the unchanged tangential speed of B with the given angle to recover its positive normal speed \\(\\frac{31}{15}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Conservation of normal momentum gives A's signed normal velocity \\(\\frac{23}{20}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The separation speed along the contact direction is \\(\\frac{11}{12}\\,\\mathrm{m\\,s^{-1}}\\). Divide by approach speed \\(\\frac{11}{2}\\,\\mathrm{m\\,s^{-1}}\\) to get \\(e=\\frac{1}{6}\\).</p>"
+        ]
+      },
+      {
+        "title": "Solve the change along the line of centres",
+        "question": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(4\\) and \\(5\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(7,\\frac{5}{3}\\right)\\) and \\(\\left(- \\frac{3}{2},-3\\right)\\). After impact the tangent of the acute angle of B's velocity to the positive contact direction is \\(\\frac{18}{25}\\). Its outgoing normal component is positive. Find the coefficient of restitution and A's outgoing normal component.</p>",
+        "solution": [
+          "<p>Use the unchanged tangential speed of B with the given angle to recover its positive normal speed \\(\\frac{25}{6}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Conservation of normal momentum gives A's signed normal velocity \\(- \\frac{1}{12}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The separation speed along the contact direction is \\(\\frac{17}{4}\\,\\mathrm{m\\,s^{-1}}\\). Divide by approach speed \\(\\frac{17}{2}\\,\\mathrm{m\\,s^{-1}}\\) to get \\(e=\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Solve the change along the line of centres",
+        "question": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(2\\) and \\(3\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(5,1\\right)\\) and \\(\\left(- \\frac{1}{2},-2\\right)\\). Restitution is \\(\\frac{1}{6}\\). Find the magnitude of the impulse on A and the total kinetic energy lost.</p>",
+        "solution": [
+          "<p>Resolve along the line of centres. The mutual impulses act only along that line, so the two tangential components remain \\(1\\,\\mathrm{m\\,s^{-1}}\\) and \\(-2\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Conservation of normal momentum and restitution give outgoing normal components \\(\\frac{23}{20}\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{31}{15}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The magnitude of the normal momentum change of A is \\(\\frac{77}{10}\\,\\mathrm{N\\,s}\\).</p>",
+          "<p>The unchanged tangential energies cancel. The total KE lost is \\(\\frac{847}{48}\\,\\mathrm J\\).</p>"
+        ]
+      },
+      {
+        "title": "Rotate the collision frame and return to x and y",
+        "question": "<p>Sphere A and sphere B of masses \\(3\\) and \\(5\\) kilograms have incoming component pairs \\(\\left(- \\frac{1}{5},\\frac{32}{5}\\right)\\) and \\(\\left(\\frac{11}{5},- \\frac{2}{5}\\right)\\) on a smooth level plane. The line from A to B at impact has unit direction \\(\\left(\\frac{3}{5},\\frac{4}{5}\\right)\\) and restitution is \\(\\frac{1}{5}\\). Find A’s two outgoing components in the original axes.</p>",
+        "solution": [
+          "<p>The normal direction is \\(\\left(\\frac{3}{5},\\frac{4}{5}\\right)\\) and one tangent direction is \\(\\left(- \\frac{4}{5},\\frac{3}{5}\\right)\\). Take the components along these perpendicular directions before applying restitution.</p>",
+          "<p>The two incoming normal components are \\(5\\,\\mathrm{m\\,s^{-1}}\\) and \\(1\\,\\mathrm{m\\,s^{-1}}\\). Solving the normal equations gives A's outward-frame normal value \\(2\\,\\mathrm{m\\,s^{-1}}\\). Its tangential component remains \\(4\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Combine the two perpendicular components in the original axes. A leaves with component pair \\(\\left(-2,4\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Rotate the collision frame and return to x and y",
+        "question": "<p>Sphere A and sphere B of masses \\(5\\) and \\(7\\) kilograms have incoming component pairs \\(\\left(- \\frac{3}{5},\\frac{46}{5}\\right)\\) and \\(\\left(5,0\\right)\\) on a smooth level plane. The line from A to B at impact has unit direction \\(\\left(\\frac{3}{5},\\frac{4}{5}\\right)\\) and restitution is \\(\\frac{3}{5}\\). Find A’s two outgoing components in the original axes.</p>",
+        "solution": [
+          "<p>The normal direction is \\(\\left(\\frac{3}{5},\\frac{4}{5}\\right)\\) and one tangent direction is \\(\\left(- \\frac{4}{5},\\frac{3}{5}\\right)\\). Take the components along these perpendicular directions before applying restitution.</p>",
+          "<p>The two incoming normal components are \\(7\\,\\mathrm{m\\,s^{-1}}\\) and \\(3\\,\\mathrm{m\\,s^{-1}}\\). Solving the normal equations gives A's outward-frame normal value \\(\\frac{49}{15}\\,\\mathrm{m\\,s^{-1}}\\). Its tangential component remains \\(6\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Combine the two perpendicular components in the original axes. A leaves with component pair \\(\\left(- \\frac{71}{25},\\frac{466}{75}\\right)\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "spheres-resolve-on-the-line-of-centres-extra",
+        "title": "Solve the change along the line of centres",
+        "prompt": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(4\\) and \\(5\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(7,\\frac{5}{3}\\right)\\) and \\(\\left(- \\frac{3}{2},-3\\right)\\). Restitution is \\(\\frac{1}{2}\\). Give both component pairs after impact.</p>",
+        "fields": [
+          {
+            "key": "an",
+            "label": "A normal",
+            "type": "number",
+            "expected": "-1/12"
+          },
+          {
+            "key": "at",
+            "label": "A tangent",
+            "type": "number",
+            "expected": "5/3"
+          },
+          {
+            "key": "bn",
+            "label": "B normal",
+            "type": "number",
+            "expected": "25/6"
+          },
+          {
+            "key": "bt",
+            "label": "B tangent",
+            "type": "number",
+            "expected": "-3"
+          }
+        ],
+        "hint": "<p>Use restitution and momentum along the line of centres. Each tangential velocity is unchanged separately.</p>",
+        "solution": "<p>Resolve along the line of centres. The mutual impulses act only along that line, so the two tangential components remain \\(\\frac{5}{3}\\,\\mathrm{m\\,s^{-1}}\\) and \\(-3\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Conservation of normal momentum and restitution give outgoing normal components \\(- \\frac{1}{12}\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{25}{6}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The outgoing pairs for A and B are \\(\\left(- \\frac{1}{12},\\frac{5}{3}\\right)\\) and \\(\\left(\\frac{25}{6},-3\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "spheres-find-outgoing-speed-and-direction-extra",
+        "title": "Solve the change along the line of centres",
+        "prompt": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(4\\) and \\(5\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(7,\\frac{5}{3}\\right)\\) and \\(\\left(- \\frac{3}{2},-3\\right)\\). The coefficient of restitution is \\(\\frac{1}{2}\\). Find the exact speed of B and the tangent of the acute angle its outgoing velocity makes with the line of centres.</p>",
+        "fields": [
+          {
+            "key": "speed",
+            "label": "Exact speed of sphere B",
+            "type": "number",
+            "expected": "sqrt(949)/6"
+          },
+          {
+            "key": "tangent",
+            "label": "Tangent of acute angle to line of centres",
+            "type": "number",
+            "expected": "18/25"
+          }
+        ],
+        "hint": "<p>Use restitution and momentum along the line of centres. Each tangential velocity is unchanged separately.</p>",
+        "solution": "<p>Resolve along the line of centres. The mutual impulses act only along that line, so the two tangential components remain \\(\\frac{5}{3}\\,\\mathrm{m\\,s^{-1}}\\) and \\(-3\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Conservation of normal momentum and restitution give outgoing normal components \\(- \\frac{1}{12}\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{25}{6}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Combine B’s two components for speed \\(\\frac{\\sqrt{949}}{6}\\,\\mathrm{m\\,s^{-1}}\\). Its tangential component is negative and normal component positive, so the acute angle to the line has tangent \\(\\frac{18}{25}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "spheres-fit-restitution-from-deflection-extra",
+        "title": "Solve the change along the line of centres",
+        "prompt": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(6\\) and \\(7\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(9,\\frac{7}{3}\\right)\\) and \\(\\left(- \\frac{5}{2},-4\\right)\\). After impact the tangent of the acute angle of B's velocity to the positive contact direction is \\(\\frac{26}{47}\\). Its outgoing normal component is positive. Find the coefficient of restitution and A's outgoing normal component.</p>",
+        "fields": [
+          {
+            "key": "restitution",
+            "label": "Coefficient of restitution",
+            "type": "number",
+            "expected": "5/6"
+          },
+          {
+            "key": "an",
+            "label": "A's outgoing normal component",
+            "type": "number",
+            "expected": "-367/156"
+          }
+        ],
+        "hint": "<p>Use restitution and momentum along the line of centres. Each tangential velocity is unchanged separately.</p>",
+        "solution": "<p>Use the unchanged tangential speed of B with the given angle to recover its positive normal speed \\(\\frac{94}{13}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Conservation of normal momentum gives A's signed normal velocity \\(- \\frac{367}{156}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The separation speed along the contact direction is \\(\\frac{115}{12}\\,\\mathrm{m\\,s^{-1}}\\). Divide by approach speed \\(\\frac{23}{2}\\,\\mathrm{m\\,s^{-1}}\\) to get \\(e=\\frac{5}{6}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "spheres-oblique-impulses-and-energy-extra",
+        "title": "Solve the change along the line of centres",
+        "prompt": "<p>Two smooth spheres collide on a smooth horizontal plane. Their masses are \\(4\\) and \\(5\\) kilograms. Relative to the contact line from A to B and a perpendicular axis, their incoming component pairs in SI units are \\(\\left(7,\\frac{5}{3}\\right)\\) and \\(\\left(- \\frac{3}{2},-3\\right)\\). Restitution is \\(\\frac{1}{2}\\). Find the magnitude of the impulse on A and the total kinetic energy lost.</p>",
+        "fields": [
+          {
+            "key": "impulse",
+            "label": "Impulse magnitude",
+            "type": "number",
+            "expected": "85/3"
+          },
+          {
+            "key": "loss",
+            "label": "Total kinetic energy lost",
+            "type": "number",
+            "expected": "1445/24"
+          }
+        ],
+        "hint": "<p>Use restitution and momentum along the line of centres. Each tangential velocity is unchanged separately.</p>",
+        "solution": "<p>Resolve along the line of centres. The mutual impulses act only along that line, so the two tangential components remain \\(\\frac{5}{3}\\,\\mathrm{m\\,s^{-1}}\\) and \\(-3\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Conservation of normal momentum and restitution give outgoing normal components \\(- \\frac{1}{12}\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{25}{6}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The magnitude of the normal momentum change of A is \\(\\frac{85}{3}\\,\\mathrm{N\\,s}\\).</p><p>The unchanged tangential energies cancel. The total KE lost is \\(\\frac{1445}{24}\\,\\mathrm J\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "spheres-rotate-to-contact-axes-extra",
+        "title": "Rotate the collision frame and return to x and y",
+        "prompt": "<p>Sphere A and sphere B of masses \\(7\\) and \\(9\\) kilograms have incoming component pairs \\(\\left(-1,12\\right)\\) and \\(\\left(\\frac{39}{5},\\frac{2}{5}\\right)\\) on a smooth level plane. The line from A to B at impact has unit direction \\(\\left(\\frac{3}{5},\\frac{4}{5}\\right)\\) and restitution is \\(1\\). Find A’s two outgoing components in the original axes.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "A's outgoing x-component",
+            "type": "number",
+            "expected": "-37/10"
+          },
+          {
+            "key": "y",
+            "label": "A's outgoing y-component",
+            "type": "number",
+            "expected": "42/5"
+          }
+        ],
+        "hint": "<p>Choose normal and tangent to match the contact geometry. Rotate back only after resolving the normal collision.</p>",
+        "solution": "<p>The normal direction is \\(\\left(\\frac{3}{5},\\frac{4}{5}\\right)\\) and one tangent direction is \\(\\left(- \\frac{4}{5},\\frac{3}{5}\\right)\\). Take the components along these perpendicular directions before applying restitution.</p><p>The two incoming normal components are \\(9\\,\\mathrm{m\\,s^{-1}}\\) and \\(5\\,\\mathrm{m\\,s^{-1}}\\). Solving the normal equations gives A's outward-frame normal value \\(\\frac{9}{2}\\,\\mathrm{m\\,s^{-1}}\\). Its tangential component remains \\(8\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Combine the two perpendicular components in the original axes. A leaves with component pair \\(\\left(- \\frac{37}{10},\\frac{42}{5}\\right)\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Line of centres",
+        "definition": "<p>The line joining the centres of the contacting spheres.</p>"
+      },
+      {
+        "term": "Mutual impulse",
+        "definition": "<p>One of the equal and opposite impulses the spheres exert on each other.</p>"
+      },
+      {
+        "term": "Contact frame",
+        "definition": "<p>Coordinate axes chosen along and perpendicular to the line of centres.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Normal direction</th><td>Conserve combined momentum and apply restitution.</td></tr><tr><th scope=\"row\">Tangent direction</th><td>Each sphere keeps its own component.</td></tr><tr><th scope=\"row\">Restore axes</th><td>Recombine normal and tangent unit directions.</td></tr><tr><th scope=\"row\">Lost KE</th><td>Compare normal kinetic energy before and after.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A sphere has outgoing normal component \\(3\\) and tangent component \\(-4\\) in SI units. Find its speed.</p><p><strong>Check</strong> \\(5\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+      "checks": "<ul><li>Do not conserve each sphere’s normal momentum separately.</li><li>Using the incoming angle with the outgoing speed generally gives incorrect components.</li></ul>",
+      "examTip": "<p>Sketch the line of centres at the collision instant, regardless of the earlier paths.</p>"
+    },
+    "related": [
+      {
+        "title": "Smooth fixed surfaces and rebound geometry",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_momentum_surfaces"
+      },
+      {
+        "title": "Successive impacts and deciding the next event",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_momentum_successive"
+      }
+    ]
+  },
+  "fm_momentum_successive": {
+    "updatedOn": "2026-11-21",
+    "description": "Compute the earliest next contact, carry updated velocities and use separate equations for later collisions.",
+    "sections": [
+      {
+        "id": "pick-the-first-wall",
+        "title": "How can I decide which of two walls is reached first?",
+        "label": "Compare candidate times",
+        "intro": "<p>Resolve displacement and velocity towards each contact line. The first event changes variables only after its own time.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>At perpendicular walls, one wall’s normal impulse does not change the approach component towards the other wall.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/momentum/perpendicular-contact-lines.svg",
+              "alt": "In a right-angle corner, a path from S hits the vertical line first, then the horizontal line.",
+              "caption": "<p>The first wall changes only its normal component. Compare event times before deciding the sequence.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "successive-pick-the-first-wall-check",
+            "title": "Track one normal change per perpendicular wall",
+            "prompt": "<p>A smooth sphere moves on a smooth level floor near two perpendicular walls. Distances of its centre from the corresponding contact lines are \\(\\frac{26}{3}\\,\\mathrm m\\) in x and \\(\\frac{15}{2}\\,\\mathrm m\\) in y. Its initial signed velocity components are \\(\\left(-4,-5\\right)\\) in SI units. Restitution is \\(\\frac{1}{2}\\) with the x-contact line and \\(\\frac{2}{3}\\) with the y-contact line. Give which contact occurs first and both times measured from the start.</p>",
+            "fields": [
+              {
+                "key": "wall",
+                "label": "First contact",
+                "type": "choice",
+                "expected": "y",
+                "options": {
+                  "x": "x-contact line",
+                  "y": "y-contact line"
+                }
+              },
+              {
+                "key": "first",
+                "label": "Time of first contact",
+                "type": "number",
+                "expected": "3/2"
+              },
+              {
+                "key": "second",
+                "label": "Time of second contact",
+                "type": "number",
+                "expected": "13/6"
+              }
+            ],
+            "hint": "<p>Compare first-hit times before changing a component. For perpendicular walls, the impulse at one does not change approach to the other.</p>",
+            "solution": "<p>The candidate times without impact are \\(\\frac{13}{6}\\,\\mathrm s\\) for the x-contact line and \\(\\frac{3}{2}\\,\\mathrm s\\) for the y-contact line.</p><p>The first is the y contact. Reset its normal velocity using restitution. The other velocity component is unchanged until its own contact.</p><p>The second contact is still at \\(\\frac{13}{6}\\,\\mathrm s\\) from the original start, because the first impulse does not change the component towards the other wall.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not choose the first wall based only on which distance is smaller.</p>"
+          }
+        ]
+      },
+      {
+        "id": "two-perpendicular-rebounds",
+        "title": "Which velocity do I use after both walls?",
+        "label": "Update one component at a time",
+        "intro": "<p>Two impacts happen at different times and their normal directions may differ.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For perpendicular walls, reverse and scale each normal at its own impact.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "successive-two-perpendicular-rebounds-check",
+            "title": "Track one normal change per perpendicular wall",
+            "prompt": "<p>A smooth sphere moves on a smooth level floor near two perpendicular walls. Distances of its centre from the corresponding contact lines are \\(\\frac{26}{3}\\,\\mathrm m\\) in x and \\(\\frac{15}{2}\\,\\mathrm m\\) in y. Its initial signed velocity components are \\(\\left(-4,-5\\right)\\) in SI units. Restitution is \\(\\frac{1}{2}\\) with the x-contact line and \\(\\frac{2}{3}\\) with the y-contact line. Find the final signed components immediately after both impacts.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Final x-component",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "y",
+                "label": "Final y-component",
+                "type": "number",
+                "expected": "10/3"
+              }
+            ],
+            "hint": "<p>Compare first-hit times before changing a component. For perpendicular walls, the impulse at one does not change approach to the other.</p>",
+            "solution": "<p>The candidate times without impact are \\(\\frac{13}{6}\\,\\mathrm s\\) for the x-contact line and \\(\\frac{3}{2}\\,\\mathrm s\\) for the y-contact line.</p><p>The first is the y contact. Reset its normal velocity using restitution. The other velocity component is unchanged until its own contact.</p><p>Apply the other restitution after the second wall. The final signed component pair is \\(\\left(2,\\frac{10}{3}\\right)\\) in SI units.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not apply both coefficients to both components.</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-for-returning-contacts",
+        "title": "When do two spheres collide again?",
+        "label": "Update gaps and closing speeds",
+        "intro": "<p>After each event compute all relevant velocities and separations. If a new closing speed is positive, divide the current gap by it.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Do not suppose that spheres are still moving away after a separate impact with another body.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "successive-check-for-returning-contacts-check",
+            "title": "Find the delay before two earlier participants meet again",
+            "prompt": "<p>Three identical smooth spheres A, B and C lie in order on a smooth straight track. A hits stationary B at speed \\(7\\,\\mathrm{m\\,s^{-1}}\\). At that instant the gap between B and stationary C is \\(2\\,\\mathrm m\\). The coefficient of restitution at each contact is \\(\\frac{3}{7}\\). Find the elapsed time from impact AB to impact BC, then the delay from impact BC to the next impact AB.</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "Time from AB to BC",
+                "type": "number",
+                "expected": "2/5"
+              },
+              {
+                "key": "second",
+                "label": "Delay from BC to next AB",
+                "type": "number",
+                "expected": "21/10"
+              }
+            ],
+            "hint": "<p>Compute new velocities at each hit, then divide the updated gap by the current closing speed.</p>",
+            "solution": "<p>Immediately after impact AB, speeds of A and B are \\(2\\,\\mathrm{m\\,s^{-1}}\\) and \\(5\\,\\mathrm{m\\,s^{-1}}\\). B moves away from A and closes the gap to C in \\(\\frac{2}{5}\\,\\mathrm s\\).</p><p>After the collision with C, B slows to \\(\\frac{10}{7}\\,\\mathrm{m\\,s^{-1}}\\), while C leaves faster than B. At that instant the gap AB has grown to \\(\\frac{6}{5}\\,\\mathrm m\\).</p><p>The faster A now closes on B. The elapsed time to BC is \\(\\frac{2}{5}\\,\\mathrm s\\) and the extra delay to the next AB contact is \\(\\frac{21}{10}\\,\\mathrm s\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use the gap at the new stage, not the gap at the original start.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "successive-check-for-returning-contacts-follow-up",
+            "title": "Find the delay before two earlier participants meet again",
+            "prompt": "<p>Three identical smooth spheres A, B and C lie in order on a smooth straight track. A hits stationary B at speed \\(9\\,\\mathrm{m\\,s^{-1}}\\). At that instant the gap between B and stationary C is \\(3\\,\\mathrm m\\). The coefficient of restitution at each contact is \\(\\frac{5}{7}\\). Find the elapsed time from impact AB to impact BC, then the delay from impact BC to the next impact AB.</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "Time from AB to BC",
+                "type": "number",
+                "expected": "7/18"
+              },
+              {
+                "key": "second",
+                "label": "Delay from BC to next AB",
+                "type": "number",
+                "expected": "245/18"
+              }
+            ],
+            "hint": "<p>Compute new velocities at each hit, then divide the updated gap by the current closing speed.</p>",
+            "solution": "<p>Immediately after impact AB, speeds of A and B are \\(\\frac{9}{7}\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{54}{7}\\,\\mathrm{m\\,s^{-1}}\\). B moves away from A and closes the gap to C in \\(\\frac{7}{18}\\,\\mathrm s\\).</p><p>After the collision with C, B slows to \\(\\frac{54}{49}\\,\\mathrm{m\\,s^{-1}}\\), while C leaves faster than B. At that instant the gap AB has grown to \\(\\frac{5}{2}\\,\\mathrm m\\).</p><p>The faster A now closes on B. The elapsed time to BC is \\(\\frac{7}{18}\\,\\mathrm s\\) and the extra delay to the next AB contact is \\(\\frac{245}{18}\\,\\mathrm s\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "wall-before-particle-impact",
+        "title": "Which momentum law belongs at which event?",
+        "label": "Change the system at the correct boundary",
+        "intro": "<p>A wall collision gives momentum to an external support. A later collision between spheres can use their combined momentum if there is no external impulse along their line.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use wall restitution first, then sphere momentum and sphere restitution.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "successive-wall-before-particle-impact-check",
+            "title": "Allow for a wall impulse before the next sphere collision",
+            "prompt": "<p>Sphere A of mass \\(4\\) kilograms moves right at \\(8\\,\\mathrm{m\\,s^{-1}}\\) on a smooth track. Its centre must travel \\(3\\,\\mathrm m\\) before hitting a wall. After rebounding, it must travel \\(7\\,\\mathrm m\\) left to meet stationary sphere B, of mass \\(5\\) kilograms. The restitution with the wall is \\(\\frac{1}{2}\\) and with B is \\(\\frac{3}{7}\\). Find time from the initial state to meeting B and B's speed immediately afterwards.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time to impact with B",
+                "type": "number",
+                "expected": "17/8"
+              },
+              {
+                "key": "speed",
+                "label": "Speed of B immediately afterwards",
+                "type": "number",
+                "expected": "160/63"
+              }
+            ],
+            "hint": "<p>Solve the wall rebound as a separate event. At the sphere–sphere impact, use the rebound velocity as A’s incoming velocity.</p>",
+            "solution": "<p>The wall is reached in \\(\\frac{3}{8}\\,\\mathrm s\\). The wall changes A’s speed to \\(4\\,\\mathrm{m\\,s^{-1}}\\) leftwards, so the extra time before B is \\(\\frac{7}{4}\\,\\mathrm s\\).</p><p>At impact with B, choose left as positive. Conserve momentum for the two spheres and use restitution. B leaves at speed \\(\\frac{160}{63}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The total time is \\(\\frac{17}{8}\\,\\mathrm s\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not carry the velocity from before the wall into the next collision.</p>"
+          }
+        ]
+      },
+      {
+        "id": "repeated-bounces",
+        "title": "Why do successive flights take less time?",
+        "label": "Apply restitution at every bounce",
+        "intro": "<p>The normal approach speed is carried from each flight into the next impact. The horizontal velocity is unchanged at every smooth-floor collision.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The outgoing vertical speed scales by the restitution coefficient at each bounce.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "successive-repeated-bounces-check",
+            "title": "Carry the changing normal speed through repeated bounces",
+            "prompt": "<p>Immediately after a bounce from a smooth level floor, a ball has upwards speed \\(6\\,\\mathrm{m\\,s^{-1}}\\) and horizontal speed \\(8\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution for further bounces is \\(\\frac{3}{7}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the duration of the second of the next two flights and the total horizontal distance across both flights.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Duration of second flight",
+                "type": "number",
+                "expected": "18/35"
+              },
+              {
+                "key": "distance",
+                "label": "Total horizontal distance",
+                "type": "number",
+                "expected": "96/7"
+              }
+            ],
+            "hint": "<p>Apply restitution at the boundary between the two flights. Do not multiply the horizontal component by it.</p>",
+            "solution": "<p>The first flight lasts \\(\\frac{6}{5}\\,\\mathrm s\\), and the ball returns with downward speed equal to the preceding upward speed.</p><p>On its next rebound, the vertical component is multiplied by restitution. The second flight lasts \\(\\frac{18}{35}\\,\\mathrm s\\).</p><p>The same horizontal component applies in each flight. The total horizontal distance is \\(\\frac{96}{7}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not scale the horizontal speed to calculate distance across multiple flights.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "successive-repeated-bounces-follow-up",
+            "title": "Carry the changing normal speed through repeated bounces",
+            "prompt": "<p>Immediately after a bounce from a smooth level floor, a ball has upwards speed \\(8\\,\\mathrm{m\\,s^{-1}}\\) and horizontal speed \\(10\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution for further bounces is \\(\\frac{5}{7}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the duration of the second of the next two flights and the total horizontal distance across both flights.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Duration of second flight",
+                "type": "number",
+                "expected": "8/7"
+              },
+              {
+                "key": "distance",
+                "label": "Total horizontal distance",
+                "type": "number",
+                "expected": "192/7"
+              }
+            ],
+            "hint": "<p>Apply restitution at the boundary between the two flights. Do not multiply the horizontal component by it.</p>",
+            "solution": "<p>The first flight lasts \\(\\frac{8}{5}\\,\\mathrm s\\), and the ball returns with downward speed equal to the preceding upward speed.</p><p>On its next rebound, the vertical component is multiplied by restitution. The second flight lasts \\(\\frac{8}{7}\\,\\mathrm s\\).</p><p>The same horizontal component applies in each flight. The total horizontal distance is \\(\\frac{192}{7}\\,\\mathrm m\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Track one normal change per perpendicular wall",
+        "question": "<p>A smooth sphere moves on a smooth level floor near two perpendicular walls. Distances of its centre from the corresponding contact lines are \\(3\\,\\mathrm m\\) in x and \\(\\frac{16}{3}\\,\\mathrm m\\) in y. Its initial signed velocity components are \\(\\left(-3,-4\\right)\\) in SI units. Restitution is \\(\\frac{1}{2}\\) with the x-contact line and \\(\\frac{2}{3}\\) with the y-contact line. Give which contact occurs first and both times measured from the start.</p>",
+        "solution": [
+          "<p>The candidate times without impact are \\(1\\,\\mathrm s\\) for the x-contact line and \\(\\frac{4}{3}\\,\\mathrm s\\) for the y-contact line.</p>",
+          "<p>The first is the x contact. Reset its normal velocity using restitution. The other velocity component is unchanged until its own contact.</p>",
+          "<p>The second contact is still at \\(\\frac{4}{3}\\,\\mathrm s\\) from the original start, because the first impulse does not change the component towards the other wall.</p>"
+        ]
+      },
+      {
+        "title": "Track one normal change per perpendicular wall",
+        "question": "<p>A smooth sphere moves on a smooth level floor near two perpendicular walls. Distances of its centre from the corresponding contact lines are \\(3\\,\\mathrm m\\) in x and \\(\\frac{16}{3}\\,\\mathrm m\\) in y. Its initial signed velocity components are \\(\\left(-3,-4\\right)\\) in SI units. Restitution is \\(\\frac{1}{2}\\) with the x-contact line and \\(\\frac{2}{3}\\) with the y-contact line. Find the final signed components immediately after both impacts.</p>",
+        "solution": [
+          "<p>The candidate times without impact are \\(1\\,\\mathrm s\\) for the x-contact line and \\(\\frac{4}{3}\\,\\mathrm s\\) for the y-contact line.</p>",
+          "<p>The first is the x contact. Reset its normal velocity using restitution. The other velocity component is unchanged until its own contact.</p>",
+          "<p>Apply the other restitution after the second wall. The final signed component pair is \\(\\left(\\frac{3}{2},\\frac{8}{3}\\right)\\) in SI units.</p>"
+        ]
+      },
+      {
+        "title": "Find the delay before two earlier participants meet again",
+        "question": "<p>Three identical smooth spheres A, B and C lie in order on a smooth straight track. A hits stationary B at speed \\(6\\,\\mathrm{m\\,s^{-1}}\\). At that instant the gap between B and stationary C is \\(\\frac{3}{2}\\,\\mathrm m\\). The coefficient of restitution at each contact is \\(\\frac{2}{7}\\). Find the elapsed time from impact AB to impact BC, then the delay from impact BC to the next impact AB.</p>",
+        "solution": [
+          "<p>Immediately after impact AB, speeds of A and B are \\(\\frac{15}{7}\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{27}{7}\\,\\mathrm{m\\,s^{-1}}\\). B moves away from A and closes the gap to C in \\(\\frac{7}{18}\\,\\mathrm s\\).</p>",
+          "<p>After the collision with C, B slows to \\(\\frac{135}{98}\\,\\mathrm{m\\,s^{-1}}\\), while C leaves faster than B. At that instant the gap AB has grown to \\(\\frac{2}{3}\\,\\mathrm m\\).</p>",
+          "<p>The faster A now closes on B. The elapsed time to BC is \\(\\frac{7}{18}\\,\\mathrm s\\) and the extra delay to the next AB contact is \\(\\frac{196}{225}\\,\\mathrm s\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the delay before two earlier participants meet again",
+        "question": "<p>Three identical smooth spheres A, B and C lie in order on a smooth straight track. A hits stationary B at speed \\(8\\,\\mathrm{m\\,s^{-1}}\\). At that instant the gap between B and stationary C is \\(\\frac{5}{2}\\,\\mathrm m\\). The coefficient of restitution at each contact is \\(\\frac{4}{7}\\). Find the elapsed time from impact AB to impact BC, then the delay from impact BC to the next impact AB.</p>",
+        "solution": [
+          "<p>Immediately after impact AB, speeds of A and B are \\(\\frac{12}{7}\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{44}{7}\\,\\mathrm{m\\,s^{-1}}\\). B moves away from A and closes the gap to C in \\(\\frac{35}{88}\\,\\mathrm s\\).</p>",
+          "<p>After the collision with C, B slows to \\(\\frac{66}{49}\\,\\mathrm{m\\,s^{-1}}\\), while C leaves faster than B. At that instant the gap AB has grown to \\(\\frac{20}{11}\\,\\mathrm m\\).</p>",
+          "<p>The faster A now closes on B. The elapsed time to BC is \\(\\frac{35}{88}\\,\\mathrm s\\) and the extra delay to the next AB contact is \\(\\frac{490}{99}\\,\\mathrm s\\).</p>"
+        ]
+      },
+      {
+        "title": "Allow for a wall impulse before the next sphere collision",
+        "question": "<p>Sphere A of mass \\(3\\) kilograms moves right at \\(7\\,\\mathrm{m\\,s^{-1}}\\) on a smooth track. Its centre must travel \\(2\\,\\mathrm m\\) before hitting a wall. After rebounding, it must travel \\(6\\,\\mathrm m\\) left to meet stationary sphere B, of mass \\(4\\) kilograms. The restitution with the wall is \\(\\frac{1}{2}\\) and with B is \\(\\frac{2}{7}\\). Find time from the initial state to meeting B and B's speed immediately afterwards.</p>",
+        "solution": [
+          "<p>The wall is reached in \\(\\frac{2}{7}\\,\\mathrm s\\). The wall changes A’s speed to \\(\\frac{7}{2}\\,\\mathrm{m\\,s^{-1}}\\) leftwards, so the extra time before B is \\(\\frac{12}{7}\\,\\mathrm s\\).</p>",
+          "<p>At impact with B, choose left as positive. Conserve momentum for the two spheres and use restitution. B leaves at speed \\(\\frac{27}{14}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The total time is \\(2\\,\\mathrm s\\).</p>"
+        ]
+      },
+      {
+        "title": "Carry the changing normal speed through repeated bounces",
+        "question": "<p>Immediately after a bounce from a smooth level floor, a ball has upwards speed \\(5\\,\\mathrm{m\\,s^{-1}}\\) and horizontal speed \\(7\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution for further bounces is \\(\\frac{2}{7}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the duration of the second of the next two flights and the total horizontal distance across both flights.</p>",
+        "solution": [
+          "<p>The first flight lasts \\(1\\,\\mathrm s\\), and the ball returns with downward speed equal to the preceding upward speed.</p>",
+          "<p>On its next rebound, the vertical component is multiplied by restitution. The second flight lasts \\(\\frac{2}{7}\\,\\mathrm s\\).</p>",
+          "<p>The same horizontal component applies in each flight. The total horizontal distance is \\(9\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Carry the changing normal speed through repeated bounces",
+        "question": "<p>Immediately after a bounce from a smooth level floor, a ball has upwards speed \\(7\\,\\mathrm{m\\,s^{-1}}\\) and horizontal speed \\(9\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution for further bounces is \\(\\frac{4}{7}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the duration of the second of the next two flights and the total horizontal distance across both flights.</p>",
+        "solution": [
+          "<p>The first flight lasts \\(\\frac{7}{5}\\,\\mathrm s\\), and the ball returns with downward speed equal to the preceding upward speed.</p>",
+          "<p>On its next rebound, the vertical component is multiplied by restitution. The second flight lasts \\(\\frac{4}{5}\\,\\mathrm s\\).</p>",
+          "<p>The same horizontal component applies in each flight. The total horizontal distance is \\(\\frac{99}{5}\\,\\mathrm m\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "successive-pick-the-first-wall-extra",
+        "title": "Track one normal change per perpendicular wall",
+        "prompt": "<p>A smooth sphere moves on a smooth level floor near two perpendicular walls. Distances of its centre from the corresponding contact lines are \\(10\\,\\mathrm m\\) in x and \\(18\\,\\mathrm m\\) in y. Its initial signed velocity components are \\(\\left(-5,-6\\right)\\) in SI units. Restitution is \\(\\frac{1}{2}\\) with the x-contact line and \\(\\frac{2}{3}\\) with the y-contact line. Give which contact occurs first and both times measured from the start.</p>",
+        "fields": [
+          {
+            "key": "wall",
+            "label": "First contact",
+            "type": "choice",
+            "expected": "x",
+            "options": {
+              "x": "x-contact line",
+              "y": "y-contact line"
+            }
+          },
+          {
+            "key": "first",
+            "label": "Time of first contact",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "second",
+            "label": "Time of second contact",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>Compare first-hit times before changing a component. For perpendicular walls, the impulse at one does not change approach to the other.</p>",
+        "solution": "<p>The candidate times without impact are \\(2\\,\\mathrm s\\) for the x-contact line and \\(3\\,\\mathrm s\\) for the y-contact line.</p><p>The first is the x contact. Reset its normal velocity using restitution. The other velocity component is unchanged until its own contact.</p><p>The second contact is still at \\(3\\,\\mathrm s\\) from the original start, because the first impulse does not change the component towards the other wall.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "successive-two-perpendicular-rebounds-extra",
+        "title": "Track one normal change per perpendicular wall",
+        "prompt": "<p>A smooth sphere moves on a smooth level floor near two perpendicular walls. Distances of its centre from the corresponding contact lines are \\(10\\,\\mathrm m\\) in x and \\(18\\,\\mathrm m\\) in y. Its initial signed velocity components are \\(\\left(-5,-6\\right)\\) in SI units. Restitution is \\(\\frac{1}{2}\\) with the x-contact line and \\(\\frac{2}{3}\\) with the y-contact line. Find the final signed components immediately after both impacts.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Final x-component",
+            "type": "number",
+            "expected": "5/2"
+          },
+          {
+            "key": "y",
+            "label": "Final y-component",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>Compare first-hit times before changing a component. For perpendicular walls, the impulse at one does not change approach to the other.</p>",
+        "solution": "<p>The candidate times without impact are \\(2\\,\\mathrm s\\) for the x-contact line and \\(3\\,\\mathrm s\\) for the y-contact line.</p><p>The first is the x contact. Reset its normal velocity using restitution. The other velocity component is unchanged until its own contact.</p><p>Apply the other restitution after the second wall. The final signed component pair is \\(\\left(\\frac{5}{2},4\\right)\\) in SI units.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "successive-check-for-returning-contacts-extra",
+        "title": "Find the delay before two earlier participants meet again",
+        "prompt": "<p>Three identical smooth spheres A, B and C lie in order on a smooth straight track. A hits stationary B at speed \\(10\\,\\mathrm{m\\,s^{-1}}\\). At that instant the gap between B and stationary C is \\(\\frac{7}{2}\\,\\mathrm m\\). The coefficient of restitution at each contact is \\(\\frac{6}{7}\\). Find the elapsed time from impact AB to impact BC, then the delay from impact BC to the next impact AB.</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "Time from AB to BC",
+            "type": "number",
+            "expected": "49/130"
+          },
+          {
+            "key": "second",
+            "label": "Delay from BC to next AB",
+            "type": "number",
+            "expected": "4116/65"
+          }
+        ],
+        "hint": "<p>Compute new velocities at each hit, then divide the updated gap by the current closing speed.</p>",
+        "solution": "<p>Immediately after impact AB, speeds of A and B are \\(\\frac{5}{7}\\,\\mathrm{m\\,s^{-1}}\\) and \\(\\frac{65}{7}\\,\\mathrm{m\\,s^{-1}}\\). B moves away from A and closes the gap to C in \\(\\frac{49}{130}\\,\\mathrm s\\).</p><p>After the collision with C, B slows to \\(\\frac{65}{98}\\,\\mathrm{m\\,s^{-1}}\\), while C leaves faster than B. At that instant the gap AB has grown to \\(\\frac{42}{13}\\,\\mathrm m\\).</p><p>The faster A now closes on B. The elapsed time to BC is \\(\\frac{49}{130}\\,\\mathrm s\\) and the extra delay to the next AB contact is \\(\\frac{4116}{65}\\,\\mathrm s\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "successive-wall-before-particle-impact-extra",
+        "title": "Allow for a wall impulse before the next sphere collision",
+        "prompt": "<p>Sphere A of mass \\(5\\) kilograms moves right at \\(9\\,\\mathrm{m\\,s^{-1}}\\) on a smooth track. Its centre must travel \\(4\\,\\mathrm m\\) before hitting a wall. After rebounding, it must travel \\(8\\,\\mathrm m\\) left to meet stationary sphere B, of mass \\(6\\) kilograms. The restitution with the wall is \\(\\frac{1}{2}\\) and with B is \\(\\frac{4}{7}\\). Find time from the initial state to meeting B and B's speed immediately afterwards.</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Time to impact with B",
+            "type": "number",
+            "expected": "20/9"
+          },
+          {
+            "key": "speed",
+            "label": "Speed of B immediately afterwards",
+            "type": "number",
+            "expected": "45/14"
+          }
+        ],
+        "hint": "<p>Solve the wall rebound as a separate event. At the sphere–sphere impact, use the rebound velocity as A’s incoming velocity.</p>",
+        "solution": "<p>The wall is reached in \\(\\frac{4}{9}\\,\\mathrm s\\). The wall changes A’s speed to \\(\\frac{9}{2}\\,\\mathrm{m\\,s^{-1}}\\) leftwards, so the extra time before B is \\(\\frac{16}{9}\\,\\mathrm s\\).</p><p>At impact with B, choose left as positive. Conserve momentum for the two spheres and use restitution. B leaves at speed \\(\\frac{45}{14}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The total time is \\(\\frac{20}{9}\\,\\mathrm s\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "successive-repeated-bounces-extra",
+        "title": "Carry the changing normal speed through repeated bounces",
+        "prompt": "<p>Immediately after a bounce from a smooth level floor, a ball has upwards speed \\(9\\,\\mathrm{m\\,s^{-1}}\\) and horizontal speed \\(11\\,\\mathrm{m\\,s^{-1}}\\). The coefficient of restitution for further bounces is \\(\\frac{6}{7}\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the duration of the second of the next two flights and the total horizontal distance across both flights.</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Duration of second flight",
+            "type": "number",
+            "expected": "54/35"
+          },
+          {
+            "key": "distance",
+            "label": "Total horizontal distance",
+            "type": "number",
+            "expected": "1287/35"
+          }
+        ],
+        "hint": "<p>Apply restitution at the boundary between the two flights. Do not multiply the horizontal component by it.</p>",
+        "solution": "<p>The first flight lasts \\(\\frac{9}{5}\\,\\mathrm s\\), and the ball returns with downward speed equal to the preceding upward speed.</p><p>On its next rebound, the vertical component is multiplied by restitution. The second flight lasts \\(\\frac{54}{35}\\,\\mathrm s\\).</p><p>The same horizontal component applies in each flight. The total horizontal distance is \\(\\frac{1287}{35}\\,\\mathrm m\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Closing speed",
+        "definition": "<p>Rate at which the gap between two approaching bodies shrinks.</p>"
+      },
+      {
+        "term": "Candidate event",
+        "definition": "<p>A contact predicted by the current stage equations before comparisons.</p>"
+      },
+      {
+        "term": "Successive impact",
+        "definition": "<p>An impact whose initial state was established by an earlier impact or intervening motion.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Choose a clock</th><td>Use times from the stated reference.</td></tr><tr><th scope=\"row\">First contact</th><td>Compare candidate contact times using the current velocities.</td></tr><tr><th scope=\"row\">After impact</th><td>Replace affected velocity components before timing the next event.</td></tr><tr><th scope=\"row\">Further gap</th><td>Use current positions and relative velocity.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>If the current gap is \\(3\\,\\mathrm m\\) and the bodies close at \\(2\\,\\mathrm{m\\,s^{-1}}\\), how long to the next collision?</p><p><strong>Check</strong> \\(\\frac32\\,\\mathrm s\\), as long as no earlier event changes the speeds.</p>",
+      "checks": "<ul><li>Do not choose the first wall based only on which distance is smaller.</li><li>Do not apply both coefficients to both components.</li></ul>",
+      "examTip": "<p>Write a short list of event times and states. Do not solve all collisions using the original velocity.</p>"
+    },
+    "related": [
+      {
+        "title": "Oblique impacts between smooth spheres",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_momentum_spheres"
+      }
+    ]
+  }
+}

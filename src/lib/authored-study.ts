@@ -49,6 +49,7 @@ import study9231MechanicsEquilibrium from "../../content/original/9231-mechanics
 import study9231MechanicsCircular from "../../content/original/9231-mechanics/circular-study.json";
 import study9231MechanicsHooke from "../../content/original/9231-mechanics/hooke-study.json";
 import study9231MechanicsVariable from "../../content/original/9231-mechanics/variable-study.json";
+import study9231MechanicsMomentum from "../../content/original/9231-mechanics/momentum-study.json";
 import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
 import { renderContent } from "./content";
 import { checkExact, checkExactInverseAngle, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
@@ -96,6 +97,7 @@ const lessons = {
   ...study9231MechanicsCircular,
   ...study9231MechanicsHooke,
   ...study9231MechanicsVariable,
+  ...study9231MechanicsMomentum,
 } as Record<string, AuthoredLesson>;
 const examPaths = examPracticePaths as Record<string, Omit<StudyExamPractice, "starters"> & { starters?: StudyExamPractice["starters"] }>;
 
