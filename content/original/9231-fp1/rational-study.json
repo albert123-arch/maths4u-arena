@@ -1,0 +1,2677 @@
+{
+  "fp1_rational_asymptotes": {
+    "updatedOn": "2026-11-21",
+    "description": "Find the original domain, distinguish poles from holes and build rational sketches from intercepts, division and signed limits.",
+    "sections": [
+      {
+        "id": "start-with-the-domain",
+        "title": "Which x-values must I exclude first?",
+        "label": "List the denominator zeros",
+        "intro": "<p>Factor the denominator before sketching. The original function is undefined at every zero of that denominator.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>An uncancelled real zero of the denominator gives a vertical asymptote. Two distinct simple poles divide the domain into three intervals.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_rational_asymptotes/two-real-poles.svg",
+              "caption": "<p>Two uncancelled denominator zeros separate the graph into three branches.</p>",
+              "alt": "The reciprocal graph has two poles, at x = −2 and x = 1. Its outer branches are above the axis and its middle branch is below the axis.",
+              "width": 476,
+              "height": 246
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "asymptotes-start-with-the-domain-check",
+            "title": "Find both vertical asymptotes",
+            "prompt": "<p>Find all excluded x-values, then decide if there are one or two vertical asymptotes for \\(f(x)=\\frac{3}{\\left(x - 2\\right) \\left(x + 3\\right)}\\).</p>",
+            "fields": [
+              {
+                "key": "values",
+                "label": "Excluded x-values",
+                "type": "set",
+                "expected": "{2,-3}",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "count",
+                "label": "Number of vertical asymptotes",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>An uncancelled zero in the denominator produces a pole.</p>",
+            "solution": "<p>The numerator is constant and non-zero.</p><p>Both denominator factors give excluded values, \\(x=2\\) and \\(x=-3\\).</p><p>Neither factor cancels, so both are vertical asymptotes.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Check the numerator before naming a vertical asymptote. A common factor can remove the blow-up.</p>"
+          }
+        ]
+      },
+      {
+        "id": "cancel-a-factor",
+        "title": "Why can a cancelled factor leave a hole?",
+        "label": "Keep the original restriction",
+        "intro": "<p>Cancellation gives an expression that agrees with the original only where the original is defined. The limit of the simplified graph describes the hole height.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>After cancellation, substitute the removed input to find the finite limiting height. Keep the corresponding point open.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "asymptotes-cancel-a-factor-check",
+            "title": "Distinguish a removable hole from a vertical asymptote",
+            "prompt": "<p>For \\(f(x)=\\frac{\\left(x - 2\\right) \\left(x + 4\\right)}{\\left(x - 2\\right) \\left(x + 3\\right)}\\), find the x-value and height of its hole and the x-value of its vertical asymptote.</p>",
+            "fields": [
+              {
+                "key": "hole_x",
+                "label": "Hole x-coordinate",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "hole_y",
+                "label": "Hole height",
+                "type": "number",
+                "expected": "6/5"
+              },
+              {
+                "key": "pole",
+                "label": "Vertical asymptote x-coordinate",
+                "type": "number",
+                "expected": "-3"
+              }
+            ],
+            "hint": "<p>Preserve both original restrictions, then see which zero survives cancellation.</p>",
+            "solution": "<p>Keep the original denominator restrictions \\(x=2\\) and \\(x=-3\\).</p><p>The common factor cancels for every allowed input. Its reduced expression is \\(\\frac{x + 4}{x + 3}\\).</p><p>The hole lies at \\((2,\\frac{6}{5})\\). The uncancelled pole is \\(x=-3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A dot on the simplified graph does not put that input back into the original domain.</p>"
+          }
+        ]
+      },
+      {
+        "id": "mark-intercepts",
+        "title": "How do I find both axis intersections?",
+        "label": "Set one coordinate to zero",
+        "intro": "<p>An x-intercept is a root of the numerator with non-zero denominator. A y-intercept is the value at zero if zero is in the domain.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check all intercepts against the original domain. Some curves miss an axis or have a hole where an intercept might be expected.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "asymptotes-mark-intercepts-check",
+            "title": "Locate both intercepts without confusing their axes",
+            "prompt": "<p>For \\(f(x)=\\frac{x - 3}{x + 3}\\), find the x-coordinate of its x-intercept and the y-coordinate of its y-intercept.</p>",
+            "fields": [
+              {
+                "key": "x_intercept",
+                "label": "x-intercept x-coordinate",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "y_intercept",
+                "label": "y-intercept y-coordinate",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>Set the output to zero for one axis and the input to zero for the other.</p>",
+            "solution": "<p>An x-intercept is a zero of the numerator at an allowed input. This gives \\(x=3\\).</p><p>At the y-intercept put \\(x=0\\). It gives \\(y=-1\\).</p><p>Neither input equals the pole \\(x=-3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A root common to numerator and denominator is excluded and cannot be an intercept.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "asymptotes-mark-intercepts-follow-up",
+            "title": "Locate both intercepts without confusing their axes",
+            "prompt": "<p>For \\(f(x)=\\frac{x - 5}{x + 5}\\), find the x-coordinate of its x-intercept and the y-coordinate of its y-intercept.</p>",
+            "fields": [
+              {
+                "key": "x_intercept",
+                "label": "x-intercept x-coordinate",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "y_intercept",
+                "label": "y-intercept y-coordinate",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>Set the output to zero for one axis and the input to zero for the other.</p>",
+            "solution": "<p>An x-intercept is a zero of the numerator at an allowed input. This gives \\(x=5\\).</p><p>At the y-intercept put \\(x=0\\). It gives \\(y=-1\\).</p><p>Neither input equals the pole \\(x=-5\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "divide-for-an-asymptote",
+        "title": "How do I find a sloping asymptote?",
+        "label": "Read the quotient of polynomial division",
+        "intro": "<p>When the numerator has degree one higher than the denominator, the division quotient is a straight line. The proper fraction gives the deviation.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write \\(f(x)=mx+c+\\frac{R(x)}{D(x)}\\) with the remainder of lower degree than the denominator. The proper fraction tends to zero at both ends.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "asymptotes-divide-for-an-asymptote-check",
+            "title": "Use polynomial division to find an oblique line",
+            "prompt": "<p>Find the gradient and intercept in the line \\(y=mx+c\\) approached by \\(f(x)=\\frac{3 x^{2} - 8 x + 7}{x - 2}\\) as \\(|x|\\to\\infty\\).</p>",
+            "fields": [
+              {
+                "key": "m",
+                "label": "Value of m",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "c",
+                "label": "Value of c",
+                "type": "number",
+                "expected": "-2"
+              }
+            ],
+            "hint": "<p>The quotient remains, the remainder term tends to zero.</p>",
+            "solution": "<p>Divide the degree-two numerator by the degree-one denominator.</p><p>The quotient is \\(3 x - 2\\) and the remainder is \\(3\\). Hence \\(f(x)=3 x - 2 + \\frac{3}{x - 2}\\).</p><p>The remainder fraction tends to zero at both ends, so the oblique asymptote is \\(y=3 x - 2\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The leading terms give the slope but can miss the constant in the quotient. Carry out the full division.</p>"
+          }
+        ]
+      },
+      {
+        "id": "one-sided-signs",
+        "title": "Which way does each branch go near an asymptote?",
+        "label": "Test signs on one side at a time",
+        "intro": "<p>For a simple pole, the sign of the denominator changes across the excluded value. Check the numerator’s sign there.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(f(x)=h+\\frac{k}{x-a}\\), the horizontal line is \\(y=h\\). Near \\(x=a\\), the reciprocal term controls both limits.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "asymptotes-one-sided-signs-check",
+            "title": "Track the signs of both one-sided limits",
+            "prompt": "<p>For \\(f(x)=5 - \\frac{3}{x - 2}\\), find the horizontal asymptote height and the signs of the limits as x approaches \\(2\\) from below and above.</p>",
+            "fields": [
+              {
+                "key": "asymptote",
+                "label": "Horizontal asymptote height",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "left",
+                "label": "Limit from below",
+                "type": "choice",
+                "expected": "pos",
+                "options": {
+                  "pos": "\\(+\\infty\\)",
+                  "neg": "\\(-\\infty\\)"
+                }
+              },
+              {
+                "key": "right",
+                "label": "Limit from above",
+                "type": "choice",
+                "expected": "neg",
+                "options": {
+                  "pos": "\\(+\\infty\\)",
+                  "neg": "\\(-\\infty\\)"
+                }
+              }
+            ],
+            "hint": "<p>The denominator has opposite signs on the two sides of the pole.</p>",
+            "solution": "<p>The reciprocal term tends to zero at large magnitude of x. This leaves the horizontal line \\(y=5\\).</p><p>Near the pole, the sign of the reciprocal term is the sign of its numerator divided by the sign of \\(x - 2\\).</p><p>Therefore the left limit is \\(\\infty\\) and the right limit is \\(-\\infty\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not draw both sides towards the same infinity unless the local denominator and numerator signs justify it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "asymptotes-one-sided-signs-follow-up",
+            "title": "Track the signs of both one-sided limits",
+            "prompt": "<p>For \\(f(x)=9 - \\frac{5}{x - 4}\\), find the horizontal asymptote height and the signs of the limits as x approaches \\(4\\) from below and above.</p>",
+            "fields": [
+              {
+                "key": "asymptote",
+                "label": "Horizontal asymptote height",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "left",
+                "label": "Limit from below",
+                "type": "choice",
+                "expected": "pos",
+                "options": {
+                  "pos": "\\(+\\infty\\)",
+                  "neg": "\\(-\\infty\\)"
+                }
+              },
+              {
+                "key": "right",
+                "label": "Limit from above",
+                "type": "choice",
+                "expected": "neg",
+                "options": {
+                  "pos": "\\(+\\infty\\)",
+                  "neg": "\\(-\\infty\\)"
+                }
+              }
+            ],
+            "hint": "<p>The denominator has opposite signs on the two sides of the pole.</p>",
+            "solution": "<p>The reciprocal term tends to zero at large magnitude of x. This leaves the horizontal line \\(y=9\\).</p><p>Near the pole, the sign of the reciprocal term is the sign of its numerator divided by the sign of \\(x - 4\\).</p><p>Therefore the left limit is \\(\\infty\\) and the right limit is \\(-\\infty\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use one test input on each branch as a check after placing the limits and intercepts.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find both vertical asymptotes",
+        "question": "<p>Find all excluded x-values, then decide if there are one or two vertical asymptotes for \\(f(x)=\\frac{2}{\\left(x - 1\\right) \\left(x + 2\\right)}\\).</p>",
+        "solution": [
+          "<p>The numerator is constant and non-zero.</p>",
+          "<p>Both denominator factors give excluded values, \\(x=1\\) and \\(x=-2\\).</p>",
+          "<p>Neither factor cancels, so both are vertical asymptotes.</p>"
+        ]
+      },
+      {
+        "title": "Distinguish a removable hole from a vertical asymptote",
+        "question": "<p>For \\(f(x)=\\frac{\\left(x - 1\\right) \\left(x + 3\\right)}{\\left(x - 1\\right) \\left(x + 2\\right)}\\), find the x-value and height of its hole and the x-value of its vertical asymptote.</p>",
+        "solution": [
+          "<p>Keep the original denominator restrictions \\(x=1\\) and \\(x=-2\\).</p>",
+          "<p>The common factor cancels for every allowed input. Its reduced expression is \\(\\frac{x + 3}{x + 2}\\).</p>",
+          "<p>The hole lies at \\((1,\\frac{4}{3})\\). The uncancelled pole is \\(x=-2\\).</p>"
+        ]
+      },
+      {
+        "title": "Locate both intercepts without confusing their axes",
+        "question": "<p>For \\(f(x)=\\frac{x - 2}{x + 2}\\), find the x-coordinate of its x-intercept and the y-coordinate of its y-intercept.</p>",
+        "solution": [
+          "<p>An x-intercept is a zero of the numerator at an allowed input. This gives \\(x=2\\).</p>",
+          "<p>At the y-intercept put \\(x=0\\). It gives \\(y=-1\\).</p>",
+          "<p>Neither input equals the pole \\(x=-2\\).</p>"
+        ]
+      },
+      {
+        "title": "Locate both intercepts without confusing their axes",
+        "question": "<p>For \\(f(x)=\\frac{x - 4}{x + 4}\\), find the x-coordinate of its x-intercept and the y-coordinate of its y-intercept.</p>",
+        "solution": [
+          "<p>An x-intercept is a zero of the numerator at an allowed input. This gives \\(x=4\\).</p>",
+          "<p>At the y-intercept put \\(x=0\\). It gives \\(y=-1\\).</p>",
+          "<p>Neither input equals the pole \\(x=-4\\).</p>"
+        ]
+      },
+      {
+        "title": "Use polynomial division to find an oblique line",
+        "question": "<p>Find the gradient and intercept in the line \\(y=mx+c\\) approached by \\(f(x)=\\frac{2 x^{2} - 5 x + 5}{x - 1}\\) as \\(|x|\\to\\infty\\).</p>",
+        "solution": [
+          "<p>Divide the degree-two numerator by the degree-one denominator.</p>",
+          "<p>The quotient is \\(2 x - 3\\) and the remainder is \\(2\\). Hence \\(f(x)=2 x - 3 + \\frac{2}{x - 1}\\).</p>",
+          "<p>The remainder fraction tends to zero at both ends, so the oblique asymptote is \\(y=2 x - 3\\).</p>"
+        ]
+      },
+      {
+        "title": "Track the signs of both one-sided limits",
+        "question": "<p>For \\(f(x)=3 + \\frac{2}{x - 1}\\), find the horizontal asymptote height and the signs of the limits as x approaches \\(1\\) from below and above.</p>",
+        "solution": [
+          "<p>The reciprocal term tends to zero at large magnitude of x. This leaves the horizontal line \\(y=3\\).</p>",
+          "<p>Near the pole, the sign of the reciprocal term is the sign of its numerator divided by the sign of \\(x - 1\\).</p>",
+          "<p>Therefore the left limit is \\(-\\infty\\) and the right limit is \\(\\infty\\).</p>"
+        ]
+      },
+      {
+        "title": "Track the signs of both one-sided limits",
+        "question": "<p>For \\(f(x)=7 + \\frac{4}{x - 3}\\), find the horizontal asymptote height and the signs of the limits as x approaches \\(3\\) from below and above.</p>",
+        "solution": [
+          "<p>The reciprocal term tends to zero at large magnitude of x. This leaves the horizontal line \\(y=7\\).</p>",
+          "<p>Near the pole, the sign of the reciprocal term is the sign of its numerator divided by the sign of \\(x - 3\\).</p>",
+          "<p>Therefore the left limit is \\(-\\infty\\) and the right limit is \\(\\infty\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "asymptotes-start-with-the-domain-extra",
+        "title": "Find both vertical asymptotes",
+        "prompt": "<p>Find all excluded x-values, then decide if there are one or two vertical asymptotes for \\(f(x)=\\frac{4}{\\left(x - 3\\right) \\left(x + 4\\right)}\\).</p>",
+        "fields": [
+          {
+            "key": "values",
+            "label": "Excluded x-values",
+            "type": "set",
+            "expected": "{3,-4}",
+            "variables": [
+              "x"
+            ]
+          },
+          {
+            "key": "count",
+            "label": "Number of vertical asymptotes",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>An uncancelled zero in the denominator produces a pole.</p>",
+        "solution": "<p>The numerator is constant and non-zero.</p><p>Both denominator factors give excluded values, \\(x=3\\) and \\(x=-4\\).</p><p>Neither factor cancels, so both are vertical asymptotes.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "asymptotes-cancel-a-factor-extra",
+        "title": "Distinguish a removable hole from a vertical asymptote",
+        "prompt": "<p>For \\(f(x)=\\frac{\\left(x - 3\\right) \\left(x + 5\\right)}{\\left(x - 3\\right) \\left(x + 4\\right)}\\), find the x-value and height of its hole and the x-value of its vertical asymptote.</p>",
+        "fields": [
+          {
+            "key": "hole_x",
+            "label": "Hole x-coordinate",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "hole_y",
+            "label": "Hole height",
+            "type": "number",
+            "expected": "8/7"
+          },
+          {
+            "key": "pole",
+            "label": "Vertical asymptote x-coordinate",
+            "type": "number",
+            "expected": "-4"
+          }
+        ],
+        "hint": "<p>Preserve both original restrictions, then see which zero survives cancellation.</p>",
+        "solution": "<p>Keep the original denominator restrictions \\(x=3\\) and \\(x=-4\\).</p><p>The common factor cancels for every allowed input. Its reduced expression is \\(\\frac{x + 5}{x + 4}\\).</p><p>The hole lies at \\((3,\\frac{8}{7})\\). The uncancelled pole is \\(x=-4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "asymptotes-mark-intercepts-extra",
+        "title": "Locate both intercepts without confusing their axes",
+        "prompt": "<p>For \\(f(x)=\\frac{x - 6}{x + 6}\\), find the x-coordinate of its x-intercept and the y-coordinate of its y-intercept.</p>",
+        "fields": [
+          {
+            "key": "x_intercept",
+            "label": "x-intercept x-coordinate",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "y_intercept",
+            "label": "y-intercept y-coordinate",
+            "type": "number",
+            "expected": "-1"
+          }
+        ],
+        "hint": "<p>Set the output to zero for one axis and the input to zero for the other.</p>",
+        "solution": "<p>An x-intercept is a zero of the numerator at an allowed input. This gives \\(x=6\\).</p><p>At the y-intercept put \\(x=0\\). It gives \\(y=-1\\).</p><p>Neither input equals the pole \\(x=-6\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "asymptotes-divide-for-an-asymptote-extra",
+        "title": "Use polynomial division to find an oblique line",
+        "prompt": "<p>Find the gradient and intercept in the line \\(y=mx+c\\) approached by \\(f(x)=\\frac{4 x^{2} - 13 x + 7}{x - 3}\\) as \\(|x|\\to\\infty\\).</p>",
+        "fields": [
+          {
+            "key": "m",
+            "label": "Value of m",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "c",
+            "label": "Value of c",
+            "type": "number",
+            "expected": "-1"
+          }
+        ],
+        "hint": "<p>The quotient remains, the remainder term tends to zero.</p>",
+        "solution": "<p>Divide the degree-two numerator by the degree-one denominator.</p><p>The quotient is \\(4 x - 1\\) and the remainder is \\(4\\). Hence \\(f(x)=4 x - 1 + \\frac{4}{x - 3}\\).</p><p>The remainder fraction tends to zero at both ends, so the oblique asymptote is \\(y=4 x - 1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "asymptotes-one-sided-signs-extra",
+        "title": "Track the signs of both one-sided limits",
+        "prompt": "<p>For \\(f(x)=11 + \\frac{6}{x - 5}\\), find the horizontal asymptote height and the signs of the limits as x approaches \\(5\\) from below and above.</p>",
+        "fields": [
+          {
+            "key": "asymptote",
+            "label": "Horizontal asymptote height",
+            "type": "number",
+            "expected": "11"
+          },
+          {
+            "key": "left",
+            "label": "Limit from below",
+            "type": "choice",
+            "expected": "neg",
+            "options": {
+              "pos": "\\(+\\infty\\)",
+              "neg": "\\(-\\infty\\)"
+            }
+          },
+          {
+            "key": "right",
+            "label": "Limit from above",
+            "type": "choice",
+            "expected": "pos",
+            "options": {
+              "pos": "\\(+\\infty\\)",
+              "neg": "\\(-\\infty\\)"
+            }
+          }
+        ],
+        "hint": "<p>The denominator has opposite signs on the two sides of the pole.</p>",
+        "solution": "<p>The reciprocal term tends to zero at large magnitude of x. This leaves the horizontal line \\(y=11\\).</p><p>Near the pole, the sign of the reciprocal term is the sign of its numerator divided by the sign of \\(x - 5\\).</p><p>Therefore the left limit is \\(-\\infty\\) and the right limit is \\(\\infty\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Domain",
+        "definition": "<p>Allowed input values of the original formula.</p>"
+      },
+      {
+        "term": "Pole",
+        "definition": "<p>An excluded input at which a branch tends to an infinite height.</p>"
+      },
+      {
+        "term": "Hole",
+        "definition": "<p>An excluded input with finite limiting height.</p>"
+      },
+      {
+        "term": "Oblique asymptote",
+        "definition": "<p>A straight sloping line approached by one or more ends.</p>"
+      },
+      {
+        "term": "Remainder",
+        "definition": "<p>The numerator of the proper fraction left after polynomial division.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Check before cancelling</th><td>Keep the original denominator restrictions.</td></tr><tr><th scope=\"row\">An uncancelled real denominator zero</th><td>Mark a vertical asymptote and find one-sided signs.</td></tr><tr><th scope=\"row\">Division quotient</th><td>Gives the polynomial part, including an oblique line.</td></tr><tr><th scope=\"row\">Intercepts</th><td>Set the other coordinate to zero and check the domain.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For \\(f(x)=\\frac{x^2+3}{x-1}\\), find its vertical and oblique asymptotes.</p><p><strong>Check</strong> \\(f(x)=x+1+\\frac{4}{x-1}\\) gives \\(x=1\\) and \\(y=x+1\\).</p>",
+      "checks": "<ul><li>Check the numerator before naming a vertical asymptote. A common factor can remove the blow-up.</li><li>A dot on the simplified graph does not put that input back into the original domain.</li></ul>",
+      "examTip": "<p>Label axes, intercepts and asymptotes. Put a hollow dot at an excluded finite point.</p>"
+    },
+    "related": [
+      {
+        "title": "Ranges and stationary points",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_rational_ranges"
+      }
+    ]
+  },
+  "fp1_rational_ranges": {
+    "updatedOn": "2026-11-21",
+    "description": "Find which heights are attained using inequalities, stationary points and the discriminant, including the linear special case.",
+    "sections": [
+      {
+        "id": "missing-level",
+        "title": "When is an asymptote height excluded?",
+        "label": "Set a general output",
+        "intro": "<p>Write the equation for an input that has the proposed height. A shifted reciprocal can reach every height except where the reciprocal term would be zero.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A horizontal asymptote can supply a missing height, but test its equation before making that conclusion.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "ranges-missing-level-check",
+            "title": "Find the missing level of a shifted reciprocal",
+            "prompt": "<p>Find the range of \\(f(x)=4 + \\frac{3}{x - 2}\\), and find the x-value at which \\(f(x)=6\\).</p>",
+            "fields": [
+              {
+                "key": "range",
+                "label": "Range of f",
+                "type": "set",
+                "expected": "(-inf,4)U(4,inf)",
+                "variables": [
+                  "y"
+                ]
+              },
+              {
+                "key": "point",
+                "label": "Requested x-value",
+                "type": "number",
+                "expected": "7/2"
+              }
+            ],
+            "hint": "<p>Set the output equal to a general y-value and see which y-values fail.</p>",
+            "solution": "<p>The reciprocal term is never zero, so the height \\(4\\) is excluded.</p><p>For any other height the equation can be solved for an allowed x. The range is therefore all reals except \\(4\\).</p><p>Putting \\(f(x)=6\\) gives \\(x=\\frac{7}{2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A limit at infinity does not prove whether the same height is reached elsewhere.</p>"
+          }
+        ]
+      },
+      {
+        "id": "cross-the-level",
+        "title": "Can a curve touch or cross its asymptote level?",
+        "label": "Solve equality at that height",
+        "intro": "<p>An asymptote describes end behaviour. A finite input can reach the same horizontal level while the function approaches that level elsewhere.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a constant plus a proper fraction, a zero of the extra numerator can place a point on the asymptote level.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "ranges-cross-the-level-check",
+            "title": "Check whether the curve reaches its asymptote height",
+            "prompt": "<p>Find the horizontal asymptote height of \\(f(x)=\\frac{x}{x^{2} + 3} + 4\\) and all x-values at which the function equals that height.</p>",
+            "fields": [
+              {
+                "key": "asymptote",
+                "label": "Horizontal asymptote height",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "values",
+                "label": "Set of x-values",
+                "type": "set",
+                "expected": "{0}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>An asymptote describes limiting behaviour. Check the equality separately.</p>",
+            "solution": "<p>The extra fraction tends to zero at both ends, so the horizontal asymptote is \\(y=4\\).</p><p>This fraction is zero at \\(x=0\\) because its numerator vanishes there while its denominator is positive.</p><p>Thus the level is attained at exactly that input.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A curve can cross an asymptote height. Exclude a value only after checking there is no allowed input.</p>"
+          }
+        ]
+      },
+      {
+        "id": "disjoint-ranges",
+        "title": "How can two branches leave a gap?",
+        "label": "Derive and include stationary boundaries",
+        "intro": "<p>A pole can isolate two branches. Determine the attained heights on each side before joining them as a range.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For the shown oblique model, rewriting with a shifted variable gives a quadratic in that variable. Its discriminant fixes the gap boundaries.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_rational_ranges/gap-between-branches.svg",
+              "caption": "<p>The two stationary heights are included. The intervening gap is excluded.</p>",
+              "alt": "A left branch reaches maximum (−1, −3) and a right branch reaches minimum (3, 5). No point of the graph lies at a height strictly between −3 and 5.",
+              "width": 476,
+              "height": 246
+            }
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "ranges-disjoint-ranges-check",
+            "title": "Find both attained boundaries of a gap in the range",
+            "prompt": "<p>For \\(f(x)=x + \\frac{9}{x - 2}\\), find the greatest value on the left of the pole, the least value on the right, and its range.</p>",
+            "fields": [
+              {
+                "key": "left",
+                "label": "Greatest left branch value",
+                "type": "number",
+                "expected": "-4"
+              },
+              {
+                "key": "right",
+                "label": "Least right branch value",
+                "type": "number",
+                "expected": "8"
+              },
+              {
+                "key": "range",
+                "label": "Range of f",
+                "type": "set",
+                "expected": "(-inf,-4]U[8,inf)",
+                "variables": [
+                  "y"
+                ]
+              }
+            ],
+            "hint": "<p>Check the discriminant and whether equality is an allowed turning point.</p>",
+            "solution": "<p>Put \\(t=x-2\\) so the output minus \\(2\\) is \\(t+\\frac{9}{t}\\).</p><p>For an output to be possible, the quadratic in \\(t\\) must have real roots. This requires \\((y-2)^2\\ge 36\\). The constant \\(9\\) is non-zero, so no quadratic solution is \\(t=0\\).</p><p>The negative branch attains its top at \\(x=-1\\) with height \\(-4\\). The positive branch attains its bottom at \\(x=5\\) with height \\(8\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If a boundary corresponds to an allowed double quadratic root, include that value rather than treating it as only a limit.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "ranges-disjoint-ranges-follow-up",
+            "title": "Find both attained boundaries of a gap in the range",
+            "prompt": "<p>For \\(f(x)=x + \\frac{25}{x - 4}\\), find the greatest value on the left of the pole, the least value on the right, and its range.</p>",
+            "fields": [
+              {
+                "key": "left",
+                "label": "Greatest left branch value",
+                "type": "number",
+                "expected": "-6"
+              },
+              {
+                "key": "right",
+                "label": "Least right branch value",
+                "type": "number",
+                "expected": "14"
+              },
+              {
+                "key": "range",
+                "label": "Range of f",
+                "type": "set",
+                "expected": "(-inf,-6]U[14,inf)",
+                "variables": [
+                  "y"
+                ]
+              }
+            ],
+            "hint": "<p>Check the discriminant and whether equality is an allowed turning point.</p>",
+            "solution": "<p>Put \\(t=x-4\\) so the output minus \\(4\\) is \\(t+\\frac{25}{t}\\).</p><p>For an output to be possible, the quadratic in \\(t\\) must have real roots. This requires \\((y-4)^2\\ge 100\\). The constant \\(25\\) is non-zero, so no quadratic solution is \\(t=0\\).</p><p>The negative branch attains its top at \\(x=-1\\) with height \\(-6\\). The positive branch attains its bottom at \\(x=9\\) with height \\(14\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "attained-and-unattained",
+        "title": "Which endpoint gets a closed bracket?",
+        "label": "Check a point and a limit separately",
+        "intro": "<p>A non-negative square may attain zero. A reciprocal with a strictly positive denominator may tend to zero without attaining it.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Show why the claimed extreme can or cannot be reached, then use continuity or an input equation to show the intervening heights occur.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "ranges-attained-and-unattained-check",
+            "title": "Decide which endpoint of a bounded range is attained",
+            "prompt": "<p>Find the range of \\(f(x)=\\frac{\\left(x - 2\\right)^{2}}{\\left(x - 2\\right)^{2} + 1}\\) and the input giving its minimum value.</p>",
+            "fields": [
+              {
+                "key": "range",
+                "label": "Range of f",
+                "type": "set",
+                "expected": "[0,1)",
+                "variables": [
+                  "y"
+                ],
+                "retry": [
+                  {
+                    "answer": "[",
+                    "feedback": "<p>0</p>"
+                  }
+                ]
+              },
+              {
+                "key": "minimum",
+                "label": "Input giving the minimum",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Separate an attained minimum from an unattained limiting value.</p>",
+            "solution": "<p>The square in the numerator is non-negative. It vanishes at \\(x=2\\), and the denominator is always positive.</p><p>Rewrite the fraction as \\(1 - \\frac{1}{\\left(x - 2\\right)^{2} + 1}\\). The term being subtracted is always positive.</p><p>The function attains zero and approaches one without equality. It is continuous and gives every intermediate value.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A diagram alone may suggest an endpoint without telling you whether to include it.</p>"
+          }
+        ]
+      },
+      {
+        "id": "quadratic-becomes-linear",
+        "title": "What if the discriminant equation stops being quadratic?",
+        "label": "Test the leading coefficient separately",
+        "intro": "<p>After clearing a denominator, the equation for a height can have a parameter-dependent leading coefficient. At the zero of that coefficient, solve the shorter equation directly.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the discriminant only when the input equation is genuinely quadratic. Then verify that at least one solution is an allowed input.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "ranges-quadratic-becomes-linear-check",
+            "title": "Handle the value that makes the range quadratic linear",
+            "prompt": "<p>Find the range of \\(f(x)=\\frac{x}{x^{2} + 9}\\). In the range argument, give the x-value when \\(y=0\\).</p>",
+            "fields": [
+              {
+                "key": "range",
+                "label": "Range of f",
+                "type": "set",
+                "expected": "[-1/6,1/6]",
+                "variables": [
+                  "y"
+                ]
+              },
+              {
+                "key": "zero",
+                "label": "Input at zero output",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Test the zero output separately before using a quadratic discriminant.</p>",
+            "solution": "<p>The equation for an attained output is \\(yx^2-x+9y=0\\).</p><p>When \\(y=0\\) the equation is linear, giving \\(x=0\\). Otherwise the discriminant test is \\(1-36y^2\\ge0\\).</p><p>All real solutions of the quadratic are allowed because the original denominator is positive. The boundaries are \\(- \\frac{1}{6}\\) and \\(\\frac{1}{6}\\), both included.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A non-negative discriminant is insufficient if the only recovered x-value is excluded.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "ranges-quadratic-becomes-linear-follow-up",
+            "title": "Handle the value that makes the range quadratic linear",
+            "prompt": "<p>Find the range of \\(f(x)=\\frac{x}{x^{2} + 25}\\). In the range argument, give the x-value when \\(y=0\\).</p>",
+            "fields": [
+              {
+                "key": "range",
+                "label": "Range of f",
+                "type": "set",
+                "expected": "[-1/10,1/10]",
+                "variables": [
+                  "y"
+                ]
+              },
+              {
+                "key": "zero",
+                "label": "Input at zero output",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Test the zero output separately before using a quadratic discriminant.</p>",
+            "solution": "<p>The equation for an attained output is \\(yx^2-x+25y=0\\).</p><p>When \\(y=0\\) the equation is linear, giving \\(x=0\\). Otherwise the discriminant test is \\(1-100y^2\\ge0\\).</p><p>All real solutions of the quadratic are allowed because the original denominator is positive. The boundaries are \\(- \\frac{1}{10}\\) and \\(\\frac{1}{10}\\), both included.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find the missing level of a shifted reciprocal",
+        "question": "<p>Find the range of \\(f(x)=3 + \\frac{2}{x - 1}\\), and find the x-value at which \\(f(x)=5\\).</p>",
+        "solution": [
+          "<p>The reciprocal term is never zero, so the height \\(3\\) is excluded.</p>",
+          "<p>For any other height the equation can be solved for an allowed x. The range is therefore all reals except \\(3\\).</p>",
+          "<p>Putting \\(f(x)=5\\) gives \\(x=2\\).</p>"
+        ]
+      },
+      {
+        "title": "Check whether the curve reaches its asymptote height",
+        "question": "<p>Find the horizontal asymptote height of \\(f(x)=\\frac{x}{x^{2} + 2} + 3\\) and all x-values at which the function equals that height.</p>",
+        "solution": [
+          "<p>The extra fraction tends to zero at both ends, so the horizontal asymptote is \\(y=3\\).</p>",
+          "<p>This fraction is zero at \\(x=0\\) because its numerator vanishes there while its denominator is positive.</p>",
+          "<p>Thus the level is attained at exactly that input.</p>"
+        ]
+      },
+      {
+        "title": "Find both attained boundaries of a gap in the range",
+        "question": "<p>For \\(f(x)=x + \\frac{4}{x - 1}\\), find the greatest value on the left of the pole, the least value on the right, and its range.</p>",
+        "solution": [
+          "<p>Put \\(t=x-1\\) so the output minus \\(1\\) is \\(t+\\frac{4}{t}\\).</p>",
+          "<p>For an output to be possible, the quadratic in \\(t\\) must have real roots. This requires \\((y-1)^2\\ge 16\\). The constant \\(4\\) is non-zero, so no quadratic solution is \\(t=0\\).</p>",
+          "<p>The negative branch attains its top at \\(x=-1\\) with height \\(-3\\). The positive branch attains its bottom at \\(x=3\\) with height \\(5\\).</p>"
+        ]
+      },
+      {
+        "title": "Find both attained boundaries of a gap in the range",
+        "question": "<p>For \\(f(x)=x + \\frac{16}{x - 3}\\), find the greatest value on the left of the pole, the least value on the right, and its range.</p>",
+        "solution": [
+          "<p>Put \\(t=x-3\\) so the output minus \\(3\\) is \\(t+\\frac{16}{t}\\).</p>",
+          "<p>For an output to be possible, the quadratic in \\(t\\) must have real roots. This requires \\((y-3)^2\\ge 64\\). The constant \\(16\\) is non-zero, so no quadratic solution is \\(t=0\\).</p>",
+          "<p>The negative branch attains its top at \\(x=-1\\) with height \\(-5\\). The positive branch attains its bottom at \\(x=7\\) with height \\(11\\).</p>"
+        ]
+      },
+      {
+        "title": "Decide which endpoint of a bounded range is attained",
+        "question": "<p>Find the range of \\(f(x)=\\frac{\\left(x - 1\\right)^{2}}{\\left(x - 1\\right)^{2} + 1}\\) and the input giving its minimum value.</p>",
+        "solution": [
+          "<p>The square in the numerator is non-negative. It vanishes at \\(x=1\\), and the denominator is always positive.</p>",
+          "<p>Rewrite the fraction as \\(1 - \\frac{1}{\\left(x - 1\\right)^{2} + 1}\\). The term being subtracted is always positive.</p>",
+          "<p>The function attains zero and approaches one without equality. It is continuous and gives every intermediate value.</p>"
+        ]
+      },
+      {
+        "title": "Handle the value that makes the range quadratic linear",
+        "question": "<p>Find the range of \\(f(x)=\\frac{x}{x^{2} + 4}\\). In the range argument, give the x-value when \\(y=0\\).</p>",
+        "solution": [
+          "<p>The equation for an attained output is \\(yx^2-x+4y=0\\).</p>",
+          "<p>When \\(y=0\\) the equation is linear, giving \\(x=0\\). Otherwise the discriminant test is \\(1-16y^2\\ge0\\).</p>",
+          "<p>All real solutions of the quadratic are allowed because the original denominator is positive. The boundaries are \\(- \\frac{1}{4}\\) and \\(\\frac{1}{4}\\), both included.</p>"
+        ]
+      },
+      {
+        "title": "Handle the value that makes the range quadratic linear",
+        "question": "<p>Find the range of \\(f(x)=\\frac{x}{x^{2} + 16}\\). In the range argument, give the x-value when \\(y=0\\).</p>",
+        "solution": [
+          "<p>The equation for an attained output is \\(yx^2-x+16y=0\\).</p>",
+          "<p>When \\(y=0\\) the equation is linear, giving \\(x=0\\). Otherwise the discriminant test is \\(1-64y^2\\ge0\\).</p>",
+          "<p>All real solutions of the quadratic are allowed because the original denominator is positive. The boundaries are \\(- \\frac{1}{8}\\) and \\(\\frac{1}{8}\\), both included.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "ranges-missing-level-extra",
+        "title": "Find the missing level of a shifted reciprocal",
+        "prompt": "<p>Find the range of \\(f(x)=5 + \\frac{4}{x - 3}\\), and find the x-value at which \\(f(x)=7\\).</p>",
+        "fields": [
+          {
+            "key": "range",
+            "label": "Range of f",
+            "type": "set",
+            "expected": "(-inf,5)U(5,inf)",
+            "variables": [
+              "y"
+            ]
+          },
+          {
+            "key": "point",
+            "label": "Requested x-value",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>Set the output equal to a general y-value and see which y-values fail.</p>",
+        "solution": "<p>The reciprocal term is never zero, so the height \\(5\\) is excluded.</p><p>For any other height the equation can be solved for an allowed x. The range is therefore all reals except \\(5\\).</p><p>Putting \\(f(x)=7\\) gives \\(x=5\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "ranges-cross-the-level-extra",
+        "title": "Check whether the curve reaches its asymptote height",
+        "prompt": "<p>Find the horizontal asymptote height of \\(f(x)=\\frac{x}{x^{2} + 4} + 5\\) and all x-values at which the function equals that height.</p>",
+        "fields": [
+          {
+            "key": "asymptote",
+            "label": "Horizontal asymptote height",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "values",
+            "label": "Set of x-values",
+            "type": "set",
+            "expected": "{0}",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>An asymptote describes limiting behaviour. Check the equality separately.</p>",
+        "solution": "<p>The extra fraction tends to zero at both ends, so the horizontal asymptote is \\(y=5\\).</p><p>This fraction is zero at \\(x=0\\) because its numerator vanishes there while its denominator is positive.</p><p>Thus the level is attained at exactly that input.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "ranges-disjoint-ranges-extra",
+        "title": "Find both attained boundaries of a gap in the range",
+        "prompt": "<p>For \\(f(x)=x + \\frac{36}{x - 5}\\), find the greatest value on the left of the pole, the least value on the right, and its range.</p>",
+        "fields": [
+          {
+            "key": "left",
+            "label": "Greatest left branch value",
+            "type": "number",
+            "expected": "-7"
+          },
+          {
+            "key": "right",
+            "label": "Least right branch value",
+            "type": "number",
+            "expected": "17"
+          },
+          {
+            "key": "range",
+            "label": "Range of f",
+            "type": "set",
+            "expected": "(-inf,-7]U[17,inf)",
+            "variables": [
+              "y"
+            ]
+          }
+        ],
+        "hint": "<p>Check the discriminant and whether equality is an allowed turning point.</p>",
+        "solution": "<p>Put \\(t=x-5\\) so the output minus \\(5\\) is \\(t+\\frac{36}{t}\\).</p><p>For an output to be possible, the quadratic in \\(t\\) must have real roots. This requires \\((y-5)^2\\ge 144\\). The constant \\(36\\) is non-zero, so no quadratic solution is \\(t=0\\).</p><p>The negative branch attains its top at \\(x=-1\\) with height \\(-7\\). The positive branch attains its bottom at \\(x=11\\) with height \\(17\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "ranges-attained-and-unattained-extra",
+        "title": "Decide which endpoint of a bounded range is attained",
+        "prompt": "<p>Find the range of \\(f(x)=\\frac{\\left(x - 3\\right)^{2}}{\\left(x - 3\\right)^{2} + 1}\\) and the input giving its minimum value.</p>",
+        "fields": [
+          {
+            "key": "range",
+            "label": "Range of f",
+            "type": "set",
+            "expected": "[0,1)",
+            "variables": [
+              "y"
+            ],
+            "retry": [
+              {
+                "answer": "[",
+                "feedback": "<p>0</p>"
+              }
+            ]
+          },
+          {
+            "key": "minimum",
+            "label": "Input giving the minimum",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>Separate an attained minimum from an unattained limiting value.</p>",
+        "solution": "<p>The square in the numerator is non-negative. It vanishes at \\(x=3\\), and the denominator is always positive.</p><p>Rewrite the fraction as \\(1 - \\frac{1}{\\left(x - 3\\right)^{2} + 1}\\). The term being subtracted is always positive.</p><p>The function attains zero and approaches one without equality. It is continuous and gives every intermediate value.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "ranges-quadratic-becomes-linear-extra",
+        "title": "Handle the value that makes the range quadratic linear",
+        "prompt": "<p>Find the range of \\(f(x)=\\frac{x}{x^{2} + 36}\\). In the range argument, give the x-value when \\(y=0\\).</p>",
+        "fields": [
+          {
+            "key": "range",
+            "label": "Range of f",
+            "type": "set",
+            "expected": "[-1/12,1/12]",
+            "variables": [
+              "y"
+            ]
+          },
+          {
+            "key": "zero",
+            "label": "Input at zero output",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>Test the zero output separately before using a quadratic discriminant.</p>",
+        "solution": "<p>The equation for an attained output is \\(yx^2-x+36y=0\\).</p><p>When \\(y=0\\) the equation is linear, giving \\(x=0\\). Otherwise the discriminant test is \\(1-144y^2\\ge0\\).</p><p>All real solutions of the quadratic are allowed because the original denominator is positive. The boundaries are \\(- \\frac{1}{12}\\) and \\(\\frac{1}{12}\\), both included.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Range",
+        "definition": "<p>The set of heights attained for some allowed input.</p>"
+      },
+      {
+        "term": "Stationary point",
+        "definition": "<p>An allowed point where the derivative is zero.</p>"
+      },
+      {
+        "term": "Boundary height",
+        "definition": "<p>Endpoint of an attained range interval or its limiting value.</p>"
+      },
+      {
+        "term": "Discriminant",
+        "definition": "<p>The test for real solutions of a genuine quadratic.</p>"
+      },
+      {
+        "term": "Asymptote height",
+        "definition": "<p>A limiting level that may also be attained at a finite input.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Test a height</th><td>Solve \\(f(x)=y\\) for an allowed x.</td></tr><tr><th scope=\"row\">A quadratic in x</th><td>Use a non-negative discriminant and check x restrictions.</td></tr><tr><th scope=\"row\">Leading coefficient zero</th><td>Solve the corresponding lower-degree equation.</td></tr><tr><th scope=\"row\">Endpoint</th><td>Use a closed bracket only for an attained height.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Find the range of \\(f(x)=\\frac{x^2}{1+x^2}\\).</p><p><strong>Check</strong> \\(0\\le f(x)<1\\) because zero is attained and \\(1-f(x)=\\frac{1}{1+x^2}\\) never vanishes.</p>",
+      "checks": "<ul><li>A limit at infinity does not prove whether the same height is reached elsewhere.</li><li>A curve can cross an asymptote height. Exclude a value only after checking there is no allowed input.</li></ul>",
+      "examTip": "<p>A horizontal asymptote places no general prohibition on attaining its height. Test equality in the original function.</p>"
+    },
+    "related": [
+      {
+        "title": "Asymptotes and curve sketching",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_rational_asymptotes"
+      },
+      {
+        "title": "Parameter families and reconstruction",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_rational_parameters"
+      }
+    ]
+  },
+  "fp1_rational_parameters": {
+    "updatedOn": "2026-11-21",
+    "description": "Recover a rational function from limits, observations and stationary points. Check which parameters give removable holes.",
+    "sections": [
+      {
+        "id": "use-a-horizontal-level",
+        "title": "Which constant does a horizontal asymptote fix?",
+        "label": "Read the constant term at infinity",
+        "intro": "<p>For a constant plus a proper fraction, the proper fraction vanishes at large input magnitude.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the horizontal height to fix the constant outside the fraction. Then use an observation to recover the numerator.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_rational_parameters/asymptote-and-observation.svg",
+              "caption": "<p>The horizontal level fixes one constant. The marked point fixes the other.</p>",
+              "alt": "The graph has a vertical line x = 2 and a horizontal asymptote y = 3. The measured point (4, 5) lies on the right branch.",
+              "width": 476,
+              "height": 246
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "parameters-use-a-horizontal-level-check",
+            "title": "Reconstruct two constants from an asymptote and a point",
+            "prompt": "<p>The graph of \\(f(x)=A+\\frac{B}{x-3}\\) has horizontal asymptote \\(y=5\\) and contains \\((5,\\frac{15}{2})\\). Find \\(A,B\\).</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "Value of A",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "B",
+                "label": "Value of B",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Use the asymptote first so the point equation has only one unknown.</p>",
+            "solution": "<p>As x grows in magnitude the reciprocal term vanishes. Therefore \\(A=5\\).</p><p>At \\(x=5\\), the denominator is \\(2\\).</p><p>Substitute the known height and solve for the numerator to obtain \\(B=5\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Substituting a finite x-coordinate into an asymptote equation is not the same as substituting it into the actual function.</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-an-oblique-line",
+        "title": "Which part of the fraction fixes the oblique line?",
+        "label": "Identify the quotient before the remainder",
+        "intro": "<p>For a quadratic over a simple linear factor, the straight line in polynomial division is the oblique asymptote.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Form quotient plus a proper fraction. Determine the constant numerator of that remainder using the given point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "parameters-use-an-oblique-line-check",
+            "title": "Read the quotient from the sloping asymptote",
+            "prompt": "<p>Let \\(f(x)=\\frac{Ax^2+Bx+C}{x-3}\\) have oblique asymptote \\(y=3 x\\) and pass through \\((4,17)\\). Find \\(A,B,C\\).</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "Value of A",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "B",
+                "label": "Value of B",
+                "type": "number",
+                "expected": "-9"
+              },
+              {
+                "key": "C",
+                "label": "Value of C",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Keep the asymptote as the quotient and recover the remainder from the point.</p>",
+            "solution": "<p>The division quotient is the asymptote. Write \\(f(x)=3 x+\\frac{K}{x-3}\\).</p><p>The point gives \\(K=5\\). Multiply the line by the denominator and add the remainder.</p><p>The combined numerator is \\(3 x \\left(x - 3\\right) + 5\\). Read the three coefficients.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep the actual point equation until after identifying the quotient. The remainder usually does not vanish at that point.</p>"
+          }
+        ]
+      },
+      {
+        "id": "exceptional-member",
+        "title": "When does a parameter remove a vertical asymptote?",
+        "label": "Force cancellation by the factor theorem",
+        "intro": "<p>If a denominator zero is shared by the numerator, it can be removable. Evaluate the numerator at that zero before manipulating the family.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find the parameter where the numerator has that root. Cancel the common factor only for allowed inputs and record the hole.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "parameters-exceptional-member-check",
+            "title": "Find the member with a removable hole",
+            "prompt": "<p>The family is \\(f(x)=\\frac{x^2+2x-k}{x-3}\\). Find the value of \\(k\\) that removes the vertical asymptote and the finite height approached at the excluded input.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Value of k",
+                "type": "number",
+                "expected": "15"
+              },
+              {
+                "key": "height",
+                "label": "Hole height",
+                "type": "number",
+                "expected": "8"
+              }
+            ],
+            "hint": "<p>A denominator factor cancels only when the numerator also vanishes at that input.</p>",
+            "solution": "<p>A common factor occurs exactly when the numerator at \\(3\\) is zero.</p><p>This gives \\(k=15\\). The numerator factors as \\(\\left(x - 3\\right) \\left(x + 5\\right)\\).</p><p>The reduced line is \\(x + 5\\), giving height \\(8\\) at the removed input. The original function still has a hole.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Cancellation removes a vertical asymptote in this example. It does not restore the excluded coordinate.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "parameters-exceptional-member-follow-up",
+            "title": "Find the member with a removable hole",
+            "prompt": "<p>The family is \\(f(x)=\\frac{x^2+4x-k}{x-5}\\). Find the value of \\(k\\) that removes the vertical asymptote and the finite height approached at the excluded input.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Value of k",
+                "type": "number",
+                "expected": "45"
+              },
+              {
+                "key": "height",
+                "label": "Hole height",
+                "type": "number",
+                "expected": "14"
+              }
+            ],
+            "hint": "<p>A denominator factor cancels only when the numerator also vanishes at that input.</p>",
+            "solution": "<p>A common factor occurs exactly when the numerator at \\(5\\) is zero.</p><p>This gives \\(k=45\\). The numerator factors as \\(\\left(x - 5\\right) \\left(x + 9\\right)\\).</p><p>The reduced line is \\(x + 9\\), giving height \\(14\\) at the removed input. The original function still has a hole.</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-a-stationary-point",
+        "title": "How can a turning-point input fix a coefficient?",
+        "label": "Set the derivative equal to zero",
+        "intro": "<p>A stationary input gives a condition on the derivative instead of the function value. Use the value of the function afterwards for its height.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Differentiate each part. For a constant over a linear factor with unit gradient, the derivative is minus the constant over the squared denominator.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "parameters-use-a-stationary-point-check",
+            "title": "Recover the parameter from a stationary input",
+            "prompt": "<p>The function \\(f(x)=2 x+\\frac{k}{x-3}\\) is stationary at \\(x=5\\). Find \\(k\\) and the stationary height at this input.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Value of k",
+                "type": "number",
+                "expected": "8"
+              },
+              {
+                "key": "height",
+                "label": "Stationary height",
+                "type": "number",
+                "expected": "14"
+              }
+            ],
+            "hint": "<p>A stationary point fixes the derivative, then the original function gives the height.</p>",
+            "solution": "<p>Differentiate to obtain \\(f^\\prime(x)=2-\\frac{k}{(x-3)^2}\\).</p><p>At the specified input set the derivative equal to zero. This gives \\(k=8\\).</p><p>Substitute into the original function for height \\(14\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A stationary point need not lie on an axis. Setting the function equal to zero uses the wrong condition.</p>"
+          }
+        ]
+      },
+      {
+        "id": "combine-observations",
+        "title": "How can two points determine both constants?",
+        "label": "Choose a form that gives linear equations",
+        "intro": "<p>Write the proper fraction as a coefficient times the reciprocal of a known input shift. Each point produces a linear equation in the unknowns.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Subtract the equations when the constant term is shared. Then substitute back to find it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "parameters-combine-observations-check",
+            "title": "Use two observations to separate a limit and a residue",
+            "prompt": "<p>The function \\(f(x)=A+\\frac{B}{x-3}\\) takes values \\(10\\) and \\(\\frac{15}{2}\\) at inputs \\(4\\) and \\(5\\) respectively. Find \\(A,B\\).</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "Value of A",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "B",
+                "label": "Value of B",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Extract one equation for each point and subtract to remove the common horizontal term.</p>",
+            "solution": "<p>The first point gives \\(A+B=10\\). The second gives \\(A+\\frac12B=\\frac{15}{2}\\).</p><p>Subtracting eliminates \\(A\\) and gives \\(B=5\\).</p><p>Substitute back to get \\(A=5\\), which is also the limiting height.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Check the two inputs are allowed and give distinct reciprocal terms. A duplicate observation supplies no new equation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "parameters-combine-observations-follow-up",
+            "title": "Use two observations to separate a limit and a residue",
+            "prompt": "<p>The function \\(f(x)=A+\\frac{B}{x-5}\\) takes values \\(16\\) and \\(\\frac{25}{2}\\) at inputs \\(6\\) and \\(7\\) respectively. Find \\(A,B\\).</p>",
+            "fields": [
+              {
+                "key": "A",
+                "label": "Value of A",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "B",
+                "label": "Value of B",
+                "type": "number",
+                "expected": "7"
+              }
+            ],
+            "hint": "<p>Extract one equation for each point and subtract to remove the common horizontal term.</p>",
+            "solution": "<p>The first point gives \\(A+B=16\\). The second gives \\(A+\\frac12B=\\frac{25}{2}\\).</p><p>Subtracting eliminates \\(A\\) and gives \\(B=7\\).</p><p>Substitute back to get \\(A=9\\), which is also the limiting height.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Reconstruct two constants from an asymptote and a point",
+        "question": "<p>The graph of \\(f(x)=A+\\frac{B}{x-2}\\) has horizontal asymptote \\(y=3\\) and contains \\((4,5)\\). Find \\(A,B\\).</p>",
+        "solution": [
+          "<p>As x grows in magnitude the reciprocal term vanishes. Therefore \\(A=3\\).</p>",
+          "<p>At \\(x=4\\), the denominator is \\(2\\).</p>",
+          "<p>Substitute the known height and solve for the numerator to obtain \\(B=4\\).</p>"
+        ]
+      },
+      {
+        "title": "Read the quotient from the sloping asymptote",
+        "question": "<p>Let \\(f(x)=\\frac{Ax^2+Bx+C}{x-2}\\) have oblique asymptote \\(y=2 x + 1\\) and pass through \\((3,11)\\). Find \\(A,B,C\\).</p>",
+        "solution": [
+          "<p>The division quotient is the asymptote. Write \\(f(x)=2 x + 1+\\frac{K}{x-2}\\).</p>",
+          "<p>The point gives \\(K=4\\). Multiply the line by the denominator and add the remainder.</p>",
+          "<p>The combined numerator is \\(2 x \\left(x - 2\\right) + x + 2\\). Read the three coefficients.</p>"
+        ]
+      },
+      {
+        "title": "Find the member with a removable hole",
+        "question": "<p>The family is \\(f(x)=\\frac{x^2+1x-k}{x-2}\\). Find the value of \\(k\\) that removes the vertical asymptote and the finite height approached at the excluded input.</p>",
+        "solution": [
+          "<p>A common factor occurs exactly when the numerator at \\(2\\) is zero.</p>",
+          "<p>This gives \\(k=6\\). The numerator factors as \\(\\left(x - 2\\right) \\left(x + 3\\right)\\).</p>",
+          "<p>The reduced line is \\(x + 3\\), giving height \\(5\\) at the removed input. The original function still has a hole.</p>"
+        ]
+      },
+      {
+        "title": "Find the member with a removable hole",
+        "question": "<p>The family is \\(f(x)=\\frac{x^2+3x-k}{x-4}\\). Find the value of \\(k\\) that removes the vertical asymptote and the finite height approached at the excluded input.</p>",
+        "solution": [
+          "<p>A common factor occurs exactly when the numerator at \\(4\\) is zero.</p>",
+          "<p>This gives \\(k=28\\). The numerator factors as \\(\\left(x - 4\\right) \\left(x + 7\\right)\\).</p>",
+          "<p>The reduced line is \\(x + 7\\), giving height \\(11\\) at the removed input. The original function still has a hole.</p>"
+        ]
+      },
+      {
+        "title": "Recover the parameter from a stationary input",
+        "question": "<p>The function \\(f(x)=x+\\frac{k}{x-2}\\) is stationary at \\(x=4\\). Find \\(k\\) and the stationary height at this input.</p>",
+        "solution": [
+          "<p>Differentiate to obtain \\(f^\\prime(x)=1-\\frac{k}{(x-2)^2}\\).</p>",
+          "<p>At the specified input set the derivative equal to zero. This gives \\(k=4\\).</p>",
+          "<p>Substitute into the original function for height \\(6\\).</p>"
+        ]
+      },
+      {
+        "title": "Use two observations to separate a limit and a residue",
+        "question": "<p>The function \\(f(x)=A+\\frac{B}{x-2}\\) takes values \\(7\\) and \\(5\\) at inputs \\(3\\) and \\(4\\) respectively. Find \\(A,B\\).</p>",
+        "solution": [
+          "<p>The first point gives \\(A+B=7\\). The second gives \\(A+\\frac12B=5\\).</p>",
+          "<p>Subtracting eliminates \\(A\\) and gives \\(B=4\\).</p>",
+          "<p>Substitute back to get \\(A=3\\), which is also the limiting height.</p>"
+        ]
+      },
+      {
+        "title": "Use two observations to separate a limit and a residue",
+        "question": "<p>The function \\(f(x)=A+\\frac{B}{x-4}\\) takes values \\(13\\) and \\(10\\) at inputs \\(5\\) and \\(6\\) respectively. Find \\(A,B\\).</p>",
+        "solution": [
+          "<p>The first point gives \\(A+B=13\\). The second gives \\(A+\\frac12B=10\\).</p>",
+          "<p>Subtracting eliminates \\(A\\) and gives \\(B=6\\).</p>",
+          "<p>Substitute back to get \\(A=7\\), which is also the limiting height.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "parameters-use-a-horizontal-level-extra",
+        "title": "Reconstruct two constants from an asymptote and a point",
+        "prompt": "<p>The graph of \\(f(x)=A+\\frac{B}{x-4}\\) has horizontal asymptote \\(y=7\\) and contains \\((6,10)\\). Find \\(A,B\\).</p>",
+        "fields": [
+          {
+            "key": "A",
+            "label": "Value of A",
+            "type": "number",
+            "expected": "7"
+          },
+          {
+            "key": "B",
+            "label": "Value of B",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Use the asymptote first so the point equation has only one unknown.</p>",
+        "solution": "<p>As x grows in magnitude the reciprocal term vanishes. Therefore \\(A=7\\).</p><p>At \\(x=6\\), the denominator is \\(2\\).</p><p>Substitute the known height and solve for the numerator to obtain \\(B=6\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "parameters-use-an-oblique-line-extra",
+        "title": "Read the quotient from the sloping asymptote",
+        "prompt": "<p>Let \\(f(x)=\\frac{Ax^2+Bx+C}{x-4}\\) have oblique asymptote \\(y=4 x - 1\\) and pass through \\((5,25)\\). Find \\(A,B,C\\).</p>",
+        "fields": [
+          {
+            "key": "A",
+            "label": "Value of A",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "B",
+            "label": "Value of B",
+            "type": "number",
+            "expected": "-17"
+          },
+          {
+            "key": "C",
+            "label": "Value of C",
+            "type": "number",
+            "expected": "10"
+          }
+        ],
+        "hint": "<p>Keep the asymptote as the quotient and recover the remainder from the point.</p>",
+        "solution": "<p>The division quotient is the asymptote. Write \\(f(x)=4 x - 1+\\frac{K}{x-4}\\).</p><p>The point gives \\(K=6\\). Multiply the line by the denominator and add the remainder.</p><p>The combined numerator is \\(4 x \\left(x - 4\\right) - x + 10\\). Read the three coefficients.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "parameters-exceptional-member-extra",
+        "title": "Find the member with a removable hole",
+        "prompt": "<p>The family is \\(f(x)=\\frac{x^2+5x-k}{x-6}\\). Find the value of \\(k\\) that removes the vertical asymptote and the finite height approached at the excluded input.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Value of k",
+            "type": "number",
+            "expected": "66"
+          },
+          {
+            "key": "height",
+            "label": "Hole height",
+            "type": "number",
+            "expected": "17"
+          }
+        ],
+        "hint": "<p>A denominator factor cancels only when the numerator also vanishes at that input.</p>",
+        "solution": "<p>A common factor occurs exactly when the numerator at \\(6\\) is zero.</p><p>This gives \\(k=66\\). The numerator factors as \\(\\left(x - 6\\right) \\left(x + 11\\right)\\).</p><p>The reduced line is \\(x + 11\\), giving height \\(17\\) at the removed input. The original function still has a hole.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "parameters-use-a-stationary-point-extra",
+        "title": "Recover the parameter from a stationary input",
+        "prompt": "<p>The function \\(f(x)=3 x+\\frac{k}{x-4}\\) is stationary at \\(x=6\\). Find \\(k\\) and the stationary height at this input.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Value of k",
+            "type": "number",
+            "expected": "12"
+          },
+          {
+            "key": "height",
+            "label": "Stationary height",
+            "type": "number",
+            "expected": "24"
+          }
+        ],
+        "hint": "<p>A stationary point fixes the derivative, then the original function gives the height.</p>",
+        "solution": "<p>Differentiate to obtain \\(f^\\prime(x)=3-\\frac{k}{(x-4)^2}\\).</p><p>At the specified input set the derivative equal to zero. This gives \\(k=12\\).</p><p>Substitute into the original function for height \\(24\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "parameters-combine-observations-extra",
+        "title": "Use two observations to separate a limit and a residue",
+        "prompt": "<p>The function \\(f(x)=A+\\frac{B}{x-6}\\) takes values \\(19\\) and \\(15\\) at inputs \\(7\\) and \\(8\\) respectively. Find \\(A,B\\).</p>",
+        "fields": [
+          {
+            "key": "A",
+            "label": "Value of A",
+            "type": "number",
+            "expected": "11"
+          },
+          {
+            "key": "B",
+            "label": "Value of B",
+            "type": "number",
+            "expected": "8"
+          }
+        ],
+        "hint": "<p>Extract one equation for each point and subtract to remove the common horizontal term.</p>",
+        "solution": "<p>The first point gives \\(A+B=19\\). The second gives \\(A+\\frac12B=15\\).</p><p>Subtracting eliminates \\(A\\) and gives \\(B=8\\).</p><p>Substitute back to get \\(A=11\\), which is also the limiting height.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Parameter",
+        "definition": "<p>A fixed constant determining one member of a family.</p>"
+      },
+      {
+        "term": "Reconstruction",
+        "definition": "<p>Recovering the function from enough independent information.</p>"
+      },
+      {
+        "term": "Exceptional member",
+        "definition": "<p>A parameter value causing a change in graph type or domain features.</p>"
+      },
+      {
+        "term": "Observation",
+        "definition": "<p>A known input and output, or a feature such as a stationary point.</p>"
+      },
+      {
+        "term": "Residue coefficient",
+        "definition": "<p>Numerator of the simple proper-fraction term in these examples.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Horizontal line plus fraction</th><td>Set the outside constant from the limit.</td></tr><tr><th scope=\"row\">Oblique line</th><td>Use it as the division quotient.</td></tr><tr><th scope=\"row\">Hole</th><td>Find the parameter that makes the numerator vanish at the denominator zero.</td></tr><tr><th scope=\"row\">Stationary input</th><td>Set the derivative equal to zero there.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A function has form \\(f(x)=A+\\frac{B}{x-2}\\), tends to 4 and passes through \\((5,6)\\). Find \\(A,B\\).</p><p><strong>Check</strong> \\(A=4,\\ B=6\\).</p>",
+      "checks": "<ul><li>Substituting a finite x-coordinate into an asymptote equation is not the same as substituting it into the actual function.</li><li>Keep the actual point equation until after identifying the quotient. The remainder usually does not vanish at that point.</li></ul>",
+      "examTip": "<p>If a parameter can make a denominator factor cancel, test that value separately and keep the original restriction.</p>"
+    },
+    "related": [
+      {
+        "title": "Ranges and stationary points",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_rational_ranges"
+      },
+      {
+        "title": "Modulus and inequalities",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_rational_modulus"
+      }
+    ]
+  },
+  "fp1_rational_modulus": {
+    "updatedOn": "2026-11-21",
+    "description": "Reflect negative output values and solve one- and two-sided rational inequalities with strict attention to poles and equality.",
+    "sections": [
+      {
+        "id": "make-heights-positive",
+        "title": "Which points move when the modulus acts on the output?",
+        "label": "Reflect the negative heights",
+        "intro": "<p>For \\(|f(x)|\\), keep each x-coordinate. Reflect a point across the x-axis only if its original height was negative.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The zeros remain at the same allowed x-values. The original poles remain outside the domain.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "modulus-make-heights-positive-check",
+            "title": "Reflect only the negative heights",
+            "prompt": "<p>For \\(f(x)=\\frac{x - 3}{x + 2}\\), give the value of \\(|f(x)|\\) at \\(x=-1\\) and the x-coordinate of its zero.</p>",
+            "fields": [
+              {
+                "key": "modulus",
+                "label": "Modulus of the height",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "zero",
+                "label": "x-coordinate of the zero",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Test the sign of f before deciding which graph segment is reflected.</p>",
+            "solution": "<p>The output of the original curve at this test input is \\(-4\\).</p><p>The output modulus reflects a negative height. It gives \\(4\\) here.</p><p>A modulus is zero only when its argument is zero, so the x-intercept remains at \\(3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Output modulus does not make negative x-values positive. It changes the output only.</p>"
+          }
+        ]
+      },
+      {
+        "id": "partition-the-number-line",
+        "title": "Why should I split the line at a pole?",
+        "label": "Read the signs of numerator and denominator",
+        "intro": "<p>A fraction’s sign can change at a zero or a pole. On each remaining interval choose a test input or read the factor signs.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a positive fraction, numerator and denominator have the same sign. A strict inequality excludes the numerator zero as well as every pole.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "modulus-partition-the-number-line-check",
+            "title": "Separate the zero from the excluded pole",
+            "prompt": "<p>For \\(f(x)=\\frac{x - 3}{x + 2}\\), solve \\(f(x)>0\\). Give all allowed x-values.</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Allowed x-values",
+                "type": "set",
+                "expected": "(-inf,-2)U(3,inf)",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Test an input in each part of the number line.</p>",
+            "solution": "<p>The pole \\(x=-2\\) is excluded. The numerator is zero at \\(x=3\\).</p><p>Numerator and denominator have the same sign outside the two boundaries and opposite signs between them.</p><p>Both boundaries are excluded in the strict positive inequality.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Multiplying by a denominator of unknown sign can reverse the inequality on part of the domain.</p>"
+          }
+        ]
+      },
+      {
+        "id": "threshold-on-two-sides",
+        "title": "How do I solve an inequality with two modulus branches?",
+        "label": "Locate both equality boundaries",
+        "intro": "<p>For a positive threshold, modulus at or above that level means the original function is at least the threshold or at most its negative.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use both equality cases and split each interval further at every pole. Then check signs to decide which intervals to include.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_rational_modulus/modulus-threshold-pole.svg",
+              "caption": "<p>The pole splits the portion at or above height two into two intervals.</p>",
+              "alt": "The modulus graph is highest near a vertical pole at x = −1. It meets height 2 at x = −4 and x = 0.",
+              "width": 476,
+              "height": 246
+            }
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "modulus-threshold-on-two-sides-check",
+            "title": "Solve a two-sided modulus inequality around a pole",
+            "prompt": "<p>Solve \\(\\left|\\frac{x - 3}{x + 2}\\right|\\ge2\\). Give all allowed x-values.</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Allowed x-values",
+                "type": "set",
+                "expected": "[-7,-2)U(-2,-1/3]",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Find the two equality points, then use the pole to split the allowed intervals.</p>",
+            "solution": "<p>Solve \\(f(x)=2\\) and \\(f(x)=-2\\). Their inputs are \\(-7\\) and \\(- \\frac{1}{3}\\).</p><p>The graph approaches a height of one in magnitude far from the pole, and rises without bound in magnitude near it.</p><p>Thus choose the intervals from the left equality up to the pole and from just past the pole through the right equality. Both equality boundaries belong, but the pole does not.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A pole between two accepted intervals does not join them. Both sides can qualify while the pole itself is still excluded.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "modulus-threshold-on-two-sides-follow-up",
+            "title": "Solve a two-sided modulus inequality around a pole",
+            "prompt": "<p>Solve \\(\\left|\\frac{x - 5}{x + 4}\\right|\\ge2\\). Give all allowed x-values.</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Allowed x-values",
+                "type": "set",
+                "expected": "[-13,-4)U(-4,-1]",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Find the two equality points, then use the pole to split the allowed intervals.</p>",
+            "solution": "<p>Solve \\(f(x)=2\\) and \\(f(x)=-2\\). Their inputs are \\(-13\\) and \\(-1\\).</p><p>The graph approaches a height of one in magnitude far from the pole, and rises without bound in magnitude near it.</p><p>Thus choose the intervals from the left equality up to the pole and from just past the pole through the right equality. Both equality boundaries belong, but the pole does not.</p>"
+          }
+        ]
+      },
+      {
+        "id": "include-only-valid-equality",
+        "title": "Which boundary is included for a non-strict inequality?",
+        "label": "Distinguish a zero from a pole",
+        "intro": "<p>A non-strict inequality can include equality only at an input that already belongs to the domain.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Keep an allowed zero for \\(f(x)\\le0\\). A denominator zero is excluded regardless of the inequality sign.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "modulus-include-only-valid-equality-check",
+            "title": "Separate the zero from the excluded pole",
+            "prompt": "<p>For \\(f(x)=\\frac{x - 3}{x + 2}\\), solve \\(f(x)\\le0\\). Give all allowed x-values.</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Allowed x-values",
+                "type": "set",
+                "expected": "(-2,3]",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Test an input in each part of the number line.</p>",
+            "solution": "<p>The pole \\(x=-2\\) is excluded. The numerator is zero at \\(x=3\\).</p><p>Numerator and denominator have the same sign outside the two boundaries and opposite signs between them.</p><p>Keep the numerator zero because equality is allowed, but exclude the pole.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Closed brackets at all algebraic boundaries can add a point at which no output exists.</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-each-case",
+        "title": "Can one of the two modulus equations have no solution?",
+        "label": "Solve each sign case directly",
+        "intro": "<p>Splitting a modulus equation produces two candidate equations. One can be inconsistent or contain only excluded candidates.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write both sign cases. Solve and substitute back into the original domain and equality.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "modulus-check-each-case-check",
+            "title": "Check if both modulus cases are possible",
+            "prompt": "<p>Solve \\(\\left|\\frac{x - 3}{x + 2}\\right|=1\\). Give all solutions.</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Allowed x-values",
+                "type": "set",
+                "expected": "{1/2}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Do not assume each sign case supplies a root.</p>",
+            "solution": "<p>The two cases are \\(f(x)=1\\) and \\(f(x)=-1\\).</p><p>The first would give \\(x - 3=x + 2\\). The x terms cancel, leaving unequal constants, so it has no solution.</p><p>The second gives \\(x=\\frac{1}{2}\\). It is different from the pole so it is valid.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not assume a symmetrical pair of solutions when the given graph is not symmetrical about the same line.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "modulus-check-each-case-follow-up",
+            "title": "Check if both modulus cases are possible",
+            "prompt": "<p>Solve \\(\\left|\\frac{x - 5}{x + 4}\\right|=1\\). Give all solutions.</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Allowed x-values",
+                "type": "set",
+                "expected": "{1/2}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Do not assume each sign case supplies a root.</p>",
+            "solution": "<p>The two cases are \\(f(x)=1\\) and \\(f(x)=-1\\).</p><p>The first would give \\(x - 5=x + 4\\). The x terms cancel, leaving unequal constants, so it has no solution.</p><p>The second gives \\(x=\\frac{1}{2}\\). It is different from the pole so it is valid.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Reflect only the negative heights",
+        "question": "<p>For \\(f(x)=\\frac{x - 2}{x + 1}\\), give the value of \\(|f(x)|\\) at \\(x=0\\) and the x-coordinate of its zero.</p>",
+        "solution": [
+          "<p>The output of the original curve at this test input is \\(-2\\).</p>",
+          "<p>The output modulus reflects a negative height. It gives \\(2\\) here.</p>",
+          "<p>A modulus is zero only when its argument is zero, so the x-intercept remains at \\(2\\).</p>"
+        ]
+      },
+      {
+        "title": "Separate the zero from the excluded pole",
+        "question": "<p>For \\(f(x)=\\frac{x - 2}{x + 1}\\), solve \\(f(x)>0\\). Give all allowed x-values.</p>",
+        "solution": [
+          "<p>The pole \\(x=-1\\) is excluded. The numerator is zero at \\(x=2\\).</p>",
+          "<p>Numerator and denominator have the same sign outside the two boundaries and opposite signs between them.</p>",
+          "<p>Both boundaries are excluded in the strict positive inequality.</p>"
+        ]
+      },
+      {
+        "title": "Solve a two-sided modulus inequality around a pole",
+        "question": "<p>Solve \\(\\left|\\frac{x - 2}{x + 1}\\right|\\ge2\\). Give all allowed x-values.</p>",
+        "solution": [
+          "<p>Solve \\(f(x)=2\\) and \\(f(x)=-2\\). Their inputs are \\(-4\\) and \\(0\\).</p>",
+          "<p>The graph approaches a height of one in magnitude far from the pole, and rises without bound in magnitude near it.</p>",
+          "<p>Thus choose the intervals from the left equality up to the pole and from just past the pole through the right equality. Both equality boundaries belong, but the pole does not.</p>"
+        ]
+      },
+      {
+        "title": "Solve a two-sided modulus inequality around a pole",
+        "question": "<p>Solve \\(\\left|\\frac{x - 4}{x + 3}\\right|\\ge2\\). Give all allowed x-values.</p>",
+        "solution": [
+          "<p>Solve \\(f(x)=2\\) and \\(f(x)=-2\\). Their inputs are \\(-10\\) and \\(- \\frac{2}{3}\\).</p>",
+          "<p>The graph approaches a height of one in magnitude far from the pole, and rises without bound in magnitude near it.</p>",
+          "<p>Thus choose the intervals from the left equality up to the pole and from just past the pole through the right equality. Both equality boundaries belong, but the pole does not.</p>"
+        ]
+      },
+      {
+        "title": "Separate the zero from the excluded pole",
+        "question": "<p>For \\(f(x)=\\frac{x - 2}{x + 1}\\), solve \\(f(x)\\le0\\). Give all allowed x-values.</p>",
+        "solution": [
+          "<p>The pole \\(x=-1\\) is excluded. The numerator is zero at \\(x=2\\).</p>",
+          "<p>Numerator and denominator have the same sign outside the two boundaries and opposite signs between them.</p>",
+          "<p>Keep the numerator zero because equality is allowed, but exclude the pole.</p>"
+        ]
+      },
+      {
+        "title": "Check if both modulus cases are possible",
+        "question": "<p>Solve \\(\\left|\\frac{x - 2}{x + 1}\\right|=1\\). Give all solutions.</p>",
+        "solution": [
+          "<p>The two cases are \\(f(x)=1\\) and \\(f(x)=-1\\).</p>",
+          "<p>The first would give \\(x - 2=x + 1\\). The x terms cancel, leaving unequal constants, so it has no solution.</p>",
+          "<p>The second gives \\(x=\\frac{1}{2}\\). It is different from the pole so it is valid.</p>"
+        ]
+      },
+      {
+        "title": "Check if both modulus cases are possible",
+        "question": "<p>Solve \\(\\left|\\frac{x - 4}{x + 3}\\right|=1\\). Give all solutions.</p>",
+        "solution": [
+          "<p>The two cases are \\(f(x)=1\\) and \\(f(x)=-1\\).</p>",
+          "<p>The first would give \\(x - 4=x + 3\\). The x terms cancel, leaving unequal constants, so it has no solution.</p>",
+          "<p>The second gives \\(x=\\frac{1}{2}\\). It is different from the pole so it is valid.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "modulus-make-heights-positive-extra",
+        "title": "Reflect only the negative heights",
+        "prompt": "<p>For \\(f(x)=\\frac{x - 4}{x + 3}\\), give the value of \\(|f(x)|\\) at \\(x=-2\\) and the x-coordinate of its zero.</p>",
+        "fields": [
+          {
+            "key": "modulus",
+            "label": "Modulus of the height",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "zero",
+            "label": "x-coordinate of the zero",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>Test the sign of f before deciding which graph segment is reflected.</p>",
+        "solution": "<p>The output of the original curve at this test input is \\(-6\\).</p><p>The output modulus reflects a negative height. It gives \\(6\\) here.</p><p>A modulus is zero only when its argument is zero, so the x-intercept remains at \\(4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modulus-partition-the-number-line-extra",
+        "title": "Separate the zero from the excluded pole",
+        "prompt": "<p>For \\(f(x)=\\frac{x - 4}{x + 3}\\), solve \\(f(x)>0\\). Give all allowed x-values.</p>",
+        "fields": [
+          {
+            "key": "solutions",
+            "label": "Allowed x-values",
+            "type": "set",
+            "expected": "(-inf,-3)U(4,inf)",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Test an input in each part of the number line.</p>",
+        "solution": "<p>The pole \\(x=-3\\) is excluded. The numerator is zero at \\(x=4\\).</p><p>Numerator and denominator have the same sign outside the two boundaries and opposite signs between them.</p><p>Both boundaries are excluded in the strict positive inequality.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modulus-threshold-on-two-sides-extra",
+        "title": "Solve a two-sided modulus inequality around a pole",
+        "prompt": "<p>Solve \\(\\left|\\frac{x - 6}{x + 5}\\right|\\ge2\\). Give all allowed x-values.</p>",
+        "fields": [
+          {
+            "key": "solutions",
+            "label": "Allowed x-values",
+            "type": "set",
+            "expected": "[-16,-5)U(-5,-4/3]",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Find the two equality points, then use the pole to split the allowed intervals.</p>",
+        "solution": "<p>Solve \\(f(x)=2\\) and \\(f(x)=-2\\). Their inputs are \\(-16\\) and \\(- \\frac{4}{3}\\).</p><p>The graph approaches a height of one in magnitude far from the pole, and rises without bound in magnitude near it.</p><p>Thus choose the intervals from the left equality up to the pole and from just past the pole through the right equality. Both equality boundaries belong, but the pole does not.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modulus-include-only-valid-equality-extra",
+        "title": "Separate the zero from the excluded pole",
+        "prompt": "<p>For \\(f(x)=\\frac{x - 4}{x + 3}\\), solve \\(f(x)\\le0\\). Give all allowed x-values.</p>",
+        "fields": [
+          {
+            "key": "solutions",
+            "label": "Allowed x-values",
+            "type": "set",
+            "expected": "(-3,4]",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Test an input in each part of the number line.</p>",
+        "solution": "<p>The pole \\(x=-3\\) is excluded. The numerator is zero at \\(x=4\\).</p><p>Numerator and denominator have the same sign outside the two boundaries and opposite signs between them.</p><p>Keep the numerator zero because equality is allowed, but exclude the pole.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modulus-check-each-case-extra",
+        "title": "Check if both modulus cases are possible",
+        "prompt": "<p>Solve \\(\\left|\\frac{x - 6}{x + 5}\\right|=1\\). Give all solutions.</p>",
+        "fields": [
+          {
+            "key": "solutions",
+            "label": "Allowed x-values",
+            "type": "set",
+            "expected": "{1/2}",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Do not assume each sign case supplies a root.</p>",
+        "solution": "<p>The two cases are \\(f(x)=1\\) and \\(f(x)=-1\\).</p><p>The first would give \\(x - 6=x + 5\\). The x terms cancel, leaving unequal constants, so it has no solution.</p><p>The second gives \\(x=\\frac{1}{2}\\). It is different from the pole so it is valid.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Output modulus",
+        "definition": "<p>Change a negative height to the corresponding positive one.</p>"
+      },
+      {
+        "term": "Sign chart",
+        "definition": "<p>Intervals separated by possible sign changes.</p>"
+      },
+      {
+        "term": "Equality boundary",
+        "definition": "<p>An allowed point where the two sides of the comparison are equal.</p>"
+      },
+      {
+        "term": "Pole",
+        "definition": "<p>An undefined input separating graph branches.</p>"
+      },
+      {
+        "term": "Strict inequality",
+        "definition": "<p>Comparison excluding equality.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Output modulus</th><td>Reflect only the negative heights.</td></tr><tr><th scope=\"row\">A rational comparison</th><td>Find zeros and poles, then test every interval.</td></tr><tr><th scope=\"row\">Two-sided modulus</th><td>Use the positive and negative threshold cases.</td></tr><tr><th scope=\"row\">Boundary</th><td>Include equality only where the original expression is defined.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Solve \\(\\frac{x-2}{x+1}\\le0\\).</p><p><strong>Check</strong> \\(-1<x\\le2\\). The pole is excluded and the zero is included.</p>",
+      "checks": "<ul><li>Output modulus does not make negative x-values positive. It changes the output only.</li><li>Multiplying by a denominator of unknown sign can reverse the inequality on part of the domain.</li></ul>",
+      "examTip": "<p>Mark a separate cross at every excluded input before deciding which pieces of the number line to keep.</p>"
+    },
+    "related": [
+      {
+        "title": "Parameter families and reconstruction",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_rational_parameters"
+      },
+      {
+        "title": "Relationships between curves",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_rational_relationships"
+      }
+    ]
+  },
+  "fp1_rational_relationships": {
+    "updatedOn": "2026-11-21",
+    "description": "Trace which points and domains change under reciprocal, input modulus, output modulus and the relation y² = f(x).",
+    "sections": [
+      {
+        "id": "take-a-reciprocal",
+        "title": "Which features swap roles in a reciprocal graph?",
+        "label": "Track zeros and inherited restrictions",
+        "intro": "<p>The reciprocal is defined only where the original function exists and is non-zero. Analyse both conditions even after simplifying the fraction.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A simple zero of the original becomes a pole. At an original pole the reciprocal expression can have a finite limiting value, often giving a hole.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_rational_relationships/pole-and-inherited-hole.svg",
+              "caption": "<p>The original pole becomes an excluded zero, while the original zero becomes a pole.</p>",
+              "alt": "The reciprocal curve has a vertical asymptote at x = 4 and a hole at x = 2, y = 0 inherited from the original function.",
+              "width": 476,
+              "height": 246
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "relationships-take-a-reciprocal-check",
+            "title": "Distinguish a zero of the original from its pole",
+            "prompt": "<p>For \\(f(x)=\\frac{x - 6}{x - 3}\\), find the vertical asymptote and the hole of \\(y=\\frac{1}{f(x)}\\). Give the two x-values and the hole height.</p>",
+            "fields": [
+              {
+                "key": "pole",
+                "label": "Vertical asymptote x-coordinate",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "hole",
+                "label": "Hole x-coordinate",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "level",
+                "label": "Hole height",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>A reciprocal must have an existing, non-zero denominator f(x).</p>",
+            "solution": "<p>The original denominator excludes \\(x=3\\). Its numerator vanishes at \\(x=6\\), where the reciprocal is undefined.</p><p>The reduced reciprocal is \\(\\frac{x - 3}{x - 6}\\), which has a pole at \\(6\\).</p><p>At the original excluded input \\(3\\) the new expression has limit zero. That is a hole, since the reciprocal inherited the original domain restriction.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Reversing a fraction symbolically may conceal inputs excluded by the original function.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reflect-the-input",
+        "title": "How does an input modulus copy a graph?",
+        "label": "Use the right-hand half",
+        "intro": "<p>The input to the original function is now non-negative. Use the portion of the old graph for non-negative inputs and reflect it across the y-axis.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Each positive excluded input becomes a pair of excluded x-values. A negative excluded input of the original need not matter to the new graph.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "relationships-reflect-the-input-check",
+            "title": "Reflect the right-hand graph when modulus acts on input",
+            "prompt": "<p>For \\(f(x)=2 + \\frac{1}{x - 3}\\), find both vertical asymptote x-values of \\(y=f(|x|)\\) and find its value at \\(x=-6\\).</p>",
+            "fields": [
+              {
+                "key": "asymptotes",
+                "label": "Set of x-values",
+                "type": "set",
+                "expected": "{-3,3}",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "height",
+                "label": "Requested height",
+                "type": "number",
+                "expected": "7/3"
+              }
+            ],
+            "hint": "<p>Apply the modulus before evaluating the original function.</p>",
+            "solution": "<p>The modulus sends negative inputs to their positive images. Therefore the right-hand graph is copied across the y-axis.</p><p>The condition on the denominator is \\(|x|=3\\), giving vertical asymptotes \\(3\\) and \\(-3\\).</p><p>Evaluate at the positive input \\(6\\) to get \\(\\frac{7}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The input modulus creates y-axis symmetry. It does not reflect negative heights upwards.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reflect-the-output",
+        "title": "How does an output modulus preserve the domain?",
+        "label": "Keep x and change height sign",
+        "intro": "<p>The function must exist at x before taking its modulus. The transformation keeps the x-coordinate and takes the magnitude of the height.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Part of the graph at negative height reflects across the x-axis. Keep original holes, poles and allowed zeros.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "relationships-reflect-the-output-check",
+            "title": "Retain holes and poles when only outputs are reflected",
+            "prompt": "<p>For \\(f(x)=\\frac{x - 6}{x - 3}\\), find the vertical asymptote’s x-value, the x-intercept and the value at \\(x=\\frac{9}{2}\\) for \\(y=|f(x)|\\).</p>",
+            "fields": [
+              {
+                "key": "pole",
+                "label": "Vertical asymptote x-coordinate",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "zero",
+                "label": "x-coordinate of zero",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "height",
+                "label": "Requested height",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Output modulus changes negative heights to positive ones but does not change inputs.</p>",
+            "solution": "<p>The domain is unchanged, so the pole remains \\(x=3\\).</p><p>The zero still occurs at \\(x=6\\).</p><p>The original height at the specified midpoint is minus one, so the reflected height is one.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Input and output modulus are different operations. Use the placement of the bars to tell which quantity changes.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "relationships-reflect-the-output-follow-up",
+            "title": "Retain holes and poles when only outputs are reflected",
+            "prompt": "<p>For \\(f(x)=\\frac{x - 10}{x - 5}\\), find the vertical asymptote’s x-value, the x-intercept and the value at \\(x=\\frac{15}{2}\\) for \\(y=|f(x)|\\).</p>",
+            "fields": [
+              {
+                "key": "pole",
+                "label": "Vertical asymptote x-coordinate",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "zero",
+                "label": "x-coordinate of zero",
+                "type": "number",
+                "expected": "10"
+              },
+              {
+                "key": "height",
+                "label": "Requested height",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Output modulus changes negative heights to positive ones but does not change inputs.</p>",
+            "solution": "<p>The domain is unchanged, so the pole remains \\(x=5\\).</p><p>The zero still occurs at \\(x=10\\).</p><p>The original height at the specified midpoint is minus one, so the reflected height is one.</p>"
+          }
+        ]
+      },
+      {
+        "id": "two-vertical-branches",
+        "title": "When does the relation give two y-values?",
+        "label": "Check the sign of the original height",
+        "intro": "<p>\\(y^2=f(x)\\) has no real output where \\(f(x)<0\\). Where the original height is positive there are two symmetric branches.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Retain every input in the original domain for which \\(f(x)\\ge0\\). At positive height take both square roots. At zero they coincide.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "relationships-two-vertical-branches-check",
+            "title": "Keep two output branches in a squared relation",
+            "prompt": "<p>For \\(f(x)=\\frac{x - 6}{x - 3}\\), find the domain in \\(x\\) of \\(y^2=f(x)\\) and give both y-values at \\(x=7\\).</p>",
+            "fields": [
+              {
+                "key": "domain",
+                "label": "Allowed x-values",
+                "type": "set",
+                "expected": "(-inf,3)U[6,inf)",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "outputs",
+                "label": "Set of y-values",
+                "type": "set",
+                "expected": "{-1/2,1/2}",
+                "variables": [
+                  "y"
+                ]
+              }
+            ],
+            "hint": "<p>A squared relation usually has two outputs where f is positive, and one where f is zero.</p>",
+            "solution": "<p>Real outputs need \\(f(x)\\ge0\\). A sign chart gives x below the pole or at least the numerator zero.</p><p>The domain is \\(x<3\\text{ or }x\\ge6\\). The pole stays excluded.</p><p>At the test input \\(f(x)=\\frac{1}{4}\\). Therefore \\(y=\\pm\\frac{1}{2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keeping only the positive square root changes the relation into a different single-valued function.</p>"
+          }
+        ]
+      },
+      {
+        "id": "read-related-intersections",
+        "title": "How can the related graphs solve an equation?",
+        "label": "Translate the level back to the original",
+        "intro": "<p>The intersections with a horizontal line can be found first on the original graph. The transformation tells which original heights produce that level.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a positive level in an output modulus, use the positive and negative levels of the original. Test both before collecting the x-values.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "relationships-read-related-intersections-check",
+            "title": "Compare a horizontal level before and after an output modulus",
+            "prompt": "<p>Let \\(f(x)=\\frac{3}{x - 3}\\). Find all x-values where \\(f(x)=2\\) and all x-values where \\(|f(x)|=2\\).</p>",
+            "fields": [
+              {
+                "key": "original",
+                "label": "Original x-values",
+                "type": "set",
+                "expected": "{9/2}",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "reflected",
+                "label": "Modulus x-values",
+                "type": "set",
+                "expected": "{3/2,9/2}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>A positive level in the reflected graph can come from either sign in the original.</p>",
+            "solution": "<p>For the original function solve its equality directly, giving \\(x=\\frac{9}{2}\\).</p><p>The output modulus includes the original positive-height point and the negative-height point satisfying \\(f(x)=-2\\).</p><p>The latter is at \\(x=\\frac{3}{2}\\). Both points have allowed inputs.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Compare graph relationships at the same allowed input. A reflected height never extends the original domain.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "relationships-read-related-intersections-follow-up",
+            "title": "Compare a horizontal level before and after an output modulus",
+            "prompt": "<p>Let \\(f(x)=\\frac{5}{x - 5}\\). Find all x-values where \\(f(x)=2\\) and all x-values where \\(|f(x)|=2\\).</p>",
+            "fields": [
+              {
+                "key": "original",
+                "label": "Original x-values",
+                "type": "set",
+                "expected": "{15/2}",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "reflected",
+                "label": "Modulus x-values",
+                "type": "set",
+                "expected": "{5/2,15/2}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>A positive level in the reflected graph can come from either sign in the original.</p>",
+            "solution": "<p>For the original function solve its equality directly, giving \\(x=\\frac{15}{2}\\).</p><p>The output modulus includes the original positive-height point and the negative-height point satisfying \\(f(x)=-2\\).</p><p>The latter is at \\(x=\\frac{5}{2}\\). Both points have allowed inputs.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Distinguish a zero of the original from its pole",
+        "question": "<p>For \\(f(x)=\\frac{x - 4}{x - 2}\\), find the vertical asymptote and the hole of \\(y=\\frac{1}{f(x)}\\). Give the two x-values and the hole height.</p>",
+        "solution": [
+          "<p>The original denominator excludes \\(x=2\\). Its numerator vanishes at \\(x=4\\), where the reciprocal is undefined.</p>",
+          "<p>The reduced reciprocal is \\(\\frac{x - 2}{x - 4}\\), which has a pole at \\(4\\).</p>",
+          "<p>At the original excluded input \\(2\\) the new expression has limit zero. That is a hole, since the reciprocal inherited the original domain restriction.</p>"
+        ]
+      },
+      {
+        "title": "Reflect the right-hand graph when modulus acts on input",
+        "question": "<p>For \\(f(x)=1 + \\frac{1}{x - 2}\\), find both vertical asymptote x-values of \\(y=f(|x|)\\) and find its value at \\(x=-4\\).</p>",
+        "solution": [
+          "<p>The modulus sends negative inputs to their positive images. Therefore the right-hand graph is copied across the y-axis.</p>",
+          "<p>The condition on the denominator is \\(|x|=2\\), giving vertical asymptotes \\(2\\) and \\(-2\\).</p>",
+          "<p>Evaluate at the positive input \\(4\\) to get \\(\\frac{3}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Retain holes and poles when only outputs are reflected",
+        "question": "<p>For \\(f(x)=\\frac{x - 4}{x - 2}\\), find the vertical asymptote’s x-value, the x-intercept and the value at \\(x=3\\) for \\(y=|f(x)|\\).</p>",
+        "solution": [
+          "<p>The domain is unchanged, so the pole remains \\(x=2\\).</p>",
+          "<p>The zero still occurs at \\(x=4\\).</p>",
+          "<p>The original height at the specified midpoint is minus one, so the reflected height is one.</p>"
+        ]
+      },
+      {
+        "title": "Retain holes and poles when only outputs are reflected",
+        "question": "<p>For \\(f(x)=\\frac{x - 8}{x - 4}\\), find the vertical asymptote’s x-value, the x-intercept and the value at \\(x=6\\) for \\(y=|f(x)|\\).</p>",
+        "solution": [
+          "<p>The domain is unchanged, so the pole remains \\(x=4\\).</p>",
+          "<p>The zero still occurs at \\(x=8\\).</p>",
+          "<p>The original height at the specified midpoint is minus one, so the reflected height is one.</p>"
+        ]
+      },
+      {
+        "title": "Keep two output branches in a squared relation",
+        "question": "<p>For \\(f(x)=\\frac{x - 4}{x - 2}\\), find the domain in \\(x\\) of \\(y^2=f(x)\\) and give both y-values at \\(x=5\\).</p>",
+        "solution": [
+          "<p>Real outputs need \\(f(x)\\ge0\\). A sign chart gives x below the pole or at least the numerator zero.</p>",
+          "<p>The domain is \\(x<2\\text{ or }x\\ge4\\). The pole stays excluded.</p>",
+          "<p>At the test input \\(f(x)=\\frac{1}{3}\\). Therefore \\(y=\\pm\\frac{\\sqrt{3}}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare a horizontal level before and after an output modulus",
+        "question": "<p>Let \\(f(x)=\\frac{2}{x - 2}\\). Find all x-values where \\(f(x)=2\\) and all x-values where \\(|f(x)|=2\\).</p>",
+        "solution": [
+          "<p>For the original function solve its equality directly, giving \\(x=3\\).</p>",
+          "<p>The output modulus includes the original positive-height point and the negative-height point satisfying \\(f(x)=-2\\).</p>",
+          "<p>The latter is at \\(x=1\\). Both points have allowed inputs.</p>"
+        ]
+      },
+      {
+        "title": "Compare a horizontal level before and after an output modulus",
+        "question": "<p>Let \\(f(x)=\\frac{4}{x - 4}\\). Find all x-values where \\(f(x)=2\\) and all x-values where \\(|f(x)|=2\\).</p>",
+        "solution": [
+          "<p>For the original function solve its equality directly, giving \\(x=6\\).</p>",
+          "<p>The output modulus includes the original positive-height point and the negative-height point satisfying \\(f(x)=-2\\).</p>",
+          "<p>The latter is at \\(x=2\\). Both points have allowed inputs.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "relationships-take-a-reciprocal-extra",
+        "title": "Distinguish a zero of the original from its pole",
+        "prompt": "<p>For \\(f(x)=\\frac{x - 8}{x - 4}\\), find the vertical asymptote and the hole of \\(y=\\frac{1}{f(x)}\\). Give the two x-values and the hole height.</p>",
+        "fields": [
+          {
+            "key": "pole",
+            "label": "Vertical asymptote x-coordinate",
+            "type": "number",
+            "expected": "8"
+          },
+          {
+            "key": "hole",
+            "label": "Hole x-coordinate",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "level",
+            "label": "Hole height",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>A reciprocal must have an existing, non-zero denominator f(x).</p>",
+        "solution": "<p>The original denominator excludes \\(x=4\\). Its numerator vanishes at \\(x=8\\), where the reciprocal is undefined.</p><p>The reduced reciprocal is \\(\\frac{x - 4}{x - 8}\\), which has a pole at \\(8\\).</p><p>At the original excluded input \\(4\\) the new expression has limit zero. That is a hole, since the reciprocal inherited the original domain restriction.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "relationships-reflect-the-input-extra",
+        "title": "Reflect the right-hand graph when modulus acts on input",
+        "prompt": "<p>For \\(f(x)=3 + \\frac{1}{x - 4}\\), find both vertical asymptote x-values of \\(y=f(|x|)\\) and find its value at \\(x=-8\\).</p>",
+        "fields": [
+          {
+            "key": "asymptotes",
+            "label": "Set of x-values",
+            "type": "set",
+            "expected": "{-4,4}",
+            "variables": [
+              "x"
+            ]
+          },
+          {
+            "key": "height",
+            "label": "Requested height",
+            "type": "number",
+            "expected": "13/4"
+          }
+        ],
+        "hint": "<p>Apply the modulus before evaluating the original function.</p>",
+        "solution": "<p>The modulus sends negative inputs to their positive images. Therefore the right-hand graph is copied across the y-axis.</p><p>The condition on the denominator is \\(|x|=4\\), giving vertical asymptotes \\(4\\) and \\(-4\\).</p><p>Evaluate at the positive input \\(8\\) to get \\(\\frac{13}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "relationships-reflect-the-output-extra",
+        "title": "Retain holes and poles when only outputs are reflected",
+        "prompt": "<p>For \\(f(x)=\\frac{x - 12}{x - 6}\\), find the vertical asymptote’s x-value, the x-intercept and the value at \\(x=9\\) for \\(y=|f(x)|\\).</p>",
+        "fields": [
+          {
+            "key": "pole",
+            "label": "Vertical asymptote x-coordinate",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "zero",
+            "label": "x-coordinate of zero",
+            "type": "number",
+            "expected": "12"
+          },
+          {
+            "key": "height",
+            "label": "Requested height",
+            "type": "number",
+            "expected": "1"
+          }
+        ],
+        "hint": "<p>Output modulus changes negative heights to positive ones but does not change inputs.</p>",
+        "solution": "<p>The domain is unchanged, so the pole remains \\(x=6\\).</p><p>The zero still occurs at \\(x=12\\).</p><p>The original height at the specified midpoint is minus one, so the reflected height is one.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "relationships-two-vertical-branches-extra",
+        "title": "Keep two output branches in a squared relation",
+        "prompt": "<p>For \\(f(x)=\\frac{x - 8}{x - 4}\\), find the domain in \\(x\\) of \\(y^2=f(x)\\) and give both y-values at \\(x=9\\).</p>",
+        "fields": [
+          {
+            "key": "domain",
+            "label": "Allowed x-values",
+            "type": "set",
+            "expected": "(-inf,4)U[8,inf)",
+            "variables": [
+              "x"
+            ]
+          },
+          {
+            "key": "outputs",
+            "label": "Set of y-values",
+            "type": "set",
+            "expected": "{-sqrt(5)/5,sqrt(5)/5}",
+            "variables": [
+              "y"
+            ]
+          }
+        ],
+        "hint": "<p>A squared relation usually has two outputs where f is positive, and one where f is zero.</p>",
+        "solution": "<p>Real outputs need \\(f(x)\\ge0\\). A sign chart gives x below the pole or at least the numerator zero.</p><p>The domain is \\(x<4\\text{ or }x\\ge8\\). The pole stays excluded.</p><p>At the test input \\(f(x)=\\frac{1}{5}\\). Therefore \\(y=\\pm\\frac{\\sqrt{5}}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "relationships-read-related-intersections-extra",
+        "title": "Compare a horizontal level before and after an output modulus",
+        "prompt": "<p>Let \\(f(x)=\\frac{6}{x - 6}\\). Find all x-values where \\(f(x)=2\\) and all x-values where \\(|f(x)|=2\\).</p>",
+        "fields": [
+          {
+            "key": "original",
+            "label": "Original x-values",
+            "type": "set",
+            "expected": "{9}",
+            "variables": [
+              "x"
+            ]
+          },
+          {
+            "key": "reflected",
+            "label": "Modulus x-values",
+            "type": "set",
+            "expected": "{3,9}",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>A positive level in the reflected graph can come from either sign in the original.</p>",
+        "solution": "<p>For the original function solve its equality directly, giving \\(x=9\\).</p><p>The output modulus includes the original positive-height point and the negative-height point satisfying \\(f(x)=-2\\).</p><p>The latter is at \\(x=3\\). Both points have allowed inputs.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Reciprocal",
+        "definition": "<p>Replace a non-zero height by one divided by that height.</p>"
+      },
+      {
+        "term": "Input modulus",
+        "definition": "<p>Replace x by its magnitude before evaluating the function.</p>"
+      },
+      {
+        "term": "Output modulus",
+        "definition": "<p>Take the magnitude after evaluating the function.</p>"
+      },
+      {
+        "term": "Squared relation",
+        "definition": "<p>Solve y² equal to the original height, potentially giving two outputs.</p>"
+      },
+      {
+        "term": "Inherited restriction",
+        "definition": "<p>An input still excluded because the original operation was undefined there.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Reciprocal</th><td>Keep original exclusions and exclude every original zero.</td></tr><tr><th scope=\"row\">Input modulus</th><td>Copy the right side across the y-axis.</td></tr><tr><th scope=\"row\">Output modulus</th><td>Reflect negative heights across the x-axis.</td></tr><tr><th scope=\"row\">\\(y^2=f(x)\\)</th><td>Require \\(f(x)\\ge0\\) and keep both square roots where distinct.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For \\(f(x)=\\frac{x-3}{x-2}\\), which inputs are excluded from \\(\\frac1{f(x)}\\)?</p><p><strong>Check</strong> \\(x=2\\) remains excluded and \\(x=3\\) is excluded because the original height is zero.</p>",
+      "checks": "<ul><li>Reversing a fraction symbolically may conceal inputs excluded by the original function.</li><li>The input modulus creates y-axis symmetry. It does not reflect negative heights upwards.</li></ul>",
+      "examTip": "<p>State inherited restrictions separately from those added by the new operation.</p>"
+    },
+    "related": [
+      {
+        "title": "Modulus and inequalities",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_rational_modulus"
+      }
+    ]
+  }
+}

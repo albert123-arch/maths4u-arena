@@ -32,6 +32,7 @@ import distributions from "../../content/original/9709-s1/distributions-study.js
 import binomialGeometric from "../../content/original/9709-s1/binomial-geometric-study.json";
 import normal from "../../content/original/9709-s1/normal-study.json";
 import study9231Fp1Roots from "../../content/original/9231-fp1/roots-study.json";
+import study9231Fp1Rational from "../../content/original/9231-fp1/rational-study.json";
 import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
 import { renderContent } from "./content";
 import { checkExact, checkExactInverseAngle, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
@@ -62,6 +63,7 @@ const lessons = {
   ...representation, ...centralTendency, ...variation, ...probability,
   ...counting, ...distributions, ...binomialGeometric, ...normal,
   ...study9231Fp1Roots,
+  ...study9231Fp1Rational,
 } as Record<string, AuthoredLesson>;
 const examPaths = examPracticePaths as Record<string, Omit<StudyExamPractice, "starters"> & { starters?: StudyExamPractice["starters"] }>;
 
