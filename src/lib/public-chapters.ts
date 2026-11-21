@@ -59,6 +59,7 @@ export function matchPublicChapter(chapters: PublicChapter[], path: string, chap
 }
 
 const chapterDescriptions: Record<string, string> = {
+  "9709-m1-newtons-laws": "Apply Newton’s laws to a particle, lifts, rough slopes, connected bodies and pulleys for Cambridge 9709 Mechanics.",
   "9709-m1-momentum": "Model signed momentum, direct collisions, coalescence and successive impacts for Cambridge 9709 Mechanics.",
   "9709-m1-kinematics": "Use signed motion, graphs, constant acceleration and calculus to solve straight-line kinematics for Cambridge 9709 Mechanics.",
   "9709-m1-forces-and-equilibrium": "Draw forces, resolve components and solve smooth and rough equilibrium problems for Cambridge 9709 Mechanics.",
