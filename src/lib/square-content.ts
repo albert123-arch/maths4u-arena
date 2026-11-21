@@ -2,7 +2,7 @@
 import extension from "../../content/original/quadratics-extension-20261105-v1.json";
 import { quadraticsTeaching } from "./quadratics-notes";
 import pack from "../../content/original/completing-square-20261105-v1.json";
-import { checkExact, isExpandedPolynomial, isRoundedNumberAnswer, scalarAnswerValue, AnswerVariableError, type ExactField } from "./exact-answer";
+import { checkExact, checkThreeSignificantFigures, isExpandedPolynomial, isRoundedNumberAnswer, scalarAnswerValue, AnswerVariableError, type ExactField } from "./exact-answer";
 import { renderContent } from "./content";
 import { mathPattern } from "./math-markup.mjs";
 import { type SquareLesson, type CheckResult, squareVersion, quadraticTopic, type QuadraticTopic } from "./square-model";
@@ -11,9 +11,10 @@ import { packageQuestions, packageTeaching, packageTopic } from "./content-packa
 import { legacyQuadraticsStudy, studyLayout } from "./authored-study";
 import { answerFormat, exactValueFeedback } from "./square-presentation";
 import { isCoordinateField, isIntervalField, rangeOutputs } from "./answer-notation";
+import { permitsThreeSignificantFigures } from "./s1-answer-precision";
 
 type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
-export type SourceQuestion = { id: string; family_uid: string; title: string; collection: string; prompt_html: string; hint_html: string; solution_html: string; answer_html: string; marks: number; difficulty: number; variant_index?: number; fields: ExactField[]; marking_criteria?: Criterion[]; parts?: { label: string; marking_criteria: Criterion[] }[]; provenance?: { type: string; past_paper_reference: unknown } };
+export type SourceQuestion = { id: string; family_uid: string; title: string; collection: string; prompt_html: string; hint_html: string; solution_html: string; answer_html: string; marks: number; difficulty: number; variant_index?: number; fields: ExactField[]; statisticsRounding?: boolean; marking_criteria?: Criterion[]; parts?: { label: string; marking_criteria: Criterion[] }[]; provenance?: { type: string; past_paper_reference: unknown } };
 export function questionCriteria(q: SourceQuestion) { return q.marking_criteria ?? q.parts?.flatMap(p=>p.marking_criteria.map(c=>({...c,code:p.label + " · " + c.code}))) ?? []; }
 export const squareQuestions = pack.questions as SourceQuestion[];
 if (pack.version !== squareVersion || squareQuestions.length !== 30 || pack.source.is_official_cambridge_material !== false || squareQuestions.some(q => q.provenance && (q.provenance.type !== "original" || q.provenance.past_paper_reference))) throw Error("SQUARE_ORIGINAL_SOURCE_REQUIRED");
@@ -62,6 +63,10 @@ function practicePrompt(question: SourceQuestion) {
   return renderContent(prompt).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>');
 }
 
+function practiceAllowsRounding(q: SourceQuestion, field: ExactField) {
+  return q.statisticsRounding && permitsThreeSignificantFigures(q.id, field, q.prompt_html);
+}
+
 export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): SquareLesson {
   const packaged=packageTeaching(topic);
   const layout = topic.packageKey ? studyLayout(topic.lessonId) : undefined;
@@ -69,7 +74,7 @@ export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): Sq
   const summaryHtml = topic.summary.match(mathPattern)
     ? renderContent(topic.summary.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"))
     : undefined;
-  return { topic, version: topic.version, title: topic.title, summaryHtml,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: practicePrompt(q), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey ? (f.type === "ratio" ? f.label.replace(/: numerator ; denominator/i, " as a fraction") : f.label) :topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
+  return { topic, version: topic.version, title: topic.title, summaryHtml,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: practicePrompt(q), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey ? (f.type === "ratio" ? f.label.replace(/: numerator ; denominator/i, " as a fraction") : f.label) :topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}), ...(practiceAllowsRounding(q, f) && { significantFigures: 3 as const }) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
 }
 export function learningTopic(key:string){return packageTopic(key)??quadraticTopic(key);}
 // Feedback describes an identifiable answer pattern, not an assumed thought process.
@@ -77,8 +82,8 @@ export function learningTopic(key:string){return packageTopic(key)??quadraticTop
 function matchesFeedbackPattern(f: ExactField, input: string) {
   try { return checkExact(f, input); } catch { return false; }
 }
-function retryMessage(q: SourceQuestion, f: ExactField, input: string) {
-  if (isRoundedNumberAnswer(f, input)) return exactValueFeedback;
+function retryMessage(q: SourceQuestion, f: ExactField, input: string, round?: boolean) {
+  if (isRoundedNumberAnswer(f, input)) return round ? answerFormat({ ...f, significantFigures: 3 }).en : exactValueFeedback;
   const multiplier = q.fields.find(x => /^(a|form_a)$/.test(x.key));
   const centre = q.fields.find(x => /^(h|form_h)$/.test(x.key));
   if (multiplier && /^(h|form_h)$/.test(f.key)) {
@@ -105,13 +110,17 @@ export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): 
   if (Object.keys(answers).length !== q.fields.length || Object.keys(answers).some(k => !q.fields.some(f => f.key === k))) return { valid: false, correct: false, fields, error: "Complete every labelled field." };
   let valid = true;
   for (const f of q.fields) {
-    try { const correct = checkExact(f, answers[f.key], q.prompt_html); fields[f.key] = { correct, message: correct ? "Correct." : retryMessage(q, f, answers[f.key]) }; }
+    const round = practiceAllowsRounding(q, f);
+    try {
+      const correct = round ? checkThreeSignificantFigures(f, answers[f.key], q.prompt_html) : checkExact(f, answers[f.key], q.prompt_html);
+      fields[f.key] = { correct, message: correct ? "Correct." : retryMessage(q, f, answers[f.key], round) };
+    }
     catch (error) {
       if (error instanceof AnswerVariableError && !error.formatOnly) fields[f.key] = { correct: false, message: error.message };
       else {
         valid = false;
         fields[f.key] = { correct: false, formatError: true, message: "Check the format. " +
-          (error instanceof AnswerVariableError ? error.message : answerFormat(f).en) };
+          (error instanceof AnswerVariableError ? error.message : answerFormat(round ? { ...f, significantFigures: 3 } : f).en) };
       }
     }
     if (f.key === "expanded" && fields[f.key].correct && !isExpandedPolynomial(answers[f.key], f.variables ?? [])) fields[f.key] = { correct: false, message: "This is equivalent, but this field asks for expanded form. Multiply out the brackets." };

@@ -21,6 +21,11 @@ export function questionTitle(q: Pick<SquareQuestion, "uid" | "title">) { return
 export const exactValueFeedback = "Give the exact value. Use a fraction or sqrt(...) when needed.";
 
 export function answerFormat(f: SquareField): { en: string; ru: string; placeholder: string } {
+  if (f.significantFigures === 3) return {
+    en: "Enter an exact value or round to 3 significant figures.",
+    ru: "Введите точное значение или округлите до 3 значащих цифр.",
+    placeholder: "Exact value or 3 significant figures",
+  };
   if (f.type === "approximate") return { en: "Round as requested in the label, or enter your calculator value. Decimal or fraction input is accepted.", ru: "Округлите как указано в подписи или введите значение калькулятора. Можно ввести десятичное число или дробь.", placeholder: "0.6827" };
   if (f.type === "choice") return { en: "Choose one option. Explain your reasoning on paper.", ru: "Выберите один вариант. Объясните рассуждение на бумаге.", placeholder: "" };
   if (f.type === "integers") return { en: "List every integer in braces, for example {1, 2, 3}; use empty if there are none.", ru: "Перечислите все целые числа в фигурных скобках, например {1, 2, 3}; если их нет, введите empty.", placeholder: "{1, 2, 3}" };

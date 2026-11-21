@@ -46,6 +46,7 @@ import s1Normal from "../../content/original/9709-s1/normal-v1.json";
 import { contentPackageSchema, type ContentPackage } from "./content-package-schema";
 import { notationProgressPolicy } from "./content-progress-policy";
 import type { QuadraticTopic } from "./square-model";
+import { s1PracticeRounding } from "./s1-answer-precision";
 export const contentPackages: ContentPackage[] = [contentPackageSchema.parse(roots),contentPackageSchema.parse(rational),contentPackageSchema.parse(summation),contentPackageSchema.parse(matrices1),contentPackageSchema.parse(polar),contentPackageSchema.parse(vectors),contentPackageSchema.parse(induction),contentPackageSchema.parse(statsCrv),contentPackageSchema.parse(statsInference),contentPackageSchema.parse(statsChi2),contentPackageSchema.parse(statsNonparam),contentPackageSchema.parse(statsPgf),contentPackageSchema.parse(fp2Hyperbolic),contentPackageSchema.parse(fp2Matrices2),contentPackageSchema.parse(fp2Differentiation),contentPackageSchema.parse(fp2Integration),contentPackageSchema.parse(fp2Complex),contentPackageSchema.parse(fp2Ode),contentPackageSchema.parse(mechanicsProjectiles),contentPackageSchema.parse(mechanicsEquilibrium),contentPackageSchema.parse(mechanicsCircular),contentPackageSchema.parse(mechanicsHooke),contentPackageSchema.parse(mechanicsVariable),contentPackageSchema.parse(mechanicsMomentum),contentPackageSchema.parse(p1Quadratics),contentPackageSchema.parse(p1Functions),contentPackageSchema.parse(p1CoordinateGeometry),contentPackageSchema.parse(p1CircularMeasure),contentPackageSchema.parse(p1Trigonometry),contentPackageSchema.parse(p1Series),contentPackageSchema.parse(p1BinomialExpansion),contentPackageSchema.parse(p1Differentiation),contentPackageSchema.parse(p1Integration),contentPackageSchema.parse(p3Algebra),contentPackageSchema.parse(p3Logarithms),contentPackageSchema.parse(p3Trigonometry),contentPackageSchema.parse(s1Representation),contentPackageSchema.parse(s1CentralTendency),contentPackageSchema.parse(s1Variation),contentPackageSchema.parse(s1Probability),contentPackageSchema.parse(s1Counting),contentPackageSchema.parse(s1Distributions),contentPackageSchema.parse(s1BinomialGeometric),contentPackageSchema.parse(s1Normal)];
 export function contentPackage(key:string) {
   const p=contentPackages.find(p=>p.key===key);if(!p)throw Error("UNKNOWN_CONTENT_PACKAGE");return p;
@@ -65,7 +66,9 @@ export function packageQuestions(key:string) {
   const t=packageTopic(key);if(!t)return undefined;
   const p=contentPackage(t.packageKey!),l=p.lessons.find(l=>l.id===key)!;
   return p.questions.filter(q=>q.lesson===l.key).map(q=>({id:q.id,family_uid:q.family_uid,title:q.title,collection:q.collection,prompt_html:q.prompt_html,
-    answer_html:q.answer_html,solution_html:q.solution_html,hint_html:q.hint_html,marks:q.marks,difficulty:q.difficulty,fields:q.fields,parts:q.parts,...(q.variant_index!==undefined?{variant_index:q.variant_index}:{})}));
+    answer_html:q.answer_html,solution_html:q.solution_html,hint_html:q.hint_html,marks:q.marks,difficulty:q.difficulty,fields:q.fields,parts:q.parts,
+    ...(s1PracticeRounding(p.key, q.collection) && { statisticsRounding: true }),
+    ...(q.variant_index!==undefined?{variant_index:q.variant_index}:{})}));
 }
 export function packageTeaching(topic:QuadraticTopic) {
   if(!topic.packageKey)return undefined;

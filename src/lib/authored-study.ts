@@ -21,8 +21,9 @@ import binomialGeometric from "../../content/original/9709-s1/binomial-geometric
 import normal from "../../content/original/9709-s1/normal-study.json";
 import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
 import { renderContent } from "./content";
-import { checkExact, checkExactInverseAngle, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
+import { checkExact, checkExactInverseAngle, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
 import { answerFormat, exactValueFeedback } from "./square-presentation";
+import { permitsThreeSignificantFigures, s1StudyRounding } from "./s1-answer-precision";
 import type { StudyBlock, StudyCheck, StudyCheckResult, StudyExamPractice, StudyLesson, StudySection } from "./study-lesson-model";
 
 type Retry = { answer: string; feedback: string }[];
@@ -90,24 +91,29 @@ function authoredFields(check: AuthoredCheck): StudyField[] {
   return "fields" in check ? check.fields : [{ ...check.field, retry: check.retry }];
 }
 
-function publicCheck(check: AuthoredCheck): { kind: "check" } & StudyCheck {
+function publicCheck(check: AuthoredCheck, s1Rounding: boolean): { kind: "check" } & StudyCheck {
   return {
     kind: "check",
     id: check.id,
     title: check.title,
     prompt: renderContent(check.prompt),
     hint: renderContent(check.hint),
-    fields: authoredFields(check).map(({ key, label, type, variables, dimension, options, inverseAngle }) => ({
-      key, label, type, variables, dimension,
-      ...(/[\\$]/.test(label) && { labelHtml: renderContent(label) }),
-      ...(options && { options: Object.fromEntries(Object.entries(options).map(([value, html]) => [value, renderContent(html)])) }),
-      ...(inverseAngle && { inverseAngle: true }),
-    })),
+    fields: authoredFields(check).map(field => {
+      const { key, label, type, variables, dimension, options, inverseAngle } = field;
+      const round = s1Rounding && permitsThreeSignificantFigures(check.id, field, check.prompt);
+      return {
+        key, label, type, variables, dimension,
+        ...(/[\\$]/.test(label) && { labelHtml: renderContent(label) }),
+        ...(options && { options: Object.fromEntries(Object.entries(options).map(([value, html]) => [value, renderContent(html)])) }),
+        ...(inverseAngle && { inverseAngle: true }),
+        ...(round && { significantFigures: 3 as const }),
+      };
+    }),
   };
 }
 
-function publicBlock(block: AuthoredBlock): StudyBlock {
-  if (block.kind === "check") return publicCheck(block);
+function publicBlock(block: AuthoredBlock, s1Rounding: boolean): StudyBlock {
+  if (block.kind === "check") return publicCheck(block, s1Rounding);
   if (block.kind === "example") return block;
   return {
     ...block,
@@ -120,15 +126,16 @@ export function studyLayout(lessonId: string) {
   const lesson = lessonById(lessonId);
   if (!lesson) return undefined;
   const path = examPaths[lessonId] ?? lesson.examPractice;
+  const s1Rounding = s1StudyRounding(lessonId);
   const study: StudyLesson = {
     sections: lesson.sections.map(section => ({
       ...section,
       intro: renderContent(section.intro),
-      blocks: section.blocks.map(publicBlock),
+      blocks: section.blocks.map(block => publicBlock(block, s1Rounding)),
     })),
     glossary: lesson.glossary.map(word => ({ ...word, definition: renderContent(word.definition) })),
     related: lesson.related,
-    ...(lesson.extraPractice && { extraPractice: lesson.extraPractice.map(publicCheck) }),
+    ...(lesson.extraPractice && { extraPractice: lesson.extraPractice.map(check => publicCheck(check, s1Rounding)) }),
     ...(path && { examPractice: {
       needs: path.needs,
       starters: (path.starters ?? []).map(q => ({
@@ -158,16 +165,20 @@ function studyAnswerMatches(field: StudyField, answer: string, prompt: string) {
   return field.inverseAngle ? checkExactInverseAngle(field, answer, field.inverseAngle) : checkExact(field, answer, prompt);
 }
 
-function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck): StudyCheckResult | undefined {
+function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck, round: boolean): StudyCheckResult | undefined {
+  const format = round ? { ...field, significantFigures: 3 as const } : field;
   try {
-    if (studyAnswerMatches(field, answer, check.prompt)) return undefined;
-    if (!field.inverseAngle && isRoundedNumberAnswer(field, answer)) return { status: "retry", feedback: renderContent("<p>" + exactValueFeedback + "</p>") };
+    const correct = round ? checkThreeSignificantFigures(field, answer, check.prompt) : studyAnswerMatches(field, answer, check.prompt);
+    if (correct) return undefined;
+    if (!field.inverseAngle && isRoundedNumberAnswer(field, answer)) {
+      return { status: "retry", feedback: renderContent("<p>" + (round ? answerFormat(format).en : exactValueFeedback) + "</p>") };
+    }
   } catch (error) {
     if (error instanceof AnswerVariableError) return {
       status: error.formatOnly ? "format" : "retry",
       feedback: renderContent("<p>" + error.message + "</p>"),
     };
-    return { status: "format", feedback: renderContent("<p>" + answerFormat(field).en + "</p>") };
+    return { status: "format", feedback: renderContent("<p>" + answerFormat(format).en + "</p>") };
   }
 
   const matching = field.retry?.find(retry => {
@@ -188,8 +199,10 @@ export function gradeStudyCheck(lessonId: string, id: string, answers: string | 
   if (Object.keys(values).length !== fields.length || fields.some(field => !Object.hasOwn(values, field.key) || !values[field.key]?.trim())) {
     return { status: "format", feedback: "<p>Enter an answer in every field.</p>" };
   }
+  const s1Rounding = s1StudyRounding(lessonId);
   for (const field of fields) {
-    const result = fieldFeedback(field, values[field.key], block);
+    const round = s1Rounding && permitsThreeSignificantFigures(block.id, field, block.prompt);
+    const result = fieldFeedback(field, values[field.key], block, round);
     if (result) return fields.length === 1 ? result : {
       ...result, feedback: renderContent("<p><strong>" + field.label + "</strong></p>") + result.feedback,
     };

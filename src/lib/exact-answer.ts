@@ -427,6 +427,40 @@ export function isRoundedNumberAnswer(field: ExactField, input: string) {
   return Math.abs(exact - decimal) <= 0.5 * 10 ** -decimals + Math.abs(exact) * Number.EPSILON;
 }
 
+function nonIntegerScalar(field: ExactField) {
+  if (field.type !== "number" || typeof field.expected !== "string" || field.variables?.length) return undefined;
+  const value = numeric(field.expected);
+  return Number.isFinite(value) && !Number.isInteger(value) ? value : undefined;
+}
+
+export function canRoundScalar(field: ExactField) {
+  return nonIntegerScalar(field) !== undefined;
+}
+
+/** An optional self-study policy. Assigned exact keys continue to use checkExact. */
+export function checkThreeSignificantFigures(field: ExactField, input: string, prompt?: string) {
+  const target = nonIntegerScalar(field);
+  if (target === undefined) return checkExact(field, input, prompt);
+  const entered = normalize(scalarAnswerValue(field, input));
+  const decimal = /^[+-]?(\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d{1,3})?$/i.exec(entered);
+  if (!decimal) return checkExact(field, input, prompt);
+  const value = Number(entered);
+  if (!Number.isFinite(value)) return false;
+  if (value === target || !/[eE]/.test(entered) && checkExact(field, input, prompt)) return true;
+
+  const magnitude = Math.abs(target), sign = Math.sign(target);
+  const exponent = Math.floor(Math.log10(magnitude));
+  function rounded(figures: number) {
+    const place = exponent - (figures - 1);
+    const scaled = magnitude / 10 ** place;
+    // Account for binary representation at a decimal half-way value.
+    const coefficient = Math.floor(scaled + 0.5 + scaled * Number.EPSILON);
+    return Number(`${sign * coefficient}e${place}`);
+  }
+  const figures = decimal[1].replace(".", "").replace(/^0+/, "").length;
+  return value === rounded(3) || figures > 3 && figures <= 15 && value === rounded(figures);
+}
+
 function removeOuterBrackets(expression: string) {
   while (expression.startsWith("(") && expression.endsWith(")")) {
     let depth = 0, end = 0;
