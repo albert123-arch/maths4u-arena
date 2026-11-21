@@ -1,0 +1,2936 @@
+{
+  "fp2_differentiation_implicit": {
+    "updatedOn": "2026-11-21",
+    "description": "Find first and second derivatives on a regular implicit branch and use them to determine the tangent and concavity.",
+    "sections": [
+      {
+        "id": "dy-is-a-function",
+        "title": "Why does differentiating y² introduce y′?",
+        "label": "Differentiate the whole relation",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>On a smooth branch, \\(y\\) varies with \\(x\\) even if the relation does not give an explicit formula for \\(y\\). The chain rule is applied wherever \\(y\\) appears.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\frac{\\mathrm d}{\\mathrm dx}(y^2)=2yy'\\) and \\(\\frac{\\mathrm d}{\\mathrm dx}(xy)=y+xy'\\). Differentiate each term once, then collect all terms containing \\(y'\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Treating \\(y\\) as constant while differentiating with respect to \\(x\\) loses its contribution to the slope.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write the derivative equation before substituting the point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "dy-is-a-function-check-1",
+            "title": "Collect terms in the gradient",
+            "prompt": "<p>At the point \\(P=\\)\\(\\left(1,-1\\right)\\) on \\(X Y + X + 3 Y^{2} + 2 Y=0\\), where \\(X=x - 1\\) and \\(Y=y + 1\\), find the gradient of the tangent.</p>",
+            "fields": [
+              {
+                "key": "gradient",
+                "label": "Tangent gradient",
+                "type": "number",
+                "expected": "-1/2"
+              }
+            ],
+            "hint": "<p>Remember that the derivative of Y with respect to x is y′.</p>",
+            "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(Y + 1+\\left(X + 6 Y + 2\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(1+2y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{1}{2}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "dy-is-a-function-check-2",
+            "title": "Differentiate a product of centred coordinates",
+            "prompt": "<p>At the point \\(P=\\)\\(\\left(3,2\\right)\\) on \\(2 X^{2} + 3 X Y + 2 X - Y^{2} + 5 Y=0\\), where \\(X=x - 3\\) and \\(Y=y - 2\\), find the gradient of the tangent.</p>",
+            "fields": [
+              {
+                "key": "gradient",
+                "label": "Tangent gradient",
+                "type": "number",
+                "expected": "-2/5"
+              }
+            ],
+            "hint": "<p>Remember that the derivative of Y with respect to x is y′.</p>",
+            "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(4 X + 3 Y + 2+\\left(3 X - 2 Y + 5\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(2+5y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{2}{5}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "regular",
+        "title": "When can I divide to find the slope?",
+        "label": "Check the regular branch",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>After collecting \\(y'\\) the equation has form \\(F_x+F_y y'=0\\). Here \\(F_x\\) and \\(F_y\\) are derivatives of the defining expression holding the other coordinate fixed.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(F_y\\ne0\\) at the point then the tangent has finite gradient \\(-\\frac{F_x}{F_y}\\). When \\(F_y=0\\) but \\(F_x\\ne0\\), use \\(x\\) locally as a function of \\(y\\) to recognise a vertical tangent.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp2_differentiation_implicit/circle-and-regular-tangents.svg",
+              "alt": "At the rightmost point the circle has a vertical tangent. At the top its tangent is horizontal.",
+              "width": 520,
+              "height": 316,
+              "caption": "<p>At the rightmost point the circle has a vertical tangent. At the top its tangent is horizontal.</p>"
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If both derivatives vanish, this method alone gives no definite tangent. Do not infer a horizontal line from the identity \\(0=0\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the point lies on the curve and substitute in the denominator separately.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "regular-check-3",
+            "title": "Read a positive gradient",
+            "prompt": "<p>At the point \\(P=\\)\\(\\left(2,-2\\right)\\) on \\(X^{2} - 3 X + 2 Y^{2} + 2 Y=0\\), where \\(X=x - 2\\) and \\(Y=y + 2\\), find the gradient of the tangent.</p>",
+            "fields": [
+              {
+                "key": "gradient",
+                "label": "Tangent gradient",
+                "type": "number",
+                "expected": "3/2"
+              }
+            ],
+            "hint": "<p>Remember that the derivative of Y with respect to x is y′.</p>",
+            "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(2 X - 3+\\left(4 Y + 2\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(-3+2y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=\\frac{3}{2}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "second-pass",
+        "title": "Which new terms appear on a second differentiation?",
+        "label": "Apply the product rule again",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>The first derivative equation involves a product between a possibly variable coefficient and \\(y'\\). Differentiate both factors before evaluating at the point.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a twice differentiable polynomial relation, \\(F_{xx}+2F_{xy}y'+F_{yy}(y')^2+F_y y''=0\\). For example, a term \\(F_y y'\\) contributes \\(F_y y''\\) and \\((F_{yx}+F_{yy}y')y'\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A computed value of \\(y'\\) holds at one point. Replacing \\(y'\\) by that constant before differentiating erases \\(y''\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep all of \\(x\\), \\(y\\) and \\(y'\\) until the second derivative relation is complete.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "second-pass-check-4",
+            "title": "Find both derivative orders",
+            "prompt": "<p>At the point \\(P=\\)\\(\\left(1,3\\right)\\) on \\(X^{2} - 2 X Y + 2 X + 3 Y^{2} - 3 Y=0\\), where \\(X=x - 1\\) and \\(Y=y - 3\\), find both first and second derivatives of \\(y\\) with respect to \\(x\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "2/3"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "2/3"
+              }
+            ],
+            "hint": "<p>Differentiate the relationship twice while treating Y as a function of x.</p>",
+            "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(2 X - 2 Y + 2+\\left(- 2 X + 6 Y - 3\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(2+-3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=\\frac{2}{3}\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=\\frac{2}{3}\\). The factor multiplying \\(y''\\) is \\(-3\\) and is nonzero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "second-pass-check-5",
+            "title": "Keep the squared first derivative term",
+            "prompt": "<p>At the point \\(P=\\)\\(\\left(-1,1\\right)\\) on \\(2 X^{2} + X Y + X - Y^{2} + 3 Y=0\\), where \\(X=x + 1\\) and \\(Y=y - 1\\), find both first and second derivatives of \\(y\\) with respect to \\(x\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "-1/3"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "-28/27"
+              }
+            ],
+            "hint": "<p>Differentiate the relationship twice while treating Y as a function of x.</p>",
+            "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(4 X + Y + 1+\\left(X - 2 Y + 3\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(1+3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{1}{3}\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=- \\frac{28}{27}\\). The factor multiplying \\(y''\\) is \\(3\\) and is nonzero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "tangent-normal",
+        "title": "How do I use the slope in a tangent or normal?",
+        "label": "Choose the correct line",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A slope describes a line only when combined with its point. The tangent and normal share that point and are perpendicular.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a finite nonzero tangent slope \\(m\\), the normal has slope \\(-\\frac1m\\). If one line is horizontal, the other is vertical.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Negating the gradient alone generally does not make the line perpendicular. Take the negative reciprocal.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A line written \\(y-y_0=m(x-x_0)\\) displays its point and slope for a quick substitution check.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "tangent-normal-check-6",
+            "title": "Reverse the normal slope",
+            "prompt": "<p>At the point \\(P=\\)\\(\\left(1,4\\right)\\) on \\(- X^{2} + X Y - 4 X + 2 Y^{2} + 3 Y=0\\), where \\(X=x - 1\\) and \\(Y=y - 4\\), find the gradients of the tangent and normal.</p>",
+            "fields": [
+              {
+                "key": "tangent",
+                "label": "Tangent gradient",
+                "type": "number",
+                "expected": "4/3"
+              },
+              {
+                "key": "normal",
+                "label": "Normal gradient",
+                "type": "number",
+                "expected": "-3/4"
+              }
+            ],
+            "hint": "<p>Solve the first derivative equation. Then use perpendicularity.</p>",
+            "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(- 2 X + Y - 4+\\left(X + 4 Y + 3\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(-4+3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=\\frac{4}{3}\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=- \\frac{70}{27}\\). The factor multiplying \\(y''\\) is \\(3\\) and is nonzero.</p><p>The normal is perpendicular to the tangent, so use the negative reciprocal \\(- \\frac{3}{4}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "read-concavity",
+        "title": "What does the sign of the second derivative show?",
+        "label": "Interpret local concavity",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>The second derivative measures how the gradient of a regular branch changes with \\(x\\). A point need not be stationary for this to be useful.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(y''>0\\) the branch is locally concave up, and if \\(y''<0\\) it is locally concave down. Only with \\(y'=0\\) does this nonzero value classify a local extremum.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Positive curvature of the graph in the sense of \\(y''>0\\) does not say the current gradient is positive.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Give the numerical slope and concavity separately when both are requested.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "read-concavity-check-7",
+            "title": "Read the concavity without assuming stationarity",
+            "prompt": "<p>At the point \\(P=\\)\\(\\left(2,1\\right)\\) on \\(2 X^{2} + 2 X + 2 Y^{2} + 3 Y=0\\), where \\(X=x - 2\\) and \\(Y=y - 1\\), find the second derivative and state the local concavity.</p>",
+            "fields": [
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "-52/27"
+              },
+              {
+                "key": "concavity",
+                "label": "Local concavity",
+                "type": "choice",
+                "expected": "option2",
+                "options": {
+                  "option1": "Concave up",
+                  "option2": "Concave down"
+                }
+              }
+            ],
+            "hint": "<p>Differentiate before substituting any numerical value for the slope.</p>",
+            "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(4 X + 2+\\left(4 Y + 3\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(2+3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{2}{3}\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=- \\frac{52}{27}\\). The factor multiplying \\(y''\\) is \\(3\\) and is nonzero.</p><p>Its sign gives concave down on this smooth branch.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Differentiate a squared dependent variable",
+        "question": "<p>At the point \\(P=\\)\\(\\left(1,2\\right)\\) on \\(X^{2} + 2 X + 2 Y^{2} + 3 Y=0\\), where \\(X=x - 1\\) and \\(Y=y - 2\\), find the gradient of the tangent.</p>",
+        "solution": [
+          "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(2 X + 2+\\left(4 Y + 3\\right)y'=0\\).</p>",
+          "<p>At the point both centred variables vanish. So \\(2+3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{2}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the cross term when using the product rule",
+        "question": "<p>At the point \\(P=\\)\\(\\left(2,1\\right)\\) on \\(2 X Y - X + Y^{2} + 3 Y=0\\), where \\(X=x - 2\\) and \\(Y=y - 1\\), find the gradient of the tangent.</p>",
+        "solution": [
+          "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(2 Y - 1+\\left(2 X + 2 Y + 3\\right)y'=0\\).</p>",
+          "<p>At the point both centred variables vanish. So \\(-1+3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=\\frac{1}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Check the coefficient of the derivative",
+        "question": "<p>At the point \\(P=\\)\\(\\left(-1,2\\right)\\) on \\(X^{2} - X Y + 3 X + 2 Y^{2} + 4 Y=0\\), where \\(X=x + 1\\) and \\(Y=y - 2\\), find the gradient of the tangent.</p>",
+        "solution": [
+          "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(2 X - Y + 3+\\left(- X + 4 Y + 4\\right)y'=0\\).</p>",
+          "<p>At the point both centred variables vanish. So \\(3+4y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{3}{4}\\).</p>"
+        ]
+      },
+      {
+        "title": "Differentiate again before evaluating",
+        "question": "<p>At the point \\(P=\\)\\(\\left(2,3\\right)\\) on \\(X^{2} + 2 X Y + 2 X + Y^{2} + 3 Y=0\\), where \\(X=x - 2\\) and \\(Y=y - 3\\), find both first and second derivatives of \\(y\\) with respect to \\(x\\).</p>",
+        "solution": [
+          "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(2 X + 2 Y + 2+\\left(2 X + 2 Y + 3\\right)y'=0\\).</p>",
+          "<p>At the point both centred variables vanish. So \\(2+3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{2}{3}\\).</p>",
+          "<p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p>",
+          "<p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=- \\frac{2}{27}\\). The factor multiplying \\(y''\\) is \\(3\\) and is nonzero.</p>"
+        ]
+      },
+      {
+        "title": "Second derivative on a different branch",
+        "question": "<p>At the point \\(P=\\)\\(\\left(1,3\\right)\\) on \\(- X^{2} + X Y - 3 X + 2 Y^{2} + 2 Y=0\\), where \\(X=x - 1\\) and \\(Y=y - 3\\), find both first and second derivatives of \\(y\\) with respect to \\(x\\).</p>",
+        "solution": [
+          "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(- 2 X + Y - 3+\\left(X + 4 Y + 2\\right)y'=0\\).</p>",
+          "<p>At the point both centred variables vanish. So \\(-3+2y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=\\frac{3}{2}\\).</p>",
+          "<p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p>",
+          "<p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=-5\\). The factor multiplying \\(y''\\) is \\(2\\) and is nonzero.</p>"
+        ]
+      },
+      {
+        "title": "Get both tangent and normal slopes",
+        "question": "<p>At the point \\(P=\\)\\(\\left(-1,-2\\right)\\) on \\(X^{2} + 2 X Y + 3 X - Y^{2} + 2 Y=0\\), where \\(X=x + 1\\) and \\(Y=y + 2\\), find the gradients of the tangent and normal.</p>",
+        "solution": [
+          "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(2 X + 2 Y + 3+\\left(2 X - 2 Y + 2\\right)y'=0\\).</p>",
+          "<p>At the point both centred variables vanish. So \\(3+2y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{3}{2}\\).</p>",
+          "<p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p>",
+          "<p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=\\frac{17}{4}\\). The factor multiplying \\(y''\\) is \\(2\\) and is nonzero.</p>",
+          "<p>The normal is perpendicular to the tangent, so use the negative reciprocal \\(\\frac{2}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Concavity on a horizontal branch",
+        "question": "<p>At the point \\(P=\\)\\(\\left(1,1\\right)\\) on \\(- 2 X^{2} + X Y + Y^{2} + 3 Y=0\\), where \\(X=x - 1\\) and \\(Y=y - 1\\), find the second derivative and state the local concavity.</p>",
+        "solution": [
+          "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(- 4 X + Y+\\left(X + 2 Y + 3\\right)y'=0\\).</p>",
+          "<p>At the point both centred variables vanish. So \\(0+3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=0\\).</p>",
+          "<p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p>",
+          "<p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=\\frac{4}{3}\\). The factor multiplying \\(y''\\) is \\(3\\) and is nonzero.</p>",
+          "<p>Its sign gives concave up on this smooth branch.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-implicit-practice-1",
+        "title": "Second derivative with a negative denominator",
+        "prompt": "<p>At the point \\(P=\\)\\(\\left(-2,-1\\right)\\) on \\(- X^{2} + 2 X Y + X + 2 Y^{2} - 3 Y=0\\), where \\(X=x + 2\\) and \\(Y=y + 1\\), find both first and second derivatives of \\(y\\) with respect to \\(x\\).</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "1/3"
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "-2/27"
+          }
+        ],
+        "hint": "<p>Differentiate the relationship twice while treating Y as a function of x.</p>",
+        "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(- 2 X + 2 Y + 1+\\left(2 X + 4 Y - 3\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(1+-3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=\\frac{1}{3}\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=- \\frac{2}{27}\\). The factor multiplying \\(y''\\) is \\(-3\\) and is nonzero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-implicit-practice-2",
+        "title": "Calculate the second derivative before insertion",
+        "prompt": "<p>At the point \\(P=\\)\\(\\left(4,3\\right)\\) on \\(3 X^{2} - X Y - X + 2 Y^{2} + 2 Y=0\\), where \\(X=x - 4\\) and \\(Y=y - 3\\), find both first and second derivatives of \\(y\\) with respect to \\(x\\).</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "1/2"
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "-3"
+          }
+        ],
+        "hint": "<p>Differentiate the relationship twice while treating Y as a function of x.</p>",
+        "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(6 X - Y - 1+\\left(- X + 4 Y + 2\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(-1+2y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=\\frac{1}{2}\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=-3\\). The factor multiplying \\(y''\\) is \\(2\\) and is nonzero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-implicit-practice-3",
+        "title": "Check the direction of the normal",
+        "prompt": "<p>At the point \\(P=\\)\\(\\left(3,3\\right)\\) on \\(- X^{2} + X Y + 2 X + 3 Y^{2} + 5 Y=0\\), where \\(X=x - 3\\) and \\(Y=y - 3\\), find the gradients of the tangent and normal.</p>",
+        "fields": [
+          {
+            "key": "tangent",
+            "label": "Tangent gradient",
+            "type": "number",
+            "expected": "-2/5"
+          },
+          {
+            "key": "normal",
+            "label": "Normal gradient",
+            "type": "number",
+            "expected": "5/2"
+          }
+        ],
+        "hint": "<p>Solve the first derivative equation. Then use perpendicularity.</p>",
+        "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(- 2 X + Y + 2+\\left(X + 6 Y + 5\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(2+5y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{2}{5}\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=\\frac{46}{125}\\). The factor multiplying \\(y''\\) is \\(5\\) and is nonzero.</p><p>The normal is perpendicular to the tangent, so use the negative reciprocal \\(\\frac{5}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-implicit-practice-4",
+        "title": "Use the horizontal tangent correctly",
+        "prompt": "<p>At the point \\(P=\\)\\(\\left(2,2\\right)\\) on \\(3 X^{2} + X Y + 2 Y^{2} + 2 Y=0\\), where \\(X=x - 2\\) and \\(Y=y - 2\\), find the second derivative and state the local concavity.</p>",
+        "fields": [
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "-3"
+          },
+          {
+            "key": "concavity",
+            "label": "Local concavity",
+            "type": "choice",
+            "expected": "option2",
+            "options": {
+              "option1": "Concave up",
+              "option2": "Concave down"
+            }
+          }
+        ],
+        "hint": "<p>Differentiate before substituting any numerical value for the slope.</p>",
+        "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(6 X + Y+\\left(X + 4 Y + 2\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(0+2y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=0\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=-3\\). The factor multiplying \\(y''\\) is \\(2\\) and is nonzero.</p><p>Its sign gives concave down on this smooth branch.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-implicit-practice-5",
+        "title": "A derivative that vanishes at the point",
+        "prompt": "<p>At the point \\(P=\\)\\(\\left(3,-2\\right)\\) on \\(- X^{2} + 2 X Y + Y^{2} + 3 Y=0\\), where \\(X=x - 3\\) and \\(Y=y + 2\\), find both first and second derivatives of \\(y\\) with respect to \\(x\\).</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "2/3"
+          }
+        ],
+        "hint": "<p>Differentiate the relationship twice while treating Y as a function of x.</p>",
+        "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(- 2 X + 2 Y+\\left(2 X + 2 Y + 3\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(0+3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=0\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=\\frac{2}{3}\\). The factor multiplying \\(y''\\) is \\(3\\) and is nonzero.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Implicit relation",
+        "definition": "<p>An equation \\(F(x,y)=0\\) defining one or more local branches.</p>"
+      },
+      {
+        "term": "Regular slope",
+        "definition": "<p>The slope exists and is finite where \\(F_y\\ne0\\).</p>"
+      },
+      {
+        "term": "Concavity",
+        "definition": "<p>The local bending direction determined by the sign of the second derivative.</p>"
+      },
+      {
+        "term": "Tangent",
+        "definition": "<p>A line following the local direction of the curve.</p>"
+      },
+      {
+        "term": "Normal",
+        "definition": "<p>A perpendicular to the tangent through the point.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>Differentiate all terms with the chain rule. Solve \\(F_x+F_y y'=0\\). Differentiate that relation again before substituting a point or a numerical slope.</p>",
+      "checks": "<ul><li>Where does the second copy of \\(F_{xy}y'\\) come from?</li><li>What happens when \\(F_y=0\\) but \\(F_x\\ne0\\)?</li><li>Can \\(y''>0\\) occur when \\(y'<0\\)?</li></ul>",
+      "examTip": "<p>Show the two differentiations before substituting the point. Keep the tangent direction and concavity separate.</p>"
+    },
+    "related": [
+      {
+        "title": "Parametric gradients and concavity",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_differentiation_parametric"
+      }
+    ]
+  },
+  "fp2_differentiation_parametric": {
+    "updatedOn": "2026-11-21",
+    "description": "Calculate exact parametric first and second derivatives and classify horizontal or vertical tangents.",
+    "sections": [
+      {
+        "id": "chain-with-t",
+        "title": "Why does a parametric slope use a quotient?",
+        "label": "Share the same parameter",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Both coordinates depend on \\(t\\). When \\(x\\) can serve as a local input, the chain rule gives \\(\\frac{\\mathrm dy}{\\mathrm dt}=\\frac{\\mathrm dy}{\\mathrm dx}\\frac{\\mathrm dx}{\\mathrm dt}\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(\\frac{\\mathrm dx}{\\mathrm dt}\\ne0\\), divide to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{y'(t)}{x'(t)}\\). The numerator and denominator belong to the same parameter value.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Dividing the coordinate functions \\(y(t)\\) and \\(x(t)\\) is different from dividing their derivatives.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write both derivatives next to the original coordinate equations.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "chain-with-t-check-1",
+            "title": "Evaluate on a different point",
+            "prompt": "<p>A curve has \\(x=t^{2} + 3 t + 1\\) and \\(y=2 t^{2} + 4 t + 1\\). At \\(t=1\\), calculate the first and second derivatives of y with respect to x.</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "8/5"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "4/125"
+              }
+            ],
+            "hint": "<p>The derivative of the gradient with respect to t needs one further division.</p>",
+            "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t + 3\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=4 t + 4\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 t + 4}{2 t + 3}\\) and hence \\(\\frac{8}{5}\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{4}{\\left(2 t + 3\\right)^{3}}\\) and its value is \\(\\frac{4}{125}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "chain-with-t-check-2",
+            "title": "Use a half as the parameter",
+            "prompt": "<p>A curve has \\(x=2 t^{2} + 2 t\\) and \\(y=- t^{2} + t + 3\\). At \\(t=\\frac{1}{2}\\), calculate the first and second derivatives of y with respect to x.</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "-1/8"
+              }
+            ],
+            "hint": "<p>The derivative of the gradient with respect to t needs one further division.</p>",
+            "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=4 t + 2\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=1 - 2 t\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{1 - 2 t}{4 t + 2}\\) and hence \\(0\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{1}{\\left(- 2 t - 1\\right)^{3}}\\) and its value is \\(- \\frac{1}{8}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "divide-again",
+        "title": "Why is there a second division when finding y″?",
+        "label": "Differentiate the gradient",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>The slope is now a function of \\(t\\). Its derivative with respect to \\(t\\) is a rate of change along the parameter. Convert it to a rate per unit \\(x\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac1{x'(t)}\\frac{\\mathrm d}{\\mathrm dt}\\!\\left(\\frac{y'(t)}{x'(t)}\\right)=\\frac{y''(t)x'(t)-y'(t)x''(t)}{(x'(t))^3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>\\(\\frac{y''(t)}{x''(t)}\\) is not the second derivative of \\(y\\) with respect to \\(x\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write the outer factor \\(\\frac1{x'(t)}\\) before differentiating inside the brackets.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "divide-again-check-3",
+            "title": "The second derivative uses another division",
+            "prompt": "<p>A curve has \\(x=t^{2} + 2 t + 3\\) and \\(y=2 t^{2} + t\\). At \\(t=1\\), calculate the first and second derivatives of y with respect to x.</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "5/4"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "3/32"
+              }
+            ],
+            "hint": "<p>The derivative of the gradient with respect to t needs one further division.</p>",
+            "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t + 2\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=4 t + 1\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 t + 1}{2 t + 2}\\) and hence \\(\\frac{5}{4}\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{3}{4 \\left(t + 1\\right)^{3}}\\) and its value is \\(\\frac{3}{32}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "order-and-orientation",
+        "title": "How does the direction of the parameter affect signs?",
+        "label": "Respect signed motion",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>A parameter may traverse an arc from right to left. The denominator of the slope, \\(x'(t)\\), is a signed derivative.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The chain-rule quotient automatically gives the slope with respect to increasing \\(x\\). Keep the signed \\(x'(t)\\) again in the second derivative formula.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using \\(|x'(t)|\\) changes the slope whenever the parameter moves left.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Report the coordinate pair by evaluating \\(x(t)\\) and \\(y(t)\\) at the same \\(t\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "order-and-orientation-check-4",
+            "title": "Keep the sign when x is decreasing",
+            "prompt": "<p>A curve has \\(x=- t^{2} - 2 t - 1\\) and \\(y=2 t^{2} + t + 1\\). At \\(t=2\\), calculate the first and second derivatives of y with respect to x.</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "-3/2"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "1/36"
+              }
+            ],
+            "hint": "<p>The derivative of the gradient with respect to t needs one further division.</p>",
+            "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=- 2 t - 2\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=4 t + 1\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 t + 1}{- 2 t - 2}\\) and hence \\(- \\frac{3}{2}\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{3}{4 \\left(t + 1\\right)^{3}}\\) and its value is \\(\\frac{1}{36}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "order-and-orientation-check-5",
+            "title": "Apply the quotient rule exactly",
+            "prompt": "<p>A curve has \\(x=t^{2} - 3 t + 3\\) and \\(y=2 t^{2} - 2 t + 1\\). At \\(t=0\\), calculate the first and second derivatives of y with respect to x.</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "2/3"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "8/27"
+              }
+            ],
+            "hint": "<p>The derivative of the gradient with respect to t needs one further division.</p>",
+            "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t - 3\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=4 t - 2\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 t - 2}{2 t - 3}\\) and hence \\(\\frac{2}{3}\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{8}{\\left(3 - 2 t\\right)^{3}}\\) and its value is \\(\\frac{8}{27}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "line-and-limit",
+        "title": "When can the tangent or normal be vertical?",
+        "label": "Tangent orientation",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>If \\(y'(t)=0\\) and \\(x'(t)\\ne0\\), the tangent is horizontal. If \\(x'(t)=0\\) and \\(y'(t)\\ne0\\), the tangent is vertical on the regular parametric curve.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a finite nonzero tangent slope \\(m\\), the normal slope is \\(-\\frac1m\\). For a zero tangent slope, give the vertical normal equation instead of dividing by zero.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>When both parameter derivatives vanish, neither quotient can be used directly. Examine the local curve or limiting slopes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check regularity before dividing or taking a reciprocal.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "line-and-limit-check-6",
+            "title": "Choose the perpendicular gradient",
+            "prompt": "<p>A curve has \\(x=- t^{2} - t\\) and \\(y=3 t^{2} + 4 t - 1\\). At \\(t=1\\), give the gradient of the normal.</p>",
+            "fields": [
+              {
+                "key": "normal",
+                "label": "Normal gradient",
+                "type": "number",
+                "expected": "3/10"
+              }
+            ],
+            "hint": "<p>Find the tangent first using a quotient of parameter derivatives.</p>",
+            "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=- 2 t - 1\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=6 t + 4\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{6 t + 4}{- 2 t - 1}\\) and hence \\(- \\frac{10}{3}\\) at the specified parameter.</p><p>Take the negative reciprocal to obtain \\(\\frac{3}{10}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "stationary",
+        "title": "How do I classify a regular horizontal tangent?",
+        "label": "Use the correct second derivative",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Find candidate parameter values from \\(y'(t)=0\\). Retain only those with \\(x'(t)\\ne0\\) when using this derivative test.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>At a regular stationary point, \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{y''(t)}{(x'(t))^2}\\). Thus its sign there agrees with \\(y''(t)\\). If it is zero, compare the slope around the point.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The simpler formula holds at a horizontal stationary point, not at an arbitrary parameter.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use the full derivative formula first when the tangent fails to be horizontal.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stationary-check-7",
+            "title": "Horizontal tangent with a local maximum",
+            "prompt": "<p>A curve has \\(x=- t^{2} - 2 t + 2\\) and \\(y=1 - 3 t^{2}\\). At \\(t=0\\), classify the point and give its second derivative.</p>",
+            "fields": [
+              {
+                "key": "classification",
+                "label": "Type of stationary point",
+                "type": "choice",
+                "expected": "option2",
+                "options": {
+                  "option1": "Minimum",
+                  "option2": "Maximum",
+                  "option3": "Stationary inflection"
+                }
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "-3/2"
+              }
+            ],
+            "hint": "<p>Verify a regular horizontal tangent before using the second-derivative test.</p>",
+            "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=- 2 t - 2\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=- 6 t\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=- \\frac{6 t}{- 2 t - 2}\\) and hence \\(0\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{3}{2 \\left(- t - 1\\right)^{3}}\\) and its value is \\(- \\frac{3}{2}\\).</p><p>The slope vanishes and the second derivative is negative. Hence the point is a local maximum.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Differentiate two coordinate functions",
+        "question": "<p>A curve has \\(x=t^{2} + 2 t + 1\\) and \\(y=2 t^{2} + 3 t - 1\\). At \\(t=1\\), calculate the first and second derivatives of y with respect to x.</p>",
+        "solution": [
+          "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t + 2\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=4 t + 3\\).</p>",
+          "<p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 t + 3}{2 t + 2}\\) and hence \\(\\frac{7}{4}\\) at the specified parameter.</p>",
+          "<p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{1}{4 \\left(t + 1\\right)^{3}}\\) and its value is \\(\\frac{1}{32}\\).</p>"
+        ]
+      },
+      {
+        "title": "Work at a fractional parameter",
+        "question": "<p>A curve has \\(x=t^{2} + 3 t + 2\\) and \\(y=3 t^{2} + 2 t\\). At \\(t=\\frac{1}{2}\\), calculate the first and second derivatives of y with respect to x.</p>",
+        "solution": [
+          "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t + 3\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=6 t + 2\\).</p>",
+          "<p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{6 t + 2}{2 t + 3}\\) and hence \\(\\frac{5}{4}\\) at the specified parameter.</p>",
+          "<p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{14}{\\left(2 t + 3\\right)^{3}}\\) and its value is \\(\\frac{7}{32}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the missing factor of the first coordinate derivative",
+        "question": "<p>A curve has \\(x=2 t^{2} + t + 1\\) and \\(y=- 2 t^{2} + 5 t + 3\\). At \\(t=2\\), calculate the first and second derivatives of y with respect to x.</p>",
+        "solution": [
+          "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=4 t + 1\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=5 - 4 t\\).</p>",
+          "<p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{5 - 4 t}{4 t + 1}\\) and hence \\(- \\frac{1}{3}\\) at the specified parameter.</p>",
+          "<p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{24}{\\left(- 4 t - 1\\right)^{3}}\\) and its value is \\(- \\frac{8}{243}\\).</p>"
+        ]
+      },
+      {
+        "title": "The parameter moves from right to left",
+        "question": "<p>A curve has \\(x=- t^{2} - 3 t + 3\\) and \\(y=t^{2} + 2 t + 4\\). At \\(t=1\\), calculate the first and second derivatives of y with respect to x.</p>",
+        "solution": [
+          "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=- 2 t - 3\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=2 t + 2\\).</p>",
+          "<p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{2 t + 2}{- 2 t - 3}\\) and hence \\(- \\frac{4}{5}\\) at the specified parameter.</p>",
+          "<p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{2}{\\left(2 t + 3\\right)^{3}}\\) and its value is \\(\\frac{2}{125}\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the cubic denominator",
+        "question": "<p>A curve has \\(x=t^{2} - t\\) and \\(y=- 2 t^{2} + t + 1\\). At \\(t=0\\), calculate the first and second derivatives of y with respect to x.</p>",
+        "solution": [
+          "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t - 1\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=1 - 4 t\\).</p>",
+          "<p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{1 - 4 t}{2 t - 1}\\) and hence \\(-1\\) at the specified parameter.</p>",
+          "<p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{2}{\\left(2 t - 1\\right)^{3}}\\) and its value is \\(-2\\).</p>"
+        ]
+      },
+      {
+        "title": "Get the gradient of the normal",
+        "question": "<p>A curve has \\(x=t^{2} + 3 t + 5\\) and \\(y=2 t^{2} - 2 t + 1\\). At \\(t=0\\), give the gradient of the normal.</p>",
+        "solution": [
+          "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t + 3\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=4 t - 2\\).</p>",
+          "<p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 t - 2}{2 t + 3}\\) and hence \\(- \\frac{2}{3}\\) at the specified parameter.</p>",
+          "<p>Take the negative reciprocal to obtain \\(\\frac{3}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Classify a regular horizontal tangent",
+        "question": "<p>A curve has \\(x=t^{2} + 2 t + 1\\) and \\(y=3 t^{2} - 1\\). At \\(t=0\\), classify the point and give its second derivative.</p>",
+        "solution": [
+          "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t + 2\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=6 t\\).</p>",
+          "<p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{6 t}{2 t + 2}\\) and hence \\(0\\) at the specified parameter.</p>",
+          "<p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{3}{2 \\left(t + 1\\right)^{3}}\\) and its value is \\(\\frac{3}{2}\\).</p>",
+          "<p>The slope vanishes and the second derivative is positive. Hence the point is a local minimum.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-parametric-practice-1",
+        "title": "Evaluate a nonstationary gradient and concavity",
+        "prompt": "<p>A curve has \\(x=2 t^{2} + 3 t + 2\\) and \\(y=t^{2} + 3 t + 1\\). At \\(t=1\\), calculate the first and second derivatives of y with respect to x.</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "5/7"
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "-6/343"
+          }
+        ],
+        "hint": "<p>The derivative of the gradient with respect to t needs one further division.</p>",
+        "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=4 t + 3\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=2 t + 3\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{2 t + 3}{4 t + 3}\\) and hence \\(\\frac{5}{7}\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{6}{\\left(- 4 t - 3\\right)^{3}}\\) and its value is \\(- \\frac{6}{343}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-parametric-practice-2",
+        "title": "A finite slope at a negative parameter",
+        "prompt": "<p>A curve has \\(x=- t^{2} + 2 t + 1\\) and \\(y=3 t^{2} + 2 t + 1\\). At \\(t=-1\\), calculate the first and second derivatives of y with respect to x.</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "1/4"
+          }
+        ],
+        "hint": "<p>The derivative of the gradient with respect to t needs one further division.</p>",
+        "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 - 2 t\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=6 t + 2\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{6 t + 2}{2 - 2 t}\\) and hence \\(-1\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{2}{\\left(1 - t\\right)^{3}}\\) and its value is \\(\\frac{1}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-parametric-practice-3",
+        "title": "Check the sign of a normal slope",
+        "prompt": "<p>A curve has \\(x=t^{2} + 3 t\\) and \\(y=2 t^{2} - t\\). At \\(t=1\\), give the gradient of the normal.</p>",
+        "fields": [
+          {
+            "key": "normal",
+            "label": "Normal gradient",
+            "type": "number",
+            "expected": "-5/3"
+          }
+        ],
+        "hint": "<p>Find the tangent first using a quotient of parameter derivatives.</p>",
+        "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t + 3\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=4 t - 1\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 t - 1}{2 t + 3}\\) and hence \\(\\frac{3}{5}\\) at the specified parameter.</p><p>Take the negative reciprocal to obtain \\(- \\frac{5}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-parametric-practice-4",
+        "title": "Classification at an off-zero parameter",
+        "prompt": "<p>A curve has \\(x=t^{2} + 3 t + 4\\) and \\(y=- 2 t^{2} + 4 t + 1\\). At \\(t=1\\), classify the point and give its second derivative.</p>",
+        "fields": [
+          {
+            "key": "classification",
+            "label": "Type of stationary point",
+            "type": "choice",
+            "expected": "option2",
+            "options": {
+              "option1": "Minimum",
+              "option2": "Maximum",
+              "option3": "Stationary inflection"
+            }
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "-4/25"
+          }
+        ],
+        "hint": "<p>Verify a regular horizontal tangent before using the second-derivative test.</p>",
+        "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t + 3\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=4 - 4 t\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 - 4 t}{2 t + 3}\\) and hence \\(0\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{20}{\\left(- 2 t - 3\\right)^{3}}\\) and its value is \\(- \\frac{4}{25}\\).</p><p>The slope vanishes and the second derivative is negative. Hence the point is a local maximum.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-parametric-practice-5",
+        "title": "Classification with negative parameter speed",
+        "prompt": "<p>A curve has \\(x=- t^{2} - t + 2\\) and \\(y=t^{2} + 2 t + 1\\). At \\(t=-1\\), classify the point and give its second derivative.</p>",
+        "fields": [
+          {
+            "key": "classification",
+            "label": "Type of stationary point",
+            "type": "choice",
+            "expected": "option1",
+            "options": {
+              "option1": "Minimum",
+              "option2": "Maximum",
+              "option3": "Stationary inflection"
+            }
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>Verify a regular horizontal tangent before using the second-derivative test.</p>",
+        "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=- 2 t - 1\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=2 t + 2\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{2 t + 2}{- 2 t - 1}\\) and hence \\(0\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{2}{\\left(- 2 t - 1\\right)^{3}}\\) and its value is \\(2\\).</p><p>The slope vanishes and the second derivative is positive. Hence the point is a local minimum.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Parameter",
+        "definition": "<p>An input \\(t\\) controlling both coordinates.</p>"
+      },
+      {
+        "term": "Regular parametric point",
+        "definition": "<p>A point where at least one coordinate derivative is nonzero.</p>"
+      },
+      {
+        "term": "Second derivative",
+        "definition": "<p>The rate of change of the gradient with respect to \\(x\\).</p>"
+      },
+      {
+        "term": "Stationary point",
+        "definition": "<p>A point of a locally differentiable graph where the gradient is zero.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>Write \\(m=\\frac{y'(t)}{x'(t)}\\), then \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac1{x'(t)}\\frac{\\mathrm dm}{\\mathrm dt}\\) where \\(x'(t)\\ne0\\). Keep signs, and substitute the parameter at the end.</p>",
+      "checks": "<ul><li>Why is \\(x'(t)\\) used twice?</li><li>Which conditions give a vertical tangent?</li><li>When is the formula \\(\\frac{y''(t)}{(x'(t))^2}\\) valid?</li></ul>",
+      "examTip": "<p>Show both divisions in your working. Keep the parameter of a candidate separate from its coordinates.</p>"
+    },
+    "related": [
+      {
+        "title": "Implicit first and second derivatives",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_differentiation_implicit"
+      },
+      {
+        "title": "Hyperbolic and inverse-function derivatives",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_differentiation_functions"
+      }
+    ]
+  },
+  "fp2_differentiation_functions": {
+    "updatedOn": "2026-11-21",
+    "description": "Derive the hyperbolic and inverse-function derivative rules and apply them with the correct branch and chain factors.",
+    "sections": [
+      {
+        "id": "exponential-derivatives",
+        "title": "Why do sinh and cosh differentiate into each other?",
+        "label": "Differentiate the definitions",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Their definitions use exponentials with opposite exponents. Differentiating \\(\\mathrm e^{-x}\\) contributes an extra minus sign.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\frac{\\mathrm d}{\\mathrm dx}\\sinh x=\\cosh x\\) and \\(\\frac{\\mathrm d}{\\mathrm dx}\\cosh x=\\sinh x\\). For a quotient, \\(\\frac{\\mathrm d}{\\mathrm dx}\\tanh x=\\operatorname{sech}^2x\\) follows from \\(\\cosh^2x-\\sinh^2x=1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Borrowing the minus sign from the derivative of ordinary cosine gives the wrong derivative for hyperbolic cosine.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the derivative of \\(\\sinh x\\) at zero: the value should be one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "exponential-derivatives-check-1",
+            "title": "Find a sine derivative at the centre",
+            "prompt": "<p>Let \\(f(x)=\\sinh{\\left(4 x - 1 \\right)}\\). Find the exact value of \\(f'(\\frac{1}{4})\\) and \\(f''(\\frac{1}{4})\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+            "solution": "<p>Use the inner function \\(u=4 x - 1\\), with derivative \\(4\\). The outer derivative with respect to \\(u\\) is \\(\\cosh{\\left(u \\right)}\\).</p><p>The chain rule gives \\(f'(x)=4 \\cosh{\\left(4 x - 1 \\right)}\\). Substitute \\(u=0\\) to get \\(4\\).</p><p>Apply the chain rule once more. The second derivative is \\(16 \\sinh{\\left(4 x - 1 \\right)}\\) and so the stated value is \\(0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "exponential-derivatives-check-2",
+            "title": "Check the maximum slope of the quotient",
+            "prompt": "<p>Let \\(f(x)=\\tanh{\\left(5 x + 2 \\right)}\\). Find the exact value of \\(f'(- \\frac{2}{5})\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+            "solution": "<p>Use the inner function \\(u=5 x + 2\\), with derivative \\(5\\). The outer derivative with respect to \\(u\\) is \\(1 - \\tanh^{2}{\\left(u \\right)}\\).</p><p>The chain rule gives \\(f'(x)=5 - 5 \\tanh^{2}{\\left(5 x + 2 \\right)}\\). Substitute \\(u=0\\) to get \\(5\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "inverse-principle",
+        "title": "How can I differentiate the inverse of a function?",
+        "label": "Reverse the derivative",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Write \\(y=f^{-1}(x)\\) as \\(x=f(y)\\) on the correct original branch. Differentiate this equation before reversing the derivative.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac1{f'(y)}\\) where \\(f'(y)\\ne0\\). Use a branch restriction to choose a square-root sign and write the result in terms of \\(x\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The derivative of an inverse function is not the reciprocal of the derivative evaluated at the same input; evaluate at the inverse output.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>State the domain where the derivative is finite.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "inverse-principle-check-3",
+            "title": "Use the inverse output branch",
+            "prompt": "<p>Let \\(f(x)=- \\sinh^{-1}{\\left(3 x - 1 \\right)}\\). Find the exact value of \\(f'(\\frac{7}{36})\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "-36/13"
+              }
+            ],
+            "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+            "solution": "<p>Use the inner function \\(u=1 - 3 x\\), with derivative \\(-3\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{\\sqrt{u^{2} + 1}}\\).</p><p>The chain rule gives \\(f'(x)=- \\frac{3}{\\sqrt{\\left(1 - 3 x\\right)^{2} + 1}}\\). Substitute \\(u=\\frac{5}{12}\\) to get \\(- \\frac{36}{13}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "inverse-circular",
+        "title": "Why do inverse sine and cosine have opposite signs?",
+        "label": "Use the principal circular branches",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>On the inverse sine branch \\(-\\frac\\pi2\\le y\\le\\frac\\pi2\\), cosine is nonnegative. On the inverse cosine branch \\(0\\le y\\le\\pi\\), sine is nonnegative.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\frac{\\mathrm d}{\\mathrm dx}\\sin^{-1}x=\\frac1{\\sqrt{1-x^2}}\\) and \\(\\frac{\\mathrm d}{\\mathrm dx}\\cos^{-1}x=-\\frac1{\\sqrt{1-x^2}}\\) for \\(|x|<1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Differentiating cosine contributes a minus before the derivative is inverted.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The inverse functions have endpoint values, but their finite derivatives here apply only on the open interval.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "inverse-circular-check-4",
+            "title": "Recover a signed inverse sine slope",
+            "prompt": "<p>Let \\(f(x)=- \\sin^{-1}{\\left(2 x - 2 \\right)}\\). Find the exact value of \\(f'(\\frac{3}{5})\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "-10/3"
+              }
+            ],
+            "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+            "solution": "<p>Use the inner function \\(u=2 - 2 x\\), with derivative \\(-2\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{\\sqrt{1 - u^{2}}}\\).</p><p>The chain rule gives \\(f'(x)=- \\frac{2}{\\sqrt{1 - \\left(2 - 2 x\\right)^{2}}}\\). Substitute \\(u=\\frac{4}{5}\\) to get \\(- \\frac{10}{3}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "inverse-circular-check-5",
+            "title": "Keep a negative outer derivative",
+            "prompt": "<p>Let \\(f(x)=\\cos^{-1}{\\left(4 x - 3 \\right)}\\). Find the exact value of \\(f'(\\frac{9}{10})\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "-5"
+              }
+            ],
+            "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+            "solution": "<p>Use the inner function \\(u=4 x - 3\\), with derivative \\(4\\). The outer derivative with respect to \\(u\\) is \\(- \\frac{1}{\\sqrt{1 - u^{2}}}\\).</p><p>The chain rule gives \\(f'(x)=- \\frac{4}{\\sqrt{1 - \\left(4 x - 3\\right)^{2}}}\\). Substitute \\(u=\\frac{3}{5}\\) to get \\(-5\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "inverse-hyperbolic",
+        "title": "How do the inverse hyperbolic domains affect their derivatives?",
+        "label": "Use the hyperbolic inverse rules",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>The square-root sign and denominator depend on which direct function is being inverted.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The derivatives of \\(\\sinh^{-1}x\\), \\(\\cosh^{-1}x\\) and \\(\\tanh^{-1}x\\) are respectively \\(\\frac1{\\sqrt{1+x^2}}\\), \\(\\frac1{\\sqrt{x^2-1}}\\) and \\(\\frac1{1-x^2}\\). Their real derivative domains are all real \\(x\\), \\(x>1\\), and \\(|x|<1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The derivative of inverse hyperbolic cosine is not finite at \\(x=1\\) though the inverse itself is defined there.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Apply domain restrictions to the whole inner expression in a composition.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "inverse-hyperbolic-check-6",
+            "title": "Calculate a finite inverse cosh derivative",
+            "prompt": "<p>Let \\(f(x)=\\cosh^{-1}{\\left(3 x \\right)}\\). Find the exact value of \\(f'(\\frac{13}{15})\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "5/4"
+              }
+            ],
+            "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+            "solution": "<p>Use the inner function \\(u=3 x\\), with derivative \\(3\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{\\sqrt{u - 1} \\sqrt{u + 1}}\\).</p><p>The chain rule gives \\(f'(x)=\\frac{3}{\\sqrt{3 x - 1} \\sqrt{3 x + 1}}\\). Substitute \\(u=\\frac{13}{5}\\) to get \\(\\frac{5}{4}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "iterated-chain",
+        "title": "How do I apply these rules twice to a composition?",
+        "label": "Differentiate the full product",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>With a composite function, the first derivative has an inner-derivative factor. It may need differentiating in the second step.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(F(x)=f(u(x))\\), \\(F''(x)=f''(u(x))(u'(x))^2+f'(u(x))u''(x)\\). The second term vanishes for a linear inner function.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The chain factor appears again after differentiation. A single power of the inner scale is insufficient for the second derivative of a linear composition.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep exact signs and radicals throughout.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "iterated-chain-check-7",
+            "title": "Keep both inner factors",
+            "prompt": "<p>Let \\(f(x)=\\tanh^{-1}{\\left(2 x - 3 \\right)}\\). Find the exact value of \\(f'(\\frac{4}{3})\\) and \\(f''(\\frac{4}{3})\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "9/4"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "-27/8"
+              }
+            ],
+            "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+            "solution": "<p>Use the inner function \\(u=2 x - 3\\), with derivative \\(2\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{1 - u^{2}}\\).</p><p>The chain rule gives \\(f'(x)=\\frac{2}{1 - \\left(2 x - 3\\right)^{2}}\\). Substitute \\(u=- \\frac{1}{3}\\) to get \\(\\frac{9}{4}\\).</p><p>Apply the chain rule once more. The second derivative is \\(\\frac{8 \\left(2 x - 3\\right)}{\\left(\\left(2 x - 3\\right)^{2} - 1\\right)^{2}}\\) and so the stated value is \\(- \\frac{27}{8}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Differentiate a hyperbolic sine at argument zero",
+        "question": "<p>Let \\(f(x)=\\sinh{\\left(3 x - 2 \\right)}\\). Find the exact value of \\(f'(\\frac{2}{3})\\) and \\(f''(\\frac{2}{3})\\).</p>",
+        "solution": [
+          "<p>Use the inner function \\(u=3 x - 2\\), with derivative \\(3\\). The outer derivative with respect to \\(u\\) is \\(\\cosh{\\left(u \\right)}\\).</p>",
+          "<p>The chain rule gives \\(f'(x)=3 \\cosh{\\left(3 x - 2 \\right)}\\). Substitute \\(u=0\\) to get \\(3\\).</p>",
+          "<p>Apply the chain rule once more. The second derivative is \\(9 \\sinh{\\left(3 x - 2 \\right)}\\) and so the stated value is \\(0\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the derivative sign of a shifted cosh",
+        "question": "<p>Let \\(f(x)=\\cosh{\\left(2 x - 1 \\right)}\\). Find the exact value of \\(f'(\\frac{1}{2})\\) and \\(f''(\\frac{1}{2})\\).</p>",
+        "solution": [
+          "<p>Use the inner function \\(u=1 - 2 x\\), with derivative \\(-2\\). The outer derivative with respect to \\(u\\) is \\(\\sinh{\\left(u \\right)}\\).</p>",
+          "<p>The chain rule gives \\(f'(x)=2 \\sinh{\\left(2 x - 1 \\right)}\\). Substitute \\(u=0\\) to get \\(0\\).</p>",
+          "<p>Apply the chain rule once more. The second derivative is \\(4 \\cosh{\\left(2 x - 1 \\right)}\\) and so the stated value is \\(4\\).</p>"
+        ]
+      },
+      {
+        "title": "Derive a reciprocal square root",
+        "question": "<p>Let \\(f(x)=\\sinh^{-1}{\\left(2 x + 1 \\right)}\\). Find the exact value of \\(f'(- \\frac{1}{8})\\).</p>",
+        "solution": [
+          "<p>Use the inner function \\(u=2 x + 1\\), with derivative \\(2\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{\\sqrt{u^{2} + 1}}\\).</p>",
+          "<p>The chain rule gives \\(f'(x)=\\frac{2}{\\sqrt{\\left(2 x + 1\\right)^{2} + 1}}\\). Substitute \\(u=\\frac{3}{4}\\) to get \\(\\frac{8}{5}\\).</p>"
+        ]
+      },
+      {
+        "title": "Differentiate inverse sine",
+        "question": "<p>Let \\(f(x)=\\sin^{-1}{\\left(2 x - 1 \\right)}\\). Find the exact value of \\(f'(\\frac{4}{5})\\).</p>",
+        "solution": [
+          "<p>Use the inner function \\(u=2 x - 1\\), with derivative \\(2\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{\\sqrt{1 - u^{2}}}\\).</p>",
+          "<p>The chain rule gives \\(f'(x)=\\frac{2}{\\sqrt{1 - \\left(2 x - 1\\right)^{2}}}\\). Substitute \\(u=\\frac{3}{5}\\) to get \\(\\frac{5}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the inverse cosine sign",
+        "question": "<p>Let \\(f(x)=\\cos^{-1}{\\left(3 x + 1 \\right)}\\). Find the exact value of \\(f'(- \\frac{6}{13})\\).</p>",
+        "solution": [
+          "<p>Use the inner function \\(u=3 x + 1\\), with derivative \\(3\\). The outer derivative with respect to \\(u\\) is \\(- \\frac{1}{\\sqrt{1 - u^{2}}}\\).</p>",
+          "<p>The chain rule gives \\(f'(x)=- \\frac{3}{\\sqrt{1 - \\left(3 x + 1\\right)^{2}}}\\). Substitute \\(u=- \\frac{5}{13}\\) to get \\(- \\frac{13}{4}\\).</p>"
+        ]
+      },
+      {
+        "title": "Stay above the inverse cosh branch endpoint",
+        "question": "<p>Let \\(f(x)=\\cosh^{-1}{\\left(2 x + 1 \\right)}\\). Find the exact value of \\(f'(\\frac{1}{3})\\).</p>",
+        "solution": [
+          "<p>Use the inner function \\(u=2 x + 1\\), with derivative \\(2\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{\\sqrt{u - 1} \\sqrt{u + 1}}\\).</p>",
+          "<p>The chain rule gives \\(f'(x)=\\frac{\\sqrt{2}}{\\sqrt{x} \\sqrt{2 x + 2}}\\). Substitute \\(u=\\frac{5}{3}\\) to get \\(\\frac{3}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Differentiate the quotient rule result again",
+        "question": "<p>Let \\(f(x)=\\tanh^{-1}{\\left(3 x - 1 \\right)}\\). Find the exact value of \\(f'(\\frac{1}{2})\\) and \\(f''(\\frac{1}{2})\\).</p>",
+        "solution": [
+          "<p>Use the inner function \\(u=3 x - 1\\), with derivative \\(3\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{1 - u^{2}}\\).</p>",
+          "<p>The chain rule gives \\(f'(x)=\\frac{3}{1 - \\left(3 x - 1\\right)^{2}}\\). Substitute \\(u=\\frac{1}{2}\\) to get \\(4\\).</p>",
+          "<p>Apply the chain rule once more. The second derivative is \\(\\frac{18 \\left(3 x - 1\\right)}{\\left(\\left(3 x - 1\\right)^{2} - 1\\right)^{2}}\\) and so the stated value is \\(16\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-functions-practice-1",
+        "title": "Use an exact radical if needed",
+        "prompt": "<p>Let \\(f(x)=\\cosh^{-1}{\\left(2 x + 1 \\right)}\\). Find the exact value of \\(f'(1)\\).</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "sqrt(2)/2"
+          }
+        ],
+        "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+        "solution": "<p>Use the inner function \\(u=2 x + 1\\), with derivative \\(2\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{\\sqrt{u - 1} \\sqrt{u + 1}}\\).</p><p>The chain rule gives \\(f'(x)=\\frac{\\sqrt{2}}{\\sqrt{x} \\sqrt{2 x + 2}}\\). Substitute \\(u=3\\) to get \\(\\frac{\\sqrt{2}}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-functions-practice-2",
+        "title": "Differentiate inverse sine twice",
+        "prompt": "<p>Let \\(f(x)=\\sin^{-1}{\\left(2 x + 1 \\right)}\\). Find the exact value of \\(f'(- \\frac{1}{5})\\) and \\(f''(- \\frac{1}{5})\\).</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "5/2"
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "75/16"
+          }
+        ],
+        "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+        "solution": "<p>Use the inner function \\(u=2 x + 1\\), with derivative \\(2\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{\\sqrt{1 - u^{2}}}\\).</p><p>The chain rule gives \\(f'(x)=\\frac{2}{\\sqrt{1 - \\left(2 x + 1\\right)^{2}}}\\). Substitute \\(u=\\frac{3}{5}\\) to get \\(\\frac{5}{2}\\).</p><p>Apply the chain rule once more. The second derivative is \\(\\frac{4 \\left(2 x + 1\\right)}{\\left(1 - \\left(2 x + 1\\right)^{2}\\right)^{\\frac{3}{2}}}\\) and so the stated value is \\(\\frac{75}{16}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-functions-practice-3",
+        "title": "A fractional inner scale",
+        "prompt": "<p>Let \\(f(x)=\\sinh^{-1}{\\left(\\frac{x}{2} + 2 \\right)}\\). Find the exact value of \\(f'(- \\frac{5}{2})\\).</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "2/5"
+          }
+        ],
+        "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+        "solution": "<p>Use the inner function \\(u=\\frac{x}{2} + 2\\), with derivative \\(\\frac{1}{2}\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{\\sqrt{u^{2} + 1}}\\).</p><p>The chain rule gives \\(f'(x)=\\frac{1}{2 \\sqrt{\\left(\\frac{x}{2} + 2\\right)^{2} + 1}}\\). Substitute \\(u=\\frac{3}{4}\\) to get \\(\\frac{2}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-functions-practice-4",
+        "title": "Differentiate cosh twice at zero",
+        "prompt": "<p>Let \\(f(x)=\\cosh{\\left(4 x - 1 \\right)}\\). Find the exact value of \\(f'(\\frac{1}{4})\\) and \\(f''(\\frac{1}{4})\\).</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "16"
+          }
+        ],
+        "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+        "solution": "<p>Use the inner function \\(u=4 x - 1\\), with derivative \\(4\\). The outer derivative with respect to \\(u\\) is \\(\\sinh{\\left(u \\right)}\\).</p><p>The chain rule gives \\(f'(x)=4 \\sinh{\\left(4 x - 1 \\right)}\\). Substitute \\(u=0\\) to get \\(0\\).</p><p>Apply the chain rule once more. The second derivative is \\(16 \\cosh{\\left(4 x - 1 \\right)}\\) and so the stated value is \\(16\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-functions-practice-5",
+        "title": "Check the sign in the inverse cosine second derivative",
+        "prompt": "<p>Let \\(f(x)=\\cos^{-1}{\\left(2 x - 1 \\right)}\\). Find the exact value of \\(f'(\\frac{1}{5})\\) and \\(f''(\\frac{1}{5})\\).</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "-5/2"
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "75/16"
+          }
+        ],
+        "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+        "solution": "<p>Use the inner function \\(u=2 x - 1\\), with derivative \\(2\\). The outer derivative with respect to \\(u\\) is \\(- \\frac{1}{\\sqrt{1 - u^{2}}}\\).</p><p>The chain rule gives \\(f'(x)=- \\frac{2}{\\sqrt{1 - \\left(2 x - 1\\right)^{2}}}\\). Substitute \\(u=- \\frac{3}{5}\\) to get \\(- \\frac{5}{2}\\).</p><p>Apply the chain rule once more. The second derivative is \\(- \\frac{4 \\left(2 x - 1\\right)}{\\left(1 - \\left(2 x - 1\\right)^{2}\\right)^{\\frac{3}{2}}}\\) and so the stated value is \\(\\frac{75}{16}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Inner function",
+        "definition": "<p>The quantity \\(u(x)\\) substituted into the outside function.</p>"
+      },
+      {
+        "term": "Principal branch",
+        "definition": "<p>The restricted original domain defining a single-valued inverse.</p>"
+      },
+      {
+        "term": "Derivative of an inverse",
+        "definition": "<p>The reciprocal of the direct derivative evaluated at the inverse output.</p>"
+      },
+      {
+        "term": "Regular input",
+        "definition": "<p>An input where the relevant derivative formula is finite and defined.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>Differentiate \\(\\sinh\\) and \\(\\cosh\\) with a positive sign. To derive an inverse formula, differentiate \\(x=f(y)\\) on the principal branch, take the reciprocal, then apply the inner chain factor.</p>",
+      "checks": "<ul><li>Why does the derivative of \\(\\cosh^{-1}x\\) require \\(x>1\\)?</li><li>Which inverse circular derivative is negative?</li><li>When does a linear inner function contribute a squared scale to the second derivative?</li></ul>",
+      "examTip": "<p>Give the allowed input interval after substituting the inner function, and justify the inverse branch.</p>"
+    },
+    "related": [
+      {
+        "title": "Parametric gradients and concavity",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_differentiation_parametric"
+      },
+      {
+        "title": "Stationary points and local geometry",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_differentiation_geometry"
+      }
+    ]
+  },
+  "fp2_differentiation_geometry": {
+    "updatedOn": "2026-11-21",
+    "description": "Classify stationary points with the second derivative or a sign check, including flat extrema and stationary inflections.",
+    "sections": [
+      {
+        "id": "find-candidates",
+        "title": "How do I identify a regular stationary point?",
+        "label": "Find a horizontal tangent",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>On a graph a stationary point has slope zero. For parametric data, use \\(y'(t)=0\\) together with \\(x'(t)\\ne0\\). For implicit data, use \\(F_x=0\\) and \\(F_y\\ne0\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find the candidate first, then its coordinates. If \\(y''>0\\) there is a local minimum, and if \\(y''<0\\) there is a local maximum.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The condition \\(y'(t)=0\\) is insufficient when both coordinate derivatives vanish.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Verify regularity and classify at the same parameter value.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "find-candidates-check-1",
+            "title": "Classify a minimum from two coordinate derivatives",
+            "prompt": "<p>For \\(x=t^{2} + 3 t + 2\\) and \\(y=2 t^{2} + 1\\), classify the point at \\(t=0\\).</p>",
+            "fields": [
+              {
+                "key": "nature",
+                "label": "Nature of the point",
+                "type": "choice",
+                "expected": "option1",
+                "options": {
+                  "option1": "Local minimum",
+                  "option2": "Local maximum",
+                  "option3": "Stationary point of inflection"
+                }
+              }
+            ],
+            "hint": "<p>Check both the slope and whether local monotonicity changes. The zero second derivative alone does not classify a point.</p>",
+            "solution": "<p>Since \\(x'(0)=3\\) is nonzero and \\(y'(0)=0\\), this is a regular stationary point.</p><p>The second derivative at the point is \\(\\frac{4}{9}\\). Its sign gives the nature of this stationary point.</p><p>The one-sided gradients have opposite signs, consistent with a local minimum.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "find-candidates-check-2",
+            "title": "Read the sign at a maximum",
+            "prompt": "<p>For \\(x=t^{2} + t + 3\\) and \\(y=2 - 2 t^{2}\\), classify the point at \\(t=0\\).</p>",
+            "fields": [
+              {
+                "key": "nature",
+                "label": "Nature of the point",
+                "type": "choice",
+                "expected": "option2",
+                "options": {
+                  "option1": "Local minimum",
+                  "option2": "Local maximum",
+                  "option3": "Stationary point of inflection"
+                }
+              }
+            ],
+            "hint": "<p>Check both the slope and whether local monotonicity changes. The zero second derivative alone does not classify a point.</p>",
+            "solution": "<p>Since \\(x'(0)=1\\) is nonzero and \\(y'(0)=0\\), this is a regular stationary point.</p><p>The second derivative at the point is \\(-4\\). Its sign gives the nature of this stationary point.</p><p>The one-sided gradients have opposite signs, consistent with a local maximum.</p>"
+          }
+        ]
+      },
+      {
+        "id": "degenerate",
+        "title": "Can y″ vanish at a point that still turns?",
+        "label": "Check a degenerate candidate",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A zero second derivative rules out using that test. Look just to the left and right at the sign of the first derivative.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(y=x^4\\) the gradient is negative before zero and positive after zero. The point is a minimum even though the second derivative is zero there.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Calling every point with \\(y'=y''=0\\) a stationary point of inflection incorrectly classifies a flat minimum or maximum.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use a sign comparison involving the first nonzero factor of the gradient.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "degenerate-check-3",
+            "title": "A fourth-power local maximum",
+            "prompt": "<p>Identify the nature of the stationary point of \\(y=2 - \\left(x - 1\\right)^{4}\\) at \\(x=1\\).</p>",
+            "fields": [
+              {
+                "key": "class",
+                "label": "Nature of the point",
+                "type": "choice",
+                "expected": "option2",
+                "options": {
+                  "option1": "Local minimum",
+                  "option2": "Local maximum",
+                  "option3": "Stationary point of inflection"
+                }
+              }
+            ],
+            "hint": "<p>If the second derivative is zero, use the sign of the derivative on both sides.</p>",
+            "solution": "<p>The first derivative is \\(- 4 \\left(x - 1\\right)^{3}\\), so it vanishes at \\(x=1\\). The point is \\(\\left(1,2\\right)\\).</p><p>The second derivative there is \\(0\\). The gradient is positive just left and negative just right, from the parity of the factor \\(\\left(x - 1\\right)^{3}\\).</p><p>This gives a local maximum.</p>"
+          }
+        ]
+      },
+      {
+        "id": "no-turn",
+        "title": "When does a curve continue through a stationary point?",
+        "label": "Stationary point of inflection",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>A smooth branch can flatten out while staying increasing, or flatten out while staying decreasing. At a stationary inflection, its concavity changes across the point.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(y=x^3\\), the gradient \\(3x^2\\) is positive either side of zero, whereas \\(y''=6x\\) changes sign. The horizontal tangent therefore occurs at a stationary point of inflection.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp2_differentiation_geometry/flat-minimum-and-inflection.svg",
+              "alt": "Both curves have a horizontal tangent and zero second derivative at the origin. The fourth-power curve turns there. The cubic continues increasing.",
+              "width": 520,
+              "height": 316,
+              "caption": "<p>Both curves have a horizontal tangent and zero second derivative at the origin. The fourth-power curve turns there. The cubic continues increasing.</p>"
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A stationary point of inflection is sometimes grouped under a textbook heading about turning points. Its gradient keeps its sign on both sides, so it is neither a local maximum nor a local minimum.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify the sign pattern and the change of concavity to justify this classification.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "no-turn-check-4",
+            "title": "Look for changed concavity",
+            "prompt": "<p>Identify the nature of the stationary point of \\(y=3 \\left(x - 4\\right)^{3} + 2\\) at \\(x=4\\).</p>",
+            "fields": [
+              {
+                "key": "class",
+                "label": "Nature of the point",
+                "type": "choice",
+                "expected": "option3",
+                "options": {
+                  "option1": "Local minimum",
+                  "option2": "Local maximum",
+                  "option3": "Stationary point of inflection"
+                }
+              }
+            ],
+            "hint": "<p>If the second derivative is zero, use the sign of the derivative on both sides.</p>",
+            "solution": "<p>The first derivative is \\(9 \\left(x - 4\\right)^{2}\\), so it vanishes at \\(x=4\\). The point is \\(\\left(4,2\\right)\\).</p><p>The second derivative there is \\(0\\). The gradient is positive just left and positive just right, from the parity of the factor \\(\\left(x - 4\\right)^{2}\\).</p><p>This gives a stationary point of inflection. Here the second derivative also changes sign across the point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "no-turn-check-5",
+            "title": "A decreasing fifth-order branch",
+            "prompt": "<p>Identify the nature of the stationary point of \\(y=1 - \\left(x + 2\\right)^{5}\\) at \\(x=-2\\).</p>",
+            "fields": [
+              {
+                "key": "class",
+                "label": "Nature of the point",
+                "type": "choice",
+                "expected": "option3",
+                "options": {
+                  "option1": "Local minimum",
+                  "option2": "Local maximum",
+                  "option3": "Stationary point of inflection"
+                }
+              }
+            ],
+            "hint": "<p>If the second derivative is zero, use the sign of the derivative on both sides.</p>",
+            "solution": "<p>The first derivative is \\(- 5 \\left(x + 2\\right)^{4}\\), so it vanishes at \\(x=-2\\). The point is \\(\\left(-2,1\\right)\\).</p><p>The second derivative there is \\(0\\). The gradient is negative just left and negative just right, from the parity of the factor \\(\\left(x + 2\\right)^{4}\\).</p><p>This gives a stationary point of inflection. Here the second derivative also changes sign across the point.</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-vertical",
+        "title": "How can regular curves have non-finite gradients?",
+        "label": "Read the tangent direction",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>The tangent direction can be found from the nonzero parameter derivative vector. The usual slope is defined only if that vector has a nonzero horizontal component.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(x'(t)=0\\) and \\(y'(t)\\ne0\\), the tangent is vertical. If both vanish, first derivatives do not give a tangent direction by themselves.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not confuse a derivative that approaches infinity with one that equals zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>When reporting a vertical tangent, write \\(x=x_0\\) and give the corresponding point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "check-vertical-check-6",
+            "title": "A vertical tangent from t signs",
+            "prompt": "<p>For \\(x=t^{2} + 2\\) and \\(y=2 t + 3\\), which statement about \\(t=0\\) follows from the first derivatives?</p>",
+            "fields": [
+              {
+                "key": "orientation",
+                "label": "First-derivative information",
+                "type": "choice",
+                "expected": "option1",
+                "options": {
+                  "option1": "Vertical tangent",
+                  "option2": "Horizontal tangent",
+                  "option3": "Both parameter derivatives vanish"
+                }
+              }
+            ],
+            "hint": "<p>Look at both coordinate derivatives. One vanishing component is different from both vanishing.</p>",
+            "solution": "<p>At \\(t=0\\), the parameter derivatives are \\(0\\) and \\(2\\).</p><p>The motion has a nonzero vertical derivative and zero horizontal one. The tangent is the vertical line \\(x=2\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "near-branch",
+        "title": "How do parameter signs relate to the left and right of a point?",
+        "label": "Check the local orientation",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>If \\(x'(t)<0\\) near the point, increasing \\(t\\) takes you from the right of the point to the left. A signed gradient is still measured with respect to increasing \\(x\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(x'(t)\\) to identify which neighbouring parameter corresponds to the left side of the graph. Classification by a nonzero second derivative already accounts for this via the chain rule.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using increasing parameter order as increasing \\(x\\) can swap a maximum and a minimum in a signed first-derivative test.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>If the second derivative test gives zero, check either signs in increasing \\(x\\) or change of concavity explicitly.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "near-branch-check-7",
+            "title": "Stationary point while x decreases",
+            "prompt": "<p>For \\(x=- t^{2} - 3 t + 2\\) and \\(y=t^{3} + 1\\), classify the point at \\(t=0\\).</p>",
+            "fields": [
+              {
+                "key": "nature",
+                "label": "Nature of the point",
+                "type": "choice",
+                "expected": "option3",
+                "options": {
+                  "option1": "Local minimum",
+                  "option2": "Local maximum",
+                  "option3": "Stationary point of inflection"
+                }
+              }
+            ],
+            "hint": "<p>Check both the slope and whether local monotonicity changes. The zero second derivative alone does not classify a point.</p>",
+            "solution": "<p>Since \\(x'(0)=-3\\) is nonzero and \\(y'(0)=0\\), this is a regular stationary point.</p><p>The second derivative is zero at the point. Nearby, \\(\\frac{3 t^{2}}{- 2 t - 3}\\) keeps the same sign on either side, because the denominator keeps the sign of \\(-3\\) and the numerator is a positive multiple of \\(t^2\\).</p><p>The curve continues the same monotonic behaviour through the horizontal tangent and changes concavity there.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find the minimum from a nonzero derivative",
+        "question": "<p>For \\(x=t^{2} + 2 t + 1\\) and \\(y=2 t^{2} + 2\\), classify the point at \\(t=0\\).</p>",
+        "solution": [
+          "<p>Since \\(x'(0)=2\\) is nonzero and \\(y'(0)=0\\), this is a regular stationary point.</p>",
+          "<p>The second derivative at the point is \\(1\\). Its sign gives the nature of this stationary point.</p>",
+          "<p>The one-sided gradients have opposite signs, consistent with a local minimum.</p>"
+        ]
+      },
+      {
+        "title": "Check the regular maximum",
+        "question": "<p>For \\(x=- t^{2} + 2 t + 3\\) and \\(y=1 - 2 t^{2}\\), classify the point at \\(t=0\\).</p>",
+        "solution": [
+          "<p>Since \\(x'(0)=2\\) is nonzero and \\(y'(0)=0\\), this is a regular stationary point.</p>",
+          "<p>The second derivative at the point is \\(-1\\). Its sign gives the nature of this stationary point.</p>",
+          "<p>The one-sided gradients have opposite signs, consistent with a local maximum.</p>"
+        ]
+      },
+      {
+        "title": "A flat minimum can still turn",
+        "question": "<p>Identify the nature of the stationary point of \\(y=2 \\left(x - 1\\right)^{4} + 3\\) at \\(x=1\\).</p>",
+        "solution": [
+          "<p>The first derivative is \\(8 \\left(x - 1\\right)^{3}\\), so it vanishes at \\(x=1\\). The point is \\(\\left(1,3\\right)\\).</p>",
+          "<p>The second derivative there is \\(0\\). The gradient is negative just left and positive just right, from the parity of the factor \\(\\left(x - 1\\right)^{3}\\).</p>",
+          "<p>This gives a local minimum.</p>"
+        ]
+      },
+      {
+        "title": "A cubic that continues through the point",
+        "question": "<p>Identify the nature of the stationary point of \\(y=\\left(x - 2\\right)^{3} + 4\\) at \\(x=2\\).</p>",
+        "solution": [
+          "<p>The first derivative is \\(3 \\left(x - 2\\right)^{2}\\), so it vanishes at \\(x=2\\). The point is \\(\\left(2,4\\right)\\).</p>",
+          "<p>The second derivative there is \\(0\\). The gradient is positive just left and positive just right, from the parity of the factor \\(\\left(x - 2\\right)^{2}\\).</p>",
+          "<p>This gives a stationary point of inflection. Here the second derivative also changes sign across the point.</p>"
+        ]
+      },
+      {
+        "title": "A decreasing stationary inflection",
+        "question": "<p>Identify the nature of the stationary point of \\(y=4 - 2 \\left(x + 1\\right)^{5}\\) at \\(x=-1\\).</p>",
+        "solution": [
+          "<p>The first derivative is \\(- 10 \\left(x + 1\\right)^{4}\\), so it vanishes at \\(x=-1\\). The point is \\(\\left(-1,4\\right)\\).</p>",
+          "<p>The second derivative there is \\(0\\). The gradient is negative just left and negative just right, from the parity of the factor \\(\\left(x + 1\\right)^{4}\\).</p>",
+          "<p>This gives a stationary point of inflection. Here the second derivative also changes sign across the point.</p>"
+        ]
+      },
+      {
+        "title": "Use a vertical derivative vector",
+        "question": "<p>For \\(x=t^{2} + 1\\) and \\(y=3 t - 2\\), which statement about \\(t=0\\) follows from the first derivatives?</p>",
+        "solution": [
+          "<p>At \\(t=0\\), the parameter derivatives are \\(0\\) and \\(3\\).</p>",
+          "<p>The motion has a nonzero vertical derivative and zero horizontal one. The tangent is the vertical line \\(x=1\\).</p>"
+        ]
+      },
+      {
+        "title": "Follow the orientation of decreasing x",
+        "question": "<p>For \\(x=t^{2} - 2 t + 3\\) and \\(y=t^{3} + 1\\), classify the point at \\(t=0\\).</p>",
+        "solution": [
+          "<p>Since \\(x'(0)=-2\\) is nonzero and \\(y'(0)=0\\), this is a regular stationary point.</p>",
+          "<p>The second derivative is zero at the point. Nearby, \\(\\frac{3 t^{2}}{2 t - 2}\\) keeps the same sign on either side, because the denominator keeps the sign of \\(-2\\) and the numerator is a positive multiple of \\(t^2\\).</p>",
+          "<p>The curve continues the same monotonic behaviour through the horizontal tangent and changes concavity there.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-geometry-practice-1",
+        "title": "Both derivatives vanish at the point",
+        "prompt": "<p>For \\(x=t^{2} + 4\\) and \\(y=3 t^{3} + 2\\), which statement about \\(t=0\\) follows from the first derivatives?</p>",
+        "fields": [
+          {
+            "key": "orientation",
+            "label": "First-derivative information",
+            "type": "choice",
+            "expected": "option3",
+            "options": {
+              "option1": "Vertical tangent",
+              "option2": "Horizontal tangent",
+              "option3": "Both parameter derivatives vanish"
+            }
+          }
+        ],
+        "hint": "<p>Look at both coordinate derivatives. One vanishing component is different from both vanishing.</p>",
+        "solution": "<p>At \\(t=0\\), the parameter derivatives are \\(0\\) and \\(0\\).</p><p>The usual first-derivative quotient is indeterminate here. More local analysis is needed to identify a tangent.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-geometry-practice-2",
+        "title": "Identify a horizontal tangent",
+        "prompt": "<p>For \\(x=4 t + 1\\) and \\(y=t^{2} + 3\\), which statement about \\(t=0\\) follows from the first derivatives?</p>",
+        "fields": [
+          {
+            "key": "orientation",
+            "label": "First-derivative information",
+            "type": "choice",
+            "expected": "option2",
+            "options": {
+              "option1": "Vertical tangent",
+              "option2": "Horizontal tangent",
+              "option3": "Both parameter derivatives vanish"
+            }
+          }
+        ],
+        "hint": "<p>Look at both coordinate derivatives. One vanishing component is different from both vanishing.</p>",
+        "solution": "<p>At \\(t=0\\), the parameter derivatives are \\(4\\) and \\(0\\).</p><p>The motion has a nonzero horizontal derivative and zero vertical one. The tangent is horizontal.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-geometry-practice-3",
+        "title": "A sixth-power local minimum",
+        "prompt": "<p>Identify the nature of the stationary point of \\(y=\\left(x + 1\\right)^{6} + 4\\) at \\(x=-1\\).</p>",
+        "fields": [
+          {
+            "key": "class",
+            "label": "Nature of the point",
+            "type": "choice",
+            "expected": "option1",
+            "options": {
+              "option1": "Local minimum",
+              "option2": "Local maximum",
+              "option3": "Stationary point of inflection"
+            }
+          }
+        ],
+        "hint": "<p>If the second derivative is zero, use the sign of the derivative on both sides.</p>",
+        "solution": "<p>The first derivative is \\(6 \\left(x + 1\\right)^{5}\\), so it vanishes at \\(x=-1\\). The point is \\(\\left(-1,4\\right)\\).</p><p>The second derivative there is \\(0\\). The gradient is negative just left and positive just right, from the parity of the factor \\(\\left(x + 1\\right)^{5}\\).</p><p>This gives a local minimum.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-geometry-practice-4",
+        "title": "Use the nonzero second derivative",
+        "prompt": "<p>For \\(x=2 t^{2} - 3 t + 1\\) and \\(y=2 - 2 t^{2}\\), classify the point at \\(t=0\\).</p>",
+        "fields": [
+          {
+            "key": "nature",
+            "label": "Nature of the point",
+            "type": "choice",
+            "expected": "option2",
+            "options": {
+              "option1": "Local minimum",
+              "option2": "Local maximum",
+              "option3": "Stationary point of inflection"
+            }
+          }
+        ],
+        "hint": "<p>Check both the slope and whether local monotonicity changes. The zero second derivative alone does not classify a point.</p>",
+        "solution": "<p>Since \\(x'(0)=-3\\) is nonzero and \\(y'(0)=0\\), this is a regular stationary point.</p><p>The second derivative at the point is \\(- \\frac{4}{9}\\). Its sign gives the nature of this stationary point.</p><p>The one-sided gradients have opposite signs, consistent with a local maximum.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-geometry-practice-5",
+        "title": "A clear inflection despite a zero value",
+        "prompt": "<p>Identify the nature of the stationary point of \\(y=x^{3} + 5\\) at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "class",
+            "label": "Nature of the point",
+            "type": "choice",
+            "expected": "option3",
+            "options": {
+              "option1": "Local minimum",
+              "option2": "Local maximum",
+              "option3": "Stationary point of inflection"
+            }
+          }
+        ],
+        "hint": "<p>If the second derivative is zero, use the sign of the derivative on both sides.</p>",
+        "solution": "<p>The first derivative is \\(3 x^{2}\\), so it vanishes at \\(x=0\\). The point is \\(\\left(0,5\\right)\\).</p><p>The second derivative there is \\(0\\). The gradient is positive just left and positive just right, from the parity of the factor \\(x^{2}\\).</p><p>This gives a stationary point of inflection. Here the second derivative also changes sign across the point.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Stationary point",
+        "definition": "<p>A regular point where \\(\\frac{\\mathrm dy}{\\mathrm dx}=0\\).</p>"
+      },
+      {
+        "term": "Stationary point of inflection",
+        "definition": "<p>A horizontal tangent at a point where concavity changes.</p>"
+      },
+      {
+        "term": "Degenerate stationary point",
+        "definition": "<p>A stationary point at which the second derivative test is inconclusive.</p>"
+      },
+      {
+        "term": "Vertical tangent",
+        "definition": "<p>A tangent line of the form \\(x=x_0\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>Find where \\(y'=0\\) on a regular branch. A nonzero \\(y''\\) classifies the extremum. Otherwise compare signs of \\(y'\\) and analyse change of concavity.</p><table><thead><tr><th scope=\"col\">Sign of gradient before</th><th scope=\"col\">Sign of gradient after</th><th scope=\"col\">Conclusion</th></tr></thead><tbody><tr><td>Negative</td><td>Positive</td><td>Local minimum</td></tr><tr><td>Positive</td><td>Negative</td><td>Local maximum</td></tr><tr><td>Same sign</td><td>Same sign</td><td>No turn. Check concavity for an inflection.</td></tr></tbody></table>",
+      "checks": "<ul><li>Why does \\(y=x^4\\) have a minimum at zero?</li><li>How does \\(y=x^3\\) behave through zero?</li><li>Which parameter derivatives identify a vertical tangent?</li></ul>",
+      "examTip": "<p>State what the gradient or concavity does on each side before naming a degenerate point.</p>"
+    },
+    "related": [
+      {
+        "title": "Hyperbolic and inverse-function derivatives",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_differentiation_functions"
+      },
+      {
+        "title": "Maclaurin polynomials and approximations",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_differentiation_maclaurin"
+      }
+    ]
+  },
+  "fp2_differentiation_maclaurin": {
+    "updatedOn": "2026-11-21",
+    "description": "Use derivative values to find Maclaurin coefficients, compose expansions and evaluate exact polynomial approximations.",
+    "sections": [
+      {
+        "id": "at-zero",
+        "title": "Why do the derivatives at zero determine the coefficients?",
+        "label": "Match the derivatives at zero",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Write a trial polynomial \\(a_0+a_1x+a_2x^2+\\cdots\\). Its derivatives at zero are \\(a_0,a_1,2a_2,\\dots\\). Matching derivatives forces the coefficients.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The coefficient of \\(x^r\\) is \\(\\frac{f^{(r)}(0)}{r!}\\). The constant is \\(f(0)\\) and the coefficient of \\(x\\) is \\(f'(0)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>For \\(x^3\\) the coefficient is \\(\\frac{f'''(0)}6\\), not \\(f'''(0)\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep a table with separate columns for derivative order, value at zero and coefficient.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "at-zero-check-1",
+            "title": "Distinguish the derivative from its coefficient",
+            "prompt": "<p>Consider \\(f(x)=\\log{\\left(1 - 3 x \\right)}\\). Find the complete Maclaurin polynomial through degree \\(2\\).</p>",
+            "fields": [
+              {
+                "key": "expansion",
+                "label": "Truncated polynomial in x",
+                "type": "polynomial",
+                "variables": [
+                  "x"
+                ],
+                "expected": "-9*x^2/2-3*x"
+              }
+            ],
+            "hint": "<p>Include all nonzero terms from the constant through the specified degree.</p>",
+            "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=-3\\), \\(f^{(2)}(0)=-9\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(- \\frac{9 x^{2}}{2} - 3 x\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "at-zero-check-2",
+            "title": "Coefficient in a shifted exponential",
+            "prompt": "<p>Consider \\(f(x)=2 e^{2 x}\\). Give the coefficient of \\(x^{3}\\) in the Maclaurin expansion.</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Requested coefficient",
+                "type": "number",
+                "expected": "8/3"
+              }
+            ],
+            "hint": "<p>Remember the factorial in each coefficient.</p>",
+            "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=2\\), \\(f^{(1)}(0)=4\\), \\(f^{(2)}(0)=8\\), \\(f^{(3)}(0)=16\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{8 x^{3}}{3} + 4 x^{2} + 4 x + 2\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "missing-terms",
+        "title": "What do zero derivatives and parity tell me?",
+        "label": "Use parity to spot missing terms",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>An even function has vanishing odd derivatives at zero, and an odd function has vanishing even derivatives there, where they exist.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The series for \\(\\cosh x\\) has even powers only. The series for \\(\\sinh x\\) or \\(\\tanh x\\) has odd powers only. An inner shift can break the parity.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Through degree four means keep powers up to \\(x^4\\) even if some coefficients vanish. Four nonzero terms is a different request.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use the stated degree or number of nonzero terms to decide where to stop.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "missing-terms-check-3",
+            "title": "An odd expansion omits even powers",
+            "prompt": "<p>Consider \\(f(x)=\\sinh{\\left(2 x \\right)}\\). Find the complete Maclaurin polynomial through degree \\(4\\).</p>",
+            "fields": [
+              {
+                "key": "expansion",
+                "label": "Truncated polynomial in x",
+                "type": "polynomial",
+                "variables": [
+                  "x"
+                ],
+                "expected": "4*x^3/3+2*x"
+              }
+            ],
+            "hint": "<p>Include all nonzero terms from the constant through the specified degree.</p>",
+            "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=2\\), \\(f^{(2)}(0)=0\\), \\(f^{(3)}(0)=8\\), \\(f^{(4)}(0)=0\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{4 x^{3}}{3} + 2 x\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "substitution-series",
+        "title": "How do I use a known series in a composite function?",
+        "label": "Substitute and cap the degree",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>If a formula-booklet expansion is allowed, substitute the inner expression and discard terms only when their lowest power is beyond the target.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For example \\(u=ax^2\\) turns \\(u^2\\) into \\(a^2x^4\\). Multiplication by an outside factor can shift powers again.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A constant inside the argument means the usual local series is now centred where that argument is zero. Do not substitute a nonzero constant term blindly into a truncated series.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write the highest required power first, then work out how many source terms can contribute.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "substitution-series-check-4",
+            "title": "Change the power by substituting",
+            "prompt": "<p>Consider \\(f(x)=\\cos{\\left(x^{2} \\right)}\\). Find the complete Maclaurin polynomial through degree \\(4\\).</p>",
+            "fields": [
+              {
+                "key": "expansion",
+                "label": "Truncated polynomial in x",
+                "type": "polynomial",
+                "variables": [
+                  "x"
+                ],
+                "expected": "1-x^4/2"
+              }
+            ],
+            "hint": "<p>Include all nonzero terms from the constant through the specified degree.</p>",
+            "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=1\\), \\(f^{(1)}(0)=0\\), \\(f^{(2)}(0)=0\\), \\(f^{(3)}(0)=0\\), \\(f^{(4)}(0)=-12\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(1 - \\frac{x^{4}}{2}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "substitution-series-check-5",
+            "title": "Keep products through the required degree",
+            "prompt": "<p>Consider \\(f(x)=e^{2 x} \\sin{\\left(x \\right)}\\). Find the complete Maclaurin polynomial through degree \\(3\\).</p>",
+            "fields": [
+              {
+                "key": "expansion",
+                "label": "Truncated polynomial in x",
+                "type": "polynomial",
+                "variables": [
+                  "x"
+                ],
+                "expected": "11*x^3/6+2*x^2+x"
+              }
+            ],
+            "hint": "<p>Include all nonzero terms from the constant through the specified degree.</p>",
+            "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=1\\), \\(f^{(2)}(0)=4\\), \\(f^{(3)}(0)=11\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{11 x^{3}}{6} + 2 x^{2} + x\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "related-derivatives",
+        "title": "How can an equation for f′ avoid repeated quotients?",
+        "label": "Differentiate a simple identity",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Seek an identity for the derivative in terms of \\(f\\). Differentiating it successively produces expressions you can evaluate at zero.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(f=\\tanh x\\), \\(f'=1-f^2\\), so \\(f''=-2ff'\\). The values \\(f(0)=0\\) and \\(f'(0)=1\\) give \\(f''(0)=0\\) and \\(f'''(0)=-2\\), hence cubic coefficient \\(-\\frac13\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>In \\(-2ff'\\), differentiating again acts on both factors and introduces \\((f')^2\\) as well as \\(ff''\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>List enough derivative values to show the coefficient requested rather than guessing a pattern.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "related-derivatives-check-6",
+            "title": "Check the sign in a tangent cubic",
+            "prompt": "<p>Consider \\(f(x)=\\tanh{\\left(3 x \\right)}\\). Give the coefficient of \\(x^{3}\\) in the Maclaurin expansion.</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Requested coefficient",
+                "type": "number",
+                "expected": "-9"
+              }
+            ],
+            "hint": "<p>Remember the factorial in each coefficient.</p>",
+            "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=3\\), \\(f^{(2)}(0)=0\\), \\(f^{(3)}(0)=-54\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(- 9 x^{3} + 3 x\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-approximation",
+        "title": "What does a truncated polynomial estimate?",
+        "label": "Approximate near zero",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>To approximate a value, replace the function by the polynomial and state the input. Keep requested precision separate from the exact rational value of that polynomial.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(f(x)\\approx P(x)\\) for a truncation. At zero the values agree. Near zero, the first omitted nonzero term often helps you judge the size of the difference.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp2_differentiation_maclaurin/exponential-polynomials.svg",
+              "alt": "Both polynomials agree with the exponential at zero. At a positive input near zero the cubic follows the exponential more closely than the linear approximation.",
+              "width": 520,
+              "height": 316,
+              "caption": "<p>Both polynomials agree with the exponential at zero. At a positive input near zero the cubic follows the exponential more closely than the linear approximation.</p>"
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The polynomial may approximate badly far from the centre even though its coefficients are correct.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>If the question specifies a truncation, evaluate that truncation. Do not substitute a calculator value of the full function.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "use-approximation-check-7",
+            "title": "Approximate an exponential by a quadratic",
+            "prompt": "<p>Consider \\(f(x)=e^{x}\\). Use its Maclaurin polynomial through degree \\(2\\) to estimate \\(f(- \\frac{1}{10})\\) as an exact rational number.</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Value of the truncated polynomial",
+                "type": "number",
+                "expected": "181/200"
+              }
+            ],
+            "hint": "<p>Use the polynomial specified by the question. Do not evaluate the original function with a calculator.</p>",
+            "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=1\\), \\(f^{(1)}(0)=1\\), \\(f^{(2)}(0)=1\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{x^{2}}{2} + x + 1\\).</p><p>Substituting \\(x=- \\frac{1}{10}\\) into the polynomial gives \\(\\frac{181}{200}\\). This is the exact value of the approximating polynomial at that input.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Match the first three derivative values",
+        "question": "<p>Consider \\(f(x)=\\log{\\left(2 x + 1 \\right)}\\). Find the complete Maclaurin polynomial through degree \\(2\\).</p>",
+        "solution": [
+          "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=2\\), \\(f^{(2)}(0)=-4\\).</p>",
+          "<p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(- 2 x^{2} + 2 x\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a cubic coefficient",
+        "question": "<p>Consider \\(f(x)=e^{- x}\\). Give the coefficient of \\(x^{3}\\) in the Maclaurin expansion.</p>",
+        "solution": [
+          "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=1\\), \\(f^{(1)}(0)=-1\\), \\(f^{(2)}(0)=1\\), \\(f^{(3)}(0)=-1\\).</p>",
+          "<p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(- \\frac{x^{3}}{6} + \\frac{x^{2}}{2} - x + 1\\).</p>"
+        ]
+      },
+      {
+        "title": "Only even powers occur in a hyperbolic cosine",
+        "question": "<p>Consider \\(f(x)=\\cosh{\\left(3 x \\right)}\\). Find the complete Maclaurin polynomial through degree \\(4\\).</p>",
+        "solution": [
+          "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=1\\), \\(f^{(1)}(0)=0\\), \\(f^{(2)}(0)=9\\), \\(f^{(3)}(0)=0\\), \\(f^{(4)}(0)=81\\).</p>",
+          "<p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{27 x^{4}}{8} + \\frac{9 x^{2}}{2} + 1\\).</p>"
+        ]
+      },
+      {
+        "title": "A substitution starts at second order",
+        "question": "<p>Consider \\(f(x)=e^{2 x^{2}}\\). Find the complete Maclaurin polynomial through degree \\(4\\).</p>",
+        "solution": [
+          "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=1\\), \\(f^{(1)}(0)=0\\), \\(f^{(2)}(0)=4\\), \\(f^{(3)}(0)=0\\), \\(f^{(4)}(0)=48\\).</p>",
+          "<p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(2 x^{4} + 2 x^{2} + 1\\).</p>"
+        ]
+      },
+      {
+        "title": "A product needs more than one source series",
+        "question": "<p>Consider \\(f(x)=e^{x} \\sin{\\left(2 x \\right)}\\). Find the complete Maclaurin polynomial through degree \\(3\\).</p>",
+        "solution": [
+          "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=2\\), \\(f^{(2)}(0)=4\\), \\(f^{(3)}(0)=-2\\).</p>",
+          "<p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(- \\frac{x^{3}}{3} + 2 x^{2} + 2 x\\).</p>"
+        ]
+      },
+      {
+        "title": "Get the cubic term of the hyperbolic tangent",
+        "question": "<p>Consider \\(f(x)=\\tanh{\\left(2 x \\right)}\\). Find the complete Maclaurin polynomial through degree \\(3\\).</p>",
+        "solution": [
+          "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=2\\), \\(f^{(2)}(0)=0\\), \\(f^{(3)}(0)=-16\\).</p>",
+          "<p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(- \\frac{8 x^{3}}{3} + 2 x\\).</p>"
+        ]
+      },
+      {
+        "title": "Approximate the positive logarithm",
+        "question": "<p>Consider \\(f(x)=\\log{\\left(x + 1 \\right)}\\). Use its Maclaurin polynomial through degree \\(3\\) to estimate \\(f(\\frac{1}{5})\\) as an exact rational number.</p>",
+        "solution": [
+          "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=1\\), \\(f^{(2)}(0)=-1\\), \\(f^{(3)}(0)=2\\).</p>",
+          "<p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{x^{3}}{3} - \\frac{x^{2}}{2} + x\\).</p>",
+          "<p>Substituting \\(x=\\frac{1}{5}\\) into the polynomial gives \\(\\frac{137}{750}\\). This is the exact value of the approximating polynomial at that input.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-maclaurin-practice-1",
+        "title": "Give all terms through fourth degree",
+        "prompt": "<p>Consider \\(f(x)=\\log{\\left(x + 1 \\right)}\\). Find the complete Maclaurin polynomial through degree \\(4\\).</p>",
+        "fields": [
+          {
+            "key": "expansion",
+            "label": "Truncated polynomial in x",
+            "type": "polynomial",
+            "variables": [
+              "x"
+            ],
+            "expected": "-x^4/4+x^3/3-x^2/2+x"
+          }
+        ],
+        "hint": "<p>Include all nonzero terms from the constant through the specified degree.</p>",
+        "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=1\\), \\(f^{(2)}(0)=-1\\), \\(f^{(3)}(0)=2\\), \\(f^{(4)}(0)=-6\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(- \\frac{x^{4}}{4} + \\frac{x^{3}}{3} - \\frac{x^{2}}{2} + x\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-maclaurin-practice-2",
+        "title": "Use a rational function near zero",
+        "prompt": "<p>Consider \\(f(x)=\\frac{1}{3 x + 1}\\). Find the complete Maclaurin polynomial through degree \\(3\\).</p>",
+        "fields": [
+          {
+            "key": "expansion",
+            "label": "Truncated polynomial in x",
+            "type": "polynomial",
+            "variables": [
+              "x"
+            ],
+            "expected": "-27*x^3+9*x^2-3*x+1"
+          }
+        ],
+        "hint": "<p>Include all nonzero terms from the constant through the specified degree.</p>",
+        "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=1\\), \\(f^{(1)}(0)=-3\\), \\(f^{(2)}(0)=18\\), \\(f^{(3)}(0)=-162\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(- 27 x^{3} + 9 x^{2} - 3 x + 1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-maclaurin-practice-3",
+        "title": "Series for an inverse circular function",
+        "prompt": "<p>Consider \\(f(x)=\\sin^{-1}{\\left(x \\right)}\\). Find the complete Maclaurin polynomial through degree \\(3\\).</p>",
+        "fields": [
+          {
+            "key": "expansion",
+            "label": "Truncated polynomial in x",
+            "type": "polynomial",
+            "variables": [
+              "x"
+            ],
+            "expected": "x^3/6+x"
+          }
+        ],
+        "hint": "<p>Include all nonzero terms from the constant through the specified degree.</p>",
+        "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=1\\), \\(f^{(2)}(0)=0\\), \\(f^{(3)}(0)=1\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{x^{3}}{6} + x\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-maclaurin-practice-4",
+        "title": "Recover a fifth-order hyperbolic coefficient",
+        "prompt": "<p>Consider \\(f(x)=\\sinh{\\left(x \\right)}\\). Give the coefficient of \\(x^{5}\\) in the Maclaurin expansion.</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Requested coefficient",
+            "type": "number",
+            "expected": "1/120"
+          }
+        ],
+        "hint": "<p>Remember the factorial in each coefficient.</p>",
+        "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=1\\), \\(f^{(2)}(0)=0\\), \\(f^{(3)}(0)=1\\), \\(f^{(4)}(0)=0\\), \\(f^{(5)}(0)=1\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{x^{5}}{120} + \\frac{x^{3}}{6} + x\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-maclaurin-practice-5",
+        "title": "Estimate an even function near zero",
+        "prompt": "<p>Consider \\(f(x)=\\cosh{\\left(x \\right)}\\). Use its Maclaurin polynomial through degree \\(4\\) to estimate \\(f(\\frac{1}{3})\\) as an exact rational number.</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Value of the truncated polynomial",
+            "type": "number",
+            "expected": "2053/1944"
+          }
+        ],
+        "hint": "<p>Use the polynomial specified by the question. Do not evaluate the original function with a calculator.</p>",
+        "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=1\\), \\(f^{(1)}(0)=0\\), \\(f^{(2)}(0)=1\\), \\(f^{(3)}(0)=0\\), \\(f^{(4)}(0)=1\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{x^{4}}{24} + \\frac{x^{2}}{2} + 1\\).</p><p>Substituting \\(x=\\frac{1}{3}\\) into the polynomial gives \\(\\frac{2053}{1944}\\). This is the exact value of the approximating polynomial at that input.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Maclaurin polynomial",
+        "definition": "<p>A polynomial matching specified derivatives of a function at \\(x=0\\).</p>"
+      },
+      {
+        "term": "Coefficient",
+        "definition": "<p>The multiplier of a power such as \\(x^3\\).</p>"
+      },
+      {
+        "term": "Factorial",
+        "definition": "<p>\\(r!=r(r-1)\\cdots1\\), with \\(0!=1\\).</p>"
+      },
+      {
+        "term": "Truncation",
+        "definition": "<p>Stopping a series after a specified power.</p>"
+      },
+      {
+        "term": "Parity",
+        "definition": "<p>Whether a function is even or odd.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>\\(P_n(x)=\\sum_{r=0}^{n}\\frac{f^{(r)}(0)}{r!}x^r\\). Substitute compatible series before discarding high powers. Distinguish the exact value of \\(P_n\\) from the approximated function value.</p>",
+      "checks": "<ul><li>What is the relationship between the cubic coefficient and the third derivative at zero?</li><li>What terms can occur for an even function?</li><li>How do you convert a polynomial to an estimate?</li></ul>",
+      "examTip": "<p>Show the derivative values or the substituted series used to derive the requested coefficients.</p>"
+    },
+    "related": [
+      {
+        "title": "Stationary points and local geometry",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_differentiation_geometry"
+      },
+      {
+        "title": "Mixed differentiation problems",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_differentiation_mixed"
+      }
+    ]
+  },
+  "fp2_differentiation_mixed": {
+    "updatedOn": "2026-11-21",
+    "description": "Combine implicit, parametric and inverse differentiation with local geometry and Maclaurin approximations.",
+    "sections": [
+      {
+        "id": "pick-dependence",
+        "title": "How do I choose a differentiation route?",
+        "label": "Read the dependency",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>A relation in \\(x,y\\) calls for the chain rule in \\(y\\). Two coordinate functions first require derivatives with respect to \\(t\\). In a composition, separate the outer and inner inputs.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(F_x+F_y y'=0\\) for a regular implicit point and \\(y'=\\frac{y_t}{x_t}\\) for a regular parametric graph. Evaluate only after differentiating.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not replace a variable-dependent factor by its value at the target point before the next differentiation.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Label each derivative by its independent variable to avoid mixing \\(x\\) and \\(t\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "pick-dependence-check-1",
+            "title": "Retain both derivative orders",
+            "prompt": "<p>At the point \\(P=\\)\\(\\left(1,-2\\right)\\) on \\(- 2 X^{2} + X Y + 2 X + 2 Y^{2} + 4 Y=0\\), where \\(X=x - 1\\) and \\(Y=y + 2\\), find both first and second derivatives of \\(y\\) with respect to \\(x\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "-1/2"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Differentiate the relationship twice while treating Y as a function of x.</p>",
+            "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(- 4 X + Y + 2+\\left(X + 4 Y + 4\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(2+4y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{1}{2}\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=1\\). The factor multiplying \\(y''\\) is \\(4\\) and is nonzero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "pick-dependence-check-2",
+            "title": "Use the quotient at a negative parameter",
+            "prompt": "<p>A curve has \\(x=t^{2} + 3 t + 2\\) and \\(y=2 t^{2} + 5 t + 1\\). At \\(t=-1\\), calculate the first and second derivatives of y with respect to x.</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>The derivative of the gradient with respect to t needs one further division.</p>",
+            "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t + 3\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=4 t + 5\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 t + 5}{2 t + 3}\\) and hence \\(1\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{2}{\\left(2 t + 3\\right)^{3}}\\) and its value is \\(2\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "chain-twice",
+        "title": "Which signs and factors survive a second derivative?",
+        "label": "Carry the chain factors",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Differentiate the first derivative as written, then use its local inputs to decide whether a square root sign or another chain factor is needed.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(f(u(x))\\) the second derivative includes \\(f''(u)(u')^2\\) and \\(f'(u)u''\\). For a linear inner function, only the first term remains.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A correct first derivative can still give a wrong second derivative if the inner signed factor or outer branch is lost.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the real derivative domain before simplifying.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "chain-twice-check-3",
+            "title": "Preserve the sign of an inverse cosine",
+            "prompt": "<p>Let \\(f(x)=\\cos^{-1}{\\left(3 x - 1 \\right)}\\). Find the exact value of \\(f'(\\frac{3}{5})\\) and \\(f''(\\frac{3}{5})\\).</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First derivative",
+                "type": "number",
+                "expected": "-5"
+              },
+              {
+                "key": "second",
+                "label": "Second derivative",
+                "type": "number",
+                "expected": "-100/3"
+              }
+            ],
+            "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+            "solution": "<p>Use the inner function \\(u=3 x - 1\\), with derivative \\(3\\). The outer derivative with respect to \\(u\\) is \\(- \\frac{1}{\\sqrt{1 - u^{2}}}\\).</p><p>The chain rule gives \\(f'(x)=- \\frac{3}{\\sqrt{1 - \\left(3 x - 1\\right)^{2}}}\\). Substitute \\(u=\\frac{4}{5}\\) to get \\(-5\\).</p><p>Apply the chain rule once more. The second derivative is \\(- \\frac{9 \\left(3 x - 1\\right)}{\\left(1 - \\left(3 x - 1\\right)^{2}\\right)^{\\frac{3}{2}}}\\) and so the stated value is \\(- \\frac{100}{3}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "coordinate-and-slope",
+        "title": "How can I distinguish slope, curvature and line type?",
+        "label": "Interpret what is being requested",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>The first derivative gives the tangent gradient. The second derivative determines local concavity where finite. A normal line also needs perpendicularity and the same point.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>At a regular horizontal tangent, use a nonzero second derivative to classify the point. When the second derivative is zero, compare the gradient around the point and check concavity if necessary.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Concavity on its own does not determine whether a point is stationary.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Give the coordinate pair and its classification separately if the question asks for both.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "coordinate-and-slope-check-4",
+            "title": "Find the perpendicular gradient for a branch",
+            "prompt": "<p>At the point \\(P=\\)\\(\\left(2,3\\right)\\) on \\(X^{2} - 2 X Y - 3 X + 2 Y^{2} + 4 Y=0\\), where \\(X=x - 2\\) and \\(Y=y - 3\\), find the gradients of the tangent and normal.</p>",
+            "fields": [
+              {
+                "key": "tangent",
+                "label": "Tangent gradient",
+                "type": "number",
+                "expected": "3/4"
+              },
+              {
+                "key": "normal",
+                "label": "Normal gradient",
+                "type": "number",
+                "expected": "-4/3"
+              }
+            ],
+            "hint": "<p>Solve the first derivative equation. Then use perpendicularity.</p>",
+            "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(2 X - 2 Y - 3+\\left(- 2 X + 4 Y + 4\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(-3+4y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=\\frac{3}{4}\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=- \\frac{5}{16}\\). The factor multiplying \\(y''\\) is \\(4\\) and is nonzero.</p><p>The normal is perpendicular to the tangent, so use the negative reciprocal \\(- \\frac{4}{3}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "coordinate-and-slope-check-5",
+            "title": "Read a zero second derivative in context",
+            "prompt": "<p>Identify the nature of the stationary point of \\(y=\\left(x + 2\\right)^{4} + 4\\) at \\(x=-2\\).</p>",
+            "fields": [
+              {
+                "key": "class",
+                "label": "Nature of the point",
+                "type": "choice",
+                "expected": "option1",
+                "options": {
+                  "option1": "Local minimum",
+                  "option2": "Local maximum",
+                  "option3": "Stationary point of inflection"
+                }
+              }
+            ],
+            "hint": "<p>If the second derivative is zero, use the sign of the derivative on both sides.</p>",
+            "solution": "<p>The first derivative is \\(4 \\left(x + 2\\right)^{3}\\), so it vanishes at \\(x=-2\\). The point is \\(\\left(-2,4\\right)\\).</p><p>The second derivative there is \\(0\\). The gradient is negative just left and positive just right, from the parity of the factor \\(\\left(x + 2\\right)^{3}\\).</p><p>This gives a local minimum.</p>"
+          }
+        ]
+      },
+      {
+        "id": "derivative-series",
+        "title": "How do I use a local derivative calculation in a series?",
+        "label": "Build local coefficients",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>For an expression with known derivative signs or a differential identity, compute a few values at zero instead of expanding the original expression directly.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(f^{(r)}(0)\\) to form the coefficient \\(\\frac{f^{(r)}(0)}{r!}\\). A zero derivative gives a zero term at that order.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using a derivative as the coefficient skips the factorial, especially at orders three and four.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>If a composition has been differentiated already, reuse correctly evaluated derivatives at the centre.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "derivative-series-check-6",
+            "title": "Build the first four polynomial terms",
+            "prompt": "<p>Consider \\(f(x)=e^{x} \\cos{\\left(x \\right)}\\). Find the complete Maclaurin polynomial through degree \\(3\\).</p>",
+            "fields": [
+              {
+                "key": "expansion",
+                "label": "Truncated polynomial in x",
+                "type": "polynomial",
+                "variables": [
+                  "x"
+                ],
+                "expected": "-x^3/3+x+1"
+              }
+            ],
+            "hint": "<p>Include all nonzero terms from the constant through the specified degree.</p>",
+            "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=1\\), \\(f^{(1)}(0)=1\\), \\(f^{(2)}(0)=0\\), \\(f^{(3)}(0)=-2\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(- \\frac{x^{3}}{3} + x + 1\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "test-a-result",
+        "title": "What checks distinguish mathematical errors from rounding?",
+        "label": "Verify exactness and scope",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Check the original domain, then check one identity against the result. If a problem uses a series, know which equality is exact for the polynomial and which is an estimate of the function.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Test a slope by substitution into the differentiated relation, a second derivative by its original equation, and a series by matching one derivative at zero.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A decimal near an exact radical does not establish exact equality. Keep the requested form until the end.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Make only the conclusion supported by the derivative or approximation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "test-a-result-check-7",
+            "title": "Evaluate one exact truncation",
+            "prompt": "<p>Consider \\(f(x)=\\log{\\left(2 x + 1 \\right)}\\). Use its Maclaurin polynomial through degree \\(3\\) to estimate \\(f(- \\frac{1}{10})\\) as an exact rational number.</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Value of the truncated polynomial",
+                "type": "number",
+                "expected": "-167/750"
+              }
+            ],
+            "hint": "<p>Use the polynomial specified by the question. Do not evaluate the original function with a calculator.</p>",
+            "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=2\\), \\(f^{(2)}(0)=-4\\), \\(f^{(3)}(0)=16\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{8 x^{3}}{3} - 2 x^{2} + 2 x\\).</p><p>Substituting \\(x=- \\frac{1}{10}\\) into the polynomial gives \\(- \\frac{167}{750}\\). This is the exact value of the approximating polynomial at that input.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use the product rule in an implicit relation",
+        "question": "<p>At the point \\(P=\\)\\(\\left(3,-2\\right)\\) on \\(- X^{2} + X Y + 2 X + Y^{2} + 3 Y=0\\), where \\(X=x - 3\\) and \\(Y=y + 2\\), find both first and second derivatives of \\(y\\) with respect to \\(x\\).</p>",
+        "solution": [
+          "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(- 2 X + Y + 2+\\left(X + 2 Y + 3\\right)y'=0\\).</p>",
+          "<p>At the point both centred variables vanish. So \\(2+3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{2}{3}\\).</p>",
+          "<p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p>",
+          "<p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=\\frac{22}{27}\\). The factor multiplying \\(y''\\) is \\(3\\) and is nonzero.</p>"
+        ]
+      },
+      {
+        "title": "Divide twice for a parametric curve",
+        "question": "<p>A curve has \\(x=- t^{2} + 2 t + 5\\) and \\(y=2 t^{2} + 3 t + 1\\). At \\(t=0\\), calculate the first and second derivatives of y with respect to x.</p>",
+        "solution": [
+          "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 - 2 t\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=4 t + 3\\).</p>",
+          "<p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 t + 3}{2 - 2 t}\\) and hence \\(\\frac{3}{2}\\) at the specified parameter.</p>",
+          "<p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{7}{4 \\left(1 - t\\right)^{3}}\\) and its value is \\(\\frac{7}{4}\\).</p>"
+        ]
+      },
+      {
+        "title": "Differentiate an inverse after an inner shift",
+        "question": "<p>Let \\(f(x)=\\tanh^{-1}{\\left(3 x - 1 \\right)}\\). Find the exact value of \\(f'(\\frac{4}{9})\\) and \\(f''(\\frac{4}{9})\\).</p>",
+        "solution": [
+          "<p>Use the inner function \\(u=3 x - 1\\), with derivative \\(3\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{1 - u^{2}}\\).</p>",
+          "<p>The chain rule gives \\(f'(x)=\\frac{3}{1 - \\left(3 x - 1\\right)^{2}}\\). Substitute \\(u=\\frac{1}{3}\\) to get \\(\\frac{27}{8}\\).</p>",
+          "<p>Apply the chain rule once more. The second derivative is \\(\\frac{18 \\left(3 x - 1\\right)}{\\left(\\left(3 x - 1\\right)^{2} - 1\\right)^{2}}\\) and so the stated value is \\(\\frac{243}{32}\\).</p>"
+        ]
+      },
+      {
+        "title": "Separate tangent and normal data",
+        "question": "<p>At the point \\(P=\\)\\(\\left(1,2\\right)\\) on \\(X^{2} + 2 X Y + 3 X - Y^{2} + 5 Y=0\\), where \\(X=x - 1\\) and \\(Y=y - 2\\), find the gradients of the tangent and normal.</p>",
+        "solution": [
+          "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(2 X + 2 Y + 3+\\left(2 X - 2 Y + 5\\right)y'=0\\).</p>",
+          "<p>At the point both centred variables vanish. So \\(3+5y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=- \\frac{3}{5}\\).</p>",
+          "<p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p>",
+          "<p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=\\frac{28}{125}\\). The factor multiplying \\(y''\\) is \\(5\\) and is nonzero.</p>",
+          "<p>The normal is perpendicular to the tangent, so use the negative reciprocal \\(\\frac{5}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Interpret a horizontal tangent after reparameterising",
+        "question": "<p>For \\(x=t^{2} - 2 t + 1\\) and \\(y=t^{3} + 3\\), classify the point at \\(t=0\\).</p>",
+        "solution": [
+          "<p>Since \\(x'(0)=-2\\) is nonzero and \\(y'(0)=0\\), this is a regular stationary point.</p>",
+          "<p>The second derivative is zero at the point. Nearby, \\(\\frac{3 t^{2}}{2 t - 2}\\) keeps the same sign on either side, because the denominator keeps the sign of \\(-2\\) and the numerator is a positive multiple of \\(t^2\\).</p>",
+          "<p>The curve continues the same monotonic behaviour through the horizontal tangent and changes concavity there.</p>"
+        ]
+      },
+      {
+        "title": "Recover a cubic from a shifted inner function",
+        "question": "<p>Consider \\(f(x)=\\log{\\left(1 - 2 x \\right)}\\). Find the complete Maclaurin polynomial through degree \\(3\\).</p>",
+        "solution": [
+          "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=-2\\), \\(f^{(2)}(0)=-4\\), \\(f^{(3)}(0)=-16\\).</p>",
+          "<p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(- \\frac{8 x^{3}}{3} - 2 x^{2} - 2 x\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep an exact estimate separate from a function value",
+        "question": "<p>Consider \\(f(x)=e^{2 x}\\). Use its Maclaurin polynomial through degree \\(3\\) to estimate \\(f(\\frac{1}{4})\\) as an exact rational number.</p>",
+        "solution": [
+          "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=1\\), \\(f^{(1)}(0)=2\\), \\(f^{(2)}(0)=4\\), \\(f^{(3)}(0)=8\\).</p>",
+          "<p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{4 x^{3}}{3} + 2 x^{2} + 2 x + 1\\).</p>",
+          "<p>Substituting \\(x=\\frac{1}{4}\\) into the polynomial gives \\(\\frac{79}{48}\\). This is the exact value of the approximating polynomial at that input.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-mixed-practice-1",
+        "title": "Check a principal inverse hyperbolic composition",
+        "prompt": "<p>Let \\(f(x)=\\cosh^{-1}{\\left(2 x - 3 \\right)}\\). Find the exact value of \\(f'(\\frac{7}{3})\\).</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "3/2"
+          }
+        ],
+        "hint": "<p>Write the principal derivative rule before applying the inner derivative.</p>",
+        "solution": "<p>Use the inner function \\(u=2 x - 3\\), with derivative \\(2\\). The outer derivative with respect to \\(u\\) is \\(\\frac{1}{\\sqrt{u - 1} \\sqrt{u + 1}}\\).</p><p>The chain rule gives \\(f'(x)=\\frac{2}{\\sqrt{2 x - 4} \\sqrt{2 x - 2}}\\). Substitute \\(u=\\frac{5}{3}\\) to get \\(\\frac{3}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-mixed-practice-2",
+        "title": "Classify a different regular stationary point",
+        "prompt": "<p>A curve has \\(x=t^{2} + 4 t + 3\\) and \\(y=2 t^{2} - 4 t + 1\\). At \\(t=1\\), classify the point and give its second derivative.</p>",
+        "fields": [
+          {
+            "key": "classification",
+            "label": "Type of stationary point",
+            "type": "choice",
+            "expected": "option1",
+            "options": {
+              "option1": "Minimum",
+              "option2": "Maximum",
+              "option3": "Stationary inflection"
+            }
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "1/9"
+          }
+        ],
+        "hint": "<p>Verify a regular horizontal tangent before using the second-derivative test.</p>",
+        "solution": "<p>Differentiate both coordinates with respect to the parameter: \\(\\frac{\\mathrm dx}{\\mathrm dt}=2 t + 4\\) and \\(\\frac{\\mathrm dy}{\\mathrm dt}=4 t - 4\\).</p><p>Taking the quotient gives \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{4 t - 4}{2 t + 4}\\) and hence \\(0\\) at the specified parameter.</p><p>Differentiate the entire gradient with respect to \\(t\\) and divide by \\(\\frac{\\mathrm dx}{\\mathrm dt}\\) again. Hence \\(\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{3}{\\left(t + 2\\right)^{3}}\\) and its value is \\(\\frac{1}{9}\\).</p><p>The slope vanishes and the second derivative is positive. Hence the point is a local minimum.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-mixed-practice-3",
+        "title": "Second derivative after a sign change",
+        "prompt": "<p>At the point \\(P=\\)\\(\\left(2,-1\\right)\\) on \\(2 X^{2} + X Y - X + 2 Y^{2} + 3 Y=0\\), where \\(X=x - 2\\) and \\(Y=y + 1\\), find both first and second derivatives of \\(y\\) with respect to \\(x\\).</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First derivative",
+            "type": "number",
+            "expected": "1/3"
+          },
+          {
+            "key": "second",
+            "label": "Second derivative",
+            "type": "number",
+            "expected": "-46/27"
+          }
+        ],
+        "hint": "<p>Differentiate the relationship twice while treating Y as a function of x.</p>",
+        "solution": "<p>The centred variables have \\(\\frac{\\mathrm dX}{\\mathrm dx}=1\\) and \\(\\frac{\\mathrm dY}{\\mathrm dx}=y'\\). First differentiate to obtain \\(4 X + Y - 1+\\left(X + 4 Y + 3\\right)y'=0\\).</p><p>At the point both centred variables vanish. So \\(-1+3y'=0\\), and \\(\\left.\\frac{\\mathrm dy}{\\mathrm dx}\\right|_P=\\frac{1}{3}\\).</p><p>Differentiating that relation again uses the product rule. Before substitution the resulting equation is \\(F_{XX}+2F_{XY}y'+F_{YY}(y')^2+F_Y y''=0\\).</p><p>At the point, this gives \\(\\left.\\frac{\\mathrm d^2y}{\\mathrm dx^2}\\right|_P=- \\frac{46}{27}\\). The factor multiplying \\(y''\\) is \\(3\\) and is nonzero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-mixed-practice-4",
+        "title": "Distinguish derivative value and coefficient",
+        "prompt": "<p>Consider \\(f(x)=\\tanh{\\left(x \\right)}\\). Give the coefficient of \\(x^{5}\\) in the Maclaurin expansion.</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Requested coefficient",
+            "type": "number",
+            "expected": "2/15"
+          }
+        ],
+        "hint": "<p>Remember the factorial in each coefficient.</p>",
+        "solution": "<p>Find the derivatives at zero. Here \\(f^{(0)}(0)=0\\), \\(f^{(1)}(0)=1\\), \\(f^{(2)}(0)=0\\), \\(f^{(3)}(0)=-2\\), \\(f^{(4)}(0)=0\\), \\(f^{(5)}(0)=16\\).</p><p>Divide each derivative of order \\(r\\) by \\(r!\\) and multiply by \\(x^r\\). The resulting polynomial is \\(\\frac{2 x^{5}}{15} - \\frac{x^{3}}{3} + x\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-mixed-practice-5",
+        "title": "Check a maximum with negative parameter speed",
+        "prompt": "<p>For \\(x=t^{2} - 3 t + 2\\) and \\(y=4 - 2 t^{2}\\), classify the point at \\(t=0\\).</p>",
+        "fields": [
+          {
+            "key": "nature",
+            "label": "Nature of the point",
+            "type": "choice",
+            "expected": "option2",
+            "options": {
+              "option1": "Local minimum",
+              "option2": "Local maximum",
+              "option3": "Stationary point of inflection"
+            }
+          }
+        ],
+        "hint": "<p>Check both the slope and whether local monotonicity changes. The zero second derivative alone does not classify a point.</p>",
+        "solution": "<p>Since \\(x'(0)=-3\\) is nonzero and \\(y'(0)=0\\), this is a regular stationary point.</p><p>The second derivative at the point is \\(- \\frac{4}{9}\\). Its sign gives the nature of this stationary point.</p><p>The one-sided gradients have opposite signs, consistent with a local maximum.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Dependency",
+        "definition": "<p>The way one coordinate or function varies with its input.</p>"
+      },
+      {
+        "term": "Implicit derivative",
+        "definition": "<p>A derivative obtained from a relation in \\(x\\) and \\(y\\) without isolating \\(y\\).</p>"
+      },
+      {
+        "term": "Chain factor",
+        "definition": "<p>The derivative of the inner function introduced when differentiating a composition.</p>"
+      },
+      {
+        "term": "Series centre",
+        "definition": "<p>The point where the derivatives used for the series are evaluated.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>Choose the derivative method from the relation. Check \\(F_y\\) or \\(x_t\\) before division. In a series, compute \\(f^{(r)}(0)\\) before dividing by \\(r!\\).</p>",
+      "checks": "<ul><li>Which part of your setup ensures the local derivative is defined?</li><li>How can a derivative sign verify a graph?</li><li>Does your stated value belong to the original function or its truncation?</li></ul>",
+      "examTip": "<p>Carry exact values throughout the derivative steps, then give the requested form and precision.</p>"
+    },
+    "related": [
+      {
+        "title": "Maclaurin polynomials and approximations",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_differentiation_maclaurin"
+      }
+    ]
+  }
+}
