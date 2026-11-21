@@ -59,6 +59,7 @@ export function matchPublicChapter(chapters: PublicChapter[], path: string, chap
 }
 
 const chapterDescriptions: Record<string, string> = {
+  "9709-m1-forces-and-equilibrium": "Draw forces, resolve components and solve smooth and rough equilibrium problems for Cambridge 9709 Mechanics.",
   "9709-p3-complex-numbers": "Work with complex arithmetic, roots, modulus and argument, exponential form and Argand loci for Cambridge 9709 Pure 3.",
   "9709-p3-differential-equations": "Model rates, separate variables, apply initial conditions and interpret first-order differential equations for Cambridge 9709 Pure 3.",
   "9709-p3-vectors": "Use vector components, lines, scalar products, angles and perpendicular feet with step-by-step practice for Cambridge 9709 Pure 3.",

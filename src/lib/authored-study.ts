@@ -18,6 +18,7 @@ import pure3NumericalMethods from "../../content/original/9709-p3/numerical-meth
 import pure3Vectors from "../../content/original/9709-p3/vectors-study.json";
 import pure3DifferentialEquations from "../../content/original/9709-p3/differential-equations-study.json";
 import pure3ComplexNumbers from "../../content/original/9709-p3/complex-numbers-study.json";
+import mechanicsForcesStudy from "../../content/original/9709-m1/forces-and-equilibrium-study.json";
 import representation from "../../content/original/9709-s1/representation-study.json";
 import centralTendency from "../../content/original/9709-s1/central-tendency-study.json";
 import variation from "../../content/original/9709-s1/variation-study.json";
@@ -52,7 +53,7 @@ type AuthoredLesson = Omit<StudyLesson, "sections" | "extraPractice"> & {
 const lessons = {
   ...quadratics, ...functions, ...coordinateGeometry, ...circularMeasure, ...trigonometry,
   ...series, ...binomialExpansion, ...differentiation, ...integration, ...crossTopic,
-  ...pure3Algebra, ...pure3FurtherAlgebra, ...pure3Logarithms, ...pure3Trigonometry, ...pure3Differentiation, ...pure3Integration, ...pure3NumericalMethods, ...pure3Vectors, ...pure3DifferentialEquations, ...pure3ComplexNumbers,
+  ...pure3Algebra, ...pure3FurtherAlgebra, ...pure3Logarithms, ...pure3Trigonometry, ...pure3Differentiation, ...pure3Integration, ...pure3NumericalMethods, ...pure3Vectors, ...pure3DifferentialEquations, ...pure3ComplexNumbers, ...mechanicsForcesStudy,
   ...representation, ...centralTendency, ...variation, ...probability,
   ...counting, ...distributions, ...binomialGeometric, ...normal,
 } as Record<string, AuthoredLesson>;
