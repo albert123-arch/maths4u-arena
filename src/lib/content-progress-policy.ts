@@ -31,6 +31,10 @@ export const notationProgressRevisions = [{
   key: "9709-m1-forces-and-equilibrium", fromVersion: "1.0.0", toVersion: "1.0.1",
   fromFingerprint: "9035dd1bf8dd98be0493171c2ef334176fec9af6eb86acd084f8712bf7e376d4",
   toFingerprint: "62977900677abfeccc6bd2eb2c9d9001cca4f7c6f98f9506c26e1eb3c8c9795f",
+}, {
+  key: "9709-m1-kinematics", fromVersion: "1.0.0", toVersion: "1.0.1",
+  fromFingerprint: "a8855e722775cccfd8f3eeb27378abcb9dfbce17e6ed17b0e01daa77f00005b2",
+  toFingerprint: "c5a865acdda2aa5e4e2015d889bd5c2ab86e30ce93e9a243dd7b1481ea2ba653",
 }] as const;
 
 export function notationProgressPolicy(p: ContentPackage) {
