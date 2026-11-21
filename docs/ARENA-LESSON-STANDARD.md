@@ -36,6 +36,7 @@ Author desktop, mobile and print from the same reviewed lesson content. The [Qua
 
 ## Mathematics and language
 
+- Use SVG for graphs, geometric constructions and schematic diagrams. Keep worked examples, tables and derivations in accessible HTML and KaTeX so they reflow at phone widths. Keep text inside SVGs to essential labels.
 - Write in concise British exam English. Use the same notation in explanations, examples, feedback and the revision sheet. Define each variable and restriction before using it.
 - Put each illustration next to the exact equation or inequality it illustrates. Label axes, key coordinates and included/excluded endpoints. State that roots are x-values where the curve **meets** the x-axis. In a zero product, set each factor containing the unknown equal to zero.
 - Show the defining diagram on arrival. For completing the square, show which corner completes the area model. In a sketching section, place the finished graph and its equation directly below the section heading so both are visible on a phone. Then explain the construction one step at a time. A graph-reading check can use the labelled sketch. Give a different curve for an independent calculation.
