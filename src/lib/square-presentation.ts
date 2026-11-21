@@ -35,7 +35,7 @@ export function answerFormat(f: SquareField): { en: string; ru: string; placehol
   if (f.type === "choice") return { en: "Choose one option. Explain your reasoning on paper.", ru: "Выберите один вариант. Объясните рассуждение на бумаге.", placeholder: "" };
   if (f.type === "integers") return { en: "List every integer in braces, for example {1, 2, 3}; use empty if there are none.", ru: "Перечислите все целые числа в фигурных скобках, например {1, 2, 3}; если их нет, введите empty.", placeholder: "{1, 2, 3}" };
   if (f.type === "pairs") return f.dimension === 3
-    ? { en: "Enter (parameter, x, y); separate multiple triples with semicolons.", ru: "Введите (параметр, x, y); несколько троек разделяйте точкой с запятой.", placeholder: "(parameter, x, y); (…)" }
+    ? { en: "Enter each triple in the order shown, for example (1, 2, 3). Separate multiple triples with semicolons.", ru: "Введите тройку в указанном порядке, например (1, 2, 3). Несколько троек разделяйте точкой с запятой.", placeholder: "(1, 2, 3)" }
     : isCoordinateField(f)
       ? { en: "Enter a point as (1, 2) or x = 1, y = 2. Separate complete pairs with commas or semicolons.", ru: "Введите точку как (1, 2) или x = 1, y = 2. Пары можно разделять запятыми или точками с запятой.", placeholder: "(1, 2), (3, 4)" }
       : { en: "Enter each pair in the order shown. Separate complete pairs with commas or semicolons.", ru: "Введите каждую пару в указанном порядке. Несколько пар можно разделить запятыми или точками с запятой.", placeholder: "(1, 2), (3, 4)" };

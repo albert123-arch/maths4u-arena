@@ -1,7 +1,7 @@
 type Field = { type: string; key: string; label: string };
 
 export function normaliseAnswerLabel(label: string) {
-  return label.replace(/[−–]/g, "-").replace(/\s+/g, "")
+  return label.replace(/[−–]/g, "-").replace(/(?:λ|\\lambda)/gi, "lambda").replace(/\s+/g, "")
     .replace(/⁻¹|\^\{-1\}|\^\(-1\)/g, "^-1").toLowerCase();
 }
 
@@ -31,12 +31,14 @@ export function scalarLabels(field: Field) {
   }
   const segment = /^(?:Exact )?length ([A-Z]{2})$/i.exec(field.label)?.[1];
   if (segment) labels.push(segment);
+  if (field.key === "lambda" || /\beigenvalue\b/i.test(field.label)) labels.push("λ");
   if (field.key === "radius") labels.push("r");
   if (field.key === "area" || /^Area\b/i.test(field.label)) labels.push("area");
   return [...new Set(labels)];
 }
 
 export function setSymbol(field: Field) {
+  if (/\beigenvalues\b/i.test(field.label)) return "λ";
   const named = /\b([a-z])[- ]values\b/i.exec(field.label)
     ?? /\b(?:values? of|restriction on|levels?|parameters?|slopes?|set for) ([a-z])\b(?!\s*\()/i.exec(field.label)
     ?? /^All ([a-z])\b(?!\s*\()/i.exec(field.label);

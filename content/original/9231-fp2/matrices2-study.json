@@ -1,0 +1,3125 @@
+{
+  "fp2_matrices2_eigen": {
+    "updatedOn": "2026-11-21",
+    "description": "Find every real eigenvalue and a matching non-zero eigenvector of a 2 by 2 or 3 by 3 matrix.",
+    "sections": [
+      {
+        "id": "test-direction",
+        "title": "How do I recognise an eigenvector?",
+        "label": "One invariant direction",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Matrix multiplication can turn a vector. An eigenvector keeps the same line through the origin after multiplication, even when its orientation reverses.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Test \\(A\\boldsymbol v=\\lambda\\boldsymbol v\\) with \\(\\boldsymbol v\\ne\\boldsymbol0\\). If the image is zero, a non-zero original vector is still an eigenvector and the eigenvalue is \\(0\\).</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp2_matrices2_eigen/one-eigendirection.svg",
+              "alt": "The original vector and its image lie on the same line through the origin. The image points in the opposite direction, indicating a negative eigenvalue.",
+              "caption": "<p>The original vector and its image lie on the same line through the origin. The image points in the opposite direction, indicating a negative eigenvalue.</p>",
+              "width": 470,
+              "height": 270
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The zero vector satisfies the equation for every scalar, so it cannot identify an eigenvalue. A vector with a zero component is allowed.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Find the scalar from a non-zero component and then check every row.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "test-direction-check-1",
+            "title": "Read a negative multiplier",
+            "prompt": "<p>The vector \\(\\left(\\begin{matrix}0\\\\1\\end{matrix}\\right)\\) is an eigenvector of \\(\\left(\\begin{matrix}3 & 0\\\\-14 & -4\\end{matrix}\\right)\\). Find its eigenvalue.</p>",
+            "fields": [
+              {
+                "key": "lambda",
+                "label": "Eigenvalue",
+                "type": "number",
+                "expected": "-4"
+              }
+            ],
+            "hint": "<p>Compare every component. Do not divide by a zero component.</p>",
+            "solution": "<p>Computation gives \\(\\left(\\begin{matrix}0\\\\-4\\end{matrix}\\right)\\). Find the common factor relating that product to the original vector.</p><p>Using the second nonzero coordinate gives \\(\\lambda=-4\\). The same scalar works in every row.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "test-direction-check-2",
+            "title": "Check a third row",
+            "prompt": "<p>The vector \\(\\left(\\begin{matrix}1\\\\0\\\\1\\end{matrix}\\right)\\) is an eigenvector of \\(\\left(\\begin{matrix}-3 & 0 & 8\\\\-4 & 1 & 4\\\\0 & 0 & 5\\end{matrix}\\right)\\). Find its eigenvalue.</p>",
+            "fields": [
+              {
+                "key": "lambda",
+                "label": "Eigenvalue",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Compare every component. Do not divide by a zero component.</p>",
+            "solution": "<p>Computation gives \\(\\left(\\begin{matrix}5\\\\0\\\\5\\end{matrix}\\right)\\). Find the common factor relating that product to the original vector.</p><p>Using the first nonzero coordinate gives \\(\\lambda=5\\). The same scalar works in every row.</p>"
+          }
+        ]
+      },
+      {
+        "id": "singular-shift",
+        "title": "Why does the determinant determine the eigenvalues?",
+        "label": "Find all eigenvalues",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Moving \\(\\lambda\\boldsymbol v\\) to the left gives a homogeneous system. A non-zero solution can exist only when its coefficient matrix is singular.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Solve \\(\\det(\\lambda I-A)=0\\). This monic convention is convenient; \\(\\det(A-\\lambda I)=0\\) has exactly the same roots. Expand or factor before substituting any numeric eigenvalue.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Subtract the eigenvalue only on the main diagonal. Subtracting it from every entry changes the equations.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For a triangular matrix the roots are its diagonal entries.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "singular-shift-check-3",
+            "title": "Find two roots",
+            "prompt": "<p>Find every eigenvalue of \\(\\left(\\begin{matrix}-11 & 12\\\\-6 & 7\\end{matrix}\\right)\\).</p>",
+            "fields": [
+              {
+                "type": "set",
+                "key": "spectrum",
+                "label": "Set of distinct eigenvalues",
+                "variables": [
+                  "lambda"
+                ],
+                "expected": "{-5,1}"
+              }
+            ],
+            "hint": "<p>Subtract the unknown eigenvalue from the main diagonal before evaluating the determinant.</p>",
+            "solution": "<p>An eigenvalue makes \\(A-\\lambda I\\) singular. The determinant equation is \\(\\lambda^{2} + 4 \\lambda - 5=0\\).</p><p>Factor this polynomial as \\(\\left(\\lambda - 1\\right) \\left(\\lambda + 5\\right)=0\\). Its real roots give the full set \\(\\left\\{-5,1\\right\\}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "solve-nullspace",
+        "title": "How do I find a non-zero eigenvector once I know the value?",
+        "label": "Solve an eigenspace",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Insert one eigenvalue into \\((A-\\lambda I)\\boldsymbol v=\\boldsymbol0\\). The independent rows determine ratios, and a free component sets the scale.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(\\lambda\\) is a distinct root of the characteristic polynomial, all eigenvectors for it are non-zero scalar multiples of one vector. One non-zero coordinate can be set to one provided you choose one that is actually free or nonzero.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If the row equations force one coordinate to be zero, it cannot be the coordinate you choose as one.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>After back-substitution, verify the image of the actual vector claimed.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "solve-nullspace-check-4",
+            "title": "Normalise eigenvector scale",
+            "prompt": "<p>For \\(A=\\left(\\begin{matrix}8 & -6\\\\12 & -10\\end{matrix}\\right)\\), find an eigenvector for \\(\\lambda=2\\) whose first component is 1.</p>",
+            "fields": [
+              {
+                "type": "pairs",
+                "key": "eigenvector",
+                "label": "Normalised eigenvector",
+                "dimension": 2,
+                "expected": "(1,1)"
+              }
+            ],
+            "hint": "<p>Use the known eigenvalue before solving for the unknown entries.</p>",
+            "solution": "<p>Set up the homogeneous system \\(\\left(\\begin{matrix}6 & -6\\\\12 & -12\\end{matrix}\\right)\\mathbf v=\\mathbf0\\). A free coordinate can be chosen because this coefficient matrix is singular.</p><p>Set the first component equal to one and back-substitute. This gives \\(\\left(\\begin{matrix}1\\\\1\\end{matrix}\\right)\\).</p><p>Multiplication gives \\(\\left(\\begin{matrix}2\\\\2\\end{matrix}\\right)\\), exactly \\(2\\) times the chosen vector.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "solve-nullspace-check-5",
+            "title": "Use the selected eigenvalue",
+            "prompt": "<p>For \\(A=\\left(\\begin{matrix}6 & 0\\\\-16 & -2\\end{matrix}\\right)\\), find an eigenvector for \\(\\lambda=6\\) whose first component is 1.</p>",
+            "fields": [
+              {
+                "type": "pairs",
+                "key": "eigenvector",
+                "label": "Normalised eigenvector",
+                "dimension": 2,
+                "expected": "(1,-2)"
+              }
+            ],
+            "hint": "<p>Use the known eigenvalue before solving for the unknown entries.</p>",
+            "solution": "<p>Set up the homogeneous system \\(\\left(\\begin{matrix}0 & 0\\\\-16 & -8\\end{matrix}\\right)\\mathbf v=\\mathbf0\\). A free coordinate can be chosen because this coefficient matrix is singular.</p><p>Set the first component equal to one and back-substitute. This gives \\(\\left(\\begin{matrix}1\\\\-2\\end{matrix}\\right)\\).</p><p>Multiplication gives \\(\\left(\\begin{matrix}6\\\\-12\\end{matrix}\\right)\\), exactly \\(6\\) times the chosen vector.</p>"
+          }
+        ]
+      },
+      {
+        "id": "three-d",
+        "title": "What changes for a three-by-three matrix?",
+        "label": "Work in three dimensions",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>The definition does not change. The characteristic equation has degree three. A zero pattern can simplify finding a factor, for example a triangular block or a sparse row.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>After finding all three real distinct eigenvalues, solve one homogeneous system per value. Two independent equations normally fix two components in terms of the third.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Matching a vector to a different eigenvalue changes the action even if the two columns are both correct individually.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Arrange your final output into matched pairs of a value and a non-zero vector.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "three-d-check-6",
+            "title": "Find three triangular roots",
+            "prompt": "<p>Find every eigenvalue of \\(\\left(\\begin{matrix}1 & 2 & -1\\\\0 & 5 & 4\\\\0 & 0 & -6\\end{matrix}\\right)\\).</p>",
+            "fields": [
+              {
+                "type": "set",
+                "key": "values",
+                "label": "All eigenvalues",
+                "variables": [
+                  "lambda"
+                ],
+                "expected": "{-6,1,5}"
+              }
+            ],
+            "hint": "<p>For a triangular matrix use the product of the diagonal terms.</p>",
+            "solution": "<p>The matrix \\(A-\\lambda I\\) is triangular since only its diagonal has changed.</p><p>Its determinant is the product of the diagonal terms. It vanishes when \\(1\\), \\(5\\) or \\(-6\\) is subtracted.</p>"
+          }
+        ]
+      },
+      {
+        "id": "trace-det",
+        "title": "How can I check the complete spectrum quickly?",
+        "label": "Trace and determinant checks",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>The coefficients of the characteristic polynomial encode properties of the matrix. They are useful for spotting a missing eigenvalue or a sign error.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The sum of the three or two eigenvalues equals \\(\\operatorname{tr}(A)\\) and their product equals \\(\\det A\\). Check these after factoring.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Equal trace alone does not verify a set of eigenvalues. Use the determinant or substitute into the original characteristic equation as well.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>If one eigenvalue is zero, its product with the others is zero. Do not divide by it to recover a missing value.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "trace-det-check-7",
+            "title": "Audit a complete real spectrum",
+            "prompt": "<p>Find every eigenvalue of \\(\\left(\\begin{matrix}-3 & 5 & -10\\\\0 & 2 & 8\\\\0 & 0 & 6\\end{matrix}\\right)\\).</p>",
+            "fields": [
+              {
+                "type": "set",
+                "key": "spectrum",
+                "label": "Set of distinct eigenvalues",
+                "variables": [
+                  "lambda"
+                ],
+                "expected": "{-3,2,6}"
+              }
+            ],
+            "hint": "<p>Subtract the unknown eigenvalue from the main diagonal before evaluating the determinant.</p>",
+            "solution": "<p>An eigenvalue makes \\(A-\\lambda I\\) singular. The determinant equation is \\(\\lambda^{3} - 5 \\lambda^{2} - 12 \\lambda + 36=0\\).</p><p>Factor this polynomial as \\(\\left(\\lambda - 6\\right) \\left(\\lambda - 2\\right) \\left(\\lambda + 3\\right)=0\\). Its real roots give the full set \\(\\left\\{-3,2,6\\right\\}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Read the common factor",
+        "question": "<p>The vector \\(\\left(\\begin{matrix}0\\\\1\\end{matrix}\\right)\\) is an eigenvector of \\(\\left(\\begin{matrix}-2 & 0\\\\14 & 5\\end{matrix}\\right)\\). Find its eigenvalue.</p>",
+        "solution": [
+          "<p>Computation gives \\(\\left(\\begin{matrix}0\\\\5\\end{matrix}\\right)\\). Find the common factor relating that product to the original vector.</p>",
+          "<p>Using the second nonzero coordinate gives \\(\\lambda=5\\). The same scalar works in every row.</p>"
+        ]
+      },
+      {
+        "title": "The image can be zero",
+        "question": "<p>The vector \\(\\left(\\begin{matrix}2\\\\1\\end{matrix}\\right)\\) is an eigenvector of \\(\\left(\\begin{matrix}-3 & 6\\\\-3 & 6\\end{matrix}\\right)\\). Find its eigenvalue.</p>",
+        "solution": [
+          "<p>Computation gives \\(\\left(\\begin{matrix}0\\\\0\\end{matrix}\\right)\\). Find the common factor relating that product to the original vector.</p>",
+          "<p>Using the first nonzero coordinate gives \\(\\lambda=0\\). The same scalar works in every row.</p>"
+        ]
+      },
+      {
+        "title": "A full two-dimensional characteristic equation",
+        "question": "<p>Find every eigenvalue of \\(\\left(\\begin{matrix}5 & -4\\\\8 & -7\\end{matrix}\\right)\\).</p>",
+        "solution": [
+          "<p>An eigenvalue makes \\(A-\\lambda I\\) singular. The determinant equation is \\(\\lambda^{2} + 2 \\lambda - 3=0\\).</p>",
+          "<p>Factor this polynomial as \\(\\left(\\lambda - 1\\right) \\left(\\lambda + 3\\right)=0\\). Its real roots give the full set \\(\\left\\{-3,1\\right\\}\\).</p>"
+        ]
+      },
+      {
+        "title": "Normalise an allowed component",
+        "question": "<p>For \\(A=\\left(\\begin{matrix}-6 & 5\\\\-10 & 9\\end{matrix}\\right)\\), find an eigenvector for \\(\\lambda=-1\\) whose first component is 1.</p>",
+        "solution": [
+          "<p>Set up the homogeneous system \\(\\left(\\begin{matrix}-5 & 5\\\\-10 & 10\\end{matrix}\\right)\\mathbf v=\\mathbf0\\). A free coordinate can be chosen because this coefficient matrix is singular.</p>",
+          "<p>Set the first component equal to one and back-substitute. This gives \\(\\left(\\begin{matrix}1\\\\1\\end{matrix}\\right)\\).</p>",
+          "<p>Multiplication gives \\(\\left(\\begin{matrix}-1\\\\-1\\end{matrix}\\right)\\), exactly \\(-1\\) times the chosen vector.</p>"
+        ]
+      },
+      {
+        "title": "A zero coordinate is allowed",
+        "question": "<p>For \\(A=\\left(\\begin{matrix}2 & 10\\\\0 & 7\\end{matrix}\\right)\\), find an eigenvector for \\(\\lambda=2\\) whose first component is 1.</p>",
+        "solution": [
+          "<p>Set up the homogeneous system \\(\\left(\\begin{matrix}0 & 10\\\\0 & 5\\end{matrix}\\right)\\mathbf v=\\mathbf0\\). A free coordinate can be chosen because this coefficient matrix is singular.</p>",
+          "<p>Set the first component equal to one and back-substitute. This gives \\(\\left(\\begin{matrix}1\\\\0\\end{matrix}\\right)\\).</p>",
+          "<p>Multiplication gives \\(\\left(\\begin{matrix}2\\\\0\\end{matrix}\\right)\\), exactly \\(2\\) times the chosen vector.</p>"
+        ]
+      },
+      {
+        "title": "Use a triangular cubic",
+        "question": "<p>Find every eigenvalue of \\(\\left(\\begin{matrix}3 & 2 & -1\\\\0 & -2 & 4\\\\0 & 0 & 5\\end{matrix}\\right)\\).</p>",
+        "solution": [
+          "<p>The matrix \\(A-\\lambda I\\) is triangular since only its diagonal has changed.</p>",
+          "<p>Its determinant is the product of the diagonal terms. It vanishes when \\(3\\), \\(-2\\) or \\(5\\) is subtracted.</p>"
+        ]
+      },
+      {
+        "title": "Check a three-value spectrum",
+        "question": "<p>Find every eigenvalue of \\(\\left(\\begin{matrix}-1 & 0 & 5\\\\-2 & 1 & 2\\\\0 & 0 & 4\\end{matrix}\\right)\\).</p>",
+        "solution": [
+          "<p>An eigenvalue makes \\(A-\\lambda I\\) singular. The determinant equation is \\(\\lambda^{3} - 4 \\lambda^{2} - \\lambda + 4=0\\).</p>",
+          "<p>Factor this polynomial as \\(\\left(\\lambda - 4\\right) \\left(\\lambda - 1\\right) \\left(\\lambda + 1\\right)=0\\). Its real roots give the full set \\(\\left\\{-1,1,4\\right\\}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-eigen-practice-1",
+        "title": "Recover a three-component eigenvector",
+        "prompt": "<p>For \\(A=\\left(\\begin{matrix}-4 & 5 & 1\\\\0 & 1 & 1\\\\0 & 0 & 2\\end{matrix}\\right)\\), find an eigenvector for \\(\\lambda=-4\\) whose first component is 1.</p>",
+        "fields": [
+          {
+            "type": "pairs",
+            "key": "eigenvector",
+            "label": "Normalised eigenvector",
+            "dimension": 3,
+            "expected": "(1,0,0)"
+          }
+        ],
+        "hint": "<p>Use the known eigenvalue before solving for the unknown entries.</p>",
+        "solution": "<p>Set up the homogeneous system \\(\\left(\\begin{matrix}0 & 5 & 1\\\\0 & 5 & 1\\\\0 & 0 & 6\\end{matrix}\\right)\\mathbf v=\\mathbf0\\). A free coordinate can be chosen because this coefficient matrix is singular.</p><p>Set the first component equal to one and back-substitute. This gives \\(\\left(\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right)\\).</p><p>Multiplication gives \\(\\left(\\begin{matrix}-4\\\\0\\\\0\\end{matrix}\\right)\\), exactly \\(-4\\) times the chosen vector.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-eigen-practice-2",
+        "title": "Recognise a zero eigenvalue",
+        "prompt": "<p>Find every eigenvalue of \\(\\left(\\begin{matrix}-1 & 2 & -1\\\\0 & 0 & 4\\\\0 & 0 & 6\\end{matrix}\\right)\\).</p>",
+        "fields": [
+          {
+            "type": "set",
+            "key": "values",
+            "label": "All eigenvalues",
+            "variables": [
+              "lambda"
+            ],
+            "expected": "{-1,0,6}"
+          }
+        ],
+        "hint": "<p>For a triangular matrix use the product of the diagonal terms.</p>",
+        "solution": "<p>The matrix \\(A-\\lambda I\\) is triangular since only its diagonal has changed.</p><p>Its determinant is the product of the diagonal terms. It vanishes when \\(-1\\), \\(0\\) or \\(6\\) is subtracted.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-eigen-practice-3",
+        "title": "Compare the image of a full vector",
+        "prompt": "<p>The vector \\(\\left(\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right)\\) is an eigenvector of \\(\\left(\\begin{matrix}2 & 1 & 6\\\\0 & 3 & 6\\\\0 & 0 & 9\\end{matrix}\\right)\\). Find its eigenvalue.</p>",
+        "fields": [
+          {
+            "key": "lambda",
+            "label": "Eigenvalue",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>Compare every component. Do not divide by a zero component.</p>",
+        "solution": "<p>Computation gives \\(\\left(\\begin{matrix}2\\\\0\\\\0\\end{matrix}\\right)\\). Find the common factor relating that product to the original vector.</p><p>Using the first nonzero coordinate gives \\(\\lambda=2\\). The same scalar works in every row.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-eigen-practice-4",
+        "title": "Solve a non-triangular characteristic equation",
+        "prompt": "<p>Find every eigenvalue of \\(\\left(\\begin{matrix}-9 & 5\\\\-10 & 6\\end{matrix}\\right)\\).</p>",
+        "fields": [
+          {
+            "type": "set",
+            "key": "spectrum",
+            "label": "Set of distinct eigenvalues",
+            "variables": [
+              "lambda"
+            ],
+            "expected": "{-4,1}"
+          }
+        ],
+        "hint": "<p>Subtract the unknown eigenvalue from the main diagonal before evaluating the determinant.</p>",
+        "solution": "<p>An eigenvalue makes \\(A-\\lambda I\\) singular. The determinant equation is \\(\\lambda^{2} + 3 \\lambda - 4=0\\).</p><p>Factor this polynomial as \\(\\left(\\lambda - 1\\right) \\left(\\lambda + 4\\right)=0\\). Its real roots give the full set \\(\\left\\{-4,1\\right\\}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-eigen-practice-5",
+        "title": "All three eigenvalues in any order",
+        "prompt": "<p>Find every eigenvalue of \\(\\left(\\begin{matrix}14 & -16 & 11\\\\11 & -13 & 11\\\\6 & -6 & 9\\end{matrix}\\right)\\).</p>",
+        "fields": [
+          {
+            "type": "set",
+            "key": "spectrum",
+            "label": "Set of distinct eigenvalues",
+            "variables": [
+              "lambda"
+            ],
+            "expected": "{-2,3,9}"
+          }
+        ],
+        "hint": "<p>Subtract the unknown eigenvalue from the main diagonal before evaluating the determinant.</p>",
+        "solution": "<p>An eigenvalue makes \\(A-\\lambda I\\) singular. The determinant equation is \\(\\lambda^{3} - 10 \\lambda^{2} + 3 \\lambda + 54=0\\).</p><p>Factor this polynomial as \\(\\left(\\lambda - 9\\right) \\left(\\lambda - 3\\right) \\left(\\lambda + 2\\right)=0\\). Its real roots give the full set \\(\\left\\{-2,3,9\\right\\}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Eigenvector",
+        "definition": "<p>A non-zero vector \\(\\boldsymbol v\\) with \\(A\\boldsymbol v=\\lambda\\boldsymbol v\\).</p>"
+      },
+      {
+        "term": "Eigenvalue",
+        "definition": "<p>The scalar multiplier associated with an eigenvector.</p>"
+      },
+      {
+        "term": "Characteristic equation",
+        "definition": "<p>\\(\\det(\\lambda I-A)=0\\).</p>"
+      },
+      {
+        "term": "Eigenspace",
+        "definition": "<p>The set of vectors solving the homogeneous system for one eigenvalue, including zero.</p>"
+      },
+      {
+        "term": "Trace",
+        "definition": "<p>The sum of the diagonal entries.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>Use \\(\\det(\\lambda I-A)=0\\) for the values and \\((A-\\lambda I)\\boldsymbol v=\\boldsymbol0\\) for their vectors. Verify by direct multiplication.</p>",
+      "checks": "<ul><li>Did you find every distinct real eigenvalue?</li><li>What happens when an eigenvalue is zero?</li><li>Does each chosen scale produce a non-zero vector?</li></ul>",
+      "examTip": "<p>Keep the vector paired with its eigenvalue and show where its free parameter comes from.</p>"
+    },
+    "related": [
+      {
+        "title": "Eigenvalue algebra",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_algebra"
+      }
+    ]
+  },
+  "fp2_matrices2_algebra": {
+    "updatedOn": "2026-11-21",
+    "description": "Use eigenvectors to reason about the eigenvalues of matrix powers, inverses, shifts and polynomial expressions.",
+    "sections": [
+      {
+        "id": "action",
+        "title": "Why does taking a power raise the eigenvalue to the same power?",
+        "label": "Repeated action",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Starting on an eigenvector makes every application of the matrix a multiplication by the same scalar. The direction stays fixed even when that scalar is negative.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(A^2\\boldsymbol v=A(\\lambda\\boldsymbol v)=\\lambda^2\\boldsymbol v\\) and in general \\(A^n\\boldsymbol v=\\lambda^n\\boldsymbol v\\) for positive integer \\(n\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If \\(\\lambda<0\\), an odd power keeps the negative sign. A sign change is part of the action on the vector.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Show at least one application of the definition before using the general rule.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "action-check-1",
+            "title": "Power of a signed eigenvalue",
+            "prompt": "<p>Suppose \\(A\\mathbf v=-3\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\). Find the eigenvalue of \\(A^{3}\\) corresponding to \\(\\mathbf v\\).</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Eigenvalue of the resulting matrix",
+                "type": "number",
+                "expected": "-27"
+              }
+            ],
+            "hint": "<p>Keep the same non-zero eigenvector while changing the matrix.</p>",
+            "solution": "<p>Apply \\(A\\) one step at a time. Every application multiplies this same direction by \\(\\lambda\\).</p><p>\\(A^n\\mathbf v=A^{n-1}(\\lambda\\mathbf v)=\\lambda^n\\mathbf v\\).</p><p>Substituting \\(\\lambda=-3\\) gives the associated eigenvalue \\(-27\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "action-check-2",
+            "title": "Power on a 3D eigendirection",
+            "prompt": "<p>Suppose \\(A\\mathbf v=-2\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\). Find the eigenvalue of \\(A^{4}\\) corresponding to \\(\\mathbf v\\).</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Eigenvalue of the resulting matrix",
+                "type": "number",
+                "expected": "16"
+              }
+            ],
+            "hint": "<p>Keep the same non-zero eigenvector while changing the matrix.</p>",
+            "solution": "<p>Apply \\(A\\) one step at a time. Every application multiplies this same direction by \\(\\lambda\\).</p><p>\\(A^n\\mathbf v=A^{n-1}(\\lambda\\mathbf v)=\\lambda^n\\mathbf v\\).</p><p>Substituting \\(\\lambda=-2\\) gives the associated eigenvalue \\(16\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "inverse",
+        "title": "When is the reciprocal eigenvalue rule allowed?",
+        "label": "Inverse action",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>An inverse matrix reverses the action of the original matrix. On the eigenvector line it must reverse multiplication by a nonzero number.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(A\\) is invertible, then \\(A^{-1}\\boldsymbol v=\\lambda^{-1}\\boldsymbol v\\). Justify \\(\\lambda\\ne0\\) from invertibility first.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A non-zero eigenvalue attached to the stated vector alone does not show the entire matrix is invertible. Other eigenvalues might be zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The same vector remains an eigenvector of every integer power whenever \\(A\\) is invertible.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "inverse-check-3",
+            "title": "Use the exact reciprocal",
+            "prompt": "<p>Suppose \\(A\\mathbf v=5\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\) and \\(A\\) is invertible. Find the eigenvalue of \\(A^{-1}\\) corresponding to \\(\\mathbf v\\).</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Eigenvalue of the resulting matrix",
+                "type": "number",
+                "expected": "1/5"
+              }
+            ],
+            "hint": "<p>Keep the same non-zero eigenvector while changing the matrix.</p>",
+            "solution": "<p>Apply \\(A^{-1}\\) on the left of both sides of the original relation. The scalar still commutes with the matrix.</p><p>\\(\\mathbf v=\\lambda A^{-1}\\mathbf v\\); as \\(\\lambda\\ne0\\), divide by \\(\\lambda\\).</p><p>Substituting \\(\\lambda=5\\) gives the associated eigenvalue \\(\\frac{1}{5}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "translate",
+        "title": "How does shifting a matrix change its eigenvalues?",
+        "label": "Identity shifts",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>The identity sends each vector to itself. Adding a multiple of the identity therefore adds its scalar multiplier to the action on every eigenvector.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\((aA+bI)\\boldsymbol v=(a\\lambda+b)\\boldsymbol v\\). In particular \\(A-\\mu I\\) is singular when \\(\\mu\\) equals an eigenvalue of \\(A\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Adding \\(bI\\) changes only the diagonal entries. Adding \\(b\\) to every entry is a different operation.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>When matching the vector use the same orientation and components.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "translate-check-4",
+            "title": "Shift a negative eigenvalue",
+            "prompt": "<p>Let \\(A\\boldsymbol v=-5\\boldsymbol v\\) for a non-zero vector. Find its eigenvalue for \\(2A+6I\\).</p>",
+            "fields": [
+              {
+                "key": "multiplier",
+                "label": "New eigenvalue",
+                "type": "number",
+                "expected": "-4"
+              }
+            ],
+            "hint": "<p>Use that the identity leaves each vector unchanged.</p>",
+            "solution": "<p>Multiply the original scalar by \\(2\\). The identity term adds \\(6\\) times the original vector.</p><p>The combined multiplier is \\(2\\times(-5)+6=-4\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "translate-check-5",
+            "title": "Find a zero after shifting",
+            "prompt": "<p>Let \\(A\\boldsymbol v=3\\boldsymbol v\\) for a non-zero vector. Find its eigenvalue for \\(3A-9I\\).</p>",
+            "fields": [
+              {
+                "key": "multiplier",
+                "label": "New eigenvalue",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Use that the identity leaves each vector unchanged.</p>",
+            "solution": "<p>Multiply the original scalar by \\(3\\). The identity term adds \\(-9\\) times the original vector.</p><p>The combined multiplier is \\(3\\times(3)-9=0\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "polynomial",
+        "title": "Can I evaluate a matrix expression by plugging in one eigenvalue?",
+        "label": "Polynomial action",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>If a problem asks what an expression in \\(A\\) does to one of its eigenvectors, each term acts by its own scalar on the same vector.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a polynomial \\(p\\), \\(p(A)\\boldsymbol v=p(\\lambda)\\boldsymbol v\\). For example, \\((A^2-cA+dI)\\boldsymbol v=(\\lambda^2-c\\lambda+d)\\boldsymbol v\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>\\(p(A)\\) is still a matrix. Knowing its eigenvalue on one direction does not make the entire matrix equal to a scalar.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the scalar constant multiplies \\(I\\) when it is part of a matrix expression.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "polynomial-check-6",
+            "title": "Evaluate the scalar polynomial",
+            "prompt": "<p>Suppose \\(A\\mathbf v=-3\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\). Find the eigenvalue of \\(A^2-1A+2I\\) corresponding to \\(\\mathbf v\\).</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Eigenvalue of the resulting matrix",
+                "type": "number",
+                "expected": "14"
+              }
+            ],
+            "hint": "<p>Keep the same non-zero eigenvector while changing the matrix.</p>",
+            "solution": "<p>Each matrix term acts on the same vector, so the scalar multipliers can be added.</p><p>Use \\(A^2\\mathbf v=\\lambda^2\\mathbf v\\) and \\(I\\mathbf v=\\mathbf v\\).</p><p>Substituting \\(\\lambda=-3\\) gives the associated eigenvalue \\(14\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "shared",
+        "title": "When can eigenvalue multipliers from two different matrices be combined?",
+        "label": "A shared vector",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>To multiply or add two matrices through their eigenvalues, the same vector must satisfy both eigenvector equations in the problem.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(A\\boldsymbol v=\\lambda\\boldsymbol v\\) and \\(B\\boldsymbol v=\\mu\\boldsymbol v\\), then \\((A+B)\\boldsymbol v=(\\lambda+\\mu)\\boldsymbol v\\) and \\(AB\\boldsymbol v=\\lambda\\mu\\boldsymbol v\\). No general equality of \\(AB\\) and \\(BA\\) follows.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Choosing an eigenvalue from each matrix is not enough if their eigenvectors are different.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Apply the rightmost factor first and show that each step leaves the same direction.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "shared-check-7",
+            "title": "Add and multiply the two actions",
+            "prompt": "<p>The same non-zero vector \\(\\boldsymbol v\\) has eigenvalue \\(-3\\) for \\(A\\) and \\(7\\) for \\(B\\). Find its eigenvalue for \\(AB\\) and for \\(A+B\\).</p>",
+            "fields": [
+              {
+                "key": "product",
+                "label": "Eigenvalue of AB",
+                "type": "number",
+                "expected": "-21"
+              },
+              {
+                "key": "sum",
+                "label": "Eigenvalue of A + B",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>Check that both matrices act on the same vector.</p>",
+            "solution": "<p>The rightmost factor \\(B\\) multiplies the vector by \\(7\\). The next factor scales the result by \\(-3\\).</p><p>In the sum both multipliers are applied to the original vector. The combined values are \\(-21\\) and \\(4\\), respectively.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Keep the sign of an odd power",
+        "question": "<p>Suppose \\(A\\mathbf v=-2\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\). Find the eigenvalue of \\(A^{3}\\) corresponding to \\(\\mathbf v\\).</p>",
+        "solution": [
+          "<p>Apply \\(A\\) one step at a time. Every application multiplies this same direction by \\(\\lambda\\).</p>",
+          "<p>\\(A^n\\mathbf v=A^{n-1}(\\lambda\\mathbf v)=\\lambda^n\\mathbf v\\).</p>",
+          "<p>Substituting \\(\\lambda=-2\\) gives the associated eigenvalue \\(-8\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a positive even power",
+        "question": "<p>Suppose \\(A\\mathbf v=-3\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\). Find the eigenvalue of \\(A^{4}\\) corresponding to \\(\\mathbf v\\).</p>",
+        "solution": [
+          "<p>Apply \\(A\\) one step at a time. Every application multiplies this same direction by \\(\\lambda\\).</p>",
+          "<p>\\(A^n\\mathbf v=A^{n-1}(\\lambda\\mathbf v)=\\lambda^n\\mathbf v\\).</p>",
+          "<p>Substituting \\(\\lambda=-3\\) gives the associated eigenvalue \\(81\\).</p>"
+        ]
+      },
+      {
+        "title": "Reverse a negative action",
+        "question": "<p>Suppose \\(A\\mathbf v=-3\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\) and \\(A\\) is invertible. Find the eigenvalue of \\(A^{-1}\\) corresponding to \\(\\mathbf v\\).</p>",
+        "solution": [
+          "<p>Apply \\(A^{-1}\\) on the left of both sides of the original relation. The scalar still commutes with the matrix.</p>",
+          "<p>\\(\\mathbf v=\\lambda A^{-1}\\mathbf v\\); as \\(\\lambda\\ne0\\), divide by \\(\\lambda\\).</p>",
+          "<p>Substituting \\(\\lambda=-3\\) gives the associated eigenvalue \\(- \\frac{1}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Shift the identity multiplier",
+        "question": "<p>Let \\(A\\boldsymbol v=-3\\boldsymbol v\\) for a non-zero vector. Find its eigenvalue for \\(2A+5I\\).</p>",
+        "solution": [
+          "<p>Multiply the original scalar by \\(2\\). The identity term adds \\(5\\) times the original vector.</p>",
+          "<p>The combined multiplier is \\(2\\times(-3)+5=-1\\).</p>"
+        ]
+      },
+      {
+        "title": "A new eigenvalue can be zero",
+        "question": "<p>Let \\(A\\boldsymbol v=4\\boldsymbol v\\) for a non-zero vector. Find its eigenvalue for \\(2A-8I\\).</p>",
+        "solution": [
+          "<p>Multiply the original scalar by \\(2\\). The identity term adds \\(-8\\) times the original vector.</p>",
+          "<p>The combined multiplier is \\(2\\times(4)-8=0\\).</p>"
+        ]
+      },
+      {
+        "title": "Combine three matrix terms",
+        "question": "<p>Suppose \\(A\\mathbf v=-3\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\). Find the eigenvalue of \\(A^2+0A+2I\\) corresponding to \\(\\mathbf v\\).</p>",
+        "solution": [
+          "<p>Each matrix term acts on the same vector, so the scalar multipliers can be added.</p>",
+          "<p>Use \\(A^2\\mathbf v=\\lambda^2\\mathbf v\\) and \\(I\\mathbf v=\\mathbf v\\).</p>",
+          "<p>Substituting \\(\\lambda=-3\\) gives the associated eigenvalue \\(11\\).</p>"
+        ]
+      },
+      {
+        "title": "Apply two matrices to one direction",
+        "question": "<p>The same non-zero vector \\(\\boldsymbol v\\) has eigenvalue \\(4\\) for \\(A\\) and \\(-5\\) for \\(B\\). Find its eigenvalue for \\(AB\\) and for \\(A+B\\).</p>",
+        "solution": [
+          "<p>The rightmost factor \\(B\\) multiplies the vector by \\(-5\\). The next factor scales the result by \\(4\\).</p>",
+          "<p>In the sum both multipliers are applied to the original vector. The combined values are \\(-20\\) and \\(-1\\), respectively.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-algebra-practice-1",
+        "title": "Keep the inverse sign",
+        "prompt": "<p>Suppose \\(A\\mathbf v=-6\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\) and \\(A\\) is invertible. Find the eigenvalue of \\(A^{-1}\\) corresponding to \\(\\mathbf v\\).</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Eigenvalue of the resulting matrix",
+            "type": "number",
+            "expected": "-1/6"
+          }
+        ],
+        "hint": "<p>Keep the same non-zero eigenvector while changing the matrix.</p>",
+        "solution": "<p>Apply \\(A^{-1}\\) on the left of both sides of the original relation. The scalar still commutes with the matrix.</p><p>\\(\\mathbf v=\\lambda A^{-1}\\mathbf v\\); as \\(\\lambda\\ne0\\), divide by \\(\\lambda\\).</p><p>Substituting \\(\\lambda=-6\\) gives the associated eigenvalue \\(- \\frac{1}{6}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-algebra-practice-2",
+        "title": "One matrix kills this vector",
+        "prompt": "<p>The same non-zero vector \\(\\boldsymbol v\\) has eigenvalue \\(2\\) for \\(A\\) and \\(0\\) for \\(B\\). Find its eigenvalue for \\(AB\\) and for \\(A+B\\).</p>",
+        "fields": [
+          {
+            "key": "product",
+            "label": "Eigenvalue of AB",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "sum",
+            "label": "Eigenvalue of A + B",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>Check that both matrices act on the same vector.</p>",
+        "solution": "<p>The rightmost factor \\(B\\) multiplies the vector by \\(0\\). The next factor scales the result by \\(2\\).</p><p>In the sum both multipliers are applied to the original vector. The combined values are \\(0\\) and \\(2\\), respectively.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-algebra-practice-3",
+        "title": "Reverse the original multiplier",
+        "prompt": "<p>Let \\(A\\boldsymbol v=3\\boldsymbol v\\) for a non-zero vector. Find its eigenvalue for \\(-4A+7I\\).</p>",
+        "fields": [
+          {
+            "key": "multiplier",
+            "label": "New eigenvalue",
+            "type": "number",
+            "expected": "-5"
+          }
+        ],
+        "hint": "<p>Use that the identity leaves each vector unchanged.</p>",
+        "solution": "<p>Multiply the original scalar by \\(-4\\). The identity term adds \\(7\\) times the original vector.</p><p>The combined multiplier is \\(-4\\times(3)+7=-5\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-algebra-practice-4",
+        "title": "Check the identity term",
+        "prompt": "<p>Suppose \\(A\\mathbf v=-4\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\). Find the eigenvalue of \\(A^2+1A+2I\\) corresponding to \\(\\mathbf v\\).</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Eigenvalue of the resulting matrix",
+            "type": "number",
+            "expected": "14"
+          }
+        ],
+        "hint": "<p>Keep the same non-zero eigenvector while changing the matrix.</p>",
+        "solution": "<p>Each matrix term acts on the same vector, so the scalar multipliers can be added.</p><p>Use \\(A^2\\mathbf v=\\lambda^2\\mathbf v\\) and \\(I\\mathbf v=\\mathbf v\\).</p><p>Substituting \\(\\lambda=-4\\) gives the associated eigenvalue \\(14\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-algebra-practice-5",
+        "title": "Raise to the fourth power",
+        "prompt": "<p>Suppose \\(A\\mathbf v=-3\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\). Find the eigenvalue of \\(A^{4}\\) corresponding to \\(\\mathbf v\\).</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Eigenvalue of the resulting matrix",
+            "type": "number",
+            "expected": "81"
+          }
+        ],
+        "hint": "<p>Keep the same non-zero eigenvector while changing the matrix.</p>",
+        "solution": "<p>Apply \\(A\\) one step at a time. Every application multiplies this same direction by \\(\\lambda\\).</p><p>\\(A^n\\mathbf v=A^{n-1}(\\lambda\\mathbf v)=\\lambda^n\\mathbf v\\).</p><p>Substituting \\(\\lambda=-3\\) gives the associated eigenvalue \\(81\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Invariant direction",
+        "definition": "<p>A line through the origin whose direction is preserved under the corresponding matrix action.</p>"
+      },
+      {
+        "term": "Inverse action",
+        "definition": "<p>The operation which undoes an invertible matrix.</p>"
+      },
+      {
+        "term": "Polynomial in a matrix",
+        "definition": "<p>A sum of scalar multiples of \\(I,A,A^2,\\dots\\).</p>"
+      },
+      {
+        "term": "Shared eigenvector",
+        "definition": "<p>A non-zero vector which is an eigenvector for each specified matrix.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>If \\(A\\boldsymbol v=\\lambda\\boldsymbol v\\), then \\(p(A)\\boldsymbol v=p(\\lambda)\\boldsymbol v\\). Invertible \\(A\\) gives reciprocal eigenvalue \\(\\frac1\\lambda\\) for \\(A^{-1}\\). Only combine actions of two different matrices along a verified shared vector.</p>",
+      "checks": "<ul><li>What is the action of \\(A^3\\) if \\(\\lambda=-2\\)?</li><li>Why does \\(A^{-1}\\) require an invertibility condition?</li><li>What does \\(A+\\mu I\\) do on the same eigenvector?</li></ul>",
+      "examTip": "<p>Use the definition on the actual vector. Avoid assuming matrices with a common eigenvector commute.</p>"
+    },
+    "related": [
+      {
+        "title": "Eigenvalues and eigenvectors",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_eigen"
+      },
+      {
+        "title": "Characteristic equations and Cayley–Hamilton",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_cayley"
+      }
+    ]
+  },
+  "fp2_matrices2_cayley": {
+    "updatedOn": "2026-11-21",
+    "description": "Use the characteristic polynomial and Cayley–Hamilton identity to reduce matrix powers and derive an inverse.",
+    "sections": [
+      {
+        "id": "monic",
+        "title": "How are the characteristic coefficients organised?",
+        "label": "Write the monic polynomial",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Use a consistent convention before converting characteristic data into a matrix equation. For a two-by-two matrix the trace and determinant give the expansion immediately.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(p(\\lambda)=\\lambda^2-\\operatorname{tr}(A)\\lambda+\\det A\\) in two dimensions. The three-dimensional polynomial is monic cubic, with constant \\(-\\det A\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Coupling a formula written for \\(\\det(\\lambda I-A)\\) with the coefficients of \\(\\det(A-\\lambda I)\\) gives the wrong signs in odd dimension.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep the matrix dimension visible when applying a determinant sign rule.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "monic-check-1",
+            "title": "Match the trace coefficient",
+            "prompt": "<p>The characteristic polynomial of \\(\\left(\\begin{matrix}-3 & 0\\\\16 & 5\\end{matrix}\\right)\\) is \\(\\lambda^{2} + \\lambda c - 15\\). Find \\(c\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Missing coefficient c",
+                "type": "number",
+                "expected": "-2"
+              }
+            ],
+            "hint": "<p>Use a monic characteristic polynomial and compare the matching powers.</p>",
+            "solution": "<p>Compute the determinant \\(\\det(\\lambda I-A)\\) and expand.</p><p>It is \\(\\lambda^{2} - 2 \\lambda - 15\\). Match the coefficient of \\(\\lambda\\) to get \\(-2\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "monic-check-2",
+            "title": "Recover a cubic coefficient",
+            "prompt": "<p>The characteristic polynomial of \\(\\left(\\begin{matrix}-3 & 0 & 8\\\\-5 & 2 & 5\\\\0 & 0 & 5\\end{matrix}\\right)\\) is \\(\\lambda^{3} + \\lambda^{2} c - 11 \\lambda + 30\\). Find \\(c\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Missing coefficient c",
+                "type": "number",
+                "expected": "-4"
+              }
+            ],
+            "hint": "<p>Use a monic characteristic polynomial and compare the matching powers.</p>",
+            "solution": "<p>Compute the determinant \\(\\det(\\lambda I-A)\\) and expand.</p><p>It is \\(\\lambda^{3} - 4 \\lambda^{2} - 11 \\lambda + 30\\). Match the coefficient of \\(\\lambda^{2}\\) to get \\(-4\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "zero-identity",
+        "title": "Why does the polynomial vanish at the matrix?",
+        "label": "Cayley–Hamilton",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>For the distinct real eigenvalues here, an eigenbasis spans the entire space. The polynomial action sends each basis vector to zero, which is enough to determine the whole matrix.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(p\\) is the characteristic polynomial then \\(p(A)=0\\). A constant term of \\(p\\) becomes a multiple of \\(I\\) and the right-hand side is the zero matrix.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Replacing a constant by a matrix whose entries are all that number changes its action. Only multiply the identity.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write the matrix identity with \\(I\\) and \\(0\\) clearly identified.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "zero-identity-check-3",
+            "title": "Use the characteristic recurrence",
+            "prompt": "<p>For \\(A=\\left(\\begin{matrix}-2 & 0 & 5\\\\-3 & 1 & 3\\\\0 & 0 & 3\\end{matrix}\\right)\\), determine the entry in row 3, column 1 of \\(A^{6}\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Reduce the power using the characteristic equation before multiplying matrices.</p>",
+            "solution": "<p>The characteristic polynomial is \\(\\lambda^{3} - 2 \\lambda^{2} - 5 \\lambda + 6\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p><p>Dividing the scalar polynomial \\(\\lambda^{6}\\) by the characteristic polynomial leaves remainder \\(77 \\lambda^{2} + 56 \\lambda - 132\\). Thus \\(A^{6}=77 A^{2} + 56 A - 132 I\\), using the identity matrix for the constant term.</p><p>Evaluating this identity gives \\(\\left(\\begin{matrix}64 & 0 & 665\\\\63 & 1 & -63\\\\0 & 0 & 729\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+          }
+        ]
+      },
+      {
+        "id": "higher-remainders",
+        "title": "How do I reduce higher powers with the characteristic equation?",
+        "label": "Reduce a high power",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>An identity between powers lets you replace a high power by a combination of lower powers. Polynomial division avoids repeated large matrix products.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Divide the scalar polynomial \\(\\lambda^k\\) by \\(p(\\lambda)\\). If the remainder is \\(r\\), then \\(A^k=r(A)\\). All higher-order terms in the quotient multiply \\(p(A)=0\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The polynomial rule only makes the quotient contribution zero after substitution of the matrix. A numeric eigenvalue is not needed to compute the remainder.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write the scalar division or use the characteristic recurrence; then evaluate the lower powers.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "higher-remainders-check-4",
+            "title": "Reduce the power of a 2D matrix",
+            "prompt": "<p>For \\(A=\\left(\\begin{matrix}9 & -5\\\\10 & -6\\end{matrix}\\right)\\), determine the entry in row 2, column 1 of \\(A^{3}\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry",
+                "type": "number",
+                "expected": "130"
+              }
+            ],
+            "hint": "<p>Reduce the power using the characteristic equation before multiplying matrices.</p>",
+            "solution": "<p>The characteristic polynomial is \\(\\lambda^{2} - 3 \\lambda - 4\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p><p>Dividing the scalar polynomial \\(\\lambda^{3}\\) by the characteristic polynomial leaves remainder \\(13 \\lambda + 12\\). Thus \\(A^{3}=13 A + 12 I\\), using the identity matrix for the constant term.</p><p>Evaluating this identity gives \\(\\left(\\begin{matrix}129 & -65\\\\130 & -66\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "higher-remainders-check-5",
+            "title": "Reduce the power of a 3D matrix",
+            "prompt": "<p>For \\(A=\\left(\\begin{matrix}-1 & 0 & 0\\\\-6 & 2 & 0\\\\12 & -3 & 5\\end{matrix}\\right)\\), determine the entry in row 2, column 3 of \\(A^{5}\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Reduce the power using the characteristic equation before multiplying matrices.</p>",
+            "solution": "<p>The characteristic polynomial is \\(\\lambda^{3} - 6 \\lambda^{2} + 3 \\lambda + 10\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p><p>Dividing the scalar polynomial \\(\\lambda^{5}\\) by the characteristic polynomial leaves remainder \\(170 \\lambda^{2} - 159 \\lambda - 330\\). Thus \\(A^{5}=170 A^{2} - 159 A - 330 I\\), using the identity matrix for the constant term.</p><p>Evaluating this identity gives \\(\\left(\\begin{matrix}-1 & 0 & 0\\\\-66 & 32 & 0\\\\9312 & -3093 & 3125\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+          }
+        ]
+      },
+      {
+        "id": "inverse-from-p",
+        "title": "When does the identity also give the inverse?",
+        "label": "Recover the inverse",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A non-zero constant term means the characteristic polynomial does not have zero as a root. Then the matrix identity can be rearranged to find a formula for the inverse.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(A^2-sA+dI=0\\) with \\(d\\ne0\\), multiplication by \\(A^{-1}\\) gives \\(A-sI+dA^{-1}=0\\). Thus \\(A^{-1}=\\frac{sI-A}{d}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Multiplying by an inverse is invalid if the characteristic constant is zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check your expression by multiplying by the original matrix.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "inverse-from-p-check-6",
+            "title": "Use a nonzero determinant",
+            "prompt": "<p>For \\(A=\\left(\\begin{matrix}-14 & 18\\\\-9 & 13\\end{matrix}\\right)\\), use the characteristic equation to find the entry in row 2, column 1 of \\(A^{-1}\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry of inverse",
+                "type": "number",
+                "expected": "-9/20"
+              }
+            ],
+            "hint": "<p>Multiply the matrix identity by the inverse only after justifying that it exists.</p>",
+            "solution": "<p>The characteristic equation is \\(\\lambda^{2} + \\lambda - 20=0\\). Its constant term is \\(-20\\), so zero is not an eigenvalue.</p><p>Replace the scalar variable with \\(A\\) and the constant term with its multiple of \\(I\\). Multiply the matrix identity by \\(A^{-1}\\).</p><p>Solving for the inverse gives \\(\\left(\\begin{matrix}- \\frac{13}{20} & \\frac{9}{10}\\\\- \\frac{9}{20} & \\frac{7}{10}\\end{matrix}\\right)\\). The requested entry is \\(- \\frac{9}{20}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "choose-computation",
+        "title": "Which approach is shortest for a requested matrix entry?",
+        "label": "Choose a calculation",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>If only one entry is required, reduce the power first. Evaluate only the matching entries of the remaining powers.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>In two dimensions the remainder has form \\(u\\lambda+v\\). The target entry is \\(u A_{ij}+v I_{ij}\\). A constant affects a diagonal entry only.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>For an off-diagonal entry \\(I_{ij}=0\\), even if \\(v\\) is nonzero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Give enough working to justify the reduced power before reading off the requested entry.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "choose-computation-check-7",
+            "title": "Evaluate only the requested entry",
+            "prompt": "<p>For \\(A=\\left(\\begin{matrix}-2 & 0\\\\10 & 3\\end{matrix}\\right)\\), determine the entry in row 2, column 1 of \\(A^{4}\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry",
+                "type": "number",
+                "expected": "130"
+              }
+            ],
+            "hint": "<p>Reduce the power using the characteristic equation before multiplying matrices.</p>",
+            "solution": "<p>The characteristic polynomial is \\(\\lambda^{2} - \\lambda - 6\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p><p>Dividing the scalar polynomial \\(\\lambda^{4}\\) by the characteristic polynomial leaves remainder \\(13 \\lambda + 42\\). Thus \\(A^{4}=13 A + 42 I\\), using the identity matrix for the constant term.</p><p>Evaluating this identity gives \\(\\left(\\begin{matrix}16 & 0\\\\130 & 81\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Recover the linear coefficient",
+        "question": "<p>The characteristic polynomial of \\(\\left(\\begin{matrix}-2 & 0\\\\10 & 3\\end{matrix}\\right)\\) is \\(\\lambda^{2} + \\lambda c - 6\\). Find \\(c\\).</p>",
+        "solution": [
+          "<p>Compute the determinant \\(\\det(\\lambda I-A)\\) and expand.</p>",
+          "<p>It is \\(\\lambda^{2} - \\lambda - 6\\). Match the coefficient of \\(\\lambda\\) to get \\(-1\\).</p>"
+        ]
+      },
+      {
+        "title": "Check the cubic signs",
+        "question": "<p>The characteristic polynomial of \\(\\left(\\begin{matrix}-4 & 0 & 7\\\\-5 & 1 & 5\\\\0 & 0 & 3\\end{matrix}\\right)\\) is \\(\\lambda^{3} + \\lambda^{2} c - 13 \\lambda + 12\\). Find \\(c\\).</p>",
+        "solution": [
+          "<p>Compute the determinant \\(\\det(\\lambda I-A)\\) and expand.</p>",
+          "<p>It is \\(\\lambda^{3} - 13 \\lambda + 12\\). Match the coefficient of \\(\\lambda^{2}\\) to get \\(0\\).</p>"
+        ]
+      },
+      {
+        "title": "Write the cubic matrix identity",
+        "question": "<p>For \\(A=\\left(\\begin{matrix}-2 & 0 & 0\\\\-6 & 1 & 0\\\\12 & -3 & 4\\end{matrix}\\right)\\), determine the entry in row 2, column 3 of \\(A^{5}\\).</p>",
+        "solution": [
+          "<p>The characteristic polynomial is \\(\\lambda^{3} - 3 \\lambda^{2} - 6 \\lambda + 8\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p>",
+          "<p>Dividing the scalar polynomial \\(\\lambda^{5}\\) by the characteristic polynomial leaves remainder \\(55 \\lambda^{2} + 66 \\lambda - 120\\). Thus \\(A^{5}=55 A^{2} + 66 A - 120 I\\), using the identity matrix for the constant term.</p>",
+          "<p>Evaluating this identity gives \\(\\left(\\begin{matrix}-32 & 0 & 0\\\\-66 & 1 & 0\\\\3102 & -1023 & 1024\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+        ]
+      },
+      {
+        "title": "Use a quadratic remainder",
+        "question": "<p>For \\(A=\\left(\\begin{matrix}-6 & 10\\\\-5 & 9\\end{matrix}\\right)\\), determine the entry in row 1, column 2 of \\(A^{5}\\).</p>",
+        "solution": [
+          "<p>The characteristic polynomial is \\(\\lambda^{2} - 3 \\lambda - 4\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p>",
+          "<p>Dividing the scalar polynomial \\(\\lambda^{5}\\) by the characteristic polynomial leaves remainder \\(205 \\lambda + 204\\). Thus \\(A^{5}=205 A + 204 I\\), using the identity matrix for the constant term.</p>",
+          "<p>Evaluating this identity gives \\(\\left(\\begin{matrix}-1026 & 2050\\\\-1025 & 2049\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+        ]
+      },
+      {
+        "title": "Reduce with a cubic characteristic polynomial",
+        "question": "<p>For \\(A=\\left(\\begin{matrix}-1 & 0 & 4\\\\-3 & 2 & 3\\\\0 & 0 & 3\\end{matrix}\\right)\\), determine the entry in row 3, column 1 of \\(A^{6}\\).</p>",
+        "solution": [
+          "<p>The characteristic polynomial is \\(\\lambda^{3} - 4 \\lambda^{2} + \\lambda + 6\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p>",
+          "<p>Dividing the scalar polynomial \\(\\lambda^{6}\\) by the characteristic polynomial leaves remainder \\(161 \\lambda^{2} - 140 \\lambda - 300\\). Thus \\(A^{6}=161 A^{2} - 140 A - 300 I\\), using the identity matrix for the constant term.</p>",
+          "<p>Evaluating this identity gives \\(\\left(\\begin{matrix}1 & 0 & 728\\\\-63 & 64 & 63\\\\0 & 0 & 729\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+        ]
+      },
+      {
+        "title": "Find an inverse entry without cofactors",
+        "question": "<p>For \\(A=\\left(\\begin{matrix}7 & -5\\\\10 & -8\\end{matrix}\\right)\\), use the characteristic equation to find the entry in row 1, column 2 of \\(A^{-1}\\).</p>",
+        "solution": [
+          "<p>The characteristic equation is \\(\\lambda^{2} + \\lambda - 6=0\\). Its constant term is \\(-6\\), so zero is not an eigenvalue.</p>",
+          "<p>Replace the scalar variable with \\(A\\) and the constant term with its multiple of \\(I\\). Multiply the matrix identity by \\(A^{-1}\\).</p>",
+          "<p>Solving for the inverse gives \\(\\left(\\begin{matrix}\\frac{4}{3} & - \\frac{5}{6}\\\\\\frac{5}{3} & - \\frac{7}{6}\\end{matrix}\\right)\\). The requested entry is \\(- \\frac{5}{6}\\).</p>"
+        ]
+      },
+      {
+        "title": "Read one off-diagonal entry of a high power",
+        "question": "<p>For \\(A=\\left(\\begin{matrix}-3 & 0\\\\10 & 2\\end{matrix}\\right)\\), determine the entry in row 2, column 1 of \\(A^{4}\\).</p>",
+        "solution": [
+          "<p>The characteristic polynomial is \\(\\lambda^{2} + \\lambda - 6\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p>",
+          "<p>Dividing the scalar polynomial \\(\\lambda^{4}\\) by the characteristic polynomial leaves remainder \\(42 - 13 \\lambda\\). Thus \\(A^{4}=- 13 A + 42 I\\), using the identity matrix for the constant term.</p>",
+          "<p>Evaluating this identity gives \\(\\left(\\begin{matrix}81 & 0\\\\-130 & 16\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-cayley-practice-1",
+        "title": "Recover another inverse entry",
+        "prompt": "<p>For \\(A=\\left(\\begin{matrix}-8 & 5\\\\-10 & 7\\end{matrix}\\right)\\), use the characteristic equation to find the entry in row 2, column 1 of \\(A^{-1}\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested entry of inverse",
+            "type": "number",
+            "expected": "-5/3"
+          }
+        ],
+        "hint": "<p>Multiply the matrix identity by the inverse only after justifying that it exists.</p>",
+        "solution": "<p>The characteristic equation is \\(\\lambda^{2} + \\lambda - 6=0\\). Its constant term is \\(-6\\), so zero is not an eigenvalue.</p><p>Replace the scalar variable with \\(A\\) and the constant term with its multiple of \\(I\\). Multiply the matrix identity by \\(A^{-1}\\).</p><p>Solving for the inverse gives \\(\\left(\\begin{matrix}- \\frac{7}{6} & \\frac{5}{6}\\\\- \\frac{5}{3} & \\frac{4}{3}\\end{matrix}\\right)\\). The requested entry is \\(- \\frac{5}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-cayley-practice-2",
+        "title": "Use a linear remainder",
+        "prompt": "<p>For \\(A=\\left(\\begin{matrix}-11 & 16\\\\-8 & 13\\end{matrix}\\right)\\), determine the entry in row 1, column 2 of \\(A^{5}\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested entry",
+            "type": "number",
+            "expected": "6736"
+          }
+        ],
+        "hint": "<p>Reduce the power using the characteristic equation before multiplying matrices.</p>",
+        "solution": "<p>The characteristic polynomial is \\(\\lambda^{2} - 2 \\lambda - 15\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p><p>Dividing the scalar polynomial \\(\\lambda^{5}\\) by the characteristic polynomial leaves remainder \\(421 \\lambda + 1020\\). Thus \\(A^{5}=421 A + 1020 I\\), using the identity matrix for the constant term.</p><p>Evaluating this identity gives \\(\\left(\\begin{matrix}-3611 & 6736\\\\-3368 & 6493\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-cayley-practice-3",
+        "title": "Check alternating signs",
+        "prompt": "<p>The characteristic polynomial of \\(\\left(\\begin{matrix}-3 & 5 & -10\\\\0 & 2 & 4\\\\0 & 0 & 4\\end{matrix}\\right)\\) is \\(\\lambda^{3} - 3 \\lambda^{2} - 10 \\lambda + c\\). Find \\(c\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Missing coefficient c",
+            "type": "number",
+            "expected": "24"
+          }
+        ],
+        "hint": "<p>Use a monic characteristic polynomial and compare the matching powers.</p>",
+        "solution": "<p>Compute the determinant \\(\\det(\\lambda I-A)\\) and expand.</p><p>It is \\(\\lambda^{3} - 3 \\lambda^{2} - 10 \\lambda + 24\\). Match the coefficient of \\(1\\) to get \\(24\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-cayley-practice-4",
+        "title": "Use the 3D inverse identity",
+        "prompt": "<p>For \\(A=\\left(\\begin{matrix}-2 & 0 & 0\\\\-6 & 1 & 0\\\\12 & -3 & 4\\end{matrix}\\right)\\), use the characteristic equation to find the entry in row 3, column 2 of \\(A^{-1}\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested entry of inverse",
+            "type": "number",
+            "expected": "3/4"
+          }
+        ],
+        "hint": "<p>Multiply the matrix identity by the inverse only after justifying that it exists.</p>",
+        "solution": "<p>The characteristic equation is \\(\\lambda^{3} - 3 \\lambda^{2} - 6 \\lambda + 8=0\\). Its constant term is \\(8\\), so zero is not an eigenvalue.</p><p>Replace the scalar variable with \\(A\\) and the constant term with its multiple of \\(I\\). Multiply the matrix identity by \\(A^{-1}\\).</p><p>Solving for the inverse gives \\(\\left(\\begin{matrix}- \\frac{1}{2} & 0 & 0\\\\-3 & 1 & 0\\\\- \\frac{3}{4} & \\frac{3}{4} & \\frac{1}{4}\\end{matrix}\\right)\\). The requested entry is \\(\\frac{3}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-cayley-practice-5",
+        "title": "Apply the same method to a higher power",
+        "prompt": "<p>For \\(A=\\left(\\begin{matrix}-11 & 8\\\\-16 & 13\\end{matrix}\\right)\\), determine the entry in row 1, column 2 of \\(A^{4}\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested entry",
+            "type": "number",
+            "expected": "544"
+          }
+        ],
+        "hint": "<p>Reduce the power using the characteristic equation before multiplying matrices.</p>",
+        "solution": "<p>The characteristic polynomial is \\(\\lambda^{2} - 2 \\lambda - 15\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p><p>Dividing the scalar polynomial \\(\\lambda^{4}\\) by the characteristic polynomial leaves remainder \\(68 \\lambda + 285\\). Thus \\(A^{4}=68 A + 285 I\\), using the identity matrix for the constant term.</p><p>Evaluating this identity gives \\(\\left(\\begin{matrix}-463 & 544\\\\-1088 & 1169\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Characteristic polynomial",
+        "definition": "<p>The polynomial \\(p(\\lambda)=\\det(\\lambda I-A)\\).</p>"
+      },
+      {
+        "term": "Cayley–Hamilton identity",
+        "definition": "<p>\\(p(A)=0\\) for the characteristic polynomial of \\(A\\).</p>"
+      },
+      {
+        "term": "Remainder",
+        "definition": "<p>The polynomial of lower degree left over from polynomial division.</p>"
+      },
+      {
+        "term": "Zero matrix",
+        "definition": "<p>The matrix with all entries zero.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>The constant term is multiplied by \\(I\\). If \\(p(A)=0\\), use the scalar remainder of \\(\\lambda^k\\) modulo \\(p\\) to reduce \\(A^k\\). For a \\(2\\times2\\) matrix with nonzero determinant, \\(A^{-1}=\\frac{\\operatorname{tr}(A)I-A}{\\det A}\\).</p>",
+      "checks": "<ul><li>Why can the result be checked on an eigenbasis?</li><li>When can the matrix identity be multiplied by the inverse?</li><li>What does a constant term add to an off-diagonal entry?</li></ul>",
+      "examTip": "<p>Keep scalar variables and matrices distinct when converting the characteristic equation to a matrix identity.</p>"
+    },
+    "related": [
+      {
+        "title": "Eigenvalue algebra",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_algebra"
+      },
+      {
+        "title": "Diagonalisation and matrix powers",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_diagonal"
+      }
+    ]
+  },
+  "fp2_matrices2_diagonal": {
+    "updatedOn": "2026-11-21",
+    "description": "Diagonalise a matrix and use matched eigenvector columns to compute powers, vector images and square roots.",
+    "sections": [
+      {
+        "id": "match-the-columns",
+        "title": "How do Q and D record a change of basis?",
+        "label": "Match columns to values",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Read \\(AQ\\) by columns. Its first column is the image of the first column of \\(Q\\). Each such image must be the same column multiplied by its eigenvalue.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(Q=(\\boldsymbol v_1\\ \\boldsymbol v_2\\ \\cdots)\\) and \\(D\\) has the matching eigenvalues down its diagonal, then \\(AQ=QD\\). Independent eigenvectors make \\(Q\\) invertible, hence \\(A=QDQ^{-1}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The matching order matters. Swapping two columns of \\(Q\\) without swapping the corresponding entries of \\(D\\) describes a different matrix.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the identity \\(AQ=QD\\) before doing a large power.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "match-the-columns-check-1",
+            "title": "A signed integer power",
+            "prompt": "<p>For \\(Q=\\left(\\begin{matrix}1 & 0\\\\-2 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-2 & 0\\\\0 & 5\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((2,1)\\) of \\(A^{3}\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry",
+                "type": "number",
+                "expected": "266"
+              }
+            ],
+            "hint": "<p>Raise the diagonal entries to the power, maintaining the order of eigenvectors.</p>",
+            "solution": "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{3}=QD^{3}Q^{-1}\\).</p><p>The diagonal matrix becomes \\(\\left(\\begin{matrix}-8 & 0\\\\0 & 125\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}-8 & 0\\\\266 & 125\\end{matrix}\\right)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "match-the-columns-check-2",
+            "title": "Match the other basis order",
+            "prompt": "<p>For \\(Q=\\left(\\begin{matrix}2 & 1\\\\1 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-3 & 0\\\\0 & 4\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((1,2)\\) of \\(A^{4}\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry",
+                "type": "number",
+                "expected": "350"
+              }
+            ],
+            "hint": "<p>Raise the diagonal entries to the power, maintaining the order of eigenvectors.</p>",
+            "solution": "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{4}=QD^{4}Q^{-1}\\).</p><p>The diagonal matrix becomes \\(\\left(\\begin{matrix}81 & 0\\\\0 & 256\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}-94 & 350\\\\-175 & 431\\end{matrix}\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "cancel-basis",
+        "title": "Why can I take powers of the diagonal entries only?",
+        "label": "Cancel interior factors",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Write out two copies of \\(QDQ^{-1}\\) side by side. The nearby inverse and basis factors cancel in the middle.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(A^k=QD^kQ^{-1}\\) for nonnegative integers \\(k\\). If all eigenvalues are nonzero, the formula also holds for negative integers.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Taking powers of \\(Q\\) and \\(Q^{-1}\\) separately fails because the matrices do not usually commute.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>At \\(k=0\\) the expression reduces to \\(QI Q^{-1}=I\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "cancel-basis-check-3",
+            "title": "Reduce the third power",
+            "prompt": "<p>For \\(Q=\\left(\\begin{matrix}0 & 1\\\\1 & -2\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-1 & 0\\\\0 & 4\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((2,1)\\) of \\(A^{3}\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry",
+                "type": "number",
+                "expected": "-130"
+              }
+            ],
+            "hint": "<p>Raise the diagonal entries to the power, maintaining the order of eigenvectors.</p>",
+            "solution": "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{3}=QD^{3}Q^{-1}\\).</p><p>The diagonal matrix becomes \\(\\left(\\begin{matrix}-1 & 0\\\\0 & 64\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}64 & 0\\\\-130 & -1\\end{matrix}\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "mixed-entry",
+        "title": "How do I calculate a selected entry efficiently?",
+        "label": "Read the needed product",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>After taking the individual powers, each column of \\(Q\\) is multiplied by its matching diagonal entry. The final multiplication combines these columns.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For entry \\(i,j\\), use row \\(i\\) of \\(QD^k\\) and column \\(j\\) of \\(Q^{-1}\\). This avoids calculating unrequested entries.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The entry at row \\(i\\), column \\(j\\) uses row from the left factor and column from the right factor.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Very different sizes or signs in the powers can cancel. Keep exact arithmetic until the end.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "mixed-entry-check-4",
+            "title": "Only one entry is required",
+            "prompt": "<p>For \\(Q=\\left(\\begin{matrix}1 & -1\\\\2 & -1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-1 & 0\\\\0 & 5\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((2,1)\\) of \\(A^{5}\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry",
+                "type": "number",
+                "expected": "6252"
+              }
+            ],
+            "hint": "<p>Raise the diagonal entries to the power, maintaining the order of eigenvectors.</p>",
+            "solution": "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{5}=QD^{5}Q^{-1}\\).</p><p>The diagonal matrix becomes \\(\\left(\\begin{matrix}-1 & 0\\\\0 & 3125\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}6251 & -3126\\\\6252 & -3127\\end{matrix}\\right)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "mixed-entry-check-5",
+            "title": "An entry in three dimensions",
+            "prompt": "<p>For \\(Q=\\left(\\begin{matrix}1 & 0 & 0\\\\2 & 1 & 0\\\\-1 & 1 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-2 & 0 & 0\\\\0 & 1 & 0\\\\0 & 0 & 5\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((2,3)\\) of \\(A^{3}\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Raise the diagonal entries to the power, maintaining the order of eigenvectors.</p>",
+            "solution": "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{3}=QD^{3}Q^{-1}\\).</p><p>The diagonal matrix becomes \\(\\left(\\begin{matrix}-8 & 0 & 0\\\\0 & 1 & 0\\\\0 & 0 & 125\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}-8 & 0 & 0\\\\-18 & 1 & 0\\\\381 & -124 & 125\\end{matrix}\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "vector-in-basis",
+        "title": "What if I only need the image of one vector?",
+        "label": "Apply a power to a vector",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Read the factors from right to left. Find the input coordinates in the eigenbasis, scale those coordinates, and then convert back.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\boldsymbol w=Q^{-1}\\boldsymbol u\\) gives eigenbasis coordinates. Then \\(A^k\\boldsymbol u=Q(D^k\\boldsymbol w)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The vector \\(D^k Q^{-1}\\boldsymbol u\\) is still measured in the eigenbasis. A final multiplication by \\(Q\\) is needed.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>If the input already lies on one eigenvector, use its single scalar multiplier directly.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "vector-in-basis-check-6",
+            "title": "Return to the original coordinates",
+            "prompt": "<p>Let \\(Q=\\left(\\begin{matrix}2 & 1\\\\1 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-2 & 0\\\\0 & 3\\end{matrix}\\right)\\). If \\(A=QDQ^{-1}\\), find \\(A^{4}\\mathbf u\\) for \\(\\mathbf u=\\left(\\begin{matrix}3\\\\4\\end{matrix}\\right)\\).</p>",
+            "fields": [
+              {
+                "type": "pairs",
+                "key": "image",
+                "label": "Image vector in original coordinates",
+                "dimension": 2,
+                "expected": "(373,389)"
+              }
+            ],
+            "hint": "<p>Apply the factors from right to left to a vector.</p>",
+            "solution": "<p>First express the input vector in the eigenbasis. This gives \\(Q^{-1}\\mathbf u=\\left(\\begin{matrix}-1\\\\5\\end{matrix}\\right)\\).</p><p>Multiply the coordinates by \\(D^{4}\\) and return to the original basis using \\(Q\\). The resulting vector is \\(\\left(\\begin{matrix}373\\\\389\\end{matrix}\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "choose-root",
+        "title": "How can a diagonal form guide a matrix square root?",
+        "label": "Choose eigenvalue signs",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>A diagonal square root can be constructed by selecting a square root for each diagonal entry. Conjugating back gives a corresponding matrix square root.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(A=QDQ^{-1}\\) and \\(E^2=D\\), then \\((QEQ^{-1})^2=A\\). The question may specify signs or impose other restrictions to select a particular root.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Squaring loses eigenvalue signs. Positive diagonal entries of \\(D\\) do not require positive eigenvalues of every root.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Verify a proposed root by squaring it using the same basis.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "choose-root-check-7",
+            "title": "Read the chosen root sign",
+            "prompt": "<p>A matrix \\(B\\) satisfies \\(B^2=\\left(\\begin{matrix}-7 & 16\\\\-32 & 41\\end{matrix}\\right)\\). It has \\(Q=\\left(\\begin{matrix}1 & 1\\\\1 & 2\\end{matrix}\\right)\\) as its eigenvector basis. It has the following eigenvalues in the same order as these columns: \\(-3\\), \\(5\\). Find entry \\((1,2)\\) of \\(B\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry of the square root",
+                "type": "number",
+                "expected": "8"
+              }
+            ],
+            "hint": "<p>Select the diagonal signs according to the eigenvalue information.</p>",
+            "solution": "<p>The given eigenvalues already choose the square-root signs. Use \\(D=\\left(\\begin{matrix}-3 & 0\\\\0 & 5\\end{matrix}\\right)\\) with the stated eigenbasis.</p><p>Then \\(B=QDQ^{-1}=\\left(\\begin{matrix}-11 & 8\\\\-16 & 13\\end{matrix}\\right)\\). Squaring this expression recovers the original matrix.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Keep the columns and values paired",
+        "question": "<p>For \\(Q=\\left(\\begin{matrix}2 & 1\\\\1 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-1 & 0\\\\0 & 3\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((1,2)\\) of \\(A^{4}\\).</p>",
+        "solution": [
+          "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{4}=QD^{4}Q^{-1}\\).</p>",
+          "<p>The diagonal matrix becomes \\(\\left(\\begin{matrix}1 & 0\\\\0 & 81\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}-79 & 160\\\\-80 & 161\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Start with another eigenvector order",
+        "question": "<p>For \\(Q=\\left(\\begin{matrix}1 & -1\\\\2 & -1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}2 & 0\\\\0 & -4\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((2,1)\\) of \\(A^{5}\\).</p>",
+        "solution": [
+          "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{5}=QD^{5}Q^{-1}\\).</p>",
+          "<p>The diagonal matrix becomes \\(\\left(\\begin{matrix}32 & 0\\\\0 & -1024\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}-2080 & 1056\\\\-2112 & 1088\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Cancel the middle matrix factors",
+        "question": "<p>For \\(Q=\\left(\\begin{matrix}1 & 0 & 0\\\\2 & 1 & 0\\\\-1 & 1 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-1 & 0 & 0\\\\0 & 5 & 0\\\\0 & 0 & 2\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((2,3)\\) of \\(A^{3}\\).</p>",
+        "solution": [
+          "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{3}=QD^{3}Q^{-1}\\).</p>",
+          "<p>The diagonal matrix becomes \\(\\left(\\begin{matrix}-1 & 0 & 0\\\\0 & 125 & 0\\\\0 & 0 & 8\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}-1 & 0 & 0\\\\-252 & 125 & 0\\\\-225 & 117 & 8\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Compute one off-diagonal entry",
+        "question": "<p>For \\(Q=\\left(\\begin{matrix}0 & 1\\\\1 & -2\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}2 & 0\\\\0 & -3\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((2,1)\\) of \\(A^{3}\\).</p>",
+        "solution": [
+          "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{3}=QD^{3}Q^{-1}\\).</p>",
+          "<p>The diagonal matrix becomes \\(\\left(\\begin{matrix}8 & 0\\\\0 & -27\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}-27 & 0\\\\70 & 8\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a three-dimensional basis",
+        "question": "<p>For \\(Q=\\left(\\begin{matrix}1 & 0 & 1\\\\1 & 1 & 0\\\\0 & 0 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-2 & 0 & 0\\\\0 & 1 & 0\\\\0 & 0 & 3\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((3,1)\\) of \\(A^{4}\\).</p>",
+        "solution": [
+          "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{4}=QD^{4}Q^{-1}\\).</p>",
+          "<p>The diagonal matrix becomes \\(\\left(\\begin{matrix}16 & 0 & 0\\\\0 & 1 & 0\\\\0 & 0 & 81\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}16 & 0 & 65\\\\15 & 1 & -15\\\\0 & 0 & 81\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Apply a power in coordinates",
+        "question": "<p>Let \\(Q=\\left(\\begin{matrix}1 & 1\\\\1 & 2\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-3 & 0\\\\0 & 2\\end{matrix}\\right)\\). If \\(A=QDQ^{-1}\\), find \\(A^{2}\\mathbf u\\) for \\(\\mathbf u=\\left(\\begin{matrix}5\\\\1\\end{matrix}\\right)\\).</p>",
+        "solution": [
+          "<p>First express the input vector in the eigenbasis. This gives \\(Q^{-1}\\mathbf u=\\left(\\begin{matrix}9\\\\-4\\end{matrix}\\right)\\).</p>",
+          "<p>Multiply the coordinates by \\(D^{2}\\) and return to the original basis using \\(Q\\). The resulting vector is \\(\\left(\\begin{matrix}65\\\\49\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a root with specified signs",
+        "question": "<p>A matrix \\(B\\) satisfies \\(B^2=\\left(\\begin{matrix}4 & 0\\\\10 & 9\\end{matrix}\\right)\\). It has \\(Q=\\left(\\begin{matrix}1 & 0\\\\-2 & 1\\end{matrix}\\right)\\) as its eigenvector basis. It has the following eigenvalues in the same order as these columns: \\(-2\\), \\(3\\). Find entry \\((2,1)\\) of \\(B\\).</p>",
+        "solution": [
+          "<p>The given eigenvalues already choose the square-root signs. Use \\(D=\\left(\\begin{matrix}-2 & 0\\\\0 & 3\\end{matrix}\\right)\\) with the stated eigenbasis.</p>",
+          "<p>Then \\(B=QDQ^{-1}=\\left(\\begin{matrix}-2 & 0\\\\10 & 3\\end{matrix}\\right)\\). Squaring this expression recovers the original matrix.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-diagonal-practice-1",
+        "title": "Apply a large power to a different vector",
+        "prompt": "<p>Let \\(Q=\\left(\\begin{matrix}1 & -1\\\\2 & -1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-2 & 0\\\\0 & 3\\end{matrix}\\right)\\). If \\(A=QDQ^{-1}\\), find \\(A^{5}\\mathbf u\\) for \\(\\mathbf u=\\left(\\begin{matrix}4\\\\5\\end{matrix}\\right)\\).</p>",
+        "fields": [
+          {
+            "type": "pairs",
+            "key": "image",
+            "label": "Image vector in original coordinates",
+            "dimension": 2,
+            "expected": "(697,665)"
+          }
+        ],
+        "hint": "<p>Apply the factors from right to left to a vector.</p>",
+        "solution": "<p>First express the input vector in the eigenbasis. This gives \\(Q^{-1}\\mathbf u=\\left(\\begin{matrix}1\\\\-3\\end{matrix}\\right)\\).</p><p>Multiply the coordinates by \\(D^{5}\\) and return to the original basis using \\(Q\\). The resulting vector is \\(\\left(\\begin{matrix}697\\\\665\\end{matrix}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-diagonal-practice-2",
+        "title": "Compute a 3D image",
+        "prompt": "<p>Let \\(Q=\\left(\\begin{matrix}1 & 0 & 1\\\\1 & 1 & 0\\\\0 & 0 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-1 & 0 & 0\\\\0 & 2 & 0\\\\0 & 0 & 4\\end{matrix}\\right)\\). If \\(A=QDQ^{-1}\\), find \\(A^{4}\\mathbf u\\) for \\(\\mathbf u=\\left(\\begin{matrix}3\\\\4\\\\5\\end{matrix}\\right)\\).</p>",
+        "fields": [
+          {
+            "type": "pairs",
+            "key": "image",
+            "label": "Image vector in original coordinates",
+            "dimension": 3,
+            "expected": "(1278,94,1280)"
+          }
+        ],
+        "hint": "<p>Apply the factors from right to left to a vector.</p>",
+        "solution": "<p>First express the input vector in the eigenbasis. This gives \\(Q^{-1}\\mathbf u=\\left(\\begin{matrix}-2\\\\6\\\\5\\end{matrix}\\right)\\).</p><p>Multiply the coordinates by \\(D^{4}\\) and return to the original basis using \\(Q\\). The resulting vector is \\(\\left(\\begin{matrix}1278\\\\94\\\\1280\\end{matrix}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-diagonal-practice-3",
+        "title": "Find an off-diagonal entry after cancellation",
+        "prompt": "<p>For \\(Q=\\left(\\begin{matrix}1 & 1\\\\1 & 2\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-2 & 0\\\\0 & 5\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((1,2)\\) of \\(A^{2}\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested entry",
+            "type": "number",
+            "expected": "21"
+          }
+        ],
+        "hint": "<p>Raise the diagonal entries to the power, maintaining the order of eigenvectors.</p>",
+        "solution": "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{2}=QD^{2}Q^{-1}\\).</p><p>The diagonal matrix becomes \\(\\left(\\begin{matrix}4 & 0\\\\0 & 25\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}-17 & 21\\\\-42 & 46\\end{matrix}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-diagonal-practice-4",
+        "title": "Use another sign choice",
+        "prompt": "<p>A matrix \\(B\\) satisfies \\(B^2=\\left(\\begin{matrix}2 & 14\\\\-7 & 23\\end{matrix}\\right)\\). It has \\(Q=\\left(\\begin{matrix}2 & 1\\\\1 & 1\\end{matrix}\\right)\\) as its eigenvector basis. It has the following eigenvalues in the same order as these columns: \\(3\\), \\(-4\\). Find entry \\((1,2)\\) of \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested entry of the square root",
+            "type": "number",
+            "expected": "-14"
+          }
+        ],
+        "hint": "<p>Select the diagonal signs according to the eigenvalue information.</p>",
+        "solution": "<p>The given eigenvalues already choose the square-root signs. Use \\(D=\\left(\\begin{matrix}3 & 0\\\\0 & -4\\end{matrix}\\right)\\) with the stated eigenbasis.</p><p>Then \\(B=QDQ^{-1}=\\left(\\begin{matrix}10 & -14\\\\7 & -11\\end{matrix}\\right)\\). Squaring this expression recovers the original matrix.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-diagonal-practice-5",
+        "title": "Include a zero eigenvalue in a positive power",
+        "prompt": "<p>For \\(Q=\\left(\\begin{matrix}1 & 0 & 1\\\\1 & 1 & 0\\\\0 & 0 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}0 & 0 & 0\\\\0 & -3 & 0\\\\0 & 0 & 5\\end{matrix}\\right)\\), let \\(A=QDQ^{-1}\\). Find entry \\((3,1)\\) of \\(A^{4}\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested entry",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>Raise the diagonal entries to the power, maintaining the order of eigenvectors.</p>",
+        "solution": "<p>Each copy of \\(Q^{-1}Q\\) cancels to the identity inside the product. Hence \\(A^{4}=QD^{4}Q^{-1}\\).</p><p>The diagonal matrix becomes \\(\\left(\\begin{matrix}0 & 0 & 0\\\\0 & 81 & 0\\\\0 & 0 & 625\\end{matrix}\\right)\\). Multiplying left by \\(Q\\) and right by \\(Q^{-1}\\) gives \\(\\left(\\begin{matrix}0 & 0 & 625\\\\-81 & 81 & 81\\\\0 & 0 & 625\\end{matrix}\\right)\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Eigenbasis",
+        "definition": "<p>A basis consisting of independent eigenvectors.</p>"
+      },
+      {
+        "term": "Diagonalisation",
+        "definition": "<p>Writing \\(A=QDQ^{-1}\\) with diagonal \\(D\\).</p>"
+      },
+      {
+        "term": "Conjugation",
+        "definition": "<p>A change of basis represented by \\(QDQ^{-1}\\).</p>"
+      },
+      {
+        "term": "Matrix square root",
+        "definition": "<p>A matrix \\(B\\) satisfying \\(B^2=A\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>Match the columns of \\(Q\\) with the diagonal entries of \\(D\\). Then \\(A^k=QD^kQ^{-1}\\). For a vector, apply \\(Q^{-1}\\) first to change to eigenbasis coordinates.</p>",
+      "checks": "<ul><li>Which factor is applied first in \\(Q D^k Q^{-1}\\boldsymbol u\\)?</li><li>When can \\(k\\) be negative?</li><li>Why can two roots square to the same matrix?</li></ul>",
+      "examTip": "<p>If you permute eigenvectors, permute eigenvalues in the same way.</p>"
+    },
+    "related": [
+      {
+        "title": "Characteristic equations and Cayley–Hamilton",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_cayley"
+      },
+      {
+        "title": "Reconstruction and similarity",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_reconstruct"
+      }
+    ]
+  },
+  "fp2_matrices2_reconstruct": {
+    "updatedOn": "2026-11-21",
+    "description": "Reconstruct a matrix from independent inputs and use a change of basis to relate similar matrices.",
+    "sections": [
+      {
+        "id": "action-data",
+        "title": "How does the action on a basis determine a matrix?",
+        "label": "Recover from independent vectors",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>To reconstruct a linear map, it is enough to know the outputs of a set of independent input vectors that spans the space.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Place the inputs in columns of \\(U\\) and matching outputs in columns of \\(V\\). Then \\(AU=V\\), giving \\(A=VU^{-1}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using input vectors as rows changes the order and orientation of the multiplication.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Verify the formula on one original input before trusting the recovered entries.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "action-data-check-1",
+            "title": "Recover one matrix entry",
+            "prompt": "<p>A linear map \\(A\\) acts on the columns of \\(U=\\left(\\begin{matrix}1 & -1\\\\2 & -1\\end{matrix}\\right)\\) to produce the respective columns of \\(V=\\left(\\begin{matrix}2 & 3\\\\1 & 1\\end{matrix}\\right)\\). Find entry \\((2,2)\\) of \\(A\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested matrix entry",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Put the inverse on the right of the output matrix.</p>",
+            "solution": "<p>Using input and output columns, write \\(AU=V\\).</p><p>Right-multiplying by \\(U^{-1}\\) gives \\(A=\\left(\\begin{matrix}-8 & 5\\\\-3 & 2\\end{matrix}\\right)\\). Checking \\(AU\\) confirms the column order.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "action-data-check-2",
+            "title": "Reverse the basis coordinates",
+            "prompt": "<p>A linear map \\(A\\) acts on the columns of \\(U=\\left(\\begin{matrix}2 & 0\\\\1 & 3\\end{matrix}\\right)\\) to produce the respective columns of \\(V=\\left(\\begin{matrix}2 & -3\\\\3 & 3\\end{matrix}\\right)\\). Find entry \\((1,2)\\) of \\(A\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested matrix entry",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>Put the inverse on the right of the output matrix.</p>",
+            "solution": "<p>Using input and output columns, write \\(AU=V\\).</p><p>Right-multiplying by \\(U^{-1}\\) gives \\(A=\\left(\\begin{matrix}\\frac{3}{2} & -1\\\\1 & 1\\end{matrix}\\right)\\). Checking \\(AU\\) confirms the column order.</p>"
+          }
+        ]
+      },
+      {
+        "id": "unordered-data",
+        "title": "What changes when the given vectors are eigenvectors?",
+        "label": "Use scaled outputs",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>For an eigenvector input, the output is the same column scaled by its own eigenvalue. This makes the output matrix easy to build.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If all columns are independent eigenvectors, write \\(U=Q\\) and \\(V=QD\\). The recovered map is \\(A=QDQ^{-1}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An eigenvector can be scaled freely if its eigenvalue remains paired. A mere rearrangement of eigenvalues alone is not a change of basis.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the determinant of the input columns before taking an inverse.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "unordered-data-check-3",
+            "title": "Treat each eigenvector as a column",
+            "prompt": "<p>An unknown \\(2\times 2\\) matrix has these independent eigenvectors. \\(\\mathbf v_1=\\left(\\begin{matrix}1\\\\2\\end{matrix}\\right)\\) has eigenvalue \\(2\\). \\(\\mathbf v_2=\\left(\\begin{matrix}-1\\\\-1\\end{matrix}\\right)\\) has eigenvalue \\(-5\\). Find entry \\((2,1)\\) of the matrix.</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry of the recovered matrix",
+                "type": "number",
+                "expected": "-14"
+              }
+            ],
+            "hint": "<p>Keep the matrix of vectors in the same order as their eigenvalues.</p>",
+            "solution": "<p>Put the vectors into the columns of \\(Q=\\left(\\begin{matrix}1 & -1\\\\2 & -1\\end{matrix}\\right)\\) in the order listed. Put their eigenvalues into matching diagonal positions of \\(D=\\left(\\begin{matrix}2 & 0\\\\0 & -5\\end{matrix}\\right)\\).</p><p>From \\(AQ=QD\\) and the invertibility of \\(Q\\), the required matrix is \\(QDQ^{-1}=\\left(\\begin{matrix}-12 & 7\\\\-14 & 9\\end{matrix}\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "same-transformation",
+        "title": "How can two different matrices encode the same linear action?",
+        "label": "Similarity",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Coordinates of a vector can be changed without changing the underlying geometric transformation. A basis matrix describes the relation between those coordinates.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(\\boldsymbol u=Q\\boldsymbol w\\), the matrix in the new coordinates is \\(Q^{-1} A Q\\). This matrix and \\(A\\) are similar, so their eigenvalues, trace and determinant match.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Equal determinants or traces alone do not prove similarity. They are necessary checks.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use the given direction of the coordinate map to decide which side receives the inverse.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "same-transformation-check-4",
+            "title": "Use three independent eigenvectors",
+            "prompt": "<p>An unknown \\(3\times 3\\) matrix has these independent eigenvectors. \\(\\mathbf v_1=\\left(\\begin{matrix}1\\\\0\\\\0\\end{matrix}\\right)\\) has eigenvalue \\(-1\\). \\(\\mathbf v_2=\\left(\\begin{matrix}1\\\\1\\\\0\\end{matrix}\\right)\\) has eigenvalue \\(2\\). \\(\\mathbf v_3=\\left(\\begin{matrix}1\\\\1\\\\1\\end{matrix}\\right)\\) has eigenvalue \\(4\\). Find entry \\((1,2)\\) of the matrix.</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry of the recovered matrix",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Keep the matrix of vectors in the same order as their eigenvalues.</p>",
+            "solution": "<p>Put the vectors into the columns of \\(Q=\\left(\\begin{matrix}1 & 1 & 1\\\\0 & 1 & 1\\\\0 & 0 & 1\\end{matrix}\\right)\\) in the order listed. Put their eigenvalues into matching diagonal positions of \\(D=\\left(\\begin{matrix}-1 & 0 & 0\\\\0 & 2 & 0\\\\0 & 0 & 4\\end{matrix}\\right)\\).</p><p>From \\(AQ=QD\\) and the invertibility of \\(Q\\), the required matrix is \\(QDQ^{-1}=\\left(\\begin{matrix}-1 & 3 & 2\\\\0 & 2 & 2\\\\0 & 0 & 4\\end{matrix}\\right)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "same-transformation-check-5",
+            "title": "Match the sign with the chosen vector",
+            "prompt": "<p>An unknown \\(2\times 2\\) matrix has these independent eigenvectors. \\(\\mathbf v_1=\\left(\\begin{matrix}1\\\\1\\end{matrix}\\right)\\) has eigenvalue \\(1\\). \\(\\mathbf v_2=\\left(\\begin{matrix}1\\\\2\\end{matrix}\\right)\\) has eigenvalue \\(-7\\). Find entry \\((1,2)\\) of the matrix.</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry of the recovered matrix",
+                "type": "number",
+                "expected": "-8"
+              }
+            ],
+            "hint": "<p>Keep the matrix of vectors in the same order as their eigenvalues.</p>",
+            "solution": "<p>Put the vectors into the columns of \\(Q=\\left(\\begin{matrix}1 & 1\\\\1 & 2\\end{matrix}\\right)\\) in the order listed. Put their eigenvalues into matching diagonal positions of \\(D=\\left(\\begin{matrix}1 & 0\\\\0 & -7\\end{matrix}\\right)\\).</p><p>From \\(AQ=QD\\) and the invertibility of \\(Q\\), the required matrix is \\(QDQ^{-1}=\\left(\\begin{matrix}9 & -8\\\\16 & -15\\end{matrix}\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "rescale-shuffle",
+        "title": "What happens if the eigenbasis is rescaled or reordered?",
+        "label": "Change the eigenbasis",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Multiplying a column by a nonzero scalar is still a valid choice of eigenvector. Reordering columns is also allowed when the associated eigenvalues are reordered.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(C\\) is an invertible diagonal matrix, then \\((QC) D (QC)^{-1}=QDQ^{-1}\\) because \\(C\\) and \\(D\\) commute.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Changing only one diagonal entry of \\(D\\) generally changes the map even if every eigenvector is retained.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Verify the action on the given columns directly as well as comparing entries.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "rescale-shuffle-check-6",
+            "title": "Read a second reconstruction entry",
+            "prompt": "<p>An unknown \\(2\times 2\\) matrix has these independent eigenvectors. \\(\\mathbf v_1=\\left(\\begin{matrix}1\\\\-2\\end{matrix}\\right)\\) has eigenvalue \\(3\\). \\(\\mathbf v_2=\\left(\\begin{matrix}0\\\\1\\end{matrix}\\right)\\) has eigenvalue \\(-8\\). Find entry \\((2,1)\\) of the matrix.</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry of the recovered matrix",
+                "type": "number",
+                "expected": "-22"
+              }
+            ],
+            "hint": "<p>Keep the matrix of vectors in the same order as their eigenvalues.</p>",
+            "solution": "<p>Put the vectors into the columns of \\(Q=\\left(\\begin{matrix}1 & 0\\\\-2 & 1\\end{matrix}\\right)\\) in the order listed. Put their eigenvalues into matching diagonal positions of \\(D=\\left(\\begin{matrix}3 & 0\\\\0 & -8\\end{matrix}\\right)\\).</p><p>From \\(AQ=QD\\) and the invertibility of \\(Q\\), the required matrix is \\(QDQ^{-1}=\\left(\\begin{matrix}3 & 0\\\\-22 & -8\\end{matrix}\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "insufficient-info",
+        "title": "When are the data insufficient to recover a unique matrix?",
+        "label": "Check independence first",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Knowing two proportional vectors in a plane gives only one independent direction. The map can act differently on a direction outside their span.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Column reconstruction requires a full basis. If \\(U\\) is singular there is no inverse. Data may be consistent but insufficient, or may contradict linearity.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Proportional inputs cannot have independent outputs. If the inputs satisfy a relation, their outputs must satisfy the same relation.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Apply a known dependency to the outputs before declaring the problem underdetermined.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "insufficient-info-check-7",
+            "title": "One direction leaves freedom",
+            "prompt": "<p>The input \\(\\boldsymbol u=\\left(\\begin{matrix}2\\\\-1\\end{matrix}\\right)\\) maps to \\(\\left(\\begin{matrix}1\\\\3\\end{matrix}\\right)\\). The input \\(\\left(\\begin{matrix}-4\\\\2\\end{matrix}\\right)\\) is said to map to \\(\\left(\\begin{matrix}-2\\\\-6\\end{matrix}\\right)\\). What follows?</p>",
+            "fields": [
+              {
+                "key": "consistency",
+                "label": "Choose the correct statement",
+                "type": "choice",
+                "expected": "option2",
+                "options": {
+                  "option1": "A unique map",
+                  "option2": "Consistent but not unique",
+                  "option3": "Inconsistent"
+                }
+              }
+            ],
+            "hint": "<p>Compare the multipliers of dependent inputs and outputs.</p>",
+            "solution": "<p>The second input is \\(-2\\) times the first. A linear map must multiply its first image by the same factor.</p><p>The stated output multiplier is \\(-2\\). The data specify one direction only.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Recover an action from two input columns",
+        "question": "<p>A linear map \\(A\\) acts on the columns of \\(U=\\left(\\begin{matrix}1 & 2\\\\1 & 3\\end{matrix}\\right)\\) to produce the respective columns of \\(V=\\left(\\begin{matrix}3 & -1\\\\2 & 1\\end{matrix}\\right)\\). Find entry \\((1,2)\\) of \\(A\\).</p>",
+        "solution": [
+          "<p>Using input and output columns, write \\(AU=V\\).</p>",
+          "<p>Right-multiplying by \\(U^{-1}\\) gives \\(A=\\left(\\begin{matrix}10 & -7\\\\5 & -3\\end{matrix}\\right)\\). Checking \\(AU\\) confirms the column order.</p>"
+        ]
+      },
+      {
+        "title": "Recover a matrix with fractional entries",
+        "question": "<p>A linear map \\(A\\) acts on the columns of \\(U=\\left(\\begin{matrix}2 & 0\\\\1 & 2\\end{matrix}\\right)\\) to produce the respective columns of \\(V=\\left(\\begin{matrix}1 & 5\\\\2 & 3\\end{matrix}\\right)\\). Find entry \\((2,1)\\) of \\(A\\).</p>",
+        "solution": [
+          "<p>Using input and output columns, write \\(AU=V\\).</p>",
+          "<p>Right-multiplying by \\(U^{-1}\\) gives \\(A=\\left(\\begin{matrix}- \\frac{3}{4} & \\frac{5}{2}\\\\\\frac{1}{4} & \\frac{3}{2}\\end{matrix}\\right)\\). Checking \\(AU\\) confirms the column order.</p>"
+        ]
+      },
+      {
+        "title": "Recover from matched eigenvectors",
+        "question": "<p>An unknown \\(2\times 2\\) matrix has these independent eigenvectors. \\(\\mathbf v_1=\\left(\\begin{matrix}1\\\\-2\\end{matrix}\\right)\\) has eigenvalue \\(2\\). \\(\\mathbf v_2=\\left(\\begin{matrix}0\\\\1\\end{matrix}\\right)\\) has eigenvalue \\(-3\\). Find entry \\((2,1)\\) of the matrix.</p>",
+        "solution": [
+          "<p>Put the vectors into the columns of \\(Q=\\left(\\begin{matrix}1 & 0\\\\-2 & 1\\end{matrix}\\right)\\) in the order listed. Put their eigenvalues into matching diagonal positions of \\(D=\\left(\\begin{matrix}2 & 0\\\\0 & -3\\end{matrix}\\right)\\).</p>",
+          "<p>From \\(AQ=QD\\) and the invertibility of \\(Q\\), the required matrix is \\(QDQ^{-1}=\\left(\\begin{matrix}2 & 0\\\\-10 & -3\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a similar representation",
+        "question": "<p>An unknown \\(3\times 3\\) matrix has these independent eigenvectors. \\(\\mathbf v_1=\\left(\\begin{matrix}1\\\\1\\\\0\\end{matrix}\\right)\\) has eigenvalue \\(-2\\). \\(\\mathbf v_2=\\left(\\begin{matrix}0\\\\1\\\\0\\end{matrix}\\right)\\) has eigenvalue \\(1\\). \\(\\mathbf v_3=\\left(\\begin{matrix}1\\\\0\\\\1\\end{matrix}\\right)\\) has eigenvalue \\(4\\). Find entry \\((3,1)\\) of the matrix.</p>",
+        "solution": [
+          "<p>Put the vectors into the columns of \\(Q=\\left(\\begin{matrix}1 & 0 & 1\\\\1 & 1 & 0\\\\0 & 0 & 1\\end{matrix}\\right)\\) in the order listed. Put their eigenvalues into matching diagonal positions of \\(D=\\left(\\begin{matrix}-2 & 0 & 0\\\\0 & 1 & 0\\\\0 & 0 & 4\\end{matrix}\\right)\\).</p>",
+          "<p>From \\(AQ=QD\\) and the invertibility of \\(Q\\), the required matrix is \\(QDQ^{-1}=\\left(\\begin{matrix}-2 & 0 & 6\\\\-3 & 1 & 3\\\\0 & 0 & 4\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "A full two-dimensional change of basis",
+        "question": "<p>An unknown \\(2\times 2\\) matrix has these independent eigenvectors. \\(\\mathbf v_1=\\left(\\begin{matrix}1\\\\1\\end{matrix}\\right)\\) has eigenvalue \\(-2\\). \\(\\mathbf v_2=\\left(\\begin{matrix}1\\\\2\\end{matrix}\\right)\\) has eigenvalue \\(7\\). Find entry \\((1,2)\\) of the matrix.</p>",
+        "solution": [
+          "<p>Put the vectors into the columns of \\(Q=\\left(\\begin{matrix}1 & 1\\\\1 & 2\\end{matrix}\\right)\\) in the order listed. Put their eigenvalues into matching diagonal positions of \\(D=\\left(\\begin{matrix}-2 & 0\\\\0 & 7\\end{matrix}\\right)\\).</p>",
+          "<p>From \\(AQ=QD\\) and the invertibility of \\(Q\\), the required matrix is \\(QDQ^{-1}=\\left(\\begin{matrix}-11 & 9\\\\-18 & 16\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Verify the other sign input",
+        "question": "<p>An unknown \\(2\times 2\\) matrix has these independent eigenvectors. \\(\\mathbf v_1=\\left(\\begin{matrix}2\\\\1\\end{matrix}\\right)\\) has eigenvalue \\(-2\\). \\(\\mathbf v_2=\\left(\\begin{matrix}1\\\\1\\end{matrix}\\right)\\) has eigenvalue \\(6\\). Find entry \\((1,2)\\) of the matrix.</p>",
+        "solution": [
+          "<p>Put the vectors into the columns of \\(Q=\\left(\\begin{matrix}2 & 1\\\\1 & 1\\end{matrix}\\right)\\) in the order listed. Put their eigenvalues into matching diagonal positions of \\(D=\\left(\\begin{matrix}-2 & 0\\\\0 & 6\\end{matrix}\\right)\\).</p>",
+          "<p>From \\(AQ=QD\\) and the invertibility of \\(Q\\), the required matrix is \\(QDQ^{-1}=\\left(\\begin{matrix}-10 & 16\\\\-8 & 14\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Incompatible data on a line",
+        "question": "<p>The input \\(\\boldsymbol u=\\left(\\begin{matrix}1\\\\2\\end{matrix}\\right)\\) maps to \\(\\left(\\begin{matrix}2\\\\-1\\end{matrix}\\right)\\). The input \\(\\left(\\begin{matrix}3\\\\6\\end{matrix}\\right)\\) is said to map to \\(\\left(\\begin{matrix}4\\\\-2\\end{matrix}\\right)\\). What follows?</p>",
+        "solution": [
+          "<p>The second input is \\(3\\) times the first. A linear map must multiply its first image by the same factor.</p>",
+          "<p>The stated output multiplier is \\(2\\). The multipliers differ, so no such linear map exists.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-reconstruct-practice-1",
+        "title": "Identify a fractional matrix entry",
+        "prompt": "<p>A linear map \\(A\\) acts on the columns of \\(U=\\left(\\begin{matrix}3 & 1\\\\1 & 0\\end{matrix}\\right)\\) to produce the respective columns of \\(V=\\left(\\begin{matrix}1 & -3\\\\2 & 7\\end{matrix}\\right)\\). Find entry \\((2,1)\\) of \\(A\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested matrix entry",
+            "type": "number",
+            "expected": "7"
+          }
+        ],
+        "hint": "<p>Put the inverse on the right of the output matrix.</p>",
+        "solution": "<p>Using input and output columns, write \\(AU=V\\).</p><p>Right-multiplying by \\(U^{-1}\\) gives \\(A=\\left(\\begin{matrix}-3 & 10\\\\7 & -19\\end{matrix}\\right)\\). Checking \\(AU\\) confirms the column order.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-reconstruct-practice-2",
+        "title": "One conflicting assertion",
+        "prompt": "<p>The input \\(\\boldsymbol u=\\left(\\begin{matrix}1\\\\4\\end{matrix}\\right)\\) maps to \\(\\left(\\begin{matrix}1\\\\0\\end{matrix}\\right)\\). The input \\(\\left(\\begin{matrix}5\\\\20\\end{matrix}\\right)\\) is said to map to \\(\\left(\\begin{matrix}3\\\\0\\end{matrix}\\right)\\). What follows?</p>",
+        "fields": [
+          {
+            "key": "consistency",
+            "label": "Choose the correct statement",
+            "type": "choice",
+            "expected": "option3",
+            "options": {
+              "option1": "A unique map",
+              "option2": "Consistent but not unique",
+              "option3": "Inconsistent"
+            }
+          }
+        ],
+        "hint": "<p>Compare the multipliers of dependent inputs and outputs.</p>",
+        "solution": "<p>The second input is \\(5\\) times the first. A linear map must multiply its first image by the same factor.</p><p>The stated output multiplier is \\(3\\). The multipliers differ, so no such linear map exists.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-reconstruct-practice-3",
+        "title": "Zero action along an eigenvector",
+        "prompt": "<p>An unknown \\(2\times 2\\) matrix has these independent eigenvectors. \\(\\mathbf v_1=\\left(\\begin{matrix}0\\\\1\\end{matrix}\\right)\\) has eigenvalue \\(3\\). \\(\\mathbf v_2=\\left(\\begin{matrix}1\\\\-2\\end{matrix}\\right)\\) has eigenvalue \\(0\\). Find entry \\((2,1)\\) of the matrix.</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested entry of the recovered matrix",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Keep the matrix of vectors in the same order as their eigenvalues.</p>",
+        "solution": "<p>Put the vectors into the columns of \\(Q=\\left(\\begin{matrix}0 & 1\\\\1 & -2\\end{matrix}\\right)\\) in the order listed. Put their eigenvalues into matching diagonal positions of \\(D=\\left(\\begin{matrix}3 & 0\\\\0 & 0\\end{matrix}\\right)\\).</p><p>From \\(AQ=QD\\) and the invertibility of \\(Q\\), the required matrix is \\(QDQ^{-1}=\\left(\\begin{matrix}0 & 0\\\\6 & 3\\end{matrix}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-reconstruct-practice-4",
+        "title": "Recover an entry in three dimensions",
+        "prompt": "<p>An unknown \\(3\times 3\\) matrix has these independent eigenvectors. \\(\\mathbf v_1=\\left(\\begin{matrix}1\\\\2\\\\-1\\end{matrix}\\right)\\) has eigenvalue \\(1\\). \\(\\mathbf v_2=\\left(\\begin{matrix}0\\\\1\\\\1\\end{matrix}\\right)\\) has eigenvalue \\(2\\). \\(\\mathbf v_3=\\left(\\begin{matrix}0\\\\0\\\\1\\end{matrix}\\right)\\) has eigenvalue \\(-4\\). Find entry \\((2,3)\\) of the matrix.</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested entry of the recovered matrix",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>Keep the matrix of vectors in the same order as their eigenvalues.</p>",
+        "solution": "<p>Put the vectors into the columns of \\(Q=\\left(\\begin{matrix}1 & 0 & 0\\\\2 & 1 & 0\\\\-1 & 1 & 1\\end{matrix}\\right)\\) in the order listed. Put their eigenvalues into matching diagonal positions of \\(D=\\left(\\begin{matrix}1 & 0 & 0\\\\0 & 2 & 0\\\\0 & 0 & -4\\end{matrix}\\right)\\).</p><p>From \\(AQ=QD\\) and the invertibility of \\(Q\\), the required matrix is \\(QDQ^{-1}=\\left(\\begin{matrix}1 & 0 & 0\\\\-2 & 2 & 0\\\\-17 & 6 & -4\\end{matrix}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-reconstruct-practice-5",
+        "title": "Compute an original-coordinate entry",
+        "prompt": "<p>A linear map \\(A\\) acts on the columns of \\(U=\\left(\\begin{matrix}1 & 1\\\\0 & 1\\end{matrix}\\right)\\) to produce the respective columns of \\(V=\\left(\\begin{matrix}3 & 7\\\\1 & 2\\end{matrix}\\right)\\). Find entry \\((1,2)\\) of \\(A\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested matrix entry",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>Put the inverse on the right of the output matrix.</p>",
+        "solution": "<p>Using input and output columns, write \\(AU=V\\).</p><p>Right-multiplying by \\(U^{-1}\\) gives \\(A=\\left(\\begin{matrix}3 & 4\\\\1 & 1\\end{matrix}\\right)\\). Checking \\(AU\\) confirms the column order.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Reconstruction",
+        "definition": "<p>Determining the linear map from the images of inputs.</p>"
+      },
+      {
+        "term": "Independent inputs",
+        "definition": "<p>Vectors for which no nontrivial linear combination is zero.</p>"
+      },
+      {
+        "term": "Similarity",
+        "definition": "<p>Two matrices related by \\(B=Q^{-1}AQ\\) for an invertible \\(Q\\).</p>"
+      },
+      {
+        "term": "Dependent data",
+        "definition": "<p>Input data that constrain fewer directions than the space has.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>From matching input and output columns, \\(AU=V\\) gives \\(A=VU^{-1}\\) when \\(U\\) is invertible. For independent eigenvectors use \\(V=QD\\).</p>",
+      "checks": "<ul><li>Which side of the output matrix receives the inverse?</li><li>What must happen to the outputs of proportional inputs?</li><li>What stays the same under a change of basis?</li></ul>",
+      "examTip": "<p>Verify using the supplied inputs, and show that they form a basis before claiming uniqueness.</p>"
+    },
+    "related": [
+      {
+        "title": "Diagonalisation and matrix powers",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_diagonal"
+      },
+      {
+        "title": "Systems, consistency and geometry",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_systems"
+      }
+    ]
+  },
+  "fp2_matrices2_systems": {
+    "updatedOn": "2026-11-21",
+    "description": "Use an augmented matrix to distinguish one common point, a line, a plane or no common point for three planes.",
+    "sections": [
+      {
+        "id": "represent",
+        "title": "How do I turn three equations into one matrix equation?",
+        "label": "Build A and b",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Choose one variable order, normally \\(x,y,z\\). Put every coefficient in that order, with a zero for any missing variable. Put the constants on the right.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write \\(A\\boldsymbol x=\\boldsymbol b\\) with unknowns as a column. A row of \\(A\\) records the coefficients of one equation, hence the normal of its plane.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not shift a coefficient into the wrong column if a variable is missing.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>When reducing, work on the augmented matrix \\([A\\mid \\boldsymbol b]\\) so the constants undergo the same row operations.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "represent-check-1",
+            "title": "Use the displayed coefficient matrix",
+            "prompt": "<p>Solve \\(\\left(\\begin{matrix}1 & 1 & 1\\\\2 & 1 & 3\\\\-1 & -2 & 2\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}0\\\\-1\\\\-5\\end{matrix}\\right)\\) and give the common point of the three planes.</p>",
+            "fields": [
+              {
+                "type": "pairs",
+                "key": "coordinates",
+                "label": "Common point (x, y, z)",
+                "dimension": 3,
+                "expected": "(3,-1,-2)"
+              }
+            ],
+            "hint": "<p>Reduce the augmented matrix including its last column.</p>",
+            "solution": "<p>Every variable is fixed, since \\(\\det A=-2\\) is nonzero.</p><p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 0 & 3\\\\0 & 1 & 0 & -1\\\\0 & 0 & 1 & -2\\end{matrix}\\right)\\).</p><p>There is a pivot in every variable column and no contradiction. Read off the values to obtain \\(\\left(\\begin{matrix}3\\\\-1\\\\-2\\end{matrix}\\right)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "represent-check-2",
+            "title": "Eliminate a latent dependence",
+            "prompt": "<p>Solve \\(\\left(\\begin{matrix}1 & 2 & 1\\\\2 & 3 & 3\\\\-1 & -3 & 2\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}-5\\\\-5\\\\16\\end{matrix}\\right)\\) and give the common point of the three planes.</p>",
+            "fields": [
+              {
+                "type": "pairs",
+                "key": "coordinates",
+                "label": "Common point (x, y, z)",
+                "dimension": 3,
+                "expected": "(-4,-2,3)"
+              }
+            ],
+            "hint": "<p>Reduce the augmented matrix including its last column.</p>",
+            "solution": "<p>Every variable is fixed, since \\(\\det A=-2\\) is nonzero.</p><p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 0 & -4\\\\0 & 1 & 0 & -2\\\\0 & 0 & 1 & 3\\end{matrix}\\right)\\).</p><p>There is a pivot in every variable column and no contradiction. Read off the values to obtain \\(\\left(\\begin{matrix}-4\\\\-2\\\\3\\end{matrix}\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "unique",
+        "title": "How can I prove that the planes meet at one point?",
+        "label": "The invertible case",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Three independent equations can fix all three variables. With \\(\\det A\\ne0\\), the equation has a unique solution for any right-hand side.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\boldsymbol x=A^{-1}\\boldsymbol b\\) or eliminate and back-substitute. The common intersection is the point with these coordinates.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A nonzero determinant establishes uniqueness. It does not give the coordinates by itself.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Substitute the found point in all three original equations.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "unique-check-3",
+            "title": "Substitute a unique point",
+            "prompt": "<p>Solve \\(\\left(\\begin{matrix}1 & 3 & 1\\\\2 & 5 & 3\\\\-1 & -4 & 2\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}-7\\\\-13\\\\4\\end{matrix}\\right)\\) and give the common point of the three planes.</p>",
+            "fields": [
+              {
+                "type": "pairs",
+                "key": "coordinates",
+                "label": "Common point (x, y, z)",
+                "dimension": 3,
+                "expected": "(4,-3,-2)"
+              }
+            ],
+            "hint": "<p>Reduce the augmented matrix including its last column.</p>",
+            "solution": "<p>Every variable is fixed, since \\(\\det A=-2\\) is nonzero.</p><p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 0 & 4\\\\0 & 1 & 0 & -3\\\\0 & 0 & 1 & -2\\end{matrix}\\right)\\).</p><p>There is a pivot in every variable column and no contradiction. Read off the values to obtain \\(\\left(\\begin{matrix}4\\\\-3\\\\-2\\end{matrix}\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "free",
+        "title": "What does a free variable mean geometrically?",
+        "label": "Consistent singular systems",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>When no contradiction occurs, the missing pivots reveal how many coordinates can vary freely. The number of free variables is three minus the number of independent equations.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Two independent equations in a consistent system leave a line. A single independent plane equation leaves a common plane. Parametrise one free variable for the line and give its direction.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp2_matrices2_systems/three-planes-one-line.svg",
+              "alt": "The planes x = 0, y = 0 and x = y all contain the vertical z-axis. The shared line is highlighted in blue.",
+              "caption": "<p>The planes x = 0, y = 0 and x = y all contain the vertical z-axis. The shared line is highlighted in blue.</p>",
+              "width": 470,
+              "height": 270
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A zero row is a redundant equation. It does not create an inconsistency.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep the free parameter explicit instead of assigning it zero and reporting only one point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "free-check-4",
+            "title": "Recognise a free variable",
+            "prompt": "<p>For \\(\\left(\\begin{matrix}1 & 2 & 1\\\\2 & 3 & 3\\\\-1 & -3 & 0\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}0\\\\3\\\\3\\end{matrix}\\right)\\), find the point on the common line for which \\(z=0\\).</p>",
+            "fields": [
+              {
+                "type": "pairs",
+                "key": "coordinates",
+                "label": "Point on the line with z = 0",
+                "dimension": 3,
+                "expected": "(6,-3,0)"
+              }
+            ],
+            "hint": "<p>Use the two independent equations and start by setting z to zero.</p>",
+            "solution": "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 3 & 6\\\\0 & 1 & -1 & -3\\\\0 & 0 & 0 & 0\\end{matrix}\\right)\\).</p><p>There are two independent equations and one free variable. The solution is an affine line.</p><p>Set the free coordinate \\(z\\) equal to \\(t\\). Reading both pivot equations gives the complete line \\(\\boldsymbol x=\\left(\\begin{matrix}6 - 3 t\\\\t - 3\\\\t\\end{matrix}\\right),\\quad t\\in\\mathbb R\\).</p><p>At \\(t=0\\), the coordinates are \\(\\left(\\begin{matrix}6\\\\-3\\\\0\\end{matrix}\\right)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "free-check-5",
+            "title": "Recognise a common plane",
+            "prompt": "<p>Interpret the common intersection of the planes represented by \\(\\left(\\begin{matrix}1 & 1 & 1\\\\2 & 2 & 2\\\\3 & 3 & 3\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}6\\\\12\\\\18\\end{matrix}\\right)\\).</p>",
+            "fields": [
+              {
+                "key": "type",
+                "label": "Choose the correct statement",
+                "type": "choice",
+                "expected": "option3",
+                "options": {
+                  "option1": "One point",
+                  "option2": "A line",
+                  "option3": "A plane",
+                  "option4": "No common point"
+                }
+              }
+            ],
+            "hint": "<p>Compare the number of independent equations with the number of variables. Check first for a contradiction.</p>",
+            "solution": "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 1 & 1 & 6\\\\0 & 0 & 0 & 0\\\\0 & 0 & 0 & 0\\end{matrix}\\right)\\).</p><p>Only the first equation supplies a constraint. Each of the other rows is a multiple, so all three planes coincide.</p>"
+          }
+        ]
+      },
+      {
+        "id": "contradiction",
+        "title": "How do I spot a system with no common point?",
+        "label": "Compare the augmented column",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A row operation can remove all three variables from an equation. Read its constant before deciding whether that row adds information.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A row \\([0\\ 0\\ 0\\mid d]\\) with \\(d\\ne0\\) is a contradiction. Three planes can meet pairwise in lines and still have no common point.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The determinant being zero allows either a consistent or an inconsistent system. Inspect the right-hand column.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Quote the contradictory row or equation to justify the geometric conclusion.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "contradiction-check-6",
+            "title": "Find the contradiction",
+            "prompt": "<p>Interpret the common intersection of the planes represented by \\(\\left(\\begin{matrix}1 & 2 & 1\\\\2 & 3 & 3\\\\-1 & -3 & 0\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}-2\\\\-4\\\\3\\end{matrix}\\right)\\).</p>",
+            "fields": [
+              {
+                "key": "type",
+                "label": "Choose the correct statement",
+                "type": "choice",
+                "expected": "option4",
+                "options": {
+                  "option1": "One point",
+                  "option2": "A line",
+                  "option3": "A plane",
+                  "option4": "No common point"
+                }
+              }
+            ],
+            "hint": "<p>Compare the number of independent equations with the number of variables. Check first for a contradiction.</p>",
+            "solution": "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 3 & 0\\\\0 & 1 & -1 & 0\\\\0 & 0 & 0 & 1\\end{matrix}\\right)\\).</p><p>The last row has zero coefficients and a nonzero right-hand side. No triple can satisfy all three equations.</p>"
+          }
+        ]
+      },
+      {
+        "id": "exception-value",
+        "title": "How do I deal with parameter values separately?",
+        "label": "Hold off on division",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>An elimination step with a parameter can lose information if you divide by an expression that may vanish. Keep that expression factored until the exceptional value is known.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find the parameter values making \\(\\det A=0\\) or a pivot disappear. For each such value insert it into the original augmented system and check consistency.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The generic solution obtained after division cannot be used at a value making that divisor zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Present the generic and exceptional cases with their geometric meanings.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "exception-value-check-7",
+            "title": "Classify the case when the last pivot vanishes",
+            "prompt": "<p>The system \\(\\left(\\begin{matrix}1 & 3 & 0\\\\0 & 1 & 1\\\\1 & 4 & k\\end{matrix}\\right)\\boldsymbol v=\\left(\\begin{matrix}1\\\\2\\\\3\\end{matrix}\\right)\\) has no unique solution for one value of \\(k\\). Find that value.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Exceptional value of k",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Subtract both of the first two augmented rows from the last.</p>",
+            "solution": "<p>Replace the third augmented row by itself minus the first two. Its coefficients become \\(\\left(\\begin{matrix}0 & 0 & k - 1\\end{matrix}\\right)\\) and its right-hand side is zero.</p><p>It loses the final constraint exactly when \\(k=1\\). The remaining two independent equations give a common line.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Read the three planes in coefficient order",
+        "question": "<p>Solve \\(\\left(\\begin{matrix}1 & 2 & 1\\\\2 & 3 & 3\\\\-1 & -3 & 2\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}0\\\\5\\\\11\\end{matrix}\\right)\\) and give the common point of the three planes.</p>",
+        "solution": [
+          "<p>Every variable is fixed, since \\(\\det A=-2\\) is nonzero.</p>",
+          "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 0 & 1\\\\0 & 1 & 0 & -2\\\\0 & 0 & 1 & 3\\end{matrix}\\right)\\).</p>",
+          "<p>There is a pivot in every variable column and no contradiction. Read off the values to obtain \\(\\left(\\begin{matrix}1\\\\-2\\\\3\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the constants during elimination",
+        "question": "<p>Solve \\(\\left(\\begin{matrix}1 & -1 & 1\\\\2 & -3 & 3\\\\-1 & 0 & 2\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}4\\\\10\\\\4\\end{matrix}\\right)\\) and give the common point of the three planes.</p>",
+        "solution": [
+          "<p>Every variable is fixed, since \\(\\det A=-2\\) is nonzero.</p>",
+          "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 0 & 2\\\\0 & 1 & 0 & 1\\\\0 & 0 & 1 & 3\\end{matrix}\\right)\\).</p>",
+          "<p>There is a pivot in every variable column and no contradiction. Read off the values to obtain \\(\\left(\\begin{matrix}2\\\\1\\\\3\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the unique common point",
+        "question": "<p>Solve \\(\\left(\\begin{matrix}1 & 3 & 1\\\\2 & 5 & 3\\\\-1 & -4 & 2\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}-8\\\\-14\\\\8\\end{matrix}\\right)\\) and give the common point of the three planes.</p>",
+        "solution": [
+          "<p>Every variable is fixed, since \\(\\det A=-2\\) is nonzero.</p>",
+          "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 0 & 2\\\\0 & 1 & 0 & -3\\\\0 & 0 & 1 & -1\\end{matrix}\\right)\\).</p>",
+          "<p>There is a pivot in every variable column and no contradiction. Read off the values to obtain \\(\\left(\\begin{matrix}2\\\\-3\\\\-1\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Two constraints leave a line",
+        "question": "<p>For \\(\\left(\\begin{matrix}1 & 1 & 1\\\\2 & 1 & 3\\\\-1 & -2 & 0\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}5\\\\13\\\\-2\\end{matrix}\\right)\\), find the point on the common line for which \\(z=0\\).</p>",
+        "solution": [
+          "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 2 & 8\\\\0 & 1 & -1 & -3\\\\0 & 0 & 0 & 0\\end{matrix}\\right)\\).</p>",
+          "<p>There are two independent equations and one free variable. The solution is an affine line.</p>",
+          "<p>Set the free coordinate \\(z\\) equal to \\(t\\). Reading both pivot equations gives the complete line \\(\\boldsymbol x=\\left(\\begin{matrix}8 - 2 t\\\\t - 3\\\\t\\end{matrix}\\right),\\quad t\\in\\mathbb R\\).</p>",
+          "<p>At \\(t=0\\), the coordinates are \\(\\left(\\begin{matrix}8\\\\-3\\\\0\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "All three planes coincide",
+        "question": "<p>Interpret the common intersection of the planes represented by \\(\\left(\\begin{matrix}1 & 2 & 1\\\\2 & 4 & 2\\\\3 & 6 & 3\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}-1\\\\-2\\\\-3\\end{matrix}\\right)\\).</p>",
+        "solution": [
+          "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 2 & 1 & -1\\\\0 & 0 & 0 & 0\\\\0 & 0 & 0 & 0\\end{matrix}\\right)\\).</p>",
+          "<p>Only the first equation supplies a constraint. Each of the other rows is a multiple, so all three planes coincide.</p>"
+        ]
+      },
+      {
+        "title": "An impossible final row",
+        "question": "<p>Interpret the common intersection of the planes represented by \\(\\left(\\begin{matrix}1 & 3 & 1\\\\2 & 5 & 3\\\\-1 & -4 & 0\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}-2\\\\4\\\\11\\end{matrix}\\right)\\).</p>",
+        "solution": [
+          "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 4 & 0\\\\0 & 1 & -1 & 0\\\\0 & 0 & 0 & 1\\end{matrix}\\right)\\).</p>",
+          "<p>The last row has zero coefficients and a nonzero right-hand side. No triple can satisfy all three equations.</p>"
+        ]
+      },
+      {
+        "title": "Find the exceptional parameter",
+        "question": "<p>The system \\(\\left(\\begin{matrix}1 & 2 & 0\\\\0 & 1 & 1\\\\1 & 3 & k\\end{matrix}\\right)\\boldsymbol v=\\left(\\begin{matrix}3\\\\4\\\\7\\end{matrix}\\right)\\) has no unique solution for one value of \\(k\\). Find that value.</p>",
+        "solution": [
+          "<p>Replace the third augmented row by itself minus the first two. Its coefficients become \\(\\left(\\begin{matrix}0 & 0 & k - 1\\end{matrix}\\right)\\) and its right-hand side is zero.</p>",
+          "<p>It loses the final constraint exactly when \\(k=1\\). The remaining two independent equations give a common line.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-systems-practice-1",
+        "title": "Keep a negative coordinate",
+        "prompt": "<p>Solve \\(\\left(\\begin{matrix}1 & 4 & 1\\\\2 & 7 & 3\\\\-1 & -5 & 2\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}-18\\\\-30\\\\28\\end{matrix}\\right)\\) and give the common point of the three planes.</p>",
+        "fields": [
+          {
+            "type": "pairs",
+            "key": "coordinates",
+            "label": "Common point (x, y, z)",
+            "dimension": 3,
+            "expected": "(-4,-4,2)"
+          }
+        ],
+        "hint": "<p>Reduce the augmented matrix including its last column.</p>",
+        "solution": "<p>Every variable is fixed, since \\(\\det A=-2\\) is nonzero.</p><p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 0 & -4\\\\0 & 1 & 0 & -4\\\\0 & 0 & 1 & 2\\end{matrix}\\right)\\).</p><p>There is a pivot in every variable column and no contradiction. Read off the values to obtain \\(\\left(\\begin{matrix}-4\\\\-4\\\\2\\end{matrix}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-systems-practice-2",
+        "title": "Distinguish dependence from inconsistency",
+        "prompt": "<p>For \\(\\left(\\begin{matrix}1 & -2 & 1\\\\2 & -5 & 3\\\\-1 & 1 & 0\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}-3\\\\-9\\\\0\\end{matrix}\\right)\\), find the point on the common line for which \\(z=0\\).</p>",
+        "fields": [
+          {
+            "type": "pairs",
+            "key": "coordinates",
+            "label": "Point on the line with z = 0",
+            "dimension": 3,
+            "expected": "(3,3,0)"
+          }
+        ],
+        "hint": "<p>Use the two independent equations and start by setting z to zero.</p>",
+        "solution": "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & -1 & 3\\\\0 & 1 & -1 & 3\\\\0 & 0 & 0 & 0\\end{matrix}\\right)\\).</p><p>There are two independent equations and one free variable. The solution is an affine line.</p><p>Set the free coordinate \\(z\\) equal to \\(t\\). Reading both pivot equations gives the complete line \\(\\boldsymbol x=\\left(\\begin{matrix}t + 3\\\\t + 3\\\\t\\end{matrix}\\right),\\quad t\\in\\mathbb R\\).</p><p>At \\(t=0\\), the coordinates are \\(\\left(\\begin{matrix}3\\\\3\\\\0\\end{matrix}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-systems-practice-3",
+        "title": "Check the augmented final constant",
+        "prompt": "<p>Interpret the common intersection of the planes represented by \\(\\left(\\begin{matrix}1 & -1 & 1\\\\2 & -3 & 3\\\\-1 & 0 & 0\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}4\\\\11\\\\0\\end{matrix}\\right)\\).</p>",
+        "fields": [
+          {
+            "key": "type",
+            "label": "Choose the correct statement",
+            "type": "choice",
+            "expected": "option4",
+            "options": {
+              "option1": "One point",
+              "option2": "A line",
+              "option3": "A plane",
+              "option4": "No common point"
+            }
+          }
+        ],
+        "hint": "<p>Compare the number of independent equations with the number of variables. Check first for a contradiction.</p>",
+        "solution": "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 0 & 0\\\\0 & 1 & -1 & 0\\\\0 & 0 & 0 & 1\\end{matrix}\\right)\\).</p><p>The last row has zero coefficients and a nonzero right-hand side. No triple can satisfy all three equations.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-systems-practice-4",
+        "title": "Solve at a non-exceptional value",
+        "prompt": "<p>For \\(k=3\\), solve \\(\\left(\\begin{matrix}1 & 1 & 0\\\\0 & 1 & 1\\\\1 & 2 & k\\end{matrix}\\right)\\boldsymbol v=\\left(\\begin{matrix}5\\\\3\\\\8\\end{matrix}\\right)\\).</p>",
+        "fields": [
+          {
+            "type": "pairs",
+            "key": "solution",
+            "label": "Ordered solution (x, y, z)",
+            "dimension": 3,
+            "expected": "(2,3,0)"
+          }
+        ],
+        "hint": "<p>Reduce before substituting for the variables.</p>",
+        "solution": "<p>Subtract the first two rows from the third. The last equation becomes \\(2z=0\\).</p><p>Thus \\(z=0\\) and the second equation gives \\(y=3\\). Use the first equation for the remaining coordinate: \\(\\left(\\begin{matrix}2\\\\3\\\\0\\end{matrix}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-systems-practice-5",
+        "title": "Find the common geometric object",
+        "prompt": "<p>Interpret the common intersection of the planes represented by \\(\\left(\\begin{matrix}1 & 4 & 1\\\\2 & 8 & 2\\\\3 & 12 & 3\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}-12\\\\-24\\\\-36\\end{matrix}\\right)\\).</p>",
+        "fields": [
+          {
+            "key": "type",
+            "label": "Choose the correct statement",
+            "type": "choice",
+            "expected": "option3",
+            "options": {
+              "option1": "One point",
+              "option2": "A line",
+              "option3": "A plane",
+              "option4": "No common point"
+            }
+          }
+        ],
+        "hint": "<p>Compare the number of independent equations with the number of variables. Check first for a contradiction.</p>",
+        "solution": "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 4 & 1 & -12\\\\0 & 0 & 0 & 0\\\\0 & 0 & 0 & 0\\end{matrix}\\right)\\).</p><p>Only the first equation supplies a constraint. Each of the other rows is a multiple, so all three planes coincide.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Augmented matrix",
+        "definition": "<p>The coefficient matrix joined to the column of constants.</p>"
+      },
+      {
+        "term": "Pivot",
+        "definition": "<p>A leading entry used to eliminate a variable.</p>"
+      },
+      {
+        "term": "Consistent system",
+        "definition": "<p>A system with at least one solution.</p>"
+      },
+      {
+        "term": "Free variable",
+        "definition": "<p>An independent parameter left unconstrained in a consistent solution.</p>"
+      },
+      {
+        "term": "Singular matrix",
+        "definition": "<p>A square matrix with determinant zero.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>If \\(\\det A\\ne0\\), solve by elimination or \\(A^{-1}\\boldsymbol b\\). If \\(\\det A=0\\), reduce \\([A\\mid\\boldsymbol b]\\). An impossible row means no common point; two independent consistent rows give a line.</p><table><thead><tr><th scope=\"col\">Reduced system</th><th scope=\"col\">Common set</th></tr></thead><tbody><tr><td>\\(\\det A\\ne0\\)</td><td>One point</td></tr><tr><td>\\(0=d,\\ d\\ne0\\)</td><td>No common point</td></tr><tr><td>Two independent consistent equations</td><td>A line</td></tr><tr><td>One independent equation</td><td>A plane</td></tr></tbody></table>",
+      "checks": "<ul><li>Which part of the augmented matrix decides whether a zero coefficient row is a contradiction?</li><li>Why can a singular system have infinitely many solutions?</li><li>How is the normal of a plane read from a matrix row?</li></ul>",
+      "examTip": "<p>Investigate each exceptional value before dividing by any parameter expression.</p>"
+    },
+    "related": [
+      {
+        "title": "Reconstruction and similarity",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_reconstruct"
+      },
+      {
+        "title": "Mixed matrix applications",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_mixed"
+      }
+    ]
+  },
+  "fp2_matrices2_mixed": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose between elimination and eigenbasis methods to solve parameter systems and calculate repeated matrix actions.",
+    "sections": [
+      {
+        "id": "pick-method",
+        "title": "Which representation makes the problem shorter?",
+        "label": "Choose a matrix method",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Ask whether the problem supplies equations, eigenvectors or a relation between powers. Those forms give different productive starting points.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use an augmented system for consistency, an eigenbasis for repeated action, and the characteristic equation for power reduction. If one eigenvector is specified, its scalar multiplier may suffice.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A matrix calculation is not always necessary when the requested input is already a known eigenvector.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify the output requested before doing an inverse or determinant.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "pick-method-check-1",
+            "title": "Apply a polynomial to one vector",
+            "prompt": "<p>Suppose \\(A\\mathbf v=3\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\). Find the eigenvalue of \\(A^2-2A+2I\\) corresponding to \\(\\mathbf v\\).</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Eigenvalue of the resulting matrix",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Keep the same non-zero eigenvector while changing the matrix.</p>",
+            "solution": "<p>Each matrix term acts on the same vector, so the scalar multipliers can be added.</p><p>Use \\(A^2\\mathbf v=\\lambda^2\\mathbf v\\) and \\(I\\mathbf v=\\mathbf v\\).</p><p>Substituting \\(\\lambda=3\\) gives the associated eigenvalue \\(5\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "pick-method-check-2",
+            "title": "Use the characteristic polynomial for the needed entry",
+            "prompt": "<p>For \\(A=\\left(\\begin{matrix}-3 & 0 & 7\\\\-5 & 2 & 5\\\\0 & 0 & 4\\end{matrix}\\right)\\), determine the entry in row 3, column 1 of \\(A^{6}\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Reduce the power using the characteristic equation before multiplying matrices.</p>",
+            "solution": "<p>The characteristic polynomial is \\(\\lambda^{3} - 3 \\lambda^{2} - 10 \\lambda + 24\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p><p>Dividing the scalar polynomial \\(\\lambda^{6}\\) by the characteristic polynomial leaves remainder \\(307 \\lambda^{2} + 174 \\lambda - 1512\\). Thus \\(A^{6}=307 A^{2} + 174 A - 1512 I\\), using the identity matrix for the constant term.</p><p>Evaluating this identity gives \\(\\left(\\begin{matrix}729 & 0 & 3367\\\\665 & 64 & -665\\\\0 & 0 & 4096\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+          }
+        ]
+      },
+      {
+        "id": "special-value",
+        "title": "How do parameter-dependent systems lose uniqueness?",
+        "label": "Test exceptional values",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>The generic argument and the exceptional argument use different facts. Separate them before simplifying.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If one pivot is \\(k-c\\) and the other pivots stay nonzero, the system is uniquely solvable for \\(k\\ne c\\). At \\(k=c\\), use the constants to decide whether a free variable or a contradiction remains.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Setting a denominator equal to zero finds a candidate for special handling. It does not give a solution for the exceptional system.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Preserve the right-hand column during parameter elimination.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "special-value-check-3",
+            "title": "Identify the exceptional parameter with constants included",
+            "prompt": "<p>The system \\(\\left(\\begin{matrix}1 & 3 & 0\\\\0 & 1 & 1\\\\1 & 4 & k\\end{matrix}\\right)\\boldsymbol v=\\left(\\begin{matrix}2\\\\4\\\\6\\end{matrix}\\right)\\) has no unique solution for one value of \\(k\\). Find that value.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Exceptional value of k",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Subtract both of the first two augmented rows from the last.</p>",
+            "solution": "<p>Replace the third augmented row by itself minus the first two. Its coefficients become \\(\\left(\\begin{matrix}0 & 0 & k - 1\\end{matrix}\\right)\\) and its right-hand side is zero.</p><p>It loses the final constraint exactly when \\(k=1\\). The remaining two independent equations give a common line.</p>"
+          }
+        ]
+      },
+      {
+        "id": "iterate",
+        "title": "How can I calculate repeated action without large products?",
+        "label": "Split the initial vector",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>If a vector is a sum along independent eigendirections, each component evolves separately under iteration.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(\\boldsymbol u=c_1\\boldsymbol v_1+c_2\\boldsymbol v_2\\), \\(A^k\\boldsymbol u=c_1\\lambda_1^k\\boldsymbol v_1+c_2\\lambda_2^k\\boldsymbol v_2\\). Use the same idea for three independent directions.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An input made of more than one eigendirection does not normally have a single multiplier.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Apply the powers to the eigenvalues, and keep the initial coefficients.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "iterate-check-4",
+            "title": "Compute an iterated image",
+            "prompt": "<p>Let \\(Q=\\left(\\begin{matrix}2 & 1\\\\1 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-5 & 0\\\\0 & 2\\end{matrix}\\right)\\). If \\(A=QDQ^{-1}\\), find \\(A^{4}\\mathbf u\\) for \\(\\mathbf u=\\left(\\begin{matrix}3\\\\4\\end{matrix}\\right)\\).</p>",
+            "fields": [
+              {
+                "type": "pairs",
+                "key": "image",
+                "label": "Image vector in original coordinates",
+                "dimension": 2,
+                "expected": "(-1170,-545)"
+              }
+            ],
+            "hint": "<p>Apply the factors from right to left to a vector.</p>",
+            "solution": "<p>First express the input vector in the eigenbasis. This gives \\(Q^{-1}\\mathbf u=\\left(\\begin{matrix}-1\\\\5\\end{matrix}\\right)\\).</p><p>Multiply the coordinates by \\(D^{4}\\) and return to the original basis using \\(Q\\). The resulting vector is \\(\\left(\\begin{matrix}-1170\\\\-545\\end{matrix}\\right)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "iterate-check-5",
+            "title": "Track three independent directions",
+            "prompt": "<p>Let \\(Q=\\left(\\begin{matrix}1 & 1 & 1\\\\0 & 1 & 1\\\\0 & 0 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-2 & 0 & 0\\\\0 & 1 & 0\\\\0 & 0 & 3\\end{matrix}\\right)\\). If \\(A=QDQ^{-1}\\), find \\(A^{5}\\mathbf u\\) for \\(\\mathbf u=\\left(\\begin{matrix}4\\\\5\\\\1\\end{matrix}\\right)\\).</p>",
+            "fields": [
+              {
+                "type": "pairs",
+                "key": "image",
+                "label": "Image vector in original coordinates",
+                "dimension": 3,
+                "expected": "(279,247,243)"
+              }
+            ],
+            "hint": "<p>Apply the factors from right to left to a vector.</p>",
+            "solution": "<p>First express the input vector in the eigenbasis. This gives \\(Q^{-1}\\mathbf u=\\left(\\begin{matrix}-1\\\\4\\\\1\\end{matrix}\\right)\\).</p><p>Multiply the coordinates by \\(D^{5}\\) and return to the original basis using \\(Q\\). The resulting vector is \\(\\left(\\begin{matrix}279\\\\247\\\\243\\end{matrix}\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "directions",
+        "title": "What does a change of coordinates do to repeated action?",
+        "label": "Conjugate once",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Relate coordinates in the original basis to coordinates in the eigenbasis. This helps avoid computing a full matrix when only a few outputs are needed.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Calculate \\(\\boldsymbol w=Q^{-1}\\boldsymbol u\\) once. Then the original coordinates after \\(k\\) applications are \\(Q D^k\\boldsymbol w\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Coordinates and physical vectors are different descriptions of the same object; sending coordinates back through the wrong basis changes the result.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A zero eigenvalue component vanishes after one or more applications.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "directions-check-6",
+            "title": "Compose the basis matrices in the right order",
+            "prompt": "<p>Let \\(Q=\\left(\\begin{matrix}0 & 1\\\\1 & -2\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-1 & 0\\\\0 & 4\\end{matrix}\\right)\\). If \\(A=QDQ^{-1}\\), find \\(A^{3}\\mathbf u\\) for \\(\\mathbf u=\\left(\\begin{matrix}1\\\\2\\end{matrix}\\right)\\).</p>",
+            "fields": [
+              {
+                "type": "pairs",
+                "key": "image",
+                "label": "Image vector in original coordinates",
+                "dimension": 2,
+                "expected": "(64,-132)"
+              }
+            ],
+            "hint": "<p>Apply the factors from right to left to a vector.</p>",
+            "solution": "<p>First express the input vector in the eigenbasis. This gives \\(Q^{-1}\\mathbf u=\\left(\\begin{matrix}4\\\\1\\end{matrix}\\right)\\).</p><p>Multiply the coordinates by \\(D^{3}\\) and return to the original basis using \\(Q\\). The resulting vector is \\(\\left(\\begin{matrix}64\\\\-132\\end{matrix}\\right)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "final-check",
+        "title": "How do I check an answer that combines several methods?",
+        "label": "Check the source of the result",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>The right check depends on the output. A matrix power can be checked on eigenvectors; a common plane intersection can be checked by substitution.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>To verify a candidate matrix \\(B=A^k\\) from a full eigenbasis, check \\(B\\boldsymbol v_i=\\lambda_i^k\\boldsymbol v_i\\) for all independent columns. To verify \\(B^2=A\\), check the chosen signs by squaring.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Checking one column proves an identity on that line only. All independent directions are needed to justify the whole matrix.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Compute a quick invariant as a check, then test the original relation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "final-check-check-7",
+            "title": "Use the given signs to recover a root",
+            "prompt": "<p>A matrix \\(B\\) satisfies \\(B^2=\\left(\\begin{matrix}28 & -12\\\\24 & -8\\end{matrix}\\right)\\). It has \\(Q=\\left(\\begin{matrix}1 & -1\\\\2 & -1\\end{matrix}\\right)\\) as its eigenvector basis. It has the following eigenvalues in the same order as these columns: \\(-2\\), \\(4\\). Find entry \\((2,1)\\) of \\(B\\).</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Requested entry of the square root",
+                "type": "number",
+                "expected": "12"
+              }
+            ],
+            "hint": "<p>Select the diagonal signs according to the eigenvalue information.</p>",
+            "solution": "<p>The given eigenvalues already choose the square-root signs. Use \\(D=\\left(\\begin{matrix}-2 & 0\\\\0 & 4\\end{matrix}\\right)\\) with the stated eigenbasis.</p><p>Then \\(B=QDQ^{-1}=\\left(\\begin{matrix}10 & -6\\\\12 & -8\\end{matrix}\\right)\\). Squaring this expression recovers the original matrix.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use the scalar action where possible",
+        "question": "<p>Suppose \\(A\\mathbf v=5\\mathbf v,\\quad \\mathbf v\\ne\\mathbf0\\). Find the eigenvalue of \\(A^2+0A+2I\\) corresponding to \\(\\mathbf v\\).</p>",
+        "solution": [
+          "<p>Each matrix term acts on the same vector, so the scalar multipliers can be added.</p>",
+          "<p>Use \\(A^2\\mathbf v=\\lambda^2\\mathbf v\\) and \\(I\\mathbf v=\\mathbf v\\).</p>",
+          "<p>Substituting \\(\\lambda=5\\) gives the associated eigenvalue \\(27\\).</p>"
+        ]
+      },
+      {
+        "title": "Reduce the matrix before multiplying",
+        "question": "<p>For \\(A=\\left(\\begin{matrix}-7 & 10\\\\-5 & 8\\end{matrix}\\right)\\), determine the entry in row 1, column 2 of \\(A^{5}\\).</p>",
+        "solution": [
+          "<p>The characteristic polynomial is \\(\\lambda^{2} - \\lambda - 6\\). By Cayley–Hamilton its value at the matrix is the zero matrix.</p>",
+          "<p>Dividing the scalar polynomial \\(\\lambda^{5}\\) by the characteristic polynomial leaves remainder \\(55 \\lambda + 78\\). Thus \\(A^{5}=55 A + 78 I\\), using the identity matrix for the constant term.</p>",
+          "<p>Evaluating this identity gives \\(\\left(\\begin{matrix}-307 & 550\\\\-275 & 518\\end{matrix}\\right)\\). Read the requested entry by row, then column.</p>"
+        ]
+      },
+      {
+        "title": "Choose the exceptional branch first",
+        "question": "<p>The system \\(\\left(\\begin{matrix}1 & 4 & 0\\\\0 & 1 & 1\\\\1 & 5 & k\\end{matrix}\\right)\\boldsymbol v=\\left(\\begin{matrix}1\\\\3\\\\4\\end{matrix}\\right)\\) has no unique solution for one value of \\(k\\). Find that value.</p>",
+        "solution": [
+          "<p>Replace the third augmented row by itself minus the first two. Its coefficients become \\(\\left(\\begin{matrix}0 & 0 & k - 1\\end{matrix}\\right)\\) and its right-hand side is zero.</p>",
+          "<p>It loses the final constraint exactly when \\(k=1\\). The remaining two independent equations give a common line.</p>"
+        ]
+      },
+      {
+        "title": "Iterate a vector in two eigendirections",
+        "question": "<p>Let \\(Q=\\left(\\begin{matrix}1 & 0\\\\-2 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-2 & 0\\\\0 & 3\\end{matrix}\\right)\\). If \\(A=QDQ^{-1}\\), find \\(A^{3}\\mathbf u\\) for \\(\\mathbf u=\\left(\\begin{matrix}2\\\\3\\end{matrix}\\right)\\).</p>",
+        "solution": [
+          "<p>First express the input vector in the eigenbasis. This gives \\(Q^{-1}\\mathbf u=\\left(\\begin{matrix}2\\\\7\\end{matrix}\\right)\\).</p>",
+          "<p>Multiply the coordinates by \\(D^{3}\\) and return to the original basis using \\(Q\\). The resulting vector is \\(\\left(\\begin{matrix}-16\\\\221\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Iterate a vector in three eigendirections",
+        "question": "<p>Let \\(Q=\\left(\\begin{matrix}1 & 0 & 1\\\\1 & 1 & 0\\\\0 & 0 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-1 & 0 & 0\\\\0 & 2 & 0\\\\0 & 0 & 4\\end{matrix}\\right)\\). If \\(A=QDQ^{-1}\\), find \\(A^{4}\\mathbf u\\) for \\(\\mathbf u=\\left(\\begin{matrix}3\\\\4\\\\5\\end{matrix}\\right)\\).</p>",
+        "solution": [
+          "<p>First express the input vector in the eigenbasis. This gives \\(Q^{-1}\\mathbf u=\\left(\\begin{matrix}-2\\\\6\\\\5\\end{matrix}\\right)\\).</p>",
+          "<p>Multiply the coordinates by \\(D^{4}\\) and return to the original basis using \\(Q\\). The resulting vector is \\(\\left(\\begin{matrix}1278\\\\94\\\\1280\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Return to original coordinates",
+        "question": "<p>Let \\(Q=\\left(\\begin{matrix}1 & -1\\\\2 & -1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}-3 & 0\\\\0 & 4\\end{matrix}\\right)\\). If \\(A=QDQ^{-1}\\), find \\(A^{5}\\mathbf u\\) for \\(\\mathbf u=\\left(\\begin{matrix}4\\\\5\\end{matrix}\\right)\\).</p>",
+        "solution": [
+          "<p>First express the input vector in the eigenbasis. This gives \\(Q^{-1}\\mathbf u=\\left(\\begin{matrix}1\\\\-3\\end{matrix}\\right)\\).</p>",
+          "<p>Multiply the coordinates by \\(D^{5}\\) and return to the original basis using \\(Q\\). The resulting vector is \\(\\left(\\begin{matrix}2829\\\\2586\\end{matrix}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Check the square with assigned signs",
+        "question": "<p>A matrix \\(B\\) satisfies \\(B^2=\\left(\\begin{matrix}46 & -21\\\\42 & -17\\end{matrix}\\right)\\). It has \\(Q=\\left(\\begin{matrix}1 & 1\\\\1 & 2\\end{matrix}\\right)\\) as its eigenvector basis. It has the following eigenvalues in the same order as these columns: \\(-5\\), \\(2\\). Find entry \\((1,2)\\) of \\(B\\).</p>",
+        "solution": [
+          "<p>The given eigenvalues already choose the square-root signs. Use \\(D=\\left(\\begin{matrix}-5 & 0\\\\0 & 2\\end{matrix}\\right)\\) with the stated eigenbasis.</p>",
+          "<p>Then \\(B=QDQ^{-1}=\\left(\\begin{matrix}-12 & 7\\\\-14 & 9\\end{matrix}\\right)\\). Squaring this expression recovers the original matrix.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "hp-mixed-practice-1",
+        "title": "Connect singularity with geometry",
+        "prompt": "<p>Interpret the common intersection of the planes represented by \\(\\left(\\begin{matrix}1 & 3 & 1\\\\2 & 5 & 3\\\\-1 & -4 & 0\\end{matrix}\\right)\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix}=\\left(\\begin{matrix}0\\\\5\\\\6\\end{matrix}\\right)\\).</p>",
+        "fields": [
+          {
+            "key": "type",
+            "label": "Choose the correct statement",
+            "type": "choice",
+            "expected": "option4",
+            "options": {
+              "option1": "One point",
+              "option2": "A line",
+              "option3": "A plane",
+              "option4": "No common point"
+            }
+          }
+        ],
+        "hint": "<p>Compare the number of independent equations with the number of variables. Check first for a contradiction.</p>",
+        "solution": "<p>The reduced augmented matrix is \\(\\left(\\begin{matrix}1 & 0 & 4 & 0\\\\0 & 1 & -1 & 0\\\\0 & 0 & 0 & 1\\end{matrix}\\right)\\).</p><p>The last row has zero coefficients and a nonzero right-hand side. No triple can satisfy all three equations.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-mixed-practice-2",
+        "title": "Recover a point when the determinant is nonzero",
+        "prompt": "<p>For \\(k=4\\), solve \\(\\left(\\begin{matrix}1 & 2 & 0\\\\0 & 1 & 1\\\\1 & 3 & k\\end{matrix}\\right)\\boldsymbol v=\\left(\\begin{matrix}2\\\\5\\\\7\\end{matrix}\\right)\\).</p>",
+        "fields": [
+          {
+            "type": "pairs",
+            "key": "solution",
+            "label": "Ordered solution (x, y, z)",
+            "dimension": 3,
+            "expected": "(-8,5,0)"
+          }
+        ],
+        "hint": "<p>Reduce before substituting for the variables.</p>",
+        "solution": "<p>Subtract the first two rows from the third. The last equation becomes \\(3z=0\\).</p><p>Thus \\(z=0\\) and the second equation gives \\(y=5\\). Use the first equation for the remaining coordinate: \\(\\left(\\begin{matrix}-8\\\\5\\\\0\\end{matrix}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-mixed-practice-3",
+        "title": "Use three signed eigenvalues for a root",
+        "prompt": "<p>A matrix \\(B\\) satisfies \\(B^2=\\left(\\begin{matrix}1 & 0 & 8\\\\-3 & 4 & 3\\\\0 & 0 & 9\\end{matrix}\\right)\\). It has \\(Q=\\left(\\begin{matrix}1 & 0 & 1\\\\1 & 1 & 0\\\\0 & 0 & 1\\end{matrix}\\right)\\) as its eigenvector basis. It has the following eigenvalues in the same order as these columns: \\(-1\\), \\(2\\), \\(-3\\). Find entry \\((3,1)\\) of \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested entry of the square root",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>Select the diagonal signs according to the eigenvalue information.</p>",
+        "solution": "<p>The given eigenvalues already choose the square-root signs. Use \\(D=\\left(\\begin{matrix}-1 & 0 & 0\\\\0 & 2 & 0\\\\0 & 0 & -3\\end{matrix}\\right)\\) with the stated eigenbasis.</p><p>Then \\(B=QDQ^{-1}=\\left(\\begin{matrix}-1 & 0 & -2\\\\-3 & 2 & 3\\\\0 & 0 & -3\\end{matrix}\\right)\\). Squaring this expression recovers the original matrix.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-mixed-practice-4",
+        "title": "Follow a coordinate whose direction is killed",
+        "prompt": "<p>Let \\(Q=\\left(\\begin{matrix}1 & 0 & 0\\\\2 & 1 & 0\\\\-1 & 1 & 1\\end{matrix}\\right)\\) with matching \\(D=\\left(\\begin{matrix}0 & 0 & 0\\\\0 & -2 & 0\\\\0 & 0 & 5\\end{matrix}\\right)\\). If \\(A=QDQ^{-1}\\), find \\(A^{3}\\mathbf u\\) for \\(\\mathbf u=\\left(\\begin{matrix}2\\\\3\\\\4\\end{matrix}\\right)\\).</p>",
+        "fields": [
+          {
+            "type": "pairs",
+            "key": "image",
+            "label": "Image vector in original coordinates",
+            "dimension": 3,
+            "expected": "(0,8,883)"
+          }
+        ],
+        "hint": "<p>Apply the factors from right to left to a vector.</p>",
+        "solution": "<p>First express the input vector in the eigenbasis. This gives \\(Q^{-1}\\mathbf u=\\left(\\begin{matrix}2\\\\-1\\\\7\\end{matrix}\\right)\\).</p><p>Multiply the coordinates by \\(D^{3}\\) and return to the original basis using \\(Q\\). The resulting vector is \\(\\left(\\begin{matrix}0\\\\8\\\\883\\end{matrix}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "hp-mixed-practice-5",
+        "title": "Recover an inverse as a final check",
+        "prompt": "<p>For \\(A=\\left(\\begin{matrix}-4 & 0\\\\14 & 3\\end{matrix}\\right)\\), use the characteristic equation to find the entry in row 1, column 2 of \\(A^{-1}\\).</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Requested entry of inverse",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>Multiply the matrix identity by the inverse only after justifying that it exists.</p>",
+        "solution": "<p>The characteristic equation is \\(\\lambda^{2} + \\lambda - 12=0\\). Its constant term is \\(-12\\), so zero is not an eigenvalue.</p><p>Replace the scalar variable with \\(A\\) and the constant term with its multiple of \\(I\\). Multiply the matrix identity by \\(A^{-1}\\).</p><p>Solving for the inverse gives \\(\\left(\\begin{matrix}- \\frac{1}{4} & 0\\\\\\frac{7}{6} & \\frac{1}{3}\\end{matrix}\\right)\\). The requested entry is \\(0\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Iteration",
+        "definition": "<p>Application of the same linear map repeatedly.</p>"
+      },
+      {
+        "term": "Coordinate column",
+        "definition": "<p>The vector of coefficients of a given vector in an ordered basis.</p>"
+      },
+      {
+        "term": "Exceptional parameter",
+        "definition": "<p>A value for which the generic invertibility or elimination argument fails.</p>"
+      },
+      {
+        "term": "Matrix identity",
+        "definition": "<p>An equality for the full matrix action on the entire domain.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<p>Use \\(\\boldsymbol x=A^{-1}\\boldsymbol b\\) only in an invertible system. For repeated action use \\(Q D^k Q^{-1}\\boldsymbol u\\). To verify an identity, test all columns of an eigenbasis.</p>",
+      "checks": "<ul><li>What must be checked when a pivot expression is zero?</li><li>Why do the starting coefficients stay in an iteration formula?</li><li>Which test verifies a claimed matrix square root?</li></ul>",
+      "examTip": "<p>Choose the method from the structure given, and check the requested quantity against its original equation.</p>"
+    },
+    "related": [
+      {
+        "title": "Systems, consistency and geometry",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_matrices2_systems"
+      }
+    ]
+  }
+}

@@ -167,7 +167,7 @@ function checkVariable(name: string, allowed: string[], range: boolean) {
   throw new AnswerVariableError("This field asks for " + allowed.slice(0, 2).join(" or ") + ". Use that symbol in your answer.");
 }
 
-const answerVariable = /^[a-z](?:\^-1)?(?:\(x\))?$/i;
+const answerVariable = /^(?:[a-z](?:\^-1)?(?:\(x\))?|lambda)$/i;
 
 function comparisonInterval(raw: string, allowed: string[], range: boolean): Interval | undefined {
   const parts = raw.split(/(<=|>=|<|>)/).map(part => part.trim());
