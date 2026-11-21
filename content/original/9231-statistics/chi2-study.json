@@ -1,0 +1,2046 @@
+{
+  "stats_chi2_specified": {
+    "updatedOn": "2026-11-21",
+    "description": "Find expected counts, pool small classes and run a chi-squared goodness-of-fit test for a specified discrete model.",
+    "sections": [
+      {
+        "id": "expectations",
+        "title": "How do probabilities become expected counts?",
+        "label": "Expected counts",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>The expected total equals the observed total because all possible outcomes are accounted for.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Multiply each model probability by the sample size. A fractional expected count is entirely possible.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Replacing a fractional expected count with the nearest integer can change the statistic.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-specified-study-01",
+            "title": "Find the expected Blue count",
+            "prompt": "<p>An independent sample of colour cards is compared with the producer’s proportions. Under the proposed model the class probabilities in order are \\(\\frac{3}{10},\\ \\frac{1}{5},\\ \\frac{1}{10},\\ \\frac{2}{5}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(18\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(22\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(14\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(6\\)</td></tr></tbody></table></div><p>Find the expected frequency for Blue. Give an exact value.</p>",
+            "fields": [
+              {
+                "key": "expected",
+                "label": "Expected for Blue",
+                "expected": "12",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>\\(E_i=60\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(18\\)</td><td>\\(18\\)</td><td>\\(0\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(22\\)</td><td>\\(12\\)</td><td>\\(\\frac{25}{3}\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(14\\)</td><td>\\(6\\)</td><td>\\(\\frac{32}{3}\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(6\\)</td><td>\\(24\\)</td><td>\\(\\frac{27}{2}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{65}{2}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is evidence against the claim that the producer’s model gives the colour proportions.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Every possible outcome belongs to exactly one class.</p>"
+          }
+        ]
+      },
+      {
+        "id": "contributions",
+        "title": "What makes a class contribute strongly?",
+        "label": "Contributions",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The same absolute difference matters more when the expected count is small.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(X^2=\\sum_i\\frac{(O_i-E_i)^2}{E_i}\\)</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Divide by the expected frequency. Dividing by the observed frequency yields a different test.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-specified-study-02",
+            "title": "Contribution from Stage 3",
+            "prompt": "<p>A device selects one of four equally likely stages under the proposed model. Independent selections were recorded.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(11\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(13\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(19\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(17\\)</td></tr></tbody></table></div><p>Find the contribution of Stage 3 to the statistic. Give an exact value.</p>",
+            "fields": [
+              {
+                "key": "term",
+                "label": "Contribution from Stage 3",
+                "expected": "16/15",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>\\(E_i=60\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(11\\)</td><td>\\(15\\)</td><td>\\(\\frac{16}{15}\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(13\\)</td><td>\\(15\\)</td><td>\\(\\frac{4}{15}\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(19\\)</td><td>\\(15\\)</td><td>\\(\\frac{16}{15}\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(17\\)</td><td>\\(15\\)</td><td>\\(\\frac{4}{15}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{8}{3}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated model fits the data.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the denominator before evaluating any term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "pooling",
+        "title": "When do classes need pooling?",
+        "label": "Pooling",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Inspect the expected counts before the test.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Choose a meaningful joint class when an expected count is below 5, then add both observed and expected frequencies. An expected count of exactly 5 satisfies the rule.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A small observed count by itself does not require pooling.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-specified-study-03",
+            "title": "Group before comparing counts",
+            "prompt": "<p>An independent sample of colour cards is compared with the producer’s proportions. Under the proposed model the class probabilities in order are \\(\\frac{1}{3},\\ \\frac{1}{3},\\ \\frac{2}{7},\\ \\frac{1}{21}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(25\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(24\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(4\\)</td></tr></tbody></table></div><p>Apply the expected frequency rule. Give the number of classes left and the expected frequency for Coral–Denim.</p>",
+            "fields": [
+              {
+                "key": "classes",
+                "label": "Final number of classes",
+                "expected": "3",
+                "type": "number"
+              },
+              {
+                "key": "expected",
+                "label": "Expected for Coral–Denim",
+                "expected": "28",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>\\(E_i=84\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(25\\)</td><td>\\(28\\)</td><td>\\(\\frac{9}{28}\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(31\\)</td><td>\\(28\\)</td><td>\\(\\frac{9}{28}\\)</td></tr><tr><th scope=\"row\">Coral–Denim</th><td>\\(28\\)</td><td>\\(28\\)</td><td>\\(0\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{9}{14}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that the producer’s model gives the colour proportions.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Combine observations in the same classes as the expected frequencies.</p>"
+          }
+        ]
+      },
+      {
+        "id": "degrees",
+        "title": "How do I count degrees of freedom?",
+        "label": "Degrees of freedom",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The fixed total is one constraint across the final counts.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\nu=k-1\\) for a specified model with \\(k\\) final classes.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Count the final classes. Do not include a totals row or split a combined group.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-specified-study-04",
+            "title": "Count the degrees of freedom",
+            "prompt": "<p>A device selects one of four equally likely stages under the proposed model. Independent selections were recorded.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(9\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(11\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(7\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(13\\)</td></tr></tbody></table></div><p>Give the degrees of freedom after any grouping.</p>",
+            "fields": [
+              {
+                "key": "df",
+                "label": "Degrees of freedom",
+                "expected": "3",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>\\(E_i=40\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(9\\)</td><td>\\(10\\)</td><td>\\(\\frac{1}{10}\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(11\\)</td><td>\\(10\\)</td><td>\\(\\frac{1}{10}\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(7\\)</td><td>\\(10\\)</td><td>\\(\\frac{9}{10}\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(13\\)</td><td>\\(10\\)</td><td>\\(\\frac{9}{10}\\)</td></tr></tbody></table></div><p>The statistic is \\(2\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated model fits the data.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Degrees of freedom must be positive.</p>"
+          }
+        ]
+      },
+      {
+        "id": "decision",
+        "title": "Which tail measures disagreement?",
+        "label": "Decision",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Squaring each discrepancy makes the statistic non-negative.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Large test statistics are evidence against the proposed probabilities. Compare with an upper critical value or an upper-tail probability.</p>",
+            "figure": {
+              "src": "/assets/study/9231/stats_chi2_specified/upper-tail.svg",
+              "alt": "Chi-squared curve with 3 degrees of freedom and the upper 5 per cent shaded.",
+              "caption": "<p>With 3 degrees of freedom the upper 5% begins at about \\(7.815\\).</p>",
+              "width": 640,
+              "height": 300
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A small statistic can be consistent with the null model. There is no lower critical region in this test.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-specified-study-05",
+            "title": "Interpret a moderate discrepancy",
+            "prompt": "<p>A device selects one of four equally likely stages under the proposed model. Independent selections were recorded.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(18\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(14\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(12\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(16\\)</td></tr></tbody></table></div><p>Find the upper-tail probability to 4 decimal places and decide at the 5% level.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Upper-tail probability (4 d.p.)",
+                "expected": "0.7212333746277604",
+                "type": "approximate",
+                "absolute_tolerance": 5e-05
+              },
+              {
+                "key": "decision",
+                "label": "Decision",
+                "type": "choice",
+                "expected": "A",
+                "options": {
+                  "A": "<p>Insufficient evidence to reject the model.</p>",
+                  "B": "<p>Reject the model.</p>"
+                }
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>\\(E_i=60\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(18\\)</td><td>\\(15\\)</td><td>\\(\\frac{3}{5}\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(14\\)</td><td>\\(15\\)</td><td>\\(\\frac{1}{15}\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(12\\)</td><td>\\(15\\)</td><td>\\(\\frac{3}{5}\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(16\\)</td><td>\\(15\\)</td><td>\\(\\frac{1}{15}\\)</td></tr></tbody></table></div><p>The right-tail probability is \\(0.7212\\).</p><p>The statistic is \\(\\frac{4}{3}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated model fits the data.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The upper-tail probability decreases as the statistic increases.</p>"
+          }
+        ]
+      },
+      {
+        "id": "write-up",
+        "title": "How do I present the complete test?",
+        "label": "Full test",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Give the hypotheses in words, retain enough working to justify the statistic, then interpret the decision.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>State the proposed distribution under \\(H_0\\) and use the alternative that the distribution does not fit. Conclude in the setting used in the question.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Insufficient evidence to reject does not mean the model has been proved.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-specified-study-06",
+            "title": "Test after pooling",
+            "prompt": "<p>An independent sample of colour cards is compared with the producer’s proportions. Under the proposed model the class probabilities in order are \\(\\frac{1}{3},\\ \\frac{1}{3},\\ \\frac{2}{7},\\ \\frac{1}{21}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(17\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(30\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(34\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(3\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 5% level. Give the statistic exactly.</p>",
+            "fields": [
+              {
+                "key": "stat",
+                "label": "Test statistic",
+                "expected": "103/14",
+                "type": "number"
+              },
+              {
+                "key": "decision",
+                "label": "Decision",
+                "type": "choice",
+                "expected": "B",
+                "options": {
+                  "A": "<p>Insufficient evidence to reject the model.</p>",
+                  "B": "<p>Reject the model.</p>"
+                }
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>\\(E_i=84\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(17\\)</td><td>\\(28\\)</td><td>\\(\\frac{121}{28}\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(30\\)</td><td>\\(28\\)</td><td>\\(\\frac{1}{7}\\)</td></tr><tr><th scope=\"row\">Coral–Denim</th><td>\\(37\\)</td><td>\\(28\\)</td><td>\\(\\frac{81}{28}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{103}{14}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is evidence against the claim that the producer’s model gives the colour proportions.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Round only the final statistic, if required.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Expected count from a uniform model",
+        "question": "<p>A device selects one of four equally likely stages under the proposed model. Independent selections were recorded.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(17\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(15\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(12\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(16\\)</td></tr></tbody></table></div><p>Find the expected frequency for Stage 2. Give an exact value.</p>",
+        "solution": [
+          "<p>\\(E_i=60\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(17\\)</td><td>\\(15\\)</td><td>\\(\\frac{4}{15}\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(15\\)</td><td>\\(15\\)</td><td>\\(0\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(12\\)</td><td>\\(15\\)</td><td>\\(\\frac{3}{5}\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(16\\)</td><td>\\(15\\)</td><td>\\(\\frac{1}{15}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{14}{15}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated model fits the data.</p>"
+        ]
+      },
+      {
+        "title": "A fractional expectation",
+        "question": "<p>An independent sample of colour cards is compared with the producer’s proportions. Under the proposed model the class probabilities in order are \\(\\frac{3}{10},\\ \\frac{1}{5},\\ \\frac{1}{10},\\ \\frac{2}{5}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(21\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(19\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(14\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(11\\)</td></tr></tbody></table></div><p>Find the expected frequency for Blue. Give an exact value.</p>",
+        "solution": [
+          "<p>\\(E_i=65\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(21\\)</td><td>\\(\\frac{39}{2}\\)</td><td>\\(\\frac{3}{26}\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(19\\)</td><td>\\(13\\)</td><td>\\(\\frac{36}{13}\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(14\\)</td><td>\\(\\frac{13}{2}\\)</td><td>\\(\\frac{225}{26}\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(11\\)</td><td>\\(26\\)</td><td>\\(\\frac{225}{26}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{525}{26}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is evidence against the claim that the producer’s model gives the colour proportions.</p>"
+        ]
+      },
+      {
+        "title": "A single contribution",
+        "question": "<p>An independent sample of colour cards is compared with the producer’s proportions. Under the proposed model the class probabilities in order are \\(\\frac{2}{5},\\ \\frac{3}{10},\\ \\frac{1}{5},\\ \\frac{1}{10}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(24\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(18\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(13\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(5\\)</td></tr></tbody></table></div><p>Find the contribution of Amber to the statistic. Give an exact value.</p>",
+        "solution": [
+          "<p>\\(E_i=60\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(24\\)</td><td>\\(24\\)</td><td>\\(0\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(18\\)</td><td>\\(18\\)</td><td>\\(0\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(13\\)</td><td>\\(12\\)</td><td>\\(\\frac{1}{12}\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(5\\)</td><td>\\(6\\)</td><td>\\(\\frac{1}{6}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{1}{4}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the producer’s model gives the colour proportions.</p>"
+        ]
+      },
+      {
+        "title": "Pool the rare categories",
+        "question": "<p>An independent sample of colour cards is compared with the producer’s proportions. Under the proposed model the class probabilities in order are \\(\\frac{1}{3},\\ \\frac{1}{3},\\ \\frac{2}{7},\\ \\frac{1}{21}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(29\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(34\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(18\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(3\\)</td></tr></tbody></table></div><p>Apply the expected frequency rule. Give the number of classes left and the expected frequency for Coral–Denim.</p>",
+        "solution": [
+          "<p>\\(E_i=84\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(29\\)</td><td>\\(28\\)</td><td>\\(\\frac{1}{28}\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(34\\)</td><td>\\(28\\)</td><td>\\(\\frac{9}{7}\\)</td></tr><tr><th scope=\"row\">Coral–Denim</th><td>\\(21\\)</td><td>\\(28\\)</td><td>\\(\\frac{7}{4}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{43}{14}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that the producer’s model gives the colour proportions.</p>"
+        ]
+      },
+      {
+        "title": "The final number of classes",
+        "question": "<p>An independent sample of colour cards is compared with the producer’s proportions. Under the proposed model the class probabilities in order are \\(\\frac{1}{3},\\ \\frac{1}{3},\\ \\frac{2}{7},\\ \\frac{1}{21}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(27\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(22\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(4\\)</td></tr></tbody></table></div><p>Give the degrees of freedom after any grouping.</p>",
+        "solution": [
+          "<p>\\(E_i=84\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(27\\)</td><td>\\(28\\)</td><td>\\(\\frac{1}{28}\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(31\\)</td><td>\\(28\\)</td><td>\\(\\frac{9}{28}\\)</td></tr><tr><th scope=\"row\">Coral–Denim</th><td>\\(26\\)</td><td>\\(28\\)</td><td>\\(\\frac{1}{7}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{1}{2}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that the producer’s model gives the colour proportions.</p>"
+        ]
+      },
+      {
+        "title": "Use a right-tail probability",
+        "question": "<p>A device selects one of four equally likely stages under the proposed model. Independent selections were recorded.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(10\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(14\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(24\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(12\\)</td></tr></tbody></table></div><p>Find the upper-tail probability to 4 decimal places and decide at the 5% level.</p>",
+        "solution": [
+          "<p>\\(E_i=60\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(10\\)</td><td>\\(15\\)</td><td>\\(\\frac{5}{3}\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(14\\)</td><td>\\(15\\)</td><td>\\(\\frac{1}{15}\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(24\\)</td><td>\\(15\\)</td><td>\\(\\frac{27}{5}\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(12\\)</td><td>\\(15\\)</td><td>\\(\\frac{3}{5}\\)</td></tr></tbody></table></div>",
+          "<p>The right-tail probability is \\(0.0519\\).</p>",
+          "<p>The statistic is \\(\\frac{116}{15}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated model fits the data.</p>"
+        ]
+      },
+      {
+        "title": "Decide whether the model fits",
+        "question": "<p>A device selects one of four equally likely stages under the proposed model. Independent selections were recorded.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(30\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(14\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(10\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(6\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 5% level. Give the statistic exactly.</p>",
+        "solution": [
+          "<p>\\(E_i=60\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(30\\)</td><td>\\(15\\)</td><td>\\(15\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(14\\)</td><td>\\(15\\)</td><td>\\(\\frac{1}{15}\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(10\\)</td><td>\\(15\\)</td><td>\\(\\frac{5}{3}\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(6\\)</td><td>\\(15\\)</td><td>\\(\\frac{27}{5}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{332}{15}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is evidence against the claim that the stated model fits the data.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Observed count",
+        "definition": "<p>The frequency recorded in the sample.</p>"
+      },
+      {
+        "term": "Expected count",
+        "definition": "<p>The model probability times the total sample size.</p>"
+      },
+      {
+        "term": "Goodness of fit",
+        "definition": "<p>A test for whether the chosen distribution is consistent with the observed frequencies.</p>"
+      },
+      {
+        "term": "Upper critical value",
+        "definition": "<p>The value exceeded with the stated significance probability under the null model.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-chi2-specified-study-07",
+        "title": "Find an expectation for Stage 4",
+        "prompt": "<p>A device selects one of four equally likely stages under the proposed model. Independent selections were recorded.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(22\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(20\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(17\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(16\\)</td></tr></tbody></table></div><p>Find the expected frequency for Stage 4. Give an exact value.</p>",
+        "fields": [
+          {
+            "key": "expected",
+            "label": "Expected for Stage 4",
+            "expected": "75/4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>\\(E_i=75\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(22\\)</td><td>\\(\\frac{75}{4}\\)</td><td>\\(\\frac{169}{300}\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(20\\)</td><td>\\(\\frac{75}{4}\\)</td><td>\\(\\frac{1}{12}\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(17\\)</td><td>\\(\\frac{75}{4}\\)</td><td>\\(\\frac{49}{300}\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(16\\)</td><td>\\(\\frac{75}{4}\\)</td><td>\\(\\frac{121}{300}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{91}{75}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated model fits the data.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-specified-study-08",
+        "title": "Compare a class with its model",
+        "prompt": "<p>An independent sample of colour cards is compared with the producer’s proportions. Under the proposed model the class probabilities in order are \\(\\frac{1}{5},\\ \\frac{1}{10},\\ \\frac{2}{5},\\ \\frac{3}{10}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(26\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(17\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(12\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(5\\)</td></tr></tbody></table></div><p>Find the contribution of Coral to the statistic. Give an exact value.</p>",
+        "fields": [
+          {
+            "key": "term",
+            "label": "Contribution from Coral",
+            "expected": "6",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>\\(E_i=60\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(26\\)</td><td>\\(12\\)</td><td>\\(\\frac{49}{3}\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(17\\)</td><td>\\(6\\)</td><td>\\(\\frac{121}{6}\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(12\\)</td><td>\\(24\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(5\\)</td><td>\\(18\\)</td><td>\\(\\frac{169}{18}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{467}{9}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is evidence against the claim that the producer’s model gives the colour proportions.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-specified-study-09",
+        "title": "Use the reduced list of classes",
+        "prompt": "<p>An independent sample of colour cards is compared with the producer’s proportions. Under the proposed model the class probabilities in order are \\(\\frac{1}{3},\\ \\frac{1}{3},\\ \\frac{2}{7},\\ \\frac{1}{21}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(25\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(30\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(25\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(4\\)</td></tr></tbody></table></div><p>Give the degrees of freedom after any grouping.</p>",
+        "fields": [
+          {
+            "key": "df",
+            "label": "Degrees of freedom",
+            "expected": "2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>\\(E_i=84\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(25\\)</td><td>\\(28\\)</td><td>\\(\\frac{9}{28}\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(30\\)</td><td>\\(28\\)</td><td>\\(\\frac{1}{7}\\)</td></tr><tr><th scope=\"row\">Coral–Denim</th><td>\\(29\\)</td><td>\\(28\\)</td><td>\\(\\frac{1}{28}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{1}{2}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that the producer’s model gives the colour proportions.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-specified-study-10",
+        "title": "A difference at the 1% level",
+        "prompt": "<p>A device selects one of four equally likely stages under the proposed model. Independent selections were recorded.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(25\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(16\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(13\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(6\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 1% level. Give the statistic exactly.</p>",
+        "fields": [
+          {
+            "key": "stat",
+            "label": "Test statistic",
+            "expected": "62/5",
+            "type": "number"
+          },
+          {
+            "key": "decision",
+            "label": "Decision",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Insufficient evidence to reject the model.</p>",
+              "B": "<p>Reject the model.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>\\(E_i=60\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(25\\)</td><td>\\(15\\)</td><td>\\(\\frac{20}{3}\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(16\\)</td><td>\\(15\\)</td><td>\\(\\frac{1}{15}\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(13\\)</td><td>\\(15\\)</td><td>\\(\\frac{4}{15}\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(6\\)</td><td>\\(15\\)</td><td>\\(\\frac{27}{5}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{62}{5}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 1% upper critical value is \\(11.345\\).</p><p>There is evidence against the claim that the stated model fits the data.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-specified-study-11",
+        "title": "Change the significance level",
+        "prompt": "<p>A device selects one of four equally likely stages under the proposed model. Independent selections were recorded.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(23\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(16\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(13\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(8\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 10% level. Give the statistic exactly.</p>",
+        "fields": [
+          {
+            "key": "stat",
+            "label": "Test statistic",
+            "expected": "118/15",
+            "type": "number"
+          },
+          {
+            "key": "decision",
+            "label": "Decision",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Insufficient evidence to reject the model.</p>",
+              "B": "<p>Reject the model.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>\\(E_i=60\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Stage 1</th><td>\\(23\\)</td><td>\\(15\\)</td><td>\\(\\frac{64}{15}\\)</td></tr><tr><th scope=\"row\">Stage 2</th><td>\\(16\\)</td><td>\\(15\\)</td><td>\\(\\frac{1}{15}\\)</td></tr><tr><th scope=\"row\">Stage 3</th><td>\\(13\\)</td><td>\\(15\\)</td><td>\\(\\frac{4}{15}\\)</td></tr><tr><th scope=\"row\">Stage 4</th><td>\\(8\\)</td><td>\\(15\\)</td><td>\\(\\frac{49}{15}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{118}{15}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 10% upper critical value is \\(6.251\\).</p><p>There is evidence against the claim that the stated model fits the data.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-specified-study-12",
+        "title": "Interpret a close fit",
+        "prompt": "<p>An independent sample of colour cards is compared with the producer’s proportions. Under the proposed model the class probabilities in order are \\(\\frac{1}{3},\\ \\frac{1}{3},\\ \\frac{2}{7},\\ \\frac{1}{21}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(30\\)</td></tr><tr><th scope=\"row\">Coral</th><td>\\(20\\)</td></tr><tr><th scope=\"row\">Denim</th><td>\\(3\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 5% level. Give the statistic exactly.</p>",
+        "fields": [
+          {
+            "key": "stat",
+            "label": "Test statistic",
+            "expected": "19/14",
+            "type": "number"
+          },
+          {
+            "key": "decision",
+            "label": "Decision",
+            "type": "choice",
+            "expected": "A",
+            "options": {
+              "A": "<p>Insufficient evidence to reject the model.</p>",
+              "B": "<p>Reject the model.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>\\(E_i=84\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">Amber</th><td>\\(31\\)</td><td>\\(28\\)</td><td>\\(\\frac{9}{28}\\)</td></tr><tr><th scope=\"row\">Blue</th><td>\\(30\\)</td><td>\\(28\\)</td><td>\\(\\frac{1}{7}\\)</td></tr><tr><th scope=\"row\">Coral–Denim</th><td>\\(23\\)</td><td>\\(28\\)</td><td>\\(\\frac{25}{28}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{19}{14}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that the producer’s model gives the colour proportions.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Method in one minute</h2><p>Use unrounded expected frequencies in every contribution.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Step</th><th scope=\"col\">What to write</th></tr></thead><tbody><tr><th scope=\"row\">Count</th><td>\\(E_i=n p_i\\)</td></tr><tr><th scope=\"row\">Pool</th><td>Add both counts before evaluating \\(X^2=\\sum_i\\frac{(O_i-E_i)^2}{E_i}\\)</td></tr><tr><th scope=\"row\">Degrees</th><td>\\(\\nu=k-1\\)</td></tr><tr><th scope=\"row\">Decide</th><td>Use the right tail.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Expected count at least 5 in every final class or cell.</li><li>The critical region is in the upper tail.</li><li>State your conclusion in context.</li></ul>",
+      "examTip": "<p>Use the significance level and degrees of freedom together. Failing to reject does not establish the null hypothesis.</p>"
+    },
+    "related": [
+      {
+        "title": "Fitted discrete model",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_estimated"
+      },
+      {
+        "title": "Continuous model",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_continuous"
+      },
+      {
+        "title": "Association in a table",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_contingency"
+      }
+    ]
+  },
+  "stats_chi2_estimated": {
+    "updatedOn": "2026-11-21",
+    "description": "Estimate binomial or Poisson parameters from the sample and use the correct degrees of freedom for chi-squared tests.",
+    "sections": [
+      {
+        "id": "estimate",
+        "title": "What information estimates the model?",
+        "label": "Estimate",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Work with the full data before pooling any classes.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(X\\sim\\mathrm{Bin}(m,p)\\) use \\(\\widehat p=\\frac{\\bar x}{m}\\). For a Poisson count use \\(\\widehat\\lambda=\\bar x\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The sample mean of the binomial count can exceed 1. Divide it by the number of trials to estimate the success probability.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-estimated-study-01",
+            "title": "Estimate the per-trial probability",
+            "prompt": "<p>Each of the independent production batches was inspected for successful checks. A binomial model with 3 trials is proposed. Its probability of success is estimated from the counts.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(17\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(72\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(24\\)</td></tr></tbody></table></div><p>Estimate the parameter from the original sample.</p>",
+            "fields": [
+              {
+                "key": "parameter",
+                "label": "Parameter estimate",
+                "expected": "119/240",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>There are \\(238\\) successes in \\(480\\) trials, so \\(\\widehat p=\\frac{119}{240}\\).</p><p>\\(E_i=160\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(17\\)</td><td>\\(\\frac{1771561}{86400}\\)</td><td>\\(\\frac{91664223121}{153062870400}\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(72\\)</td><td>\\(\\frac{1742279}{28800}\\)</td><td>\\(\\frac{109773605041}{50177635200}\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(47\\)</td><td>\\(\\frac{1713481}{28800}\\)</td><td>\\(\\frac{129514334161}{49348252800}\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(24\\)</td><td>\\(\\frac{1685159}{86400}\\)</td><td>\\(\\frac{150886410481}{145597737600}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{19247784076960}{2985361963199}\\) with \\(\\nu=4-1-1=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is evidence against the claim that a binomial model fits the number of successful checks.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use the original total for the mean, particularly when the final class is open.</p>"
+          }
+        ]
+      },
+      {
+        "id": "probabilities",
+        "title": "How do estimates become expected counts?",
+        "label": "Use the model",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Once the parameter is fitted, substitute it into the distribution formula.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(E_j=N\\mathrm{P}_{\\widehat p}(X=j)\\) for a fitted binomial and the corresponding Poisson mass times \\(N\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Expected counts still sum to the number of observations, even though some probabilities were fitted.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-estimated-study-02",
+            "title": "Calculate the fitted expectation for 2",
+            "prompt": "<p>Each of the independent production batches was inspected for successful checks. A binomial model with 3 trials is proposed. Its probability of success is estimated from the counts.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(20\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(60\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(29\\)</td></tr></tbody></table></div><p>Find the expected frequency for 2. Give an exact value.</p>",
+            "fields": [
+              {
+                "key": "expected",
+                "label": "Expected for 2",
+                "expected": "205239/3200",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>There are \\(258\\) successes in \\(480\\) trials, so \\(\\widehat p=\\frac{43}{80}\\).</p><p>\\(E_i=160\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(20\\)</td><td>\\(\\frac{50653}{3200}\\)</td><td>\\(\\frac{178142409}{162089600}\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(51\\)</td><td>\\(\\frac{176601}{3200}\\)</td><td>\\(\\frac{59862267}{188374400}\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(60\\)</td><td>\\(\\frac{205239}{3200}\\)</td><td>\\(\\frac{58423707}{218921600}\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(29\\)</td><td>\\(\\frac{79507}{3200}\\)</td><td>\\(\\frac{176703849}{254422400}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{9577729440}{4027268071}\\) with \\(\\nu=4-1-1=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that a binomial model fits the number of successful checks.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Binomial probabilities use the number of trials inside one observation.</p>"
+          }
+        ]
+      },
+      {
+        "id": "tails",
+        "title": "How much probability belongs to a Poisson tail?",
+        "label": "Upper classes",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The Poisson model has no final possible count. Use a complementary probability for a top class.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm P(X\\ge k)=1-\\sum_{j=0}^{k-1}\\mathrm P(X=j)\\). If the top classes are pooled, use the new lower limit.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not treat “at least 3” as the single count 3.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-estimated-study-03",
+            "title": "Calculate a pooled expectation",
+            "prompt": "<p>Independent equal-time windows were checked for instrument resets. A Poisson model is fitted. The 3 observations in the final class contribute 12 in total to the ungrouped sum.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(36\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(42\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(12\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(7\\)</td></tr><tr><th scope=\"row\">at least 4</th><td>\\(3\\)</td></tr></tbody></table></div><p>Find the expected frequency for 2–at least 4. Give 4 decimal places.</p>",
+            "fields": [
+              {
+                "key": "expected",
+                "label": "Expected for 2–at least 4 (4 d.p.)",
+                "expected": "26.05623848661291",
+                "type": "approximate",
+                "absolute_tolerance": 5e-05
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>Estimate the mean from the ungrouped sample \\(\\widehat\\lambda=\\frac{99}{100}\\). Use the complement for the final Poisson class.</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(36\\)</td><td>\\(37.1577\\)</td><td>\\(0.0361\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(42\\)</td><td>\\(36.7861\\)</td><td>\\(0.739\\)</td></tr><tr><th scope=\"row\">2–at least 4</th><td>\\(22\\)</td><td>\\(26.0562\\)</td><td>\\(0.6314\\)</td></tr></tbody></table></div><p>The statistic is \\(1.4065\\) with \\(\\nu=3-1-1=1\\) degrees of freedom. The 5% upper critical value is \\(3.841\\).</p><p>There is insufficient evidence against the claim that a Poisson model fits the number of resets per window.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the upper tail is included.</p>"
+          }
+        ]
+      },
+      {
+        "id": "restricted",
+        "title": "What changes the degrees of freedom?",
+        "label": "Fitted degrees",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The final class count and the number of fitted parameters both matter.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\nu=k-1-r\\) for \\(k\\) final classes and \\(r\\) parameters fitted from the sample.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A parameter given independently by the question does not cost a further degree of freedom.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-estimated-study-04",
+            "title": "Find the model’s degrees of freedom",
+            "prompt": "<p>Each of the independent production batches was inspected for successful checks. A binomial model with 3 trials is proposed. Its probability of success is estimated from the counts.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(17\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(58\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(68\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(17\\)</td></tr></tbody></table></div><p>Give the degrees of freedom after any grouping.</p>",
+            "fields": [
+              {
+                "key": "df",
+                "label": "Degrees of freedom",
+                "expected": "2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>There are \\(245\\) successes in \\(480\\) trials, so \\(\\widehat p=\\frac{49}{96}\\).</p><p>\\(E_i=160\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(17\\)</td><td>\\(\\frac{519115}{27648}\\)</td><td>\\(\\frac{2410711801}{14352491520}\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(58\\)</td><td>\\(\\frac{541205}{9216}\\)</td><td>\\(\\frac{44582329}{4987745280}\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(68\\)</td><td>\\(\\frac{564235}{9216}\\)</td><td>\\(\\frac{3900377209}{5199989760}\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(17\\)</td><td>\\(\\frac{588245}{27648}\\)</td><td>\\(\\frac{13978096441}{16263797760}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{109103764256}{61073360635}\\) with \\(\\nu=4-1-1=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that a binomial model fits the number of successful checks.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write both deductions explicitly.</p>"
+          }
+        ]
+      },
+      {
+        "id": "precision",
+        "title": "How do I prevent early rounding?",
+        "label": "Calculate",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Fitted-model probabilities commonly have several decimal places.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Carry the estimate and the expectations unrounded in the calculation. Round the final answer to the requested precision.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Adding rounded contributions can shift the reported statistic or even the decision near a boundary.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-estimated-study-05",
+            "title": "Find a pooled contribution",
+            "prompt": "<p>Independent equal-time windows were checked for instrument resets. A Poisson model is fitted. The 3 observations in the final class contribute 12 in total to the ungrouped sum.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(34\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(12\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(4\\)</td></tr><tr><th scope=\"row\">at least 4</th><td>\\(3\\)</td></tr></tbody></table></div><p>Find the contribution of 2–at least 4 to the statistic. Give 4 decimal places.</p>",
+            "fields": [
+              {
+                "key": "term",
+                "label": "Contribution from 2–at least 4 (4 d.p.)",
+                "expected": "1.268951799717675",
+                "type": "approximate",
+                "absolute_tolerance": 5e-05
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>Estimate the mean from the ungrouped sample \\(\\widehat\\lambda=\\frac{19}{20}\\). Use the complement for the final Poisson class.</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(34\\)</td><td>\\(38.6741\\)</td><td>\\(0.5649\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(47\\)</td><td>\\(36.7404\\)</td><td>\\(2.865\\)</td></tr><tr><th scope=\"row\">2–at least 4</th><td>\\(19\\)</td><td>\\(24.5855\\)</td><td>\\(1.269\\)</td></tr></tbody></table></div><p>The statistic is \\(4.6988\\) with \\(\\nu=3-1-1=1\\) degrees of freedom. The 5% upper critical value is \\(3.841\\).</p><p>There is evidence against the claim that a Poisson model fits the number of resets per window.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep precision until the answer.</p>"
+          }
+        ]
+      },
+      {
+        "id": "context",
+        "title": "How is the fitted result interpreted?",
+        "label": "Write up",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>A fitted distribution can still fail a goodness-of-fit test even though it matches the sample’s mean.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The null hypothesis proposes the family and parameter structure. Compare using the degrees of freedom adjusted for the fitting.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Matching the average on its own says little about how well the rest of the distribution matches.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-estimated-study-06",
+            "title": "Decide at a lower significance level",
+            "prompt": "<p>Each of the independent production batches was inspected for successful checks. A binomial model with 3 trials is proposed. Its probability of success is estimated from the counts.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(30\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(46\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(53\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(31\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 1% level. Give the statistic exactly.</p>",
+            "fields": [
+              {
+                "key": "stat",
+                "label": "Test statistic",
+                "expected": "183409146016/12214672127",
+                "type": "number"
+              },
+              {
+                "key": "decision",
+                "label": "Decision",
+                "type": "choice",
+                "expected": "B",
+                "options": {
+                  "A": "<p>Insufficient evidence to reject the model.</p>",
+                  "B": "<p>Reject the model.</p>"
+                }
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>There are \\(245\\) successes in \\(480\\) trials, so \\(\\widehat p=\\frac{49}{96}\\).</p><p>\\(E_i=160\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(30\\)</td><td>\\(\\frac{519115}{27648}\\)</td><td>\\(\\frac{19260321125}{2870498304}\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(46\\)</td><td>\\(\\frac{541205}{9216}\\)</td><td>\\(\\frac{13752018361}{4987745280}\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(53\\)</td><td>\\(\\frac{564235}{9216}\\)</td><td>\\(\\frac{5743669369}{5199989760}\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(31\\)</td><td>\\(\\frac{588245}{27648}\\)</td><td>\\(\\frac{72276558649}{16263797760}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{183409146016}{12214672127}\\) with \\(\\nu=4-1-1=2\\) degrees of freedom. The 1% upper critical value is \\(9.210\\).</p><p>There is evidence against the claim that a binomial model fits the number of successful checks.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use a conclusion about suitability of the model.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Estimate a three-trial success probability",
+        "question": "<p>Each of the independent production batches was inspected for successful checks. A binomial model with 3 trials is proposed. Its probability of success is estimated from the counts.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(22\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(70\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(17\\)</td></tr></tbody></table></div><p>Estimate the parameter from the original sample.</p>",
+        "solution": [
+          "<p>There are \\(242\\) successes in \\(480\\) trials, so \\(\\widehat p=\\frac{121}{240}\\).</p><p>\\(E_i=160\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(22\\)</td><td>\\(\\frac{1685159}{86400}\\)</td><td>\\(\\frac{46501040881}{145597737600}\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(51\\)</td><td>\\(\\frac{1713481}{28800}\\)</td><td>\\(\\frac{207158449}{170755200}\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(70\\)</td><td>\\(\\frac{1742279}{28800}\\)</td><td>\\(\\frac{10703312263}{7168233600}\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(17\\)</td><td>\\(\\frac{1771561}{86400}\\)</td><td>\\(\\frac{91664223121}{153062870400}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{10820729203360}{2985361963199}\\) with \\(\\nu=4-1-1=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that a binomial model fits the number of successful checks.</p>"
+        ]
+      },
+      {
+        "title": "Estimate a Poisson mean using the raw total",
+        "question": "<p>Independent equal-time windows were checked for instrument resets. A Poisson model is fitted. The 3 observations in the final class contribute 12 in total to the ungrouped sum.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(34\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(18\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(6\\)</td></tr><tr><th scope=\"row\">at least 4</th><td>\\(3\\)</td></tr></tbody></table></div><p>Estimate the parameter from the original sample.</p>",
+        "solution": [
+          "<p>Estimate the mean from the ungrouped sample \\(\\widehat\\lambda=1\\). Use the complement for the final Poisson class.</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(39\\)</td><td>\\(36.7879\\)</td><td>\\(0.133\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(34\\)</td><td>\\(36.7879\\)</td><td>\\(0.2113\\)</td></tr><tr><th scope=\"row\">2–at least 4</th><td>\\(27\\)</td><td>\\(26.4241\\)</td><td>\\(0.0126\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(0.3568\\) with \\(\\nu=3-1-1=1\\) degrees of freedom. The 5% upper critical value is \\(3.841\\).</p><p>There is insufficient evidence against the claim that a Poisson model fits the number of resets per window.</p>"
+        ]
+      },
+      {
+        "title": "Find the frequency predicted by the fit",
+        "question": "<p>Each of the independent production batches was inspected for successful checks. A binomial model with 3 trials is proposed. Its probability of success is estimated from the counts.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(18\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(64\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(60\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(18\\)</td></tr></tbody></table></div><p>Find the expected frequency for 1. Give an exact value.</p>",
+        "solution": [
+          "<p>There are \\(238\\) successes in \\(480\\) trials, so \\(\\widehat p=\\frac{119}{240}\\).</p><p>\\(E_i=160\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(18\\)</td><td>\\(\\frac{1771561}{86400}\\)</td><td>\\(\\frac{46812082321}{153062870400}\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(64\\)</td><td>\\(\\frac{1742279}{28800}\\)</td><td>\\(\\frac{10185048241}{50177635200}\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(60\\)</td><td>\\(\\frac{1713481}{28800}\\)</td><td>\\(\\frac{210801361}{49348252800}\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(18\\)</td><td>\\(\\frac{1685159}{86400}\\)</td><td>\\(\\frac{16889341681}{145597737600}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{1878053068960}{2985361963199}\\) with \\(\\nu=4-1-1=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that a binomial model fits the number of successful checks.</p>"
+        ]
+      },
+      {
+        "title": "Pool a full Poisson tail",
+        "question": "<p>Independent equal-time windows were checked for instrument resets. A Poisson model is fitted. The 3 observations in the final class contribute 12 in total to the ungrouped sum.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(34\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(18\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(6\\)</td></tr><tr><th scope=\"row\">at least 4</th><td>\\(3\\)</td></tr></tbody></table></div><p>Apply the expected frequency rule. Give the number of classes left and the expected frequency for 2–at least 4. Give the expected frequency to 4 decimal places.</p>",
+        "solution": [
+          "<p>Estimate the mean from the ungrouped sample \\(\\widehat\\lambda=1\\). Use the complement for the final Poisson class.</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(39\\)</td><td>\\(36.7879\\)</td><td>\\(0.133\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(34\\)</td><td>\\(36.7879\\)</td><td>\\(0.2113\\)</td></tr><tr><th scope=\"row\">2–at least 4</th><td>\\(27\\)</td><td>\\(26.4241\\)</td><td>\\(0.0126\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(0.3568\\) with \\(\\nu=3-1-1=1\\) degrees of freedom. The 5% upper critical value is \\(3.841\\).</p><p>There is insufficient evidence against the claim that a Poisson model fits the number of resets per window.</p>"
+        ]
+      },
+      {
+        "title": "Count final classes and fitted constraints",
+        "question": "<p>Independent equal-time windows were checked for instrument resets. A Poisson model is fitted. The 3 observations in the final class contribute 12 in total to the ungrouped sum.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(35\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(38\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(16\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(8\\)</td></tr><tr><th scope=\"row\">at least 4</th><td>\\(3\\)</td></tr></tbody></table></div><p>Give the degrees of freedom after any grouping.</p>",
+        "solution": [
+          "<p>Estimate the mean from the ungrouped sample \\(\\widehat\\lambda=\\frac{53}{50}\\). Use the complement for the final Poisson class.</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(35\\)</td><td>\\(34.6456\\)</td><td>\\(0.0036\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(38\\)</td><td>\\(36.7243\\)</td><td>\\(0.0443\\)</td></tr><tr><th scope=\"row\">2–at least 4</th><td>\\(27\\)</td><td>\\(28.6301\\)</td><td>\\(0.0928\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(0.1408\\) with \\(\\nu=3-1-1=1\\) degrees of freedom. The 5% upper critical value is \\(3.841\\).</p><p>There is insufficient evidence against the claim that a Poisson model fits the number of resets per window.</p>"
+        ]
+      },
+      {
+        "title": "Compare a fitted binomial with the data",
+        "question": "<p>Each of the independent production batches was inspected for successful checks. A binomial model with 3 trials is proposed. Its probability of success is estimated from the counts.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(11\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(69\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(63\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(17\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 5% level. Give the statistic exactly.</p>",
+        "solution": [
+          "<p>There are \\(246\\) successes in \\(480\\) trials, so \\(\\widehat p=\\frac{41}{80}\\).</p><p>\\(E_i=160\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(11\\)</td><td>\\(\\frac{59319}{3200}\\)</td><td>\\(\\frac{581726161}{189820800}\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(69\\)</td><td>\\(\\frac{187083}{3200}\\)</td><td>\\(\\frac{126315121}{66518400}\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(63\\)</td><td>\\(\\frac{196677}{3200}\\)</td><td>\\(\\frac{2692881}{69929600}\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(17\\)</td><td>\\(\\frac{68921}{3200}\\)</td><td>\\(\\frac{210859441}{220547200}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{24358809760}{4088324799}\\) with \\(\\nu=4-1-1=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that a binomial model fits the number of successful checks.</p>"
+        ]
+      },
+      {
+        "title": "Test a fitted arrival model",
+        "question": "<p>Independent equal-time windows were checked for instrument resets. A Poisson model is fitted. The 3 observations in the final class contribute 12 in total to the ungrouped sum.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(33\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(11\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(6\\)</td></tr><tr><th scope=\"row\">at least 4</th><td>\\(3\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 5% level. Give the statistic to 4 decimal places.</p>",
+        "solution": [
+          "<p>Estimate the mean from the ungrouped sample \\(\\widehat\\lambda=\\frac{99}{100}\\). Use the complement for the final Poisson class.</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(33\\)</td><td>\\(37.1577\\)</td><td>\\(0.4652\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(47\\)</td><td>\\(36.7861\\)</td><td>\\(2.836\\)</td></tr><tr><th scope=\"row\">2–at least 4</th><td>\\(20\\)</td><td>\\(26.0562\\)</td><td>\\(1.4076\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(4.7088\\) with \\(\\nu=3-1-1=1\\) degrees of freedom. The 5% upper critical value is \\(3.841\\).</p><p>There is evidence against the claim that a Poisson model fits the number of resets per window.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Fitted parameter",
+        "definition": "<p>An unknown model quantity estimated from the same data used in the test.</p>"
+      },
+      {
+        "term": "Poisson upper tail",
+        "definition": "<p>All values from a stated count upwards, with no largest possible count.</p>"
+      },
+      {
+        "term": "Ungrouped total",
+        "definition": "<p>The total sum of the observations before outcome classes are pooled.</p>"
+      },
+      {
+        "term": "Degrees of freedom",
+        "definition": "<p>The number of final classes minus one for the fixed total and one for each fitted parameter.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-chi2-estimated-study-07",
+        "title": "Convert a weighted total into a parameter",
+        "prompt": "<p>Each of the independent production batches was inspected for successful checks. A binomial model with 3 trials is proposed. Its probability of success is estimated from the counts.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(22\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(54\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(61\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(23\\)</td></tr></tbody></table></div><p>Estimate the parameter from the original sample.</p>",
+        "fields": [
+          {
+            "key": "parameter",
+            "label": "Parameter estimate",
+            "expected": "49/96",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>There are \\(245\\) successes in \\(480\\) trials, so \\(\\widehat p=\\frac{49}{96}\\).</p><p>\\(E_i=160\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(22\\)</td><td>\\(\\frac{519115}{27648}\\)</td><td>\\(\\frac{7946117881}{14352491520}\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(54\\)</td><td>\\(\\frac{541205}{9216}\\)</td><td>\\(\\frac{1895818681}{4987745280}\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(61\\)</td><td>\\(\\frac{564235}{9216}\\)</td><td>\\(\\frac{4239481}{5199989760}\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(23\\)</td><td>\\(\\frac{588245}{27648}\\)</td><td>\\(\\frac{2271380281}{16263797760}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{65605589792}{61073360635}\\) with \\(\\nu=4-1-1=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that a binomial model fits the number of successful checks.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-estimated-study-08",
+        "title": "Use the mean for the probability of no resets",
+        "prompt": "<p>Independent equal-time windows were checked for instrument resets. A Poisson model is fitted. The 3 observations in the final class contribute 12 in total to the ungrouped sum.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(41\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(13\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(6\\)</td></tr><tr><th scope=\"row\">at least 4</th><td>\\(3\\)</td></tr></tbody></table></div><p>Find the expected frequency for 0. Give 4 decimal places.</p>",
+        "fields": [
+          {
+            "key": "expected",
+            "label": "Expected for 0 (4 d.p.)",
+            "expected": "37.90830381033988",
+            "type": "approximate",
+            "absolute_tolerance": 5e-05
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>Estimate the mean from the ungrouped sample \\(\\widehat\\lambda=\\frac{97}{100}\\). Use the complement for the final Poisson class.</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(37\\)</td><td>\\(37.9083\\)</td><td>\\(0.0218\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(41\\)</td><td>\\(36.7711\\)</td><td>\\(0.4864\\)</td></tr><tr><th scope=\"row\">2–at least 4</th><td>\\(22\\)</td><td>\\(25.3206\\)</td><td>\\(0.4355\\)</td></tr></tbody></table></div><p>The statistic is \\(0.9436\\) with \\(\\nu=3-1-1=1\\) degrees of freedom. The 5% upper critical value is \\(3.841\\).</p><p>There is insufficient evidence against the claim that a Poisson model fits the number of resets per window.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-estimated-study-09",
+        "title": "After pooling count the constraints",
+        "prompt": "<p>Independent equal-time windows were checked for instrument resets. A Poisson model is fitted. The 3 observations in the final class contribute 12 in total to the ungrouped sum.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(40\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(35\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(16\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(6\\)</td></tr><tr><th scope=\"row\">at least 4</th><td>\\(3\\)</td></tr></tbody></table></div><p>Give the degrees of freedom after any grouping.</p>",
+        "fields": [
+          {
+            "key": "df",
+            "label": "Degrees of freedom",
+            "expected": "1",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>Estimate the mean from the ungrouped sample \\(\\widehat\\lambda=\\frac{97}{100}\\). Use the complement for the final Poisson class.</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(40\\)</td><td>\\(37.9083\\)</td><td>\\(0.1154\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(35\\)</td><td>\\(36.7711\\)</td><td>\\(0.0853\\)</td></tr><tr><th scope=\"row\">2–at least 4</th><td>\\(25\\)</td><td>\\(25.3206\\)</td><td>\\(0.0041\\)</td></tr></tbody></table></div><p>The statistic is \\(0.2048\\) with \\(\\nu=3-1-1=1\\) degrees of freedom. The 5% upper critical value is \\(3.841\\).</p><p>There is insufficient evidence against the claim that a Poisson model fits the number of resets per window.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-estimated-study-10",
+        "title": "A tail probability for the fitted model",
+        "prompt": "<p>Each of the independent production batches was inspected for successful checks. A binomial model with 3 trials is proposed. Its probability of success is estimated from the counts.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(18\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(70\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(23\\)</td></tr></tbody></table></div><p>Find the upper-tail probability to 4 decimal places and decide at the 5% level.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Upper-tail probability (4 d.p.)",
+            "expected": "0.1179401593127975",
+            "type": "approximate",
+            "absolute_tolerance": 5e-05
+          },
+          {
+            "key": "decision",
+            "label": "Decision",
+            "type": "choice",
+            "expected": "A",
+            "options": {
+              "A": "<p>Insufficient evidence to reject the model.</p>",
+              "B": "<p>Reject the model.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>There are \\(237\\) successes in \\(480\\) trials, so \\(\\widehat p=\\frac{79}{160}\\).</p><p>\\(E_i=160\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(18\\)</td><td>\\(\\frac{531441}{25600}\\)</td><td>\\(\\frac{61606801}{167961600}\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(70\\)</td><td>\\(\\frac{1554957}{25600}\\)</td><td>\\(\\frac{56189383849}{39806899200}\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(49\\)</td><td>\\(\\frac{1516563}{25600}\\)</td><td>\\(\\frac{68729438569}{38824012800}\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(23\\)</td><td>\\(\\frac{493039}{25600}\\)</td><td>\\(\\frac{9170169121}{12621798400}\\)</td></tr></tbody></table></div><p>The right-tail probability is \\(0.1179\\).</p><p>The statistic is \\(\\frac{41488192480}{9704486637}\\) with \\(\\nu=4-1-1=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that a binomial model fits the number of successful checks.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-estimated-study-11",
+        "title": "Compare the first observed and expected counts",
+        "prompt": "<p>Each of the independent production batches was inspected for successful checks. A binomial model with 3 trials is proposed. Its probability of success is estimated from the counts.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(34\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(46\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(53\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(27\\)</td></tr></tbody></table></div><p>Find the contribution of 0 to the statistic. Give an exact value.</p>",
+        "fields": [
+          {
+            "key": "term",
+            "label": "Contribution from 0",
+            "expected": "71091490706929/10415846937600",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>There are \\(233\\) successes in \\(480\\) trials, so \\(\\widehat p=\\frac{233}{480}\\).</p><p>\\(E_i=160\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(34\\)</td><td>\\(\\frac{15069223}{691200}\\)</td><td>\\(\\frac{71091490706929}{10415846937600}\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(46\\)</td><td>\\(\\frac{14215097}{230400}\\)</td><td>\\(\\frac{13080497189809}{3275158348800}\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(53\\)</td><td>\\(\\frac{13409383}{230400}\\)</td><td>\\(\\frac{1435642501489}{3089521843200}\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(27\\)</td><td>\\(\\frac{12649337}{691200}\\)</td><td>\\(\\frac{36156926641969}{8743221734400}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{2939155955643040}{190615680055151}\\) with \\(\\nu=4-1-1=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is evidence against the claim that a binomial model fits the number of successful checks.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-estimated-study-12",
+        "title": "Distinguish fit from matching a mean",
+        "prompt": "<p>Independent equal-time windows were checked for instrument resets. A Poisson model is fitted. The 3 observations in the final class contribute 12 in total to the ungrouped sum.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(18\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(20\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(10\\)</td></tr><tr><th scope=\"row\">at least 4</th><td>\\(3\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 5% level. Give the statistic to 4 decimal places.</p>",
+        "fields": [
+          {
+            "key": "stat",
+            "label": "Test statistic (4 d.p.)",
+            "expected": "15.285539569351291",
+            "type": "approximate",
+            "absolute_tolerance": 5e-05
+          },
+          {
+            "key": "decision",
+            "label": "Decision",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Insufficient evidence to reject the model.</p>",
+              "B": "<p>Reject the model.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>Estimate the mean from the ungrouped sample \\(\\widehat\\lambda=1\\). Use the complement for the final Poisson class.</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0</th><td>\\(49\\)</td><td>\\(36.7879\\)</td><td>\\(4.0539\\)</td></tr><tr><th scope=\"row\">1</th><td>\\(18\\)</td><td>\\(36.7879\\)</td><td>\\(9.5952\\)</td></tr><tr><th scope=\"row\">2–at least 4</th><td>\\(33\\)</td><td>\\(26.4241\\)</td><td>\\(1.6365\\)</td></tr></tbody></table></div><p>The statistic is \\(15.2855\\) with \\(\\nu=3-1-1=1\\) degrees of freedom. The 5% upper critical value is \\(3.841\\).</p><p>There is evidence against the claim that a Poisson model fits the number of resets per window.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Method in one minute</h2><p>Use unrounded expected frequencies in every contribution.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Step</th><th scope=\"col\">What to write</th></tr></thead><tbody><tr><th scope=\"row\">Estimate</th><td>\\(\\widehat p=\\tfrac{\\bar x}{m},\\ \\widehat\\lambda=\\bar x\\)</td></tr><tr><th scope=\"row\">Top class</th><td>\\(\\mathrm P(X\\ge k)=1-\\mathrm P(X&lt;k)\\)</td></tr><tr><th scope=\"row\">Expected</th><td>\\(E_i=N\\mathrm P_{\\widehat\\theta}(i)\\)</td></tr><tr><th scope=\"row\">Degrees</th><td>\\(\\nu=k-1-r\\)</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Expected count at least 5 in every final class or cell.</li><li>The critical region is in the upper tail.</li><li>State your conclusion in context.</li></ul>",
+      "examTip": "<p>Use the significance level and degrees of freedom together. Failing to reject does not establish the null hypothesis.</p>"
+    },
+    "related": [
+      {
+        "title": "Specified discrete model",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_specified"
+      },
+      {
+        "title": "Continuous model",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_continuous"
+      },
+      {
+        "title": "Association in a table",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_contingency"
+      }
+    ]
+  },
+  "stats_chi2_continuous": {
+    "updatedOn": "2026-11-21",
+    "description": "Turn continuous class intervals into expected counts using CDF differences and apply a chi-squared goodness-of-fit test.",
+    "sections": [
+      {
+        "id": "width",
+        "title": "How do interval widths affect expected counts?",
+        "label": "Uniform expectations",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A uniform model puts equal probability into equal lengths.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(E_i=N\\frac{u_i-l_i}{b-a}\\) when the class lies in the model’s support \\([a,b]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Different class widths generally give different expected counts under a uniform model.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-continuous-study-01",
+            "title": "Find the frequency for a five-minute interval",
+            "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to be uniform on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–1</th><td>\\(10\\)</td></tr><tr><th scope=\"row\">1–3</th><td>\\(25\\)</td></tr><tr><th scope=\"row\">3–8</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(20\\)</td></tr></tbody></table></div><p>Find the expected frequency for 3–8. Give an exact value.</p>",
+            "fields": [
+              {
+                "key": "expected",
+                "label": "Expected for 3–8",
+                "expected": "50",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–1</th><td>\\(10\\)</td><td>\\(10\\)</td><td>\\(0\\)</td></tr><tr><th scope=\"row\">1–3</th><td>\\(25\\)</td><td>\\(20\\)</td><td>\\(\\frac{5}{4}\\)</td></tr><tr><th scope=\"row\">3–8</th><td>\\(45\\)</td><td>\\(50\\)</td><td>\\(\\frac{1}{2}\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(20\\)</td><td>\\(20\\)</td><td>\\(0\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{7}{4}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Every interval width is part of the model.</p>"
+          }
+        ]
+      },
+      {
+        "id": "pdf",
+        "title": "How can I turn a density into a frequency?",
+        "label": "Using the PDF",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The area under the density over a class gives its probability.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(E_i=N\\int_{l_i}^{u_i}f(x)\\,\\mathrm dx\\). Check that all expected counts sum to the sample size.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The density at a class midpoint is a height. It does not give the interval probability.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-continuous-study-02",
+            "title": "Read an interval from the model density",
+            "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to have density \\(f(x)=\\frac{x}{50}\\) on the stated range, and zero elsewhere on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–3</th><td>\\(10\\)</td></tr><tr><th scope=\"row\">3–5</th><td>\\(20\\)</td></tr><tr><th scope=\"row\">5–8</th><td>\\(34\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(36\\)</td></tr></tbody></table></div><p>Find the expected frequency for 8–10. Give an exact value.</p>",
+            "fields": [
+              {
+                "key": "expected",
+                "label": "Expected for 8–10",
+                "expected": "36",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–3</th><td>\\(10\\)</td><td>\\(9\\)</td><td>\\(\\frac{1}{9}\\)</td></tr><tr><th scope=\"row\">3–5</th><td>\\(20\\)</td><td>\\(16\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">5–8</th><td>\\(34\\)</td><td>\\(39\\)</td><td>\\(\\frac{25}{39}\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(36\\)</td><td>\\(36\\)</td><td>\\(0\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{205}{117}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The area gives a probability.</p>"
+          }
+        ]
+      },
+      {
+        "id": "cdf",
+        "title": "Which CDF values do I subtract?",
+        "label": "CDF difference",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For a continuous distribution the exact class endpoint conventions do not affect the probability.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\). Use a genuine CDF with the correct support and any required piecewise branch.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not use \\(F(u)\\) alone for an interval beginning inside the support.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-continuous-study-03",
+            "title": "Exclude probability below the chosen interval",
+            "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to have density \\(f(x)=\\frac{x}{50}\\) on the stated range, and zero elsewhere on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–3</th><td>\\(11\\)</td></tr><tr><th scope=\"row\">3–6</th><td>\\(20\\)</td></tr><tr><th scope=\"row\">6–8</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(32\\)</td></tr></tbody></table></div><p>Find the contribution of 3–6 to the statistic. Give an exact value.</p>",
+            "fields": [
+              {
+                "key": "term",
+                "label": "Contribution from 3–6",
+                "expected": "49/27",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–3</th><td>\\(11\\)</td><td>\\(9\\)</td><td>\\(\\frac{4}{9}\\)</td></tr><tr><th scope=\"row\">3–6</th><td>\\(20\\)</td><td>\\(27\\)</td><td>\\(\\frac{49}{27}\\)</td></tr><tr><th scope=\"row\">6–8</th><td>\\(37\\)</td><td>\\(28\\)</td><td>\\(\\frac{81}{28}\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(32\\)</td><td>\\(36\\)</td><td>\\(\\frac{4}{9}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{4231}{756}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The table of expected values is a useful check on your CDF arithmetic.</p>"
+          }
+        ]
+      },
+      {
+        "id": "combine",
+        "title": "What happens when the first interval is too small?",
+        "label": "Combine intervals",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Intervals at the edge of a continuous model may carry little probability.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Join neighbouring intervals if necessary and recompute the contribution using the combined counts.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Compute the contribution after combining. Adding two already-calculated contributions gives a different statistic.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-continuous-study-04",
+            "title": "Obtain the contribution after grouping",
+            "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to have density \\(f(x)=\\frac{x}{50}\\) on the stated range, and zero elsewhere on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–1</th><td>\\(2\\)</td></tr><tr><th scope=\"row\">1–4</th><td>\\(17\\)</td></tr><tr><th scope=\"row\">4–8</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(44\\)</td></tr></tbody></table></div><p>Find the contribution of 0–1–1–4 to the statistic. Give an exact value.</p>",
+            "fields": [
+              {
+                "key": "term",
+                "label": "Contribution from 0–1–1–4",
+                "expected": "9/16",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–1–1–4</th><td>\\(19\\)</td><td>\\(16\\)</td><td>\\(\\frac{9}{16}\\)</td></tr><tr><th scope=\"row\">4–8</th><td>\\(37\\)</td><td>\\(48\\)</td><td>\\(\\frac{121}{48}\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(44\\)</td><td>\\(36\\)</td><td>\\(\\frac{16}{9}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{175}{36}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>An expected frequency of exactly 5 is acceptable.</p>"
+          }
+        ]
+      },
+      {
+        "id": "tail",
+        "title": "How do I complete a continuous-model test?",
+        "label": "Test statistic",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Once the expected counts are in the table the same goodness-of-fit procedure applies.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(X^2=\\sum_i\\frac{(O_i-E_i)^2}{E_i}\\) using expected counts from interval probabilities. Use \\(\\nu=k-1-r\\) when any parameter was estimated from the test data.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A continuous fit uses class counts. Do not use the raw measurements as individual chi-squared terms.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-continuous-study-05",
+            "title": "Use the final degrees of freedom",
+            "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to have density \\(f(x)=\\frac{x}{50}\\) on the stated range, and zero elsewhere on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(3\\)</td></tr><tr><th scope=\"row\">2–5</th><td>\\(19\\)</td></tr><tr><th scope=\"row\">5–7</th><td>\\(30\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(48\\)</td></tr></tbody></table></div><p>Give the degrees of freedom after any grouping.</p>",
+            "fields": [
+              {
+                "key": "df",
+                "label": "Degrees of freedom",
+                "expected": "2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–2–2–5</th><td>\\(22\\)</td><td>\\(25\\)</td><td>\\(\\frac{9}{25}\\)</td></tr><tr><th scope=\"row\">5–7</th><td>\\(30\\)</td><td>\\(24\\)</td><td>\\(\\frac{3}{2}\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(48\\)</td><td>\\(51\\)</td><td>\\(\\frac{3}{17}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{1731}{850}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use the right tail for the test.</p>"
+          }
+        ]
+      },
+      {
+        "id": "unequal",
+        "title": "Can unequal widths be used in a full test?",
+        "label": "Complete model",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Show both the parameter assumptions and the class boundaries. Compute each expectation using its own interval.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the full support and compare with the upper-tail critical value for the final classes.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A midpoint is useful for estimating a mean from grouped data when required. It does not replace integrating the model density.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-continuous-study-06",
+            "title": "Test a concentrated set of times",
+            "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to be uniform on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(16\\)</td></tr><tr><th scope=\"row\">2–4</th><td>\\(20\\)</td></tr><tr><th scope=\"row\">4–7</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(19\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 5% level. Give the statistic exactly.</p>",
+            "fields": [
+              {
+                "key": "stat",
+                "label": "Test statistic",
+                "expected": "37/3",
+                "type": "number"
+              },
+              {
+                "key": "decision",
+                "label": "Decision",
+                "type": "choice",
+                "expected": "B",
+                "options": {
+                  "A": "<p>Insufficient evidence to reject the model.</p>",
+                  "B": "<p>Reject the model.</p>"
+                }
+              }
+            ],
+            "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+            "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(16\\)</td><td>\\(20\\)</td><td>\\(\\frac{4}{5}\\)</td></tr><tr><th scope=\"row\">2–4</th><td>\\(20\\)</td><td>\\(20\\)</td><td>\\(0\\)</td></tr><tr><th scope=\"row\">4–7</th><td>\\(45\\)</td><td>\\(30\\)</td><td>\\(\\frac{15}{2}\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(19\\)</td><td>\\(30\\)</td><td>\\(\\frac{121}{30}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{37}{3}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is evidence against the claim that the stated distribution models the drying times.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>State the original model when expressing your conclusion.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use a uniform distribution on four intervals",
+        "question": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to be uniform on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–1</th><td>\\(11\\)</td></tr><tr><th scope=\"row\">1–4</th><td>\\(27\\)</td></tr><tr><th scope=\"row\">4–8</th><td>\\(40\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(22\\)</td></tr></tbody></table></div><p>Find the expected frequency for 1–4. Give an exact value.</p>",
+        "solution": [
+          "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–1</th><td>\\(11\\)</td><td>\\(10\\)</td><td>\\(\\frac{1}{10}\\)</td></tr><tr><th scope=\"row\">1–4</th><td>\\(27\\)</td><td>\\(30\\)</td><td>\\(\\frac{3}{10}\\)</td></tr><tr><th scope=\"row\">4–8</th><td>\\(40\\)</td><td>\\(40\\)</td><td>\\(0\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(22\\)</td><td>\\(20\\)</td><td>\\(\\frac{1}{5}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{3}{5}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+        ]
+      },
+      {
+        "title": "Two intervals with distinct widths",
+        "question": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to be uniform on the range 2 to 12.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">2–4</th><td>\\(19\\)</td></tr><tr><th scope=\"row\">4–6</th><td>\\(24\\)</td></tr><tr><th scope=\"row\">6–9</th><td>\\(23\\)</td></tr><tr><th scope=\"row\">9–12</th><td>\\(34\\)</td></tr></tbody></table></div><p>Find the contribution of 4–6 to the statistic. Give an exact value.</p>",
+        "solution": [
+          "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">2–4</th><td>\\(19\\)</td><td>\\(20\\)</td><td>\\(\\frac{1}{20}\\)</td></tr><tr><th scope=\"row\">4–6</th><td>\\(24\\)</td><td>\\(20\\)</td><td>\\(\\frac{4}{5}\\)</td></tr><tr><th scope=\"row\">6–9</th><td>\\(23\\)</td><td>\\(30\\)</td><td>\\(\\frac{49}{30}\\)</td></tr><tr><th scope=\"row\">9–12</th><td>\\(34\\)</td><td>\\(30\\)</td><td>\\(\\frac{8}{15}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{181}{60}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+        ]
+      },
+      {
+        "title": "Find the expected count from a rising density",
+        "question": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to have density \\(f(x)=\\frac{x}{50}\\) on the stated range, and zero elsewhere on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–3</th><td>\\(11\\)</td></tr><tr><th scope=\"row\">3–6</th><td>\\(19\\)</td></tr><tr><th scope=\"row\">6–8</th><td>\\(30\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(40\\)</td></tr></tbody></table></div><p>Find the expected frequency for 3–6. Give an exact value.</p>",
+        "solution": [
+          "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–3</th><td>\\(11\\)</td><td>\\(9\\)</td><td>\\(\\frac{4}{9}\\)</td></tr><tr><th scope=\"row\">3–6</th><td>\\(19\\)</td><td>\\(27\\)</td><td>\\(\\frac{64}{27}\\)</td></tr><tr><th scope=\"row\">6–8</th><td>\\(30\\)</td><td>\\(28\\)</td><td>\\(\\frac{1}{7}\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(40\\)</td><td>\\(36\\)</td><td>\\(\\frac{4}{9}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{643}{189}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+        ]
+      },
+      {
+        "title": "Use a CDF difference over the middle class",
+        "question": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to have density \\(f(x)=\\frac{x}{50} - \\frac{1}{50}\\) on the stated range, and zero elsewhere on the range 1 to 11.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">1–4</th><td>\\(4\\)</td></tr><tr><th scope=\"row\">4–6</th><td>\\(16\\)</td></tr><tr><th scope=\"row\">6–9</th><td>\\(35\\)</td></tr><tr><th scope=\"row\">9–11</th><td>\\(45\\)</td></tr></tbody></table></div><p>Find the contribution of 6–9 to the statistic. Give an exact value.</p>",
+        "solution": [
+          "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">1–4</th><td>\\(4\\)</td><td>\\(9\\)</td><td>\\(\\frac{25}{9}\\)</td></tr><tr><th scope=\"row\">4–6</th><td>\\(16\\)</td><td>\\(16\\)</td><td>\\(0\\)</td></tr><tr><th scope=\"row\">6–9</th><td>\\(35\\)</td><td>\\(39\\)</td><td>\\(\\frac{16}{39}\\)</td></tr><tr><th scope=\"row\">9–11</th><td>\\(45\\)</td><td>\\(36\\)</td><td>\\(\\frac{9}{4}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{2545}{468}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+        ]
+      },
+      {
+        "title": "Join the first two intervals",
+        "question": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to have density \\(f(x)=\\frac{x}{50}\\) on the stated range, and zero elsewhere on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(4\\)</td></tr><tr><th scope=\"row\">2–5</th><td>\\(20\\)</td></tr><tr><th scope=\"row\">5–8</th><td>\\(34\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(42\\)</td></tr></tbody></table></div><p>Apply the expected frequency rule. Give the number of classes left and the expected frequency for 0–2–2–5.</p>",
+        "solution": [
+          "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–2–2–5</th><td>\\(24\\)</td><td>\\(25\\)</td><td>\\(\\frac{1}{25}\\)</td></tr><tr><th scope=\"row\">5–8</th><td>\\(34\\)</td><td>\\(39\\)</td><td>\\(\\frac{25}{39}\\)</td></tr><tr><th scope=\"row\">8–10</th><td>\\(42\\)</td><td>\\(36\\)</td><td>\\(1\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{1639}{975}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+        ]
+      },
+      {
+        "title": "A right-tailed test from continuous class counts",
+        "question": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to be uniform on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(10\\)</td></tr><tr><th scope=\"row\">2–4</th><td>\\(26\\)</td></tr><tr><th scope=\"row\">4–7</th><td>\\(26\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(38\\)</td></tr></tbody></table></div><p>Find the upper-tail probability to 4 decimal places and decide at the 5% level.</p>",
+        "solution": [
+          "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(10\\)</td><td>\\(20\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">2–4</th><td>\\(26\\)</td><td>\\(20\\)</td><td>\\(\\frac{9}{5}\\)</td></tr><tr><th scope=\"row\">4–7</th><td>\\(26\\)</td><td>\\(30\\)</td><td>\\(\\frac{8}{15}\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(38\\)</td><td>\\(30\\)</td><td>\\(\\frac{32}{15}\\)</td></tr></tbody></table></div>",
+          "<p>The right-tail probability is \\(0.0237\\).</p>",
+          "<p>The statistic is \\(\\frac{142}{15}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is evidence against the claim that the stated distribution models the drying times.</p>"
+        ]
+      },
+      {
+        "title": "Test a full set of unequal-width classes",
+        "question": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to have density \\(f(x)=\\frac{x}{50}\\) on the stated range, and zero elsewhere on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(7\\)</td></tr><tr><th scope=\"row\">2–3</th><td>\\(16\\)</td></tr><tr><th scope=\"row\">3–6</th><td>\\(33\\)</td></tr><tr><th scope=\"row\">6–10</th><td>\\(44\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 5% level. Give the statistic exactly.</p>",
+        "solution": [
+          "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p>",
+          "<p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–2–2–3</th><td>\\(23\\)</td><td>\\(9\\)</td><td>\\(\\frac{196}{9}\\)</td></tr><tr><th scope=\"row\">3–6</th><td>\\(33\\)</td><td>\\(27\\)</td><td>\\(\\frac{4}{3}\\)</td></tr><tr><th scope=\"row\">6–10</th><td>\\(44\\)</td><td>\\(64\\)</td><td>\\(\\frac{25}{4}\\)</td></tr></tbody></table></div>",
+          "<p>The statistic is \\(\\frac{1057}{36}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is evidence against the claim that the stated distribution models the drying times.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Class interval",
+        "definition": "<p>A range used to group a continuous measurement.</p>"
+      },
+      {
+        "term": "CDF difference",
+        "definition": "<p>The upper CDF value minus the lower CDF value for the interval.</p>"
+      },
+      {
+        "term": "Continuous support",
+        "definition": "<p>The full range of possible values under the model.</p>"
+      },
+      {
+        "term": "Class boundary",
+        "definition": "<p>A cut-off separating two adjacent ranges.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-chi2-continuous-study-07",
+        "title": "Interpret equal-width intervals",
+        "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to be uniform on the range 0 to 8.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(28\\)</td></tr><tr><th scope=\"row\">2–4</th><td>\\(19\\)</td></tr><tr><th scope=\"row\">4–6</th><td>\\(27\\)</td></tr><tr><th scope=\"row\">6–8</th><td>\\(26\\)</td></tr></tbody></table></div><p>Find the upper-tail probability to 4 decimal places and decide at the 5% level.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Upper-tail probability (4 d.p.)",
+            "expected": "0.5724067044708798",
+            "type": "approximate",
+            "absolute_tolerance": 5e-05
+          },
+          {
+            "key": "decision",
+            "label": "Decision",
+            "type": "choice",
+            "expected": "A",
+            "options": {
+              "A": "<p>Insufficient evidence to reject the model.</p>",
+              "B": "<p>Reject the model.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(28\\)</td><td>\\(25\\)</td><td>\\(\\frac{9}{25}\\)</td></tr><tr><th scope=\"row\">2–4</th><td>\\(19\\)</td><td>\\(25\\)</td><td>\\(\\frac{36}{25}\\)</td></tr><tr><th scope=\"row\">4–6</th><td>\\(27\\)</td><td>\\(25\\)</td><td>\\(\\frac{4}{25}\\)</td></tr><tr><th scope=\"row\">6–8</th><td>\\(26\\)</td><td>\\(25\\)</td><td>\\(\\frac{1}{25}\\)</td></tr></tbody></table></div><p>The right-tail probability is \\(0.5724\\).</p><p>The statistic is \\(2\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-continuous-study-08",
+        "title": "Find a shifted-support expectation",
+        "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to have density \\(f(x)=\\frac{x}{50} - \\frac{1}{25}\\) on the stated range, and zero elsewhere on the range 2 to 12.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">2–5</th><td>\\(9\\)</td></tr><tr><th scope=\"row\">5–7</th><td>\\(18\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(28\\)</td></tr><tr><th scope=\"row\">10–12</th><td>\\(45\\)</td></tr></tbody></table></div><p>Find the expected frequency for 5–7. Give an exact value.</p>",
+        "fields": [
+          {
+            "key": "expected",
+            "label": "Expected for 5–7",
+            "expected": "16",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">2–5</th><td>\\(9\\)</td><td>\\(9\\)</td><td>\\(0\\)</td></tr><tr><th scope=\"row\">5–7</th><td>\\(18\\)</td><td>\\(16\\)</td><td>\\(\\frac{1}{4}\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(28\\)</td><td>\\(39\\)</td><td>\\(\\frac{121}{39}\\)</td></tr><tr><th scope=\"row\">10–12</th><td>\\(45\\)</td><td>\\(36\\)</td><td>\\(\\frac{9}{4}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{437}{78}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-continuous-study-09",
+        "title": "Combine first and second classes",
+        "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to have density \\(f(x)=\\frac{x}{50}\\) on the stated range, and zero elsewhere on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–1</th><td>\\(1\\)</td></tr><tr><th scope=\"row\">1–3</th><td>\\(7\\)</td></tr><tr><th scope=\"row\">3–6</th><td>\\(36\\)</td></tr><tr><th scope=\"row\">6–10</th><td>\\(56\\)</td></tr></tbody></table></div><p>Apply the expected frequency rule. Give the number of classes left and the expected frequency for 0–1–1–3.</p>",
+        "fields": [
+          {
+            "key": "classes",
+            "label": "Final number of classes",
+            "expected": "3",
+            "type": "number"
+          },
+          {
+            "key": "expected",
+            "label": "Expected for 0–1–1–3",
+            "expected": "9",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–1–1–3</th><td>\\(8\\)</td><td>\\(9\\)</td><td>\\(\\frac{1}{9}\\)</td></tr><tr><th scope=\"row\">3–6</th><td>\\(36\\)</td><td>\\(27\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">6–10</th><td>\\(56\\)</td><td>\\(64\\)</td><td>\\(1\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{37}{9}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-continuous-study-10",
+        "title": "Check a model with gaps in counts",
+        "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to be uniform on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">2–4</th><td>\\(24\\)</td></tr><tr><th scope=\"row\">4–7</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(45\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 5% level. Give the statistic exactly.</p>",
+        "fields": [
+          {
+            "key": "stat",
+            "label": "Test statistic",
+            "expected": "85/3",
+            "type": "number"
+          },
+          {
+            "key": "decision",
+            "label": "Decision",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Insufficient evidence to reject the model.</p>",
+              "B": "<p>Reject the model.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(0\\)</td><td>\\(20\\)</td><td>\\(20\\)</td></tr><tr><th scope=\"row\">2–4</th><td>\\(24\\)</td><td>\\(20\\)</td><td>\\(\\frac{4}{5}\\)</td></tr><tr><th scope=\"row\">4–7</th><td>\\(31\\)</td><td>\\(30\\)</td><td>\\(\\frac{1}{30}\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(45\\)</td><td>\\(30\\)</td><td>\\(\\frac{15}{2}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{85}{3}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is evidence against the claim that the stated distribution models the drying times.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-continuous-study-11",
+        "title": "Evaluate a larger grouping discrepancy",
+        "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to have density \\(f(x)=\\frac{x}{50}\\) on the stated range, and zero elsewhere on the range 0 to 10.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">0–2</th><td>\\(2\\)</td></tr><tr><th scope=\"row\">2–3</th><td>\\(25\\)</td></tr><tr><th scope=\"row\">3–7</th><td>\\(27\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(46\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 5% level. Give the statistic exactly.</p>",
+        "fields": [
+          {
+            "key": "stat",
+            "label": "Test statistic",
+            "expected": "83059/2040",
+            "type": "number"
+          },
+          {
+            "key": "decision",
+            "label": "Decision",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Insufficient evidence to reject the model.</p>",
+              "B": "<p>Reject the model.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><p>Pool adjacent classes before finding contributions, keeping both totals fixed.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">0–2–2–3</th><td>\\(27\\)</td><td>\\(9\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">3–7</th><td>\\(27\\)</td><td>\\(40\\)</td><td>\\(\\frac{169}{40}\\)</td></tr><tr><th scope=\"row\">7–10</th><td>\\(46\\)</td><td>\\(51\\)</td><td>\\(\\frac{25}{51}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{83059}{2040}\\) with \\(\\nu=3-1-0=2\\) degrees of freedom. The 5% upper critical value is \\(5.991\\).</p><p>There is evidence against the claim that the stated distribution models the drying times.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-continuous-study-12",
+        "title": "Use all the class widths at once",
+        "prompt": "<p>The table records a sample of independent drying times in minutes. The distribution is proposed to be uniform on the range 2 to 12.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Category</th><th scope=\"col\">Observed</th></tr></thead><tbody><tr><th scope=\"row\">2–3</th><td>\\(5\\)</td></tr><tr><th scope=\"row\">3–4</th><td>\\(9\\)</td></tr><tr><th scope=\"row\">4–8</th><td>\\(41\\)</td></tr><tr><th scope=\"row\">8–12</th><td>\\(45\\)</td></tr></tbody></table></div><p>Calculate the statistic and decide at the 5% level. Give the statistic exactly.</p>",
+        "fields": [
+          {
+            "key": "stat",
+            "label": "Test statistic",
+            "expected": "13/4",
+            "type": "number"
+          },
+          {
+            "key": "decision",
+            "label": "Decision",
+            "type": "choice",
+            "expected": "A",
+            "options": {
+              "A": "<p>Insufficient evidence to reject the model.</p>",
+              "B": "<p>Reject the model.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Find each expected count from the model. Use the final classes to count degrees of freedom.</p>",
+        "solution": "<p>Use CDF differences on the stated support \\(\\mathrm P(l&lt;X&lt;u)=F(u)-F(l)\\).</p><p>\\(E_i=100\\mathrm{P}(X\\text{ is in class }i)\\)</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Final class</th><th scope=\"col\">Observed</th><th scope=\"col\">Expected</th><th scope=\"col\">Contribution</th></tr></thead><tbody><tr><th scope=\"row\">2–3</th><td>\\(5\\)</td><td>\\(10\\)</td><td>\\(\\frac{5}{2}\\)</td></tr><tr><th scope=\"row\">3–4</th><td>\\(9\\)</td><td>\\(10\\)</td><td>\\(\\frac{1}{10}\\)</td></tr><tr><th scope=\"row\">4–8</th><td>\\(41\\)</td><td>\\(40\\)</td><td>\\(\\frac{1}{40}\\)</td></tr><tr><th scope=\"row\">8–12</th><td>\\(45\\)</td><td>\\(40\\)</td><td>\\(\\frac{5}{8}\\)</td></tr></tbody></table></div><p>The statistic is \\(\\frac{13}{4}\\) with \\(\\nu=4-1-0=3\\) degrees of freedom. The 5% upper critical value is \\(7.815\\).</p><p>There is insufficient evidence against the claim that the stated distribution models the drying times.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Method in one minute</h2><p>Use unrounded expected frequencies in every contribution.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Step</th><th scope=\"col\">What to write</th></tr></thead><tbody><tr><th scope=\"row\">Class probability</th><td>\\(F(u)-F(l)=\\int_l^u f(x)\\,\\mathrm dx\\)</td></tr><tr><th scope=\"row\">Expected</th><td>\\(E_i=N\\mathrm P(l_i&lt;X&lt;u_i)\\)</td></tr><tr><th scope=\"row\">Pooling</th><td>Recalculate from the combined counts.</td></tr><tr><th scope=\"row\">Test</th><td>\\(\\nu=k-1-r\\) with the final classes.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Expected count at least 5 in every final class or cell.</li><li>The critical region is in the upper tail.</li><li>State your conclusion in context.</li></ul>",
+      "examTip": "<p>Use the significance level and degrees of freedom together. Failing to reject does not establish the null hypothesis.</p>"
+    },
+    "related": [
+      {
+        "title": "Specified discrete model",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_specified"
+      },
+      {
+        "title": "Fitted discrete model",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_estimated"
+      },
+      {
+        "title": "Association in a table",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_contingency"
+      }
+    ]
+  },
+  "stats_chi2_contingency": {
+    "updatedOn": "2026-11-21",
+    "description": "Calculate expected contingency-table counts, pool coherent groups if needed and test for an association between two classifications.",
+    "sections": [
+      {
+        "id": "independence",
+        "title": "What would independence predict?",
+        "label": "Expected counts",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Under independence the same column proportions apply in each row.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(E_{ij}=\\frac{R_iC_j}{N}\\) follows from multiplying the marginal probabilities and then scaling by \\(N\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not divide the sample size equally among cells unless the margins happen to give equal expected counts.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-contingency-study-01",
+            "title": "Find one model preference under independence",
+            "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(12\\)</td><td>\\(16\\)</td><td>\\(11\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(18\\)</td><td>\\(13\\)</td><td>\\(14\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(10\\)</td><td>\\(17\\)</td><td>\\(9\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(40\\)</td><td>\\(46\\)</td><td>\\(34\\)</td><td>\\(120\\)</td></tr></tbody></table></div><p>Find the expected frequency for 40 or older and Models exactly.</p>",
+            "fields": [
+              {
+                "key": "expected",
+                "label": "Expected count",
+                "expected": "69/5",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+            "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(13\\)</td><td>\\(\\frac{299}{20}\\)</td><td>\\(\\frac{221}{20}\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(15\\)</td><td>\\(\\frac{69}{4}\\)</td><td>\\(\\frac{51}{4}\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(12\\)</td><td>\\(\\frac{69}{5}\\)</td><td>\\(\\frac{51}{5}\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(40\\)</td><td>\\(46\\)</td><td>\\(34\\)</td><td>\\(120\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{6133}{1955},\\quad \\nu=(3-1)(3-1)=4\\). The upper critical value is \\(9.488\\).</p><p>Insufficient evidence of an association.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use row and column totals only to calculate expected cells.</p>"
+          }
+        ]
+      },
+      {
+        "id": "cell",
+        "title": "What does one cell contribute?",
+        "label": "Cell contribution",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Compare the observed count with the expected count for the same row and column.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\frac{(O_{ij}-E_{ij})^2}{E_{ij}}\\) contributes to the statistic. Sum over actual cells only.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The margins help calculate expected counts. They are not separate chi-squared terms.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-contingency-study-02",
+            "title": "Check a contribution from a common category",
+            "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(22\\)</td><td>\\(17\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(14\\)</td><td>\\(22\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(20\\)</td><td>\\(5\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(56\\)</td><td>\\(44\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Find the exact contribution from 20 to 39 and Maps.</p>",
+            "fields": [
+              {
+                "key": "term",
+                "label": "Contribution",
+                "expected": "847/450",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+            "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(\\frac{546}{25}\\)</td><td>\\(\\frac{429}{25}\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(\\frac{504}{25}\\)</td><td>\\(\\frac{396}{25}\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(14\\)</td><td>\\(11\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(56\\)</td><td>\\(44\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{182425}{18018},\\quad \\nu=(3-1)(2-1)=2\\). The upper critical value is \\(5.991\\).</p><p>Evidence of an association.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Leave all marginal totals out of the statistic.</p>"
+          }
+        ]
+      },
+      {
+        "id": "dimensions",
+        "title": "Why do rows and columns determine the degrees?",
+        "label": "Degrees of freedom",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>With all margins fixed you cannot choose every count freely.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\nu=(r-1)(c-1)\\) for \\(r\\) rows and \\(c\\) columns in the final table.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A two-way table uses the row/column degrees formula. Counting final cells minus one would give the wrong critical value.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-contingency-study-03",
+            "title": "Calculate degrees after seeing all categories",
+            "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(12\\)</td><td>\\(16\\)</td><td>\\(11\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(18\\)</td><td>\\(13\\)</td><td>\\(14\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(10\\)</td><td>\\(17\\)</td><td>\\(9\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(40\\)</td><td>\\(46\\)</td><td>\\(34\\)</td><td>\\(120\\)</td></tr></tbody></table></div><p>Work out the degrees of freedom for the final table.</p>",
+            "fields": [
+              {
+                "key": "df",
+                "label": "Degrees of freedom",
+                "expected": "4",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+            "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(13\\)</td><td>\\(\\frac{299}{20}\\)</td><td>\\(\\frac{221}{20}\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(15\\)</td><td>\\(\\frac{69}{4}\\)</td><td>\\(\\frac{51}{4}\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(12\\)</td><td>\\(\\frac{69}{5}\\)</td><td>\\(\\frac{51}{5}\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(40\\)</td><td>\\(46\\)</td><td>\\(34\\)</td><td>\\(120\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{6133}{1955},\\quad \\nu=(3-1)(3-1)=4\\). The upper critical value is \\(9.488\\).</p><p>Insufficient evidence of an association.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Do not count the totals row or column.</p>"
+          }
+        ]
+      },
+      {
+        "id": "combine-groups",
+        "title": "How can I pool a small expected cell?",
+        "label": "Pool a group",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Only combine complete rows or columns when the resulting group makes sense.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Recalculate the margins and expectations for the final table. If sensible pooling is impossible, the standard chi-squared procedure is unsuitable.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Pooling one isolated cell breaks the table classification.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-contingency-study-04",
+            "title": "Combine the first two age bands",
+            "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(4\\)</td><td>\\(3\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(14\\)</td><td>\\(11\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(32\\)</td><td>\\(36\\)</td><td>\\(68\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Combine Under 20 and 20 to 39 into one row. Give its expected frequency in the Models column and the final degrees of freedom.</p>",
+            "fields": [
+              {
+                "key": "expected",
+                "label": "Pooled expected count",
+                "expected": "16",
+                "type": "number"
+              },
+              {
+                "key": "df",
+                "label": "Degrees of freedom",
+                "expected": "1",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+            "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20 and 20 to 39</th><td>\\(16\\)</td><td>\\(16\\)</td><td>\\(32\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(34\\)</td><td>\\(34\\)</td><td>\\(68\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{25}{34},\\quad \\nu=(2-1)(2-1)=1\\). The upper critical value is \\(3.841\\).</p><p>Insufficient evidence of an association.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Pool before computing the final contribution.</p>"
+          }
+        ]
+      },
+      {
+        "id": "interpret",
+        "title": "Is an association the same as a cause?",
+        "label": "Interpretation",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A significant chi-squared statistic is evidence that the variables are associated in the population.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>State which two classifications are being tested. Association alone does not establish that changing one variable causes a change in the other.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Failing to reject does not prove independence or guarantee that there is no useful relationship.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-contingency-study-05",
+            "title": "Conclude for a strong discrepancy",
+            "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(30\\)</td><td>\\(9\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(12\\)</td><td>\\(26\\)</td><td>\\(38\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(8\\)</td><td>\\(15\\)</td><td>\\(23\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Choose a conclusion at the 5% level.</p>",
+            "fields": [
+              {
+                "key": "decision",
+                "label": "Conclusion",
+                "type": "choice",
+                "expected": "B",
+                "options": {
+                  "A": "<p>Insufficient evidence of an association.</p>",
+                  "B": "<p>Evidence of an association.</p>"
+                }
+              }
+            ],
+            "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+            "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(\\frac{39}{2}\\)</td><td>\\(\\frac{39}{2}\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(19\\)</td><td>\\(19\\)</td><td>\\(38\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(\\frac{23}{2}\\)</td><td>\\(\\frac{23}{2}\\)</td><td>\\(23\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{105644}{5681},\\quad \\nu=(3-1)(2-1)=2\\). The upper critical value is \\(5.991\\).</p><p>Evidence of an association.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Do not infer causality from association.</p>"
+          }
+        ]
+      },
+      {
+        "id": "full",
+        "title": "How do I present the full test?",
+        "label": "Test of independence",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Give the null assumption, expected frequencies, statistic, degrees of freedom and a decision.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(X^2=\\sum_i\\frac{(O_i-E_i)^2}{E_i}\\) with the cells as classes. Use the ordinary statistic in 9231, with no Yates correction.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Classify each sampled item once in each variable. Repeated or matched measurements can violate the independence of observations.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-chi2-contingency-study-06",
+            "title": "Test for an association after pooling",
+            "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(4\\)</td><td>\\(3\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(14\\)</td><td>\\(22\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(32\\)</td><td>\\(25\\)</td><td>\\(57\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Find the exact statistic and decide at the 5% level.</p>",
+            "fields": [
+              {
+                "key": "stat",
+                "label": "Test statistic",
+                "expected": "4900/2451",
+                "type": "number"
+              },
+              {
+                "key": "decision",
+                "label": "Conclusion",
+                "type": "choice",
+                "expected": "A",
+                "options": {
+                  "A": "<p>Insufficient evidence of an association.</p>",
+                  "B": "<p>Evidence of an association.</p>"
+                }
+              }
+            ],
+            "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+            "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20 and 20 to 39</th><td>\\(\\frac{43}{2}\\)</td><td>\\(\\frac{43}{2}\\)</td><td>\\(43\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(\\frac{57}{2}\\)</td><td>\\(\\frac{57}{2}\\)</td><td>\\(57\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{4900}{2451},\\quad \\nu=(2-1)(2-1)=1\\). The upper critical value is \\(3.841\\).</p><p>Insufficient evidence of an association.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Record context and significance level in the conclusion.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use the margins to predict one count",
+        "question": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(14\\)</td><td>\\(13\\)</td><td>\\(27\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(25\\)</td><td>\\(12\\)</td><td>\\(37\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(11\\)</td><td>\\(25\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Find the expected frequency for Under 20 and Maps exactly.</p>",
+        "solution": [
+          "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(\\frac{27}{2}\\)</td><td>\\(\\frac{27}{2}\\)</td><td>\\(27\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(\\frac{37}{2}\\)</td><td>\\(\\frac{37}{2}\\)</td><td>\\(37\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(18\\)</td><td>\\(18\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div>",
+          "<p>\\(X^2=\\frac{10039}{999},\\quad \\nu=(3-1)(2-1)=2\\). The upper critical value is \\(5.991\\).</p>",
+          "<p>Evidence of an association.</p>"
+        ]
+      },
+      {
+        "title": "Use all three column totals",
+        "question": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(12\\)</td><td>\\(16\\)</td><td>\\(11\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(18\\)</td><td>\\(13\\)</td><td>\\(14\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(10\\)</td><td>\\(17\\)</td><td>\\(9\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(40\\)</td><td>\\(46\\)</td><td>\\(34\\)</td><td>\\(120\\)</td></tr></tbody></table></div><p>Find the expected frequency for 20 to 39 and Videos exactly.</p>",
+        "solution": [
+          "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(13\\)</td><td>\\(\\frac{299}{20}\\)</td><td>\\(\\frac{221}{20}\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(15\\)</td><td>\\(\\frac{69}{4}\\)</td><td>\\(\\frac{51}{4}\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(12\\)</td><td>\\(\\frac{69}{5}\\)</td><td>\\(\\frac{51}{5}\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(40\\)</td><td>\\(46\\)</td><td>\\(34\\)</td><td>\\(120\\)</td></tr></tbody></table></div>",
+          "<p>\\(X^2=\\frac{6133}{1955},\\quad \\nu=(3-1)(3-1)=4\\). The upper critical value is \\(9.488\\).</p>",
+          "<p>Insufficient evidence of an association.</p>"
+        ]
+      },
+      {
+        "title": "Find the contribution of one display choice",
+        "question": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(14\\)</td><td>\\(13\\)</td><td>\\(27\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(25\\)</td><td>\\(12\\)</td><td>\\(37\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(11\\)</td><td>\\(25\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Find the exact contribution from 40 or older and Models.</p>",
+        "solution": [
+          "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(\\frac{27}{2}\\)</td><td>\\(\\frac{27}{2}\\)</td><td>\\(27\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(\\frac{37}{2}\\)</td><td>\\(\\frac{37}{2}\\)</td><td>\\(37\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(18\\)</td><td>\\(18\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div>",
+          "<p>\\(X^2=\\frac{10039}{999},\\quad \\nu=(3-1)(2-1)=2\\). The upper critical value is \\(5.991\\).</p>",
+          "<p>Evidence of an association.</p>"
+        ]
+      },
+      {
+        "title": "Count the free cells in a rectangular table",
+        "question": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(17\\)</td><td>\\(16\\)</td><td>\\(18\\)</td><td>\\(51\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(19\\)</td><td>\\(13\\)</td><td>\\(18\\)</td><td>\\(50\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(36\\)</td><td>\\(29\\)</td><td>\\(36\\)</td><td>\\(101\\)</td></tr></tbody></table></div><p>Work out the degrees of freedom for the final table.</p>",
+        "solution": [
+          "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(\\frac{1836}{101}\\)</td><td>\\(\\frac{1479}{101}\\)</td><td>\\(\\frac{1836}{101}\\)</td><td>\\(51\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(\\frac{1800}{101}\\)</td><td>\\(\\frac{1450}{101}\\)</td><td>\\(\\frac{1800}{101}\\)</td><td>\\(50\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(36\\)</td><td>\\(29\\)</td><td>\\(36\\)</td><td>\\(101\\)</td></tr></tbody></table></div>",
+          "<p>\\(X^2=\\frac{1095749}{2662200},\\quad \\nu=(2-1)(3-1)=2\\). The upper critical value is \\(5.991\\).</p>",
+          "<p>Insufficient evidence of an association.</p>"
+        ]
+      },
+      {
+        "title": "Pool coherent age bands before calculating",
+        "question": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(3\\)</td><td>\\(4\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(12\\)</td><td>\\(18\\)</td><td>\\(30\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(35\\)</td><td>\\(28\\)</td><td>\\(63\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Combine Under 20 and 20 to 39 into one row. Give its expected frequency in the Maps column and the final degrees of freedom.</p>",
+        "solution": [
+          "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20 and 20 to 39</th><td>\\(\\frac{37}{2}\\)</td><td>\\(\\frac{37}{2}\\)</td><td>\\(37\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(\\frac{63}{2}\\)</td><td>\\(\\frac{63}{2}\\)</td><td>\\(63\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div>",
+          "<p>\\(X^2=\\frac{700}{333},\\quad \\nu=(2-1)(2-1)=1\\). The upper critical value is \\(3.841\\).</p>",
+          "<p>Insufficient evidence of an association.</p>"
+        ]
+      },
+      {
+        "title": "Decide whether this difference is significant",
+        "question": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(22\\)</td><td>\\(17\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(14\\)</td><td>\\(22\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(20\\)</td><td>\\(5\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(56\\)</td><td>\\(44\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Choose a conclusion at the 5% level.</p>",
+        "solution": [
+          "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(\\frac{546}{25}\\)</td><td>\\(\\frac{429}{25}\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(\\frac{504}{25}\\)</td><td>\\(\\frac{396}{25}\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(14\\)</td><td>\\(11\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(56\\)</td><td>\\(44\\)</td><td>\\(100\\)</td></tr></tbody></table></div>",
+          "<p>\\(X^2=\\frac{182425}{18018},\\quad \\nu=(3-1)(2-1)=2\\). The upper critical value is \\(5.991\\).</p>",
+          "<p>Evidence of an association.</p>"
+        ]
+      },
+      {
+        "title": "Run a test from a three-by-three table",
+        "question": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(12\\)</td><td>\\(16\\)</td><td>\\(11\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(18\\)</td><td>\\(13\\)</td><td>\\(14\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(10\\)</td><td>\\(17\\)</td><td>\\(9\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(40\\)</td><td>\\(46\\)</td><td>\\(34\\)</td><td>\\(120\\)</td></tr></tbody></table></div><p>Find the exact statistic and decide at the 5% level.</p>",
+        "solution": [
+          "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(13\\)</td><td>\\(\\frac{299}{20}\\)</td><td>\\(\\frac{221}{20}\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(15\\)</td><td>\\(\\frac{69}{4}\\)</td><td>\\(\\frac{51}{4}\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(12\\)</td><td>\\(\\frac{69}{5}\\)</td><td>\\(\\frac{51}{5}\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(40\\)</td><td>\\(46\\)</td><td>\\(34\\)</td><td>\\(120\\)</td></tr></tbody></table></div>",
+          "<p>\\(X^2=\\frac{6133}{1955},\\quad \\nu=(3-1)(3-1)=4\\). The upper critical value is \\(9.488\\).</p>",
+          "<p>Insufficient evidence of an association.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Independence",
+        "definition": "<p>Knowing one classification leaves the probabilities of the other unchanged.</p>"
+      },
+      {
+        "term": "Marginal total",
+        "definition": "<p>The total for one row or one column.</p>"
+      },
+      {
+        "term": "Contingency table",
+        "definition": "<p>A table of counts for two classifications measured on the same items.</p>"
+      },
+      {
+        "term": "Association",
+        "definition": "<p>Evidence that the variables are not independent in the population being studied.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-chi2-contingency-study-07",
+        "title": "Check an expected count in a two-by-three table",
+        "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(17\\)</td><td>\\(16\\)</td><td>\\(18\\)</td><td>\\(51\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(19\\)</td><td>\\(13\\)</td><td>\\(18\\)</td><td>\\(50\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(36\\)</td><td>\\(29\\)</td><td>\\(36\\)</td><td>\\(101\\)</td></tr></tbody></table></div><p>Find the expected frequency for Under 20 and Videos exactly.</p>",
+        "fields": [
+          {
+            "key": "expected",
+            "label": "Expected count",
+            "expected": "1836/101",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+        "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Videos</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(\\frac{1836}{101}\\)</td><td>\\(\\frac{1479}{101}\\)</td><td>\\(\\frac{1836}{101}\\)</td><td>\\(51\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(\\frac{1800}{101}\\)</td><td>\\(\\frac{1450}{101}\\)</td><td>\\(\\frac{1800}{101}\\)</td><td>\\(50\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(36\\)</td><td>\\(29\\)</td><td>\\(36\\)</td><td>\\(101\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{1095749}{2662200},\\quad \\nu=(2-1)(3-1)=2\\). The upper critical value is \\(5.991\\).</p><p>Insufficient evidence of an association.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-contingency-study-08",
+        "title": "Reassess after a different age-band pool",
+        "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(3\\)</td><td>\\(3\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(18\\)</td><td>\\(19\\)</td><td>\\(37\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(29\\)</td><td>\\(28\\)</td><td>\\(57\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Work out the degrees of freedom for the final table.</p>",
+        "fields": [
+          {
+            "key": "df",
+            "label": "Degrees of freedom",
+            "expected": "1",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+        "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20 and 20 to 39</th><td>\\(\\frac{43}{2}\\)</td><td>\\(\\frac{43}{2}\\)</td><td>\\(43\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(\\frac{57}{2}\\)</td><td>\\(\\frac{57}{2}\\)</td><td>\\(57\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{100}{2451},\\quad \\nu=(2-1)(2-1)=1\\). The upper critical value is \\(3.841\\).</p><p>Insufficient evidence of an association.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-contingency-study-09",
+        "title": "Check a smaller effect at the 1% level",
+        "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(22\\)</td><td>\\(17\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(14\\)</td><td>\\(22\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(20\\)</td><td>\\(5\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(56\\)</td><td>\\(44\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Choose a conclusion at the 1% level.</p>",
+        "fields": [
+          {
+            "key": "decision",
+            "label": "Conclusion",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Insufficient evidence of an association.</p>",
+              "B": "<p>Evidence of an association.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+        "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(\\frac{546}{25}\\)</td><td>\\(\\frac{429}{25}\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(\\frac{504}{25}\\)</td><td>\\(\\frac{396}{25}\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(14\\)</td><td>\\(11\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(56\\)</td><td>\\(44\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{182425}{18018},\\quad \\nu=(3-1)(2-1)=2\\). The upper critical value is \\(9.210\\).</p><p>Evidence of an association.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-contingency-study-10",
+        "title": "Find a contribution in the last age band",
+        "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(14\\)</td><td>\\(13\\)</td><td>\\(27\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(25\\)</td><td>\\(12\\)</td><td>\\(37\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(11\\)</td><td>\\(25\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Find the exact contribution from 40 or older and Maps.</p>",
+        "fields": [
+          {
+            "key": "term",
+            "label": "Contribution",
+            "expected": "49/18",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+        "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(\\frac{27}{2}\\)</td><td>\\(\\frac{27}{2}\\)</td><td>\\(27\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(\\frac{37}{2}\\)</td><td>\\(\\frac{37}{2}\\)</td><td>\\(37\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(18\\)</td><td>\\(18\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{10039}{999},\\quad \\nu=(3-1)(2-1)=2\\). The upper critical value is \\(5.991\\).</p><p>Evidence of an association.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-contingency-study-11",
+        "title": "Find an expected count from unequal row totals",
+        "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(22\\)</td><td>\\(17\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(14\\)</td><td>\\(22\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(20\\)</td><td>\\(5\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(56\\)</td><td>\\(44\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Find the expected frequency for 20 to 39 and Models exactly.</p>",
+        "fields": [
+          {
+            "key": "expected",
+            "label": "Expected count",
+            "expected": "396/25",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+        "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(\\frac{546}{25}\\)</td><td>\\(\\frac{429}{25}\\)</td><td>\\(39\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(\\frac{504}{25}\\)</td><td>\\(\\frac{396}{25}\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(14\\)</td><td>\\(11\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(56\\)</td><td>\\(44\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{182425}{18018},\\quad \\nu=(3-1)(2-1)=2\\). The upper critical value is \\(5.991\\).</p><p>Evidence of an association.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-chi2-contingency-study-12",
+        "title": "Complete the test at the 10% level",
+        "prompt": "<p>An independent sample of visitors was recorded by age band and preferred display. The column labels give display types.</p><p>The null hypothesis is that the row and column classifications are independent.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(14\\)</td><td>\\(13\\)</td><td>\\(27\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(25\\)</td><td>\\(12\\)</td><td>\\(37\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(11\\)</td><td>\\(25\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>Find the exact statistic and decide at the 10% level.</p>",
+        "fields": [
+          {
+            "key": "stat",
+            "label": "Test statistic",
+            "expected": "10039/999",
+            "type": "number"
+          },
+          {
+            "key": "decision",
+            "label": "Conclusion",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Insufficient evidence of an association.</p>",
+              "B": "<p>Evidence of an association.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Compute margins first. Degrees of freedom come from the final numbers of rows and columns.</p>",
+        "solution": "<p>Use the final row totals, column totals and grand total. Compute each expected cell as \\(\\frac{\\text{row total}\\times\\text{column total}}{\\text{grand total}}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">Maps</th><th scope=\"col\">Models</th><th scope=\"col\">Total</th></tr></thead><tbody><tr><th scope=\"row\">Under 20</th><td>\\(\\frac{27}{2}\\)</td><td>\\(\\frac{27}{2}\\)</td><td>\\(27\\)</td></tr><tr><th scope=\"row\">20 to 39</th><td>\\(\\frac{37}{2}\\)</td><td>\\(\\frac{37}{2}\\)</td><td>\\(37\\)</td></tr><tr><th scope=\"row\">40 or older</th><td>\\(18\\)</td><td>\\(18\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">Total</th><td>\\(50\\)</td><td>\\(50\\)</td><td>\\(100\\)</td></tr></tbody></table></div><p>\\(X^2=\\frac{10039}{999},\\quad \\nu=(3-1)(2-1)=2\\). The upper critical value is \\(4.605\\).</p><p>Evidence of an association.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Method in one minute</h2><p>Use unrounded expected frequencies in every contribution.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Step</th><th scope=\"col\">What to write</th></tr></thead><tbody><tr><th scope=\"row\">Expected count</th><td>\\(E_{ij}=\\tfrac{R_iC_j}{N}\\)</td></tr><tr><th scope=\"row\">Pool</th><td>Join complete, meaningful rows or columns.</td></tr><tr><th scope=\"row\">Degrees</th><td>\\(\\nu=(r-1)(c-1)\\)</td></tr><tr><th scope=\"row\">Conclude</th><td>Evidence or insufficient evidence of an association.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Expected count at least 5 in every final class or cell.</li><li>The critical region is in the upper tail.</li><li>State your conclusion in context.</li></ul>",
+      "examTip": "<p>Use the significance level and degrees of freedom together. Failing to reject does not establish the null hypothesis.</p>"
+    },
+    "related": [
+      {
+        "title": "Specified discrete model",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_specified"
+      },
+      {
+        "title": "Fitted discrete model",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_estimated"
+      },
+      {
+        "title": "Continuous model",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_chi2_continuous"
+      }
+    ]
+  }
+}
