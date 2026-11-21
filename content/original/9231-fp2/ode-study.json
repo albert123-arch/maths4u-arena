@@ -1,0 +1,2479 @@
+{
+  "fp2_ode_first": {
+    "updatedOn": "2026-11-21",
+    "description": "Normalise a first-order equation, find an integrating factor and apply it to a model with initial data.",
+    "sections": [
+      {
+        "id": "constant-coefficient",
+        "title": "What makes an integrating factor work?",
+        "label": "Turn the left side into a product derivative",
+        "intro": "<p>Write the equation with coefficient one on the first derivative. The integrating factor must have logarithmic derivative equal to the coefficient of y.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mu=\\exp\\!\\left(\\int P(x)\\,\\mathrm dx\\right)\\) makes \\(\\mu(y^\\prime+Py)=(\\mu y)^\\prime\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "first-constant-coefficient-check",
+            "title": "Multiply by an exponential integrating factor",
+            "prompt": "<p>Solve \\(3 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=12 x + 10\\) with \\(y(0)=5\\). Give the exponent coefficient in the integrating factor \\(\\mathrm e^{kx}\\) and \\(C\\) in \\(y=C e^{- 3 x} + 4 x + 2\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Exponent coefficient k",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Use the coefficient of y after isolating the first derivative.</p>",
+            "solution": "<p>The coefficient of y is constant. The integrating factor is \\(e^{3 x}\\).</p><p>Multiplying makes the left side the derivative of \\(\\mathrm e^{3x}y\\). Integrate the right side and divide by the factor to obtain \\(y=C e^{- 3 x} + 4 x + 2\\).</p><p>At zero \\(C\\) makes up the difference between \\(5\\) and \\(2\\). Thus \\(C=3\\) and \\(y=4 x + 2 + 3 e^{- 3 x}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Multiply the whole equation, including the incoming or forcing term on the right.</p>"
+          }
+        ]
+      },
+      {
+        "id": "power-integrating-factor",
+        "title": "When does the integrating factor become a power?",
+        "label": "Handle a simple reciprocal",
+        "intro": "<p>The integral of a simple reciprocal gives a logarithm, so exponentiation can convert it to a power.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the stated interval before removing an absolute value. One positive factor on that interval is sufficient.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "first-power-integrating-factor-check",
+            "title": "Use a power integrating factor on the stated interval",
+            "prompt": "<p>For \\(x>-1\\), solve \\(\\frac{d}{d x} y{\\left(x \\right)} + \\frac{3 y{\\left(x \\right)}}{x + 1}=4 x + 4\\) with \\(y(0)=\\frac{19}{5}\\). Give the exponent in \\((x+1)^k\\) used as integrating factor and the coefficient of \\(\\frac{1}{(x+1)^k}\\) in the solution.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Exponent k",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Use the actual domain when simplifying the logarithm from the y coefficient.</p>",
+            "solution": "<p>Integrate the y coefficient to get \\(3\\ln(x+1)\\). Exponentiating gives \\(\\left(x + 1\\right)^{3}\\), positive in the domain.</p><p>The new right side is \\(4 \\left(x + 1\\right)^{4}\\). Integrating and dividing by \\(\\left(x + 1\\right)^{3}\\) gives \\(y=\\frac{C}{\\left(x + 1\\right)^{3}} + \\frac{4 \\left(x + 1\\right)^{2}}{5}\\).</p><p>Substituting zero produces \\(C=3\\). This solution stays on the original interval.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If the equation excludes an input, integration does not restore it.</p>"
+          }
+        ]
+      },
+      {
+        "id": "normalise-before-integrating",
+        "title": "Why should I divide before reading the coefficient?",
+        "label": "Make the derivative coefficient one",
+        "intro": "<p>In a linear equation the entire derivative term can carry a variable multiplier. Divide through only where that multiplier is non-zero.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>After normalising, integrate the new coefficient of y to obtain the factor. Apply it to both sides.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "first-normalise-before-integrating-check",
+            "title": "Divide by the derivative coefficient before finding a factor",
+            "prompt": "<p>For \\(x>0\\), \\(\\left(x + 2\\right) \\frac{d}{d x} y{\\left(x \\right)} + 3 y{\\left(x \\right)}=16 x + 17\\). Its solution has the form \\(y=\\frac{C}{\\left(x + 2\\right)^{3}} + 4 x + 3\\). Give the exponent of \\(x + 2\\) in the integrating factor and the value of \\(C\\) if \\(y(1)=\\frac{193}{27}\\).</p>",
+            "fields": [
+              {
+                "key": "exponent",
+                "label": "Exponent in the integrating factor",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>The coefficient of y in the unnormalised equation is not P(x). Divide first.</p>",
+            "solution": "<p>Divide the whole equation by \\(x + 2\\). Its new y coefficient is \\(\\frac{3}{x + 2}\\).</p><p>The integrating factor is \\(\\left(x + 2\\right)^{3}\\). The corresponding product derivative can be integrated to obtain the stated form.</p><p>At one the difference from the polynomial part is \\(\\frac{4}{27}\\). Multiply by the factor evaluated at one to get \\(C=4\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The original coefficient of y is not the coefficient to integrate when the derivative coefficient differs from one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "first-normalise-before-integrating-follow-up",
+            "title": "Divide by the derivative coefficient before finding a factor",
+            "prompt": "<p>For \\(x>0\\), \\(\\left(x + 4\\right) \\frac{d}{d x} y{\\left(x \\right)} + 5 y{\\left(x \\right)}=36 x + 49\\). Its solution has the form \\(y=\\frac{C}{\\left(x + 4\\right)^{5}} + 6 x + 5\\). Give the exponent of \\(x + 4\\) in the integrating factor and the value of \\(C\\) if \\(y(1)=\\frac{34381}{3125}\\).</p>",
+            "fields": [
+              {
+                "key": "exponent",
+                "label": "Exponent in the integrating factor",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "6"
+              }
+            ],
+            "hint": "<p>The coefficient of y in the unnormalised equation is not P(x). Divide first.</p>",
+            "solution": "<p>Divide the whole equation by \\(x + 4\\). Its new y coefficient is \\(\\frac{5}{x + 4}\\).</p><p>The integrating factor is \\(\\left(x + 4\\right)^{5}\\). The corresponding product derivative can be integrated to obtain the stated form.</p><p>At one the difference from the polynomial part is \\(\\frac{6}{3125}\\). Multiply by the factor evaluated at one to get \\(C=6\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "hyperbolic-factor",
+        "title": "What if the coefficient is hyperbolic?",
+        "label": "Recognise a logarithmic derivative",
+        "intro": "<p>Look for a derivative of the form f prime over f. This can make the integrating factor a familiar hyperbolic function.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The derivative of \\(\\ln(\\cosh x)\\) is \\(\\tanh x\\). The factor can be a positive power of \\(\\cosh x\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "first-hyperbolic-factor-check",
+            "title": "Recognise a hyperbolic logarithmic derivative",
+            "prompt": "<p>Solve \\(3 y{\\left(x \\right)} \\tanh{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=\\frac{4}{\\cosh^{3}{\\left(x \\right)}}\\) subject to \\(y(0)=3\\). Give the exponent in the factor \\((\\cosh x)^k\\) and the additive constant in the numerator after dividing by the factor.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Exponent k",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>The factor multiplies the entire equation, including the right side.</p>",
+            "solution": "<p>The derivative of \\(\\ln(\\cosh x)\\) is \\(\\tanh x\\). The positive factor is \\(\\cosh^{3}{\\left(x \\right)}\\).</p><p>After multiplying, the right side is the constant \\(4\\). Integrate it to get numerator \\(C + 4 x\\).</p><p>At zero the hyperbolic cosine is one, giving \\(C=3\\). The solution is \\(y=\\frac{4 x + 3}{\\cosh^{3}{\\left(x \\right)}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Check the derivative of the proposed factor against P times that factor.</p>"
+          }
+        ]
+      },
+      {
+        "id": "mass-balance",
+        "title": "How do I interpret a first-order model after solving?",
+        "label": "Track mass before reconstructing concentration",
+        "intro": "<p>Choose a quantity and consistent units. The mass balance is the inflow rate minus the outflow rate, and a well-mixed outflow carries the current concentration.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>When volume is constant, the rate equation is linear in the mass. The exponential correction describes approach to a fixed equilibrium.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "first-mass-balance-check",
+            "title": "Model a fixed-volume inflow and outflow",
+            "prompt": "<p>A well-mixed container holds \\(12\\) litres. Fluid of concentration \\(4\\) grams per litre enters at two litres per minute, with the same outflow rate. Initially the concentration is \\(2\\) grams per litre. Find the decay constant of the transient and the limiting mass of solute.</p>",
+            "fields": [
+              {
+                "key": "decay",
+                "label": "Decay constant per minute",
+                "type": "number",
+                "expected": "1/6"
+              },
+              {
+                "key": "limit",
+                "label": "Limiting mass in grams",
+                "type": "number",
+                "expected": "48"
+              }
+            ],
+            "hint": "<p>Form the mass balance. Divide mass by volume to find the outflow concentration.</p>",
+            "solution": "<p>Let mass be M grams. The inlet brings \\(8\\) grams per minute. The outlet concentration is \\(\\frac{M}{12}\\).</p><p>The linear model is \\(\\frac{\\mathrm dM}{\\mathrm dt}+\\frac{1}{6}M=8\\). Use the exponential factor or solve for the deviation from equilibrium.</p><p>With the initial mass, the solution is \\(M=48 - 24 e^{- \\frac{t}{6}}\\). The exponential correction tends to zero. The limiting mass is \\(48\\) grams.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The mass in a container and grams per litre are different quantities. Divide by volume where concentration is requested.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "first-mass-balance-follow-up",
+            "title": "Model a fixed-volume inflow and outflow",
+            "prompt": "<p>A well-mixed container holds \\(16\\) litres. Fluid of concentration \\(6\\) grams per litre enters at two litres per minute, with the same outflow rate. Initially the concentration is \\(4\\) grams per litre. Find the decay constant of the transient and the limiting mass of solute.</p>",
+            "fields": [
+              {
+                "key": "decay",
+                "label": "Decay constant per minute",
+                "type": "number",
+                "expected": "1/8"
+              },
+              {
+                "key": "limit",
+                "label": "Limiting mass in grams",
+                "type": "number",
+                "expected": "96"
+              }
+            ],
+            "hint": "<p>Form the mass balance. Divide mass by volume to find the outflow concentration.</p>",
+            "solution": "<p>Let mass be M grams. The inlet brings \\(12\\) grams per minute. The outlet concentration is \\(\\frac{M}{16}\\).</p><p>The linear model is \\(\\frac{\\mathrm dM}{\\mathrm dt}+\\frac{1}{8}M=12\\). Use the exponential factor or solve for the deviation from equilibrium.</p><p>With the initial mass, the solution is \\(M=96 - 32 e^{- \\frac{t}{8}}\\). The exponential correction tends to zero. The limiting mass is \\(96\\) grams.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Multiply by an exponential integrating factor",
+        "question": "<p>Solve \\(2 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=6 x + 5\\) with \\(y(0)=3\\). Give the exponent coefficient in the integrating factor \\(\\mathrm e^{kx}\\) and \\(C\\) in \\(y=C e^{- 2 x} + 3 x + 1\\).</p>",
+        "solution": [
+          "<p>The coefficient of y is constant. The integrating factor is \\(e^{2 x}\\).</p>",
+          "<p>Multiplying makes the left side the derivative of \\(\\mathrm e^{2x}y\\). Integrate the right side and divide by the factor to obtain \\(y=C e^{- 2 x} + 3 x + 1\\).</p>",
+          "<p>At zero \\(C\\) makes up the difference between \\(3\\) and \\(1\\). Thus \\(C=2\\) and \\(y=3 x + 1 + 2 e^{- 2 x}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a power integrating factor on the stated interval",
+        "question": "<p>For \\(x>-1\\), solve \\(\\frac{d}{d x} y{\\left(x \\right)} + \\frac{2 y{\\left(x \\right)}}{x + 1}=3 x + 3\\) with \\(y(0)=\\frac{11}{4}\\). Give the exponent in \\((x+1)^k\\) used as integrating factor and the coefficient of \\(\\frac{1}{(x+1)^k}\\) in the solution.</p>",
+        "solution": [
+          "<p>Integrate the y coefficient to get \\(2\\ln(x+1)\\). Exponentiating gives \\(\\left(x + 1\\right)^{2}\\), positive in the domain.</p>",
+          "<p>The new right side is \\(3 \\left(x + 1\\right)^{3}\\). Integrating and dividing by \\(\\left(x + 1\\right)^{2}\\) gives \\(y=\\frac{C}{\\left(x + 1\\right)^{2}} + \\frac{3 \\left(x + 1\\right)^{2}}{4}\\).</p>",
+          "<p>Substituting zero produces \\(C=2\\). This solution stays on the original interval.</p>"
+        ]
+      },
+      {
+        "title": "Divide by the derivative coefficient before finding a factor",
+        "question": "<p>For \\(x>0\\), \\(\\left(x + 1\\right) \\frac{d}{d x} y{\\left(x \\right)} + 2 y{\\left(x \\right)}=9 x + 7\\). Its solution has the form \\(y=\\frac{C}{\\left(x + 1\\right)^{2}} + 3 x + 2\\). Give the exponent of \\(x + 1\\) in the integrating factor and the value of \\(C\\) if \\(y(1)=\\frac{23}{4}\\).</p>",
+        "solution": [
+          "<p>Divide the whole equation by \\(x + 1\\). Its new y coefficient is \\(\\frac{2}{x + 1}\\).</p>",
+          "<p>The integrating factor is \\(\\left(x + 1\\right)^{2}\\). The corresponding product derivative can be integrated to obtain the stated form.</p>",
+          "<p>At one the difference from the polynomial part is \\(\\frac{3}{4}\\). Multiply by the factor evaluated at one to get \\(C=3\\).</p>"
+        ]
+      },
+      {
+        "title": "Divide by the derivative coefficient before finding a factor",
+        "question": "<p>For \\(x>0\\), \\(\\left(x + 3\\right) \\frac{d}{d x} y{\\left(x \\right)} + 4 y{\\left(x \\right)}=25 x + 31\\). Its solution has the form \\(y=\\frac{C}{\\left(x + 3\\right)^{4}} + 5 x + 4\\). Give the exponent of \\(x + 3\\) in the integrating factor and the value of \\(C\\) if \\(y(1)=\\frac{2309}{256}\\).</p>",
+        "solution": [
+          "<p>Divide the whole equation by \\(x + 3\\). Its new y coefficient is \\(\\frac{4}{x + 3}\\).</p>",
+          "<p>The integrating factor is \\(\\left(x + 3\\right)^{4}\\). The corresponding product derivative can be integrated to obtain the stated form.</p>",
+          "<p>At one the difference from the polynomial part is \\(\\frac{5}{256}\\). Multiply by the factor evaluated at one to get \\(C=5\\).</p>"
+        ]
+      },
+      {
+        "title": "Recognise a hyperbolic logarithmic derivative",
+        "question": "<p>Solve \\(2 y{\\left(x \\right)} \\tanh{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=\\frac{3}{\\cosh^{2}{\\left(x \\right)}}\\) subject to \\(y(0)=2\\). Give the exponent in the factor \\((\\cosh x)^k\\) and the additive constant in the numerator after dividing by the factor.</p>",
+        "solution": [
+          "<p>The derivative of \\(\\ln(\\cosh x)\\) is \\(\\tanh x\\). The positive factor is \\(\\cosh^{2}{\\left(x \\right)}\\).</p>",
+          "<p>After multiplying, the right side is the constant \\(3\\). Integrate it to get numerator \\(C + 3 x\\).</p>",
+          "<p>At zero the hyperbolic cosine is one, giving \\(C=2\\). The solution is \\(y=\\frac{3 x + 2}{\\cosh^{2}{\\left(x \\right)}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Model a fixed-volume inflow and outflow",
+        "question": "<p>A well-mixed container holds \\(10\\) litres. Fluid of concentration \\(3\\) grams per litre enters at two litres per minute, with the same outflow rate. Initially the concentration is \\(1\\) grams per litre. Find the decay constant of the transient and the limiting mass of solute.</p>",
+        "solution": [
+          "<p>Let mass be M grams. The inlet brings \\(6\\) grams per minute. The outlet concentration is \\(\\frac{M}{10}\\).</p>",
+          "<p>The linear model is \\(\\frac{\\mathrm dM}{\\mathrm dt}+\\frac{1}{5}M=6\\). Use the exponential factor or solve for the deviation from equilibrium.</p>",
+          "<p>With the initial mass, the solution is \\(M=30 - 20 e^{- \\frac{t}{5}}\\). The exponential correction tends to zero. The limiting mass is \\(30\\) grams.</p>"
+        ]
+      },
+      {
+        "title": "Model a fixed-volume inflow and outflow",
+        "question": "<p>A well-mixed container holds \\(14\\) litres. Fluid of concentration \\(5\\) grams per litre enters at two litres per minute, with the same outflow rate. Initially the concentration is \\(3\\) grams per litre. Find the decay constant of the transient and the limiting mass of solute.</p>",
+        "solution": [
+          "<p>Let mass be M grams. The inlet brings \\(10\\) grams per minute. The outlet concentration is \\(\\frac{M}{14}\\).</p>",
+          "<p>The linear model is \\(\\frac{\\mathrm dM}{\\mathrm dt}+\\frac{1}{7}M=10\\). Use the exponential factor or solve for the deviation from equilibrium.</p>",
+          "<p>With the initial mass, the solution is \\(M=70 - 28 e^{- \\frac{t}{7}}\\). The exponential correction tends to zero. The limiting mass is \\(70\\) grams.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "first-constant-coefficient-extra",
+        "title": "Multiply by an exponential integrating factor",
+        "prompt": "<p>Solve \\(4 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=20 x + 17\\) with \\(y(0)=7\\). Give the exponent coefficient in the integrating factor \\(\\mathrm e^{kx}\\) and \\(C\\) in \\(y=C e^{- 4 x} + 5 x + 3\\).</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Exponent coefficient k",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "c",
+            "label": "Constant C",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>Use the coefficient of y after isolating the first derivative.</p>",
+        "solution": "<p>The coefficient of y is constant. The integrating factor is \\(e^{4 x}\\).</p><p>Multiplying makes the left side the derivative of \\(\\mathrm e^{4x}y\\). Integrate the right side and divide by the factor to obtain \\(y=C e^{- 4 x} + 5 x + 3\\).</p><p>At zero \\(C\\) makes up the difference between \\(7\\) and \\(3\\). Thus \\(C=4\\) and \\(y=5 x + 3 + 4 e^{- 4 x}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "first-power-integrating-factor-extra",
+        "title": "Use a power integrating factor on the stated interval",
+        "prompt": "<p>For \\(x>-1\\), solve \\(\\frac{d}{d x} y{\\left(x \\right)} + \\frac{4 y{\\left(x \\right)}}{x + 1}=5 x + 5\\) with \\(y(0)=\\frac{29}{6}\\). Give the exponent in \\((x+1)^k\\) used as integrating factor and the coefficient of \\(\\frac{1}{(x+1)^k}\\) in the solution.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Exponent k",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "c",
+            "label": "Constant C",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>Use the actual domain when simplifying the logarithm from the y coefficient.</p>",
+        "solution": "<p>Integrate the y coefficient to get \\(4\\ln(x+1)\\). Exponentiating gives \\(\\left(x + 1\\right)^{4}\\), positive in the domain.</p><p>The new right side is \\(5 \\left(x + 1\\right)^{5}\\). Integrating and dividing by \\(\\left(x + 1\\right)^{4}\\) gives \\(y=\\frac{C}{\\left(x + 1\\right)^{4}} + \\frac{5 \\left(x + 1\\right)^{2}}{6}\\).</p><p>Substituting zero produces \\(C=4\\). This solution stays on the original interval.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "first-normalise-before-integrating-extra",
+        "title": "Divide by the derivative coefficient before finding a factor",
+        "prompt": "<p>For \\(x>0\\), \\(\\left(x + 5\\right) \\frac{d}{d x} y{\\left(x \\right)} + 6 y{\\left(x \\right)}=49 x + 71\\). Its solution has the form \\(y=\\frac{C}{\\left(x + 5\\right)^{6}} + 7 x + 6\\). Give the exponent of \\(x + 5\\) in the integrating factor and the value of \\(C\\) if \\(y(1)=\\frac{606535}{46656}\\).</p>",
+        "fields": [
+          {
+            "key": "exponent",
+            "label": "Exponent in the integrating factor",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "c",
+            "label": "Constant C",
+            "type": "number",
+            "expected": "7"
+          }
+        ],
+        "hint": "<p>The coefficient of y in the unnormalised equation is not P(x). Divide first.</p>",
+        "solution": "<p>Divide the whole equation by \\(x + 5\\). Its new y coefficient is \\(\\frac{6}{x + 5}\\).</p><p>The integrating factor is \\(\\left(x + 5\\right)^{6}\\). The corresponding product derivative can be integrated to obtain the stated form.</p><p>At one the difference from the polynomial part is \\(\\frac{7}{46656}\\). Multiply by the factor evaluated at one to get \\(C=7\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "first-hyperbolic-factor-extra",
+        "title": "Recognise a hyperbolic logarithmic derivative",
+        "prompt": "<p>Solve \\(4 y{\\left(x \\right)} \\tanh{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=\\frac{5}{\\cosh^{4}{\\left(x \\right)}}\\) subject to \\(y(0)=4\\). Give the exponent in the factor \\((\\cosh x)^k\\) and the additive constant in the numerator after dividing by the factor.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Exponent k",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "c",
+            "label": "Constant C",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>The factor multiplies the entire equation, including the right side.</p>",
+        "solution": "<p>The derivative of \\(\\ln(\\cosh x)\\) is \\(\\tanh x\\). The positive factor is \\(\\cosh^{4}{\\left(x \\right)}\\).</p><p>After multiplying, the right side is the constant \\(5\\). Integrate it to get numerator \\(C + 5 x\\).</p><p>At zero the hyperbolic cosine is one, giving \\(C=4\\). The solution is \\(y=\\frac{5 x + 4}{\\cosh^{4}{\\left(x \\right)}}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "first-mass-balance-extra",
+        "title": "Model a fixed-volume inflow and outflow",
+        "prompt": "<p>A well-mixed container holds \\(18\\) litres. Fluid of concentration \\(7\\) grams per litre enters at two litres per minute, with the same outflow rate. Initially the concentration is \\(5\\) grams per litre. Find the decay constant of the transient and the limiting mass of solute.</p>",
+        "fields": [
+          {
+            "key": "decay",
+            "label": "Decay constant per minute",
+            "type": "number",
+            "expected": "1/9"
+          },
+          {
+            "key": "limit",
+            "label": "Limiting mass in grams",
+            "type": "number",
+            "expected": "126"
+          }
+        ],
+        "hint": "<p>Form the mass balance. Divide mass by volume to find the outflow concentration.</p>",
+        "solution": "<p>Let mass be M grams. The inlet brings \\(14\\) grams per minute. The outlet concentration is \\(\\frac{M}{18}\\).</p><p>The linear model is \\(\\frac{\\mathrm dM}{\\mathrm dt}+\\frac{1}{9}M=14\\). Use the exponential factor or solve for the deviation from equilibrium.</p><p>With the initial mass, the solution is \\(M=126 - 36 e^{- \\frac{t}{9}}\\). The exponential correction tends to zero. The limiting mass is \\(126\\) grams.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Linear first order",
+        "definition": "<p>One first derivative, with y and its derivative to the first power.</p>"
+      },
+      {
+        "term": "Integrating factor",
+        "definition": "<p>Non-zero multiplier turning the normalised left side into a product derivative.</p>"
+      },
+      {
+        "term": "Normalise",
+        "definition": "<p>Divide the equation so the highest derivative has coefficient one.</p>"
+      },
+      {
+        "term": "Equilibrium",
+        "definition": "<p>Constant solution where gain and loss balance.</p>"
+      },
+      {
+        "term": "Transient",
+        "definition": "<p>Term describing deviation from the long-term behaviour.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Normal form</th><td>\\(y^\\prime+P(x)y=Q(x)\\)</td></tr><tr><th scope=\"row\">Integrating factor</th><td>\\(\\mu=\\exp\\!\\left(\\int P(x)\\,\\mathrm dx\\right)\\)</td></tr><tr><th scope=\"row\">Solve</th><td>\\((\\mu y)^\\prime=\\mu Q\\), integrate, then divide by the factor.</td></tr><tr><th scope=\"row\">Data</th><td>Use the initial or boundary value on an allowed interval.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For \\(y^\\prime+4y=8\\), find an integrating factor and the equilibrium.</p><p><strong>Check</strong> \\(\\mu=\\mathrm e^{4x}\\) is a factor and \\(y=2\\) is the equilibrium.</p>",
+      "checks": "<ul><li>Multiply the whole equation, including the incoming or forcing term on the right.</li><li>If the equation excludes an input, integration does not restore it.</li></ul>",
+      "examTip": "<p>Check the original interval and units of the initial data and interpreted answer.</p>"
+    },
+    "related": [
+      {
+        "title": "Complementary functions and initial conditions",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_ode_complementary"
+      }
+    ]
+  },
+  "fp2_ode_complementary": {
+    "updatedOn": "2026-11-21",
+    "description": "Build real complementary functions for distinct, repeated and complex auxiliary roots. Apply initial conditions to the whole solution.",
+    "sections": [
+      {
+        "id": "one-homogeneous-mode",
+        "title": "Which exponential solves a first-order homogeneous equation?",
+        "label": "Solve the first-order auxiliary equation",
+        "intro": "<p>Replace the derivative of an exponential with its multiplier. The homogeneous equation then tells you which exponent works.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For constant coefficients the first-order homogeneous solution has one arbitrary coefficient. Use one initial value to fix it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "complementary-one-homogeneous-mode-check",
+            "title": "Check the first-order complementary exponential",
+            "prompt": "<p>For \\(3 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=0\\) with \\(y(0)=-2\\), give the exponent coefficient and amplitude of the solution.</p>",
+            "fields": [
+              {
+                "key": "rate",
+                "label": "Exponent coefficient",
+                "type": "number",
+                "expected": "-3"
+              },
+              {
+                "key": "a",
+                "label": "Amplitude",
+                "type": "number",
+                "expected": "-2"
+              }
+            ],
+            "hint": "<p>A first-order homogeneous equation has one independent mode.</p>",
+            "solution": "<p>Trying an exponential gives \\(m + 3=0\\), so its exponent coefficient is \\(-3\\).</p><p>At zero the exponential is one. Its amplitude is therefore \\(-2\\).</p><p>The whole solution is \\(y=- 2 e^{- 3 x}\\). A zero forcing term needs no particular integral.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A homogeneous equation has zero forcing. Its complementary function is already the complete general solution.</p>"
+          }
+        ]
+      },
+      {
+        "id": "two-distinct-roots",
+        "title": "How do two distinct real roots determine the complementary function?",
+        "label": "Use two independent exponentials",
+        "intro": "<p>The second-order constant-coefficient operator gives a quadratic when applied to an exponential.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Each distinct real auxiliary root supplies an exponential mode. Add them with independent constants.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "complementary-two-distinct-roots-check",
+            "title": "Solve two initial conditions for distinct real modes",
+            "prompt": "<p>For \\(- 6 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=0\\) with \\(y(0)=3,\\quad y^\\prime(0)=-9\\), find A and B in \\(y=A e^{- 3 x} + B e^{2 x}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A of the first mode",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B of the second mode",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Use the full solution for the initial values, including a specified particular integral.</p>",
+            "solution": "<p>The roots are \\(-3\\) and \\(2\\). Their two exponentials give the complementary function.</p><p>The full form is \\(y=A e^{- 3 x} + B e^{2 x}\\). Put x equal to zero in both this expression and its derivative.</p><p>The two equations give \\(A=3\\) and \\(B=0\\). The particular solution is \\(y=3 e^{- 3 x}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Two initial conditions give two equations. Substitute into both the solution and its derivative.</p>"
+          }
+        ]
+      },
+      {
+        "id": "repeated-auxiliary-root",
+        "title": "Why is the second mode multiplied by x?",
+        "label": "Use an independent repeated-root mode",
+        "intro": "<p>Two copies of the same exponential cannot represent the two-constant family required by a second-order equation.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For one repeated root use an exponential and x times that exponential. Verify each solves the homogeneous equation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "complementary-repeated-auxiliary-root-check",
+            "title": "Use a second mode for a repeated root",
+            "prompt": "<p>For \\(9 y{\\left(x \\right)} + 6 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=0\\) with \\(y(0)=3,\\quad y^\\prime(0)=-9\\), find A and B in \\(y=A e^{- 3 x} + B x e^{- 3 x}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A of the first mode",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B of the second mode",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Two copies of the same exponential can combine into only one mode. Multiply the second by x.</p>",
+            "solution": "<p>The auxiliary polynomial is a perfect square. One exponential and x times that exponential give the two independent solutions.</p><p>The full form is \\(y=A e^{- 3 x} + B x e^{- 3 x}\\). Put x equal to zero in both this expression and its derivative.</p><p>The two equations give \\(A=3\\) and \\(B=0\\). The particular solution is \\(y=3 e^{- 3 x}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A repeated root does not reduce the order of the original equation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "complementary-repeated-auxiliary-root-follow-up",
+            "title": "Use a second mode for a repeated root",
+            "prompt": "<p>For \\(25 y{\\left(x \\right)} + 10 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=0\\) with \\(y(0)=5,\\quad y^\\prime(0)=-27\\), find A and B in \\(y=A e^{- 5 x} + B x e^{- 5 x}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A of the first mode",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B of the second mode",
+                "type": "number",
+                "expected": "-2"
+              }
+            ],
+            "hint": "<p>Two copies of the same exponential can combine into only one mode. Multiply the second by x.</p>",
+            "solution": "<p>The auxiliary polynomial is a perfect square. One exponential and x times that exponential give the two independent solutions.</p><p>The full form is \\(y=A e^{- 5 x} + B x e^{- 5 x}\\). Put x equal to zero in both this expression and its derivative.</p><p>The two equations give \\(A=5\\) and \\(B=-2\\). The particular solution is \\(y=- 2 x e^{- 5 x} + 5 e^{- 5 x}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "real-modes-from-conjugates",
+        "title": "How do complex roots give a real solution?",
+        "label": "Combine the conjugate modes",
+        "intro": "<p>A pair of conjugate roots gives sine and cosine multiplied by one exponential envelope.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the shared real part as the exponent coefficient and the positive imaginary magnitude as angular frequency.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "complementary-real-modes-from-conjugates-check",
+            "title": "Turn complex auxiliary roots into real modes",
+            "prompt": "<p>For \\(13 y{\\left(x \\right)} + 4 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=0\\) with \\(y(0)=3,\\quad y^\\prime(0)=-6\\), find A and B in \\(y=A e^{- 2 x} \\cos{\\left(3 x \\right)} + B e^{- 2 x} \\sin{\\left(3 x \\right)}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A of the first mode",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B of the second mode",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>The imaginary magnitude determines the frequency, while the real part determines the envelope.</p>",
+            "solution": "<p>The roots have shared real part \\(-2\\) and imaginary magnitude \\(3\\). Combine the conjugate solutions into real cosine and sine modes under the same exponential envelope.</p><p>The full form is \\(y=A e^{- 2 x} \\cos{\\left(3 x \\right)} + B e^{- 2 x} \\sin{\\left(3 x \\right)}\\). Put x equal to zero in both this expression and its derivative.</p><p>The two equations give \\(A=3\\) and \\(B=0\\). The particular solution is \\(y=3 e^{- 2 x} \\cos{\\left(3 x \\right)}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep both trigonometric modes and differentiate the envelope as well as the sine or cosine.</p>"
+          }
+        ]
+      },
+      {
+        "id": "conditions-after-adding-the-particular-integral",
+        "title": "When should I use the initial conditions?",
+        "label": "Apply both to the full solution",
+        "intro": "<p>The full solution has the complementary part and a particular integral. Both can contribute to each condition.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Build the entire form, then substitute the stated function and derivative values to fix the arbitrary constants.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "complementary-conditions-after-adding-the-particular-integral-check",
+            "title": "Apply conditions to the complementary function plus the particular integral",
+            "prompt": "<p>For \\(12 y{\\left(x \\right)} + 7 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=24 x + 38\\) with \\(y(0)=5,\\quad y^\\prime(0)=-7\\), find A and B in \\(y=A e^{- 3 x} + B e^{- 4 x} + 2 x + 2\\). The polynomial part shown is a particular integral.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A of the first mode",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B of the second mode",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Use the full solution for the initial values, including a specified particular integral.</p>",
+            "solution": "<p>The roots are \\(-3\\) and \\(-4\\). Their two exponentials give the complementary function.</p><p>The full form is \\(y=A e^{- 3 x} + B e^{- 4 x} + 2 x + 2\\). Put x equal to zero in both this expression and its derivative.</p><p>The two equations give \\(A=3\\) and \\(B=0\\). The particular solution is \\(y=2 x + 2 + 3 e^{- 3 x}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If the given height or slope is zero, the corresponding complementary contribution need not be zero because the forcing response may contribute.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "complementary-conditions-after-adding-the-particular-integral-follow-up",
+            "title": "Apply conditions to the complementary function plus the particular integral",
+            "prompt": "<p>For \\(30 y{\\left(x \\right)} + 11 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=120 x + 104\\) with \\(y(0)=5,\\quad y^\\prime(0)=-9\\), find A and B in \\(y=A e^{- 5 x} + B e^{- 6 x} + 4 x + 2\\). The polynomial part shown is a particular integral.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A of the first mode",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B of the second mode",
+                "type": "number",
+                "expected": "-2"
+              }
+            ],
+            "hint": "<p>Use the full solution for the initial values, including a specified particular integral.</p>",
+            "solution": "<p>The roots are \\(-5\\) and \\(-6\\). Their two exponentials give the complementary function.</p><p>The full form is \\(y=A e^{- 5 x} + B e^{- 6 x} + 4 x + 2\\). Put x equal to zero in both this expression and its derivative.</p><p>The two equations give \\(A=5\\) and \\(B=-2\\). The particular solution is \\(y=4 x + 2 + 5 e^{- 5 x} - 2 e^{- 6 x}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Check the first-order complementary exponential",
+        "question": "<p>For \\(2 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=0\\) with \\(y(0)=-1\\), give the exponent coefficient and amplitude of the solution.</p>",
+        "solution": [
+          "<p>Trying an exponential gives \\(m + 2=0\\), so its exponent coefficient is \\(-2\\).</p>",
+          "<p>At zero the exponential is one. Its amplitude is therefore \\(-1\\).</p>",
+          "<p>The whole solution is \\(y=- e^{- 2 x}\\). A zero forcing term needs no particular integral.</p>"
+        ]
+      },
+      {
+        "title": "Solve two initial conditions for distinct real modes",
+        "question": "<p>For \\(- 2 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=0\\) with \\(y(0)=3,\\quad y^\\prime(0)=-3\\), find A and B in \\(y=A e^{- 2 x} + B e^{x}\\).</p>",
+        "solution": [
+          "<p>The roots are \\(-2\\) and \\(1\\). Their two exponentials give the complementary function.</p>",
+          "<p>The full form is \\(y=A e^{- 2 x} + B e^{x}\\). Put x equal to zero in both this expression and its derivative.</p>",
+          "<p>The two equations give \\(A=2\\) and \\(B=1\\). The particular solution is \\(y=e^{x} + 2 e^{- 2 x}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a second mode for a repeated root",
+        "question": "<p>For \\(4 y{\\left(x \\right)} + 4 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=0\\) with \\(y(0)=2,\\quad y^\\prime(0)=-3\\), find A and B in \\(y=A e^{- 2 x} + B x e^{- 2 x}\\).</p>",
+        "solution": [
+          "<p>The auxiliary polynomial is a perfect square. One exponential and x times that exponential give the two independent solutions.</p>",
+          "<p>The full form is \\(y=A e^{- 2 x} + B x e^{- 2 x}\\). Put x equal to zero in both this expression and its derivative.</p>",
+          "<p>The two equations give \\(A=2\\) and \\(B=1\\). The particular solution is \\(y=x e^{- 2 x} + 2 e^{- 2 x}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a second mode for a repeated root",
+        "question": "<p>For \\(16 y{\\left(x \\right)} + 8 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=0\\) with \\(y(0)=4,\\quad y^\\prime(0)=-17\\), find A and B in \\(y=A e^{- 4 x} + B x e^{- 4 x}\\).</p>",
+        "solution": [
+          "<p>The auxiliary polynomial is a perfect square. One exponential and x times that exponential give the two independent solutions.</p>",
+          "<p>The full form is \\(y=A e^{- 4 x} + B x e^{- 4 x}\\). Put x equal to zero in both this expression and its derivative.</p>",
+          "<p>The two equations give \\(A=4\\) and \\(B=-1\\). The particular solution is \\(y=- x e^{- 4 x} + 4 e^{- 4 x}\\).</p>"
+        ]
+      },
+      {
+        "title": "Turn complex auxiliary roots into real modes",
+        "question": "<p>For \\(5 y{\\left(x \\right)} + 2 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=0\\) with \\(y(0)=2,\\quad y^\\prime(0)=0\\), find A and B in \\(y=A e^{- x} \\cos{\\left(2 x \\right)} + B e^{- x} \\sin{\\left(2 x \\right)}\\).</p>",
+        "solution": [
+          "<p>The roots have shared real part \\(-1\\) and imaginary magnitude \\(2\\). Combine the conjugate solutions into real cosine and sine modes under the same exponential envelope.</p>",
+          "<p>The full form is \\(y=A e^{- x} \\cos{\\left(2 x \\right)} + B e^{- x} \\sin{\\left(2 x \\right)}\\). Put x equal to zero in both this expression and its derivative.</p>",
+          "<p>The two equations give \\(A=2\\) and \\(B=1\\). The particular solution is \\(y=e^{- x} \\sin{\\left(2 x \\right)} + 2 e^{- x} \\cos{\\left(2 x \\right)}\\).</p>"
+        ]
+      },
+      {
+        "title": "Apply conditions to the complementary function plus the particular integral",
+        "question": "<p>For \\(6 y{\\left(x \\right)} + 5 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=6 x + 17\\) with \\(y(0)=5,\\quad y^\\prime(0)=-6\\), find A and B in \\(y=A e^{- 2 x} + B e^{- 3 x} + x + 2\\). The polynomial part shown is a particular integral.</p>",
+        "solution": [
+          "<p>The roots are \\(-2\\) and \\(-3\\). Their two exponentials give the complementary function.</p>",
+          "<p>The full form is \\(y=A e^{- 2 x} + B e^{- 3 x} + x + 2\\). Put x equal to zero in both this expression and its derivative.</p>",
+          "<p>The two equations give \\(A=2\\) and \\(B=1\\). The particular solution is \\(y=x + 2 + 2 e^{- 2 x} + e^{- 3 x}\\).</p>"
+        ]
+      },
+      {
+        "title": "Apply conditions to the complementary function plus the particular integral",
+        "question": "<p>For \\(20 y{\\left(x \\right)} + 9 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=60 x + 67\\) with \\(y(0)=5,\\quad y^\\prime(0)=-8\\), find A and B in \\(y=A e^{- 4 x} + B e^{- 5 x} + 3 x + 2\\). The polynomial part shown is a particular integral.</p>",
+        "solution": [
+          "<p>The roots are \\(-4\\) and \\(-5\\). Their two exponentials give the complementary function.</p>",
+          "<p>The full form is \\(y=A e^{- 4 x} + B e^{- 5 x} + 3 x + 2\\). Put x equal to zero in both this expression and its derivative.</p>",
+          "<p>The two equations give \\(A=4\\) and \\(B=-1\\). The particular solution is \\(y=3 x + 2 + 4 e^{- 4 x} - e^{- 5 x}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "complementary-one-homogeneous-mode-extra",
+        "title": "Check the first-order complementary exponential",
+        "prompt": "<p>For \\(4 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=0\\) with \\(y(0)=-3\\), give the exponent coefficient and amplitude of the solution.</p>",
+        "fields": [
+          {
+            "key": "rate",
+            "label": "Exponent coefficient",
+            "type": "number",
+            "expected": "-4"
+          },
+          {
+            "key": "a",
+            "label": "Amplitude",
+            "type": "number",
+            "expected": "-3"
+          }
+        ],
+        "hint": "<p>A first-order homogeneous equation has one independent mode.</p>",
+        "solution": "<p>Trying an exponential gives \\(m + 4=0\\), so its exponent coefficient is \\(-4\\).</p><p>At zero the exponential is one. Its amplitude is therefore \\(-3\\).</p><p>The whole solution is \\(y=- 3 e^{- 4 x}\\). A zero forcing term needs no particular integral.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "complementary-two-distinct-roots-extra",
+        "title": "Solve two initial conditions for distinct real modes",
+        "prompt": "<p>For \\(- 12 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=0\\) with \\(y(0)=3,\\quad y^\\prime(0)=-19\\), find A and B in \\(y=A e^{- 4 x} + B e^{3 x}\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A of the first mode",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B of the second mode",
+            "type": "number",
+            "expected": "-1"
+          }
+        ],
+        "hint": "<p>Use the full solution for the initial values, including a specified particular integral.</p>",
+        "solution": "<p>The roots are \\(-4\\) and \\(3\\). Their two exponentials give the complementary function.</p><p>The full form is \\(y=A e^{- 4 x} + B e^{3 x}\\). Put x equal to zero in both this expression and its derivative.</p><p>The two equations give \\(A=4\\) and \\(B=-1\\). The particular solution is \\(y=- e^{3 x} + 4 e^{- 4 x}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "complementary-repeated-auxiliary-root-extra",
+        "title": "Use a second mode for a repeated root",
+        "prompt": "<p>For \\(36 y{\\left(x \\right)} + 12 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=0\\) with \\(y(0)=6,\\quad y^\\prime(0)=-39\\), find A and B in \\(y=A e^{- 6 x} + B x e^{- 6 x}\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A of the first mode",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B of the second mode",
+            "type": "number",
+            "expected": "-3"
+          }
+        ],
+        "hint": "<p>Two copies of the same exponential can combine into only one mode. Multiply the second by x.</p>",
+        "solution": "<p>The auxiliary polynomial is a perfect square. One exponential and x times that exponential give the two independent solutions.</p><p>The full form is \\(y=A e^{- 6 x} + B x e^{- 6 x}\\). Put x equal to zero in both this expression and its derivative.</p><p>The two equations give \\(A=6\\) and \\(B=-3\\). The particular solution is \\(y=- 3 x e^{- 6 x} + 6 e^{- 6 x}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "complementary-real-modes-from-conjugates-extra",
+        "title": "Turn complex auxiliary roots into real modes",
+        "prompt": "<p>For \\(25 y{\\left(x \\right)} + 6 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=0\\) with \\(y(0)=4,\\quad y^\\prime(0)=-16\\), find A and B in \\(y=A e^{- 3 x} \\cos{\\left(4 x \\right)} + B e^{- 3 x} \\sin{\\left(4 x \\right)}\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A of the first mode",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B of the second mode",
+            "type": "number",
+            "expected": "-1"
+          }
+        ],
+        "hint": "<p>The imaginary magnitude determines the frequency, while the real part determines the envelope.</p>",
+        "solution": "<p>The roots have shared real part \\(-3\\) and imaginary magnitude \\(4\\). Combine the conjugate solutions into real cosine and sine modes under the same exponential envelope.</p><p>The full form is \\(y=A e^{- 3 x} \\cos{\\left(4 x \\right)} + B e^{- 3 x} \\sin{\\left(4 x \\right)}\\). Put x equal to zero in both this expression and its derivative.</p><p>The two equations give \\(A=4\\) and \\(B=-1\\). The particular solution is \\(y=- e^{- 3 x} \\sin{\\left(4 x \\right)} + 4 e^{- 3 x} \\cos{\\left(4 x \\right)}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "complementary-conditions-after-adding-the-particular-integral-extra",
+        "title": "Apply conditions to the complementary function plus the particular integral",
+        "prompt": "<p>For \\(42 y{\\left(x \\right)} + 13 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=210 x + 149\\) with \\(y(0)=5,\\quad y^\\prime(0)=-10\\), find A and B in \\(y=A e^{- 6 x} + B e^{- 7 x} + 5 x + 2\\). The polynomial part shown is a particular integral.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A of the first mode",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B of the second mode",
+            "type": "number",
+            "expected": "-3"
+          }
+        ],
+        "hint": "<p>Use the full solution for the initial values, including a specified particular integral.</p>",
+        "solution": "<p>The roots are \\(-6\\) and \\(-7\\). Their two exponentials give the complementary function.</p><p>The full form is \\(y=A e^{- 6 x} + B e^{- 7 x} + 5 x + 2\\). Put x equal to zero in both this expression and its derivative.</p><p>The two equations give \\(A=6\\) and \\(B=-3\\). The particular solution is \\(y=5 x + 2 + 6 e^{- 6 x} - 3 e^{- 7 x}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Auxiliary equation",
+        "definition": "<p>Polynomial equation for the exponential multiplier.</p>"
+      },
+      {
+        "term": "Complementary function",
+        "definition": "<p>General solution of the homogeneous equation.</p>"
+      },
+      {
+        "term": "Mode",
+        "definition": "<p>Independent exponential or real oscillatory contribution.</p>"
+      },
+      {
+        "term": "Repeated root",
+        "definition": "<p>Auxiliary root of multiplicity larger than one.</p>"
+      },
+      {
+        "term": "Particular integral",
+        "definition": "<p>One solution that produces the given forcing.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Distinct real roots</th><td>Two independent exponentials.</td></tr><tr><th scope=\"row\">Repeated real root</th><td>Use the exponential and x times the exponential.</td></tr><tr><th scope=\"row\">Complex pair</th><td>Sine and cosine under one exponential envelope.</td></tr><tr><th scope=\"row\">Initial conditions</th><td>Apply them to the full solution, including the particular integral.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>What form does the complementary function have for auxiliary equation \\((m+3)^2=0\\)?</p><p><strong>Check</strong> \\((A+Bx)\\mathrm e^{-3x}\\).</p>",
+      "checks": "<ul><li>A homogeneous equation has zero forcing. Its complementary function is already the complete general solution.</li><li>Two initial conditions give two equations. Substitute into both the solution and its derivative.</li></ul>",
+      "examTip": "<p>An initial slope uses the derivative of every term, including the particular integral.</p>"
+    },
+    "related": [
+      {
+        "title": "Linear first-order equations and models",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_ode_first"
+      },
+      {
+        "title": "Polynomial and exponential particular integrals",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_ode_forcing"
+      }
+    ]
+  },
+  "fp2_ode_forcing": {
+    "updatedOn": "2026-11-21",
+    "description": "Match polynomial and exponential trials, combine responses by linearity and use initial data to remove a growing mode.",
+    "sections": [
+      {
+        "id": "match-a-whole-polynomial",
+        "title": "What belongs in a polynomial trial?",
+        "label": "Keep all powers through the forcing degree",
+        "intro": "<p>Differentiating a polynomial can generate lower-power terms. Start with a trial including all powers up to the degree of the forcing when no homogeneous mode conflicts.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Substitute the trial into every term of the operator, then match coefficients in descending powers.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "forcing-match-a-whole-polynomial-check",
+            "title": "Match every coefficient in a quadratic trial",
+            "prompt": "<p>Find A, B and C for a particular integral \\(y=A x^{2} + B x + C\\) of \\(12 y{\\left(x \\right)} + 7 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=36 x^{2} - 6 x + 2\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B",
+                "type": "number",
+                "expected": "-4"
+              },
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Match the highest degree first, then work down to lower powers.</p>",
+            "solution": "<p>Use a complete quadratic trial, including lower powers even if some are absent from the right-hand side.</p><p>Applying the left operator gives \\(12 A x^{2} + 14 A x + 2 A + 12 B x + 7 B + 12 C\\). Match each power of x.</p><p>The coefficients are \\(A=3\\), \\(B=-4\\) and \\(C=2\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An absent term on the right has coefficient zero. It does not mean the corresponding trial coefficient is also zero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "evaluate-at-the-exponent",
+        "title": "How can an exponential trial be found without multiple expansions?",
+        "label": "Evaluate the auxiliary polynomial",
+        "intro": "<p>Differentiating an exponential with fixed rate multiplies it by that rate. Repeated derivatives multiply by successive powers of the rate.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If the auxiliary polynomial evaluated at that rate is non-zero, divide the right-hand amplitude by that value.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "forcing-evaluate-at-the-exponent-check",
+            "title": "Evaluate the auxiliary polynomial at the forcing exponent",
+            "prompt": "<p>Find K in the particular integral \\(K\\mathrm e^{2x}\\) for \\(12 y{\\left(x \\right)} + 7 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=150 e^{2 x}\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Coefficient K",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Evaluate the full auxiliary polynomial, including the constant term.</p>",
+            "solution": "<p>The auxiliary polynomial is \\(m^{2} + 7 m + 12\\). Applying the operator to the exponential multiplies it by the value of that polynomial at \\(2\\).</p><p>This value is \\(30\\) and is non-zero, so a constant multiple is suitable.</p><p>Equating to the right-hand amplitude gives \\(K=5\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A zero value signals a conflicting homogeneous mode. The non-resonant division then cannot be used.</p>"
+          }
+        ]
+      },
+      {
+        "id": "superpose-separate-inputs",
+        "title": "Can I solve for one forcing term at a time?",
+        "label": "Add particular responses",
+        "intro": "<p>Differential operators with linear derivative and function terms respect addition. A combined forcing can be split.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find one response to each source term and add them to obtain a particular integral of the combined equation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "forcing-superpose-separate-inputs-check",
+            "title": "Find separate responses and add them",
+            "prompt": "<p>For \\(12 y{\\left(x \\right)} + 7 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=36 x + 90 e^{2 x} + 69\\), give the coefficients of \\(y=A x + B + C e^{2 x}\\) as a particular integral.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "b",
+                "label": "Constant B",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "c",
+                "label": "Exponential coefficient C",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Do not multiply separate trial responses. Add them after matching each input.</p>",
+            "solution": "<p>The differential operator is linear. Match a line to the polynomial forcing and an exponential to the other part.</p><p>Use the x-term first to fix \\(A=3\\). Match the constant to get \\(B=4\\).</p><p>Evaluate the auxiliary polynomial at \\(2\\) for the exponential term, obtaining \\(C=3\\). The two responses add.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The complementary function belongs once in the general solution. It need not be added separately for every forcing term.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "forcing-superpose-separate-inputs-follow-up",
+            "title": "Find separate responses and add them",
+            "prompt": "<p>For \\(30 y{\\left(x \\right)} + 11 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=150 x + 450 e^{4 x} + 235\\), give the coefficients of \\(y=A x + B + C e^{4 x}\\) as a particular integral.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "b",
+                "label": "Constant B",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "c",
+                "label": "Exponential coefficient C",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Do not multiply separate trial responses. Add them after matching each input.</p>",
+            "solution": "<p>The differential operator is linear. Match a line to the polynomial forcing and an exponential to the other part.</p><p>Use the x-term first to fix \\(A=5\\). Match the constant to get \\(B=6\\).</p><p>Evaluate the auxiliary polynomial at \\(4\\) for the exponential term, obtaining \\(C=5\\). The two responses add.</p>"
+          }
+        ]
+      },
+      {
+        "id": "exclude-a-growing-mode",
+        "title": "How do I choose data that remove a growing mode?",
+        "label": "Set its coefficient to zero and use the remaining conditions",
+        "intro": "<p>The positive auxiliary root gives an exponential increasing with x. For the growing mode to be absent its coefficient must be zero.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Fix the other coefficient from the initial height of the complete expression. Differentiate it to find the needed initial slope.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "forcing-exclude-a-growing-mode-check",
+            "title": "Choose a starting slope so a growing mode is absent",
+            "prompt": "<p>For \\(- 6 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=- 18 x - 21\\) the value of y at zero is \\(8\\). Choose its initial slope so the growing exponential is absent. Also give the coefficient of the decaying exponential.</p>",
+            "fields": [
+              {
+                "key": "slope",
+                "label": "Required initial slope",
+                "type": "number",
+                "expected": "-9"
+              },
+              {
+                "key": "coefficient",
+                "label": "Decaying coefficient",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>Apply the conditions after adding the particular integral and suppressing the growing term.</p>",
+            "solution": "<p>The auxiliary roots are \\(2\\) and \\(-3\\). Set the coefficient of the positive-root exponential to zero.</p><p>A particular integral is \\(3 x + 4\\). Applying the initial value to the full expression fixes the decaying coefficient at \\(4\\).</p><p>Differentiate \\(y=3 x + 4 + 4 e^{- 3 x}\\) and put x equal to zero, obtaining slope \\(-9\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The particular integral can also grow, for example as a polynomial. Removing a growing exponential does not necessarily make y bounded.</p>"
+          }
+        ]
+      },
+      {
+        "id": "first-order-particular-integral",
+        "title": "How does matching a polynomial change for first order?",
+        "label": "Use one derivative and a single homogeneous mode",
+        "intro": "<p>A first-order constant-coefficient equation can also be solved with a complementary function and a particular integral.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Match the polynomial to the first-order operator. Add the single homogeneous solution when a general answer is requested.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "forcing-first-order-particular-integral-check",
+            "title": "Use a polynomial particular integral in first order",
+            "prompt": "<p>For \\(2 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=6 x - 5\\), give the coefficients of the particular integral \\(y=A x + B\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "b",
+                "label": "Constant B",
+                "type": "number",
+                "expected": "-4"
+              }
+            ],
+            "hint": "<p>The derivative can contribute to the constant term even when the trial is linear.</p>",
+            "solution": "<p>The derivative contributes the constant A. Multiplication of the trial by the y coefficient supplies its linear and constant terms.</p><p>Match the coefficient of x first, which gives \\(A=3\\).</p><p>Then match the constant to solve \\(B=-4\\). A homogeneous exponential can be added to this particular integral.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Coefficient matching gives one particular integral. Its arbitrary constant belongs in the homogeneous part.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "forcing-first-order-particular-integral-follow-up",
+            "title": "Use a polynomial particular integral in first order",
+            "prompt": "<p>For \\(4 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=20 x - 19\\), give the coefficients of the particular integral \\(y=A x + B\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "b",
+                "label": "Constant B",
+                "type": "number",
+                "expected": "-6"
+              }
+            ],
+            "hint": "<p>The derivative can contribute to the constant term even when the trial is linear.</p>",
+            "solution": "<p>The derivative contributes the constant A. Multiplication of the trial by the y coefficient supplies its linear and constant terms.</p><p>Match the coefficient of x first, which gives \\(A=5\\).</p><p>Then match the constant to solve \\(B=-6\\). A homogeneous exponential can be added to this particular integral.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Match every coefficient in a quadratic trial",
+        "question": "<p>Find A, B and C for a particular integral \\(y=A x^{2} + B x + C\\) of \\(6 y{\\left(x \\right)} + 5 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=12 x^{2} + 2 x - 5\\).</p>",
+        "solution": [
+          "<p>Use a complete quadratic trial, including lower powers even if some are absent from the right-hand side.</p>",
+          "<p>Applying the left operator gives \\(6 A x^{2} + 10 A x + 2 A + 6 B x + 5 B + 6 C\\). Match each power of x.</p>",
+          "<p>The coefficients are \\(A=2\\), \\(B=-3\\) and \\(C=1\\).</p>"
+        ]
+      },
+      {
+        "title": "Evaluate the auxiliary polynomial at the forcing exponent",
+        "question": "<p>Find K in the particular integral \\(K\\mathrm e^{1x}\\) for \\(6 y{\\left(x \\right)} + 5 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=48 e^{x}\\).</p>",
+        "solution": [
+          "<p>The auxiliary polynomial is \\(m^{2} + 5 m + 6\\). Applying the operator to the exponential multiplies it by the value of that polynomial at \\(1\\).</p>",
+          "<p>This value is \\(12\\) and is non-zero, so a constant multiple is suitable.</p>",
+          "<p>Equating to the right-hand amplitude gives \\(K=4\\).</p>"
+        ]
+      },
+      {
+        "title": "Find separate responses and add them",
+        "question": "<p>For \\(6 y{\\left(x \\right)} + 5 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=12 x + 24 e^{x} + 28\\), give the coefficients of \\(y=A x + B + C e^{x}\\) as a particular integral.</p>",
+        "solution": [
+          "<p>The differential operator is linear. Match a line to the polynomial forcing and an exponential to the other part.</p>",
+          "<p>Use the x-term first to fix \\(A=2\\). Match the constant to get \\(B=3\\).</p>",
+          "<p>Evaluate the auxiliary polynomial at \\(1\\) for the exponential term, obtaining \\(C=2\\). The two responses add.</p>"
+        ]
+      },
+      {
+        "title": "Find separate responses and add them",
+        "question": "<p>For \\(20 y{\\left(x \\right)} + 9 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=80 x + 224 e^{3 x} + 136\\), give the coefficients of \\(y=A x + B + C e^{3 x}\\) as a particular integral.</p>",
+        "solution": [
+          "<p>The differential operator is linear. Match a line to the polynomial forcing and an exponential to the other part.</p>",
+          "<p>Use the x-term first to fix \\(A=4\\). Match the constant to get \\(B=5\\).</p>",
+          "<p>Evaluate the auxiliary polynomial at \\(3\\) for the exponential term, obtaining \\(C=4\\). The two responses add.</p>"
+        ]
+      },
+      {
+        "title": "Choose a starting slope so a growing mode is absent",
+        "question": "<p>For \\(- 2 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=- 4 x - 4\\) the value of y at zero is \\(6\\). Choose its initial slope so the growing exponential is absent. Also give the coefficient of the decaying exponential.</p>",
+        "solution": [
+          "<p>The auxiliary roots are \\(1\\) and \\(-2\\). Set the coefficient of the positive-root exponential to zero.</p>",
+          "<p>A particular integral is \\(2 x + 3\\). Applying the initial value to the full expression fixes the decaying coefficient at \\(3\\).</p>",
+          "<p>Differentiate \\(y=2 x + 3 + 3 e^{- 2 x}\\) and put x equal to zero, obtaining slope \\(-4\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a polynomial particular integral in first order",
+        "question": "<p>For \\(y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=2 x - 1\\), give the coefficients of the particular integral \\(y=A x + B\\).</p>",
+        "solution": [
+          "<p>The derivative contributes the constant A. Multiplication of the trial by the y coefficient supplies its linear and constant terms.</p>",
+          "<p>Match the coefficient of x first, which gives \\(A=2\\).</p>",
+          "<p>Then match the constant to solve \\(B=-3\\). A homogeneous exponential can be added to this particular integral.</p>"
+        ]
+      },
+      {
+        "title": "Use a polynomial particular integral in first order",
+        "question": "<p>For \\(3 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=12 x - 11\\), give the coefficients of the particular integral \\(y=A x + B\\).</p>",
+        "solution": [
+          "<p>The derivative contributes the constant A. Multiplication of the trial by the y coefficient supplies its linear and constant terms.</p>",
+          "<p>Match the coefficient of x first, which gives \\(A=4\\).</p>",
+          "<p>Then match the constant to solve \\(B=-5\\). A homogeneous exponential can be added to this particular integral.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "forcing-match-a-whole-polynomial-extra",
+        "title": "Match every coefficient in a quadratic trial",
+        "prompt": "<p>Find A, B and C for a particular integral \\(y=A x^{2} + B x + C\\) of \\(20 y{\\left(x \\right)} + 9 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=80 x^{2} - 28 x + 23\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "type": "number",
+            "expected": "-5"
+          },
+          {
+            "key": "c",
+            "label": "Constant C",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>Match the highest degree first, then work down to lower powers.</p>",
+        "solution": "<p>Use a complete quadratic trial, including lower powers even if some are absent from the right-hand side.</p><p>Applying the left operator gives \\(20 A x^{2} + 18 A x + 2 A + 20 B x + 9 B + 20 C\\). Match each power of x.</p><p>The coefficients are \\(A=4\\), \\(B=-5\\) and \\(C=3\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "forcing-evaluate-at-the-exponent-extra",
+        "title": "Evaluate the auxiliary polynomial at the forcing exponent",
+        "prompt": "<p>Find K in the particular integral \\(K\\mathrm e^{3x}\\) for \\(20 y{\\left(x \\right)} + 9 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=336 e^{3 x}\\).</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Coefficient K",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Evaluate the full auxiliary polynomial, including the constant term.</p>",
+        "solution": "<p>The auxiliary polynomial is \\(m^{2} + 9 m + 20\\). Applying the operator to the exponential multiplies it by the value of that polynomial at \\(3\\).</p><p>This value is \\(56\\) and is non-zero, so a constant multiple is suitable.</p><p>Equating to the right-hand amplitude gives \\(K=6\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "forcing-superpose-separate-inputs-extra",
+        "title": "Find separate responses and add them",
+        "prompt": "<p>For \\(42 y{\\left(x \\right)} + 13 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=252 x + 792 e^{5 x} + 372\\), give the coefficients of \\(y=A x + B + C e^{5 x}\\) as a particular integral.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "b",
+            "label": "Constant B",
+            "type": "number",
+            "expected": "7"
+          },
+          {
+            "key": "c",
+            "label": "Exponential coefficient C",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Do not multiply separate trial responses. Add them after matching each input.</p>",
+        "solution": "<p>The differential operator is linear. Match a line to the polynomial forcing and an exponential to the other part.</p><p>Use the x-term first to fix \\(A=6\\). Match the constant to get \\(B=7\\).</p><p>Evaluate the auxiliary polynomial at \\(5\\) for the exponential term, obtaining \\(C=6\\). The two responses add.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "forcing-exclude-a-growing-mode-extra",
+        "title": "Choose a starting slope so a growing mode is absent",
+        "prompt": "<p>For \\(- 12 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=- 48 x - 56\\) the value of y at zero is \\(10\\). Choose its initial slope so the growing exponential is absent. Also give the coefficient of the decaying exponential.</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Required initial slope",
+            "type": "number",
+            "expected": "-16"
+          },
+          {
+            "key": "coefficient",
+            "label": "Decaying coefficient",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>Apply the conditions after adding the particular integral and suppressing the growing term.</p>",
+        "solution": "<p>The auxiliary roots are \\(3\\) and \\(-4\\). Set the coefficient of the positive-root exponential to zero.</p><p>A particular integral is \\(4 x + 5\\). Applying the initial value to the full expression fixes the decaying coefficient at \\(5\\).</p><p>Differentiate \\(y=4 x + 5 + 5 e^{- 4 x}\\) and put x equal to zero, obtaining slope \\(-16\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "forcing-first-order-particular-integral-extra",
+        "title": "Use a polynomial particular integral in first order",
+        "prompt": "<p>For \\(5 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=30 x - 29\\), give the coefficients of the particular integral \\(y=A x + B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "b",
+            "label": "Constant B",
+            "type": "number",
+            "expected": "-7"
+          }
+        ],
+        "hint": "<p>The derivative can contribute to the constant term even when the trial is linear.</p>",
+        "solution": "<p>The derivative contributes the constant A. Multiplication of the trial by the y coefficient supplies its linear and constant terms.</p><p>Match the coefficient of x first, which gives \\(A=6\\).</p><p>Then match the constant to solve \\(B=-7\\). A homogeneous exponential can be added to this particular integral.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Forcing",
+        "definition": "<p>Right-hand side of the differential equation.</p>"
+      },
+      {
+        "term": "Trial form",
+        "definition": "<p>Candidate form with unknown coefficients for one particular integral.</p>"
+      },
+      {
+        "term": "Linearity",
+        "definition": "<p>The operator acting on a sum is the sum of its results on the terms.</p>"
+      },
+      {
+        "term": "Non-resonant",
+        "definition": "<p>Forcing mode is not itself a homogeneous solution.</p>"
+      },
+      {
+        "term": "Growth mode",
+        "definition": "<p>Part of the complementary function that can increase without bound.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Polynomial forcing</th><td>Match coefficients after applying the whole operator.</td></tr><tr><th scope=\"row\">Exponential forcing</th><td>Evaluate the auxiliary polynomial at its exponent.</td></tr><tr><th scope=\"row\">Two inputs</th><td>Add responses using linearity.</td></tr><tr><th scope=\"row\">Initial conditions</th><td>Use them only after combining complementary and particular parts.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For \\(y^{\\prime\\prime}+3y^\\prime+2y=12\\mathrm e^x\\), give a particular integral.</p><p><strong>Check</strong> The auxiliary polynomial has value six at one, so the particular integral is \\(2\\mathrm e^x\\).</p>",
+      "checks": "<ul><li>An absent term on the right has coefficient zero. It does not mean the corresponding trial coefficient is also zero.</li><li>A zero value signals a conflicting homogeneous mode. The non-resonant division then cannot be used.</li></ul>",
+      "examTip": "<p>Before accepting a trial, substitute it back into the differential equation and check its full input.</p>"
+    },
+    "related": [
+      {
+        "title": "Complementary functions and initial conditions",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_ode_complementary"
+      },
+      {
+        "title": "Oscillatory forcing, resonance and long-term behaviour",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_ode_oscillations"
+      }
+    ]
+  },
+  "fp2_ode_oscillations": {
+    "updatedOn": "2026-11-21",
+    "description": "Match sine and cosine responses, compare long-term modes and verify supplied resonant trials for simple and repeated roots.",
+    "sections": [
+      {
+        "id": "match-sine-and-cosine",
+        "title": "Why can a cosine input need both sine and cosine in its solution?",
+        "label": "Match two coefficients together",
+        "intro": "<p>A derivative of a sine is a cosine, and the derivative of a cosine is a negative sine. The first derivative term couples their coefficients.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use both sine and cosine at the input frequency, then compare the coefficients separately.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "oscillations-match-sine-and-cosine-check",
+            "title": "Match sine and cosine as two separate coefficients",
+            "prompt": "<p>Find A and B in \\(y=A \\cos{\\left(2 x \\right)} + B \\sin{\\left(2 x \\right)}\\) as a particular integral of \\(6 y{\\left(x \\right)} + 3 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=4 \\left(4 \\sin{\\left(2 x \\right)} - 3 \\cos{\\left(2 x \\right)}\\right) - 42 \\sin{\\left(2 x \\right)} - 6 \\cos{\\left(2 x \\right)}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Cosine coefficient A",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "b",
+                "label": "Sine coefficient B",
+                "type": "number",
+                "expected": "-4"
+              }
+            ],
+            "hint": "<p>A first derivative mixes the sine and cosine coefficients.</p>",
+            "solution": "<p>A sine derivative produces a cosine and a cosine derivative produces a negative sine. Use both trial terms even if one input coefficient is zero.</p><p>Substitute the full trial into the left side. Then equate its sine and cosine coefficients to the corresponding right-hand coefficients.</p><p>The simultaneous equations give \\(A=3\\) and \\(B=-4\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Matching only the cosine term may leave an unwanted sine term on the left.</p>"
+          }
+        ]
+      },
+      {
+        "id": "compare-transient-and-steady-response",
+        "title": "When does a periodic particular integral describe the long-term motion?",
+        "label": "Check the actual complementary part",
+        "intro": "<p>The long-run difference between the total solution and its periodic part is the complementary function.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A negative real exponent gives a decaying envelope. A positive exponent can prevent the periodic part from being a valid approximation.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp2_ode_oscillations/decaying-transient.svg",
+              "caption": "<p>The damped response closes in on the periodic particular integral.</p>",
+              "alt": "Two curves on x and y axes: the solid total response and dashed sine particular integral. Their early difference decays, so the curves nearly coincide farther right.",
+              "width": 469,
+              "height": 266
+            }
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "oscillations-compare-transient-and-steady-response-check",
+            "title": "Predict whether a transient dies away",
+            "prompt": "<p>A solution is \\(y=\\left(- 4 \\sin{\\left(3 x \\right)} + 3 \\cos{\\left(3 x \\right)}\\right) e^{x} + 4 \\sin{\\left(2 x \\right)}\\). Give the frequency of the periodic particular integral and decide whether that term approximates y with vanishing difference as x grows.</p>",
+            "fields": [
+              {
+                "key": "frequency",
+                "label": "Angular frequency in the periodic term",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "limit",
+                "label": "Does the difference tend to zero?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>The long-term approximation requires decay of the actual complementary term.</p>",
+            "solution": "<p>The complementary term is \\(\\left(- 4 \\sin{\\left(3 x \\right)} + 3 \\cos{\\left(3 x \\right)}\\right) e^{x}\\). It is a sinusoidal combination multiplied by \\(e^{x}\\).</p><p>The envelope grows and the sinusoidal combination is non-zero at recurring points. The difference does not tend to zero.</p><p>The particular integral is \\(4 \\sin{\\left(2 x \\right)}\\), with angular frequency \\(2\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A general mode can grow even when its trigonometric part has infinitely many zeros. Check its behaviour between the zeros.</p>"
+          }
+        ]
+      },
+      {
+        "id": "simple-resonant-trial",
+        "title": "Why is a supplied resonance trial multiplied by x?",
+        "label": "Account for a simple matching root",
+        "intro": "<p>An ordinary exponential trial fails if the forcing exponent is a simple auxiliary root, since its operator value is zero.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the supplied form with one factor of x and substitute it. The new coefficient often equals the derivative of the auxiliary polynomial at the forcing exponent.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "oscillations-simple-resonant-trial-check",
+            "title": "Verify a supplied resonant trial with the right power of x",
+            "prompt": "<p>For \\(- 12 y{\\left(x \\right)} - \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=- 21 e^{- 3 x}\\), use the supplied particular integral form \\(Kx\\mathrm e^{-3x}\\). Find K and the multiplicity of the matching auxiliary root.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Coefficient K",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "multiplicity",
+                "label": "Multiplicity",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>The supplied x-factor allows the trial to avoid the matching homogeneous mode.</p>",
+            "solution": "<p>The forcing exponent is \\(-3\\). It is a simple root. An unmodified trial at that exponent would be annihilated.</p><p>Substituting the supplied form gives the surviving multiple \\((-7)K\\) of the forcing exponential.</p><p>Match the coefficient to obtain \\(K=3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A conflicting trial is not evidence that the equation has no solution. It means the trial is being annihilated.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "oscillations-simple-resonant-trial-follow-up",
+            "title": "Verify a supplied resonant trial with the right power of x",
+            "prompt": "<p>For \\(- 30 y{\\left(x \\right)} - \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=- 55 e^{- 5 x}\\), use the supplied particular integral form \\(Kx\\mathrm e^{-5x}\\). Find K and the multiplicity of the matching auxiliary root.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Coefficient K",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "multiplicity",
+                "label": "Multiplicity",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>The supplied x-factor allows the trial to avoid the matching homogeneous mode.</p>",
+            "solution": "<p>The forcing exponent is \\(-5\\). It is a simple root. An unmodified trial at that exponent would be annihilated.</p><p>Substituting the supplied form gives the surviving multiple \\((-11)K\\) of the forcing exponential.</p><p>Match the coefficient to obtain \\(K=5\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "repeat-the-resonant-factor",
+        "title": "What changes when the matching root is repeated?",
+        "label": "Use the supplied quadratic factor",
+        "intro": "<p>With repeated auxiliary roots, the pure exponential and its product with x both belong to the complementary function.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Substitute the supplied trial with x squared times the exponential and match the surviving terms.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "oscillations-repeat-the-resonant-factor-check",
+            "title": "Verify a supplied resonant trial with the right power of x",
+            "prompt": "<p>For \\(9 y{\\left(x \\right)} + 6 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=6 e^{- 3 x}\\), use the supplied particular integral form \\(Kx^2\\mathrm e^{-3x}\\). Find K and the multiplicity of the matching auxiliary root.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Coefficient K",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "multiplicity",
+                "label": "Multiplicity",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>The supplied x-factor allows the trial to avoid the matching homogeneous mode.</p>",
+            "solution": "<p>The forcing exponent is \\(-3\\). It is a repeated root. An unmodified trial at that exponent would be annihilated.</p><p>Substitute the supplied form. The surviving multiple of the forcing exponential is \\(2K\\) in the repeated case.</p><p>Match the coefficient to obtain \\(K=3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A single x factor can still be annihilated in the repeated-root case.</p>"
+          }
+        ]
+      },
+      {
+        "id": "oscillatory-resonance",
+        "title": "How do I check a supplied oscillatory resonant form?",
+        "label": "Keep the product when differentiating",
+        "intro": "<p>For an undamped oscillator, sine and cosine at the natural frequency are both homogeneous. The supplied test form can therefore include a factor of x.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Differentiate the trial completely, then check that the alternating terms cancel and the requested forcing remains.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "oscillations-oscillatory-resonance-check",
+            "title": "Differentiate a supplied resonant trigonometric form",
+            "prompt": "<p>Given \\(Kx\\sin(3x)\\) as a particular integral of \\(9 y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=24 \\cos{\\left(3 x \\right)}\\), find K.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Coefficient K",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>Use the product rule twice and check which terms cancel.</p>",
+            "solution": "<p>Without the x factor, the sine at this frequency is a homogeneous solution.</p><p>Differentiate the supplied product twice. The term still containing x cancels after adding the multiple of the original trial.</p><p>The surviving term is \\(6K\\cos(3x)\\). Match it with the input to get \\(K=4\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The angular frequency appears in both derivatives. Do not drop it when matching the forcing amplitude.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "oscillations-oscillatory-resonance-follow-up",
+            "title": "Differentiate a supplied resonant trigonometric form",
+            "prompt": "<p>Given \\(Kx\\sin(5x)\\) as a particular integral of \\(25 y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=60 \\cos{\\left(5 x \\right)}\\), find K.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Coefficient K",
+                "type": "number",
+                "expected": "6"
+              }
+            ],
+            "hint": "<p>Use the product rule twice and check which terms cancel.</p>",
+            "solution": "<p>Without the x factor, the sine at this frequency is a homogeneous solution.</p><p>Differentiate the supplied product twice. The term still containing x cancels after adding the multiple of the original trial.</p><p>The surviving term is \\(10K\\cos(5x)\\). Match it with the input to get \\(K=6\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Match sine and cosine as two separate coefficients",
+        "question": "<p>Find A and B in \\(y=A \\cos{\\left(x \\right)} + B \\sin{\\left(x \\right)}\\) as a particular integral of \\(3 y{\\left(x \\right)} + 2 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=- 10 \\sin{\\left(x \\right)} - 2 \\cos{\\left(x \\right)}\\).</p>",
+        "solution": [
+          "<p>A sine derivative produces a cosine and a cosine derivative produces a negative sine. Use both trial terms even if one input coefficient is zero.</p>",
+          "<p>Substitute the full trial into the left side. Then equate its sine and cosine coefficients to the corresponding right-hand coefficients.</p>",
+          "<p>The simultaneous equations give \\(A=2\\) and \\(B=-3\\).</p>"
+        ]
+      },
+      {
+        "title": "Predict whether a transient dies away",
+        "question": "<p>A solution is \\(y=\\left(- 3 \\sin{\\left(2 x \\right)} + 2 \\cos{\\left(2 x \\right)}\\right) e^{- x} + 3 \\sin{\\left(x \\right)}\\). Give the frequency of the periodic particular integral and decide whether that term approximates y with vanishing difference as x grows.</p>",
+        "solution": [
+          "<p>The complementary term is \\(\\left(- 3 \\sin{\\left(2 x \\right)} + 2 \\cos{\\left(2 x \\right)}\\right) e^{- x}\\). It is a sinusoidal combination multiplied by \\(e^{- x}\\).</p>",
+          "<p>The envelope decays to zero, so the difference from the particular integral tends to zero.</p>",
+          "<p>The particular integral is \\(3 \\sin{\\left(x \\right)}\\), with angular frequency \\(1\\).</p>"
+        ]
+      },
+      {
+        "title": "Verify a supplied resonant trial with the right power of x",
+        "question": "<p>For \\(- 6 y{\\left(x \\right)} - \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=- 10 e^{- 2 x}\\), use the supplied particular integral form \\(Kx\\mathrm e^{-2x}\\). Find K and the multiplicity of the matching auxiliary root.</p>",
+        "solution": [
+          "<p>The forcing exponent is \\(-2\\). It is a simple root. An unmodified trial at that exponent would be annihilated.</p>",
+          "<p>Substituting the supplied form gives the surviving multiple \\((-5)K\\) of the forcing exponential.</p>",
+          "<p>Match the coefficient to obtain \\(K=2\\).</p>"
+        ]
+      },
+      {
+        "title": "Verify a supplied resonant trial with the right power of x",
+        "question": "<p>For \\(- 20 y{\\left(x \\right)} - \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=- 36 e^{- 4 x}\\), use the supplied particular integral form \\(Kx\\mathrm e^{-4x}\\). Find K and the multiplicity of the matching auxiliary root.</p>",
+        "solution": [
+          "<p>The forcing exponent is \\(-4\\). It is a simple root. An unmodified trial at that exponent would be annihilated.</p>",
+          "<p>Substituting the supplied form gives the surviving multiple \\((-9)K\\) of the forcing exponential.</p>",
+          "<p>Match the coefficient to obtain \\(K=4\\).</p>"
+        ]
+      },
+      {
+        "title": "Verify a supplied resonant trial with the right power of x",
+        "question": "<p>For \\(4 y{\\left(x \\right)} + 4 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=4 e^{- 2 x}\\), use the supplied particular integral form \\(Kx^2\\mathrm e^{-2x}\\). Find K and the multiplicity of the matching auxiliary root.</p>",
+        "solution": [
+          "<p>The forcing exponent is \\(-2\\). It is a repeated root. An unmodified trial at that exponent would be annihilated.</p>",
+          "<p>Substitute the supplied form. The surviving multiple of the forcing exponential is \\(2K\\) in the repeated case.</p>",
+          "<p>Match the coefficient to obtain \\(K=2\\).</p>"
+        ]
+      },
+      {
+        "title": "Differentiate a supplied resonant trigonometric form",
+        "question": "<p>Given \\(Kx\\sin(2x)\\) as a particular integral of \\(4 y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=12 \\cos{\\left(2 x \\right)}\\), find K.</p>",
+        "solution": [
+          "<p>Without the x factor, the sine at this frequency is a homogeneous solution.</p>",
+          "<p>Differentiate the supplied product twice. The term still containing x cancels after adding the multiple of the original trial.</p>",
+          "<p>The surviving term is \\(4K\\cos(2x)\\). Match it with the input to get \\(K=3\\).</p>"
+        ]
+      },
+      {
+        "title": "Differentiate a supplied resonant trigonometric form",
+        "question": "<p>Given \\(Kx\\sin(4x)\\) as a particular integral of \\(16 y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=40 \\cos{\\left(4 x \\right)}\\), find K.</p>",
+        "solution": [
+          "<p>Without the x factor, the sine at this frequency is a homogeneous solution.</p>",
+          "<p>Differentiate the supplied product twice. The term still containing x cancels after adding the multiple of the original trial.</p>",
+          "<p>The surviving term is \\(8K\\cos(4x)\\). Match it with the input to get \\(K=5\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "oscillations-match-sine-and-cosine-extra",
+        "title": "Match sine and cosine as two separate coefficients",
+        "prompt": "<p>Find A and B in \\(y=A \\cos{\\left(3 x \\right)} + B \\sin{\\left(3 x \\right)}\\) as a particular integral of \\(11 y{\\left(x \\right)} + 4 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=9 \\left(5 \\sin{\\left(3 x \\right)} - 4 \\cos{\\left(3 x \\right)}\\right) - 103 \\sin{\\left(3 x \\right)} - 16 \\cos{\\left(3 x \\right)}\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Cosine coefficient A",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "b",
+            "label": "Sine coefficient B",
+            "type": "number",
+            "expected": "-5"
+          }
+        ],
+        "hint": "<p>A first derivative mixes the sine and cosine coefficients.</p>",
+        "solution": "<p>A sine derivative produces a cosine and a cosine derivative produces a negative sine. Use both trial terms even if one input coefficient is zero.</p><p>Substitute the full trial into the left side. Then equate its sine and cosine coefficients to the corresponding right-hand coefficients.</p><p>The simultaneous equations give \\(A=4\\) and \\(B=-5\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "oscillations-compare-transient-and-steady-response-extra",
+        "title": "Predict whether a transient dies away",
+        "prompt": "<p>A solution is \\(y=\\left(- 5 \\sin{\\left(4 x \\right)} + 4 \\cos{\\left(4 x \\right)}\\right) e^{- x} + 5 \\sin{\\left(3 x \\right)}\\). Give the frequency of the periodic particular integral and decide whether that term approximates y with vanishing difference as x grows.</p>",
+        "fields": [
+          {
+            "key": "frequency",
+            "label": "Angular frequency in the periodic term",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "limit",
+            "label": "Does the difference tend to zero?",
+            "type": "choice",
+            "expected": "yes",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          }
+        ],
+        "hint": "<p>The long-term approximation requires decay of the actual complementary term.</p>",
+        "solution": "<p>The complementary term is \\(\\left(- 5 \\sin{\\left(4 x \\right)} + 4 \\cos{\\left(4 x \\right)}\\right) e^{- x}\\). It is a sinusoidal combination multiplied by \\(e^{- x}\\).</p><p>The envelope decays to zero, so the difference from the particular integral tends to zero.</p><p>The particular integral is \\(5 \\sin{\\left(3 x \\right)}\\), with angular frequency \\(3\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "oscillations-simple-resonant-trial-extra",
+        "title": "Verify a supplied resonant trial with the right power of x",
+        "prompt": "<p>For \\(- 42 y{\\left(x \\right)} - \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=- 78 e^{- 6 x}\\), use the supplied particular integral form \\(Kx\\mathrm e^{-6x}\\). Find K and the multiplicity of the matching auxiliary root.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Coefficient K",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "multiplicity",
+            "label": "Multiplicity",
+            "type": "number",
+            "expected": "1"
+          }
+        ],
+        "hint": "<p>The supplied x-factor allows the trial to avoid the matching homogeneous mode.</p>",
+        "solution": "<p>The forcing exponent is \\(-6\\). It is a simple root. An unmodified trial at that exponent would be annihilated.</p><p>Substituting the supplied form gives the surviving multiple \\((-13)K\\) of the forcing exponential.</p><p>Match the coefficient to obtain \\(K=6\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "oscillations-repeat-the-resonant-factor-extra",
+        "title": "Verify a supplied resonant trial with the right power of x",
+        "prompt": "<p>For \\(16 y{\\left(x \\right)} + 8 \\frac{d}{d x} y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=8 e^{- 4 x}\\), use the supplied particular integral form \\(Kx^2\\mathrm e^{-4x}\\). Find K and the multiplicity of the matching auxiliary root.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Coefficient K",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "multiplicity",
+            "label": "Multiplicity",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>The supplied x-factor allows the trial to avoid the matching homogeneous mode.</p>",
+        "solution": "<p>The forcing exponent is \\(-4\\). It is a repeated root. An unmodified trial at that exponent would be annihilated.</p><p>Substitute the supplied form. The surviving multiple of the forcing exponential is \\(2K\\) in the repeated case.</p><p>Match the coefficient to obtain \\(K=4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "oscillations-oscillatory-resonance-extra",
+        "title": "Differentiate a supplied resonant trigonometric form",
+        "prompt": "<p>Given \\(Kx\\sin(6x)\\) as a particular integral of \\(36 y{\\left(x \\right)} + \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)}=84 \\cos{\\left(6 x \\right)}\\), find K.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Coefficient K",
+            "type": "number",
+            "expected": "7"
+          }
+        ],
+        "hint": "<p>Use the product rule twice and check which terms cancel.</p>",
+        "solution": "<p>Without the x factor, the sine at this frequency is a homogeneous solution.</p><p>Differentiate the supplied product twice. The term still containing x cancels after adding the multiple of the original trial.</p><p>The surviving term is \\(12K\\cos(6x)\\). Match it with the input to get \\(K=7\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Angular frequency",
+        "definition": "<p>Coefficient multiplying the independent variable inside sine or cosine.</p>"
+      },
+      {
+        "term": "Damping",
+        "definition": "<p>Decay of a complementary envelope.</p>"
+      },
+      {
+        "term": "Periodic part",
+        "definition": "<p>Part of a solution that repeats after a fixed interval.</p>"
+      },
+      {
+        "term": "Resonance",
+        "definition": "<p>A forcing mode coincides with a homogeneous mode.</p>"
+      },
+      {
+        "term": "Multiplicity",
+        "definition": "<p>Number of times an auxiliary root occurs.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Sine or cosine input</th><td>Try both sine and cosine unless a supplied form says otherwise.</td></tr><tr><th scope=\"row\">Long-time response</th><td>Check whether the actual complementary term tends to zero.</td></tr><tr><th scope=\"row\">Supplied resonance trial</th><td>Differentiate it and match the surviving forcing term.</td></tr><tr><th scope=\"row\">Repeated root</th><td>Both the pure and x-multiplied exponentials may be homogeneous.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Does the term \\(\\mathrm e^{-2x}\\cos(3x)\\) tend to zero as x increases?</p><p><strong>Check</strong> Yes. The cosine is bounded and the envelope tends to zero.</p>",
+      "checks": "<ul><li>Matching only the cosine term may leave an unwanted sine term on the left.</li><li>A general mode can grow even when its trigonometric part has infinitely many zeros. Check its behaviour between the zeros.</li></ul>",
+      "examTip": "<p>Check the multiplicity of a matching auxiliary root and confirm the supplied trial by substitution.</p>"
+    },
+    "related": [
+      {
+        "title": "Polynomial and exponential particular integrals",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_ode_forcing"
+      },
+      {
+        "title": "Substitutions, real branches and transformed conditions",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_ode_substitutions"
+      }
+    ]
+  },
+  "fp2_ode_substitutions": {
+    "updatedOn": "2026-11-21",
+    "description": "Reduce differential equations with given substitutions. Transform derivatives and data, then recover a valid branch.",
+    "sections": [
+      {
+        "id": "product-to-linear",
+        "title": "How can a product substitution remove variable coefficients?",
+        "label": "Recognise the first and second product derivatives",
+        "intro": "<p>Differentiate the given product expression before reducing the original terms. Compare both product derivatives with the variable-coefficient expression.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Once the transformed equation has constant coefficients, solve it with its auxiliary modes and a suitable particular integral.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "substitutions-product-to-linear-check",
+            "title": "Recognise a product giving constant coefficients",
+            "prompt": "<p>For \\(x>0\\), use \\(v=(x+1)y\\) in \\(\\left(x + 1\\right) \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)} + \\left(7 x + 9\\right) \\frac{d}{d x} y{\\left(x \\right)} + \\left(12 x + 19\\right) y{\\left(x \\right)}=24 x + 38\\). Find the coefficients of \\(v^\\prime\\) and v in the resulting second-order equation.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Coefficient of the first derivative of v",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "q",
+                "label": "Coefficient of v",
+                "type": "number",
+                "expected": "12"
+              }
+            ],
+            "hint": "<p>Differentiate the given product twice before substituting.</p>",
+            "solution": "<p>Differentiate the product: \\(v^\\prime=y+(x+1)y^\\prime\\) and \\(v^{\\prime\\prime}=2y^\\prime+(x+1)y^{\\prime\\prime}\\).</p><p>Recognise the original left side as \\(v^{\\prime\\prime}+7v^\\prime+12v\\). This removes the variable coefficients.</p><p>The auxiliary roots are \\(-3\\) and \\(-4\\). The particular integral is \\(2 x + 2\\). Thus \\(y=\\frac{A e^{- 3 x} + B e^{- 4 x} + 2 x + 2}{x + 1}\\) after dividing by \\(x+1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The second product derivative can contribute two copies of the first derivative of y. Keep both.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reciprocal-variable",
+        "title": "Why can a reciprocal turn a nonlinear equation into a linear one?",
+        "label": "Express its derivative by the chain rule",
+        "intro": "<p>If the given substitution is a reciprocal, the new derivative contains the original derivative divided by a square.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use this identity to replace all original terms consistently. Translate the initial value using the reciprocal.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "substitutions-reciprocal-variable-check",
+            "title": "Reduce a nonlinear equation by a reciprocal substitution",
+            "prompt": "<p>For a non-zero solution of \\(3 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=12 y^{2}{\\left(x \\right)}\\) with \\(y(0)=\\frac{1}{6}\\), use \\(v=\\frac1y\\). Find the constant and exponential coefficient in \\(v=A+B\\mathrm e^{3x}\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Constant A",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "b",
+                "label": "Exponential coefficient B",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Differentiate the reciprocal with a minus sign and translate the initial value as well.</p>",
+            "solution": "<p>The derivative is \\(v^\\prime=-\\frac{y^\\prime}{y^2}\\). Divide the original equation by the square before replacing the variables.</p><p>This gives \\(v^\\prime-3v=-12\\), whose solutions are \\(v=4+B\\mathrm e^{3x}\\).</p><p>Use the reciprocal of the given initial value to get \\(B=2\\). Return to \\(y=\\frac1v\\). The original zero solution is excluded by the non-zero condition.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Dividing by y squared excludes a zero solution. Handle that branch separately if it is allowed.</p>"
+          }
+        ]
+      },
+      {
+        "id": "new-independent-variable",
+        "title": "How do I transform a second derivative when changing the input?",
+        "label": "Apply the chain rule twice",
+        "intro": "<p>A change of input affects every derivative. The second application also differentiates the first chain multiplier.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For positive x and t equal to the natural logarithm of x, the two key combinations are \\(xy^\\prime=Y_t\\) and \\(x^2y^{\\prime\\prime}=Y_{tt}-Y_t\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "substitutions-new-independent-variable-check",
+            "title": "Transform second derivatives and data to a logarithmic variable",
+            "prompt": "<p>For \\(x>0\\), solve \\(x^{2} \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)} + 2 x \\frac{d}{d x} y{\\left(x \\right)} - 6 y{\\left(x \\right)}=2 - 12 \\log{\\left(x \\right)}\\) with \\(y(1)=7,\\ y^\\prime(1)=-4\\). Use \\(t=\\ln x\\). Give A and B in \\(Y(t)=A e^{2 t} + B e^{- 3 t} + 2 t\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>The second derivative introduces a first-derivative term. Transform the initial data before solving.</p>",
+            "solution": "<p>Write \\(x\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{\\mathrm dY}{\\mathrm dt}\\) and \\(x^2\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{\\mathrm d^2Y}{\\mathrm dt^2}-\\frac{\\mathrm dY}{\\mathrm dt}\\).</p><p>The transformed coefficients are constant. At x equal to one, t is zero, and the derivatives agree there because x is one.</p><p>The conditions give \\(A=3\\) and \\(B=4\\). Replacing t by the logarithm gives \\(y=3 x^{2} + 2 \\log{\\left(x \\right)} + \\frac{4}{x^{3}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The initial derivative can change numerically under a substitution. Transform it, rather than reusing it without checking.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "substitutions-new-independent-variable-follow-up",
+            "title": "Transform second derivatives and data to a logarithmic variable",
+            "prompt": "<p>For \\(x>0\\), solve \\(x^{2} \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)} + 2 x \\frac{d}{d x} y{\\left(x \\right)} - 20 y{\\left(x \\right)}=2 - 40 \\log{\\left(x \\right)}\\) with \\(y(1)=11,\\ y^\\prime(1)=-8\\). Use \\(t=\\ln x\\). Give A and B in \\(Y(t)=A e^{4 t} + B e^{- 5 t} + 2 t\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B",
+                "type": "number",
+                "expected": "6"
+              }
+            ],
+            "hint": "<p>The second derivative introduces a first-derivative term. Transform the initial data before solving.</p>",
+            "solution": "<p>Write \\(x\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{\\mathrm dY}{\\mathrm dt}\\) and \\(x^2\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{\\mathrm d^2Y}{\\mathrm dt^2}-\\frac{\\mathrm dY}{\\mathrm dt}\\).</p><p>The transformed coefficients are constant. At x equal to one, t is zero, and the derivatives agree there because x is one.</p><p>The conditions give \\(A=5\\) and \\(B=6\\). Replacing t by the logarithm gives \\(y=5 x^{4} + 2 \\log{\\left(x \\right)} + \\frac{6}{x^{5}}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "select-a-real-branch",
+        "title": "How do I recover y from a squared quantity?",
+        "label": "Use the given sign and interval",
+        "intro": "<p>The substitution v equal to y squared can convert a product of y and its derivative to a linear term.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>After solving the equation for v, choose the sign of the square root using the stated branch and initial data.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "substitutions-select-a-real-branch-check",
+            "title": "Choose the branch after a square substitution",
+            "prompt": "<p>A positive solution satisfies \\(3 y^{2}{\\left(x \\right)} + 2 y{\\left(x \\right)} \\frac{d}{d x} y{\\left(x \\right)}=48\\) and \\(y(0)=\\sqrt{19}\\). Use \\(v=y^2\\). Give the transformed derivative at zero and the limiting value of y.</p>",
+            "fields": [
+              {
+                "key": "slope",
+                "label": "Derivative of v at zero",
+                "type": "number",
+                "expected": "-9"
+              },
+              {
+                "key": "limit",
+                "label": "Limiting value of y",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>Return from v to y using the sign specified for the original solution.</p>",
+            "solution": "<p>The derivative of v is \\(2yy^\\prime\\). The transformed equation is linear with fixed equilibrium \\(16\\).</p><p>At zero the value of v is \\(19\\), so its derivative is \\(-9\\). Solving gives \\(v=16 + 3 e^{- 3 x}\\).</p><p>Choose the positive square root throughout the given branch. Its limit is \\(4\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The transformed equation may have real solutions with negative v, which cannot produce a real y.</p>"
+          }
+        ]
+      },
+      {
+        "id": "ratio-to-separable",
+        "title": "When does the given ratio substitution give a separable equation?",
+        "label": "Cancel the common terms first",
+        "intro": "<p>Replacing y by x times a new function can simplify expressions involving y divided by x. Differentiate the product and substitute before rearranging.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If the resulting first-order equation separates, integrate the non-zero branch and restore the original variables at the end.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "substitutions-ratio-to-separable-check",
+            "title": "Use a ratio substitution to obtain a separable equation",
+            "prompt": "<p>For \\(x>0\\), use \\(y=xu\\) in \\(x \\frac{d}{d x} y{\\left(x \\right)}=y{\\left(x \\right)} + \\frac{2 y^{2}{\\left(x \\right)}}{x}\\) with \\(y(1)=\\frac{3}{2}\\). Give the multiplier in \\(x u^\\prime=ku^2\\) and the constant in \\(\\frac1u=C-k\\ln x\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Multiplier k",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "2/3"
+              }
+            ],
+            "hint": "<p>Use the product rule before separating, and check the non-zero branch.</p>",
+            "solution": "<p>The product rule gives \\(y^\\prime=u+xu^\\prime\\). Substitution cancels the term linear in u, giving \\(xu^\\prime=2u^2\\).</p><p>Separate and integrate on the non-zero branch. This gives \\(\\frac1u=C-2\\ln x\\).</p><p>At x equal to one, u agrees with the initial y, so \\(C=\\frac{2}{3}\\). Recover y by multiplying by x. Use only the interval through one where the denominator is non-zero.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>When the reconstructed denominator vanishes, end the solution on that interval. Do not join branches through the singularity.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "substitutions-ratio-to-separable-follow-up",
+            "title": "Use a ratio substitution to obtain a separable equation",
+            "prompt": "<p>For \\(x>0\\), use \\(y=xu\\) in \\(x \\frac{d}{d x} y{\\left(x \\right)}=y{\\left(x \\right)} + \\frac{4 y^{2}{\\left(x \\right)}}{x}\\) with \\(y(1)=\\frac{5}{2}\\). Give the multiplier in \\(x u^\\prime=ku^2\\) and the constant in \\(\\frac1u=C-k\\ln x\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Multiplier k",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "2/5"
+              }
+            ],
+            "hint": "<p>Use the product rule before separating, and check the non-zero branch.</p>",
+            "solution": "<p>The product rule gives \\(y^\\prime=u+xu^\\prime\\). Substitution cancels the term linear in u, giving \\(xu^\\prime=4u^2\\).</p><p>Separate and integrate on the non-zero branch. This gives \\(\\frac1u=C-4\\ln x\\).</p><p>At x equal to one, u agrees with the initial y, so \\(C=\\frac{2}{5}\\). Recover y by multiplying by x. Use only the interval through one where the denominator is non-zero.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Recognise a product giving constant coefficients",
+        "question": "<p>For \\(x>0\\), use \\(v=(x+1)y\\) in \\(\\left(x + 1\\right) \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)} + \\left(5 x + 7\\right) \\frac{d}{d x} y{\\left(x \\right)} + \\left(6 x + 11\\right) y{\\left(x \\right)}=6 x + 17\\). Find the coefficients of \\(v^\\prime\\) and v in the resulting second-order equation.</p>",
+        "solution": [
+          "<p>Differentiate the product: \\(v^\\prime=y+(x+1)y^\\prime\\) and \\(v^{\\prime\\prime}=2y^\\prime+(x+1)y^{\\prime\\prime}\\).</p>",
+          "<p>Recognise the original left side as \\(v^{\\prime\\prime}+5v^\\prime+6v\\). This removes the variable coefficients.</p>",
+          "<p>The auxiliary roots are \\(-2\\) and \\(-3\\). The particular integral is \\(x + 2\\). Thus \\(y=\\frac{A e^{- 2 x} + B e^{- 3 x} + x + 2}{x + 1}\\) after dividing by \\(x+1\\).</p>"
+        ]
+      },
+      {
+        "title": "Reduce a nonlinear equation by a reciprocal substitution",
+        "question": "<p>For a non-zero solution of \\(2 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=6 y^{2}{\\left(x \\right)}\\) with \\(y(0)=\\frac{1}{4}\\), use \\(v=\\frac1y\\). Find the constant and exponential coefficient in \\(v=A+B\\mathrm e^{2x}\\).</p>",
+        "solution": [
+          "<p>The derivative is \\(v^\\prime=-\\frac{y^\\prime}{y^2}\\). Divide the original equation by the square before replacing the variables.</p>",
+          "<p>This gives \\(v^\\prime-2v=-6\\), whose solutions are \\(v=3+B\\mathrm e^{2x}\\).</p>",
+          "<p>Use the reciprocal of the given initial value to get \\(B=1\\). Return to \\(y=\\frac1v\\). The original zero solution is excluded by the non-zero condition.</p>"
+        ]
+      },
+      {
+        "title": "Transform second derivatives and data to a logarithmic variable",
+        "question": "<p>For \\(x>0\\), solve \\(x^{2} \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)} + 2 x \\frac{d}{d x} y{\\left(x \\right)} - 2 y{\\left(x \\right)}=2 - 4 \\log{\\left(x \\right)}\\) with \\(y(1)=5,\\ y^\\prime(1)=-2\\). Use \\(t=\\ln x\\). Give A and B in \\(Y(t)=A e^{t} + B e^{- 2 t} + 2 t\\).</p>",
+        "solution": [
+          "<p>Write \\(x\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{\\mathrm dY}{\\mathrm dt}\\) and \\(x^2\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{\\mathrm d^2Y}{\\mathrm dt^2}-\\frac{\\mathrm dY}{\\mathrm dt}\\).</p>",
+          "<p>The transformed coefficients are constant. At x equal to one, t is zero, and the derivatives agree there because x is one.</p>",
+          "<p>The conditions give \\(A=2\\) and \\(B=3\\). Replacing t by the logarithm gives \\(y=2 x + 2 \\log{\\left(x \\right)} + \\frac{3}{x^{2}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Transform second derivatives and data to a logarithmic variable",
+        "question": "<p>For \\(x>0\\), solve \\(x^{2} \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)} + 2 x \\frac{d}{d x} y{\\left(x \\right)} - 12 y{\\left(x \\right)}=2 - 24 \\log{\\left(x \\right)}\\) with \\(y(1)=9,\\ y^\\prime(1)=-6\\). Use \\(t=\\ln x\\). Give A and B in \\(Y(t)=A e^{3 t} + B e^{- 4 t} + 2 t\\).</p>",
+        "solution": [
+          "<p>Write \\(x\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{\\mathrm dY}{\\mathrm dt}\\) and \\(x^2\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{\\mathrm d^2Y}{\\mathrm dt^2}-\\frac{\\mathrm dY}{\\mathrm dt}\\).</p>",
+          "<p>The transformed coefficients are constant. At x equal to one, t is zero, and the derivatives agree there because x is one.</p>",
+          "<p>The conditions give \\(A=4\\) and \\(B=5\\). Replacing t by the logarithm gives \\(y=4 x^{3} + 2 \\log{\\left(x \\right)} + \\frac{5}{x^{4}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Choose the branch after a square substitution",
+        "question": "<p>A positive solution satisfies \\(2 y^{2}{\\left(x \\right)} + 2 y{\\left(x \\right)} \\frac{d}{d x} y{\\left(x \\right)}=18\\) and \\(y(0)=\\sqrt{11}\\). Use \\(v=y^2\\). Give the transformed derivative at zero and the limiting value of y.</p>",
+        "solution": [
+          "<p>The derivative of v is \\(2yy^\\prime\\). The transformed equation is linear with fixed equilibrium \\(9\\).</p>",
+          "<p>At zero the value of v is \\(11\\), so its derivative is \\(-4\\). Solving gives \\(v=9 + 2 e^{- 2 x}\\).</p>",
+          "<p>Choose the positive square root throughout the given branch. Its limit is \\(3\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a ratio substitution to obtain a separable equation",
+        "question": "<p>For \\(x>0\\), use \\(y=xu\\) in \\(x \\frac{d}{d x} y{\\left(x \\right)}=y{\\left(x \\right)} + \\frac{y^{2}{\\left(x \\right)}}{x}\\) with \\(y(1)=1\\). Give the multiplier in \\(x u^\\prime=ku^2\\) and the constant in \\(\\frac1u=C-k\\ln x\\).</p>",
+        "solution": [
+          "<p>The product rule gives \\(y^\\prime=u+xu^\\prime\\). Substitution cancels the term linear in u, giving \\(xu^\\prime=1u^2\\).</p>",
+          "<p>Separate and integrate on the non-zero branch. This gives \\(\\frac1u=C-1\\ln x\\).</p>",
+          "<p>At x equal to one, u agrees with the initial y, so \\(C=1\\). Recover y by multiplying by x. Use only the interval through one where the denominator is non-zero.</p>"
+        ]
+      },
+      {
+        "title": "Use a ratio substitution to obtain a separable equation",
+        "question": "<p>For \\(x>0\\), use \\(y=xu\\) in \\(x \\frac{d}{d x} y{\\left(x \\right)}=y{\\left(x \\right)} + \\frac{3 y^{2}{\\left(x \\right)}}{x}\\) with \\(y(1)=2\\). Give the multiplier in \\(x u^\\prime=ku^2\\) and the constant in \\(\\frac1u=C-k\\ln x\\).</p>",
+        "solution": [
+          "<p>The product rule gives \\(y^\\prime=u+xu^\\prime\\). Substitution cancels the term linear in u, giving \\(xu^\\prime=3u^2\\).</p>",
+          "<p>Separate and integrate on the non-zero branch. This gives \\(\\frac1u=C-3\\ln x\\).</p>",
+          "<p>At x equal to one, u agrees with the initial y, so \\(C=\\frac{1}{2}\\). Recover y by multiplying by x. Use only the interval through one where the denominator is non-zero.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "substitutions-product-to-linear-extra",
+        "title": "Recognise a product giving constant coefficients",
+        "prompt": "<p>For \\(x>0\\), use \\(v=(x+1)y\\) in \\(\\left(x + 1\\right) \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)} + \\left(9 x + 11\\right) \\frac{d}{d x} y{\\left(x \\right)} + \\left(20 x + 29\\right) y{\\left(x \\right)}=60 x + 67\\). Find the coefficients of \\(v^\\prime\\) and v in the resulting second-order equation.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Coefficient of the first derivative of v",
+            "type": "number",
+            "expected": "9"
+          },
+          {
+            "key": "q",
+            "label": "Coefficient of v",
+            "type": "number",
+            "expected": "20"
+          }
+        ],
+        "hint": "<p>Differentiate the given product twice before substituting.</p>",
+        "solution": "<p>Differentiate the product: \\(v^\\prime=y+(x+1)y^\\prime\\) and \\(v^{\\prime\\prime}=2y^\\prime+(x+1)y^{\\prime\\prime}\\).</p><p>Recognise the original left side as \\(v^{\\prime\\prime}+9v^\\prime+20v\\). This removes the variable coefficients.</p><p>The auxiliary roots are \\(-4\\) and \\(-5\\). The particular integral is \\(3 x + 2\\). Thus \\(y=\\frac{A e^{- 4 x} + B e^{- 5 x} + 3 x + 2}{x + 1}\\) after dividing by \\(x+1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "substitutions-reciprocal-variable-extra",
+        "title": "Reduce a nonlinear equation by a reciprocal substitution",
+        "prompt": "<p>For a non-zero solution of \\(4 y{\\left(x \\right)} + \\frac{d}{d x} y{\\left(x \\right)}=20 y^{2}{\\left(x \\right)}\\) with \\(y(0)=\\frac{1}{8}\\), use \\(v=\\frac1y\\). Find the constant and exponential coefficient in \\(v=A+B\\mathrm e^{4x}\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Constant A",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "b",
+            "label": "Exponential coefficient B",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>Differentiate the reciprocal with a minus sign and translate the initial value as well.</p>",
+        "solution": "<p>The derivative is \\(v^\\prime=-\\frac{y^\\prime}{y^2}\\). Divide the original equation by the square before replacing the variables.</p><p>This gives \\(v^\\prime-4v=-20\\), whose solutions are \\(v=5+B\\mathrm e^{4x}\\).</p><p>Use the reciprocal of the given initial value to get \\(B=3\\). Return to \\(y=\\frac1v\\). The original zero solution is excluded by the non-zero condition.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "substitutions-new-independent-variable-extra",
+        "title": "Transform second derivatives and data to a logarithmic variable",
+        "prompt": "<p>For \\(x>0\\), solve \\(x^{2} \\frac{d^{2}}{d x^{2}} y{\\left(x \\right)} + 2 x \\frac{d}{d x} y{\\left(x \\right)} - 30 y{\\left(x \\right)}=2 - 60 \\log{\\left(x \\right)}\\) with \\(y(1)=13,\\ y^\\prime(1)=-10\\). Use \\(t=\\ln x\\). Give A and B in \\(Y(t)=A e^{5 t} + B e^{- 6 t} + 2 t\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "type": "number",
+            "expected": "7"
+          }
+        ],
+        "hint": "<p>The second derivative introduces a first-derivative term. Transform the initial data before solving.</p>",
+        "solution": "<p>Write \\(x\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{\\mathrm dY}{\\mathrm dt}\\) and \\(x^2\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{\\mathrm d^2Y}{\\mathrm dt^2}-\\frac{\\mathrm dY}{\\mathrm dt}\\).</p><p>The transformed coefficients are constant. At x equal to one, t is zero, and the derivatives agree there because x is one.</p><p>The conditions give \\(A=6\\) and \\(B=7\\). Replacing t by the logarithm gives \\(y=6 x^{5} + 2 \\log{\\left(x \\right)} + \\frac{7}{x^{6}}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "substitutions-select-a-real-branch-extra",
+        "title": "Choose the branch after a square substitution",
+        "prompt": "<p>A positive solution satisfies \\(4 y^{2}{\\left(x \\right)} + 2 y{\\left(x \\right)} \\frac{d}{d x} y{\\left(x \\right)}=100\\) and \\(y(0)=\\sqrt{29}\\). Use \\(v=y^2\\). Give the transformed derivative at zero and the limiting value of y.</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Derivative of v at zero",
+            "type": "number",
+            "expected": "-16"
+          },
+          {
+            "key": "limit",
+            "label": "Limiting value of y",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>Return from v to y using the sign specified for the original solution.</p>",
+        "solution": "<p>The derivative of v is \\(2yy^\\prime\\). The transformed equation is linear with fixed equilibrium \\(25\\).</p><p>At zero the value of v is \\(29\\), so its derivative is \\(-16\\). Solving gives \\(v=25 + 4 e^{- 4 x}\\).</p><p>Choose the positive square root throughout the given branch. Its limit is \\(5\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "substitutions-ratio-to-separable-extra",
+        "title": "Use a ratio substitution to obtain a separable equation",
+        "prompt": "<p>For \\(x>0\\), use \\(y=xu\\) in \\(x \\frac{d}{d x} y{\\left(x \\right)}=y{\\left(x \\right)} + \\frac{5 y^{2}{\\left(x \\right)}}{x}\\) with \\(y(1)=3\\). Give the multiplier in \\(x u^\\prime=ku^2\\) and the constant in \\(\\frac1u=C-k\\ln x\\).</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Multiplier k",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "c",
+            "label": "Constant C",
+            "type": "number",
+            "expected": "1/3"
+          }
+        ],
+        "hint": "<p>Use the product rule before separating, and check the non-zero branch.</p>",
+        "solution": "<p>The product rule gives \\(y^\\prime=u+xu^\\prime\\). Substitution cancels the term linear in u, giving \\(xu^\\prime=5u^2\\).</p><p>Separate and integrate on the non-zero branch. This gives \\(\\frac1u=C-5\\ln x\\).</p><p>At x equal to one, u agrees with the initial y, so \\(C=\\frac{1}{3}\\). Recover y by multiplying by x. Use only the interval through one where the denominator is non-zero.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Dependent-variable substitution",
+        "definition": "<p>Replace the unknown function by a rule involving a new dependent variable.</p>"
+      },
+      {
+        "term": "Independent-variable substitution",
+        "definition": "<p>Change the input used to describe derivatives.</p>"
+      },
+      {
+        "term": "Real branch",
+        "definition": "<p>Sign or interval where the reconstructed solution is real and satisfies the given data.</p>"
+      },
+      {
+        "term": "Separable equation",
+        "definition": "<p>Equation whose variable factors can be placed on opposite sides.</p>"
+      },
+      {
+        "term": "Chain multiplier",
+        "definition": "<p>Derivative of the intermediate input when differentiating a composition.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Product substitution</th><td>Write both product derivatives before replacing terms.</td></tr><tr><th scope=\"row\">New input</th><td>Apply the chain rule twice and transform the data.</td></tr><tr><th scope=\"row\">Reduction</th><td>Solve the resulting linear or separable equation.</td></tr><tr><th scope=\"row\">Recover the original</th><td>Restore variables and confirm the branch and interval.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>With \\(t=\\ln x\\), what does \\(xy^\\prime\\) become?</p><p><strong>Check</strong> \\(\\frac{\\mathrm dY}{\\mathrm dt}\\) on the positive-x interval.</p>",
+      "checks": "<ul><li>The second product derivative can contribute two copies of the first derivative of y. Keep both.</li><li>Dividing by y squared excludes a zero solution. Handle that branch separately if it is allowed.</li></ul>",
+      "examTip": "<p>Write the domain and initial conditions in the new variables before solving, and test the recovered solution in the original equation.</p>"
+    },
+    "related": [
+      {
+        "title": "Oscillatory forcing, resonance and long-term behaviour",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_ode_oscillations"
+      }
+    ]
+  }
+}
