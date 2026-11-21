@@ -23,6 +23,10 @@ export const notationProgressRevisions = [{
   key: "9709-p3-differential-equations", fromVersion: "1.0.0", toVersion: "1.0.1",
   fromFingerprint: "5b393538354dbd1d5f0b686be82d205d3194a270bec0d44fc12965f5f65e09b0",
   toFingerprint: "fff64573bfdf86bf41421bc61742f7597b5e8d620e9c96bfb024be2d8132873d",
+}, {
+  key: "9709-p3-complex-numbers", fromVersion: "1.0.0", toVersion: "1.0.1",
+  fromFingerprint: "e5edb108cf32fa60ad83eed351cc944cc00887a502c823d0433c9eb4ba8ef9f8",
+  toFingerprint: "c5c3ed98f30b93a82e2a0f8a6c0efe352aa9e50d90e96c0bbf87276542bf853c",
 }] as const;
 
 export function notationProgressPolicy(p: ContentPackage) {
