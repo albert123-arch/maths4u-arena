@@ -1,0 +1,2740 @@
+{
+  "orig_9709_m1_kin_motion": {
+    "updatedOn": "2026-11-21",
+    "description": "Use signed positions and velocity on a straight line. Find distances, average rates and crossings from a position–time graph.",
+    "sections": [
+      {
+        "id": "choose-a-direction",
+        "title": "How do I decide which quantities need a sign?",
+        "label": "Use an origin and orientation",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Motion is along one line. Set an origin and declare an orientation before tracing the movements. Motion opposite that orientation makes a negative contribution to displacement.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For positions \\(s_0,s_1\\), displacement is \\(s_1-s_0\\). Distance is the sum of the lengths of each leg of the route.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "motion-choose-a-direction-check",
+            "title": "Distinguish position, displacement and distance",
+            "prompt": "<p>Positions on a straight track are measured east of a fixed marker. A trolley starts \\(4\\,\\mathrm m\\) east of the marker, travels \\(9\\,\\mathrm m\\) east, then \\(14\\,\\mathrm m\\) west. Find its final position, displacement from its start and total distance travelled. Give signed positions and displacements.</p>",
+            "hint": "<p>Work along a signed number line. Track the change separately from the final coordinate.</p>",
+            "solution": "<p>East is positive. The westward displacement is \\(-14\\,\\mathrm m\\).</p><p>The two legs give \\(9-14=-5\\) so the displacement from the start is \\(-5\\,\\mathrm m\\). Add the starting position for \\(-1\\,\\mathrm m\\).</p><p>Add the path lengths for a distance of \\(23\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "position",
+                "label": "Final position (m)",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "displacement",
+                "label": "Displacement from start (m)",
+                "type": "number",
+                "expected": "-5"
+              },
+              {
+                "key": "distance",
+                "label": "Distance travelled (m)",
+                "type": "number",
+                "expected": "23",
+                "retry": [
+                  {
+                    "answer": "5",
+                    "feedback": "<p>Add the lengths of both legs before taking the total.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A final coordinate already includes the choice of origin. The displacement uses the change from the actual starting coordinate.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For every interval, distance is at least the magnitude of displacement. Equality holds when direction never changes.</p>"
+          }
+        ]
+      },
+      {
+        "id": "average-rates",
+        "title": "Why can average speed differ from average velocity?",
+        "label": "Use different numerators",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Both averages use the whole elapsed time. The numerators measure different things after a reversal.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\text{Average velocity}=\\frac{\\text{displacement}}{\\text{elapsed time}}\\) and \\(\\text{average speed}=\\frac{\\text{distance}}{\\text{elapsed time}}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "motion-average-rates-check",
+            "title": "Compare average speed and average velocity",
+            "prompt": "<p>A carrier moves \\(11\\,\\mathrm m\\) east and then \\(14\\,\\mathrm m\\) west. The whole journey lasts \\(4\\,\\mathrm s\\). Take east as positive. Find its signed average velocity and average speed.</p>",
+            "hint": "<p>Use the same total time for both averages, but use a different numerator.</p>",
+            "solution": "<p>Positive and negative legs give a net displacement of \\(-3\\,\\mathrm m\\).</p><p>Average velocity is displacement divided by elapsed time, giving \\(- \\frac{3}{4}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Average speed uses the total path length \\(25\\,\\mathrm m\\), giving \\(\\frac{25}{4}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Average velocity (m s⁻¹)",
+                "type": "number",
+                "expected": "-3/4"
+              },
+              {
+                "key": "speed",
+                "label": "Average speed (m s⁻¹)",
+                "type": "number",
+                "expected": "25/4",
+                "retry": [
+                  {
+                    "answer": "3/4",
+                    "feedback": "<p>Average speed uses the whole path length.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Taking the magnitude of average velocity can miss distance covered while moving back towards the start.</p>"
+          }
+        ]
+      },
+      {
+        "id": "read-the-slope",
+        "title": "What does a sloping position graph tell me?",
+        "label": "Find the gradient",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The horizontal axis measures time. The vertical axis in a position graph measures signed position. A straight segment has a constant slope.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The gradient is velocity. A negative gradient indicates motion in the negative direction even when the position is positive.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_m1_kin_motion/position-gradient.svg",
+              "alt": "A falling straight position–time segment joins (1, 4) to (4, −2). It passes through position zero between these endpoints.",
+              "caption": "<p>The sign of the gradient gives the direction of motion.</p>",
+              "width": 484,
+              "height": 252
+            }
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "motion-read-the-slope-check",
+            "title": "Get velocity from a straight position segment",
+            "prompt": "<p>A straight segment of a position–time graph joins \\((2,5)\\) and \\((6,-7)\\), with time in seconds and position in metres. Find the velocity and speed on the segment.</p>",
+            "hint": "<p>Subtract in the same order on both axes before dividing.</p>",
+            "solution": "<p>Find the signed change in position, \\(-12\\,\\mathrm m\\), and the positive elapsed time, \\(4\\,\\mathrm s\\).</p><p>Their quotient gives the gradient, \\(-3\\,\\mathrm{m\\,s^{-1}}\\), which is the velocity.</p><p>Speed is the magnitude of velocity, \\(3\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Velocity (m s⁻¹)",
+                "type": "number",
+                "expected": "-3"
+              },
+              {
+                "key": "speed",
+                "label": "Speed (m s⁻¹)",
+                "type": "number",
+                "expected": "3"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Position is read from the height of the graph. Speed is the magnitude of gradient, not the magnitude of the height.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "motion-read-the-slope-second",
+            "title": "Get velocity from a straight position segment",
+            "prompt": "<p>A straight segment of a position–time graph joins \\((6,9)\\) and \\((14,-47)\\), with time in seconds and position in metres. Find the velocity and speed on the segment.</p>",
+            "hint": "<p>Subtract in the same order on both axes before dividing.</p>",
+            "solution": "<p>Find the signed change in position, \\(-56\\,\\mathrm m\\), and the positive elapsed time, \\(8\\,\\mathrm s\\).</p><p>Their quotient gives the gradient, \\(-7\\,\\mathrm{m\\,s^{-1}}\\), which is the velocity.</p><p>Speed is the magnitude of velocity, \\(7\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Velocity (m s⁻¹)",
+                "type": "number",
+                "expected": "-7"
+              },
+              {
+                "key": "speed",
+                "label": "Speed (m s⁻¹)",
+                "type": "number",
+                "expected": "7"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "constant-position",
+        "title": "What does a horizontal line mean?",
+        "label": "Read a rest interval",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>A level portion of a position–time graph means the position remains unchanged. It can appear at any height.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A horizontal position graph has zero gradient and hence zero velocity. Read the time interval using its horizontal width.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "motion-constant-position-check",
+            "title": "Read a stay at a non-zero position",
+            "prompt": "<p>A position–time graph is horizontal at \\(s=7\\) for \\(3\\le t\\le 7\\). Time is in seconds and position is in metres. Find the velocity and the time spent at rest in this interval.</p>",
+            "hint": "<p>A horizontal position graph indicates a constant position, even when the graph is above the zero line.</p>",
+            "solution": "<p>Position remains fixed through the whole horizontal segment.</p><p>The gradient is zero, so the velocity is \\(0\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The time spent at rest is the difference between the endpoints, \\(4\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "velocity",
+                "label": "Velocity (m s⁻¹)",
+                "type": "number",
+                "expected": "0",
+                "retry": [
+                  {
+                    "answer": "7",
+                    "feedback": "<p>The height is the position. The gradient gives the velocity.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "duration",
+                "label": "Time at rest (s)",
+                "type": "number",
+                "expected": "4"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A horizontal position graph at a non-zero height does not mean the particle is moving at that height per second.</p>"
+          }
+        ]
+      },
+      {
+        "id": "pass-the-origin",
+        "title": "How can I find a crossing of the origin?",
+        "label": "Set position equal to zero",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Passing the origin concerns position. Stopping or changing direction concerns velocity.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A point where the position graph crosses the time axis has position zero. Decide whether the object is at rest using the slope there.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "motion-pass-the-origin-check",
+            "title": "Find when a particle passes the origin",
+            "prompt": "<p>A position–time straight line is given by \\(s=3 t - 5\\) for \\(t\\ge0\\). Time is in seconds and position in metres. Find the time the particle passes the origin and its distance from the origin at \\(t=4\\,\\mathrm s\\).</p>",
+            "hint": "<p>Solve for the time-axis intersection. The position axis crossing at t = 0 is the starting position.</p>",
+            "solution": "<p>Passing the origin means \\(s=0\\). The gradient \\(3\\) is non-zero.</p><p>Solve the linear equation to obtain \\(t=\\frac{5}{3}\\,\\mathrm s\\).</p><p>At the later time, substitute into the position equation and take its magnitude, giving \\(7\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time of crossing (s)",
+                "type": "number",
+                "expected": "5/3"
+              },
+              {
+                "key": "distance",
+                "label": "Distance from the origin (m)",
+                "type": "number",
+                "expected": "7"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A particle can pass the origin while moving. A direction change can occur far from the origin.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "motion-pass-the-origin-second",
+            "title": "Find when a particle passes the origin",
+            "prompt": "<p>A position–time straight line is given by \\(s=7 t - 13\\) for \\(t\\ge0\\). Time is in seconds and position in metres. Find the time the particle passes the origin and its distance from the origin at \\(t=8\\,\\mathrm s\\).</p>",
+            "hint": "<p>Solve for the time-axis intersection. The position axis crossing at t = 0 is the starting position.</p>",
+            "solution": "<p>Passing the origin means \\(s=0\\). The gradient \\(7\\) is non-zero.</p><p>Solve the linear equation to obtain \\(t=\\frac{13}{7}\\,\\mathrm s\\).</p><p>At the later time, substitute into the position equation and take its magnitude, giving \\(43\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time of crossing (s)",
+                "type": "number",
+                "expected": "13/7"
+              },
+              {
+                "key": "distance",
+                "label": "Distance from the origin (m)",
+                "type": "number",
+                "expected": "43"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Distinguish position, displacement and distance",
+        "question": "<p>Positions on a straight track are measured east of a fixed marker. A trolley starts \\(3\\,\\mathrm m\\) east of the marker, travels \\(7\\,\\mathrm m\\) east, then \\(11\\,\\mathrm m\\) west. Find its final position, displacement from its start and total distance travelled. Give signed positions and displacements.</p>",
+        "solution": [
+          "<p>East is positive. The westward displacement is \\(-11\\,\\mathrm m\\).</p>",
+          "<p>The two legs give \\(7-11=-4\\) so the displacement from the start is \\(-4\\,\\mathrm m\\). Add the starting position for \\(-1\\,\\mathrm m\\).</p>",
+          "<p>Add the path lengths for a distance of \\(18\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare average speed and average velocity",
+        "question": "<p>A carrier moves \\(8\\,\\mathrm m\\) east and then \\(10\\,\\mathrm m\\) west. The whole journey lasts \\(3\\,\\mathrm s\\). Take east as positive. Find its signed average velocity and average speed.</p>",
+        "solution": [
+          "<p>Positive and negative legs give a net displacement of \\(-2\\,\\mathrm m\\).</p>",
+          "<p>Average velocity is displacement divided by elapsed time, giving \\(- \\frac{2}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Average speed uses the total path length \\(18\\,\\mathrm m\\), giving \\(6\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Get velocity from a straight position segment",
+        "question": "<p>A straight segment of a position–time graph joins \\((1,4)\\) and \\((4,-2)\\), with time in seconds and position in metres. Find the velocity and speed on the segment.</p>",
+        "solution": [
+          "<p>Find the signed change in position, \\(-6\\,\\mathrm m\\), and the positive elapsed time, \\(3\\,\\mathrm s\\).</p>",
+          "<p>Their quotient gives the gradient, \\(-2\\,\\mathrm{m\\,s^{-1}}\\), which is the velocity.</p>",
+          "<p>Speed is the magnitude of velocity, \\(2\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Get velocity from a straight position segment",
+        "question": "<p>A straight segment of a position–time graph joins \\((3,6)\\) and \\((8,-14)\\), with time in seconds and position in metres. Find the velocity and speed on the segment.</p>",
+        "solution": [
+          "<p>Find the signed change in position, \\(-20\\,\\mathrm m\\), and the positive elapsed time, \\(5\\,\\mathrm s\\).</p>",
+          "<p>Their quotient gives the gradient, \\(-4\\,\\mathrm{m\\,s^{-1}}\\), which is the velocity.</p>",
+          "<p>Speed is the magnitude of velocity, \\(4\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Read a stay at a non-zero position",
+        "question": "<p>A position–time graph is horizontal at \\(s=5\\) for \\(2\\le t\\le 5\\). Time is in seconds and position is in metres. Find the velocity and the time spent at rest in this interval.</p>",
+        "solution": [
+          "<p>Position remains fixed through the whole horizontal segment.</p>",
+          "<p>The gradient is zero, so the velocity is \\(0\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The time spent at rest is the difference between the endpoints, \\(3\\,\\mathrm s\\).</p>"
+        ]
+      },
+      {
+        "title": "Find when a particle passes the origin",
+        "question": "<p>A position–time straight line is given by \\(s=2 t - 3\\) for \\(t\\ge0\\). Time is in seconds and position in metres. Find the time the particle passes the origin and its distance from the origin at \\(t=3\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Passing the origin means \\(s=0\\). The gradient \\(2\\) is non-zero.</p>",
+          "<p>Solve the linear equation to obtain \\(t=\\frac{3}{2}\\,\\mathrm s\\).</p>",
+          "<p>At the later time, substitute into the position equation and take its magnitude, giving \\(3\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Find when a particle passes the origin",
+        "question": "<p>A position–time straight line is given by \\(s=4 t - 7\\) for \\(t\\ge0\\). Time is in seconds and position in metres. Find the time the particle passes the origin and its distance from the origin at \\(t=5\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Passing the origin means \\(s=0\\). The gradient \\(4\\) is non-zero.</p>",
+          "<p>Solve the linear equation to obtain \\(t=\\frac{7}{4}\\,\\mathrm s\\).</p>",
+          "<p>At the later time, substitute into the position equation and take its magnitude, giving \\(13\\,\\mathrm m\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Position",
+        "definition": "<p>Signed coordinate measured from a fixed origin.</p>"
+      },
+      {
+        "term": "Displacement",
+        "definition": "<p>Final position minus initial position. It can be positive, negative or zero.</p>"
+      },
+      {
+        "term": "Distance",
+        "definition": "<p>Total length of the path travelled.</p>"
+      },
+      {
+        "term": "Velocity",
+        "definition": "<p>Signed instantaneous rate of change of position.</p>"
+      },
+      {
+        "term": "Speed",
+        "definition": "<p>Magnitude of instantaneous velocity.</p>"
+      },
+      {
+        "term": "Gradient",
+        "definition": "<p>Signed change in the vertical reading divided by change in time.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When you see</th><th scope=\"col\">What to do</th></tr></thead><tbody><tr><th scope=\"row\">Signed change</th><td>\\(\\Delta s=s_{\\mathrm{end}}-s_{\\mathrm{start}}\\)</td></tr><tr><th scope=\"row\">Distance</th><td>Add the absolute lengths of all legs.</td></tr><tr><th scope=\"row\">Position–time slope</th><td>Signed velocity. A horizontal position segment means rest.</td></tr><tr><th scope=\"row\">Time-axis crossing</th><td>Position zero at that time.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A trolley moves from position \\(-3\\,\\mathrm m\\) to \\(7\\,\\mathrm m\\) and then to \\(2\\,\\mathrm m\\). Find displacement and distance.</p><p><strong>Check</strong> \\(5\\,\\mathrm m\\) and \\(15\\,\\mathrm m\\).</p>",
+      "checks": "<ul><li>A final coordinate already includes the choice of origin. The displacement uses the change from the actual starting coordinate.</li><li>Taking the magnitude of average velocity can miss distance covered while moving back towards the start.</li></ul>",
+      "examTip": "<p>Before using a slope, read the vertical axis and mark the positive direction. State whether your result is signed.</p>"
+    },
+    "related": [
+      {
+        "title": "Velocity–time graphs",
+        "href": "/courses/maths4u-9709-m1/topics/orig_9709_m1_kin_velocity_graphs"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "motion-choose-a-direction-more",
+        "title": "Distinguish position, displacement and distance",
+        "prompt": "<p>Positions on a straight track are measured east of a fixed marker. A trolley starts \\(5\\,\\mathrm m\\) east of the marker, travels \\(11\\,\\mathrm m\\) east, then \\(17\\,\\mathrm m\\) west. Find its final position, displacement from its start and total distance travelled. Give signed positions and displacements.</p>",
+        "hint": "<p>Work along a signed number line. Track the change separately from the final coordinate.</p>",
+        "solution": "<p>East is positive. The westward displacement is \\(-17\\,\\mathrm m\\).</p><p>The two legs give \\(11-17=-6\\) so the displacement from the start is \\(-6\\,\\mathrm m\\). Add the starting position for \\(-1\\,\\mathrm m\\).</p><p>Add the path lengths for a distance of \\(28\\,\\mathrm m\\).</p>",
+        "fields": [
+          {
+            "key": "position",
+            "label": "Final position (m)",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "displacement",
+            "label": "Displacement from start (m)",
+            "type": "number",
+            "expected": "-6"
+          },
+          {
+            "key": "distance",
+            "label": "Distance travelled (m)",
+            "type": "number",
+            "expected": "28",
+            "retry": [
+              {
+                "answer": "6",
+                "feedback": "<p>Add the lengths of both legs before taking the total.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "motion-average-rates-more",
+        "title": "Compare average speed and average velocity",
+        "prompt": "<p>A carrier moves \\(14\\,\\mathrm m\\) east and then \\(18\\,\\mathrm m\\) west. The whole journey lasts \\(5\\,\\mathrm s\\). Take east as positive. Find its signed average velocity and average speed.</p>",
+        "hint": "<p>Use the same total time for both averages, but use a different numerator.</p>",
+        "solution": "<p>Positive and negative legs give a net displacement of \\(-4\\,\\mathrm m\\).</p><p>Average velocity is displacement divided by elapsed time, giving \\(- \\frac{4}{5}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Average speed uses the total path length \\(32\\,\\mathrm m\\), giving \\(\\frac{32}{5}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "fields": [
+          {
+            "key": "velocity",
+            "label": "Average velocity (m s⁻¹)",
+            "type": "number",
+            "expected": "-4/5"
+          },
+          {
+            "key": "speed",
+            "label": "Average speed (m s⁻¹)",
+            "type": "number",
+            "expected": "32/5",
+            "retry": [
+              {
+                "answer": "4/5",
+                "feedback": "<p>Average speed uses the whole path length.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "motion-read-the-slope-more",
+        "title": "Get velocity from a straight position segment",
+        "prompt": "<p>A straight segment of a position–time graph joins \\((7,10)\\) and \\((16,-62)\\), with time in seconds and position in metres. Find the velocity and speed on the segment.</p>",
+        "hint": "<p>Subtract in the same order on both axes before dividing.</p>",
+        "solution": "<p>Find the signed change in position, \\(-72\\,\\mathrm m\\), and the positive elapsed time, \\(9\\,\\mathrm s\\).</p><p>Their quotient gives the gradient, \\(-8\\,\\mathrm{m\\,s^{-1}}\\), which is the velocity.</p><p>Speed is the magnitude of velocity, \\(8\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "fields": [
+          {
+            "key": "velocity",
+            "label": "Velocity (m s⁻¹)",
+            "type": "number",
+            "expected": "-8"
+          },
+          {
+            "key": "speed",
+            "label": "Speed (m s⁻¹)",
+            "type": "number",
+            "expected": "8"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "motion-constant-position-more",
+        "title": "Read a stay at a non-zero position",
+        "prompt": "<p>A position–time graph is horizontal at \\(s=9\\) for \\(4\\le t\\le 9\\). Time is in seconds and position is in metres. Find the velocity and the time spent at rest in this interval.</p>",
+        "hint": "<p>A horizontal position graph indicates a constant position, even when the graph is above the zero line.</p>",
+        "solution": "<p>Position remains fixed through the whole horizontal segment.</p><p>The gradient is zero, so the velocity is \\(0\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The time spent at rest is the difference between the endpoints, \\(5\\,\\mathrm s\\).</p>",
+        "fields": [
+          {
+            "key": "velocity",
+            "label": "Velocity (m s⁻¹)",
+            "type": "number",
+            "expected": "0",
+            "retry": [
+              {
+                "answer": "9",
+                "feedback": "<p>The height is the position. The gradient gives the velocity.</p>"
+              }
+            ]
+          },
+          {
+            "key": "duration",
+            "label": "Time at rest (s)",
+            "type": "number",
+            "expected": "5"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "motion-pass-the-origin-more",
+        "title": "Find when a particle passes the origin",
+        "prompt": "<p>A position–time straight line is given by \\(s=8 t - 15\\) for \\(t\\ge0\\). Time is in seconds and position in metres. Find the time the particle passes the origin and its distance from the origin at \\(t=9\\,\\mathrm s\\).</p>",
+        "hint": "<p>Solve for the time-axis intersection. The position axis crossing at t = 0 is the starting position.</p>",
+        "solution": "<p>Passing the origin means \\(s=0\\). The gradient \\(8\\) is non-zero.</p><p>Solve the linear equation to obtain \\(t=\\frac{15}{8}\\,\\mathrm s\\).</p><p>At the later time, substitute into the position equation and take its magnitude, giving \\(57\\,\\mathrm m\\).</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Time of crossing (s)",
+            "type": "number",
+            "expected": "15/8"
+          },
+          {
+            "key": "distance",
+            "label": "Distance from the origin (m)",
+            "type": "number",
+            "expected": "57"
+          }
+        ]
+      }
+    ]
+  },
+  "orig_9709_m1_kin_velocity_graphs": {
+    "updatedOn": "2026-11-21",
+    "description": "Use gradients and signed areas to interpret velocity, acceleration, displacement and distance during straight-line motion.",
+    "sections": [
+      {
+        "id": "read-acceleration",
+        "title": "Which slope gives acceleration?",
+        "label": "Take the gradient of a velocity graph",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Read a velocity change between the endpoints of a straight segment. Divide that signed change by the time elapsed.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Acceleration measures the change of velocity, not the change of its absolute value. For example, negative velocity becoming more negative means speeding up.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "velocity_graphs-read-acceleration-check",
+            "title": "Find acceleration from a velocity graph",
+            "prompt": "<p>A velocity–time graph has a straight line from \\((2,11)\\) to \\((6,3)\\). Time is in seconds and velocity in metres per second. Find its signed acceleration and decide whether the particle speeds up or slows down.</p>",
+            "hint": "<p>Use the gradient to find acceleration and compare velocity magnitudes to determine the speed trend.</p>",
+            "solution": "<p>The acceleration is the slope. Divide the velocity change \\(-8\\,\\mathrm{m\\,s^{-1}}\\) by the duration \\(4\\,\\mathrm s\\).</p><p>The acceleration is \\(-2\\,\\mathrm{m\\,s^{-2}}\\).</p><p>Both velocities are positive and their magnitude drops. The particle slows down on this interval.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Acceleration a (m s⁻²)",
+                "type": "number",
+                "expected": "-2"
+              },
+              {
+                "key": "trend",
+                "label": "Change in speed",
+                "type": "choice",
+                "expected": "slower",
+                "options": {
+                  "faster": "Speeds up",
+                  "slower": "Slows down",
+                  "same": "Remains constant"
+                }
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Negative acceleration on its own does not mean slowing down. Compare signs of velocity and acceleration.</p>"
+          }
+        ]
+      },
+      {
+        "id": "positive-area",
+        "title": "How can a graph show a displacement?",
+        "label": "Use a trapezium area",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Over a time interval, the area against the horizontal axis represents accumulated displacement. On a line segment above the axis this area is positive.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A straight velocity segment from \\(u\\) to \\(v\\) over duration \\(t\\) corresponds to \\(s=\\frac12(u+v)t\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "velocity_graphs-positive-area-check",
+            "title": "Find the displacement from a trapezium",
+            "prompt": "<p>A velocity–time graph joins \\((0,3)\\) to \\((3,9)\\) with a straight line. Time is in seconds and velocity in metres per second. Find the displacement and distance over the interval.</p>",
+            "hint": "<p>Calculate the area between the whole segment and the time axis.</p>",
+            "solution": "<p>The whole segment lies above the time axis, so its signed area is positive.</p><p>The perpendicular width is \\(3\\,\\mathrm s\\). Half the sum of the vertical sides, multiplied by this width, gives \\(18\\,\\mathrm m\\).</p><p>The particle does not reverse, so the distance and displacement have the same numerical value.</p>",
+            "fields": [
+              {
+                "key": "displacement",
+                "label": "Displacement (m)",
+                "type": "number",
+                "expected": "18"
+              },
+              {
+                "key": "distance",
+                "label": "Distance travelled (m)",
+                "type": "number",
+                "expected": "18"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Multiplying the final velocity by the entire time assumes a constant velocity. Use the mean height for the straight segment.</p>"
+          }
+        ]
+      },
+      {
+        "id": "signed-areas",
+        "title": "What changes when the graph goes below the axis?",
+        "label": "Split at a reversal",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Below the axis the particle moves in the negative direction. A crossing may divide one journey into two legs with opposite signs.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Add the signed areas for displacement. Add their magnitudes for total distance. Check each crossing in the relevant interval.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_m1_kin_velocity_graphs/signed-triangles.svg",
+              "alt": "Velocity falls in a straight line from 4 at time zero through zero at two seconds to −6 at five seconds. The two triangles have opposite signed areas.",
+              "caption": "<p>Use opposite signs for displacement and positive magnitudes for distance.</p>",
+              "width": 484,
+              "height": 252
+            }
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "velocity_graphs-signed-areas-check",
+            "title": "Split the area where velocity changes sign",
+            "prompt": "<p>A velocity–time graph is a straight line from \\((0,6)\\) to \\((7,-8)\\) and crosses the time axis at \\(t=3\\,\\mathrm s\\). Find the displacement and distance over the whole interval.</p>",
+            "hint": "<p>Split at zero velocity. The two sides of the time axis contribute opposite signs only to displacement.</p>",
+            "solution": "<p>The left triangle gives positive displacement \\(9\\,\\mathrm m\\). The right triangle gives negative displacement \\(-16\\,\\mathrm m\\).</p><p>Add their signed values to find the displacement \\(-7\\,\\mathrm m\\).</p><p>Add their magnitudes to find the distance \\(25\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "displacement",
+                "label": "Displacement (m)",
+                "type": "number",
+                "expected": "-7"
+              },
+              {
+                "key": "distance",
+                "label": "Total distance (m)",
+                "type": "number",
+                "expected": "25",
+                "retry": [
+                  {
+                    "answer": "7",
+                    "feedback": "<p>The distance includes both directions of travel.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A zero total displacement is possible despite positive distance. Only a sign change in velocity indicates a reversal.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "velocity_graphs-signed-areas-second",
+            "title": "Split the area where velocity changes sign",
+            "prompt": "<p>A velocity–time graph is a straight line from \\((0,14)\\) to \\((15,-16)\\) and crosses the time axis at \\(t=7\\,\\mathrm s\\). Find the displacement and distance over the whole interval.</p>",
+            "hint": "<p>Split at zero velocity. The two sides of the time axis contribute opposite signs only to displacement.</p>",
+            "solution": "<p>The left triangle gives positive displacement \\(49\\,\\mathrm m\\). The right triangle gives negative displacement \\(-64\\,\\mathrm m\\).</p><p>Add their signed values to find the displacement \\(-15\\,\\mathrm m\\).</p><p>Add their magnitudes to find the distance \\(113\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "displacement",
+                "label": "Displacement (m)",
+                "type": "number",
+                "expected": "-15"
+              },
+              {
+                "key": "distance",
+                "label": "Total distance (m)",
+                "type": "number",
+                "expected": "113",
+                "retry": [
+                  {
+                    "answer": "15",
+                    "feedback": "<p>The distance includes both directions of travel.</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "missing-endpoint",
+        "title": "How can a known displacement give a missing speed?",
+        "label": "Work backward from an area",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>A stated displacement can fix an unknown height or time in a velocity graph. Label the segment endpoints before forming the equation.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write the signed trapezium area in terms of the unknown. If part lies below the time axis, keep the velocity signs.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "velocity_graphs-missing-endpoint-check",
+            "title": "Use a known area to recover a graph endpoint",
+            "prompt": "<p>A straight segment of a velocity–time graph begins at \\(3\\,\\mathrm{m\\,s^{-1}}\\) and lasts \\(6\\,\\mathrm s\\). The displacement on it is \\(39\\,\\mathrm m\\). Find the final velocity and acceleration.</p>",
+            "hint": "<p>Start with the area to find the unknown height, then use the slope.</p>",
+            "solution": "<p>Use the trapezium rule for this straight graph segment: \\(s=\\frac12(u+v)t\\).</p><p>Here the sum of the endpoint velocities is \\(13\\), so the final velocity is \\(10\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Divide the change in velocity by the elapsed time to get \\(\\frac{7}{6}\\,\\mathrm{m\\,s^{-2}}\\).</p>",
+            "fields": [
+              {
+                "key": "v",
+                "label": "Final velocity v (m s⁻¹)",
+                "type": "number",
+                "expected": "10"
+              },
+              {
+                "key": "a",
+                "label": "Acceleration a (m s⁻²)",
+                "type": "number",
+                "expected": "7/6"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A small area can mean a small height or a short duration. Use the given graph dimensions before solving.</p>"
+          }
+        ]
+      },
+      {
+        "id": "draw-the-stages",
+        "title": "How can I sketch motion with several stages?",
+        "label": "Connect changing gradients",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Start at the initial velocity. Mark each stage’s elapsed time, calculate the end velocity, and connect the points with the correct type of segment.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Uniform acceleration gives a sloping straight line. Constant velocity gives a horizontal line. Constant zero velocity is a horizontal line on the axis.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_m1_kin_velocity_graphs/three-stage-velocity.svg",
+              "alt": "Velocity rises from zero to 4 at t = 2, stays at 4 until t = 5, then falls to zero at t = 9.",
+              "caption": "<p>Each velocity stage contributes a separate area.</p>",
+              "width": 484,
+              "height": 252
+            }
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "velocity_graphs-draw-the-stages-check",
+            "title": "Translate a three-stage journey into areas",
+            "prompt": "<p>A dolly starts at rest and reaches \\(6\\,\\mathrm{m\\,s^{-1}}\\) in two seconds with uniform acceleration. It keeps that speed for \\(4\\,\\mathrm s\\) and then brakes uniformly to rest over \\(5\\,\\mathrm s\\). Find the total distance and the signed braking acceleration.</p>",
+            "hint": "<p>Break up the journey when the velocity graph changes gradient.</p>",
+            "solution": "<p>Draw a rising line, then a horizontal line, then a falling line. All three lie on or above the time axis.</p><p>Add the area of the first triangle \\(6\\,\\mathrm m\\), the rectangle \\(24\\,\\mathrm m\\) and the last triangle \\(15\\,\\mathrm m\\). This gives \\(45\\,\\mathrm m\\).</p><p>The last segment has velocity change \\(-6\\,\\mathrm{m\\,s^{-1}}\\) in \\(5\\,\\mathrm s\\), so its gradient is \\(- \\frac{6}{5}\\,\\mathrm{m\\,s^{-2}}\\).</p>",
+            "fields": [
+              {
+                "key": "distance",
+                "label": "Total distance (m)",
+                "type": "number",
+                "expected": "45"
+              },
+              {
+                "key": "acceleration",
+                "label": "Braking acceleration (m s⁻²)",
+                "type": "number",
+                "expected": "-6/5"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The next stage starts at the previous end time and normally at the previous velocity. A sudden jump needs explicit justification.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "velocity_graphs-draw-the-stages-second",
+            "title": "Translate a three-stage journey into areas",
+            "prompt": "<p>A dolly starts at rest and reaches \\(14\\,\\mathrm{m\\,s^{-1}}\\) in two seconds with uniform acceleration. It keeps that speed for \\(8\\,\\mathrm s\\) and then brakes uniformly to rest over \\(9\\,\\mathrm s\\). Find the total distance and the signed braking acceleration.</p>",
+            "hint": "<p>Break up the journey when the velocity graph changes gradient.</p>",
+            "solution": "<p>Draw a rising line, then a horizontal line, then a falling line. All three lie on or above the time axis.</p><p>Add the area of the first triangle \\(14\\,\\mathrm m\\), the rectangle \\(112\\,\\mathrm m\\) and the last triangle \\(63\\,\\mathrm m\\). This gives \\(189\\,\\mathrm m\\).</p><p>The last segment has velocity change \\(-14\\,\\mathrm{m\\,s^{-1}}\\) in \\(9\\,\\mathrm s\\), so its gradient is \\(- \\frac{14}{9}\\,\\mathrm{m\\,s^{-2}}\\).</p>",
+            "fields": [
+              {
+                "key": "distance",
+                "label": "Total distance (m)",
+                "type": "number",
+                "expected": "189"
+              },
+              {
+                "key": "acceleration",
+                "label": "Braking acceleration (m s⁻²)",
+                "type": "number",
+                "expected": "-14/9"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find acceleration from a velocity graph",
+        "question": "<p>A velocity–time graph has a straight line from \\((1,8)\\) to \\((4,2)\\). Time is in seconds and velocity in metres per second. Find its signed acceleration and decide whether the particle speeds up or slows down.</p>",
+        "solution": [
+          "<p>The acceleration is the slope. Divide the velocity change \\(-6\\,\\mathrm{m\\,s^{-1}}\\) by the duration \\(3\\,\\mathrm s\\).</p>",
+          "<p>The acceleration is \\(-2\\,\\mathrm{m\\,s^{-2}}\\).</p>",
+          "<p>Both velocities are positive and their magnitude drops. The particle slows down on this interval.</p>"
+        ]
+      },
+      {
+        "title": "Find the displacement from a trapezium",
+        "question": "<p>A velocity–time graph joins \\((0,2)\\) to \\((2,6)\\) with a straight line. Time is in seconds and velocity in metres per second. Find the displacement and distance over the interval.</p>",
+        "solution": [
+          "<p>The whole segment lies above the time axis, so its signed area is positive.</p>",
+          "<p>The perpendicular width is \\(2\\,\\mathrm s\\). Half the sum of the vertical sides, multiplied by this width, gives \\(8\\,\\mathrm m\\).</p>",
+          "<p>The particle does not reverse, so the distance and displacement have the same numerical value.</p>"
+        ]
+      },
+      {
+        "title": "Split the area where velocity changes sign",
+        "question": "<p>A velocity–time graph is a straight line from \\((0,4)\\) to \\((5,-6)\\) and crosses the time axis at \\(t=2\\,\\mathrm s\\). Find the displacement and distance over the whole interval.</p>",
+        "solution": [
+          "<p>The left triangle gives positive displacement \\(4\\,\\mathrm m\\). The right triangle gives negative displacement \\(-9\\,\\mathrm m\\).</p>",
+          "<p>Add their signed values to find the displacement \\(-5\\,\\mathrm m\\).</p>",
+          "<p>Add their magnitudes to find the distance \\(13\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Split the area where velocity changes sign",
+        "question": "<p>A velocity–time graph is a straight line from \\((0,8)\\) to \\((9,-10)\\) and crosses the time axis at \\(t=4\\,\\mathrm s\\). Find the displacement and distance over the whole interval.</p>",
+        "solution": [
+          "<p>The left triangle gives positive displacement \\(16\\,\\mathrm m\\). The right triangle gives negative displacement \\(-25\\,\\mathrm m\\).</p>",
+          "<p>Add their signed values to find the displacement \\(-9\\,\\mathrm m\\).</p>",
+          "<p>Add their magnitudes to find the distance \\(41\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a known area to recover a graph endpoint",
+        "question": "<p>A straight segment of a velocity–time graph begins at \\(2\\,\\mathrm{m\\,s^{-1}}\\) and lasts \\(5\\,\\mathrm s\\). The displacement on it is \\(25\\,\\mathrm m\\). Find the final velocity and acceleration.</p>",
+        "solution": [
+          "<p>Use the trapezium rule for this straight graph segment: \\(s=\\frac12(u+v)t\\).</p>",
+          "<p>Here the sum of the endpoint velocities is \\(10\\), so the final velocity is \\(8\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Divide the change in velocity by the elapsed time to get \\(\\frac{6}{5}\\,\\mathrm{m\\,s^{-2}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Translate a three-stage journey into areas",
+        "question": "<p>A dolly starts at rest and reaches \\(4\\,\\mathrm{m\\,s^{-1}}\\) in two seconds with uniform acceleration. It keeps that speed for \\(3\\,\\mathrm s\\) and then brakes uniformly to rest over \\(4\\,\\mathrm s\\). Find the total distance and the signed braking acceleration.</p>",
+        "solution": [
+          "<p>Draw a rising line, then a horizontal line, then a falling line. All three lie on or above the time axis.</p>",
+          "<p>Add the area of the first triangle \\(4\\,\\mathrm m\\), the rectangle \\(12\\,\\mathrm m\\) and the last triangle \\(8\\,\\mathrm m\\). This gives \\(24\\,\\mathrm m\\).</p>",
+          "<p>The last segment has velocity change \\(-4\\,\\mathrm{m\\,s^{-1}}\\) in \\(4\\,\\mathrm s\\), so its gradient is \\(-1\\,\\mathrm{m\\,s^{-2}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Translate a three-stage journey into areas",
+        "question": "<p>A dolly starts at rest and reaches \\(8\\,\\mathrm{m\\,s^{-1}}\\) in two seconds with uniform acceleration. It keeps that speed for \\(5\\,\\mathrm s\\) and then brakes uniformly to rest over \\(6\\,\\mathrm s\\). Find the total distance and the signed braking acceleration.</p>",
+        "solution": [
+          "<p>Draw a rising line, then a horizontal line, then a falling line. All three lie on or above the time axis.</p>",
+          "<p>Add the area of the first triangle \\(8\\,\\mathrm m\\), the rectangle \\(40\\,\\mathrm m\\) and the last triangle \\(24\\,\\mathrm m\\). This gives \\(72\\,\\mathrm m\\).</p>",
+          "<p>The last segment has velocity change \\(-8\\,\\mathrm{m\\,s^{-1}}\\) in \\(6\\,\\mathrm s\\), so its gradient is \\(- \\frac{4}{3}\\,\\mathrm{m\\,s^{-2}}\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Velocity–time graph",
+        "definition": "<p>A graph of signed velocity against time.</p>"
+      },
+      {
+        "term": "Acceleration",
+        "definition": "<p>Signed instantaneous rate of change of velocity.</p>"
+      },
+      {
+        "term": "Signed area",
+        "definition": "<p>Region above the time axis counts positively. Region below it counts negatively.</p>"
+      },
+      {
+        "term": "Reversal",
+        "definition": "<p>A change in direction, identified by a change in the sign of velocity.</p>"
+      },
+      {
+        "term": "Trapezium",
+        "definition": "<p>A shape whose area is half the sum of its parallel sides multiplied by their perpendicular separation.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When you see</th><th scope=\"col\">What to do</th></tr></thead><tbody><tr><th scope=\"row\">Gradient</th><td>\\(a=\\frac{\\Delta v}{\\Delta t}\\) on a straight segment.</td></tr><tr><th scope=\"row\">Area above and below</th><td>Subtract negative-region magnitude for displacement. Add magnitudes for distance.</td></tr><tr><th scope=\"row\">Velocity changes sign</th><td>Split at the time-axis crossing.</td></tr><tr><th scope=\"row\">Several stages</th><td>Set a time and velocity at each join before calculating areas.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A straight velocity graph changes from \\(-4\\,\\mathrm{m\\,s^{-1}}\\) to \\(8\\,\\mathrm{m\\,s^{-1}}\\) in six seconds. When does the particle reverse?</p><p><strong>Check</strong> The acceleration is \\(2\\,\\mathrm{m\\,s^{-2}}\\), so it reverses after \\(2\\,\\mathrm s\\).</p>",
+      "checks": "<ul><li>Negative acceleration on its own does not mean slowing down. Compare signs of velocity and acceleration.</li><li>Multiplying the final velocity by the entire time assumes a constant velocity. Use the mean height for the straight segment.</li></ul>",
+      "examTip": "<p>Label each axis. Say whether a computation is a gradient, a signed area or a sum of unsigned areas.</p>"
+    },
+    "related": [
+      {
+        "title": "Distance, displacement and position–time graphs",
+        "href": "/courses/maths4u-9709-m1/topics/orig_9709_m1_kin_motion"
+      },
+      {
+        "title": "Constant acceleration and vertical motion",
+        "href": "/courses/maths4u-9709-m1/topics/orig_9709_m1_kin_constant"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "velocity_graphs-read-acceleration-more",
+        "title": "Find acceleration from a velocity graph",
+        "prompt": "<p>A velocity–time graph has a straight line from \\((3,14)\\) to \\((8,4)\\). Time is in seconds and velocity in metres per second. Find its signed acceleration and decide whether the particle speeds up or slows down.</p>",
+        "hint": "<p>Use the gradient to find acceleration and compare velocity magnitudes to determine the speed trend.</p>",
+        "solution": "<p>The acceleration is the slope. Divide the velocity change \\(-10\\,\\mathrm{m\\,s^{-1}}\\) by the duration \\(5\\,\\mathrm s\\).</p><p>The acceleration is \\(-2\\,\\mathrm{m\\,s^{-2}}\\).</p><p>Both velocities are positive and their magnitude drops. The particle slows down on this interval.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Acceleration a (m s⁻²)",
+            "type": "number",
+            "expected": "-2"
+          },
+          {
+            "key": "trend",
+            "label": "Change in speed",
+            "type": "choice",
+            "expected": "slower",
+            "options": {
+              "faster": "Speeds up",
+              "slower": "Slows down",
+              "same": "Remains constant"
+            }
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "velocity_graphs-positive-area-more",
+        "title": "Find the displacement from a trapezium",
+        "prompt": "<p>A velocity–time graph joins \\((0,4)\\) to \\((4,12)\\) with a straight line. Time is in seconds and velocity in metres per second. Find the displacement and distance over the interval.</p>",
+        "hint": "<p>Calculate the area between the whole segment and the time axis.</p>",
+        "solution": "<p>The whole segment lies above the time axis, so its signed area is positive.</p><p>The perpendicular width is \\(4\\,\\mathrm s\\). Half the sum of the vertical sides, multiplied by this width, gives \\(32\\,\\mathrm m\\).</p><p>The particle does not reverse, so the distance and displacement have the same numerical value.</p>",
+        "fields": [
+          {
+            "key": "displacement",
+            "label": "Displacement (m)",
+            "type": "number",
+            "expected": "32"
+          },
+          {
+            "key": "distance",
+            "label": "Distance travelled (m)",
+            "type": "number",
+            "expected": "32"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "velocity_graphs-signed-areas-more",
+        "title": "Split the area where velocity changes sign",
+        "prompt": "<p>A velocity–time graph is a straight line from \\((0,16)\\) to \\((17,-18)\\) and crosses the time axis at \\(t=8\\,\\mathrm s\\). Find the displacement and distance over the whole interval.</p>",
+        "hint": "<p>Split at zero velocity. The two sides of the time axis contribute opposite signs only to displacement.</p>",
+        "solution": "<p>The left triangle gives positive displacement \\(64\\,\\mathrm m\\). The right triangle gives negative displacement \\(-81\\,\\mathrm m\\).</p><p>Add their signed values to find the displacement \\(-17\\,\\mathrm m\\).</p><p>Add their magnitudes to find the distance \\(145\\,\\mathrm m\\).</p>",
+        "fields": [
+          {
+            "key": "displacement",
+            "label": "Displacement (m)",
+            "type": "number",
+            "expected": "-17"
+          },
+          {
+            "key": "distance",
+            "label": "Total distance (m)",
+            "type": "number",
+            "expected": "145",
+            "retry": [
+              {
+                "answer": "17",
+                "feedback": "<p>The distance includes both directions of travel.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "velocity_graphs-missing-endpoint-more",
+        "title": "Use a known area to recover a graph endpoint",
+        "prompt": "<p>A straight segment of a velocity–time graph begins at \\(4\\,\\mathrm{m\\,s^{-1}}\\) and lasts \\(7\\,\\mathrm s\\). The displacement on it is \\(56\\,\\mathrm m\\). Find the final velocity and acceleration.</p>",
+        "hint": "<p>Start with the area to find the unknown height, then use the slope.</p>",
+        "solution": "<p>Use the trapezium rule for this straight graph segment: \\(s=\\frac12(u+v)t\\).</p><p>Here the sum of the endpoint velocities is \\(16\\), so the final velocity is \\(12\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Divide the change in velocity by the elapsed time to get \\(\\frac{8}{7}\\,\\mathrm{m\\,s^{-2}}\\).</p>",
+        "fields": [
+          {
+            "key": "v",
+            "label": "Final velocity v (m s⁻¹)",
+            "type": "number",
+            "expected": "12"
+          },
+          {
+            "key": "a",
+            "label": "Acceleration a (m s⁻²)",
+            "type": "number",
+            "expected": "8/7"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "velocity_graphs-draw-the-stages-more",
+        "title": "Translate a three-stage journey into areas",
+        "prompt": "<p>A dolly starts at rest and reaches \\(16\\,\\mathrm{m\\,s^{-1}}\\) in two seconds with uniform acceleration. It keeps that speed for \\(9\\,\\mathrm s\\) and then brakes uniformly to rest over \\(10\\,\\mathrm s\\). Find the total distance and the signed braking acceleration.</p>",
+        "hint": "<p>Break up the journey when the velocity graph changes gradient.</p>",
+        "solution": "<p>Draw a rising line, then a horizontal line, then a falling line. All three lie on or above the time axis.</p><p>Add the area of the first triangle \\(16\\,\\mathrm m\\), the rectangle \\(144\\,\\mathrm m\\) and the last triangle \\(80\\,\\mathrm m\\). This gives \\(240\\,\\mathrm m\\).</p><p>The last segment has velocity change \\(-16\\,\\mathrm{m\\,s^{-1}}\\) in \\(10\\,\\mathrm s\\), so its gradient is \\(- \\frac{8}{5}\\,\\mathrm{m\\,s^{-2}}\\).</p>",
+        "fields": [
+          {
+            "key": "distance",
+            "label": "Total distance (m)",
+            "type": "number",
+            "expected": "240"
+          },
+          {
+            "key": "acceleration",
+            "label": "Braking acceleration (m s⁻²)",
+            "type": "number",
+            "expected": "-8/5"
+          }
+        ]
+      }
+    ]
+  },
+  "orig_9709_m1_kin_constant": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose a constant-acceleration equation, use signed quantities and calculate highest points and impact conditions in vertical motion.",
+    "sections": [
+      {
+        "id": "start-and-end-velocities",
+        "title": "When can I use the constant-acceleration formulae?",
+        "label": "Check that acceleration is uniform",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Write the five quantities and choose a positive direction. These equations apply to a single interval of uniform acceleration.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The velocity–time graph is a straight line, so \\(v=u+at\\) from the gradient and \\(s=\\frac12(u+v)t\\) from the signed area.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "constant-start-and-end-velocities-check",
+            "title": "Connect initial and final velocities",
+            "prompt": "<p>A trolley starts with velocity \\(4\\,\\mathrm{m\\,s^{-1}}\\) and accelerates uniformly at \\(4\\,\\mathrm{m\\,s^{-2}}\\) for \\(5\\,\\mathrm s\\). Find the final velocity and displacement.</p>",
+            "hint": "<p>Choose v = u + at for the final velocity, then use a displacement equation.</p>",
+            "solution": "<p>The acceleration is constant. Use \\(v=u+at\\) to find \\(24\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The velocity rises linearly. Its average is \\(14\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Multiply the average velocity by the duration for a displacement of \\(70\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "v",
+                "label": "Final velocity v (m s⁻¹)",
+                "type": "number",
+                "expected": "24"
+              },
+              {
+                "key": "s",
+                "label": "Displacement s (m)",
+                "type": "number",
+                "expected": "70"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Velocity and displacement need their signs. The time is the elapsed duration of the selected phase.</p>"
+          }
+        ]
+      },
+      {
+        "id": "omit-final-velocity",
+        "title": "Which formula avoids the unknown final velocity?",
+        "label": "Use initial velocity and elapsed time",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>When the final velocity is not given, substitute the linear velocity relation into the signed area formula.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(s=\\frac12(u+u+at)t=ut+\\frac12at^2\\). The terms are the constant-velocity rectangle and the extra signed triangular contribution.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "constant-omit-final-velocity-check",
+            "title": "Use displacement without knowing the final velocity",
+            "prompt": "<p>A particle moves in the positive direction. From an initial velocity of \\(3\\,\\mathrm{m\\,s^{-1}}\\) it accelerates at a constant \\(4\\,\\mathrm{m\\,s^{-2}}\\) for \\(4\\,\\mathrm s\\). Find the separate displacement terms due to the initial velocity and the acceleration, then the total.</p>",
+            "hint": "<p>Use the equation for displacement that omits v.</p>",
+            "solution": "<p>\\(3\\,\\mathrm{m\\,s^{-1}}\\) maintained for the whole interval would give \\(12\\,\\mathrm m\\).</p><p>The increasing velocity adds the triangular area \\(\\frac12at^2\\), which is \\(32\\,\\mathrm m\\).</p><p>Together these give \\(44\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "initial_term",
+                "label": "Initial velocity contribution (m)",
+                "type": "number",
+                "expected": "12"
+              },
+              {
+                "key": "accel_term",
+                "label": "Acceleration contribution (m)",
+                "type": "number",
+                "expected": "32"
+              },
+              {
+                "key": "total",
+                "label": "Total displacement (m)",
+                "type": "number",
+                "expected": "44"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The whole product \\(\\frac12at^2\\) is a displacement contribution. Only the time is squared.</p>"
+          }
+        ]
+      },
+      {
+        "id": "omit-time",
+        "title": "Which formula avoids time?",
+        "label": "Use the squared-velocity relation",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A distance marker gives an endpoint without specifying when it occurs. Eliminate time when \\(u,v,a,s\\) contain the information you need.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(v^2=u^2+2as\\). You can obtain it by combining \\(v-u=at\\) with the trapezium displacement formula. Alternatively \\(s=vt-\\frac12at^2\\) omits the initial velocity.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "constant-omit-time-check",
+            "title": "Eliminate time in a braking calculation",
+            "prompt": "<p>On a straight track, a sled slows uniformly from \\(13\\,\\mathrm{m\\,s^{-1}}\\) to \\(6\\,\\mathrm{m\\,s^{-1}}\\) while moving \\(4\\,\\mathrm m\\) in the same positive direction. Find its signed acceleration and time spent slowing.</p>",
+            "hint": "<p>Use the equation with squared velocities to remove time first.</p>",
+            "solution": "<p>Both velocities and the displacement are positive. Since no time is given, use \\(v^2=u^2+2as\\).</p><p>Rearranging gives \\(- \\frac{133}{8}\\,\\mathrm{m\\,s^{-2}}\\). The negative sign is consistent with the falling positive velocity.</p><p>Use \\(v=u+at\\) to obtain a duration of \\(\\frac{8}{19}\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Acceleration a (m s⁻²)",
+                "type": "number",
+                "expected": "-133/8",
+                "retry": [
+                  {
+                    "answer": "133/8",
+                    "feedback": "<p>The velocity is positive and decreases. The acceleration must be negative.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "time",
+                "label": "Duration (s)",
+                "type": "number",
+                "expected": "8/19"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>After solving for a squared velocity, choose a sign using the physical direction or a different motion equation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "constant-omit-time-second",
+            "title": "Eliminate time in a braking calculation",
+            "prompt": "<p>On a straight track, a sled slows uniformly from \\(21\\,\\mathrm{m\\,s^{-1}}\\) to \\(10\\,\\mathrm{m\\,s^{-1}}\\) while moving \\(8\\,\\mathrm m\\) in the same positive direction. Find its signed acceleration and time spent slowing.</p>",
+            "hint": "<p>Use the equation with squared velocities to remove time first.</p>",
+            "solution": "<p>Both velocities and the displacement are positive. Since no time is given, use \\(v^2=u^2+2as\\).</p><p>Rearranging gives \\(- \\frac{341}{16}\\,\\mathrm{m\\,s^{-2}}\\). The negative sign is consistent with the falling positive velocity.</p><p>Use \\(v=u+at\\) to obtain a duration of \\(\\frac{16}{31}\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Acceleration a (m s⁻²)",
+                "type": "number",
+                "expected": "-341/16",
+                "retry": [
+                  {
+                    "answer": "341/16",
+                    "feedback": "<p>The velocity is positive and decreases. The acceleration must be negative.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "time",
+                "label": "Duration (s)",
+                "type": "number",
+                "expected": "16/31"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vertical-high-point",
+        "title": "What is zero at the highest point?",
+        "label": "Use negative acceleration when up is positive",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>For free vertical motion with up positive, take acceleration \\(-g\\). This is the same while the object rises, stops momentarily and falls.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>At the highest point in the flight, \\(v=0\\) and \\(a=-g\\). Add the launch height to the signed rise to get height above the ground.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "constant-vertical-high-point-check",
+            "title": "Find the highest point above the ground",
+            "prompt": "<p>A marker is thrown vertically upwards from a height of \\(5\\,\\mathrm m\\) with speed \\(15\\,\\mathrm{m\\,s^{-1}}\\). Take the upward direction as positive. Throughout this motion, ignore air resistance and take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time and height above the ground at the highest point.</p>",
+            "hint": "<p>Set v = 0 at the top. Height above ground includes the starting height.</p>",
+            "solution": "<p>At the highest point the velocity is zero. Acceleration is still \\(-10\\,\\mathrm{m\\,s^{-2}}\\).</p><p>Put \\(v=0\\) in \\(v=15-10t\\) to obtain \\(t=\\frac{3}{2}\\,\\mathrm s\\).</p><p>The rise is \\(\\frac{45}{4}\\,\\mathrm m\\). Add the launch height for \\(\\frac{65}{4}\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Time to highest point (s)",
+                "type": "number",
+                "expected": "3/2"
+              },
+              {
+                "key": "height",
+                "label": "Maximum height above ground (m)",
+                "type": "number",
+                "expected": "65/4",
+                "retry": [
+                  {
+                    "answer": "45/4",
+                    "feedback": "<p>This is the rise above launch level. Add the starting height.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Velocity is momentarily zero at the top. Gravity still acts, so acceleration remains downwards.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The chapter uses \\(10\\,\\mathrm{m\\,s^{-2}}\\) for \\(g\\) where stated. If a question gives another value, use the one stated.</p>"
+          }
+        ]
+      },
+      {
+        "id": "vertical-impact",
+        "title": "How do I choose a time from a vertical-motion quadratic?",
+        "label": "Check height, time and direction",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Choose an origin such as ground level. Use initial height plus displacement and stop the equation at the first impact unless a later stage is specified.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For launch height \\(h_0\\) and upward positive, height is \\(h=h_0+ut-\\frac12gt^2\\). At ground impact solve \\(h=0\\) and keep times belonging to the modelled flight.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_m1_kin_constant/platform-height.svg",
+              "alt": "The model particle starts at height 8 m, reaches a maximum at 0.6 s, then lands at t = 2 s.",
+              "caption": "<p>The time at the top is set by a horizontal tangent.</p>",
+              "width": 484,
+              "height": 252
+            }
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "constant-vertical-impact-check",
+            "title": "Use the positive time and signed impact velocity",
+            "prompt": "<p>A particle is thrown vertically upwards at \\(8\\,\\mathrm{m\\,s^{-1}}\\) from a platform \\(21\\,\\mathrm m\\) above the ground. Use upward positive. Throughout this motion, ignore air resistance and take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Determine its impact time and signed velocity just before striking the ground.</p>",
+            "hint": "<p>Use height zero or displacement equal to the negative launch height. Check every candidate time.</p>",
+            "solution": "<p>For height above ground, \\(h=- 5 t^{2} + 8 t + 21\\). Set height equal to zero at impact.</p><p>The roots are \\(3\\) and \\(- \\frac{7}{5}\\). Only the positive one lies in the time after launch.</p><p>Evaluate \\(v=8 - 10 t\\) at the accepted root to get \\(-22\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Positive impact time (s)",
+                "type": "number",
+                "expected": "3",
+                "retry": [
+                  {
+                    "answer": "-7/5",
+                    "feedback": "<p>A negative root is a time before the stated launch.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "v",
+                "label": "Signed impact velocity v (m s⁻¹)",
+                "type": "number",
+                "expected": "-22",
+                "retry": [
+                  {
+                    "answer": "22",
+                    "feedback": "<p>This is the speed. The signed velocity is downwards.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Ground impact does not mean zero velocity. If the answer asks for velocity, give the sign as well as the magnitude.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "constant-vertical-impact-second",
+            "title": "Use the positive time and signed impact velocity",
+            "prompt": "<p>A particle is thrown vertically upwards at \\(14\\,\\mathrm{m\\,s^{-1}}\\) from a platform \\(147\\,\\mathrm m\\) above the ground. Use upward positive. Throughout this motion, ignore air resistance and take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Determine its impact time and signed velocity just before striking the ground.</p>",
+            "hint": "<p>Use height zero or displacement equal to the negative launch height. Check every candidate time.</p>",
+            "solution": "<p>For height above ground, \\(h=- 5 t^{2} + 14 t + 147\\). Set height equal to zero at impact.</p><p>The roots are \\(7\\) and \\(- \\frac{21}{5}\\). Only the positive one lies in the time after launch.</p><p>Evaluate \\(v=14 - 10 t\\) at the accepted root to get \\(-56\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Positive impact time (s)",
+                "type": "number",
+                "expected": "7",
+                "retry": [
+                  {
+                    "answer": "-21/5",
+                    "feedback": "<p>A negative root is a time before the stated launch.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "v",
+                "label": "Signed impact velocity v (m s⁻¹)",
+                "type": "number",
+                "expected": "-56",
+                "retry": [
+                  {
+                    "answer": "56",
+                    "feedback": "<p>This is the speed. The signed velocity is downwards.</p>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Connect initial and final velocities",
+        "question": "<p>A trolley starts with velocity \\(3\\,\\mathrm{m\\,s^{-1}}\\) and accelerates uniformly at \\(2\\,\\mathrm{m\\,s^{-2}}\\) for \\(4\\,\\mathrm s\\). Find the final velocity and displacement.</p>",
+        "solution": [
+          "<p>The acceleration is constant. Use \\(v=u+at\\) to find \\(11\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>The velocity rises linearly. Its average is \\(7\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Multiply the average velocity by the duration for a displacement of \\(28\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Use displacement without knowing the final velocity",
+        "question": "<p>A particle moves in the positive direction. From an initial velocity of \\(2\\,\\mathrm{m\\,s^{-1}}\\) it accelerates at a constant \\(2\\,\\mathrm{m\\,s^{-2}}\\) for \\(3\\,\\mathrm s\\). Find the separate displacement terms due to the initial velocity and the acceleration, then the total.</p>",
+        "solution": [
+          "<p>\\(2\\,\\mathrm{m\\,s^{-1}}\\) maintained for the whole interval would give \\(6\\,\\mathrm m\\).</p>",
+          "<p>The increasing velocity adds the triangular area \\(\\frac12at^2\\), which is \\(9\\,\\mathrm m\\).</p>",
+          "<p>Together these give \\(15\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Eliminate time in a braking calculation",
+        "question": "<p>On a straight track, a sled slows uniformly from \\(11\\,\\mathrm{m\\,s^{-1}}\\) to \\(5\\,\\mathrm{m\\,s^{-1}}\\) while moving \\(3\\,\\mathrm m\\) in the same positive direction. Find its signed acceleration and time spent slowing.</p>",
+        "solution": [
+          "<p>Both velocities and the displacement are positive. Since no time is given, use \\(v^2=u^2+2as\\).</p>",
+          "<p>Rearranging gives \\(-16\\,\\mathrm{m\\,s^{-2}}\\). The negative sign is consistent with the falling positive velocity.</p>",
+          "<p>Use \\(v=u+at\\) to obtain a duration of \\(\\frac{3}{8}\\,\\mathrm s\\).</p>"
+        ]
+      },
+      {
+        "title": "Eliminate time in a braking calculation",
+        "question": "<p>On a straight track, a sled slows uniformly from \\(15\\,\\mathrm{m\\,s^{-1}}\\) to \\(7\\,\\mathrm{m\\,s^{-1}}\\) while moving \\(5\\,\\mathrm m\\) in the same positive direction. Find its signed acceleration and time spent slowing.</p>",
+        "solution": [
+          "<p>Both velocities and the displacement are positive. Since no time is given, use \\(v^2=u^2+2as\\).</p>",
+          "<p>Rearranging gives \\(- \\frac{88}{5}\\,\\mathrm{m\\,s^{-2}}\\). The negative sign is consistent with the falling positive velocity.</p>",
+          "<p>Use \\(v=u+at\\) to obtain a duration of \\(\\frac{5}{11}\\,\\mathrm s\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the highest point above the ground",
+        "question": "<p>A marker is thrown vertically upwards from a height of \\(3\\,\\mathrm m\\) with speed \\(12\\,\\mathrm{m\\,s^{-1}}\\). Take the upward direction as positive. Throughout this motion, ignore air resistance and take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time and height above the ground at the highest point.</p>",
+        "solution": [
+          "<p>At the highest point the velocity is zero. Acceleration is still \\(-10\\,\\mathrm{m\\,s^{-2}}\\).</p>",
+          "<p>Put \\(v=0\\) in \\(v=12-10t\\) to obtain \\(t=\\frac{6}{5}\\,\\mathrm s\\).</p>",
+          "<p>The rise is \\(\\frac{36}{5}\\,\\mathrm m\\). Add the launch height for \\(\\frac{51}{5}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the positive time and signed impact velocity",
+        "question": "<p>A particle is thrown vertically upwards at \\(6\\,\\mathrm{m\\,s^{-1}}\\) from a platform \\(8\\,\\mathrm m\\) above the ground. Use upward positive. Throughout this motion, ignore air resistance and take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Determine its impact time and signed velocity just before striking the ground.</p>",
+        "solution": [
+          "<p>For height above ground, \\(h=- 5 t^{2} + 6 t + 8\\). Set height equal to zero at impact.</p>",
+          "<p>The roots are \\(2\\) and \\(- \\frac{4}{5}\\). Only the positive one lies in the time after launch.</p>",
+          "<p>Evaluate \\(v=6 - 10 t\\) at the accepted root to get \\(-14\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the positive time and signed impact velocity",
+        "question": "<p>A particle is thrown vertically upwards at \\(12\\,\\mathrm{m\\,s^{-1}}\\) from a platform \\(32\\,\\mathrm m\\) above the ground. Use upward positive. Throughout this motion, ignore air resistance and take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Determine its impact time and signed velocity just before striking the ground.</p>",
+        "solution": [
+          "<p>For height above ground, \\(h=- 5 t^{2} + 12 t + 32\\). Set height equal to zero at impact.</p>",
+          "<p>The roots are \\(4\\) and \\(- \\frac{8}{5}\\). Only the positive one lies in the time after launch.</p>",
+          "<p>Evaluate \\(v=12 - 10 t\\) at the accepted root to get \\(-28\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "u",
+        "definition": "<p>Initial signed velocity for the interval.</p>"
+      },
+      {
+        "term": "v",
+        "definition": "<p>Final signed velocity for the interval.</p>"
+      },
+      {
+        "term": "s",
+        "definition": "<p>Signed displacement over the interval.</p>"
+      },
+      {
+        "term": "a",
+        "definition": "<p>Signed acceleration, constant over the interval where these formulae apply.</p>"
+      },
+      {
+        "term": "t",
+        "definition": "<p>Time elapsed in that interval.</p>"
+      },
+      {
+        "term": "g",
+        "definition": "<p>Positive magnitude of free-fall acceleration, acting downwards.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When you see</th><th scope=\"col\">What to do</th></tr></thead><tbody><tr><th scope=\"row\">Time and velocities</th><td>\\(v=u+at\\)</td></tr><tr><th scope=\"row\">Displacement without final velocity</th><td>\\(s=ut+\\frac12at^2\\)</td></tr><tr><th scope=\"row\">Displacement without time</th><td>\\(v^2=u^2+2as\\)</td></tr><tr><th scope=\"row\">Vertical motion</th><td>Up positive gives \\(a=-g\\). The highest point has \\(v=0\\).</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A particle thrown vertically upwards at \\(12\\,\\mathrm{m\\,s^{-1}}\\) has \\(g=10\\). Find the time to the highest point.</p><p><strong>Check</strong> \\(v=0\\) gives \\(\\frac{6}{5}\\,\\mathrm s\\).</p>",
+      "checks": "<ul><li>Velocity and displacement need their signs. The time is the elapsed duration of the selected phase.</li><li>The whole product \\(\\frac12at^2\\) is a displacement contribution. Only the time is squared.</li></ul>",
+      "examTip": "<p>State the positive direction, use the given value of g and check that accepted times are in the stated flight interval.</p>"
+    },
+    "related": [
+      {
+        "title": "Velocity–time graphs",
+        "href": "/courses/maths4u-9709-m1/topics/orig_9709_m1_kin_velocity_graphs"
+      },
+      {
+        "title": "Variable acceleration",
+        "href": "/courses/maths4u-9709-m1/topics/orig_9709_m1_kin_variable"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "constant-start-and-end-velocities-more",
+        "title": "Connect initial and final velocities",
+        "prompt": "<p>A trolley starts with velocity \\(5\\,\\mathrm{m\\,s^{-1}}\\) and accelerates uniformly at \\(6\\,\\mathrm{m\\,s^{-2}}\\) for \\(6\\,\\mathrm s\\). Find the final velocity and displacement.</p>",
+        "hint": "<p>Choose v = u + at for the final velocity, then use a displacement equation.</p>",
+        "solution": "<p>The acceleration is constant. Use \\(v=u+at\\) to find \\(41\\,\\mathrm{m\\,s^{-1}}\\).</p><p>The velocity rises linearly. Its average is \\(23\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Multiply the average velocity by the duration for a displacement of \\(138\\,\\mathrm m\\).</p>",
+        "fields": [
+          {
+            "key": "v",
+            "label": "Final velocity v (m s⁻¹)",
+            "type": "number",
+            "expected": "41"
+          },
+          {
+            "key": "s",
+            "label": "Displacement s (m)",
+            "type": "number",
+            "expected": "138"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "constant-omit-final-velocity-more",
+        "title": "Use displacement without knowing the final velocity",
+        "prompt": "<p>A particle moves in the positive direction. From an initial velocity of \\(4\\,\\mathrm{m\\,s^{-1}}\\) it accelerates at a constant \\(6\\,\\mathrm{m\\,s^{-2}}\\) for \\(5\\,\\mathrm s\\). Find the separate displacement terms due to the initial velocity and the acceleration, then the total.</p>",
+        "hint": "<p>Use the equation for displacement that omits v.</p>",
+        "solution": "<p>\\(4\\,\\mathrm{m\\,s^{-1}}\\) maintained for the whole interval would give \\(20\\,\\mathrm m\\).</p><p>The increasing velocity adds the triangular area \\(\\frac12at^2\\), which is \\(75\\,\\mathrm m\\).</p><p>Together these give \\(95\\,\\mathrm m\\).</p>",
+        "fields": [
+          {
+            "key": "initial_term",
+            "label": "Initial velocity contribution (m)",
+            "type": "number",
+            "expected": "20"
+          },
+          {
+            "key": "accel_term",
+            "label": "Acceleration contribution (m)",
+            "type": "number",
+            "expected": "75"
+          },
+          {
+            "key": "total",
+            "label": "Total displacement (m)",
+            "type": "number",
+            "expected": "95"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "constant-omit-time-more",
+        "title": "Eliminate time in a braking calculation",
+        "prompt": "<p>On a straight track, a sled slows uniformly from \\(23\\,\\mathrm{m\\,s^{-1}}\\) to \\(11\\,\\mathrm{m\\,s^{-1}}\\) while moving \\(9\\,\\mathrm m\\) in the same positive direction. Find its signed acceleration and time spent slowing.</p>",
+        "hint": "<p>Use the equation with squared velocities to remove time first.</p>",
+        "solution": "<p>Both velocities and the displacement are positive. Since no time is given, use \\(v^2=u^2+2as\\).</p><p>Rearranging gives \\(- \\frac{68}{3}\\,\\mathrm{m\\,s^{-2}}\\). The negative sign is consistent with the falling positive velocity.</p><p>Use \\(v=u+at\\) to obtain a duration of \\(\\frac{9}{17}\\,\\mathrm s\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Acceleration a (m s⁻²)",
+            "type": "number",
+            "expected": "-68/3",
+            "retry": [
+              {
+                "answer": "68/3",
+                "feedback": "<p>The velocity is positive and decreases. The acceleration must be negative.</p>"
+              }
+            ]
+          },
+          {
+            "key": "time",
+            "label": "Duration (s)",
+            "type": "number",
+            "expected": "9/17"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "constant-vertical-high-point-more",
+        "title": "Find the highest point above the ground",
+        "prompt": "<p>A marker is thrown vertically upwards from a height of \\(7\\,\\mathrm m\\) with speed \\(18\\,\\mathrm{m\\,s^{-1}}\\). Take the upward direction as positive. Throughout this motion, ignore air resistance and take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the time and height above the ground at the highest point.</p>",
+        "hint": "<p>Set v = 0 at the top. Height above ground includes the starting height.</p>",
+        "solution": "<p>At the highest point the velocity is zero. Acceleration is still \\(-10\\,\\mathrm{m\\,s^{-2}}\\).</p><p>Put \\(v=0\\) in \\(v=18-10t\\) to obtain \\(t=\\frac{9}{5}\\,\\mathrm s\\).</p><p>The rise is \\(\\frac{81}{5}\\,\\mathrm m\\). Add the launch height for \\(\\frac{116}{5}\\,\\mathrm m\\).</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Time to highest point (s)",
+            "type": "number",
+            "expected": "9/5"
+          },
+          {
+            "key": "height",
+            "label": "Maximum height above ground (m)",
+            "type": "number",
+            "expected": "116/5",
+            "retry": [
+              {
+                "answer": "81/5",
+                "feedback": "<p>This is the rise above launch level. Add the starting height.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "constant-vertical-impact-more",
+        "title": "Use the positive time and signed impact velocity",
+        "prompt": "<p>A particle is thrown vertically upwards at \\(13\\,\\mathrm{m\\,s^{-1}}\\) from a platform \\(216\\,\\mathrm m\\) above the ground. Use upward positive. Throughout this motion, ignore air resistance and take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Determine its impact time and signed velocity just before striking the ground.</p>",
+        "hint": "<p>Use height zero or displacement equal to the negative launch height. Check every candidate time.</p>",
+        "solution": "<p>For height above ground, \\(h=- 5 t^{2} + 13 t + 216\\). Set height equal to zero at impact.</p><p>The roots are \\(8\\) and \\(- \\frac{27}{5}\\). Only the positive one lies in the time after launch.</p><p>Evaluate \\(v=13 - 10 t\\) at the accepted root to get \\(-67\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Positive impact time (s)",
+            "type": "number",
+            "expected": "8",
+            "retry": [
+              {
+                "answer": "-27/5",
+                "feedback": "<p>A negative root is a time before the stated launch.</p>"
+              }
+            ]
+          },
+          {
+            "key": "v",
+            "label": "Signed impact velocity v (m s⁻¹)",
+            "type": "number",
+            "expected": "-67",
+            "retry": [
+              {
+                "answer": "67",
+                "feedback": "<p>This is the speed. The signed velocity is downwards.</p>"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "orig_9709_m1_kin_variable": {
+    "updatedOn": "2026-11-21",
+    "description": "Differentiate and integrate position, velocity and acceleration. Use initial conditions and split distance at reversals.",
+    "sections": [
+      {
+        "id": "differentiate-position",
+        "title": "How do I get velocity and acceleration from position?",
+        "label": "Differentiate in order",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Differentiate with respect to time to move from position to velocity and then from velocity to acceleration.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(v=\\frac{\\mathrm ds}{\\mathrm dt}\\), \\(a=\\frac{\\mathrm dv}{\\mathrm dt}\\) and \\(a=\\frac{\\mathrm d^2s}{\\mathrm dt^2}\\). Evaluate only after forming the derivative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "variable-differentiate-position-check",
+            "title": "Differentiate a position function twice",
+            "prompt": "<p>A particle has position \\(s=3 t^{3} - 4 t^{2} + 6\\) metres at time \\(t\\) seconds. Find its velocity and acceleration at \\(t=2\\,\\mathrm s\\).</p>",
+            "hint": "<p>Differentiate with respect to t before substituting the time.</p>",
+            "solution": "<p>Differentiate the position function with respect to time: \\(v=9 t^{2} - 8 t\\).</p><p>Differentiate again to obtain \\(a=18 t - 8\\).</p><p>Substitute the requested time into both functions. The answers are \\(20\\,\\mathrm{m\\,s^{-1}}\\) and \\(28\\,\\mathrm{m\\,s^{-2}}\\).</p>",
+            "fields": [
+              {
+                "key": "v",
+                "label": "Velocity v (m s⁻¹)",
+                "type": "number",
+                "expected": "20"
+              },
+              {
+                "key": "a",
+                "label": "Acceleration a (m s⁻²)",
+                "type": "number",
+                "expected": "28"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Substituting the time into position before differentiating replaces the function with a number.</p>"
+          }
+        ]
+      },
+      {
+        "id": "recover-velocity",
+        "title": "What happens to the constant when I integrate acceleration?",
+        "label": "Use a velocity condition",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>An acceleration function only tells you how velocity changes. One known velocity fixes the remaining additive constant.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Integrate first to get the velocity family. Substitute the known time and velocity to solve for the constant.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "variable-recover-velocity-check",
+            "title": "Determine an integration constant from a known velocity",
+            "prompt": "<p>A particle has acceleration \\(a=6 t - 4\\) metres per second squared at time \\(t\\) seconds. Its velocity is \\(7\\,\\mathrm{m\\,s^{-1}}\\) at \\(t=3\\,\\mathrm s\\). Find the constant \\(C\\) in \\(v=C + 3 t^{2} - 4 t\\) and the velocity at \\(t=5\\,\\mathrm s\\).</p>",
+            "hint": "<p>The velocity at a non-zero time is not generally the constant of integration.</p>",
+            "solution": "<p>Integrate the acceleration to obtain \\(v=C + 3 t^{2} - 4 t\\).</p><p>Use the observed velocity and its time. This gives \\(C=-8\\).</p><p>With the constant included, the requested velocity is \\(47\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "c",
+                "label": "Constant C",
+                "type": "number",
+                "expected": "-8"
+              },
+              {
+                "key": "v",
+                "label": "Requested velocity v (m s⁻¹)",
+                "type": "number",
+                "expected": "47"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A condition at a non-zero time has contributions from the antiderivative as well as the constant.</p>"
+          }
+        ]
+      },
+      {
+        "id": "recover-position",
+        "title": "How do I get position and displacement from velocity?",
+        "label": "Use the initial position",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Integrate velocity to find position. If starting position is given, use it to fix the integration constant.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For displacement over an interval, subtract the two positions or integrate velocity directly with definite limits. If you started from acceleration, use a new constant on the second integration.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "variable-recover-position-check",
+            "title": "Keep initial position out of displacement",
+            "prompt": "<p>The velocity of a motion sensor carriage is \\(v=4 t^{2} + 3\\) metres per second and its position at \\(t=0\\) is \\(5\\,\\mathrm m\\). Find its position and its displacement from the start at \\(t=3\\,\\mathrm s\\).</p>",
+            "hint": "<p>The position needs an initial reference. A change of position is independent of that reference.</p>",
+            "solution": "<p>Integrate velocity and use the initial position to get \\(s=\\frac{4 t^{3}}{3} + 3 t + 5\\).</p><p>Substitute the requested time to find the position \\(50\\,\\mathrm m\\).</p><p>Subtract the initial position for the displacement \\(45\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "position",
+                "label": "Position (m)",
+                "type": "number",
+                "expected": "50"
+              },
+              {
+                "key": "displacement",
+                "label": "Displacement from start (m)",
+                "type": "number",
+                "expected": "45"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>“Starts from rest” gives an initial velocity of zero. It does not tell you the initial position with respect to a given origin.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "variable-recover-position-second",
+            "title": "Keep initial position out of displacement",
+            "prompt": "<p>The velocity of a motion sensor carriage is \\(v=8 t^{2} + 7\\) metres per second and its position at \\(t=0\\) is \\(13\\,\\mathrm m\\). Find its position and its displacement from the start at \\(t=7\\,\\mathrm s\\).</p>",
+            "hint": "<p>The position needs an initial reference. A change of position is independent of that reference.</p>",
+            "solution": "<p>Integrate velocity and use the initial position to get \\(s=\\frac{8 t^{3}}{3} + 7 t + 13\\).</p><p>Substitute the requested time to find the position \\(\\frac{2930}{3}\\,\\mathrm m\\).</p><p>Subtract the initial position for the displacement \\(\\frac{2891}{3}\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "position",
+                "label": "Position (m)",
+                "type": "number",
+                "expected": "2930/3"
+              },
+              {
+                "key": "displacement",
+                "label": "Displacement from start (m)",
+                "type": "number",
+                "expected": "2891/3"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "integrate-pieces",
+        "title": "How can I find total distance using calculus?",
+        "label": "Split at changes of direction",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Find all zeros of velocity in the interval. Check its sign between consecutive zeros because an isolated zero need not produce a reversal.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Integrate on intervals with a fixed sign. Add the signed changes for displacement and their magnitudes for distance.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_m1_kin_variable/curved-velocity-sign.svg",
+              "alt": "A curved velocity–time graph starts below the axis, crosses at two seconds and is above it until the final time at four seconds.",
+              "caption": "<p>A zero of velocity divides the signed integral into two intervals.</p>",
+              "width": 484,
+              "height": 252
+            }
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "variable-integrate-pieces-check",
+            "title": "Use velocity zeros to find total distance",
+            "prompt": "<p>For \\(0\\le t\\le 5\\), a particle has velocity \\(v=\\left(t + 1\\right) \\left(3 t - 9\\right)\\) metres per second. Find the displacement and distance over this interval.</p>",
+            "hint": "<p>Use each zero inside the interval to identify portions with a fixed direction.</p>",
+            "solution": "<p>The only zero inside the interval occurs at \\(t=3\\,\\mathrm s\\). The other zero is \\(t=-1\\). The velocity changes sign at the included zero.</p><p>Integrate on each side of the turn. The signed displacements are \\(-27\\,\\mathrm m\\) and \\(32\\,\\mathrm m\\).</p><p>Their sum is \\(5\\,\\mathrm m\\). Adding the magnitudes instead gives total distance \\(59\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "displacement",
+                "label": "Displacement (m)",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "distance",
+                "label": "Distance travelled (m)",
+                "type": "number",
+                "expected": "59",
+                "retry": [
+                  {
+                    "answer": "5",
+                    "feedback": "<p>Integrate separately on both sides of the sign change.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Take absolute values on the parts before adding. The magnitude of one definite integral across a reversal can miss a leg.</p>"
+          }
+        ]
+      },
+      {
+        "id": "change-in-velocity",
+        "title": "What does the acceleration integral give?",
+        "label": "Add the initial velocity",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A definite integral of acceleration gives the velocity difference between the endpoints. Use a known starting velocity to recover the final one.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(v(t_2)=v(t_1)+\\int_{t_1}^{t_2}a(t)\\,\\mathrm dt\\). This includes any positive and negative changes automatically.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "variable-change-in-velocity-check",
+            "title": "Use an acceleration integral to change velocity",
+            "prompt": "<p>A particle has acceleration \\(a=3 t^{2} - 3\\) metres per second squared for the times considered. Its velocity at \\(t=2\\,\\mathrm s\\) is \\(10\\,\\mathrm{m\\,s^{-1}}\\). Find the change in velocity and the final velocity at \\(t=4\\,\\mathrm s\\).</p>",
+            "hint": "<p>The definite integral gives the difference of the two velocities, not the later velocity alone.</p>",
+            "solution": "<p>Integrate acceleration between the two times to find a change in velocity.</p><p>Use \\(\\left[t^3-3t\\right]_{2}^{4}\\) to obtain \\(50\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Add the starting velocity. The final velocity is \\(60\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "change",
+                "label": "Change in velocity (m s⁻¹)",
+                "type": "number",
+                "expected": "50"
+              },
+              {
+                "key": "v",
+                "label": "Final velocity v (m s⁻¹)",
+                "type": "number",
+                "expected": "60"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The integral alone is the final velocity only when the starting velocity is zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "variable-change-in-velocity-second",
+            "title": "Use an acceleration integral to change velocity",
+            "prompt": "<p>A particle has acceleration \\(a=3 t^{2} - 7\\) metres per second squared for the times considered. Its velocity at \\(t=6\\,\\mathrm s\\) is \\(18\\,\\mathrm{m\\,s^{-1}}\\). Find the change in velocity and the final velocity at \\(t=8\\,\\mathrm s\\).</p>",
+            "hint": "<p>The definite integral gives the difference of the two velocities, not the later velocity alone.</p>",
+            "solution": "<p>Integrate acceleration between the two times to find a change in velocity.</p><p>Use \\(\\left[t^3-7t\\right]_{6}^{8}\\) to obtain \\(282\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Add the starting velocity. The final velocity is \\(300\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+            "fields": [
+              {
+                "key": "change",
+                "label": "Change in velocity (m s⁻¹)",
+                "type": "number",
+                "expected": "282"
+              },
+              {
+                "key": "v",
+                "label": "Final velocity v (m s⁻¹)",
+                "type": "number",
+                "expected": "300"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Do not assume acceleration is constant unless the acceleration function shows that it is.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Differentiate a position function twice",
+        "question": "<p>A particle has position \\(s=2 t^{3} - 3 t^{2} + 5\\) metres at time \\(t\\) seconds. Find its velocity and acceleration at \\(t=1\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Differentiate the position function with respect to time: \\(v=6 t^{2} - 6 t\\).</p>",
+          "<p>Differentiate again to obtain \\(a=12 t - 6\\).</p>",
+          "<p>Substitute the requested time into both functions. The answers are \\(0\\,\\mathrm{m\\,s^{-1}}\\) and \\(6\\,\\mathrm{m\\,s^{-2}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Determine an integration constant from a known velocity",
+        "question": "<p>A particle has acceleration \\(a=4 t - 3\\) metres per second squared at time \\(t\\) seconds. Its velocity is \\(5\\,\\mathrm{m\\,s^{-1}}\\) at \\(t=2\\,\\mathrm s\\). Find the constant \\(C\\) in \\(v=C + 2 t^{2} - 3 t\\) and the velocity at \\(t=3\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Integrate the acceleration to obtain \\(v=C + 2 t^{2} - 3 t\\).</p>",
+          "<p>Use the observed velocity and its time. This gives \\(C=3\\).</p>",
+          "<p>With the constant included, the requested velocity is \\(12\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep initial position out of displacement",
+        "question": "<p>The velocity of a motion sensor carriage is \\(v=3 t^{2} + 2\\) metres per second and its position at \\(t=0\\) is \\(3\\,\\mathrm m\\). Find its position and its displacement from the start at \\(t=2\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Integrate velocity and use the initial position to get \\(s=t^{3} + 2 t + 3\\).</p>",
+          "<p>Substitute the requested time to find the position \\(15\\,\\mathrm m\\).</p>",
+          "<p>Subtract the initial position for the displacement \\(12\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep initial position out of displacement",
+        "question": "<p>The velocity of a motion sensor carriage is \\(v=5 t^{2} + 4\\) metres per second and its position at \\(t=0\\) is \\(7\\,\\mathrm m\\). Find its position and its displacement from the start at \\(t=4\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Integrate velocity and use the initial position to get \\(s=\\frac{5 t^{3}}{3} + 4 t + 7\\).</p>",
+          "<p>Substitute the requested time to find the position \\(\\frac{389}{3}\\,\\mathrm m\\).</p>",
+          "<p>Subtract the initial position for the displacement \\(\\frac{368}{3}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Use velocity zeros to find total distance",
+        "question": "<p>For \\(0\\le t\\le 4\\), a particle has velocity \\(v=\\left(t + 1\\right) \\left(2 t - 4\\right)\\) metres per second. Find the displacement and distance over this interval.</p>",
+        "solution": [
+          "<p>The only zero inside the interval occurs at \\(t=2\\,\\mathrm s\\). The other zero is \\(t=-1\\). The velocity changes sign at the included zero.</p>",
+          "<p>Integrate on each side of the turn. The signed displacements are \\(- \\frac{20}{3}\\,\\mathrm m\\) and \\(\\frac{52}{3}\\,\\mathrm m\\).</p>",
+          "<p>Their sum is \\(\\frac{32}{3}\\,\\mathrm m\\). Adding the magnitudes instead gives total distance \\(24\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Use an acceleration integral to change velocity",
+        "question": "<p>A particle has acceleration \\(a=3 t^{2} - 2\\) metres per second squared for the times considered. Its velocity at \\(t=1\\,\\mathrm s\\) is \\(8\\,\\mathrm{m\\,s^{-1}}\\). Find the change in velocity and the final velocity at \\(t=3\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Integrate acceleration between the two times to find a change in velocity.</p>",
+          "<p>Use \\(\\left[t^3-2t\\right]_{1}^{3}\\) to obtain \\(22\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Add the starting velocity. The final velocity is \\(30\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use an acceleration integral to change velocity",
+        "question": "<p>A particle has acceleration \\(a=3 t^{2} - 4\\) metres per second squared for the times considered. Its velocity at \\(t=3\\,\\mathrm s\\) is \\(12\\,\\mathrm{m\\,s^{-1}}\\). Find the change in velocity and the final velocity at \\(t=5\\,\\mathrm s\\).</p>",
+        "solution": [
+          "<p>Integrate acceleration between the two times to find a change in velocity.</p>",
+          "<p>Use \\(\\left[t^3-4t\\right]_{3}^{5}\\) to obtain \\(90\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Add the starting velocity. The final velocity is \\(102\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Position function",
+        "definition": "<p>Position as a function of time on the same signed line.</p>"
+      },
+      {
+        "term": "Instantaneous velocity",
+        "definition": "<p>Derivative of position with respect to time.</p>"
+      },
+      {
+        "term": "Instantaneous acceleration",
+        "definition": "<p>Derivative of velocity with respect to time.</p>"
+      },
+      {
+        "term": "Initial condition",
+        "definition": "<p>A known position or velocity at a specified time.</p>"
+      },
+      {
+        "term": "Definite integral",
+        "definition": "<p>The accumulated signed change between two fixed times.</p>"
+      },
+      {
+        "term": "Reversal time",
+        "definition": "<p>A time at which velocity changes sign.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When you see</th><th scope=\"col\">What to do</th></tr></thead><tbody><tr><th scope=\"row\">Position to velocity to acceleration</th><td>Differentiate in order.</td></tr><tr><th scope=\"row\">Acceleration to velocity to position</th><td>Integrate in order. Use a condition for each new constant.</td></tr><tr><th scope=\"row\">Change of velocity</th><td>\\(\\displaystyle\\int_{t_1}^{t_2}a(t)\\,\\mathrm dt\\).</td></tr><tr><th scope=\"row\">Distance</th><td>Use velocity signs, split where they change, then add magnitudes.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Given \\(a=6t\\) and \\(v(0)=2\\), find velocity after two seconds.</p><p><strong>Check</strong> \\(v=3t^2+2\\) gives \\(14\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+      "checks": "<ul><li>Substituting the time into position before differentiating replaces the function with a number.</li><li>A condition at a non-zero time has contributions from the antiderivative as well as the constant.</li></ul>",
+      "examTip": "<p>When the motion reverses, include each reversal time in the distance calculation. Keep the order of the limits.</p>"
+    },
+    "related": [
+      {
+        "title": "Constant acceleration and vertical motion",
+        "href": "/courses/maths4u-9709-m1/topics/orig_9709_m1_kin_constant"
+      },
+      {
+        "title": "Piecewise motion and two particles",
+        "href": "/courses/maths4u-9709-m1/topics/orig_9709_m1_kin_piecewise"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "variable-differentiate-position-more",
+        "title": "Differentiate a position function twice",
+        "prompt": "<p>A particle has position \\(s=4 t^{3} - 5 t^{2} + 7\\) metres at time \\(t\\) seconds. Find its velocity and acceleration at \\(t=3\\,\\mathrm s\\).</p>",
+        "hint": "<p>Differentiate with respect to t before substituting the time.</p>",
+        "solution": "<p>Differentiate the position function with respect to time: \\(v=12 t^{2} - 10 t\\).</p><p>Differentiate again to obtain \\(a=24 t - 10\\).</p><p>Substitute the requested time into both functions. The answers are \\(78\\,\\mathrm{m\\,s^{-1}}\\) and \\(62\\,\\mathrm{m\\,s^{-2}}\\).</p>",
+        "fields": [
+          {
+            "key": "v",
+            "label": "Velocity v (m s⁻¹)",
+            "type": "number",
+            "expected": "78"
+          },
+          {
+            "key": "a",
+            "label": "Acceleration a (m s⁻²)",
+            "type": "number",
+            "expected": "62"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "variable-recover-velocity-more",
+        "title": "Determine an integration constant from a known velocity",
+        "prompt": "<p>A particle has acceleration \\(a=8 t - 5\\) metres per second squared at time \\(t\\) seconds. Its velocity is \\(9\\,\\mathrm{m\\,s^{-1}}\\) at \\(t=4\\,\\mathrm s\\). Find the constant \\(C\\) in \\(v=C + 4 t^{2} - 5 t\\) and the velocity at \\(t=7\\,\\mathrm s\\).</p>",
+        "hint": "<p>The velocity at a non-zero time is not generally the constant of integration.</p>",
+        "solution": "<p>Integrate the acceleration to obtain \\(v=C + 4 t^{2} - 5 t\\).</p><p>Use the observed velocity and its time. This gives \\(C=-35\\).</p><p>With the constant included, the requested velocity is \\(126\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "fields": [
+          {
+            "key": "c",
+            "label": "Constant C",
+            "type": "number",
+            "expected": "-35"
+          },
+          {
+            "key": "v",
+            "label": "Requested velocity v (m s⁻¹)",
+            "type": "number",
+            "expected": "126"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "variable-recover-position-more",
+        "title": "Keep initial position out of displacement",
+        "prompt": "<p>The velocity of a motion sensor carriage is \\(v=9 t^{2} + 8\\) metres per second and its position at \\(t=0\\) is \\(15\\,\\mathrm m\\). Find its position and its displacement from the start at \\(t=8\\,\\mathrm s\\).</p>",
+        "hint": "<p>The position needs an initial reference. A change of position is independent of that reference.</p>",
+        "solution": "<p>Integrate velocity and use the initial position to get \\(s=3 t^{3} + 8 t + 15\\).</p><p>Substitute the requested time to find the position \\(1615\\,\\mathrm m\\).</p><p>Subtract the initial position for the displacement \\(1600\\,\\mathrm m\\).</p>",
+        "fields": [
+          {
+            "key": "position",
+            "label": "Position (m)",
+            "type": "number",
+            "expected": "1615"
+          },
+          {
+            "key": "displacement",
+            "label": "Displacement from start (m)",
+            "type": "number",
+            "expected": "1600"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "variable-integrate-pieces-more",
+        "title": "Use velocity zeros to find total distance",
+        "prompt": "<p>For \\(0\\le t\\le 6\\), a particle has velocity \\(v=\\left(t + 1\\right) \\left(4 t - 16\\right)\\) metres per second. Find the displacement and distance over this interval.</p>",
+        "hint": "<p>Use each zero inside the interval to identify portions with a fixed direction.</p>",
+        "solution": "<p>The only zero inside the interval occurs at \\(t=4\\,\\mathrm s\\). The other zero is \\(t=-1\\). The velocity changes sign at the included zero.</p><p>Integrate on each side of the turn. The signed displacements are \\(- \\frac{224}{3}\\,\\mathrm m\\) and \\(\\frac{152}{3}\\,\\mathrm m\\).</p><p>Their sum is \\(-24\\,\\mathrm m\\). Adding the magnitudes instead gives total distance \\(\\frac{376}{3}\\,\\mathrm m\\).</p>",
+        "fields": [
+          {
+            "key": "displacement",
+            "label": "Displacement (m)",
+            "type": "number",
+            "expected": "-24"
+          },
+          {
+            "key": "distance",
+            "label": "Distance travelled (m)",
+            "type": "number",
+            "expected": "376/3",
+            "retry": [
+              {
+                "answer": "24",
+                "feedback": "<p>Integrate separately on both sides of the sign change.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "variable-change-in-velocity-more",
+        "title": "Use an acceleration integral to change velocity",
+        "prompt": "<p>A particle has acceleration \\(a=3 t^{2} - 8\\) metres per second squared for the times considered. Its velocity at \\(t=7\\,\\mathrm s\\) is \\(20\\,\\mathrm{m\\,s^{-1}}\\). Find the change in velocity and the final velocity at \\(t=9\\,\\mathrm s\\).</p>",
+        "hint": "<p>The definite integral gives the difference of the two velocities, not the later velocity alone.</p>",
+        "solution": "<p>Integrate acceleration between the two times to find a change in velocity.</p><p>Use \\(\\left[t^3-8t\\right]_{7}^{9}\\) to obtain \\(370\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Add the starting velocity. The final velocity is \\(390\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+        "fields": [
+          {
+            "key": "change",
+            "label": "Change in velocity (m s⁻¹)",
+            "type": "number",
+            "expected": "370"
+          },
+          {
+            "key": "v",
+            "label": "Final velocity v (m s⁻¹)",
+            "type": "number",
+            "expected": "390"
+          }
+        ]
+      }
+    ]
+  },
+  "orig_9709_m1_kin_piecewise": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose the right motion phase, relate delayed start times and solve for meetings using a common position axis.",
+    "sections": [
+      {
+        "id": "join-the-phases",
+        "title": "What carries over at the change from one phase to the next?",
+        "label": "Use the common endpoint",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>For each phase write initial velocity, acceleration and duration separately. In ordinary continuous motion, the final velocity of one phase is the initial velocity of the next.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Record the final position, velocity and total elapsed time at every join. Calculate displacements separately, then add.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "piecewise-join-the-phases-check",
+            "title": "Carry the final velocity into the next phase",
+            "prompt": "<p>A buggy accelerates uniformly from rest at \\(4\\,\\mathrm{m\\,s^{-2}}\\) for \\(3\\,\\mathrm s\\). It then travels at the resulting constant velocity for \\(4\\,\\mathrm s\\). Find the common velocity at the join and the total displacement.</p>",
+            "hint": "<p>Give the second phase its own elapsed time and keep the velocity at the join.</p>",
+            "solution": "<p>At the end of the first phase \\(v=at\\) gives \\(12\\,\\mathrm{m\\,s^{-1}}\\). That is the starting velocity of the next phase.</p><p>The first displacement is \\(18\\,\\mathrm m\\). The second has zero acceleration and covers \\(48\\,\\mathrm m\\).</p><p>The total displacement is \\(66\\,\\mathrm m\\).</p>",
+            "fields": [
+              {
+                "key": "v",
+                "label": "Velocity at join v (m s⁻¹)",
+                "type": "number",
+                "expected": "12"
+              },
+              {
+                "key": "displacement",
+                "label": "Total displacement (m)",
+                "type": "number",
+                "expected": "66"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Continuing the first acceleration into a phase with different acceleration gives the wrong displacement even when the starting speed is correct.</p>"
+          }
+        ]
+      },
+      {
+        "id": "share-a-clock",
+        "title": "How do I write equations for a delayed start?",
+        "label": "Use a single time reference",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Call the main time \\(t\\). If one particle starts at \\(t=d\\), its elapsed time after launch is \\(t-d\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a delayed particle use its moving formula only at \\(t\\ge d\\). Substitute both motions into equations at the same main time.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "piecewise-share-a-clock-check",
+            "title": "Use one clock when a second particle starts later",
+            "prompt": "<p>Cart A leaves a marker at time zero and moves at constant velocity \\(3\\,\\mathrm{m\\,s^{-1}}\\). Cart B leaves the same marker \\(3\\,\\mathrm s\\) later in the same direction at \\(7\\,\\mathrm{m\\,s^{-1}}\\). Find when B catches A, measured from A’s start, and the meeting position measured from the marker.</p>",
+            "hint": "<p>Write both positions in terms of one clock, using the delay for B.</p>",
+            "solution": "<p>Using one time \\(t\\), A’s position is \\(3t\\). B moves for \\(t-3\\) seconds after its start.</p><p>Equate \\(3t\\) to \\(7(t-3)\\) and solve, giving \\(t=\\frac{21}{4}\\,\\mathrm s\\).</p><p>Substitute in either position to get \\(\\frac{63}{4}\\,\\mathrm m\\). The time is after B started.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Meeting time from A’s start (s)",
+                "type": "number",
+                "expected": "21/4",
+                "retry": [
+                  {
+                    "answer": "9/4",
+                    "feedback": "<p>This measures elapsed time from B’s start, not A’s.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "position",
+                "label": "Meeting position (m)",
+                "type": "number",
+                "expected": "63/4"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The solved time may be before the delayed departure. Such a root cannot use the delayed moving formula.</p>"
+          }
+        ]
+      },
+      {
+        "id": "shared-origin",
+        "title": "How do I use signs when two particles move towards each other?",
+        "label": "Fix one position axis",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Choose an origin and orientation for both particles. A particle pointing in the negative direction has negative velocity even when its position is positive.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Equate the two position functions. If the particles move towards each other at constant speed, their initial gap closes at the sum of those speeds.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "piecewise-shared-origin-check",
+            "title": "Count both particles on a shared position axis",
+            "prompt": "<p>A and B are simultaneously started on a straight track, \\(33\\,\\mathrm m\\) apart. Take positive towards B’s starting point from A’s. A moves towards B at speed \\(6\\,\\mathrm{m\\,s^{-1}}\\) and B moves towards A at speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). Find the meeting time and its distance from A’s start.</p>",
+            "hint": "<p>Give B the correct signed velocity and include its starting position.</p>",
+            "solution": "<p>Use position zero for A. Then B starts at \\(33\\,\\mathrm m\\) and has signed velocity \\(-5\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Solve \\(6t=33-5t\\) to obtain \\(t=3\\,\\mathrm s\\).</p><p>A has travelled \\(18\\,\\mathrm m\\) at this time.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Meeting time (s)",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "position",
+                "label": "Distance from A’s starting point (m)",
+                "type": "number",
+                "expected": "18"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Subtract positions expressed from the same origin. Two equal local displacements do not generally mean the particles meet.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "piecewise-shared-origin-second",
+            "title": "Count both particles on a shared position axis",
+            "prompt": "<p>A and B are simultaneously started on a straight track, \\(53\\,\\mathrm m\\) apart. Take positive towards B’s starting point from A’s. A moves towards B at speed \\(10\\,\\mathrm{m\\,s^{-1}}\\) and B moves towards A at speed \\(13\\,\\mathrm{m\\,s^{-1}}\\). Find the meeting time and its distance from A’s start.</p>",
+            "hint": "<p>Give B the correct signed velocity and include its starting position.</p>",
+            "solution": "<p>Use position zero for A. Then B starts at \\(53\\,\\mathrm m\\) and has signed velocity \\(-13\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Solve \\(10t=53-13t\\) to obtain \\(t=\\frac{53}{23}\\,\\mathrm s\\).</p><p>A has travelled \\(\\frac{530}{23}\\,\\mathrm m\\) at this time.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Meeting time (s)",
+                "type": "number",
+                "expected": "53/23"
+              },
+              {
+                "key": "position",
+                "label": "Distance from A’s starting point (m)",
+                "type": "number",
+                "expected": "530/23"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "all-intersections",
+        "title": "Can two moving particles meet more than once?",
+        "label": "Check every root and stage condition",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Write both position rules and solve their equality. A line and parabola can intersect twice, with each root a possible meeting.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check every candidate against time, its correct stage, and any endpoint conditions. Use the shared position if a meeting location is requested.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_m1_kin_piecewise/two-particle-intersections.svg",
+              "alt": "The straight-line position graph of B intersects the curved position graph of A at times one and three, at positions 2 m and 18 m.",
+              "caption": "<p>The two position graphs meet twice.</p>",
+              "width": 484,
+              "height": 252
+            }
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "piecewise-all-intersections-check",
+            "title": "Solve for every meeting time in the stage",
+            "prompt": "<p>A starts from rest at the origin with constant acceleration \\(6\\,\\mathrm{m\\,s^{-2}}\\). At the same instant, B is at position \\(-24\\,\\mathrm m\\) and moves with constant velocity \\(18\\,\\mathrm{m\\,s^{-1}}\\). Find all times at which they meet while these motions continue. Give the set of times in seconds.</p>",
+            "hint": "<p>A meeting requires equality of position at the same time, not equality of velocity.</p>",
+            "solution": "<p>Using the same origin, the positions are \\(s_A=3 t^{2}\\) and \\(s_B=18 t - 24\\).</p><p>Equate them and divide by the positive common factor. The result is \\(\\left(t - 4\\right) \\left(t - 2\\right)=0\\).</p><p>Both roots are non-negative, so the meeting times are \\(2\\,\\mathrm s\\) and \\(4\\,\\mathrm s\\).</p>",
+            "fields": [
+              {
+                "key": "meetings",
+                "label": "Set of t-values (s)",
+                "type": "set",
+                "expected": "{2,4}",
+                "variables": [
+                  "t"
+                ],
+                "retry": [
+                  {
+                    "answer": "{2}",
+                    "feedback": "<p>There are two roots from equating positions. Check the later one as well.</p>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Equality of velocities tells you the separation may be momentarily stationary. Equality of positions gives a meeting.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reset-phase-time",
+        "title": "How do I use a local braking time without mixing up the clocks?",
+        "label": "Add the phase’s start time",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>You may measure elapsed time separately for a phase. Convert its answer back to the original clock when the problem asks for time from the start.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the duration since braking began to calculate its displacement. Add the earlier duration only when reporting the time measured from the start.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "piecewise-reset-phase-time-check",
+            "title": "Reset the elapsed time at a braking point",
+            "prompt": "<p>A carrier travels at constant speed \\(8\\,\\mathrm{m\\,s^{-1}}\\) for \\(4\\,\\mathrm s\\) and then brakes at constant acceleration \\(-3\\,\\mathrm{m\\,s^{-2}}\\) until it stops. Find the time measured from the start when it stops and its total distance.</p>",
+            "hint": "<p>Keep the first-phase and braking clocks distinct, then add their durations.</p>",
+            "solution": "<p>The braking equation uses elapsed time since braking started. Its starting velocity is \\(8\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Set the final velocity to zero. This gives a braking duration of \\(\\frac{8}{3}\\,\\mathrm s\\), or \\(\\frac{20}{3}\\,\\mathrm s\\) from the start.</p><p>The first distance is \\(32\\,\\mathrm m\\). Add the braking distance \\(\\frac{32}{3}\\,\\mathrm m\\) for \\(\\frac{128}{3}\\,\\mathrm m\\) in total.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Stopping time from the start (s)",
+                "type": "number",
+                "expected": "20/3",
+                "retry": [
+                  {
+                    "answer": "8/3",
+                    "feedback": "<p>Add the time spent before braking began.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "distance",
+                "label": "Total distance (m)",
+                "type": "number",
+                "expected": "128/3"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Putting the total duration into the braking equation applies braking before it started.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "piecewise-reset-phase-time-second",
+            "title": "Reset the elapsed time at a braking point",
+            "prompt": "<p>A carrier travels at constant speed \\(16\\,\\mathrm{m\\,s^{-1}}\\) for \\(8\\,\\mathrm s\\) and then brakes at constant acceleration \\(-7\\,\\mathrm{m\\,s^{-2}}\\) until it stops. Find the time measured from the start when it stops and its total distance.</p>",
+            "hint": "<p>Keep the first-phase and braking clocks distinct, then add their durations.</p>",
+            "solution": "<p>The braking equation uses elapsed time since braking started. Its starting velocity is \\(16\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Set the final velocity to zero. This gives a braking duration of \\(\\frac{16}{7}\\,\\mathrm s\\), or \\(\\frac{72}{7}\\,\\mathrm s\\) from the start.</p><p>The first distance is \\(128\\,\\mathrm m\\). Add the braking distance \\(\\frac{128}{7}\\,\\mathrm m\\) for \\(\\frac{1024}{7}\\,\\mathrm m\\) in total.</p>",
+            "fields": [
+              {
+                "key": "time",
+                "label": "Stopping time from the start (s)",
+                "type": "number",
+                "expected": "72/7",
+                "retry": [
+                  {
+                    "answer": "16/7",
+                    "feedback": "<p>Add the time spent before braking began.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "distance",
+                "label": "Total distance (m)",
+                "type": "number",
+                "expected": "1024/7"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>When a target distance lies between stage totals, choose that stage before finding its local time.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Carry the final velocity into the next phase",
+        "question": "<p>A buggy accelerates uniformly from rest at \\(2\\,\\mathrm{m\\,s^{-2}}\\) for \\(2\\,\\mathrm s\\). It then travels at the resulting constant velocity for \\(3\\,\\mathrm s\\). Find the common velocity at the join and the total displacement.</p>",
+        "solution": [
+          "<p>At the end of the first phase \\(v=at\\) gives \\(4\\,\\mathrm{m\\,s^{-1}}\\). That is the starting velocity of the next phase.</p>",
+          "<p>The first displacement is \\(4\\,\\mathrm m\\). The second has zero acceleration and covers \\(12\\,\\mathrm m\\).</p>",
+          "<p>The total displacement is \\(16\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Use one clock when a second particle starts later",
+        "question": "<p>Cart A leaves a marker at time zero and moves at constant velocity \\(2\\,\\mathrm{m\\,s^{-1}}\\). Cart B leaves the same marker \\(2\\,\\mathrm s\\) later in the same direction at \\(5\\,\\mathrm{m\\,s^{-1}}\\). Find when B catches A, measured from A’s start, and the meeting position measured from the marker.</p>",
+        "solution": [
+          "<p>Using one time \\(t\\), A’s position is \\(2t\\). B moves for \\(t-2\\) seconds after its start.</p>",
+          "<p>Equate \\(2t\\) to \\(5(t-2)\\) and solve, giving \\(t=\\frac{10}{3}\\,\\mathrm s\\).</p>",
+          "<p>Substitute in either position to get \\(\\frac{20}{3}\\,\\mathrm m\\). The time is after B started.</p>"
+        ]
+      },
+      {
+        "title": "Count both particles on a shared position axis",
+        "question": "<p>A and B are simultaneously started on a straight track, \\(28\\,\\mathrm m\\) apart. Take positive towards B’s starting point from A’s. A moves towards B at speed \\(5\\,\\mathrm{m\\,s^{-1}}\\) and B moves towards A at speed \\(3\\,\\mathrm{m\\,s^{-1}}\\). Find the meeting time and its distance from A’s start.</p>",
+        "solution": [
+          "<p>Use position zero for A. Then B starts at \\(28\\,\\mathrm m\\) and has signed velocity \\(-3\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Solve \\(5t=28-3t\\) to obtain \\(t=\\frac{7}{2}\\,\\mathrm s\\).</p>",
+          "<p>A has travelled \\(\\frac{35}{2}\\,\\mathrm m\\) at this time.</p>"
+        ]
+      },
+      {
+        "title": "Count both particles on a shared position axis",
+        "question": "<p>A and B are simultaneously started on a straight track, \\(38\\,\\mathrm m\\) apart. Take positive towards B’s starting point from A’s. A moves towards B at speed \\(7\\,\\mathrm{m\\,s^{-1}}\\) and B moves towards A at speed \\(7\\,\\mathrm{m\\,s^{-1}}\\). Find the meeting time and its distance from A’s start.</p>",
+        "solution": [
+          "<p>Use position zero for A. Then B starts at \\(38\\,\\mathrm m\\) and has signed velocity \\(-7\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Solve \\(7t=38-7t\\) to obtain \\(t=\\frac{19}{7}\\,\\mathrm s\\).</p>",
+          "<p>A has travelled \\(19\\,\\mathrm m\\) at this time.</p>"
+        ]
+      },
+      {
+        "title": "Solve for every meeting time in the stage",
+        "question": "<p>A starts from rest at the origin with constant acceleration \\(4\\,\\mathrm{m\\,s^{-2}}\\). At the same instant, B is at position \\(-6\\,\\mathrm m\\) and moves with constant velocity \\(8\\,\\mathrm{m\\,s^{-1}}\\). Find all times at which they meet while these motions continue. Give the set of times in seconds.</p>",
+        "solution": [
+          "<p>Using the same origin, the positions are \\(s_A=2 t^{2}\\) and \\(s_B=8 t - 6\\).</p>",
+          "<p>Equate them and divide by the positive common factor. The result is \\(\\left(t - 3\\right) \\left(t - 1\\right)=0\\).</p>",
+          "<p>Both roots are non-negative, so the meeting times are \\(1\\,\\mathrm s\\) and \\(3\\,\\mathrm s\\).</p>"
+        ]
+      },
+      {
+        "title": "Reset the elapsed time at a braking point",
+        "question": "<p>A carrier travels at constant speed \\(6\\,\\mathrm{m\\,s^{-1}}\\) for \\(3\\,\\mathrm s\\) and then brakes at constant acceleration \\(-2\\,\\mathrm{m\\,s^{-2}}\\) until it stops. Find the time measured from the start when it stops and its total distance.</p>",
+        "solution": [
+          "<p>The braking equation uses elapsed time since braking started. Its starting velocity is \\(6\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Set the final velocity to zero. This gives a braking duration of \\(3\\,\\mathrm s\\), or \\(6\\,\\mathrm s\\) from the start.</p>",
+          "<p>The first distance is \\(18\\,\\mathrm m\\). Add the braking distance \\(9\\,\\mathrm m\\) for \\(27\\,\\mathrm m\\) in total.</p>"
+        ]
+      },
+      {
+        "title": "Reset the elapsed time at a braking point",
+        "question": "<p>A carrier travels at constant speed \\(10\\,\\mathrm{m\\,s^{-1}}\\) for \\(5\\,\\mathrm s\\) and then brakes at constant acceleration \\(-4\\,\\mathrm{m\\,s^{-2}}\\) until it stops. Find the time measured from the start when it stops and its total distance.</p>",
+        "solution": [
+          "<p>The braking equation uses elapsed time since braking started. Its starting velocity is \\(10\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Set the final velocity to zero. This gives a braking duration of \\(\\frac{5}{2}\\,\\mathrm s\\), or \\(\\frac{15}{2}\\,\\mathrm s\\) from the start.</p>",
+          "<p>The first distance is \\(50\\,\\mathrm m\\). Add the braking distance \\(\\frac{25}{2}\\,\\mathrm m\\) for \\(\\frac{125}{2}\\,\\mathrm m\\) in total.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Phase",
+        "definition": "<p>An interval governed by one specified velocity or acceleration model.</p>"
+      },
+      {
+        "term": "Join",
+        "definition": "<p>The time at which the governing rule changes.</p>"
+      },
+      {
+        "term": "Local elapsed time",
+        "definition": "<p>Time counted from the start of a particular phase.</p>"
+      },
+      {
+        "term": "Common clock",
+        "definition": "<p>A single time reference used for both motions.</p>"
+      },
+      {
+        "term": "Meeting",
+        "definition": "<p>Two particles have the same position at the same time.</p>"
+      },
+      {
+        "term": "Separation",
+        "definition": "<p>The magnitude of the difference of two positions on the same axis.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When you see</th><th scope=\"col\">What to do</th></tr></thead><tbody><tr><th scope=\"row\">New phase</th><td>Start with the preceding endpoint position and velocity where they are continuous.</td></tr><tr><th scope=\"row\">Delayed particle</th><td>Use \\(t-d\\) during its moving phase.</td></tr><tr><th scope=\"row\">Meeting</th><td>\\(s_A(t)=s_B(t)\\) on the same axis and clock.</td></tr><tr><th scope=\"row\">Admissible roots</th><td>Retain only times in the appropriate stage for both particles.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A leaves the origin at \\(2\\,\\mathrm{m\\,s^{-1}}\\). B leaves the same origin one second later at \\(4\\,\\mathrm{m\\,s^{-1}}\\). When do they meet again?</p><p><strong>Check</strong> \\(2t=4(t-1)\\) gives \\(2\\,\\mathrm s\\) from A’s start.</p>",
+      "checks": "<ul><li>Continuing the first acceleration into a phase with different acceleration gives the wrong displacement even when the starting speed is correct.</li><li>The solved time may be before the delayed departure. Such a root cannot use the delayed moving formula.</li></ul>",
+      "examTip": "<p>Write intervals beside the position formulae. A valid meeting time is in both intervals and gives equal positions.</p>"
+    },
+    "related": [
+      {
+        "title": "Variable acceleration",
+        "href": "/courses/maths4u-9709-m1/topics/orig_9709_m1_kin_variable"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "piecewise-join-the-phases-more",
+        "title": "Carry the final velocity into the next phase",
+        "prompt": "<p>A buggy accelerates uniformly from rest at \\(6\\,\\mathrm{m\\,s^{-2}}\\) for \\(4\\,\\mathrm s\\). It then travels at the resulting constant velocity for \\(5\\,\\mathrm s\\). Find the common velocity at the join and the total displacement.</p>",
+        "hint": "<p>Give the second phase its own elapsed time and keep the velocity at the join.</p>",
+        "solution": "<p>At the end of the first phase \\(v=at\\) gives \\(24\\,\\mathrm{m\\,s^{-1}}\\). That is the starting velocity of the next phase.</p><p>The first displacement is \\(48\\,\\mathrm m\\). The second has zero acceleration and covers \\(120\\,\\mathrm m\\).</p><p>The total displacement is \\(168\\,\\mathrm m\\).</p>",
+        "fields": [
+          {
+            "key": "v",
+            "label": "Velocity at join v (m s⁻¹)",
+            "type": "number",
+            "expected": "24"
+          },
+          {
+            "key": "displacement",
+            "label": "Total displacement (m)",
+            "type": "number",
+            "expected": "168"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "piecewise-share-a-clock-more",
+        "title": "Use one clock when a second particle starts later",
+        "prompt": "<p>Cart A leaves a marker at time zero and moves at constant velocity \\(4\\,\\mathrm{m\\,s^{-1}}\\). Cart B leaves the same marker \\(4\\,\\mathrm s\\) later in the same direction at \\(9\\,\\mathrm{m\\,s^{-1}}\\). Find when B catches A, measured from A’s start, and the meeting position measured from the marker.</p>",
+        "hint": "<p>Write both positions in terms of one clock, using the delay for B.</p>",
+        "solution": "<p>Using one time \\(t\\), A’s position is \\(4t\\). B moves for \\(t-4\\) seconds after its start.</p><p>Equate \\(4t\\) to \\(9(t-4)\\) and solve, giving \\(t=\\frac{36}{5}\\,\\mathrm s\\).</p><p>Substitute in either position to get \\(\\frac{144}{5}\\,\\mathrm m\\). The time is after B started.</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Meeting time from A’s start (s)",
+            "type": "number",
+            "expected": "36/5",
+            "retry": [
+              {
+                "answer": "16/5",
+                "feedback": "<p>This measures elapsed time from B’s start, not A’s.</p>"
+              }
+            ]
+          },
+          {
+            "key": "position",
+            "label": "Meeting position (m)",
+            "type": "number",
+            "expected": "144/5"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "piecewise-shared-origin-more",
+        "title": "Count both particles on a shared position axis",
+        "prompt": "<p>A and B are simultaneously started on a straight track, \\(58\\,\\mathrm m\\) apart. Take positive towards B’s starting point from A’s. A moves towards B at speed \\(11\\,\\mathrm{m\\,s^{-1}}\\) and B moves towards A at speed \\(15\\,\\mathrm{m\\,s^{-1}}\\). Find the meeting time and its distance from A’s start.</p>",
+        "hint": "<p>Give B the correct signed velocity and include its starting position.</p>",
+        "solution": "<p>Use position zero for A. Then B starts at \\(58\\,\\mathrm m\\) and has signed velocity \\(-15\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Solve \\(11t=58-15t\\) to obtain \\(t=\\frac{29}{13}\\,\\mathrm s\\).</p><p>A has travelled \\(\\frac{319}{13}\\,\\mathrm m\\) at this time.</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Meeting time (s)",
+            "type": "number",
+            "expected": "29/13"
+          },
+          {
+            "key": "position",
+            "label": "Distance from A’s starting point (m)",
+            "type": "number",
+            "expected": "319/13"
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "piecewise-all-intersections-more",
+        "title": "Solve for every meeting time in the stage",
+        "prompt": "<p>A starts from rest at the origin with constant acceleration \\(8\\,\\mathrm{m\\,s^{-2}}\\). At the same instant, B is at position \\(-60\\,\\mathrm m\\) and moves with constant velocity \\(32\\,\\mathrm{m\\,s^{-1}}\\). Find all times at which they meet while these motions continue. Give the set of times in seconds.</p>",
+        "hint": "<p>A meeting requires equality of position at the same time, not equality of velocity.</p>",
+        "solution": "<p>Using the same origin, the positions are \\(s_A=4 t^{2}\\) and \\(s_B=32 t - 60\\).</p><p>Equate them and divide by the positive common factor. The result is \\(\\left(t - 5\\right) \\left(t - 3\\right)=0\\).</p><p>Both roots are non-negative, so the meeting times are \\(3\\,\\mathrm s\\) and \\(5\\,\\mathrm s\\).</p>",
+        "fields": [
+          {
+            "key": "meetings",
+            "label": "Set of t-values (s)",
+            "type": "set",
+            "expected": "{3,5}",
+            "variables": [
+              "t"
+            ],
+            "retry": [
+              {
+                "answer": "{3}",
+                "feedback": "<p>There are two roots from equating positions. Check the later one as well.</p>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "check",
+        "id": "piecewise-reset-phase-time-more",
+        "title": "Reset the elapsed time at a braking point",
+        "prompt": "<p>A carrier travels at constant speed \\(18\\,\\mathrm{m\\,s^{-1}}\\) for \\(9\\,\\mathrm s\\) and then brakes at constant acceleration \\(-8\\,\\mathrm{m\\,s^{-2}}\\) until it stops. Find the time measured from the start when it stops and its total distance.</p>",
+        "hint": "<p>Keep the first-phase and braking clocks distinct, then add their durations.</p>",
+        "solution": "<p>The braking equation uses elapsed time since braking started. Its starting velocity is \\(18\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Set the final velocity to zero. This gives a braking duration of \\(\\frac{9}{4}\\,\\mathrm s\\), or \\(\\frac{45}{4}\\,\\mathrm s\\) from the start.</p><p>The first distance is \\(162\\,\\mathrm m\\). Add the braking distance \\(\\frac{81}{4}\\,\\mathrm m\\) for \\(\\frac{729}{4}\\,\\mathrm m\\) in total.</p>",
+        "fields": [
+          {
+            "key": "time",
+            "label": "Stopping time from the start (s)",
+            "type": "number",
+            "expected": "45/4",
+            "retry": [
+              {
+                "answer": "9/4",
+                "feedback": "<p>Add the time spent before braking began.</p>"
+              }
+            ]
+          },
+          {
+            "key": "distance",
+            "label": "Total distance (m)",
+            "type": "number",
+            "expected": "729/4"
+          }
+        ]
+      }
+    ]
+  }
+}
