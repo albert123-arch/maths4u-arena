@@ -1,0 +1,1990 @@
+{
+  "stats_nonparam_sign": {
+    "updatedOn": "2026-11-21",
+    "description": "Use the binomial sign test for a population median or matched differences, including a normal approximation for large samples.",
+    "sections": [
+      {
+        "id": "signs",
+        "title": "How do observations become signs?",
+        "label": "Assign signs",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Compare each reading with the median specified by the null hypothesis.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use a plus above the proposed median and a minus below it. The exercise data give no observations exactly equal to that median.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using the sample median as the subtraction point would erase the test of the stated population median.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-sign-study-01",
+            "title": "Count signs in an unsorted sample",
+            "prompt": "<p>An independent sample records daily call lengths in minutes.</p><p>Test whether the population median call length is greater than 40 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Length (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(27\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(35\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(57\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(25\\)</td></tr></tbody></table></div><p>Count the positive and negative signs.</p>",
+            "fields": [
+              {
+                "key": "positive",
+                "label": "Positive signs",
+                "expected": "3",
+                "type": "number"
+              },
+              {
+                "key": "negative",
+                "label": "Negative signs",
+                "expected": "4",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+            "solution": "<p>Compare each observation with \\(40\\).</p><p>There are \\(3\\) positive and \\(4\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(7,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(99\\) of \\(128\\) equally likely patterns. The resulting probability is \\(\\frac{99}{128}\\).</p><p>There is insufficient evidence that the population median call length is greater than 40 minutes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write the hypothesised number on your first line.</p>"
+          }
+        ]
+      },
+      {
+        "id": "model",
+        "title": "Which null model describes the count?",
+        "label": "Binomial model",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Let \\(B\\) count the plus signs over independent observations.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(B\\sim\\mathrm{Bin}(n,\\tfrac12)\\) under \\(H_0\\) for a continuous population with the stated median.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The binomial probability is one half under the null. It is fixed before looking at the observed fraction of plus signs.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-sign-study-02",
+            "title": "Identify the null trials for eight comparisons",
+            "prompt": "<p>An independent sample records daily call lengths in minutes.</p><p>Test whether the population median call length is greater than 40 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Length (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(29\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(55\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(35\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(27\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(57\\)</td></tr></tbody></table></div><p>Give the number of binomial trials and the probability of a positive sign under the null hypothesis.</p>",
+            "fields": [
+              {
+                "key": "size",
+                "label": "Number of trials",
+                "expected": "8",
+                "type": "number"
+              },
+              {
+                "key": "chance",
+                "label": "Probability of a positive sign",
+                "expected": "1/2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+            "solution": "<p>Compare each observation with \\(40\\).</p><p>There are \\(4\\) positive and \\(4\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(8,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(163\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{163}{256}\\).</p><p>There is insufficient evidence that the population median call length is greater than 40 minutes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Here \\(n\\) is the number of comparisons.</p>"
+          }
+        ]
+      },
+      {
+        "id": "direction",
+        "title": "How does the alternative select the tail?",
+        "label": "Tail choice",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Decide which way the count would move if the claim were true.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A larger population median leads towards a larger plus count. A smaller population median leads towards a smaller plus count.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using the smaller of the two sign counts for a directional alternative can reject in the opposite direction.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-sign-study-03",
+            "title": "Select the alternative tail for larger times",
+            "prompt": "<p>An independent sample records daily call lengths in minutes.</p><p>Test whether the population median call length is greater than 40 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Length (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(55\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(33\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(53\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(23\\)</td></tr></tbody></table></div><p>Which tail would provide evidence in the stated direction?</p>",
+            "fields": [
+              {
+                "key": "tail",
+                "label": "Tail",
+                "type": "choice",
+                "expected": "B",
+                "options": {
+                  "A": "<p>Lower tail</p>",
+                  "B": "<p>Upper tail</p>",
+                  "C": "<p>Both tails</p>"
+                }
+              }
+            ],
+            "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+            "solution": "<p>Compare each observation with \\(40\\).</p><p>There are \\(4\\) positive and \\(4\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(8,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(163\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{163}{256}\\).</p><p>There is insufficient evidence that the population median call length is greater than 40 minutes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Name the statistic before choosing the tail.</p>"
+          }
+        ]
+      },
+      {
+        "id": "two-tails",
+        "title": "What goes into a two-sided p-value?",
+        "label": "Exact probabilities",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Difference in either direction is relevant when the alternative says “different”.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For fair signs, double the smaller inclusive tail and cap it at 1.</p>",
+            "figure": {
+              "src": "/assets/study/9231/stats_nonparam_sign/sign-binomial-tail.svg",
+              "alt": "A binomial law for eight fair signs with both extreme tails highlighted.",
+              "caption": "<p>At \\(B=1\\) the two-sided p-value includes counts at most 1 and at least 7.</p>",
+              "width": 640,
+              "height": 290
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use inclusive inequalities. The observed count is part of the p-value.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-sign-study-04",
+            "title": "Find the exact two-sided probability",
+            "prompt": "<p>An independent sample records daily call lengths in minutes.</p><p>Test whether the population median call length is different from 40 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Length (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(55\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(33\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(53\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(57\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(59\\)</td></tr></tbody></table></div><p>Find the exact p-value.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "p-value",
+                "expected": "5/128",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+            "solution": "<p>Compare each observation with \\(40\\).</p><p>There are \\(8\\) positive and \\(1\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(9,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(20\\) of \\(512\\) equally likely patterns. The resulting probability is \\(\\frac{5}{128}\\).</p><p>There is sufficient evidence that the population median call length is different from 40 minutes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The two extreme counts are reflections around \\(\\tfrac n2\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "matched",
+        "title": "What changes for paired observations?",
+        "label": "Matched signs",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Each person or item provides one difference. Treat the differences, across pairs, as an independent sample.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Define a direction such as after minus before. Test whether the population median of the differences is zero.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The test is about the median of differences. Subtracting the two population medians in isolation describes a different parameter.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-sign-study-05",
+            "title": "Compare signs only within each pair",
+            "prompt": "<p>A random sample completed the same setup procedure before and after a change. The table shows setup times in seconds.</p><p>Test whether the population median of after minus before is greater than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Pair</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(52\\)</td><td>\\(57\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(54\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(56\\)</td><td>\\(67\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(58\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(63\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(62\\)</td><td>\\(69\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(64\\)</td><td>\\(79\\)</td></tr></tbody></table></div><p>Count the positive and negative signs.</p>",
+            "fields": [
+              {
+                "key": "positive",
+                "label": "Positive signs",
+                "expected": "5",
+                "type": "number"
+              },
+              {
+                "key": "negative",
+                "label": "Negative signs",
+                "expected": "2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+            "solution": "<p>Subtract before from after for every matched pair.</p><p>There are \\(5\\) positive and \\(2\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(7,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(29\\) of \\(128\\) equally likely patterns. The resulting probability is \\(\\frac{29}{128}\\).</p><p>There is insufficient evidence that the population median of after minus before is greater than zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep each pair together when you calculate a sign.</p>"
+          }
+        ]
+      },
+      {
+        "id": "normal",
+        "title": "When can a normal approximation help?",
+        "label": "Large samples",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>For a large sign count and a fair null probability, a normal approximation can estimate the tail.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(B\\approx\\mathrm N(\\tfrac n2,\\tfrac n4)\\). For \\(\\mathrm P(B\\ge b)\\) use \\(b-\\tfrac12\\); for \\(\\mathrm P(B\\le b)\\) use \\(b+\\tfrac12\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The second normal parameter here is the variance. Divide by its square root to standardise.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-sign-study-06",
+            "title": "Find a large-sample upper-tail probability",
+            "prompt": "<p>Independent sign comparisons have been made for the sample of call lengths. A plus means the value exceeds the null median.</p><p>Test whether the population median call length is greater than 40 minutes.</p><p>There are \\(40\\) usable observations and \\(28\\) positive signs.</p><p>Find the p-value to 4 decimal places using the normal approximation.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "p-value (4 d.p.)",
+                "expected": "0.008853032903683318",
+                "type": "approximate",
+                "absolute_tolerance": 5e-05
+              }
+            ],
+            "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+            "solution": "<p>The signs are independent.</p><p>There are \\(28\\) positive and \\(12\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(40,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>The null distribution has mean \\(20\\) and variance \\(10\\).</p><p>Use the continuity boundary \\(\\frac{55}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{55}{2}-20}{\\sqrt{10}})\\) gives \\(0.0089\\).</p><p>There is sufficient evidence that the population median call length is greater than 40 minutes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Decide which bin at the boundary must be included.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Classify measurements around the null median",
+        "question": "<p>An independent sample records daily call lengths in minutes.</p><p>Test whether the population median call length is greater than 40 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Length (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(25\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(27\\)</td></tr></tbody></table></div><p>Count the positive and negative signs.</p>",
+        "solution": [
+          "<p>Compare each observation with \\(40\\).</p><p>There are \\(4\\) positive and \\(3\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(7,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p>",
+          "<p>Use the upper including the observed test value. Under the null, the tail contains \\(64\\) of \\(128\\) equally likely patterns. The resulting probability is \\(\\frac{1}{2}\\).</p>",
+          "<p>There is insufficient evidence that the population median call length is greater than 40 minutes.</p>"
+        ]
+      },
+      {
+        "title": "Check the signs after shifting the null value",
+        "question": "<p>An independent sample records daily call lengths in minutes.</p><p>Test whether the population median call length is greater than 45 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Length (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(36\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(40\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(56\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(42\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(52\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(58\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(60\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(28\\)</td></tr></tbody></table></div><p>Count the positive and negative signs.</p>",
+        "solution": [
+          "<p>Compare each observation with \\(45\\).</p><p>There are \\(4\\) positive and \\(4\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(8,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p>",
+          "<p>Use the upper including the observed test value. Under the null, the tail contains \\(163\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{163}{256}\\).</p>",
+          "<p>There is insufficient evidence that the population median call length is greater than 45 minutes.</p>"
+        ]
+      },
+      {
+        "title": "Choose the fair null model",
+        "question": "<p>An independent sample records daily call lengths in minutes.</p><p>Test whether the population median call length is greater than 40 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Length (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(29\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(53\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(55\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(23\\)</td></tr></tbody></table></div><p>Give the number of binomial trials and the probability of a positive sign under the null hypothesis.</p>",
+        "solution": [
+          "<p>Compare each observation with \\(40\\).</p><p>There are \\(5\\) positive and \\(3\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(8,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p>",
+          "<p>Use the upper including the observed test value. Under the null, the tail contains \\(93\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{93}{256}\\).</p>",
+          "<p>There is insufficient evidence that the population median call length is greater than 40 minutes.</p>"
+        ]
+      },
+      {
+        "title": "Choose the tail for a surviving claim",
+        "question": "<p>An independent sample records daily call lengths in minutes.</p><p>Test whether the population median call length is less than 40 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Length (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(53\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(33\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(55\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(57\\)</td></tr></tbody></table></div><p>Which tail would provide evidence in the stated direction?</p>",
+        "solution": [
+          "<p>Compare each observation with \\(40\\).</p><p>There are \\(6\\) positive and \\(2\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(8,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p>",
+          "<p>Use the lower including the observed test value. Under the null, the tail contains \\(247\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{247}{256}\\).</p>",
+          "<p>There is insufficient evidence that the population median call length is less than 40 minutes.</p>"
+        ]
+      },
+      {
+        "title": "Put the exact probability in both tails",
+        "question": "<p>An independent sample records daily call lengths in minutes.</p><p>Test whether the population median call length is different from 40 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Length (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(29\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(53\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(55\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(57\\)</td></tr></tbody></table></div><p>Find the exact p-value.</p>",
+        "solution": [
+          "<p>Compare each observation with \\(40\\).</p><p>There are \\(7\\) positive and \\(1\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(8,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p>",
+          "<p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(18\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{9}{128}\\).</p>",
+          "<p>There is insufficient evidence that the population median call length is different from 40 minutes.</p>"
+        ]
+      },
+      {
+        "title": "Decide from a lower sign count in paired data",
+        "question": "<p>A random sample completed the same setup procedure before and after a change. The table shows setup times in seconds.</p><p>Test whether the population median of after minus before is less than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Pair</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(52\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(54\\)</td><td>\\(59\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(56\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(58\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(62\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(64\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(66\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(68\\)</td><td>\\(49\\)</td></tr></tbody></table></div><p>Choose the conclusion at 5%. Use the exact binomial model.</p>",
+        "solution": [
+          "<p>Subtract before from after for every matched pair.</p><p>There are \\(1\\) positive and \\(8\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(9,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p>",
+          "<p>Use the lower including the observed test value. Under the null, the tail contains \\(10\\) of \\(512\\) equally likely patterns. The resulting probability is \\(\\frac{5}{256}\\).</p>",
+          "<p>There is sufficient evidence that the population median of after minus before is less than zero.</p>"
+        ]
+      },
+      {
+        "title": "Move the normal lower boundary by a half",
+        "question": "<p>Independent sign comparisons have been made for the sample of call lengths. A plus means the value exceeds the null median.</p><p>Test whether the population median call length is less than 40 minutes.</p><p>There are \\(40\\) usable observations and \\(12\\) positive signs.</p><p>Give the continuity-corrected boundary for the observed tail.</p>",
+        "solution": [
+          "<p>The signs are independent.</p><p>There are \\(12\\) positive and \\(28\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(40,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p>",
+          "<p>The null distribution has mean \\(20\\) and variance \\(10\\).</p><p>Use the continuity boundary \\(\\frac{25}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\le \\frac{\\frac{25}{2}-20}{\\sqrt{10}})\\) gives \\(0.0089\\).</p>",
+          "<p>There is sufficient evidence that the population median call length is less than 40 minutes.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Population median",
+        "definition": "<p>A value with half the continuous population below it and half above it.</p>"
+      },
+      {
+        "term": "Positive sign",
+        "definition": "<p>An observation above the hypothesised median or a positive matched difference.</p>"
+      },
+      {
+        "term": "Sign count",
+        "definition": "<p>The number of positive signs. Under a continuous null median it has a fair binomial law.</p>"
+      },
+      {
+        "term": "Continuity correction",
+        "definition": "<p>Move the boundary by a half when approximating a discrete probability using a normal distribution.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-nonparam-sign-study-07",
+        "title": "Account for the p-value in the claim’s direction",
+        "prompt": "<p>An independent sample records daily call lengths in minutes.</p><p>Test whether the population median call length is greater than 40 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Length (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(29\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(53\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(55\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(57\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(59\\)</td></tr><tr><th scope=\"row\">10</th><td>\\(61\\)</td></tr></tbody></table></div><p>Find the exact p-value.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "p-value",
+            "expected": "11/1024",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+        "solution": "<p>Compare each observation with \\(40\\).</p><p>There are \\(9\\) positive and \\(1\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(10,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(11\\) of \\(1024\\) equally likely patterns. The resulting probability is \\(\\frac{11}{1024}\\).</p><p>There is sufficient evidence that the population median call length is greater than 40 minutes.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-sign-study-08",
+        "title": "Choose a conclusion at a tighter cut-off",
+        "prompt": "<p>An independent sample records daily call lengths in minutes.</p><p>Test whether the population median call length is greater than 40 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Length (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(27\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(55\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(57\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(59\\)</td></tr><tr><th scope=\"row\">10</th><td>\\(61\\)</td></tr></tbody></table></div><p>Choose the conclusion at 1%. Use the exact binomial model.</p>",
+        "fields": [
+          {
+            "key": "decision",
+            "label": "Conclusion",
+            "type": "choice",
+            "expected": "A",
+            "options": {
+              "A": "<p>Insufficient evidence that the population median call length is greater than 40 minutes.</p>",
+              "B": "<p>Sufficient evidence that the population median call length is greater than 40 minutes.</p>"
+            }
+          }
+        ],
+        "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+        "solution": "<p>Compare each observation with \\(40\\).</p><p>There are \\(8\\) positive and \\(2\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(10,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(56\\) of \\(1024\\) equally likely patterns. The resulting probability is \\(\\frac{7}{128}\\).</p><p>There is insufficient evidence that the population median call length is greater than 40 minutes.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-sign-study-09",
+        "title": "Assess two-sided evidence from a paired sample",
+        "prompt": "<p>A random sample completed the same setup procedure before and after a change. The table shows setup times in seconds.</p><p>Test whether the population median of after minus before is different from zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Pair</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(52\\)</td><td>\\(57\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(54\\)</td><td>\\(47\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(56\\)</td><td>\\(53\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(58\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(62\\)</td><td>\\(53\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(64\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(66\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(68\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">10</th><td>\\(70\\)</td><td>\\(49\\)</td></tr></tbody></table></div><p>Find the exact p-value.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "p-value",
+            "expected": "11/512",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+        "solution": "<p>Subtract before from after for every matched pair.</p><p>There are \\(1\\) positive and \\(9\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(10,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(22\\) of \\(1024\\) equally likely patterns. The resulting probability is \\(\\frac{11}{512}\\).</p><p>There is sufficient evidence that the population median of after minus before is different from zero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-sign-study-10",
+        "title": "Find the two null moments at once",
+        "prompt": "<p>Independent sign comparisons have been made for the sample of call lengths. A plus means the value exceeds the null median.</p><p>Test whether the population median call length is greater than 40 minutes.</p><p>There are \\(60\\) usable observations and \\(37\\) positive signs.</p><p>Find the exact mean and variance of the null model.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean",
+            "expected": "30",
+            "type": "number"
+          },
+          {
+            "key": "variance",
+            "label": "Variance",
+            "expected": "15",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+        "solution": "<p>The signs are independent.</p><p>There are \\(37\\) positive and \\(23\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(60,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>The null distribution has mean \\(30\\) and variance \\(15\\).</p><p>Use the continuity boundary \\(\\frac{73}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{73}{2}-30}{\\sqrt{15}})\\) gives \\(0.0466\\).</p><p>There is sufficient evidence that the population median call length is greater than 40 minutes.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-sign-study-11",
+        "title": "Use the upper-tail continuity boundary",
+        "prompt": "<p>Independent sign comparisons have been made for the sample of call lengths. A plus means the value exceeds the null median.</p><p>Test whether the population median call length is greater than 40 minutes.</p><p>There are \\(48\\) usable observations and \\(32\\) positive signs.</p><p>Give the continuity-corrected boundary for the observed tail.</p>",
+        "fields": [
+          {
+            "key": "boundary",
+            "label": "Corrected boundary",
+            "expected": "63/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+        "solution": "<p>The signs are independent.</p><p>There are \\(32\\) positive and \\(16\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(48,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>The null distribution has mean \\(24\\) and variance \\(12\\).</p><p>Use the continuity boundary \\(\\frac{63}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{63}{2}-24}{2 \\sqrt{3}})\\) gives \\(0.0152\\).</p><p>There is sufficient evidence that the population median call length is greater than 40 minutes.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-sign-study-12",
+        "title": "Find a two-sided normal p-value",
+        "prompt": "<p>Independent sign comparisons have been made for the sample of call lengths. A plus means the value exceeds the null median.</p><p>Test whether the population median call length is different from 40 minutes.</p><p>There are \\(40\\) usable observations and \\(10\\) positive signs.</p><p>Find the p-value to 4 decimal places using the normal approximation.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "p-value (4 d.p.)",
+            "expected": "0.0026631192591385594",
+            "type": "approximate",
+            "absolute_tolerance": 5e-05
+          }
+        ],
+        "hint": "<p>A positive sign means a value above the null median, or a positive after-minus-before difference. Choose the tail from the alternative.</p>",
+        "solution": "<p>The signs are independent.</p><p>There are \\(10\\) positive and \\(30\\) negative signs.</p><p>\\(B\\sim\\mathrm{Bin}\\left(40,\\tfrac{1}{2}\\right)\\) under the null hypothesis.</p><p>The null distribution has mean \\(20\\) and variance \\(10\\).</p><p>Use the continuity boundary \\(\\frac{21}{2}\\).</p><p>The doubled relevant normal tail \\(\\mathrm P(Z\\le \\frac{\\frac{21}{2}-20}{\\sqrt{10}})\\) gives \\(0.0027\\).</p><p>There is sufficient evidence that the population median call length is different from 40 minutes.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose and use the test</h2><p>Start by identifying the sampling design.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Step</th><th scope=\"col\">Keep in view</th></tr></thead><tbody><tr><th scope=\"row\">Parameter</th><td>Population median or median paired difference.</td></tr><tr><th scope=\"row\">Null count</th><td>\\(B\\sim\\mathrm{Bin}(n,\\tfrac12)\\)</td></tr><tr><th scope=\"row\">Two-sided</th><td>Double the smaller inclusive tail, up to 1.</td></tr><tr><th scope=\"row\">Normal</th><td>\\(\\mathrm N(\\tfrac n2,\\tfrac n4)\\) with a continuity correction.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>State a population parameter or populations in the hypotheses.</li><li>Choose a direction before looking at the observed statistic.</li><li>Include the observed value in the exact tail.</li></ul>",
+      "examTip": "<p>Compare the p-value with the significance level. State what the sample provides evidence for.</p>"
+    },
+    "related": [
+      {
+        "title": "One-sample signed ranks",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_signed"
+      },
+      {
+        "title": "Matched pairs",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_paired"
+      },
+      {
+        "title": "Rank sums for independent groups",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_rank_sum"
+      }
+    ]
+  },
+  "stats_nonparam_signed": {
+    "updatedOn": "2026-11-21",
+    "description": "Rank absolute deviations and use the Wilcoxon signed-rank test for a median, including the normal approximation.",
+    "sections": [
+      {
+        "id": "differences",
+        "title": "What differences do I rank?",
+        "label": "Differences",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Subtract the hypothesised median from each reading.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the population median specified by the null hypothesis. Use rank 1 for the smallest absolute difference.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Ranking signed values directly gives large negative values the wrong places.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-signed-study-01",
+            "title": "Keep the first observed rank separate",
+            "prompt": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is greater than 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(19\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(21\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(41\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(53\\)</td></tr></tbody></table></div><p>Find the magnitude rank of observation 1.</p>",
+            "fields": [
+              {
+                "key": "rank",
+                "label": "Absolute difference rank",
+                "expected": "4",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(-13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(19\\)</td><td>\\(9\\)</td></tr></tbody></table></div><p>\\(P=32,\\quad Q=13,\\quad T=13\\).</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(77\\) of \\(512\\) equally likely patterns. The resulting probability is \\(\\frac{77}{512}\\).</p><p>There is insufficient evidence that the population median process time is greater than 34 minutes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Work with deviations from the fixed value in the hypothesis.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rank-sums",
+        "title": "What do the two rank sums tell me?",
+        "label": "Rank sums",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The magnitude matters through the rank.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Give each rank the sign of its original difference. Add positive and negative ranks separately, using their positive rank numbers.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>\\(Q\\) is a sum of positive rank numbers, even though its assigned differences were negative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-signed-study-02",
+            "title": "Give both complete rank sums",
+            "prompt": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is greater than 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(25\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(29\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(41\\)</td></tr></tbody></table></div><p>Find both signed rank sums.</p>",
+            "fields": [
+              {
+                "key": "positive",
+                "label": "Positive rank sum P",
+                "expected": "30",
+                "type": "number"
+              },
+              {
+                "key": "negative",
+                "label": "Negative rank sum Q",
+                "expected": "6",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(-5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(7\\)</td><td>\\(3\\)</td></tr></tbody></table></div><p>\\(P=30,\\quad Q=6,\\quad T=6\\).</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(14\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{7}{128}\\).</p><p>There is insufficient evidence that the population median process time is greater than 34 minutes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check \\(P+Q=\\tfrac{n(n+1)}{2}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "method",
+        "title": "Why does the method require symmetry?",
+        "label": "Assumptions",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Under the null symmetry makes each sign equally likely, even at a particular magnitude.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The standard signed-rank model uses independent observations and a continuous symmetric distribution for the sample deviations.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Holding the median fixed with unequal tails need not give the same rank behaviour. Without a defensible symmetry assumption, consider the sign test.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-signed-study-03",
+            "title": "Choose the exact tabulated statistic",
+            "prompt": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is greater than 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(17\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(41\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(25\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(37\\)</td></tr></tbody></table></div><p>Find the smaller of the two signed rank sums.</p>",
+            "fields": [
+              {
+                "key": "stat",
+                "label": "Smaller rank sum T",
+                "expected": "12",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(-9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(3\\)</td><td>\\(1\\)</td></tr></tbody></table></div><p>\\(P=24,\\quad Q=12,\\quad T=12\\).</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(59\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{59}{256}\\).</p><p>There is insufficient evidence that the population median process time is greater than 34 minutes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Cambridge exam data for the method avoid zero differences and tied absolute ranks.</p>"
+          }
+        ]
+      },
+      {
+        "id": "direction",
+        "title": "What happens with a directional claim?",
+        "label": "Tail selection",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The smaller sum \\(T\\) can be used with the MF19 tables.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a two-sided claim small \\(T\\) supports either direction. For a directional claim check which signed sum was small before using the one-tailed cutoff.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A small statistic from the opposite direction is not evidence for the stated alternative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-signed-study-04",
+            "title": "Identify which tail is evidence",
+            "prompt": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is greater than 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(41\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(53\\)</td></tr></tbody></table></div><p>Which tail of the positive rank sum gives evidence for the alternative?</p>",
+            "fields": [
+              {
+                "key": "tail",
+                "label": "Tail",
+                "type": "choice",
+                "expected": "B",
+                "options": {
+                  "A": "<p>Lower tail</p>",
+                  "B": "<p>Upper tail</p>",
+                  "C": "<p>Both tails</p>"
+                }
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(19\\)</td><td>\\(9\\)</td></tr></tbody></table></div><p>\\(P=44,\\quad Q=1,\\quad T=1\\).</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(2\\) of \\(512\\) equally likely patterns. The resulting probability is \\(\\frac{1}{256}\\).</p><p>There is sufficient evidence that the population median process time is greater than 34 minutes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>You can instead work directly with a named tail of \\(P\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "complete",
+        "title": "How do I reach a conclusion in context?",
+        "label": "Test and conclude",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The signed-rank test concerns a population location under the symmetry assumption.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Combine the sign of the evidence, the observed statistic and either a critical cutoff or an inclusive p-value.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use “sufficient evidence” or “insufficient evidence” about the population claim, even when the sample appears clear.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-signed-study-05",
+            "title": "Interpret the evidence at the 5% level",
+            "prompt": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is greater than 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(17\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(41\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(21\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(23\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(43\\)</td></tr></tbody></table></div><p>Choose the conclusion at 5%. Use the exact null distribution.</p>",
+            "fields": [
+              {
+                "key": "decision",
+                "label": "Conclusion",
+                "type": "choice",
+                "expected": "A",
+                "options": {
+                  "A": "<p>Insufficient evidence that the population median process time is greater than 34 minutes.</p>",
+                  "B": "<p>Sufficient evidence that the population median process time is greater than 34 minutes.</p>"
+                }
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(-13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(-11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(9\\)</td><td>\\(4\\)</td></tr></tbody></table></div><p>\\(P=17,\\quad Q=19,\\quad T=17\\).</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(148\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{37}{64}\\).</p><p>There is insufficient evidence that the population median process time is greater than 34 minutes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>State the significance level with the decision.</p>"
+          }
+        ]
+      },
+      {
+        "id": "normal",
+        "title": "How can I estimate a tail in a large sample?",
+        "label": "Large sample",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>For larger \\(n\\) the normal approximation describes a specified rank sum such as \\(P\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm E(P)=\\frac{n(n+1)}4,\\qquad \\mathrm{Var}(P)=\\frac{n(n+1)(2n+1)}{24}\\). Use the normal boundary that includes the observed integer.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>These moments describe \\(P\\) or \\(Q\\) individually. Applying them to the smaller statistic \\(T\\) gives a different distribution.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-signed-study-06",
+            "title": "Find a p-value with the normal approximation",
+            "prompt": "<p>Assume independent observations from a continuous symmetric population.</p><p>Test whether the population median process time is greater than 34 minutes.</p><p>The data give \\(26\\) distinct nonzero magnitudes and positive rank sum \\(238\\).</p><p>Find the p-value to 4 decimal places using a normal approximation.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "p-value (4 d.p.)",
+                "expected": "0.057665787962435974",
+                "type": "approximate",
+                "absolute_tolerance": 5e-05
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><p>\\(P=238,\\quad Q=113,\\quad T=113\\).</p><p>The null distribution has mean \\(\\frac{351}{2}\\) and variance \\(\\frac{6201}{4}\\).</p><p>Use the continuity boundary \\(\\frac{475}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{475}{2}-\\frac{351}{2}}{\\frac{3 \\sqrt{689}}{2}})\\) gives \\(0.0577\\).</p><p>There is insufficient evidence that the population median process time is greater than 34 minutes.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the standard deviation and the direction of the continuity correction.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Observation magnitude ranks from unsorted differences",
+        "question": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is greater than 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(17\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(15\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(43\\)</td></tr></tbody></table></div><p>Find the magnitude rank of observation 2.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(11\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(13\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(-17\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(15\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(-19\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(9\\)</td><td>\\(3\\)</td></tr></tbody></table></div><p>\\(P=20,\\quad Q=16,\\quad T=16\\).</p>",
+          "<p>Use the upper including the observed test value. Under the null, the tail contains \\(108\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{27}{64}\\).</p>",
+          "<p>There is insufficient evidence that the population median process time is greater than 34 minutes.</p>"
+        ]
+      },
+      {
+        "title": "Two rank sums from the same sample",
+        "question": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is greater than 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(23\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(21\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(41\\)</td></tr></tbody></table></div><p>Find both signed rank sums.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(-13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(7\\)</td><td>\\(3\\)</td></tr></tbody></table></div><p>\\(P=17,\\quad Q=11,\\quad T=11\\).</p>",
+          "<p>Use the upper including the observed test value. Under the null, the tail contains \\(44\\) of \\(128\\) equally likely patterns. The resulting probability is \\(\\frac{11}{32}\\).</p>",
+          "<p>There is insufficient evidence that the population median process time is greater than 34 minutes.</p>"
+        ]
+      },
+      {
+        "title": "Check the rank-sum total",
+        "question": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is greater than 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(27\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(25\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(29\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(53\\)</td></tr></tbody></table></div><p>Find both signed rank sums.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(13\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(15\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(-9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(-5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(17\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(19\\)</td><td>\\(8\\)</td></tr></tbody></table></div><p>\\(P=27,\\quad Q=9,\\quad T=9\\).</p>",
+          "<p>Use the upper including the observed test value. Under the null, the tail contains \\(32\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{1}{8}\\).</p>",
+          "<p>There is insufficient evidence that the population median process time is greater than 34 minutes.</p>"
+        ]
+      },
+      {
+        "title": "Turn the smaller signed sum into T",
+        "question": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is greater than 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(17\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(15\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(41\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(31\\)</td></tr></tbody></table></div><p>Find the smaller of the two signed rank sums.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-17\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(-19\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr></tbody></table></div><p>\\(P=20,\\quad Q=16,\\quad T=16\\).</p>",
+          "<p>Use the upper including the observed test value. Under the null, the tail contains \\(108\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{27}{64}\\).</p>",
+          "<p>There is insufficient evidence that the population median process time is greater than 34 minutes.</p>"
+        ]
+      },
+      {
+        "title": "Identify the direction despite a small other sum",
+        "question": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is greater than 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(41\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(25\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(49\\)</td></tr></tbody></table></div><p>Which tail of the positive rank sum gives evidence for the alternative?</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(-9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(15\\)</td><td>\\(7\\)</td></tr></tbody></table></div><p>\\(P=32,\\quad Q=4,\\quad T=4\\).</p>",
+          "<p>Use the upper including the observed test value. Under the null, the tail contains \\(7\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{7}{256}\\).</p>",
+          "<p>There is sufficient evidence that the population median process time is greater than 34 minutes.</p>"
+        ]
+      },
+      {
+        "title": "Use an exact two-sided signed-rank law",
+        "question": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is different from 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(41\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(31\\)</td></tr></tbody></table></div><p>Find the exact p-value from the equally likely sign patterns.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr></tbody></table></div><p>\\(P=35,\\quad Q=1,\\quad T=1\\).</p>",
+          "<p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(4\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{1}{64}\\).</p>",
+          "<p>There is sufficient evidence that the population median process time is different from 34 minutes.</p>"
+        ]
+      },
+      {
+        "title": "Continuity-correct one side of a rank-sum tail",
+        "question": "<p>Assume independent observations from a continuous symmetric population.</p><p>Test whether the population median process time is greater than 34 minutes.</p><p>The data give \\(24\\) distinct nonzero magnitudes and positive rank sum \\(210\\).</p><p>Give the continuity-corrected boundary of the observed tail.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><p>\\(P=210,\\quad Q=90,\\quad T=90\\).</p>",
+          "<p>The null distribution has mean \\(150\\) and variance \\(1225\\).</p><p>Use the continuity boundary \\(\\frac{419}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{419}{2}-150}{35})\\) gives \\(0.0446\\).</p>",
+          "<p>There is sufficient evidence that the population median process time is greater than 34 minutes.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Absolute difference",
+        "definition": "<p>The positive magnitude used to assign a rank.</p>"
+      },
+      {
+        "term": "Positive rank sum",
+        "definition": "<p>The sum of ranks whose original signed differences are positive.</p>"
+      },
+      {
+        "term": "Negative rank sum",
+        "definition": "<p>The sum of ranks whose original signed differences are negative.</p>"
+      },
+      {
+        "term": "Symmetry",
+        "definition": "<p>The pattern to either side of the centre of the population distribution is a reflection.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-nonparam-signed-study-07",
+        "title": "Count the rank signs after comparing values",
+        "prompt": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is different from 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(37\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(15\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(19\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(23\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(27\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(39\\)</td></tr></tbody></table></div><p>Find both signed rank sums.</p>",
+        "fields": [
+          {
+            "key": "positive",
+            "label": "Positive rank sum P",
+            "expected": "21",
+            "type": "number"
+          },
+          {
+            "key": "negative",
+            "label": "Negative rank sum Q",
+            "expected": "24",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-19\\)</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(-15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(-11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(-7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(5\\)</td><td>\\(2\\)</td></tr></tbody></table></div><p>\\(P=21,\\quad Q=24,\\quad T=21\\).</p><p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(466\\) of \\(512\\) equally likely patterns. The resulting probability is \\(\\frac{233}{256}\\).</p><p>There is insufficient evidence that the population median process time is different from 34 minutes.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-signed-study-08",
+        "title": "Choose the direction if larger is the alternative",
+        "prompt": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is greater than 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(41\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(43\\)</td></tr></tbody></table></div><p>Which tail of the positive rank sum gives evidence for the alternative?</p>",
+        "fields": [
+          {
+            "key": "tail",
+            "label": "Tail",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Lower tail</p>",
+              "B": "<p>Upper tail</p>",
+              "C": "<p>Both tails</p>"
+            }
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(9\\)</td><td>\\(4\\)</td></tr></tbody></table></div><p>\\(P=35,\\quad Q=1,\\quad T=1\\).</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(2\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{1}{128}\\).</p><p>There is sufficient evidence that the population median process time is greater than 34 minutes.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-signed-study-09",
+        "title": "Calculate the exact probability for an extreme outcome",
+        "prompt": "<p>A random sample of process times is compared with a proposed population median of 34 minutes. Assume a continuous symmetric distribution.</p><p>Test whether the population median process time is different from 34 minutes.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Time (minutes)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(39\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(41\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(43\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(45\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(47\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(49\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(31\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(53\\)</td></tr></tbody></table></div><p>Find the exact p-value from the equally likely sign patterns.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "p-value",
+            "expected": "1/128",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(19\\)</td><td>\\(9\\)</td></tr></tbody></table></div><p>\\(P=44,\\quad Q=1,\\quad T=1\\).</p><p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(4\\) of \\(512\\) equally likely patterns. The resulting probability is \\(\\frac{1}{128}\\).</p><p>There is sufficient evidence that the population median process time is different from 34 minutes.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-signed-study-10",
+        "title": "Find both normal parameters",
+        "prompt": "<p>Assume independent observations from a continuous symmetric population.</p><p>Test whether the population median process time is greater than 34 minutes.</p><p>The data give \\(28\\) distinct nonzero magnitudes and positive rank sum \\(250\\).</p><p>Give the exact mean and variance of the positive rank sum under the null hypothesis.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean",
+            "expected": "203",
+            "type": "number"
+          },
+          {
+            "key": "var",
+            "label": "Variance",
+            "expected": "3857/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><p>\\(P=250,\\quad Q=156,\\quad T=156\\).</p><p>The null distribution has mean \\(203\\) and variance \\(\\frac{3857}{2}\\).</p><p>Use the continuity boundary \\(\\frac{499}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{499}{2}-203}{\\frac{\\sqrt{7714}}{2}})\\) gives \\(0.1448\\).</p><p>There is insufficient evidence that the population median process time is greater than 34 minutes.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-signed-study-11",
+        "title": "Correct the boundary of a large-sample upper tail",
+        "prompt": "<p>Assume independent observations from a continuous symmetric population.</p><p>Test whether the population median process time is greater than 34 minutes.</p><p>The data give \\(30\\) distinct nonzero magnitudes and positive rank sum \\(323\\).</p><p>Give the continuity-corrected boundary of the observed tail.</p>",
+        "fields": [
+          {
+            "key": "boundary",
+            "label": "Corrected boundary",
+            "expected": "645/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><p>\\(P=323,\\quad Q=142,\\quad T=142\\).</p><p>The null distribution has mean \\(\\frac{465}{2}\\) and variance \\(\\frac{9455}{4}\\).</p><p>Use the continuity boundary \\(\\frac{645}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{645}{2}-\\frac{465}{2}}{\\frac{\\sqrt{9455}}{2}})\\) gives \\(0.0321\\).</p><p>There is sufficient evidence that the population median process time is greater than 34 minutes.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-signed-study-12",
+        "title": "Interpret a large-sample two-sided test",
+        "prompt": "<p>Assume independent observations from a continuous symmetric population.</p><p>Test whether the population median process time is different from 34 minutes.</p><p>The data give \\(30\\) distinct nonzero magnitudes and positive rank sum \\(330\\).</p><p>Choose the conclusion at 5%. Use a normal approximation.</p>",
+        "fields": [
+          {
+            "key": "decision",
+            "label": "Conclusion",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Insufficient evidence that the population median process time is different from 34 minutes.</p>",
+              "B": "<p>Sufficient evidence that the population median process time is different from 34 minutes.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><p>\\(P=330,\\quad Q=135,\\quad T=135\\).</p><p>The null distribution has mean \\(\\frac{465}{2}\\) and variance \\(\\frac{9455}{4}\\).</p><p>Use the continuity boundary \\(\\frac{659}{2}\\).</p><p>The doubled relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{659}{2}-\\frac{465}{2}}{\\frac{\\sqrt{9455}}{2}})\\) gives \\(0.0460\\).</p><p>There is sufficient evidence that the population median process time is different from 34 minutes.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose and use the test</h2><p>Start by identifying the sampling design.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Step</th><th scope=\"col\">Keep in view</th></tr></thead><tbody><tr><th scope=\"row\">Difference</th><td>Subtract the hypothesised median from each reading.</td></tr><tr><th scope=\"row\">Rank</th><td>Rank magnitudes and restore signs.</td></tr><tr><th scope=\"row\">Check</th><td>\\(P+Q=\\tfrac{n(n+1)}2,\\quad T=\\min(P,Q)\\)</td></tr><tr><th scope=\"row\">Normal</th><td>\\(\\mathrm N\\left(\\tfrac{n(n+1)}4,\\tfrac{n(n+1)(2n+1)}{24}\\right)\\) for \\(P\\).</td></tr></tbody></table></div>",
+      "checks": "<ul><li>State a population parameter or populations in the hypotheses.</li><li>Choose a direction before looking at the observed statistic.</li><li>Include the observed value in the exact tail.</li></ul>",
+      "examTip": "<p>Compare the p-value with the significance level. State what the sample provides evidence for.</p>"
+    },
+    "related": [
+      {
+        "title": "Sign test for a population median",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_sign"
+      },
+      {
+        "title": "Matched pairs",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_paired"
+      },
+      {
+        "title": "Rank sums for independent groups",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_rank_sum"
+      }
+    ]
+  },
+  "stats_nonparam_paired": {
+    "updatedOn": "2026-11-21",
+    "description": "Form matched differences, rank their magnitudes and interpret a Wilcoxon signed-rank test for a change.",
+    "sections": [
+      {
+        "id": "differences",
+        "title": "What differences do I rank?",
+        "label": "Differences",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Subtract before from after in each pair.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use a population median difference of zero. Use rank 1 for the smallest absolute difference.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Ranking signed values directly gives large negative values the wrong places.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-paired-study-01",
+            "title": "Keep the first observed rank separate",
+            "prompt": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(51\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(56\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(41\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(64\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(71\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(80\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(85\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(78\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(72\\)</td><td>\\(57\\)</td></tr></tbody></table></div><p>Find the magnitude rank of observation 1.</p>",
+            "fields": [
+              {
+                "key": "rank",
+                "label": "Absolute difference rank",
+                "expected": "1",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(-13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(19\\)</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(-15\\)</td><td>\\(7\\)</td></tr></tbody></table></div><p>\\(P=32,\\quad Q=13,\\quad T=13\\).</p><p>Use the lower including the observed test value. Under the null, the tail contains \\(448\\) of \\(512\\) equally likely patterns. The resulting probability is \\(\\frac{7}{8}\\).</p><p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A matched pair produces one difference.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rank-sums",
+        "title": "What do the two rank sums tell me?",
+        "label": "Rank sums",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The magnitude matters through the rank.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Give each rank the sign of its original difference. Add positive and negative ranks separately, using their positive rank numbers.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>\\(Q\\) is a sum of positive rank numbers, even though its assigned differences were negative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-paired-study-02",
+            "title": "Give both complete rank sums",
+            "prompt": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(65\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(62\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(67\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(72\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(55\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(70\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(69\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(60\\)</td></tr></tbody></table></div><p>Find both signed rank sums.</p>",
+            "fields": [
+              {
+                "key": "positive",
+                "label": "Positive rank sum P",
+                "expected": "30",
+                "type": "number"
+              },
+              {
+                "key": "negative",
+                "label": "Negative rank sum Q",
+                "expected": "6",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(-5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(-9\\)</td><td>\\(4\\)</td></tr></tbody></table></div><p>\\(P=30,\\quad Q=6,\\quad T=6\\).</p><p>Use the lower including the observed test value. Under the null, the tail contains \\(246\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{123}{128}\\).</p><p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check \\(P+Q=\\tfrac{n(n+1)}{2}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "method",
+        "title": "Why does the method require symmetry?",
+        "label": "Assumptions",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Under the null symmetry makes each sign equally likely, even at a particular magnitude.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The standard signed-rank model uses independent observations and a continuous symmetric distribution for the paired differences.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Holding the median fixed with unequal tails need not give the same rank behaviour. Without a defensible symmetry assumption, consider the sign test.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-paired-study-03",
+            "title": "Choose the exact tabulated statistic",
+            "prompt": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(55\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(62\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(67\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(72\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(51\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(66\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(71\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(52\\)</td></tr></tbody></table></div><p>Find the smaller of the two signed rank sums.</p>",
+            "fields": [
+              {
+                "key": "stat",
+                "label": "Smaller rank sum T",
+                "expected": "12",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(-9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(-17\\)</td><td>\\(8\\)</td></tr></tbody></table></div><p>\\(P=24,\\quad Q=12,\\quad T=12\\).</p><p>Use the lower including the observed test value. Under the null, the tail contains \\(207\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{207}{256}\\).</p><p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Cambridge exam data for the method avoid zero differences and tied absolute ranks.</p>"
+          }
+        ]
+      },
+      {
+        "id": "direction",
+        "title": "What happens with a directional claim?",
+        "label": "Tail selection",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The smaller sum \\(T\\) can be used with the MF19 tables.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a two-sided claim small \\(T\\) supports either direction. For a directional claim check which signed sum was small before using the one-tailed cutoff.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A small statistic from the opposite direction is not evidence for the stated alternative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-paired-study-04",
+            "title": "Identify which tail is evidence",
+            "prompt": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(57\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(58\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(65\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(70\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(75\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(80\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(85\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(74\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(72\\)</td><td>\\(69\\)</td></tr></tbody></table></div><p>Which tail of the positive rank sum gives evidence for the alternative?</p>",
+            "fields": [
+              {
+                "key": "tail",
+                "label": "Tail",
+                "type": "choice",
+                "expected": "A",
+                "options": {
+                  "A": "<p>Lower tail</p>",
+                  "B": "<p>Upper tail</p>",
+                  "C": "<p>Both tails</p>"
+                }
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(19\\)</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr></tbody></table></div><p>\\(P=44,\\quad Q=1,\\quad T=1\\).</p><p>Use the lower including the observed test value. Under the null, the tail contains \\(511\\) of \\(512\\) equally likely patterns. The resulting probability is \\(\\frac{511}{512}\\).</p><p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>You can instead work directly with a named tail of \\(P\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "complete",
+        "title": "How do I reach a conclusion in context?",
+        "label": "Test and conclude",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The signed-rank test concerns a population location under the symmetry assumption.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Combine the sign of the evidence, the observed statistic and either a critical cutoff or an inclusive p-value.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use “sufficient evidence” or “insufficient evidence” about the population claim, even when the sample appears clear.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-paired-study-05",
+            "title": "Interpret the evidence at the 5% level",
+            "prompt": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(51\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(56\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(61\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(44\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(49\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(72\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(81\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(52\\)</td></tr></tbody></table></div><p>Choose the conclusion at 5%. Use the exact null distribution.</p>",
+            "fields": [
+              {
+                "key": "decision",
+                "label": "Conclusion",
+                "type": "choice",
+                "expected": "A",
+                "options": {
+                  "A": "<p>Insufficient evidence that the population median after-minus-before difference is less than zero.</p>",
+                  "B": "<p>Sufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+                }
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(-13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(-11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(-17\\)</td><td>\\(8\\)</td></tr></tbody></table></div><p>\\(P=17,\\quad Q=19,\\quad T=17\\).</p><p>Use the lower including the observed test value. Under the null, the tail contains \\(121\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{121}{256}\\).</p><p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>State the significance level with the decision.</p>"
+          }
+        ]
+      },
+      {
+        "id": "normal",
+        "title": "How can I estimate a tail in a large sample?",
+        "label": "Large sample",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>For larger \\(n\\) the normal approximation describes a specified rank sum such as \\(P\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm E(P)=\\frac{n(n+1)}4,\\qquad \\mathrm{Var}(P)=\\frac{n(n+1)(2n+1)}{24}\\). Use the normal boundary that includes the observed integer.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>These moments describe \\(P\\) or \\(Q\\) individually. Applying them to the smaller statistic \\(T\\) gives a different distribution.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-paired-study-06",
+            "title": "Find a p-value with the normal approximation",
+            "prompt": "<p>Assume the population of paired differences is continuous and symmetric, with independent pairs.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><p>The data give \\(26\\) distinct nonzero magnitudes and positive rank sum \\(113\\).</p><p>Find the p-value to 4 decimal places using a normal approximation.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "p-value (4 d.p.)",
+                "expected": "0.057665787962435974",
+                "type": "approximate",
+                "absolute_tolerance": 5e-05
+              }
+            ],
+            "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+            "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><p>\\(P=113,\\quad Q=238,\\quad T=113\\).</p><p>The null distribution has mean \\(\\frac{351}{2}\\) and variance \\(\\frac{6201}{4}\\).</p><p>Use the continuity boundary \\(\\frac{227}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\le \\frac{\\frac{227}{2}-\\frac{351}{2}}{\\frac{3 \\sqrt{689}}{2}})\\) gives \\(0.0577\\).</p><p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the standard deviation and the direction of the continuity correction.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Pair magnitude ranks from unsorted differences",
+        "question": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(61\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(34\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(59\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(72\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(41\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(72\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(77\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(66\\)</td></tr></tbody></table></div><p>Find the magnitude rank of observation 2.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(13\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-17\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(15\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(-19\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(9\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(11\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr></tbody></table></div><p>\\(P=20,\\quad Q=16,\\quad T=16\\).</p>",
+          "<p>Use the lower including the observed test value. Under the null, the tail contains \\(161\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{161}{256}\\).</p>",
+          "<p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+        ]
+      },
+      {
+        "title": "Two rank sums from the same sample",
+        "question": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(53\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(54\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(41\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(66\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(67\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(78\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(55\\)</td></tr></tbody></table></div><p>Find both signed rank sums.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(-13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(-11\\)</td><td>\\(5\\)</td></tr></tbody></table></div><p>\\(P=17,\\quad Q=11,\\quad T=11\\).</p>",
+          "<p>Use the lower including the observed test value. Under the null, the tail contains \\(91\\) of \\(128\\) equally likely patterns. The resulting probability is \\(\\frac{91}{128}\\).</p>",
+          "<p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+        ]
+      },
+      {
+        "title": "Check the rank-sum total",
+        "question": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(63\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(54\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(45\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(52\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(77\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(82\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(79\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(62\\)</td></tr></tbody></table></div><p>Find both signed rank sums.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(15\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(-9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(-5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(17\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(19\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(13\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(-7\\)</td><td>\\(3\\)</td></tr></tbody></table></div><p>\\(P=27,\\quad Q=9,\\quad T=9\\).</p>",
+          "<p>Use the lower including the observed test value. Under the null, the tail contains \\(231\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{231}{256}\\).</p>",
+          "<p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+        ]
+      },
+      {
+        "title": "Turn the smaller signed sum into T",
+        "question": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(29\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(58\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(63\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(68\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(73\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(60\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(71\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(52\\)</td></tr></tbody></table></div><p>Find the smaller of the two signed rank sums.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(-19\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(-17\\)</td><td>\\(7\\)</td></tr></tbody></table></div><p>\\(P=20,\\quad Q=16,\\quad T=16\\).</p>",
+          "<p>Use the lower including the observed test value. Under the null, the tail contains \\(161\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{161}{256}\\).</p>",
+          "<p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+        ]
+      },
+      {
+        "title": "Identify the direction despite a small other sum",
+        "question": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(59\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(56\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(61\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(48\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(73\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(78\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(83\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(72\\)</td></tr></tbody></table></div><p>Which tail of the positive rank sum gives evidence for the alternative?</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(-9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(3\\)</td><td>\\(1\\)</td></tr></tbody></table></div><p>\\(P=32,\\quad Q=4,\\quad T=4\\).</p>",
+          "<p>Use the lower including the observed test value. Under the null, the tail contains \\(251\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{251}{256}\\).</p>",
+          "<p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+        ]
+      },
+      {
+        "title": "Use an exact two-sided signed-rank law",
+        "question": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is different from zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(59\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(66\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(67\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(66\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(77\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(60\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(71\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(76\\)</td></tr></tbody></table></div><p>Find the exact p-value from the equally likely sign patterns.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(7\\)</td><td>\\(3\\)</td></tr></tbody></table></div><p>\\(P=35,\\quad Q=1,\\quad T=1\\).</p>",
+          "<p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(4\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{1}{64}\\).</p>",
+          "<p>There is sufficient evidence that the population median after-minus-before difference is different from zero.</p>"
+        ]
+      },
+      {
+        "title": "Continuity-correct one side of a rank-sum tail",
+        "question": "<p>Assume the population of paired differences is continuous and symmetric, with independent pairs.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><p>The data give \\(24\\) distinct nonzero magnitudes and positive rank sum \\(90\\).</p><p>Give the continuity-corrected boundary of the observed tail.</p>",
+        "solution": [
+          "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><p>\\(P=90,\\quad Q=210,\\quad T=90\\).</p>",
+          "<p>The null distribution has mean \\(150\\) and variance \\(1225\\).</p><p>Use the continuity boundary \\(\\frac{181}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\le \\frac{\\frac{181}{2}-150}{35})\\) gives \\(0.0446\\).</p>",
+          "<p>There is sufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Absolute difference",
+        "definition": "<p>The positive magnitude used to assign a rank.</p>"
+      },
+      {
+        "term": "Positive rank sum",
+        "definition": "<p>The sum of ranks whose original signed differences are positive.</p>"
+      },
+      {
+        "term": "Negative rank sum",
+        "definition": "<p>The sum of ranks whose original signed differences are negative.</p>"
+      },
+      {
+        "term": "Symmetry",
+        "definition": "<p>The pattern to either side of the centre of the population distribution is a reflection.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-nonparam-paired-study-07",
+        "title": "Count the rank signs after comparing values",
+        "prompt": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is different from zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(65\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(67\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(46\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(69\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(56\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(71\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(72\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(72\\)</td><td>\\(53\\)</td></tr></tbody></table></div><p>Find both signed rank sums.</p>",
+        "fields": [
+          {
+            "key": "positive",
+            "label": "Positive rank sum P",
+            "expected": "21",
+            "type": "number"
+          },
+          {
+            "key": "negative",
+            "label": "Negative rank sum Q",
+            "expected": "24",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(-11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(-7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(-19\\)</td><td>\\(9\\)</td></tr></tbody></table></div><p>\\(P=21,\\quad Q=24,\\quad T=21\\).</p><p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(466\\) of \\(512\\) equally likely patterns. The resulting probability is \\(\\frac{233}{256}\\).</p><p>There is insufficient evidence that the population median after-minus-before difference is different from zero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-paired-study-08",
+        "title": "Choose the direction if larger is the alternative",
+        "prompt": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is greater than zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(55\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(48\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(65\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(70\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(75\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(72\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(83\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(74\\)</td></tr></tbody></table></div><p>Which tail of the positive rank sum gives evidence for the alternative?</p>",
+        "fields": [
+          {
+            "key": "tail",
+            "label": "Tail",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Lower tail</p>",
+              "B": "<p>Upper tail</p>",
+              "C": "<p>Both tails</p>"
+            }
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(17\\)</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(5\\)</td><td>\\(2\\)</td></tr></tbody></table></div><p>\\(P=35,\\quad Q=1,\\quad T=1\\).</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(2\\) of \\(256\\) equally likely patterns. The resulting probability is \\(\\frac{1}{128}\\).</p><p>There is sufficient evidence that the population median after-minus-before difference is greater than zero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-paired-study-09",
+        "title": "Calculate the exact probability for an extreme outcome",
+        "prompt": "<p>A random sample of valves was timed before and after a service. Let the difference be after minus before. Assume the population of differences is continuous and symmetric.</p><p>Test whether the population median after-minus-before difference is different from zero.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Valve</th><th scope=\"col\">Before (s)</th><th scope=\"col\">After (s)</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(48\\)</td><td>\\(55\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(51\\)</td><td>\\(60\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(54\\)</td><td>\\(65\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(57\\)</td><td>\\(70\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(60\\)</td><td>\\(75\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(63\\)</td><td>\\(60\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(66\\)</td><td>\\(85\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(69\\)</td><td>\\(74\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(72\\)</td><td>\\(89\\)</td></tr></tbody></table></div><p>Find the exact p-value from the equally likely sign patterns.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "p-value",
+            "expected": "1/128",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Observation</th><th scope=\"col\">Signed difference</th><th scope=\"col\">Absolute difference rank</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(7\\)</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(9\\)</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(11\\)</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(13\\)</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(15\\)</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">6</th><td>\\(-3\\)</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">7</th><td>\\(19\\)</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">8</th><td>\\(5\\)</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">9</th><td>\\(17\\)</td><td>\\(8\\)</td></tr></tbody></table></div><p>\\(P=44,\\quad Q=1,\\quad T=1\\).</p><p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(4\\) of \\(512\\) equally likely patterns. The resulting probability is \\(\\frac{1}{128}\\).</p><p>There is sufficient evidence that the population median after-minus-before difference is different from zero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-paired-study-10",
+        "title": "Find both normal parameters",
+        "prompt": "<p>Assume the population of paired differences is continuous and symmetric, with independent pairs.</p><p>Test whether the population median after-minus-before difference is less than zero.</p><p>The data give \\(28\\) distinct nonzero magnitudes and positive rank sum \\(156\\).</p><p>Give the exact mean and variance of the positive rank sum under the null hypothesis.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean",
+            "expected": "203",
+            "type": "number"
+          },
+          {
+            "key": "var",
+            "label": "Variance",
+            "expected": "3857/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><p>\\(P=156,\\quad Q=250,\\quad T=156\\).</p><p>The null distribution has mean \\(203\\) and variance \\(\\frac{3857}{2}\\).</p><p>Use the continuity boundary \\(\\frac{313}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\le \\frac{\\frac{313}{2}-203}{\\frac{\\sqrt{7714}}{2}})\\) gives \\(0.1448\\).</p><p>There is insufficient evidence that the population median after-minus-before difference is less than zero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-paired-study-11",
+        "title": "Correct the boundary of a large-sample upper tail",
+        "prompt": "<p>Assume the population of paired differences is continuous and symmetric, with independent pairs.</p><p>Test whether the population median after-minus-before difference is greater than zero.</p><p>The data give \\(30\\) distinct nonzero magnitudes and positive rank sum \\(323\\).</p><p>Give the continuity-corrected boundary of the observed tail.</p>",
+        "fields": [
+          {
+            "key": "boundary",
+            "label": "Corrected boundary",
+            "expected": "645/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><p>\\(P=323,\\quad Q=142,\\quad T=142\\).</p><p>The null distribution has mean \\(\\frac{465}{2}\\) and variance \\(\\frac{9455}{4}\\).</p><p>Use the continuity boundary \\(\\frac{645}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{645}{2}-\\frac{465}{2}}{\\frac{\\sqrt{9455}}{2}})\\) gives \\(0.0321\\).</p><p>There is sufficient evidence that the population median after-minus-before difference is greater than zero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-paired-study-12",
+        "title": "Interpret a large-sample two-sided test",
+        "prompt": "<p>Assume the population of paired differences is continuous and symmetric, with independent pairs.</p><p>Test whether the population median after-minus-before difference is different from zero.</p><p>The data give \\(30\\) distinct nonzero magnitudes and positive rank sum \\(135\\).</p><p>Choose the conclusion at 5%. Use a normal approximation.</p>",
+        "fields": [
+          {
+            "key": "decision",
+            "label": "Conclusion",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Insufficient evidence that the population median after-minus-before difference is different from zero.</p>",
+              "B": "<p>Sufficient evidence that the population median after-minus-before difference is different from zero.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Rank magnitudes first. For a one-tailed alternative, check that the observed sum goes in the required direction.</p>",
+        "solution": "<p>Rank the absolute differences from smallest to largest. Give each rank the sign of the original difference.</p><p>\\(P=135,\\quad Q=330,\\quad T=135\\).</p><p>The null distribution has mean \\(\\frac{465}{2}\\) and variance \\(\\frac{9455}{4}\\).</p><p>Use the continuity boundary \\(\\frac{271}{2}\\).</p><p>The doubled relevant normal tail \\(\\mathrm P(Z\\le \\frac{\\frac{271}{2}-\\frac{465}{2}}{\\frac{\\sqrt{9455}}{2}})\\) gives \\(0.0460\\).</p><p>There is sufficient evidence that the population median after-minus-before difference is different from zero.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose and use the test</h2><p>Start by identifying the sampling design.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Step</th><th scope=\"col\">Keep in view</th></tr></thead><tbody><tr><th scope=\"row\">Difference</th><td>Subtract before from after in each pair.</td></tr><tr><th scope=\"row\">Rank</th><td>Rank magnitudes and restore signs.</td></tr><tr><th scope=\"row\">Check</th><td>\\(P+Q=\\tfrac{n(n+1)}2,\\quad T=\\min(P,Q)\\)</td></tr><tr><th scope=\"row\">Normal</th><td>\\(\\mathrm N\\left(\\tfrac{n(n+1)}4,\\tfrac{n(n+1)(2n+1)}{24}\\right)\\) for \\(P\\).</td></tr></tbody></table></div>",
+      "checks": "<ul><li>State a population parameter or populations in the hypotheses.</li><li>Choose a direction before looking at the observed statistic.</li><li>Include the observed value in the exact tail.</li></ul>",
+      "examTip": "<p>Compare the p-value with the significance level. State what the sample provides evidence for.</p>"
+    },
+    "related": [
+      {
+        "title": "Sign test for a population median",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_sign"
+      },
+      {
+        "title": "One-sample signed ranks",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_signed"
+      },
+      {
+        "title": "Rank sums for independent groups",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_rank_sum"
+      }
+    ]
+  },
+  "stats_nonparam_rank_sum": {
+    "updatedOn": "2026-11-21",
+    "description": "Rank two independent samples together and use the Wilcoxon rank-sum test for identical distributions.",
+    "sections": [
+      {
+        "id": "pooled",
+        "title": "Why do both samples share one ordering?",
+        "label": "Combined ordering",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Under the null both samples come from the same continuous distribution.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Pool the values and rank from smallest to largest, preserving each group label.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Ranking each sample on its own cannot show that one group tends to take higher ranks.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-rank-sum-study-01",
+            "title": "Find sample A ranks before summing",
+            "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(11\\)</td><td>\\(34\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(24\\)</td><td>\\(33\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(38\\)</td><td>\\(29\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(42\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">5</th><td>—</td><td>\\(20\\)</td></tr><tr><th scope=\"row\">6</th><td>—</td><td>\\(16\\)</td></tr><tr><th scope=\"row\">7</th><td>—</td><td>\\(15\\)</td></tr></tbody></table></div><p>Rank the pooled data and give the rank sum for sample A.</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Sample A rank sum",
+                "expected": "27",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+            "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>A</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>B</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>B</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>B</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>A</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>B</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>B</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>B</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>B</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">\\(38\\)</th><td>A</td><td>\\(10\\)</td></tr><tr><th scope=\"row\">\\(42\\)</th><td>A</td><td>\\(11\\)</td></tr></tbody></table></div><p>\\(R_m=27,\\quad m(m+n+1)-R_m=21,\\quad W=21\\).</p><p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(214\\) of \\(330\\) equally likely patterns. The resulting probability is \\(\\frac{107}{165}\\).</p><p>There is insufficient evidence that the two population distributions differ.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Cambridge exercises avoid tied ranks.</p>"
+          }
+        ]
+      },
+      {
+        "id": "smaller",
+        "title": "Which rank sum goes in the table?",
+        "label": "Reference group",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Match the group sizes to the notation in your tables.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(m\\le n\\) let \\(R_m\\) be the pooled rank sum for the group of size \\(m\\). If the sizes are equal choose a reference group and keep it throughout.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using the total rank sum of both groups would produce the same number for every sample.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-rank-sum-study-02",
+            "title": "Find a pooled sum for two equal-sized samples",
+            "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(11\\)</td><td>\\(38\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(34\\)</td><td>\\(33\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(16\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(29\\)</td><td>\\(24\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(20\\)</td><td>\\(15\\)</td></tr></tbody></table></div><p>Rank the pooled data and give the rank sum for sample A.</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Sample A rank sum",
+                "expected": "24",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+            "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>A</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>B</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>A</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>A</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>B</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>B</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>A</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>B</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>A</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">\\(38\\)</th><td>B</td><td>\\(10\\)</td></tr></tbody></table></div><p>\\(R_m=24,\\quad m(m+n+1)-R_m=31,\\quad W=24\\).</p><p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(138\\) of \\(252\\) equally likely patterns. The resulting probability is \\(\\frac{23}{42}\\).</p><p>There is insufficient evidence that the two population distributions differ.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Retain the original group labels when sorting.</p>"
+          }
+        ]
+      },
+      {
+        "id": "folded",
+        "title": "How is the table statistic W calculated?",
+        "label": "Tabulated W",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The rank sum for the chosen group can be unusually low or unusually high.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(W=\\min\\{R_m,\\ m(m+n+1)-R_m\\}\\) folds both extremes into the lower end of the null distribution.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The second term is the reflection of the reference-group sum. With unequal sample sizes it is not the actual rank sum of the other group.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-rank-sum-study-03",
+            "title": "Find the lower reflected statistic",
+            "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(24\\)</td><td>\\(29\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(33\\)</td><td>\\(20\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(34\\)</td><td>\\(16\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(25\\)</td><td>\\(15\\)</td></tr><tr><th scope=\"row\">5</th><td>—</td><td>\\(11\\)</td></tr></tbody></table></div><p>Find the tabulated rank-sum statistic \\(W\\).</p>",
+            "fields": [
+              {
+                "key": "w",
+                "label": "W statistic",
+                "expected": "12",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+            "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>B</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>B</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>B</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>B</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>A</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>A</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>B</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>A</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>A</td><td>\\(9\\)</td></tr></tbody></table></div><p>\\(R_m=28,\\quad m(m+n+1)-R_m=12,\\quad W=12\\).</p><p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(8\\) of \\(126\\) equally likely patterns. The resulting probability is \\(\\frac{4}{63}\\).</p><p>There is insufficient evidence that the two population distributions differ.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For a directional test also check which side produced the extreme statistic.</p>"
+          }
+        ]
+      },
+      {
+        "id": "claim",
+        "title": "Which direction is evidence?",
+        "label": "One or two tails",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Specify whether the hypothesis is a difference or an ordered tendency.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Lower A ranks support A tending to smaller values. Higher A ranks support A tending to larger values. Use both tails for an alternative of difference.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A very high A rank sum does not support A tending to smaller values.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-rank-sum-study-04",
+            "title": "Choose the tail for a smaller-A claim",
+            "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether A tends to have smaller values than B.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(29\\)</td><td>\\(38\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(24\\)</td><td>\\(34\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(33\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(20\\)</td><td>\\(16\\)</td></tr><tr><th scope=\"row\">5</th><td>—</td><td>\\(15\\)</td></tr><tr><th scope=\"row\">6</th><td>—</td><td>\\(11\\)</td></tr></tbody></table></div><p>Which tail of the sample A rank sum gives evidence for the alternative?</p>",
+            "fields": [
+              {
+                "key": "tail",
+                "label": "Tail",
+                "type": "choice",
+                "expected": "A",
+                "options": {
+                  "A": "<p>Lower tail</p>",
+                  "B": "<p>Upper tail</p>",
+                  "C": "<p>Both tails</p>"
+                }
+              }
+            ],
+            "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+            "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>B</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>B</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>B</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>A</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>A</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>B</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>A</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>A</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>B</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">\\(38\\)</th><td>B</td><td>\\(10\\)</td></tr></tbody></table></div><p>\\(R_m=24,\\quad m(m+n+1)-R_m=20,\\quad W=20\\).</p><p>Use the lower including the observed test value. Under the null, the tail contains \\(146\\) of \\(210\\) equally likely patterns. The resulting probability is \\(\\frac{73}{105}\\).</p><p>There is insufficient evidence that A tends to have smaller values than B.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>State which variable tends to have higher or lower readings.</p>"
+          }
+        ]
+      },
+      {
+        "id": "cutoff",
+        "title": "How do I turn ranks into a test?",
+        "label": "Exact test",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>In the small-sample null distribution all assignments of ranks to the chosen group of size \\(m\\) are equally likely.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>An exact p-value counts favourable assignments in the appropriate tail. MF19 provides cutoffs for small sample sizes.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A critical value for one tail cannot be used as a two-tail cutoff at the same level.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-rank-sum-study-05",
+            "title": "Decide from a one-tail exact test",
+            "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether A tends to have smaller values than B.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(11\\)</td><td>\\(38\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(15\\)</td><td>\\(34\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(16\\)</td><td>\\(33\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(25\\)</td><td>\\(29\\)</td></tr><tr><th scope=\"row\">5</th><td>—</td><td>\\(24\\)</td></tr><tr><th scope=\"row\">6</th><td>—</td><td>\\(20\\)</td></tr></tbody></table></div><p>Choose the conclusion at 5%. Use the exact null distribution.</p>",
+            "fields": [
+              {
+                "key": "decision",
+                "label": "Conclusion",
+                "type": "choice",
+                "expected": "B",
+                "options": {
+                  "A": "<p>Insufficient evidence that A tends to have smaller values than B.</p>",
+                  "B": "<p>Sufficient evidence that A tends to have smaller values than B.</p>"
+                }
+              }
+            ],
+            "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+            "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>A</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>A</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>A</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>B</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>B</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>A</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>B</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>B</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>B</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">\\(38\\)</th><td>B</td><td>\\(10\\)</td></tr></tbody></table></div><p>\\(R_m=12,\\quad m(m+n+1)-R_m=32,\\quad W=12\\).</p><p>Use the lower including the observed test value. Under the null, the tail contains \\(4\\) of \\(210\\) equally likely patterns. The resulting probability is \\(\\frac{2}{105}\\).</p><p>There is sufficient evidence that A tends to have smaller values than B.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use an inclusive cutoff for the observed rank sum.</p>"
+          }
+        ]
+      },
+      {
+        "id": "approximation",
+        "title": "How do I estimate a larger-sample tail?",
+        "label": "Normal approximation",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Approximate the reference-group rank sum, keeping the group labels and tail direction.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mu=\\frac{m(m+n+1)}2,\\qquad \\sigma^2=\\frac{mn(m+n+1)}{12}\\). Use a half-unit continuity correction as appropriate.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The normal approximation here is for \\(R_m\\); the folded statistic \\(W\\) does not have the same mean.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-nonparam-rank-sum-study-06",
+            "title": "Approximate a two-sided rank-sum probability",
+            "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><p>The smaller independent sample A has size \\(12\\) and pooled rank sum \\(222\\). Sample B has size \\(15\\).</p><p>Find the p-value to 4 decimal places using a normal approximation.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "p-value (4 d.p.)",
+                "expected": "0.00904013300601946",
+                "type": "approximate",
+                "absolute_tolerance": 5e-05
+              }
+            ],
+            "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+            "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><p>\\(R_m=222,\\quad m(m+n+1)-R_m=114,\\quad W=114\\).</p><p>The null distribution has mean \\(168\\) and variance \\(420\\).</p><p>Use the continuity boundary \\(\\frac{443}{2}\\).</p><p>The doubled relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{443}{2}-168}{2 \\sqrt{105}})\\) gives \\(0.0090\\).</p><p>There is sufficient evidence that the two population distributions differ.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use the variance’s square root to standardise.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Rank both groups in one list",
+        "question": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(15\\)</td><td>\\(38\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(29\\)</td><td>\\(33\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(20\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(34\\)</td><td>\\(24\\)</td></tr><tr><th scope=\"row\">5</th><td>—</td><td>\\(16\\)</td></tr><tr><th scope=\"row\">6</th><td>—</td><td>\\(11\\)</td></tr></tbody></table></div><p>Rank the pooled data and give the rank sum for sample A.</p>",
+        "solution": [
+          "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>B</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>A</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>B</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>A</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>B</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>B</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>A</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>B</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>A</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">\\(38\\)</th><td>B</td><td>\\(10\\)</td></tr></tbody></table></div><p>\\(R_m=22,\\quad m(m+n+1)-R_m=22,\\quad W=22\\).</p>",
+          "<p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(210\\) of \\(210\\) equally likely patterns. The resulting probability is \\(1\\).</p>",
+          "<p>There is insufficient evidence that the two population distributions differ.</p>"
+        ]
+      },
+      {
+        "title": "Identify a distinct smaller reference group",
+        "question": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(32\\)</td><td>\\(36\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(18\\)</td><td>\\(31\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(40\\)</td><td>\\(27\\)</td></tr><tr><th scope=\"row\">4</th><td>—</td><td>\\(23\\)</td></tr><tr><th scope=\"row\">5</th><td>—</td><td>\\(22\\)</td></tr></tbody></table></div><p>Rank the pooled data and give the rank sum for sample A.</p>",
+        "solution": [
+          "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(18\\)</th><td>A</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(22\\)</th><td>B</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(23\\)</th><td>B</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(27\\)</th><td>B</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(31\\)</th><td>B</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(32\\)</th><td>A</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(36\\)</th><td>B</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(40\\)</th><td>A</td><td>\\(8\\)</td></tr></tbody></table></div><p>\\(R_m=15,\\quad m(m+n+1)-R_m=12,\\quad W=12\\).</p>",
+          "<p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(44\\) of \\(56\\) equally likely patterns. The resulting probability is \\(\\frac{11}{14}\\).</p>",
+          "<p>There is insufficient evidence that the two population distributions differ.</p>"
+        ]
+      },
+      {
+        "title": "Work with the first sample as the reference",
+        "question": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(11\\)</td><td>\\(38\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(25\\)</td><td>\\(34\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(24\\)</td><td>\\(33\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(20\\)</td><td>\\(29\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(16\\)</td><td>\\(15\\)</td></tr></tbody></table></div><p>Rank the pooled data and give the rank sum for sample A.</p>",
+        "solution": [
+          "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>A</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>B</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>A</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>A</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>A</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>A</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>B</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>B</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>B</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">\\(38\\)</th><td>B</td><td>\\(10\\)</td></tr></tbody></table></div><p>\\(R_m=19,\\quad m(m+n+1)-R_m=36,\\quad W=19\\).</p>",
+          "<p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(24\\) of \\(252\\) equally likely patterns. The resulting probability is \\(\\frac{2}{21}\\).</p>",
+          "<p>There is insufficient evidence that the two population distributions differ.</p>"
+        ]
+      },
+      {
+        "title": "Reflect an unusually large rank sum",
+        "question": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(32\\)</td><td>\\(41\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(36\\)</td><td>\\(28\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(37\\)</td><td>\\(27\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(45\\)</td><td>\\(23\\)</td></tr><tr><th scope=\"row\">5</th><td>—</td><td>\\(19\\)</td></tr><tr><th scope=\"row\">6</th><td>—</td><td>\\(18\\)</td></tr><tr><th scope=\"row\">7</th><td>—</td><td>\\(14\\)</td></tr></tbody></table></div><p>Find the tabulated rank-sum statistic \\(W\\).</p>",
+        "solution": [
+          "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(14\\)</th><td>B</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(18\\)</th><td>B</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(19\\)</th><td>B</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(23\\)</th><td>B</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(27\\)</th><td>B</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(28\\)</th><td>B</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(32\\)</th><td>A</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(36\\)</th><td>A</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(37\\)</th><td>A</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">\\(41\\)</th><td>B</td><td>\\(10\\)</td></tr><tr><th scope=\"row\">\\(45\\)</th><td>A</td><td>\\(11\\)</td></tr></tbody></table></div><p>\\(R_m=35,\\quad m(m+n+1)-R_m=13,\\quad W=13\\).</p>",
+          "<p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(14\\) of \\(330\\) equally likely patterns. The resulting probability is \\(\\frac{7}{165}\\).</p>",
+          "<p>There is sufficient evidence that the two population distributions differ.</p>"
+        ]
+      },
+      {
+        "title": "Connect the larger rank sum to the claim",
+        "question": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether A tends to have larger values than B.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(20\\)</td><td>\\(42\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(25\\)</td><td>\\(33\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(34\\)</td><td>\\(29\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(38\\)</td><td>\\(24\\)</td></tr><tr><th scope=\"row\">5</th><td>—</td><td>\\(16\\)</td></tr><tr><th scope=\"row\">6</th><td>—</td><td>\\(15\\)</td></tr><tr><th scope=\"row\">7</th><td>—</td><td>\\(11\\)</td></tr></tbody></table></div><p>Which tail of the sample A rank sum gives evidence for the alternative?</p>",
+        "solution": [
+          "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>B</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>B</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>B</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>A</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>B</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>A</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>B</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>B</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>A</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">\\(38\\)</th><td>A</td><td>\\(10\\)</td></tr><tr><th scope=\"row\">\\(42\\)</th><td>B</td><td>\\(11\\)</td></tr></tbody></table></div><p>\\(R_m=29,\\quad m(m+n+1)-R_m=19,\\quad W=19\\).</p>",
+          "<p>Use the upper including the observed test value. Under the null, the tail contains \\(68\\) of \\(330\\) equally likely patterns. The resulting probability is \\(\\frac{34}{165}\\).</p>",
+          "<p>There is insufficient evidence that A tends to have larger values than B.</p>"
+        ]
+      },
+      {
+        "title": "Find a two-sided exact p-value",
+        "question": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(11\\)</td><td>\\(34\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(15\\)</td><td>\\(33\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(16\\)</td><td>\\(29\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(20\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">5</th><td>—</td><td>\\(24\\)</td></tr></tbody></table></div><p>Find the exact p-value.</p>",
+        "solution": [
+          "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>A</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>A</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>A</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>A</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>B</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>B</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>B</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>B</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>B</td><td>\\(9\\)</td></tr></tbody></table></div><p>\\(R_m=10,\\quad m(m+n+1)-R_m=30,\\quad W=10\\).</p>",
+          "<p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(2\\) of \\(126\\) equally likely patterns. The resulting probability is \\(\\frac{1}{63}\\).</p>",
+          "<p>There is sufficient evidence that the two population distributions differ.</p>"
+        ]
+      },
+      {
+        "title": "Move the normal upper boundary by half a rank",
+        "question": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether A tends to have larger values than B.</p><p>The smaller independent sample A has size \\(14\\) and pooled rank sum \\(274\\). Sample B has size \\(16\\).</p><p>Give the continuity-corrected boundary for the observed tail.</p>",
+        "solution": [
+          "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><p>\\(R_m=274,\\quad m(m+n+1)-R_m=160,\\quad W=160\\).</p>",
+          "<p>The null distribution has mean \\(217\\) and variance \\(\\frac{1736}{3}\\).</p><p>Use the continuity boundary \\(\\frac{547}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{547}{2}-217}{\\frac{2 \\sqrt{1302}}{3}})\\) gives \\(0.0094\\).</p>",
+          "<p>There is sufficient evidence that A tends to have larger values than B.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Independent samples",
+        "definition": "<p>The measurement in one sample does not determine a paired measurement in the other.</p>"
+      },
+      {
+        "term": "Pooled rank",
+        "definition": "<p>A position in the increasing list of all values from both samples.</p>"
+      },
+      {
+        "term": "Rank sum",
+        "definition": "<p>The total of the pooled ranks belonging to one specified sample.</p>"
+      },
+      {
+        "term": "Identical distributions",
+        "definition": "<p>The rank-sum null hypothesis that observations have the same population distribution in the two groups.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-nonparam-rank-sum-study-07",
+        "title": "Find an upper rank sum in a different-sized pair",
+        "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(15\\)</td><td>\\(34\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(20\\)</td><td>\\(33\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(29\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(38\\)</td><td>\\(24\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(42\\)</td><td>\\(16\\)</td></tr><tr><th scope=\"row\">6</th><td>—</td><td>\\(11\\)</td></tr></tbody></table></div><p>Rank the pooled data and give the rank sum for sample A.</p>",
+        "fields": [
+          {
+            "key": "sum",
+            "label": "Sample A rank sum",
+            "expected": "34",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+        "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>B</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>A</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>B</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>A</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>B</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>B</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>A</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>B</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>B</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">\\(38\\)</th><td>A</td><td>\\(10\\)</td></tr><tr><th scope=\"row\">\\(42\\)</th><td>A</td><td>\\(11\\)</td></tr></tbody></table></div><p>\\(R_m=34,\\quad m(m+n+1)-R_m=26,\\quad W=26\\).</p><p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(248\\) of \\(462\\) equally likely patterns. The resulting probability is \\(\\frac{124}{231}\\).</p><p>There is insufficient evidence that the two population distributions differ.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-rank-sum-study-08",
+        "title": "Compare two distributions with an exact result",
+        "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(11\\)</td><td>\\(43\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(15\\)</td><td>\\(42\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(16\\)</td><td>\\(38\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(20\\)</td><td>\\(34\\)</td></tr><tr><th scope=\"row\">5</th><td>\\(25\\)</td><td>\\(33\\)</td></tr><tr><th scope=\"row\">6</th><td>—</td><td>\\(29\\)</td></tr><tr><th scope=\"row\">7</th><td>—</td><td>\\(24\\)</td></tr></tbody></table></div><p>Find the exact p-value.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "p-value",
+            "expected": "1/198",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+        "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>A</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>A</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>A</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>A</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>B</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>A</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>B</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>B</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>B</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">\\(38\\)</th><td>B</td><td>\\(10\\)</td></tr><tr><th scope=\"row\">\\(42\\)</th><td>B</td><td>\\(11\\)</td></tr><tr><th scope=\"row\">\\(43\\)</th><td>B</td><td>\\(12\\)</td></tr></tbody></table></div><p>\\(R_m=16,\\quad m(m+n+1)-R_m=49,\\quad W=16\\).</p><p>Use the two equal extreme tails including the observed test value. Under the null, the tail contains \\(4\\) of \\(792\\) equally likely patterns. The resulting probability is \\(\\frac{1}{198}\\).</p><p>There is sufficient evidence that the two population distributions differ.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-rank-sum-study-09",
+        "title": "Check how small W comes from a high sum",
+        "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether A tends to have larger values than B.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Reading</th><th scope=\"col\">Sample A</th><th scope=\"col\">Sample B</th></tr></thead><tbody><tr><th scope=\"row\">1</th><td>\\(33\\)</td><td>\\(25\\)</td></tr><tr><th scope=\"row\">2</th><td>\\(29\\)</td><td>\\(24\\)</td></tr><tr><th scope=\"row\">3</th><td>\\(34\\)</td><td>\\(20\\)</td></tr><tr><th scope=\"row\">4</th><td>\\(38\\)</td><td>\\(16\\)</td></tr><tr><th scope=\"row\">5</th><td>—</td><td>\\(15\\)</td></tr><tr><th scope=\"row\">6</th><td>—</td><td>\\(11\\)</td></tr></tbody></table></div><p>Find the tabulated rank-sum statistic \\(W\\).</p>",
+        "fields": [
+          {
+            "key": "w",
+            "label": "W statistic",
+            "expected": "10",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+        "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Measurement</th><th scope=\"col\">Group</th><th scope=\"col\">Pooled rank</th></tr></thead><tbody><tr><th scope=\"row\">\\(11\\)</th><td>B</td><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(15\\)</th><td>B</td><td>\\(2\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>B</td><td>\\(3\\)</td></tr><tr><th scope=\"row\">\\(20\\)</th><td>B</td><td>\\(4\\)</td></tr><tr><th scope=\"row\">\\(24\\)</th><td>B</td><td>\\(5\\)</td></tr><tr><th scope=\"row\">\\(25\\)</th><td>B</td><td>\\(6\\)</td></tr><tr><th scope=\"row\">\\(29\\)</th><td>A</td><td>\\(7\\)</td></tr><tr><th scope=\"row\">\\(33\\)</th><td>A</td><td>\\(8\\)</td></tr><tr><th scope=\"row\">\\(34\\)</th><td>A</td><td>\\(9\\)</td></tr><tr><th scope=\"row\">\\(38\\)</th><td>A</td><td>\\(10\\)</td></tr></tbody></table></div><p>\\(R_m=34,\\quad m(m+n+1)-R_m=10,\\quad W=10\\).</p><p>Use the upper including the observed test value. Under the null, the tail contains \\(1\\) of \\(210\\) equally likely patterns. The resulting probability is \\(\\frac{1}{210}\\).</p><p>There is sufficient evidence that A tends to have larger values than B.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-rank-sum-study-10",
+        "title": "Find both moments of a reference rank-sum law",
+        "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether the two population distributions differ.</p><p>The smaller independent sample A has size \\(15\\) and pooled rank sum \\(276\\). Sample B has size \\(18\\).</p><p>Find the exact mean and variance of the A rank sum under the null hypothesis.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean",
+            "expected": "255",
+            "type": "number"
+          },
+          {
+            "key": "var",
+            "label": "Variance",
+            "expected": "765",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+        "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><p>\\(R_m=276,\\quad m(m+n+1)-R_m=234,\\quad W=234\\).</p><p>The null distribution has mean \\(255\\) and variance \\(765\\).</p><p>Use the continuity boundary \\(\\frac{551}{2}\\).</p><p>The doubled relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{551}{2}-255}{3 \\sqrt{85}})\\) gives \\(0.4586\\).</p><p>There is insufficient evidence that the two population distributions differ.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-rank-sum-study-11",
+        "title": "Use the lower-tail continuity boundary",
+        "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether A tends to have smaller values than B.</p><p>The smaller independent sample A has size \\(12\\) and pooled rank sum \\(132\\). Sample B has size \\(17\\).</p><p>Give the continuity-corrected boundary for the observed tail.</p>",
+        "fields": [
+          {
+            "key": "boundary",
+            "label": "Corrected boundary",
+            "expected": "265/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+        "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><p>\\(R_m=132,\\quad m(m+n+1)-R_m=228,\\quad W=132\\).</p><p>The null distribution has mean \\(180\\) and variance \\(510\\).</p><p>Use the continuity boundary \\(\\frac{265}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\le \\frac{\\frac{265}{2}-180}{\\sqrt{510}})\\) gives \\(0.0177\\).</p><p>There is sufficient evidence that A tends to have smaller values than B.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-nonparam-rank-sum-study-12",
+        "title": "Decide from a normal approximation",
+        "prompt": "<p>Two independent samples of cycle times are drawn from continuous populations. Under the null hypothesis the two distributions are identical.</p><p>Test whether A tends to have larger values than B.</p><p>The smaller independent sample A has size \\(11\\) and pooled rank sum \\(181\\). Sample B has size \\(13\\).</p><p>Choose the conclusion at 5%. Use the normal approximation.</p>",
+        "fields": [
+          {
+            "key": "decision",
+            "label": "Conclusion",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Insufficient evidence that A tends to have larger values than B.</p>",
+              "B": "<p>Sufficient evidence that A tends to have larger values than B.</p>"
+            }
+          }
+        ],
+        "hint": "<p>Keep the ranks from both groups in a single ordering. In a directional test the sign of the deviation from the null mean matters.</p>",
+        "solution": "<p>Rank the combined observations. Under the null, each selection of ranks of the right size is equally likely.</p><p>\\(R_m=181,\\quad m(m+n+1)-R_m=94,\\quad W=94\\).</p><p>The null distribution has mean \\(\\frac{275}{2}\\) and variance \\(\\frac{3575}{12}\\).</p><p>Use the continuity boundary \\(\\frac{361}{2}\\).</p><p>The relevant normal tail \\(\\mathrm P(Z\\ge \\frac{\\frac{361}{2}-\\frac{275}{2}}{\\frac{5 \\sqrt{429}}{6}})\\) gives \\(0.0064\\).</p><p>There is sufficient evidence that A tends to have larger values than B.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose and use the test</h2><p>Start by identifying the sampling design.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Step</th><th scope=\"col\">Keep in view</th></tr></thead><tbody><tr><th scope=\"row\">Ranks</th><td>Rank both groups together.</td></tr><tr><th scope=\"row\">Reference</th><td>\\(R_m\\) for the smaller group.</td></tr><tr><th scope=\"row\">Table</th><td>\\(W=\\min\\{R_m,m(m+n+1)-R_m\\}\\)</td></tr><tr><th scope=\"row\">Approximation</th><td>\\(\\mu=\\tfrac{m(m+n+1)}2,\\ \\sigma^2=\\tfrac{mn(m+n+1)}{12}\\) for \\(R_m\\).</td></tr></tbody></table></div>",
+      "checks": "<ul><li>State a population parameter or populations in the hypotheses.</li><li>Choose a direction before looking at the observed statistic.</li><li>Include the observed value in the exact tail.</li></ul>",
+      "examTip": "<p>Compare the p-value with the significance level. State what the sample provides evidence for.</p>"
+    },
+    "related": [
+      {
+        "title": "Sign test for a population median",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_sign"
+      },
+      {
+        "title": "One-sample signed ranks",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_signed"
+      },
+      {
+        "title": "Matched pairs",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_nonparam_paired"
+      }
+    ]
+  }
+}
