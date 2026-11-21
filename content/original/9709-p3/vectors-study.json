@@ -1,0 +1,2614 @@
+{
+  "orig_9709_p3_vec_components": {
+    "updatedOn": "2026-11-21",
+    "description": "Use 2D and 3D vectors to describe position, displacement, length and midpoint.",
+    "sections": [
+      {
+        "id": "read-vector-notation",
+        "title": "How do I read a vector in 2D or 3D?",
+        "label": "Read the notation",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>An ordered list of components describes a movement. The point \\(P(2,-1,3)\\) has position vector \\(\\overrightarrow{OP}\\). The same column can describe a displacement between other points.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Unit vectors \\(\\mathbf i,\\mathbf j,\\mathbf k\\) point along the positive axes. In 2D use two components. In 3D use three, including a zero for any direction with no movement.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep the coordinate order when switching forms. In \\(2\\mathbf i-3\\mathbf k\\), the second component is zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-components-1",
+            "title": "Read the basis components",
+            "prompt": "<p>Write \\(- 2 \\mathbf i - 4 \\mathbf j\\) as a column vector. Give all 3 components.</p>",
+            "fields": [
+              {
+                "key": "ax",
+                "label": "Vector x-component",
+                "type": "number",
+                "expected": "-2"
+              },
+              {
+                "key": "ay",
+                "label": "Vector y-component",
+                "type": "number",
+                "expected": "-4"
+              },
+              {
+                "key": "az",
+                "label": "Vector z-component",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>An omitted basis direction has coefficient zero. Keep the column in coordinate order.</p>",
+            "solution": "<p>The coefficients of \\(\\mathbf i,\\mathbf j,\\mathbf k\\) give the components in that order.</p><p>The column vector is \\(\\begin{pmatrix}-2\\\\-4\\\\0\\end{pmatrix}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "find-a-displacement",
+        "title": "Which point do I subtract first?",
+        "label": "Subtract positions",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Think of a route from the origin. Going to \\(A\\) and then moving by \\(\\overrightarrow{AB}\\) must arrive at \\(B\\). Reversing the route negates the displacement.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\overrightarrow{AB}=\\overrightarrow{OB}-\\overrightarrow{OA}\\). The arrow reads start to finish, while the subtraction reads finish minus start.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_vec_components/position-displacement.svg",
+              "alt": "Three arrows show the route from O to A, from O to B and from A to B.",
+              "caption": "<p>The route \\(O\\to A\\to B\\) and the direct route \\(O\\to B\\) have the same total displacement.</p>",
+              "width": 500,
+              "height": 250
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Subtracting \\(\\overrightarrow{OB}\\) from \\(\\overrightarrow{OA}\\) gives \\(\\overrightarrow{BA}\\). A distance check alone cannot spot this reversal.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-components-2",
+            "title": "Find endpoint minus start point",
+            "prompt": "<p>Find \\(\\overrightarrow{AB}\\) for \\(A(-5, 2, 4)\\) and \\(B(3, -1, -2)\\).</p>",
+            "fields": [
+              {
+                "key": "dx",
+                "label": "Displacement x-component",
+                "type": "number",
+                "expected": "8",
+                "retry": [
+                  {
+                    "answer": "-8",
+                    "feedback": "<p>That is the first component of the return displacement. Subtract the position of A from the position of B.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "dy",
+                "label": "Displacement y-component",
+                "type": "number",
+                "expected": "-3"
+              },
+              {
+                "key": "dz",
+                "label": "Displacement z-component",
+                "type": "number",
+                "expected": "-6"
+              }
+            ],
+            "hint": "<p>Write the endpoint above the start point before subtracting.</p>",
+            "solution": "<p>The movement must start at \\(A\\) and finish at \\(B\\). Subtract the starting position from the ending position.</p><p>\\(\\overrightarrow{AB}=\\begin{pmatrix}3\\\\-1\\\\-2\\end{pmatrix}-\\begin{pmatrix}-5\\\\2\\\\4\\end{pmatrix}=\\begin{pmatrix}8\\\\-3\\\\-6\\end{pmatrix}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "combine-directed-steps",
+        "title": "How do I add and scale movements?",
+        "label": "Add and scale",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>To take two steps, translate the second arrow so it starts at the first arrow’s tip. To multiply by a scalar, multiply all the components by that number.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The parallelogram diagonal is the sum of the adjacent side vectors. A negative scalar reverses direction as it changes length.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Scaling one component alone generally changes the direction, so it does not give a parallel vector.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-components-3",
+            "title": "Complete a parallelogram",
+            "prompt": "<p>\\(DABC\\) is a parallelogram, with vertices given in order. Find \\(B\\) if \\(D(2, 1, -1)\\), \\(A(5, 4, 0)\\) and \\(C(0, 3, 4)\\). Give all coordinates.</p>",
+            "fields": [
+              {
+                "key": "bx",
+                "label": "Vertex B x-component",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "by",
+                "label": "Vertex B y-component",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "bz",
+                "label": "Vertex B z-component",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Use the displacement from D to C, then start that movement at A.</p>",
+            "solution": "<p>Opposite edges have the same directed displacement, so \\(\\overrightarrow{AB}=\\overrightarrow{DC}\\).</p><p>Add the displacement \\(\\begin{pmatrix}0\\\\3\\\\4\\end{pmatrix}-\\begin{pmatrix}2\\\\1\\\\-1\\end{pmatrix}\\) to the position of \\(A\\).</p><p>The resulting point is \\(B(3, 6, 5)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "measure-and-normalise",
+        "title": "How do I find length and unit direction?",
+        "label": "Measure and normalise",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Use Pythagoras on mutually perpendicular axes. The length is \\(\\sqrt{x^2+y^2+z^2}\\) in 3D. In 2D omit the last term. A direction without its original speed or length can be given by a unit vector.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For non-zero \\(\\mathbf d\\), the unit vector along it is \\(\\frac{\\mathbf d}{|\\mathbf d|}\\). For the opposite unit vector, use \\(-\\frac{\\mathbf d}{|\\mathbf d|}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The zero vector has length zero and no direction. Dividing it by its length does not define a unit vector.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the exact unit vector by squaring its three components and adding. The sum should be \\(1\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-components-4",
+            "title": "Build a unit vector",
+            "prompt": "<p>Find the length of \\(\\mathbf d=\\begin{pmatrix}-4\\\\4\\\\2\\end{pmatrix}\\) and the unit vector opposite to \\(\\mathbf d\\). Give exact entries.</p>",
+            "fields": [
+              {
+                "key": "length",
+                "label": "Vector length",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "ux",
+                "label": "Unit vector x-component",
+                "type": "number",
+                "expected": "2/3",
+                "retry": [
+                  {
+                    "answer": "-2/3",
+                    "feedback": "<p>That vector points in the original direction. Reverse all components for the requested direction.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "uy",
+                "label": "Unit vector y-component",
+                "type": "number",
+                "expected": "-2/3"
+              },
+              {
+                "key": "uz",
+                "label": "Unit vector z-component",
+                "type": "number",
+                "expected": "-1/3"
+              }
+            ],
+            "hint": "<p>Use the square root of the sum of the squares, and keep track of the requested direction.</p>",
+            "solution": "<p>Pythagoras gives \\(|\\mathbf d|=6\\).</p><p>Reverse the signs, then divide all components by the positive length.</p><p>The length is \\(6\\) and the requested unit vector is \\(\\begin{pmatrix}\\frac{2}{3}\\\\- \\frac{2}{3}\\\\- \\frac{1}{3}\\end{pmatrix}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "find-a-midpoint",
+        "title": "Why does averaging locate the midpoint?",
+        "label": "Find a midpoint",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Start at \\(A\\) and take half the displacement to \\(B\\). This gives an average of the endpoint position vectors, and it works in either dimension.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\overrightarrow{OM}=\\overrightarrow{OA}+\\tfrac12\\overrightarrow{AB}=\\tfrac12(\\overrightarrow{OA}+\\overrightarrow{OB})\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Half of \\(\\overrightarrow{AB}\\) is a displacement from \\(A\\), not usually a position from \\(O\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-components-5",
+            "title": "Find the midpoint",
+            "prompt": "<p>Find the midpoint of \\(AB\\) when \\(A(2, 9, -6)\\) and \\(B(-5, 1, 8)\\). Give all coordinates.</p>",
+            "fields": [
+              {
+                "key": "mx",
+                "label": "Midpoint x-component",
+                "type": "number",
+                "expected": "-3/2"
+              },
+              {
+                "key": "my",
+                "label": "Midpoint y-component",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "mz",
+                "label": "Midpoint z-component",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Average the position vectors. Half the displacement alone starts at the wrong place.</p>",
+            "solution": "<p>At the midpoint the displacement from \\(A\\) is half of \\(\\overrightarrow{AB}\\).</p><p>Average the two position vectors. \\(\\overrightarrow{OM}=\\frac12\\left(\\begin{pmatrix}2\\\\9\\\\-6\\end{pmatrix}+\\begin{pmatrix}-5\\\\1\\\\8\\end{pmatrix}\\right)=\\begin{pmatrix}- \\frac{3}{2}\\\\5\\\\1\\end{pmatrix}\\).</p><p>The midpoint is \\(M(- \\frac{3}{2}, 5, 1)\\).</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Position vector",
+        "definition": "<p>The displacement from the origin to a point.</p>"
+      },
+      {
+        "term": "Displacement",
+        "definition": "<p>An ordered movement from a specified start to a specified endpoint.</p>"
+      },
+      {
+        "term": "Magnitude",
+        "definition": "<p>The non-negative length of a vector.</p>"
+      },
+      {
+        "term": "Unit vector",
+        "definition": "<p>A vector of magnitude one.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Read the basis components",
+        "question": "<p>Write \\(3 \\mathbf i - 5 \\mathbf k\\) as a column vector. Give all 3 components.</p>",
+        "solution": [
+          "<p>The coefficients of \\(\\mathbf i,\\mathbf j,\\mathbf k\\) give the components in that order.</p>",
+          "<p>The column vector is \\(\\begin{pmatrix}3\\\\0\\\\-5\\end{pmatrix}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find endpoint minus start point",
+        "question": "<p>Find \\(\\overrightarrow{AB}\\) for \\(A(2, -3, 5)\\) and \\(B(-4, 1, 2)\\).</p>",
+        "solution": [
+          "<p>The movement must start at \\(A\\) and finish at \\(B\\). Subtract the starting position from the ending position.</p>",
+          "<p>\\(\\overrightarrow{AB}=\\begin{pmatrix}-4\\\\1\\\\2\\end{pmatrix}-\\begin{pmatrix}2\\\\-3\\\\5\\end{pmatrix}=\\begin{pmatrix}-6\\\\4\\\\-3\\end{pmatrix}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find endpoint minus start point",
+        "question": "<p>Find \\(\\overrightarrow{AB}\\) for \\(A(6, -3)\\) and \\(B(-2, 0)\\).</p>",
+        "solution": [
+          "<p>The movement must start at \\(A\\) and finish at \\(B\\). Subtract the starting position from the ending position.</p>",
+          "<p>\\(\\overrightarrow{AB}=\\begin{pmatrix}-2\\\\0\\end{pmatrix}-\\begin{pmatrix}6\\\\-3\\end{pmatrix}=\\begin{pmatrix}-8\\\\3\\end{pmatrix}\\).</p>"
+        ]
+      },
+      {
+        "title": "Combine two vectors",
+        "question": "<p>Given \\(\\mathbf a=\\begin{pmatrix}1\\\\4\\\\-2\\end{pmatrix},\\quad\\mathbf b=\\begin{pmatrix}-3\\\\0\\\\5\\end{pmatrix}\\), calculate \\(2 \\mathbf a - 3 \\mathbf b\\). Give all components.</p>",
+        "solution": [
+          "<p>Scale every component before adding or subtracting.</p>",
+          "<p>\\(2 \\mathbf a - 3 \\mathbf b=2\\begin{pmatrix}1\\\\4\\\\-2\\end{pmatrix}-3\\begin{pmatrix}-3\\\\0\\\\5\\end{pmatrix}=\\begin{pmatrix}11\\\\8\\\\-19\\end{pmatrix}\\).</p>"
+        ]
+      },
+      {
+        "title": "Complete a parallelogram",
+        "question": "<p>\\(DABC\\) is a parallelogram, with vertices given in order. Find \\(B\\) if \\(D(3, -2, 2)\\), \\(A(4, 3, 0)\\) and \\(C(-1, 0, 5)\\). Give all coordinates.</p>",
+        "solution": [
+          "<p>Opposite edges have the same directed displacement, so \\(\\overrightarrow{AB}=\\overrightarrow{DC}\\).</p>",
+          "<p>Add the displacement \\(\\begin{pmatrix}-1\\\\0\\\\5\\end{pmatrix}-\\begin{pmatrix}3\\\\-2\\\\2\\end{pmatrix}\\) to the position of \\(A\\).</p>",
+          "<p>The resulting point is \\(B(0, 5, 3)\\).</p>"
+        ]
+      },
+      {
+        "title": "Build a unit vector",
+        "question": "<p>Find the length of \\(\\mathbf d=\\begin{pmatrix}2\\\\-3\\\\6\\end{pmatrix}\\) and the unit vector in the direction of \\(\\mathbf d\\). Give exact entries.</p>",
+        "solution": [
+          "<p>Pythagoras gives \\(|\\mathbf d|=7\\).</p>",
+          "<p>Divide every component by the positive length, preserving their signs.</p>",
+          "<p>The length is \\(7\\) and the requested unit vector is \\(\\begin{pmatrix}\\frac{2}{7}\\\\- \\frac{3}{7}\\\\\\frac{6}{7}\\end{pmatrix}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the midpoint",
+        "question": "<p>Find the midpoint of \\(AB\\) when \\(A(3, -8, 1)\\) and \\(B(-5, 2, 4)\\). Give all coordinates.</p>",
+        "solution": [
+          "<p>At the midpoint the displacement from \\(A\\) is half of \\(\\overrightarrow{AB}\\).</p>",
+          "<p>Average the two position vectors. \\(\\overrightarrow{OM}=\\frac12\\left(\\begin{pmatrix}3\\\\-8\\\\1\\end{pmatrix}+\\begin{pmatrix}-5\\\\2\\\\4\\end{pmatrix}\\right)=\\begin{pmatrix}-1\\\\-3\\\\\\frac{5}{2}\\end{pmatrix}\\).</p>",
+          "<p>The midpoint is \\(M(-1, -3, \\frac{5}{2})\\).</p>"
+        ]
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the method</h2><div class=\"table-scroll\"><table><thead><tr><th>Use</th><th>What to write</th></tr></thead><tbody><tr><th>Displacement</th><td>\\(\\overrightarrow{AB}=\\overrightarrow{OB}-\\overrightarrow{OA}\\)</td></tr><tr><th>Magnitude</th><td>\\(|\\mathbf d|=\\sqrt{d_x^2+d_y^2+d_z^2}\\) in 3D.</td></tr><tr><th>Unit direction</th><td>\\(\\frac{\\mathbf d}{|\\mathbf d|}\\) for \\(\\mathbf d\\ne\\mathbf 0\\).</td></tr><tr><th>Midpoint</th><td>\\(\\overrightarrow{OM}=\\frac12(\\overrightarrow{OA}+\\overrightarrow{OB})\\).</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Check which endpoint the arrow starts from.</li><li>Preserve a zero component when switching forms.</li><li>A unit vector has a squared length of one.</li></ul>",
+      "examTip": "<p>Show the exact magnitude before normalising. A negative component records direction.</p>"
+    },
+    "related": [
+      {
+        "title": "Vector equations of straight lines",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_vec_line_equations"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "p3-vec-components-extra-1",
+        "title": "Read the basis components",
+        "prompt": "<p>Write \\(6 \\mathbf i - 5 \\mathbf j\\) as a column vector. Give all 3 components.</p>",
+        "fields": [
+          {
+            "key": "ax",
+            "label": "Vector x-component",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "ay",
+            "label": "Vector y-component",
+            "type": "number",
+            "expected": "-5"
+          },
+          {
+            "key": "az",
+            "label": "Vector z-component",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>An omitted basis direction has coefficient zero. Keep the column in coordinate order.</p>",
+        "solution": "<p>The coefficients of \\(\\mathbf i,\\mathbf j,\\mathbf k\\) give the components in that order.</p><p>The column vector is \\(\\begin{pmatrix}6\\\\-5\\\\0\\end{pmatrix}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-components-extra-2",
+        "title": "Find endpoint minus start point",
+        "prompt": "<p>Find \\(\\overrightarrow{AB}\\) and the exact length \\(AB\\) for \\(A(3, -6, 2)\\) and \\(B(-2, 1, 4)\\).</p>",
+        "fields": [
+          {
+            "key": "dx",
+            "label": "Displacement x-component",
+            "type": "number",
+            "expected": "-5"
+          },
+          {
+            "key": "dy",
+            "label": "Displacement y-component",
+            "type": "number",
+            "expected": "7"
+          },
+          {
+            "key": "dz",
+            "label": "Displacement z-component",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "distance",
+            "label": "Exact distance",
+            "type": "number",
+            "expected": "sqrt(78)"
+          }
+        ],
+        "hint": "<p>Write the endpoint above the start point before subtracting.</p>",
+        "solution": "<p>The movement must start at \\(A\\) and finish at \\(B\\). Subtract the starting position from the ending position.</p><p>\\(\\overrightarrow{AB}=\\begin{pmatrix}-2\\\\1\\\\4\\end{pmatrix}-\\begin{pmatrix}3\\\\-6\\\\2\\end{pmatrix}=\\begin{pmatrix}-5\\\\7\\\\2\\end{pmatrix}\\).</p><p>The displacement is \\(\\begin{pmatrix}-5\\\\7\\\\2\\end{pmatrix}\\) and \\(AB=\\sqrt{78}\\), found by squaring and adding the components before taking the square root.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-components-extra-3",
+        "title": "Combine two vectors",
+        "prompt": "<p>Given \\(\\mathbf a=\\begin{pmatrix}2\\\\0\\\\-3\\end{pmatrix},\\quad\\mathbf b=\\begin{pmatrix}-4\\\\7\\\\3\\end{pmatrix}\\), calculate \\(- \\mathbf a + 2 \\mathbf b\\). Give all components.</p>",
+        "fields": [
+          {
+            "key": "rx",
+            "label": "Result x-component",
+            "type": "number",
+            "expected": "-10"
+          },
+          {
+            "key": "ry",
+            "label": "Result y-component",
+            "type": "number",
+            "expected": "14"
+          },
+          {
+            "key": "rz",
+            "label": "Result z-component",
+            "type": "number",
+            "expected": "9"
+          }
+        ],
+        "hint": "<p>Apply each coefficient to its whole vector before combining like components.</p>",
+        "solution": "<p>Scale every component before adding or subtracting.</p><p>\\(- \\mathbf a + 2 \\mathbf b=-\\begin{pmatrix}2\\\\0\\\\-3\\end{pmatrix}+2\\begin{pmatrix}-4\\\\7\\\\3\\end{pmatrix}=\\begin{pmatrix}-10\\\\14\\\\9\\end{pmatrix}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-components-extra-4",
+        "title": "Build a unit vector",
+        "prompt": "<p>Find the length of \\(\\mathbf d=\\begin{pmatrix}6\\\\-3\\\\2\\end{pmatrix}\\) and the unit vector in the direction of \\(\\mathbf d\\). Give exact entries.</p>",
+        "fields": [
+          {
+            "key": "length",
+            "label": "Vector length",
+            "type": "number",
+            "expected": "7"
+          },
+          {
+            "key": "ux",
+            "label": "Unit vector x-component",
+            "type": "number",
+            "expected": "6/7"
+          },
+          {
+            "key": "uy",
+            "label": "Unit vector y-component",
+            "type": "number",
+            "expected": "-3/7"
+          },
+          {
+            "key": "uz",
+            "label": "Unit vector z-component",
+            "type": "number",
+            "expected": "2/7"
+          }
+        ],
+        "hint": "<p>Use the square root of the sum of the squares, and keep track of the requested direction.</p>",
+        "solution": "<p>Pythagoras gives \\(|\\mathbf d|=7\\).</p><p>Divide every component by the positive length, preserving their signs.</p><p>The length is \\(7\\) and the requested unit vector is \\(\\begin{pmatrix}\\frac{6}{7}\\\\- \\frac{3}{7}\\\\\\frac{2}{7}\\end{pmatrix}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-components-extra-5",
+        "title": "Find the midpoint",
+        "prompt": "<p>Find the midpoint of \\(AB\\) when \\(A(2, 2)\\) and \\(B(5, -3)\\). Give all coordinates.</p>",
+        "fields": [
+          {
+            "key": "mx",
+            "label": "Midpoint x-component",
+            "type": "number",
+            "expected": "7/2"
+          },
+          {
+            "key": "my",
+            "label": "Midpoint y-component",
+            "type": "number",
+            "expected": "-1/2"
+          }
+        ],
+        "hint": "<p>Average the position vectors. Half the displacement alone starts at the wrong place.</p>",
+        "solution": "<p>At the midpoint the displacement from \\(A\\) is half of \\(\\overrightarrow{AB}\\).</p><p>Average the two position vectors. \\(\\overrightarrow{OM}=\\frac12\\left(\\begin{pmatrix}2\\\\2\\end{pmatrix}+\\begin{pmatrix}5\\\\-3\\end{pmatrix}\\right)=\\begin{pmatrix}\\frac{7}{2}\\\\- \\frac{1}{2}\\end{pmatrix}\\).</p><p>The midpoint is \\(M(\\frac{7}{2}, - \\frac{1}{2})\\).</p>"
+      }
+    ]
+  },
+  "orig_9709_p3_vec_line_equations": {
+    "updatedOn": "2026-11-21",
+    "description": "Build line equations from points and directions, test membership and restrict parameters to a segment.",
+    "sections": [
+      {
+        "id": "read-a-vector-line",
+        "title": "What does each part of a line equation do?",
+        "label": "Read the line",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>In \\(\\mathbf r=\\mathbf a+t\\mathbf d\\), \\(\\mathbf a\\) fixes the position at \\(t=0\\), and non-zero \\(\\mathbf d\\) gives the direction of movement as \\(t\\) increases.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The position vector \\(\\mathbf r\\) changes with \\(t\\). A whole straight line uses all real values of \\(t\\), including negative values.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_vec_line_equations/parameter-line.svg",
+              "alt": "A rising straight line has points marked in order P, A, B. Its direction arrow points from A towards B.",
+              "caption": "<p>At \\(t=0\\) the vector line is at its anchor \\(A\\). Increasing \\(t\\) moves along the direction arrow.</p>",
+              "width": 500,
+              "height": 250
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A negative parameter moves in the opposite sense from the direction arrow. The direction vector does not have to have length one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-line_equations-1",
+            "title": "Read a point from its parameter",
+            "prompt": "<p>A line has equation \\(\\mathbf r=\\begin{pmatrix}0\\\\5\\\\-1\\end{pmatrix}+t\\begin{pmatrix}3\\\\-2\\\\4\\end{pmatrix}\\). Find the point at \\(t=\\frac{3}{2}\\). Give all coordinates.</p>",
+            "fields": [
+              {
+                "key": "rx",
+                "label": "Point x-component",
+                "type": "number",
+                "expected": "9/2",
+                "retry": [
+                  {
+                    "answer": "-9/2",
+                    "feedback": "<p>That uses the negative parameter. The question gives a positive value of t.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "ry",
+                "label": "Point y-component",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "rz",
+                "label": "Point z-component",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Multiply the direction vector by the parameter, then add the anchor.</p>",
+            "solution": "<p>Substitute the same parameter into all coordinates.</p><p>\\(\\mathbf r=\\begin{pmatrix}0\\\\5\\\\-1\\end{pmatrix}+\\left(\\frac{3}{2}\\right)\\begin{pmatrix}3\\\\-2\\\\4\\end{pmatrix}=\\begin{pmatrix}\\frac{9}{2}\\\\2\\\\5\\end{pmatrix}\\).</p><p>The point is \\(P(\\frac{9}{2}, 2, 5)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "two-points-to-line",
+        "title": "How do two points determine a line?",
+        "label": "Build the line",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Either point can anchor the line. Take the difference of the two position vectors to get a direction. Swapping their order reverses the arrow along the same line.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For distinct points \\(A\\) and \\(B\\), one form is \\(\\mathbf r=\\overrightarrow{OA}+t\\overrightarrow{AB}\\). In this form, \\(t=0\\) gives \\(A\\) and \\(t=1\\) gives \\(B\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using a second position vector as the direction only works in special cases. Start with endpoint minus start point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-line_equations-2",
+            "title": "Write a line through two points",
+            "prompt": "<p>Use \\(A(-1, 3, 8)\\) and \\(B(-1, -1, 14)\\) to construct \\(\\mathbf r=\\mathbf a+t\\mathbf d\\). Take the anchor at \\(B\\) and use \\(\\overrightarrow{BA}\\) as the direction. Give every component of both vectors.</p>",
+            "fields": [
+              {
+                "key": "ax",
+                "label": "Anchor x-component",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "ay",
+                "label": "Anchor y-component",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "az",
+                "label": "Anchor z-component",
+                "type": "number",
+                "expected": "14"
+              },
+              {
+                "key": "dx",
+                "label": "Direction x-component",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "dy",
+                "label": "Direction y-component",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "dz",
+                "label": "Direction z-component",
+                "type": "number",
+                "expected": "-6"
+              }
+            ],
+            "hint": "<p>An endpoint is a position. A direction is a difference of two positions.</p>",
+            "solution": "<p>Use the position of \\(B\\) for the anchor.</p><p>\\(\\overrightarrow{BA}=\\begin{pmatrix}0\\\\4\\\\-6\\end{pmatrix}\\) by subtracting the starting position from the final one.</p><p>The line is \\(\\mathbf r=\\begin{pmatrix}-1\\\\-1\\\\14\\end{pmatrix}+t\\begin{pmatrix}0\\\\4\\\\-6\\end{pmatrix}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "match-the-parameter",
+        "title": "How do I test whether a point is on the line?",
+        "label": "Test membership",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Write the three coordinate equations and use a changing coordinate to get a candidate parameter. All coordinates must agree at that same value.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>In a fixed coordinate, the direction component is zero. That coordinate must equal the anchor coordinate at every point of the line.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Separate values of \\(t\\) for different coordinates never establish membership.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-line_equations-3",
+            "title": "Check all coordinates",
+            "prompt": "<p>Does \\(P(3, 9, -1)\\) lie on \\(\\mathbf r=\\begin{pmatrix}2\\\\6\\\\1\\end{pmatrix}+t\\begin{pmatrix}0\\\\3\\\\-2\\end{pmatrix}\\)?</p>",
+            "fields": [
+              {
+                "key": "membership",
+                "label": "Point on line",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                },
+                "retry": [
+                  {
+                    "answer": "yes",
+                    "feedback": "<p>The y-coordinate determines the parameter, but the first coordinate is fixed at 2 and the candidate point has first coordinate 3.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Fit one changing coordinate first. A mismatch elsewhere rules out membership.</p>",
+            "solution": "<p>The y-coordinate forces \\(t=1\\).</p><p>At this value the position on the line is \\((2, 9, -1)\\), but \\(P=(3, 9, -1)\\).</p><p>No. A single parameter must give every coordinate of the point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "change-the-description",
+        "title": "Can the same line have a different equation?",
+        "label": "Reparameterise",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Choose another anchor already on the line, and scale the direction by a non-zero number. The new parameter still traces all the same points.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(\\mathbf b=\\mathbf a+s\\mathbf d\\), then \\(\\mathbf b+u(c\\mathbf d)\\) equals \\(\\mathbf a+(s+cu)\\mathbf d\\). With \\(c\\ne0\\), the parameter \\(s+cu\\) ranges over every real number.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A parallel direction alone does not establish that two equations describe the same line. The anchor must be on the original line.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-line_equations-4",
+            "title": "Change the anchor and direction",
+            "prompt": "<p>A line is \\(\\mathbf r=\\begin{pmatrix}0\\\\4\\\\1\\end{pmatrix}+t\\begin{pmatrix}-3\\\\2\\\\0\\end{pmatrix}\\). Rewrite it using the point at \\(t=-1\\) as the new anchor and \\(3\\mathbf d\\) as the direction, where \\(\\mathbf d=\\begin{pmatrix}-3\\\\2\\\\0\\end{pmatrix}\\). Give both vectors.</p>",
+            "fields": [
+              {
+                "key": "bx",
+                "label": "New anchor x-component",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "by",
+                "label": "New anchor y-component",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "bz",
+                "label": "New anchor z-component",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "ex",
+                "label": "New direction x-component",
+                "type": "number",
+                "expected": "-9"
+              },
+              {
+                "key": "ey",
+                "label": "New direction y-component",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "ez",
+                "label": "New direction z-component",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Changing the parameter origin can change the anchor. Scale the full direction vector.</p>",
+            "solution": "<p>The new anchor is \\(\\mathbf b=\\begin{pmatrix}0\\\\4\\\\1\\end{pmatrix}+\\left(-1\\right)\\begin{pmatrix}-3\\\\2\\\\0\\end{pmatrix}=\\begin{pmatrix}3\\\\2\\\\1\\end{pmatrix}\\).</p><p>Multiplying a direction by a non-zero scalar changes the parameter scale or sense. It covers the same set of points.</p><p>One equivalent form is \\(\\mathbf r=\\begin{pmatrix}3\\\\2\\\\1\\end{pmatrix}+u\\begin{pmatrix}-9\\\\6\\\\0\\end{pmatrix}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "finite-segment",
+        "title": "How do I identify points on the segment AB?",
+        "label": "Restrict a segment",
+        "minutes": 5,
+        "level": "further",
+        "intro": "<p>The entire line through \\(A\\) and \\(B\\) also extends beyond its endpoints. In the parameterisation from \\(A\\) along the full displacement \\(\\overrightarrow{AB}\\), the endpoints are \\(t=0\\) and \\(t=1\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(0\\le t\\le1\\) describes the closed segment for this particular choice of anchor and direction. At \\(t=\\tfrac12\\), the point is the midpoint.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>With a different direction scale, the parameter of \\(B\\) may no longer be \\(1\\). Find it before restricting the parameter.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-line_equations-5",
+            "title": "Read a point from its parameter",
+            "prompt": "<p>A line has equation \\(\\mathbf r=\\begin{pmatrix}-3\\\\1\\\\7\\end{pmatrix}+t\\begin{pmatrix}12\\\\-4\\\\8\\end{pmatrix}\\). Find the point at \\(t=\\frac{3}{4}\\). Give all coordinates.</p>",
+            "fields": [
+              {
+                "key": "rx",
+                "label": "Point x-component",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "ry",
+                "label": "Point y-component",
+                "type": "number",
+                "expected": "-2"
+              },
+              {
+                "key": "rz",
+                "label": "Point z-component",
+                "type": "number",
+                "expected": "13"
+              }
+            ],
+            "hint": "<p>Multiply the direction vector by the parameter, then add the anchor.</p>",
+            "solution": "<p>Substitute the same parameter into all coordinates.</p><p>\\(\\mathbf r=\\begin{pmatrix}-3\\\\1\\\\7\\end{pmatrix}+\\left(\\frac{3}{4}\\right)\\begin{pmatrix}12\\\\-4\\\\8\\end{pmatrix}=\\begin{pmatrix}6\\\\-2\\\\13\\end{pmatrix}\\).</p><p>The point is \\(P(6, -2, 13)\\).</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Anchor",
+        "definition": "<p>The point represented when the line parameter is zero.</p>"
+      },
+      {
+        "term": "Direction vector",
+        "definition": "<p>A non-zero displacement parallel to the line.</p>"
+      },
+      {
+        "term": "Parameter",
+        "definition": "<p>A real number that picks a position on the line.</p>"
+      },
+      {
+        "term": "Segment",
+        "definition": "<p>The part of a line between two given endpoints, including the endpoints here.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Read a point from its parameter",
+        "question": "<p>A line has equation \\(\\mathbf r=\\begin{pmatrix}3\\\\1\\\\-2\\end{pmatrix}+t\\begin{pmatrix}-4\\\\2\\\\1\\end{pmatrix}\\). Find the point at \\(t=-2\\). Give all coordinates.</p>",
+        "solution": [
+          "<p>Substitute the same parameter into all coordinates.</p>",
+          "<p>\\(\\mathbf r=\\begin{pmatrix}3\\\\1\\\\-2\\end{pmatrix}+\\left(-2\\right)\\begin{pmatrix}-4\\\\2\\\\1\\end{pmatrix}=\\begin{pmatrix}11\\\\-3\\\\-4\\end{pmatrix}\\).</p>",
+          "<p>The point is \\(P(11, -3, -4)\\).</p>"
+        ]
+      },
+      {
+        "title": "Write a line through two points",
+        "question": "<p>Use \\(A(2, 1, -4)\\) and \\(B(6, -5, -2)\\) to construct \\(\\mathbf r=\\mathbf a+t\\mathbf d\\). Take the anchor at \\(A\\) and use \\(\\overrightarrow{AB}\\) as the direction. Give every component of both vectors.</p>",
+        "solution": [
+          "<p>Use the position of \\(A\\) for the anchor.</p>",
+          "<p>\\(\\overrightarrow{AB}=\\begin{pmatrix}4\\\\-6\\\\2\\end{pmatrix}\\) by subtracting the starting position from the final one.</p>",
+          "<p>The line is \\(\\mathbf r=\\begin{pmatrix}2\\\\1\\\\-4\\end{pmatrix}+t\\begin{pmatrix}4\\\\-6\\\\2\\end{pmatrix}\\).</p>"
+        ]
+      },
+      {
+        "title": "Write a line through two points",
+        "question": "<p>Use \\(A(1, 6)\\) and \\(B(-5, 8)\\) to construct \\(\\mathbf r=\\mathbf a+t\\mathbf d\\). Take the anchor at \\(A\\) and use \\(\\overrightarrow{AB}\\) as the direction. Give every component of both vectors.</p>",
+        "solution": [
+          "<p>Use the position of \\(A\\) for the anchor.</p>",
+          "<p>\\(\\overrightarrow{AB}=\\begin{pmatrix}-6\\\\2\\end{pmatrix}\\) by subtracting the starting position from the final one.</p>",
+          "<p>The line is \\(\\mathbf r=\\begin{pmatrix}1\\\\6\\end{pmatrix}+t\\begin{pmatrix}-6\\\\2\\end{pmatrix}\\).</p>"
+        ]
+      },
+      {
+        "title": "Test point membership",
+        "question": "<p>A line has equation \\(\\mathbf r=\\begin{pmatrix}0\\\\-4\\\\7\\end{pmatrix}+t\\begin{pmatrix}0\\\\2\\\\-3\\end{pmatrix}\\). Find the parameter of \\(P(0, -8, 13)\\) and verify the other coordinates.</p>",
+        "solution": [
+          "<p>The y-coordinate requires \\(2 t - 4=-8\\), so \\(t=-2\\).</p>",
+          "<p>Test the same value in the full equation. It gives \\(\\begin{pmatrix}0\\\\-8\\\\13\\end{pmatrix}\\), which matches all the coordinates.</p>",
+          "<p>The point lies on the line at \\(t=-2\\).</p>"
+        ]
+      },
+      {
+        "title": "Test point membership",
+        "question": "<p>A line has equation \\(\\mathbf r=\\begin{pmatrix}2\\\\5\\\\6\\end{pmatrix}+t\\begin{pmatrix}2\\\\0\\\\-4\\end{pmatrix}\\). Find the parameter of \\(P(3, 5, 4)\\) and verify the other coordinates.</p>",
+        "solution": [
+          "<p>The x-coordinate requires \\(2 t + 2=3\\), so \\(t=\\frac{1}{2}\\).</p>",
+          "<p>Test the same value in the full equation. It gives \\(\\begin{pmatrix}3\\\\5\\\\4\\end{pmatrix}\\), which matches all the coordinates.</p>",
+          "<p>The point lies on the line at \\(t=\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Change the anchor and direction",
+        "question": "<p>A line is \\(\\mathbf r=\\begin{pmatrix}1\\\\-5\\\\3\\end{pmatrix}+t\\begin{pmatrix}2\\\\3\\\\-1\\end{pmatrix}\\). Rewrite it using the point at \\(t=2\\) as the new anchor and \\(-2\\mathbf d\\) as the direction, where \\(\\mathbf d=\\begin{pmatrix}2\\\\3\\\\-1\\end{pmatrix}\\). Give both vectors.</p>",
+        "solution": [
+          "<p>The new anchor is \\(\\mathbf b=\\begin{pmatrix}1\\\\-5\\\\3\\end{pmatrix}+\\left(2\\right)\\begin{pmatrix}2\\\\3\\\\-1\\end{pmatrix}=\\begin{pmatrix}5\\\\1\\\\1\\end{pmatrix}\\).</p>",
+          "<p>Multiplying a direction by a non-zero scalar changes the parameter scale or sense. It covers the same set of points.</p>",
+          "<p>One equivalent form is \\(\\mathbf r=\\begin{pmatrix}5\\\\1\\\\1\\end{pmatrix}+u\\begin{pmatrix}-4\\\\-6\\\\2\\end{pmatrix}\\).</p>"
+        ]
+      },
+      {
+        "title": "Read a point from its parameter",
+        "question": "<p>A line has equation \\(\\mathbf r=\\begin{pmatrix}6\\\\-3\\\\4\\end{pmatrix}+t\\begin{pmatrix}-3\\\\9\\\\6\\end{pmatrix}\\). Find the point at \\(t=\\frac{1}{3}\\). Give all coordinates.</p>",
+        "solution": [
+          "<p>Substitute the same parameter into all coordinates.</p>",
+          "<p>\\(\\mathbf r=\\begin{pmatrix}6\\\\-3\\\\4\\end{pmatrix}+\\left(\\frac{1}{3}\\right)\\begin{pmatrix}-3\\\\9\\\\6\\end{pmatrix}=\\begin{pmatrix}5\\\\0\\\\6\\end{pmatrix}\\).</p>",
+          "<p>The point is \\(P(5, 0, 6)\\).</p>"
+        ]
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the method</h2><div class=\"table-scroll\"><table><thead><tr><th>Use</th><th>What to write</th></tr></thead><tbody><tr><th>Equation</th><td>\\(\\mathbf r=\\mathbf a+t\\mathbf d\\) with \\(t\\in\\mathbb R\\) and \\(\\mathbf d\\ne\\mathbf0\\).</td></tr><tr><th>Two points</th><td>Set \\(\\mathbf a=\\overrightarrow{OA}\\) and \\(\\mathbf d=\\overrightarrow{AB}\\).</td></tr><tr><th>Membership</th><td>Use the same parameter in every coordinate, including fixed coordinates.</td></tr><tr><th>Segment AB</th><td>For \\(\\mathbf r=\\overrightarrow{OA}+t\\overrightarrow{AB}\\), use \\(0\\le t\\le1\\).</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Use a point on the line as the anchor.</li><li>Subtract endpoint positions to get a direction.</li><li>Changing the direction scale changes endpoint parameters.</li></ul>",
+      "examTip": "<p>When using two points, check that substituting the second endpoint gives its full position vector.</p>"
+    },
+    "related": [
+      {
+        "title": "Components, displacements and unit vectors",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_vec_components"
+      },
+      {
+        "title": "Scalar products, angles and perpendicularity",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_vec_scalar_product"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "p3-vec-line_equations-extra-1",
+        "title": "Read a point from its parameter",
+        "prompt": "<p>A line has equation \\(\\mathbf r=\\begin{pmatrix}1\\\\0\\\\3\\end{pmatrix}+t\\begin{pmatrix}-2\\\\-1\\\\1\\end{pmatrix}\\). Find the point at \\(t=- \\frac{3}{2}\\). Give all coordinates.</p>",
+        "fields": [
+          {
+            "key": "rx",
+            "label": "Point x-component",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "ry",
+            "label": "Point y-component",
+            "type": "number",
+            "expected": "3/2"
+          },
+          {
+            "key": "rz",
+            "label": "Point z-component",
+            "type": "number",
+            "expected": "3/2"
+          }
+        ],
+        "hint": "<p>Multiply the direction vector by the parameter, then add the anchor.</p>",
+        "solution": "<p>Substitute the same parameter into all coordinates.</p><p>\\(\\mathbf r=\\begin{pmatrix}1\\\\0\\\\3\\end{pmatrix}+\\left(- \\frac{3}{2}\\right)\\begin{pmatrix}-2\\\\-1\\\\1\\end{pmatrix}=\\begin{pmatrix}4\\\\\\frac{3}{2}\\\\\\frac{3}{2}\\end{pmatrix}\\).</p><p>The point is \\(P(4, \\frac{3}{2}, \\frac{3}{2})\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-line_equations-extra-2",
+        "title": "Write a line through two points",
+        "prompt": "<p>Use \\(A(5, -1, 6)\\) and \\(B(4, -3, 10)\\) to construct \\(\\mathbf r=\\mathbf a+t\\mathbf d\\). Take the anchor at \\(A\\) and use \\(\\overrightarrow{AB}\\) as the direction. Give every component of both vectors.</p>",
+        "fields": [
+          {
+            "key": "ax",
+            "label": "Anchor x-component",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "ay",
+            "label": "Anchor y-component",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "az",
+            "label": "Anchor z-component",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "dx",
+            "label": "Direction x-component",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "dy",
+            "label": "Direction y-component",
+            "type": "number",
+            "expected": "-2"
+          },
+          {
+            "key": "dz",
+            "label": "Direction z-component",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>An endpoint is a position. A direction is a difference of two positions.</p>",
+        "solution": "<p>Use the position of \\(A\\) for the anchor.</p><p>\\(\\overrightarrow{AB}=\\begin{pmatrix}-1\\\\-2\\\\4\\end{pmatrix}\\) by subtracting the starting position from the final one.</p><p>The line is \\(\\mathbf r=\\begin{pmatrix}5\\\\-1\\\\6\\end{pmatrix}+t\\begin{pmatrix}-1\\\\-2\\\\4\\end{pmatrix}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-line_equations-extra-3",
+        "title": "Test point membership",
+        "prompt": "<p>A line has equation \\(\\mathbf r=\\begin{pmatrix}0\\\\3\\\\1\\end{pmatrix}+t\\begin{pmatrix}4\\\\-2\\\\3\\end{pmatrix}\\). Find the parameter of \\(P(8, -1, 7)\\) and verify the other coordinates.</p>",
+        "fields": [
+          {
+            "key": "t",
+            "label": "Parameter t",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>Find a candidate parameter from a changing coordinate. Check every coordinate with that same value.</p>",
+        "solution": "<p>The x-coordinate requires \\(4 t=8\\), so \\(t=2\\).</p><p>Test the same value in the full equation. It gives \\(\\begin{pmatrix}8\\\\-1\\\\7\\end{pmatrix}\\), which matches all the coordinates.</p><p>The point lies on the line at \\(t=2\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-line_equations-extra-4",
+        "title": "Change the anchor and direction",
+        "prompt": "<p>A line is \\(\\mathbf r=\\begin{pmatrix}7\\\\-2\\\\0\\end{pmatrix}+t\\begin{pmatrix}1\\\\3\\\\-1\\end{pmatrix}\\). Rewrite it using the point at \\(t=2\\) as the new anchor and \\(-3\\mathbf d\\) as the direction, where \\(\\mathbf d=\\begin{pmatrix}1\\\\3\\\\-1\\end{pmatrix}\\). Give both vectors.</p>",
+        "fields": [
+          {
+            "key": "bx",
+            "label": "New anchor x-component",
+            "type": "number",
+            "expected": "9"
+          },
+          {
+            "key": "by",
+            "label": "New anchor y-component",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "bz",
+            "label": "New anchor z-component",
+            "type": "number",
+            "expected": "-2"
+          },
+          {
+            "key": "ex",
+            "label": "New direction x-component",
+            "type": "number",
+            "expected": "-3"
+          },
+          {
+            "key": "ey",
+            "label": "New direction y-component",
+            "type": "number",
+            "expected": "-9"
+          },
+          {
+            "key": "ez",
+            "label": "New direction z-component",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>Changing the parameter origin can change the anchor. Scale the full direction vector.</p>",
+        "solution": "<p>The new anchor is \\(\\mathbf b=\\begin{pmatrix}7\\\\-2\\\\0\\end{pmatrix}+\\left(2\\right)\\begin{pmatrix}1\\\\3\\\\-1\\end{pmatrix}=\\begin{pmatrix}9\\\\4\\\\-2\\end{pmatrix}\\).</p><p>Multiplying a direction by a non-zero scalar changes the parameter scale or sense. It covers the same set of points.</p><p>One equivalent form is \\(\\mathbf r=\\begin{pmatrix}9\\\\4\\\\-2\\end{pmatrix}+u\\begin{pmatrix}-3\\\\-9\\\\3\\end{pmatrix}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-line_equations-extra-5",
+        "title": "Read a point from its parameter",
+        "prompt": "<p>A line has equation \\(\\mathbf r=\\begin{pmatrix}2\\\\3\\\\6\\end{pmatrix}+t\\begin{pmatrix}6\\\\-9\\\\-3\\end{pmatrix}\\). Find the point at \\(t=\\frac{1}{3}\\). Give all coordinates.</p>",
+        "fields": [
+          {
+            "key": "rx",
+            "label": "Point x-component",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "ry",
+            "label": "Point y-component",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "rz",
+            "label": "Point z-component",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>Multiply the direction vector by the parameter, then add the anchor.</p>",
+        "solution": "<p>Substitute the same parameter into all coordinates.</p><p>\\(\\mathbf r=\\begin{pmatrix}2\\\\3\\\\6\\end{pmatrix}+\\left(\\frac{1}{3}\\right)\\begin{pmatrix}6\\\\-9\\\\-3\\end{pmatrix}=\\begin{pmatrix}4\\\\0\\\\5\\end{pmatrix}\\).</p><p>The point is \\(P(4, 0, 5)\\).</p>"
+      }
+    ]
+  },
+  "orig_9709_p3_vec_scalar_product": {
+    "updatedOn": "2026-11-21",
+    "description": "Use scalar products to find directed vector angles, smaller line angles and perpendicular directions.",
+    "sections": [
+      {
+        "id": "calculate-a-dot-product",
+        "title": "How do two vectors produce a single number?",
+        "label": "Use the dot product",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Multiply matching components and add the products. The resulting scalar can be negative, zero or positive.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>With \\(\\mathbf a=(a_x,a_y,a_z)\\) and \\(\\mathbf b=(b_x,b_y,b_z)\\) written as component triples, \\(\\mathbf a\\cdot\\mathbf b=a_xb_x+a_yb_y+a_zb_z\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Elementwise products alone give three values. Add them to finish the dot product.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-scalar_product-1",
+            "title": "Find the scalar product",
+            "prompt": "<p>Calculate \\(\\mathbf a\\cdot\\mathbf b\\) for \\(\\mathbf a=\\begin{pmatrix}2\\\\-5\\\\1\\end{pmatrix}\\) and \\(\\mathbf b=\\begin{pmatrix}7\\\\4\\\\-2\\end{pmatrix}\\).</p>",
+            "fields": [
+              {
+                "key": "dot",
+                "label": "Scalar product",
+                "type": "number",
+                "expected": "-8"
+              }
+            ],
+            "hint": "<p>The result is one number. Preserve the sign of every product.</p>",
+            "solution": "<p>Multiply corresponding components, then add.</p><p>\\(\\mathbf a\\cdot\\mathbf b=\\left(2\\right)\\left(7\\right)+\\left(-5\\right)\\left(4\\right)+\\left(1\\right)\\left(-2\\right)=-8\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "angles-between-vectors",
+        "title": "When does the angle between vectors become obtuse?",
+        "label": "Find a vector angle",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Put both vector arrows tail to tail. For non-zero vectors, divide the dot product by the two positive magnitudes to get the cosine of their angle.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\cos\\theta=\\frac{\\mathbf a\\cdot\\mathbf b}{|\\mathbf a||\\mathbf b|}\\), with \\(0^\\circ\\le\\theta\\le180^\\circ\\). A negative dot product gives an obtuse angle unless the arrows point in exactly opposite directions.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not remove a negative sign from the dot product when the question asks for the angle between directed vectors.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-scalar_product-2",
+            "title": "Find the angle between two vectors",
+            "prompt": "<p>Find the angle \\(\\theta\\) between the vectors \\(\\begin{pmatrix}3\\\\-2\\\\1\\end{pmatrix}\\) and \\(\\begin{pmatrix}-2\\\\0\\\\3\\end{pmatrix}\\). Give the exact value of \\(\\cos\\theta\\).</p>",
+            "fields": [
+              {
+                "key": "cos",
+                "label": "Exact cosine",
+                "type": "number",
+                "expected": "-3*sqrt(182)/182"
+              }
+            ],
+            "hint": "<p>Divide the correct scalar product by the product of the magnitudes before taking the inverse cosine.</p>",
+            "solution": "<p>Keep the sign of the scalar product \\(-3\\) because the two vector arrows have fixed directions.</p><p>The magnitudes are \\(\\sqrt{14}\\) and \\(\\sqrt{13}\\), giving \\(\\cos\\theta=- \\frac{3 \\sqrt{182}}{182}\\).</p><p>\\(\\cos\\theta=- \\frac{3 \\sqrt{182}}{182}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "smaller-angle-between-lines",
+        "title": "Why can the sign change for a line angle?",
+        "label": "Find a line angle",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A direction vector can be reversed without changing a line. The angle between two lines is the smaller angle made by a pair of their directions, whether or not the lines meet.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\cos\\theta=\\frac{|\\mathbf d_1\\cdot\\mathbf d_2|}{|\\mathbf d_1||\\mathbf d_2|}\\) to get \\(0^\\circ\\le\\theta\\le90^\\circ\\).</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_vec_scalar_product/angle-senses.svg",
+              "alt": "Two lines cross. Two solid direction arrows make an obtuse angle, while a dotted reverse arrow shows the smaller angle.",
+              "caption": "<p>Either sense can describe the teal line. Its smaller angle with the blue line is the acute angle in this sketch.</p>",
+              "width": 500,
+              "height": 250
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The anchor points do not describe the inclinations of the lines. Use their direction vectors, and round the angle only at the end.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-scalar_product-3",
+            "title": "Find the smaller line angle",
+            "prompt": "<p>Find the smaller angle \\(\\theta\\) between \\(l_1: \\mathbf r=\\begin{pmatrix}1\\\\0\\\\2\\end{pmatrix}+t\\begin{pmatrix}2\\\\1\\\\-2\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}0\\\\2\\\\-1\\end{pmatrix}+u\\begin{pmatrix}-1\\\\4\\\\3\\end{pmatrix}\\). Give your answer in degrees to one decimal place.</p>",
+            "fields": [
+              {
+                "key": "theta",
+                "label": "Angle in degrees",
+                "type": "approximate",
+                "expected": "74.841616173521",
+                "absolute_tolerance": 0.050001,
+                "minimum": 0,
+                "maximum": 90
+              }
+            ],
+            "hint": "<p>Divide the correct scalar product by the product of the magnitudes before taking the inverse cosine.</p>",
+            "solution": "<p>Use the direction vectors. Their dot product is \\(-4\\). The absolute value gives the smaller angle because either direction can represent a line.</p><p>The magnitudes are \\(3\\) and \\(\\sqrt{26}\\), giving \\(\\cos\\theta=\\frac{2 \\sqrt{26}}{39}\\).</p><p>Therefore \\(\\theta=74.8^\\circ\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "test-for-perpendicularity",
+        "title": "When does a zero dot product show a right angle?",
+        "label": "Test a right angle",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>The dot product of non-zero vectors vanishes exactly when the cosine of their angle is zero. This gives an equation for unknown components.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For directions \\(\\mathbf a\\) and \\(\\mathbf b\\), use \\(\\mathbf a\\cdot\\mathbf b=0\\). For two lines to meet at a right angle, also establish that they intersect.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The zero vector has zero dot product with every vector but defines no angle.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-scalar_product-4",
+            "title": "Use perpendicularity to find a coefficient",
+            "prompt": "<p>Find \\(k\\) when \\(\\begin{pmatrix}5\\\\2\\\\-3\\end{pmatrix}\\) and \\(\\begin{pmatrix}k\\\\-5\\\\2\\end{pmatrix}\\) are perpendicular.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Coefficient k",
+                "type": "number",
+                "expected": "16/5",
+                "retry": [
+                  {
+                    "answer": "-16/5",
+                    "feedback": "<p>The two known products add to −16. The remaining product must be +16 so that the sum is zero.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>A zero dot product is the condition for two non-zero perpendicular vectors.</p>",
+            "solution": "<p>Both vectors have non-zero length when perpendicular. Their scalar product must be zero.</p><p>The equation is \\(5 k - 16=0\\).</p><p>Solving gives \\(k=\\frac{16}{5}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "signed-component",
+        "title": "What does a negative projected component mean?",
+        "label": "Interpret projection",
+        "minutes": 5,
+        "level": "further",
+        "intro": "<p>Taking the dot product with a unit direction gives the signed length of a component. A negative result means the component points against the chosen direction.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The signed component of \\(\\mathbf a\\) along non-zero \\(\\mathbf d\\) is \\(\\mathbf a\\cdot\\frac{\\mathbf d}{|\\mathbf d|}\\). It equals \\(|\\mathbf a|\\cos\\theta\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A negative signed component is useful information. An actual distance is never negative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-scalar_product-5",
+            "title": "Find a signed component along a direction",
+            "prompt": "<p>Find the signed scalar component of \\(\\begin{pmatrix}3\\\\4\\\\-2\\end{pmatrix}\\) along the direction \\(\\begin{pmatrix}-2\\\\2\\\\-1\\end{pmatrix}\\). Give an exact value.</p>",
+            "fields": [
+              {
+                "key": "component",
+                "label": "Signed component",
+                "type": "number",
+                "expected": "4/3"
+              }
+            ],
+            "hint": "<p>Divide by the direction's magnitude before using it in the scalar product.</p>",
+            "solution": "<p>Turn the direction into a unit vector \\(\\begin{pmatrix}- \\frac{2}{3}\\\\\\frac{2}{3}\\\\- \\frac{1}{3}\\end{pmatrix}\\).</p><p>Take the dot product with that unit vector. The signed component is \\(\\frac{4}{3}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Scalar product",
+        "definition": "<p>The sum of matching component products, also called the dot product.</p>"
+      },
+      {
+        "term": "Vector angle",
+        "definition": "<p>The angle between the two arrows with their tails placed together.</p>"
+      },
+      {
+        "term": "Line angle",
+        "definition": "<p>The smaller angle between any two directions of the lines.</p>"
+      },
+      {
+        "term": "Signed component",
+        "definition": "<p>The length along a chosen unit direction, with its sign recording the sense.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find the scalar product",
+        "question": "<p>Calculate \\(\\mathbf a\\cdot\\mathbf b\\) for \\(\\mathbf a=\\begin{pmatrix}3\\\\-1\\\\4\\end{pmatrix}\\) and \\(\\mathbf b=\\begin{pmatrix}-2\\\\5\\\\3\\end{pmatrix}\\).</p>",
+        "solution": [
+          "<p>Multiply corresponding components, then add.</p>",
+          "<p>\\(\\mathbf a\\cdot\\mathbf b=\\left(3\\right)\\left(-2\\right)+\\left(-1\\right)\\left(5\\right)+\\left(4\\right)\\left(3\\right)=1\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the angle between two vectors",
+        "question": "<p>Find the angle \\(\\theta\\) between the vectors \\(\\begin{pmatrix}4\\\\1\\\\-2\\end{pmatrix}\\) and \\(\\begin{pmatrix}-1\\\\3\\\\1\\end{pmatrix}\\). Give your answer in degrees to one decimal place.</p>",
+        "solution": [
+          "<p>Keep the sign of the scalar product \\(-3\\) because the two vector arrows have fixed directions.</p>",
+          "<p>The magnitudes are \\(\\sqrt{21}\\) and \\(\\sqrt{11}\\), giving \\(\\cos\\theta=- \\frac{\\sqrt{231}}{77}\\).</p>",
+          "<p>Therefore \\(\\theta=101.4^\\circ\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the angle between two vectors",
+        "question": "<p>Find the angle \\(\\theta\\) between the vectors \\(\\begin{pmatrix}1\\\\1\\\\-2\\end{pmatrix}\\) and \\(\\begin{pmatrix}2\\\\-3\\\\4\\end{pmatrix}\\). Give your answer in degrees to one decimal place.</p>",
+        "solution": [
+          "<p>Keep the sign of the scalar product \\(-9\\) because the two vector arrows have fixed directions.</p>",
+          "<p>The magnitudes are \\(\\sqrt{6}\\) and \\(\\sqrt{29}\\), giving \\(\\cos\\theta=- \\frac{3 \\sqrt{174}}{58}\\).</p>",
+          "<p>Therefore \\(\\theta=133.0^\\circ\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the smaller line angle",
+        "question": "<p>Find the smaller angle \\(\\theta\\) between \\(l_1: \\mathbf r=\\begin{pmatrix}1\\\\0\\\\2\\end{pmatrix}+t\\begin{pmatrix}1\\\\-2\\\\3\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}0\\\\2\\\\-1\\end{pmatrix}+u\\begin{pmatrix}-3\\\\0\\\\-1\\end{pmatrix}\\). Give your answer in degrees to one decimal place.</p>",
+        "solution": [
+          "<p>Use the direction vectors. Their dot product is \\(-6\\). The absolute value gives the smaller angle because either direction can represent a line.</p>",
+          "<p>The magnitudes are \\(\\sqrt{14}\\) and \\(\\sqrt{10}\\), giving \\(\\cos\\theta=\\frac{3 \\sqrt{35}}{35}\\).</p>",
+          "<p>Therefore \\(\\theta=59.5^\\circ\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the smaller line angle",
+        "question": "<p>Find the smaller angle \\(\\theta\\) between \\(l_1: \\mathbf r=\\begin{pmatrix}1\\\\0\\\\2\\end{pmatrix}+t\\begin{pmatrix}2\\\\1\\\\1\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}0\\\\2\\\\-1\\end{pmatrix}+u\\begin{pmatrix}-3\\\\2\\\\-2\\end{pmatrix}\\). Give the exact value of \\(\\cos\\theta\\).</p>",
+        "solution": [
+          "<p>Use the direction vectors. Their dot product is \\(-6\\). The absolute value gives the smaller angle because either direction can represent a line.</p>",
+          "<p>The magnitudes are \\(\\sqrt{6}\\) and \\(\\sqrt{17}\\), giving \\(\\cos\\theta=\\frac{\\sqrt{102}}{17}\\).</p>",
+          "<p>\\(\\cos\\theta=\\frac{\\sqrt{102}}{17}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use perpendicularity to find a coefficient",
+        "question": "<p>Find \\(k\\) when \\(\\begin{pmatrix}2\\\\-3\\\\5\\end{pmatrix}\\) and \\(\\begin{pmatrix}1\\\\k\\\\7\\end{pmatrix}\\) are perpendicular.</p>",
+        "solution": [
+          "<p>Both vectors have non-zero length when perpendicular. Their scalar product must be zero.</p>",
+          "<p>The equation is \\(37 - 3 k=0\\).</p>",
+          "<p>Solving gives \\(k=\\frac{37}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a signed component along a direction",
+        "question": "<p>Find the signed scalar component of \\(\\begin{pmatrix}-4\\\\2\\\\1\\end{pmatrix}\\) along the direction \\(\\begin{pmatrix}2\\\\-1\\\\2\\end{pmatrix}\\). Give an exact value.</p>",
+        "solution": [
+          "<p>Turn the direction into a unit vector \\(\\begin{pmatrix}\\frac{2}{3}\\\\- \\frac{1}{3}\\\\\\frac{2}{3}\\end{pmatrix}\\).</p>",
+          "<p>Take the dot product with that unit vector. The signed component is \\(- \\frac{8}{3}\\).</p>"
+        ]
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the method</h2><div class=\"table-scroll\"><table><thead><tr><th>Use</th><th>What to write</th></tr></thead><tbody><tr><th>Dot product</th><td>\\(\\mathbf a\\cdot\\mathbf b=a_xb_x+a_yb_y+a_zb_z\\).</td></tr><tr><th>Vector angle</th><td>\\(\\cos\\theta=\\frac{\\mathbf a\\cdot\\mathbf b}{|\\mathbf a||\\mathbf b|}\\).</td></tr><tr><th>Line angle</th><td>Use \\(|\\mathbf a\\cdot\\mathbf b|\\) in the numerator, with \\(\\mathbf a,\\mathbf b\\) directions.</td></tr><tr><th>Right angle</th><td>For non-zero vectors use \\(\\mathbf a\\cdot\\mathbf b=0\\).</td></tr></tbody></table></div>",
+      "checks": "<ul><li>For a vector angle, preserve the sign of the scalar product.</li><li>For a line angle, use directions and choose the smaller angle.</li><li>Round degrees to one decimal place unless another precision is given.</li></ul>",
+      "examTip": "<p>Write which two vectors you are using. A negative dot product is allowed for a vector angle.</p>"
+    },
+    "related": [
+      {
+        "title": "Vector equations of straight lines",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_vec_line_equations"
+      },
+      {
+        "title": "Parallel, intersecting and skew lines",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_vec_line_relationships"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "p3-vec-scalar_product-extra-1",
+        "title": "Find the scalar product",
+        "prompt": "<p>Calculate \\(\\mathbf a\\cdot\\mathbf b\\) for \\(\\mathbf a=\\begin{pmatrix}1\\\\3\\\\-7\\end{pmatrix}\\) and \\(\\mathbf b=\\begin{pmatrix}4\\\\-2\\\\1\\end{pmatrix}\\).</p>",
+        "fields": [
+          {
+            "key": "dot",
+            "label": "Scalar product",
+            "type": "number",
+            "expected": "-9"
+          }
+        ],
+        "hint": "<p>The result is one number. Preserve the sign of every product.</p>",
+        "solution": "<p>Multiply corresponding components, then add.</p><p>\\(\\mathbf a\\cdot\\mathbf b=\\left(1\\right)\\left(4\\right)+\\left(3\\right)\\left(-2\\right)+\\left(-7\\right)\\left(1\\right)=-9\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-scalar_product-extra-2",
+        "title": "Find the angle between two vectors",
+        "prompt": "<p>Find the angle \\(\\theta\\) between the vectors \\(\\begin{pmatrix}4\\\\1\\\\3\\end{pmatrix}\\) and \\(\\begin{pmatrix}2\\\\-1\\\\3\\end{pmatrix}\\). Give your answer in degrees to one decimal place.</p>",
+        "fields": [
+          {
+            "key": "theta",
+            "label": "Angle in degrees",
+            "type": "approximate",
+            "expected": "33.004491598883",
+            "absolute_tolerance": 0.050001,
+            "minimum": 0,
+            "maximum": 180
+          }
+        ],
+        "hint": "<p>Divide the correct scalar product by the product of the magnitudes before taking the inverse cosine.</p>",
+        "solution": "<p>Keep the sign of the scalar product \\(16\\) because the two vector arrows have fixed directions.</p><p>The magnitudes are \\(\\sqrt{26}\\) and \\(\\sqrt{14}\\), giving \\(\\cos\\theta=\\frac{8 \\sqrt{91}}{91}\\).</p><p>Therefore \\(\\theta=33.0^\\circ\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-scalar_product-extra-3",
+        "title": "Find the smaller line angle",
+        "prompt": "<p>Find the smaller angle \\(\\theta\\) between \\(l_1: \\mathbf r=\\begin{pmatrix}1\\\\0\\\\2\\end{pmatrix}+t\\begin{pmatrix}2\\\\1\\\\5\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}0\\\\2\\\\-1\\end{pmatrix}+u\\begin{pmatrix}-1\\\\0\\\\-2\\end{pmatrix}\\). Give the exact value of \\(\\cos\\theta\\).</p>",
+        "fields": [
+          {
+            "key": "cos",
+            "label": "Exact cosine",
+            "type": "number",
+            "expected": "2*sqrt(6)/5"
+          }
+        ],
+        "hint": "<p>Divide the correct scalar product by the product of the magnitudes before taking the inverse cosine.</p>",
+        "solution": "<p>Use the direction vectors. Their dot product is \\(-12\\). The absolute value gives the smaller angle because either direction can represent a line.</p><p>The magnitudes are \\(\\sqrt{30}\\) and \\(\\sqrt{5}\\), giving \\(\\cos\\theta=\\frac{2 \\sqrt{6}}{5}\\).</p><p>\\(\\cos\\theta=\\frac{2 \\sqrt{6}}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-scalar_product-extra-4",
+        "title": "Use perpendicularity to find a coefficient",
+        "prompt": "<p>Find \\(k\\) when \\(\\begin{pmatrix}2\\\\1\\\\-5\\end{pmatrix}\\) and \\(\\begin{pmatrix}1\\\\2\\\\k\\end{pmatrix}\\) are perpendicular.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Coefficient k",
+            "type": "number",
+            "expected": "4/5"
+          }
+        ],
+        "hint": "<p>A zero dot product is the condition for two non-zero perpendicular vectors.</p>",
+        "solution": "<p>Both vectors have non-zero length when perpendicular. Their scalar product must be zero.</p><p>The equation is \\(4 - 5 k=0\\).</p><p>Solving gives \\(k=\\frac{4}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-scalar_product-extra-5",
+        "title": "Find a signed component along a direction",
+        "prompt": "<p>Find the signed scalar component of \\(\\begin{pmatrix}1\\\\-2\\\\5\\end{pmatrix}\\) along the direction \\(\\begin{pmatrix}1\\\\2\\\\-2\\end{pmatrix}\\). Give an exact value.</p>",
+        "fields": [
+          {
+            "key": "component",
+            "label": "Signed component",
+            "type": "number",
+            "expected": "-13/3"
+          }
+        ],
+        "hint": "<p>Divide by the direction's magnitude before using it in the scalar product.</p>",
+        "solution": "<p>Turn the direction into a unit vector \\(\\begin{pmatrix}\\frac{1}{3}\\\\\\frac{2}{3}\\\\- \\frac{2}{3}\\end{pmatrix}\\).</p><p>Take the dot product with that unit vector. The signed component is \\(- \\frac{13}{3}\\).</p>"
+      }
+    ]
+  },
+  "orig_9709_p3_vec_line_relationships": {
+    "updatedOn": "2026-11-21",
+    "description": "Classify two lines in space, verify coordinate consistency and find an intersection when it exists.",
+    "sections": [
+      {
+        "id": "compare-line-directions",
+        "title": "How can I tell if two lines are parallel?",
+        "label": "Compare directions",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Check whether the second direction equals a non-zero scalar times the first. Then distinguish a single common line from two distinct parallel lines.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(\\mathbf e=c\\mathbf d\\), test whether the difference of the anchors also equals a scalar times \\(\\mathbf d\\). If it does, the lines are coincident.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A zero component calls for a direct comparison. Do not divide by it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-line_relationships-1",
+            "title": "Classify a pair of lines",
+            "prompt": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}4\\\\1\\\\-2\\end{pmatrix}+t\\begin{pmatrix}0\\\\3\\\\-1\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}5\\\\4\\\\-3\\end{pmatrix}+u\\begin{pmatrix}0\\\\-9\\\\3\\end{pmatrix}\\).</p>",
+            "fields": [
+              {
+                "key": "relation",
+                "label": "Line relationship",
+                "type": "choice",
+                "expected": "parallel",
+                "options": {
+                  "parallel": "Distinct and parallel",
+                  "coincident": "Coincident",
+                  "intersect": "Intersect at one point",
+                  "skew": "Skew"
+                }
+              }
+            ],
+            "hint": "<p>Test direction vectors first. If they are not proportional, solve two independent coordinate equations and check the third.</p>",
+            "solution": "<p>The second direction is \\(-3\\) times the first. Test the displacement between anchors \\(\\begin{pmatrix}1\\\\3\\\\-1\\end{pmatrix}\\) against that direction.</p><p>The lines are distinct and parallel. Their anchor displacement is not a multiple of the direction.</p>"
+          }
+        ]
+      },
+      {
+        "id": "coincident-lines",
+        "title": "How can different equations give the same line?",
+        "label": "Test coincident lines",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A point of one parallel line lies on the other precisely when the two lines coincide. Check the anchor difference to show this directly.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Look for two scalar relationships, one between the directions and one between the anchor displacement and a direction.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Different anchor points do not rule out coincident lines.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-line_relationships-2",
+            "title": "Classify a pair of lines",
+            "prompt": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}3\\\\4\\\\0\\end{pmatrix}+t\\begin{pmatrix}1\\\\0\\\\2\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}-1\\\\4\\\\-8\\end{pmatrix}+u\\begin{pmatrix}3\\\\0\\\\6\\end{pmatrix}\\).</p>",
+            "fields": [
+              {
+                "key": "relation",
+                "label": "Line relationship",
+                "type": "choice",
+                "expected": "coincident",
+                "options": {
+                  "parallel": "Distinct and parallel",
+                  "coincident": "Coincident",
+                  "intersect": "Intersect at one point",
+                  "skew": "Skew"
+                },
+                "retry": [
+                  {
+                    "answer": "parallel",
+                    "feedback": "<p>The directions are parallel. Check the difference of the anchors too: it is also a multiple of the direction, so the equations describe the same line.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Test direction vectors first. If they are not proportional, solve two independent coordinate equations and check the third.</p>",
+            "solution": "<p>The second direction is \\(3\\) times the first. Test the displacement between anchors \\(\\begin{pmatrix}-4\\\\0\\\\-8\\end{pmatrix}\\) against that direction.</p><p>The lines are coincident. Both anchors lie on the same line and its directions are parallel.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "solve-for-the-intersection",
+        "title": "How do I find where two lines meet?",
+        "label": "Find an intersection",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>For non-parallel directions, a shared point can occur only once. Use two separate parameters, one for each line. Equate their three coordinate expressions.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Solve two independent coordinate equations, then verify the unused one. Substitute the parameter into either full line equation to state the intersection.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Reporting only the two parameter values does not answer a question asking for the point of intersection.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-line_relationships-3",
+            "title": "Classify a pair of lines",
+            "prompt": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}4\\\\3\\\\-2\\end{pmatrix}+t\\begin{pmatrix}1\\\\-1\\\\2\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}-1\\\\4\\\\-5\\end{pmatrix}+u\\begin{pmatrix}3\\\\1\\\\-1\\end{pmatrix}\\). Give all coordinates of their intersection.</p>",
+            "fields": [
+              {
+                "key": "relation",
+                "label": "Line relationship",
+                "type": "choice",
+                "expected": "intersect",
+                "options": {
+                  "parallel": "Distinct and parallel",
+                  "coincident": "Coincident",
+                  "intersect": "Intersect at one point",
+                  "skew": "Skew"
+                }
+              },
+              {
+                "key": "px",
+                "label": "Intersection x-component",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "py",
+                "label": "Intersection y-component",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "pz",
+                "label": "Intersection z-component",
+                "type": "number",
+                "expected": "-6"
+              }
+            ],
+            "hint": "<p>Test direction vectors first. If they are not proportional, solve two independent coordinate equations and check the third.</p>",
+            "solution": "<p>Directions are not proportional. Equate coordinates, keeping separate parameters for the two lines.</p><p>Solve \\(t + 4=3 u - 1\\) and \\(3 - t=u + 4\\) to get \\(t=-2\\) and \\(u=1\\).</p><p>The remaining z-coordinates are \\(-6\\) and \\(-6\\).</p><p>All three coordinates match. The lines intersect at \\((2, 5, -6)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "spot-a-skew-pair",
+        "title": "What makes two lines skew?",
+        "label": "Check the third equation",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Two non-parallel lines in 3D can miss each other. If the only candidate from two independent equations fails the third, the lines are skew.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Skew means non-parallel and non-intersecting. Show both facts from the direction and coordinate tests.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_vec_line_relationships/skew-edges.svg",
+              "alt": "A wireframe cuboid shows one horizontal front bottom edge and one vertical back edge highlighted. The edges never meet.",
+              "caption": "<p>The highlighted edges lie in different faces. The blue edge is horizontal, the teal edge vertical, and their extensions have no common point.</p>",
+              "width": 500,
+              "height": 250
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An apparent crossing in a 2D drawing does not prove that the lines share the same third coordinate.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-line_relationships-4",
+            "title": "Classify a pair of lines",
+            "prompt": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}0\\\\4\\\\-5\\end{pmatrix}+t\\begin{pmatrix}2\\\\1\\\\1\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}0\\\\11\\\\-1\\end{pmatrix}+u\\begin{pmatrix}-1\\\\3\\\\0\\end{pmatrix}\\).</p>",
+            "fields": [
+              {
+                "key": "relation",
+                "label": "Line relationship",
+                "type": "choice",
+                "expected": "skew",
+                "options": {
+                  "parallel": "Distinct and parallel",
+                  "coincident": "Coincident",
+                  "intersect": "Intersect at one point",
+                  "skew": "Skew"
+                },
+                "retry": [
+                  {
+                    "answer": "intersect",
+                    "feedback": "<p>The first two coordinate equations locate a candidate. The third coordinate differs, so the lines are skew.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Test direction vectors first. If they are not proportional, solve two independent coordinate equations and check the third.</p>",
+            "solution": "<p>Directions are not proportional. Equate coordinates, keeping separate parameters for the two lines.</p><p>Solve \\(2 t=- u\\) and \\(t + 4=3 u + 11\\) to get \\(t=1\\) and \\(u=-2\\).</p><p>The remaining z-coordinates are \\(-4\\) and \\(-1\\).</p><p>The third equation fails, although the directions are not parallel. The lines are skew.</p>"
+          }
+        ]
+      },
+      {
+        "id": "choose-independent-equations",
+        "title": "What if the first two equations depend on each other?",
+        "label": "Choose an equation pair",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>If solving the first two coordinate equations gives the same condition twice, use another coordinate equation. If two equations are inconsistent, there can be no intersection.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For non-parallel directions, some pair of coordinate equations is independent. Use that pair to determine both parameters before the final check.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A mismatch in an equation with no parameters also rules out intersection. Do not discard a fixed coordinate.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-line_relationships-5",
+            "title": "Classify a pair of lines",
+            "prompt": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}1\\\\-2\\\\2\\end{pmatrix}+t\\begin{pmatrix}1\\\\3\\\\-2\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}5\\\\11\\\\-1\\end{pmatrix}+u\\begin{pmatrix}2\\\\6\\\\1\\end{pmatrix}\\).</p>",
+            "fields": [
+              {
+                "key": "relation",
+                "label": "Line relationship",
+                "type": "choice",
+                "expected": "skew",
+                "options": {
+                  "parallel": "Distinct and parallel",
+                  "coincident": "Coincident",
+                  "intersect": "Intersect at one point",
+                  "skew": "Skew"
+                }
+              }
+            ],
+            "hint": "<p>Test direction vectors first. If they are not proportional, solve two independent coordinate equations and check the third.</p>",
+            "solution": "<p>Directions are not proportional. Equate coordinates, keeping separate parameters for the two lines.</p><p>Solve \\(t + 1=2 u + 5\\) and \\(2 - 2 t=u - 1\\) to get \\(t=2\\) and \\(u=-1\\).</p><p>The remaining y-coordinates are \\(4\\) and \\(5\\).</p><p>The third equation fails, although the directions are not parallel. The lines are skew.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Parallel",
+        "definition": "<p>Directions that are non-zero scalar multiples of each other.</p>"
+      },
+      {
+        "term": "Coincident",
+        "definition": "<p>Two equations whose sets of points are the same.</p>"
+      },
+      {
+        "term": "Intersecting",
+        "definition": "<p>Two distinct lines that share a point.</p>"
+      },
+      {
+        "term": "Skew",
+        "definition": "<p>Two non-parallel lines that share no point.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Classify a pair of lines",
+        "question": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}1\\\\-2\\\\4\\end{pmatrix}+t\\begin{pmatrix}2\\\\0\\\\3\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}4\\\\-1\\\\3\\end{pmatrix}+u\\begin{pmatrix}-4\\\\0\\\\-6\\end{pmatrix}\\).</p>",
+        "solution": [
+          "<p>The second direction is \\(-2\\) times the first. Test the displacement between anchors \\(\\begin{pmatrix}3\\\\1\\\\-1\\end{pmatrix}\\) against that direction.</p>",
+          "<p>The lines are distinct and parallel. Their anchor displacement is not a multiple of the direction.</p>"
+        ]
+      },
+      {
+        "title": "Classify a pair of lines",
+        "question": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}0\\\\2\\\\-3\\end{pmatrix}+t\\begin{pmatrix}2\\\\-1\\\\0\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}6\\\\-1\\\\-3\\end{pmatrix}+u\\begin{pmatrix}-4\\\\2\\\\0\\end{pmatrix}\\).</p>",
+        "solution": [
+          "<p>The second direction is \\(-2\\) times the first. Test the displacement between anchors \\(\\begin{pmatrix}6\\\\-3\\\\0\\end{pmatrix}\\) against that direction.</p>",
+          "<p>The lines are coincident. Both anchors lie on the same line and its directions are parallel.</p>"
+        ]
+      },
+      {
+        "title": "Classify a pair of lines",
+        "question": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}2\\\\-3\\\\4\\end{pmatrix}+t\\begin{pmatrix}4\\\\-2\\\\1\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}-2\\\\-1\\\\3\\end{pmatrix}+u\\begin{pmatrix}-8\\\\4\\\\-2\\end{pmatrix}\\).</p>",
+        "solution": [
+          "<p>The second direction is \\(-2\\) times the first. Test the displacement between anchors \\(\\begin{pmatrix}-4\\\\2\\\\-1\\end{pmatrix}\\) against that direction.</p>",
+          "<p>The lines are coincident. Both anchors lie on the same line and its directions are parallel.</p>"
+        ]
+      },
+      {
+        "title": "Classify a pair of lines",
+        "question": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}1\\\\-2\\\\4\\end{pmatrix}+t\\begin{pmatrix}2\\\\3\\\\-1\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}3\\\\5\\\\4\\end{pmatrix}+u\\begin{pmatrix}-2\\\\1\\\\2\\end{pmatrix}\\). Give all coordinates of their intersection.</p>",
+        "solution": [
+          "<p>Directions are not proportional. Equate coordinates, keeping separate parameters for the two lines.</p>",
+          "<p>Solve \\(2 t + 1=3 - 2 u\\) and \\(3 t - 2=u + 5\\) to get \\(t=2\\) and \\(u=-1\\).</p>",
+          "<p>The remaining z-coordinates are \\(2\\) and \\(2\\).</p>",
+          "<p>All three coordinates match. The lines intersect at \\((5, 4, 2)\\).</p>"
+        ]
+      },
+      {
+        "title": "Classify a pair of lines",
+        "question": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}-2\\\\0\\\\1\\end{pmatrix}+t\\begin{pmatrix}3\\\\2\\\\1\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}3\\\\4\\\\6\\end{pmatrix}+u\\begin{pmatrix}1\\\\0\\\\-3\\end{pmatrix}\\). Give all coordinates of their intersection.</p>",
+        "solution": [
+          "<p>Directions are not proportional. Equate coordinates, keeping separate parameters for the two lines.</p>",
+          "<p>Solve \\(3 t - 2=u + 3\\) and \\(2 t=4\\) to get \\(t=2\\) and \\(u=1\\).</p>",
+          "<p>The remaining z-coordinates are \\(3\\) and \\(3\\).</p>",
+          "<p>All three coordinates match. The lines intersect at \\((4, 4, 3)\\).</p>"
+        ]
+      },
+      {
+        "title": "Classify a pair of lines",
+        "question": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}1\\\\1\\\\0\\end{pmatrix}+t\\begin{pmatrix}1\\\\2\\\\3\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}1\\\\6\\\\9\\end{pmatrix}+u\\begin{pmatrix}2\\\\-1\\\\-1\\end{pmatrix}\\).</p>",
+        "solution": [
+          "<p>Directions are not proportional. Equate coordinates, keeping separate parameters for the two lines.</p>",
+          "<p>Solve \\(t + 1=2 u + 1\\) and \\(2 t + 1=6 - u\\) to get \\(t=2\\) and \\(u=1\\).</p>",
+          "<p>The remaining z-coordinates are \\(6\\) and \\(8\\).</p>",
+          "<p>The third equation fails, although the directions are not parallel. The lines are skew.</p>"
+        ]
+      },
+      {
+        "title": "Classify a pair of lines",
+        "question": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}2\\\\3\\\\-4\\end{pmatrix}+t\\begin{pmatrix}2\\\\4\\\\1\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}-3\\\\-7\\\\-8\\end{pmatrix}+u\\begin{pmatrix}1\\\\2\\\\2\\end{pmatrix}\\). Give all coordinates of their intersection.</p>",
+        "solution": [
+          "<p>Directions are not proportional. Equate coordinates, keeping separate parameters for the two lines.</p>",
+          "<p>Solve \\(2 t + 2=u - 3\\) and \\(t - 4=2 u - 8\\) to get \\(t=-2\\) and \\(u=1\\).</p>",
+          "<p>The remaining y-coordinates are \\(-5\\) and \\(-5\\).</p>",
+          "<p>All three coordinates match. The lines intersect at \\((-2, -5, -6)\\).</p>"
+        ]
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the method</h2><div class=\"table-scroll\"><table><thead><tr><th>Use</th><th>What to write</th></tr></thead><tbody><tr><th>Parallel directions</th><td>Check the difference of the anchors. A multiple of the direction establishes coincidence.</td></tr><tr><th>Non-parallel</th><td>Equate the coordinates using separate parameters.</td></tr><tr><th>Candidate found</th><td>Check the remaining coordinate, then evaluate the full vector at the intersection.</td></tr><tr><th>Inconsistency</th><td>With non-parallel directions and no common point, the lines are skew.</td></tr></tbody></table></div><p>For lines with non-parallel directions, solve \\(\\mathbf a+t\\mathbf u=\\mathbf b+s\\mathbf v\\) in all three components using independent parameters. Use the common point only after the third equation agrees.</p>",
+      "checks": "<ul><li>Treat a zero component by direct comparison.</li><li>Use an independent equation pair.</li><li>Give the intersection coordinates, if requested.</li></ul>",
+      "examTip": "<p>Show the unused coordinate check. Two matching coordinates can hide a skew pair.</p>"
+    },
+    "related": [
+      {
+        "title": "Scalar products, angles and perpendicularity",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_vec_scalar_product"
+      },
+      {
+        "title": "Foot of a perpendicular and point-to-line distance",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_vec_perpendicular_foot"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "p3-vec-line_relationships-extra-1",
+        "title": "Classify a pair of lines",
+        "prompt": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}1\\\\-1\\\\2\\end{pmatrix}+t\\begin{pmatrix}0\\\\3\\\\-1\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}0\\\\1\\\\3\\end{pmatrix}+u\\begin{pmatrix}0\\\\-6\\\\2\\end{pmatrix}\\).</p>",
+        "fields": [
+          {
+            "key": "relation",
+            "label": "Line relationship",
+            "type": "choice",
+            "expected": "parallel",
+            "options": {
+              "parallel": "Distinct and parallel",
+              "coincident": "Coincident",
+              "intersect": "Intersect at one point",
+              "skew": "Skew"
+            }
+          }
+        ],
+        "hint": "<p>Test direction vectors first. If they are not proportional, solve two independent coordinate equations and check the third.</p>",
+        "solution": "<p>The second direction is \\(-2\\) times the first. Test the displacement between anchors \\(\\begin{pmatrix}-1\\\\2\\\\1\\end{pmatrix}\\) against that direction.</p><p>The lines are distinct and parallel. Their anchor displacement is not a multiple of the direction.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-line_relationships-extra-2",
+        "title": "Classify a pair of lines",
+        "prompt": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}-2\\\\-1\\\\4\\end{pmatrix}+t\\begin{pmatrix}2\\\\1\\\\0\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}4\\\\2\\\\4\\end{pmatrix}+u\\begin{pmatrix}6\\\\3\\\\0\\end{pmatrix}\\).</p>",
+        "fields": [
+          {
+            "key": "relation",
+            "label": "Line relationship",
+            "type": "choice",
+            "expected": "coincident",
+            "options": {
+              "parallel": "Distinct and parallel",
+              "coincident": "Coincident",
+              "intersect": "Intersect at one point",
+              "skew": "Skew"
+            }
+          }
+        ],
+        "hint": "<p>Test direction vectors first. If they are not proportional, solve two independent coordinate equations and check the third.</p>",
+        "solution": "<p>The second direction is \\(3\\) times the first. Test the displacement between anchors \\(\\begin{pmatrix}6\\\\3\\\\0\\end{pmatrix}\\) against that direction.</p><p>The lines are coincident. Both anchors lie on the same line and its directions are parallel.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-line_relationships-extra-3",
+        "title": "Classify a pair of lines",
+        "prompt": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}4\\\\0\\\\-4\\end{pmatrix}+t\\begin{pmatrix}1\\\\0\\\\3\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}1\\\\-6\\\\-3\\end{pmatrix}+u\\begin{pmatrix}1\\\\3\\\\-2\\end{pmatrix}\\). Give all coordinates of their intersection.</p>",
+        "fields": [
+          {
+            "key": "relation",
+            "label": "Line relationship",
+            "type": "choice",
+            "expected": "intersect",
+            "options": {
+              "parallel": "Distinct and parallel",
+              "coincident": "Coincident",
+              "intersect": "Intersect at one point",
+              "skew": "Skew"
+            }
+          },
+          {
+            "key": "px",
+            "label": "Intersection x-component",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "py",
+            "label": "Intersection y-component",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "pz",
+            "label": "Intersection z-component",
+            "type": "number",
+            "expected": "-7"
+          }
+        ],
+        "hint": "<p>Test direction vectors first. If they are not proportional, solve two independent coordinate equations and check the third.</p>",
+        "solution": "<p>Directions are not proportional. Equate coordinates, keeping separate parameters for the two lines.</p><p>Solve \\(t + 4=u + 1\\) and \\(0=3 u - 6\\) to get \\(t=-1\\) and \\(u=2\\).</p><p>The remaining z-coordinates are \\(-7\\) and \\(-7\\).</p><p>All three coordinates match. The lines intersect at \\((3, 0, -7)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-line_relationships-extra-4",
+        "title": "Classify a pair of lines",
+        "prompt": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}1\\\\4\\\\-2\\end{pmatrix}+t\\begin{pmatrix}3\\\\1\\\\3\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}2\\\\9\\\\5\\end{pmatrix}+u\\begin{pmatrix}-1\\\\2\\\\1\\end{pmatrix}\\).</p>",
+        "fields": [
+          {
+            "key": "relation",
+            "label": "Line relationship",
+            "type": "choice",
+            "expected": "skew",
+            "options": {
+              "parallel": "Distinct and parallel",
+              "coincident": "Coincident",
+              "intersect": "Intersect at one point",
+              "skew": "Skew"
+            }
+          }
+        ],
+        "hint": "<p>Test direction vectors first. If they are not proportional, solve two independent coordinate equations and check the third.</p>",
+        "solution": "<p>Directions are not proportional. Equate coordinates, keeping separate parameters for the two lines.</p><p>Solve \\(3 t + 1=2 - u\\) and \\(t + 4=2 u + 9\\) to get \\(t=1\\) and \\(u=-2\\).</p><p>The remaining z-coordinates are \\(1\\) and \\(3\\).</p><p>The third equation fails, although the directions are not parallel. The lines are skew.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-line_relationships-extra-5",
+        "title": "Classify a pair of lines",
+        "prompt": "<p>Classify the lines \\(l_1: \\mathbf r=\\begin{pmatrix}5\\\\-3\\\\1\\end{pmatrix}+t\\begin{pmatrix}1\\\\2\\\\4\\end{pmatrix}\\) and \\(l_2: \\mathbf r=\\begin{pmatrix}0\\\\-13\\\\7\\end{pmatrix}+u\\begin{pmatrix}3\\\\6\\\\-1\\end{pmatrix}\\). Give all coordinates of their intersection.</p>",
+        "fields": [
+          {
+            "key": "relation",
+            "label": "Line relationship",
+            "type": "choice",
+            "expected": "intersect",
+            "options": {
+              "parallel": "Distinct and parallel",
+              "coincident": "Coincident",
+              "intersect": "Intersect at one point",
+              "skew": "Skew"
+            }
+          },
+          {
+            "key": "px",
+            "label": "Intersection x-component",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "py",
+            "label": "Intersection y-component",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "pz",
+            "label": "Intersection z-component",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>Test direction vectors first. If they are not proportional, solve two independent coordinate equations and check the third.</p>",
+        "solution": "<p>Directions are not proportional. Equate coordinates, keeping separate parameters for the two lines.</p><p>Solve \\(t + 5=3 u\\) and \\(4 t + 1=7 - u\\) to get \\(t=1\\) and \\(u=2\\).</p><p>The remaining y-coordinates are \\(-1\\) and \\(-1\\).</p><p>All three coordinates match. The lines intersect at \\((6, -1, 5)\\).</p>"
+      }
+    ]
+  },
+  "orig_9709_p3_vec_perpendicular_foot": {
+    "updatedOn": "2026-11-21",
+    "description": "Find the foot on a line, prove the nearest distance and use the method on spatial diagonals.",
+    "sections": [
+      {
+        "id": "locate-a-perpendicular-foot",
+        "title": "Where does a perpendicular from P reach a line?",
+        "label": "Set up the foot",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Write the foot \\(F\\) as a general point on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to the line direction.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(\\mathbf f=\\mathbf a+t\\mathbf d\\) and point \\(P\\) with position vector \\(\\mathbf p\\), solve \\((\\mathbf p-\\mathbf f)\\cdot\\mathbf d=0\\).</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_vec_perpendicular_foot/perpendicular-foot.svg",
+              "alt": "A dashed perpendicular drops from P to F on line l. A different point X on the line joins P at a slant.",
+              "caption": "<p>\\(F\\) is on the line, and \\(PF\\) makes a right angle with it. The route to a different point \\(X\\) is longer.</p>",
+              "width": 500,
+              "height": 250
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>\\(\\mathbf p-\\mathbf a\\) is the movement from the anchor to \\(P\\). The perpendicular condition uses the unknown \\(F\\), not the anchor.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-perpendicular_foot-1",
+            "title": "Drop a perpendicular from a point",
+            "prompt": "<p>For \\(P(5, 8, -1)\\) and the line \\(\\mathbf r=\\begin{pmatrix}4\\\\2\\\\0\\end{pmatrix}+t\\begin{pmatrix}-1\\\\3\\\\2\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\). Give the parameter and every coordinate of \\(F\\).</p>",
+            "fields": [
+              {
+                "key": "t",
+                "label": "Parameter t",
+                "type": "number",
+                "expected": "15/14"
+              },
+              {
+                "key": "fx",
+                "label": "Foot F x-component",
+                "type": "number",
+                "expected": "41/14"
+              },
+              {
+                "key": "fy",
+                "label": "Foot F y-component",
+                "type": "number",
+                "expected": "73/14"
+              },
+              {
+                "key": "fz",
+                "label": "Foot F z-component",
+                "type": "number",
+                "expected": "15/7"
+              }
+            ],
+            "hint": "<p>Write F as a general point on the line first. Its displacement to P has dot product zero with the direction vector.</p>",
+            "solution": "<p>Put \\(\\mathbf f=\\begin{pmatrix}4\\\\2\\\\0\\end{pmatrix}+t\\begin{pmatrix}-1\\\\3\\\\2\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p><p>Set the scalar product to zero. This gives \\(15 - 14 t=0\\), so \\(t=\\frac{15}{14}\\).</p><p>Substitute into the line to obtain \\(F(\\frac{41}{14}, \\frac{73}{14}, \\frac{15}{7})\\).</p><p>The perpendicular foot is \\(F(\\frac{41}{14}, \\frac{73}{14}, \\frac{15}{7})\\) at \\(t=\\frac{15}{14}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-the-foot",
+        "title": "How do I verify a candidate perpendicular foot?",
+        "label": "Check both conditions",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A foot must lie on the given line and make a right angle with it. Solve for the parameter first and substitute back into the line. Test both conditions if a point has already been proposed.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>When \\(\\mathbf d\\ne\\mathbf 0\\), the equation gives exactly one value \\(t=\\frac{(\\mathbf p-\\mathbf a)\\cdot\\mathbf d}{\\mathbf d\\cdot\\mathbf d}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The denominator is the square of the direction’s length. A non-unit direction cannot be treated as a unit direction.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-perpendicular_foot-2",
+            "title": "Drop a perpendicular from a point",
+            "prompt": "<p>For \\(P(5, 1, 7)\\) and the line \\(\\mathbf r=\\begin{pmatrix}-1\\\\3\\\\5\\end{pmatrix}+t\\begin{pmatrix}2\\\\2\\\\1\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\). Give the parameter and every coordinate of \\(F\\).</p>",
+            "fields": [
+              {
+                "key": "t",
+                "label": "Parameter t",
+                "type": "number",
+                "expected": "10/9"
+              },
+              {
+                "key": "fx",
+                "label": "Foot F x-component",
+                "type": "number",
+                "expected": "11/9"
+              },
+              {
+                "key": "fy",
+                "label": "Foot F y-component",
+                "type": "number",
+                "expected": "47/9"
+              },
+              {
+                "key": "fz",
+                "label": "Foot F z-component",
+                "type": "number",
+                "expected": "55/9"
+              }
+            ],
+            "hint": "<p>Write F as a general point on the line first. Its displacement to P has dot product zero with the direction vector.</p>",
+            "solution": "<p>Put \\(\\mathbf f=\\begin{pmatrix}-1\\\\3\\\\5\\end{pmatrix}+t\\begin{pmatrix}2\\\\2\\\\1\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p><p>Set the scalar product to zero. This gives \\(10 - 9 t=0\\), so \\(t=\\frac{10}{9}\\).</p><p>Substitute into the line to obtain \\(F(\\frac{11}{9}, \\frac{47}{9}, \\frac{55}{9})\\).</p><p>The perpendicular foot is \\(F(\\frac{11}{9}, \\frac{47}{9}, \\frac{55}{9})\\) at \\(t=\\frac{10}{9}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "measure-point-to-line-distance",
+        "title": "Why is the perpendicular the shortest route?",
+        "label": "Measure the distance",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>For any other point \\(X\\) on the line, triangle \\(PFX\\) is right-angled at \\(F\\). So \\(PX^2=PF^2+FX^2\\), and any non-zero \\(FX\\) increases the distance.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>After locating \\(F\\), the point-to-line distance is \\(|\\mathbf p-\\mathbf f|\\). If \\(P\\) already lies on the line, the foot is \\(P\\) and the distance is zero.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Distance to a chosen anchor is generally longer than distance to the line. Calculate the foot first.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-perpendicular_foot-3",
+            "title": "Drop a perpendicular from a point",
+            "prompt": "<p>For \\(P(2, 7, -1)\\) and the line \\(\\mathbf r=\\begin{pmatrix}0\\\\3\\\\1\\end{pmatrix}+t\\begin{pmatrix}3\\\\-1\\\\1\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\) and exact distance \\(PF\\). Give every coordinate of \\(F\\).</p>",
+            "fields": [
+              {
+                "key": "fx",
+                "label": "Foot F x-component",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "fy",
+                "label": "Foot F y-component",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "fz",
+                "label": "Foot F z-component",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "distance",
+                "label": "Exact distance PF",
+                "type": "number",
+                "expected": "2*sqrt(6)"
+              }
+            ],
+            "hint": "<p>Write F as a general point on the line first. Its displacement to P has dot product zero with the direction vector.</p>",
+            "solution": "<p>Put \\(\\mathbf f=\\begin{pmatrix}0\\\\3\\\\1\\end{pmatrix}+t\\begin{pmatrix}3\\\\-1\\\\1\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p><p>Set the scalar product to zero. This gives \\(- 11 t=0\\), so \\(t=0\\).</p><p>Substitute into the line to obtain \\(F(0, 3, 1)\\).</p><p>The foot is \\(F(0, 3, 1)\\) and \\(PF=2 \\sqrt{6}\\). Use the magnitude of the perpendicular displacement \\(\\begin{pmatrix}2\\\\4\\\\-2\\end{pmatrix}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "project-within-a-solid",
+        "title": "How does the method work with a solid?",
+        "label": "Use the geometry",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Assign axes along mutually perpendicular edges. For a cuboid, the coordinates of each vertex can then be read from its side lengths. Build the line and perpendicular condition from these coordinates.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Choose a clear origin and keep the same coordinate order throughout. Use the full spatial direction of the edge or diagonal in the dot product.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A diagram flattens depth. A visual right angle is only a cue, while the dot product verifies the calculation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-perpendicular_foot-4",
+            "title": "Drop a perpendicular from a point",
+            "prompt": "<p>For \\(P(3, 0, 4)\\) and the line \\(\\mathbf r=\\begin{pmatrix}0\\\\0\\\\0\\end{pmatrix}+t\\begin{pmatrix}3\\\\4\\\\4\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\) and exact distance \\(PF\\). Give every coordinate of \\(F\\).</p>",
+            "fields": [
+              {
+                "key": "fx",
+                "label": "Foot F x-component",
+                "type": "number",
+                "expected": "75/41"
+              },
+              {
+                "key": "fy",
+                "label": "Foot F y-component",
+                "type": "number",
+                "expected": "100/41"
+              },
+              {
+                "key": "fz",
+                "label": "Foot F z-component",
+                "type": "number",
+                "expected": "100/41"
+              },
+              {
+                "key": "distance",
+                "label": "Exact distance PF",
+                "type": "number",
+                "expected": "20*sqrt(41)/41"
+              }
+            ],
+            "hint": "<p>Write F as a general point on the line first. Its displacement to P has dot product zero with the direction vector.</p>",
+            "solution": "<p>Put \\(\\mathbf f=\\begin{pmatrix}0\\\\0\\\\0\\end{pmatrix}+t\\begin{pmatrix}3\\\\4\\\\4\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p><p>Set the scalar product to zero. This gives \\(25 - 41 t=0\\), so \\(t=\\frac{25}{41}\\).</p><p>Substitute into the line to obtain \\(F(\\frac{75}{41}, \\frac{100}{41}, \\frac{100}{41})\\).</p><p>The foot is \\(F(\\frac{75}{41}, \\frac{100}{41}, \\frac{100}{41})\\) and \\(PF=\\frac{20 \\sqrt{41}}{41}\\). Use the magnitude of the perpendicular displacement \\(\\begin{pmatrix}\\frac{48}{41}\\\\- \\frac{100}{41}\\\\\\frac{64}{41}\\end{pmatrix}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "compare-line-and-segment",
+        "title": "When does the nearest point on a segment lie at an endpoint?",
+        "label": "Check the parameter interval",
+        "minutes": 5,
+        "level": "extension",
+        "intro": "<p>For application questions on a finite segment, use the closest point on its supporting line first. If the foot lies outside the segment, compare the endpoints or use \\(PX^2=PF^2+FX^2\\) to choose the closer endpoint.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(\\mathbf r=\\overrightarrow{OA}+t\\overrightarrow{AB}\\), a foot with \\(0\\le t\\le1\\) lies on segment \\(AB\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not report a foot outside the segment as a point of that segment.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "p3-vec-perpendicular_foot-5",
+            "title": "Find the nearest point on a closed segment",
+            "prompt": "<p>Find the point of segment \\(AB\\) nearest to \\(P(-3, 0, 0)\\). \\(A(0, 0, 2)\\) and \\(B(2, 3, 3)\\). Give all coordinates and the exact distance.</p>",
+            "fields": [
+              {
+                "key": "nearx",
+                "label": "Nearest point x-component",
+                "type": "number",
+                "expected": "0",
+                "retry": [
+                  {
+                    "answer": "-8/7",
+                    "feedback": "<p>That x-coordinate belongs to the foot on the supporting line. Its parameter is outside the segment, so the nearest point on the segment is A.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "neary",
+                "label": "Nearest point y-component",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "nearz",
+                "label": "Nearest point z-component",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "distance",
+                "label": "Exact distance",
+                "type": "number",
+                "expected": "sqrt(13)"
+              }
+            ],
+            "hint": "<p>Find the perpendicular foot on the whole line, then compare its parameter to the endpoint parameters.</p>",
+            "solution": "<p>Put \\(\\mathbf f=\\begin{pmatrix}0\\\\0\\\\2\\end{pmatrix}+t\\begin{pmatrix}2\\\\3\\\\1\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p><p>Set the scalar product to zero. This gives \\(- 14 t - 8=0\\), so \\(t=- \\frac{4}{7}\\).</p><p>Substitute into the line to obtain \\(F(- \\frac{8}{7}, - \\frac{12}{7}, \\frac{10}{7})\\).</p><p>The foot parameter \\(- \\frac{4}{7}\\) is outside \\([0,1]\\). The nearest allowable parameter is \\(0\\).</p><p>The nearest point is \\((0, 0, 2)\\) and its distance from \\(P\\) is \\(\\sqrt{13}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Perpendicular foot",
+        "definition": "<p>The point on a line reached by a perpendicular from a given point.</p>"
+      },
+      {
+        "term": "Point-to-line distance",
+        "definition": "<p>The length from the point to its perpendicular foot.</p>"
+      },
+      {
+        "term": "Supporting line",
+        "definition": "<p>The full straight line containing a given segment.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Drop a perpendicular from a point",
+        "question": "<p>For \\(P(5, 2, 6)\\) and the line \\(\\mathbf r=\\begin{pmatrix}1\\\\-1\\\\2\\end{pmatrix}+t\\begin{pmatrix}2\\\\1\\\\-1\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\). Give the parameter and every coordinate of \\(F\\).</p>",
+        "solution": [
+          "<p>Put \\(\\mathbf f=\\begin{pmatrix}1\\\\-1\\\\2\\end{pmatrix}+t\\begin{pmatrix}2\\\\1\\\\-1\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p>",
+          "<p>Set the scalar product to zero. This gives \\(7 - 6 t=0\\), so \\(t=\\frac{7}{6}\\).</p>",
+          "<p>Substitute into the line to obtain \\(F(\\frac{10}{3}, \\frac{1}{6}, \\frac{5}{6})\\).</p>",
+          "<p>The perpendicular foot is \\(F(\\frac{10}{3}, \\frac{1}{6}, \\frac{5}{6})\\) at \\(t=\\frac{7}{6}\\).</p>"
+        ]
+      },
+      {
+        "title": "Drop a perpendicular from a point",
+        "question": "<p>For \\(P(6, 0, 2)\\) and the line \\(\\mathbf r=\\begin{pmatrix}2\\\\3\\\\1\\end{pmatrix}+t\\begin{pmatrix}0\\\\3\\\\-2\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\). Give the parameter and every coordinate of \\(F\\).</p>",
+        "solution": [
+          "<p>Put \\(\\mathbf f=\\begin{pmatrix}2\\\\3\\\\1\\end{pmatrix}+t\\begin{pmatrix}0\\\\3\\\\-2\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p>",
+          "<p>Set the scalar product to zero. This gives \\(- 13 t - 11=0\\), so \\(t=- \\frac{11}{13}\\).</p>",
+          "<p>Substitute into the line to obtain \\(F(2, \\frac{6}{13}, \\frac{35}{13})\\).</p>",
+          "<p>The perpendicular foot is \\(F(2, \\frac{6}{13}, \\frac{35}{13})\\) at \\(t=- \\frac{11}{13}\\).</p>"
+        ]
+      },
+      {
+        "title": "Drop a perpendicular from a point",
+        "question": "<p>For \\(P(5, -4, 2)\\) and the line \\(\\mathbf r=\\begin{pmatrix}2\\\\3\\\\0\\end{pmatrix}+t\\begin{pmatrix}3\\\\1\\\\-2\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\). Give the parameter and every coordinate of \\(F\\).</p>",
+        "solution": [
+          "<p>Put \\(\\mathbf f=\\begin{pmatrix}2\\\\3\\\\0\\end{pmatrix}+t\\begin{pmatrix}3\\\\1\\\\-2\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p>",
+          "<p>Set the scalar product to zero. This gives \\(- 14 t - 2=0\\), so \\(t=- \\frac{1}{7}\\).</p>",
+          "<p>Substitute into the line to obtain \\(F(\\frac{11}{7}, \\frac{20}{7}, \\frac{2}{7})\\).</p>",
+          "<p>The perpendicular foot is \\(F(\\frac{11}{7}, \\frac{20}{7}, \\frac{2}{7})\\) at \\(t=- \\frac{1}{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "Drop a perpendicular from a point",
+        "question": "<p>For \\(P(5, 1, 2)\\) and the line \\(\\mathbf r=\\begin{pmatrix}1\\\\-2\\\\3\\end{pmatrix}+t\\begin{pmatrix}2\\\\0\\\\1\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\) and exact distance \\(PF\\). Give every coordinate of \\(F\\).</p>",
+        "solution": [
+          "<p>Put \\(\\mathbf f=\\begin{pmatrix}1\\\\-2\\\\3\\end{pmatrix}+t\\begin{pmatrix}2\\\\0\\\\1\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p>",
+          "<p>Set the scalar product to zero. This gives \\(7 - 5 t=0\\), so \\(t=\\frac{7}{5}\\).</p>",
+          "<p>Substitute into the line to obtain \\(F(\\frac{19}{5}, -2, \\frac{22}{5})\\).</p>",
+          "<p>The foot is \\(F(\\frac{19}{5}, -2, \\frac{22}{5})\\) and \\(PF=\\frac{9 \\sqrt{5}}{5}\\). Use the magnitude of the perpendicular displacement \\(\\begin{pmatrix}\\frac{6}{5}\\\\3\\\\- \\frac{12}{5}\\end{pmatrix}\\).</p>"
+        ]
+      },
+      {
+        "title": "Drop a perpendicular from a point",
+        "question": "<p>For \\(P(-1, 9, -5)\\) and the line \\(\\mathbf r=\\begin{pmatrix}2\\\\3\\\\4\\end{pmatrix}+t\\begin{pmatrix}1\\\\-2\\\\3\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\) and exact distance \\(PF\\). Give every coordinate of \\(F\\).</p>",
+        "solution": [
+          "<p>Put \\(\\mathbf f=\\begin{pmatrix}2\\\\3\\\\4\\end{pmatrix}+t\\begin{pmatrix}1\\\\-2\\\\3\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p>",
+          "<p>Set the scalar product to zero. This gives \\(- 14 t - 42=0\\), so \\(t=-3\\).</p>",
+          "<p>Substitute into the line to obtain \\(F(-1, 9, -5)\\).</p>",
+          "<p>The foot is \\(F(-1, 9, -5)\\) and \\(PF=0\\). Use the magnitude of the perpendicular displacement \\(\\begin{pmatrix}0\\\\0\\\\0\\end{pmatrix}\\).</p>"
+        ]
+      },
+      {
+        "title": "Drop a perpendicular from a point",
+        "question": "<p>For \\(P(0, 0, 12)\\) and the line \\(\\mathbf r=\\begin{pmatrix}0\\\\0\\\\0\\end{pmatrix}+t\\begin{pmatrix}4\\\\3\\\\12\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\) and exact distance \\(PF\\). Give every coordinate of \\(F\\).</p>",
+        "solution": [
+          "<p>Put \\(\\mathbf f=\\begin{pmatrix}0\\\\0\\\\0\\end{pmatrix}+t\\begin{pmatrix}4\\\\3\\\\12\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p>",
+          "<p>Set the scalar product to zero. This gives \\(144 - 169 t=0\\), so \\(t=\\frac{144}{169}\\).</p>",
+          "<p>Substitute into the line to obtain \\(F(\\frac{576}{169}, \\frac{432}{169}, \\frac{1728}{169})\\).</p>",
+          "<p>The foot is \\(F(\\frac{576}{169}, \\frac{432}{169}, \\frac{1728}{169})\\) and \\(PF=\\frac{60}{13}\\). Use the magnitude of the perpendicular displacement \\(\\begin{pmatrix}- \\frac{576}{169}\\\\- \\frac{432}{169}\\\\\\frac{300}{169}\\end{pmatrix}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the nearest point on a closed segment",
+        "question": "<p>Find the point of segment \\(AB\\) nearest to \\(P(4, 2, 4)\\). \\(A(2, 0, 1)\\) and \\(B(4, 1, 3)\\). Give all coordinates and the exact distance.</p>",
+        "solution": [
+          "<p>Put \\(\\mathbf f=\\begin{pmatrix}2\\\\0\\\\1\\end{pmatrix}+t\\begin{pmatrix}2\\\\1\\\\2\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p>",
+          "<p>Set the scalar product to zero. This gives \\(12 - 9 t=0\\), so \\(t=\\frac{4}{3}\\).</p>",
+          "<p>Substitute into the line to obtain \\(F(\\frac{14}{3}, \\frac{4}{3}, \\frac{11}{3})\\).</p>",
+          "<p>The foot parameter \\(\\frac{4}{3}\\) is outside \\([0,1]\\). The nearest allowable parameter is \\(1\\).</p>",
+          "<p>The nearest point is \\((4, 1, 3)\\) and its distance from \\(P\\) is \\(\\sqrt{2}\\).</p>"
+        ]
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the method</h2><div class=\"table-scroll\"><table><thead><tr><th>Use</th><th>What to write</th></tr></thead><tbody><tr><th>Put the foot on the line</th><td>\\(\\mathbf f=\\mathbf a+t\\mathbf d\\).</td></tr><tr><th>Make the right angle</th><td>Solve \\((\\mathbf p-\\mathbf f)\\cdot\\mathbf d=0\\).</td></tr><tr><th>Substitute and measure</th><td>Calculate \\(F\\) and then \\(PF=|\\mathbf p-\\mathbf f|\\).</td></tr><tr><th>If limited to a segment</th><td>Check whether the foot parameter falls between the endpoints.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Use the difference from F to P.</li><li>Substitute the parameter to give the foot coordinates.</li><li>For a segment, check the endpoint parameters before reporting the nearest point.</li></ul>",
+      "examTip": "<p>If the question asks for a proof of shortest distance, compare squared distances using the right triangle.</p>"
+    },
+    "related": [
+      {
+        "title": "Parallel, intersecting and skew lines",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_vec_line_relationships"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "p3-vec-perpendicular_foot-extra-1",
+        "title": "Drop a perpendicular from a point",
+        "prompt": "<p>For \\(P(-2, -3, 0)\\) and the line \\(\\mathbf r=\\begin{pmatrix}2\\\\3\\\\-5\\end{pmatrix}+t\\begin{pmatrix}1\\\\4\\\\0\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\). Give the parameter and every coordinate of \\(F\\).</p>",
+        "fields": [
+          {
+            "key": "t",
+            "label": "Parameter t",
+            "type": "number",
+            "expected": "-28/17"
+          },
+          {
+            "key": "fx",
+            "label": "Foot F x-component",
+            "type": "number",
+            "expected": "6/17"
+          },
+          {
+            "key": "fy",
+            "label": "Foot F y-component",
+            "type": "number",
+            "expected": "-61/17"
+          },
+          {
+            "key": "fz",
+            "label": "Foot F z-component",
+            "type": "number",
+            "expected": "-5"
+          }
+        ],
+        "hint": "<p>Write F as a general point on the line first. Its displacement to P has dot product zero with the direction vector.</p>",
+        "solution": "<p>Put \\(\\mathbf f=\\begin{pmatrix}2\\\\3\\\\-5\\end{pmatrix}+t\\begin{pmatrix}1\\\\4\\\\0\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p><p>Set the scalar product to zero. This gives \\(- 17 t - 28=0\\), so \\(t=- \\frac{28}{17}\\).</p><p>Substitute into the line to obtain \\(F(\\frac{6}{17}, - \\frac{61}{17}, -5)\\).</p><p>The perpendicular foot is \\(F(\\frac{6}{17}, - \\frac{61}{17}, -5)\\) at \\(t=- \\frac{28}{17}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-perpendicular_foot-extra-2",
+        "title": "Drop a perpendicular from a point",
+        "prompt": "<p>For \\(P(3, -3, 4)\\) and the line \\(\\mathbf r=\\begin{pmatrix}0\\\\1\\\\4\\end{pmatrix}+t\\begin{pmatrix}2\\\\2\\\\-1\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\). Give the parameter and every coordinate of \\(F\\).</p>",
+        "fields": [
+          {
+            "key": "t",
+            "label": "Parameter t",
+            "type": "number",
+            "expected": "-2/9"
+          },
+          {
+            "key": "fx",
+            "label": "Foot F x-component",
+            "type": "number",
+            "expected": "-4/9"
+          },
+          {
+            "key": "fy",
+            "label": "Foot F y-component",
+            "type": "number",
+            "expected": "5/9"
+          },
+          {
+            "key": "fz",
+            "label": "Foot F z-component",
+            "type": "number",
+            "expected": "38/9"
+          }
+        ],
+        "hint": "<p>Write F as a general point on the line first. Its displacement to P has dot product zero with the direction vector.</p>",
+        "solution": "<p>Put \\(\\mathbf f=\\begin{pmatrix}0\\\\1\\\\4\\end{pmatrix}+t\\begin{pmatrix}2\\\\2\\\\-1\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p><p>Set the scalar product to zero. This gives \\(- 9 t - 2=0\\), so \\(t=- \\frac{2}{9}\\).</p><p>Substitute into the line to obtain \\(F(- \\frac{4}{9}, \\frac{5}{9}, \\frac{38}{9})\\).</p><p>The perpendicular foot is \\(F(- \\frac{4}{9}, \\frac{5}{9}, \\frac{38}{9})\\) at \\(t=- \\frac{2}{9}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-perpendicular_foot-extra-3",
+        "title": "Drop a perpendicular from a point",
+        "prompt": "<p>For \\(P(3, 2, 4)\\) and the line \\(\\mathbf r=\\begin{pmatrix}2\\\\1\\\\1\\end{pmatrix}+t\\begin{pmatrix}1\\\\2\\\\1\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\) and exact distance \\(PF\\). Give every coordinate of \\(F\\).</p>",
+        "fields": [
+          {
+            "key": "fx",
+            "label": "Foot F x-component",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "fy",
+            "label": "Foot F y-component",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "fz",
+            "label": "Foot F z-component",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "distance",
+            "label": "Exact distance PF",
+            "type": "number",
+            "expected": "sqrt(5)"
+          }
+        ],
+        "hint": "<p>Write F as a general point on the line first. Its displacement to P has dot product zero with the direction vector.</p>",
+        "solution": "<p>Put \\(\\mathbf f=\\begin{pmatrix}2\\\\1\\\\1\\end{pmatrix}+t\\begin{pmatrix}1\\\\2\\\\1\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p><p>Set the scalar product to zero. This gives \\(6 - 6 t=0\\), so \\(t=1\\).</p><p>Substitute into the line to obtain \\(F(3, 3, 2)\\).</p><p>The foot is \\(F(3, 3, 2)\\) and \\(PF=\\sqrt{5}\\). Use the magnitude of the perpendicular displacement \\(\\begin{pmatrix}0\\\\-1\\\\2\\end{pmatrix}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-perpendicular_foot-extra-4",
+        "title": "Drop a perpendicular from a point",
+        "prompt": "<p>For \\(P(2, 6, 0)\\) and the line \\(\\mathbf r=\\begin{pmatrix}0\\\\0\\\\0\\end{pmatrix}+t\\begin{pmatrix}2\\\\6\\\\3\\end{pmatrix}\\), find the foot of the perpendicular \\(F\\) and exact distance \\(PF\\). Give every coordinate of \\(F\\).</p>",
+        "fields": [
+          {
+            "key": "fx",
+            "label": "Foot F x-component",
+            "type": "number",
+            "expected": "80/49"
+          },
+          {
+            "key": "fy",
+            "label": "Foot F y-component",
+            "type": "number",
+            "expected": "240/49"
+          },
+          {
+            "key": "fz",
+            "label": "Foot F z-component",
+            "type": "number",
+            "expected": "120/49"
+          },
+          {
+            "key": "distance",
+            "label": "Exact distance PF",
+            "type": "number",
+            "expected": "6*sqrt(10)/7"
+          }
+        ],
+        "hint": "<p>Write F as a general point on the line first. Its displacement to P has dot product zero with the direction vector.</p>",
+        "solution": "<p>Put \\(\\mathbf f=\\begin{pmatrix}0\\\\0\\\\0\\end{pmatrix}+t\\begin{pmatrix}2\\\\6\\\\3\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p><p>Set the scalar product to zero. This gives \\(40 - 49 t=0\\), so \\(t=\\frac{40}{49}\\).</p><p>Substitute into the line to obtain \\(F(\\frac{80}{49}, \\frac{240}{49}, \\frac{120}{49})\\).</p><p>The foot is \\(F(\\frac{80}{49}, \\frac{240}{49}, \\frac{120}{49})\\) and \\(PF=\\frac{6 \\sqrt{10}}{7}\\). Use the magnitude of the perpendicular displacement \\(\\begin{pmatrix}\\frac{18}{49}\\\\\\frac{54}{49}\\\\- \\frac{120}{49}\\end{pmatrix}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "p3-vec-perpendicular_foot-extra-5",
+        "title": "Find the nearest point on a closed segment",
+        "prompt": "<p>Find the point of segment \\(AB\\) nearest to \\(P(3, 1, 1)\\). \\(A(0, 0, 0)\\) and \\(B(4, 1, 2)\\). Give all coordinates and the exact distance.</p>",
+        "fields": [
+          {
+            "key": "nearx",
+            "label": "Nearest point x-component",
+            "type": "number",
+            "expected": "20/7"
+          },
+          {
+            "key": "neary",
+            "label": "Nearest point y-component",
+            "type": "number",
+            "expected": "5/7"
+          },
+          {
+            "key": "nearz",
+            "label": "Nearest point z-component",
+            "type": "number",
+            "expected": "10/7"
+          },
+          {
+            "key": "distance",
+            "label": "Exact distance",
+            "type": "number",
+            "expected": "sqrt(14)/7"
+          }
+        ],
+        "hint": "<p>Find the perpendicular foot on the whole line, then compare its parameter to the endpoint parameters.</p>",
+        "solution": "<p>Put \\(\\mathbf f=\\begin{pmatrix}0\\\\0\\\\0\\end{pmatrix}+t\\begin{pmatrix}4\\\\1\\\\2\\end{pmatrix}\\) on the line. The displacement from \\(F\\) to \\(P\\) must be perpendicular to its direction.</p><p>Set the scalar product to zero. This gives \\(15 - 21 t=0\\), so \\(t=\\frac{5}{7}\\).</p><p>Substitute into the line to obtain \\(F(\\frac{20}{7}, \\frac{5}{7}, \\frac{10}{7})\\).</p><p>The foot parameter \\(\\frac{5}{7}\\) belongs to \\([0,1]\\), so the foot is on the segment.</p><p>The nearest point is \\((\\frac{20}{7}, \\frac{5}{7}, \\frac{10}{7})\\) and its distance from \\(P\\) is \\(\\frac{\\sqrt{14}}{7}\\).</p>"
+      }
+    ]
+  }
+}

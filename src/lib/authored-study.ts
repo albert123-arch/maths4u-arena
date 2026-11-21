@@ -15,6 +15,7 @@ import pure3Trigonometry from "../../content/original/9709-p3/trigonometry-study
 import pure3Differentiation from "../../content/original/9709-p3/differentiation-study.json";
 import pure3Integration from "../../content/original/9709-p3/integration-study.json";
 import pure3NumericalMethods from "../../content/original/9709-p3/numerical-methods-study.json";
+import pure3Vectors from "../../content/original/9709-p3/vectors-study.json";
 import representation from "../../content/original/9709-s1/representation-study.json";
 import centralTendency from "../../content/original/9709-s1/central-tendency-study.json";
 import variation from "../../content/original/9709-s1/variation-study.json";
@@ -49,7 +50,7 @@ type AuthoredLesson = Omit<StudyLesson, "sections" | "extraPractice"> & {
 const lessons = {
   ...quadratics, ...functions, ...coordinateGeometry, ...circularMeasure, ...trigonometry,
   ...series, ...binomialExpansion, ...differentiation, ...integration, ...crossTopic,
-  ...pure3Algebra, ...pure3FurtherAlgebra, ...pure3Logarithms, ...pure3Trigonometry, ...pure3Differentiation, ...pure3Integration, ...pure3NumericalMethods,
+  ...pure3Algebra, ...pure3FurtherAlgebra, ...pure3Logarithms, ...pure3Trigonometry, ...pure3Differentiation, ...pure3Integration, ...pure3NumericalMethods, ...pure3Vectors,
   ...representation, ...centralTendency, ...variation, ...probability,
   ...counting, ...distributions, ...binomialGeometric, ...normal,
 } as Record<string, AuthoredLesson>;
