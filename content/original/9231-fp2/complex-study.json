@@ -1,0 +1,2561 @@
+{
+  "fp2_complex_powers": {
+    "updatedOn": "2026-11-21",
+    "description": "Use and prove de Moivre’s theorem, handle negative powers and find all branches of rational powers.",
+    "sections": [
+      {
+        "id": "geometry",
+        "title": "How does multiplication move an Argand point?",
+        "label": "Rotate and scale",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Write each non-zero number as a modulus times a unit rotation.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Multiplication multiplies the moduli and adds the arguments. Division divides the moduli and subtracts the arguments.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp2_complex_powers/rotate-and-scale.svg",
+              "alt": "Multiplication by a complex number scales one vector and rotates it.",
+              "caption": "<p>Multiplication by \\(2\\mathrm e^{\\mathrm i\\frac{\\pi}{3}}\\) doubles the length and turns the vector through \\(\\tfrac{\\pi}{3}\\) anticlockwise.</p>",
+              "width": 640,
+              "height": 350
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An argument sum may lie outside the principal interval. Add or subtract a full turn to bring it back.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-powers-study-01",
+            "title": "Multiply through the principal interval",
+            "prompt": "<p>Let \\(z=4\\,\\mathrm e^{\\frac{5 i \\pi}{6}}\\) and \\(w=2\\,\\mathrm e^{\\frac{3 i \\pi}{4}}\\).</p><p>Give the modulus and the coefficient of \\(\\pi\\) in the principal argument of \\(zw\\).</p>",
+            "fields": [
+              {
+                "key": "mag",
+                "label": "Modulus",
+                "expected": "8",
+                "type": "number"
+              },
+              {
+                "key": "arg",
+                "label": "Coefficient of π",
+                "expected": "-5/12",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Combine arguments first, then bring the result into the principal interval.</p>",
+            "solution": "<p>Multiply the moduli and add the arguments.</p><p>\\(zw=8\\,\\mathrm e^{- \\frac{5 i \\pi}{12}}\\), with the argument in \\((-\\pi,\\pi]\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Start by writing the requested interval.</p>"
+          }
+        ]
+      },
+      {
+        "id": "induct",
+        "title": "How can I prove the positive integer formula?",
+        "label": "Proof",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Use the trigonometric angle-addition formulae in the induction step.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Assume the result for \\(n=k\\), then multiply by \\(\\cos\\theta+\\mathrm i\\sin\\theta\\) to obtain the result at \\(k+1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Check \\(n=1\\) before stating the induction conclusion.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-powers-study-02",
+            "title": "Identify the base case",
+            "prompt": "<p>The induction proves the formula for positive integer powers.</p><p>Which check provides the base case?</p>",
+            "fields": [
+              {
+                "key": "choice",
+                "label": "Choose an answer",
+                "type": "choice",
+                "expected": "B",
+                "options": {
+                  "A": "<p>\\(u^2=\\cos(2\\theta)+\\mathrm i\\sin(2\\theta)\\)</p>",
+                  "B": "<p>\\(u^1=\\cos\\theta+\\mathrm i\\sin\\theta\\)</p>",
+                  "C": "<p>\\(u^0=1\\)</p>"
+                }
+              }
+            ],
+            "hint": "<p>The first positive integer is 1. An induction base case starts the stated range.</p>",
+            "solution": "<p>At \\(n=1\\) this is exactly the definition of \\(u\\). The induction step then passes from \\(k\\) to \\(k+1\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For modulus \\(r\\) factor out \\(r^n\\) separately.</p>"
+          }
+        ]
+      },
+      {
+        "id": "integer",
+        "title": "What changes for a negative exponent?",
+        "label": "Reciprocal",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A reciprocal reverses an argument and replaces the modulus by its reciprocal.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\((r\\mathrm e^{\\mathrm i\\theta})^{-k}=r^{-k}\\mathrm e^{-\\mathrm ik\\theta}\\) for \\(r&gt;0\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Multiplying an angle by a negative number reverses its sense. A negative exponent is undefined at zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-powers-study-03",
+            "title": "Use reciprocal magnitude and principal angle",
+            "prompt": "<p>Let \\(z=2\\,\\mathrm e^{\\frac{i \\pi}{4}}\\).</p><p>Give the exact modulus and the coefficient of \\(\\pi\\) in the principal argument.</p>",
+            "fields": [
+              {
+                "key": "mag",
+                "label": "Modulus",
+                "expected": "1/32",
+                "type": "number"
+              },
+              {
+                "key": "arg",
+                "label": "Coefficient of π",
+                "expected": "3/4",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A negative exponent first requires a reciprocal, which reverses the argument.</p>",
+            "solution": "<p>Raise the modulus to the same power and multiply the argument by the exponent.</p><p>\\(|z^{-5}|=\\frac{1}{32},\\quad \\arg(z^{-5})\\equiv - \\frac{5 \\pi}{4}\\pmod{2\\pi}\\).</p><p>The principal argument is \\(\\frac{3 \\pi}{4}\\), so the number is \\(\\frac{\\sqrt{2} \\left(-1 + i\\right)}{64}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the sign of the resulting imaginary component against its quadrant.</p>"
+          }
+        ]
+      },
+      {
+        "id": "all-branches",
+        "title": "How do I find every branch of a rational exponent?",
+        "label": "Rational powers",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Write every input argument as one angle plus an integer number of full turns.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\((r\\mathrm e^{\\mathrm i\\theta})^{\\frac pq}=r^{\\frac pq}\\exp\\left(\\frac{\\mathrm ip}{q}(\\theta+2k\\pi)\\right)\\) for a reduced fraction \\(\\tfrac pq\\) with \\(q&gt;0\\) and \\(r&gt;0\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using only the principal input argument usually loses valid values.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-powers-study-04",
+            "title": "Keep all branches in the positive argument interval",
+            "prompt": "<p>Let \\(z=64\\,\\mathrm e^{\\frac{2 i \\pi}{3}}\\). Find all values of \\(z^{\\frac{2}{3}}\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) in \\([0,2\\pi)\\).</p>",
+            "fields": [
+              {
+                "key": "set",
+                "label": "Coefficients of π, separated by commas",
+                "expected": "4/9, 10/9, 16/9",
+                "type": "set"
+              }
+            ],
+            "hint": "<p>Use all input arguments before multiplying by the rational exponent. Do not stop after the principal input angle.</p>",
+            "solution": "<p>Write the input arguments as \\(\\frac{2 \\pi}{3}+2k\\pi\\). Multiply each by the rational power.</p><p>Use \\(k=0,\\ldots,2\\) and put the angles in the requested interval.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Common modulus</th><th scope=\"col\">Argument in the given interval</th></tr></thead><tbody><tr><th scope=\"row\">\\(16\\)</th><td>\\(\\frac{4 \\pi}{9}\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>\\(\\frac{10 \\pi}{9}\\)</td></tr><tr><th scope=\"row\">\\(16\\)</th><td>\\(\\frac{16 \\pi}{9}\\)</td></tr></tbody></table></div><p>There are \\(3\\) distinct branches. Raising any value to \\(3\\) gives \\(z^{2}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For a reduced exponent use \\(k=0,\\ldots,q-1\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "spacing",
+        "title": "Where do the branches sit on the diagram?",
+        "label": "Root circle",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Each branch has the same modulus. The full set is equally spaced around the origin.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The angular spacing in increasing counter-clockwise order is \\(\\tfrac{2\\pi}{q}\\). Taking successive \\(k\\) may skip intermediate points.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Changing the interval representation of an argument does not move its point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-powers-study-05",
+            "title": "Find the exact radius and spacing of fifth-root branches",
+            "prompt": "<p>Let \\(z=32\\,\\mathrm e^{\\frac{i \\pi}{6}}\\). Find all values of \\(z^{\\frac{1}{5}}\\).</p><p>Give the common modulus and the counter-clockwise spacing as a coefficient of \\(\\pi\\).</p>",
+            "fields": [
+              {
+                "key": "modulus",
+                "label": "Common modulus",
+                "expected": "2",
+                "type": "number"
+              },
+              {
+                "key": "spacing",
+                "label": "Spacing as a coefficient of π",
+                "expected": "2/5",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Use all input arguments before multiplying by the rational exponent. Do not stop after the principal input angle.</p>",
+            "solution": "<p>Write the input arguments as \\(\\frac{\\pi}{6}+2k\\pi\\). Multiply each by the rational power.</p><p>Use \\(k=0,\\ldots,4\\) and put the angles in the requested interval.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Common modulus</th><th scope=\"col\">Principal argument</th></tr></thead><tbody><tr><th scope=\"row\">\\(2\\)</th><td>\\(- \\frac{23 \\pi}{30}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(- \\frac{11 \\pi}{30}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{\\pi}{30}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{13 \\pi}{30}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{5 \\pi}{6}\\)</td></tr></tbody></table></div><p>There are \\(5\\) distinct branches. Raising any value to \\(5\\) gives \\(z^{1}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Sort the final arguments in the requested interval.</p>"
+          }
+        ]
+      },
+      {
+        "id": "negative-rational",
+        "title": "How do I check a negative rational power?",
+        "label": "Negative branches",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Take a nonzero input and work with a positive modulus. A negative numerator gives the reciprocal modulus for the same positive exponent.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For each candidate \\(w\\) check \\(w^q=z^p\\) and confirm that the distinct branch count is \\(q\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not retain zero when using a negative power.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-powers-study-06",
+            "title": "Find the full negative rational branch set",
+            "prompt": "<p>Let \\(z=125\\,\\mathrm e^{\\frac{i \\pi}{2}}\\). Find all values of \\(z^{\\frac{-2}{3}}\\).</p><p>Give the common modulus. Give the complete set of coefficients of \\(\\pi\\) in \\((-\\pi,\\pi]\\).</p>",
+            "fields": [
+              {
+                "key": "modulus",
+                "label": "Common modulus",
+                "expected": "1/25",
+                "type": "number"
+              },
+              {
+                "key": "set",
+                "label": "Coefficients of π, separated by commas",
+                "expected": "-1/3, 1/3, 1",
+                "type": "set"
+              }
+            ],
+            "hint": "<p>Use all input arguments before multiplying by the rational exponent. Do not stop after the principal input angle.</p>",
+            "solution": "<p>Write the input arguments as \\(\\frac{\\pi}{2}+2k\\pi\\). Multiply each by the rational power.</p><p>Use \\(k=0,\\ldots,2\\) and put the angles in the requested interval.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Common modulus</th><th scope=\"col\">Principal argument</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\frac{1}{25}\\)</th><td>\\(- \\frac{\\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{1}{25}\\)</th><td>\\(\\frac{\\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{1}{25}\\)</th><td>\\(\\pi\\)</td></tr></tbody></table></div><p>There are \\(3\\) distinct branches. Raising any value to \\(3\\) gives \\(z^{-2}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>When a principal value alone is requested, read the question’s convention for which branch to report.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Combine two rotations",
+        "question": "<p>Let \\(z=2\\,\\mathrm e^{\\frac{i \\pi}{3}}\\) and \\(w=3\\,\\mathrm e^{\\frac{i \\pi}{4}}\\).</p><p>Give the modulus and the coefficient of \\(\\pi\\) in the principal argument of \\(zw\\).</p>",
+        "solution": [
+          "<p>Multiply the moduli and add the arguments.</p>",
+          "<p>\\(zw=6\\,\\mathrm e^{\\frac{7 i \\pi}{12}}\\), with the argument in \\((-\\pi,\\pi]\\).</p>"
+        ]
+      },
+      {
+        "title": "Undo part of a rotation by dividing",
+        "question": "<p>Let \\(z=6\\,\\mathrm e^{- \\frac{2 i \\pi}{3}}\\) and \\(w=2\\,\\mathrm e^{\\frac{3 i \\pi}{4}}\\).</p><p>Give the modulus and the coefficient of \\(\\pi\\) in the principal argument of \\(\\tfrac zw\\).</p>",
+        "solution": [
+          "<p>Divide the moduli and subtract the arguments.</p>",
+          "<p>\\(\\tfrac zw=3\\,\\mathrm e^{\\frac{7 i \\pi}{12}}\\), with the argument in \\((-\\pi,\\pi]\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the induction move",
+        "question": "<p>Let \\(u=\\cos\\theta+\\mathrm i\\sin\\theta\\). Suppose \\(u^k=\\cos(k\\theta)+\\mathrm i\\sin(k\\theta)\\).</p><p>Which operation gives the induction step?</p>",
+        "solution": [
+          "<p>The case \\(k=1\\) is immediate. Multiply the case \\(k\\) by \\(u\\) to get \\(u^{k+1}\\).</p>",
+          "<p>The real part becomes \\(\\cos(k\\theta)\\cos\\theta-\\sin(k\\theta)\\sin\\theta\\) and the imaginary coefficient becomes \\(\\sin(k\\theta)\\cos\\theta+\\cos(k\\theta)\\sin\\theta\\).</p>",
+          "<p>These equal \\(\\cos((k+1)\\theta)\\) and \\(\\sin((k+1)\\theta)\\). The induction proves the result for positive integers.</p>"
+        ]
+      },
+      {
+        "title": "Use a negative integer power",
+        "question": "<p>Let \\(z=2\\,\\mathrm e^{\\frac{i \\pi}{6}}\\).</p><p>Find the real and imaginary parts of \\(z^{-4}\\).</p>",
+        "solution": [
+          "<p>Raise the modulus to the same power and multiply the argument by the exponent.</p><p>\\(|z^{-4}|=\\frac{1}{16},\\quad \\arg(z^{-4})\\equiv - \\frac{2 \\pi}{3}\\pmod{2\\pi}\\).</p>",
+          "<p>The principal argument is \\(- \\frac{2 \\pi}{3}\\), so the number is \\(- \\frac{1}{32} - \\frac{\\sqrt{3} i}{32}\\).</p>"
+        ]
+      },
+      {
+        "title": "List all cube roots of a rotated point",
+        "question": "<p>Let \\(z=27\\,\\mathrm e^{\\frac{i \\pi}{2}}\\). Find all values of \\(z^{\\frac{1}{3}}\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) in \\((-\\pi,\\pi]\\).</p>",
+        "solution": [
+          "<p>Write the input arguments as \\(\\frac{\\pi}{2}+2k\\pi\\). Multiply each by the rational power.</p><p>Use \\(k=0,\\ldots,2\\) and put the angles in the requested interval.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Common modulus</th><th scope=\"col\">Principal argument</th></tr></thead><tbody><tr><th scope=\"row\">\\(3\\)</th><td>\\(- \\frac{\\pi}{2}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{\\pi}{6}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{5 \\pi}{6}\\)</td></tr></tbody></table></div>",
+          "<p>There are \\(3\\) distinct branches. Raising any value to \\(3\\) gives \\(z^{1}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the radius and spacing for fourth roots",
+        "question": "<p>Let \\(z=81\\,\\mathrm e^{i \\pi}\\). Find all values of \\(z^{\\frac{1}{4}}\\).</p><p>Give the common modulus and the counter-clockwise spacing as a coefficient of \\(\\pi\\).</p>",
+        "solution": [
+          "<p>Write the input arguments as \\(\\pi+2k\\pi\\). Multiply each by the rational power.</p><p>Use \\(k=0,\\ldots,3\\) and put the angles in the requested interval.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Common modulus</th><th scope=\"col\">Principal argument</th></tr></thead><tbody><tr><th scope=\"row\">\\(3\\)</th><td>\\(- \\frac{3 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(- \\frac{\\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{\\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{3 \\pi}{4}\\)</td></tr></tbody></table></div>",
+          "<p>There are \\(4\\) distinct branches. Raising any value to \\(4\\) gives \\(z^{1}\\).</p>"
+        ]
+      },
+      {
+        "title": "A negative rational power with four branches",
+        "question": "<p>Let \\(z=16\\,\\mathrm e^{\\frac{i \\pi}{2}}\\). Find all values of \\(z^{\\frac{-3}{4}}\\).</p><p>Give the common modulus. Give the complete set of coefficients of \\(\\pi\\) in \\((-\\pi,\\pi]\\).</p>",
+        "solution": [
+          "<p>Write the input arguments as \\(\\frac{\\pi}{2}+2k\\pi\\). Multiply each by the rational power.</p><p>Use \\(k=0,\\ldots,3\\) and put the angles in the requested interval.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Common modulus</th><th scope=\"col\">Principal argument</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\frac{1}{8}\\)</th><td>\\(- \\frac{7 \\pi}{8}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{1}{8}\\)</th><td>\\(- \\frac{3 \\pi}{8}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{1}{8}\\)</th><td>\\(\\frac{\\pi}{8}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{1}{8}\\)</th><td>\\(\\frac{5 \\pi}{8}\\)</td></tr></tbody></table></div>",
+          "<p>There are \\(4\\) distinct branches. Raising any value to \\(4\\) gives \\(z^{-3}\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Modulus",
+        "definition": "<p>Distance to the origin on the Argand diagram.</p>"
+      },
+      {
+        "term": "Principal argument",
+        "definition": "<p>The chosen angle in \\((-\\pi,\\pi]\\).</p>"
+      },
+      {
+        "term": "Branch",
+        "definition": "<p>One value of a rational power obtained by using a particular representative argument.</p>"
+      },
+      {
+        "term": "de Moivre’s theorem",
+        "definition": "<p>\\((\\cos\\theta+\\mathrm i\\sin\\theta)^n=\\cos(n\\theta)+\\mathrm i\\sin(n\\theta)\\) for integer \\(n\\).</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "fp2-complex-powers-study-07",
+        "title": "Compute two Cartesian parts using a fourth power",
+        "prompt": "<p>Let \\(z=3\\,\\mathrm e^{- \\frac{i \\pi}{3}}\\).</p><p>Find the real and imaginary parts of \\(z^{4}\\).</p>",
+        "fields": [
+          {
+            "key": "re",
+            "label": "Real part",
+            "expected": "-81/2",
+            "type": "number"
+          },
+          {
+            "key": "im",
+            "label": "Imaginary part",
+            "expected": "81*sqrt(3)/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A negative exponent first requires a reciprocal, which reverses the argument.</p>",
+        "solution": "<p>Raise the modulus to the same power and multiply the argument by the exponent.</p><p>\\(|z^{4}|=81,\\quad \\arg(z^{4})\\equiv - \\frac{4 \\pi}{3}\\pmod{2\\pi}\\).</p><p>The principal argument is \\(\\frac{2 \\pi}{3}\\), so the number is \\(- \\frac{81}{2} + \\frac{81 \\sqrt{3} i}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-powers-study-08",
+        "title": "Give the principal argument on the negative real axis",
+        "prompt": "<p>Let \\(z=2\\,\\mathrm e^{\\frac{i \\pi}{2}}\\).</p><p>Give the exact modulus and the coefficient of \\(\\pi\\) in the principal argument.</p>",
+        "fields": [
+          {
+            "key": "mag",
+            "label": "Modulus",
+            "expected": "4",
+            "type": "number"
+          },
+          {
+            "key": "arg",
+            "label": "Coefficient of π",
+            "expected": "1",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A negative exponent first requires a reciprocal, which reverses the argument.</p>",
+        "solution": "<p>Raise the modulus to the same power and multiply the argument by the exponent.</p><p>\\(|z^{2}|=4,\\quad \\arg(z^{2})\\equiv \\pi\\pmod{2\\pi}\\).</p><p>The principal argument is \\(\\pi\\), so the number is \\(-4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-powers-study-09",
+        "title": "Quotient from points on opposite sides of the axis",
+        "prompt": "<p>Let \\(z=10\\,\\mathrm e^{- \\frac{i \\pi}{3}}\\) and \\(w=4\\,\\mathrm e^{\\frac{i \\pi}{4}}\\).</p><p>Give the modulus and the coefficient of \\(\\pi\\) in the principal argument of \\(\\tfrac zw\\).</p>",
+        "fields": [
+          {
+            "key": "mag",
+            "label": "Modulus",
+            "expected": "5/2",
+            "type": "number"
+          },
+          {
+            "key": "arg",
+            "label": "Coefficient of π",
+            "expected": "-7/12",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Combine arguments first, then bring the result into the principal interval.</p>",
+        "solution": "<p>Divide the moduli and subtract the arguments.</p><p>\\(\\tfrac zw=\\frac{5}{2}\\,\\mathrm e^{- \\frac{7 i \\pi}{12}}\\), with the argument in \\((-\\pi,\\pi]\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-powers-study-10",
+        "title": "Catch the fourth branch on the edge of the interval",
+        "prompt": "<p>Let \\(z=16\\). Find all values of \\(z^{\\frac{1}{4}}\\).</p><p>Give the common modulus. Give the complete set of coefficients of \\(\\pi\\) in \\((-\\pi,\\pi]\\).</p>",
+        "fields": [
+          {
+            "key": "modulus",
+            "label": "Common modulus",
+            "expected": "2",
+            "type": "number"
+          },
+          {
+            "key": "set",
+            "label": "Coefficients of π, separated by commas",
+            "expected": "-1/2, 0, 1/2, 1",
+            "type": "set"
+          }
+        ],
+        "hint": "<p>Use all input arguments before multiplying by the rational exponent. Do not stop after the principal input angle.</p>",
+        "solution": "<p>Write the input arguments as \\(0+2k\\pi\\). Multiply each by the rational power.</p><p>Use \\(k=0,\\ldots,3\\) and put the angles in the requested interval.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Common modulus</th><th scope=\"col\">Principal argument</th></tr></thead><tbody><tr><th scope=\"row\">\\(2\\)</th><td>\\(- \\frac{\\pi}{2}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{\\pi}{2}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\pi\\)</td></tr></tbody></table></div><p>There are \\(4\\) distinct branches. Raising any value to \\(4\\) gives \\(z^{1}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-powers-study-11",
+        "title": "Find a square-root power with a negative numerator",
+        "prompt": "<p>Let \\(z=9\\,\\mathrm e^{\\frac{i \\pi}{3}}\\). Find all values of \\(z^{\\frac{-3}{2}}\\).</p><p>Give the common modulus. Give the complete set of coefficients of \\(\\pi\\) in \\((-\\pi,\\pi]\\).</p>",
+        "fields": [
+          {
+            "key": "modulus",
+            "label": "Common modulus",
+            "expected": "1/27",
+            "type": "number"
+          },
+          {
+            "key": "set",
+            "label": "Coefficients of π, separated by commas",
+            "expected": "-1/2, 1/2",
+            "type": "set"
+          }
+        ],
+        "hint": "<p>Use all input arguments before multiplying by the rational exponent. Do not stop after the principal input angle.</p>",
+        "solution": "<p>Write the input arguments as \\(\\frac{\\pi}{3}+2k\\pi\\). Multiply each by the rational power.</p><p>Use \\(k=0,\\ldots,1\\) and put the angles in the requested interval.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Common modulus</th><th scope=\"col\">Principal argument</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\frac{1}{27}\\)</th><td>\\(- \\frac{\\pi}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{1}{27}\\)</th><td>\\(\\frac{\\pi}{2}\\)</td></tr></tbody></table></div><p>There are \\(2\\) distinct branches. Raising any value to \\(2\\) gives \\(z^{-3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-powers-study-12",
+        "title": "Use six positive-interval angles",
+        "prompt": "<p>Let \\(z=64\\,\\mathrm e^{\\frac{i \\pi}{2}}\\). Find all values of \\(z^{\\frac{5}{6}}\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) in \\([0,2\\pi)\\).</p>",
+        "fields": [
+          {
+            "key": "set",
+            "label": "Coefficients of π, separated by commas",
+            "expected": "1/12, 5/12, 3/4, 13/12, 17/12, 7/4",
+            "type": "set"
+          }
+        ],
+        "hint": "<p>Use all input arguments before multiplying by the rational exponent. Do not stop after the principal input angle.</p>",
+        "solution": "<p>Write the input arguments as \\(\\frac{\\pi}{2}+2k\\pi\\). Multiply each by the rational power.</p><p>Use \\(k=0,\\ldots,5\\) and put the angles in the requested interval.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Common modulus</th><th scope=\"col\">Argument in the given interval</th></tr></thead><tbody><tr><th scope=\"row\">\\(32\\)</th><td>\\(\\frac{\\pi}{12}\\)</td></tr><tr><th scope=\"row\">\\(32\\)</th><td>\\(\\frac{5 \\pi}{12}\\)</td></tr><tr><th scope=\"row\">\\(32\\)</th><td>\\(\\frac{3 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(32\\)</th><td>\\(\\frac{13 \\pi}{12}\\)</td></tr><tr><th scope=\"row\">\\(32\\)</th><td>\\(\\frac{17 \\pi}{12}\\)</td></tr><tr><th scope=\"row\">\\(32\\)</th><td>\\(\\frac{7 \\pi}{4}\\)</td></tr></tbody></table></div><p>There are \\(6\\) distinct branches. Raising any value to \\(6\\) gives \\(z^{5}\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Methods to remember</h2><p>Write the representation that makes the next step straightforward.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Method</th><th scope=\"col\">Working</th></tr></thead><tbody><tr><th scope=\"row\">Multiply</th><td>Multiply moduli and add arguments.</td></tr><tr><th scope=\"row\">Integer powers</th><td>\\(r^n\\mathrm e^{\\mathrm in\\theta}\\)</td></tr><tr><th scope=\"row\">Rational powers</th><td>Use \\(\\theta+2k\\pi\\) first.</td></tr><tr><th scope=\"row\">Check</th><td>\\(w^q=z^p\\) with \\(q\\) distinct values.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>State the chosen argument interval where needed.</li><li>Keep all values exactly when you can.</li><li>Check domain, endpoints or exceptional values before finalising.</li></ul>",
+      "examTip": "<p>Use a quick substitution or a geometric check to verify the answer.</p>"
+    },
+    "related": [
+      {
+        "title": "Multiple angles and polynomial roots",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_angles"
+      },
+      {
+        "title": "Harmonics and integrals",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_harmonics"
+      },
+      {
+        "title": "Roots of unity and polygons",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_unity"
+      },
+      {
+        "title": "Finite, binomial and convergent sums",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_sums"
+      }
+    ]
+  },
+  "fp2_complex_angles": {
+    "updatedOn": "2026-11-21",
+    "description": "Derive multiple-angle identities using de Moivre’s theorem and use them to find exact roots of trigonometric polynomials.",
+    "sections": [
+      {
+        "id": "real",
+        "title": "Why does the real part give cosine?",
+        "label": "Real part",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Expanding the integer power gives a real part from even powers of \\(\\mathrm i\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\cos(n\\theta)=\\mathrm{Re}\\bigl((\\cos\\theta+\\mathrm i\\sin\\theta)^n\\bigr)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Even imaginary powers alternate in sign. Use \\(\\mathrm i^2=-1\\) before collecting terms.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-angles-study-01",
+            "title": "Write cosine of five times the angle as a polynomial",
+            "prompt": "<p>Let \\(u=\\cos\\theta\\). Express \\(\\cos(5\\theta)\\) as a polynomial in \\(u\\).</p>",
+            "fields": [
+              {
+                "key": "poly",
+                "label": "Polynomial in u",
+                "type": "polynomial",
+                "variables": [
+                  "u"
+                ],
+                "expected": "u*(16*u^4 - 20*u^2 + 5)"
+              }
+            ],
+            "hint": "<p>Separate the real and imaginary powers of i before replacing a square.</p>",
+            "solution": "<p>Take the real part of \\((\\cos\\theta+\\mathrm i\\sin\\theta)^5\\).</p><p>With \\(a=\\cos\\theta,\\ b=\\sin\\theta\\), the expansion gives \\(a \\left(a^{4} - 10 a^{2} b^{2} + 5 b^{4}\\right)\\).</p><p>Use \\(a^2+b^2=1\\) to retain just the requested variable.</p>\\[\\cos(5\\theta)=16 u^{5} - 20 u^{3} + 5 u\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>After expanding, use \\(\\sin^2\\theta=1-\\cos^2\\theta\\) when you want a polynomial in cosine.</p>"
+          }
+        ]
+      },
+      {
+        "id": "imaginary",
+        "title": "What does the imaginary part give?",
+        "label": "Imaginary part",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Odd powers of \\(\\mathrm i\\) give the imaginary component.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\sin(n\\theta)=\\mathrm{Im}\\bigl((\\cos\\theta+\\mathrm i\\sin\\theta)^n\\bigr)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The imaginary part is the coefficient of \\(\\mathrm i\\). It is a real number.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-angles-study-02",
+            "title": "Extract the imaginary coefficients from a fifth power",
+            "prompt": "<p>Let \\(u=\\sin\\theta\\). Express \\(\\sin(5\\theta)\\) as a polynomial in \\(u\\).</p>",
+            "fields": [
+              {
+                "key": "poly",
+                "label": "Polynomial in u",
+                "type": "polynomial",
+                "variables": [
+                  "u"
+                ],
+                "expected": "u*(16*u^4 - 20*u^2 + 5)"
+              }
+            ],
+            "hint": "<p>Separate the real and imaginary powers of i before replacing a square.</p>",
+            "solution": "<p>Take the imaginary part of \\((\\cos\\theta+\\mathrm i\\sin\\theta)^5\\).</p><p>With \\(a=\\cos\\theta,\\ b=\\sin\\theta\\), the expansion gives \\(b \\left(5 a^{4} - 10 a^{2} b^{2} + b^{4}\\right)\\).</p><p>Use \\(a^2+b^2=1\\) to retain just the requested variable.</p>\\[\\sin(5\\theta)=16 u^{5} - 20 u^{3} + 5 u\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For odd \\(n\\) you can replace all remaining even powers of cosine in terms of sine.</p>"
+          }
+        ]
+      },
+      {
+        "id": "quotient",
+        "title": "How can I get a tangent formula?",
+        "label": "Tangent",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Take sine over cosine and divide both top and bottom by the correct power of the fundamental cosine.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Set \\(t=\\tan\\theta\\) and use the imaginary and real components of \\((1+\\mathrm it)^n\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The common domain excludes angles with \\(\\cos\\theta=0\\) or \\(\\cos(n\\theta)=0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-angles-study-03",
+            "title": "Find a rational expression for the tangent of a quadruple angle",
+            "prompt": "<p>Let \\(t=\\tan\\theta\\). Express \\(\\tan 4\\theta\\) as a rational expression in \\(t\\) on the common domain. Enter the numerator and denominator separately, using a denominator with constant term 1.</p>",
+            "fields": [
+              {
+                "key": "numerator",
+                "label": "Numerator",
+                "type": "polynomial",
+                "variables": [
+                  "t"
+                ],
+                "expected": "4*t*(1 - t^2)"
+              },
+              {
+                "key": "denominator",
+                "label": "Denominator",
+                "type": "polynomial",
+                "variables": [
+                  "t"
+                ],
+                "expected": "t^4 - 6*t^2 + 1"
+              }
+            ],
+            "hint": "<p>Divide both parts of \\(\\tfrac{\\sin(n\\theta)}{\\cos(n\\theta)}\\) by \\(\\cos^4\\theta\\) on the common domain.</p>",
+            "solution": "<p>Expand \\((1+\\mathrm i t)^4\\) and separate its real and imaginary parts.</p><p>\\(\\mathrm{Re}=t^{4} - 6 t^{2} + 1,\\quad \\mathrm{Im}=- 4 t^{3} + 4 t\\).</p>\\[\\tan 4\\theta=\\frac{- 4 t^{3} + 4 t}{t^{4} - 6 t^{2} + 1}\\]<p>Require \\(\\cos\\theta\\ne0\\) and \\(\\cos 4\\theta\\ne0\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep the entire numerator and denominator when entering your answer.</p>"
+          }
+        ]
+      },
+      {
+        "id": "polynomial",
+        "title": "Which substitution turns the equation into a familiar angle?",
+        "label": "Identify the pattern",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Recognise the polynomial as a multiple-angle expression. For cosine the range from \\(0\\) to \\(\\pi\\) covers every possible input once.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(T_n(\\cos\\theta)=\\cos(n\\theta)\\), solve the angular equation and convert every valid angle to \\(u=\\cos\\theta\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>One trigonometric solution family can have several angles in the permitted fundamental interval.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-angles-study-04",
+            "title": "Use cosine to solve a fifth-degree equation",
+            "prompt": "<p>Solve \\(16 u^{5} - 20 u^{3} + 5 u=0\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) for the corresponding angles. Use \\([0,\\pi]\\) for cosine.</p>",
+            "fields": [
+              {
+                "key": "set",
+                "label": "Angle coefficients, separated by commas",
+                "expected": "1/10, 3/10, 1/2, 7/10, 9/10",
+                "type": "set"
+              }
+            ],
+            "hint": "<p>Recognise the multiple-angle polynomial, then choose angles so that the real roots are listed once.</p>",
+            "solution": "<p>Use \\(u=\\cos\\theta\\). The polynomial was obtained from \\(\\cos(5\\theta)-0\\).</p><p>Use \\(0\\le\\theta\\le\\pi\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Angle</th><th scope=\"col\">Polynomial root</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\frac{\\pi}{10}\\)</th><td>\\(\\frac{\\sqrt{2 \\sqrt{5} + 10}}{4}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{3 \\pi}{10}\\)</th><td>\\(\\frac{\\sqrt{10 - 2 \\sqrt{5}}}{4}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{\\pi}{2}\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(\\frac{7 \\pi}{10}\\)</th><td>\\(- \\frac{\\sqrt{10 - 2 \\sqrt{5}}}{4}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{9 \\pi}{10}\\)</th><td>\\(- \\frac{\\sqrt{2 \\sqrt{5} + 10}}{4}\\)</td></tr></tbody></table></div><p>These values give all distinct real roots. Repeated algebraic roots give a single value in the answer set.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use exact values and keep a clear list of angles.</p>"
+          }
+        ]
+      },
+      {
+        "id": "range",
+        "title": "How do endpoints and repeated roots affect the answer?",
+        "label": "Complete the set",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Include endpoints that satisfy the original equation. Arguments in different angular families may represent one polynomial root.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>List distinct roots once. If asked for multiplicities, use the polynomial factors or derivatives to determine them separately.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Counting different angle equations is not a substitute for counting distinct algebraic roots.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-angles-study-05",
+            "title": "Keep the endpoint root when the cosine is one",
+            "prompt": "<p>Solve \\(4 u^{3} - 3 u - 1=0\\).</p><p>Give every distinct exact real root.</p>",
+            "fields": [
+              {
+                "key": "set",
+                "label": "Exact roots, separated by commas",
+                "expected": "-1/2, 1",
+                "type": "set"
+              }
+            ],
+            "hint": "<p>Recognise the multiple-angle polynomial, then choose angles so that the real roots are listed once.</p>",
+            "solution": "<p>Use \\(u=\\cos\\theta\\). The polynomial was obtained from \\(\\cos(3\\theta)-1\\).</p><p>Use \\(0\\le\\theta\\le\\pi\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Angle</th><th scope=\"col\">Polynomial root</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(\\frac{2 \\pi}{3}\\)</th><td>\\(- \\frac{1}{2}\\)</td></tr></tbody></table></div><p>These values give all distinct real roots. Repeated algebraic roots give a single value in the answer set.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the degree if the equation asks for every complex root.</p>"
+          }
+        ]
+      },
+      {
+        "id": "check",
+        "title": "How do I check that the root list is complete?",
+        "label": "Verify",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>For monotone fundamental ranges each admissible cosine or sine value corresponds to exactly one selected angle.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check each candidate in the original polynomial. If the number of distinct values equals its degree, the root list is complete.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A numerical approximation can help you order roots but it does not establish an exact factorisation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-angles-study-06",
+            "title": "Use all distinct roots of the fifth multiple set",
+            "prompt": "<p>Solve \\(16 u^{5} - 20 u^{3} + 5 u - 1=0\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) for the corresponding angles. Use \\([0,\\pi]\\) for cosine.</p>",
+            "fields": [
+              {
+                "key": "set",
+                "label": "Angle coefficients, separated by commas",
+                "expected": "0, 2/5, 4/5",
+                "type": "set"
+              }
+            ],
+            "hint": "<p>Recognise the multiple-angle polynomial, then choose angles so that the real roots are listed once.</p>",
+            "solution": "<p>Use \\(u=\\cos\\theta\\). The polynomial was obtained from \\(\\cos(5\\theta)-1\\).</p><p>Use \\(0\\le\\theta\\le\\pi\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Angle</th><th scope=\"col\">Polynomial root</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(\\frac{2 \\pi}{5}\\)</th><td>\\(- \\frac{1}{4} + \\frac{\\sqrt{5}}{4}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{4 \\pi}{5}\\)</th><td>\\(- \\frac{\\sqrt{5}}{4} - \\frac{1}{4}\\)</td></tr></tbody></table></div><p>These values give all distinct real roots. Repeated algebraic roots give a single value in the answer set.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>An optional check is to multiply the exact linear factors and compare leading coefficients.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Read the cubic identity for cosine",
+        "question": "<p>Let \\(u=\\cos\\theta\\). Express \\(\\cos(3\\theta)\\) as a polynomial in \\(u\\).</p>",
+        "solution": [
+          "<p>Take the real part of \\((\\cos\\theta+\\mathrm i\\sin\\theta)^3\\).</p><p>With \\(a=\\cos\\theta,\\ b=\\sin\\theta\\), the expansion gives \\(a \\left(a^{2} - 3 b^{2}\\right)\\).</p>",
+          "<p>Use \\(a^2+b^2=1\\) to retain just the requested variable.</p>",
+          "\\[\\cos(3\\theta)=4 u^{3} - 3 u\\]"
+        ]
+      },
+      {
+        "title": "Read a fourth multiple without a sine variable",
+        "question": "<p>Let \\(u=\\cos\\theta\\). Express \\(\\cos(4\\theta)\\) as a polynomial in \\(u\\).</p>",
+        "solution": [
+          "<p>Take the real part of \\((\\cos\\theta+\\mathrm i\\sin\\theta)^4\\).</p><p>With \\(a=\\cos\\theta,\\ b=\\sin\\theta\\), the expansion gives \\(a^{4} - 6 a^{2} b^{2} + b^{4}\\).</p>",
+          "<p>Use \\(a^2+b^2=1\\) to retain just the requested variable.</p>",
+          "\\[\\cos(4\\theta)=8 u^{4} - 8 u^{2} + 1\\]"
+        ]
+      },
+      {
+        "title": "Find the cubic identity for sine",
+        "question": "<p>Let \\(u=\\sin\\theta\\). Express \\(\\sin(3\\theta)\\) as a polynomial in \\(u\\).</p>",
+        "solution": [
+          "<p>Take the imaginary part of \\((\\cos\\theta+\\mathrm i\\sin\\theta)^3\\).</p><p>With \\(a=\\cos\\theta,\\ b=\\sin\\theta\\), the expansion gives \\(b \\left(3 a^{2} - b^{2}\\right)\\).</p>",
+          "<p>Use \\(a^2+b^2=1\\) to retain just the requested variable.</p>",
+          "\\[\\sin(3\\theta)=- 4 u^{3} + 3 u\\]"
+        ]
+      },
+      {
+        "title": "Build the full rational expression for tangent",
+        "question": "<p>Let \\(t=\\tan\\theta\\). Express \\(\\tan 3\\theta\\) as a rational expression in \\(t\\) on the common domain.</p>",
+        "solution": [
+          "<p>Expand \\((1+\\mathrm i t)^3\\) and separate its real and imaginary parts.</p><p>\\(\\mathrm{Re}=1 - 3 t^{2},\\quad \\mathrm{Im}=- t^{3} + 3 t\\).</p>",
+          "\\[\\tan 3\\theta=\\frac{- t^{3} + 3 t}{1 - 3 t^{2}}\\]",
+          "<p>Require \\(\\cos\\theta\\ne0\\) and \\(\\cos 3\\theta\\ne0\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover real roots from the triple-angle cosine",
+        "question": "<p>Solve \\(4 u^{3} - 3 u=0\\).</p><p>Give every distinct exact real root.</p>",
+        "solution": [
+          "<p>Use \\(u=\\cos\\theta\\). The polynomial was obtained from \\(\\cos(3\\theta)-0\\).</p><p>Use \\(0\\le\\theta\\le\\pi\\).</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Angle</th><th scope=\"col\">Polynomial root</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\frac{\\pi}{6}\\)</th><td>\\(\\frac{\\sqrt{3}}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{\\pi}{2}\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(\\frac{5 \\pi}{6}\\)</th><td>\\(- \\frac{\\sqrt{3}}{2}\\)</td></tr></tbody></table></div>",
+          "<p>These values give all distinct real roots. Repeated algebraic roots give a single value in the answer set.</p>"
+        ]
+      },
+      {
+        "title": "Use the two-to-one symmetry without duplicating roots",
+        "question": "<p>Solve \\(8 u^{4} - 8 u^{2}=0\\).</p><p>Give every distinct exact real root.</p>",
+        "solution": [
+          "<p>Use \\(u=\\cos\\theta\\). The polynomial was obtained from \\(\\cos(4\\theta)-1\\).</p><p>Use \\(0\\le\\theta\\le\\pi\\).</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Angle</th><th scope=\"col\">Polynomial root</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(1\\)</td></tr><tr><th scope=\"row\">\\(\\frac{\\pi}{2}\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(\\pi\\)</th><td>\\(-1\\)</td></tr></tbody></table></div>",
+          "<p>These values give all distinct real roots. Repeated algebraic roots give a single value in the answer set.</p>"
+        ]
+      },
+      {
+        "title": "List all angle coefficients for the quartic identity",
+        "question": "<p>Solve \\(8 u^{4} - 8 u^{2} + 1=0\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) for the corresponding angles. Use \\([0,\\pi]\\) for cosine.</p>",
+        "solution": [
+          "<p>Use \\(u=\\cos\\theta\\). The polynomial was obtained from \\(\\cos(4\\theta)-0\\).</p><p>Use \\(0\\le\\theta\\le\\pi\\).</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Angle</th><th scope=\"col\">Polynomial root</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\frac{\\pi}{8}\\)</th><td>\\(\\frac{\\sqrt{\\sqrt{2} + 2}}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{3 \\pi}{8}\\)</th><td>\\(\\frac{\\sqrt{2 - \\sqrt{2}}}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{5 \\pi}{8}\\)</th><td>\\(- \\frac{\\sqrt{2 - \\sqrt{2}}}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{7 \\pi}{8}\\)</th><td>\\(- \\frac{\\sqrt{\\sqrt{2} + 2}}{2}\\)</td></tr></tbody></table></div>",
+          "<p>These values give all distinct real roots. Repeated algebraic roots give a single value in the answer set.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Fundamental angle",
+        "definition": "<p>The original angle being multiplied.</p>"
+      },
+      {
+        "term": "Multiple-angle identity",
+        "definition": "<p>An equality relating a trigonometric function of a multiple to functions of the original angle.</p>"
+      },
+      {
+        "term": "Polynomial root",
+        "definition": "<p>A value of the algebraic variable making the polynomial zero.</p>"
+      },
+      {
+        "term": "Common domain",
+        "definition": "<p>The angles for which both sides of an identity are defined.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "fp2-complex-angles-study-07",
+        "title": "Confirm the quadratic cosine identity from the real part",
+        "prompt": "<p>Let \\(u=\\cos\\theta\\). Express \\(\\cos(2\\theta)\\) as a polynomial in \\(u\\).</p>",
+        "fields": [
+          {
+            "key": "poly",
+            "label": "Polynomial in u",
+            "type": "polynomial",
+            "variables": [
+              "u"
+            ],
+            "expected": "2*u^2 - 1"
+          }
+        ],
+        "hint": "<p>Separate the real and imaginary powers of i before replacing a square.</p>",
+        "solution": "<p>Take the real part of \\((\\cos\\theta+\\mathrm i\\sin\\theta)^2\\).</p><p>With \\(a=\\cos\\theta,\\ b=\\sin\\theta\\), the expansion gives \\(a^{2} - b^{2}\\).</p><p>Use \\(a^2+b^2=1\\) to retain just the requested variable.</p>\\[\\cos(2\\theta)=2 u^{2} - 1\\]"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-angles-study-08",
+        "title": "Use the tangent double angle on its common domain",
+        "prompt": "<p>Let \\(t=\\tan\\theta\\). Express \\(\\tan 2\\theta\\) as a rational expression in \\(t\\) on the common domain.</p>",
+        "fields": [
+          {
+            "key": "identity",
+            "label": "Rational expression in t",
+            "type": "ratio",
+            "variables": [
+              "t"
+            ],
+            "expected": [
+              "2*t",
+              "1 - t^2"
+            ]
+          }
+        ],
+        "hint": "<p>Divide both parts of \\(\\tfrac{\\sin(n\\theta)}{\\cos(n\\theta)}\\) by \\(\\cos^2\\theta\\) on the common domain.</p>",
+        "solution": "<p>Expand \\((1+\\mathrm i t)^2\\) and separate its real and imaginary parts.</p><p>\\(\\mathrm{Re}=1 - t^{2},\\quad \\mathrm{Im}=2 t\\).</p>\\[\\tan 2\\theta=\\frac{2 t}{1 - t^{2}}\\]<p>Require \\(\\cos\\theta\\ne0\\) and \\(\\cos 2\\theta\\ne0\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-angles-study-09",
+        "title": "Find a sixth-angle identity without residual sine squares",
+        "prompt": "<p>Let \\(u=\\cos\\theta\\). Express \\(\\cos(6\\theta)\\) as a polynomial in \\(u\\).</p>",
+        "fields": [
+          {
+            "key": "poly",
+            "label": "Polynomial in u",
+            "type": "polynomial",
+            "variables": [
+              "u"
+            ],
+            "expected": "32*u^6 - 48*u^4 + 18*u^2 - 1"
+          }
+        ],
+        "hint": "<p>Separate the real and imaginary powers of i before replacing a square.</p>",
+        "solution": "<p>Take the real part of \\((\\cos\\theta+\\mathrm i\\sin\\theta)^6\\).</p><p>With \\(a=\\cos\\theta,\\ b=\\sin\\theta\\), the expansion gives \\(a^{6} - 15 a^{4} b^{2} + 15 a^{2} b^{4} - b^{6}\\).</p><p>Use \\(a^2+b^2=1\\) to retain just the requested variable.</p>\\[\\cos(6\\theta)=32 u^{6} - 48 u^{4} + 18 u^{2} - 1\\]"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-angles-study-10",
+        "title": "Find the two polynomials for the fifth tangent angle",
+        "prompt": "<p>Let \\(t=\\tan\\theta\\). Express \\(\\tan 5\\theta\\) as a rational expression in \\(t\\) on the common domain. Enter the numerator and denominator separately, using a denominator with constant term 1.</p>",
+        "fields": [
+          {
+            "key": "numerator",
+            "label": "Numerator",
+            "type": "polynomial",
+            "variables": [
+              "t"
+            ],
+            "expected": "t*(t^4 - 10*t^2 + 5)"
+          },
+          {
+            "key": "denominator",
+            "label": "Denominator",
+            "type": "polynomial",
+            "variables": [
+              "t"
+            ],
+            "expected": "5*t^4 - 10*t^2 + 1"
+          }
+        ],
+        "hint": "<p>Divide both parts of \\(\\tfrac{\\sin(n\\theta)}{\\cos(n\\theta)}\\) by \\(\\cos^5\\theta\\) on the common domain.</p>",
+        "solution": "<p>Expand \\((1+\\mathrm i t)^5\\) and separate its real and imaginary parts.</p><p>\\(\\mathrm{Re}=5 t^{4} - 10 t^{2} + 1,\\quad \\mathrm{Im}=t^{5} - 10 t^{3} + 5 t\\).</p>\\[\\tan 5\\theta=\\frac{t^{5} - 10 t^{3} + 5 t}{5 t^{4} - 10 t^{2} + 1}\\]<p>Require \\(\\cos\\theta\\ne0\\) and \\(\\cos 5\\theta\\ne0\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-angles-study-11",
+        "title": "Include both exact cosine roots",
+        "prompt": "<p>Solve \\(2 u^{2} - 1=0\\).</p><p>Give every distinct exact real root.</p>",
+        "fields": [
+          {
+            "key": "set",
+            "label": "Exact roots, separated by commas",
+            "expected": "-sqrt(2)/2, sqrt(2)/2",
+            "type": "set"
+          }
+        ],
+        "hint": "<p>Recognise the multiple-angle polynomial, then choose angles so that the real roots are listed once.</p>",
+        "solution": "<p>Use \\(u=\\cos\\theta\\). The polynomial was obtained from \\(\\cos(2\\theta)-0\\).</p><p>Use \\(0\\le\\theta\\le\\pi\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Angle</th><th scope=\"col\">Polynomial root</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\frac{\\pi}{4}\\)</th><td>\\(\\frac{\\sqrt{2}}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{3 \\pi}{4}\\)</th><td>\\(- \\frac{\\sqrt{2}}{2}\\)</td></tr></tbody></table></div><p>These values give all distinct real roots. Repeated algebraic roots give a single value in the answer set.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-angles-study-12",
+        "title": "Check every root angle of a sixth-angle polynomial",
+        "prompt": "<p>Solve \\(32 u^{6} - 48 u^{4} + 18 u^{2} - 1=0\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) for the corresponding angles. Use \\([0,\\pi]\\) for cosine.</p>",
+        "fields": [
+          {
+            "key": "set",
+            "label": "Angle coefficients, separated by commas",
+            "expected": "1/12, 1/4, 5/12, 7/12, 3/4, 11/12",
+            "type": "set"
+          }
+        ],
+        "hint": "<p>Recognise the multiple-angle polynomial, then choose angles so that the real roots are listed once.</p>",
+        "solution": "<p>Use \\(u=\\cos\\theta\\). The polynomial was obtained from \\(\\cos(6\\theta)-0\\).</p><p>Use \\(0\\le\\theta\\le\\pi\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Angle</th><th scope=\"col\">Polynomial root</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\frac{\\pi}{12}\\)</th><td>\\(\\frac{\\sqrt{2}}{4} + \\frac{\\sqrt{6}}{4}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{\\pi}{4}\\)</th><td>\\(\\frac{\\sqrt{2}}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{5 \\pi}{12}\\)</th><td>\\(- \\frac{\\sqrt{2}}{4} + \\frac{\\sqrt{6}}{4}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{7 \\pi}{12}\\)</th><td>\\(- \\frac{\\sqrt{6}}{4} + \\frac{\\sqrt{2}}{4}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{3 \\pi}{4}\\)</th><td>\\(- \\frac{\\sqrt{2}}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\frac{11 \\pi}{12}\\)</th><td>\\(- \\frac{\\sqrt{6}}{4} - \\frac{\\sqrt{2}}{4}\\)</td></tr></tbody></table></div><p>These values give all distinct real roots. Repeated algebraic roots give a single value in the answer set.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Methods to remember</h2><p>Write the representation that makes the next step straightforward.</p><p>Expand \\((\\cos\\theta+\\mathrm i\\sin\\theta)^n\\), then compare its real and imaginary parts with \\(\\cos(n\\theta)+\\mathrm i\\sin(n\\theta)\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Method</th><th scope=\"col\">Working</th></tr></thead><tbody><tr><th scope=\"row\">Cosine</th><td>Take the real part of the power.</td></tr><tr><th scope=\"row\">Sine</th><td>Take the imaginary part.</td></tr><tr><th scope=\"row\">Tangent</th><td>Use imaginary over real and state the common domain.</td></tr><tr><th scope=\"row\">Roots</th><td>Choose a monotone fundamental range and test every value.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>State the chosen argument interval where needed.</li><li>Keep all values exactly when you can.</li><li>Check domain, endpoints or exceptional values before finalising.</li></ul>",
+      "examTip": "<p>Use a quick substitution or a geometric check to verify the answer.</p>"
+    },
+    "related": [
+      {
+        "title": "Powers, rotations and branches",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_powers"
+      },
+      {
+        "title": "Harmonics and integrals",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_harmonics"
+      },
+      {
+        "title": "Roots of unity and polygons",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_unity"
+      },
+      {
+        "title": "Finite, binomial and convergent sums",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_sums"
+      }
+    ]
+  },
+  "fp2_complex_harmonics": {
+    "updatedOn": "2026-11-21",
+    "description": "Use opposite exponential powers to express sine and cosine powers as harmonics, then evaluate exact integrals.",
+    "sections": [
+      {
+        "id": "conjugates",
+        "title": "Why do opposite powers give real trigonometric values?",
+        "label": "Opposite powers",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Set \\(u=\\mathrm e^{\\mathrm i\\theta}\\). The reciprocal \\(u^{-1}\\) represents the angle in the opposite direction.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\cos\\theta=\\tfrac12(u+u^{-1})\\) and \\(\\sin\\theta=\\tfrac{1}{2\\mathrm i}(u-u^{-1})\\) follow by adding and subtracting the exponential forms.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The difference carries a factor of \\(\\mathrm i\\). Omitting that factor changes the value.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-harmonics-study-01",
+            "title": "Find the constant after rewriting cosine squared",
+            "prompt": "<p>Write \\(\\cos^2\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficient of \\(1\\).</p>",
+            "fields": [
+              {
+                "key": "coef0",
+                "label": "Constant",
+                "expected": "1/2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+            "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\cos\\theta=\\tfrac{u+u^{-1}}2\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{1}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(\\frac{1}{2}\\)</td></tr></tbody></table></div>\\[\\cos^2\\theta=\\frac{\\cos{\\left(2 \\theta \\right)}}{2} + \\frac{1}{2}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Pair terms with the same absolute exponent.</p>"
+          }
+        ]
+      },
+      {
+        "id": "cosine",
+        "title": "How do I expand a power of cosine?",
+        "label": "Cosine powers",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Use the binomial theorem on the sum of opposite powers.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Cosine powers reduce to cosine harmonics, with a constant term for even powers. The denominator is \\(2^n\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Only zero exponent terms contribute the constant. Terms of opposite nonzero exponents give a harmonic.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-harmonics-study-02",
+            "title": "Keep all cosine harmonics in an odd power",
+            "prompt": "<p>Write \\(\\cos^5\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficients of \\(\\cos(1\\theta)\\), \\(\\cos(3\\theta)\\), \\(\\cos(5\\theta)\\).</p>",
+            "fields": [
+              {
+                "key": "coef1",
+                "label": "Coefficient of cos 1θ",
+                "expected": "5/8",
+                "type": "number"
+              },
+              {
+                "key": "coef3",
+                "label": "Coefficient of cos 3θ",
+                "expected": "5/16",
+                "type": "number"
+              },
+              {
+                "key": "coef5",
+                "label": "Coefficient of cos 5θ",
+                "expected": "1/16",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+            "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\cos\\theta=\\tfrac{u+u^{-1}}2\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\cos(1\\theta)\\)</th><td>\\(\\frac{5}{8}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(3\\theta)\\)</th><td>\\(\\frac{5}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(5\\theta)\\)</th><td>\\(\\frac{1}{16}\\)</td></tr></tbody></table></div>\\[\\cos^5\\theta=\\frac{5 \\cos\\theta}{8} + \\frac{5 \\cos{\\left(3 \\theta \\right)}}{16} + \\frac{\\cos{\\left(5 \\theta \\right)}}{16}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Before simplifying, check the harmonics have the same parity as the original exponent.</p>"
+          }
+        ]
+      },
+      {
+        "id": "sine-even",
+        "title": "Why do even sine powers contain cosine harmonics?",
+        "label": "Even sine powers",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>An even power is unchanged when the angle changes sign.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Expand the difference and keep \\((2\\mathrm i)^n\\) as a denominator until the sign is clear. Opposite powers pair into cosine terms.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The denominator can be negative for even \\(n\\). For fourth powers it is positive.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-harmonics-study-03",
+            "title": "Count all harmonics with even sine parity",
+            "prompt": "<p>Write \\(\\sin^6\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficients of \\(1\\), \\(\\cos(2\\theta)\\), \\(\\cos(4\\theta)\\), \\(\\cos(6\\theta)\\).</p>",
+            "fields": [
+              {
+                "key": "coef0",
+                "label": "Constant",
+                "expected": "5/16",
+                "type": "number"
+              },
+              {
+                "key": "coef2",
+                "label": "Coefficient of cos 2θ",
+                "expected": "-15/32",
+                "type": "number"
+              },
+              {
+                "key": "coef4",
+                "label": "Coefficient of cos 4θ",
+                "expected": "3/16",
+                "type": "number"
+              },
+              {
+                "key": "coef6",
+                "label": "Coefficient of cos 6θ",
+                "expected": "-1/32",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+            "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\sin\\theta=\\tfrac{u-u^{-1}}{2\\mathrm i}\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{5}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(- \\frac{15}{32}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{3}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(6\\theta)\\)</th><td>\\(- \\frac{1}{32}\\)</td></tr></tbody></table></div>\\[\\sin^6\\theta=- \\frac{15 \\cos{\\left(2 \\theta \\right)}}{32} + \\frac{3 \\cos{\\left(4 \\theta \\right)}}{16} - \\frac{\\cos{\\left(6 \\theta \\right)}}{32} + \\frac{5}{16}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The constant term should be positive for a nonzero even power.</p>"
+          }
+        ]
+      },
+      {
+        "id": "sine-odd",
+        "title": "Why do odd sine powers contain sine harmonics?",
+        "label": "Odd sine powers",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>An odd sine power changes sign with the angle, so the harmonics are also odd functions.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Pair equal magnitudes with opposite signs. Use \\(u^k-u^{-k}=2\\mathrm i\\sin(k\\theta)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The resulting trigonometric identity is real. Any remaining imaginary factor signals a simplification error.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-harmonics-study-04",
+            "title": "Check three coefficients in the fifth sine power",
+            "prompt": "<p>Write \\(\\sin^5\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficients of \\(\\sin(1\\theta)\\), \\(\\sin(3\\theta)\\), \\(\\sin(5\\theta)\\).</p>",
+            "fields": [
+              {
+                "key": "coef1",
+                "label": "Coefficient of sin 1θ",
+                "expected": "5/8",
+                "type": "number"
+              },
+              {
+                "key": "coef3",
+                "label": "Coefficient of sin 3θ",
+                "expected": "-5/16",
+                "type": "number"
+              },
+              {
+                "key": "coef5",
+                "label": "Coefficient of sin 5θ",
+                "expected": "1/16",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+            "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\sin\\theta=\\tfrac{u-u^{-1}}{2\\mathrm i}\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\sin(1\\theta)\\)</th><td>\\(\\frac{5}{8}\\)</td></tr><tr><th scope=\"row\">\\(\\sin(3\\theta)\\)</th><td>\\(- \\frac{5}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\sin(5\\theta)\\)</th><td>\\(\\frac{1}{16}\\)</td></tr></tbody></table></div>\\[\\sin^5\\theta=\\frac{5 \\sin\\theta}{8} - \\frac{5 \\sin{\\left(3 \\theta \\right)}}{16} + \\frac{\\sin{\\left(5 \\theta \\right)}}{16}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Evaluating both sides at \\(\\theta=\\tfrac\\pi2\\) quickly checks the final coefficients.</p>"
+          }
+        ]
+      },
+      {
+        "id": "integration",
+        "title": "How do harmonics make integration easier?",
+        "label": "Integrate",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>After expanding, integrate the constant and each sine or cosine separately.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\int\\cos(k\\theta)\\,\\mathrm d\\theta=\\frac{\\sin(k\\theta)}{k}+C\\) for \\(k\\ne0\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The factor \\(\\tfrac1k\\) applies to a harmonic. The constant term instead multiplies the interval length.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-harmonics-study-05",
+            "title": "Integrate a sixth power over a half quadrant",
+            "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{4}}\\sin^6\\theta\\,\\mathrm d\\theta\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "integral",
+                "label": "Exact integral",
+                "expected": "-11/48 + 5*pi/64",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+            "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\sin\\theta=\\tfrac{u-u^{-1}}{2\\mathrm i}\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{5}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(- \\frac{15}{32}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{3}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(6\\theta)\\)</th><td>\\(- \\frac{1}{32}\\)</td></tr></tbody></table></div>\\[\\sin^6\\theta=- \\frac{15 \\cos{\\left(2 \\theta \\right)}}{32} + \\frac{3 \\cos{\\left(4 \\theta \\right)}}{16} - \\frac{\\cos{\\left(6 \\theta \\right)}}{32} + \\frac{5}{16}\\]<p>Integrate each harmonic. The factors from \\(\\int\\cos(k\\theta)\\,\\mathrm d\\theta\\) include \\(\\tfrac1k\\).</p>\\[\\left[\\frac{5 \\theta}{16} - \\frac{15 \\sin{\\left(2 \\theta \\right)}}{64} + \\frac{3 \\sin{\\left(4 \\theta \\right)}}{64} - \\frac{\\sin{\\left(6 \\theta \\right)}}{192}\\right]_{0}^{\\frac{\\pi}{4}}=- \\frac{11}{48} + \\frac{5 \\pi}{64}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Evaluate the antiderivative at both bounds.</p>"
+          }
+        ]
+      },
+      {
+        "id": "endpoint-check",
+        "title": "Can I predict which terms integrate to zero?",
+        "label": "Exact bounds",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Look for intervals whose endpoints make entire sine or cosine terms cancel.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>On a full period, nonconstant integer harmonics integrate to zero. On a shorter interval, evaluate each endpoint rather than assuming cancellation.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A term that vanishes at the upper endpoint may contribute through the lower endpoint.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-harmonics-study-06",
+            "title": "Use endpoint cancellation over a half turn",
+            "prompt": "<p>Evaluate \\(\\int_{0}^{\\pi}\\cos^6\\theta\\,\\mathrm d\\theta\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "integral",
+                "label": "Exact integral",
+                "expected": "5*pi/16",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+            "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\cos\\theta=\\tfrac{u+u^{-1}}2\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{5}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(\\frac{15}{32}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{3}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(6\\theta)\\)</th><td>\\(\\frac{1}{32}\\)</td></tr></tbody></table></div>\\[\\cos^6\\theta=\\frac{15 \\cos{\\left(2 \\theta \\right)}}{32} + \\frac{3 \\cos{\\left(4 \\theta \\right)}}{16} + \\frac{\\cos{\\left(6 \\theta \\right)}}{32} + \\frac{5}{16}\\]<p>Integrate each harmonic. The factors from \\(\\int\\cos(k\\theta)\\,\\mathrm d\\theta\\) include \\(\\tfrac1k\\).</p>\\[\\left[\\frac{5 \\theta}{16} + \\frac{15 \\sin{\\left(2 \\theta \\right)}}{64} + \\frac{3 \\sin{\\left(4 \\theta \\right)}}{64} + \\frac{\\sin{\\left(6 \\theta \\right)}}{192}\\right]_{0}^{\\pi}=\\frac{5 \\pi}{16}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use radians in the exact integration formulae.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Pair a positive and negative exponential in a square",
+        "question": "<p>Write \\(\\cos^2\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficients of \\(1\\), \\(\\cos(2\\theta)\\).</p>",
+        "solution": [
+          "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\cos\\theta=\\tfrac{u+u^{-1}}2\\). Keep the common denominator while expanding.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{1}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(\\frac{1}{2}\\)</td></tr></tbody></table></div>",
+          "\\[\\cos^2\\theta=\\frac{\\cos{\\left(2 \\theta \\right)}}{2} + \\frac{1}{2}\\]"
+        ]
+      },
+      {
+        "title": "Read the highest harmonic in a fourth power",
+        "question": "<p>Write \\(\\cos^4\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficient of \\(\\cos(4\\theta)\\).</p>",
+        "solution": [
+          "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\cos\\theta=\\tfrac{u+u^{-1}}2\\). Keep the common denominator while expanding.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3}{8}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(\\frac{1}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{1}{8}\\)</td></tr></tbody></table></div>",
+          "\\[\\cos^4\\theta=\\frac{\\cos{\\left(2 \\theta \\right)}}{2} + \\frac{\\cos{\\left(4 \\theta \\right)}}{8} + \\frac{3}{8}\\]"
+        ]
+      },
+      {
+        "title": "Obtain the harmonics for a fourth power of cosine",
+        "question": "<p>Write \\(\\cos^4\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficients of \\(1\\), \\(\\cos(2\\theta)\\), \\(\\cos(4\\theta)\\).</p>",
+        "solution": [
+          "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\cos\\theta=\\tfrac{u+u^{-1}}2\\). Keep the common denominator while expanding.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3}{8}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(\\frac{1}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{1}{8}\\)</td></tr></tbody></table></div>",
+          "\\[\\cos^4\\theta=\\frac{\\cos{\\left(2 \\theta \\right)}}{2} + \\frac{\\cos{\\left(4 \\theta \\right)}}{8} + \\frac{3}{8}\\]"
+        ]
+      },
+      {
+        "title": "Track the sign in a fourth power of sine",
+        "question": "<p>Write \\(\\sin^4\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficients of \\(1\\), \\(\\cos(2\\theta)\\), \\(\\cos(4\\theta)\\).</p>",
+        "solution": [
+          "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\sin\\theta=\\tfrac{u-u^{-1}}{2\\mathrm i}\\). Keep the common denominator while expanding.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3}{8}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(- \\frac{1}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{1}{8}\\)</td></tr></tbody></table></div>",
+          "\\[\\sin^4\\theta=- \\frac{\\cos{\\left(2 \\theta \\right)}}{2} + \\frac{\\cos{\\left(4 \\theta \\right)}}{8} + \\frac{3}{8}\\]"
+        ]
+      },
+      {
+        "title": "Collect the two harmonics in an odd power",
+        "question": "<p>Write \\(\\sin^3\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficients of \\(\\sin(1\\theta)\\), \\(\\sin(3\\theta)\\).</p>",
+        "solution": [
+          "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\sin\\theta=\\tfrac{u-u^{-1}}{2\\mathrm i}\\). Keep the common denominator while expanding.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\sin(1\\theta)\\)</th><td>\\(\\frac{3}{4}\\)</td></tr><tr><th scope=\"row\">\\(\\sin(3\\theta)\\)</th><td>\\(- \\frac{1}{4}\\)</td></tr></tbody></table></div>",
+          "\\[\\sin^3\\theta=\\frac{3 \\sin\\theta}{4} - \\frac{\\sin{\\left(3 \\theta \\right)}}{4}\\]"
+        ]
+      },
+      {
+        "title": "Integrate a fourth power of cosine exactly",
+        "question": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{4}}\\cos^4\\theta\\,\\mathrm d\\theta\\) exactly.</p>",
+        "solution": [
+          "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\cos\\theta=\\tfrac{u+u^{-1}}2\\). Keep the common denominator while expanding.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3}{8}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(\\frac{1}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{1}{8}\\)</td></tr></tbody></table></div>",
+          "\\[\\cos^4\\theta=\\frac{\\cos{\\left(2 \\theta \\right)}}{2} + \\frac{\\cos{\\left(4 \\theta \\right)}}{8} + \\frac{3}{8}\\]",
+          "<p>Integrate each harmonic. The factors from \\(\\int\\cos(k\\theta)\\,\\mathrm d\\theta\\) include \\(\\tfrac1k\\).</p>\\[\\left[\\frac{3 \\theta}{8} + \\frac{\\sin{\\left(2 \\theta \\right)}}{4} + \\frac{\\sin{\\left(4 \\theta \\right)}}{32}\\right]_{0}^{\\frac{\\pi}{4}}=\\frac{1}{4} + \\frac{3 \\pi}{32}\\]"
+        ]
+      },
+      {
+        "title": "Decide what cancels at exact bounds",
+        "question": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{2}}\\sin^4\\theta\\,\\mathrm d\\theta\\) exactly.</p>",
+        "solution": [
+          "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\sin\\theta=\\tfrac{u-u^{-1}}{2\\mathrm i}\\). Keep the common denominator while expanding.</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3}{8}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(- \\frac{1}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{1}{8}\\)</td></tr></tbody></table></div>",
+          "\\[\\sin^4\\theta=- \\frac{\\cos{\\left(2 \\theta \\right)}}{2} + \\frac{\\cos{\\left(4 \\theta \\right)}}{8} + \\frac{3}{8}\\]",
+          "<p>Integrate each harmonic. The factors from \\(\\int\\cos(k\\theta)\\,\\mathrm d\\theta\\) include \\(\\tfrac1k\\).</p>\\[\\left[\\frac{3 \\theta}{8} - \\frac{\\sin{\\left(2 \\theta \\right)}}{4} + \\frac{\\sin{\\left(4 \\theta \\right)}}{32}\\right]_{0}^{\\frac{\\pi}{2}}=\\frac{3 \\pi}{16}\\]"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Harmonic",
+        "definition": "<p>A sine or cosine of an integer multiple of an angle.</p>"
+      },
+      {
+        "term": "Laurent expression",
+        "definition": "<p>An expression with both positive and negative integer powers of a variable.</p>"
+      },
+      {
+        "term": "Conjugate terms",
+        "definition": "<p>Opposite powers on the unit circle or terms related by complex conjugation.</p>"
+      },
+      {
+        "term": "Constant term",
+        "definition": "<p>The zero-power term in the exponential expansion, which contributes a constant to the harmonic form.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "fp2-complex-harmonics-study-07",
+        "title": "Obtain one fourth-harmonic coefficient",
+        "prompt": "<p>Write \\(\\sin^6\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficient of \\(\\cos(4\\theta)\\).</p>",
+        "fields": [
+          {
+            "key": "coef4",
+            "label": "Coefficient of cos 4θ",
+            "expected": "3/16",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+        "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\sin\\theta=\\tfrac{u-u^{-1}}{2\\mathrm i}\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{5}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(- \\frac{15}{32}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{3}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(6\\theta)\\)</th><td>\\(- \\frac{1}{32}\\)</td></tr></tbody></table></div>\\[\\sin^6\\theta=- \\frac{15 \\cos{\\left(2 \\theta \\right)}}{32} + \\frac{3 \\cos{\\left(4 \\theta \\right)}}{16} - \\frac{\\cos{\\left(6 \\theta \\right)}}{32} + \\frac{5}{16}\\]"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-harmonics-study-08",
+        "title": "Find the zero-power contribution",
+        "prompt": "<p>Write \\(\\cos^6\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficient of \\(1\\).</p>",
+        "fields": [
+          {
+            "key": "coef0",
+            "label": "Constant",
+            "expected": "5/16",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+        "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\cos\\theta=\\tfrac{u+u^{-1}}2\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{5}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(\\frac{15}{32}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{3}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(6\\theta)\\)</th><td>\\(\\frac{1}{32}\\)</td></tr></tbody></table></div>\\[\\cos^6\\theta=\\frac{15 \\cos{\\left(2 \\theta \\right)}}{32} + \\frac{3 \\cos{\\left(4 \\theta \\right)}}{16} + \\frac{\\cos{\\left(6 \\theta \\right)}}{32} + \\frac{5}{16}\\]"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-harmonics-study-09",
+        "title": "Integrate after pairing odd sine powers",
+        "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{3}}\\sin^3\\theta\\,\\mathrm d\\theta\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "integral",
+            "label": "Exact integral",
+            "expected": "5/24",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+        "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\sin\\theta=\\tfrac{u-u^{-1}}{2\\mathrm i}\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\sin(1\\theta)\\)</th><td>\\(\\frac{3}{4}\\)</td></tr><tr><th scope=\"row\">\\(\\sin(3\\theta)\\)</th><td>\\(- \\frac{1}{4}\\)</td></tr></tbody></table></div>\\[\\sin^3\\theta=\\frac{3 \\sin\\theta}{4} - \\frac{\\sin{\\left(3 \\theta \\right)}}{4}\\]<p>Integrate each harmonic. The factors from \\(\\int\\cos(k\\theta)\\,\\mathrm d\\theta\\) include \\(\\tfrac1k\\).</p>\\[\\left[- \\frac{3 \\cos{\\left(\\theta \\right)}}{4} + \\frac{\\cos{\\left(3 \\theta \\right)}}{12}\\right]_{0}^{\\frac{\\pi}{3}}=\\frac{5}{24}\\]"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-harmonics-study-10",
+        "title": "Use the odd cosine integral over symmetric bounds",
+        "prompt": "<p>Evaluate \\(\\int_{- \\frac{\\pi}{3}}^{\\frac{\\pi}{3}}\\cos^3\\theta\\,\\mathrm d\\theta\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "integral",
+            "label": "Exact integral",
+            "expected": "3*sqrt(3)/4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+        "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\cos\\theta=\\tfrac{u+u^{-1}}2\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\cos(1\\theta)\\)</th><td>\\(\\frac{3}{4}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(3\\theta)\\)</th><td>\\(\\frac{1}{4}\\)</td></tr></tbody></table></div>\\[\\cos^3\\theta=\\frac{3 \\cos\\theta}{4} + \\frac{\\cos{\\left(3 \\theta \\right)}}{4}\\]<p>Integrate each harmonic. The factors from \\(\\int\\cos(k\\theta)\\,\\mathrm d\\theta\\) include \\(\\tfrac1k\\).</p>\\[\\left[\\frac{3 \\sin{\\left(\\theta \\right)}}{4} + \\frac{\\sin{\\left(3 \\theta \\right)}}{12}\\right]_{- \\frac{\\pi}{3}}^{\\frac{\\pi}{3}}=\\frac{3 \\sqrt{3}}{4}\\]"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-harmonics-study-11",
+        "title": "Get a full set of sixth-power cosine coefficients",
+        "prompt": "<p>Write \\(\\cos^6\\theta\\) in harmonics of \\(\\theta\\). Give the exact coefficients of \\(1\\), \\(\\cos(2\\theta)\\), \\(\\cos(4\\theta)\\), \\(\\cos(6\\theta)\\).</p>",
+        "fields": [
+          {
+            "key": "coef0",
+            "label": "Constant",
+            "expected": "5/16",
+            "type": "number"
+          },
+          {
+            "key": "coef2",
+            "label": "Coefficient of cos 2θ",
+            "expected": "15/32",
+            "type": "number"
+          },
+          {
+            "key": "coef4",
+            "label": "Coefficient of cos 4θ",
+            "expected": "3/16",
+            "type": "number"
+          },
+          {
+            "key": "coef6",
+            "label": "Coefficient of cos 6θ",
+            "expected": "1/32",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+        "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\cos\\theta=\\tfrac{u+u^{-1}}2\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{5}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(\\frac{15}{32}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{3}{16}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(6\\theta)\\)</th><td>\\(\\frac{1}{32}\\)</td></tr></tbody></table></div>\\[\\cos^6\\theta=\\frac{15 \\cos{\\left(2 \\theta \\right)}}{32} + \\frac{3 \\cos{\\left(4 \\theta \\right)}}{16} + \\frac{\\cos{\\left(6 \\theta \\right)}}{32} + \\frac{5}{16}\\]"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-harmonics-study-12",
+        "title": "Apply the harmonic identity away from zero",
+        "prompt": "<p>Evaluate \\(\\int_{\\frac{\\pi}{6}}^{\\frac{\\pi}{3}}\\cos^4\\theta\\,\\mathrm d\\theta\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "integral",
+            "label": "Exact integral",
+            "expected": "-sqrt(3)/32 + pi/16",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Pair opposite exponential powers, then simplify the factor of i and the power of 2.</p>",
+        "solution": "<p>Use \\(u=\\mathrm e^{\\mathrm i\\theta}\\). Then \\(\\cos\\theta=\\tfrac{u+u^{-1}}2\\). Keep the common denominator while expanding.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Term</th><th scope=\"col\">Coefficient</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3}{8}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(2\\theta)\\)</th><td>\\(\\frac{1}{2}\\)</td></tr><tr><th scope=\"row\">\\(\\cos(4\\theta)\\)</th><td>\\(\\frac{1}{8}\\)</td></tr></tbody></table></div>\\[\\cos^4\\theta=\\frac{\\cos{\\left(2 \\theta \\right)}}{2} + \\frac{\\cos{\\left(4 \\theta \\right)}}{8} + \\frac{3}{8}\\]<p>Integrate each harmonic. The factors from \\(\\int\\cos(k\\theta)\\,\\mathrm d\\theta\\) include \\(\\tfrac1k\\).</p>\\[\\left[\\frac{3 \\theta}{8} + \\frac{\\sin{\\left(2 \\theta \\right)}}{4} + \\frac{\\sin{\\left(4 \\theta \\right)}}{32}\\right]_{\\frac{\\pi}{6}}^{\\frac{\\pi}{3}}=- \\frac{\\sqrt{3}}{32} + \\frac{\\pi}{16}\\]"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Methods to remember</h2><p>Write the representation that makes the next step straightforward.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Method</th><th scope=\"col\">Working</th></tr></thead><tbody><tr><th scope=\"row\">Rewrite</th><td>\\(\\cos\\theta=\\tfrac12(u+u^{-1})\\) and \\(\\sin\\theta=\\tfrac{1}{2\\mathrm i}(u-u^{-1})\\)</td></tr><tr><th scope=\"row\">Expand</th><td>Keep the power of the denominator.</td></tr><tr><th scope=\"row\">Pair powers</th><td>\\(u^k+u^{-k}=2\\cos(k\\theta)\\) and \\(u^k-u^{-k}=2\\mathrm i\\sin(k\\theta)\\)</td></tr><tr><th scope=\"row\">Integrate</th><td>Treat the constant separately and check both bounds.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>State the chosen argument interval where needed.</li><li>Keep all values exactly when you can.</li><li>Check domain, endpoints or exceptional values before finalising.</li></ul>",
+      "examTip": "<p>Use a quick substitution or a geometric check to verify the answer.</p>"
+    },
+    "related": [
+      {
+        "title": "Powers, rotations and branches",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_powers"
+      },
+      {
+        "title": "Multiple angles and polynomial roots",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_angles"
+      },
+      {
+        "title": "Roots of unity and polygons",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_unity"
+      },
+      {
+        "title": "Finite, binomial and convergent sums",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_sums"
+      }
+    ]
+  },
+  "fp2_complex_unity": {
+    "updatedOn": "2026-11-21",
+    "description": "Find complete sets of roots of unity, use root polygons, and calculate selected sums and chord lengths.",
+    "sections": [
+      {
+        "id": "unit",
+        "title": "Why does unity generate a whole circle of solutions?",
+        "label": "Roots of unity",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>The number one has argument zero and any full-turn representative.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(z=\\exp\\left(\\frac{2k\\pi\\mathrm i}{n}\\right)\\) for \\(k=0,\\ldots,n-1\\) solves \\(z^n=1\\).</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp2_complex_unity/cube-roots-unit-circle.svg",
+              "alt": "Three unit cube roots forming an equilateral triangle on an Argand diagram.",
+              "caption": "<p>Each consecutive root is a rotation by \\(\\tfrac{2\\pi}{3}\\) about the origin.</p>",
+              "width": 640,
+              "height": 350
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The roots of unity always include \\(1\\). They are not restricted to ±1.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-unity-study-01",
+            "title": "Find the full set of arguments for fifth roots of unity",
+            "prompt": "<p>Consider all roots of \\(z^{5}=1\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) in the arguments, using \\([0,2\\pi)\\).</p>",
+            "fields": [
+              {
+                "key": "set",
+                "label": "Coefficients of π, separated by commas",
+                "expected": "0, 2/5, 4/5, 6/5, 8/5",
+                "type": "set"
+              }
+            ],
+            "hint": "<p>All roots lie at the same distance from the origin. Consecutive arguments differ by one full turn divided by the degree.</p>",
+            "solution": "<p>All roots have modulus \\(1\\) and adjacent arguments differ by \\(\\frac{2 \\pi}{5}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{2 \\pi}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{4 \\pi}{5}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{6 \\pi}{5}\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\frac{8 \\pi}{5}\\)</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check you have exactly as many roots as the degree.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rotated",
+        "title": "How do non-unit right-hand sides rotate and scale the roots?",
+        "label": "Root circles",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>First obtain one root. Multiplying it by each root of unity gives the complete set.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(z^n=r\\mathrm e^{\\mathrm i\\theta}\\) the circle radius is \\(\\sqrt[n]r\\) and the roots turn by \\(\\tfrac{2\\pi}{n}\\) between neighbours.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The radius is the root of the right-hand-side modulus.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-unity-study-02",
+            "title": "Use the radius to constrain a real parameter",
+            "prompt": "<p>Consider \\(z^4=k\\) for real \\(k\\).</p><p>Give all real values of \\(k\\) for which the root polygon has radius \\(2\\).</p>",
+            "fields": [
+              {
+                "key": "set",
+                "label": "All real values of k",
+                "expected": "-16, 16",
+                "type": "set"
+              }
+            ],
+            "hint": "<p>Taking moduli gives the magnitude of the parameter. Interpret the extra real-root condition, if given.</p>",
+            "solution": "<p>Taking moduli gives \\(|k|=2^4=16\\).</p><p>Either sign is possible. The sign rotates the roots but leaves their radius unchanged. Thus \\(k=\\pm16\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For real k in \\(z^n=k\\), either sign of k gives the same radius if its magnitude agrees.</p>"
+          }
+        ]
+      },
+      {
+        "id": "chords",
+        "title": "How does the central angle determine a side length?",
+        "label": "Chord lengths",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Join adjacent roots to the origin. Their triangle has two equal sides.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\ell=2r\\sin\\left(\\frac{\\pi}{n}\\right)\\) for consecutive roots on a circle of radius \\(r\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The full central angle is twice the angle used in the sine on the right.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-unity-study-03",
+            "title": "Find the distance between adjacent fourth roots",
+            "prompt": "<p>Consider all roots of \\(z^{4}=81\\,\\mathrm e^{i \\pi}\\).</p><p>Find the exact side length of the polygon formed by joining consecutive roots.</p>",
+            "fields": [
+              {
+                "key": "side",
+                "label": "Side length",
+                "expected": "3*sqrt(2)",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>All roots lie at the same distance from the origin. Consecutive arguments differ by one full turn divided by the degree.</p>",
+            "solution": "<p>All roots have modulus \\(3\\) and adjacent arguments differ by \\(\\frac{\\pi}{2}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{\\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{5 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{7 \\pi}{4}\\)</td></tr></tbody></table></div><p>Bisect the central angle \\(\\frac{\\pi}{2}\\). The chord is \\(2(3)\\sin\\left(\\frac{\\pi}{4}\\right)=3 \\sqrt{2}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For nonconsecutive points use half their actual angular separation.</p>"
+          }
+        ]
+      },
+      {
+        "id": "sum",
+        "title": "Why does the sum of all roots vanish?",
+        "label": "Symmetry",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The regular set of vectors balances around the origin. Equivalently, a geometric series of the distinct unit multipliers has zero sum.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(\\omega=\\exp(\\tfrac{2\\pi\\mathrm i}{n})\\) and \\(n&gt;1\\), \\(1+\\omega+\\cdots+\\omega^{n-1}=0\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>This uses the full set, including the real root at one for unity.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-unity-study-04",
+            "title": "Use symmetry to keep three out of four roots",
+            "prompt": "<p>Consider all roots of \\(z^{4}=1\\,\\mathrm e^{i \\pi}\\).</p><p>From the sum, exclude the roots at \\(\\frac{\\pi}{4}\\) radians. Give the real and imaginary parts of the sum of the remaining roots.</p>",
+            "fields": [
+              {
+                "key": "re",
+                "label": "Real part",
+                "expected": "-sqrt(2)/2",
+                "type": "number"
+              },
+              {
+                "key": "im",
+                "label": "Imaginary part",
+                "expected": "-sqrt(2)/2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>All roots lie at the same distance from the origin. Consecutive arguments differ by one full turn divided by the degree.</p>",
+            "solution": "<p>All roots have modulus \\(1\\) and adjacent arguments differ by \\(\\frac{\\pi}{2}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{\\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{5 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{7 \\pi}{4}\\)</td></tr></tbody></table></div><p>The sum of every root is zero. Subtract the excluded roots from zero.</p><p>The excluded sum is \\(\\frac{\\sqrt{2} \\left(1 + i\\right)}{2}\\), so the required value is \\(\\frac{\\sqrt{2} \\left(-1 - i\\right)}{2}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Multiplying the full zero sum by any common factor leaves zero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "selected",
+        "title": "How can I sum an incomplete set efficiently?",
+        "label": "Selected roots",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Identify which roots are excluded and subtract their sum from the total zero.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The remaining sum is the negative of the removed sum.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Dropping a root changes the cancellation. Keep the correct sign on the excluded terms.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-unity-study-05",
+            "title": "Remove diametrically opposite roots",
+            "prompt": "<p>Consider all roots of \\(z^{6}=1\\).</p><p>From the sum, exclude the roots at \\(0\\), \\(\\pi\\) radians. Give the real and imaginary parts of the sum of the remaining roots.</p>",
+            "fields": [
+              {
+                "key": "re",
+                "label": "Real part",
+                "expected": "0",
+                "type": "number"
+              },
+              {
+                "key": "im",
+                "label": "Imaginary part",
+                "expected": "0",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>All roots lie at the same distance from the origin. Consecutive arguments differ by one full turn divided by the degree.</p>",
+            "solution": "<p>All roots have modulus \\(1\\) and adjacent arguments differ by \\(\\frac{\\pi}{3}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{\\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{2 \\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\pi\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\frac{4 \\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(5\\)</th><td>\\(\\frac{5 \\pi}{3}\\)</td></tr></tbody></table></div><p>The sum of every root is zero. Subtract the excluded roots from zero.</p><p>The excluded sum is \\(0\\), so the required value is \\(0\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check each removed root is actually in the polygon.</p>"
+          }
+        ]
+      },
+      {
+        "id": "represent",
+        "title": "How do I write all arguments in the requested interval?",
+        "label": "Argument interval",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Use the equal spacing from one root, then convert each value before writing the list.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Adding a full turn gives the same root. Use exactly one representative for each point in the specified half-open interval.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not include both endpoints of a full-turn interval.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-unity-study-06",
+            "title": "Keep the entire interval for all fourth roots of a negative number",
+            "prompt": "<p>Consider all roots of \\(z^{4}=1\\,\\mathrm e^{i \\pi}\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) in the arguments, using \\([0,2\\pi)\\).</p>",
+            "fields": [
+              {
+                "key": "set",
+                "label": "Coefficients of π, separated by commas",
+                "expected": "1/4, 3/4, 5/4, 7/4",
+                "type": "set"
+              }
+            ],
+            "hint": "<p>All roots lie at the same distance from the origin. Consecutive arguments differ by one full turn divided by the degree.</p>",
+            "solution": "<p>All roots have modulus \\(1\\) and adjacent arguments differ by \\(\\frac{\\pi}{2}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{\\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{5 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{7 \\pi}{4}\\)</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A table of indices and arguments is a concise way to show completeness.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "List the cube roots of unity",
+        "question": "<p>Consider all roots of \\(z^{3}=1\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) in the arguments, using \\([0,2\\pi)\\).</p>",
+        "solution": [
+          "<p>All roots have modulus \\(1\\) and adjacent arguments differ by \\(\\frac{2 \\pi}{3}\\).</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{2 \\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{4 \\pi}{3}\\)</td></tr></tbody></table></div>"
+        ]
+      },
+      {
+        "title": "Identify the complete square of unit roots",
+        "question": "<p>Consider all roots of \\(z^{4}=1\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) in the arguments, using \\([0,2\\pi)\\).</p>",
+        "solution": [
+          "<p>All roots have modulus \\(1\\) and adjacent arguments differ by \\(\\frac{\\pi}{2}\\).</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{\\pi}{2}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\pi\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{3 \\pi}{2}\\)</td></tr></tbody></table></div>"
+        ]
+      },
+      {
+        "title": "Find the circle for a rotated six-root set",
+        "question": "<p>Consider all roots of \\(z^{6}=64\\,\\mathrm e^{i \\pi}\\).</p><p>Give the radius of the root circle and the coefficient of \\(\\pi\\) in the angle between consecutive roots.</p>",
+        "solution": [
+          "<p>All roots have modulus \\(2\\) and adjacent arguments differ by \\(\\frac{\\pi}{3}\\).</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{\\pi}{6}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{\\pi}{2}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{5 \\pi}{6}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{7 \\pi}{6}\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\frac{3 \\pi}{2}\\)</td></tr><tr><th scope=\"row\">\\(5\\)</th><td>\\(\\frac{11 \\pi}{6}\\)</td></tr></tbody></table></div>"
+        ]
+      },
+      {
+        "title": "Find the side of a root hexagon",
+        "question": "<p>Consider all roots of \\(z^{6}=729\\).</p><p>Find the exact side length of the polygon formed by joining consecutive roots.</p>",
+        "solution": [
+          "<p>All roots have modulus \\(3\\) and adjacent arguments differ by \\(\\frac{\\pi}{3}\\).</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{\\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{2 \\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\pi\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\frac{4 \\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(5\\)</th><td>\\(\\frac{5 \\pi}{3}\\)</td></tr></tbody></table></div>",
+          "<p>Bisect the central angle \\(\\frac{\\pi}{3}\\). The chord is \\(2(3)\\sin\\left(\\frac{\\pi}{6}\\right)=3\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the zero sum and remove one vertex",
+        "question": "<p>Consider all roots of \\(z^{4}=1\\).</p><p>From the sum, exclude the roots at \\(\\frac{\\pi}{2}\\) radians. Give the real and imaginary parts of the sum of the remaining roots.</p>",
+        "solution": [
+          "<p>All roots have modulus \\(1\\) and adjacent arguments differ by \\(\\frac{\\pi}{2}\\).</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{\\pi}{2}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\pi\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{3 \\pi}{2}\\)</td></tr></tbody></table></div>",
+          "<p>The sum of every root is zero. Subtract the excluded roots from zero.</p><p>The excluded sum is \\(i\\), so the required value is \\(- i\\).</p>"
+        ]
+      },
+      {
+        "title": "Subtract two removed roots from zero",
+        "question": "<p>Consider all roots of \\(z^{6}=64\\).</p><p>From the sum, exclude the roots at \\(0\\), \\(\\frac{\\pi}{3}\\) radians. Give the real and imaginary parts of the sum of the remaining roots.</p>",
+        "solution": [
+          "<p>All roots have modulus \\(2\\) and adjacent arguments differ by \\(\\frac{\\pi}{3}\\).</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{\\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{2 \\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\pi\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\frac{4 \\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(5\\)</th><td>\\(\\frac{5 \\pi}{3}\\)</td></tr></tbody></table></div>",
+          "<p>The sum of every root is zero. Subtract the excluded roots from zero.</p><p>The excluded sum is \\(3 + \\sqrt{3} i\\), so the required value is \\(-3 - \\sqrt{3} i\\).</p>"
+        ]
+      },
+      {
+        "title": "List every argument of a rotated square",
+        "question": "<p>Consider all roots of \\(z^{4}=16\\,\\mathrm e^{i \\pi}\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) in the arguments, using \\([0,2\\pi)\\).</p>",
+        "solution": [
+          "<p>All roots have modulus \\(2\\) and adjacent arguments differ by \\(\\frac{\\pi}{2}\\).</p>",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{\\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{5 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{7 \\pi}{4}\\)</td></tr></tbody></table></div>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Root of unity",
+        "definition": "<p>A complex solution of \\(z^n=1\\) for a positive integer \\(n\\).</p>"
+      },
+      {
+        "term": "Root polygon",
+        "definition": "<p>The regular polygon joining all roots of a nonzero number in argument order.</p>"
+      },
+      {
+        "term": "Angular spacing",
+        "definition": "<p>The angle between neighbouring roots around the origin.</p>"
+      },
+      {
+        "term": "Chord",
+        "definition": "<p>A straight segment joining two points on a circle.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "fp2-complex-unity-study-07",
+        "title": "Find the triangle side length for third roots",
+        "prompt": "<p>Consider all roots of \\(z^{3}=64\\).</p><p>Find the exact side length of the polygon formed by joining consecutive roots.</p>",
+        "fields": [
+          {
+            "key": "side",
+            "label": "Side length",
+            "expected": "4*sqrt(3)",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>All roots lie at the same distance from the origin. Consecutive arguments differ by one full turn divided by the degree.</p>",
+        "solution": "<p>All roots have modulus \\(4\\) and adjacent arguments differ by \\(\\frac{2 \\pi}{3}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{2 \\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{4 \\pi}{3}\\)</td></tr></tbody></table></div><p>Bisect the central angle \\(\\frac{2 \\pi}{3}\\). The chord is \\(2(4)\\sin\\left(\\frac{\\pi}{3}\\right)=4 \\sqrt{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-unity-study-08",
+        "title": "List roots on the fifth-root circle after rotation",
+        "prompt": "<p>Consider all roots of \\(z^{5}=1\\,\\mathrm e^{i \\pi}\\).</p><p>Give the complete set of coefficients of \\(\\pi\\) in the arguments, using \\([0,2\\pi)\\).</p>",
+        "fields": [
+          {
+            "key": "set",
+            "label": "Coefficients of π, separated by commas",
+            "expected": "1/5, 3/5, 1, 7/5, 9/5",
+            "type": "set"
+          }
+        ],
+        "hint": "<p>All roots lie at the same distance from the origin. Consecutive arguments differ by one full turn divided by the degree.</p>",
+        "solution": "<p>All roots have modulus \\(1\\) and adjacent arguments differ by \\(\\frac{2 \\pi}{5}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{\\pi}{5}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3 \\pi}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\pi\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{7 \\pi}{5}\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\frac{9 \\pi}{5}\\)</td></tr></tbody></table></div>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-unity-study-09",
+        "title": "Sum a root set after removing the two real roots",
+        "prompt": "<p>Consider all roots of \\(z^{8}=1\\).</p><p>From the sum, exclude the roots at \\(0\\), \\(\\pi\\) radians. Give the real and imaginary parts of the sum of the remaining roots.</p>",
+        "fields": [
+          {
+            "key": "re",
+            "label": "Real part",
+            "expected": "0",
+            "type": "number"
+          },
+          {
+            "key": "im",
+            "label": "Imaginary part",
+            "expected": "0",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>All roots lie at the same distance from the origin. Consecutive arguments differ by one full turn divided by the degree.</p>",
+        "solution": "<p>All roots have modulus \\(1\\) and adjacent arguments differ by \\(\\frac{\\pi}{4}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{\\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{\\pi}{2}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{3 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\pi\\)</td></tr><tr><th scope=\"row\">\\(5\\)</th><td>\\(\\frac{5 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(6\\)</th><td>\\(\\frac{3 \\pi}{2}\\)</td></tr><tr><th scope=\"row\">\\(7\\)</th><td>\\(\\frac{7 \\pi}{4}\\)</td></tr></tbody></table></div><p>The sum of every root is zero. Subtract the excluded roots from zero.</p><p>The excluded sum is \\(0\\), so the required value is \\(0\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-unity-study-10",
+        "title": "Subtract two non-opposite cube roots",
+        "prompt": "<p>Consider all roots of \\(z^{3}=27\\).</p><p>From the sum, exclude the roots at \\(0\\), \\(\\frac{2 \\pi}{3}\\) radians. Give the real and imaginary parts of the sum of the remaining roots.</p>",
+        "fields": [
+          {
+            "key": "re",
+            "label": "Real part",
+            "expected": "-3/2",
+            "type": "number"
+          },
+          {
+            "key": "im",
+            "label": "Imaginary part",
+            "expected": "-3*sqrt(3)/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>All roots lie at the same distance from the origin. Consecutive arguments differ by one full turn divided by the degree.</p>",
+        "solution": "<p>All roots have modulus \\(3\\) and adjacent arguments differ by \\(\\frac{2 \\pi}{3}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(0\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{2 \\pi}{3}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{4 \\pi}{3}\\)</td></tr></tbody></table></div><p>The sum of every root is zero. Subtract the excluded roots from zero.</p><p>The excluded sum is \\(\\frac{3}{2} + \\frac{3 \\sqrt{3} i}{2}\\), so the required value is \\(- \\frac{3}{2} - \\frac{3 \\sqrt{3} i}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-unity-study-11",
+        "title": "Use a circle with twelve equally spaced points",
+        "prompt": "<p>Consider all roots of \\(z^{12}=1\\,\\mathrm e^{i \\pi}\\).</p><p>Give the radius of the root circle and the coefficient of \\(\\pi\\) in the angle between consecutive roots.</p>",
+        "fields": [
+          {
+            "key": "radius",
+            "label": "Radius",
+            "expected": "1",
+            "type": "number"
+          },
+          {
+            "key": "spacing",
+            "label": "Angular coefficient",
+            "expected": "1/6",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>All roots lie at the same distance from the origin. Consecutive arguments differ by one full turn divided by the degree.</p>",
+        "solution": "<p>All roots have modulus \\(1\\) and adjacent arguments differ by \\(\\frac{\\pi}{6}\\).</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Index</th><th scope=\"col\">Argument in \\([0,2\\pi)\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{\\pi}{12}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{\\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{5 \\pi}{12}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{7 \\pi}{12}\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\frac{3 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(5\\)</th><td>\\(\\frac{11 \\pi}{12}\\)</td></tr><tr><th scope=\"row\">\\(6\\)</th><td>\\(\\frac{13 \\pi}{12}\\)</td></tr><tr><th scope=\"row\">\\(7\\)</th><td>\\(\\frac{5 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(8\\)</th><td>\\(\\frac{17 \\pi}{12}\\)</td></tr><tr><th scope=\"row\">\\(9\\)</th><td>\\(\\frac{19 \\pi}{12}\\)</td></tr><tr><th scope=\"row\">\\(10\\)</th><td>\\(\\frac{7 \\pi}{4}\\)</td></tr><tr><th scope=\"row\">\\(11\\)</th><td>\\(\\frac{23 \\pi}{12}\\)</td></tr></tbody></table></div>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-unity-study-12",
+        "title": "Use the absence of real roots to find the sign",
+        "prompt": "<p>Consider \\(z^6=k\\) for real \\(k\\).</p><p>The roots have modulus \\(2\\) and none of the roots is real. Find \\(k\\).</p>",
+        "fields": [
+          {
+            "key": "parameter",
+            "label": "Parameter k",
+            "expected": "-64",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Taking moduli gives the magnitude of the parameter. Interpret the extra real-root condition, if given.</p>",
+        "solution": "<p>Taking moduli gives \\(|k|=2^6=64\\).</p><p>The exponent is even, so a real root is possible only for non-negative \\(k\\). The absence of real roots and the positive modulus give \\(k=-64\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Methods to remember</h2><p>Write the representation that makes the next step straightforward.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Method</th><th scope=\"col\">Working</th></tr></thead><tbody><tr><th scope=\"row\">Unity</th><td>\\(z_k=\\exp\\left(\\tfrac{2k\\pi\\mathrm i}{n}\\right)\\)</td></tr><tr><th scope=\"row\">Spacing</th><td>\\(\\tfrac{2\\pi}{n}\\)</td></tr><tr><th scope=\"row\">Chord</th><td>\\(2r\\sin\\left(\\tfrac{\\pi}{n}\\right)\\) for neighbouring roots.</td></tr><tr><th scope=\"row\">Sum</th><td>Full sum zero for \\(n&gt;1\\). Subtract any omitted roots.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>State the chosen argument interval where needed.</li><li>Keep all values exactly when you can.</li><li>Check domain, endpoints or exceptional values before finalising.</li></ul>",
+      "examTip": "<p>Use a quick substitution or a geometric check to verify the answer.</p>"
+    },
+    "related": [
+      {
+        "title": "Powers, rotations and branches",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_powers"
+      },
+      {
+        "title": "Multiple angles and polynomial roots",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_angles"
+      },
+      {
+        "title": "Harmonics and integrals",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_harmonics"
+      },
+      {
+        "title": "Finite, binomial and convergent sums",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_sums"
+      }
+    ]
+  },
+  "fp2_complex_sums": {
+    "updatedOn": "2026-11-21",
+    "description": "Sum finite, binomial and absolutely convergent complex series and recover the required real or imaginary part.",
+    "sections": [
+      {
+        "id": "combine",
+        "title": "What does the C + iS method combine?",
+        "label": "Combine components",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Place a cosine sum in the real part and the matching sine sum in the imaginary part.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(C+\\mathrm iS=\\sum_k a_k(\\cos(k\\theta)+\\mathrm i\\sin(k\\theta))=\\sum_k a_kz^k\\) with unit \\(z\\) and real weights \\(a_k\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The method needs the same weights and angles for both component sums.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-sums-study-01",
+            "title": "Give both parts of a finite sum of rotating terms",
+            "prompt": "<p>Let \\(z=1\\,\\mathrm e^{- \\frac{i \\pi}{3}}\\). Consider \\(\\sum_{k=0}^{4} z^k\\).</p><p>Give the real and imaginary parts of the sum.</p>",
+            "fields": [
+              {
+                "key": "re",
+                "label": "Real part",
+                "expected": "-1/2",
+                "type": "number"
+              },
+              {
+                "key": "im",
+                "label": "Imaginary part",
+                "expected": "-sqrt(3)/2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Check the ratio before using the formula. For an infinite sum the ratio must have modulus less than one.</p>",
+            "solution": "<p>Use \\(\\frac{z^{0}(1-z^{5})}{1-z}\\).</p><p>Evaluate the powers using their moduli and arguments. The sum is \\(- \\frac{1}{2} - \\frac{\\sqrt{3} i}{2}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Take the required component only after simplifying the complex sum.</p>"
+          }
+        ]
+      },
+      {
+        "id": "finite",
+        "title": "How do I sum a finite geometric complex series?",
+        "label": "Finite geometric sum",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Use the same geometric identity as for a real ratio. Complex multiplication is distributive.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\sum_{k=a}^b z^k=\\frac{z^a(1-z^{b-a+1})}{1-z}\\) when \\(z\\ne1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>There are \\(b-a+1\\) terms. The exponent in the numerator counts them.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-sums-study-02",
+            "title": "Use the finite formula from a nonzero start",
+            "prompt": "<p>Let \\(z=2\\,\\mathrm e^{\\frac{i \\pi}{2}}\\). Consider \\(\\sum_{k=1}^{5} z^k\\).</p><p>Give the real and imaginary parts of the sum.</p>",
+            "fields": [
+              {
+                "key": "re",
+                "label": "Real part",
+                "expected": "12",
+                "type": "number"
+              },
+              {
+                "key": "im",
+                "label": "Imaginary part",
+                "expected": "26",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Check the ratio before using the formula. For an infinite sum the ratio must have modulus less than one.</p>",
+            "solution": "<p>Use \\(\\frac{z^{1}(1-z^{5})}{1-z}\\).</p><p>Evaluate the powers using their moduli and arguments. The sum is \\(12 + 26 i\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check the starting index before using the formula.</p>"
+          }
+        ]
+      },
+      {
+        "id": "exception",
+        "title": "What if the ratio is exactly one?",
+        "label": "Exceptional ratio",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>At ratio one each power equals one. The expression with denominator \\(1-z\\) is undefined.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Count the terms directly when \\(z=1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If \\(|z|=1\\) but \\(z\\ne1\\), the finite formula is still valid.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-sums-study-03",
+            "title": "Handle the ratio-one case without dividing",
+            "prompt": "<p>Let \\(z=1\\). Consider \\(\\sum_{k=1}^{5} z^k\\).</p><p>Find the exact real part of the sum.</p>",
+            "fields": [
+              {
+                "key": "re",
+                "label": "Real part",
+                "expected": "5",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Check the ratio before using the formula. For an infinite sum the ratio must have modulus less than one.</p>",
+            "solution": "<p>Here \\(z=1\\), so every term is 1. There are \\(5\\) terms.</p><p>Evaluate the powers using their moduli and arguments. The sum is \\(5\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The infinite sum is a separate convergence question.</p>"
+          }
+        ]
+      },
+      {
+        "id": "infinite",
+        "title": "When can a complex geometric series converge?",
+        "label": "Convergence",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The powers tend to zero if and only if the ratio has modulus less than one, for a geometric series with nonzero first term.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\sum_{k=a}^{\\infty}z^k=\\frac{z^a}{1-z}\\) for \\(|z|&lt;1\\). The series then converges absolutely.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A negative real part does not guarantee convergence. Check the full modulus.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-sums-study-04",
+            "title": "Recover the imaginary part of a convergent sum",
+            "prompt": "<p>Let \\(z=\\frac{1}{3}\\,\\mathrm e^{\\frac{i \\pi}{2}}\\). Consider \\(\\sum_{k=0}^\\infty z^k\\).</p><p>Find the exact imaginary part of the sum.</p>",
+            "fields": [
+              {
+                "key": "im",
+                "label": "Imaginary part",
+                "expected": "3/10",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Check the ratio before using the formula. For an infinite sum the ratio must have modulus less than one.</p>",
+            "solution": "<p>The series converges absolutely because \\(|z|=\\frac{1}{3}&lt;1\\). Use \\(\\frac{z^{0}}{1-z}\\).</p><p>Evaluate the powers using their moduli and arguments. The sum is \\(\\frac{9}{10} + \\frac{3 i}{10}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>At modulus one the terms do not tend to zero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial",
+        "title": "How do binomial coefficients change the method?",
+        "label": "Binomial sums",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>If the weights are binomial coefficients, use the binomial expansion of a sum instead of the geometric formula.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\sum_{k=0}^n\\binom nk a^{n-k}z^k=(a+z)^n\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Take care of any factor multiplying each power. It may belong in the choice of ratio or in the binomial base.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-sums-study-05",
+            "title": "Use the binomial weights for a sine sum",
+            "prompt": "<p>Let \\(z=2\\,\\mathrm e^{\\frac{i \\pi}{2}}\\).</p><p>Evaluate \\(\\sum_{k=0}^{4}\\binom{4}{k}\\left(2\\right)^k\\sin\\left(k\\cdot \\frac{\\pi}{2}\\right)\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "im",
+                "label": "Exact sum",
+                "expected": "-24",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Combine the real and imaginary sums as one complex binomial sum, then deal with the starting index.</p>",
+            "solution": "<p>The binomial theorem gives the sum from 0 as \\((1+z)^{4}\\).</p><p>The complex total is \\(-7 - 24 i\\). Take the requested component or give both.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use de Moivre to evaluate a high power when it has a convenient argument.</p>"
+          }
+        ]
+      },
+      {
+        "id": "indices",
+        "title": "What if one or more starting terms are missing?",
+        "label": "Shifted index",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Compute the full geometric or binomial expression only if you can remove the unwanted terms.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Subtract the omitted contribution before taking its real or imaginary part.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The first omitted binomial term is \\(a^n\\). It affects the real sum even when its imaginary contribution is zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "fp2-complex-sums-study-06",
+            "title": "Remove two terms from a real component",
+            "prompt": "<p>Let \\(z=1\\,\\mathrm e^{\\frac{i \\pi}{2}}\\).</p><p>Evaluate \\(\\sum_{k=2}^{5}\\binom{5}{k}2^{5-k}\\left(1\\right)^k\\cos\\left(k\\cdot \\frac{\\pi}{2}\\right)\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "re",
+                "label": "Exact sum",
+                "expected": "-70",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Combine the real and imaginary sums as one complex binomial sum, then deal with the starting index.</p>",
+            "solution": "<p>The binomial theorem gives the sum from 0 as \\((2+z)^{5}\\).</p><p>Remove the 2 initial terms, because the requested sum starts at 2.</p><p>The complex total is \\(-70 - 39 i\\). Take the requested component or give both.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For weighted trigonometric sums, check the powers, trigonometric frequency and the starting index.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Combine two trigonometric components in one result",
+        "question": "<p>Let \\(z=1\\,\\mathrm e^{\\frac{i \\pi}{3}}\\). Consider \\(\\sum_{k=0}^{3} z^k\\).</p><p>Give the real and imaginary parts of the sum.</p>",
+        "solution": [
+          "<p>Use \\(\\frac{z^{0}(1-z^{4})}{1-z}\\).</p>",
+          "<p>Evaluate the powers using their moduli and arguments. The sum is \\(\\sqrt{3} i\\).</p>"
+        ]
+      },
+      {
+        "title": "Read only the imaginary component after adding",
+        "question": "<p>Let \\(z=1\\,\\mathrm e^{\\frac{i \\pi}{4}}\\). Consider \\(\\sum_{k=0}^{3} z^k\\).</p><p>Find the exact imaginary part of the sum.</p>",
+        "solution": [
+          "<p>Use \\(\\frac{z^{0}(1-z^{4})}{1-z}\\).</p>",
+          "<p>Evaluate the powers using their moduli and arguments. The sum is \\(1 + i \\left(1 + \\sqrt{2}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Include an initial power of two in the sum",
+        "question": "<p>Let \\(z=1\\,\\mathrm e^{\\frac{i \\pi}{6}}\\). Consider \\(\\sum_{k=2}^{6} z^k\\).</p><p>Give the real and imaginary parts of the sum.</p>",
+        "solution": [
+          "<p>Use \\(\\frac{z^{2}(1-z^{5})}{1-z}\\).</p>",
+          "<p>Evaluate the powers using their moduli and arguments. The sum is \\(-1 + \\frac{3 i}{2} + \\sqrt{3} \\left(- \\frac{1}{2} + i\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Count the terms at ratio one",
+        "question": "<p>Let \\(z=1\\). Consider \\(\\sum_{k=2}^{6} z^k\\).</p><p>Give the real and imaginary parts of the sum.</p>",
+        "solution": [
+          "<p>Here \\(z=1\\), so every term is 1. There are \\(5\\) terms.</p>",
+          "<p>Evaluate the powers using their moduli and arguments. The sum is \\(5\\).</p>"
+        ]
+      },
+      {
+        "title": "Sum a convergent tail from power two",
+        "question": "<p>Let \\(z=\\frac{1}{2}\\,\\mathrm e^{\\frac{i \\pi}{2}}\\). Consider \\(\\sum_{k=2}^\\infty z^k\\).</p><p>Give the real and imaginary parts of the sum.</p>",
+        "solution": [
+          "<p>The series converges absolutely because \\(|z|=\\frac{1}{2}&lt;1\\). Use \\(\\frac{z^{2}}{1-z}\\).</p>",
+          "<p>Evaluate the powers using their moduli and arguments. The sum is \\(- \\frac{1}{5} - \\frac{i}{10}\\).</p>"
+        ]
+      },
+      {
+        "title": "Evaluate a complex binomial power and both parts",
+        "question": "<p>Let \\(z=1\\,\\mathrm e^{\\frac{i \\pi}{2}}\\).</p><p>Evaluate \\(\\sum_{k=0}^{4}\\binom{4}{k}z^k\\). Give the real and imaginary parts.</p>",
+        "solution": [
+          "<p>The binomial theorem gives the sum from 0 as \\((1+z)^{4}\\).</p>",
+          "<p>The complex total is \\(-4\\). Take the requested component or give both.</p>"
+        ]
+      },
+      {
+        "title": "Exclude early terms before taking the real part",
+        "question": "<p>Let \\(z=1\\,\\mathrm e^{\\frac{i \\pi}{3}}\\).</p><p>Evaluate \\(\\sum_{k=2}^{5}\\binom{5}{k}\\left(1\\right)^k\\cos\\left(k\\cdot \\frac{\\pi}{3}\\right)\\) exactly.</p>",
+        "solution": [
+          "<p>The binomial theorem gives the sum from 0 as \\((1+z)^{5}\\).</p>",
+          "<p>Remove the 2 initial terms, because the requested sum starts at 2.</p>",
+          "<p>The complex total is \\(-17 + 2 \\sqrt{3} i\\). Take the requested component or give both.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Common ratio",
+        "definition": "<p>The factor multiplying one term to obtain the next.</p>"
+      },
+      {
+        "term": "Finite geometric sum",
+        "definition": "<p>The sum of finitely many terms with a constant ratio.</p>"
+      },
+      {
+        "term": "Absolute convergence",
+        "definition": "<p>Convergence of the sum of the moduli of all terms.</p>"
+      },
+      {
+        "term": "Binomial weights",
+        "definition": "<p>Binomial coefficients attached to powers in a binomial expansion.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "fp2-complex-sums-study-07",
+        "title": "Find the value of an infinite tail with negative argument",
+        "prompt": "<p>Let \\(z=\\frac{1}{2}\\,\\mathrm e^{- \\frac{i \\pi}{3}}\\). Consider \\(\\sum_{k=1}^\\infty z^k\\).</p><p>Give the real and imaginary parts of the sum.</p>",
+        "fields": [
+          {
+            "key": "re",
+            "label": "Real part",
+            "expected": "0",
+            "type": "number"
+          },
+          {
+            "key": "im",
+            "label": "Imaginary part",
+            "expected": "-sqrt(3)/3",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Check the ratio before using the formula. For an infinite sum the ratio must have modulus less than one.</p>",
+        "solution": "<p>The series converges absolutely because \\(|z|=\\frac{1}{2}&lt;1\\). Use \\(\\frac{z^{1}}{1-z}\\).</p><p>Evaluate the powers using their moduli and arguments. The sum is \\(- \\frac{\\sqrt{3} i}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-sums-study-08",
+        "title": "Check cancellation across a complete rotation",
+        "prompt": "<p>Let \\(z=1\\,\\mathrm e^{\\frac{i \\pi}{3}}\\). Consider \\(\\sum_{k=0}^{5} z^k\\).</p><p>Give the real and imaginary parts of the sum.</p>",
+        "fields": [
+          {
+            "key": "re",
+            "label": "Real part",
+            "expected": "0",
+            "type": "number"
+          },
+          {
+            "key": "im",
+            "label": "Imaginary part",
+            "expected": "0",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Check the ratio before using the formula. For an infinite sum the ratio must have modulus less than one.</p>",
+        "solution": "<p>Use \\(\\frac{z^{0}(1-z^{6})}{1-z}\\).</p><p>Evaluate the powers using their moduli and arguments. The sum is \\(0\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-sums-study-09",
+        "title": "Include the non-unit base in a complex binomial sum",
+        "prompt": "<p>Let \\(z=1\\,\\mathrm e^{- \\frac{i \\pi}{2}}\\).</p><p>Evaluate \\(\\sum_{k=1}^{3}\\binom{3}{k}3^{3-k}z^k\\). Give the real and imaginary parts.</p>",
+        "fields": [
+          {
+            "key": "re",
+            "label": "Real part",
+            "expected": "-9",
+            "type": "number"
+          },
+          {
+            "key": "im",
+            "label": "Imaginary part",
+            "expected": "-26",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Combine the real and imaginary sums as one complex binomial sum, then deal with the starting index.</p>",
+        "solution": "<p>The binomial theorem gives the sum from 0 as \\((3+z)^{3}\\).</p><p>Remove the 1 initial term, because the requested sum starts at 1.</p><p>The complex total is \\(-9 - 26 i\\). Take the requested component or give both.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-sums-study-10",
+        "title": "Evaluate an imaginary binomial sum with one omitted term",
+        "prompt": "<p>Let \\(z=2\\,\\mathrm e^{- \\frac{i \\pi}{2}}\\).</p><p>Evaluate \\(\\sum_{k=1}^{5}\\binom{5}{k}\\left(2\\right)^k\\sin\\left(k\\cdot - \\frac{\\pi}{2}\\right)\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "im",
+            "label": "Exact sum",
+            "expected": "38",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Combine the real and imaginary sums as one complex binomial sum, then deal with the starting index.</p>",
+        "solution": "<p>The binomial theorem gives the sum from 0 as \\((1+z)^{5}\\).</p><p>Remove the 1 initial term, because the requested sum starts at 1.</p><p>The complex total is \\(40 + 38 i\\). Take the requested component or give both.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-sums-study-11",
+        "title": "Take the real part after two omitted powers",
+        "prompt": "<p>Let \\(z=1\\,\\mathrm e^{\\frac{i \\pi}{4}}\\). Consider \\(\\sum_{k=2}^{6} z^k\\).</p><p>Find the exact real part of the sum.</p>",
+        "fields": [
+          {
+            "key": "re",
+            "label": "Real part",
+            "expected": "-sqrt(2) - 1",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Check the ratio before using the formula. For an infinite sum the ratio must have modulus less than one.</p>",
+        "solution": "<p>Use \\(\\frac{z^{2}(1-z^{5})}{1-z}\\).</p><p>Evaluate the powers using their moduli and arguments. The sum is \\(- \\sqrt{2} - 1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "fp2-complex-sums-study-12",
+        "title": "Track the real contribution from a removed constant term",
+        "prompt": "<p>Let \\(z=1\\,\\mathrm e^{\\frac{i \\pi}{2}}\\).</p><p>Evaluate \\(\\sum_{k=1}^{6}\\binom{6}{k}\\left(1\\right)^k\\cos\\left(k\\cdot \\frac{\\pi}{2}\\right)\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "re",
+            "label": "Exact sum",
+            "expected": "-1",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Combine the real and imaginary sums as one complex binomial sum, then deal with the starting index.</p>",
+        "solution": "<p>The binomial theorem gives the sum from 0 as \\((1+z)^{6}\\).</p><p>Remove the 1 initial term, because the requested sum starts at 1.</p><p>The complex total is \\(-1 - 8 i\\). Take the requested component or give both.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Methods to remember</h2><p>Write the representation that makes the next step straightforward.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Method</th><th scope=\"col\">Working</th></tr></thead><tbody><tr><th scope=\"row\">Finite</th><td>\\(\\tfrac{z^a(1-z^{b-a+1})}{1-z}\\) for \\(z\\ne1\\).</td></tr><tr><th scope=\"row\">Infinite</th><td>\\(\\tfrac{z^a}{1-z}\\) for \\(|z|&lt;1\\).</td></tr><tr><th scope=\"row\">Binomial</th><td>\\(\\sum_{k=0}^n\\binom nk a^{n-k}z^k=(a+z)^n\\)</td></tr><tr><th scope=\"row\">Components</th><td>Remove unwanted terms first and then take the requested component.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>State the chosen argument interval where needed.</li><li>Keep all values exactly when you can.</li><li>Check domain, endpoints or exceptional values before finalising.</li></ul>",
+      "examTip": "<p>Use a quick substitution or a geometric check to verify the answer.</p>"
+    },
+    "related": [
+      {
+        "title": "Powers, rotations and branches",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_powers"
+      },
+      {
+        "title": "Multiple angles and polynomial roots",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_angles"
+      },
+      {
+        "title": "Harmonics and integrals",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_harmonics"
+      },
+      {
+        "title": "Roots of unity and polygons",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_complex_unity"
+      }
+    ]
+  }
+}
