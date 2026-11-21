@@ -1,0 +1,2531 @@
+{
+  "stats_pgf_construct": {
+    "updatedOn": "2026-11-21",
+    "description": "Build and read probability generating functions for finite, uniform, binomial, geometric and Poisson random variables.",
+    "sections": [
+      {
+        "id": "powers",
+        "title": "How does one power store one probability?",
+        "label": "Construct the PGF",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Use the value as an exponent and its probability as the coefficient.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_X(t)=\\mathrm E(t^X)=\\sum_{k\\ge0}\\mathrm P(X=k)t^k\\). The constant is the probability of zero.</p>",
+            "figure": {
+              "src": "/assets/study/9231/stats_pgf_construct/missing-power.svg",
+              "alt": "Three probability masses at 0, 1 and 3, with no mass at 2.",
+              "caption": "<p>This discrete law has PGF \\(\\tfrac12+\\tfrac13t+\\tfrac16t^3\\). The graphical gap at \\(2\\) gives a missing \\(t^2\\) term.</p>",
+              "width": 640,
+              "height": 290
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The power is the possible value of the random variable. The coefficient is its probability.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-construct-study-01",
+            "title": "Build a four-term PGF",
+            "prompt": "<p>A scoring device returns a non-negative integer count.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{1}{5}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{2}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{3}{10}\\)</td></tr><tr><th scope=\"row\">\\(5\\)</th><td>\\(\\frac{1}{10}\\)</td></tr></tbody></table></div><p>Give the whole generating function, in terms of \\(t\\).</p>",
+            "fields": [
+              {
+                "key": "pgf",
+                "label": "Generating function",
+                "type": "polynomial",
+                "variables": [
+                  "t"
+                ],
+                "expected": "t^5/10 + 3*t^2/10 + 2*t/5 + 1/5"
+              }
+            ],
+            "hint": "<p>The coefficient gives the probability for that exponent. For moments, differentiate before substituting 1.</p>",
+            "solution": "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{t^{5}}{10} + \\frac{3 t^{2}}{10} + \\frac{2 t}{5} + \\frac{1}{5}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Attach each table entry to the correct power. Missing values have coefficient zero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "one",
+        "title": "Why does the PGF equal 1 at t = 1?",
+        "label": "Check the total",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Every power of 1 equals 1, including the constant term.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_X(1)=1\\) because the probabilities sum to one. Use this condition to find an unknown common multiplier.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Checking the total is necessary, and all individual coefficients also need to be non-negative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-construct-study-02",
+            "title": "Find a constant and an individual probability",
+            "prompt": "<p>A proposed PGF has the form \\(c\\left(3 t^{3} + 5 t + 2\\right)\\).</p><p>Find \\(c\\) and the exact coefficient of \\(t^3\\).</p>",
+            "fields": [
+              {
+                "key": "c",
+                "label": "Constant",
+                "expected": "1/10",
+                "type": "number"
+              },
+              {
+                "key": "p",
+                "label": "Coefficient",
+                "expected": "3/10",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>The coefficients are non-negative and must add to one.</p>",
+            "solution": "<p>\\(G(1)=1\\) so \\(10c=1\\) and \\(c=\\frac{1}{10}\\).</p><p>The completed function is \\(G_{X}(t)=\\frac{3 t^{3}}{10} + \\frac{t}{2} + \\frac{1}{5}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Read coefficients after applying the supplied multiplier.</p>"
+          }
+        ]
+      },
+      {
+        "id": "uniform",
+        "title": "How do I build uniform and binomial PGFs?",
+        "label": "Finite laws",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Write one term per possible uniform value. For a binomial count expand a single Bernoulli factor for each trial.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_X(t)=(1-p+pt)^n\\) when \\(X\\sim\\mathrm{Bin}(n,p)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A binomial PGF has a term for zero successes even when the smallest positive success count is one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-construct-study-03",
+            "title": "Generate five equally likely outcomes",
+            "prompt": "<p>\\(X\\) follows 5 equally likely integer outcomes from 1 to 5.</p><p>Give the generating function in terms of \\(t\\).</p>",
+            "fields": [
+              {
+                "key": "pgf",
+                "label": "Generating function",
+                "type": "polynomial",
+                "variables": [
+                  "t"
+                ],
+                "expected": "t*(t^4 + t^3 + t^2 + t + 1)/5"
+              }
+            ],
+            "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+            "solution": "<p>Write one term per possible result. Every coefficient is \\(\\frac{1}{5}\\).</p>\\[G_{X}(t)=\\frac{t^{5}}{5} + \\frac{t^{4}}{5} + \\frac{t^{3}}{5} + \\frac{t^{2}}{5} + \\frac{t}{5}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For the uniform model list the actual endpoints before writing the sum.</p>"
+          }
+        ]
+      },
+      {
+        "id": "geometric",
+        "title": "Where does the geometric series start?",
+        "label": "First success",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The geometric variable used here counts the trial of the first success. Its support begins at 1.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_X(t)=\\frac{pt}{1-(1-p)t}\\) from the geometric series starting with \\(pt\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Omitting the first \\(t\\) would generate the number of failures before success.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-construct-study-04",
+            "title": "Use the full first-success function",
+            "prompt": "<p>\\(X\\) follows a geometric distribution with success probability \\(\\frac{3}{7}\\). It counts the trial of the first success.</p><p>Give the generating function in terms of \\(t\\).</p>",
+            "fields": [
+              {
+                "key": "pgf",
+                "label": "Generating function",
+                "variables": [
+                  "t"
+                ],
+                "type": "ratio",
+                "expected": [
+                  "-3*t",
+                  "4*t - 7"
+                ]
+              }
+            ],
+            "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+            "solution": "<p>Factor the first term \\(\\frac{3 t}{7}\\) from the series. The remaining series has common ratio \\(\\frac{4 t}{7}\\).</p>\\[G_{X}(t)=\\frac{3 t}{7 \\left(1 - \\frac{4 t}{7}\\right)}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The common ratio is \\((1-p)t\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "poisson",
+        "title": "Why does a Poisson PGF use an exponential?",
+        "label": "Poisson PGF",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The factorial denominators match the power series for the exponential function.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_X(t)=\\mathrm e^{\\lambda(t-1)}\\) for \\(X\\sim\\mathrm{Po}(\\lambda)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep the constant multiplier \\(\\mathrm e^{-\\lambda}\\). It makes the sum of probabilities equal one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-construct-study-05",
+            "title": "Read a Poisson probability",
+            "prompt": "<p>\\(X\\) follows a Poisson distribution with rate \\(2\\).</p><p>Find the probability of exactly 3.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Probability",
+                "type": "choice",
+                "expected": "A",
+                "options": {
+                  "A": "<p>\\(\\frac{4}{3 e^{2}}\\)</p>",
+                  "B": "<p>\\(\\frac{4 e^{2}}{3}\\)</p>",
+                  "C": "<p>\\(\\frac{8}{3 e^{2}}\\)</p>",
+                  "D": "<p>\\(\\frac{2}{3 e^{2}}\\)</p>"
+                }
+              }
+            ],
+            "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+            "solution": "<p>Factor \\(e^{-2}\\) from the power series. The remaining series is the exponential series for \\(e^{2 t}\\).</p>\\[G_{X}(t)=e^{2 t - 2}\\]<p>Read the coefficient of \\(t^{3}\\) to get \\(\\frac{4}{3 e^{2}}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The constant coefficient is the probability of zero occurrences.</p>"
+          }
+        ]
+      },
+      {
+        "id": "recover",
+        "title": "How can a generating function be read backwards?",
+        "label": "Extract coefficients",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Match a desired outcome to its exponent. Expand only as far as needed.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm P(X=k)=[t^k]G_X(t)\\). For finite ranges, add the indicated coefficients.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Evaluating \\(G_X(k)\\) does not extract the probability at \\(X=k\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-construct-study-06",
+            "title": "Read the probability of an absent term",
+            "prompt": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{3 t^{5}}{8} + \\frac{3 t^{2}}{8} + \\frac{1}{4}\\]<p>Find the exact probability of \\(X=1\\).</p>",
+            "fields": [
+              {
+                "key": "prob",
+                "label": "Probability",
+                "expected": "0",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>The coefficient gives the probability for that exponent. For moments, differentiate before substituting 1.</p>",
+            "solution": "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{3 t^{5}}{8} + \\frac{3 t^{2}}{8} + \\frac{1}{4}\\]<p>The coefficient of \\(t^{1}\\) is \\(0\\). The constant coefficient is \\(\\frac{1}{4}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>If the requested exponent is absent, the probability is zero.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Attach each mass to its exponent",
+        "question": "<p>A scoring device returns a non-negative integer count.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{1}{2}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{1}{3}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{1}{6}\\)</td></tr></tbody></table></div><p>Give the whole generating function, in terms of \\(t\\).</p>",
+        "solution": [
+          "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{t^{3}}{6} + \\frac{t}{3} + \\frac{1}{2}\\]",
+          "<p>The possible outcomes are \\(0,1,3\\), so the coefficient of \\(t^2\\) is zero. Substitution of \\(t=1\\) gives \\(G_X(1)=1\\), confirming the probabilities add to one.</p>"
+        ]
+      },
+      {
+        "title": "Read a missing and a constant probability",
+        "question": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{t^{4}}{2} + \\frac{t}{10} + \\frac{2}{5}\\]<p>Find the exact probabilities of \\(X=0\\) and \\(X=2\\).</p>",
+        "solution": [
+          "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{t^{4}}{2} + \\frac{t}{10} + \\frac{2}{5}\\]",
+          "<p>The coefficient of \\(t^{2}\\) is \\(0\\). The constant coefficient is \\(\\frac{2}{5}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the coefficient multiplier",
+        "question": "<p>A proposed PGF has the form \\(c\\left(6 t^{4} + 3 t + 1\\right)\\).</p><p>Find \\(c\\) and the exact coefficient of \\(t^1\\).</p>",
+        "solution": [
+          "<p>\\(G(1)=1\\) so \\(10c=1\\) and \\(c=\\frac{1}{10}\\).</p>",
+          "<p>The completed function is \\(G_{X}(t)=\\frac{3 t^{4}}{5} + \\frac{3 t}{10} + \\frac{1}{10}\\).</p>"
+        ]
+      },
+      {
+        "title": "Form a binomial PGF",
+        "question": "<p>\\(X\\) follows a binomial distribution with 3 trials and success probability \\(\\frac{1}{3}\\).</p><p>Give the generating function in terms of \\(t\\).</p>",
+        "solution": [
+          "<p>One trial has PGF \\(\\frac{t}{3} + \\frac{2}{3}\\). The binomial expansion collects the probabilities for all \\(3\\) independent trials.</p>",
+          "\\[G_{X}(t)=\\left(\\frac{t}{3} + \\frac{2}{3}\\right)^{3}\\]"
+        ]
+      },
+      {
+        "title": "Start the geometric PGF at the first trial",
+        "question": "<p>\\(X\\) follows a geometric distribution with success probability \\(\\frac{2}{5}\\). It counts the trial of the first success.</p><p>Give the generating function in terms of \\(t\\).</p>",
+        "solution": [
+          "<p>Factor the first term \\(\\frac{2 t}{5}\\) from the series. The remaining series has common ratio \\(\\frac{3 t}{5}\\).</p>",
+          "\\[G_{X}(t)=\\frac{2 t}{5 \\left(1 - \\frac{3 t}{5}\\right)}\\]"
+        ]
+      },
+      {
+        "title": "Recognise the normalised exponential",
+        "question": "<p>\\(X\\) follows a Poisson distribution with rate \\(3\\).</p><p>Give the generating function in terms of \\(t\\).</p>",
+        "solution": [
+          "<p>Factor \\(e^{-3}\\) from the power series. The remaining series is the exponential series for \\(e^{3 t}\\).</p>",
+          "\\[G_{X}(t)=e^{3 t - 3}\\]"
+        ]
+      },
+      {
+        "title": "Read the probability at the fourth power",
+        "question": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{3 t^{4}}{8} + \\frac{t^{2}}{2} + \\frac{1}{8}\\]<p>Find the exact probability of \\(X=4\\).</p>",
+        "solution": [
+          "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{3 t^{4}}{8} + \\frac{t^{2}}{2} + \\frac{1}{8}\\]",
+          "<p>The coefficient of \\(t^{4}\\) is \\(\\frac{3}{8}\\). The constant coefficient is \\(\\frac{1}{8}\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Generating function",
+        "definition": "<p>A power series that stores the probability for each non-negative integer outcome.</p>"
+      },
+      {
+        "term": "Coefficient",
+        "definition": "<p>The multiplier of a power of \\(t\\). It gives the probability for the exponent.</p>"
+      },
+      {
+        "term": "Support",
+        "definition": "<p>The values with positive probability.</p>"
+      },
+      {
+        "term": "Dummy variable",
+        "definition": "<p>The symbol \\(t\\) labels powers. It is separate from the random variable.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-pgf-construct-study-07",
+        "title": "Normalise the complete function",
+        "prompt": "<p>A proposed PGF has the form \\(c\\left(3 t^{5} + 4 t^{3} + 2 t^{2} + 3\\right)\\).</p><p>Give the complete normalised PGF.</p>",
+        "fields": [
+          {
+            "key": "pgf",
+            "label": "Generating function",
+            "type": "polynomial",
+            "variables": [
+              "t"
+            ],
+            "expected": "t^5/4 + t^3/3 + t^2/6 + 1/4"
+          }
+        ],
+        "hint": "<p>The coefficients are non-negative and must add to one.</p>",
+        "solution": "<p>\\(G(1)=1\\) so \\(12c=1\\) and \\(c=\\frac{1}{12}\\).</p><p>The completed function is \\(G_{X}(t)=\\frac{t^{5}}{4} + \\frac{t^{3}}{3} + \\frac{t^{2}}{6} + \\frac{1}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-construct-study-08",
+        "title": "Read the mass at the first possible trial",
+        "prompt": "<p>\\(X\\) follows a geometric distribution with success probability \\(\\frac{4}{9}\\). It counts the trial of the first success.</p><p>Find the smallest possible value of \\(X\\) and its exact probability.</p>",
+        "fields": [
+          {
+            "key": "small",
+            "label": "Smallest value",
+            "expected": "1",
+            "type": "number"
+          },
+          {
+            "key": "p",
+            "label": "Probability at smallest value",
+            "expected": "4/9",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+        "solution": "<p>Factor the first term \\(\\frac{4 t}{9}\\) from the series. The remaining series has common ratio \\(\\frac{5 t}{9}\\).</p>\\[G_{X}(t)=\\frac{4 t}{9 \\left(1 - \\frac{5 t}{9}\\right)}\\]<p>Read the coefficient of \\(t^{1}\\) to get \\(\\frac{4}{9}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-construct-study-09",
+        "title": "Recognise a different rate",
+        "prompt": "<p>\\(X\\) follows a Poisson distribution with rate \\(4\\).</p><p>Give the generating function in terms of \\(t\\).</p>",
+        "fields": [
+          {
+            "key": "pgf",
+            "label": "Generating function",
+            "type": "choice",
+            "expected": "A",
+            "options": {
+              "A": "<p>\\(e^{4 t - 4}\\)</p>",
+              "B": "<p>\\(e^{4 t}\\)</p>",
+              "C": "<p>\\(e^{4 t + 4}\\)</p>",
+              "D": "<p>\\(e^{- 4 t}\\)</p>"
+            }
+          }
+        ],
+        "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+        "solution": "<p>Factor \\(e^{-4}\\) from the power series. The remaining series is the exponential series for \\(e^{4 t}\\).</p>\\[G_{X}(t)=e^{4 t - 4}\\]"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-construct-study-10",
+        "title": "Compute the finite binomial probability",
+        "prompt": "<p>\\(X\\) follows a binomial distribution with 4 trials and success probability \\(\\frac{3}{5}\\).</p><p>Find the probability of exactly 2.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Probability",
+            "expected": "216/625",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+        "solution": "<p>One trial has PGF \\(\\frac{3 t}{5} + \\frac{2}{5}\\). The binomial expansion collects the probabilities for all \\(4\\) independent trials.</p>\\[G_{X}(t)=\\left(\\frac{3 t}{5} + \\frac{2}{5}\\right)^{4}\\]<p>Read the coefficient of \\(t^{2}\\) to get \\(\\frac{216}{625}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-construct-study-11",
+        "title": "Find a later geometric coefficient",
+        "prompt": "<p>\\(X\\) follows a geometric distribution with success probability \\(\\frac{1}{3}\\). It counts the trial of the first success.</p><p>Find the probability of exactly 4.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Probability",
+            "expected": "8/81",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+        "solution": "<p>Factor the first term \\(\\frac{t}{3}\\) from the series. The remaining series has common ratio \\(\\frac{2 t}{3}\\).</p>\\[G_{X}(t)=\\frac{t}{3 \\left(1 - \\frac{2 t}{3}\\right)}\\]<p>Read the coefficient of \\(t^{4}\\) to get \\(\\frac{8}{81}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-construct-study-12",
+        "title": "Read the constant and sixth-power coefficients",
+        "prompt": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{2 t^{6}}{5} + \\frac{3 t^{5}}{10} + \\frac{t}{5} + \\frac{1}{10}\\]<p>Find the exact probabilities of \\(X=0\\) and \\(X=6\\).</p>",
+        "fields": [
+          {
+            "key": "p0",
+            "label": "Probability of 0",
+            "expected": "1/10",
+            "type": "number"
+          },
+          {
+            "key": "p",
+            "label": "Probability of 6",
+            "expected": "2/5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>The coefficient gives the probability for that exponent. For moments, differentiate before substituting 1.</p>",
+        "solution": "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{2 t^{6}}{5} + \\frac{3 t^{5}}{10} + \\frac{t}{5} + \\frac{1}{10}\\]<p>The coefficient of \\(t^{6}\\) is \\(\\frac{2}{5}\\). The constant coefficient is \\(\\frac{1}{10}\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the right PGF operation</h2><p>Keep the random count and the dummy variable distinct.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When</th><th scope=\"col\">Use</th></tr></thead><tbody><tr><th scope=\"row\">Definition</th><td>\\(G_X(t)=\\mathrm E(t^X)\\)</td></tr><tr><th scope=\"row\">Normalise</th><td>\\(G_X(1)=1\\)</td></tr><tr><th scope=\"row\">Retrieve</th><td>\\([t^k]G_X(t)=\\mathrm P(X=k)\\)</td></tr><tr><th scope=\"row\">Geometric</th><td>\\(\\frac{pt}{1-(1-p)t}\\) when \\(X\\) starts at 1.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Each supported exponent is a non-negative integer.</li><li>A missing exponent has probability zero.</li><li>Check \\(G(1)=1\\) and whether independence is given.</li></ul>",
+      "examTip": "<p>The coefficient determines the probability. For moments, differentiate before evaluating at 1.</p>"
+    },
+    "related": [
+      {
+        "title": "Recover a distribution and its moments",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_moments"
+      },
+      {
+        "title": "Add independent counts",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_sums"
+      },
+      {
+        "title": "Transform a count or handle dependence",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_transform"
+      },
+      {
+        "title": "Add repeated independent copies",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_copies"
+      }
+    ]
+  },
+  "stats_pgf_moments": {
+    "updatedOn": "2026-11-21",
+    "description": "Find means, factorial moments and variances from PGFs, and verify them against finite distributions.",
+    "sections": [
+      {
+        "id": "mean",
+        "title": "Why does one derivative give the mean?",
+        "label": "Mean",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Differentiating multiplies every probability by its outcome.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm E(X)=G'_X(1)\\). The constant contribution disappears because a zero outcome contributes zero to the mean.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The mean comes from evaluating the derivative at 1. The original function evaluates to 1 for all distributions.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-moments-study-01",
+            "title": "Find a finite mean with gaps",
+            "prompt": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{t^{5}}{2} + \\frac{2 t^{2}}{5} + \\frac{1}{10}\\]<p>Find the exact mean.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean",
+                "expected": "33/10",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>The coefficient gives the probability for that exponent. For moments, differentiate before substituting 1.</p>",
+            "solution": "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{t^{5}}{2} + \\frac{2 t^{2}}{5} + \\frac{1}{10}\\]\\[G_X^\\prime(t)=\\frac{5 t^{4}}{2} + \\frac{4 t}{5},\\qquad G_X^{\\prime\\prime}(t)=2 \\left(5 t^{3} + \\frac{2}{5}\\right)\\]<p>\\(G'_X(1)=\\frac{33}{10}\\) and \\(G_X^{\\prime\\prime}(1)=\\frac{54}{5}\\).</p><p>\\(\\mathrm{Var}(X)=G_X^{\\prime\\prime}(1)+G_X^\\prime(1)-(G_X^\\prime(1))^2=\\frac{321}{100}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Differentiate the entire function first.</p>"
+          }
+        ]
+      },
+      {
+        "id": "factorial",
+        "title": "What does the second derivative actually measure?",
+        "label": "Factorial moment",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The second derivative gives two successive factors from each original exponent.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G''_X(1)=\\mathrm E[X(X-1)]\\). An outcome of zero or one gives no contribution to this expression.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The second factorial moment differs from \\(\\mathrm E(X^2)\\) whenever the mean is nonzero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-moments-study-02",
+            "title": "Distinguish a factorial moment from a square",
+            "prompt": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{t^{4}}{5} + \\frac{2 t^{3}}{5} + \\frac{t}{10} + \\frac{3}{10}\\]<p>Find the exact second factorial moment.</p>",
+            "fields": [
+              {
+                "key": "fm",
+                "label": "Second factorial moment",
+                "expected": "24/5",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>The coefficient gives the probability for that exponent. For moments, differentiate before substituting 1.</p>",
+            "solution": "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{t^{4}}{5} + \\frac{2 t^{3}}{5} + \\frac{t}{10} + \\frac{3}{10}\\]\\[G_X^\\prime(t)=\\frac{4 t^{3}}{5} + \\frac{6 t^{2}}{5} + \\frac{1}{10},\\qquad G_X^{\\prime\\prime}(t)=\\frac{12 t \\left(t + 1\\right)}{5}\\]<p>\\(G'_X(1)=\\frac{21}{10}\\) and \\(G_X^{\\prime\\prime}(1)=\\frac{24}{5}\\).</p><p>\\(\\mathrm{Var}(X)=G_X^{\\prime\\prime}(1)+G_X^\\prime(1)-(G_X^\\prime(1))^2=\\frac{249}{100}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Track the descending factors \\(k(k-1)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "variance",
+        "title": "How do both derivatives give the variance?",
+        "label": "Variance",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Write \\(X^2=X(X-1)+X\\) and take expectations.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm{Var}(X)=G''_X(1)+G'_X(1)-(G'_X(1))^2\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Square only the mean term, using its unrounded value.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-moments-study-03",
+            "title": "Get variance from four powers",
+            "prompt": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{t^{6}}{5} + \\frac{3 t^{3}}{10} + \\frac{2 t^{2}}{5} + \\frac{1}{10}\\]<p>Find the exact variance.</p>",
+            "fields": [
+              {
+                "key": "variance",
+                "label": "Variance",
+                "expected": "309/100",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>The coefficient gives the probability for that exponent. For moments, differentiate before substituting 1.</p>",
+            "solution": "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{t^{6}}{5} + \\frac{3 t^{3}}{10} + \\frac{2 t^{2}}{5} + \\frac{1}{10}\\]\\[G_X^\\prime(t)=\\frac{6 t^{5}}{5} + \\frac{9 t^{2}}{10} + \\frac{4 t}{5},\\qquad G_X^{\\prime\\prime}(t)=6 t^{4} + \\frac{9 t}{5} + \\frac{4}{5}\\]<p>\\(G'_X(1)=\\frac{29}{10}\\) and \\(G_X^{\\prime\\prime}(1)=\\frac{43}{5}\\).</p><p>\\(\\mathrm{Var}(X)=G_X^{\\prime\\prime}(1)+G_X^\\prime(1)-(G_X^\\prime(1))^2=\\frac{309}{100}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A negative variance signals an arithmetic error.</p>"
+          }
+        ]
+      },
+      {
+        "id": "chain",
+        "title": "Can a factored form simplify derivatives?",
+        "label": "Factored PGFs",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A compact binomial or power form often makes the chain rule faster than expanding.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find \\(G'_X(t)\\) and \\(G''_X(t)\\) before substituting \\(t=1\\). A term like \\((a+bt)^n\\) produces a factor \\(b\\) at each differentiation.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The multiplier from the inner function is needed at each use of the chain rule.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-moments-study-04",
+            "title": "Chain rule with the common probability",
+            "prompt": "<p>\\(X\\) follows a binomial distribution with 5 trials and success probability \\(\\frac{1}{4}\\).</p><p>Find the exact mean and variance.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean",
+                "expected": "5/4",
+                "type": "number"
+              },
+              {
+                "key": "var",
+                "label": "Variance",
+                "expected": "15/16",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+            "solution": "<p>One trial has PGF \\(\\frac{t}{4} + \\frac{3}{4}\\). The binomial expansion collects the probabilities for all \\(5\\) independent trials.</p>\\[G_{X}(t)=\\left(\\frac{t}{4} + \\frac{3}{4}\\right)^{5}\\]\\[G_X^\\prime(t)=\\frac{5 \\left(t + 3\\right)^{4}}{1024},\\qquad G_X^{\\prime\\prime}(t)=\\frac{5 \\left(t + 3\\right)^{3}}{256}\\]<p>\\(G_X^\\prime(1)=\\frac{5}{4},\\quad G_X^{\\prime\\prime}(1)=\\frac{5}{4},\\quad \\mathrm{Var}(X)=\\frac{15}{16}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Note where the inside expression equals one.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rational",
+        "title": "How do I handle an infinite distribution?",
+        "label": "Geometric moments",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A convergent rational PGF is often simpler to differentiate than the whole series.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Rewrite the denominator as a negative power or use the quotient rule. For a geometric first-success count the variance is \\(\\tfrac{1-p}{p^2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Substituting one into an undifferentiated PGF gives the total probability, regardless of how many outcomes it has.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-moments-study-05",
+            "title": "Find the moments of a first-success count",
+            "prompt": "<p>\\(X\\) follows a geometric distribution with success probability \\(\\frac{5}{8}\\). It counts the trial of the first success.</p><p>Find the exact mean and variance.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean",
+                "expected": "8/5",
+                "type": "number"
+              },
+              {
+                "key": "var",
+                "label": "Variance",
+                "expected": "24/25",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+            "solution": "<p>Factor the first term \\(\\frac{5 t}{8}\\) from the series. The remaining series has common ratio \\(\\frac{3 t}{8}\\).</p>\\[G_{X}(t)=\\frac{5 t}{8 \\left(1 - \\frac{3 t}{8}\\right)}\\]\\[G_X^\\prime(t)=\\frac{40}{\\left(3 t - 8\\right)^{2}},\\qquad G_X^{\\prime\\prime}(t)=- \\frac{240}{\\left(3 t - 8\\right)^{3}}\\]<p>\\(G_X^\\prime(1)=\\frac{8}{5},\\quad G_X^{\\prime\\prime}(1)=\\frac{48}{25},\\quad \\mathrm{Var}(X)=\\frac{24}{25}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check that the function is defined in a neighbourhood of 1.</p>"
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "How can the distribution check my answer?",
+        "label": "Cross-check",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>For finite laws the original coefficients allow a second method.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\sum_k kp_k\\) gives the mean and \\(\\sum_k(k-\\mu)^2p_k\\) gives the variance. Compare with the derivatives.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If a PGF is expanded to check moments, keep the zero and missing powers straight.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-moments-study-06",
+            "title": "Use both exact moments from a table",
+            "prompt": "<p>A scoring device returns a non-negative integer count.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{2}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{1}{5}\\)</td></tr><tr><th scope=\"row\">\\(5\\)</th><td>\\(\\frac{3}{10}\\)</td></tr><tr><th scope=\"row\">\\(6\\)</th><td>\\(\\frac{1}{10}\\)</td></tr></tbody></table></div><p>Find the exact mean and variance.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean",
+                "expected": "5/2",
+                "type": "number"
+              },
+              {
+                "key": "variance",
+                "label": "Variance",
+                "expected": "113/20",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>The coefficient gives the probability for that exponent. For moments, differentiate before substituting 1.</p>",
+            "solution": "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{t^{6}}{10} + \\frac{3 t^{5}}{10} + \\frac{t^{2}}{5} + \\frac{2}{5}\\]\\[G_X^\\prime(t)=\\frac{3 t^{5}}{5} + \\frac{3 t^{4}}{2} + \\frac{2 t}{5},\\qquad G_X^{\\prime\\prime}(t)=3 t^{4} + 6 t^{3} + \\frac{2}{5}\\]<p>\\(G'_X(1)=\\frac{5}{2}\\) and \\(G_X^{\\prime\\prime}(1)=\\frac{47}{5}\\).</p><p>\\(\\mathrm{Var}(X)=G_X^{\\prime\\prime}(1)+G_X^\\prime(1)-(G_X^\\prime(1))^2=\\frac{113}{20}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>An exact rational calculation avoids cumulative rounding.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Mean from an expanded PGF",
+        "question": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{t^{4}}{2} + \\frac{t}{5} + \\frac{3}{10}\\]<p>Find the exact mean.</p>",
+        "solution": [
+          "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{t^{4}}{2} + \\frac{t}{5} + \\frac{3}{10}\\]",
+          "\\[G_X^\\prime(t)=2 t^{3} + \\frac{1}{5},\\qquad G_X^{\\prime\\prime}(t)=6 t^{2}\\]",
+          "<p>\\(G'_X(1)=\\frac{11}{5}\\) and \\(G_X^{\\prime\\prime}(1)=6\\).</p>",
+          "<p>\\(\\mathrm{Var}(X)=G_X^{\\prime\\prime}(1)+G_X^\\prime(1)-(G_X^\\prime(1))^2=\\frac{84}{25}\\).</p>"
+        ]
+      },
+      {
+        "title": "Mean checked against the original table",
+        "question": "<p>A scoring device returns a non-negative integer count.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{2}{5}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{3}{10}\\)</td></tr><tr><th scope=\"row\">\\(5\\)</th><td>\\(\\frac{3}{10}\\)</td></tr></tbody></table></div><p>Find the exact mean.</p>",
+        "solution": [
+          "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{3 t^{5}}{10} + \\frac{3 t^{3}}{10} + \\frac{2 t}{5}\\]",
+          "\\[G_X^\\prime(t)=\\frac{3 t^{4}}{2} + \\frac{9 t^{2}}{10} + \\frac{2}{5},\\qquad G_X^{\\prime\\prime}(t)=3 t \\left(2 t^{2} + \\frac{3}{5}\\right)\\]",
+          "<p>\\(G'_X(1)=\\frac{14}{5}\\) and \\(G_X^{\\prime\\prime}(1)=\\frac{39}{5}\\).</p>",
+          "<p>\\(\\mathrm{Var}(X)=G_X^{\\prime\\prime}(1)+G_X^\\prime(1)-(G_X^\\prime(1))^2=\\frac{69}{25}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the factorial moment from isolated powers",
+        "question": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{3 t^{3}}{5} + \\frac{t^{2}}{5} + \\frac{1}{5}\\]<p>Find the exact second factorial moment.</p>",
+        "solution": [
+          "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{3 t^{3}}{5} + \\frac{t^{2}}{5} + \\frac{1}{5}\\]",
+          "\\[G_X^\\prime(t)=\\frac{9 t^{2}}{5} + \\frac{2 t}{5},\\qquad G_X^{\\prime\\prime}(t)=\\frac{2 \\left(9 t + 1\\right)}{5}\\]",
+          "<p>\\(G'_X(1)=\\frac{11}{5}\\) and \\(G_X^{\\prime\\prime}(1)=4\\).</p>",
+          "<p>\\(\\mathrm{Var}(X)=G_X^{\\prime\\prime}(1)+G_X^\\prime(1)-(G_X^\\prime(1))^2=\\frac{34}{25}\\).</p>"
+        ]
+      },
+      {
+        "title": "Combine the derivative values for variance",
+        "question": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{t^{3}}{2} + \\frac{3 t}{10} + \\frac{1}{5}\\]<p>Find the exact variance.</p>",
+        "solution": [
+          "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{t^{3}}{2} + \\frac{3 t}{10} + \\frac{1}{5}\\]",
+          "\\[G_X^\\prime(t)=\\frac{3 t^{2}}{2} + \\frac{3}{10},\\qquad G_X^{\\prime\\prime}(t)=3 t\\]",
+          "<p>\\(G'_X(1)=\\frac{9}{5}\\) and \\(G_X^{\\prime\\prime}(1)=3\\).</p>",
+          "<p>\\(\\mathrm{Var}(X)=G_X^{\\prime\\prime}(1)+G_X^\\prime(1)-(G_X^\\prime(1))^2=\\frac{39}{25}\\).</p>"
+        ]
+      },
+      {
+        "title": "Differentiate a four-trial binomial PGF",
+        "question": "<p>\\(X\\) follows a binomial distribution with 4 trials and success probability \\(\\frac{2}{5}\\).</p><p>Find the exact mean and variance.</p>",
+        "solution": [
+          "<p>One trial has PGF \\(\\frac{2 t}{5} + \\frac{3}{5}\\). The binomial expansion collects the probabilities for all \\(4\\) independent trials.</p>",
+          "\\[G_{X}(t)=\\left(\\frac{2 t}{5} + \\frac{3}{5}\\right)^{4}\\]",
+          "\\[G_X^\\prime(t)=\\frac{8 \\left(2 t + 3\\right)^{3}}{625},\\qquad G_X^{\\prime\\prime}(t)=\\frac{48 \\left(2 t + 3\\right)^{2}}{625}\\]",
+          "<p>\\(G_X^\\prime(1)=\\frac{8}{5},\\quad G_X^{\\prime\\prime}(1)=\\frac{48}{25},\\quad \\mathrm{Var}(X)=\\frac{24}{25}\\).</p>"
+        ]
+      },
+      {
+        "title": "Derivatives of a rational PGF",
+        "question": "<p>\\(X\\) follows a geometric distribution with success probability \\(\\frac{3}{5}\\). It counts the trial of the first success.</p><p>Find the exact mean and variance.</p>",
+        "solution": [
+          "<p>Factor the first term \\(\\frac{3 t}{5}\\) from the series. The remaining series has common ratio \\(\\frac{2 t}{5}\\).</p>",
+          "\\[G_{X}(t)=\\frac{3 t}{5 \\left(1 - \\frac{2 t}{5}\\right)}\\]",
+          "\\[G_X^\\prime(t)=\\frac{15}{\\left(2 t - 5\\right)^{2}},\\qquad G_X^{\\prime\\prime}(t)=- \\frac{60}{\\left(2 t - 5\\right)^{3}}\\]",
+          "<p>\\(G_X^\\prime(1)=\\frac{5}{3},\\quad G_X^{\\prime\\prime}(1)=\\frac{20}{9},\\quad \\mathrm{Var}(X)=\\frac{10}{9}\\).</p>"
+        ]
+      },
+      {
+        "title": "Cross-check both moments using coefficients",
+        "question": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{3 t^{6}}{10} + \\frac{2 t^{2}}{5} + \\frac{3 t}{10}\\]<p>Find the exact mean and variance.</p>",
+        "solution": [
+          "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{3 t^{6}}{10} + \\frac{2 t^{2}}{5} + \\frac{3 t}{10}\\]",
+          "\\[G_X^\\prime(t)=\\frac{9 t^{5}}{5} + \\frac{4 t}{5} + \\frac{3}{10},\\qquad G_X^{\\prime\\prime}(t)=9 t^{4} + \\frac{4}{5}\\]",
+          "<p>\\(G'_X(1)=\\frac{29}{10}\\) and \\(G_X^{\\prime\\prime}(1)=\\frac{49}{5}\\).</p>",
+          "<p>\\(\\mathrm{Var}(X)=G_X^{\\prime\\prime}(1)+G_X^\\prime(1)-(G_X^\\prime(1))^2=\\frac{429}{100}\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "First derivative",
+        "definition": "<p>At \\(t=1\\), it yields the expected count.</p>"
+      },
+      {
+        "term": "Second factorial moment",
+        "definition": "<p>\\(\\mathrm E[X(X-1)]\\), the value of the second derivative at 1.</p>"
+      },
+      {
+        "term": "Second ordinary moment",
+        "definition": "<p>\\(\\mathrm E(X^2)\\) combines the two derivatives evaluated at 1.</p>"
+      },
+      {
+        "term": "Variance",
+        "definition": "<p>The second ordinary moment minus the square of the mean.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-pgf-moments-study-07",
+        "title": "Combine mean and variance as exact fractions",
+        "prompt": "<p>A scoring device returns a non-negative integer count.</p>\\[G_{X}(t)=\\frac{t^{6}}{10} + \\frac{3 t^{3}}{10} + \\frac{t}{5} + \\frac{2}{5}\\]<p>Find the exact mean and variance.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean",
+            "expected": "17/10",
+            "type": "number"
+          },
+          {
+            "key": "variance",
+            "label": "Variance",
+            "expected": "361/100",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>The coefficient gives the probability for that exponent. For moments, differentiate before substituting 1.</p>",
+        "solution": "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{t^{6}}{10} + \\frac{3 t^{3}}{10} + \\frac{t}{5} + \\frac{2}{5}\\]\\[G_X^\\prime(t)=\\frac{3 t^{5}}{5} + \\frac{9 t^{2}}{10} + \\frac{1}{5},\\qquad G_X^{\\prime\\prime}(t)=3 t \\left(t^{3} + \\frac{3}{5}\\right)\\]<p>\\(G'_X(1)=\\frac{17}{10}\\) and \\(G_X^{\\prime\\prime}(1)=\\frac{24}{5}\\).</p><p>\\(\\mathrm{Var}(X)=G_X^{\\prime\\prime}(1)+G_X^\\prime(1)-(G_X^\\prime(1))^2=\\frac{361}{100}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-moments-study-08",
+        "title": "Recognise equal Poisson mean and variance",
+        "prompt": "<p>\\(X\\) follows a Poisson distribution with rate \\(5\\).</p><p>Find the exact mean and variance.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean",
+            "expected": "5",
+            "type": "number"
+          },
+          {
+            "key": "var",
+            "label": "Variance",
+            "expected": "5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+        "solution": "<p>Factor \\(e^{-5}\\) from the power series. The remaining series is the exponential series for \\(e^{5 t}\\).</p>\\[G_{X}(t)=e^{5 t - 5}\\]\\[G_X^\\prime(t)=\\frac{5 e^{5 t}}{e^{5}},\\qquad G_X^{\\prime\\prime}(t)=\\frac{25 e^{5 t}}{e^{5}}\\]<p>\\(G_X^\\prime(1)=5,\\quad G_X^{\\prime\\prime}(1)=25,\\quad \\mathrm{Var}(X)=5\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-moments-study-09",
+        "title": "Find the factorial moment of a binomial count",
+        "prompt": "<p>\\(X\\) follows a binomial distribution with 5 trials and success probability \\(\\frac{4}{7}\\).</p><p>Find the exact second factorial moment.</p>",
+        "fields": [
+          {
+            "key": "factorial",
+            "label": "Second factorial moment",
+            "expected": "320/49",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+        "solution": "<p>One trial has PGF \\(\\frac{4 t}{7} + \\frac{3}{7}\\). The binomial expansion collects the probabilities for all \\(5\\) independent trials.</p>\\[G_{X}(t)=\\left(\\frac{4 t}{7} + \\frac{3}{7}\\right)^{5}\\]\\[G_X^\\prime(t)=\\frac{20 \\left(4 t + 3\\right)^{4}}{16807},\\qquad G_X^{\\prime\\prime}(t)=\\frac{320 \\left(4 t + 3\\right)^{3}}{16807}\\]<p>\\(G_X^\\prime(1)=\\frac{20}{7},\\quad G_X^{\\prime\\prime}(1)=\\frac{320}{49},\\quad \\mathrm{Var}(X)=\\frac{60}{49}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-moments-study-10",
+        "title": "Use a geometric factorial moment",
+        "prompt": "<p>\\(X\\) follows a geometric distribution with success probability \\(\\frac{2}{7}\\). It counts the trial of the first success.</p><p>Find the exact second factorial moment.</p>",
+        "fields": [
+          {
+            "key": "factorial",
+            "label": "Second factorial moment",
+            "expected": "35/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+        "solution": "<p>Factor the first term \\(\\frac{2 t}{7}\\) from the series. The remaining series has common ratio \\(\\frac{5 t}{7}\\).</p>\\[G_{X}(t)=\\frac{2 t}{7 \\left(1 - \\frac{5 t}{7}\\right)}\\]\\[G_X^\\prime(t)=\\frac{14}{\\left(5 t - 7\\right)^{2}},\\qquad G_X^{\\prime\\prime}(t)=- \\frac{140}{\\left(5 t - 7\\right)^{3}}\\]<p>\\(G_X^\\prime(1)=\\frac{7}{2},\\quad G_X^{\\prime\\prime}(1)=\\frac{35}{2},\\quad \\mathrm{Var}(X)=\\frac{35}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-moments-study-11",
+        "title": "Find both moments of the discrete uniform law",
+        "prompt": "<p>\\(X\\) follows 6 equally likely integer outcomes from 1 to 6.</p><p>Find the exact mean and variance.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean",
+            "expected": "7/2",
+            "type": "number"
+          },
+          {
+            "key": "var",
+            "label": "Variance",
+            "expected": "35/12",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Write the possible values down first. Then use the probability for each exponent.</p>",
+        "solution": "<p>Write one term per possible result. Every coefficient is \\(\\frac{1}{6}\\).</p>\\[G_{X}(t)=\\frac{t^{6}}{6} + \\frac{t^{5}}{6} + \\frac{t^{4}}{6} + \\frac{t^{3}}{6} + \\frac{t^{2}}{6} + \\frac{t}{6}\\]\\[G_X^\\prime(t)=\\frac{6 t^{5} + 5 t^{4} + 4 t^{3} + 3 t^{2} + 2 t + 1}{6},\\qquad G_X^{\\prime\\prime}(t)=\\frac{15 t^{4} + 10 t^{3} + 6 t^{2} + 3 t + 1}{3}\\]<p>\\(G_X^\\prime(1)=\\frac{7}{2},\\quad G_X^{\\prime\\prime}(1)=\\frac{35}{3},\\quad \\mathrm{Var}(X)=\\frac{35}{12}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-moments-study-12",
+        "title": "Confirm the variance when zero has positive mass",
+        "prompt": "<p>A scoring device returns a non-negative integer count.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{3}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{3}{10}\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\frac{1}{10}\\)</td></tr></tbody></table></div><p>Find the exact variance.</p>",
+        "fields": [
+          {
+            "key": "variance",
+            "label": "Variance",
+            "expected": "9/5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>The coefficient gives the probability for that exponent. For moments, differentiate before substituting 1.</p>",
+        "solution": "<p>Attach the probability to the power for its value.</p>\\[G_{X}(t)=\\frac{t^{4}}{10} + \\frac{3 t^{2}}{10} + \\frac{3}{5}\\]\\[G_X^\\prime(t)=\\frac{2 t^{3}}{5} + \\frac{3 t}{5},\\qquad G_X^{\\prime\\prime}(t)=\\frac{3 \\left(2 t^{2} + 1\\right)}{5}\\]<p>\\(G'_X(1)=1\\) and \\(G_X^{\\prime\\prime}(1)=\\frac{9}{5}\\).</p><p>\\(\\mathrm{Var}(X)=G_X^{\\prime\\prime}(1)+G_X^\\prime(1)-(G_X^\\prime(1))^2=\\frac{9}{5}\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the right PGF operation</h2><p>Keep the random count and the dummy variable distinct.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When</th><th scope=\"col\">Use</th></tr></thead><tbody><tr><th scope=\"row\">Mean</th><td>\\(G'_X(1)\\)</td></tr><tr><th scope=\"row\">Factorial moment</th><td>\\(G''_X(1)\\)</td></tr><tr><th scope=\"row\">Ordinary second moment</th><td>\\(G''_X(1)+G'_X(1)\\)</td></tr><tr><th scope=\"row\">Variance</th><td>\\(G''_X(1)+G'_X(1)-[G'_X(1)]^2\\)</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Each supported exponent is a non-negative integer.</li><li>A missing exponent has probability zero.</li><li>Check \\(G(1)=1\\) and whether independence is given.</li></ul>",
+      "examTip": "<p>The coefficient determines the probability. For moments, differentiate before evaluating at 1.</p>"
+    },
+    "related": [
+      {
+        "title": "Build and read a PGF",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_construct"
+      },
+      {
+        "title": "Add independent counts",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_sums"
+      },
+      {
+        "title": "Transform a count or handle dependence",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_transform"
+      },
+      {
+        "title": "Add repeated independent copies",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_copies"
+      }
+    ]
+  },
+  "stats_pgf_sums": {
+    "updatedOn": "2026-11-21",
+    "description": "Use PGF products and selected coefficients to add independent counts and recognise resulting Poisson and binomial laws.",
+    "sections": [
+      {
+        "id": "product",
+        "title": "Why can I multiply the two functions?",
+        "label": "Product",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>When counts are independent, the expectation of the product of their powers factorises.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_{X+Y}(t)=\\mathrm E(t^Xt^Y)=G_X(t)G_Y(t)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Adding PGFs would produce a total of two at \\(t=1\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-sums-study-01",
+            "title": "Give the whole product for unequal supports",
+            "prompt": "<p>Workers count two independent streams of requests.</p><p>\\(G_{X}(t)=\\frac{t^{3}}{2} + \\frac{3 t}{10} + \\frac{1}{5}\\) and \\(G_{Y}(t)=\\frac{3 t^{2}}{4} + \\frac{t}{4}\\).</p><p>Let \\(S=X + Y\\).</p><p>Give the whole generating function for \\(S\\).</p>",
+            "fields": [
+              {
+                "key": "pgf",
+                "label": "Generating function",
+                "type": "polynomial",
+                "variables": [
+                  "t"
+                ],
+                "expected": "t*(15*t^4 + 5*t^3 + 9*t^2 + 9*t + 2)/40"
+              }
+            ],
+            "hint": "<p>A coefficient in the product collects every pair of counts with the given total.</p>",
+            "solution": "<p>The summands are independent. Account for any scale and shift in the exponent.</p>\\[G_S(t)=G_X(t)G_Y(t)=\\frac{3 t^{5}}{8} + \\frac{t^{4}}{8} + \\frac{9 t^{3}}{40} + \\frac{9 t^{2}}{40} + \\frac{t}{20}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check that the question states or implies independence.</p>"
+          }
+        ]
+      },
+      {
+        "id": "coefficient",
+        "title": "Which outcome pairs give the wanted total?",
+        "label": "One coefficient",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For a requested total, expand only terms whose exponents add to it.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm P(X+Y=k)=\\sum_i\\mathrm P(X=i)\\mathrm P(Y=k-i)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Several different ordered outcomes may produce the same total.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-sums-study-02",
+            "title": "Find the exact probability of a sum of four",
+            "prompt": "<p>Two independent counters record \\(X\\) and \\(Y\\) during the same window.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{2}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{3}{5}\\)</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(y\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{1}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{3}{5}\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\frac{1}{5}\\)</td></tr></tbody></table></div><p>Let \\(S=X + Y\\).</p><p>Find the exact probability that the result is 4.</p>",
+            "fields": [
+              {
+                "key": "prob",
+                "label": "Probability",
+                "expected": "11/25",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A coefficient in the product collects every pair of counts with the given total.</p>",
+            "solution": "<p>The summands are independent. Account for any scale and shift in the exponent.</p>\\[G_S(t)=G_X(t)G_Y(t)=\\frac{3 t^{6}}{25} + \\frac{11 t^{4}}{25} + \\frac{9 t^{2}}{25} + \\frac{2}{25}\\]<p>Outcomes giving the required coefficient contribute \\(\\frac{2}{25}+\\frac{9}{25}\\), which sums to \\(\\frac{11}{25}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Use a short list of index pairs to check what you included.</p>"
+          }
+        ]
+      },
+      {
+        "id": "support",
+        "title": "How do I find the smallest and largest total?",
+        "label": "Support",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For finite supports, the lowest powers combine and the highest powers combine.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the minimum and maximum exponents of both factors. Any internal gap still depends on which sums can actually occur.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A range of allowed powers is not proof that every intermediate exponent appears.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-sums-study-03",
+            "title": "Look for the extreme values in both distributions",
+            "prompt": "<p>Two independent counters record \\(X\\) and \\(Y\\) during the same window.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{2}{5}\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\frac{3}{5}\\)</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(y\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{3}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{2}{5}\\)</td></tr></tbody></table></div><p>Let \\(S=X + Y\\).</p><p>Give its smallest and largest possible values.</p>",
+            "fields": [
+              {
+                "key": "small",
+                "label": "Smallest value",
+                "expected": "2",
+                "type": "number"
+              },
+              {
+                "key": "largest",
+                "label": "Largest value",
+                "expected": "6",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A coefficient in the product collects every pair of counts with the given total.</p>",
+            "solution": "<p>The summands are independent. Account for any scale and shift in the exponent.</p>\\[G_S(t)=G_X(t)G_Y(t)=\\frac{6 t^{6}}{25} + \\frac{9 t^{5}}{25} + \\frac{4 t^{3}}{25} + \\frac{6 t^{2}}{25}\\]<p>Read the lowest and highest powers \\(2\\) and \\(6\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>There is no largest power for the Poisson or first-success geometric distribution.</p>"
+          }
+        ]
+      },
+      {
+        "id": "poisson-product",
+        "title": "What happens when I add two Poisson counts?",
+        "label": "Poisson closure",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Exponential powers add when the PGFs are multiplied.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm e^{a(t-1)}\\mathrm e^{b(t-1)}=\\mathrm e^{(a+b)(t-1)}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using the product of the rates would give the wrong mean.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-sums-study-04",
+            "title": "Identify a rate from the sum",
+            "prompt": "<p>The counts are independent. Their laws are \\(X\\sim\\mathrm{Po}(3),\\quad Y\\sim\\mathrm{Po}(7)\\).</p><p>Find its Poisson rate.</p>",
+            "fields": [
+              {
+                "key": "rate",
+                "label": "Rate of the total",
+                "expected": "10",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Multiply PGFs and combine identical bases or exponential powers.</p>",
+            "solution": "<p>Multiply the two PGFs.</p>\\[G_{X+Y}(t)=e^{10 t - 10}\\]<p>Recognise this as \\(\\mathrm{Po}(10)\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Independence is needed even when both marginal distributions are Poisson.</p>"
+          }
+        ]
+      },
+      {
+        "id": "binomial-product",
+        "title": "When does a binomial sum stay binomial?",
+        "label": "Binomial closure",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A common success probability gives the identical PGF base for both counts.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\((1-p+pt)^m(1-p+pt)^n=(1-p+pt)^{m+n}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Different probabilities give different bases. The ordinary binomial simplification is unavailable.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-sums-study-05",
+            "title": "Use the shared binomial factor",
+            "prompt": "<p>The counts are independent. Their laws are \\(X\\sim\\mathrm{Bin}(3,\\frac{3}{8}),\\quad Y\\sim\\mathrm{Bin}(5,\\frac{3}{8})\\).</p><p>Identify the distribution of the sum.</p>",
+            "fields": [
+              {
+                "key": "law",
+                "label": "Distribution of the total",
+                "type": "choice",
+                "expected": "A",
+                "options": {
+                  "A": "<p>\\(\\mathrm{Bin}(8,\\frac{3}{8})\\)</p>",
+                  "B": "<p>\\(\\mathrm{Bin}(8,\\frac{9}{64})\\)</p>",
+                  "C": "<p>\\(\\mathrm{Bin}(15,\\frac{3}{8})\\)</p>"
+                }
+              }
+            ],
+            "hint": "<p>Multiply PGFs and combine identical bases or exponential powers.</p>",
+            "solution": "<p>Multiply the two PGFs.</p>\\[G_{X+Y}(t)=\\left(\\frac{3 t}{8} + \\frac{5}{8}\\right)^{8}\\]<p>Recognise this as \\(\\mathrm{Bin}(8,\\frac{3}{8})\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Keep the common probability fixed and add the number of trials.</p>"
+          }
+        ]
+      },
+      {
+        "id": "moment-sum",
+        "title": "Can I get moments without full expansion?",
+        "label": "Moments",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Derivatives of the product at 1 give the same answer as adding moments directly.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm E(X+Y)=\\mathrm E(X)+\\mathrm E(Y)\\); the variances also add for these independent variables.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Adding standard deviations or assuming variance additivity without independence can give wrong results.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-sums-study-06",
+            "title": "Use variance additivity without expanding",
+            "prompt": "<p>Two independent counters record \\(X\\) and \\(Y\\) during the same window.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{3}{10}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{7}{10}\\)</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(y\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{2}{5}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{1}{5}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{2}{5}\\)</td></tr></tbody></table></div><p>Let \\(S=X + Y\\).</p><p>Find the exact mean and variance.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean",
+                "expected": "14/5",
+                "type": "number"
+              },
+              {
+                "key": "var",
+                "label": "Variance",
+                "expected": "67/25",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A coefficient in the product collects every pair of counts with the given total.</p>",
+            "solution": "<p>The summands are independent. Account for any scale and shift in the exponent.</p>\\[G_S(t)=G_X(t)G_Y(t)=\\frac{7 t^{5}}{25} + \\frac{13 t^{3}}{50} + \\frac{7 t^{2}}{25} + \\frac{3 t}{50} + \\frac{3}{25}\\]<p>The mean is \\(\\frac{14}{5}\\) and, adding independent variances with the scale squared, the variance is \\(\\frac{67}{25}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Means add even when independence does not hold.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Multiply two finite distributions",
+        "question": "<p>Two independent counters record \\(X\\) and \\(Y\\) during the same window.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{1}{3}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{2}{3}\\)</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(y\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{2}{3}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{1}{3}\\)</td></tr></tbody></table></div><p>Let \\(S=X + Y\\).</p><p>Give the whole generating function for \\(S\\).</p>",
+        "solution": [
+          "<p>The summands are independent. Account for any scale and shift in the exponent.</p>",
+          "\\[G_S(t)=G_X(t)G_Y(t)=\\frac{2 t^{3}}{9} + \\frac{t^{2}}{9} + \\frac{4 t}{9} + \\frac{2}{9}\\]"
+        ]
+      },
+      {
+        "title": "Use two functions without a table",
+        "question": "<p>Workers count two independent streams of requests.</p><p>\\(G_{X}(t)=\\frac{2 t^{2}}{5} + \\frac{3 t}{5}\\) and \\(G_{Y}(t)=\\frac{2 t}{5} + \\frac{3}{5}\\).</p><p>Let \\(S=X + Y\\).</p><p>Give the whole generating function for \\(S\\).</p>",
+        "solution": [
+          "<p>The summands are independent. Account for any scale and shift in the exponent.</p>",
+          "\\[G_S(t)=G_X(t)G_Y(t)=\\frac{4 t^{3}}{25} + \\frac{12 t^{2}}{25} + \\frac{9 t}{25}\\]"
+        ]
+      },
+      {
+        "title": "Collect two routes to a sum of three",
+        "question": "<p>Two independent counters record \\(X\\) and \\(Y\\) during the same window.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{1}{5}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{2}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{2}{5}\\)</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(y\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{3}{5}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{1}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{1}{5}\\)</td></tr></tbody></table></div><p>Let \\(S=X + Y\\).</p><p>Find the exact probability that the result is 3.</p>",
+        "solution": [
+          "<p>The summands are independent. Account for any scale and shift in the exponent.</p>",
+          "\\[G_S(t)=G_X(t)G_Y(t)=\\frac{2 t^{4}}{25} + \\frac{4 t^{3}}{25} + \\frac{9 t^{2}}{25} + \\frac{7 t}{25} + \\frac{3}{25}\\]",
+          "<p>Outcomes giving the required coefficient contribute \\(\\frac{2}{25}+\\frac{2}{25}\\), which sums to \\(\\frac{4}{25}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find two extreme attainable sums",
+        "question": "<p>Two independent counters record \\(X\\) and \\(Y\\) during the same window.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{1}{3}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{2}{3}\\)</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(y\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{2}{3}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{1}{3}\\)</td></tr></tbody></table></div><p>Let \\(S=X + Y\\).</p><p>Give its smallest and largest possible values.</p>",
+        "solution": [
+          "<p>The summands are independent. Account for any scale and shift in the exponent.</p>",
+          "\\[G_S(t)=G_X(t)G_Y(t)=\\frac{2 t^{5}}{9} + \\frac{5 t^{3}}{9} + \\frac{2 t}{9}\\]",
+          "<p>Read the lowest and highest powers \\(1\\) and \\(5\\).</p>"
+        ]
+      },
+      {
+        "title": "Add two independent Poisson rates",
+        "question": "<p>The counts are independent. Their laws are \\(X\\sim\\mathrm{Po}(2),\\quad Y\\sim\\mathrm{Po}(5)\\).</p><p>Identify the distribution of the sum.</p>",
+        "solution": [
+          "<p>Multiply the two PGFs.</p>\\[G_{X+Y}(t)=e^{7 t - 7}\\]",
+          "<p>Recognise this as \\(\\mathrm{Po}(7)\\).</p>"
+        ]
+      },
+      {
+        "title": "Combine equal-probability Bernoulli trials",
+        "question": "<p>The counts are independent. Their laws are \\(X\\sim\\mathrm{Bin}(4,\\frac{2}{7}),\\quad Y\\sim\\mathrm{Bin}(3,\\frac{2}{7})\\).</p><p>Identify the distribution of the sum.</p>",
+        "solution": [
+          "<p>Multiply the two PGFs.</p>\\[G_{X+Y}(t)=\\left(\\frac{2 t}{7} + \\frac{5}{7}\\right)^{7}\\]",
+          "<p>Recognise this as \\(\\mathrm{Bin}(7,\\frac{2}{7})\\).</p>"
+        ]
+      },
+      {
+        "title": "Check moments of an independent sum",
+        "question": "<p>Workers count two independent streams of requests.</p><p>\\(G_{X}(t)=\\frac{t^{3}}{2} + \\frac{3 t}{10} + \\frac{1}{5}\\) and \\(G_{Y}(t)=\\frac{3 t^{2}}{5} + \\frac{2}{5}\\).</p><p>Let \\(S=X + Y\\).</p><p>Find the exact mean and variance.</p>",
+        "solution": [
+          "<p>The summands are independent. Account for any scale and shift in the exponent.</p>",
+          "\\[G_S(t)=G_X(t)G_Y(t)=\\frac{3 t^{5}}{10} + \\frac{19 t^{3}}{50} + \\frac{3 t^{2}}{25} + \\frac{3 t}{25} + \\frac{2}{25}\\]",
+          "<p>The mean is \\(3\\) and, adding independent variances with the scale squared, the variance is \\(\\frac{63}{25}\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Independent counts",
+        "definition": "<p>Their joint probabilities are products of the matching marginal probabilities.</p>"
+      },
+      {
+        "term": "Convolution",
+        "definition": "<p>Add the products of probabilities for all outcome pairs giving one sum.</p>"
+      },
+      {
+        "term": "Support of a sum",
+        "definition": "<p>The attainable totals from the possible summand values.</p>"
+      },
+      {
+        "term": "Same success probability",
+        "definition": "<p>The condition that permits independent binomial PGFs to combine to one binomial law.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-pgf-sums-study-07",
+        "title": "Identify an impossible sum from the supports",
+        "prompt": "<p>Two independent counters record \\(X\\) and \\(Y\\) during the same window.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{1}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{4}{5}\\)</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(y\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{2}{5}\\)</td></tr><tr><th scope=\"row\">\\(4\\)</th><td>\\(\\frac{3}{5}\\)</td></tr></tbody></table></div><p>Let \\(S=X + Y\\).</p><p>Find the exact probability that the result is 3.</p>",
+        "fields": [
+          {
+            "key": "prob",
+            "label": "Probability",
+            "expected": "0",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A coefficient in the product collects every pair of counts with the given total.</p>",
+        "solution": "<p>The summands are independent. Account for any scale and shift in the exponent.</p>\\[G_S(t)=G_X(t)G_Y(t)=\\frac{12 t^{6}}{25} + \\frac{3 t^{4}}{25} + \\frac{8 t^{2}}{25} + \\frac{2}{25}\\]<p>Outcomes giving the required coefficient contribute \\(0\\), which sums to \\(0\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-sums-study-08",
+        "title": "Give a product with a non-zero starting exponent",
+        "prompt": "<p>Two independent counters record \\(X\\) and \\(Y\\) during the same window.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{1}{3}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{2}{3}\\)</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(y\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{2}{7}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{5}{7}\\)</td></tr></tbody></table></div><p>Let \\(S=X + Y\\).</p><p>Give the whole generating function for \\(S\\).</p>",
+        "fields": [
+          {
+            "key": "pgf",
+            "label": "Generating function",
+            "type": "polynomial",
+            "variables": [
+              "t"
+            ],
+            "expected": "t^2*(10*t^3 + 4*t^2 + 5*t + 2)/21"
+          }
+        ],
+        "hint": "<p>A coefficient in the product collects every pair of counts with the given total.</p>",
+        "solution": "<p>The summands are independent. Account for any scale and shift in the exponent.</p>\\[G_S(t)=G_X(t)G_Y(t)=\\frac{10 t^{5}}{21} + \\frac{4 t^{4}}{21} + \\frac{5 t^{3}}{21} + \\frac{2 t^{2}}{21}\\]"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-sums-study-09",
+        "title": "Recognise a larger Poisson total",
+        "prompt": "<p>The counts are independent. Their laws are \\(X\\sim\\mathrm{Po}(5),\\quad Y\\sim\\mathrm{Po}(9)\\).</p><p>Identify the distribution of the sum.</p>",
+        "fields": [
+          {
+            "key": "law",
+            "label": "Distribution of the total",
+            "type": "choice",
+            "expected": "A",
+            "options": {
+              "A": "<p>\\(\\mathrm{Po}(14)\\)</p>",
+              "B": "<p>\\(\\mathrm{Po}(45)\\)</p>",
+              "C": "<p>\\(\\mathrm{Po}(4)\\)</p>"
+            }
+          }
+        ],
+        "hint": "<p>Multiply PGFs and combine identical bases or exponential powers.</p>",
+        "solution": "<p>Multiply the two PGFs.</p>\\[G_{X+Y}(t)=e^{14 t - 14}\\]<p>Recognise this as \\(\\mathrm{Po}(14)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-sums-study-10",
+        "title": "Recover the total number of attempts",
+        "prompt": "<p>The counts are independent. Their laws are \\(X\\sim\\mathrm{Bin}(6,\\frac{1}{3}),\\quad Y\\sim\\mathrm{Bin}(4,\\frac{1}{3})\\).</p><p>Find its binomial trial count.</p>",
+        "fields": [
+          {
+            "key": "trials",
+            "label": "Number of trials in the total",
+            "expected": "10",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Multiply PGFs and combine identical bases or exponential powers.</p>",
+        "solution": "<p>Multiply the two PGFs.</p>\\[G_{X+Y}(t)=\\left(\\frac{t}{3} + \\frac{2}{3}\\right)^{10}\\]<p>Recognise this as \\(\\mathrm{Bin}(10,\\frac{1}{3})\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-sums-study-11",
+        "title": "Derive moments from two unequal laws",
+        "prompt": "<p>Workers count two independent streams of requests.</p><p>\\(G_{X}(t)=\\frac{t^{3}}{4} + \\frac{t}{4} + \\frac{1}{2}\\) and \\(G_{Y}(t)=\\frac{t^{2}}{7} + \\frac{4 t}{7} + \\frac{2}{7}\\).</p><p>Let \\(S=X + Y\\).</p><p>Find the exact mean and variance.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean",
+            "expected": "13/7",
+            "type": "number"
+          },
+          {
+            "key": "var",
+            "label": "Variance",
+            "expected": "187/98",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A coefficient in the product collects every pair of counts with the given total.</p>",
+        "solution": "<p>The summands are independent. Account for any scale and shift in the exponent.</p>\\[G_S(t)=G_X(t)G_Y(t)=\\frac{t^{5}}{28} + \\frac{t^{4}}{7} + \\frac{3 t^{3}}{28} + \\frac{3 t^{2}}{14} + \\frac{5 t}{14} + \\frac{1}{7}\\]<p>The mean is \\(\\frac{13}{7}\\) and, adding independent variances with the scale squared, the variance is \\(\\frac{187}{98}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-sums-study-12",
+        "title": "Read one pair and its reversed possibilities",
+        "prompt": "<p>Two independent counters record \\(X\\) and \\(Y\\) during the same window.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{4}{7}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{2}{7}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{1}{7}\\)</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(y\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{1}{9}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{1}{3}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{5}{9}\\)</td></tr></tbody></table></div><p>Let \\(S=X + Y\\).</p><p>Find the exact probability that the result is 2.</p>",
+        "fields": [
+          {
+            "key": "prob",
+            "label": "Probability",
+            "expected": "22/63",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A coefficient in the product collects every pair of counts with the given total.</p>",
+        "solution": "<p>The summands are independent. Account for any scale and shift in the exponent.</p>\\[G_S(t)=G_X(t)G_Y(t)=\\frac{5 t^{5}}{63} + \\frac{13 t^{4}}{63} + \\frac{t^{3}}{9} + \\frac{22 t^{2}}{63} + \\frac{4 t}{21} + \\frac{4}{63}\\]<p>Outcomes giving the required coefficient contribute \\(\\frac{20}{63}+\\frac{2}{63}\\), which sums to \\(\\frac{22}{63}\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the right PGF operation</h2><p>Keep the random count and the dummy variable distinct.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When</th><th scope=\"col\">Use</th></tr></thead><tbody><tr><th scope=\"row\">Independence</th><td>\\(G_{X+Y}(t)=G_X(t)G_Y(t)\\)</td></tr><tr><th scope=\"row\">Coefficient</th><td>Include every ordered pair with the target sum.</td></tr><tr><th scope=\"row\">Rates</th><td>Independent Poisson rates add.</td></tr><tr><th scope=\"row\">Trials</th><td>Independent binomial trial counts add when the success probabilities are equal.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Each supported exponent is a non-negative integer.</li><li>A missing exponent has probability zero.</li><li>Check \\(G(1)=1\\) and whether independence is given.</li></ul>",
+      "examTip": "<p>The coefficient determines the probability. For moments, differentiate before evaluating at 1.</p>"
+    },
+    "related": [
+      {
+        "title": "Build and read a PGF",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_construct"
+      },
+      {
+        "title": "Recover a distribution and its moments",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_moments"
+      },
+      {
+        "title": "Transform a count or handle dependence",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_transform"
+      },
+      {
+        "title": "Add repeated independent copies",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_copies"
+      }
+    ]
+  },
+  "stats_pgf_transform": {
+    "updatedOn": "2026-11-21",
+    "description": "Shift and scale integer outcomes in a PGF, and find sum probabilities from a joint distribution when counts are dependent.",
+    "sections": [
+      {
+        "id": "shift",
+        "title": "Why does a shift multiply by a power?",
+        "label": "Shift",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Adding a fixed integer to every value raises every exponent by that integer.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_{X+b}(t)=t^bG_X(t)\\) for a non-negative shift \\(b\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>It shifts all powers, including an original constant term.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-transform-study-01",
+            "title": "Report a complete shifted PGF",
+            "prompt": "<p>A count \\(X\\) has PGF \\(G_{X}(t)=\\frac{t^{3}}{2} + \\frac{t}{5} + \\frac{3}{10}\\). Define \\(Y=X + 2\\).</p><p>Give the generating function for \\(Y\\).</p>",
+            "fields": [
+              {
+                "key": "pgf",
+                "label": "Generating function",
+                "type": "polynomial",
+                "variables": [
+                  "t"
+                ],
+                "expected": "t^2*(5*t^3 + 2*t + 3)/10"
+              }
+            ],
+            "hint": "<p>A shift multiplies by a power of t. A scale changes the power inside the original function.</p>",
+            "solution": "<p>\\(t^Y=t^{2}(t^{1})^X\\).</p>\\[G_{Y}(t)=\\frac{t^{5}}{2} + \\frac{t^{3}}{5} + \\frac{3 t^{2}}{10}\\]<p>The transformed mean and variance are \\(\\frac{37}{10}\\) and \\(\\frac{181}{100}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A shift makes the lowest possible value larger by exactly the same amount.</p>"
+          }
+        ]
+      },
+      {
+        "id": "scale",
+        "title": "Why does a scale replace t by a power?",
+        "label": "Scale",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Doubling a count doubles every outcome exponent.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_{aX}(t)=G_X(t^a)\\) for positive integer \\(a\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Changing the multiplier of every term would change probabilities, and their total would no longer equal one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-transform-study-02",
+            "title": "Find a power removed by scaling",
+            "prompt": "<p>A count \\(X\\) has PGF \\(G_{X}(t)=\\frac{t^{2}}{2} + \\frac{3 t}{10} + \\frac{1}{5}\\). Define \\(Y=3 X\\).</p><p>Find the exact probability that the transformed value is 5.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Probability",
+                "expected": "0",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A shift multiplies by a power of t. A scale changes the power inside the original function.</p>",
+            "solution": "<p>\\(t^Y=t^{0}(t^{3})^X\\).</p>\\[G_{Y}(t)=\\frac{t^{6}}{2} + \\frac{3 t^{3}}{10} + \\frac{1}{5}\\]<p>The transformed mean and variance are \\(\\frac{39}{10}\\) and \\(\\frac{549}{100}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A power that cannot appear by scaling has zero probability.</p>"
+          }
+        ]
+      },
+      {
+        "id": "both",
+        "title": "How do I combine a shift and a scale?",
+        "label": "Both operations",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Apply the exponent identity to the whole value.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_{aX+b}(t)=t^bG_X(t^a)\\) follows by writing \\(t^{aX+b}=t^b(t^a)^X\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>When calculating variance the shift contributes zero and the scale is squared.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-transform-study-03",
+            "title": "Find a coefficient after a scale and shift",
+            "prompt": "<p>A count \\(X\\) has PGF \\(G_{X}(t)=\\frac{t^{2}}{5} + \\frac{t}{2} + \\frac{3}{10}\\). Define \\(Y=2 X + 2\\).</p><p>Find the exact probability that the transformed value is 4.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Probability",
+                "expected": "1/2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A shift multiplies by a power of t. A scale changes the power inside the original function.</p>",
+            "solution": "<p>\\(t^Y=t^{2}(t^{2})^X\\).</p>\\[G_{Y}(t)=\\frac{t^{6}}{5} + \\frac{t^{4}}{2} + \\frac{3 t^{2}}{10}\\]<p>The transformed mean and variance are \\(\\frac{19}{5}\\) and \\(\\frac{49}{25}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Read the transformed support before extracting a coefficient.</p>"
+          }
+        ]
+      },
+      {
+        "id": "test-independence",
+        "title": "How do the margins test independence?",
+        "label": "Joint laws",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Sum the cells in each row and column to obtain the individual masses.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Independence requires \\(\\mathrm P(X=i,Y=j)=\\mathrm P(X=i)\\mathrm P(Y=j)\\) for every pair.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>One pair that matches the product does not establish independence.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-transform-study-04",
+            "title": "Detect a failure of marginal factorisation",
+            "prompt": "<p>A joint distribution for two counts is given.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Joint probability</th><th scope=\"col\">\\(Y=0\\)</th><th scope=\"col\">\\(Y=1\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(X=0\\)</th><td>\\(\\frac{5}{12}\\)</td><td>\\(\\frac{1}{12}\\)</td></tr><tr><th scope=\"row\">\\(X=1\\)</th><td>\\(\\frac{1}{12}\\)</td><td>\\(\\frac{5}{12}\\)</td></tr></tbody></table></div><p>Are \\(X\\) and \\(Y\\) independent?</p>",
+            "fields": [
+              {
+                "key": "dec",
+                "label": "Relationship",
+                "type": "choice",
+                "expected": "B",
+                "options": {
+                  "A": "<p>Independent</p>",
+                  "B": "<p>Dependent</p>"
+                }
+              }
+            ],
+            "hint": "<p>For a sum, add the joint probabilities on the diagonal with the required total.</p>",
+            "solution": "<p>For example, \\(\\mathrm P(X=0,Y=0)=\\frac{5}{12}\\) and the product of the marginals is \\(\\frac{1}{4}\\).</p><p>The sum's coefficient is \\(\\sum_{i+j=1}\\mathrm P(X=i,Y=j)\\) for exponent \\(1\\), giving \\(\\frac{1}{6}\\).</p>\\[G_{X+Y}(t)=\\frac{5 t^{2}}{12} + \\frac{t}{6} + \\frac{5}{12}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>One counterexample is sufficient to show dependence.</p>"
+          }
+        ]
+      },
+      {
+        "id": "diagonal",
+        "title": "How do I find a sum when the counts depend on each other?",
+        "label": "Add joint masses",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>The sum event collects all cells on the relevant diagonal.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm P(X+Y=k)=\\sum_{i+j=k}\\mathrm P(X=i,Y=j)\\). Use the actual joint values.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Replacing the listed joint probabilities with products of margins silently assumes independence.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-transform-study-05",
+            "title": "Collect two joint outcomes on an interior diagonal",
+            "prompt": "<p>A joint distribution for two counts is given.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Joint probability</th><th scope=\"col\">\\(Y=0\\)</th><th scope=\"col\">\\(Y=1\\)</th><th scope=\"col\">\\(Y=2\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(X=0\\)</th><td>\\(\\frac{1}{10}\\)</td><td>\\(\\frac{1}{20}\\)</td><td>\\(\\frac{1}{5}\\)</td></tr><tr><th scope=\"row\">\\(X=1\\)</th><td>\\(\\frac{1}{20}\\)</td><td>\\(\\frac{1}{4}\\)</td><td>\\(\\frac{1}{10}\\)</td></tr><tr><th scope=\"row\">\\(X=2\\)</th><td>\\(\\frac{1}{10}\\)</td><td>\\(\\frac{1}{10}\\)</td><td>\\(\\frac{1}{20}\\)</td></tr></tbody></table></div><p>Find the exact probability of a sum of 2.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Probability",
+                "expected": "11/20",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>For a sum, add the joint probabilities on the diagonal with the required total.</p>",
+            "solution": "<p>For example, \\(\\mathrm P(X=0,Y=0)=\\frac{1}{10}\\) and the product of the marginals is \\(\\frac{7}{80}\\).</p><p>The sum's coefficient is \\(\\sum_{i+j=2}\\mathrm P(X=i,Y=j)\\) for exponent \\(2\\), giving \\(\\frac{11}{20}\\).</p>\\[G_{X+Y}(t)=\\frac{t^{4}}{20} + \\frac{t^{3}}{5} + \\frac{11 t^{2}}{20} + \\frac{t}{10} + \\frac{1}{10}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For \\(X+Y=1\\) check both the \\((0,1)\\) and \\((1,0)\\) cells.</p>"
+          }
+        ]
+      },
+      {
+        "id": "combine",
+        "title": "What if I transform one count before adding another?",
+        "label": "Transform and combine",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>First generate the transformed count. Then multiply by the other PGF if independence is given.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_{aX+b+Y}(t)=t^bG_X(t^a)G_Y(t)\\) for independent \\(X\\) and \\(Y\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The product expression must use the modified outcome of \\(X\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-transform-study-06",
+            "title": "Find one mass after changing a summand",
+            "prompt": "<p>Two independent counters record \\(X\\) and \\(Y\\) during the same window.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{4}{5}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{1}{5}\\)</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(y\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{3}{10}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{2}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{3}{10}\\)</td></tr></tbody></table></div><p>Let \\(S=2 X + Y + 1\\).</p><p>Find the exact probability that the result is 3.</p>",
+            "fields": [
+              {
+                "key": "prob",
+                "label": "Probability",
+                "expected": "3/10",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A coefficient in the product collects every pair of counts with the given total.</p>",
+            "solution": "<p>The summands are independent. Account for any scale and shift in the exponent.</p>\\[G_S(t)=t^{1}G_X(t^{2})G_Y(t)=\\frac{3 t^{5}}{50} + \\frac{2 t^{4}}{25} + \\frac{3 t^{3}}{10} + \\frac{8 t^{2}}{25} + \\frac{6 t}{25}\\]<p>Outcomes giving the required coefficient contribute \\(\\frac{6}{25}+\\frac{3}{50}\\), which sums to \\(\\frac{3}{10}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A transformation of one variable preserves its independence from the other.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Move every exponent one place",
+        "question": "<p>A count \\(X\\) has PGF \\(G_{X}(t)=\\frac{t^{3}}{2} + \\frac{3 t}{10} + \\frac{1}{5}\\). Define \\(Y=X + 1\\).</p><p>Give the generating function for \\(Y\\).</p>",
+        "solution": [
+          "<p>\\(t^Y=t^{1}(t^{1})^X\\).</p>",
+          "\\[G_{Y}(t)=\\frac{t^{4}}{2} + \\frac{3 t^{2}}{10} + \\frac{t}{5}\\]",
+          "<p>The transformed mean and variance are \\(\\frac{14}{5}\\) and \\(\\frac{39}{25}\\).</p>"
+        ]
+      },
+      {
+        "title": "Shift a distribution that already starts at one",
+        "question": "<p>A count \\(X\\) has PGF \\(G_{X}(t)=\\frac{t^{4}}{4} + \\frac{t^{2}}{2} + \\frac{t}{4}\\). Define \\(Y=X + 2\\).</p><p>Give the smallest possible value and its probability.</p>",
+        "solution": [
+          "<p>\\(t^Y=t^{2}(t^{1})^X\\).</p>",
+          "\\[G_{Y}(t)=\\frac{t^{6}}{4} + \\frac{t^{4}}{2} + \\frac{t^{3}}{4}\\]",
+          "<p>The transformed mean and variance are \\(\\frac{17}{4}\\) and \\(\\frac{19}{16}\\).</p>"
+        ]
+      },
+      {
+        "title": "Double output counts without changing their masses",
+        "question": "<p>A count \\(X\\) has PGF \\(G_{X}(t)=\\frac{t^{2}}{2} + \\frac{2 t}{5} + \\frac{1}{10}\\). Define \\(Y=2 X\\).</p><p>Give the generating function for \\(Y\\).</p>",
+        "solution": [
+          "<p>\\(t^Y=t^{0}(t^{2})^X\\).</p>",
+          "\\[G_{Y}(t)=\\frac{t^{4}}{2} + \\frac{2 t^{2}}{5} + \\frac{1}{10}\\]",
+          "<p>The transformed mean and variance are \\(\\frac{14}{5}\\) and \\(\\frac{44}{25}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find both moments after scaling and shifting",
+        "question": "<p>A count \\(X\\) has PGF \\(G_{X}(t)=\\frac{t^{2}}{4} + \\frac{t}{2} + \\frac{1}{4}\\). Define \\(Y=2 X + 1\\).</p><p>Find the exact mean and variance after transforming.</p>",
+        "solution": [
+          "<p>\\(t^Y=t^{1}(t^{2})^X\\).</p>",
+          "\\[G_{Y}(t)=\\frac{t^{5}}{4} + \\frac{t^{3}}{2} + \\frac{t}{4}\\]",
+          "<p>The transformed mean and variance are \\(3\\) and \\(2\\).</p>"
+        ]
+      },
+      {
+        "title": "Check independence from a joint table",
+        "question": "<p>A joint distribution for two counts is given.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Joint probability</th><th scope=\"col\">\\(Y=0\\)</th><th scope=\"col\">\\(Y=1\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(X=0\\)</th><td>\\(\\frac{2}{5}\\)</td><td>\\(\\frac{4}{15}\\)</td></tr><tr><th scope=\"row\">\\(X=1\\)</th><td>\\(\\frac{1}{5}\\)</td><td>\\(\\frac{2}{15}\\)</td></tr></tbody></table></div><p>Are \\(X\\) and \\(Y\\) independent?</p>",
+        "solution": [
+          "<p>Each joint probability is the product of the corresponding marginals.</p>",
+          "<p>The sum's coefficient is \\(\\sum_{i+j=1}\\mathrm P(X=i,Y=j)\\) for exponent \\(1\\), giving \\(\\frac{7}{15}\\).</p>",
+          "\\[G_{X+Y}(t)=\\frac{2 t^{2}}{15} + \\frac{7 t}{15} + \\frac{2}{5}\\]"
+        ]
+      },
+      {
+        "title": "Add the joint outcomes for one total",
+        "question": "<p>A joint distribution for two counts is given.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Joint probability</th><th scope=\"col\">\\(Y=0\\)</th><th scope=\"col\">\\(Y=1\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(X=0\\)</th><td>\\(\\frac{2}{5}\\)</td><td>\\(\\frac{1}{5}\\)</td></tr><tr><th scope=\"row\">\\(X=1\\)</th><td>\\(\\frac{1}{10}\\)</td><td>\\(\\frac{3}{10}\\)</td></tr></tbody></table></div><p>Find the exact probability of a sum of 1.</p>",
+        "solution": [
+          "<p>For example, \\(\\mathrm P(X=0,Y=0)=\\frac{2}{5}\\) and the product of the marginals is \\(\\frac{3}{10}\\).</p>",
+          "<p>The sum's coefficient is \\(\\sum_{i+j=1}\\mathrm P(X=i,Y=j)\\) for exponent \\(1\\), giving \\(\\frac{3}{10}\\).</p>",
+          "\\[G_{X+Y}(t)=\\frac{3 t^{2}}{10} + \\frac{3 t}{10} + \\frac{2}{5}\\]"
+        ]
+      },
+      {
+        "title": "Build a shifted sum with two independent inputs",
+        "question": "<p>Workers count two independent streams of requests.</p><p>\\(G_{X}(t)=\\frac{2 t}{3} + \\frac{1}{3}\\) and \\(G_{Y}(t)=\\frac{2 t}{5} + \\frac{3}{5}\\).</p><p>Let \\(S=2 X + Y + 1\\).</p><p>Give the whole generating function for \\(S\\).</p>",
+        "solution": [
+          "<p>The summands are independent. Account for any scale and shift in the exponent.</p>",
+          "\\[G_S(t)=t^{1}G_X(t^{2})G_Y(t)=\\frac{4 t^{4}}{15} + \\frac{2 t^{3}}{5} + \\frac{2 t^{2}}{15} + \\frac{t}{5}\\]"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Shift",
+        "definition": "<p>Add a fixed integer to each outcome.</p>"
+      },
+      {
+        "term": "Scale",
+        "definition": "<p>Multiply each outcome by a positive integer.</p>"
+      },
+      {
+        "term": "Joint probability",
+        "definition": "<p>The probability that two outcomes occur together.</p>"
+      },
+      {
+        "term": "Marginal probability",
+        "definition": "<p>An individual variable’s probability, found by summing across the matching row or column.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-pgf-transform-study-07",
+        "title": "Find the shifted support minimum and probability",
+        "prompt": "<p>A count \\(X\\) has PGF \\(G_{X}(t)=\\frac{5 t^{3}}{12} + \\frac{t^{2}}{4} + \\frac{t}{3}\\). Define \\(Y=2 X\\).</p><p>Give the smallest possible value and its probability.</p>",
+        "fields": [
+          {
+            "key": "sm",
+            "label": "Smallest value",
+            "expected": "2",
+            "type": "number"
+          },
+          {
+            "key": "p",
+            "label": "Probability",
+            "expected": "1/3",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A shift multiplies by a power of t. A scale changes the power inside the original function.</p>",
+        "solution": "<p>\\(t^Y=t^{0}(t^{2})^X\\).</p>\\[G_{Y}(t)=\\frac{5 t^{6}}{12} + \\frac{t^{4}}{4} + \\frac{t^{2}}{3}\\]<p>The transformed mean and variance are \\(\\frac{25}{6}\\) and \\(\\frac{107}{36}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-transform-study-08",
+        "title": "Build the whole sum PGF from a joint model",
+        "prompt": "<p>A joint distribution for two counts is given.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Joint probability</th><th scope=\"col\">\\(Y=0\\)</th><th scope=\"col\">\\(Y=1\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(X=0\\)</th><td>\\(\\frac{2}{5}\\)</td><td>\\(\\frac{3}{10}\\)</td></tr><tr><th scope=\"row\">\\(X=1\\)</th><td>\\(\\frac{1}{10}\\)</td><td>\\(\\frac{1}{5}\\)</td></tr></tbody></table></div><p>Give the complete PGF of \\(X+Y\\).</p>",
+        "fields": [
+          {
+            "key": "pgf",
+            "label": "Generating function",
+            "type": "polynomial",
+            "variables": [
+              "t"
+            ],
+            "expected": "t^2/5 + 2*t/5 + 2/5"
+          }
+        ],
+        "hint": "<p>For a sum, add the joint probabilities on the diagonal with the required total.</p>",
+        "solution": "<p>For example, \\(\\mathrm P(X=0,Y=0)=\\frac{2}{5}\\) and the product of the marginals is \\(\\frac{7}{20}\\).</p><p>The sum's coefficient is \\(\\sum_{i+j=1}\\mathrm P(X=i,Y=j)\\) for exponent \\(1\\), giving \\(\\frac{2}{5}\\).</p>\\[G_{X+Y}(t)=\\frac{t^{2}}{5} + \\frac{2 t}{5} + \\frac{2}{5}\\]"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-transform-study-09",
+        "title": "Confirm independence in a rectangular table",
+        "prompt": "<p>A joint distribution for two counts is given.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Joint probability</th><th scope=\"col\">\\(Y=0\\)</th><th scope=\"col\">\\(Y=1\\)</th><th scope=\"col\">\\(Y=2\\)</th></tr></thead><tbody><tr><th scope=\"row\">\\(X=0\\)</th><td>\\(\\frac{1}{15}\\)</td><td>\\(\\frac{1}{5}\\)</td><td>\\(\\frac{2}{15}\\)</td></tr><tr><th scope=\"row\">\\(X=1\\)</th><td>\\(\\frac{1}{10}\\)</td><td>\\(\\frac{3}{10}\\)</td><td>\\(\\frac{1}{5}\\)</td></tr></tbody></table></div><p>Are \\(X\\) and \\(Y\\) independent?</p>",
+        "fields": [
+          {
+            "key": "dec",
+            "label": "Relationship",
+            "type": "choice",
+            "expected": "A",
+            "options": {
+              "A": "<p>Independent</p>",
+              "B": "<p>Dependent</p>"
+            }
+          }
+        ],
+        "hint": "<p>For a sum, add the joint probabilities on the diagonal with the required total.</p>",
+        "solution": "<p>Each joint probability is the product of the corresponding marginals.</p><p>The sum's coefficient is \\(\\sum_{i+j=1}\\mathrm P(X=i,Y=j)\\) for exponent \\(1\\), giving \\(\\frac{3}{10}\\).</p>\\[G_{X+Y}(t)=\\frac{t^{3}}{5} + \\frac{13 t^{2}}{30} + \\frac{3 t}{10} + \\frac{1}{15}\\]"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-transform-study-10",
+        "title": "Find the resulting mean and variance",
+        "prompt": "<p>A count \\(X\\) has PGF \\(G_{X}(t)=\\frac{2 t^{3}}{5} + \\frac{t}{5} + \\frac{2}{5}\\). Define \\(Y=2 X\\).</p><p>Find the exact mean and variance after transforming.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean",
+            "expected": "14/5",
+            "type": "number"
+          },
+          {
+            "key": "variance",
+            "label": "Variance",
+            "expected": "184/25",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A shift multiplies by a power of t. A scale changes the power inside the original function.</p>",
+        "solution": "<p>\\(t^Y=t^{0}(t^{2})^X\\).</p>\\[G_{Y}(t)=\\frac{2 t^{6}}{5} + \\frac{t^{2}}{5} + \\frac{2}{5}\\]<p>The transformed mean and variance are \\(\\frac{14}{5}\\) and \\(\\frac{184}{25}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-transform-study-11",
+        "title": "Compare moments after scaling one count",
+        "prompt": "<p>Workers count two independent streams of requests.</p><p>\\(G_{X}(t)=\\frac{3 t^{2}}{10} + \\frac{2 t}{5} + \\frac{3}{10}\\) and \\(G_{Y}(t)=\\frac{t^{2}}{5} + \\frac{2 t}{5} + \\frac{2}{5}\\).</p><p>Let \\(S=2 X + Y + 1\\).</p><p>Find the exact mean and variance.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean",
+            "expected": "19/5",
+            "type": "number"
+          },
+          {
+            "key": "var",
+            "label": "Variance",
+            "expected": "74/25",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A coefficient in the product collects every pair of counts with the given total.</p>",
+        "solution": "<p>The summands are independent. Account for any scale and shift in the exponent.</p>\\[G_S(t)=t^{1}G_X(t^{2})G_Y(t)=\\frac{3 t^{7}}{50} + \\frac{3 t^{6}}{25} + \\frac{t^{5}}{5} + \\frac{4 t^{4}}{25} + \\frac{11 t^{3}}{50} + \\frac{3 t^{2}}{25} + \\frac{3 t}{25}\\]<p>The mean is \\(\\frac{19}{5}\\) and, adding independent variances with the scale squared, the variance is \\(\\frac{74}{25}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-transform-study-12",
+        "title": "Check the transformed support of both counts",
+        "prompt": "<p>Workers count two independent streams of requests.</p><p>\\(G_{X}(t)=\\frac{3 t^{2}}{4} + \\frac{t}{4}\\) and \\(G_{Y}(t)=\\frac{3 t^{3}}{4} + \\frac{1}{4}\\).</p><p>Let \\(S=2 X + Y + 1\\).</p><p>Give its smallest and largest possible values.</p>",
+        "fields": [
+          {
+            "key": "small",
+            "label": "Smallest value",
+            "expected": "3",
+            "type": "number"
+          },
+          {
+            "key": "largest",
+            "label": "Largest value",
+            "expected": "8",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A coefficient in the product collects every pair of counts with the given total.</p>",
+        "solution": "<p>The summands are independent. Account for any scale and shift in the exponent.</p>\\[G_S(t)=t^{1}G_X(t^{2})G_Y(t)=\\frac{9 t^{8}}{16} + \\frac{3 t^{6}}{16} + \\frac{3 t^{5}}{16} + \\frac{t^{3}}{16}\\]<p>Read the lowest and highest powers \\(3\\) and \\(8\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the right PGF operation</h2><p>Keep the random count and the dummy variable distinct.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When</th><th scope=\"col\">Use</th></tr></thead><tbody><tr><th scope=\"row\">Shift</th><td>\\(G_{X+b}(t)=t^bG_X(t)\\)</td></tr><tr><th scope=\"row\">Scale</th><td>\\(G_{aX}(t)=G_X(t^a)\\)</td></tr><tr><th scope=\"row\">Combined</th><td>\\(G_{aX+b}(t)=t^bG_X(t^a)\\)</td></tr><tr><th scope=\"row\">Dependent sum</th><td>Add joint masses for the target exponent.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Each supported exponent is a non-negative integer.</li><li>A missing exponent has probability zero.</li><li>Check \\(G(1)=1\\) and whether independence is given.</li></ul>",
+      "examTip": "<p>The coefficient determines the probability. For moments, differentiate before evaluating at 1.</p>"
+    },
+    "related": [
+      {
+        "title": "Build and read a PGF",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_construct"
+      },
+      {
+        "title": "Recover a distribution and its moments",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_moments"
+      },
+      {
+        "title": "Add independent counts",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_sums"
+      },
+      {
+        "title": "Add repeated independent copies",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_copies"
+      }
+    ]
+  },
+  "stats_pgf_copies": {
+    "updatedOn": "2026-11-21",
+    "description": "Raise a PGF to a power for repeated independent copies, and find support, exact total probabilities and moments.",
+    "sections": [
+      {
+        "id": "powers",
+        "title": "Why is a repeated sum a power?",
+        "label": "Repeated sum",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Each observation contributes a factor and every factor has the same form.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_{X_1+\\cdots+X_n}(t)=[G_X(t)]^n\\) for independent identically distributed copies.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The exponent is the number of independent copies. Multiplying the single-copy PGF by this number would break normalisation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-copies-study-01",
+            "title": "Build the PGF of three plays",
+            "prompt": "<p>A points game is played 3 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{t^{2}}{3} + \\frac{t}{6} + \\frac{1}{2}\\]<p>Let \\(T\\) be the total.</p><p>Give the full PGF for the total.</p>",
+            "fields": [
+              {
+                "key": "pgf",
+                "label": "Generating function",
+                "type": "polynomial",
+                "variables": [
+                  "t"
+                ],
+                "expected": "t^6/27 + t^5/18 + 7*t^4/36 + 37*t^3/216 + 7*t^2/24 + t/8 + 1/8"
+              }
+            ],
+            "hint": "<p>Raise the single-play PGF to the number of plays, then read the required coefficient or moment.</p>",
+            "solution": "<p>\\(G_T(t)=[G_X(t)]^{3}\\) because there is an independent factor for each play.</p>\\[G_{T}(t)=\\frac{t^{6}}{27} + \\frac{t^{5}}{18} + \\frac{7 t^{4}}{36} + \\frac{37 t^{3}}{216} + \\frac{7 t^{2}}{24} + \\frac{t}{8} + \\frac{1}{8}\\]"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Write one factor for each observation you actually sum.</p>"
+          }
+        ]
+      },
+      {
+        "id": "extremes",
+        "title": "What are the smallest and largest totals?",
+        "label": "Support",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>If the single-copy minimum and maximum are finite, add them over all copies.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\min S=n\\min X,\\quad \\max S=n\\max X\\) because those extreme choices can occur together.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A total inside the endpoints can still be impossible if the support has gaps.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-copies-study-02",
+            "title": "Find the limits for shifted positive scores",
+            "prompt": "<p>A points game is played 3 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{t^{4}}{2} + \\frac{3 t^{3}}{10} + \\frac{t^{2}}{5}\\]<p>Let \\(T\\) be the total.</p><p>Give the smallest and largest possible totals.</p>",
+            "fields": [
+              {
+                "key": "min",
+                "label": "Smallest total",
+                "expected": "6",
+                "type": "number"
+              },
+              {
+                "key": "max",
+                "label": "Largest total",
+                "expected": "12",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Raise the single-play PGF to the number of plays, then read the required coefficient or moment.</p>",
+            "solution": "<p>\\(G_T(t)=[G_X(t)]^{3}\\) because there is an independent factor for each play.</p>\\[G_{T}(t)=\\frac{t^{12}}{8} + \\frac{9 t^{11}}{40} + \\frac{57 t^{10}}{200} + \\frac{207 t^{9}}{1000} + \\frac{57 t^{8}}{500} + \\frac{9 t^{7}}{250} + \\frac{t^{6}}{125}\\]<p>The lowest and highest powers give \\(6\\) and \\(12\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>A fixed smallest value above zero shifts the entire repeated sum.</p>"
+          }
+        ]
+      },
+      {
+        "id": "patterns",
+        "title": "How many patterns make a particular total?",
+        "label": "Single probability",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Factor the polynomial first and identify the target coefficient.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Different orders of the same outcomes can contribute separately. For exactly one nonzero observation, choose which copy supplies it.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using a single ordering undercounts when the nonzero score could come from several copies.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-copies-study-03",
+            "title": "Find the probability of a total of one",
+            "prompt": "<p>A points game is played 4 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{3 t^{2}}{10} + \\frac{3 t}{10} + \\frac{2}{5}\\]<p>Let \\(T\\) be the total.</p><p>Find the exact probability of a total of 1.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Probability",
+                "expected": "48/625",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Raise the single-play PGF to the number of plays, then read the required coefficient or moment.</p>",
+            "solution": "<p>\\(G_T(t)=[G_X(t)]^{4}\\) because there is an independent factor for each play.</p>\\[G_{T}(t)=\\frac{81 t^{8}}{10000} + \\frac{81 t^{7}}{2500} + \\frac{459 t^{6}}{5000} + \\frac{81 t^{5}}{500} + \\frac{2241 t^{4}}{10000} + \\frac{27 t^{3}}{125} + \\frac{102 t^{2}}{625} + \\frac{48 t}{625} + \\frac{16}{625}\\]<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Unordered pattern</th><th scope=\"col\">Orders</th><th scope=\"col\">Probability over these orders</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\left(0,0,0,1\\right)\\)</th><td>\\(4\\)</td><td>\\(\\frac{48}{625}\\)</td></tr></tbody></table></div><p>Add the pattern contributions to obtain \\(\\frac{48}{625}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>If using an expansion, include all terms that reach the target exponent.</p>"
+          }
+        ]
+      },
+      {
+        "id": "moments",
+        "title": "Can I work out moments before expanding?",
+        "label": "Efficient moments",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For independent copies each occurrence contributes the same mean and variance.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm E(S)=n\\mathrm E(X),\\quad \\mathrm{Var}(S)=n\\mathrm{Var}(X)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Multiplying a random variable by \\(n\\) has variance factor \\(n^2\\). Summing \\(n\\) independent copies has variance factor \\(n\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-copies-study-04",
+            "title": "Find the mean and variance after four plays",
+            "prompt": "<p>A points game is played 4 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{t^{2}}{10} + \\frac{3 t}{10} + \\frac{3}{5}\\]<p>Let \\(T\\) be the total.</p><p>Give the exact mean and variance of the total.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean",
+                "expected": "2",
+                "type": "number"
+              },
+              {
+                "key": "var",
+                "label": "Variance",
+                "expected": "9/5",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Raise the single-play PGF to the number of plays, then read the required coefficient or moment.</p>",
+            "solution": "<p>\\(G_T(t)=[G_X(t)]^{4}\\) because there is an independent factor for each play.</p>\\[G_{T}(t)=\\frac{t^{8}}{10000} + \\frac{3 t^{7}}{2500} + \\frac{39 t^{6}}{5000} + \\frac{81 t^{5}}{2500} + \\frac{189 t^{4}}{2000} + \\frac{243 t^{3}}{1250} + \\frac{351 t^{2}}{1250} + \\frac{162 t}{625} + \\frac{81}{625}\\]<p>The single-play mean and variance are \\(\\frac{1}{2}\\) and \\(\\frac{9}{20}\\). The total has mean \\(2\\) and variance \\(\\frac{9}{5}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>The standard deviation of the total is \\(\\sqrt n\\) times the single-copy standard deviation.</p>"
+          }
+        ]
+      },
+      {
+        "id": "closed",
+        "title": "Can a repeated total be recognised immediately?",
+        "label": "Recognise the law",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Repeated Poisson counts and repeated binomial counts with the same success probability give familiar PGFs.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A power multiplies the Poisson rate or the binomial trial count. In a binomial model the success probability per trial stays the same.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Don’t change the binomial success probability by raising it to the number of repeats.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-copies-study-05",
+            "title": "Recognise two identical binomial counts",
+            "prompt": "<p>The counts are independent. Their laws are \\(X\\sim\\mathrm{Bin}(3,\\frac{2}{5}),\\quad Y\\sim\\mathrm{Bin}(3,\\frac{2}{5})\\).</p><p>Identify the distribution of the sum.</p>",
+            "fields": [
+              {
+                "key": "law",
+                "label": "Distribution of the total",
+                "type": "choice",
+                "expected": "A",
+                "options": {
+                  "A": "<p>\\(\\mathrm{Bin}(6,\\frac{2}{5})\\)</p>",
+                  "B": "<p>\\(\\mathrm{Bin}(6,\\frac{4}{25})\\)</p>",
+                  "C": "<p>\\(\\mathrm{Bin}(9,\\frac{2}{5})\\)</p>"
+                }
+              }
+            ],
+            "hint": "<p>Multiply PGFs and combine identical bases or exponential powers.</p>",
+            "solution": "<p>Multiply the two PGFs.</p>\\[G_{X+Y}(t)=\\left(\\frac{2 t}{5} + \\frac{3}{5}\\right)^{6}\\]<p>Recognise this as \\(\\mathrm{Bin}(6,\\frac{2}{5})\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check familiarity only after confirming the model form.</p>"
+          }
+        ]
+      },
+      {
+        "id": "contrast",
+        "title": "How can I distinguish repeated copies from a scaled single copy?",
+        "label": "Choose the operation",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>Repeated copies allow different outcomes. A scaled copy takes one value and repeats that value by multiplication.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(G_{X_1+\\cdots+X_n}(t)=[G_X(t)]^n\\) whereas \\(G_{nX}(t)=G_X(t^n)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The means agree. The variance and support can distinguish the two distributions.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-pgf-copies-study-06",
+            "title": "Find both total moments from the one-play table",
+            "prompt": "<p>A points game is played 3 times independently with the same single-play law.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{1}{5}\\)</td></tr><tr><th scope=\"row\">\\(2\\)</th><td>\\(\\frac{3}{5}\\)</td></tr><tr><th scope=\"row\">\\(3\\)</th><td>\\(\\frac{1}{5}\\)</td></tr></tbody></table></div><p>Let \\(T\\) be the total.</p><p>Give the exact mean and variance of the total.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean",
+                "expected": "6",
+                "type": "number"
+              },
+              {
+                "key": "var",
+                "label": "Variance",
+                "expected": "6/5",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Raise the single-play PGF to the number of plays, then read the required coefficient or moment.</p>",
+            "solution": "<p>\\(G_T(t)=[G_X(t)]^{3}\\) because there is an independent factor for each play.</p>\\[G_{T}(t)=\\frac{t^{9}}{125} + \\frac{9 t^{8}}{125} + \\frac{6 t^{7}}{25} + \\frac{9 t^{6}}{25} + \\frac{6 t^{5}}{25} + \\frac{9 t^{4}}{125} + \\frac{t^{3}}{125}\\]<p>The single-play mean and variance are \\(2\\) and \\(\\frac{2}{5}\\). The total has mean \\(6\\) and variance \\(\\frac{6}{5}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify whether the individual outcomes can differ from one another.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Square the distribution of one score",
+        "question": "<p>A points game is played 2 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{t^{2}}{2} + \\frac{3 t}{10} + \\frac{1}{5}\\]<p>Let \\(T\\) be the total.</p><p>Give the full PGF for the total.</p>",
+        "solution": [
+          "<p>\\(G_T(t)=[G_X(t)]^{2}\\) because there is an independent factor for each play.</p>",
+          "\\[G_{T}(t)=\\frac{t^{4}}{4} + \\frac{3 t^{3}}{10} + \\frac{29 t^{2}}{100} + \\frac{3 t}{25} + \\frac{1}{25}\\]"
+        ]
+      },
+      {
+        "title": "Generate three independent binary scores",
+        "question": "<p>A points game is played 3 times independently with the same single-play law.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">\\(x\\)</th><th scope=\"col\">Probability</th></tr></thead><tbody><tr><th scope=\"row\">\\(0\\)</th><td>\\(\\frac{3}{4}\\)</td></tr><tr><th scope=\"row\">\\(1\\)</th><td>\\(\\frac{1}{4}\\)</td></tr></tbody></table></div><p>Let \\(T\\) be the total.</p><p>Give the full PGF for the total.</p>",
+        "solution": [
+          "<p>\\(G_T(t)=[G_X(t)]^{3}\\) because there is an independent factor for each play.</p>",
+          "\\[G_{T}(t)=\\frac{t^{3}}{64} + \\frac{9 t^{2}}{64} + \\frac{27 t}{64} + \\frac{27}{64}\\]"
+        ]
+      },
+      {
+        "title": "Find the lowest and highest sums",
+        "question": "<p>A points game is played 3 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{t^{3}}{4} + \\frac{t^{2}}{4} + \\frac{t}{2}\\]<p>Let \\(T\\) be the total.</p><p>Give the smallest and largest possible totals.</p>",
+        "solution": [
+          "<p>\\(G_T(t)=[G_X(t)]^{3}\\) because there is an independent factor for each play.</p>",
+          "\\[G_{T}(t)=\\frac{t^{9}}{64} + \\frac{3 t^{8}}{64} + \\frac{9 t^{7}}{64} + \\frac{13 t^{6}}{64} + \\frac{9 t^{5}}{32} + \\frac{3 t^{4}}{16} + \\frac{t^{3}}{8}\\]",
+          "<p>The lowest and highest powers give \\(3\\) and \\(9\\).</p>"
+        ]
+      },
+      {
+        "title": "Collect every way of scoring two",
+        "question": "<p>A points game is played 3 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{3 t^{2}}{10} + \\frac{t}{2} + \\frac{1}{5}\\]<p>Let \\(T\\) be the total.</p><p>Find the exact probability of a total of 2.</p>",
+        "solution": [
+          "<p>\\(G_T(t)=[G_X(t)]^{3}\\) because there is an independent factor for each play.</p>",
+          "\\[G_{T}(t)=\\frac{27 t^{6}}{1000} + \\frac{27 t^{5}}{200} + \\frac{279 t^{4}}{1000} + \\frac{61 t^{3}}{200} + \\frac{93 t^{2}}{500} + \\frac{3 t}{50} + \\frac{1}{125}\\]",
+          "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Unordered pattern</th><th scope=\"col\">Orders</th><th scope=\"col\">Probability over these orders</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\left(0,0,2\\right)\\)</th><td>\\(3\\)</td><td>\\(\\frac{9}{250}\\)</td></tr><tr><th scope=\"row\">\\(\\left(0,1,1\\right)\\)</th><td>\\(3\\)</td><td>\\(\\frac{3}{20}\\)</td></tr></tbody></table></div>",
+          "<p>Add the pattern contributions to obtain \\(\\frac{93}{500}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the single-copy moments first",
+        "question": "<p>A points game is played 4 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{t^{3}}{2} + \\frac{3 t^{2}}{10} + \\frac{1}{5}\\]<p>Let \\(T\\) be the total.</p><p>Give the exact mean and variance of the total.</p>",
+        "solution": [
+          "<p>\\(G_T(t)=[G_X(t)]^{4}\\) because there is an independent factor for each play.</p>",
+          "\\[G_{T}(t)=\\frac{t^{12}}{16} + \\frac{3 t^{11}}{20} + \\frac{27 t^{10}}{200} + \\frac{77 t^{9}}{500} + \\frac{1881 t^{8}}{10000} + \\frac{27 t^{7}}{250} + \\frac{51 t^{6}}{625} + \\frac{9 t^{5}}{125} + \\frac{27 t^{4}}{1250} + \\frac{2 t^{3}}{125} + \\frac{6 t^{2}}{625} + \\frac{1}{625}\\]",
+          "<p>The single-play mean and variance are \\(\\frac{21}{10}\\) and \\(\\frac{129}{100}\\). The total has mean \\(\\frac{42}{5}\\) and variance \\(\\frac{129}{25}\\).</p>"
+        ]
+      },
+      {
+        "title": "Recognise equal independent Poisson groups",
+        "question": "<p>The counts are independent. Their laws are \\(X\\sim\\mathrm{Po}(4),\\quad Y\\sim\\mathrm{Po}(4)\\).</p><p>Identify the distribution of the sum.</p>",
+        "solution": [
+          "<p>Multiply the two PGFs.</p>\\[G_{X+Y}(t)=e^{8 t - 8}\\]",
+          "<p>Recognise this as \\(\\mathrm{Po}(8)\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare the scale of one draw with a sum",
+        "question": "<p>A count \\(X\\) has PGF \\(G_{X}(t)=\\frac{t^{2}}{6} + \\frac{t}{2} + \\frac{1}{3}\\). Define \\(Y=3 X\\).</p><p>Find the exact mean and variance after transforming.</p>",
+        "solution": [
+          "<p>\\(t^Y=t^{0}(t^{3})^X\\).</p>",
+          "\\[G_{Y}(t)=\\frac{t^{6}}{6} + \\frac{t^{3}}{2} + \\frac{1}{3}\\]",
+          "<p>The transformed mean and variance are \\(\\frac{5}{2}\\) and \\(\\frac{17}{4}\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Independent copy",
+        "definition": "<p>A new variable with the same distribution and independent of the others.</p>"
+      },
+      {
+        "term": "Repeated total",
+        "definition": "<p>The sum of a fixed number of independent copies.</p>"
+      },
+      {
+        "term": "Coefficient extraction",
+        "definition": "<p>Find the multiplier of the target power after taking the appropriate product.</p>"
+      },
+      {
+        "term": "Mutually exclusive contributions",
+        "definition": "<p>Distinct outcome patterns that cannot both occur in a single sequence of trials.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-pgf-copies-study-07",
+        "title": "Read the probability of exactly three points",
+        "prompt": "<p>A points game is played 3 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{t^{2}}{5} + \\frac{2 t}{5} + \\frac{2}{5}\\]<p>Let \\(T\\) be the total.</p><p>Find the exact probability of a total of 3.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Probability",
+            "expected": "32/125",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Raise the single-play PGF to the number of plays, then read the required coefficient or moment.</p>",
+        "solution": "<p>\\(G_T(t)=[G_X(t)]^{3}\\) because there is an independent factor for each play.</p>\\[G_{T}(t)=\\frac{t^{6}}{125} + \\frac{6 t^{5}}{125} + \\frac{18 t^{4}}{125} + \\frac{32 t^{3}}{125} + \\frac{36 t^{2}}{125} + \\frac{24 t}{125} + \\frac{8}{125}\\]<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Unordered pattern</th><th scope=\"col\">Orders</th><th scope=\"col\">Probability over these orders</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\left(0,1,2\\right)\\)</th><td>\\(6\\)</td><td>\\(\\frac{24}{125}\\)</td></tr><tr><th scope=\"row\">\\(\\left(1,1,1\\right)\\)</th><td>\\(1\\)</td><td>\\(\\frac{8}{125}\\)</td></tr></tbody></table></div><p>Add the pattern contributions to obtain \\(\\frac{32}{125}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-copies-study-08",
+        "title": "Find a missing odd total from even outcomes",
+        "prompt": "<p>A points game is played 3 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{2 t^{2}}{5} + \\frac{3}{5}\\]<p>Let \\(T\\) be the total.</p><p>Find the exact probability of a total of 3.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Probability",
+            "expected": "0",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Raise the single-play PGF to the number of plays, then read the required coefficient or moment.</p>",
+        "solution": "<p>\\(G_T(t)=[G_X(t)]^{3}\\) because there is an independent factor for each play.</p>\\[G_{T}(t)=\\frac{8 t^{6}}{125} + \\frac{36 t^{4}}{125} + \\frac{54 t^{2}}{125} + \\frac{27}{125}\\]<p>No supported sequence gives that total, so its probability is zero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-copies-study-09",
+        "title": "Build the exact two-play function",
+        "prompt": "<p>A points game is played 2 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{t^{3}}{2} + \\frac{t^{2}}{3} + \\frac{1}{6}\\]<p>Let \\(T\\) be the total.</p><p>Give the full PGF for the total.</p>",
+        "fields": [
+          {
+            "key": "pgf",
+            "label": "Generating function",
+            "type": "polynomial",
+            "variables": [
+              "t"
+            ],
+            "expected": "t^6/4 + t^5/3 + t^4/9 + t^3/6 + t^2/9 + 1/36"
+          }
+        ],
+        "hint": "<p>Raise the single-play PGF to the number of plays, then read the required coefficient or moment.</p>",
+        "solution": "<p>\\(G_T(t)=[G_X(t)]^{2}\\) because there is an independent factor for each play.</p>\\[G_{T}(t)=\\frac{t^{6}}{4} + \\frac{t^{5}}{3} + \\frac{t^{4}}{9} + \\frac{t^{3}}{6} + \\frac{t^{2}}{9} + \\frac{1}{36}\\]"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-copies-study-10",
+        "title": "Count the support floor and ceiling",
+        "prompt": "<p>A points game is played 5 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{t^{3}}{3} + \\frac{2 t}{3}\\]<p>Let \\(T\\) be the total.</p><p>Give the smallest and largest possible totals.</p>",
+        "fields": [
+          {
+            "key": "min",
+            "label": "Smallest total",
+            "expected": "5",
+            "type": "number"
+          },
+          {
+            "key": "max",
+            "label": "Largest total",
+            "expected": "15",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Raise the single-play PGF to the number of plays, then read the required coefficient or moment.</p>",
+        "solution": "<p>\\(G_T(t)=[G_X(t)]^{5}\\) because there is an independent factor for each play.</p>\\[G_{T}(t)=\\frac{t^{15}}{243} + \\frac{10 t^{13}}{243} + \\frac{40 t^{11}}{243} + \\frac{80 t^{9}}{243} + \\frac{80 t^{7}}{243} + \\frac{32 t^{5}}{243}\\]<p>The lowest and highest powers give \\(5\\) and \\(15\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-copies-study-11",
+        "title": "Identify a pattern with just one high payoff",
+        "prompt": "<p>A points game is played 3 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{t^{3}}{5} + \\frac{2 t}{5} + \\frac{2}{5}\\]<p>Let \\(T\\) be the total.</p><p>Find the exact probability of a total of 5.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Probability",
+            "expected": "12/125",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Raise the single-play PGF to the number of plays, then read the required coefficient or moment.</p>",
+        "solution": "<p>\\(G_T(t)=[G_X(t)]^{3}\\) because there is an independent factor for each play.</p>\\[G_{T}(t)=\\frac{t^{9}}{125} + \\frac{6 t^{7}}{125} + \\frac{6 t^{6}}{125} + \\frac{12 t^{5}}{125} + \\frac{24 t^{4}}{125} + \\frac{4 t^{3}}{25} + \\frac{24 t^{2}}{125} + \\frac{24 t}{125} + \\frac{8}{125}\\]<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Unordered pattern</th><th scope=\"col\">Orders</th><th scope=\"col\">Probability over these orders</th></tr></thead><tbody><tr><th scope=\"row\">\\(\\left(1,1,3\\right)\\)</th><td>\\(3\\)</td><td>\\(\\frac{12}{125}\\)</td></tr></tbody></table></div><p>Add the pattern contributions to obtain \\(\\frac{12}{125}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-pgf-copies-study-12",
+        "title": "Evaluate the two moments without expansion",
+        "prompt": "<p>A points game is played 6 times independently with the same single-play law.</p>\\[G_{X}(t)=\\frac{2 t^{2}}{5} + \\frac{t}{5} + \\frac{2}{5}\\]<p>Let \\(T\\) be the total.</p><p>Give the exact mean and variance of the total.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean",
+            "expected": "6",
+            "type": "number"
+          },
+          {
+            "key": "var",
+            "label": "Variance",
+            "expected": "24/5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Raise the single-play PGF to the number of plays, then read the required coefficient or moment.</p>",
+        "solution": "<p>\\(G_T(t)=[G_X(t)]^{6}\\) because there is an independent factor for each play.</p>\\[G_{T}(t)=\\frac{64 t^{12}}{15625} + \\frac{192 t^{11}}{15625} + \\frac{624 t^{10}}{15625} + \\frac{224 t^{9}}{3125} + \\frac{396 t^{8}}{3125} + \\frac{2412 t^{7}}{15625} + \\frac{2841 t^{6}}{15625} + \\frac{2412 t^{5}}{15625} + \\frac{396 t^{4}}{3125} + \\frac{224 t^{3}}{3125} + \\frac{624 t^{2}}{15625} + \\frac{192 t}{15625} + \\frac{64}{15625}\\]<p>The single-play mean and variance are \\(1\\) and \\(\\frac{4}{5}\\). The total has mean \\(6\\) and variance \\(\\frac{24}{5}\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the right PGF operation</h2><p>Keep the random count and the dummy variable distinct.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">When</th><th scope=\"col\">Use</th></tr></thead><tbody><tr><th scope=\"row\">Sum of copies</th><td>\\(G_S(t)=[G_X(t)]^n\\)</td></tr><tr><th scope=\"row\">Scaled copy</th><td>\\(G_{nX}(t)=G_X(t^n)\\)</td></tr><tr><th scope=\"row\">Repeated moments</th><td>\\(\\mathrm E(S)=n\\mathrm E(X),\\quad\\mathrm{Var}(S)=n\\mathrm{Var}(X)\\)</td></tr><tr><th scope=\"row\">Read probability</th><td>Choose the coefficient of the requested total.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Each supported exponent is a non-negative integer.</li><li>A missing exponent has probability zero.</li><li>Check \\(G(1)=1\\) and whether independence is given.</li></ul>",
+      "examTip": "<p>The coefficient determines the probability. For moments, differentiate before evaluating at 1.</p>"
+    },
+    "related": [
+      {
+        "title": "Build and read a PGF",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_construct"
+      },
+      {
+        "title": "Recover a distribution and its moments",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_moments"
+      },
+      {
+        "title": "Add independent counts",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_sums"
+      },
+      {
+        "title": "Transform a count or handle dependence",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_pgf_transform"
+      }
+    ]
+  }
+}

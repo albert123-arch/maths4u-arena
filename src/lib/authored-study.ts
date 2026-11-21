@@ -54,6 +54,7 @@ import study9231StatisticsCrv from "../../content/original/9231-statistics/crv-s
 import study9231StatisticsInference from "../../content/original/9231-statistics/inference-study.json";
 import study9231StatisticsChi2 from "../../content/original/9231-statistics/chi2-study.json";
 import study9231StatisticsNonparam from "../../content/original/9231-statistics/nonparam-study.json";
+import study9231StatisticsPgf from "../../content/original/9231-statistics/pgf-study.json";
 import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
 import { renderContent } from "./content";
 import { checkExact, checkExactInverseAngle, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
@@ -106,6 +107,7 @@ const lessons = {
   ...study9231StatisticsInference,
   ...study9231StatisticsChi2,
   ...study9231StatisticsNonparam,
+  ...study9231StatisticsPgf,
 } as Record<string, AuthoredLesson>;
 const examPaths = examPracticePaths as Record<string, Omit<StudyExamPractice, "starters"> & { starters?: StudyExamPractice["starters"] }>;
 
