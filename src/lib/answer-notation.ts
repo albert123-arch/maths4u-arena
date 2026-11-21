@@ -18,7 +18,11 @@ export function scalarSymbol(field: Field) {
 
 export function scalarLabels(field: Field) {
   const labels = [scalarSymbol(field)].filter((label): label is string => !!label);
-  if (field.type === "polynomial") return labels;
+  if (field.type === "polynomial") {
+    const division = /^(?:Quotient (Q\(x\))|Remainder (R\(x\)))$/i.exec(field.label);
+    const named = division?.[1] ?? division?.[2];
+    return named ? [named, ...labels] : labels;
+  }
   const evaluation = /^(?:Exact )?value of ([a-z]{1,2}(?:⁻¹|\^-1|\^\{-1\})?\([−–+\d./ -]+\))$/i.exec(field.label)?.[1];
   if (evaluation) {
     labels.unshift(evaluation);

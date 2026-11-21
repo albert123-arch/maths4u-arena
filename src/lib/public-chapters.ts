@@ -63,6 +63,7 @@ const chapterDescriptions: Record<string, string> = {
   "9709-p1-functions": "Study functions for Cambridge 9709 Pure Mathematics 1. Work through domain and range, inverse and composite functions, and graph transformations.",
   "9709-p1-coordinate-geometry": "Study coordinate geometry for Cambridge 9709 Pure Mathematics 1. Find exact distances, gradients, line and circle equations, intersections and tangents.",
   "9709-p1-circular-measure": "Study circular measure for Cambridge 9709 Pure Mathematics 1. Convert angles, find arc lengths and sector areas, and solve problems on segments and composite regions.",
+  "9709-p3-algebra": "Study algebra for Cambridge 9709 Pure Mathematics 3. Sketch linear modulus graphs, solve modulus equations and inequalities, and use polynomial division and the factor and remainder theorems.",
 };
 
 export function chapterMetadata(ch: PublicChapter, lesson?: PublicLesson) {
@@ -85,6 +86,8 @@ export function chapterMetadata(ch: PublicChapter, lesson?: PublicLesson) {
 
 export function learningStructuredData(ch: PublicChapter, lesson?: PublicLesson) {
   const path = lesson?.path ?? ch.chapterPath, is9709 = ch.courseCode === "9709";
+  const educationalLevel = ch.courseSlug === "maths4u-9709-p3" ? "Cambridge International A Level"
+    : is9709 ? "Cambridge International AS Level" : "A Level Further Mathematics";
   const crumbs = [
     is9709 ? { name: "AS & A Level", path: "/learn/a-level" } : { name: "Maths4U", path: "/" },
     { name: is9709 ? ch.courseTitle : "9231 " + furtherCourseName(ch.courseTitle), path: "/courses/" + ch.courseSlug },
@@ -99,7 +102,7 @@ export function learningStructuredData(ch: PublicChapter, lesson?: PublicLesson)
     {
       "@context": "https://schema.org", "@type": ["WebPage", "LearningResource"], name: lesson?.title ?? ch.chapterTitle,
       url: arenaOrigin + path, description: chapterMetadata(ch, lesson).description, inLanguage: "en", isAccessibleForFree: true,
-      educationalLevel: is9709 ? "Cambridge International AS Level" : "A Level Further Mathematics",
+      educationalLevel,
       learningResourceType: ["Notes", "Worked examples", "Practice questions"], about: "Cambridge International " + ch.courseCode + " " + ch.chapterTitle,
       ...(lesson ? { teaches: lesson.objective } : {}), dateModified: lesson?.modified ?? ch.modified,
       publisher: { "@type": "Organization", name: "Maths4U", url: arenaOrigin },

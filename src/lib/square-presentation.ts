@@ -60,8 +60,13 @@ export function answerFormat(f: SquareField): { en: string; ru: string; placehol
     if (/(?:^|_)roots?$/.test(f.key)) return { en: "Give every root, for example x = 1 or x = 4, or 1, 4. Use sqrt(...) for exact roots, or empty if there are none.", ru: "Укажите все корни, например x = 1 or x = 4 или 1, 4. Для точных корней используйте sqrt(...), если корней нет — empty.", placeholder: "x = 1 or x = 4" };
     return { en: "Give the complete set: {1, 4} for separate values, (1, 5] for an interval, U for union or empty for no real solutions. Use sqrt(...) for exact roots.", ru: "Укажите всё множество: {1, 4} для отдельных значений, (1, 5] для интервала, U для объединения, empty, если действительных решений нет. Точные корни: sqrt(...).", placeholder: "{root1, root2} or (lower, upper]" };
   }
-  if (f.variables?.length) return { en: `Enter an expression in ${f.variables.join(", ")}; use ^ for powers and / for fractions.`, ru: `Введите выражение с ${f.variables.join(", ")}; степени обозначайте ^, дроби — /.`, placeholder: `Expression in ${f.variables.join(", ")}` };
   const symbol = scalarLabels(f)[0];
+  if (f.type === "polynomial" && symbol?.endsWith("(x)")) return {
+    en: "Enter the expression on its own or write " + symbol + " = … . Use ^ for powers and / to type fractions.",
+    ru: "Введите выражение отдельно или с обозначением " + symbol + " = … . Для степеней используйте ^, для дробей /.",
+    placeholder: symbol + " = …",
+  };
+  if (f.variables?.length) return { en: `Enter an expression in ${f.variables.join(", ")}; use ^ for powers and / for fractions.`, ru: `Введите выражение с ${f.variables.join(", ")}; степени обозначайте ^, дроби — /.`, placeholder: `Expression in ${f.variables.join(", ")}` };
   if (symbol) return {
     en: "Enter the value on its own or write " + symbol + " = … . Fractions and exact square roots are accepted.",
     ru: "Введите значение отдельно или с обозначением " + symbol + " = … . Можно использовать дроби и точные корни.",
