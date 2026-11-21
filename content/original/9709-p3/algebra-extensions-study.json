@@ -1,0 +1,1074 @@
+{
+  "orig_9709_p3_alg_partial_fractions": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose the correct denominator template, find every numerator coefficient and separate a constant quotient before decomposing.",
+    "sections": [
+      {
+        "id": "choose-partial-fraction-shape",
+        "title": "Which terms must the split contain?",
+        "label": "Choose the template",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Write the denominator as factors. Each numerator must have lower degree than the corresponding factor. Test whether the original fraction is proper before solving for coefficients.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A linear factor takes a constant numerator. A squared linear factor needs separate terms for the first and second powers. A real irreducible quadratic takes a linear numerator.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Denominator shape</th><th scope=\"col\">Required fractions</th></tr></thead><tbody><tr><th scope=\"row\">\\(L_1L_2L_3\\), distinct linear</th><td>\\(\\frac A{L_1}+\\frac B{L_2}+\\frac C{L_3}\\)</td></tr><tr><th scope=\"row\">\\(LR^2\\), distinct linear \\(L,R\\)</th><td>\\(\\frac AL+\\frac BR+\\frac C{R^2}\\)</td></tr><tr><th scope=\"row\">\\(LQ\\), irreducible quadratic \\(Q\\)</th><td>\\(\\frac AL+\\frac{Bx+C}{Q}\\)</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Choose the general form before solving. A zero coefficient may remove a term only after the identity has been matched.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "alg-pf-shape",
+            "title": "Match the full denominator shape",
+            "prompt": "<p>Choose the general template for denominator \\((x-3)(x^2+6)\\).</p>",
+            "fields": [
+              {
+                "key": "shape",
+                "label": "General form",
+                "expected": "quadratic",
+                "type": "choice",
+                "options": {
+                  "linear": "\\(\\frac{A}{x-3}+\\frac B{x^2+6}\\)",
+                  "quadratic": "\\(\\frac{A}{x-3}+\\frac{Bx+C}{x^2+6}\\)",
+                  "repeated": "\\(\\frac{A}{x-3}+\\frac B{x^2+6}+\\frac C{(x^2+6)^2}\\)"
+                }
+              }
+            ],
+            "hint": "<p>The second factor has degree two and does not split over the reals.</p>",
+            "solution": "<p>The form is \\(\\frac A{x-3}+\\frac{Bx+C}{x^2+6}\\). Even if a particular \\(B\\) is zero, this is the template to begin with.</p>"
+          }
+        ]
+      },
+      {
+        "id": "distinct-linear-factors",
+        "title": "How can roots isolate the coefficients?",
+        "label": "Use distinct linear factors",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Multiply by the full denominator to get a polynomial identity. Only after clearing the fractions may you substitute the zeros of the original denominator into that identity.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For three different linear factors, clear the denominator and evaluate at each root. For \\(ax+b\\), use \\(x=-\\frac ba\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not plug an excluded value into the original rational expression. Substitute it into the polynomial identity.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "alg-pf-distinct",
+            "title": "Solve for three constants",
+            "prompt": "<p>Decompose \\(\\frac{6 x^{2} - 3 x + 16}{\\left(x - 4\\right) \\left(x + 1\\right) \\left(3 x - 2\\right)}\\) in the form \\(\\frac{A}{x + 1} + \\frac{B}{3 x - 2} + \\frac{C}{x - 4}\\). Give all its coefficients.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "expected": "1",
+                "type": "number"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B",
+                "expected": "-3",
+                "type": "number"
+              },
+              {
+                "key": "c",
+                "label": "Coefficient C",
+                "expected": "2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>At the zero of one factor, its matching numerator coefficient is isolated.</p>",
+            "solution": "<p>The fraction is proper. The shape of the split is \\(\\frac{A}{x + 1} + \\frac{B}{3 x - 2} + \\frac{C}{x - 4}\\), on the original domain \\(x\\ne -1,\\ \\frac{2}{3},\\ 4\\).</p><p>Clear the denominator. The numerator identity is \\(6 x^{2} - 3 x + 16 = A \\left(3 x^{2} - 14 x + 8\\right) + B \\left(x^{2} - 3 x - 4\\right) + C \\left(3 x^{2} + x - 2\\right)\\).</p><p>At \\(x = -1\\), all terms but the A term vanish. This gives \\(25 = 25 A\\), hence \\(A = 1\\).</p><p>At \\(x = \\frac{2}{3}\\), all terms but the B term vanish. This gives \\(\\frac{50}{3} = - \\frac{50 B}{9}\\), hence \\(B = -3\\).</p><p>At \\(x = 4\\), all terms but the C term vanish. This gives \\(100 = 50 C\\), hence \\(C = 2\\).</p><p>Therefore the original fraction is \\(- \\frac{3}{3 x - 2} + \\frac{1}{x + 1} + \\frac{2}{x - 4}\\), on \\(x\\ne -1,\\ \\frac{2}{3},\\ 4\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "repeated-linear-factors",
+        "title": "Why are both powers of a repeated factor needed?",
+        "label": "Handle a squared factor",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Use one fraction for each power of the repeated linear factor. At its zero, the highest power leaves a surviving term in the cleared identity.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>With denominator \\(LR^2\\), the cleared identity is \\(N=AR^2+BLR+CL\\). Solve \\(A\\) and \\(C\\) using the roots, then use one remaining coefficient for \\(B\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Substitution at the repeated root determines the coefficient of \\(\\frac1{R^2}\\). It does not determine the coefficient of \\(\\frac1R\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "alg-pf-repeated",
+            "title": "Complete the repeated-factor split",
+            "prompt": "<p>Decompose \\(\\frac{7 x^{2} + 30 x + 32}{\\left(x + 3\\right)^{2} \\left(2 x + 1\\right)}\\) in the form \\(\\frac{A}{2 x + 1} + \\frac{B}{x + 3} + \\frac{C}{\\left(x + 3\\right)^{2}}\\). Give all its coefficients.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "expected": "3",
+                "type": "number"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B",
+                "expected": "2",
+                "type": "number"
+              },
+              {
+                "key": "c",
+                "label": "Coefficient C",
+                "expected": "-1",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find the outer coefficients by root substitution, then use the coefficient of the highest power.</p>",
+            "solution": "<p>The fraction is proper. The shape of the split is \\(\\frac{A}{2 x + 1} + \\frac{B}{x + 3} + \\frac{C}{\\left(x + 3\\right)^{2}}\\), on the original domain \\(x\\ne -3,\\ - \\frac{1}{2}\\).</p><p>Clear the denominator to obtain \\(7 x^{2} + 30 x + 32 = A \\left(x + 3\\right)^{2} + B \\left(x + 3\\right) \\left(2 x + 1\\right) + C \\left(2 x + 1\\right)\\).</p><p>At \\(x = - \\frac{1}{2}\\), only the \\(A\\) term survives, and at \\(x = -3\\), only the \\(C\\) term survives. This gives \\(A = 3\\) and \\(C = -1\\).</p><p>Compare coefficients of \\(x^{2}\\). Then \\(7 = 2 B + 3\\), so \\(B = 2\\).</p><p>Therefore the original fraction is \\(\\frac{3}{2 x + 1} + \\frac{2}{x + 3} - \\frac{1}{\\left(x + 3\\right)^{2}}\\), on \\(x\\ne -3,\\ - \\frac{1}{2}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "irreducible-quadratic",
+        "title": "Why is the quadratic numerator linear?",
+        "label": "Use an irreducible quadratic",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>If the quadratic has no real roots, keep it intact. Its numerator can contain both an \\(x\\)-term and a constant.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>With denominator \\(LQ\\), write \\(N=AQ+(Bx+C)L\\). The root of \\(L\\) isolates \\(A\\), while coefficient comparison gives the other two values.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not try to get a second real substitution root from an irreducible quadratic. Compare coefficients of the identity instead.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "alg-pf-quadratic",
+            "title": "Find both quadratic numerator coefficients",
+            "prompt": "<p>Decompose \\(\\frac{x^{2} - 5 x + 12}{\\left(x + 2\\right) \\left(2 x^{2} + 5\\right)}\\) in the form \\(\\frac{A}{x + 2} + \\frac{B x + C}{2 x^{2} + 5}\\). Give all its coefficients.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "expected": "2",
+                "type": "number"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B",
+                "expected": "-3",
+                "type": "number"
+              },
+              {
+                "key": "c",
+                "label": "Coefficient C",
+                "expected": "1",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Use the real root first. Then compare the coefficient of the square term and the constant term.</p>",
+            "solution": "<p>The fraction is proper. The shape of the split is \\(\\frac{A}{x + 2} + \\frac{B x + C}{2 x^{2} + 5}\\), on the original domain \\(x\\ne -2\\).</p><p>The quadratic is irreducible over the reals and needs a linear numerator. The cleared identity is \\(x^{2} - 5 x + 12 = A \\left(2 x^{2} + 5\\right) + \\left(x + 2\\right) \\left(B x + C\\right)\\).</p><p>Set \\(x = -2\\) to remove the linear factor term. This gives \\(26 = 13 A\\), so \\(A = 2\\).</p><p>Compare \\(x^{2}\\) coefficients: \\(1 = B + 4\\), giving \\(B = -3\\). At \\(x = 0\\), \\(12 = 2 C + 10\\) gives \\(C = 1\\).</p><p>Therefore the original fraction is \\(\\frac{1 - 3 x}{2 x^{2} + 5} + \\frac{2}{x + 2}\\), on \\(x\\ne -2\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "equal-degree-division",
+        "title": "What happens when the degrees are equal?",
+        "label": "Separate the constant quotient",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Divide first when the two degrees are equal. The leading coefficient ratio gives a constant quotient, leaving a proper fractional remainder to split.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For equal degrees, write \\(\\frac ND=Q+\\frac RD\\) where \\(Q\\) is constant and \\(\\deg R<\\deg D\\). Decompose \\(\\frac RD\\) and keep the restrictions of the original expression.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not drop the quotient. Recombine the split and check both degrees and any excluded inputs.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "alg-pf-equal-degree",
+            "title": "Find both the quotient and the split",
+            "prompt": "<p>Write \\(\\frac{- 2 x^{2} - 3 x + 17}{\\left(x - 1\\right) \\left(x + 3\\right)}\\) in the form \\(Q+\\frac{A}{x - 1} + \\frac{B}{x + 3}\\). Give the constant quotient and both coefficients.</p>",
+            "fields": [
+              {
+                "key": "whole",
+                "label": "Polynomial quotient Q",
+                "expected": "-2",
+                "type": "number"
+              },
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "expected": "3",
+                "type": "number"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B",
+                "expected": "-2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find the leading coefficient ratio and subtract the quotient times the whole denominator.</p>",
+            "solution": "<p>The numerator and denominator have the same degree. Their leading coefficients are \\(-2\\) and \\(1\\), so the quotient is \\(-2\\). Subtract the quotient times the denominator to leave the remainder \\(x + 11\\).</p><p>Clear the denominator. The numerator identity is \\(x + 11 = A \\left(x + 3\\right) + B \\left(x - 1\\right)\\).</p><p>At \\(x = 1\\), all terms but the A term vanish. This gives \\(12 = 4 A\\), hence \\(A = 3\\).</p><p>At \\(x = -3\\), all terms but the B term vanish. This gives \\(8 = - 4 B\\), hence \\(B = -2\\).</p><p>Therefore the original fraction is \\(-2 - \\frac{2}{x + 3} + \\frac{3}{x - 1}\\), on \\(x\\ne -3,\\ 1\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Proper fraction",
+        "definition": "<p>An algebraic fraction whose numerator has lower degree than its denominator.</p>"
+      },
+      {
+        "term": "Partial fractions",
+        "definition": "<p>A sum of simpler algebraic fractions that recombines to produce the original rational expression.</p>"
+      },
+      {
+        "term": "Irreducible quadratic",
+        "definition": "<p>A quadratic factor with no real roots and therefore no real linear factorisation.</p>"
+      },
+      {
+        "term": "Polynomial identity",
+        "definition": "<p>An equality of polynomials that holds for every input.</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Choose the form before solving",
+        "question": "<p>State the partial-fraction form for \\(\\frac{5x^2-3x+1}{(x-3)(x^2+6)}\\). You need not find the coefficients.</p>",
+        "solution": [
+          "<p>The numerator has degree \\(2\\); the denominator has degree \\(3\\), so no polynomial division is needed.</p>",
+          "<p>\\(x^2+6\\) is irreducible over the reals. A constant numerator is enough over the linear factor, while a linear numerator is needed over the quadratic.</p>",
+          "<p>The form is \\(\\frac A{x-3}+\\frac{Bx+C}{x^2+6}\\), on \\(x\\ne3\\).</p>"
+        ]
+      },
+      {
+        "title": "Isolate one coefficient at a time",
+        "question": "<p>Decompose \\(\\frac{14 - x}{\\left(x - 2\\right) \\left(x + 4\\right)}\\) in the form \\(\\frac{A}{x - 2} + \\frac{B}{x + 4}\\). Give all its coefficients.</p>",
+        "solution": [
+          "<p>The fraction is proper. The shape of the split is \\(\\frac{A}{x - 2} + \\frac{B}{x + 4}\\), on the original domain \\(x\\ne -4,\\ 2\\).</p>",
+          "<p>Clear the denominator. The numerator identity is \\(14 - x = A \\left(x + 4\\right) + B \\left(x - 2\\right)\\).</p>",
+          "<p>At \\(x = 2\\), all terms but the A term vanish. This gives \\(12 = 6 A\\), hence \\(A = 2\\).</p>",
+          "<p>At \\(x = -4\\), all terms but the B term vanish. This gives \\(18 = - 6 B\\), hence \\(B = -3\\).</p>",
+          "<p>Therefore the original fraction is \\(- \\frac{3}{x + 4} + \\frac{2}{x - 2}\\), on \\(x\\ne -4,\\ 2\\).</p>"
+        ]
+      },
+      {
+        "title": "Handle a non-monic linear factor",
+        "question": "<p>Decompose \\(\\frac{7 x^{2} - 33 x - 34}{\\left(x - 3\\right) \\left(x + 2\\right) \\left(2 x + 1\\right)}\\) in the form \\(\\frac{A}{2 x + 1} + \\frac{B}{x - 3} + \\frac{C}{x + 2}\\). Give all its coefficients.</p>",
+        "solution": [
+          "<p>The fraction is proper. The shape of the split is \\(\\frac{A}{2 x + 1} + \\frac{B}{x - 3} + \\frac{C}{x + 2}\\), on the original domain \\(x\\ne -2,\\ - \\frac{1}{2},\\ 3\\).</p>",
+          "<p>Clear the denominator. The numerator identity is \\(7 x^{2} - 33 x - 34 = A \\left(x^{2} - x - 6\\right) + B \\left(2 x^{2} + 5 x + 2\\right) + C \\left(2 x^{2} - 5 x - 3\\right)\\).</p>",
+          "<p>At \\(x = - \\frac{1}{2}\\), all terms but the A term vanish. This gives \\(- \\frac{63}{4} = - \\frac{21 A}{4}\\), hence \\(A = 3\\).</p>",
+          "<p>At \\(x = 3\\), all terms but the B term vanish. This gives \\(-70 = 35 B\\), hence \\(B = -2\\).</p>",
+          "<p>At \\(x = -2\\), all terms but the C term vanish. This gives \\(60 = 15 C\\), hence \\(C = 4\\).</p>",
+          "<p>Therefore the original fraction is \\(\\frac{3}{2 x + 1} + \\frac{4}{x + 2} - \\frac{2}{x - 3}\\), on \\(x\\ne -2,\\ - \\frac{1}{2},\\ 3\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep both powers of a repeated factor",
+        "question": "<p>Decompose \\(\\frac{2 x^{2} - 17 x + 31}{\\left(x + 1\\right) \\left(2 x - 3\\right)^{2}}\\) in the form \\(\\frac{A}{x + 1} + \\frac{B}{2 x - 3} + \\frac{C}{\\left(2 x - 3\\right)^{2}}\\). Give all its coefficients.</p>",
+        "solution": [
+          "<p>The fraction is proper. The shape of the split is \\(\\frac{A}{x + 1} + \\frac{B}{2 x - 3} + \\frac{C}{\\left(2 x - 3\\right)^{2}}\\), on the original domain \\(x\\ne -1,\\ \\frac{3}{2}\\).</p>",
+          "<p>Clear the denominator to obtain \\(2 x^{2} - 17 x + 31 = A \\left(2 x - 3\\right)^{2} + B \\left(x + 1\\right) \\left(2 x - 3\\right) + C \\left(x + 1\\right)\\).</p>",
+          "<p>At \\(x = -1\\), only the \\(A\\) term survives, and at \\(x = \\frac{3}{2}\\), only the \\(C\\) term survives. This gives \\(A = 2\\) and \\(C = 4\\).</p>",
+          "<p>Compare coefficients of \\(x^{2}\\). Then \\(2 = 2 B + 8\\), so \\(B = -3\\).</p>",
+          "<p>Therefore the original fraction is \\(- \\frac{3}{2 x - 3} + \\frac{4}{\\left(2 x - 3\\right)^{2}} + \\frac{2}{x + 1}\\), on \\(x\\ne -1,\\ \\frac{3}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a linear numerator above the quadratic",
+        "question": "<p>Decompose \\(\\frac{2 x^{2} + 4 x + 8}{\\left(x - 2\\right) \\left(x^{2} + 4\\right)}\\) in the form \\(\\frac{A}{x - 2} + \\frac{B x + C}{x^{2} + 4}\\). Give all its coefficients.</p>",
+        "solution": [
+          "<p>The fraction is proper. The shape of the split is \\(\\frac{A}{x - 2} + \\frac{B x + C}{x^{2} + 4}\\), on the original domain \\(x\\ne 2\\).</p>",
+          "<p>The quadratic is irreducible over the reals and needs a linear numerator. The cleared identity is \\(2 x^{2} + 4 x + 8 = A \\left(x^{2} + 4\\right) + \\left(x - 2\\right) \\left(B x + C\\right)\\).</p>",
+          "<p>Set \\(x = 2\\) to remove the linear factor term. This gives \\(24 = 8 A\\), so \\(A = 3\\).</p>",
+          "<p>Compare \\(x^{2}\\) coefficients: \\(2 = B + 3\\), giving \\(B = -1\\). At \\(x = 0\\), \\(8 = 12 - 2 C\\) gives \\(C = 2\\).</p>",
+          "<p>Therefore the original fraction is \\(\\frac{2 - x}{x^{2} + 4} + \\frac{3}{x - 2}\\), on \\(x\\ne 2\\).</p>"
+        ]
+      },
+      {
+        "title": "Divide before decomposing",
+        "question": "<p>Write \\(\\frac{4 x^{2} + 10 x + 3}{\\left(x + 4\\right) \\left(2 x - 1\\right)}\\) in the form \\(Q+\\frac{A}{x + 4} + \\frac{B}{2 x - 1}\\). Give the constant quotient and both coefficients.</p>",
+        "solution": [
+          "<p>The numerator and denominator have the same degree. Their leading coefficients are \\(4\\) and \\(2\\), so the quotient is \\(2\\). Subtract the quotient times the denominator to leave the remainder \\(11 - 4 x\\).</p>",
+          "<p>Clear the denominator. The numerator identity is \\(11 - 4 x = A \\left(2 x - 1\\right) + B \\left(x + 4\\right)\\).</p>",
+          "<p>At \\(x = -4\\), all terms but the A term vanish. This gives \\(27 = - 9 A\\), hence \\(A = -3\\).</p>",
+          "<p>At \\(x = \\frac{1}{2}\\), all terms but the B term vanish. This gives \\(9 = \\frac{9 B}{2}\\), hence \\(B = 2\\).</p>",
+          "<p>Therefore the original fraction is \\(2 + \\frac{2}{2 x - 1} - \\frac{3}{x + 4}\\), on \\(x\\ne -4,\\ \\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "A zero coefficient does not restore the original input",
+        "question": "<p>Write \\(\\frac{- x^{2} + 5 x - 4}{\\left(x - 4\\right) \\left(x + 2\\right)}\\) in the form \\(Q+\\frac{A}{x - 4} + \\frac{B}{x + 2}\\). Give the constant quotient and both coefficients.</p>",
+        "solution": [
+          "<p>The numerator and denominator have the same degree. Their leading coefficients are \\(-1\\) and \\(1\\), so the quotient is \\(-1\\). Subtract the quotient times the denominator to leave the remainder \\(3 x - 12\\).</p>",
+          "<p>Clear the denominator. The numerator identity is \\(3 x - 12 = A \\left(x + 2\\right) + B \\left(x - 4\\right)\\).</p>",
+          "<p>At \\(x = 4\\), all terms but the A term vanish. This gives \\(0 = 6 A\\), hence \\(A = 0\\).</p>",
+          "<p>At \\(x = -2\\), all terms but the B term vanish. This gives \\(-18 = - 6 B\\), hence \\(B = 3\\).</p>",
+          "<p>Therefore the original fraction is \\(-1 + \\frac{3}{x + 2}\\), on \\(x\\ne -2,\\ 4\\).</p>"
+        ]
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the denominator shape</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Denominator shape</th><th scope=\"col\">Required fractions</th></tr></thead><tbody><tr><th scope=\"row\">\\(L_1L_2L_3\\), distinct linear</th><td>\\(\\frac A{L_1}+\\frac B{L_2}+\\frac C{L_3}\\)</td></tr><tr><th scope=\"row\">\\(LR^2\\), distinct linear \\(L,R\\)</th><td>\\(\\frac AL+\\frac BR+\\frac C{R^2}\\)</td></tr><tr><th scope=\"row\">\\(LQ\\), irreducible quadratic \\(Q\\)</th><td>\\(\\frac AL+\\frac{Bx+C}{Q}\\)</td></tr></tbody></table></div><h2>When the degrees are equal</h2><p>Divide to obtain a constant plus a proper fraction. Decompose only the latter.</p><h2>Solve the identity</h2><p>Clear the whole denominator, then use the roots of linear factors and compare remaining coefficients.</p>",
+      "checks": "<ul><li>Keep every original excluded input.</li><li>Use linear numerators over irreducible quadratics.</li><li>Recombine the coefficients to check the split.</li></ul>",
+      "examTip": "<p>After clearing denominators, write an identity. Root substitutions belong there, even where the original expression is undefined.</p>"
+    },
+    "related": [
+      {
+        "title": "Polynomial division",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_alg_polynomial_division"
+      },
+      {
+        "title": "Fractional binomial expansion",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_alg_fractional_binomial"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "alg-pf-extra-two",
+        "title": "Two non-monic factors",
+        "prompt": "<p>Decompose \\(\\frac{- x - 32}{\\left(2 x - 5\\right) \\left(3 x + 4\\right)}\\) in the form \\(\\frac{A}{3 x + 4} + \\frac{B}{2 x - 5}\\). Give all its coefficients.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "4",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "-3",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Use the two different roots after clearing the denominator.</p>",
+        "solution": "<p>The fraction is proper. The shape of the split is \\(\\frac{A}{3 x + 4} + \\frac{B}{2 x - 5}\\), on the original domain \\(x\\ne - \\frac{4}{3},\\ \\frac{5}{2}\\).</p><p>Clear the denominator. The numerator identity is \\(- x - 32 = A \\left(2 x - 5\\right) + B \\left(3 x + 4\\right)\\).</p><p>At \\(x = - \\frac{4}{3}\\), all terms but the A term vanish. This gives \\(- \\frac{92}{3} = - \\frac{23 A}{3}\\), hence \\(A = 4\\).</p><p>At \\(x = \\frac{5}{2}\\), all terms but the B term vanish. This gives \\(- \\frac{69}{2} = \\frac{23 B}{2}\\), hence \\(B = -3\\).</p><p>Therefore the original fraction is \\(\\frac{4}{3 x + 4} - \\frac{3}{2 x - 5}\\), on \\(x\\ne - \\frac{4}{3},\\ \\frac{5}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "alg-pf-extra-three",
+        "title": "A second split with three linear factors",
+        "prompt": "<p>Decompose \\(\\frac{- 2 x^{2} - 23 x + 37}{\\left(x - 1\\right) \\left(x + 3\\right) \\left(2 x - 5\\right)}\\) in the form \\(\\frac{A}{x - 1} + \\frac{B}{x + 3} + \\frac{C}{2 x - 5}\\). Give all its coefficients.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "-1",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "2",
+            "type": "number"
+          },
+          {
+            "key": "c",
+            "label": "Coefficient C",
+            "expected": "-4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Verify all three values by recombining over the original denominator.</p>",
+        "solution": "<p>The fraction is proper. The shape of the split is \\(\\frac{A}{x - 1} + \\frac{B}{x + 3} + \\frac{C}{2 x - 5}\\), on the original domain \\(x\\ne -3,\\ 1,\\ \\frac{5}{2}\\).</p><p>Clear the denominator. The numerator identity is \\(- 2 x^{2} - 23 x + 37 = A \\left(2 x^{2} + x - 15\\right) + B \\left(2 x^{2} - 7 x + 5\\right) + C \\left(x^{2} + 2 x - 3\\right)\\).</p><p>At \\(x = 1\\), all terms but the A term vanish. This gives \\(12 = - 12 A\\), hence \\(A = -1\\).</p><p>At \\(x = -3\\), all terms but the B term vanish. This gives \\(88 = 44 B\\), hence \\(B = 2\\).</p><p>At \\(x = \\frac{5}{2}\\), all terms but the C term vanish. This gives \\(-33 = \\frac{33 C}{4}\\), hence \\(C = -4\\).</p><p>Therefore the original fraction is \\(- \\frac{4}{2 x - 5} + \\frac{2}{x + 3} - \\frac{1}{x - 1}\\), on \\(x\\ne -3,\\ 1,\\ \\frac{5}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "alg-pf-extra-repeat",
+        "title": "Repeated factor with a negative coefficient",
+        "prompt": "<p>Decompose \\(\\frac{- 4 x^{2} - 50 x - 13}{\\left(x - 5\\right) \\left(2 x + 1\\right)^{2}}\\) in the form \\(\\frac{A}{x - 5} + \\frac{B}{2 x + 1} + \\frac{C}{\\left(2 x + 1\\right)^{2}}\\). Give all its coefficients.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "-3",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "4",
+            "type": "number"
+          },
+          {
+            "key": "c",
+            "label": "Coefficient C",
+            "expected": "-2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Substitute at the two roots, then inspect the square term.</p>",
+        "solution": "<p>The fraction is proper. The shape of the split is \\(\\frac{A}{x - 5} + \\frac{B}{2 x + 1} + \\frac{C}{\\left(2 x + 1\\right)^{2}}\\), on the original domain \\(x\\ne - \\frac{1}{2},\\ 5\\).</p><p>Clear the denominator to obtain \\(- 4 x^{2} - 50 x - 13 = A \\left(2 x + 1\\right)^{2} + B \\left(x - 5\\right) \\left(2 x + 1\\right) + C \\left(x - 5\\right)\\).</p><p>At \\(x = 5\\), only the \\(A\\) term survives, and at \\(x = - \\frac{1}{2}\\), only the \\(C\\) term survives. This gives \\(A = -3\\) and \\(C = -2\\).</p><p>Compare coefficients of \\(x^{2}\\). Then \\(-4 = 2 B - 12\\), so \\(B = 4\\).</p><p>Therefore the original fraction is \\(\\frac{4}{2 x + 1} - \\frac{2}{\\left(2 x + 1\\right)^{2}} - \\frac{3}{x - 5}\\), on \\(x\\ne - \\frac{1}{2},\\ 5\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "alg-pf-extra-quad",
+        "title": "An intact quadratic with a non-monic linear factor",
+        "prompt": "<p>Decompose \\(\\frac{- 9 x - 5}{\\left(2 x - 3\\right) \\left(x^{2} + 7\\right)}\\) in the form \\(\\frac{A}{2 x - 3} + \\frac{B x + C}{x^{2} + 7}\\). Give all its coefficients.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "-2",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "1",
+            "type": "number"
+          },
+          {
+            "key": "c",
+            "label": "Coefficient C",
+            "expected": "-3",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Compare the quadratic and constant coefficients after finding the first numerator.</p>",
+        "solution": "<p>The fraction is proper. The shape of the split is \\(\\frac{A}{2 x - 3} + \\frac{B x + C}{x^{2} + 7}\\), on the original domain \\(x\\ne \\frac{3}{2}\\).</p><p>The quadratic is irreducible over the reals and needs a linear numerator. The cleared identity is \\(- 9 x - 5 = A \\left(x^{2} + 7\\right) + \\left(2 x - 3\\right) \\left(B x + C\\right)\\).</p><p>Set \\(x = \\frac{3}{2}\\) to remove the linear factor term. This gives \\(- \\frac{37}{2} = \\frac{37 A}{4}\\), so \\(A = -2\\).</p><p>Compare \\(x^{2}\\) coefficients: \\(0 = 2 B - 2\\), giving \\(B = 1\\). At \\(x = 0\\), \\(-5 = - 3 C - 14\\) gives \\(C = -3\\).</p><p>Therefore the original fraction is \\(\\frac{x - 3}{x^{2} + 7} - \\frac{2}{2 x - 3}\\), on \\(x\\ne \\frac{3}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "alg-pf-extra-quotient",
+        "title": "Begin by dividing",
+        "prompt": "<p>Write \\(\\frac{3 x^{2} + 8 x - 21}{\\left(x - 2\\right) \\left(x + 5\\right)}\\) in the form \\(Q+\\frac{A}{x + 5} + \\frac{B}{x - 2}\\). Give the constant quotient and both coefficients.</p>",
+        "fields": [
+          {
+            "key": "whole",
+            "label": "Polynomial quotient Q",
+            "expected": "3",
+            "type": "number"
+          },
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "-2",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "1",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Compare highest powers before separating the proper part.</p>",
+        "solution": "<p>The numerator and denominator have the same degree. Their leading coefficients are \\(3\\) and \\(1\\), so the quotient is \\(3\\). Subtract the quotient times the denominator to leave the remainder \\(9 - x\\).</p><p>Clear the denominator. The numerator identity is \\(9 - x = A \\left(x - 2\\right) + B \\left(x + 5\\right)\\).</p><p>At \\(x = -5\\), all terms but the A term vanish. This gives \\(14 = - 7 A\\), hence \\(A = -2\\).</p><p>At \\(x = 2\\), all terms but the B term vanish. This gives \\(7 = 7 B\\), hence \\(B = 1\\).</p><p>Therefore the original fraction is \\(3 - \\frac{2}{x + 5} + \\frac{1}{x - 2}\\), on \\(x\\ne -5,\\ 2\\).</p>"
+      }
+    ]
+  },
+  "orig_9709_p3_alg_fractional_binomial": {
+    "updatedOn": "2026-11-21",
+    "description": "Expand rational powers near zero, keep the outside scale and use strict validity conditions for an exact coefficient or numerical estimate.",
+    "sections": [
+      {
+        "id": "fixed-binomial-terms",
+        "title": "How do fractional powers change the signs of the coefficients?",
+        "label": "Build the first terms",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>For rational \\(n\\), the standard expansion about zero begins with a constant and fixed linear, quadratic and cubic terms. Read the sign of each factor of the coefficient.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\((1+u)^n=1+nu+\\frac{n(n-1)}2u^2+\\frac{n(n-1)(n-2)}6u^3+\\cdots\\) for \\(|u|<1\\). Keep every power requested.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use \\(n\\), \\(n-1\\) and \\(n-2\\) as signed numbers. Replacing them by magnitudes loses the sign of some coefficients.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "alg-bin-fixed-coefficients",
+            "title": "Expand a positive fractional power",
+            "prompt": "<p>Expand \\(\\left(x + 1\\right)^{\\frac{3}{2}}\\) up to and including the cubic term. Give every coefficient.</p>",
+            "fields": [
+              {
+                "key": "coef0",
+                "label": "Constant term",
+                "expected": "1",
+                "type": "number"
+              },
+              {
+                "key": "coef1",
+                "label": "Coefficient of x",
+                "expected": "3/2",
+                "type": "number"
+              },
+              {
+                "key": "coef2",
+                "label": "Coefficient of x squared",
+                "expected": "3/8",
+                "type": "number"
+              },
+              {
+                "key": "coef3",
+                "label": "Coefficient of x cubed",
+                "expected": "-1/16",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Multiply the consecutive factors in the numerator before dividing by the factorial.</p>",
+            "solution": "<p>Rewrite the expression as \\(\\left(x + 1\\right)^{\\frac{3}{2}}\\). Thus \\(u = x\\) and the outside factor is \\(1\\).</p><p>Substitute into the fixed binomial terms \\(1+nu+\\frac{n(n-1)}2u^2+\\frac{n(n-1)(n-2)}6u^3\\). Use \\(n=\\frac{3}{2}\\).</p><p>Expand the powers and multiply each term by \\(1\\). The terms required are \\(- \\frac{x^{3}}{16} + \\frac{3 x^{2}}{8} + \\frac{3 x}{2} + 1\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "substitute-inner-linear-term",
+        "title": "What happens to the multiplier when the power increases?",
+        "label": "Substitute the whole inner term",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Set \\(u=kx\\) and substitute \\(kx\\) throughout the series: the first power contributes \\(k\\), the square contributes \\(k^2\\), and the cube contributes \\(k^3\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The same inside term controls the coefficients and validity. For \\(u=kx\\), solve \\(|kx|<1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not multiply every coefficient by \\(k\\). The coefficient of \\(x^2\\) receives the factor \\(k^2\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "alg-bin-substitution",
+            "title": "Use a signed inside multiplier",
+            "prompt": "<p>Expand \\(\\frac{1}{\\sqrt{1 - 3 x}}\\) up to and including the quadratic term. Give every coefficient. State the strict interval where the expansion is valid.</p>",
+            "fields": [
+              {
+                "key": "coef0",
+                "label": "Constant term",
+                "expected": "1",
+                "type": "number"
+              },
+              {
+                "key": "coef1",
+                "label": "Coefficient of x",
+                "expected": "3/2",
+                "type": "number"
+              },
+              {
+                "key": "coef2",
+                "label": "Coefficient of x squared",
+                "expected": "27/8",
+                "type": "number"
+              },
+              {
+                "key": "interval",
+                "label": "Strict interval for x",
+                "expected": "(-1/3,1/3)",
+                "type": "set",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>The inner coefficient is negative, but its square is positive.</p>",
+            "solution": "<p>Rewrite the expression as \\(\\frac{1}{\\sqrt{1 - 3 x}}\\). Thus \\(u = - 3 x\\) and the outside factor is \\(1\\).</p><p>Substitute into the fixed binomial terms \\(1+nu+\\frac{n(n-1)}2u^2\\). Use \\(n=- \\frac{1}{2}\\).</p><p>Expand the powers and multiply each term by \\(1\\). The terms required are \\(\\frac{27 x^{2}}{8} + \\frac{3 x}{2} + 1\\).</p><p>The condition is \\(\\big|- 3 x\\big|<1\\) and the interval is \\(-\\frac{1}{3}<x<\\frac{1}{3}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "extract-positive-constant",
+        "title": "How do you expand an expression that does not start with one?",
+        "label": "Extract and apply the outside factor",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Factor the positive constant out of the base first. The whole factor still needs to be raised to the original power.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(a>0\\), use \\((a+bx)^n=a^n\\left(1+\\frac ba x\\right)^n\\). Multiply all retained terms by \\(a^n\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A reciprocal square root has a factor \\(a^{-\\frac{1}{2}}\\), not \\(a^{-1}\\). Check the constant term by putting \\(x=0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "alg-bin-scaling",
+            "title": "Include the outside scale",
+            "prompt": "<p>Expand \\(\\sqrt{6 x + 4}\\) up to and including the quadratic term. Give every coefficient. State the strict interval where the expansion is valid.</p>",
+            "fields": [
+              {
+                "key": "coef0",
+                "label": "Constant term",
+                "expected": "2",
+                "type": "number"
+              },
+              {
+                "key": "coef1",
+                "label": "Coefficient of x",
+                "expected": "3/2",
+                "type": "number"
+              },
+              {
+                "key": "coef2",
+                "label": "Coefficient of x squared",
+                "expected": "-9/16",
+                "type": "number"
+              },
+              {
+                "key": "interval",
+                "label": "Strict interval for x",
+                "expected": "(-2/3,2/3)",
+                "type": "set",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Rewrite the base as four times a bracket that begins with one.</p>",
+            "solution": "<p>Rewrite the expression as \\(2 \\sqrt{\\frac{3 x}{2} + 1}\\). Thus \\(u = \\frac{3 x}{2}\\) and the outside factor is \\(2\\).</p><p>Substitute into the fixed binomial terms \\(1+nu+\\frac{n(n-1)}2u^2\\). Use \\(n=\\frac{1}{2}\\).</p><p>Expand the powers and multiply each term by \\(2\\). The terms required are \\(- \\frac{9 x^{2}}{16} + \\frac{3 x}{2} + 2\\).</p><p>The condition is \\(\\big|\\frac{3 x}{2}\\big|<1\\) and the interval is \\(-\\frac{2}{3}<x<\\frac{2}{3}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
+          }
+        ]
+      },
+      {
+        "id": "strict-validity",
+        "title": "Which interval is valid for a combined expansion?",
+        "label": "Intersect the strict intervals",
+        "minutes": 9,
+        "level": "core",
+        "intro": "<p>Find a validity condition for each expansion you use. An expression can make sense outside this interval, but the series method has only been justified on the interval.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For terms with \\(|k_1x|<1\\) and \\(|k_2x|<1\\), take the intersection. In a quadratic product expansion, include the product of the two linear terms.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_alg_fractional_binomial/overlapping-validity-intervals.svg",
+              "alt": "Three number lines showing the open intervals for the square root expansion, the reciprocal expansion, and their intersection.",
+              "caption": "<p>Both expansions are valid on the shared open interval \\(-\\frac{1}{2}<x<\\frac{1}{2}\\).</p>",
+              "width": 480,
+              "height": 215
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not include either endpoint merely because the original expression happens to be defined there. The standard validity conditions here are strict.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "alg-bin-common-validity",
+            "title": "Combine two expansions",
+            "prompt": "<p>Expand \\(\\frac{\\sqrt{2 x + 1}}{1 - 3 x}\\) through the quadratic term. Give every coefficient and the common validity interval.</p>",
+            "fields": [
+              {
+                "key": "coef0",
+                "label": "Constant term",
+                "expected": "1",
+                "type": "number"
+              },
+              {
+                "key": "coef1",
+                "label": "Coefficient of x",
+                "expected": "4",
+                "type": "number"
+              },
+              {
+                "key": "coef2",
+                "label": "Coefficient of x squared",
+                "expected": "23/2",
+                "type": "number"
+              },
+              {
+                "key": "interval",
+                "label": "Common strict interval",
+                "expected": "(-1/3,1/3)",
+                "type": "set",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Use the smaller of the two validity radii, and retain all products of total degree two.</p>",
+            "solution": "<p>The first factor supplies \\(9 x^{2} + 3 x + 1\\). The second factor supplies \\(- \\frac{x^{2}}{2} + x + 1\\).</p><p>Keep every product whose combined degree is at most two. The resulting terms are \\(\\frac{23 x^{2}}{2} + 4 x + 1\\).</p><p>The two expansions require \\(\\left|{x}\\right|\\) to be less than \\(\\frac{1}{3}\\) and \\(\\frac{1}{2}\\). The common interval is \\(-\\frac{1}{3}<x<\\frac{1}{3}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "approximate-without-rounding-early",
+        "title": "How can a nearby exact power make an approximation easier?",
+        "label": "Use a small normalised input",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Choose a positive constant with a simple root. Write the target as that constant times \\(1+u\\), then apply the expansion at a small value of \\(u\\).</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>First decide which terms to retain. Evaluate their exact sum and round only as requested.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An equality between the original function and a finite polynomial is generally not exact here. Use an approximation sign when you omit the remaining terms.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "alg-bin-approximate",
+            "title": "Find the value of a three-term approximation",
+            "prompt": "<p>Use \\(4.2=4\\left(1+\\frac1{20}\\right)\\) and the first three terms for \\((1+u)^{\\frac{1}{2}}\\) to approximate \\(\\sqrt{4.2}\\). Give the value of your approximation before rounding.</p>",
+            "fields": [
+              {
+                "key": "estimate",
+                "label": "Unrounded approximation",
+                "expected": "3279/1600",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Multiply the truncated bracket by two. Include its quadratic term before rounding.</p>",
+            "solution": "<p>Use \\(2\\left(1+\\frac1{40}-\\frac1{3200}\\right)=\\frac{3279}{1600}=2.049375\\).</p><p>The number is the value of the truncated series, which is an approximation to the square root.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Fractional power",
+        "definition": "<p>A rational exponent, often representing a root or reciprocal of a root.</p>"
+      },
+      {
+        "term": "Validity interval",
+        "definition": "<p>The strict interval on which the binomial expansion used here is justified.</p>"
+      },
+      {
+        "term": "Truncation",
+        "definition": "<p>Keeping only the terms through a specified degree.</p>"
+      },
+      {
+        "term": "Coefficient",
+        "definition": "<p>The number multiplying a power such as \\(x^2\\).</p>"
+      }
+    ],
+    "examples": [
+      {
+        "title": "Track the signs in three fractional-power terms",
+        "question": "<p>Expand \\(\\frac{1}{\\left(x + 1\\right)^{\\frac{3}{2}}}\\) up to and including the cubic term. Give every coefficient.</p>",
+        "solution": [
+          "<p>Rewrite the expression as \\(\\frac{1}{\\left(x + 1\\right)^{\\frac{3}{2}}}\\). Thus \\(u = x\\) and the outside factor is \\(1\\).</p>",
+          "<p>Substitute into the fixed binomial terms \\(1+nu+\\frac{n(n-1)}2u^2+\\frac{n(n-1)(n-2)}6u^3\\). Use \\(n=- \\frac{3}{2}\\).</p>",
+          "<p>Expand the powers and multiply each term by \\(1\\). The terms required are \\(- \\frac{35 x^{3}}{16} + \\frac{15 x^{2}}{8} - \\frac{3 x}{2} + 1\\).</p>"
+        ]
+      },
+      {
+        "title": "Replace each occurrence by a signed inner term",
+        "question": "<p>Expand \\(\\sqrt{1 - 2 x}\\) up to and including the cubic term. Give every coefficient. State the strict interval where the expansion is valid.</p>",
+        "solution": [
+          "<p>Rewrite the expression as \\(\\sqrt{1 - 2 x}\\). Thus \\(u = - 2 x\\) and the outside factor is \\(1\\).</p>",
+          "<p>Substitute into the fixed binomial terms \\(1+nu+\\frac{n(n-1)}2u^2+\\frac{n(n-1)(n-2)}6u^3\\). Use \\(n=\\frac{1}{2}\\).</p>",
+          "<p>Expand the powers and multiply each term by \\(1\\). The terms required are \\(- \\frac{x^{3}}{2} - \\frac{x^{2}}{2} - x + 1\\).</p>",
+          "<p>The condition is \\(\\big|- 2 x\\big|<1\\) and the interval is \\(-\\frac{1}{2}<x<\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Scale the squared inner term as well",
+        "question": "<p>Expand \\(\\frac{1}{\\left(3 x + 1\\right)^{\\frac{2}{3}}}\\) up to and including the quadratic term. Give every coefficient. State the strict interval where the expansion is valid.</p>",
+        "solution": [
+          "<p>Rewrite the expression as \\(\\frac{1}{\\left(3 x + 1\\right)^{\\frac{2}{3}}}\\). Thus \\(u = 3 x\\) and the outside factor is \\(1\\).</p>",
+          "<p>Substitute into the fixed binomial terms \\(1+nu+\\frac{n(n-1)}2u^2\\). Use \\(n=- \\frac{2}{3}\\).</p>",
+          "<p>Expand the powers and multiply each term by \\(1\\). The terms required are \\(5 x^{2} - 2 x + 1\\).</p>",
+          "<p>The condition is \\(\\big|3 x\\big|<1\\) and the interval is \\(-\\frac{1}{3}<x<\\frac{1}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Extract a constant raised to a fractional power",
+        "question": "<p>Expand \\(\\left(16 - 8 x\\right)^{\\frac{3}{4}}\\) up to and including the quadratic term. Give every coefficient. State the strict interval where the expansion is valid.</p>",
+        "solution": [
+          "<p>Rewrite the expression as \\(8 \\left(1 - \\frac{x}{2}\\right)^{\\frac{3}{4}}\\). Thus \\(u = - \\frac{x}{2}\\) and the outside factor is \\(8\\).</p>",
+          "<p>Substitute into the fixed binomial terms \\(1+nu+\\frac{n(n-1)}2u^2\\). Use \\(n=\\frac{3}{4}\\).</p>",
+          "<p>Expand the powers and multiply each term by \\(8\\). The terms required are \\(- \\frac{3 x^{2}}{16} - 3 x + 8\\).</p>",
+          "<p>The condition is \\(\\big|- \\frac{x}{2}\\big|<1\\) and the interval is \\(-2<x<2\\).</p>"
+        ]
+      },
+      {
+        "title": "Handle a reciprocal square root with a constant term",
+        "question": "<p>Expand \\(\\frac{1}{\\sqrt{18 x + 9}}\\) up to and including the quadratic term. Give every coefficient. State the strict interval where the expansion is valid.</p>",
+        "solution": [
+          "<p>Rewrite the expression as \\(\\frac{1}{3 \\sqrt{2 x + 1}}\\). Thus \\(u = 2 x\\) and the outside factor is \\(\\frac{1}{3}\\).</p>",
+          "<p>Substitute into the fixed binomial terms \\(1+nu+\\frac{n(n-1)}2u^2\\). Use \\(n=- \\frac{1}{2}\\).</p>",
+          "<p>Expand the powers and multiply each term by \\(\\frac{1}{3}\\). The terms required are \\(\\frac{x^{2}}{2} - \\frac{x}{3} + \\frac{1}{3}\\).</p>",
+          "<p>The condition is \\(\\big|2 x\\big|<1\\) and the interval is \\(-\\frac{1}{2}<x<\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Combine two expansions on a common interval",
+        "question": "<p>Expand \\(\\frac{\\sqrt{2 x + 1}}{1 - \\frac{x}{3}}\\) through the quadratic term. Give every coefficient and the common validity interval.</p>",
+        "solution": [
+          "<p>The first factor supplies \\(- \\frac{x^{2}}{2} + x + 1\\). The second factor supplies \\(\\frac{x^{2}}{9} + \\frac{x}{3} + 1\\).</p>",
+          "<p>Keep every product whose combined degree is at most two. The resulting terms are \\(- \\frac{x^{2}}{18} + \\frac{4 x}{3} + 1\\).</p>",
+          "<p>The two expansions require \\(\\left|{x}\\right|\\) to be less than \\(\\frac{1}{2}\\) and \\(3\\). The common interval is \\(-\\frac{1}{2}<x<\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Choose a convenient square close to the target",
+        "question": "<p>Use the first three terms of a binomial expansion to approximate \\(\\sqrt{10.2}\\).</p>",
+        "solution": [
+          "<p>Write \\(\\sqrt{10.2}=3\\left(1+\\frac{2}{15}\\right)^{\\frac{1}{2}}\\), where \\(\\left|\\frac{2}{15}\\right|<1\\).</p>",
+          "<p>Use \\((1+u)^{\\frac{1}{2}}=1+\\frac12u-\\frac18u^2+\\cdots\\). Keeping the first three terms gives \\(3\\left(1+\\frac1{15}-\\frac1{450}\\right)\\).</p>",
+          "<p>The truncated approximation is \\(\\frac{479}{150}\\), or approximately \\(3.193\\) to four significant figures.</p>"
+        ]
+      }
+    ],
+    "revision": {
+      "body": "<h2>Normalise, expand and check</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Step</th><th scope=\"col\">What to keep track of</th></tr></thead><tbody><tr><th scope=\"row\">Normalise</th><td>\\((a+bx)^n=a^n\\left(1+\\frac ba x\\right)^n\\), for \\(a>0\\).</td></tr><tr><th scope=\"row\">Expand</th><td>\\(1+nu+\\frac{n(n-1)}2u^2+\\frac{n(n-1)(n-2)}6u^3+\\cdots\\)</td></tr><tr><th scope=\"row\">Scale</th><td>Apply the replacement \\(u=\\frac ba x\\) to every power and multiply each term by \\(a^n\\).</td></tr><tr><th scope=\"row\">Check validity</th><td>\\(\\left|\\frac ba x\\right|<1\\); intersect the valid intervals when combining expansions.</td></tr></tbody></table></div><h2>Example</h2><p>\\((9+18x)^{-\\frac{1}{2}}\\) has terms \\(\\frac13-\\frac13x+\\frac12x^2\\) through the quadratic, valid for \\(|x|<\\frac12\\).</p>",
+      "checks": "<ul><li>Apply the outside scale to every term.</li><li>Track the sign of the inside term in each power.</li><li>Keep both endpoints strict; combine the conditions for every factor.</li></ul>",
+      "examTip": "<p>Use exact coefficients in your working. Round a final numerical estimate only if the question asks for it.</p>"
+    },
+    "related": [
+      {
+        "title": "Partial fractions",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_alg_partial_fractions"
+      },
+      {
+        "title": "Modulus inequalities",
+        "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_alg_modulus_inequalities"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "alg-bin-extra-negative",
+        "title": "Three terms beyond the constant",
+        "prompt": "<p>Expand \\(\\frac{1}{\\left(x + 1\\right)^{\\frac{5}{3}}}\\) up to and including the cubic term. Give every coefficient.</p>",
+        "fields": [
+          {
+            "key": "coef0",
+            "label": "Constant term",
+            "expected": "1",
+            "type": "number"
+          },
+          {
+            "key": "coef1",
+            "label": "Coefficient of x",
+            "expected": "-5/3",
+            "type": "number"
+          },
+          {
+            "key": "coef2",
+            "label": "Coefficient of x squared",
+            "expected": "20/9",
+            "type": "number"
+          },
+          {
+            "key": "coef3",
+            "label": "Coefficient of x cubed",
+            "expected": "-220/81",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Check the signs of all three fixed binomial coefficients.</p>",
+        "solution": "<p>Rewrite the expression as \\(\\frac{1}{\\left(x + 1\\right)^{\\frac{5}{3}}}\\). Thus \\(u = x\\) and the outside factor is \\(1\\).</p><p>Substitute into the fixed binomial terms \\(1+nu+\\frac{n(n-1)}2u^2+\\frac{n(n-1)(n-2)}6u^3\\). Use \\(n=- \\frac{5}{3}\\).</p><p>Expand the powers and multiply each term by \\(1\\). The terms required are \\(- \\frac{220 x^{3}}{81} + \\frac{20 x^{2}}{9} - \\frac{5 x}{3} + 1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "alg-bin-extra-inner",
+        "title": "Use a positive multiplier with a negative power",
+        "prompt": "<p>Expand \\(\\frac{1}{\\sqrt[3]{5 x + 1}}\\) up to and including the quadratic term. Give every coefficient. State the strict interval where the expansion is valid.</p>",
+        "fields": [
+          {
+            "key": "coef0",
+            "label": "Constant term",
+            "expected": "1",
+            "type": "number"
+          },
+          {
+            "key": "coef1",
+            "label": "Coefficient of x",
+            "expected": "-5/3",
+            "type": "number"
+          },
+          {
+            "key": "coef2",
+            "label": "Coefficient of x squared",
+            "expected": "50/9",
+            "type": "number"
+          },
+          {
+            "key": "interval",
+            "label": "Strict interval for x",
+            "expected": "(-1/5,1/5)",
+            "type": "set",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>The quadratic term uses five squared.</p>",
+        "solution": "<p>Rewrite the expression as \\(\\frac{1}{\\sqrt[3]{5 x + 1}}\\). Thus \\(u = 5 x\\) and the outside factor is \\(1\\).</p><p>Substitute into the fixed binomial terms \\(1+nu+\\frac{n(n-1)}2u^2\\). Use \\(n=- \\frac{1}{3}\\).</p><p>Expand the powers and multiply each term by \\(1\\). The terms required are \\(\\frac{50 x^{2}}{9} - \\frac{5 x}{3} + 1\\).</p><p>The condition is \\(\\big|5 x\\big|<1\\) and the interval is \\(-\\frac{1}{5}<x<\\frac{1}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "alg-bin-extra-scale",
+        "title": "Normalise a cube root",
+        "prompt": "<p>Expand \\(\\sqrt[3]{6 x + 8}\\) up to and including the quadratic term. Give every coefficient. State the strict interval where the expansion is valid.</p>",
+        "fields": [
+          {
+            "key": "coef0",
+            "label": "Constant term",
+            "expected": "2",
+            "type": "number"
+          },
+          {
+            "key": "coef1",
+            "label": "Coefficient of x",
+            "expected": "1/2",
+            "type": "number"
+          },
+          {
+            "key": "coef2",
+            "label": "Coefficient of x squared",
+            "expected": "-1/8",
+            "type": "number"
+          },
+          {
+            "key": "interval",
+            "label": "Strict interval for x",
+            "expected": "(-4/3,4/3)",
+            "type": "set",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Extract the cube root of eight before expanding.</p>",
+        "solution": "<p>Rewrite the expression as \\(2 \\sqrt[3]{\\frac{3 x}{4} + 1}\\). Thus \\(u = \\frac{3 x}{4}\\) and the outside factor is \\(2\\).</p><p>Substitute into the fixed binomial terms \\(1+nu+\\frac{n(n-1)}2u^2\\). Use \\(n=\\frac{1}{3}\\).</p><p>Expand the powers and multiply each term by \\(2\\). The terms required are \\(- \\frac{x^{2}}{8} + \\frac{x}{2} + 2\\).</p><p>The condition is \\(\\big|\\frac{3 x}{4}\\big|<1\\) and the interval is \\(-\\frac{4}{3}<x<\\frac{4}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "alg-bin-extra-endpoints",
+        "title": "Keep the normalised interval strict",
+        "prompt": "<p>The expression \\((9-3x)^{\\frac{3}{2}}\\) is to be expanded as \\(27\\left(1-\\frac x3\\right)^{\\frac{3}{2}}\\). State the strict validity interval for the expansion.</p>",
+        "fields": [
+          {
+            "key": "interval",
+            "label": "Strict interval for x",
+            "expected": "(-3,3)",
+            "type": "set",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Apply the validity condition to the whole normalised inner term.</p>",
+        "solution": "<p>\\(\\left|-\\frac x3\\right|<1\\) is equivalent to \\(|x|<3\\), so \\(-3<x<3\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "alg-bin-extra-product",
+        "title": "Collect all quadratic terms",
+        "prompt": "<p>Expand \\(\\frac{\\left(2 x + 1\\right)^{\\frac{3}{2}}}{1 - 4 x}\\) through the quadratic term. Give every coefficient and the common validity interval.</p>",
+        "fields": [
+          {
+            "key": "coef0",
+            "label": "Constant term",
+            "expected": "1",
+            "type": "number"
+          },
+          {
+            "key": "coef1",
+            "label": "Coefficient of x",
+            "expected": "7",
+            "type": "number"
+          },
+          {
+            "key": "coef2",
+            "label": "Coefficient of x squared",
+            "expected": "59/2",
+            "type": "number"
+          },
+          {
+            "key": "interval",
+            "label": "Common strict interval",
+            "expected": "(-1/4,1/4)",
+            "type": "set",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Multiply the linear term of the first factor by the linear term of the second as well.</p>",
+        "solution": "<p>The first factor supplies \\(\\frac{3 x^{2}}{2} + 3 x + 1\\). The second factor supplies \\(16 x^{2} + 4 x + 1\\).</p><p>Keep every product whose combined degree is at most two. The resulting terms are \\(\\frac{59 x^{2}}{2} + 7 x + 1\\).</p><p>The two expansions require \\(\\left|{x}\\right|\\) to be less than \\(\\frac{1}{2}\\) and \\(\\frac{1}{4}\\). The common interval is \\(-\\frac{1}{4}<x<\\frac{1}{4}\\).</p>"
+      }
+    ]
+  }
+}

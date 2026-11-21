@@ -77,7 +77,9 @@ test('every complete quick answer works; missing and incorrect fields fail; revi
       assert(!squareHelp(q,'solution').includes('katex-error'),q.id);assert.equal(squareMarkingRows(q).reduce((n,r)=>n+r.marks,0),q.marks);
       for(const raw of [q.answer_html,q.hint_html,...(q.parts??[]).flatMap(part=>part.marking_criteria.map(c=>c.description_html))])assert(!renderContent(raw).includes('katex-error'),q.id);
       if(!q.fields.length)continue;
-      const answers=Object.fromEntries(q.fields.map(f=>[f.key,Array.isArray(f.expected)?f.expected.join(';'):f.expected]));
+      const fields = dto.questions.find(question => question.uid === q.id)!.fields;
+      const answers = Object.fromEntries(q.fields.map((f, index) => [f.key, Array.isArray(f.expected)
+        ? f.expected.join(';') : fields[index].decimalPlaces === 4 ? Number(f.expected).toFixed(4) : f.expected]));
       assert(gradeSquare(q,answers).correct,JSON.stringify({uid:q.id,result:gradeSquare(q,answers)}));
       for(const f of q.fields){const wrong={...answers,[f.key]:f.type==='choice'?Object.keys(f.options!).find(k=>k!==f.expected)!:'98765'};assert(!gradeSquare(q,wrong).correct,q.id);const missing={...answers};delete missing[f.key];assert(!gradeSquare(q,missing).correct,q.id);}
     }

@@ -11,7 +11,7 @@ import { packageQuestions, packageTeaching, packageTopic } from "./content-packa
 import { legacyQuadraticsStudy, studyLayout } from "./authored-study";
 import { answerFormat, exactValueFeedback } from "./square-presentation";
 import { isCoordinateField, isIntervalField, rangeOutputs } from "./answer-notation";
-import { permitsThreeSignificantFigures } from "./s1-answer-precision";
+import { fourPlaceFeedback, needsFourPlaceFeedback, permitsThreeSignificantFigures, s1FourDecimalPlaces } from "./s1-answer-precision";
 import { projectSolutionImages } from "./solution-image-display";
 
 type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
@@ -68,6 +68,10 @@ function practiceAllowsRounding(q: SourceQuestion, field: ExactField) {
   return q.statisticsRounding && permitsThreeSignificantFigures(q.id, field, q.prompt_html);
 }
 
+function practiceFourDecimalPlaces(q: SourceQuestion, field: ExactField) {
+  return q.statisticsRounding && s1FourDecimalPlaces(q.id, field, q.prompt_html);
+}
+
 export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): SquareLesson {
   const packaged=packageTeaching(topic);
   const layout = topic.packageKey ? studyLayout(topic.lessonId) : undefined;
@@ -75,7 +79,7 @@ export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): Sq
   const summaryHtml = topic.summary.match(mathPattern)
     ? renderContent(topic.summary.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"))
     : undefined;
-  return { topic, version: topic.version, title: topic.title, summaryHtml,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: practicePrompt(q), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey ? (f.type === "ratio" ? f.label.replace(/: numerator ; denominator/i, " as a fraction") : f.label) :topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}), ...(practiceAllowsRounding(q, f) && { significantFigures: 3 as const }) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
+  return { topic, version: topic.version, title: topic.title, summaryHtml,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: practicePrompt(q), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey ? (f.type === "ratio" ? f.label.replace(/: numerator ; denominator/i, " as a fraction") : f.label) :topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}), ...(practiceAllowsRounding(q, f) && { significantFigures: 3 as const }), ...(practiceFourDecimalPlaces(q, f) && { decimalPlaces: 4 as const }) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
 }
 export function learningTopic(key:string){return packageTopic(key)??quadraticTopic(key);}
 // Feedback describes an identifiable answer pattern, not an assumed thought process.
@@ -112,16 +116,19 @@ export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): 
   let valid = true;
   for (const f of q.fields) {
     const round = practiceAllowsRounding(q, f);
+    const fourPlaces = practiceFourDecimalPlaces(q, f);
     try {
       const correct = round ? checkThreeSignificantFigures(f, answers[f.key], q.prompt_html) : checkExact(f, answers[f.key], q.prompt_html);
-      fields[f.key] = { correct, message: correct ? "Correct." : retryMessage(q, f, answers[f.key], round) };
+      fields[f.key] = fourPlaces && needsFourPlaceFeedback(f, answers[f.key], correct)
+        ? { correct: false, message: fourPlaceFeedback }
+        : { correct, message: correct ? "Correct." : retryMessage(q, f, answers[f.key], round) };
     }
     catch (error) {
       if (error instanceof AnswerVariableError && !error.formatOnly) fields[f.key] = { correct: false, message: error.message };
       else {
         valid = false;
         fields[f.key] = { correct: false, formatError: true, message: "Check the format. " +
-          (error instanceof AnswerVariableError ? error.message : answerFormat(round ? { ...f, significantFigures: 3 } : f).en) };
+          (error instanceof AnswerVariableError ? error.message : answerFormat({ ...f, ...(round && { significantFigures: 3 }), ...(fourPlaces && { decimalPlaces: 4 }) }).en) };
       }
     }
     if (f.key === "expanded" && fields[f.key].correct && !isExpandedPolynomial(answers[f.key], f.variables ?? [])) fields[f.key] = { correct: false, message: "This is equivalent, but this field asks for expanded form. Multiply out the brackets." };

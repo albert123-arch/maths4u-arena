@@ -21,7 +21,7 @@ export function scalarLabels(field: Field) {
   if (field.type === "polynomial") {
     const division = /^(?:Quotient (Q\(x\))|Remainder (R\(x\)))$/i.exec(field.label);
     const named = division?.[1] ?? division?.[2];
-    return named ? [named, ...labels] : labels;
+    return named ? [...new Set([named, named[0], ...labels])] : labels;
   }
   const evaluation = /^(?:Exact )?value of ([a-z]{1,2}(?:⁻¹|\^-1|\^\{-1\})?\([−–+\d./ -]+\))$/i.exec(field.label)?.[1];
   if (evaluation) {

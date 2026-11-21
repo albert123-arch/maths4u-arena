@@ -64,6 +64,7 @@ const chapterDescriptions: Record<string, string> = {
   "9709-p1-coordinate-geometry": "Study coordinate geometry for Cambridge 9709 Pure Mathematics 1. Find exact distances, gradients, line and circle equations, intersections and tangents.",
   "9709-p1-circular-measure": "Study circular measure for Cambridge 9709 Pure Mathematics 1. Convert angles, find arc lengths and sector areas, and solve problems on segments and composite regions.",
   "9709-p3-algebra": "Study algebra for Cambridge 9709 Pure Mathematics 3. Sketch linear modulus graphs, solve modulus equations and inequalities, and use polynomial division and the factor and remainder theorems.",
+  "9709-p3-algebra-extensions": "Practise partial fractions and fractional binomial expansion for Cambridge 9709 Pure Mathematics 3. Check the algebra and the interval of validity.",
   "9709-p3-logarithms": "Study logarithms and exponentials for Cambridge 9709 Pure Mathematics 3. Solve equations and inequalities, check logarithm domains and use straight-line graphs to recover model constants.",
   "9709-p3-trigonometry": "Study reciprocal graphs, compound and double angles, the R form and trigonometric equations for Cambridge 9709 Pure Mathematics 3.",
   "9709-p3-differentiation": "Study the chain, product and quotient rules, implicit and parametric differentiation, and tangent and normal problems for Cambridge 9709 Pure Mathematics 3.",

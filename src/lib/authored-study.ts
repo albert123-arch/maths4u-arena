@@ -9,6 +9,7 @@ import differentiation from "../../content/original/9709-p1/differentiation-stud
 import integration from "../../content/original/9709-p1/integration-study.json";
 import crossTopic from "../../content/original/9709-p1/cross-topic-revision-study.json";
 import pure3Algebra from "../../content/original/9709-p3/algebra-study.json";
+import pure3FurtherAlgebra from "../../content/original/9709-p3/algebra-extensions-study.json";
 import pure3Logarithms from "../../content/original/9709-p3/logarithmic-and-exponential-functions-study.json";
 import pure3Trigonometry from "../../content/original/9709-p3/trigonometry-study.json";
 import pure3Differentiation from "../../content/original/9709-p3/differentiation-study.json";
@@ -25,7 +26,7 @@ import examPracticePaths from "../../content/original/9709-p1/exam-practice-path
 import { renderContent } from "./content";
 import { checkExact, checkExactInverseAngle, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
 import { answerFormat, exactValueFeedback } from "./square-presentation";
-import { permitsThreeSignificantFigures, s1StudyRounding } from "./s1-answer-precision";
+import { fourPlaceFeedback, needsFourPlaceFeedback, permitsThreeSignificantFigures, s1FourDecimalPlaces, s1StudyRounding } from "./s1-answer-precision";
 import type { StudyBlock, StudyCheck, StudyCheckResult, StudyExamPractice, StudyLesson, StudySection } from "./study-lesson-model";
 
 type Retry = { answer: string; feedback: string }[];
@@ -47,7 +48,7 @@ type AuthoredLesson = Omit<StudyLesson, "sections" | "extraPractice"> & {
 const lessons = {
   ...quadratics, ...functions, ...coordinateGeometry, ...circularMeasure, ...trigonometry,
   ...series, ...binomialExpansion, ...differentiation, ...integration, ...crossTopic,
-  ...pure3Algebra, ...pure3Logarithms, ...pure3Trigonometry, ...pure3Differentiation, ...pure3Integration,
+  ...pure3Algebra, ...pure3FurtherAlgebra, ...pure3Logarithms, ...pure3Trigonometry, ...pure3Differentiation, ...pure3Integration,
   ...representation, ...centralTendency, ...variation, ...probability,
   ...counting, ...distributions, ...binomialGeometric, ...normal,
 } as Record<string, AuthoredLesson>;
@@ -109,6 +110,7 @@ function publicCheck(check: AuthoredCheck, s1Rounding: boolean): { kind: "check"
         ...(options && { options: Object.fromEntries(Object.entries(options).map(([value, html]) => [value, renderContent(html)])) }),
         ...(inverseAngle && { inverseAngle: true }),
         ...(round && { significantFigures: 3 as const }),
+        ...(s1Rounding && s1FourDecimalPlaces(check.id, field, check.prompt) && { decimalPlaces: 4 as const }),
       };
     }),
   };
@@ -167,10 +169,15 @@ function studyAnswerMatches(field: StudyField, answer: string, prompt: string) {
   return field.inverseAngle ? checkExactInverseAngle(field, answer, field.inverseAngle) : checkExact(field, answer, prompt);
 }
 
-function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck, round: boolean): StudyCheckResult | undefined {
-  const format = round ? { ...field, significantFigures: 3 as const } : field;
+function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck, s1Rounding: boolean): StudyCheckResult | undefined {
+  const round = s1Rounding && permitsThreeSignificantFigures(check.id, field, check.prompt);
+  const fourPlaces = s1Rounding && s1FourDecimalPlaces(check.id, field, check.prompt);
+  const format = { ...field, ...(round && { significantFigures: 3 as const }), ...(fourPlaces && { decimalPlaces: 4 as const }) };
   try {
     const correct = round ? checkThreeSignificantFigures(field, answer, check.prompt) : studyAnswerMatches(field, answer, check.prompt);
+    if (fourPlaces && needsFourPlaceFeedback(field, answer, correct)) {
+      return { status: "retry", feedback: renderContent("<p>" + fourPlaceFeedback + "</p>") };
+    }
     if (correct) return undefined;
     if (!field.inverseAngle && isRoundedNumberAnswer(field, answer)) {
       return { status: "retry", feedback: renderContent("<p>" + (round ? answerFormat(format).en : exactValueFeedback) + "</p>") };
@@ -203,8 +210,7 @@ export function gradeStudyCheck(lessonId: string, id: string, answers: string | 
   }
   const s1Rounding = s1StudyRounding(lessonId);
   for (const field of fields) {
-    const round = s1Rounding && permitsThreeSignificantFigures(block.id, field, block.prompt);
-    const result = fieldFeedback(field, values[field.key], block, round);
+    const result = fieldFeedback(field, values[field.key], block, s1Rounding);
     if (result) return fields.length === 1 ? result : {
       ...result, feedback: renderContent("<p><strong>" + field.label + "</strong></p>") + result.feedback,
     };

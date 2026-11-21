@@ -112,6 +112,7 @@ function split(s: string, separator: string) {
 }
 type Bound = { key: string; value: number };
 type Interval = { low: Bound; high: Bound; lc: boolean; hc: boolean };
+const emptySetAnswer = /^(?:empty|none|no(?:\s+real)?\s+solutions?|∅|\{\s*\})$/i;
 function bound(raw: string): Bound {
   const value = raw.trim().replace(/[−–]/g, "-").replace(/\\infty/g, "∞");
   if (/^\+?(?:inf|infinity|∞)$/i.test(value)) return { key: "+inf", value: Infinity };
@@ -121,7 +122,7 @@ function bound(raw: string): Bound {
 function setIntervals(raw: string): Interval[] {
   if (raw.length > 400) fail();
   const s = raw.trim().replace(/∪/g, "U");
-  if (/^(?:empty|none|∅|\{\s*\})$/i.test(s)) return [];
+  if (emptySetAnswer.test(s)) return [];
   const intervals: Interval[] = [];
   for (const part of split(s, "U")) {
     const t = part.trim();
@@ -307,7 +308,7 @@ function answerSetKey(field: ExactField, raw: string, prompt?: string) {
 
 function pairsKey(raw: string, dimension = 2, coordinates = false) {
   if (raw.length > 400) fail();
-  if (/^(?:empty|none|∅|\{\s*\})$/i.test(raw.trim())) return "[]";
+  if (emptySetAnswer.test(raw.trim())) return "[]";
   function tuple(entries: string[]) {
     if (entries.length !== dimension) return fail();
     if (coordinates && dimension === 2 && entries.some(part => part.includes("="))) {
@@ -515,7 +516,7 @@ export function checkExact(field: ExactField, input: string, prompt?: string): b
   if (typeof field.expected !== "string") fail();
   const expected=field.expected as string;
   if (field.type === "integers") {
-    let s=input.trim(); if (/^(?:empty|none|∅|\{\s*\})$/i.test(s)) return setKey(s)===setKey(expected);
+    let s=input.trim(); if (emptySetAnswer.test(s)) return setKey(s)===setKey(expected);
     if(s.startsWith("{")&&s.endsWith("}"))s=s.slice(1,-1);
     for(const value of split(s,",")){const p=polynomialKey(value);if(p.length && (p.length!==1 || p[0][0]!==0 || p[0][1].length!==1 || p[0][1][0][0]!==1 || p[0][1][0][2]!=="1"))return false;}
     return setKey(input)===setKey(expected);

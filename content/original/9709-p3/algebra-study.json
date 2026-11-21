@@ -7,7 +7,7 @@
         "id": "distance",
         "title": "What does a modulus measure?",
         "label": "Read modulus as distance",
-        "minutes": 5,
+        "minutes": 8,
         "level": "core",
         "intro": "<p>\\(|u|\\) is the distance from \\(u\\) to \\(0\\) on a number line. It is always non-negative and is zero exactly when \\(u=0\\).</p>",
         "blocks": [
@@ -46,6 +46,36 @@
                 "expected": "5"
               }
             ]
+          },
+          {
+            "kind": "key",
+            "html": "<p>A distance from \\(r\\) has the form \\(|x-r|\\). If a positive number multiplies the input difference, it scales the height by that number.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "modgraph-distance-centre",
+            "title": "Read the centre of a distance model",
+            "prompt": "<p>Write \\(|2x+6|=k|x-r|\\) with \\(k&gt;0\\). Give \\(k,r\\).</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Scale k",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "r",
+                "label": "Centre r",
+                "type": "number",
+                "expected": "-3"
+              }
+            ],
+            "hint": "<p>Factor two from the inner expression and rewrite the remaining linear expression as x minus the centre.</p>",
+            "solution": "<p>\\(|2x+6|=2|x+3|=2|x-(-3)|\\), so \\(k=2\\) and \\(r=-3\\).</p>"
           }
         ]
       },
@@ -53,7 +83,7 @@
         "id": "sketch",
         "title": "How do I sketch the two lines?",
         "label": "Sketch vertex and gradients",
-        "minutes": 7,
+        "minutes": 10,
         "level": "core",
         "intro": "<p>Start with the line \\(y=ax+b\\). Keep its points on or above the \\(x\\)-axis. A point below it has negative height, so reflect that part upwards. Both parts keep the same \\(x\\)-coordinates. They join at \\((x,0)\\), where \\(ax+b=0\\).</p>",
         "blocks": [
@@ -109,6 +139,48 @@
                 "expected": "4"
               }
             ]
+          },
+          {
+            "kind": "key",
+            "html": "<p>The size of the slope of the inner line decides how steep the V is. Both arms have slope of size \\(|a|\\). The left arm decreases to the vertex and the right arm increases from it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "modgraph-negative-inner-gradient",
+            "title": "Find both arms of a negatively written V",
+            "prompt": "<p>For \\(y=|-3x+12|\\), give the vertex's x-coordinate, the y-intercept value and the gradients of the left and right arms.</p>",
+            "fields": [
+              {
+                "key": "vertex",
+                "label": "Vertex x-coordinate",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "intercept",
+                "label": "Intercept y-coordinate",
+                "type": "number",
+                "expected": "12"
+              },
+              {
+                "key": "left",
+                "label": "Left gradient",
+                "type": "number",
+                "expected": "-3"
+              },
+              {
+                "key": "right",
+                "label": "Right gradient",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Rewrite as three times a non-negative distance and decide which branch decreases towards the vertex.</p>",
+            "solution": "<p>\\(y=3|x-4|\\) has vertex \\((4,0)\\) and intercept \\((0,12)\\). The left and right gradients are \\(-3\\) and \\(3\\) respectively.</p>"
           }
         ]
       },
@@ -116,7 +188,7 @@
         "id": "horizontal-intersection",
         "title": "How many times does a horizontal line meet the graph?",
         "label": "Read horizontal intersections",
-        "minutes": 5,
+        "minutes": 8,
         "level": "core",
         "intro": "<p>Compare the requested height with the minimum \\(0\\). A negative height cannot occur, height zero meets the graph at the vertex, and a positive height meets both arms when \\(a\\ne0\\).</p>",
         "blocks": [
@@ -153,6 +225,73 @@
           {
             "kind": "tip",
             "html": "<p>Label the axes, vertex and intercepts. A sketch illustrates the algebraic values you have found.</p>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>At a fixed positive height the two inputs are mirror images in the vertical line through the vertex. If the distance from the vertex is \\(d\\), write the inputs as \\(r-d\\) and \\(r+d\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "modgraph-symmetric-inputs",
+            "title": "Find every input at a given height",
+            "prompt": "<p>Find all inputs where \\(y=|4x+12|\\) meets the line \\(y=20\\).</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "All real solutions",
+                "type": "set",
+                "expected": "{-8,2}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Rewrite the graph as four times a distance from the vertex.</p>",
+            "solution": "<p>The vertex is at \\(x=-3\\) and the distance from it is \\(5\\). Thus \\(x=-8\\) or \\(x=2\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "recover-a-v-formula",
+        "title": "How do I read a formula from the vertex and another point?",
+        "label": "Recover a V from two points",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For a V with vertex \\((r,0)\\) and another point \\((p,h)\\), the height \\(h\\) tells you how many times the distance from the vertex was scaled.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>When \\(p\\ne r\\) and \\(h&gt;0\\), use \\(y=k|x-r|\\) with \\(k=\\frac{h}{|p-r|}\\). To write \\(y=|ax+b|\\), one choice is \\(a=k\\) and \\(b=-kr\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "modgraph-recover-coefficients",
+            "title": "Find a and b from two graph points",
+            "prompt": "<p>The graph \\(y=|ax+b|\\) has vertex \\((3,0)\\) and contains \\((-1,8)\\). Find \\(a,b\\) with \\(a&gt;0\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "-6"
+              }
+            ],
+            "hint": "<p>Use the distance between −1 and 3 to find the positive scale.</p>",
+            "solution": "<p>The distance is four, giving \\(a=2\\). The formula is \\(y=2|x-3|=|2x-6|\\), so \\(b=-6\\).</p>"
           }
         ]
       }
@@ -184,6 +323,39 @@
           "<p>Move \\(2\\) units to either side of \\(3\\), giving \\(x=1\\) or \\(x=5\\).</p>",
           "<p>The intersections are \\((1,4)\\) and \\((5,4)\\).</p>"
         ]
+      },
+      {
+        "title": "Read a scaled distance",
+        "question": "<p>Interpret the height of the graph \\(y=|3x-6|\\) at \\(x=-1\\). Find the point on the other arm at the same height.</p>",
+        "solution": [
+          "<p>Rewrite the formula as \\(y=3|x-2|\\). The height is three times the horizontal distance from \\(x=2\\).</p>",
+          "<p>At \\(x=-1\\) that distance is three. The height is \\(9\\) and the other input is \\(x=2+3=5\\).</p>"
+        ]
+      },
+      {
+        "title": "Sketch a V when the inner slope is negative",
+        "question": "<p>Give the vertex, the vertical intercept and both branch gradients of \\(y=|-5x-10|\\).</p>",
+        "solution": [
+          "<p>The inner line vanishes at \\(x=-2\\), so the vertex is \\((-2,0)\\).</p>",
+          "<p>Since \\(y=5|x+2|\\), the left arm has gradient \\(-5\\) and the right arm has gradient \\(5\\).</p>",
+          "<p>At \\(x=0\\) the modulus is \\(10\\), giving the intercept \\((0,10)\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover the second intersection by symmetry",
+        "question": "<p>The line \\(y=8\\) meets \\(y=|2x-10|\\) at an input \\(x=9\\). Find the other input.</p>",
+        "solution": [
+          "<p>The vertex has input \\(5\\). The known input is four units to its right.</p>",
+          "<p>The other input is four units to its left, \\(x=1\\). Both have height \\(2\\times4=8\\).</p>"
+        ]
+      },
+      {
+        "title": "Build a formula from a given vertex",
+        "question": "<p>A graph of the form \\(y=|ax+b|\\) has vertex \\((-2,0)\\) and passes through \\((4,18)\\). Find one formula with \\(a&gt;0\\).</p>",
+        "solution": [
+          "<p>The form is \\(y=k|x+2|\\). The extra point is six horizontal units from the vertex.</p>",
+          "<p>Since \\(18=6k\\), \\(k=3\\). Hence \\(y=3|x+2|=|3x+6|\\).</p>"
+        ]
       }
     ],
     "glossary": [
@@ -198,6 +370,18 @@
       {
         "term": "Gradient",
         "definition": "<p>The signed change in height per unit increase in the input.</p>"
+      },
+      {
+        "term": "Axis of symmetry",
+        "definition": "<p>The vertical line through the vertex. Points on the two arms at the same height are equally far from this line.</p>"
+      },
+      {
+        "term": "Scale factor",
+        "definition": "<p>A positive multiplier that converts horizontal distance from the vertex into graph height.</p>"
+      },
+      {
+        "term": "Intersection",
+        "definition": "<p>A point that lies on both graphs. Its x-coordinate is a solution to the equation made by equating the graph heights.</p>"
       }
     ],
     "related": [
@@ -211,10 +395,91 @@
       }
     ],
     "revision": {
-      "body": "<h2>Distance and the two branches</h2><p>\\(|u|=u\\) for \\(u\\ge0\\) and \\(|u|=-u\\) for \\(u&lt;0\\). For \\(a\\ne0\\), \\(y=|ax+b|\\) has vertex \\(\\left(-\\frac ba,0\\right)\\), \\(y\\)-intercept \\((0,|b|)\\) and gradients \\(-|a|\\), then \\(|a|\\).</p><h2>Sketch example</h2><p>\\(y=|2x-6|=2|x-3|\\) has vertex \\((3,0)\\) and passes through \\((0,6)\\).</p><p><img src=\"/assets/study/9709/orig_9709_p3_alg_modulus_graphs/linear-modulus-vertex.svg\" width=\"480\" height=\"295\" alt=\"A V-shaped graph of y equals the modulus of 2x minus 6. The vertex is at (3, 0), the y-intercept is (0, 6), and the two branches have gradients −2 and 2.\"></p><h2>Read a horizontal intersection</h2><p>If \\(c&gt;0\\), \\(|ax+b|=c\\) gives two points at distance \\(\\frac{c}{|a|}\\) from the vertex. At \\(c=0\\) there is one point, and at \\(c&lt;0\\) there are none.</p>",
+      "body": "<h2>Distance and the two branches</h2><p>\\(|u|=u\\) for \\(u\\ge0\\) and \\(|u|=-u\\) for \\(u&lt;0\\). For \\(a\\ne0\\), \\(y=|ax+b|\\) has vertex \\(\\left(-\\frac ba,0\\right)\\), \\(y\\)-intercept \\((0,|b|)\\) and gradients \\(-|a|\\), then \\(|a|\\).</p><h2>Sketch example</h2><p>\\(y=|2x-6|=2|x-3|\\) has vertex \\((3,0)\\) and passes through \\((0,6)\\).</p><p><img src=\"/assets/study/9709/orig_9709_p3_alg_modulus_graphs/linear-modulus-vertex.svg\" width=\"480\" height=\"295\" alt=\"A V-shaped graph of y equals the modulus of 2x minus 6. The vertex is at (3, 0), the y-intercept is (0, 6), and the two branches have gradients −2 and 2.\"></p><h2>Read a horizontal intersection</h2><p>If \\(c&gt;0\\), \\(|ax+b|=c\\) gives two points at distance \\(\\frac{c}{|a|}\\) from the vertex. At \\(c=0\\) there is one point, and at \\(c&lt;0\\) there are none.</p><h2>Recover the scale</h2><p>A point \\((p,h)\\) on a V with vertex \\((r,0)\\) gives \\(k=\\frac{h}{|p-r|}\\) for \\(y=k|x-r|\\).</p>",
       "checks": "<ul><li>Find the vertex at the zero of the inside expression.</li><li>Leave the positive part of the original line in place.</li><li>Reflect its negative part in the \\(x\\)-axis.</li></ul>",
       "examTip": "<p>If \\(a&lt;0\\), the formula for the left arm changes, but its gradient is still \\(-|a|\\).</p>"
-    }
+    },
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "modgraph-practice-sign",
+        "title": "Factor out the positive scale",
+        "prompt": "<p>Write \\(|6-2x|=k|x-r|\\) with \\(k&gt;0\\). Give \\(k,r\\).</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Scale k",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "r",
+            "label": "Centre r",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>Inside the modulus factor out negative two.</p>",
+        "solution": "<p>Taking the modulus gives \\(|-2|\\,|x-3|=2|x-3|\\) so \\(k=2\\) and \\(r=3\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modgraph-practice-at-zero",
+        "title": "Find the contact with the horizontal axis",
+        "prompt": "<p>Give the complete solution set of \\(|5x+4|=0\\).</p>",
+        "fields": [
+          {
+            "key": "roots",
+            "label": "All real solutions",
+            "type": "set",
+            "expected": "{-4/5}",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>The only number with zero modulus is zero.</p>",
+        "solution": "<p>Solve \\(5x+4=0\\). The only input is \\(x=-\\frac45\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modgraph-practice-below-axis",
+        "title": "Decide whether the V meets a negative height",
+        "prompt": "<p>Give all inputs where \\(y=|3x-7|\\) meets \\(y=-2\\).</p>",
+        "fields": [
+          {
+            "key": "roots",
+            "label": "All real solutions",
+            "type": "set",
+            "expected": "empty",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Check the possible heights of the V.</p>",
+        "solution": "<p>Every height of the V is non-negative, so the graphs have no intersection.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modgraph-practice-fraction-pair",
+        "title": "Find the two exact intersections",
+        "prompt": "<p>Find all inputs where \\(y=|3x-2|\\) meets \\(y=4\\).</p>",
+        "fields": [
+          {
+            "key": "roots",
+            "label": "All real solutions",
+            "type": "set",
+            "expected": "{-2/3,2}",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>The vertex is at two thirds. Find the distance from the vertex for height four.</p>",
+        "solution": "<p>The two inputs are \\(\\frac23\\pm\\frac43\\), namely \\(-\\frac23\\) and \\(2\\).</p>"
+      }
+    ]
   },
   "orig_9709_p3_alg_modulus_equations": {
     "updatedOn": "2026-11-21",
@@ -224,7 +489,7 @@
         "id": "constant-height",
         "title": "How do I solve a modulus equal to a constant?",
         "label": "Use both signed cases",
-        "minutes": 6,
+        "minutes": 9,
         "level": "core",
         "intro": "<p>For \\(|u|=c\\), decide how many solutions are possible by checking the sign of \\(c\\) before splitting into cases.</p>",
         "blocks": [
@@ -265,6 +530,33 @@
                 ]
               }
             ]
+          },
+          {
+            "kind": "key",
+            "html": "<p>When the target height is zero the two signed cases coincide. Give the one input that makes the inside expression zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "modeq-zero-singleton",
+            "title": "Use the zero-height case",
+            "prompt": "<p>Give the complete solution set of \\(|6x-5|=0\\).</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "All real solutions",
+                "type": "set",
+                "expected": "{5/6}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Solve the inner expression equal to zero.</p>",
+            "solution": "<p>Solving \\(6x-5=0\\) gives the single solution \\(x=\\frac56\\).</p>"
           }
         ]
       },
@@ -272,7 +564,7 @@
         "id": "two-moduli",
         "title": "What changes when both sides contain a modulus?",
         "label": "Compare two moduli",
-        "minutes": 7,
+        "minutes": 10,
         "level": "core",
         "intro": "<p>Equal distances from zero mean that the two signed expressions are equal or opposite.</p>",
         "blocks": [
@@ -303,6 +595,33 @@
           {
             "kind": "mistake",
             "html": "<p>When the whole expression changes sign, every term inside its brackets changes sign.</p>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>One signed equation may have no solution because its variable terms cancel and leave a false constant equality. Complete the other case as well.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "modeq-parallel-inner-lines",
+            "title": "Solve when one case is impossible",
+            "prompt": "<p>Give all solutions of \\(|4x-1|=|4x+7|\\).</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "All real solutions",
+                "type": "set",
+                "expected": "{-3/4}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Equal inner expressions would give −1 = 7. Test the opposite-sign equation.</p>",
+            "solution": "<p>The only possible case is \\(4x-1=-4x-7\\), giving \\(8x=-6\\) and \\(x=-\\frac34\\).</p>"
           }
         ]
       },
@@ -310,7 +629,7 @@
         "id": "signed-right",
         "title": "What if the other side can be negative?",
         "label": "Check the signed side",
-        "minutes": 9,
+        "minutes": 12,
         "level": "core",
         "intro": "<p>For \\(|u(x)|=v(x)\\), a root must satisfy \\(v(x)\\ge0\\). If you split by the sign of \\(u(x)\\), keep only candidates on their chosen branch.</p>",
         "blocks": [
@@ -378,6 +697,70 @@
           {
             "kind": "tip",
             "html": "<p>Substitute candidate roots into the given equation when you have used a sign condition or squared a signed expression.</p>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>If the right side can be negative, establish its allowed region first. Both signed equations can still give a root when the right side is non-negative at each root.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "modeq-validate-two-candidates",
+            "title": "Test both candidate roots",
+            "prompt": "<p>Give all real solutions of \\(|2x+1|=x+4\\).</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "All real solutions",
+                "type": "set",
+                "expected": "{-5/3,3}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>The right side must be at least zero. Solve both signed cases on that region.</p>",
+            "solution": "<p>The signed equations give \\(x=3\\) and \\(x=-\\frac53\\). Both satisfy \\(x\\ge-4\\), so include both.</p>"
+          }
+        ]
+      },
+      {
+        "id": "when-a-case-is-identically-true",
+        "title": "Can a whole interval satisfy a modulus equation?",
+        "label": "Recognise a whole branch",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>When solving branch by branch you may reach an identity. Then every point in that branch that meets the original restrictions is a solution.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For any real \\(u\\), the equation \\(|u|=u\\) means \\(u\\ge0\\), and \\(|u|=-u\\) means \\(u\\le0\\). Include \\(u=0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "modeq-identical-negative-branch",
+            "title": "Find the whole matching branch",
+            "prompt": "<p>Solve \\(|3x+9|=-3x-9\\) for all real \\(x\\).</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "All real solutions",
+                "type": "set",
+                "expected": "(-inf,-3]",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>The modulus equals the negative of its input when the input is non-positive.</p>",
+            "solution": "<p>The equation is equivalent to \\(3x+9\\le0\\), or \\(x\\le-3\\).</p>"
           }
         ]
       }
@@ -409,6 +792,38 @@
           "<p>Solve \\(2x-1=x+4\\), giving \\(x=5\\), or \\(2x-1=-x-4\\), giving \\(x=-1\\).</p>",
           "<p>Both values satisfy \\(x\\ge-4\\). The original sides are both \\(9\\) at \\(x=5\\), and both \\(3\\) at \\(x=-1\\).</p>"
         ]
+      },
+      {
+        "title": "Find the only root at height zero",
+        "question": "<p>Solve \\(|4x+3|=0\\).</p>",
+        "solution": [
+          "<p>The inside must vanish, so \\(4x+3=0\\).</p>",
+          "<p>The solution set is \\(\\left\\{-\\frac34\\right\\}\\).</p>"
+        ]
+      },
+      {
+        "title": "Handle an impossible signed case",
+        "question": "<p>Solve \\(|3x+8|=|3x-4|\\).</p>",
+        "solution": [
+          "<p>The equal-sign equation gives \\(3x+8=3x-4\\), which would require \\(8=-4\\).</p>",
+          "<p>The opposite-sign equation is \\(3x+8=-3x+4\\), giving \\(x=-\\frac23\\).</p>"
+        ]
+      },
+      {
+        "title": "Retain both candidates after testing",
+        "question": "<p>Solve \\(|3x-2|=x+6\\).</p>",
+        "solution": [
+          "<p>The right side requires \\(x\\ge-6\\). The two possible equations are \\(3x-2=x+6\\) and \\(3x-2=-(x+6)\\).</p>",
+          "<p>The candidates are \\(x=4\\) and \\(x=-1\\). Their respective right-side values are \\(10\\) and \\(5\\), so both are solutions.</p>"
+        ]
+      },
+      {
+        "title": "Find where the graphs share a ray",
+        "question": "<p>Solve \\(|2x-6|=2x-6\\).</p>",
+        "solution": [
+          "<p>The equation holds when the inner expression is non-negative. Therefore solve \\(2x-6\\ge0\\).</p>",
+          "<p>The solution set is \\(x\\ge3\\). The boundary value makes both sides zero.</p>"
+        ]
       }
     ],
     "glossary": [
@@ -423,6 +838,18 @@
       {
         "term": "Signed case",
         "definition": "<p>An equation obtained by choosing the positive or negative value of the inside expression.</p>"
+      },
+      {
+        "term": "Extraneous root",
+        "definition": "<p>A candidate from a transformed equation that fails the original equation or one of its sign restrictions.</p>"
+      },
+      {
+        "term": "Identity",
+        "definition": "<p>A statement that is true for every input in the region under consideration.</p>"
+      },
+      {
+        "term": "Branch",
+        "definition": "<p>A region where a particular signed formula for the modulus is valid.</p>"
       }
     ],
     "related": [
@@ -436,10 +863,69 @@
       }
     ],
     "revision": {
-      "body": "<h2>Equal to a constant</h2><p>\\(|u|=c\\) has cases \\(u=c\\) and \\(u=-c\\) for \\(c&gt;0\\). For \\(c=0\\) use \\(u=0\\); for \\(c&lt;0\\) there are no real solutions.</p><h2>Equal moduli</h2><p>\\(|u|=|v|\\iff u=v\\) or \\(u=-v\\). If you square these non-negative sides, the difference of squares gives the same cases.</p><h2>A signed expression on one side</h2><p>Keep \\(v(x)\\ge0\\) before solving \\(|u(x)|=v(x)\\). For \\(|2x-1|=x+4\\), require \\(x\\ge-4\\). Equating \\(2x-1\\) to \\(x+4\\) or \\(-(x+4)\\) gives \\(x=5\\) or \\(x=-1\\), and both pass the check.</p><img src=\"/assets/study/9709/orig_9709_p3_alg_modulus_equations/signed-modulus-intersections.svg\" width=\"504\" height=\"294\" alt=\"The graph of y equals the modulus of 2x minus 1 intersects y equals x plus 4 at (−1, 3) and (5, 9). The portion of the line to the left of x equals −4 is dashed because it has negative height.\"><h2>Finish with a set</h2><p>List each valid real solution once. Give exact fractions if they are required.</p>",
+      "body": "<h2>Equal to a constant</h2><p>\\(|u|=c\\) has cases \\(u=c\\) and \\(u=-c\\) for \\(c&gt;0\\). For \\(c=0\\) use \\(u=0\\); for \\(c&lt;0\\) there are no real solutions.</p><h2>Equal moduli</h2><p>\\(|u|=|v|\\iff u=v\\) or \\(u=-v\\). If you square these non-negative sides, the difference of squares gives the same cases.</p><h2>A signed expression on one side</h2><p>Keep \\(v(x)\\ge0\\) before solving \\(|u(x)|=v(x)\\). For \\(|2x-1|=x+4\\), require \\(x\\ge-4\\). Equating \\(2x-1\\) to \\(x+4\\) or \\(-(x+4)\\) gives \\(x=5\\) or \\(x=-1\\), and both pass the check.</p><img src=\"/assets/study/9709/orig_9709_p3_alg_modulus_equations/signed-modulus-intersections.svg\" width=\"504\" height=\"294\" alt=\"The graph of y equals the modulus of 2x minus 1 intersects y equals x plus 4 at (−1, 3) and (5, 9). The portion of the line to the left of x equals −4 is dashed because it has negative height.\"><h2>Finish with a set</h2><p>List each valid real solution once. Give exact fractions if they are required.</p><h2>Recognise identical branches</h2><p>\\(|u|=u\\) holds for \\(u\\ge0\\) and \\(|u|=-u\\) holds for \\(u\\le0\\). The solution may be an interval rather than isolated roots.</p>",
       "checks": "<ul><li>Write both signed cases.</li><li>Keep the original sign and domain restrictions.</li><li>Check all roots, then give their complete set.</li></ul>",
       "examTip": "<p>Squaring when one side may be negative can create extra candidates. Explain why you accept or discard each candidate.</p>"
-    }
+    },
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "modeq-practice-two-roots",
+        "title": "Give both roots at a positive height",
+        "prompt": "<p>Solve \\(|3x-4|=7\\).</p>",
+        "fields": [
+          {
+            "key": "roots",
+            "label": "All real solutions",
+            "type": "set",
+            "expected": "{-1,11/3}",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Set the inner expression equal to positive seven and negative seven.</p>",
+        "solution": "<p>The two cases give \\(x=\\frac{11}3\\) and \\(x=-1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modeq-practice-equal-distances",
+        "title": "Compare two moduli",
+        "prompt": "<p>Solve \\(|2x+1|=|x-8|\\).</p>",
+        "fields": [
+          {
+            "key": "roots",
+            "label": "All real solutions",
+            "type": "set",
+            "expected": "{-9,7/3}",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>The two inner expressions must be equal or be negatives of one another.</p>",
+        "solution": "<p>The equal case \\(2x+1=x-8\\) gives \\(x=-9\\). The opposite case \\(2x+1=-x+8\\) gives \\(x=\\frac73\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modeq-practice-empty-after-sign-check",
+        "title": "Check for inadmissible roots",
+        "prompt": "<p>Solve \\(|4x-3|=2x-5\\).</p>",
+        "fields": [
+          {
+            "key": "roots",
+            "label": "All real solutions",
+            "type": "set",
+            "expected": "empty",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>First find where the right side is non-negative. On that region, decide the sign of the inner expression.</p>",
+        "solution": "<p>The right side requires \\(x\\ge\\frac52\\). There \\(4x-3&gt;0\\), and the only linear candidate \\(x=-1\\) lies outside the allowed region. There are no solutions.</p>"
+      }
+    ]
   },
   "orig_9709_p3_alg_modulus_inequalities": {
     "updatedOn": "2026-11-21",
@@ -449,7 +935,7 @@
         "id": "inner-band",
         "title": "When do the solutions lie between two endpoints?",
         "label": "Solve an inside band",
-        "minutes": 6,
+        "minutes": 9,
         "level": "core",
         "intro": "<p>\\(|x-a|\\) measures the distance from \\(a\\). A distance below a positive bound puts \\(x\\) inside an interval.</p>",
         "blocks": [
@@ -493,6 +979,33 @@
                 ]
               }
             ]
+          },
+          {
+            "kind": "key",
+            "html": "<p>If the coefficient of \\(x\\) inside the modulus is negative, each comparison reverses when you divide by it. Put the endpoint values in increasing order at the end.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "modineq-reversed-inner-band",
+            "title": "Find both inclusive endpoints",
+            "prompt": "<p>Solve \\(|7-3x|\\le4\\).</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Solution set in x",
+                "type": "set",
+                "expected": "[1,11/3]",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Convert to a double inequality and reverse its signs when you divide by negative three.</p>",
+            "solution": "<p>\\(-4\\le7-3x\\le4\\) gives \\(-11\\le-3x\\le-3\\). Thus \\(1\\le x\\le\\frac{11}3\\).</p>"
           }
         ]
       },
@@ -555,7 +1068,7 @@
         "id": "two-sided-moduli",
         "title": "When can I square both sides safely?",
         "label": "Compare two moduli",
-        "minutes": 7,
+        "minutes": 10,
         "level": "core",
         "intro": "<p>If both sides are moduli, they are non-negative. Squaring is increasing on non-negative numbers.</p>",
         "blocks": [
@@ -592,6 +1105,33 @@
                 ]
               }
             ]
+          },
+          {
+            "kind": "key",
+            "html": "<p>With two moduli, use the difference of two squares to determine where the squared magnitudes compare. The factor with lower root does not decide the sign by itself.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "modineq-squared-exterior",
+            "title": "Include both exterior branches",
+            "prompt": "<p>Solve \\(|3x+1|&gt;|x+5|\\).</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Solution set in x",
+                "type": "set",
+                "expected": "(-inf,-3/2)U(2,inf)",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>The difference of the squares factors as \\((2x-4)(4x+6)\\).</p>",
+            "solution": "<p>The factors have the same sign for \\(x&lt;-\\frac32\\) or \\(x&gt;2\\). The strict comparison excludes both roots.</p>"
           }
         ]
       },
@@ -638,6 +1178,43 @@
             "html": "<p>Squaring a comparison when the right-hand side is negative does not preserve the original inequality.</p>"
           }
         ]
+      },
+      {
+        "id": "zero-or-negative-bound",
+        "title": "What if the bound is zero or negative?",
+        "label": "Check non-positive bounds",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A modulus is always non-negative. Compare that fact with the bound before trying to create a band or exterior rays.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Comparison</th><th scope=\"col\">When it holds</th></tr></thead><tbody><tr><th scope=\"row\">\\(|u|&lt;0\\)</th><td>Never</td></tr><tr><th scope=\"row\">\\(|u|\\le0\\)</th><td>\\(u=0\\)</td></tr><tr><th scope=\"row\">\\(|u|&gt;0\\)</th><td>\\(u\\ne0\\)</td></tr><tr><th scope=\"row\">\\(|u|\\ge0\\)</th><td>For every real value of the inside expression</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "modineq-nonnegative-for-all",
+            "title": "Identify when an inequality is always true",
+            "prompt": "<p>Solve \\(|2x-3|\\ge0\\) for real \\(x\\).</p>",
+            "fields": [
+              {
+                "key": "solutions",
+                "label": "Solution set in x",
+                "type": "set",
+                "expected": "(-inf,inf)",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>A modulus is non-negative for every real input, including where it is zero.</p>",
+            "solution": "<p>Every real value of \\(x\\) satisfies the comparison. The solution set is \\(\\mathbb{R}\\).</p>"
+          }
+        ]
       }
     ],
     "examples": [
@@ -676,6 +1253,30 @@
           "<p>For \\(x\\ge3\\), replace the modulus by \\(x-3\\). Then \\(x-3&gt;2x+1\\) gives \\(x&lt;-4\\), impossible on this branch.</p>",
           "<p>Take the union of the retained branch sets. The solution is \\(x&lt;\\frac23\\).</p>"
         ]
+      },
+      {
+        "title": "Keep the order after dividing by a negative number",
+        "question": "<p>Solve \\(|5-2x|&lt;3\\).</p>",
+        "solution": [
+          "<p>Write \\(-3&lt;5-2x&lt;3\\) and subtract five throughout: \\(-8&lt;-2x&lt;-2\\).</p>",
+          "<p>Divide by negative two, reversing both comparisons. This gives \\(4&gt;x&gt;1\\), usually written \\(1&lt;x&lt;4\\).</p>"
+        ]
+      },
+      {
+        "title": "Identify the signs either side of two roots",
+        "question": "<p>Solve \\(|2x-3|\\le|x+3|\\).</p>",
+        "solution": [
+          "<p>Both sides are non-negative, so square and subtract: \\((2x-3)^2-(x+3)^2=(x-6)(3x)\\).</p>",
+          "<p>The factors have opposite signs between \\(0\\) and \\(6\\). The original comparison permits equality, so the solution is \\(0\\le x\\le6\\).</p>"
+        ]
+      },
+      {
+        "title": "Exclude the one zero-distance input",
+        "question": "<p>Solve \\(|3x+6|&gt;0\\).</p>",
+        "solution": [
+          "<p>The modulus can only fail to be positive when the inside is zero.</p>",
+          "<p>The only excluded input is \\(x=-2\\). The solution is \\(x\\ne-2\\).</p>"
+        ]
       }
     ],
     "glossary": [
@@ -690,6 +1291,18 @@
       {
         "term": "Branch restriction",
         "definition": "<p>The condition on the input under which a chosen signed formula for the modulus applies.</p>"
+      },
+      {
+        "term": "Boundary point",
+        "definition": "<p>An endpoint where the relation may become equality. A strict inequality omits such a point.</p>"
+      },
+      {
+        "term": "Union",
+        "definition": "<p>All inputs in at least one of the solved regions.</p>"
+      },
+      {
+        "term": "Intersection",
+        "definition": "<p>Only the inputs meeting every condition under consideration. Use it when enforcing a branch restriction.</p>"
       }
     ],
     "related": [
@@ -703,10 +1316,88 @@
       }
     ],
     "revision": {
-      "body": "<h2>Distance rules</h2><p>For \\(c&gt;0\\), \\(|u|&lt;c\\) means \\(-c&lt;u&lt;c\\). In contrast, \\(|u|&gt;c\\) means \\(u&lt;-c\\) or \\(u&gt;c\\). Include equality at both boundaries for non-strict comparisons.</p><p>Example: \\(|2x+1|&lt;7\\) gives \\(-7&lt;2x+1&lt;7\\), so \\(-4&lt;x&lt;3\\).</p><h2>Two moduli</h2><p>Both sides are non-negative. Square, factor \\(u^2-v^2=(u-v)(u+v)\\) and test the sign in each region.</p><h2>A signed side</h2><p>Split where the inside expression changes sign. Solve each linear comparison, intersect with its branch and join the retained sets. For \\(|u|\\le v\\), equivalently require \\(v\\ge0\\) and \\(-v\\le u\\le v\\).</p><h2>Boundary values</h2><p>A strict comparison excludes equality. Dividing an inequality by a negative number reverses the sign.</p>",
+      "body": "<h2>Distance rules</h2><p>For \\(c&gt;0\\), \\(|u|&lt;c\\) means \\(-c&lt;u&lt;c\\). In contrast, \\(|u|&gt;c\\) means \\(u&lt;-c\\) or \\(u&gt;c\\). Include equality at both boundaries for non-strict comparisons.</p><p>Example: \\(|2x+1|&lt;7\\) gives \\(-7&lt;2x+1&lt;7\\), so \\(-4&lt;x&lt;3\\).</p><h2>Two moduli</h2><p>Both sides are non-negative. Square, factor \\(u^2-v^2=(u-v)(u+v)\\) and test the sign in each region.</p><h2>A signed side</h2><p>Split where the inside expression changes sign. Solve each linear comparison, intersect with its branch and join the retained sets. For \\(|u|\\le v\\), equivalently require \\(v\\ge0\\) and \\(-v\\le u\\le v\\).</p><h2>Boundary values</h2><p>A strict comparison excludes equality. Dividing an inequality by a negative number reverses the sign.</p><h2>Check the sign of a constant bound</h2><p>\\(|u|&lt;0\\) is impossible, \\(|u|\\le0\\) holds at \\(u=0\\), and \\(|u|&gt;0\\) excludes that zero case.</p>",
       "checks": "<ul><li>Find equality points, then test the centre or a point in each region.</li><li>Use open endpoints when equality is excluded.</li><li>Join separate rays with “or”.</li></ul>",
       "examTip": "<p>For a signed right-hand side, write branch restrictions next to the rearranged inequalities. Keep the intersection on each branch first.</p>"
-    }
+    },
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "modineq-practice-two-strict-rays",
+        "title": "Find the two strict rays",
+        "prompt": "<p>Solve \\(|4x-1|&gt;7\\).</p>",
+        "fields": [
+          {
+            "key": "solutions",
+            "label": "Solution set in x",
+            "type": "set",
+            "expected": "(-inf,-3/2)U(2,inf)",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>A distance exceeding seven puts the inner expression outside the band from −7 to 7.</p>",
+        "solution": "<p>Solving \\(4x-1&lt;-7\\) or \\(4x-1&gt;7\\) gives \\(x&lt;-\\frac32\\) or \\(x&gt;2\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modineq-practice-signed-linear",
+        "title": "Solve a comparison against a signed line",
+        "prompt": "<p>Solve \\(|2x-5|\\le2x+1\\).</p>",
+        "fields": [
+          {
+            "key": "solutions",
+            "label": "Solution set in x",
+            "type": "set",
+            "expected": "[1,inf)",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Require a non-negative right side and compare both signed versions of the inside to that right side.</p>",
+        "solution": "<p>The comparisons \\(2x-5\\le2x+1\\) and \\(-2x+5\\le2x+1\\) hold together exactly when \\(x\\ge1\\). This also meets the sign condition.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modineq-practice-negative-upper-bound",
+        "title": "Use the sign before splitting",
+        "prompt": "<p>Solve \\(|x-2|&lt;-3\\).</p>",
+        "fields": [
+          {
+            "key": "solutions",
+            "label": "Solution set in x",
+            "type": "set",
+            "expected": "empty",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Check the least possible value of the modulus.</p>",
+        "solution": "<p>A modulus is at least zero, so it cannot be less than negative three. There are no solutions.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "modineq-practice-constant-factor",
+        "title": "Keep a constant factor when squaring",
+        "prompt": "<p>Solve \\(|3x-1|\\le|3x+5|\\).</p>",
+        "fields": [
+          {
+            "key": "solutions",
+            "label": "Solution set in x",
+            "type": "set",
+            "expected": "[-2/3,inf)",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Subtract the squares using the factored difference; one factor is a negative constant.</p>",
+        "solution": "<p>The squared comparison reduces to \\((-6)(6x+4)\\le0\\). Dividing by negative six reverses the sign, giving \\(x\\ge-\\frac23\\).</p>"
+      }
+    ]
   },
   "orig_9709_p3_alg_polynomial_division": {
     "updatedOn": "2026-11-21",
@@ -716,7 +1407,7 @@
         "id": "quotient-remainder",
         "title": "What must the quotient and remainder satisfy?",
         "label": "Check the division identity",
-        "minutes": 5,
+        "minutes": 8,
         "level": "core",
         "intro": "<p>For a nonzero divisor \\(D(x)\\), write a polynomial \\(P(x)\\) as a multiple of \\(D(x)\\) plus a smaller remainder.</p>",
         "blocks": [
@@ -755,6 +1446,42 @@
                 ]
               }
             ]
+          },
+          {
+            "kind": "key",
+            "html": "<p>A product-plus-remainder identity is a valid division result only when the remainder has lower degree than the divisor. If it still has a large enough leading term, another quotient term can be taken out.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "polydiv-finish-remainder",
+            "title": "Remove one more multiple of the divisor",
+            "prompt": "<p>Suppose \\(P=(x^2-2)(x+4)+(3x^2+2x-1)\\). Give the final quotient and remainder on division by \\(x^2-2\\).</p>",
+            "fields": [
+              {
+                "key": "quotient",
+                "label": "Quotient Q(x)",
+                "type": "polynomial",
+                "expected": "x+7",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "remainder",
+                "label": "Remainder R(x)",
+                "type": "polynomial",
+                "expected": "2*x+5",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Take three times the divisor out of the displayed candidate remainder.</p>",
+            "solution": "<p>Subtract \\(3(x^2-2)\\) from \\(3x^2+2x-1\\) to get \\(2x+5\\). The quotient grows from \\(x+4\\) to \\(x+7\\).</p>"
           }
         ]
       },
@@ -762,7 +1489,7 @@
         "id": "linear-divisor",
         "title": "How do I divide by a non-monic linear polynomial?",
         "label": "Divide by a linear polynomial",
-        "minutes": 8,
+        "minutes": 11,
         "level": "core",
         "intro": "<p>At each step, divide the leading term of what remains by the leading term of the divisor. Multiply the whole divisor by that quotient term and subtract.</p>",
         "blocks": [
@@ -809,6 +1536,42 @@
                 ]
               }
             ]
+          },
+          {
+            "kind": "key",
+            "html": "<p>The leading term division may give a fractional coefficient. Keep the fraction and multiply it by the whole divisor before subtracting.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "polydiv-fractional-quotient",
+            "title": "Keep exact coefficients",
+            "prompt": "<p>Divide \\(3x^2+2x-1\\) by \\(2x+1\\). Give the quotient and remainder.</p>",
+            "fields": [
+              {
+                "key": "quotient",
+                "label": "Quotient Q(x)",
+                "type": "polynomial",
+                "expected": "3*x/2+1/4",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "remainder",
+                "label": "Remainder R(x)",
+                "type": "polynomial",
+                "expected": "-5/4",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>The first quotient term is \\(\\frac32x\\). Subtract its product before deciding the next term.</p>",
+            "solution": "<p>The first subtraction gives \\(\\frac12x-1\\) and the next quotient term is \\(\\frac14\\). Hence \\(Q=\\frac32x+\\frac14\\) and \\(R=-\\frac54\\).</p>"
           }
         ]
       },
@@ -899,6 +1662,61 @@
             ]
           }
         ]
+      },
+      {
+        "id": "division-for-rational-expressions",
+        "title": "Why divide a rational expression first?",
+        "label": "Separate a polynomial and a proper fraction",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Dividing a rational expression can separate it into a polynomial part and a proper fractional part. Keep the original excluded inputs when rewriting the result.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>From \\(P=DQ+R\\), divide by \\(D\\) wherever \\(D\\ne0\\) to obtain \\(\\frac PD=Q+\\frac RD\\). The smaller numerator \\(R\\) is ready for methods such as partial fractions.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "polydiv-rational-and-domain",
+            "title": "Give the two parts and the exclusions",
+            "prompt": "<p>For \\(\\frac{2x^3-4x+3}{x^2-2}\\), give quotient, remainder and every real input excluded by the original denominator.</p>",
+            "fields": [
+              {
+                "key": "quotient",
+                "label": "Quotient Q(x)",
+                "type": "polynomial",
+                "expected": "2*x",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "remainder",
+                "label": "Remainder R(x)",
+                "type": "polynomial",
+                "expected": "3",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "excluded",
+                "label": "All excluded values of x",
+                "type": "set",
+                "expected": "{-sqrt(2),sqrt(2)}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>The product of \\(2x\\) with the divisor accounts for its two nonconstant terms. Find where the original denominator is zero.</p>",
+            "solution": "<p>The product is \\(2x^3-4x\\), so \\(Q=2x,\\ R=3\\). The excluded inputs are \\(x=-\\sqrt2\\) and \\(x=\\sqrt2\\).</p>"
+          }
+        ]
       }
     ],
     "examples": [
@@ -940,6 +1758,31 @@
           "<p>Subtract \\(x^2-1\\) to obtain \\(R(x)=x+1\\). Thus \\(Q(x)=x^2+1\\).</p>",
           "<p>Check: \\((x^2-1)(x^2+1)=x^4-1\\). Adding the remainder \\(x+1\\) gives \\(x^4+x\\) as required.</p>"
         ]
+      },
+      {
+        "title": "Repair a remainder with degree too high",
+        "question": "<p>The division of \\(P=x^3+4x^2+2x+1\\) by \\(D=x^2+x\\) has reached \\(P=D(x+1)+(2x^2+x+1)\\). Finish the division.</p>",
+        "solution": [
+          "<p>The candidate remainder still has degree two. Subtract \\(2D=2x^2+2x\\) from it.</p>",
+          "<p>The new remainder is \\(-x+1\\). Add two to the previous quotient, giving \\(Q=x+3\\) and \\(R=-x+1\\).</p>"
+        ]
+      },
+      {
+        "title": "Divide by a linear divisor with a fractional quotient",
+        "question": "<p>Divide \\(x^2+2x+3\\) by \\(2x-1\\).</p>",
+        "solution": [
+          "<p>The first quotient term is \\(\\frac x2\\). Multiplying by \\(2x-1\\) gives \\(x^2-\\frac x2\\). Subtract to leave \\(\\frac52x+3\\).</p>",
+          "<p>The next quotient term is \\(\\frac54\\). Its product with the divisor is \\(\\frac52x-\\frac54\\).</p>",
+          "<p>Subtract to obtain \\(R=\\frac{17}4\\). The quotient is \\(Q=\\frac x2+\\frac54\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the restrictions when rewriting a fraction",
+        "question": "<p>Rewrite \\(\\frac{x^3-x+2}{x^2-1}\\) as a polynomial plus a proper fraction. State the excluded inputs.</p>",
+        "solution": [
+          "<p>The first quotient term \\(x\\) gives product \\(x(x^2-1)=x^3-x\\). The remainder is \\(2\\).</p>",
+          "<p>Thus the form is \\(x+\\frac2{x^2-1}\\), with the original exclusions \\(x\\ne-1,1\\).</p>"
+        ]
       }
     ],
     "glossary": [
@@ -958,6 +1801,18 @@
       {
         "term": "Remainder",
         "definition": "<p>The part left over, either zero or of lower degree than the divisor.</p>"
+      },
+      {
+        "term": "Leading term",
+        "definition": "<p>The term with the highest power of the variable and a non-zero coefficient.</p>"
+      },
+      {
+        "term": "Proper rational fraction",
+        "definition": "<p>A polynomial fraction with numerator degree lower than its denominator degree.</p>"
+      },
+      {
+        "term": "Excluded input",
+        "definition": "<p>A value where the original denominator is zero. Rewriting the expression does not allow division by zero.</p>"
       }
     ],
     "related": [
@@ -967,10 +1822,124 @@
       }
     ],
     "revision": {
-      "body": "<h2>Use the identity</h2><p>\\(P=DQ+R\\). The remainder is zero or has degree less than \\(D\\). A linear divisor leaves a constant; a quadratic divisor can leave \\(ax+b\\).</p><h2>Repeat three operations</h2><ul><li>Divide the current leading term by the divisor's leading term.</li><li>Multiply the whole divisor by that quotient term.</li><li>Subtract the resulting polynomial and repeat only if the degree still allows another step.</li></ul><h2>Check a quartic division</h2><p>\\(x^4+x=(x^2-1)(x^2+1)+(x+1)\\). Here \\(Q=x^2+1\\) and \\(R=x+1\\). The \\(x^2\\) terms cancel in the product.</p><h2>Non-monic divisors</h2><p>For \\(3x+2\\), divide the leading term by \\(3x\\) first. For \\(2x^2-1\\), divide it by \\(2x^2\\).</p>",
+      "body": "<h2>Use the identity</h2><p>\\(P=DQ+R\\). The remainder is zero or has degree less than \\(D\\). A linear divisor leaves a constant; a quadratic divisor can leave \\(ax+b\\).</p><h2>Repeat three operations</h2><ul><li>Divide the current leading term by the divisor's leading term.</li><li>Multiply the whole divisor by that quotient term.</li><li>Subtract the resulting polynomial and repeat only if the degree still allows another step.</li></ul><h2>Check a quartic division</h2><p>\\(x^4+x=(x^2-1)(x^2+1)+(x+1)\\). Here \\(Q=x^2+1\\) and \\(R=x+1\\). The \\(x^2\\) terms cancel in the product.</p><h2>Non-monic divisors</h2><p>For \\(3x+2\\), divide the leading term by \\(3x\\) first. For \\(2x^2-1\\), divide it by \\(2x^2\\).</p><h2>Rewrite a rational expression</h2><p>\\(\\frac PD=Q+\\frac RD\\) where \\(D\\ne0\\) and the final remainder has degree lower than the divisor.</p>",
       "checks": "<ul><li>Divide the current leading term by the divisor’s leading term.</li><li>Multiply by the entire divisor and subtract every term.</li><li>Check that the degree drops. Reconstruct the dividend at the end.</li></ul>",
       "examTip": "<p>State the quotient and remainder separately, even when the remainder is zero.</p>"
-    }
+    },
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "polydiv-practice-missing-cubic-power",
+        "title": "Divide a cubic with a missing term",
+        "prompt": "<p>Divide \\(x^3-5x+4\\) by \\(x-2\\). Give quotient and remainder.</p>",
+        "fields": [
+          {
+            "key": "quotient",
+            "label": "Quotient Q(x)",
+            "type": "polynomial",
+            "expected": "x^2+2*x-1",
+            "variables": [
+              "x"
+            ]
+          },
+          {
+            "key": "remainder",
+            "label": "Remainder R(x)",
+            "type": "polynomial",
+            "expected": "2",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Keep a zero coefficient for the missing squared term.</p>",
+        "solution": "<p>Multiplying back gives \\((x-2)(x^2+2x-1)+2=x^3-5x+4\\). The remainder is constant as required.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "polydiv-practice-quartic-by-monic",
+        "title": "Stop at a linear remainder",
+        "prompt": "<p>Divide \\(2x^4+x^3+3x^2-x+4\\) by \\(x^2+1\\). Give quotient and remainder.</p>",
+        "fields": [
+          {
+            "key": "quotient",
+            "label": "Quotient Q(x)",
+            "type": "polynomial",
+            "expected": "2*x^2+x+1",
+            "variables": [
+              "x"
+            ]
+          },
+          {
+            "key": "remainder",
+            "label": "Remainder R(x)",
+            "type": "polynomial",
+            "expected": "-2*x+3",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>For a quadratic divisor, subtract until the remaining degree is at most one.</p>",
+        "solution": "<p>The quotient terms are \\(2x^2\\) then \\(x\\) then \\(1\\). Subtracting the product leaves \\(-2x+3\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "polydiv-practice-quartic-by-nonmonic",
+        "title": "Use fractional coefficients in quadratic division",
+        "prompt": "<p>Divide \\(3x^4-x^2+2\\) by \\(2x^2+3\\). Give quotient and remainder.</p>",
+        "fields": [
+          {
+            "key": "quotient",
+            "label": "Quotient Q(x)",
+            "type": "polynomial",
+            "expected": "3*x^2/2-11/4",
+            "variables": [
+              "x"
+            ]
+          },
+          {
+            "key": "remainder",
+            "label": "Remainder R(x)",
+            "type": "polynomial",
+            "expected": "41/4",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Start with \\(\\frac32x^2\\). The next quotient term accounts for the remaining squared term.</p>",
+        "solution": "<p>After subtracting the first product, the squared coefficient is \\(-\\frac{11}{2}\\), so the next quotient term is \\(-\\frac{11}4\\). The final subtraction leaves \\(\\frac{41}4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "polydiv-practice-exact-nonmonic",
+        "title": "Check an exact division by multiplying back",
+        "prompt": "<p>Divide \\(6x^3+x^2+x+2\\) by \\(3x+2\\). Give quotient and remainder.</p>",
+        "fields": [
+          {
+            "key": "quotient",
+            "label": "Quotient Q(x)",
+            "type": "polynomial",
+            "expected": "2*x^2-x+1",
+            "variables": [
+              "x"
+            ]
+          },
+          {
+            "key": "remainder",
+            "label": "Remainder R(x)",
+            "type": "polynomial",
+            "expected": "0",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Take the leading quotient term \\(2x^2\\) and continue until no remainder is left.</p>",
+        "solution": "<p>Multiplying \\((3x+2)(2x^2-x+1)\\) gives the complete dividend. Thus the quotient is \\(2x^2-x+1\\) and the remainder is zero.</p>"
+      }
+    ]
   },
   "orig_9709_p3_alg_factor_remainder": {
     "updatedOn": "2026-11-21",
@@ -980,7 +1949,7 @@
         "id": "remainder",
         "title": "Which value gives a linear remainder?",
         "label": "Evaluate the linear remainder",
-        "minutes": 7,
+        "minutes": 10,
         "level": "core",
         "intro": "<p>If you only need the remainder on division by \\(ax+b\\), find the input where the divisor is zero.</p>",
         "blocks": [
@@ -1018,6 +1987,30 @@
           {
             "kind": "mistake",
             "html": "<p>For \\(ax+b\\), substitute \\(-\\frac ba\\). Substituting \\(-b\\) is valid here only if \\(a=1\\) or \\(b=0\\).</p>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>The remainder on division by a non-monic linear divisor is still a constant. Its value comes from evaluating the dividend at the zero of that divisor.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "factor-rem-negative-fraction",
+            "title": "Evaluate the dividend at the divisor's zero",
+            "prompt": "<p>Find the remainder when \\(3x^3+2x-6\\) is divided by \\(3x-2\\).</p>",
+            "fields": [
+              {
+                "key": "remainder",
+                "label": "Constant remainder",
+                "type": "number",
+                "expected": "-34/9"
+              }
+            ],
+            "hint": "<p>The input is two thirds, not two.</p>",
+            "solution": "<p>The value is \\(3\\left(\\frac23\\right)^3+2\\left(\\frac23\\right)-6=\\frac89+\\frac43-6=-\\frac{34}9\\).</p>"
           }
         ]
       },
@@ -1025,7 +2018,7 @@
         "id": "coefficients",
         "title": "How do factor and remainder conditions determine coefficients?",
         "label": "Turn statements into equations",
-        "minutes": 8,
+        "minutes": 11,
         "level": "core",
         "intro": "<p>\\(ax+b\\) is a factor exactly when \\(P\\left(-\\frac ba\\right)=0\\). A nonzero specified remainder gives a different evaluation equation.</p>",
         "blocks": [
@@ -1058,6 +2051,36 @@
                 "expected": "-7"
               }
             ]
+          },
+          {
+            "kind": "key",
+            "html": "<p>Two pieces of information about linear divisions can give two independent equations. Use a zero value for a factor condition and the stated nonzero value for a remainder condition.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "factor-rem-coupled-conditions",
+            "title": "Use the correct evaluation at each root",
+            "prompt": "<p>Let \\(P(x)=x^3+ax^2+bx-1\\). The polynomial has factor \\(x-1\\) and remainder \\(-21\\) on division by \\(x+2\\). Find \\(a,b\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient a",
+                "type": "number",
+                "expected": "-2"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient b",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Use the two values \\(P(1)=0\\) and \\(P(-2)=-21\\).</p>",
+            "solution": "<p>These give \\(a+b=0\\) and \\(4a-2b=-12\\). Substituting \\(b=-a\\) yields \\(a=-2,\\ b=2\\).</p>"
           }
         ]
       },
@@ -1065,7 +2088,7 @@
         "id": "solve-polynomial",
         "title": "How does a known factor help solve a cubic?",
         "label": "Find every real root",
-        "minutes": 8,
+        "minutes": 11,
         "level": "core",
         "intro": "<p>Find or verify a linear factor, divide by it, and then solve the remaining factor. Keep the root from the first factor too.</p>",
         "blocks": [
@@ -1106,6 +2129,83 @@
           {
             "kind": "tip",
             "html": "<p>A proposed factor is confirmed by one zero evaluation. To solve the whole equation, use the quotient too.</p>"
+          },
+          {
+            "kind": "key",
+            "html": "<p>A factor may appear a second time in the quotient. In a set of solutions list that input once. When asked for multiplicity, count its occurrences as a factor separately.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_alg_factor_remainder/repeated-root-contact.svg",
+              "alt": "The cubic crosses the horizontal axis at minus two and touches it at three.",
+              "caption": "The factors of \\(P(x)=(x-3)^2(x+2)\\) show a crossing at \\(x=-2\\) and contact without crossing at \\(x=3\\).",
+              "width": 590,
+              "height": 270
+            }
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "factor-rem-repeated-root",
+            "title": "List each root once and count the repetition",
+            "prompt": "<p>Given factor \\(x-1\\), solve \\(x^3+x^2-5x+3=0\\). Give all distinct roots and the multiplicity of the root one.</p>",
+            "fields": [
+              {
+                "key": "roots",
+                "label": "All real solutions",
+                "type": "set",
+                "expected": "{-3,1}",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "multiplicity",
+                "label": "Multiplicity of the root one",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>After dividing by the known factor, factorise the quadratic quotient.</p>",
+            "solution": "<p>The quotient is \\(x^2+2x-3=(x-1)(x+3)\\). The roots are \\(-3\\) and \\(1\\), with multiplicity two at one.</p>"
+          }
+        ]
+      },
+      {
+        "id": "remainder-at-two-zeros",
+        "title": "Can two evaluations determine a linear remainder?",
+        "label": "Use the two zeros of a quadratic divisor",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Dividing by a quadratic produces a remainder of degree at most one. If the divisor has two distinct real zeros, the dividend and remainder agree at both of them.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(P=DQ+R\\), at a zero \\(r\\) of \\(D\\) we have \\(P(r)=R(r)\\). Two distinct values of \\(r\\) determine the at-most-linear \\(R(x)\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "factor-rem-two-point-remainder",
+            "title": "Recover the remainder from two inputs",
+            "prompt": "<p>Find the remainder on division of \\(P(x)=x^3+3x^2-x-13\\) by \\(x^2+x-6\\).</p>",
+            "fields": [
+              {
+                "key": "remainder",
+                "label": "Remainder R(x)",
+                "type": "polynomial",
+                "expected": "3*x-1",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>The divisor's zeros are two and negative three. At both inputs set a linear remainder equal to the dividend.</p>",
+            "solution": "<p>For \\(R(x)=ax+b\\), \\(P(2)=5\\) gives \\(2a+b=5\\) and \\(P(-3)=-10\\) gives \\(-3a+b=-10\\). Thus \\(R(x)=3x-1\\).</p>"
           }
         ]
       }
@@ -1137,6 +2237,38 @@
           "<p>Dividing by \\(2x-3\\) gives \\(x^2-3x-4=(x+1)(x-4)\\).</p>",
           "<p>From \\(P(x)=(2x-3)(x+1)(x-4)=0\\), obtain \\(x=-1\\), \\(x=\\frac32\\) or \\(x=4\\).</p>"
         ]
+      },
+      {
+        "title": "Evaluate at a negative fractional root",
+        "question": "<p>Find the remainder when \\(2x^3-x^2+4x-5\\) is divided by \\(2x+1\\).</p>",
+        "solution": [
+          "<p>The divisor is zero at \\(x=-\\frac12\\). Evaluate the dividend at that input.</p>",
+          "<p>The four terms give \\(-\\frac14-\\frac14-2-5=-\\frac{15}2\\). This value is the constant remainder.</p>"
+        ]
+      },
+      {
+        "title": "Solve a factor condition and a remainder condition together",
+        "question": "<p>Let \\(P(x)=x^3+ax^2+bx+4\\). The polynomial has factor \\(x+1\\) and remainder \\(18\\) on division by \\(x-2\\). Find \\(a,b\\).</p>",
+        "solution": [
+          "<p>Set \\(P(-1)=0\\) to get \\(a-b=-3\\). Set \\(P(2)=18\\) to get \\(2a+b=3\\).</p>",
+          "<p>Add the equations to get \\(3a=0\\). Hence \\(a=0,\\ b=3\\).</p>"
+        ]
+      },
+      {
+        "title": "Recognise a repeated factor in a cubic",
+        "question": "<p>Given that \\(x-3\\) is a factor of \\(x^3-4x^2-3x+18\\), solve the cubic equation and state the multiplicity of the root three.</p>",
+        "solution": [
+          "<p>Division by \\(x-3\\) gives \\(x^2-x-6=(x-3)(x+2)\\).</p>",
+          "<p>The factorisation is \\((x-3)^2(x+2)\\). The distinct roots are \\(-2\\) and \\(3\\), and three is a root of multiplicity two.</p>"
+        ]
+      },
+      {
+        "title": "Test a quadratic factor by two evaluations",
+        "question": "<p>Show that \\(x^2-x-2\\) is a factor of \\(P(x)=x^4-x^3-7x^2+5x+10\\).</p>",
+        "solution": [
+          "<p>Factor the divisor as \\((x-2)(x+1)\\). Direct substitution gives \\(P(2)=0\\) and \\(P(-1)=0\\).</p>",
+          "<p>The remainder has degree at most one and vanishes at two distinct inputs. It is the zero polynomial, so the quadratic divisor is a factor.</p>"
+        ]
       }
     ],
     "glossary": [
@@ -1151,6 +2283,18 @@
       {
         "term": "Root",
         "definition": "<p>A value of the input where the polynomial equals zero.</p>"
+      },
+      {
+        "term": "Multiplicity",
+        "definition": "<p>The number of times the matching linear factor occurs in a factorisation.</p>"
+      },
+      {
+        "term": "Evaluation",
+        "definition": "<p>Finding the value of a polynomial by substituting a stated input.</p>"
+      },
+      {
+        "term": "Linear remainder",
+        "definition": "<p>The at-most-first-degree expression left after division by a quadratic.</p>"
       }
     ],
     "related": [
@@ -1160,9 +2304,81 @@
       }
     ],
     "revision": {
-      "body": "<h2>Evaluate at the divisor's zero</h2><p>On division by \\(ax+b\\), \\(r=P\\left(-\\frac ba\\right)\\). A remainder of zero confirms that \\(ax+b\\) is a factor.</p><h2>Translate the condition</h2><p>\\(x-1\\) is a factor means \\(P(1)=0\\). Remainder \\(12\\) for \\(x+2\\) means \\(P(-2)=12\\). Both statements can give equations for unknown coefficients.</p><h2>Solve a polynomial completely</h2><p>From \\(2x^3-9x^2+x+12=(2x-3)(x+1)(x-4)\\), the real roots are \\(-1\\), \\(\\frac32\\) and \\(4\\). Include the root of the divisor as well as those of its quotient.</p>",
+      "body": "<h2>Evaluate at the divisor's zero</h2><p>On division by \\(ax+b\\), \\(r=P\\left(-\\frac ba\\right)\\). A remainder of zero confirms that \\(ax+b\\) is a factor.</p><h2>Translate the condition</h2><p>\\(x-1\\) is a factor means \\(P(1)=0\\). Remainder \\(12\\) for \\(x+2\\) means \\(P(-2)=12\\). Both statements can give equations for unknown coefficients.</p><h2>Solve a polynomial completely</h2><p>From \\(2x^3-9x^2+x+12=(2x-3)(x+1)(x-4)\\), the real roots are \\(-1\\), \\(\\frac32\\) and \\(4\\). Include the root of the divisor as well as those of its quotient.</p><h2>Quadratic divisors</h2><p>For two distinct divisor zeros, use the two dividend values to find the coefficients of an at-most-linear remainder.</p>",
       "checks": "<ul><li>Check the sign and scale of the input you substitute.</li><li>For several conditions, check each evaluation after solving.</li><li>Factorise the quotient before writing your complete root set.</li></ul>",
       "examTip": "<p>A zero evaluation proves divisibility by the corresponding linear factor. To solve the polynomial equation, use the quotient to find the remaining roots.</p>"
-    }
+    },
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "factor-rem-practice-fractional-zero",
+        "title": "Use a fractional evaluation point",
+        "prompt": "<p>Find the remainder on division of \\(4x^2-3x+2\\) by \\(2x+3\\).</p>",
+        "fields": [
+          {
+            "key": "remainder",
+            "label": "Constant remainder",
+            "type": "number",
+            "expected": "31/2"
+          }
+        ],
+        "hint": "<p>Find where the linear divisor vanishes.</p>",
+        "solution": "<p>At \\(x=-\\frac32\\) the dividend is \\(9+\\frac92+2=\\frac{31}2\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "factor-rem-practice-unknown-factor-coefficient",
+        "title": "Use a non-monic factor to find a coefficient",
+        "prompt": "<p>Given that \\(2x-3\\) is a factor of \\(2x^2+ax-3\\), find \\(a\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient a",
+            "type": "number",
+            "expected": "-1"
+          }
+        ],
+        "hint": "<p>The root is three halves. The polynomial must be zero there.</p>",
+        "solution": "<p>Setting \\(x=\\frac32\\) gives \\(\\frac92+\\frac32a-3=0\\) and hence \\(a=-1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "factor-rem-practice-complete-cubic-set",
+        "title": "Find all the roots after removing a factor",
+        "prompt": "<p>The cubic \\(2x^3+3x^2-11x-6\\) has factor \\(2x+1\\). Give all real roots.</p>",
+        "fields": [
+          {
+            "key": "roots",
+            "label": "All real solutions",
+            "type": "set",
+            "expected": "{-3,-1/2,2}",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Use the root of the given factor as well as the two roots of the quadratic quotient.</p>",
+        "solution": "<p>The quotient is \\(x^2+x-6=(x+3)(x-2)\\). Together with the divisor zero this gives roots \\(-3,-\\frac12,2\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "factor-rem-practice-linear-remainder",
+        "title": "Find a linear remainder by evaluation",
+        "prompt": "<p>Find the remainder when \\(x^3-2x^2-3x+11\\) is divided by \\(x^2+x-2\\).</p>",
+        "fields": [
+          {
+            "key": "remainder",
+            "label": "Remainder R(x)",
+            "type": "polynomial",
+            "expected": "2*x+5",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Use the divisor's zeros one and negative two to give two values of the remainder.</p>",
+        "solution": "<p>The values are \\(R(1)=7\\) and \\(R(-2)=1\\). Solving for the coefficients gives \\(R(x)=2x+5\\).</p>"
+      }
+    ]
   }
 }

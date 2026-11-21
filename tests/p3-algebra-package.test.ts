@@ -46,12 +46,22 @@ test("Pure 3 Chapter 1 connects its teaching and complete-answer practice to the
 
 test("polynomial division accepts named complete expressions and distinguishes quotient from remainder", () => {
   const quotient = { key: "q", type: "polynomial", label: "Quotient Q(x)", variables: ["x"], expected: "2*x^2-3" };
-  const remainder = { key: "r", type: "polynomial", label: "Remainder R(x)", variables: ["x"], expected: "x-4" };
+  const remainder = { key: "remainder", type: "polynomial", label: "Remainder R(x)", variables: ["x"], expected: "x-4" };
   assert(checkExact(quotient, "Q(x) = -3 + 2x²"));
   assert(checkExact(remainder, "R(x) = x − 4"));
+  assert(checkExact(remainder, "R = x − 4"));
+  assert(checkExact({ ...remainder, expected: "1/2" }, "R = 1/2"));
   assert(!checkExact(remainder, "R(x) = x"));
   assert.throws(() => checkExact(quotient, "R(x) = -3 + 2x²"));
   assert.throws(() => checkExact(remainder, "Q(x) = x − 4"));
+});
+
+test("an empty solution set accepts ordinary words and still rejects them when roots exist", () => {
+  const field = { key: "solutions", label: "All x-values", type: "set", expected: "empty", variables: ["x"] };
+  assert(checkExact(field, "no solution"));
+  assert(checkExact(field, "No real solutions"));
+  assert(!checkExact({ ...field, expected: "{1}" }, "no solution"));
+  assert.throws(() => checkExact({ ...field, type: "number" }, "no solution"));
 });
 
 test("Your turn returns a format result for an incomplete answer", () => {
