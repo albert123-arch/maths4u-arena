@@ -31,6 +31,7 @@ import counting from "../../content/original/9709-s1/counting-study.json";
 import distributions from "../../content/original/9709-s1/distributions-study.json";
 import binomialGeometric from "../../content/original/9709-s1/binomial-geometric-study.json";
 import normal from "../../content/original/9709-s1/normal-study.json";
+import study9231Fp1Roots from "../../content/original/9231-fp1/roots-study.json";
 import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
 import { renderContent } from "./content";
 import { checkExact, checkExactInverseAngle, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
@@ -60,6 +61,7 @@ const lessons = {
   ...pure3Algebra, ...pure3FurtherAlgebra, ...pure3Logarithms, ...pure3Trigonometry, ...pure3Differentiation, ...pure3Integration, ...pure3NumericalMethods, ...pure3Vectors, ...pure3DifferentialEquations, ...pure3ComplexNumbers, ...mechanicsForcesStudy, ...mechanicsKinematicsStudy, ...mechanicsMomentumStudy, ...mechanicsNewtonStudy, ...mechanicsEnergyStudy,
   ...representation, ...centralTendency, ...variation, ...probability,
   ...counting, ...distributions, ...binomialGeometric, ...normal,
+  ...study9231Fp1Roots,
 } as Record<string, AuthoredLesson>;
 const examPaths = examPracticePaths as Record<string, Omit<StudyExamPractice, "starters"> & { starters?: StudyExamPractice["starters"] }>;
 

@@ -1,0 +1,2149 @@
+{
+  "fp1_roots_coefficients": {
+    "updatedOn": "2026-11-21",
+    "description": "Read root sums, pair and triple products from coefficients. Reconstruct a polynomial and count repeated roots consistently.",
+    "sections": [
+      {
+        "id": "normalise-first",
+        "title": "Why divide by the leading coefficient first?",
+        "label": "Normalise and compare",
+        "intro": "<p>Writing a quadratic as \\(a(x-\\alpha)(x-\\beta)\\) separates its leading multiplier from the roots. Dividing by that multiplier simplifies comparison.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\((x-\\alpha)(x-\\beta)=x^2-(\\alpha+\\beta)x+\\alpha\\beta\\). Match the coefficients after dividing by \\(a\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "coefficients-normalise-first-check",
+            "title": "Read the two root quantities without solving",
+            "prompt": "<p>The roots of \\(3 x^{2} - 5 x - 6=0\\) are \\(\\alpha,\\beta\\). Find their sum and product.</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Sum of the roots",
+                "type": "number",
+                "expected": "5/3",
+                "retry": [
+                  {
+                    "answer": "-5/3",
+                    "feedback": "<p>The sign of the x coefficient reverses.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "product",
+                "label": "Product of the roots",
+                "type": "number",
+                "expected": "-2"
+              }
+            ],
+            "hint": "<p>Compare with the expansion of two factors, including the signs.</p>",
+            "solution": "<p>Divide every coefficient by the leading coefficient to get \\(x^{2} - \\frac{5 x}{3} - 2=0\\).</p><p>The x coefficient is minus the sum of the roots, giving \\(\\alpha+\\beta=\\frac{5}{3}\\).</p><p>The constant term is their product, so \\(\\alpha\\beta=-2\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A leading multiplier affects every coefficient. Dividing only the first term changes the equation.</p>"
+          }
+        ]
+      },
+      {
+        "id": "compare-cubic",
+        "title": "Why are there three different root quantities for a cubic?",
+        "label": "Compare the three coefficient positions",
+        "intro": "<p>A term in the expanded product takes either the variable or the negative root from each factor. Choosing one, two or three roots gives alternating signs.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a monic cubic, the squared coefficient is minus \\(\\sum\\alpha\\), the linear coefficient is \\(\\sum\\alpha\\beta\\) and the constant is minus \\(\\alpha\\beta\\gamma\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "coefficients-compare-cubic-check",
+            "title": "Read sums and product from a non-monic cubic",
+            "prompt": "<p>The roots of \\(3 x^{3} - 2 x^{2} + 7 x - 4=0\\) are \\(\\alpha,\\beta,\\gamma\\). Find the sum of roots, the sum of their pair products and their product.</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Sum of the roots",
+                "type": "number",
+                "expected": "2/3"
+              },
+              {
+                "key": "pairs",
+                "label": "Sum of pair products",
+                "type": "number",
+                "expected": "7/3"
+              },
+              {
+                "key": "product",
+                "label": "Product of the roots",
+                "type": "number",
+                "expected": "4/3",
+                "retry": [
+                  {
+                    "answer": "-4/3",
+                    "feedback": "<p>The constant of a monic cubic is minus the product.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Read the squared, linear and constant coefficients in that order.</p>",
+            "solution": "<p>The monic polynomial is \\(x^{3} - \\frac{2 x^{2}}{3} + \\frac{7 x}{3} - \\frac{4}{3}\\). The coefficients give the alternating signs.</p><p>Read \\(\\sum\\alpha=\\frac{2}{3}\\) from the squared term and \\(\\sum\\alpha\\beta=\\frac{7}{3}\\) from the linear term.</p><p>The constant is minus the product, so \\(\\alpha\\beta\\gamma=\\frac{4}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The pair-product sum includes each of the three unordered pairs once. It is different from squaring the sum.</p>"
+          }
+        ]
+      },
+      {
+        "id": "track-quartic",
+        "title": "Where do the triple products go in a quartic?",
+        "label": "Use four coefficient slots",
+        "intro": "<p>The three non-leading powers and the constant each have their own root relation. Count all pairs and triples of distinct root positions.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>In a quartic the coefficient of \\(x\\) is minus the triple-product sum after normalisation. The constant gives the product of all four roots.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "coefficients-track-quartic-check",
+            "title": "Keep all four slots of a quartic",
+            "prompt": "<p>Find the sum of the roots, sum of pair products, sum of triple products and product of all four roots of \\(4 x^{4} - 2 x^{3} - 3 x^{2} + 3 x + 6=0\\).</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Root sum",
+                "type": "number",
+                "expected": "1/2"
+              },
+              {
+                "key": "pairs",
+                "label": "Sum of pair products",
+                "type": "number",
+                "expected": "-3/4"
+              },
+              {
+                "key": "triples",
+                "label": "Sum of triple products",
+                "type": "number",
+                "expected": "-3/4"
+              },
+              {
+                "key": "product",
+                "label": "Product of all roots",
+                "type": "number",
+                "expected": "3/2"
+              }
+            ],
+            "hint": "<p>Leave a zero coefficient in the list when a power is missing.</p>",
+            "solution": "<p>Use the coefficient of \\(x^3\\) for the root sum and of \\(x^2\\) for the pair products. They give \\(\\frac{1}{2}\\) and \\(- \\frac{3}{4}\\).</p><p>The coefficient of \\(x\\) gives minus the triple-product sum after division by the leading coefficient. It gives \\(- \\frac{3}{4}\\).</p><p>The constant gives four negative factors, so the product of all four roots is \\(\\frac{3}{2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not slide the coefficient list left when a power is missing. That power has coefficient zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "coefficients-track-quartic-follow-up",
+            "title": "Keep all four slots of a quartic",
+            "prompt": "<p>Find the sum of the roots, sum of pair products, sum of triple products and product of all four roots of \\(6 x^{4} - 4 x^{3} - 5 x^{2} + 5 x + 8=0\\).</p>",
+            "fields": [
+              {
+                "key": "sum",
+                "label": "Root sum",
+                "type": "number",
+                "expected": "2/3"
+              },
+              {
+                "key": "pairs",
+                "label": "Sum of pair products",
+                "type": "number",
+                "expected": "-5/6"
+              },
+              {
+                "key": "triples",
+                "label": "Sum of triple products",
+                "type": "number",
+                "expected": "-5/6"
+              },
+              {
+                "key": "product",
+                "label": "Product of all roots",
+                "type": "number",
+                "expected": "4/3"
+              }
+            ],
+            "hint": "<p>Leave a zero coefficient in the list when a power is missing.</p>",
+            "solution": "<p>Use the coefficient of \\(x^3\\) for the root sum and of \\(x^2\\) for the pair products. They give \\(\\frac{2}{3}\\) and \\(- \\frac{5}{6}\\).</p><p>The coefficient of \\(x\\) gives minus the triple-product sum after division by the leading coefficient. It gives \\(- \\frac{5}{6}\\).</p><p>The constant gives four negative factors, so the product of all four roots is \\(\\frac{4}{3}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check that the degree, number of root positions and number of coefficient conditions agree.</p>"
+          }
+        ]
+      },
+      {
+        "id": "repeat-the-position",
+        "title": "Does a repeated root count twice?",
+        "label": "Keep all root positions",
+        "intro": "<p>A repeated value can occur in two distinct factor positions. In the cubic \\((x-u)^2(x-v)\\), the first two positions have the same value.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For roots \\(u,u,v\\), the sum is \\(2u+v\\), the pair sum \\(u^2+2uv\\) and the product \\(u^2v\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "coefficients-repeat-the-position-check",
+            "title": "Use the ordering to select the repeated root",
+            "prompt": "<p>A monic cubic has roots \\(u,u,v\\) with \\(v>u>0\\). Their sum is \\(10\\) and the sum of their pair products is \\(28\\). Find \\(u,v\\) and the monic polynomial.</p>",
+            "fields": [
+              {
+                "key": "u",
+                "label": "Repeated root u",
+                "type": "number",
+                "expected": "2",
+                "retry": [
+                  {
+                    "answer": "14/3",
+                    "feedback": "<p>This candidate makes v smaller than u.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "v",
+                "label": "Root v",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "x^3 - 10*x^2 + 28*x - 24",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Keep both algebraic candidates until you check the ordering.</p>",
+            "solution": "<p>The first condition gives \\(v=10 - 2 u\\). The pair products include \\(u^2\\) once and \\(uv\\) twice.</p><p>Substitute into the pair-product condition to solve \\(3 u^{2} - 20 u + 28=0\\). The candidates for \\(u\\) are \\(2\\) and \\(\\frac{14}{3}\\).</p><p>The second gives \\(v=\\frac{2}{3}\\), so it violates \\(v>u\\). The accepted values are \\(u=2\\) and \\(v=6\\). The polynomial is \\(x^{3} - 10 x^{2} + 28 x - 24\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>When solving for the repeated value, check all algebraic candidates against the stated ordering.</p>"
+          }
+        ]
+      },
+      {
+        "id": "build-a-polynomial",
+        "title": "How do I go from root relations to an equation?",
+        "label": "Write the monic polynomial",
+        "intro": "<p>The root relations reverse direction: once they are known you can write the coefficients without solving for individual roots.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Start with the correct degree. Fill the remaining positions in descending powers with signs negative, positive, negative and, for a quartic, positive.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "coefficients-build-a-polynomial-check",
+            "title": "Build the monic cubic from three root relations",
+            "prompt": "<p>For a monic cubic the sum of roots is \\(3\\), the sum of pair products is \\(-6\\), and their product is \\(-8\\). Enter its monic polynomial in \\(x\\).</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "x^3 - 3*x^2 - 6*x + 8",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>A monic cubic is determined by the three root relations. Put the alternating signs in before expanding.</p>",
+            "solution": "<p>The coefficient of \\(x^2\\) is the negative of the root sum \\(3\\).</p><p>The coefficient of \\(x\\) is \\(-6\\). The constant is minus \\(-8\\).</p><p>Assemble the terms to get \\(x^{3} - 3 x^{2} - 6 x + 8\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Only a non-zero common multiplier preserves the whole equation’s roots. Keep the polynomial monic when requested.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "coefficients-build-a-polynomial-follow-up",
+            "title": "Build the monic cubic from three root relations",
+            "prompt": "<p>For a monic cubic the sum of roots is \\(5\\), the sum of pair products is \\(-12\\), and their product is \\(-36\\). Enter its monic polynomial in \\(x\\).</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "x^3 - 5*x^2 - 12*x + 36",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>A monic cubic is determined by the three root relations. Put the alternating signs in before expanding.</p>",
+            "solution": "<p>The coefficient of \\(x^2\\) is the negative of the root sum \\(5\\).</p><p>The coefficient of \\(x\\) is \\(-12\\). The constant is minus \\(-36\\).</p><p>Assemble the terms to get \\(x^{3} - 5 x^{2} - 12 x + 36\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Read the two root quantities without solving",
+        "question": "<p>The roots of \\(2 x^{2} - 3 x - 5=0\\) are \\(\\alpha,\\beta\\). Find their sum and product.</p>",
+        "solution": [
+          "<p>Divide every coefficient by the leading coefficient to get \\(x^{2} - \\frac{3 x}{2} - \\frac{5}{2}=0\\).</p>",
+          "<p>The x coefficient is minus the sum of the roots, giving \\(\\alpha+\\beta=\\frac{3}{2}\\).</p>",
+          "<p>The constant term is their product, so \\(\\alpha\\beta=- \\frac{5}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Read sums and product from a non-monic cubic",
+        "question": "<p>The roots of \\(2 x^{3} + x^{2} + 5 x + 3=0\\) are \\(\\alpha,\\beta,\\gamma\\). Find the sum of roots, the sum of their pair products and their product.</p>",
+        "solution": [
+          "<p>The monic polynomial is \\(x^{3} + \\frac{x^{2}}{2} + \\frac{5 x}{2} + \\frac{3}{2}\\). The coefficients give the alternating signs.</p>",
+          "<p>Read \\(\\sum\\alpha=- \\frac{1}{2}\\) from the squared term and \\(\\sum\\alpha\\beta=\\frac{5}{2}\\) from the linear term.</p>",
+          "<p>The constant is minus the product, so \\(\\alpha\\beta\\gamma=- \\frac{3}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep all four slots of a quartic",
+        "question": "<p>Find the sum of the roots, sum of pair products, sum of triple products and product of all four roots of \\(3 x^{4} - x^{3} + 2 x^{2} + 5=0\\).</p>",
+        "solution": [
+          "<p>Use the coefficient of \\(x^3\\) for the root sum and of \\(x^2\\) for the pair products. They give \\(\\frac{1}{3}\\) and \\(\\frac{2}{3}\\).</p>",
+          "<p>The coefficient of \\(x\\) gives minus the triple-product sum after division by the leading coefficient. It gives \\(0\\).</p>",
+          "<p>The constant gives four negative factors, so the product of all four roots is \\(\\frac{5}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep all four slots of a quartic",
+        "question": "<p>Find the sum of the roots, sum of pair products, sum of triple products and product of all four roots of \\(5 x^{4} - 3 x^{3} + 4 x^{2} + 4 x + 7=0\\).</p>",
+        "solution": [
+          "<p>Use the coefficient of \\(x^3\\) for the root sum and of \\(x^2\\) for the pair products. They give \\(\\frac{3}{5}\\) and \\(\\frac{4}{5}\\).</p>",
+          "<p>The coefficient of \\(x\\) gives minus the triple-product sum after division by the leading coefficient. It gives \\(- \\frac{4}{5}\\).</p>",
+          "<p>The constant gives four negative factors, so the product of all four roots is \\(\\frac{7}{5}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the ordering to select the repeated root",
+        "question": "<p>A monic cubic has roots \\(u,u,v\\) with \\(v>u>0\\). Their sum is \\(6\\) and the sum of their pair products is \\(9\\). Find \\(u,v\\) and the monic polynomial.</p>",
+        "solution": [
+          "<p>The first condition gives \\(v=6 - 2 u\\). The pair products include \\(u^2\\) once and \\(uv\\) twice.</p>",
+          "<p>Substitute into the pair-product condition to solve \\(3 u^{2} - 12 u + 9=0\\). The candidates for \\(u\\) are \\(1\\) and \\(3\\).</p>",
+          "<p>The second gives \\(v=0\\), so it violates \\(v>u\\). The accepted values are \\(u=1\\) and \\(v=4\\). The polynomial is \\(x^{3} - 6 x^{2} + 9 x - 4\\).</p>"
+        ]
+      },
+      {
+        "title": "Build the monic cubic from three root relations",
+        "question": "<p>For a monic cubic the sum of roots is \\(6\\), the sum of pair products is \\(-1\\), and their product is \\(-30\\). Enter its monic polynomial in \\(x\\).</p>",
+        "solution": [
+          "<p>The coefficient of \\(x^2\\) is the negative of the root sum \\(6\\).</p>",
+          "<p>The coefficient of \\(x\\) is \\(-1\\). The constant is minus \\(-30\\).</p>",
+          "<p>Assemble the terms to get \\(x^{3} - 6 x^{2} - x + 30\\).</p>"
+        ]
+      },
+      {
+        "title": "Build the monic cubic from three root relations",
+        "question": "<p>For a monic cubic the sum of roots is \\(3\\), the sum of pair products is \\(-10\\), and their product is \\(-24\\). Enter its monic polynomial in \\(x\\).</p>",
+        "solution": [
+          "<p>The coefficient of \\(x^2\\) is the negative of the root sum \\(3\\).</p>",
+          "<p>The coefficient of \\(x\\) is \\(-10\\). The constant is minus \\(-24\\).</p>",
+          "<p>Assemble the terms to get \\(x^{3} - 3 x^{2} - 10 x + 24\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "coefficients-normalise-first-extra",
+        "title": "Read the two root quantities without solving",
+        "prompt": "<p>The roots of \\(4 x^{2} - 7=0\\) are \\(\\alpha,\\beta\\). Find their sum and product.</p>",
+        "fields": [
+          {
+            "key": "sum",
+            "label": "Sum of the roots",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "product",
+            "label": "Product of the roots",
+            "type": "number",
+            "expected": "-7/4"
+          }
+        ],
+        "hint": "<p>Compare with the expansion of two factors, including the signs.</p>",
+        "solution": "<p>Divide every coefficient by the leading coefficient to get \\(x^{2} - \\frac{7}{4}=0\\).</p><p>The x coefficient is minus the sum of the roots, giving \\(\\alpha+\\beta=0\\).</p><p>The constant term is their product, so \\(\\alpha\\beta=- \\frac{7}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "coefficients-compare-cubic-extra",
+        "title": "Read sums and product from a non-monic cubic",
+        "prompt": "<p>The roots of \\(4 x^{3} - 5 x^{2} + 9 x + 5=0\\) are \\(\\alpha,\\beta,\\gamma\\). Find the sum of roots, the sum of their pair products and their product.</p>",
+        "fields": [
+          {
+            "key": "sum",
+            "label": "Sum of the roots",
+            "type": "number",
+            "expected": "5/4"
+          },
+          {
+            "key": "pairs",
+            "label": "Sum of pair products",
+            "type": "number",
+            "expected": "9/4"
+          },
+          {
+            "key": "product",
+            "label": "Product of the roots",
+            "type": "number",
+            "expected": "-5/4",
+            "retry": [
+              {
+                "answer": "5/4",
+                "feedback": "<p>The constant of a monic cubic is minus the product.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Read the squared, linear and constant coefficients in that order.</p>",
+        "solution": "<p>The monic polynomial is \\(x^{3} - \\frac{5 x^{2}}{4} + \\frac{9 x}{4} + \\frac{5}{4}\\). The coefficients give the alternating signs.</p><p>Read \\(\\sum\\alpha=\\frac{5}{4}\\) from the squared term and \\(\\sum\\alpha\\beta=\\frac{9}{4}\\) from the linear term.</p><p>The constant is minus the product, so \\(\\alpha\\beta\\gamma=- \\frac{5}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "coefficients-track-quartic-extra",
+        "title": "Keep all four slots of a quartic",
+        "prompt": "<p>Find the sum of the roots, sum of pair products, sum of triple products and product of all four roots of \\(7 x^{4} - 5 x^{3} + 6 x^{2} + 6 x + 9=0\\).</p>",
+        "fields": [
+          {
+            "key": "sum",
+            "label": "Root sum",
+            "type": "number",
+            "expected": "5/7"
+          },
+          {
+            "key": "pairs",
+            "label": "Sum of pair products",
+            "type": "number",
+            "expected": "6/7"
+          },
+          {
+            "key": "triples",
+            "label": "Sum of triple products",
+            "type": "number",
+            "expected": "-6/7"
+          },
+          {
+            "key": "product",
+            "label": "Product of all roots",
+            "type": "number",
+            "expected": "9/7"
+          }
+        ],
+        "hint": "<p>Leave a zero coefficient in the list when a power is missing.</p>",
+        "solution": "<p>Use the coefficient of \\(x^3\\) for the root sum and of \\(x^2\\) for the pair products. They give \\(\\frac{5}{7}\\) and \\(\\frac{6}{7}\\).</p><p>The coefficient of \\(x\\) gives minus the triple-product sum after division by the leading coefficient. It gives \\(- \\frac{6}{7}\\).</p><p>The constant gives four negative factors, so the product of all four roots is \\(\\frac{9}{7}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "coefficients-repeat-the-position-extra",
+        "title": "Use the ordering to select the repeated root",
+        "prompt": "<p>A monic cubic has roots \\(u,u,v\\) with \\(v>u>0\\). Their sum is \\(14\\) and the sum of their pair products is \\(57\\). Find \\(u,v\\) and the monic polynomial.</p>",
+        "fields": [
+          {
+            "key": "u",
+            "label": "Repeated root u",
+            "type": "number",
+            "expected": "3",
+            "retry": [
+              {
+                "answer": "19/3",
+                "feedback": "<p>This candidate makes v smaller than u.</p>"
+              }
+            ]
+          },
+          {
+            "key": "v",
+            "label": "Root v",
+            "type": "number",
+            "expected": "8"
+          },
+          {
+            "key": "polynomial",
+            "label": "Monic polynomial",
+            "type": "polynomial",
+            "expected": "x^3 - 14*x^2 + 57*x - 72",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Keep both algebraic candidates until you check the ordering.</p>",
+        "solution": "<p>The first condition gives \\(v=14 - 2 u\\). The pair products include \\(u^2\\) once and \\(uv\\) twice.</p><p>Substitute into the pair-product condition to solve \\(3 u^{2} - 28 u + 57=0\\). The candidates for \\(u\\) are \\(3\\) and \\(\\frac{19}{3}\\).</p><p>The second gives \\(v=\\frac{4}{3}\\), so it violates \\(v>u\\). The accepted values are \\(u=3\\) and \\(v=8\\). The polynomial is \\(x^{3} - 14 x^{2} + 57 x - 72\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "coefficients-build-a-polynomial-extra",
+        "title": "Build the monic cubic from three root relations",
+        "prompt": "<p>For a monic cubic the sum of roots is \\(10\\), the sum of pair products is \\(17\\), and their product is \\(-28\\). Enter its monic polynomial in \\(x\\).</p>",
+        "fields": [
+          {
+            "key": "polynomial",
+            "label": "Monic polynomial",
+            "type": "polynomial",
+            "expected": "x^3 - 10*x^2 + 17*x + 28",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>A monic cubic is determined by the three root relations. Put the alternating signs in before expanding.</p>",
+        "solution": "<p>The coefficient of \\(x^2\\) is the negative of the root sum \\(10\\).</p><p>The coefficient of \\(x\\) is \\(17\\). The constant is minus \\(-28\\).</p><p>Assemble the terms to get \\(x^{3} - 10 x^{2} + 17 x + 28\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Monic",
+        "definition": "<p>Leading coefficient equal to one.</p>"
+      },
+      {
+        "term": "Multiplicity",
+        "definition": "<p>Number of times the factor associated with a root occurs.</p>"
+      },
+      {
+        "term": "Root sum",
+        "definition": "<p>\\(\\sum\\alpha\\) adds every root position.</p>"
+      },
+      {
+        "term": "Pair-product sum",
+        "definition": "<p>\\(\\sum\\alpha\\beta\\) adds products of unordered pairs of positions.</p>"
+      },
+      {
+        "term": "Triple-product sum",
+        "definition": "<p>\\(\\sum\\alpha\\beta\\gamma\\) adds products of unordered triples of positions.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Quadratic \\(ax^2+bx+c\\)</th><td>\\(\\alpha+\\beta=-\\frac ba,\\quad\\alpha\\beta=\\frac ca\\)</td></tr><tr><th scope=\"row\">Cubic \\(ax^3+bx^2+cx+d\\)</th><td>\\(\\sum\\alpha=-\\frac ba,\\quad\\sum\\alpha\\beta=\\frac ca,\\quad\\alpha\\beta\\gamma=-\\frac da\\)</td></tr><tr><th scope=\"row\">Quartic \\(ax^4+bx^3+cx^2+dx+e\\)</th><td>\\(\\sum\\alpha\\beta\\gamma=-\\frac da,\\quad\\alpha\\beta\\gamma\\delta=\\frac ea\\) beyond the first two relations.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For \\(4 x^{3} + 8 x^{2} - 5=0\\), find the pair-product sum and root product.</p><p><strong>Check</strong> The missing linear term gives zero pair sum. The product is \\(\\frac{5}{4}\\).</p>",
+      "checks": "<ul><li>A leading multiplier affects every coefficient. Dividing only the first term changes the equation.</li><li>The pair-product sum includes each of the three unordered pairs once. It is different from squaring the sum.</li></ul>",
+      "examTip": "<p>Normalise first and count with multiplicity. Use a discriminant or another argument if reality has to be established.</p>"
+    },
+    "related": [
+      {
+        "title": "Symmetric functions of roots and power sums",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_roots_symmetric_sums"
+      }
+    ]
+  },
+  "fp1_roots_symmetric_sums": {
+    "updatedOn": "2026-11-21",
+    "description": "Use S₁, S₂ and S₃, reciprocal identities and recurrences to evaluate symmetric functions without solving for each root.",
+    "sections": [
+      {
+        "id": "square-sum",
+        "title": "How do I get the sum of squares from coefficients?",
+        "label": "Remove the mixed products",
+        "intro": "<p>A power sum \\(S_k=\\sum_i r_i^k\\) adds the kth powers of all root positions. The subscript gives a power, while \\(\\sum\\alpha\\beta\\) describes products of different positions.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(S_2=S_1^2-2\\sum\\alpha\\beta\\). Each cross term occurs twice in the expansion of \\(S_1^2\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "symmetric-sums-square-sum-check",
+            "title": "Subtract the doubled pair products",
+            "prompt": "<p>For the roots of \\(x^{3} - 4 x^{2} - 11 x + 30=0\\), calculate \\(S_2\\) without solving the cubic.</p>",
+            "fields": [
+              {
+                "key": "square_sum",
+                "label": "Sum of squares",
+                "type": "number",
+                "expected": "38",
+                "retry": [
+                  {
+                    "answer": "16",
+                    "feedback": "<p>Subtract the pair products counted twice in the square of the sum.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>The square of the sum also contains pair products.</p>",
+            "solution": "<p>Read \\(S_1=4\\) and \\(\\sum\\alpha\\beta=-11\\) from the coefficients.</p><p>In \\(S_1^2\\) each pair product occurs twice. Remove those mixed terms using \\(S_2=S_1^2-2\\sum\\alpha\\beta\\).</p><p>The answer is \\(S_2=38\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not confuse \\(S_2\\) with \\(\\sum\\alpha\\beta\\). Read the pair-product sum from the coefficient and then apply the identity.</p>"
+          }
+        ]
+      },
+      {
+        "id": "cube-sum",
+        "title": "How do the pair products help find the sum of cubes?",
+        "label": "Combine the first three root quantities",
+        "intro": "<p>For a cubic, comparing the terms in the product of the first and second power sums produces a relation involving the pair products and the product of all three roots.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(S_3=S_1S_2-(\\sum\\alpha\\beta)S_1+3\\alpha\\beta\\gamma\\). The last term accounts for the three product contributions.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "symmetric-sums-cube-sum-check",
+            "title": "Combine square and pair sums to get cubes",
+            "prompt": "<p>The roots of \\(x^{3} - 4 x^{2} - 11 x + 30=0\\) are \\(\\alpha,\\beta,\\gamma\\). Find \\(S_2\\) and \\(S_3\\).</p>",
+            "fields": [
+              {
+                "key": "square_sum",
+                "label": "Sum of squares",
+                "type": "number",
+                "expected": "38"
+              },
+              {
+                "key": "cube_sum",
+                "label": "Sum of cubes",
+                "type": "number",
+                "expected": "106",
+                "retry": [
+                  {
+                    "answer": "196",
+                    "feedback": "<p>Include the triple product three times.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Compute the pair-product sum and full product before using the cube identity.</p>",
+            "solution": "<p>Read \\(S_1=4\\), \\(\\sum\\alpha\\beta=-11\\), and \\(\\alpha\\beta\\gamma=-30\\).</p><p>First \\(S_2=38\\) from \\(S_1^2-2\\sum\\alpha\\beta\\).</p><p>The cube identity \\(S_3=S_1S_2-(\\sum\\alpha\\beta)S_1+3\\alpha\\beta\\gamma\\) then gives \\(S_3=106\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Dropping the triple-product term can significantly change the answer, including its sign.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reciprocal-powers",
+        "title": "What do I check before taking reciprocals?",
+        "label": "Use a non-zero full product",
+        "intro": "<p>The constant term detects a zero root. If no root is zero, work with a common denominator equal to the product of all roots.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For cubic roots the reciprocal sum is \\(\\frac{\\sum\\alpha\\beta}{\\alpha\\beta\\gamma}\\) and the reciprocal pair sum is \\(\\frac{S_1}{\\alpha\\beta\\gamma}\\). Apply the square-sum identity to get \\(S_{-2}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "symmetric-sums-reciprocal-powers-check",
+            "title": "Find reciprocal square sums using one denominator",
+            "prompt": "<p>For the roots of \\(x^{3} - 4 x^{2} - 11 x + 30=0\\), find \\(S_{-1}\\) and \\(S_{-2}\\).</p>",
+            "fields": [
+              {
+                "key": "reciprocal",
+                "label": "Sum of reciprocals",
+                "type": "number",
+                "expected": "11/30"
+              },
+              {
+                "key": "reciprocal_squares",
+                "label": "Sum of squared reciprocals",
+                "type": "number",
+                "expected": "361/900"
+              }
+            ],
+            "hint": "<p>For reciprocals, first check that the original constant term is non-zero.</p>",
+            "solution": "<p>The constant is non-zero, so every root is non-zero. With the common denominator \\(\\alpha\\beta\\gamma=-30\\), the reciprocal sum is \\(\\frac{11}{30}\\).</p><p>The reciprocal pair-product sum is \\(- \\frac{2}{15}\\). Its numerator is the sum of the original roots.</p><p>Now apply the same square identity to reciprocal roots to obtain \\(S_{-2}=\\frac{361}{900}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A reciprocal identity cannot be used if any original root is zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "symmetric-sums-reciprocal-powers-follow-up",
+            "title": "Find reciprocal square sums using one denominator",
+            "prompt": "<p>For the roots of \\(x^{3} - 10 x^{2} + 23 x - 14=0\\), find \\(S_{-1}\\) and \\(S_{-2}\\).</p>",
+            "fields": [
+              {
+                "key": "reciprocal",
+                "label": "Sum of reciprocals",
+                "type": "number",
+                "expected": "23/14"
+              },
+              {
+                "key": "reciprocal_squares",
+                "label": "Sum of squared reciprocals",
+                "type": "number",
+                "expected": "249/196"
+              }
+            ],
+            "hint": "<p>For reciprocals, first check that the original constant term is non-zero.</p>",
+            "solution": "<p>The constant is non-zero, so every root is non-zero. With the common denominator \\(\\alpha\\beta\\gamma=14\\), the reciprocal sum is \\(\\frac{23}{14}\\).</p><p>The reciprocal pair-product sum is \\(\\frac{5}{7}\\). Its numerator is the sum of the original roots.</p><p>Now apply the same square identity to reciprocal roots to obtain \\(S_{-2}=\\frac{249}{196}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>For four non-zero roots the numerator of the reciprocal sum is the sum of triple products.</p>"
+          }
+        ]
+      },
+      {
+        "id": "root-recurrence",
+        "title": "How can I calculate a higher power sum efficiently?",
+        "label": "Multiply and sum the root equation",
+        "intro": "<p>Write the equation at a single root. Multiplying by a power of that root gives a relation you can sum over every root.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(ar^3+br^2+cr+d=0\\) leads to \\(aS_{k+3}+bS_{k+2}+cS_{k+1}+dS_k=0\\) for \\(k\\ge0\\). Use \\(S_0=3\\) for a cubic.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "symmetric-sums-root-recurrence-check",
+            "title": "Read a recurrence from the equation each root satisfies",
+            "prompt": "<p>For \\(x^{3} - 3 x + 3=0\\), find \\(S_3\\) and \\(S_6\\) using the root equation.</p>",
+            "fields": [
+              {
+                "key": "third",
+                "label": "Sum of cubes",
+                "type": "number",
+                "expected": "-9",
+                "retry": [
+                  {
+                    "answer": "-3",
+                    "feedback": "<p>The constant in the root equation is counted once for each of the three roots.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "sixth",
+                "label": "Sum of sixth powers",
+                "type": "number",
+                "expected": "81"
+              }
+            ],
+            "hint": "<p>The starting value S₀ counts every root position.</p>",
+            "solution": "<p>At a root \\(r\\), \\(r^3=3 r - 3\\). Multiplying by \\(r^k\\) and summing gives \\(S_{k+3}=3S_{k+1}-3S_k\\).</p><p>Start with \\(S_0=3,S_1=0\\) and \\(S_2=6\\). Therefore \\(S_3=-9\\).</p><p>The next values are \\(S_4=18\\) and \\(S_5=-45\\). Use \\(S_4\\) and \\(S_3\\) to obtain \\(S_6=81\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The constant occurs once for each root when \\(k=0\\). Dropping this factor gives a wrong starting value.</p>"
+          }
+        ]
+      },
+      {
+        "id": "recover-the-coefficients",
+        "title": "Can power sums determine a cubic?",
+        "label": "Work backwards through the identities",
+        "intro": "<p>If a monic cubic has its first three power sums specified, work back to the root sum, pair-product sum and product. These are three independent coefficient values.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(S_2\\) to recover the pair sum first. Then rearrange the \\(S_3\\) identity to obtain the product without solving the equation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "symmetric-sums-recover-the-coefficients-check",
+            "title": "Recover coefficients from power-sum data",
+            "prompt": "<p>A monic cubic has \\(S_1=4\\), \\(S_2=38\\) and \\(S_3=106\\). Find the pair-product sum, product and monic polynomial.</p>",
+            "fields": [
+              {
+                "key": "pairs",
+                "label": "Sum of pair products",
+                "type": "number",
+                "expected": "-11"
+              },
+              {
+                "key": "product",
+                "label": "Product of the roots",
+                "type": "number",
+                "expected": "-30"
+              },
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "x^3 - 4*x^2 - 11*x + 30",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Work backwards from second and third powers to the elementary quantities, in that order.</p>",
+            "solution": "<p>Solve \\(S_2=S_1^2-2\\sum\\alpha\\beta\\) for the pair-product sum. It is \\(-11\\).</p><p>Next rearrange the cube identity for the product. It is \\(-30\\).</p><p>Use the reconstructed root sum, pair-product sum and product to write \\(x^{3} - 4 x^{2} - 11 x + 30\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not put the second and third power sums directly into the polynomial. Convert them to root products first.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "symmetric-sums-recover-the-coefficients-follow-up",
+            "title": "Recover coefficients from power-sum data",
+            "prompt": "<p>A monic cubic has \\(S_1=10\\), \\(S_2=54\\) and \\(S_3=352\\). Find the pair-product sum, product and monic polynomial.</p>",
+            "fields": [
+              {
+                "key": "pairs",
+                "label": "Sum of pair products",
+                "type": "number",
+                "expected": "23"
+              },
+              {
+                "key": "product",
+                "label": "Product of the roots",
+                "type": "number",
+                "expected": "14"
+              },
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "x^3 - 10*x^2 + 23*x - 14",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Work backwards from second and third powers to the elementary quantities, in that order.</p>",
+            "solution": "<p>Solve \\(S_2=S_1^2-2\\sum\\alpha\\beta\\) for the pair-product sum. It is \\(23\\).</p><p>Next rearrange the cube identity for the product. It is \\(14\\).</p><p>Use the reconstructed root sum, pair-product sum and product to write \\(x^{3} - 10 x^{2} + 23 x - 14\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Subtract the doubled pair products",
+        "question": "<p>For the roots of \\(x^{3} - 3 x^{2} - 6 x + 8=0\\), calculate \\(S_2\\) without solving the cubic.</p>",
+        "solution": [
+          "<p>Read \\(S_1=3\\) and \\(\\sum\\alpha\\beta=-6\\) from the coefficients.</p>",
+          "<p>In \\(S_1^2\\) each pair product occurs twice. Remove those mixed terms using \\(S_2=S_1^2-2\\sum\\alpha\\beta\\).</p>",
+          "<p>The answer is \\(S_2=21\\).</p>"
+        ]
+      },
+      {
+        "title": "Combine square and pair sums to get cubes",
+        "question": "<p>The roots of \\(x^{3} - 3 x^{2} - 6 x + 8=0\\) are \\(\\alpha,\\beta,\\gamma\\). Find \\(S_2\\) and \\(S_3\\).</p>",
+        "solution": [
+          "<p>Read \\(S_1=3\\), \\(\\sum\\alpha\\beta=-6\\), and \\(\\alpha\\beta\\gamma=-8\\).</p>",
+          "<p>First \\(S_2=21\\) from \\(S_1^2-2\\sum\\alpha\\beta\\).</p>",
+          "<p>The cube identity \\(S_3=S_1S_2-(\\sum\\alpha\\beta)S_1+3\\alpha\\beta\\gamma\\) then gives \\(S_3=57\\).</p>"
+        ]
+      },
+      {
+        "title": "Find reciprocal square sums using one denominator",
+        "question": "<p>For the roots of \\(x^{3} - 3 x^{2} - 6 x + 8=0\\), find \\(S_{-1}\\) and \\(S_{-2}\\).</p>",
+        "solution": [
+          "<p>The constant is non-zero, so every root is non-zero. With the common denominator \\(\\alpha\\beta\\gamma=-8\\), the reciprocal sum is \\(\\frac{3}{4}\\).</p>",
+          "<p>The reciprocal pair-product sum is \\(- \\frac{3}{8}\\). Its numerator is the sum of the original roots.</p>",
+          "<p>Now apply the same square identity to reciprocal roots to obtain \\(S_{-2}=\\frac{21}{16}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find reciprocal square sums using one denominator",
+        "question": "<p>For the roots of \\(x^{3} - 8 x^{2} + 9 x + 18=0\\), find \\(S_{-1}\\) and \\(S_{-2}\\).</p>",
+        "solution": [
+          "<p>The constant is non-zero, so every root is non-zero. With the common denominator \\(\\alpha\\beta\\gamma=-18\\), the reciprocal sum is \\(- \\frac{1}{2}\\).</p>",
+          "<p>The reciprocal pair-product sum is \\(- \\frac{4}{9}\\). Its numerator is the sum of the original roots.</p>",
+          "<p>Now apply the same square identity to reciprocal roots to obtain \\(S_{-2}=\\frac{41}{36}\\).</p>"
+        ]
+      },
+      {
+        "title": "Read a recurrence from the equation each root satisfies",
+        "question": "<p>For \\(x^{3} - 2 x - 3=0\\), find \\(S_3\\) and \\(S_6\\) using the root equation.</p>",
+        "solution": [
+          "<p>At a root \\(r\\), \\(r^3=2 r + 3\\). Multiplying by \\(r^k\\) and summing gives \\(S_{k+3}=2S_{k+1}+3S_k\\).</p>",
+          "<p>Start with \\(S_0=3,S_1=0\\) and \\(S_2=4\\). Therefore \\(S_3=9\\).</p>",
+          "<p>The next values are \\(S_4=8\\) and \\(S_5=30\\). Use \\(S_4\\) and \\(S_3\\) to obtain \\(S_6=43\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover coefficients from power-sum data",
+        "question": "<p>A monic cubic has \\(S_1=3\\), \\(S_2=21\\) and \\(S_3=57\\). Find the pair-product sum, product and monic polynomial.</p>",
+        "solution": [
+          "<p>Solve \\(S_2=S_1^2-2\\sum\\alpha\\beta\\) for the pair-product sum. It is \\(-6\\).</p>",
+          "<p>Next rearrange the cube identity for the product. It is \\(-8\\).</p>",
+          "<p>Use the reconstructed root sum, pair-product sum and product to write \\(x^{3} - 3 x^{2} - 6 x + 8\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover coefficients from power-sum data",
+        "question": "<p>A monic cubic has \\(S_1=8\\), \\(S_2=46\\) and \\(S_3=242\\). Find the pair-product sum, product and monic polynomial.</p>",
+        "solution": [
+          "<p>Solve \\(S_2=S_1^2-2\\sum\\alpha\\beta\\) for the pair-product sum. It is \\(9\\).</p>",
+          "<p>Next rearrange the cube identity for the product. It is \\(-18\\).</p>",
+          "<p>Use the reconstructed root sum, pair-product sum and product to write \\(x^{3} - 8 x^{2} + 9 x + 18\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "symmetric-sums-square-sum-extra",
+        "title": "Subtract the doubled pair products",
+        "prompt": "<p>For the roots of \\(x^{3} - 8 x^{2} + 9 x + 18=0\\), calculate \\(S_2\\) without solving the cubic.</p>",
+        "fields": [
+          {
+            "key": "square_sum",
+            "label": "Sum of squares",
+            "type": "number",
+            "expected": "46",
+            "retry": [
+              {
+                "answer": "64",
+                "feedback": "<p>Subtract the pair products counted twice in the square of the sum.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The square of the sum also contains pair products.</p>",
+        "solution": "<p>Read \\(S_1=8\\) and \\(\\sum\\alpha\\beta=9\\) from the coefficients.</p><p>In \\(S_1^2\\) each pair product occurs twice. Remove those mixed terms using \\(S_2=S_1^2-2\\sum\\alpha\\beta\\).</p><p>The answer is \\(S_2=46\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "symmetric-sums-cube-sum-extra",
+        "title": "Combine square and pair sums to get cubes",
+        "prompt": "<p>The roots of \\(x^{3} - 8 x^{2} + 9 x + 18=0\\) are \\(\\alpha,\\beta,\\gamma\\). Find \\(S_2\\) and \\(S_3\\).</p>",
+        "fields": [
+          {
+            "key": "square_sum",
+            "label": "Sum of squares",
+            "type": "number",
+            "expected": "46"
+          },
+          {
+            "key": "cube_sum",
+            "label": "Sum of cubes",
+            "type": "number",
+            "expected": "242",
+            "retry": [
+              {
+                "answer": "296",
+                "feedback": "<p>Include the triple product three times.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Compute the pair-product sum and full product before using the cube identity.</p>",
+        "solution": "<p>Read \\(S_1=8\\), \\(\\sum\\alpha\\beta=9\\), and \\(\\alpha\\beta\\gamma=-18\\).</p><p>First \\(S_2=46\\) from \\(S_1^2-2\\sum\\alpha\\beta\\).</p><p>The cube identity \\(S_3=S_1S_2-(\\sum\\alpha\\beta)S_1+3\\alpha\\beta\\gamma\\) then gives \\(S_3=242\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "symmetric-sums-reciprocal-powers-extra",
+        "title": "Find reciprocal square sums using one denominator",
+        "prompt": "<p>For the roots of \\(x^{3} - 2 x^{2} - 19 x + 20=0\\), find \\(S_{-1}\\) and \\(S_{-2}\\).</p>",
+        "fields": [
+          {
+            "key": "reciprocal",
+            "label": "Sum of reciprocals",
+            "type": "number",
+            "expected": "19/20"
+          },
+          {
+            "key": "reciprocal_squares",
+            "label": "Sum of squared reciprocals",
+            "type": "number",
+            "expected": "441/400"
+          }
+        ],
+        "hint": "<p>For reciprocals, first check that the original constant term is non-zero.</p>",
+        "solution": "<p>The constant is non-zero, so every root is non-zero. With the common denominator \\(\\alpha\\beta\\gamma=-20\\), the reciprocal sum is \\(\\frac{19}{20}\\).</p><p>The reciprocal pair-product sum is \\(- \\frac{1}{10}\\). Its numerator is the sum of the original roots.</p><p>Now apply the same square identity to reciprocal roots to obtain \\(S_{-2}=\\frac{441}{400}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "symmetric-sums-root-recurrence-extra",
+        "title": "Read a recurrence from the equation each root satisfies",
+        "prompt": "<p>For \\(x^{3} - x - 3=0\\), find \\(S_3\\) and \\(S_6\\) using the root equation.</p>",
+        "fields": [
+          {
+            "key": "third",
+            "label": "Sum of cubes",
+            "type": "number",
+            "expected": "9",
+            "retry": [
+              {
+                "answer": "3",
+                "feedback": "<p>The constant in the root equation is counted once for each of the three roots.</p>"
+              }
+            ]
+          },
+          {
+            "key": "sixth",
+            "label": "Sum of sixth powers",
+            "type": "number",
+            "expected": "29"
+          }
+        ],
+        "hint": "<p>The starting value S₀ counts every root position.</p>",
+        "solution": "<p>At a root \\(r\\), \\(r^3=r + 3\\). Multiplying by \\(r^k\\) and summing gives \\(S_{k+3}=1S_{k+1}+3S_k\\).</p><p>Start with \\(S_0=3,S_1=0\\) and \\(S_2=2\\). Therefore \\(S_3=9\\).</p><p>The next values are \\(S_4=2\\) and \\(S_5=15\\). Use \\(S_4\\) and \\(S_3\\) to obtain \\(S_6=29\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "symmetric-sums-recover-the-coefficients-extra",
+        "title": "Recover coefficients from power-sum data",
+        "prompt": "<p>A monic cubic has \\(S_1=2\\), \\(S_2=42\\) and \\(S_3=62\\). Find the pair-product sum, product and monic polynomial.</p>",
+        "fields": [
+          {
+            "key": "pairs",
+            "label": "Sum of pair products",
+            "type": "number",
+            "expected": "-19"
+          },
+          {
+            "key": "product",
+            "label": "Product of the roots",
+            "type": "number",
+            "expected": "-20"
+          },
+          {
+            "key": "polynomial",
+            "label": "Monic polynomial",
+            "type": "polynomial",
+            "expected": "x^3 - 2*x^2 - 19*x + 20",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Work backwards from second and third powers to the elementary quantities, in that order.</p>",
+        "solution": "<p>Solve \\(S_2=S_1^2-2\\sum\\alpha\\beta\\) for the pair-product sum. It is \\(-19\\).</p><p>Next rearrange the cube identity for the product. It is \\(-20\\).</p><p>Use the reconstructed root sum, pair-product sum and product to write \\(x^{3} - 2 x^{2} - 19 x + 20\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Power sum",
+        "definition": "<p>\\(S_k=\\sum_i r_i^k\\) counts each root position.</p>"
+      },
+      {
+        "term": "Symmetric expression",
+        "definition": "<p>A quantity unchanged by reordering the roots.</p>"
+      },
+      {
+        "term": "Pair-product sum",
+        "definition": "<p>Products of different root positions, each unordered pair once.</p>"
+      },
+      {
+        "term": "Reciprocal power",
+        "definition": "<p>A negative power, defined only for non-zero roots.</p>"
+      },
+      {
+        "term": "Recurrence",
+        "definition": "<p>A rule giving a later power sum from earlier ones.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Square sum</th><td>\\(S_2=S_1^2-2\\sum\\alpha\\beta\\)</td></tr><tr><th scope=\"row\">Cubic sum</th><td>\\(S_3=S_1S_2-(\\sum\\alpha\\beta)S_1+3\\alpha\\beta\\gamma\\)</td></tr><tr><th scope=\"row\">Reciprocal sum</th><td>\\(S_{-1}=\\frac{\\sum\\alpha\\beta}{\\alpha\\beta\\gamma}\\) for a cubic with non-zero product.</td></tr><tr><th scope=\"row\">Higher powers</th><td>Use the root equation and start with the root count as \\(S_0\\).</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A monic cubic has \\(S_1=4,\\ \\sum\\alpha\\beta=1,\\ \\alpha\\beta\\gamma=-2\\). Find \\(S_2\\) and \\(S_3\\).</p><p><strong>Check</strong> \\(S_2=14,\\ S_3=46\\).</p>",
+      "checks": "<ul><li>Do not confuse \\(S_2\\) with \\(\\sum\\alpha\\beta\\). Read the pair-product sum from the coefficient and then apply the identity.</li><li>Dropping the triple-product term can significantly change the answer, including its sign.</li></ul>",
+      "examTip": "<p>A negative square sum rules out all roots being real. Do not apply real-square reasoning without checking reality.</p>"
+    },
+    "related": [
+      {
+        "title": "Roots and coefficients of quadratic, cubic and quartic equations",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_roots_coefficients"
+      },
+      {
+        "title": "Transforming equations by substitution",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_roots_transformations"
+      }
+    ]
+  },
+  "fp1_roots_transformations": {
+    "updatedOn": "2026-11-21",
+    "description": "Find equations whose roots are translated, scaled, reciprocal, squared or related by another algebraic substitution.",
+    "sections": [
+      {
+        "id": "invert-a-linear-transformation",
+        "title": "Why do I substitute the inverse rule?",
+        "label": "Express the old variable in terms of the new",
+        "intro": "<p>The transformation describes the values you want. The original equation contains the old variable, so rearrange the transformation before putting it into the original polynomial.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(y=mx+h\\) with \\(m\\ne0\\), use \\(x=\\frac{y-h}{m}\\). Multiply by \\(m^n\\) to remove the constant denominators for degree \\(n\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "transformations-invert-a-linear-transformation-check",
+            "title": "Use the inverse affine substitution",
+            "prompt": "<p>Let the old roots belong to \\(x^{3} - 4 x^{2} - 11 x + 30=0\\). Find the monic polynomial in \\(y\\) for the transformed roots defined by \\(y=3 x - 1\\).</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "y^3 - 9*y^2 - 120*y + 700",
+                "variables": [
+                  "y"
+                ]
+              }
+            ],
+            "hint": "<p>Substitute for x, not for y. Clear constant denominators at the end.</p>",
+            "solution": "<p>Rearrange the rule for the original variable: \\(x=\\frac{y}{3} + \\frac{1}{3}\\).</p><p>Substitute this into the old polynomial, then multiply by \\(27\\) to restore the monic leading coefficient.</p><p>Expansion gives \\(y^{3} - 9 y^{2} - 120 y + 700\\). Each new root comes from exactly one old root because the multiplier \\(3\\) is non-zero.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Adding to the roots means subtracting that addition in the substitution for the old variable.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reverse-coefficients",
+        "title": "Why do reciprocal roots reverse coefficients?",
+        "label": "Clear the highest inverse power",
+        "intro": "<p>For a reciprocal transformation first check that zero is not an original root. Then the substitution \\(x=\\frac1y\\) gives negative powers of the new variable.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For degree \\(n\\), form \\(y^nP\\left(\\frac1y\\right)\\). The old constant becomes the new leading coefficient.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "transformations-reverse-coefficients-check",
+            "title": "Reverse coefficients after checking zero",
+            "prompt": "<p>For the roots of \\(x^{3} - 4 x^{2} - 11 x + 30=0\\), find the monic polynomial in \\(y\\) whose roots are their reciprocals.</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "y^3 - 11*y^2/30 - 2*y/15 + 1/30",
+                "variables": [
+                  "y"
+                ]
+              }
+            ],
+            "hint": "<p>Each coefficient reverses its place after multiplication by the highest power of the new variable.</p>",
+            "solution": "<p>The original constant is non-zero. Put \\(y=\\frac1x\\) so \\(x=\\frac1y\\).</p><p>Multiplication by \\(y^3\\) gives \\(30 y^{3} - 11 y^{2} - 4 y + 1=0\\). The new constant is non-zero, so the excluded value \\(y=0\\) is not added.</p><p>Divide by \\(30\\) to obtain the monic polynomial \\(y^{3} - \\frac{11 y^{2}}{30} - \\frac{2 y}{15} + \\frac{1}{30}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If a root at zero is defined in the output polynomial, check that it is not introduced by clearing denominators.</p>"
+          }
+        ]
+      },
+      {
+        "id": "square-and-count",
+        "title": "How do I keep repeated images after squaring?",
+        "label": "Replace the even power",
+        "intro": "<p>Squaring can send two distinct roots to one value. The transformed polynomial should still have one factor per old root position.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\((-1)^nP(x)P(-x)\\) is even for monic degree \\(n\\). Its factor for each old root \\(r\\) is \\(x^2-r^2\\). Put \\(y=x^2\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "transformations-square-and-count-check",
+            "title": "Square roots without losing repetitions",
+            "prompt": "<p>Find the monic polynomial in \\(y\\) whose roots are the squares of the roots of \\(x^{3} - x^{2} - 9 x + 9=0\\), counting multiplicity.</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "y^3 - 19*y^2 + 99*y - 81",
+                "variables": [
+                  "y"
+                ]
+              }
+            ],
+            "hint": "<p>Retain a factor for every original root position, even when two images coincide.</p>",
+            "solution": "<p>The polynomial factors as \\(\\left(x - 3\\right) \\left(x - 1\\right) \\left(x + 3\\right)\\). In particular the roots \\(3\\) and \\(-3\\) have the same square.</p><p>Their squares are \\(9\\), \\(9\\) and \\(1\\). The first value occurs twice.</p><p>Multiply the factors \\(\\left(y - 9\\right)^{2} \\left(y - 1\\right)\\), obtaining \\(y^{3} - 19 y^{2} + 99 y - 81\\). An alternative without factorisation is to replace \\(x^2\\) by \\(y\\) in \\(-P(x)P(-x)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If you use a squared relation to remove a variable another way, justify that every new root has the required origin and multiplicity.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "transformations-square-and-count-follow-up",
+            "title": "Square roots without losing repetitions",
+            "prompt": "<p>Find the monic polynomial in \\(y\\) whose roots are the squares of the roots of \\(x^{3} - 4 x^{2} - x + 4=0\\), counting multiplicity.</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "y^3 - 18*y^2 + 33*y - 16",
+                "variables": [
+                  "y"
+                ]
+              }
+            ],
+            "hint": "<p>Retain a factor for every original root position, even when two images coincide.</p>",
+            "solution": "<p>The polynomial factors as \\(\\left(x - 4\\right) \\left(x - 1\\right) \\left(x + 1\\right)\\). In particular the roots \\(1\\) and \\(-1\\) have the same square.</p><p>Their squares are \\(1\\), \\(1\\) and \\(16\\). The first value occurs twice.</p><p>Multiply the factors \\(\\left(y - 16\\right) \\left(y - 1\\right)^{2}\\), obtaining \\(y^{3} - 18 y^{2} + 33 y - 16\\). An alternative without factorisation is to replace \\(x^2\\) by \\(y\\) in \\(-P(x)P(-x)\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "reduce-with-the-root-equation",
+        "title": "What if the new roots involve high powers?",
+        "label": "Reduce the power at a root",
+        "intro": "<p>Each old root satisfies the polynomial equation. Use that relation to simplify an expression before substituting into the original.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>At a root of \\(x^3+ax+b=0\\), the value of \\(x^3\\) is \\(-ax-b\\). If \\(a\\ne0\\) the new rule for the cube is linear on the root set.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "transformations-reduce-with-the-root-equation-check",
+            "title": "Use the root equation to reduce a cubic expression",
+            "prompt": "<p>The cubic \\(x^{3} + 3 x - 2=0\\) has three roots, counted with multiplicity. Find the monic polynomial in \\(y\\) whose roots are their cubes.</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "y^3 - 6*y^2 + 39*y - 8",
+                "variables": [
+                  "y"
+                ]
+              }
+            ],
+            "hint": "<p>Replace the cube by the lower-degree expression before looking for the inverse.</p>",
+            "solution": "<p>At a root, \\(x^3=2 - 3 x\\). Thus the transformation is effectively linear on these three roots.</p><p>Set \\(y=2 - 3 x\\) and rearrange to obtain \\(x=\\frac{2}{3} - \\frac{y}{3}\\).</p><p>Substitute into the original cubic and multiply by \\(-27\\) to obtain \\(y^{3} - 6 y^{2} + 39 y - 8\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>This simplification is true at the roots. It is not a polynomial identity valid at every x.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rational-transform",
+        "title": "Which values can a fractional transformation exclude?",
+        "label": "Check each denominator",
+        "intro": "<p>A nonlinear rule can have a pole at an original input or an excluded value in its inverse. Write both conditions before cross-multiplying.</p>",
+        "minutes": 7,
+        "level": "further",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check the old polynomial at the original pole, then test the value forbidden in the inverse in the final polynomial. Verify the degree after clearing denominators.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "transformations-rational-transform-check",
+            "title": "Check both excluded values of a fractional rule",
+            "prompt": "<p>For roots of \\(x^{3} - 4 x^{2} - 11 x + 30=0\\), use \\(y=\\frac{x - 1}{x - 4}\\) to form the monic polynomial in \\(y\\). Also give the excluded value of \\(y\\) used in the inverse.</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "y^3 - 57*y^2/14 + 8/7",
+                "variables": [
+                  "y"
+                ]
+              },
+              {
+                "key": "excluded",
+                "label": "Excluded y-value",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Rearrange the fractional rule first, then check the old denominator and the new one separately.</p>",
+            "solution": "<p>Substituting \\(x=4\\) into the original gives \\(-14\\), which is non-zero. The pole does not belong to the original roots.</p><p>Rearrange to get \\(x=\\frac{4 y - 1}{y - 1}\\), requiring \\(y\\ne1\\).</p><p>Substitute, multiply by \\((y-1)^3\\) and normalise to obtain \\(y^{3} - \\frac{57 y^{2}}{14} + \\frac{8}{7}\\). At \\(y=1\\) its value is \\(- \\frac{27}{14}\\), so no pole was introduced.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An excluded value never becomes an accepted root merely because formal denominators have disappeared.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "transformations-rational-transform-follow-up",
+            "title": "Check both excluded values of a fractional rule",
+            "prompt": "<p>For roots of \\(x^{3} - 10 x^{2} + 23 x - 14=0\\), use \\(y=\\frac{x + 3}{x - 5}\\) to form the monic polynomial in \\(y\\). Also give the excluded value of \\(y\\) used in the inverse.</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "y^3 - 7*y^2/3 - 35*y/3 - 25/3",
+                "variables": [
+                  "y"
+                ]
+              },
+              {
+                "key": "excluded",
+                "label": "Excluded y-value",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Rearrange the fractional rule first, then check the old denominator and the new one separately.</p>",
+            "solution": "<p>Substituting \\(x=5\\) into the original gives \\(-24\\), which is non-zero. The pole does not belong to the original roots.</p><p>Rearrange to get \\(x=\\frac{5 y + 3}{y - 1}\\), requiring \\(y\\ne1\\).</p><p>Substitute, multiply by \\((y-1)^3\\) and normalise to obtain \\(y^{3} - \\frac{7 y^{2}}{3} - \\frac{35 y}{3} - \\frac{25}{3}\\). At \\(y=1\\) its value is \\(- \\frac{64}{3}\\), so no pole was introduced.</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>State why the degree and multiplicities agree when the transformation is one-to-one on the original roots.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use the inverse affine substitution",
+        "question": "<p>Let the old roots belong to \\(x^{3} - 3 x^{2} - 6 x + 8=0\\). Find the monic polynomial in \\(y\\) for the transformed roots defined by \\(y=3 - 2 x\\).</p>",
+        "solution": [
+          "<p>Rearrange the rule for the original variable: \\(x=\\frac{3}{2} - \\frac{y}{2}\\).</p>",
+          "<p>Substitute this into the old polynomial, then multiply by \\(-8\\) to restore the monic leading coefficient.</p>",
+          "<p>Expansion gives \\(y^{3} - 3 y^{2} - 33 y + 35\\). Each new root comes from exactly one old root because the multiplier \\(-2\\) is non-zero.</p>"
+        ]
+      },
+      {
+        "title": "Reverse coefficients after checking zero",
+        "question": "<p>For the roots of \\(x^{3} - 3 x^{2} - 6 x + 8=0\\), find the monic polynomial in \\(y\\) whose roots are their reciprocals.</p>",
+        "solution": [
+          "<p>The original constant is non-zero. Put \\(y=\\frac1x\\) so \\(x=\\frac1y\\).</p>",
+          "<p>Multiplication by \\(y^3\\) gives \\(8 y^{3} - 6 y^{2} - 3 y + 1=0\\). The new constant is non-zero, so the excluded value \\(y=0\\) is not added.</p>",
+          "<p>Divide by \\(8\\) to obtain the monic polynomial \\(y^{3} - \\frac{3 y^{2}}{4} - \\frac{3 y}{8} + \\frac{1}{8}\\).</p>"
+        ]
+      },
+      {
+        "title": "Square roots without losing repetitions",
+        "question": "<p>Find the monic polynomial in \\(y\\) whose roots are the squares of the roots of \\(x^{3} - 3 x^{2} - 4 x + 12=0\\), counting multiplicity.</p>",
+        "solution": [
+          "<p>The polynomial factors as \\(\\left(x - 3\\right) \\left(x - 2\\right) \\left(x + 2\\right)\\). In particular the roots \\(2\\) and \\(-2\\) have the same square.</p>",
+          "<p>Their squares are \\(4\\), \\(4\\) and \\(9\\). The first value occurs twice.</p>",
+          "<p>Multiply the factors \\(\\left(y - 9\\right) \\left(y - 4\\right)^{2}\\), obtaining \\(y^{3} - 17 y^{2} + 88 y - 144\\). An alternative without factorisation is to replace \\(x^2\\) by \\(y\\) in \\(-P(x)P(-x)\\).</p>"
+        ]
+      },
+      {
+        "title": "Square roots without losing repetitions",
+        "question": "<p>Find the monic polynomial in \\(y\\) whose roots are the squares of the roots of \\(x^{3} - 2 x^{2} - 16 x + 32=0\\), counting multiplicity.</p>",
+        "solution": [
+          "<p>The polynomial factors as \\(\\left(x - 4\\right) \\left(x - 2\\right) \\left(x + 4\\right)\\). In particular the roots \\(4\\) and \\(-4\\) have the same square.</p>",
+          "<p>Their squares are \\(16\\), \\(16\\) and \\(4\\). The first value occurs twice.</p>",
+          "<p>Multiply the factors \\(\\left(y - 16\\right)^{2} \\left(y - 4\\right)\\), obtaining \\(y^{3} - 36 y^{2} + 384 y - 1024\\). An alternative without factorisation is to replace \\(x^2\\) by \\(y\\) in \\(-P(x)P(-x)\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the root equation to reduce a cubic expression",
+        "question": "<p>The cubic \\(x^{3} + 2 x + 3=0\\) has three roots, counted with multiplicity. Find the monic polynomial in \\(y\\) whose roots are their cubes.</p>",
+        "solution": [
+          "<p>At a root, \\(x^3=- 2 x - 3\\). Thus the transformation is effectively linear on these three roots.</p>",
+          "<p>Set \\(y=- 2 x - 3\\) and rearrange to obtain \\(x=- \\frac{y}{2} - \\frac{3}{2}\\).</p>",
+          "<p>Substitute into the original cubic and multiply by \\(-8\\) to obtain \\(y^{3} + 9 y^{2} + 35 y + 27\\).</p>"
+        ]
+      },
+      {
+        "title": "Check both excluded values of a fractional rule",
+        "question": "<p>For roots of \\(x^{3} - 3 x^{2} - 6 x + 8=0\\), use \\(y=\\frac{x + 2}{x - 3}\\) to form the monic polynomial in \\(y\\). Also give the excluded value of \\(y\\) used in the inverse.</p>",
+        "solution": [
+          "<p>Substituting \\(x=3\\) into the original gives \\(-10\\), which is non-zero. The pole does not belong to the original roots.</p>",
+          "<p>Rearrange to get \\(x=\\frac{3 y + 2}{y - 1}\\), requiring \\(y\\ne1\\).</p>",
+          "<p>Substitute, multiply by \\((y-1)^3\\) and normalise to obtain \\(y^{3} - \\frac{9 y^{2}}{2} - 9 y\\). At \\(y=1\\) its value is \\(- \\frac{25}{2}\\), so no pole was introduced.</p>"
+        ]
+      },
+      {
+        "title": "Check both excluded values of a fractional rule",
+        "question": "<p>For roots of \\(x^{3} - 8 x^{2} + 9 x + 18=0\\), use \\(y=\\frac{x + 1}{x - 2}\\) to form the monic polynomial in \\(y\\). Also give the excluded value of \\(y\\) used in the inverse.</p>",
+        "solution": [
+          "<p>Substituting \\(x=2\\) into the original gives \\(12\\), which is non-zero. The pole does not belong to the original roots.</p>",
+          "<p>Rearrange to get \\(x=\\frac{2 y + 1}{y - 1}\\), requiring \\(y\\ne1\\).</p>",
+          "<p>Substitute, multiply by \\((y-1)^3\\) and normalise to obtain \\(y^{3} - \\frac{23 y^{2}}{4} + 7 y\\). At \\(y=1\\) its value is \\(\\frac{9}{4}\\), so no pole was introduced.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "transformations-invert-a-linear-transformation-extra",
+        "title": "Use the inverse affine substitution",
+        "prompt": "<p>Let the old roots belong to \\(x^{3} - 8 x^{2} + 9 x + 18=0\\). Find the monic polynomial in \\(y\\) for the transformed roots defined by \\(y=4 - x\\).</p>",
+        "fields": [
+          {
+            "key": "polynomial",
+            "label": "Monic polynomial",
+            "type": "polynomial",
+            "expected": "y^3 - 4*y^2 - 7*y + 10",
+            "variables": [
+              "y"
+            ]
+          }
+        ],
+        "hint": "<p>Substitute for x, not for y. Clear constant denominators at the end.</p>",
+        "solution": "<p>Rearrange the rule for the original variable: \\(x=4 - y\\).</p><p>Substitute this into the old polynomial, then multiply by \\(-1\\) to restore the monic leading coefficient.</p><p>Expansion gives \\(y^{3} - 4 y^{2} - 7 y + 10\\). Each new root comes from exactly one old root because the multiplier \\(-1\\) is non-zero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "transformations-reverse-coefficients-extra",
+        "title": "Reverse coefficients after checking zero",
+        "prompt": "<p>For the roots of \\(x^{3} - 8 x^{2} + 9 x + 18=0\\), find the monic polynomial in \\(y\\) whose roots are their reciprocals.</p>",
+        "fields": [
+          {
+            "key": "polynomial",
+            "label": "Monic polynomial",
+            "type": "polynomial",
+            "expected": "y^3 + y^2/2 - 4*y/9 + 1/18",
+            "variables": [
+              "y"
+            ]
+          }
+        ],
+        "hint": "<p>Each coefficient reverses its place after multiplication by the highest power of the new variable.</p>",
+        "solution": "<p>The original constant is non-zero. Put \\(y=\\frac1x\\) so \\(x=\\frac1y\\).</p><p>Multiplication by \\(y^3\\) gives \\(18 y^{3} + 9 y^{2} - 8 y + 1=0\\). The new constant is non-zero, so the excluded value \\(y=0\\) is not added.</p><p>Divide by \\(18\\) to obtain the monic polynomial \\(y^{3} + \\frac{y^{2}}{2} - \\frac{4 y}{9} + \\frac{1}{18}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "transformations-square-and-count-extra",
+        "title": "Square roots without losing repetitions",
+        "prompt": "<p>Find the monic polynomial in \\(y\\) whose roots are the squares of the roots of \\(x^{3} - 5 x^{2} - 9 x + 45=0\\), counting multiplicity.</p>",
+        "fields": [
+          {
+            "key": "polynomial",
+            "label": "Monic polynomial",
+            "type": "polynomial",
+            "expected": "y^3 - 43*y^2 + 531*y - 2025",
+            "variables": [
+              "y"
+            ]
+          }
+        ],
+        "hint": "<p>Retain a factor for every original root position, even when two images coincide.</p>",
+        "solution": "<p>The polynomial factors as \\(\\left(x - 5\\right) \\left(x - 3\\right) \\left(x + 3\\right)\\). In particular the roots \\(3\\) and \\(-3\\) have the same square.</p><p>Their squares are \\(9\\), \\(9\\) and \\(25\\). The first value occurs twice.</p><p>Multiply the factors \\(\\left(y - 25\\right) \\left(y - 9\\right)^{2}\\), obtaining \\(y^{3} - 43 y^{2} + 531 y - 2025\\). An alternative without factorisation is to replace \\(x^2\\) by \\(y\\) in \\(-P(x)P(-x)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "transformations-reduce-with-the-root-equation-extra",
+        "title": "Use the root equation to reduce a cubic expression",
+        "prompt": "<p>The cubic \\(x^{3} + 4 x + 1=0\\) has three roots, counted with multiplicity. Find the monic polynomial in \\(y\\) whose roots are their cubes.</p>",
+        "fields": [
+          {
+            "key": "polynomial",
+            "label": "Monic polynomial",
+            "type": "polynomial",
+            "expected": "y^3 + 3*y^2 + 67*y + 1",
+            "variables": [
+              "y"
+            ]
+          }
+        ],
+        "hint": "<p>Replace the cube by the lower-degree expression before looking for the inverse.</p>",
+        "solution": "<p>At a root, \\(x^3=- 4 x - 1\\). Thus the transformation is effectively linear on these three roots.</p><p>Set \\(y=- 4 x - 1\\) and rearrange to obtain \\(x=- \\frac{y}{4} - \\frac{1}{4}\\).</p><p>Substitute into the original cubic and multiply by \\(-64\\) to obtain \\(y^{3} + 3 y^{2} + 67 y + 1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "transformations-rational-transform-extra",
+        "title": "Check both excluded values of a fractional rule",
+        "prompt": "<p>For roots of \\(x^{3} - 2 x^{2} - 19 x + 20=0\\), use \\(y=\\frac{x + 4}{x - 11}\\) to form the monic polynomial in \\(y\\). Also give the excluded value of \\(y\\) used in the inverse.</p>",
+        "fields": [
+          {
+            "key": "polynomial",
+            "label": "Monic polynomial",
+            "type": "polynomial",
+            "expected": "y^3 + 2*y^2 + 3*y/4",
+            "variables": [
+              "y"
+            ]
+          },
+          {
+            "key": "excluded",
+            "label": "Excluded y-value",
+            "type": "number",
+            "expected": "1"
+          }
+        ],
+        "hint": "<p>Rearrange the fractional rule first, then check the old denominator and the new one separately.</p>",
+        "solution": "<p>Substituting \\(x=11\\) into the original gives \\(900\\), which is non-zero. The pole does not belong to the original roots.</p><p>Rearrange to get \\(x=\\frac{11 y + 4}{y - 1}\\), requiring \\(y\\ne1\\).</p><p>Substitute, multiply by \\((y-1)^3\\) and normalise to obtain \\(y^{3} + 2 y^{2} + \\frac{3 y}{4}\\). At \\(y=1\\) its value is \\(\\frac{15}{4}\\), so no pole was introduced.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Old variable",
+        "definition": "<p>The input variable in the original polynomial.</p>"
+      },
+      {
+        "term": "Transformed root",
+        "definition": "<p>The image of an original root under the stated rule.</p>"
+      },
+      {
+        "term": "Inverse substitution",
+        "definition": "<p>Writing the old variable in terms of the new one.</p>"
+      },
+      {
+        "term": "Pole",
+        "definition": "<p>A value at which the denominator of the rule is zero.</p>"
+      },
+      {
+        "term": "Multiplicity",
+        "definition": "<p>How many original root positions contribute a factor, including repeated images.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Affine rule</th><td>\\(y=mx+h\\ \\Rightarrow\\ x=\\frac{y-h}{m}\\)</td></tr><tr><th scope=\"row\">Reciprocal</th><td>Check the original constant, then clear the highest inverse power.</td></tr><tr><th scope=\"row\">Square</th><td>Use the root values or replace \\(x^2\\) in \\((-1)^nP(x)P(-x)\\).</td></tr><tr><th scope=\"row\">Higher power</th><td>Reduce using the equation satisfied by each root.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>The roots of \\(x^{2} - 6 x + 8=0\\) are each increased by three. Find the new monic polynomial.</p><p><strong>Check</strong> \\((y-3)^2-6(y-3)+8=y^2-12y+35\\).</p>",
+      "checks": "<ul><li>Adding to the roots means subtracting that addition in the substitution for the old variable.</li><li>If a root at zero is defined in the output polynomial, check that it is not introduced by clearing denominators.</li></ul>",
+      "examTip": "<p>Check the normalisation, degree and excluded values. Multiplying by a non-zero constant keeps the roots.</p>"
+    },
+    "related": [
+      {
+        "title": "Symmetric functions of roots and power sums",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_roots_symmetric_sums"
+      },
+      {
+        "title": "Mixed problems",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_roots_mixed"
+      }
+    ]
+  },
+  "fp1_roots_mixed": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose a useful coefficient relation or substitution for linked roots, reciprocal quartics, repeated factors and reality checks.",
+    "sections": [
+      {
+        "id": "recognise-root-pattern",
+        "title": "How can a root pattern reduce the unknowns?",
+        "label": "Express all roots in two parameters",
+        "intro": "<p>A pattern among the roots can reduce the number of parameters you have to find. Use the symmetric relations to determine those parameters.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For three arithmetic values write \\(a-d,a,a+d\\) with \\(d>0\\) when they are distinct. Their sum fixes the centre immediately.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "mixed-recognise-root-pattern-check",
+            "title": "Turn an arithmetic pattern into coefficient conditions",
+            "prompt": "<p>Three distinct roots of a monic cubic are in arithmetic progression. Their sum is \\(18\\) and the sum of pair products is \\(92\\). Find the positive common difference and the monic polynomial.</p>",
+            "fields": [
+              {
+                "key": "d",
+                "label": "Positive common difference d",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "polynomial",
+                "label": "Monic polynomial",
+                "type": "polynomial",
+                "expected": "x^3 - 18*x^2 + 92*x - 120",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>The middle root is one third of the sum.</p>",
+            "solution": "<p>Write the roots as \\(a-d,a,a+d\\) with \\(d>0\\). The sum is \\(3a\\), giving \\(a=6\\).</p><p>The pair-product sum is \\(3a^2-d^2\\). Substitute to get \\(d^2=16\\), so \\(d=4\\).</p><p>Multiply the factors given by the three roots to get \\(x^{3} - 18 x^{2} + 92 x - 120\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The pair products are not just the product of the two end terms. Include the products with the centre as well.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reciprocal-quartic-test",
+        "title": "When can a reciprocal quartic become a quadratic?",
+        "label": "Use the symmetry in coefficients",
+        "intro": "<p>For a quartic whose coefficients read the same in reverse, divide by \\(x^2\\) and look for matching inverse powers.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Put \\(y=x+\\frac1x\\) and use \\(x^2+\\frac1{x^2}=y^2-2\\). A real x requires \\(y^2-4\\ge0\\) when you solve \\(x^2-yx+1=0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "mixed-reciprocal-quartic-test-check",
+            "title": "Keep the reduced values that come from real x",
+            "prompt": "<p>Let \\(x^{4} - 3 x^{3} - 2 x^{2} - 3 x + 1\\) equal zero. Put \\(y=x+\\frac1x\\). Find both reduced y-values and the number of distinct real x-roots.</p>",
+            "fields": [
+              {
+                "key": "ys",
+                "label": "Set of reduced y-values",
+                "type": "set",
+                "expected": "{-1,4}",
+                "variables": [
+                  "y"
+                ]
+              },
+              {
+                "key": "count",
+                "label": "Number of distinct real x-roots",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Use the quadratic discriminant in x after solving the equation in y.</p>",
+            "solution": "<p>The constant term is one, so division by \\(x^2\\) is allowed at the roots.</p><p>Use \\(x^2+\\frac1{x^2}=y^2-2\\) to get \\(y^{2} - 3 y - 4=0\\). Thus the candidates are \\(-1\\) and \\(4\\).</p><p>The equation \\(x^2-yx+1=0\\) has two real roots if \\(|y|>2\\), one distinct real root if \\(|y|=2\\), and none otherwise. Applying this test gives \\(2\\) distinct real x-roots.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>At \\(y=\\pm2\\) the quadratic has only one distinct real root. Count it once if the question asks for distinct values.</p>"
+          }
+        ]
+      },
+      {
+        "id": "shift-to-a-centre",
+        "title": "How do two equal pair sums simplify a quartic?",
+        "label": "Shift the centre before solving",
+        "intro": "<p>If both pairs have the same sum, both have the same midpoint. Shifting that midpoint to zero produces pairs with opposite values.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The polynomial in the shifted variable has only even powers. Solve for its square, check that the square is non-negative for real roots, then recover the original variable.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "mixed-shift-to-a-centre-check",
+            "title": "Centre two pairs and solve a quadratic in a square",
+            "prompt": "<p>The quartic \\(x^{4} - 12 x^{3} + 25 x^{2} + 66 x - 80=0\\) has roots in pairs with equal pair sums. Substitute \\(x=y + 3\\) to find its two positive values of \\(y^2\\) and all original roots.</p>",
+            "fields": [
+              {
+                "key": "squares",
+                "label": "Set of squared y-values",
+                "type": "set",
+                "expected": "{4,25}"
+              },
+              {
+                "key": "roots",
+                "label": "Complete set of x-roots",
+                "type": "set",
+                "expected": "{-2,1,5,8}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>A quadratic in y² gives two y-values for each strictly positive square.</p>",
+            "solution": "<p>Putting the centre at zero gives \\(y^{4} - 29 y^{2} + 100=0\\). The odd powers vanish.</p><p>Factor as \\(\\left(y - 5\\right) \\left(y - 2\\right) \\left(y + 2\\right) \\left(y + 5\\right)\\), so the values of \\(y^2\\) are \\(4\\) and \\(25\\).</p><p>Use both signs of each square root and translate by \\(3\\) to obtain \\(-2,1,5,8\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Solving for the square gives fewer values than solving for the root itself. Retain both signs where they are distinct.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "mixed-shift-to-a-centre-follow-up",
+            "title": "Centre two pairs and solve a quadratic in a square",
+            "prompt": "<p>The quartic \\(x^{4} - 16 x^{3} + 62 x^{2} + 16 x - 63=0\\) has roots in pairs with equal pair sums. Substitute \\(x=y + 4\\) to find its two positive values of \\(y^2\\) and all original roots.</p>",
+            "fields": [
+              {
+                "key": "squares",
+                "label": "Set of squared y-values",
+                "type": "set",
+                "expected": "{9,25}"
+              },
+              {
+                "key": "roots",
+                "label": "Complete set of x-roots",
+                "type": "set",
+                "expected": "{-1,1,7,9}",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>A quadratic in y² gives two y-values for each strictly positive square.</p>",
+            "solution": "<p>Putting the centre at zero gives \\(y^{4} - 34 y^{2} + 225=0\\). The odd powers vanish.</p><p>Factor as \\(\\left(y - 5\\right) \\left(y - 3\\right) \\left(y + 3\\right) \\left(y + 5\\right)\\), so the values of \\(y^2\\) are \\(9\\) and \\(25\\).</p><p>Use both signs of each square root and translate by \\(4\\) to obtain \\(-1,1,7,9\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "test-for-real-roots",
+        "title": "What can a sum of squares tell me about reality?",
+        "label": "Use a necessary condition",
+        "intro": "<p>Suppose every root is real. A sum of their squares would then be non-negative, even when individual roots have different signs.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Compute \\(S_2\\) from coefficients. A negative answer contradicts that assumption and shows some roots are non-real.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "mixed-test-for-real-roots-check",
+            "title": "Use a negative square sum to rule out four real roots",
+            "prompt": "<p>Can every root of \\(x^{4} + x^{3} + 5 x^{2} + 3 x - 2=0\\) be real? Find \\(S_2\\) and decide.</p>",
+            "fields": [
+              {
+                "key": "squares",
+                "label": "Sum of squares",
+                "type": "number",
+                "expected": "-9"
+              },
+              {
+                "key": "all_real",
+                "label": "Can all roots be real?",
+                "type": "choice",
+                "expected": "no",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>A sum of squares is non-negative only when each squared quantity is real.</p>",
+            "solution": "<p>The monic coefficients give \\(S_1=-1\\) and \\(\\sum\\alpha\\beta=5\\).</p><p>Thus \\(S_2=-9\\) by the square-sum identity.</p><p>If all roots were real, each square would be non-negative. The computed negative value rules that out.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A positive sum of squares is only a necessary-condition check. It does not prove that every root is real.</p>"
+          }
+        ]
+      },
+      {
+        "id": "repeated-quadratic",
+        "title": "What if each of two values occurs twice?",
+        "label": "Use a squared quadratic",
+        "intro": "<p>When each of two distinct values occurs twice, halve the total root sum and square sum to recover the corresponding quantities for the two distinct values.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write the quadratic with those two values as its roots. Squaring it gives the monic quartic with correct multiplicities.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "mixed-repeated-quadratic-check",
+            "title": "Use two double roots to reconstruct a quartic",
+            "prompt": "<p>A monic quartic has two distinct real roots, each repeated twice. Its root sum is \\(4\\) and \\(S_2=20\\). Find the monic quadratic with the two distinct roots and the original monic quartic.</p>",
+            "fields": [
+              {
+                "key": "quadratic",
+                "label": "Monic quadratic in x",
+                "type": "polynomial",
+                "expected": "x^2 - 2*x - 3",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "quartic",
+                "label": "Monic quartic in x",
+                "type": "polynomial",
+                "expected": "x^4 - 4*x^3 - 2*x^2 + 12*x + 9",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Count each root twice in the given sums; count each root once in the quadratic.</p>",
+            "solution": "<p>Let the roots be \\(u,u,v,v\\). Hence \\(u+v=2\\) and \\(u^2+v^2=10\\).</p><p>Subtract the last quantity from \\((u+v)^2\\) and divide by two to get \\(uv=-3\\). The quadratic is \\(x^{2} - 2 x - 3\\).</p><p>Square that quadratic because both roots are repeated. Expansion yields \\(x^{4} - 4 x^{3} - 2 x^{2} + 12 x + 9\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Halving the quartic pair-product sum does not produce the product of the distinct roots. Use the square-sum identity.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "mixed-repeated-quadratic-follow-up",
+            "title": "Use two double roots to reconstruct a quartic",
+            "prompt": "<p>A monic quartic has two distinct real roots, each repeated twice. Its root sum is \\(16\\) and \\(S_2=80\\). Find the monic quadratic with the two distinct roots and the original monic quartic.</p>",
+            "fields": [
+              {
+                "key": "quadratic",
+                "label": "Monic quadratic in x",
+                "type": "polynomial",
+                "expected": "x^2 - 8*x + 12",
+                "variables": [
+                  "x"
+                ]
+              },
+              {
+                "key": "quartic",
+                "label": "Monic quartic in x",
+                "type": "polynomial",
+                "expected": "x^4 - 16*x^3 + 88*x^2 - 192*x + 144",
+                "variables": [
+                  "x"
+                ]
+              }
+            ],
+            "hint": "<p>Count each root twice in the given sums; count each root once in the quadratic.</p>",
+            "solution": "<p>Let the roots be \\(u,u,v,v\\). Hence \\(u+v=8\\) and \\(u^2+v^2=40\\).</p><p>Subtract the last quantity from \\((u+v)^2\\) and divide by two to get \\(uv=12\\). The quadratic is \\(x^{2} - 8 x + 12\\).</p><p>Square that quadratic because both roots are repeated. Expansion yields \\(x^{4} - 16 x^{3} + 88 x^{2} - 192 x + 144\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Turn an arithmetic pattern into coefficient conditions",
+        "question": "<p>Three distinct roots of a monic cubic are in arithmetic progression. Their sum is \\(15\\) and the sum of pair products is \\(71\\). Find the positive common difference and the monic polynomial.</p>",
+        "solution": [
+          "<p>Write the roots as \\(a-d,a,a+d\\) with \\(d>0\\). The sum is \\(3a\\), giving \\(a=5\\).</p>",
+          "<p>The pair-product sum is \\(3a^2-d^2\\). Substitute to get \\(d^2=4\\), so \\(d=2\\).</p>",
+          "<p>Multiply the factors given by the three roots to get \\(x^{3} - 15 x^{2} + 71 x - 105\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the reduced values that come from real x",
+        "question": "<p>Let \\(x^{4} - 4 x^{3} + 5 x^{2} - 4 x + 1\\) equal zero. Put \\(y=x+\\frac1x\\). Find both reduced y-values and the number of distinct real x-roots.</p>",
+        "solution": [
+          "<p>The constant term is one, so division by \\(x^2\\) is allowed at the roots.</p>",
+          "<p>Use \\(x^2+\\frac1{x^2}=y^2-2\\) to get \\(y^{2} - 4 y + 3=0\\). Thus the candidates are \\(1\\) and \\(3\\).</p>",
+          "<p>The equation \\(x^2-yx+1=0\\) has two real roots if \\(|y|>2\\), one distinct real root if \\(|y|=2\\), and none otherwise. Applying this test gives \\(2\\) distinct real x-roots.</p>"
+        ]
+      },
+      {
+        "title": "Centre two pairs and solve a quadratic in a square",
+        "question": "<p>The quartic \\(x^{4} - 8 x^{3} + 7 x^{2} + 36 x - 36=0\\) has roots in pairs with equal pair sums. Substitute \\(x=y + 2\\) to find its two positive values of \\(y^2\\) and all original roots.</p>",
+        "solution": [
+          "<p>Putting the centre at zero gives \\(y^{4} - 17 y^{2} + 16=0\\). The odd powers vanish.</p>",
+          "<p>Factor as \\(\\left(y - 4\\right) \\left(y - 1\\right) \\left(y + 1\\right) \\left(y + 4\\right)\\), so the values of \\(y^2\\) are \\(1\\) and \\(16\\).</p>",
+          "<p>Use both signs of each square root and translate by \\(2\\) to obtain \\(-2,1,3,6\\).</p>"
+        ]
+      },
+      {
+        "title": "Centre two pairs and solve a quadratic in a square",
+        "question": "<p>The quartic \\(x^{4} + 4 x^{3} - 7 x^{2} - 22 x + 24=0\\) has roots in pairs with equal pair sums. Substitute \\(x=y - 1\\) to find its two positive values of \\(y^2\\) and all original roots.</p>",
+        "solution": [
+          "<p>Putting the centre at zero gives \\(y^{4} - 13 y^{2} + 36=0\\). The odd powers vanish.</p>",
+          "<p>Factor as \\(\\left(y - 3\\right) \\left(y - 2\\right) \\left(y + 2\\right) \\left(y + 3\\right)\\), so the values of \\(y^2\\) are \\(4\\) and \\(9\\).</p>",
+          "<p>Use both signs of each square root and translate by \\(-1\\) to obtain \\(-4,-3,1,2\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a negative square sum to rule out four real roots",
+        "question": "<p>Can every root of \\(x^{4} + x^{3} + 4 x^{2} + x - 1=0\\) be real? Find \\(S_2\\) and decide.</p>",
+        "solution": [
+          "<p>The monic coefficients give \\(S_1=-1\\) and \\(\\sum\\alpha\\beta=4\\).</p>",
+          "<p>Thus \\(S_2=-7\\) by the square-sum identity.</p>",
+          "<p>If all roots were real, each square would be non-negative. The computed negative value rules that out.</p>"
+        ]
+      },
+      {
+        "title": "Use two double roots to reconstruct a quartic",
+        "question": "<p>A monic quartic has two distinct real roots, each repeated twice. Its root sum is \\(4\\) and \\(S_2=40\\). Find the monic quadratic with the two distinct roots and the original monic quartic.</p>",
+        "solution": [
+          "<p>Let the roots be \\(u,u,v,v\\). Hence \\(u+v=2\\) and \\(u^2+v^2=20\\).</p>",
+          "<p>Subtract the last quantity from \\((u+v)^2\\) and divide by two to get \\(uv=-8\\). The quadratic is \\(x^{2} - 2 x - 8\\).</p>",
+          "<p>Square that quadratic because both roots are repeated. Expansion yields \\(x^{4} - 4 x^{3} - 12 x^{2} + 32 x + 64\\).</p>"
+        ]
+      },
+      {
+        "title": "Use two double roots to reconstruct a quartic",
+        "question": "<p>A monic quartic has two distinct real roots, each repeated twice. Its root sum is \\(12\\) and \\(S_2=52\\). Find the monic quadratic with the two distinct roots and the original monic quartic.</p>",
+        "solution": [
+          "<p>Let the roots be \\(u,u,v,v\\). Hence \\(u+v=6\\) and \\(u^2+v^2=26\\).</p>",
+          "<p>Subtract the last quantity from \\((u+v)^2\\) and divide by two to get \\(uv=5\\). The quadratic is \\(x^{2} - 6 x + 5\\).</p>",
+          "<p>Square that quadratic because both roots are repeated. Expansion yields \\(x^{4} - 12 x^{3} + 46 x^{2} - 60 x + 25\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "mixed-recognise-root-pattern-extra",
+        "title": "Turn an arithmetic pattern into coefficient conditions",
+        "prompt": "<p>Three distinct roots of a monic cubic are in arithmetic progression. Their sum is \\(12\\) and the sum of pair products is \\(39\\). Find the positive common difference and the monic polynomial.</p>",
+        "fields": [
+          {
+            "key": "d",
+            "label": "Positive common difference d",
+            "type": "number",
+            "expected": "3"
+          },
+          {
+            "key": "polynomial",
+            "label": "Monic polynomial",
+            "type": "polynomial",
+            "expected": "x^3 - 12*x^2 + 39*x - 28",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>The middle root is one third of the sum.</p>",
+        "solution": "<p>Write the roots as \\(a-d,a,a+d\\) with \\(d>0\\). The sum is \\(3a\\), giving \\(a=4\\).</p><p>The pair-product sum is \\(3a^2-d^2\\). Substitute to get \\(d^2=9\\), so \\(d=3\\).</p><p>Multiply the factors given by the three roots to get \\(x^{3} - 12 x^{2} + 39 x - 28\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "mixed-reciprocal-quartic-test-extra",
+        "title": "Keep the reduced values that come from real x",
+        "prompt": "<p>Let \\(x^{4} + x^{3} - 4 x^{2} + x + 1\\) equal zero. Put \\(y=x+\\frac1x\\). Find both reduced y-values and the number of distinct real x-roots.</p>",
+        "fields": [
+          {
+            "key": "ys",
+            "label": "Set of reduced y-values",
+            "type": "set",
+            "expected": "{-3,2}",
+            "variables": [
+              "y"
+            ]
+          },
+          {
+            "key": "count",
+            "label": "Number of distinct real x-roots",
+            "type": "number",
+            "expected": "3"
+          }
+        ],
+        "hint": "<p>Use the quadratic discriminant in x after solving the equation in y.</p>",
+        "solution": "<p>The constant term is one, so division by \\(x^2\\) is allowed at the roots.</p><p>Use \\(x^2+\\frac1{x^2}=y^2-2\\) to get \\(y^{2} + y - 6=0\\). Thus the candidates are \\(-3\\) and \\(2\\).</p><p>The equation \\(x^2-yx+1=0\\) has two real roots if \\(|y|>2\\), one distinct real root if \\(|y|=2\\), and none otherwise. Applying this test gives \\(3\\) distinct real x-roots.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "mixed-shift-to-a-centre-extra",
+        "title": "Centre two pairs and solve a quadratic in a square",
+        "prompt": "<p>The quartic \\(x^{4} - 4 x^{3} - 46 x^{2} + 100 x + 525=0\\) has roots in pairs with equal pair sums. Substitute \\(x=y + 1\\) to find its two positive values of \\(y^2\\) and all original roots.</p>",
+        "fields": [
+          {
+            "key": "squares",
+            "label": "Set of squared y-values",
+            "type": "set",
+            "expected": "{16,36}"
+          },
+          {
+            "key": "roots",
+            "label": "Complete set of x-roots",
+            "type": "set",
+            "expected": "{-5,-3,5,7}",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>A quadratic in y² gives two y-values for each strictly positive square.</p>",
+        "solution": "<p>Putting the centre at zero gives \\(y^{4} - 52 y^{2} + 576=0\\). The odd powers vanish.</p><p>Factor as \\(\\left(y - 6\\right) \\left(y - 4\\right) \\left(y + 4\\right) \\left(y + 6\\right)\\), so the values of \\(y^2\\) are \\(16\\) and \\(36\\).</p><p>Use both signs of each square root and translate by \\(1\\) to obtain \\(-5,-3,5,7\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "mixed-test-for-real-roots-extra",
+        "title": "Use a negative square sum to rule out four real roots",
+        "prompt": "<p>Can every root of \\(x^{4} + x^{3} + 6 x^{2} + 4 x - 3=0\\) be real? Find \\(S_2\\) and decide.</p>",
+        "fields": [
+          {
+            "key": "squares",
+            "label": "Sum of squares",
+            "type": "number",
+            "expected": "-11"
+          },
+          {
+            "key": "all_real",
+            "label": "Can all roots be real?",
+            "type": "choice",
+            "expected": "no",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          }
+        ],
+        "hint": "<p>A sum of squares is non-negative only when each squared quantity is real.</p>",
+        "solution": "<p>The monic coefficients give \\(S_1=-1\\) and \\(\\sum\\alpha\\beta=6\\).</p><p>Thus \\(S_2=-11\\) by the square-sum identity.</p><p>If all roots were real, each square would be non-negative. The computed negative value rules that out.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "mixed-repeated-quadratic-extra",
+        "title": "Use two double roots to reconstruct a quartic",
+        "prompt": "<p>A monic quartic has two distinct real roots, each repeated twice. Its root sum is \\(-4\\) and \\(S_2=20\\). Find the monic quadratic with the two distinct roots and the original monic quartic.</p>",
+        "fields": [
+          {
+            "key": "quadratic",
+            "label": "Monic quadratic in x",
+            "type": "polynomial",
+            "expected": "x^2 + 2*x - 3",
+            "variables": [
+              "x"
+            ]
+          },
+          {
+            "key": "quartic",
+            "label": "Monic quartic in x",
+            "type": "polynomial",
+            "expected": "x^4 + 4*x^3 - 2*x^2 - 12*x + 9",
+            "variables": [
+              "x"
+            ]
+          }
+        ],
+        "hint": "<p>Count each root twice in the given sums; count each root once in the quadratic.</p>",
+        "solution": "<p>Let the roots be \\(u,u,v,v\\). Hence \\(u+v=-2\\) and \\(u^2+v^2=10\\).</p><p>Subtract the last quantity from \\((u+v)^2\\) and divide by two to get \\(uv=-3\\). The quadratic is \\(x^{2} + 2 x - 3\\).</p><p>Square that quadratic because both roots are repeated. Expansion yields \\(x^{4} + 4 x^{3} - 2 x^{2} - 12 x + 9\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Arithmetic progression",
+        "definition": "<p>Values spaced by one common difference.</p>"
+      },
+      {
+        "term": "Reciprocal quartic",
+        "definition": "<p>A quartic unchanged, up to a factor of the variable’s fourth power, when the variable is inverted.</p>"
+      },
+      {
+        "term": "Centre shift",
+        "definition": "<p>Substitution that moves the common midpoint of the root pairs to zero.</p>"
+      },
+      {
+        "term": "Discriminant",
+        "definition": "<p>For a quadratic, the quantity deciding whether its roots are real and distinct.</p>"
+      },
+      {
+        "term": "Necessary condition",
+        "definition": "<p>A test that all valid solutions must satisfy.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Arithmetic roots</th><td>Use \\(a-d,a,a+d\\) and the sum to find the centre.</td></tr><tr><th scope=\"row\">Reciprocal quartic</th><td>\\(y=x+\\frac1x\\), then test \\(y^2-4\\).</td></tr><tr><th scope=\"row\">Opposite roots after a shift</th><td>Solve for the square and return to the original variable.</td></tr><tr><th scope=\"row\">Reality check</th><td>If all roots are real, \\(S_2\\ge0\\).</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For real non-zero \\(x\\), can \\(x+\\frac1x=1\\) hold?</p><p><strong>Check</strong> No. The quadratic \\(x^2-x+1=0\\) has discriminant \\(-3\\).</p>",
+      "checks": "<ul><li>The pair products are not just the product of the two end terms. Include the products with the centre as well.</li><li>At \\(y=\\pm2\\) the quadratic has only one distinct real root. Count it once if the question asks for distinct values.</li></ul>",
+      "examTip": "<p>Keep candidates until the stated restrictions have been checked. Distinguish distinct root values from root multiplicities.</p>"
+    },
+    "related": [
+      {
+        "title": "Transforming equations by substitution",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_roots_transformations"
+      }
+    ]
+  }
+}
