@@ -1,0 +1,2512 @@
+{
+  "fp1_induction_sums": {
+    "updatedOn": "2026-11-21",
+    "description": "Verify the first case, derive the next claim from the assumption and write a conclusion covering the stated integer range.",
+    "sections": [
+      {
+        "id": "first-case",
+        "title": "Which case starts an induction proof?",
+        "label": "Use the smallest admissible index",
+        "intro": "<p>Read the range of integers in the claim. Evaluate both sides of the first allowed case independently.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A proof starts where the claim starts. The smallest index can be zero, one or a later integer.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "sums-first-case-check",
+            "title": "Connect the exact starting case to a new summand",
+            "prompt": "<p>The claim is \\(\\sum_{r=1}^{n}\\left(3 r + 4\\right)\\) equal to \\(\\frac{n \\left(3 n + 11\\right)}{2}\\) for every integer n from \\(1\\) onwards. Give the starting index and the common value of both sides at that index.</p>",
+            "fields": [
+              {
+                "key": "index",
+                "label": "First index",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "base",
+                "label": "Value of each side there",
+                "type": "number",
+                "expected": "7"
+              }
+            ],
+            "hint": "<p>Write the claim at k and at k + 1, then compare what their left sides differ by.</p>",
+            "solution": "<p>At \\(n=1\\) the left side has a single term, equal to \\(7\\). The proposed formula gives the same value.</p><p>Assume the formula at \\(n=k\\). The next sum adds the term at \\(k+1\\), which is \\(3 k + 7\\).</p><p>Adding that term to the assumed expression gives \\(\\frac{\\left(k + 1\\right) \\left(3 k + 14\\right)}{2}\\), as required. The base and step establish the claim on its stated interval.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Matching the two sides for one index starts the proof. It does not establish the step.</p>"
+          }
+        ]
+      },
+      {
+        "id": "state-the-assumption",
+        "title": "Why do I state the claim at an arbitrary k?",
+        "label": "Separate the two claims",
+        "intro": "<p>Assume the statement at any allowed k. Your proof must show this assumption is enough to obtain the next statement.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a sum, the next left-hand side is the old sum plus the term with index k + 1. Replace the old sum by the assumed formula.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "sums-state-the-assumption-check",
+            "title": "Connect the exact starting case to a new summand",
+            "prompt": "<p>The claim is \\(\\sum_{r=1}^{n}\\left(r \\left(3 r + 4\\right)\\right)\\) equal to \\(\\frac{n \\left(n + 1\\right) \\left(2 n + 5\\right)}{2}\\) for every integer n from \\(1\\) onwards. Give the added term as a polynomial in k and the value of both sides in the base case.</p>",
+            "fields": [
+              {
+                "key": "polynomial",
+                "label": "Added term as a polynomial in k",
+                "type": "polynomial",
+                "expected": "3*k^2 + 10*k + 7",
+                "variables": [
+                  "k"
+                ]
+              },
+              {
+                "key": "base",
+                "label": "Value at the base case",
+                "type": "number",
+                "expected": "7"
+              }
+            ],
+            "hint": "<p>Write the claim at k and at k + 1, then compare what their left sides differ by.</p>",
+            "solution": "<p>At \\(n=1\\) the left side has a single term, equal to \\(7\\). The proposed formula gives the same value.</p><p>Assume the formula at \\(n=k\\). The next sum adds the term at \\(k+1\\), which is \\(3 k^{2} + 10 k + 7\\).</p><p>Adding that term to the assumed expression gives \\(\\frac{\\left(k + 1\\right) \\left(k + 2\\right) \\left(2 k + 7\\right)}{2}\\), as required. The base and step establish the claim on its stated interval.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not use the result at k + 1 as an assumption while trying to prove it.</p>"
+          }
+        ]
+      },
+      {
+        "id": "start-at-a-later-index",
+        "title": "How do I handle a sum that starts later than one?",
+        "label": "Retain the original lower limit",
+        "intro": "<p>The lower limit stays fixed throughout the induction. At the first index the sum contains its first term only.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Keep the given lower index when writing both the base case and the step. Only the upper limit changes.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "sums-start-at-a-later-index-check",
+            "title": "Connect the exact starting case to a new summand",
+            "prompt": "<p>The claim is \\(\\sum_{r=4}^{n}\\left(3 r + 4\\right)\\) equal to \\(\\frac{\\left(n - 3\\right) \\left(3 n + 20\\right)}{2}\\) for every integer n from \\(4\\) onwards. Give the base index and the next summand as a polynomial in k.</p>",
+            "fields": [
+              {
+                "key": "index",
+                "label": "First index",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "polynomial",
+                "label": "Added term as a polynomial in k",
+                "type": "polynomial",
+                "expected": "3*k + 7",
+                "variables": [
+                  "k"
+                ]
+              }
+            ],
+            "hint": "<p>Write the claim at k and at k + 1, then compare what their left sides differ by.</p>",
+            "solution": "<p>At \\(n=4\\) the left side has a single term, equal to \\(16\\). The proposed formula gives the same value.</p><p>Assume the formula at \\(n=k\\). The next sum adds the term at \\(k+1\\), which is \\(3 k + 7\\).</p><p>Adding that term to the assumed expression gives \\(\\frac{\\left(k - 2\\right) \\left(3 k + 23\\right)}{2}\\), as required. The base and step establish the claim on its stated interval.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If you replace a late starting index with one, you prove a different sum.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "sums-start-at-a-later-index-follow-up",
+            "title": "Connect the exact starting case to a new summand",
+            "prompt": "<p>The claim is \\(\\sum_{r=6}^{n}\\left(5 r + 6\\right)\\) equal to \\(\\frac{\\left(n - 5\\right) \\left(5 n + 42\\right)}{2}\\) for every integer n from \\(6\\) onwards. Give the base index and the next summand as a polynomial in k.</p>",
+            "fields": [
+              {
+                "key": "index",
+                "label": "First index",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "polynomial",
+                "label": "Added term as a polynomial in k",
+                "type": "polynomial",
+                "expected": "5*k + 11",
+                "variables": [
+                  "k"
+                ]
+              }
+            ],
+            "hint": "<p>Write the claim at k and at k + 1, then compare what their left sides differ by.</p>",
+            "solution": "<p>At \\(n=6\\) the left side has a single term, equal to \\(36\\). The proposed formula gives the same value.</p><p>Assume the formula at \\(n=k\\). The next sum adds the term at \\(k+1\\), which is \\(5 k + 11\\).</p><p>Adding that term to the assumed expression gives \\(\\frac{\\left(k - 4\\right) \\left(5 k + 47\\right)}{2}\\), as required. The base and step establish the claim on its stated interval.</p>"
+          }
+        ]
+      },
+      {
+        "id": "inequality-bridge",
+        "title": "What else is needed when the claim is an inequality?",
+        "label": "Compare with the new target",
+        "intro": "<p>Use the assumed inequality only with valid operations. Multiplying by a positive number preserves its direction.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>After applying the assumption, show that the new bound is at least or at most the desired next quantity as required.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "sums-inequality-bridge-check",
+            "title": "Bridge an inequality rather than only an equality",
+            "prompt": "<p>To prove \\(3^n\\ge n+1\\) for all \\(n\\ge0\\), assume it at \\(n=k\\). State the multiplier on the assumption and the excess of this resulting lower bound over \\(k+2\\) at \\(k=3\\).</p>",
+            "fields": [
+              {
+                "key": "multiplier",
+                "label": "Positive multiplier",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "excess",
+                "label": "Excess of the lower bound",
+                "type": "number",
+                "expected": "7"
+              }
+            ],
+            "hint": "<p>Prove the derived bound is at least the next target, rather than assuming it.</p>",
+            "solution": "<p>At n zero both sides are one.</p><p>Multiply the inductive assumption by the positive number \\(3\\). The next power is then at least \\(3 k + 3\\).</p><p>Its difference from the target \\(k+2\\) is \\(2 k + 1\\), non-negative for every allowed k. This proves the induction step. At the specified k it is \\(7\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A derived inequality may be too weak. Check the final comparison explicitly.</p>"
+          }
+        ]
+      },
+      {
+        "id": "spot-a-false-pattern",
+        "title": "How can a proposed formula match several cases and still be false?",
+        "label": "Search for a counterexample",
+        "intro": "<p>A finite set of matching cases need not imply any later case. An extra factor can vanish at every tested index.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>One counterexample disproves a universal claim. An induction step must establish a real implication rather than report more tests.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "sums-spot-a-false-pattern-check",
+            "title": "Find a counterexample after several successful checks",
+            "prompt": "<p>For the sum of the first n odd numbers, someone proposes \\(2 n^{4} - 20 n^{3} + 71 n^{2} - 100 n + 48\\). Find the first positive n where this fails and the amount by which the proposed formula exceeds the correct sum.</p>",
+            "fields": [
+              {
+                "key": "n",
+                "label": "First failed positive integer n",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "excess",
+                "label": "Excess at that index",
+                "type": "number",
+                "expected": "48"
+              }
+            ],
+            "hint": "<p>Check where all correction factors are non-zero for the first time.</p>",
+            "solution": "<p>For the first four positive indices the correction product has a zero factor.</p><p>The usual odd sum is \\(n^2\\). It starts at one and increases by \\(2k+1\\) between \\(k\\) and \\(k+1\\), giving the induction step.</p><p>At five the proposed correction is \\(48\\), which is non-zero. This is the first failure.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Testing four or five values is useful checking, but cannot replace the induction step.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "sums-spot-a-false-pattern-follow-up",
+            "title": "Find a counterexample after several successful checks",
+            "prompt": "<p>For the sum of the first n odd numbers, someone proposes \\(4 n^{4} - 40 n^{3} + 141 n^{2} - 200 n + 96\\). Find the first positive n where this fails and the amount by which the proposed formula exceeds the correct sum.</p>",
+            "fields": [
+              {
+                "key": "n",
+                "label": "First failed positive integer n",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "excess",
+                "label": "Excess at that index",
+                "type": "number",
+                "expected": "96"
+              }
+            ],
+            "hint": "<p>Check where all correction factors are non-zero for the first time.</p>",
+            "solution": "<p>For the first four positive indices the correction product has a zero factor.</p><p>The usual odd sum is \\(n^2\\). It starts at one and increases by \\(2k+1\\) between \\(k\\) and \\(k+1\\), giving the induction step.</p><p>At five the proposed correction is \\(96\\), which is non-zero. This is the first failure.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Connect the exact starting case to a new summand",
+        "question": "<p>The claim is \\(\\sum_{r=1}^{n}\\left(2 r + 3\\right)\\) equal to \\(n \\left(n + 4\\right)\\) for every integer n from \\(1\\) onwards. Give the starting index and the common value of both sides at that index.</p>",
+        "solution": [
+          "<p>At \\(n=1\\) the left side has a single term, equal to \\(5\\). The proposed formula gives the same value.</p>",
+          "<p>Assume the formula at \\(n=k\\). The next sum adds the term at \\(k+1\\), which is \\(2 k + 5\\).</p>",
+          "<p>Adding that term to the assumed expression gives \\(\\left(k + 1\\right) \\left(k + 5\\right)\\), as required. The base and step establish the claim on its stated interval.</p>"
+        ]
+      },
+      {
+        "title": "Connect the exact starting case to a new summand",
+        "question": "<p>The claim is \\(\\sum_{r=1}^{n}\\left(r \\left(2 r + 3\\right)\\right)\\) equal to \\(\\frac{n \\left(n + 1\\right) \\left(4 n + 11\\right)}{6}\\) for every integer n from \\(1\\) onwards. Give the added term as a polynomial in k and the value of both sides in the base case.</p>",
+        "solution": [
+          "<p>At \\(n=1\\) the left side has a single term, equal to \\(5\\). The proposed formula gives the same value.</p>",
+          "<p>Assume the formula at \\(n=k\\). The next sum adds the term at \\(k+1\\), which is \\(2 k^{2} + 7 k + 5\\).</p>",
+          "<p>Adding that term to the assumed expression gives \\(\\frac{\\left(k + 1\\right) \\left(k + 2\\right) \\left(4 k + 15\\right)}{6}\\), as required. The base and step establish the claim on its stated interval.</p>"
+        ]
+      },
+      {
+        "title": "Connect the exact starting case to a new summand",
+        "question": "<p>The claim is \\(\\sum_{r=3}^{n}\\left(2 r + 3\\right)\\) equal to \\(\\left(n - 2\\right) \\left(n + 6\\right)\\) for every integer n from \\(3\\) onwards. Give the base index and the next summand as a polynomial in k.</p>",
+        "solution": [
+          "<p>At \\(n=3\\) the left side has a single term, equal to \\(9\\). The proposed formula gives the same value.</p>",
+          "<p>Assume the formula at \\(n=k\\). The next sum adds the term at \\(k+1\\), which is \\(2 k + 5\\).</p>",
+          "<p>Adding that term to the assumed expression gives \\(\\left(k - 1\\right) \\left(k + 7\\right)\\), as required. The base and step establish the claim on its stated interval.</p>"
+        ]
+      },
+      {
+        "title": "Connect the exact starting case to a new summand",
+        "question": "<p>The claim is \\(\\sum_{r=5}^{n}\\left(4 r + 5\\right)\\) equal to \\(\\left(n - 4\\right) \\left(2 n + 15\\right)\\) for every integer n from \\(5\\) onwards. Give the base index and the next summand as a polynomial in k.</p>",
+        "solution": [
+          "<p>At \\(n=5\\) the left side has a single term, equal to \\(25\\). The proposed formula gives the same value.</p>",
+          "<p>Assume the formula at \\(n=k\\). The next sum adds the term at \\(k+1\\), which is \\(4 k + 9\\).</p>",
+          "<p>Adding that term to the assumed expression gives \\(\\left(k - 3\\right) \\left(2 k + 17\\right)\\), as required. The base and step establish the claim on its stated interval.</p>"
+        ]
+      },
+      {
+        "title": "Bridge an inequality rather than only an equality",
+        "question": "<p>To prove \\(2^n\\ge n+1\\) for all \\(n\\ge0\\), assume it at \\(n=k\\). State the multiplier on the assumption and the excess of this resulting lower bound over \\(k+2\\) at \\(k=2\\).</p>",
+        "solution": [
+          "<p>At n zero both sides are one.</p>",
+          "<p>Multiply the inductive assumption by the positive number \\(2\\). The next power is then at least \\(2 k + 2\\).</p>",
+          "<p>Its difference from the target \\(k+2\\) is \\(k\\), non-negative for every allowed k. This proves the induction step. At the specified k it is \\(2\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a counterexample after several successful checks",
+        "question": "<p>For the sum of the first n odd numbers, someone proposes \\(n^{4} - 10 n^{3} + 36 n^{2} - 50 n + 24\\). Find the first positive n where this fails and the amount by which the proposed formula exceeds the correct sum.</p>",
+        "solution": [
+          "<p>For the first four positive indices the correction product has a zero factor.</p>",
+          "<p>The usual odd sum is \\(n^2\\). It starts at one and increases by \\(2k+1\\) between \\(k\\) and \\(k+1\\), giving the induction step.</p>",
+          "<p>At five the proposed correction is \\(24\\), which is non-zero. This is the first failure.</p>"
+        ]
+      },
+      {
+        "title": "Find a counterexample after several successful checks",
+        "question": "<p>For the sum of the first n odd numbers, someone proposes \\(3 n^{4} - 30 n^{3} + 106 n^{2} - 150 n + 72\\). Find the first positive n where this fails and the amount by which the proposed formula exceeds the correct sum.</p>",
+        "solution": [
+          "<p>For the first four positive indices the correction product has a zero factor.</p>",
+          "<p>The usual odd sum is \\(n^2\\). It starts at one and increases by \\(2k+1\\) between \\(k\\) and \\(k+1\\), giving the induction step.</p>",
+          "<p>At five the proposed correction is \\(72\\), which is non-zero. This is the first failure.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "sums-first-case-extra",
+        "title": "Connect the exact starting case to a new summand",
+        "prompt": "<p>The claim is \\(\\sum_{r=1}^{n}\\left(4 r + 5\\right)\\) equal to \\(n \\left(2 n + 7\\right)\\) for every integer n from \\(1\\) onwards. Give the starting index and the common value of both sides at that index.</p>",
+        "fields": [
+          {
+            "key": "index",
+            "label": "First index",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "base",
+            "label": "Value of each side there",
+            "type": "number",
+            "expected": "9"
+          }
+        ],
+        "hint": "<p>Write the claim at k and at k + 1, then compare what their left sides differ by.</p>",
+        "solution": "<p>At \\(n=1\\) the left side has a single term, equal to \\(9\\). The proposed formula gives the same value.</p><p>Assume the formula at \\(n=k\\). The next sum adds the term at \\(k+1\\), which is \\(4 k + 9\\).</p><p>Adding that term to the assumed expression gives \\(\\left(k + 1\\right) \\left(2 k + 9\\right)\\), as required. The base and step establish the claim on its stated interval.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "sums-state-the-assumption-extra",
+        "title": "Connect the exact starting case to a new summand",
+        "prompt": "<p>The claim is \\(\\sum_{r=1}^{n}\\left(r \\left(4 r + 5\\right)\\right)\\) equal to \\(\\frac{n \\left(n + 1\\right) \\left(8 n + 19\\right)}{6}\\) for every integer n from \\(1\\) onwards. Give the added term as a polynomial in k and the value of both sides in the base case.</p>",
+        "fields": [
+          {
+            "key": "polynomial",
+            "label": "Added term as a polynomial in k",
+            "type": "polynomial",
+            "expected": "4*k^2 + 13*k + 9",
+            "variables": [
+              "k"
+            ]
+          },
+          {
+            "key": "base",
+            "label": "Value at the base case",
+            "type": "number",
+            "expected": "9"
+          }
+        ],
+        "hint": "<p>Write the claim at k and at k + 1, then compare what their left sides differ by.</p>",
+        "solution": "<p>At \\(n=1\\) the left side has a single term, equal to \\(9\\). The proposed formula gives the same value.</p><p>Assume the formula at \\(n=k\\). The next sum adds the term at \\(k+1\\), which is \\(4 k^{2} + 13 k + 9\\).</p><p>Adding that term to the assumed expression gives \\(\\frac{\\left(k + 1\\right) \\left(k + 2\\right) \\left(8 k + 27\\right)}{6}\\), as required. The base and step establish the claim on its stated interval.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "sums-start-at-a-later-index-extra",
+        "title": "Connect the exact starting case to a new summand",
+        "prompt": "<p>The claim is \\(\\sum_{r=7}^{n}\\left(6 r + 7\\right)\\) equal to \\(\\left(n - 6\\right) \\left(3 n + 28\\right)\\) for every integer n from \\(7\\) onwards. Give the base index and the next summand as a polynomial in k.</p>",
+        "fields": [
+          {
+            "key": "index",
+            "label": "First index",
+            "type": "number",
+            "expected": "7"
+          },
+          {
+            "key": "polynomial",
+            "label": "Added term as a polynomial in k",
+            "type": "polynomial",
+            "expected": "6*k + 13",
+            "variables": [
+              "k"
+            ]
+          }
+        ],
+        "hint": "<p>Write the claim at k and at k + 1, then compare what their left sides differ by.</p>",
+        "solution": "<p>At \\(n=7\\) the left side has a single term, equal to \\(49\\). The proposed formula gives the same value.</p><p>Assume the formula at \\(n=k\\). The next sum adds the term at \\(k+1\\), which is \\(6 k + 13\\).</p><p>Adding that term to the assumed expression gives \\(\\left(k - 5\\right) \\left(3 k + 31\\right)\\), as required. The base and step establish the claim on its stated interval.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "sums-inequality-bridge-extra",
+        "title": "Bridge an inequality rather than only an equality",
+        "prompt": "<p>To prove \\(4^n\\ge n+1\\) for all \\(n\\ge0\\), assume it at \\(n=k\\). State the multiplier on the assumption and the excess of this resulting lower bound over \\(k+2\\) at \\(k=4\\).</p>",
+        "fields": [
+          {
+            "key": "multiplier",
+            "label": "Positive multiplier",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "excess",
+            "label": "Excess of the lower bound",
+            "type": "number",
+            "expected": "14"
+          }
+        ],
+        "hint": "<p>Prove the derived bound is at least the next target, rather than assuming it.</p>",
+        "solution": "<p>At n zero both sides are one.</p><p>Multiply the inductive assumption by the positive number \\(4\\). The next power is then at least \\(4 k + 4\\).</p><p>Its difference from the target \\(k+2\\) is \\(3 k + 2\\), non-negative for every allowed k. This proves the induction step. At the specified k it is \\(14\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "sums-spot-a-false-pattern-extra",
+        "title": "Find a counterexample after several successful checks",
+        "prompt": "<p>For the sum of the first n odd numbers, someone proposes \\(5 n^{4} - 50 n^{3} + 176 n^{2} - 250 n + 120\\). Find the first positive n where this fails and the amount by which the proposed formula exceeds the correct sum.</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "First failed positive integer n",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "excess",
+            "label": "Excess at that index",
+            "type": "number",
+            "expected": "120"
+          }
+        ],
+        "hint": "<p>Check where all correction factors are non-zero for the first time.</p>",
+        "solution": "<p>For the first four positive indices the correction product has a zero factor.</p><p>The usual odd sum is \\(n^2\\). It starts at one and increases by \\(2k+1\\) between \\(k\\) and \\(k+1\\), giving the induction step.</p><p>At five the proposed correction is \\(120\\), which is non-zero. This is the first failure.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Base case",
+        "definition": "<p>First verified case of the statement.</p>"
+      },
+      {
+        "term": "Inductive hypothesis",
+        "definition": "<p>Assumption of the claim at an arbitrary allowed index.</p>"
+      },
+      {
+        "term": "Inductive step",
+        "definition": "<p>Argument that the next claim follows from the hypothesis.</p>"
+      },
+      {
+        "term": "Counterexample",
+        "definition": "<p>Specific value for which a proposed claim fails.</p>"
+      },
+      {
+        "term": "Conclusion",
+        "definition": "<p>Statement that links the base and step to all allowed indices.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Base</th><td>Check the first allowed index on both sides.</td></tr><tr><th scope=\"row\">Assume</th><td>State the claim at an arbitrary allowed k.</td></tr><tr><th scope=\"row\">Step</th><td>Use the assumption to derive the claim at k + 1.</td></tr><tr><th scope=\"row\">Conclude</th><td>Give the integer range reached from the verified start.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>When proving a sum to n, what one term is added to reach the sum to k + 1 from the sum to k?</p><p><strong>Check</strong> The summand at index \\(r=k+1\\).</p>",
+      "checks": "<ul><li>Matching the two sides for one index starts the proof. It does not establish the step.</li><li>Do not use the result at k + 1 as an assumption while trying to prove it.</li></ul>",
+      "examTip": "<p>Write the new term or other change explicitly so the reader can see exactly where the induction hypothesis is used.</p>"
+    },
+    "related": [
+      {
+        "title": "Induction through repeated differentiation",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_induction_derivatives"
+      }
+    ]
+  },
+  "fp1_induction_derivatives": {
+    "updatedOn": "2026-11-21",
+    "description": "Follow the derivative order through constant, chain and product-rule steps, and handle cycles in a block of derivatives.",
+    "sections": [
+      {
+        "id": "zero-derivatives",
+        "title": "What does derivative order zero mean?",
+        "label": "Start with the original function",
+        "intro": "<p>Order zero means no differentiation has been applied. It is the original function.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>At each next order, differentiate the assumed formula with respect to x, with the index held constant.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "derivatives-zero-derivatives-check",
+            "title": "Carry a constant multiplier through one derivative",
+            "prompt": "<p>For \\(y=e^{3 x + 4}\\), give the multiplier when passing from the kth to the next derivative, and the coefficient of y in the derivative of order \\(3\\).</p>",
+            "fields": [
+              {
+                "key": "factor",
+                "label": "Multiplier in each differentiation",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "coef",
+                "label": "Coefficient at the requested order",
+                "type": "number",
+                "expected": "27"
+              }
+            ],
+            "hint": "<p>The derivative of the exponent is a constant. Keep track of how many times it is applied.</p>",
+            "solution": "<p>At order zero the expression is y itself.</p><p>Differentiating multiplies y by \\(3\\) and leaves its form unchanged. Thus each step introduces the same multiplier.</p><p>Induction gives coefficient \\(3^k\\) at order k. At the requested order it is \\(27\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If the claim starts at order zero, starting with the first derivative omits its actual base case.</p>"
+          }
+        ]
+      },
+      {
+        "id": "track-the-chain-factor",
+        "title": "Which factor comes from the inner expression?",
+        "label": "Use the chain rule with the current exponent",
+        "intro": "<p>For a power of a linear expression, differentiation multiplies by the current exponent and by the derivative of the expression inside.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>State both the new coefficient and the exponent after applying the chain rule. A negative power decreases by one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "derivatives-track-the-chain-factor-check",
+            "title": "Track the power shift and chain factor",
+            "prompt": "<p>For \\(y=\\frac{1}{3 x + 4}\\) on \\(3 x + 4>0\\), give the signed coefficient and the exponent of \\(3 x + 4\\) in derivative order \\(3\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Signed coefficient",
+                "type": "number",
+                "expected": "-162"
+              },
+              {
+                "key": "exponent",
+                "label": "Exponent",
+                "type": "number",
+                "expected": "-4"
+              }
+            ],
+            "hint": "<p>Retain both the current negative exponent and the derivative of the bracket.</p>",
+            "solution": "<p>At order zero the exponent is \\(-1\\) and the coefficient is one.</p><p>At order k, differentiation multiplies the coefficient by \\(- 3 k - 3\\) and subtracts one from the exponent.</p><p>Induction gives \\((-3)^k\\frac{(1+k-1)!}{(1-1)!}\\left(3 x + 4\\right)^{-1-k}\\). At the requested order the coefficient is \\(-162\\) and the exponent is \\(-4\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A negative sign changes the coefficient. The exponent still moves one step lower.</p>"
+          }
+        ]
+      },
+      {
+        "id": "count-factorial-terms",
+        "title": "Why does a factorial appear in a repeated derivative?",
+        "label": "Track the running product",
+        "intro": "<p>The magnitude of a negative exponent increases at each step. The corresponding sequence of multipliers accumulates into a product of consecutive integers.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Match the newly introduced integer factor to the next factorial quotient and keep the repeated linear chain factor.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "derivatives-count-factorial-terms-check",
+            "title": "Track the power shift and chain factor",
+            "prompt": "<p>For \\(y=\\frac{1}{\\left(3 x + 4\\right)^{3}}\\) on \\(3 x + 4>0\\), give the signed coefficient and the exponent of \\(3 x + 4\\) in derivative order \\(3\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Signed coefficient",
+                "type": "number",
+                "expected": "-1620"
+              },
+              {
+                "key": "exponent",
+                "label": "Exponent",
+                "type": "number",
+                "expected": "-6"
+              }
+            ],
+            "hint": "<p>Retain both the current negative exponent and the derivative of the bracket.</p>",
+            "solution": "<p>At order zero the exponent is \\(-3\\) and the coefficient is one.</p><p>At order k, differentiation multiplies the coefficient by \\(- 3 k - 9\\) and subtracts one from the exponent.</p><p>Induction gives \\((-3)^k\\frac{(3+k-1)!}{(3-1)!}\\left(3 x + 4\\right)^{-3-k}\\). At the requested order the coefficient is \\(-1620\\) and the exponent is \\(-6\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using the same exponent multiplier at every stage ignores how the exponent changes.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "derivatives-count-factorial-terms-follow-up",
+            "title": "Track the power shift and chain factor",
+            "prompt": "<p>For \\(y=\\frac{1}{\\left(5 x + 6\\right)^{5}}\\) on \\(5 x + 6>0\\), give the signed coefficient and the exponent of \\(5 x + 6\\) in derivative order \\(5\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Signed coefficient",
+                "type": "number",
+                "expected": "-47250000"
+              },
+              {
+                "key": "exponent",
+                "label": "Exponent",
+                "type": "number",
+                "expected": "-10"
+              }
+            ],
+            "hint": "<p>Retain both the current negative exponent and the derivative of the bracket.</p>",
+            "solution": "<p>At order zero the exponent is \\(-5\\) and the coefficient is one.</p><p>At order k, differentiation multiplies the coefficient by \\(- 5 k - 25\\) and subtracts one from the exponent.</p><p>Induction gives \\((-5)^k\\frac{(5+k-1)!}{(5-1)!}\\left(5 x + 6\\right)^{-5-k}\\). At the requested order the coefficient is \\(-47250000\\) and the exponent is \\(-10\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "four-derivative-cycle",
+        "title": "How can one induction step contain four differentiations?",
+        "label": "Count blocks consistently",
+        "intro": "<p>Some functions return to the same trigonometric form after a fixed number of differentiations.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>When n counts blocks, advance from one block index to the next using four actual derivatives in this example.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "derivatives-four-derivative-cycle-check",
+            "title": "Use four differentiations as a single induction step",
+            "prompt": "<p>For \\(y=\\sin{\\left(3 x \\right)}\\), let the index n count blocks of four differentiations. Give the block multiplier and the coefficient of y after \\(8\\) differentiations.</p>",
+            "fields": [
+              {
+                "key": "block",
+                "label": "Multiplier per block",
+                "type": "number",
+                "expected": "81"
+              },
+              {
+                "key": "coefficient",
+                "label": "Requested total coefficient",
+                "type": "number",
+                "expected": "6561"
+              }
+            ],
+            "hint": "<p>An induction step of one block means four actual differentiations.</p>",
+            "solution": "<p>At zero blocks the function is unchanged. Differentiate four times: sine, cosine, minus sine, minus cosine, then sine.</p><p>Each differentiation introduces a factor \\(3\\). Thus one block gives multiplier \\(81\\).</p><p>A step from n blocks to n + 1 blocks applies the same multiplier once more. The requested coefficient is \\(6561\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The index of a block is not the raw derivative order.</p>"
+          }
+        ]
+      },
+      {
+        "id": "track-both-product-terms",
+        "title": "What does the product rule add at the next order?",
+        "label": "Carry the polynomial coefficient update",
+        "intro": "<p>When the expression is an exponential times a polynomial, differentiating once produces two contributions.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Differentiate the exponential and the polynomial separately, then combine them into a recurrence for the remaining coefficients.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "derivatives-track-both-product-terms-check",
+            "title": "Keep the derivative of the polynomial factor",
+            "prompt": "<p>For \\(y=\\left(x - 4\\right) e^{3 x}\\), the derivative of order \\(3\\) equals \\(\\mathrm e^{3x}(Ax+B)\\). Find \\(A,B\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "27"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B",
+                "type": "number",
+                "expected": "-81"
+              }
+            ],
+            "hint": "<p>Apply the product rule to both factors. The derivative of the linear factor contributes to B.</p>",
+            "solution": "<p>Suppose order k has exponential times \\(A_kx+B_k\\). At order zero the coefficients are \\(1,-4\\).</p><p>The product rule gives \\(A_{k+1}=3A_k\\) and \\(B_{k+1}=A_k+3B_k\\).</p><p>Hence \\(27 x - 81\\) is the polynomial factor at the requested order. Its coefficients can also be checked by repeated differentiation.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Differentiating only the exponential misses the changing constant term.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "derivatives-track-both-product-terms-follow-up",
+            "title": "Keep the derivative of the polynomial factor",
+            "prompt": "<p>For \\(y=\\left(x - 6\\right) e^{5 x}\\), the derivative of order \\(5\\) equals \\(\\mathrm e^{5x}(Ax+B)\\). Find \\(A,B\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "3125"
+              },
+              {
+                "key": "b",
+                "label": "Coefficient B",
+                "type": "number",
+                "expected": "-15625"
+              }
+            ],
+            "hint": "<p>Apply the product rule to both factors. The derivative of the linear factor contributes to B.</p>",
+            "solution": "<p>Suppose order k has exponential times \\(A_kx+B_k\\). At order zero the coefficients are \\(1,-6\\).</p><p>The product rule gives \\(A_{k+1}=5A_k\\) and \\(B_{k+1}=A_k+5B_k\\).</p><p>Hence \\(3125 x - 15625\\) is the polynomial factor at the requested order. Its coefficients can also be checked by repeated differentiation.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Carry a constant multiplier through one derivative",
+        "question": "<p>For \\(y=e^{2 x + 3}\\), give the multiplier when passing from the kth to the next derivative, and the coefficient of y in the derivative of order \\(2\\).</p>",
+        "solution": [
+          "<p>At order zero the expression is y itself.</p>",
+          "<p>Differentiating multiplies y by \\(2\\) and leaves its form unchanged. Thus each step introduces the same multiplier.</p>",
+          "<p>Induction gives coefficient \\(2^k\\) at order k. At the requested order it is \\(4\\).</p>"
+        ]
+      },
+      {
+        "title": "Track the power shift and chain factor",
+        "question": "<p>For \\(y=\\frac{1}{2 x + 3}\\) on \\(2 x + 3>0\\), give the signed coefficient and the exponent of \\(2 x + 3\\) in derivative order \\(2\\).</p>",
+        "solution": [
+          "<p>At order zero the exponent is \\(-1\\) and the coefficient is one.</p>",
+          "<p>At order k, differentiation multiplies the coefficient by \\(- 2 k - 2\\) and subtracts one from the exponent.</p>",
+          "<p>Induction gives \\((-2)^k\\frac{(1+k-1)!}{(1-1)!}\\left(2 x + 3\\right)^{-1-k}\\). At the requested order the coefficient is \\(8\\) and the exponent is \\(-3\\).</p>"
+        ]
+      },
+      {
+        "title": "Track the power shift and chain factor",
+        "question": "<p>For \\(y=\\frac{1}{\\left(2 x + 3\\right)^{2}}\\) on \\(2 x + 3>0\\), give the signed coefficient and the exponent of \\(2 x + 3\\) in derivative order \\(2\\).</p>",
+        "solution": [
+          "<p>At order zero the exponent is \\(-2\\) and the coefficient is one.</p>",
+          "<p>At order k, differentiation multiplies the coefficient by \\(- 2 k - 4\\) and subtracts one from the exponent.</p>",
+          "<p>Induction gives \\((-2)^k\\frac{(2+k-1)!}{(2-1)!}\\left(2 x + 3\\right)^{-2-k}\\). At the requested order the coefficient is \\(24\\) and the exponent is \\(-4\\).</p>"
+        ]
+      },
+      {
+        "title": "Track the power shift and chain factor",
+        "question": "<p>For \\(y=\\frac{1}{\\left(4 x + 5\\right)^{4}}\\) on \\(4 x + 5>0\\), give the signed coefficient and the exponent of \\(4 x + 5\\) in derivative order \\(4\\).</p>",
+        "solution": [
+          "<p>At order zero the exponent is \\(-4\\) and the coefficient is one.</p>",
+          "<p>At order k, differentiation multiplies the coefficient by \\(- 4 k - 16\\) and subtracts one from the exponent.</p>",
+          "<p>Induction gives \\((-4)^k\\frac{(4+k-1)!}{(4-1)!}\\left(4 x + 5\\right)^{-4-k}\\). At the requested order the coefficient is \\(215040\\) and the exponent is \\(-8\\).</p>"
+        ]
+      },
+      {
+        "title": "Use four differentiations as a single induction step",
+        "question": "<p>For \\(y=\\sin{\\left(2 x \\right)}\\), let the index n count blocks of four differentiations. Give the block multiplier and the coefficient of y after \\(4\\) differentiations.</p>",
+        "solution": [
+          "<p>At zero blocks the function is unchanged. Differentiate four times: sine, cosine, minus sine, minus cosine, then sine.</p>",
+          "<p>Each differentiation introduces a factor \\(2\\). Thus one block gives multiplier \\(16\\).</p>",
+          "<p>A step from n blocks to n + 1 blocks applies the same multiplier once more. The requested coefficient is \\(16\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the derivative of the polynomial factor",
+        "question": "<p>For \\(y=\\left(x - 3\\right) e^{2 x}\\), the derivative of order \\(2\\) equals \\(\\mathrm e^{2x}(Ax+B)\\). Find \\(A,B\\).</p>",
+        "solution": [
+          "<p>Suppose order k has exponential times \\(A_kx+B_k\\). At order zero the coefficients are \\(1,-3\\).</p>",
+          "<p>The product rule gives \\(A_{k+1}=2A_k\\) and \\(B_{k+1}=A_k+2B_k\\).</p>",
+          "<p>Hence \\(4 x - 8\\) is the polynomial factor at the requested order. Its coefficients can also be checked by repeated differentiation.</p>"
+        ]
+      },
+      {
+        "title": "Keep the derivative of the polynomial factor",
+        "question": "<p>For \\(y=\\left(x - 5\\right) e^{4 x}\\), the derivative of order \\(4\\) equals \\(\\mathrm e^{4x}(Ax+B)\\). Find \\(A,B\\).</p>",
+        "solution": [
+          "<p>Suppose order k has exponential times \\(A_kx+B_k\\). At order zero the coefficients are \\(1,-5\\).</p>",
+          "<p>The product rule gives \\(A_{k+1}=4A_k\\) and \\(B_{k+1}=A_k+4B_k\\).</p>",
+          "<p>Hence \\(256 x - 1024\\) is the polynomial factor at the requested order. Its coefficients can also be checked by repeated differentiation.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "derivatives-zero-derivatives-extra",
+        "title": "Carry a constant multiplier through one derivative",
+        "prompt": "<p>For \\(y=e^{4 x + 5}\\), give the multiplier when passing from the kth to the next derivative, and the coefficient of y in the derivative of order \\(4\\).</p>",
+        "fields": [
+          {
+            "key": "factor",
+            "label": "Multiplier in each differentiation",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "coef",
+            "label": "Coefficient at the requested order",
+            "type": "number",
+            "expected": "256"
+          }
+        ],
+        "hint": "<p>The derivative of the exponent is a constant. Keep track of how many times it is applied.</p>",
+        "solution": "<p>At order zero the expression is y itself.</p><p>Differentiating multiplies y by \\(4\\) and leaves its form unchanged. Thus each step introduces the same multiplier.</p><p>Induction gives coefficient \\(4^k\\) at order k. At the requested order it is \\(256\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "derivatives-track-the-chain-factor-extra",
+        "title": "Track the power shift and chain factor",
+        "prompt": "<p>For \\(y=\\frac{1}{4 x + 5}\\) on \\(4 x + 5>0\\), give the signed coefficient and the exponent of \\(4 x + 5\\) in derivative order \\(4\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Signed coefficient",
+            "type": "number",
+            "expected": "6144"
+          },
+          {
+            "key": "exponent",
+            "label": "Exponent",
+            "type": "number",
+            "expected": "-5"
+          }
+        ],
+        "hint": "<p>Retain both the current negative exponent and the derivative of the bracket.</p>",
+        "solution": "<p>At order zero the exponent is \\(-1\\) and the coefficient is one.</p><p>At order k, differentiation multiplies the coefficient by \\(- 4 k - 4\\) and subtracts one from the exponent.</p><p>Induction gives \\((-4)^k\\frac{(1+k-1)!}{(1-1)!}\\left(4 x + 5\\right)^{-1-k}\\). At the requested order the coefficient is \\(6144\\) and the exponent is \\(-5\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "derivatives-count-factorial-terms-extra",
+        "title": "Track the power shift and chain factor",
+        "prompt": "<p>For \\(y=\\frac{1}{\\left(6 x + 7\\right)^{6}}\\) on \\(6 x + 7>0\\), give the signed coefficient and the exponent of \\(6 x + 7\\) in derivative order \\(6\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Signed coefficient",
+            "type": "number",
+            "expected": "15519651840"
+          },
+          {
+            "key": "exponent",
+            "label": "Exponent",
+            "type": "number",
+            "expected": "-12"
+          }
+        ],
+        "hint": "<p>Retain both the current negative exponent and the derivative of the bracket.</p>",
+        "solution": "<p>At order zero the exponent is \\(-6\\) and the coefficient is one.</p><p>At order k, differentiation multiplies the coefficient by \\(- 6 k - 36\\) and subtracts one from the exponent.</p><p>Induction gives \\((-6)^k\\frac{(6+k-1)!}{(6-1)!}\\left(6 x + 7\\right)^{-6-k}\\). At the requested order the coefficient is \\(15519651840\\) and the exponent is \\(-12\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "derivatives-four-derivative-cycle-extra",
+        "title": "Use four differentiations as a single induction step",
+        "prompt": "<p>For \\(y=\\sin{\\left(4 x \\right)}\\), let the index n count blocks of four differentiations. Give the block multiplier and the coefficient of y after \\(12\\) differentiations.</p>",
+        "fields": [
+          {
+            "key": "block",
+            "label": "Multiplier per block",
+            "type": "number",
+            "expected": "256"
+          },
+          {
+            "key": "coefficient",
+            "label": "Requested total coefficient",
+            "type": "number",
+            "expected": "16777216"
+          }
+        ],
+        "hint": "<p>An induction step of one block means four actual differentiations.</p>",
+        "solution": "<p>At zero blocks the function is unchanged. Differentiate four times: sine, cosine, minus sine, minus cosine, then sine.</p><p>Each differentiation introduces a factor \\(4\\). Thus one block gives multiplier \\(256\\).</p><p>A step from n blocks to n + 1 blocks applies the same multiplier once more. The requested coefficient is \\(16777216\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "derivatives-track-both-product-terms-extra",
+        "title": "Keep the derivative of the polynomial factor",
+        "prompt": "<p>For \\(y=\\left(x - 7\\right) e^{6 x}\\), the derivative of order \\(6\\) equals \\(\\mathrm e^{6x}(Ax+B)\\). Find \\(A,B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "type": "number",
+            "expected": "46656"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "type": "number",
+            "expected": "-279936"
+          }
+        ],
+        "hint": "<p>Apply the product rule to both factors. The derivative of the linear factor contributes to B.</p>",
+        "solution": "<p>Suppose order k has exponential times \\(A_kx+B_k\\). At order zero the coefficients are \\(1,-7\\).</p><p>The product rule gives \\(A_{k+1}=6A_k\\) and \\(B_{k+1}=A_k+6B_k\\).</p><p>Hence \\(46656 x - 279936\\) is the polynomial factor at the requested order. Its coefficients can also be checked by repeated differentiation.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Derivative order",
+        "definition": "<p>Number of times differentiation has been applied.</p>"
+      },
+      {
+        "term": "Base derivative",
+        "definition": "<p>The original function at order zero.</p>"
+      },
+      {
+        "term": "Chain factor",
+        "definition": "<p>Derivative of an inside expression multiplied into the result.</p>"
+      },
+      {
+        "term": "Cycle",
+        "definition": "<p>Pattern of derivative forms that repeats after a fixed number of steps.</p>"
+      },
+      {
+        "term": "Coefficient update",
+        "definition": "<p>Rule turning the coefficients at one derivative order into the next.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Base order zero</th><td>The original function.</td></tr><tr><th scope=\"row\">Differentiate the hypothesis</th><td>Hold the index constant and differentiate with respect to x.</td></tr><tr><th scope=\"row\">Chain rule</th><td>Multiply by both the current exponent and the inner derivative.</td></tr><tr><th scope=\"row\">Product rule</th><td>Differentiate both factors and update every coefficient.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Find the second derivative of \\(\\mathrm e^{3x}\\).</p><p><strong>Check</strong> \\(9\\mathrm e^{3x}\\).</p>",
+      "checks": "<ul><li>If the claim starts at order zero, starting with the first derivative omits its actual base case.</li><li>A negative sign changes the coefficient. The exponent still moves one step lower.</li></ul>",
+      "examTip": "<p>Name the actual derivative order when the induction step advances by a block.</p>"
+    },
+    "related": [
+      {
+        "title": "Building an induction proof",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_induction_sums"
+      },
+      {
+        "title": "Recursive formulae and invariant bounds",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_induction_recurrences"
+      }
+    ]
+  },
+  "fp1_induction_recurrences": {
+    "updatedOn": "2026-11-21",
+    "description": "Prove a recursive formula or bound by substituting the inductive assumption, with enough initial values.",
+    "sections": [
+      {
+        "id": "substitute-the-old-term",
+        "title": "How do I use the given recursive rule in the proof?",
+        "label": "Substitute into the recurrence",
+        "intro": "<p>The rule specifies the next term in terms of previous ones. The proposed formula must make that exact update.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check the starting term, substitute the assumed formula and simplify to the stated next formula.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "recurrences-substitute-the-old-term-check",
+            "title": "Substitute the assumed term into the recurrence",
+            "prompt": "<p>Let \\(u_0=2\\) and \\(u_{n+1}=3u_n+5\\). The proposed formula is \\(u_n=\\frac{9 \\cdot 3^{n}}{2} - \\frac{5}{2}\\). Give the coefficient of \\(3^n\\) and the additive constant.</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient of the exponential",
+                "type": "number",
+                "expected": "9/2"
+              },
+              {
+                "key": "constant",
+                "label": "Additive constant",
+                "type": "number",
+                "expected": "-5/2"
+              }
+            ],
+            "hint": "<p>Keep the constant when substituting the assumed formula into the recurrence.</p>",
+            "solution": "<p>The formula at zero gives the specified initial value.</p><p>Assume the formula at k. Multiplying by \\(3\\) and adding \\(5\\) turns its exponential part into the next power.</p><p>The constant stays \\(- \\frac{5}{2}\\) because \\(3(- \\frac{5}{2})+5=- \\frac{5}{2}\\). This proves the formula by induction.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Testing only the proposed formula at a later input bypasses the recurrence.</p>"
+          }
+        ]
+      },
+      {
+        "id": "shift-before-solving",
+        "title": "Why can adding a constant simplify a recurrence?",
+        "label": "Move to a geometric sequence",
+        "intro": "<p>A fixed offset can hide a multiplicative recurrence. A shift of every term can remove the additive part.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find an offset that makes the shifted new term a fixed multiple of the shifted old term.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "recurrences-shift-before-solving-check",
+            "title": "Shift a recurrence to a pure geometric one",
+            "prompt": "<p>Given \\(u_0=2\\) and \\(u_{n+1}=3(u_n+4)-4\\), find \\(u_1\\) and the constant that must be added to each term so the shifted sequence is geometric.</p>",
+            "fields": [
+              {
+                "key": "next",
+                "label": "Value of the first term after the initial one",
+                "type": "number",
+                "expected": "14"
+              },
+              {
+                "key": "shift",
+                "label": "Constant added to u",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>Add the same offset to both successive terms.</p>",
+            "solution": "<p>Move the fixed offset to the same side as the next term.</p><p>Defining \\(v_n=u_n+4\\) gives \\(v_{n+1}=3v_n\\). Verify the shifted initial value.</p><p>By induction the shift follows geometric growth. At the first step the original term is \\(14\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Apply the same shift to both terms, including the initial value.</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-both-previous-cases",
+        "title": "When are two initial cases needed?",
+        "label": "Carry adjacent assumptions",
+        "intro": "<p>If the next term requires the previous two terms, the inductive step must start from two known consecutive formulas.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Verify both base cases. Assume the pair at k and k + 1, prove the next formula and retain the last two.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "recurrences-use-both-previous-cases-check",
+            "title": "Carry two consecutive assumptions through one step",
+            "prompt": "<p>For \\(u_n=2 \\left(-1\\right)^{n} + 3 \\cdot 2^{n}\\), the rule is \\(u_{n+2}=u_{n+1}+2u_n\\). Give both required initial values and the coefficient multiplying u at index k in the induction step.</p>",
+            "fields": [
+              {
+                "key": "base0",
+                "label": "Value of u at zero",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "base1",
+                "label": "Value of u at one",
+                "type": "number",
+                "expected": "4"
+              },
+              {
+                "key": "factor",
+                "label": "Multiplier on u_k in the step",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>This is a two-step recurrence, so checking just the first term cannot start the argument.</p>",
+            "solution": "<p>Two consecutive known values are needed. The formula at zero and one gives \\(5\\) and \\(4\\).</p><p>Assume both formulas at k and k + 1. The next term follows from \\(u_{k+2}=u_{k+1}+2u_k\\).</p><p>For the two exponential parts, the factors \\(2\\) and \\(-1\\) each satisfy \\(q^2=q+2\\), which proves the step.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>One base value cannot generate the second without a separate condition in a two-step recursion.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "recurrences-use-both-previous-cases-follow-up",
+            "title": "Carry two consecutive assumptions through one step",
+            "prompt": "<p>For \\(u_n=4 \\left(-1\\right)^{n} + 5 \\cdot 2^{n}\\), the rule is \\(u_{n+2}=u_{n+1}+2u_n\\). Give both required initial values and the coefficient multiplying u at index k in the induction step.</p>",
+            "fields": [
+              {
+                "key": "base0",
+                "label": "Value of u at zero",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "base1",
+                "label": "Value of u at one",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "factor",
+                "label": "Multiplier on u_k in the step",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>This is a two-step recurrence, so checking just the first term cannot start the argument.</p>",
+            "solution": "<p>Two consecutive known values are needed. The formula at zero and one gives \\(9\\) and \\(6\\).</p><p>Assume both formulas at k and k + 1. The next term follows from \\(u_{k+2}=u_{k+1}+2u_k\\).</p><p>For the two exponential parts, the factors \\(2\\) and \\(-1\\) each satisfy \\(q^2=q+2\\), which proves the step.</p>"
+          }
+        ]
+      },
+      {
+        "id": "bound-the-next-image",
+        "title": "How can a recurrence preserve an interval?",
+        "label": "Check the range of the update",
+        "intro": "<p>For a decreasing update map the largest permissible input gives the smallest image. Keep input denominators on the stated side of zero.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Show the whole image interval is inside the original interval, and check that the initial term is inside too.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "recurrences-bound-the-next-image-check",
+            "title": "Use both endpoints of an invariant interval",
+            "prompt": "<p>Let \\(u_0=\\frac{3}{2}\\) and \\(u_{n+1}=\\frac{5}{3+u_n}\\). Assuming \\(1\\le u_k\\le2\\), give the lower and upper bounds found for \\(u_{k+1}\\).</p>",
+            "fields": [
+              {
+                "key": "lower",
+                "label": "Lower bound for the next term",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "upper",
+                "label": "Upper bound for the next term",
+                "type": "number",
+                "expected": "5/4"
+              }
+            ],
+            "hint": "<p>Check the denominator’s sign before reversing an inequality by taking reciprocals.</p>",
+            "solution": "<p>The initial value is between one and two. For the induction step the denominators are positive.</p><p>Taking reciprocals reverses the endpoints. Substitution at u equal to two gives the lower image \\(1\\), and at one gives the upper image \\(\\frac{5}{4}\\).</p><p>The new interval is inside the original one, verifying that the same bound holds at k + 1.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Checking one test input does not prove that a whole interval is preserved.</p>"
+          }
+        ]
+      },
+      {
+        "id": "find-the-needed-increment",
+        "title": "Can I test a proposed closed form by its differences?",
+        "label": "Compare consecutive values",
+        "intro": "<p>For a recurrence that adds a function of the index, the difference between successive candidate values should equal that increment.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Match both the initial value and every symbolic increment to verify the proposed formula.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "recurrences-find-the-needed-increment-check",
+            "title": "Use induction to verify a proposed closed form",
+            "prompt": "<p>The proposed formula is \\(u_n=n^{2} + 3 n\\) starting at zero. Give the starting value and the polynomial in k that the recurrence must add at each step.</p>",
+            "fields": [
+              {
+                "key": "base",
+                "label": "Starting value",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "polynomial",
+                "label": "Added polynomial in k",
+                "type": "polynomial",
+                "expected": "2*k + 4",
+                "variables": [
+                  "k"
+                ]
+              }
+            ],
+            "hint": "<p>Subtract adjacent target expressions rather than guessing the increment.</p>",
+            "solution": "<p>At zero the formula gives zero.</p><p>Subtract the kth expression from the expression at k + 1, giving \\(2 k + 4\\).</p><p>Starting at zero and adding this expression each time establishes the proposed formula by induction.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A difference identity alone allows a constant error in every term. The starting value excludes that error.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "recurrences-find-the-needed-increment-follow-up",
+            "title": "Use induction to verify a proposed closed form",
+            "prompt": "<p>The proposed formula is \\(u_n=n^{2} + 5 n\\) starting at zero. Give the starting value and the polynomial in k that the recurrence must add at each step.</p>",
+            "fields": [
+              {
+                "key": "base",
+                "label": "Starting value",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "polynomial",
+                "label": "Added polynomial in k",
+                "type": "polynomial",
+                "expected": "2*k + 6",
+                "variables": [
+                  "k"
+                ]
+              }
+            ],
+            "hint": "<p>Subtract adjacent target expressions rather than guessing the increment.</p>",
+            "solution": "<p>At zero the formula gives zero.</p><p>Subtract the kth expression from the expression at k + 1, giving \\(2 k + 6\\).</p><p>Starting at zero and adding this expression each time establishes the proposed formula by induction.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Substitute the assumed term into the recurrence",
+        "question": "<p>Let \\(u_0=1\\) and \\(u_{n+1}=2u_n+4\\). The proposed formula is \\(u_n=5 \\cdot 2^{n} - 4\\). Give the coefficient of \\(2^n\\) and the additive constant.</p>",
+        "solution": [
+          "<p>The formula at zero gives the specified initial value.</p>",
+          "<p>Assume the formula at k. Multiplying by \\(2\\) and adding \\(4\\) turns its exponential part into the next power.</p>",
+          "<p>The constant stays \\(-4\\) because \\(2(-4)+4=-4\\). This proves the formula by induction.</p>"
+        ]
+      },
+      {
+        "title": "Shift a recurrence to a pure geometric one",
+        "question": "<p>Given \\(u_0=1\\) and \\(u_{n+1}=2(u_n+3)-3\\), find \\(u_1\\) and the constant that must be added to each term so the shifted sequence is geometric.</p>",
+        "solution": [
+          "<p>Move the fixed offset to the same side as the next term.</p>",
+          "<p>Defining \\(v_n=u_n+3\\) gives \\(v_{n+1}=2v_n\\). Verify the shifted initial value.</p>",
+          "<p>By induction the shift follows geometric growth. At the first step the original term is \\(5\\).</p>"
+        ]
+      },
+      {
+        "title": "Carry two consecutive assumptions through one step",
+        "question": "<p>For \\(u_n=\\left(-1\\right)^{n} + 2 \\cdot 2^{n}\\), the rule is \\(u_{n+2}=u_{n+1}+2u_n\\). Give both required initial values and the coefficient multiplying u at index k in the induction step.</p>",
+        "solution": [
+          "<p>Two consecutive known values are needed. The formula at zero and one gives \\(3\\) and \\(3\\).</p>",
+          "<p>Assume both formulas at k and k + 1. The next term follows from \\(u_{k+2}=u_{k+1}+2u_k\\).</p>",
+          "<p>For the two exponential parts, the factors \\(2\\) and \\(-1\\) each satisfy \\(q^2=q+2\\), which proves the step.</p>"
+        ]
+      },
+      {
+        "title": "Carry two consecutive assumptions through one step",
+        "question": "<p>For \\(u_n=3 \\left(-1\\right)^{n} + 4 \\cdot 2^{n}\\), the rule is \\(u_{n+2}=u_{n+1}+2u_n\\). Give both required initial values and the coefficient multiplying u at index k in the induction step.</p>",
+        "solution": [
+          "<p>Two consecutive known values are needed. The formula at zero and one gives \\(7\\) and \\(5\\).</p>",
+          "<p>Assume both formulas at k and k + 1. The next term follows from \\(u_{k+2}=u_{k+1}+2u_k\\).</p>",
+          "<p>For the two exponential parts, the factors \\(2\\) and \\(-1\\) each satisfy \\(q^2=q+2\\), which proves the step.</p>"
+        ]
+      },
+      {
+        "title": "Use both endpoints of an invariant interval",
+        "question": "<p>Let \\(u_0=\\frac{3}{2}\\) and \\(u_{n+1}=\\frac{4}{2+u_n}\\). Assuming \\(1\\le u_k\\le2\\), give the lower and upper bounds found for \\(u_{k+1}\\).</p>",
+        "solution": [
+          "<p>The initial value is between one and two. For the induction step the denominators are positive.</p>",
+          "<p>Taking reciprocals reverses the endpoints. Substitution at u equal to two gives the lower image \\(1\\), and at one gives the upper image \\(\\frac{4}{3}\\).</p>",
+          "<p>The new interval is inside the original one, verifying that the same bound holds at k + 1.</p>"
+        ]
+      },
+      {
+        "title": "Use induction to verify a proposed closed form",
+        "question": "<p>The proposed formula is \\(u_n=n^{2} + 2 n\\) starting at zero. Give the starting value and the polynomial in k that the recurrence must add at each step.</p>",
+        "solution": [
+          "<p>At zero the formula gives zero.</p>",
+          "<p>Subtract the kth expression from the expression at k + 1, giving \\(2 k + 3\\).</p>",
+          "<p>Starting at zero and adding this expression each time establishes the proposed formula by induction.</p>"
+        ]
+      },
+      {
+        "title": "Use induction to verify a proposed closed form",
+        "question": "<p>The proposed formula is \\(u_n=n^{2} + 4 n\\) starting at zero. Give the starting value and the polynomial in k that the recurrence must add at each step.</p>",
+        "solution": [
+          "<p>At zero the formula gives zero.</p>",
+          "<p>Subtract the kth expression from the expression at k + 1, giving \\(2 k + 5\\).</p>",
+          "<p>Starting at zero and adding this expression each time establishes the proposed formula by induction.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "recurrences-substitute-the-old-term-extra",
+        "title": "Substitute the assumed term into the recurrence",
+        "prompt": "<p>Let \\(u_0=3\\) and \\(u_{n+1}=4u_n+6\\). The proposed formula is \\(u_n=5 \\cdot 4^{n} - 2\\). Give the coefficient of \\(4^n\\) and the additive constant.</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient of the exponential",
+            "type": "number",
+            "expected": "5"
+          },
+          {
+            "key": "constant",
+            "label": "Additive constant",
+            "type": "number",
+            "expected": "-2"
+          }
+        ],
+        "hint": "<p>Keep the constant when substituting the assumed formula into the recurrence.</p>",
+        "solution": "<p>The formula at zero gives the specified initial value.</p><p>Assume the formula at k. Multiplying by \\(4\\) and adding \\(6\\) turns its exponential part into the next power.</p><p>The constant stays \\(-2\\) because \\(4(-2)+6=-2\\). This proves the formula by induction.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "recurrences-shift-before-solving-extra",
+        "title": "Shift a recurrence to a pure geometric one",
+        "prompt": "<p>Given \\(u_0=3\\) and \\(u_{n+1}=4(u_n+5)-5\\), find \\(u_1\\) and the constant that must be added to each term so the shifted sequence is geometric.</p>",
+        "fields": [
+          {
+            "key": "next",
+            "label": "Value of the first term after the initial one",
+            "type": "number",
+            "expected": "27"
+          },
+          {
+            "key": "shift",
+            "label": "Constant added to u",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>Add the same offset to both successive terms.</p>",
+        "solution": "<p>Move the fixed offset to the same side as the next term.</p><p>Defining \\(v_n=u_n+5\\) gives \\(v_{n+1}=4v_n\\). Verify the shifted initial value.</p><p>By induction the shift follows geometric growth. At the first step the original term is \\(27\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "recurrences-use-both-previous-cases-extra",
+        "title": "Carry two consecutive assumptions through one step",
+        "prompt": "<p>For \\(u_n=5 \\left(-1\\right)^{n} + 6 \\cdot 2^{n}\\), the rule is \\(u_{n+2}=u_{n+1}+2u_n\\). Give both required initial values and the coefficient multiplying u at index k in the induction step.</p>",
+        "fields": [
+          {
+            "key": "base0",
+            "label": "Value of u at zero",
+            "type": "number",
+            "expected": "11"
+          },
+          {
+            "key": "base1",
+            "label": "Value of u at one",
+            "type": "number",
+            "expected": "7"
+          },
+          {
+            "key": "factor",
+            "label": "Multiplier on u_k in the step",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>This is a two-step recurrence, so checking just the first term cannot start the argument.</p>",
+        "solution": "<p>Two consecutive known values are needed. The formula at zero and one gives \\(11\\) and \\(7\\).</p><p>Assume both formulas at k and k + 1. The next term follows from \\(u_{k+2}=u_{k+1}+2u_k\\).</p><p>For the two exponential parts, the factors \\(2\\) and \\(-1\\) each satisfy \\(q^2=q+2\\), which proves the step.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "recurrences-bound-the-next-image-extra",
+        "title": "Use both endpoints of an invariant interval",
+        "prompt": "<p>Let \\(u_0=\\frac{3}{2}\\) and \\(u_{n+1}=\\frac{6}{4+u_n}\\). Assuming \\(1\\le u_k\\le2\\), give the lower and upper bounds found for \\(u_{k+1}\\).</p>",
+        "fields": [
+          {
+            "key": "lower",
+            "label": "Lower bound for the next term",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "upper",
+            "label": "Upper bound for the next term",
+            "type": "number",
+            "expected": "6/5"
+          }
+        ],
+        "hint": "<p>Check the denominator’s sign before reversing an inequality by taking reciprocals.</p>",
+        "solution": "<p>The initial value is between one and two. For the induction step the denominators are positive.</p><p>Taking reciprocals reverses the endpoints. Substitution at u equal to two gives the lower image \\(1\\), and at one gives the upper image \\(\\frac{6}{5}\\).</p><p>The new interval is inside the original one, verifying that the same bound holds at k + 1.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "recurrences-find-the-needed-increment-extra",
+        "title": "Use induction to verify a proposed closed form",
+        "prompt": "<p>The proposed formula is \\(u_n=n^{2} + 6 n\\) starting at zero. Give the starting value and the polynomial in k that the recurrence must add at each step.</p>",
+        "fields": [
+          {
+            "key": "base",
+            "label": "Starting value",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "polynomial",
+            "label": "Added polynomial in k",
+            "type": "polynomial",
+            "expected": "2*k + 7",
+            "variables": [
+              "k"
+            ]
+          }
+        ],
+        "hint": "<p>Subtract adjacent target expressions rather than guessing the increment.</p>",
+        "solution": "<p>At zero the formula gives zero.</p><p>Subtract the kth expression from the expression at k + 1, giving \\(2 k + 7\\).</p><p>Starting at zero and adding this expression each time establishes the proposed formula by induction.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Recurrence",
+        "definition": "<p>Rule for each new term using earlier terms.</p>"
+      },
+      {
+        "term": "Initial values",
+        "definition": "<p>Terms needed to start the recursion.</p>"
+      },
+      {
+        "term": "Shift",
+        "definition": "<p>Same added constant applied to every term.</p>"
+      },
+      {
+        "term": "Invariant interval",
+        "definition": "<p>An interval mapped into itself by the update.</p>"
+      },
+      {
+        "term": "Closed form",
+        "definition": "<p>Explicit expression for a term in its own index.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">First-order rule</th><td>Check one initial value and one substitution step.</td></tr><tr><th scope=\"row\">Two-step rule</th><td>Check two base values and carry both assumptions.</td></tr><tr><th scope=\"row\">Interval</th><td>Check the full image interval and the sign of any denominator.</td></tr><tr><th scope=\"row\">Additive recurrence</th><td>Compare the full difference of consecutive formulas.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>How many initial values are needed for \\(u_{n+2}=3u_{n+1}-u_n\\)?</p><p><strong>Check</strong> \\(2\\). Carry consecutive assumptions into the next case.</p>",
+      "checks": "<ul><li>Testing only the proposed formula at a later input bypasses the recurrence.</li><li>Apply the same shift to both terms, including the initial value.</li></ul>",
+      "examTip": "<p>Use the stated recursion in the step. Simplify until it matches the precise next statement.</p>"
+    },
+    "related": [
+      {
+        "title": "Induction through repeated differentiation",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_induction_derivatives"
+      },
+      {
+        "title": "Induction for matrix powers",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_induction_matrices"
+      }
+    ]
+  },
+  "fp1_induction_matrices": {
+    "updatedOn": "2026-11-21",
+    "description": "Prove matrix-power formulae using actual products, parity cycles and corrections that vanish at higher powers.",
+    "sections": [
+      {
+        "id": "diagonal-powers",
+        "title": "Why are diagonal matrix powers straightforward?",
+        "label": "Apply powers to diagonal entries",
+        "intro": "<p>Diagonal multiplication leaves all off-diagonal entries zero and acts independently on the diagonal.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Start with the identity at zero power. Multiply by the original matrix once to advance both diagonal powers.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "matrices-diagonal-powers-check",
+            "title": "Prove a power formula from multiplication on the diagonal",
+            "prompt": "<p>For \\(A=\\left[\\begin{matrix}3 & 0\\\\0 & -4\\end{matrix}\\right]\\), give the diagonal entries of \\(A^{3}\\).</p>",
+            "fields": [
+              {
+                "key": "diag1",
+                "label": "First diagonal entry",
+                "type": "number",
+                "expected": "27"
+              },
+              {
+                "key": "diag2",
+                "label": "Second diagonal entry",
+                "type": "number",
+                "expected": "-64"
+              }
+            ],
+            "hint": "<p>Use brackets around the negative base before applying its exponent.</p>",
+            "solution": "<p>At order zero the power is the identity. Each step multiplies the two diagonal entries separately by \\(3\\) and \\(-4\\).</p><p>Thus after n multiplications the leading entries are \\(3^n\\) and \\((-4)^n\\).</p><p>At the requested order the power is \\(\\left[\\begin{matrix}27 & 0\\\\0 & -64\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Negative diagonal bases need their signs raised to the same power.</p>"
+          }
+        ]
+      },
+      {
+        "id": "track-an-entry",
+        "title": "How do I prove a triangular entry grows linearly?",
+        "label": "Use its row–column product",
+        "intro": "<p>A repeated shear can leave most matrix entries unchanged. One off-diagonal entry carries the accumulation.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Assume the matrix form at exponent k and show the next row–column products. The changing entry determines the new coefficient.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "matrices-track-an-entry-check",
+            "title": "Track the single entry that changes at each power",
+            "prompt": "<p>For \\(A=\\left[\\begin{matrix}1 & 3\\\\0 & 1\\end{matrix}\\right]\\), give the top-right entry of \\(A^{3}\\) and its increment per additional multiplication.</p>",
+            "fields": [
+              {
+                "key": "entry",
+                "label": "Top-right entry",
+                "type": "number",
+                "expected": "9"
+              },
+              {
+                "key": "increment",
+                "label": "Increment",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Compute the first-row second-column product, keeping the diagonal ones.</p>",
+            "solution": "<p>At zero power the top-right entry is zero. Assume it is \\(3k\\) in the kth power.</p><p>Multiplication by A gives top-right entry \\(3k+3\\). The other entries match the old form.</p><p>This proves the general pattern and gives \\(9\\) at the requested order.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Checking the changing entry is useful only after the other entries have also been verified.</p>"
+          }
+        ]
+      },
+      {
+        "id": "alternate-matrix-powers",
+        "title": "What if powers alternate between two matrices?",
+        "label": "Check both parities",
+        "intro": "<p>When squaring the matrix gives the identity, increasing the exponent by two leaves the power unchanged.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Prove each parity pattern from its own base case, or combine them into a paired induction statement.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "matrices-alternate-matrix-powers-check",
+            "title": "Use a step of two for a matrix that repeats",
+            "prompt": "<p>Given \\(A=\\left[\\begin{matrix}0 & 3\\\\\\frac{1}{3} & 0\\end{matrix}\\right]\\), give the top-right entries of \\(A^{6}\\) and \\(A^{7}\\).</p>",
+            "fields": [
+              {
+                "key": "even",
+                "label": "Top-right entry at the even power",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "odd",
+                "label": "Top-right entry at the odd power",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Start once in each parity when the induction step advances by two.</p>",
+            "solution": "<p>Multiplying A by itself gives the identity. The two-step factor is therefore the identity at every stage.</p><p>At zero power the top-right entry is zero. At one power it is \\(3\\).</p><p>The even powers retain the first pattern and the odd powers retain the second.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A two-step proof starting at zero cannot prove the odd-index formula without another start.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "matrices-alternate-matrix-powers-follow-up",
+            "title": "Use a step of two for a matrix that repeats",
+            "prompt": "<p>Given \\(A=\\left[\\begin{matrix}0 & 5\\\\\\frac{1}{5} & 0\\end{matrix}\\right]\\), give the top-right entries of \\(A^{10}\\) and \\(A^{11}\\).</p>",
+            "fields": [
+              {
+                "key": "even",
+                "label": "Top-right entry at the even power",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "odd",
+                "label": "Top-right entry at the odd power",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Start once in each parity when the induction step advances by two.</p>",
+            "solution": "<p>Multiplying A by itself gives the identity. The two-step factor is therefore the identity at every stage.</p><p>At zero power the top-right entry is zero. At one power it is \\(5\\).</p><p>The even powers retain the first pattern and the odd powers retain the second.</p>"
+          }
+        ]
+      },
+      {
+        "id": "keep-second-order-matrix-terms",
+        "title": "How can a vanishing cube simplify a three-by-three power?",
+        "label": "Track coefficients of J and J²",
+        "intro": "<p>A correction matrix can have a non-zero square and a zero cube. Use the zero cube only after multiplying.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Compare the updated coefficients of the identity, the correction and its square. The last one gains the old linear coefficient at every step.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "matrices-keep-second-order-matrix-terms-check",
+            "title": "Keep the squared correction in a three-by-three power",
+            "prompt": "<p>Let \\(J=\\left[\\begin{matrix}0 & 3 & 0\\\\0 & 0 & 1\\\\0 & 0 & 0\\end{matrix}\\right]\\) and \\(A=I+J\\). Find the first-row third-column entries of \\(J^2\\) and \\(A^{3}\\).</p>",
+            "fields": [
+              {
+                "key": "j2",
+                "label": "Entry of J squared",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "power",
+                "label": "Entry of the requested power",
+                "type": "number",
+                "expected": "9"
+              }
+            ],
+            "hint": "<p>Preserve the J² term after multiplying and use J³ = 0 only where it applies.</p>",
+            "solution": "<p>The cube of J is zero. At power zero the proposed formula \\(I+nJ+\\frac12n(n-1)J^2\\) is the identity.</p><p>Multiplying the formula at k by \\(I+J\\) adds one to the first coefficient and k to the second because the cubic term vanishes.</p><p>Thus the new quadratic coefficient matches \\(\\frac12k(k+1)\\). The requested entries are \\(3\\) and \\(9\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Setting the square to zero when only the cube vanishes loses the quadratic term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "linear-matrix-correction",
+        "title": "How can a square-zero correction prove a power formula?",
+        "label": "Multiply and cancel the square",
+        "intro": "<p>When a matrix is the identity plus a square-zero correction, each multiplication can add the correction once.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Verify the zero square directly. Then multiply the assumed formula by the original and check the resulting coefficient.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "matrices-linear-matrix-correction-check",
+            "title": "Recognise a matrix with a linear correction to identity",
+            "prompt": "<p>Let \\(A=\\left[\\begin{matrix}4 & -3\\\\3 & -2\\end{matrix}\\right]\\) and \\(N=A-I\\). Find the top-left and top-right entries of \\(A^{3}\\).</p>",
+            "fields": [
+              {
+                "key": "entry1",
+                "label": "Top-left entry",
+                "type": "number",
+                "expected": "10"
+              },
+              {
+                "key": "entry2",
+                "label": "Top-right entry",
+                "type": "number",
+                "expected": "-9"
+              }
+            ],
+            "hint": "<p>At the inductive step keep the product of the two correction terms until it can be shown zero.</p>",
+            "solution": "<p>Multiplication shows \\(N^2=0\\). The formula \\(I+nN\\) starts at the identity.</p><p>Assuming it at k, multiplication by \\(I+N\\) gives \\(I+(k+1)N+kN^2\\). The last term is zero.</p><p>This proves the power formula. The requested matrix is \\(\\left[\\begin{matrix}10 & -9\\\\9 & -8\\end{matrix}\\right]\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not assume a correction is square-zero just because the pattern worked for a different matrix.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "matrices-linear-matrix-correction-follow-up",
+            "title": "Recognise a matrix with a linear correction to identity",
+            "prompt": "<p>Let \\(A=\\left[\\begin{matrix}6 & -5\\\\5 & -4\\end{matrix}\\right]\\) and \\(N=A-I\\). Find the top-left and top-right entries of \\(A^{5}\\).</p>",
+            "fields": [
+              {
+                "key": "entry1",
+                "label": "Top-left entry",
+                "type": "number",
+                "expected": "26"
+              },
+              {
+                "key": "entry2",
+                "label": "Top-right entry",
+                "type": "number",
+                "expected": "-25"
+              }
+            ],
+            "hint": "<p>At the inductive step keep the product of the two correction terms until it can be shown zero.</p>",
+            "solution": "<p>Multiplication shows \\(N^2=0\\). The formula \\(I+nN\\) starts at the identity.</p><p>Assuming it at k, multiplication by \\(I+N\\) gives \\(I+(k+1)N+kN^2\\). The last term is zero.</p><p>This proves the power formula. The requested matrix is \\(\\left[\\begin{matrix}26 & -25\\\\25 & -24\\end{matrix}\\right]\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Prove a power formula from multiplication on the diagonal",
+        "question": "<p>For \\(A=\\left[\\begin{matrix}2 & 0\\\\0 & -3\\end{matrix}\\right]\\), give the diagonal entries of \\(A^{2}\\).</p>",
+        "solution": [
+          "<p>At order zero the power is the identity. Each step multiplies the two diagonal entries separately by \\(2\\) and \\(-3\\).</p>",
+          "<p>Thus after n multiplications the leading entries are \\(2^n\\) and \\((-3)^n\\).</p>",
+          "<p>At the requested order the power is \\(\\left[\\begin{matrix}4 & 0\\\\0 & 9\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Track the single entry that changes at each power",
+        "question": "<p>For \\(A=\\left[\\begin{matrix}1 & 2\\\\0 & 1\\end{matrix}\\right]\\), give the top-right entry of \\(A^{2}\\) and its increment per additional multiplication.</p>",
+        "solution": [
+          "<p>At zero power the top-right entry is zero. Assume it is \\(2k\\) in the kth power.</p>",
+          "<p>Multiplication by A gives top-right entry \\(2k+2\\). The other entries match the old form.</p>",
+          "<p>This proves the general pattern and gives \\(4\\) at the requested order.</p>"
+        ]
+      },
+      {
+        "title": "Use a step of two for a matrix that repeats",
+        "question": "<p>Given \\(A=\\left[\\begin{matrix}0 & 2\\\\\\frac{1}{2} & 0\\end{matrix}\\right]\\), give the top-right entries of \\(A^{4}\\) and \\(A^{5}\\).</p>",
+        "solution": [
+          "<p>Multiplying A by itself gives the identity. The two-step factor is therefore the identity at every stage.</p>",
+          "<p>At zero power the top-right entry is zero. At one power it is \\(2\\).</p>",
+          "<p>The even powers retain the first pattern and the odd powers retain the second.</p>"
+        ]
+      },
+      {
+        "title": "Use a step of two for a matrix that repeats",
+        "question": "<p>Given \\(A=\\left[\\begin{matrix}0 & 4\\\\\\frac{1}{4} & 0\\end{matrix}\\right]\\), give the top-right entries of \\(A^{8}\\) and \\(A^{9}\\).</p>",
+        "solution": [
+          "<p>Multiplying A by itself gives the identity. The two-step factor is therefore the identity at every stage.</p>",
+          "<p>At zero power the top-right entry is zero. At one power it is \\(4\\).</p>",
+          "<p>The even powers retain the first pattern and the odd powers retain the second.</p>"
+        ]
+      },
+      {
+        "title": "Keep the squared correction in a three-by-three power",
+        "question": "<p>Let \\(J=\\left[\\begin{matrix}0 & 2 & 0\\\\0 & 0 & 1\\\\0 & 0 & 0\\end{matrix}\\right]\\) and \\(A=I+J\\). Find the first-row third-column entries of \\(J^2\\) and \\(A^{2}\\).</p>",
+        "solution": [
+          "<p>The cube of J is zero. At power zero the proposed formula \\(I+nJ+\\frac12n(n-1)J^2\\) is the identity.</p>",
+          "<p>Multiplying the formula at k by \\(I+J\\) adds one to the first coefficient and k to the second because the cubic term vanishes.</p>",
+          "<p>Thus the new quadratic coefficient matches \\(\\frac12k(k+1)\\). The requested entries are \\(2\\) and \\(2\\).</p>"
+        ]
+      },
+      {
+        "title": "Recognise a matrix with a linear correction to identity",
+        "question": "<p>Let \\(A=\\left[\\begin{matrix}3 & -2\\\\2 & -1\\end{matrix}\\right]\\) and \\(N=A-I\\). Find the top-left and top-right entries of \\(A^{2}\\).</p>",
+        "solution": [
+          "<p>Multiplication shows \\(N^2=0\\). The formula \\(I+nN\\) starts at the identity.</p>",
+          "<p>Assuming it at k, multiplication by \\(I+N\\) gives \\(I+(k+1)N+kN^2\\). The last term is zero.</p>",
+          "<p>This proves the power formula. The requested matrix is \\(\\left[\\begin{matrix}5 & -4\\\\4 & -3\\end{matrix}\\right]\\).</p>"
+        ]
+      },
+      {
+        "title": "Recognise a matrix with a linear correction to identity",
+        "question": "<p>Let \\(A=\\left[\\begin{matrix}5 & -4\\\\4 & -3\\end{matrix}\\right]\\) and \\(N=A-I\\). Find the top-left and top-right entries of \\(A^{4}\\).</p>",
+        "solution": [
+          "<p>Multiplication shows \\(N^2=0\\). The formula \\(I+nN\\) starts at the identity.</p>",
+          "<p>Assuming it at k, multiplication by \\(I+N\\) gives \\(I+(k+1)N+kN^2\\). The last term is zero.</p>",
+          "<p>This proves the power formula. The requested matrix is \\(\\left[\\begin{matrix}17 & -16\\\\16 & -15\\end{matrix}\\right]\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "matrices-diagonal-powers-extra",
+        "title": "Prove a power formula from multiplication on the diagonal",
+        "prompt": "<p>For \\(A=\\left[\\begin{matrix}4 & 0\\\\0 & -5\\end{matrix}\\right]\\), give the diagonal entries of \\(A^{4}\\).</p>",
+        "fields": [
+          {
+            "key": "diag1",
+            "label": "First diagonal entry",
+            "type": "number",
+            "expected": "256"
+          },
+          {
+            "key": "diag2",
+            "label": "Second diagonal entry",
+            "type": "number",
+            "expected": "625"
+          }
+        ],
+        "hint": "<p>Use brackets around the negative base before applying its exponent.</p>",
+        "solution": "<p>At order zero the power is the identity. Each step multiplies the two diagonal entries separately by \\(4\\) and \\(-5\\).</p><p>Thus after n multiplications the leading entries are \\(4^n\\) and \\((-5)^n\\).</p><p>At the requested order the power is \\(\\left[\\begin{matrix}256 & 0\\\\0 & 625\\end{matrix}\\right]\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "matrices-track-an-entry-extra",
+        "title": "Track the single entry that changes at each power",
+        "prompt": "<p>For \\(A=\\left[\\begin{matrix}1 & 4\\\\0 & 1\\end{matrix}\\right]\\), give the top-right entry of \\(A^{4}\\) and its increment per additional multiplication.</p>",
+        "fields": [
+          {
+            "key": "entry",
+            "label": "Top-right entry",
+            "type": "number",
+            "expected": "16"
+          },
+          {
+            "key": "increment",
+            "label": "Increment",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>Compute the first-row second-column product, keeping the diagonal ones.</p>",
+        "solution": "<p>At zero power the top-right entry is zero. Assume it is \\(4k\\) in the kth power.</p><p>Multiplication by A gives top-right entry \\(4k+4\\). The other entries match the old form.</p><p>This proves the general pattern and gives \\(16\\) at the requested order.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "matrices-alternate-matrix-powers-extra",
+        "title": "Use a step of two for a matrix that repeats",
+        "prompt": "<p>Given \\(A=\\left[\\begin{matrix}0 & 6\\\\\\frac{1}{6} & 0\\end{matrix}\\right]\\), give the top-right entries of \\(A^{12}\\) and \\(A^{13}\\).</p>",
+        "fields": [
+          {
+            "key": "even",
+            "label": "Top-right entry at the even power",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "odd",
+            "label": "Top-right entry at the odd power",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Start once in each parity when the induction step advances by two.</p>",
+        "solution": "<p>Multiplying A by itself gives the identity. The two-step factor is therefore the identity at every stage.</p><p>At zero power the top-right entry is zero. At one power it is \\(6\\).</p><p>The even powers retain the first pattern and the odd powers retain the second.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "matrices-keep-second-order-matrix-terms-extra",
+        "title": "Keep the squared correction in a three-by-three power",
+        "prompt": "<p>Let \\(J=\\left[\\begin{matrix}0 & 4 & 0\\\\0 & 0 & 1\\\\0 & 0 & 0\\end{matrix}\\right]\\) and \\(A=I+J\\). Find the first-row third-column entries of \\(J^2\\) and \\(A^{4}\\).</p>",
+        "fields": [
+          {
+            "key": "j2",
+            "label": "Entry of J squared",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "power",
+            "label": "Entry of the requested power",
+            "type": "number",
+            "expected": "24"
+          }
+        ],
+        "hint": "<p>Preserve the J² term after multiplying and use J³ = 0 only where it applies.</p>",
+        "solution": "<p>The cube of J is zero. At power zero the proposed formula \\(I+nJ+\\frac12n(n-1)J^2\\) is the identity.</p><p>Multiplying the formula at k by \\(I+J\\) adds one to the first coefficient and k to the second because the cubic term vanishes.</p><p>Thus the new quadratic coefficient matches \\(\\frac12k(k+1)\\). The requested entries are \\(4\\) and \\(24\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "matrices-linear-matrix-correction-extra",
+        "title": "Recognise a matrix with a linear correction to identity",
+        "prompt": "<p>Let \\(A=\\left[\\begin{matrix}7 & -6\\\\6 & -5\\end{matrix}\\right]\\) and \\(N=A-I\\). Find the top-left and top-right entries of \\(A^{6}\\).</p>",
+        "fields": [
+          {
+            "key": "entry1",
+            "label": "Top-left entry",
+            "type": "number",
+            "expected": "37"
+          },
+          {
+            "key": "entry2",
+            "label": "Top-right entry",
+            "type": "number",
+            "expected": "-36"
+          }
+        ],
+        "hint": "<p>At the inductive step keep the product of the two correction terms until it can be shown zero.</p>",
+        "solution": "<p>Multiplication shows \\(N^2=0\\). The formula \\(I+nN\\) starts at the identity.</p><p>Assuming it at k, multiplication by \\(I+N\\) gives \\(I+(k+1)N+kN^2\\). The last term is zero.</p><p>This proves the power formula. The requested matrix is \\(\\left[\\begin{matrix}37 & -36\\\\36 & -35\\end{matrix}\\right]\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Power zero",
+        "definition": "<p>The identity matrix for a square matrix.</p>"
+      },
+      {
+        "term": "Shear",
+        "definition": "<p>A map adding a multiple of one coordinate to another.</p>"
+      },
+      {
+        "term": "Parity",
+        "definition": "<p>Even or odd index type.</p>"
+      },
+      {
+        "term": "Correction matrix",
+        "definition": "<p>Matrix added to the identity in a structured example.</p>"
+      },
+      {
+        "term": "Nilpotent",
+        "definition": "<p>A matrix whose sufficiently high power is the zero matrix.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Base case</th><td>Evaluate the actual matrix power and the proposed expression.</td></tr><tr><th scope=\"row\">Step</th><td>Use the real matrix product \\(A^{k+1}=A^kA\\).</td></tr><tr><th scope=\"row\">Parity</th><td>Choose base cases for every index family reached.</td></tr><tr><th scope=\"row\">Vanishing products</th><td>Show which powers of the correction are zero before discarding them.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>If \\(A^2=I\\), what are \\(A^9\\) and \\(A^{10}\\)?</p><p><strong>Check</strong> \\(A^9=A\\) and \\(A^{10}=I\\).</p>",
+      "checks": "<ul><li>Negative diagonal bases need their signs raised to the same power.</li><li>Checking the changing entry is useful only after the other entries have also been verified.</li></ul>",
+      "examTip": "<p>Compare every entry of the next matrix with the target and name the range of integer powers proved.</p>"
+    },
+    "related": [
+      {
+        "title": "Recursive formulae and invariant bounds",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_induction_recurrences"
+      },
+      {
+        "title": "Divisibility and a complete inductive argument",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_induction_divisibility"
+      }
+    ]
+  },
+  "fp1_induction_divisibility": {
+    "updatedOn": "2026-11-21",
+    "description": "Carry integer multiples through expressions with products or powers. Choose an induction step that reaches the correct index set.",
+    "sections": [
+      {
+        "id": "keep-a-multiple",
+        "title": "How can a previous multiple establish the next one?",
+        "label": "Isolate a multiple of the assumed expression",
+        "intro": "<p>Divisibility means equality to the divisor times an integer. Products by integers preserve divisibility.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Rewrite the next expression as an integer multiple of the previous one plus a new term divisible by the required divisor.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "divisibility-keep-a-multiple-check",
+            "title": "Keep a multiple of the previous expression visible",
+            "prompt": "<p>To prove that \\(4\\) divides \\(5^{n} - 1\\) for all non-negative integers n, write the next expression as \\(aF_k+b\\). Find \\(a,b\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Multiplier a",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "b",
+                "label": "Additive term b",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>Subtract and add the same constant so that the earlier expression appears.</p>",
+            "solution": "<p>The base case is zero, which is a multiple of \\(4\\).</p><p>Write \\(F_{k+1}=5F_k+4\\). The first term is divisible by \\(4\\) if the inductive assumption holds, and the second is divisible directly.</p><p>The base and step establish the result for every non-negative integer.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Assuming a quotient is an integer is the conclusion you need to prove, not an available algebraic step.</p>"
+          }
+        ]
+      },
+      {
+        "id": "factor-the-change",
+        "title": "When is the difference easier than the next expression?",
+        "label": "Show the change is divisible",
+        "intro": "<p>If the old expression and the change are both divisible by the same integer, their sum is divisible too.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Factor the change to expose consecutive integers or specific numerical factors.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "divisibility-factor-the-change-check",
+            "title": "Factor a difference of consecutive products",
+            "prompt": "<p>The claim is that \\(\\left(n + 3\\right) \\left(n + 4\\right) \\left(n + 5\\right)\\) is divisible by six for all non-negative integers n. Give the base value and the expanded polynomial in k representing the change in the product from k to k + 1.</p>",
+            "fields": [
+              {
+                "key": "base",
+                "label": "Base product at n = 0",
+                "type": "number",
+                "expected": "60"
+              },
+              {
+                "key": "polynomial",
+                "label": "Expanded change in the product",
+                "type": "polynomial",
+                "expected": "3*k^2 + 27*k + 60",
+                "variables": [
+                  "k"
+                ]
+              }
+            ],
+            "hint": "<p>Factor before expanding so the consecutive integers remain visible.</p>",
+            "solution": "<p>At zero the product is \\(60\\), divisible by six.</p><p>Factor the common two factors in the difference. This gives \\(3 \\left(k + 4\\right) \\left(k + 5\\right)\\).</p><p>The two consecutive integers in this factorisation give an even product. Multiplication by three makes the change divisible by six, carrying the divisibility forward.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not rely on checking a few numerical changes. The factor reasoning must hold at every admissible k.</p>"
+          }
+        ]
+      },
+      {
+        "id": "match-an-exponential-base",
+        "title": "How do I rewrite a difference of powers for the induction step?",
+        "label": "Match one growth factor",
+        "intro": "<p>The next expression has two exponential terms, each multiplied by its own base. Factor one base times the earlier expression.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The leftover contains a coefficient involving the difference of the bases; check it is a multiple of the divisor.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "divisibility-match-an-exponential-base-check",
+            "title": "Use one growth factor to isolate the earlier powers",
+            "prompt": "<p>For \\(F_n=- 3^{n} + 7^{n}\\), write \\(F_{k+1}=AF_k+B\\). Give \\(A\\) and the value of \\(B\\) when \\(k=2\\). Use the form with B a constant times \\(3^k\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Multiplier A",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "b",
+                "label": "Added value at k = 2",
+                "type": "number",
+                "expected": "36"
+              }
+            ],
+            "hint": "<p>Match one exponential term and factor the residual difference of bases.</p>",
+            "solution": "<p>The base value is zero, so it is divisible by \\(4\\).</p><p>Subtract \\(7F_k\\) from the next expression. The terms with the larger base cancel, leaving \\(4 \\cdot 3^{k}\\).</p><p>This remainder is always a multiple of \\(4\\). At k equal to two it is \\(36\\). Thus the induction carries divisibility.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use the earlier whole expression, including both terms and their signs.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "divisibility-match-an-exponential-base-follow-up",
+            "title": "Use one growth factor to isolate the earlier powers",
+            "prompt": "<p>For \\(F_n=11^{n} - 5^{n}\\), write \\(F_{k+1}=AF_k+B\\). Give \\(A\\) and the value of \\(B\\) when \\(k=2\\). Use the form with B a constant times \\(5^k\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Multiplier A",
+                "type": "number",
+                "expected": "11"
+              },
+              {
+                "key": "b",
+                "label": "Added value at k = 2",
+                "type": "number",
+                "expected": "150"
+              }
+            ],
+            "hint": "<p>Match one exponential term and factor the residual difference of bases.</p>",
+            "solution": "<p>The base value is zero, so it is divisible by \\(6\\).</p><p>Subtract \\(11F_k\\) from the next expression. The terms with the larger base cancel, leaving \\(6 \\cdot 5^{k}\\).</p><p>This remainder is always a multiple of \\(6\\). At k equal to two it is \\(150\\). Thus the induction carries divisibility.</p>"
+          }
+        ]
+      },
+      {
+        "id": "induct-on-odd-indices",
+        "title": "Why might the proof step need to add two?",
+        "label": "Advance to the next admissible integer",
+        "intro": "<p>When the claim is only for odd integers, the next admissible index after k is k + 2.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check the first positive odd integer and use an implication from an arbitrary odd k to k + 2.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "divisibility-induct-on-odd-indices-check",
+            "title": "Advance to the next eligible odd index",
+            "prompt": "<p>The claim is that eight divides \\(n^{2} - 25\\) for every positive odd integer n. Give the base value and the change in the expression when moving from \\(k=3\\) to the next odd index.</p>",
+            "fields": [
+              {
+                "key": "base",
+                "label": "Value at the first odd index",
+                "type": "number",
+                "expected": "-24"
+              },
+              {
+                "key": "step",
+                "label": "Change at the requested step",
+                "type": "number",
+                "expected": "16"
+              }
+            ],
+            "hint": "<p>A step of one would not stay within the set of odd indices.</p>",
+            "solution": "<p>The first index is one, giving \\(-24\\), a multiple of eight.</p><p>A step adds two to the index. The change is \\(4(k+1)\\). Since k is odd, k + 1 is even, so the change is divisible by eight.</p><p>At the requested k the change is \\(16\\). Thus the induction visits all positive odd integers.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A one-step induction cannot use an odd-only assumption at every integer.</p>"
+          }
+        ]
+      },
+      {
+        "id": "carry-a-higher-factor",
+        "title": "How do I prove divisibility by a square?",
+        "label": "Track the entire remainder",
+        "intro": "<p>A linear correction to a power can remove the first-order contribution, leaving a multiple of a squared factor.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Subtract a suitable multiple of the preceding whole expression, then factor the remainder and compare with the squared divisor.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "divisibility-carry-a-higher-factor-check",
+            "title": "Carry a squared divisibility factor through the step",
+            "prompt": "<p>Let \\(F_n=5^{n} - 4 n - 1\\). In the form \\(F_{k+1}=aF_k+ck\\), find \\(a,c\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Multiplier a",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "c",
+                "label": "Coefficient c",
+                "type": "number",
+                "expected": "16"
+              }
+            ],
+            "hint": "<p>Subtract a multiple of the whole earlier expression, including its constant and linear parts.</p>",
+            "solution": "<p>At zero the expression is zero.</p><p>Subtract \\(5F_k\\) from the next expression. The exponential terms cancel, leaving \\(16 k\\).</p><p>Because the remainder has the squared factor \\(16\\), induction proves divisibility by that factor.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Divisibility by a factor does not automatically prove divisibility by its square.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "divisibility-carry-a-higher-factor-follow-up",
+            "title": "Carry a squared divisibility factor through the step",
+            "prompt": "<p>Let \\(F_n=7^{n} - 6 n - 1\\). In the form \\(F_{k+1}=aF_k+ck\\), find \\(a,c\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Multiplier a",
+                "type": "number",
+                "expected": "7"
+              },
+              {
+                "key": "c",
+                "label": "Coefficient c",
+                "type": "number",
+                "expected": "36"
+              }
+            ],
+            "hint": "<p>Subtract a multiple of the whole earlier expression, including its constant and linear parts.</p>",
+            "solution": "<p>At zero the expression is zero.</p><p>Subtract \\(7F_k\\) from the next expression. The exponential terms cancel, leaving \\(36 k\\).</p><p>Because the remainder has the squared factor \\(36\\), induction proves divisibility by that factor.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Keep a multiple of the previous expression visible",
+        "question": "<p>To prove that \\(3\\) divides \\(4^{n} - 1\\) for all non-negative integers n, write the next expression as \\(aF_k+b\\). Find \\(a,b\\).</p>",
+        "solution": [
+          "<p>The base case is zero, which is a multiple of \\(3\\).</p>",
+          "<p>Write \\(F_{k+1}=4F_k+3\\). The first term is divisible by \\(3\\) if the inductive assumption holds, and the second is divisible directly.</p>",
+          "<p>The base and step establish the result for every non-negative integer.</p>"
+        ]
+      },
+      {
+        "title": "Factor a difference of consecutive products",
+        "question": "<p>The claim is that \\(\\left(n + 2\\right) \\left(n + 3\\right) \\left(n + 4\\right)\\) is divisible by six for all non-negative integers n. Give the base value and the expanded polynomial in k representing the change in the product from k to k + 1.</p>",
+        "solution": [
+          "<p>At zero the product is \\(24\\), divisible by six.</p>",
+          "<p>Factor the common two factors in the difference. This gives \\(3 \\left(k + 3\\right) \\left(k + 4\\right)\\).</p>",
+          "<p>The two consecutive integers in this factorisation give an even product. Multiplication by three makes the change divisible by six, carrying the divisibility forward.</p>"
+        ]
+      },
+      {
+        "title": "Use one growth factor to isolate the earlier powers",
+        "question": "<p>For \\(F_n=- 2^{n} + 5^{n}\\), write \\(F_{k+1}=AF_k+B\\). Give \\(A\\) and the value of \\(B\\) when \\(k=2\\). Use the form with B a constant times \\(2^k\\).</p>",
+        "solution": [
+          "<p>The base value is zero, so it is divisible by \\(3\\).</p>",
+          "<p>Subtract \\(5F_k\\) from the next expression. The terms with the larger base cancel, leaving \\(3 \\cdot 2^{k}\\).</p>",
+          "<p>This remainder is always a multiple of \\(3\\). At k equal to two it is \\(12\\). Thus the induction carries divisibility.</p>"
+        ]
+      },
+      {
+        "title": "Use one growth factor to isolate the earlier powers",
+        "question": "<p>For \\(F_n=- 4^{n} + 9^{n}\\), write \\(F_{k+1}=AF_k+B\\). Give \\(A\\) and the value of \\(B\\) when \\(k=2\\). Use the form with B a constant times \\(4^k\\).</p>",
+        "solution": [
+          "<p>The base value is zero, so it is divisible by \\(5\\).</p>",
+          "<p>Subtract \\(9F_k\\) from the next expression. The terms with the larger base cancel, leaving \\(5 \\cdot 4^{k}\\).</p>",
+          "<p>This remainder is always a multiple of \\(5\\). At k equal to two it is \\(80\\). Thus the induction carries divisibility.</p>"
+        ]
+      },
+      {
+        "title": "Advance to the next eligible odd index",
+        "question": "<p>The claim is that eight divides \\(n^{2} - 9\\) for every positive odd integer n. Give the base value and the change in the expression when moving from \\(k=1\\) to the next odd index.</p>",
+        "solution": [
+          "<p>The first index is one, giving \\(-8\\), a multiple of eight.</p>",
+          "<p>A step adds two to the index. The change is \\(4(k+1)\\). Since k is odd, k + 1 is even, so the change is divisible by eight.</p>",
+          "<p>At the requested k the change is \\(8\\). Thus the induction visits all positive odd integers.</p>"
+        ]
+      },
+      {
+        "title": "Carry a squared divisibility factor through the step",
+        "question": "<p>Let \\(F_n=4^{n} - 3 n - 1\\). In the form \\(F_{k+1}=aF_k+ck\\), find \\(a,c\\).</p>",
+        "solution": [
+          "<p>At zero the expression is zero.</p>",
+          "<p>Subtract \\(4F_k\\) from the next expression. The exponential terms cancel, leaving \\(9 k\\).</p>",
+          "<p>Because the remainder has the squared factor \\(9\\), induction proves divisibility by that factor.</p>"
+        ]
+      },
+      {
+        "title": "Carry a squared divisibility factor through the step",
+        "question": "<p>Let \\(F_n=6^{n} - 5 n - 1\\). In the form \\(F_{k+1}=aF_k+ck\\), find \\(a,c\\).</p>",
+        "solution": [
+          "<p>At zero the expression is zero.</p>",
+          "<p>Subtract \\(6F_k\\) from the next expression. The exponential terms cancel, leaving \\(25 k\\).</p>",
+          "<p>Because the remainder has the squared factor \\(25\\), induction proves divisibility by that factor.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "divisibility-keep-a-multiple-extra",
+        "title": "Keep a multiple of the previous expression visible",
+        "prompt": "<p>To prove that \\(5\\) divides \\(6^{n} - 1\\) for all non-negative integers n, write the next expression as \\(aF_k+b\\). Find \\(a,b\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Multiplier a",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "b",
+            "label": "Additive term b",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>Subtract and add the same constant so that the earlier expression appears.</p>",
+        "solution": "<p>The base case is zero, which is a multiple of \\(5\\).</p><p>Write \\(F_{k+1}=6F_k+5\\). The first term is divisible by \\(5\\) if the inductive assumption holds, and the second is divisible directly.</p><p>The base and step establish the result for every non-negative integer.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "divisibility-factor-the-change-extra",
+        "title": "Factor a difference of consecutive products",
+        "prompt": "<p>The claim is that \\(\\left(n + 4\\right) \\left(n + 5\\right) \\left(n + 6\\right)\\) is divisible by six for all non-negative integers n. Give the base value and the expanded polynomial in k representing the change in the product from k to k + 1.</p>",
+        "fields": [
+          {
+            "key": "base",
+            "label": "Base product at n = 0",
+            "type": "number",
+            "expected": "120"
+          },
+          {
+            "key": "polynomial",
+            "label": "Expanded change in the product",
+            "type": "polynomial",
+            "expected": "3*k^2 + 33*k + 90",
+            "variables": [
+              "k"
+            ]
+          }
+        ],
+        "hint": "<p>Factor before expanding so the consecutive integers remain visible.</p>",
+        "solution": "<p>At zero the product is \\(120\\), divisible by six.</p><p>Factor the common two factors in the difference. This gives \\(3 \\left(k + 5\\right) \\left(k + 6\\right)\\).</p><p>The two consecutive integers in this factorisation give an even product. Multiplication by three makes the change divisible by six, carrying the divisibility forward.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "divisibility-match-an-exponential-base-extra",
+        "title": "Use one growth factor to isolate the earlier powers",
+        "prompt": "<p>For \\(F_n=13^{n} - 6^{n}\\), write \\(F_{k+1}=AF_k+B\\). Give \\(A\\) and the value of \\(B\\) when \\(k=2\\). Use the form with B a constant times \\(6^k\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Multiplier A",
+            "type": "number",
+            "expected": "13"
+          },
+          {
+            "key": "b",
+            "label": "Added value at k = 2",
+            "type": "number",
+            "expected": "252"
+          }
+        ],
+        "hint": "<p>Match one exponential term and factor the residual difference of bases.</p>",
+        "solution": "<p>The base value is zero, so it is divisible by \\(7\\).</p><p>Subtract \\(13F_k\\) from the next expression. The terms with the larger base cancel, leaving \\(7 \\cdot 6^{k}\\).</p><p>This remainder is always a multiple of \\(7\\). At k equal to two it is \\(252\\). Thus the induction carries divisibility.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "divisibility-induct-on-odd-indices-extra",
+        "title": "Advance to the next eligible odd index",
+        "prompt": "<p>The claim is that eight divides \\(n^{2} - 49\\) for every positive odd integer n. Give the base value and the change in the expression when moving from \\(k=5\\) to the next odd index.</p>",
+        "fields": [
+          {
+            "key": "base",
+            "label": "Value at the first odd index",
+            "type": "number",
+            "expected": "-48"
+          },
+          {
+            "key": "step",
+            "label": "Change at the requested step",
+            "type": "number",
+            "expected": "24"
+          }
+        ],
+        "hint": "<p>A step of one would not stay within the set of odd indices.</p>",
+        "solution": "<p>The first index is one, giving \\(-48\\), a multiple of eight.</p><p>A step adds two to the index. The change is \\(4(k+1)\\). Since k is odd, k + 1 is even, so the change is divisible by eight.</p><p>At the requested k the change is \\(24\\). Thus the induction visits all positive odd integers.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "divisibility-carry-a-higher-factor-extra",
+        "title": "Carry a squared divisibility factor through the step",
+        "prompt": "<p>Let \\(F_n=8^{n} - 7 n - 1\\). In the form \\(F_{k+1}=aF_k+ck\\), find \\(a,c\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Multiplier a",
+            "type": "number",
+            "expected": "8"
+          },
+          {
+            "key": "c",
+            "label": "Coefficient c",
+            "type": "number",
+            "expected": "49"
+          }
+        ],
+        "hint": "<p>Subtract a multiple of the whole earlier expression, including its constant and linear parts.</p>",
+        "solution": "<p>At zero the expression is zero.</p><p>Subtract \\(8F_k\\) from the next expression. The exponential terms cancel, leaving \\(49 k\\).</p><p>Because the remainder has the squared factor \\(49\\), induction proves divisibility by that factor.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Divisible",
+        "definition": "<p>Equal to the stated divisor times an integer.</p>"
+      },
+      {
+        "term": "Integer multiple",
+        "definition": "<p>Product of an integer and the specified divisor.</p>"
+      },
+      {
+        "term": "Remainder",
+        "definition": "<p>Expression left after subtracting a chosen multiple of the previous expression.</p>"
+      },
+      {
+        "term": "Eligible index",
+        "definition": "<p>An index allowed by the claim.</p>"
+      },
+      {
+        "term": "Step size",
+        "definition": "<p>Difference between consecutive indices reached by the induction.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Base</th><td>Check the first index in the claim.</td></tr><tr><th scope=\"row\">Inductive step</th><td>Use a multiple of the old expression plus a divisible remainder.</td></tr><tr><th scope=\"row\">Change factorisation</th><td>Prove its divisibility from exact algebra or integer factors.</td></tr><tr><th scope=\"row\">Odd indices</th><td>Advance by two, starting from the first positive odd index.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>If five divides \\(F_k\\) and \\(F_{k+1}=3F_k+10\\), must five divide \\(F_{k+1}\\)?</p><p><strong>Check</strong> Yes. Both terms on the right are multiples of five.</p>",
+      "checks": "<ul><li>Assuming a quotient is an integer is the conclusion you need to prove, not an available algebraic step.</li><li>Do not rely on checking a few numerical changes. The factor reasoning must hold at every admissible k.</li></ul>",
+      "examTip": "<p>Say where the hypothesis is used and name every index category reached by the chosen step.</p>"
+    },
+    "related": [
+      {
+        "title": "Induction for matrix powers",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_induction_matrices"
+      }
+    ]
+  }
+}
