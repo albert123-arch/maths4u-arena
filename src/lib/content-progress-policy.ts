@@ -39,6 +39,10 @@ export const notationProgressRevisions = [{
   key: "9709-m1-momentum", fromVersion: "1.0.0", toVersion: "1.0.1",
   fromFingerprint: "e254cd0eadedeba0aa0bc5b699f6c865af3d139c9ecaa9c4e933c941ef221914",
   toFingerprint: "bcc7c1cdc539d95e06e203bb436979e2bd22e1f2efaf67b95cc7fc5fdcced0cb",
+}, {
+  key: "9709-m1-newtons-laws", fromVersion: "1.0.0", toVersion: "1.0.1",
+  fromFingerprint: "7b6e036f3429f5eca7c68d2518fabb377c40c6150644065713df9efe24bd8605",
+  toFingerprint: "7f6b425e3c7e26b2668e41e950751f5e822c029e5d9aac0b26237952736bc74e",
 }] as const;
 
 export function notationProgressPolicy(p: ContentPackage) {
