@@ -1,0 +1,2649 @@
+{
+  "stats_crv_density": {
+    "updatedOn": "2026-11-21",
+    "description": "Normalise a piecewise density, distinguish point probability from curve height and integrate over the actual support.",
+    "sections": [
+      {
+        "id": "area",
+        "title": "What part of a density graph represents probability?",
+        "label": "Read area",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A density is a height per unit of the variable. The probability of an interval is the area above it.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\mathrm P(a\\le X\\le b)=\\int_a^b f(x)\\,\\mathrm dx\\). For a continuous distribution with a density, each single point has probability zero.</p>",
+            "figure": {
+              "src": "/assets/study/9231/stats_crv_density/interval-area.svg",
+              "alt": "An increasing density from zero to one with a blue shaded interval between one quarter and three quarters.",
+              "caption": "<p>The interval probability is the shaded area; the height at a single point contributes no area.</p>",
+              "width": 640,
+              "height": 350
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A height may exceed one. It is the area, after using the horizontal width, that must be between zero and one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-density-study-01",
+            "title": "Distinguish a density height from an area",
+            "prompt": "<p>The density is \\(\\frac{8 x}{5} + \\frac{8}{5}\\) for \\(0\\le x\\le\\frac{1}{2}\\) and zero elsewhere.</p><p>Find the stated height at \\(\\frac{1}{8}\\), the point probability \\(\\mathrm P(X=\\frac{1}{8})\\), and \\(\\mathrm P(\\frac{1}{8}\\le X\\le\\frac{3}{8})\\).</p>",
+            "fields": [
+              {
+                "key": "height",
+                "label": "Density height",
+                "expected": "9/5",
+                "type": "number"
+              },
+              {
+                "key": "point",
+                "label": "Point probability",
+                "expected": "0",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "9/5",
+                    "feedback": "<p>That is the height of the density at the point. A point has no width.</p>"
+                  }
+                ]
+              },
+              {
+                "key": "interval",
+                "label": "Interval probability",
+                "expected": "1/2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>A height needs a width to contribute probability.</p>",
+            "solution": "<p>Substituting into the density gives a height of \\(\\frac{9}{5}\\).</p><p>Any single point has zero probability in a continuous distribution with a density.</p><p>Integrate on the relevant support pieces to get \\(\\int_{\\frac{1}{8}}^{\\frac{3}{8}}\\frac{8 x}{5} + \\frac{8}{5}\\,\\mathrm dx=\\frac{1}{2}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "normalisation",
+        "title": "How do I choose the unknown scale?",
+        "label": "Normalise the whole support",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Start with the entire area. Only after fixing the constant should you narrow the bounds to the event in question.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Multiply the proposed shape by a single constant so that the sum of all branch integrals is one.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not set the area of only the requested event equal to one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-density-study-02",
+            "title": "Scale the full density before finding an interval probability",
+            "prompt": "<p>The proposed density has the following non-zero pieces: \\(k(3 - x)\\) on \\(0\\le x&lt;3\\). It is zero elsewhere.</p><p>Find \\(k\\) and \\(\\mathrm P(1&lt;X&lt;2)\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Normalising constant k",
+                "expected": "2/9",
+                "type": "number"
+              },
+              {
+                "key": "prob",
+                "label": "Interval probability",
+                "expected": "1/3",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Use the entire support to determine k, then restrict the probability calculation to the event.</p>",
+            "solution": "<p>The unscaled area is \\(\\int_{0}^{3}3 - x\\,\\mathrm dx=\\frac{9}{2}\\). The true area must be one.</p><p>Thus \\(k=\\frac{2}{9}\\). Substituting this makes all densities non-negative on their stated intervals.</p><p>Use only the active pieces of the requested event. This gives \\(\\int_{1}^{2}\\frac{2}{3} - \\frac{2 x}{9}\\,\\mathrm dx=\\frac{1}{3}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "branches",
+        "title": "When must I split an interval integral?",
+        "label": "Split at every join",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A piecewise model can have different equations on adjacent parts of one support. Use each equation only on its assigned interval.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A density may jump at a break. Unless the question adds a condition, the heights on the two sides need not be equal.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The formula for the first branch must stop where the second begins.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Event position</th><th scope=\"col\">Integral choice</th></tr></thead><tbody><tr><th scope=\"row\">Inside one branch</th><td>One integral on that interval.</td></tr><tr><th scope=\"row\">Across a join</th><td>Clip and sum the separate integrals.</td></tr><tr><th scope=\"row\">Inside a gap</th><td>Probability zero.</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-density-study-03",
+            "title": "Scale the full density before finding an interval probability",
+            "prompt": "<p>The proposed density has the following non-zero pieces: \\(k(x + 1)\\) on \\(0\\le x&lt;2\\); \\(k(1)\\) on \\(2\\le x&lt;5\\). It is zero elsewhere.</p><p>Find \\(k\\) and \\(\\mathrm P(1&lt;X&lt;3)\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "k",
+                "label": "Normalising constant k",
+                "expected": "1/7",
+                "type": "number"
+              },
+              {
+                "key": "prob",
+                "label": "Interval probability",
+                "expected": "1/2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Use the entire support to determine k, then restrict the probability calculation to the event.</p>",
+            "solution": "<p>The unscaled area is \\(\\int_{0}^{2}x + 1\\,\\mathrm dx+\\int_{2}^{5}1\\,\\mathrm dx=7\\). The true area must be one.</p><p>Thus \\(k=\\frac{1}{7}\\). Substituting this makes all densities non-negative on their stated intervals.</p><p>Use only the active pieces of the requested event. This gives \\(\\int_{1}^{2}\\frac{x}{7} + \\frac{1}{7}\\,\\mathrm dx+\\int_{2}^{3}\\frac{1}{7}\\,\\mathrm dx=\\frac{1}{2}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "gaps",
+        "title": "What does a gap in the support contribute?",
+        "label": "Skip empty intervals",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>An event can include values that the model never produces. Those intervals contribute no area.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Clip each event to the union of the stated support intervals. Add only the parts with non-zero density.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not bridge a gap by extending the nearest formula.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-density-study-04",
+            "title": "Find the probability across the relevant branches",
+            "prompt": "<p>The density is \\(\\frac{1}{4}\\) for \\(-3\\le x&lt;-1\\); \\(\\frac{1}{4}\\) for \\(2\\le x&lt;4\\) and zero elsewhere.</p><p>Find \\(\\mathrm P(-2&lt;X\\le3)\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Interval probability",
+                "expected": "1/2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Write the actual interval for each branch before integrating.</p>",
+            "solution": "<p>Clip the requested event to the support. At each change of formula start a separate integral.</p><p>The contributing areas give \\(\\int_{-2}^{-1}\\frac{1}{4}\\,\\mathrm dx+\\int_{2}^{3}\\frac{1}{4}\\,\\mathrm dx=\\frac{1}{2}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "validity",
+        "title": "Is a total area of one sufficient?",
+        "label": "Check area and sign",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>One condition controls the total area; a separate condition prevents negative probabilities.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A density needs \\(f(x)\\ge0\\) and \\(\\int_{-\\infty}^{\\infty} f(x)\\,\\mathrm dx=1\\). Check both.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A negative section can cancel positive area in the total integral. That would still be invalid.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-density-study-05",
+            "title": "Check the two density requirements",
+            "prompt": "<p>A proposed density is \\(2 x\\) on \\(0\\le x\\le1\\) and zero elsewhere. Find the area under it on this interval. Then decide whether the model is a valid density.</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Total integral",
+                "expected": "1",
+                "type": "number"
+              },
+              {
+                "key": "valid",
+                "label": "Valid density",
+                "type": "choice",
+                "expected": "A",
+                "options": {
+                  "A": "<p>Yes.</p>",
+                  "B": "<p>No.</p>"
+                }
+              }
+            ],
+            "hint": "<p>A total integral of one is necessary but insufficient if any branch has negative height.</p>",
+            "solution": "<p>The integral is \\(\\int_{0}^{1}2 x\\,\\mathrm dx=1\\).</p><p>The least value on the proposed support is \\(0\\).</p><p>Both conditions hold.</p>"
+          }
+        ]
+      },
+      {
+        "id": "boundary",
+        "title": "Can changing one endpoint alter a probability?",
+        "label": "Interpret endpoint types",
+        "minutes": 5,
+        "level": "extension",
+        "intro": "<p>Including or excluding a single boundary point does not affect a probability. The statement still determines which height is assigned at that boundary.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For interval probability, a formula can be changed at an isolated point without changing any area.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A jump in the height is allowed; it does not create a jump in cumulative probability.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-density-study-06",
+            "title": "Find the probability across the relevant branches",
+            "prompt": "<p>The density is \\(1\\) for \\(0\\le x&lt;\\frac{1}{2}\\); \\(\\frac{1}{2}\\) for \\(2\\le x&lt;3\\) and zero elsewhere.</p><p>Find \\(\\mathrm P(\\frac{3}{4}&lt;X\\le\\frac{3}{2})\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Interval probability",
+                "expected": "0",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Write the actual interval for each branch before integrating.</p>",
+            "solution": "<p>Clip the requested event to the support. At each change of formula start a separate integral.</p><p>The contributing areas give \\(0=0\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Distinguish a density height from an area",
+        "question": "<p>The density is \\(\\frac{2 x}{5} + \\frac{4}{5}\\) for \\(0\\le x\\le1\\) and zero elsewhere.</p><p>Find the stated height at \\(\\frac{1}{4}\\), the point probability \\(\\mathrm P(X=\\frac{1}{4})\\), and \\(\\mathrm P(\\frac{1}{4}\\le X\\le\\frac{3}{4})\\).</p>",
+        "solution": [
+          "<p>Substituting into the density gives a height of \\(\\frac{9}{10}\\).</p>",
+          "<p>Any single point has zero probability in a continuous distribution with a density.</p>",
+          "<p>Integrate on the relevant support pieces to get \\(\\int_{\\frac{1}{4}}^{\\frac{3}{4}}\\frac{2 x}{5} + \\frac{4}{5}\\,\\mathrm dx=\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Distinguish a density height from an area",
+        "question": "<p>The density is \\(4\\) for \\(0\\le x\\le\\frac{1}{4}\\) and zero elsewhere.</p><p>Find the stated height at \\(\\frac{1}{16}\\), the point probability \\(\\mathrm P(X=\\frac{1}{16})\\), and \\(\\mathrm P(\\frac{1}{16}\\le X\\le\\frac{1}{8})\\).</p>",
+        "solution": [
+          "<p>Substituting into the density gives a height of \\(4\\).</p>",
+          "<p>Any single point has zero probability in a continuous distribution with a density.</p>",
+          "<p>Integrate on the relevant support pieces to get \\(\\int_{\\frac{1}{16}}^{\\frac{1}{8}}4\\,\\mathrm dx=\\frac{1}{4}\\).</p>"
+        ]
+      },
+      {
+        "title": "Scale the full density before finding an interval probability",
+        "question": "<p>The proposed density has the following non-zero pieces: \\(k(x + 2)\\) on \\(0\\le x&lt;1\\). It is zero elsewhere.</p><p>Find \\(k\\) and \\(\\mathrm P(\\frac{1}{4}&lt;X&lt;\\frac{3}{4})\\) exactly.</p>",
+        "solution": [
+          "<p>The unscaled area is \\(\\int_{0}^{1}x + 2\\,\\mathrm dx=\\frac{5}{2}\\). The true area must be one.</p>",
+          "<p>Thus \\(k=\\frac{2}{5}\\). Substituting this makes all densities non-negative on their stated intervals.</p>",
+          "<p>Use only the active pieces of the requested event. This gives \\(\\int_{\\frac{1}{4}}^{\\frac{3}{4}}\\frac{2 x}{5} + \\frac{4}{5}\\,\\mathrm dx=\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the probability across the relevant branches",
+        "question": "<p>The density is \\(\\frac{2 x}{5}\\) for \\(0\\le x&lt;1\\); \\(\\frac{2}{5}\\) for \\(1\\le x&lt;3\\) and zero elsewhere.</p><p>Find \\(\\mathrm P(\\frac{1}{2}&lt;X\\le2)\\) exactly.</p>",
+        "solution": [
+          "<p>Clip the requested event to the support. At each change of formula start a separate integral.</p>",
+          "<p>The contributing areas give \\(\\int_{\\frac{1}{2}}^{1}\\frac{2 x}{5}\\,\\mathrm dx+\\int_{1}^{2}\\frac{2}{5}\\,\\mathrm dx=\\frac{11}{20}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the probability across the relevant branches",
+        "question": "<p>The density is \\(1\\) for \\(0\\le x&lt;\\frac{1}{2}\\); \\(\\frac{1}{2}\\) for \\(2\\le x&lt;3\\) and zero elsewhere.</p><p>Find \\(\\mathrm P(\\frac{1}{4}&lt;X\\le\\frac{5}{2})\\) exactly.</p>",
+        "solution": [
+          "<p>Clip the requested event to the support. At each change of formula start a separate integral.</p>",
+          "<p>The contributing areas give \\(\\int_{\\frac{1}{4}}^{\\frac{1}{2}}1\\,\\mathrm dx+\\int_{2}^{\\frac{5}{2}}\\frac{1}{2}\\,\\mathrm dx=\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Check the two density requirements",
+        "question": "<p>A proposed density is \\(3 x - \\frac{1}{2}\\) on \\(0\\le x\\le1\\) and zero elsewhere. Find the area under it on this interval. Then decide whether the model is a valid density.</p>",
+        "solution": [
+          "<p>The integral is \\(\\int_{0}^{1}3 x - \\frac{1}{2}\\,\\mathrm dx=1\\).</p>",
+          "<p>The least value on the proposed support is \\(- \\frac{1}{2}\\).</p>",
+          "<p>A valid density needs total area one and non-negative height throughout.</p>"
+        ]
+      },
+      {
+        "title": "Find the probability across the relevant branches",
+        "question": "<p>The density is \\(\\frac{1}{5}\\) for \\(-2\\le x\\le3\\) and zero elsewhere.</p><p>Find \\(\\mathrm P(-2&lt;X\\le3)\\) exactly.</p>",
+        "solution": [
+          "<p>Clip the requested event to the support. At each change of formula start a separate integral.</p>",
+          "<p>The contributing areas give \\(\\int_{-2}^{3}\\frac{1}{5}\\,\\mathrm dx=1\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Density",
+        "definition": "<p>A non-negative function whose area on an interval is its probability.</p>"
+      },
+      {
+        "term": "Support",
+        "definition": "<p>The region where a distribution can place probability. A gap has zero density.</p>"
+      },
+      {
+        "term": "Normalise",
+        "definition": "<p>Choose a constant which makes the total area one.</p>"
+      },
+      {
+        "term": "Point probability",
+        "definition": "<p>A single point has probability zero in a distribution with a density.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-crv-density-study-07",
+        "title": "Distinguish a density height from an area",
+        "prompt": "<p>The density is \\(\\frac{x}{4}\\) for \\(1\\le x\\le3\\) and zero elsewhere.</p><p>Find the stated height at \\(\\frac{3}{2}\\), the point probability \\(\\mathrm P(X=\\frac{3}{2})\\), and \\(\\mathrm P(\\frac{3}{2}\\le X\\le\\frac{5}{2})\\).</p>",
+        "fields": [
+          {
+            "key": "height",
+            "label": "Density height",
+            "expected": "3/8",
+            "type": "number"
+          },
+          {
+            "key": "point",
+            "label": "Point probability",
+            "expected": "0",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "3/8",
+                "feedback": "<p>That is the height of the density at the point. A point has no width.</p>"
+              }
+            ]
+          },
+          {
+            "key": "interval",
+            "label": "Interval probability",
+            "expected": "1/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A height needs a width to contribute probability.</p>",
+        "solution": "<p>Substituting into the density gives a height of \\(\\frac{3}{8}\\).</p><p>Any single point has zero probability in a continuous distribution with a density.</p><p>Integrate on the relevant support pieces to get \\(\\int_{\\frac{3}{2}}^{\\frac{5}{2}}\\frac{x}{4}\\,\\mathrm dx=\\frac{1}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-density-study-08",
+        "title": "Scale the full density before finding an interval probability",
+        "prompt": "<p>The proposed density has the following non-zero pieces: \\(k(x^{2})\\) on \\(0\\le x&lt;2\\). It is zero elsewhere.</p><p>Find \\(k\\) and \\(\\mathrm P(\\frac{1}{2}&lt;X&lt;\\frac{3}{2})\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "k",
+            "label": "Normalising constant k",
+            "expected": "3/8",
+            "type": "number"
+          },
+          {
+            "key": "prob",
+            "label": "Interval probability",
+            "expected": "13/32",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Use the entire support to determine k, then restrict the probability calculation to the event.</p>",
+        "solution": "<p>The unscaled area is \\(\\int_{0}^{2}x^{2}\\,\\mathrm dx=\\frac{8}{3}\\). The true area must be one.</p><p>Thus \\(k=\\frac{3}{8}\\). Substituting this makes all densities non-negative on their stated intervals.</p><p>Use only the active pieces of the requested event. This gives \\(\\int_{\\frac{1}{2}}^{\\frac{3}{2}}\\frac{3 x^{2}}{8}\\,\\mathrm dx=\\frac{13}{32}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-density-study-09",
+        "title": "Find the probability across the relevant branches",
+        "prompt": "<p>The density is \\(\\frac{1}{7}\\) for \\(0\\le x&lt;3\\); \\(\\frac{2}{7}\\) for \\(3\\le x&lt;5\\) and zero elsewhere.</p><p>Find \\(\\mathrm P(2&lt;X\\le4)\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Interval probability",
+            "expected": "3/7",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Write the actual interval for each branch before integrating.</p>",
+        "solution": "<p>Clip the requested event to the support. At each change of formula start a separate integral.</p><p>The contributing areas give \\(\\int_{2}^{3}\\frac{1}{7}\\,\\mathrm dx+\\int_{3}^{4}\\frac{2}{7}\\,\\mathrm dx=\\frac{3}{7}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-density-study-10",
+        "title": "Find the probability across the relevant branches",
+        "prompt": "<p>The density is \\(\\frac{1}{8}\\) for \\(0\\le x&lt;2\\); \\(\\frac{1}{4}\\) for \\(4\\le x&lt;7\\) and zero elsewhere.</p><p>Find \\(\\mathrm P(1&lt;X\\le5)\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Interval probability",
+            "expected": "3/8",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Write the actual interval for each branch before integrating.</p>",
+        "solution": "<p>Clip the requested event to the support. At each change of formula start a separate integral.</p><p>The contributing areas give \\(\\int_{1}^{2}\\frac{1}{8}\\,\\mathrm dx+\\int_{4}^{5}\\frac{1}{4}\\,\\mathrm dx=\\frac{3}{8}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-density-study-11",
+        "title": "Check the two density requirements",
+        "prompt": "<p>A proposed density is \\(x + \\frac{1}{2}\\) on \\(-1\\le x\\le1\\) and zero elsewhere. Find the area under it on this interval. Then decide whether the model is a valid density.</p>",
+        "fields": [
+          {
+            "key": "area",
+            "label": "Total integral",
+            "expected": "1",
+            "type": "number"
+          },
+          {
+            "key": "valid",
+            "label": "Valid density",
+            "type": "choice",
+            "expected": "B",
+            "options": {
+              "A": "<p>Yes.</p>",
+              "B": "<p>No.</p>"
+            }
+          }
+        ],
+        "hint": "<p>A total integral of one is necessary but insufficient if any branch has negative height.</p>",
+        "solution": "<p>The integral is \\(\\int_{-1}^{1}x + \\frac{1}{2}\\,\\mathrm dx=1\\).</p><p>The least value on the proposed support is \\(- \\frac{1}{2}\\).</p><p>A valid density needs total area one and non-negative height throughout.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-density-study-12",
+        "title": "Find the probability across the relevant branches",
+        "prompt": "<p>The density is \\(\\frac{1}{6}\\) for \\(-3\\le x\\le3\\) and zero elsewhere.</p><p>Find \\(\\mathrm P(-4&lt;X\\le-3)\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Interval probability",
+            "expected": "0",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Write the actual interval for each branch before integrating.</p>",
+        "solution": "<p>Clip the requested event to the support. At each change of formula start a separate integral.</p><p>The contributing areas give \\(0=0\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Check the whole density</h2><p>Keep curve height, interval area and point probability distinct.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Task</th><th scope=\"col\">Write or check</th></tr></thead><tbody><tr><th scope=\"row\">Total area</th><td>\\(\\sum\\int f(x)\\,\\mathrm dx=1\\)</td></tr><tr><th scope=\"row\">Sign</th><td>Check every branch is non-negative.</td></tr><tr><th scope=\"row\">Interval</th><td>Split at every join or gap.</td></tr><tr><th scope=\"row\">A single point</th><td>\\(\\mathrm P(X=a)=0\\)</td></tr></tbody></table></div><h2>One example</h2><p>For \\(f(x)=4x\\) on \\(0\\le x\\le\\frac{1}{\\sqrt2}\\) and zero elsewhere, the total area is one.</p>",
+      "checks": "<ul><li>Use each formula only on its support.</li><li>An isolated endpoint contributes no area.</li><li>Keep exact fractions until the final result.</li></ul>",
+      "examTip": "<p>Write the bounds for each integral before integrating.</p>"
+    },
+    "related": [
+      {
+        "title": "Build the cumulative function",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_crv_cdf"
+      },
+      {
+        "title": "Find expectations",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_crv_moments"
+      }
+    ]
+  },
+  "stats_crv_cdf": {
+    "updatedOn": "2026-11-21",
+    "description": "Build cumulative distribution functions, invert the correct branch for a quantile and use cumulative differences for conditional probabilities.",
+    "sections": [
+      {
+        "id": "full-cdf",
+        "title": "What must a complete CDF include?",
+        "label": "Include exterior branches",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Start below the support at zero, accumulate mass through the model, and finish at one after the support.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write \\(F(x)=\\int_{-\\infty}^{x} f(t)\\,\\mathrm dt\\). The integration variable is separate from the upper bound.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>When a new branch starts, carry across the probability already accumulated.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-cdf-study-01",
+            "title": "Build the cumulative description from the full density",
+            "prompt": "<p>The density is \\(\\frac{2 x}{9} + \\frac{2}{9}\\) for \\(-1\\le x\\le2\\) and zero elsewhere.</p><p>On paper, derive the complete CDF. Enter \\(F(1)\\) as an exact value.</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Cumulative probability",
+                "expected": "4/9",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Start the first branch from zero and add the completed mass when you change branch.</p>",
+            "solution": "<p>Start each branch with all mass accumulated before its left endpoint. In an empty interval, that value stays fixed.</p>\\[F(x)=\\begin{cases}0&amp;x&lt;-1\\\\\\frac{x^{2}}{9} + \\frac{2 x}{9} + \\frac{1}{9}&amp;-1\\le x&lt;2\\\\1&amp;x\\ge2\\end{cases}\\]<p>At \\(1\\) the CDF is \\(\\frac{4}{9}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "plateau",
+        "title": "Why is the CDF flat in a gap?",
+        "label": "Keep earlier mass during a gap",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>If density is zero on an interval, no additional probability accumulates there.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The CDF is continuous for a distribution with a density, even if the density jumps. Test the value at each join from both sides.</p>",
+            "figure": {
+              "src": "/assets/study/9231/stats_crv_cdf/plateau.svg",
+              "alt": "CDF rising from zero to one half between zero and two, flat from two to three, then increasing to one at four.",
+              "caption": "<p>A flat part of the CDF records a gap in the support.</p>",
+              "width": 640,
+              "height": 350
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Zero density in a gap gives a constant cumulative probability rather than a reset to zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-cdf-study-02",
+            "title": "Build the cumulative description from the full density",
+            "prompt": "<p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x&lt;1\\); \\(\\frac{1}{4}\\) for \\(2\\le x&lt;5\\) and zero elsewhere.</p><p>On paper, derive the complete CDF. Enter \\(F(\\frac{3}{2})\\) as an exact value.</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Cumulative probability",
+                "expected": "1/4",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Start the first branch from zero and add the completed mass when you change branch.</p>",
+            "solution": "<p>Start each branch with all mass accumulated before its left endpoint. In an empty interval, that value stays fixed.</p>\\[F(x)=\\begin{cases}0&amp;x&lt;0\\\\\\frac{x}{4}&amp;0\\le x&lt;1\\\\\\frac{1}{4}&amp;1\\le x&lt;2\\\\\\frac{x}{4} - \\frac{1}{4}&amp;2\\le x&lt;5\\\\1&amp;x\\ge5\\end{cases}\\]<p>At \\(\\frac{3}{2}\\) the CDF is \\(\\frac{1}{4}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "differentiate",
+        "title": "How do I recover the density on a branch?",
+        "label": "Differentiate the CDF",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Differentiate on the open interval where one formula applies. A corner marks a change of derivative, not a point mass.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Where the cumulative function is differentiable, \\(f(x)=F^{\\prime}(x)\\). Constant sections give zero density.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The CDF value itself is an area, not the local density.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-cdf-study-03",
+            "title": "Recover a density from a cumulative function",
+            "prompt": "<p>A continuous random variable has CDF</p>\\[F(x)=\\begin{cases}0&amp;x&lt;0\\\\\\frac{x}{4}&amp;0\\le x&lt;2\\\\\\frac{1}{2}&amp;2\\le x&lt;3\\\\\\frac{x}{2} - 1&amp;3\\le x&lt;4\\\\1&amp;x\\ge4\\end{cases}\\]<p>Differentiate to find the density away from breakpoints. Enter the density value at \\(\\frac{5}{2}\\).</p>",
+            "fields": [
+              {
+                "key": "height",
+                "label": "Density value",
+                "expected": "0",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Differentiate the active branch, not its cumulative value.</p>",
+            "solution": "<p>On each open branch, differentiate the cumulative function. Constant branches give density zero.</p><p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x&lt;2\\); \\(\\frac{1}{2}\\) for \\(3\\le x&lt;4\\) and zero elsewhere.</p><p>The expression in force at \\(\\frac{5}{2}\\) gives \\(0\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "quantile",
+        "title": "Which part of the CDF reaches the target?",
+        "label": "Match level before solving",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Compare the target with the CDF levels at the breakpoints. Then solve the equation on the first branch that reaches it.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For level \\(p\\), use the smallest input with \\(F(x)\\ge p\\). A plateau may give several solutions to \\(F(x)=p\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Check that the root lies on the chosen branch and use the left end of a plateau when the lower quantile is requested.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-cdf-study-04",
+            "title": "Solve on the cumulative branch that reaches the target",
+            "prompt": "<p>The density is \\(\\frac{x}{8}\\) for \\(0\\le x\\le4\\) and zero elsewhere.</p><p>Find the lower quantile at level \\(\\frac{1}{4}\\). Use the earliest input where the cumulative probability reaches the target.</p>",
+            "fields": [
+              {
+                "key": "q",
+                "label": "Lower quantile",
+                "expected": "2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Compare the target with the cumulative masses at the breakpoints before solving.</p>",
+            "solution": "<p>On the first branch reaching \\(\\frac{1}{4}\\), the input lies between \\(0\\) and \\(4\\).</p>\\[\\frac{x^{2}}{16}=\\frac{1}{4}\\]<p>The first qualifying input is \\(2\\). An equal cumulative value later on a flat branch would not change the lower quantile.</p>"
+          }
+        ]
+      },
+      {
+        "id": "tails",
+        "title": "How do cumulative values give a conditional tail?",
+        "label": "Use the full condition event",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>When the upper target lies inside the conditioning tail, its probability is also the overlap probability.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(a&lt;b\\), \\(\\mathrm P(X&gt;b\\mid X&gt;a)=\\frac{1-F(b)}{1-F(a)}\\) if \\(F(a)&lt;1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Subtract from one for a tail. A CDF value is a lower cumulative probability.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-cdf-study-05",
+            "title": "Use the overlap in a conditional upper tail",
+            "prompt": "<p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x&lt;2\\); \\(\\frac{1}{2}\\) for \\(3\\le x&lt;4\\) and zero elsewhere.</p><p>Find \\(\\mathrm P(X&gt;\\frac{7}{2}\\mid X&gt;\\frac{1}{2})\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Conditional probability",
+                "expected": "2/7",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "1/4",
+                    "feedback": "<p>That is the overlap probability. Divide it by the full condition probability.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>The denominator is all of the condition event, including the part outside the target.</p>",
+            "solution": "<p>The condition has probability \\(\\frac{7}{8}\\). The target is already inside that condition and has probability \\(\\frac{1}{4}\\).</p><p>Divide the overlap by the conditioning probability: \\(\\frac{\\frac{1}{4}}{\\frac{7}{8}}=\\frac{2}{7}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "interquartile",
+        "title": "Can the two quartiles come from different branches?",
+        "label": "Calculate both thresholds",
+        "minutes": 5,
+        "level": "extension",
+        "intro": "<p>Solve the two level equations separately. Subtract the lower quantile from the upper quantile only after selecting each branch.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The interquartile range is a distance on the horizontal scale. It is not the gap between 25 per cent and 75 per cent on the vertical scale.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not invert a branch outside its own input interval.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-cdf-study-06",
+            "title": "Find quartiles on their appropriate branches",
+            "prompt": "<p>The density is \\(\\frac{1}{8}\\) for \\(1\\le x\\le9\\) and zero elsewhere.</p><p>Find the lower quartile, upper quartile and interquartile range.</p>",
+            "fields": [
+              {
+                "key": "lower",
+                "label": "Lower quartile",
+                "expected": "3",
+                "type": "number"
+              },
+              {
+                "key": "upper",
+                "label": "Upper quartile",
+                "expected": "7",
+                "type": "number"
+              },
+              {
+                "key": "iqr",
+                "label": "Interquartile range",
+                "expected": "4",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find the two quartiles separately; the two branches need not be the same.</p>",
+            "solution": "<p>The lower quartile is the first value where the CDF reaches \\(\\frac{1}{4}\\); here it is \\(3\\). The upper quartile is the first value where it reaches \\(\\frac{3}{4}\\); here it is \\(7\\).</p>\\[\\frac{x}{8} - \\frac{1}{8}=\\frac{1}{4}\\]\\[\\frac{x}{8} - \\frac{1}{8}=\\frac{3}{4}\\]<p>Their difference is \\(4\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Build the cumulative description from the full density",
+        "question": "<p>The density is \\(\\frac{x}{3} + \\frac{1}{6}\\) for \\(0\\le x\\le2\\) and zero elsewhere.</p><p>On paper, derive the complete CDF. Enter \\(F(\\frac{3}{2})\\) as an exact value.</p>",
+        "solution": [
+          "<p>Start each branch with all mass accumulated before its left endpoint. In an empty interval, that value stays fixed.</p>",
+          "\\[F(x)=\\begin{cases}0&amp;x&lt;0\\\\\\frac{x^{2}}{6} + \\frac{x}{6}&amp;0\\le x&lt;2\\\\1&amp;x\\ge2\\end{cases}\\]",
+          "<p>At \\(\\frac{3}{2}\\) the CDF is \\(\\frac{5}{8}\\).</p>"
+        ]
+      },
+      {
+        "title": "Build the cumulative description from the full density",
+        "question": "<p>The density is \\(\\frac{6 x}{7}\\) for \\(0\\le x&lt;1\\); \\(\\frac{2}{7}\\) for \\(1\\le x&lt;3\\) and zero elsewhere.</p><p>On paper, derive the complete CDF. Enter \\(F(2)\\) as an exact value.</p>",
+        "solution": [
+          "<p>Start each branch with all mass accumulated before its left endpoint. In an empty interval, that value stays fixed.</p>",
+          "\\[F(x)=\\begin{cases}0&amp;x&lt;0\\\\\\frac{3 x^{2}}{7}&amp;0\\le x&lt;1\\\\\\frac{2 x}{7} + \\frac{1}{7}&amp;1\\le x&lt;3\\\\1&amp;x\\ge3\\end{cases}\\]",
+          "<p>At \\(2\\) the CDF is \\(\\frac{5}{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "Build the cumulative description from the full density",
+        "question": "<p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x&lt;2\\); \\(\\frac{1}{2}\\) for \\(3\\le x&lt;4\\) and zero elsewhere.</p><p>On paper, derive the complete CDF. Enter \\(F(\\frac{5}{2})\\) as an exact value.</p>",
+        "solution": [
+          "<p>Start each branch with all mass accumulated before its left endpoint. In an empty interval, that value stays fixed.</p>",
+          "\\[F(x)=\\begin{cases}0&amp;x&lt;0\\\\\\frac{x}{4}&amp;0\\le x&lt;2\\\\\\frac{1}{2}&amp;2\\le x&lt;3\\\\\\frac{x}{2} - 1&amp;3\\le x&lt;4\\\\1&amp;x\\ge4\\end{cases}\\]",
+          "<p>At \\(\\frac{5}{2}\\) the CDF is \\(\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a density from a cumulative function",
+        "question": "<p>A continuous random variable has CDF</p>\\[F(x)=\\begin{cases}0&amp;x&lt;0\\\\\\frac{3 x^{2}}{7}&amp;0\\le x&lt;1\\\\\\frac{2 x}{7} + \\frac{1}{7}&amp;1\\le x&lt;3\\\\1&amp;x\\ge3\\end{cases}\\]<p>Differentiate to find the density away from breakpoints. Enter the density value at \\(\\frac{3}{2}\\).</p>",
+        "solution": [
+          "<p>On each open branch, differentiate the cumulative function. Constant branches give density zero.</p>",
+          "<p>The density is \\(\\frac{6 x}{7}\\) for \\(0\\le x&lt;1\\); \\(\\frac{2}{7}\\) for \\(1\\le x&lt;3\\) and zero elsewhere.</p>",
+          "<p>The expression in force at \\(\\frac{3}{2}\\) gives \\(\\frac{2}{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "Solve on the cumulative branch that reaches the target",
+        "question": "<p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x&lt;2\\); \\(\\frac{1}{2}\\) for \\(3\\le x&lt;4\\) and zero elsewhere.</p><p>Find the lower quantile at level \\(\\frac{1}{2}\\). Use the earliest input where the cumulative probability reaches the target.</p>",
+        "solution": [
+          "<p>On the first branch reaching \\(\\frac{1}{2}\\), the input lies between \\(0\\) and \\(2\\).</p>",
+          "\\[\\frac{x}{4}=\\frac{1}{2}\\]",
+          "<p>The first qualifying input is \\(2\\). An equal cumulative value later on a flat branch would not change the lower quantile.</p>"
+        ]
+      },
+      {
+        "title": "Use the overlap in a conditional upper tail",
+        "question": "<p>The density is \\(\\frac{x}{3} + \\frac{1}{6}\\) for \\(0\\le x\\le2\\) and zero elsewhere.</p><p>Find \\(\\mathrm P(X&gt;\\frac{3}{2}\\mid X&gt;\\frac{1}{2})\\) exactly.</p>",
+        "solution": [
+          "<p>The condition has probability \\(\\frac{7}{8}\\). The target is already inside that condition and has probability \\(\\frac{3}{8}\\).</p>",
+          "<p>Divide the overlap by the conditioning probability: \\(\\frac{\\frac{3}{8}}{\\frac{7}{8}}=\\frac{3}{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find quartiles on their appropriate branches",
+        "question": "<p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x&lt;2\\); \\(\\frac{1}{2}\\) for \\(3\\le x&lt;4\\) and zero elsewhere.</p><p>Find the lower quartile, upper quartile and interquartile range.</p>",
+        "solution": [
+          "<p>The lower quartile is the first value where the CDF reaches \\(\\frac{1}{4}\\); here it is \\(1\\). The upper quartile is the first value where it reaches \\(\\frac{3}{4}\\); here it is \\(\\frac{7}{2}\\).</p>",
+          "\\[\\frac{x}{4}=\\frac{1}{4}\\]\\[\\frac{x}{2} - 1=\\frac{3}{4}\\]",
+          "<p>Their difference is \\(\\frac{5}{2}\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "CDF",
+        "definition": "<p>\\(F(x)=\\mathrm P(X\\le x)\\) for every real input.</p>"
+      },
+      {
+        "term": "Quantile",
+        "definition": "<p>A threshold where the cumulative probability reaches a given level.</p>"
+      },
+      {
+        "term": "Plateau",
+        "definition": "<p>A flat interval in the CDF, indicating an interval of zero probability.</p>"
+      },
+      {
+        "term": "Conditional probability",
+        "definition": "<p>The overlap divided by the full probability of the condition.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-crv-cdf-study-07",
+        "title": "Build the cumulative description from the full density",
+        "prompt": "<p>The density is \\(\\frac{1}{4}\\) for \\(-1\\le x&lt;1\\); \\(\\frac{1}{2}\\) for \\(3\\le x&lt;4\\) and zero elsewhere.</p><p>On paper, derive the complete CDF. Enter \\(F(\\frac{7}{2})\\) as an exact value.</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Cumulative probability",
+            "expected": "3/4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Start the first branch from zero and add the completed mass when you change branch.</p>",
+        "solution": "<p>Start each branch with all mass accumulated before its left endpoint. In an empty interval, that value stays fixed.</p>\\[F(x)=\\begin{cases}0&amp;x&lt;-1\\\\\\frac{x}{4} + \\frac{1}{4}&amp;-1\\le x&lt;1\\\\\\frac{1}{2}&amp;1\\le x&lt;3\\\\\\frac{x}{2} - 1&amp;3\\le x&lt;4\\\\1&amp;x\\ge4\\end{cases}\\]<p>At \\(\\frac{7}{2}\\) the CDF is \\(\\frac{3}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-cdf-study-08",
+        "title": "Build the cumulative description from the full density",
+        "prompt": "<p>The density is \\(\\frac{6 x}{7}\\) for \\(0\\le x&lt;1\\); \\(\\frac{2}{7}\\) for \\(1\\le x&lt;3\\) and zero elsewhere.</p><p>On paper, derive the complete CDF. Enter \\(F(\\frac{3}{2})\\) as an exact value.</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Cumulative probability",
+            "expected": "4/7",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Start the first branch from zero and add the completed mass when you change branch.</p>",
+        "solution": "<p>Start each branch with all mass accumulated before its left endpoint. In an empty interval, that value stays fixed.</p>\\[F(x)=\\begin{cases}0&amp;x&lt;0\\\\\\frac{3 x^{2}}{7}&amp;0\\le x&lt;1\\\\\\frac{2 x}{7} + \\frac{1}{7}&amp;1\\le x&lt;3\\\\1&amp;x\\ge3\\end{cases}\\]<p>At \\(\\frac{3}{2}\\) the CDF is \\(\\frac{4}{7}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-cdf-study-09",
+        "title": "Recover a density from a cumulative function",
+        "prompt": "<p>A continuous random variable has CDF</p>\\[F(x)=\\begin{cases}0&amp;x&lt;1\\\\\\frac{x^{2}}{9} - \\frac{2 x}{9} + \\frac{1}{9}&amp;1\\le x&lt;4\\\\1&amp;x\\ge4\\end{cases}\\]<p>Differentiate to find the density away from breakpoints. Enter the density value at \\(2\\).</p>",
+        "fields": [
+          {
+            "key": "height",
+            "label": "Density value",
+            "expected": "2/9",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Differentiate the active branch, not its cumulative value.</p>",
+        "solution": "<p>On each open branch, differentiate the cumulative function. Constant branches give density zero.</p><p>The density is \\(\\frac{2 x}{9} - \\frac{2}{9}\\) for \\(1\\le x\\le4\\) and zero elsewhere.</p><p>The expression in force at \\(2\\) gives \\(\\frac{2}{9}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-cdf-study-10",
+        "title": "Solve on the cumulative branch that reaches the target",
+        "prompt": "<p>The density is \\(\\frac{1}{5}\\) for \\(0\\le x&lt;1\\); \\(\\frac{1}{5}\\) for \\(2\\le x&lt;6\\) and zero elsewhere.</p><p>Find the lower quantile at level \\(\\frac{1}{5}\\). Use the earliest input where the cumulative probability reaches the target.</p>",
+        "fields": [
+          {
+            "key": "q",
+            "label": "Lower quantile",
+            "expected": "1",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Compare the target with the cumulative masses at the breakpoints before solving.</p>",
+        "solution": "<p>On the first branch reaching \\(\\frac{1}{5}\\), the input lies between \\(0\\) and \\(1\\).</p>\\[\\frac{x}{5}=\\frac{1}{5}\\]<p>The first qualifying input is \\(1\\). An equal cumulative value later on a flat branch would not change the lower quantile.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-cdf-study-11",
+        "title": "Use the overlap in a conditional upper tail",
+        "prompt": "<p>The density is \\(\\frac{2 x}{25}\\) for \\(0\\le x\\le5\\) and zero elsewhere.</p><p>Find \\(\\mathrm P(X&gt;3\\mid X&gt;1)\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Conditional probability",
+            "expected": "2/3",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "16/25",
+                "feedback": "<p>That is the overlap probability. Divide it by the full condition probability.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>The denominator is all of the condition event, including the part outside the target.</p>",
+        "solution": "<p>The condition has probability \\(\\frac{24}{25}\\). The target is already inside that condition and has probability \\(\\frac{16}{25}\\).</p><p>Divide the overlap by the conditioning probability: \\(\\frac{\\frac{16}{25}}{\\frac{24}{25}}=\\frac{2}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-cdf-study-12",
+        "title": "Find quartiles on their appropriate branches",
+        "prompt": "<p>The density is \\(\\frac{1}{8}\\) for \\(-4\\le x\\le4\\) and zero elsewhere.</p><p>Find the lower quartile, upper quartile and interquartile range.</p>",
+        "fields": [
+          {
+            "key": "lower",
+            "label": "Lower quartile",
+            "expected": "-2",
+            "type": "number"
+          },
+          {
+            "key": "upper",
+            "label": "Upper quartile",
+            "expected": "2",
+            "type": "number"
+          },
+          {
+            "key": "iqr",
+            "label": "Interquartile range",
+            "expected": "4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find the two quartiles separately; the two branches need not be the same.</p>",
+        "solution": "<p>The lower quartile is the first value where the CDF reaches \\(\\frac{1}{4}\\); here it is \\(-2\\). The upper quartile is the first value where it reaches \\(\\frac{3}{4}\\); here it is \\(2\\).</p>\\[\\frac{x}{8} + \\frac{1}{2}=\\frac{1}{4}\\]\\[\\frac{x}{8} + \\frac{1}{2}=\\frac{3}{4}\\]<p>Their difference is \\(4\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Accumulate from the left</h2><p>A CDF starts at zero, stays non-decreasing and ends at one.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Task</th><th scope=\"col\">Expression</th></tr></thead><tbody><tr><th scope=\"row\">Interval</th><td>\\(\\mathrm P(a&lt;X\\le b)=F(b)-F(a)\\)</td></tr><tr><th scope=\"row\">Density</th><td>\\(f(x)=F^{\\prime}(x)\\) on an open differentiable branch.</td></tr><tr><th scope=\"row\">Lower quantile</th><td>\\(q_p=\\inf\\{x:F(x)\\ge p\\}\\)</td></tr><tr><th scope=\"row\">Upper tail</th><td>\\(1-F(x)\\)</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Check continuity across every join.</li><li>Carry earlier probability through later branches and gaps.</li><li>For a conditional event, test whether its denominator is positive.</li></ul>",
+      "examTip": "<p>When reporting a complete CDF, include the branches before and after the support.</p>"
+    },
+    "related": [
+      {
+        "title": "Review how density gives area",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_crv_density"
+      },
+      {
+        "title": "Transform an event using a CDF",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_crv_monotone"
+      }
+    ]
+  },
+  "stats_crv_moments": {
+    "updatedOn": "2026-11-21",
+    "description": "Find expectations of functions by integration, calculate variance with two matched moments and handle a bounded reciprocal safely.",
+    "sections": [
+      {
+        "id": "mean",
+        "title": "Why is a continuous mean an integral?",
+        "label": "Weight the values by density",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>A mean averages possible values using their probabilities. The integral replaces the discrete weighted sum.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\mathrm E(X)=\\int x f(x)\\,\\mathrm dx\\) across every active support piece.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Integrating the density by itself gives total probability, not a mean.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-moments-study-01",
+            "title": "Find moments without transforming the density",
+            "prompt": "<p>The density is \\(\\frac{x}{8}\\) for \\(0\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=X\\). Find the mean of Y. Give exact values.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean of Y",
+                "expected": "8/3",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+            "solution": "<p>Use the original density against \\(x\\). The integral for the mean is \\(\\int_{0}^{4}\\frac{x^{2}}{8}\\,\\mathrm dx=\\frac{8}{3}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "second-moment",
+        "title": "Which square goes into the variance?",
+        "label": "Compute moments separately",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Find the second moment by weighting each squared value. Separately square the first moment. Those are two different operations.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\operatorname{Var}(X)=\\mathrm E(X^2)-[\\mathrm E(X)]^2\\). The result cannot be negative.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The second moment alone does not measure the spread around the mean.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Quantity</th><th scope=\"col\">Integrand</th></tr></thead><tbody><tr><th scope=\"row\">Mean</th><td>\\(xf(x)\\)</td></tr><tr><th scope=\"row\">Second moment</th><td>\\(x^2f(x)\\)</td></tr><tr><th scope=\"row\">Variance</th><td>\\((x-\\mu)^2f(x)\\) or subtract using the two moments.</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-moments-study-02",
+            "title": "Find moments without transforming the density",
+            "prompt": "<p>The density is \\(\\frac{1}{3}\\) for \\(1\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=X\\). Find the mean and variance of Y. Give exact values.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean of Y",
+                "expected": "5/2",
+                "type": "number"
+              },
+              {
+                "key": "variance",
+                "label": "Variance of Y",
+                "expected": "3/4",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "7",
+                    "feedback": "<p>That is the second moment. Subtract the square of the mean.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+            "solution": "<p>Use the original density against \\(x\\). The integral for the mean is \\(\\int_{1}^{4}\\frac{x}{3}\\,\\mathrm dx=\\frac{5}{2}\\).</p><p>For the second moment integrate \\(x^{2}\\) against the same density. This gives \\(7\\).</p><p>Subtract the square of the mean to obtain \\(\\frac{3}{4}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "function",
+        "title": "Do I need to transform the density first?",
+        "label": "Use the original density",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>For an expectation of a function, integrate that function of the original input. No inverse is needed, even when the function turns.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm E(g(X))=\\int g(x)f_X(x)\\,\\mathrm dx\\). The density still describes X.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>In general the mean of the function is different from the function of the mean.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-moments-study-03",
+            "title": "Find moments without transforming the density",
+            "prompt": "<p>The density is \\(\\frac{1}{3}\\) for \\(-1\\le x\\le2\\) and zero elsewhere.</p><p>Let \\(Y=X^{2}\\). Find the mean and variance of Y. Give exact values.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean of Y",
+                "expected": "1",
+                "type": "number"
+              },
+              {
+                "key": "variance",
+                "label": "Variance of Y",
+                "expected": "6/5",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "11/5",
+                    "feedback": "<p>That is the second moment. Subtract the square of the mean.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+            "solution": "<p>Use the original density against \\(x^{2}\\). The integral for the mean is \\(\\int_{-1}^{2}\\frac{x^{2}}{3}\\,\\mathrm dx=1\\).</p><p>For the second moment integrate \\(x^{4}\\) against the same density. This gives \\(\\frac{11}{5}\\).</p><p>Subtract the square of the mean to obtain \\(\\frac{6}{5}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "affine",
+        "title": "When can I use the linear short cut?",
+        "label": "Shift and scale",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Linearity makes a change of origin or scale easier. A shift moves the mean but does not change the spread.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm E(aX+b)=a\\mathrm E(X)+b\\) and \\(\\operatorname{Var}(aX+b)=a^2\\operatorname{Var}(X)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Multiply the variance by the square of the scale, even when the scale is negative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-moments-study-04",
+            "title": "Find moments without transforming the density",
+            "prompt": "<p>The density is \\(\\frac{1}{2}\\) for \\(1\\le x\\le3\\) and zero elsewhere.</p><p>Let \\(Y=2 X + 5\\). Find the mean and variance of Y. Give exact values.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean of Y",
+                "expected": "9",
+                "type": "number"
+              },
+              {
+                "key": "variance",
+                "label": "Variance of Y",
+                "expected": "4/3",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "247/3",
+                    "feedback": "<p>That is the second moment. Subtract the square of the mean.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+            "solution": "<p>Use the original density against \\(2 x + 5\\). The integral for the mean is \\(\\int_{1}^{3}x + \\frac{5}{2}\\,\\mathrm dx=9\\).</p><p>For the second moment integrate \\(4 x^{2} + 20 x + 25\\) against the same density. This gives \\(\\frac{247}{3}\\).</p><p>Subtract the square of the mean to obtain \\(\\frac{4}{3}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "pieces",
+        "title": "How do several support pieces change the calculation?",
+        "label": "Add moment contributions",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For each piece use its own density and its own interval. Add the separate contributions to a global moment.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For variance take the square of the global mean. Each part contributes to both integrals.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not average the variances of the pieces without including differences in their means.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-moments-study-05",
+            "title": "Find moments without transforming the density",
+            "prompt": "<p>The density is \\(\\frac{1}{3}\\) for \\(0\\le x&lt;1\\); \\(\\frac{2}{3}\\) for \\(2\\le x&lt;3\\) and zero elsewhere.</p><p>Let \\(Y=X^{2}\\). Find the mean and variance of Y. Give exact values.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean of Y",
+                "expected": "13/3",
+                "type": "number"
+              },
+              {
+                "key": "variance",
+                "label": "Variance of Y",
+                "expected": "424/45",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "141/5",
+                    "feedback": "<p>That is the second moment. Subtract the square of the mean.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+            "solution": "<p>Use the original density against \\(x^{2}\\). The integral for the mean is \\(\\int_{0}^{1}\\frac{x^{2}}{3}\\,\\mathrm dx+\\int_{2}^{3}\\frac{2 x^{2}}{3}\\,\\mathrm dx=\\frac{13}{3}\\).</p><p>For the second moment integrate \\(x^{4}\\) against the same density. This gives \\(\\frac{141}{5}\\).</p><p>Subtract the square of the mean to obtain \\(\\frac{424}{45}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "reciprocal",
+        "title": "What should I check before integrating a reciprocal?",
+        "label": "Check a lower endpoint",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>A reciprocal may require a separate convergence check when its original support reaches zero. Here choose a model whose lower endpoint is positive.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the correct power in the second moment. Keep the logarithm exact through the calculation, then round only if requested.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The reciprocal of the mean rarely gives the mean of the reciprocal.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-moments-study-06",
+            "title": "Find moments without transforming the density",
+            "prompt": "<p>The density is \\(\\frac{x}{6}\\) for \\(2\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=\\frac{1}{X}\\). Find the mean and variance of Y. Give results to 4 decimal places.</p>",
+            "fields": [
+              {
+                "key": "mean",
+                "label": "Mean of Y (4 d.p.)",
+                "expected": "0.3333333333333333",
+                "type": "approximate",
+                "absolute_tolerance": 5e-05
+              },
+              {
+                "key": "variance",
+                "label": "Variance of Y (4 d.p.)",
+                "expected": "0.004413418982213107",
+                "type": "approximate",
+                "absolute_tolerance": 5e-05
+              }
+            ],
+            "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+            "solution": "<p>Use the original density against \\(\\frac{1}{x}\\). The integral for the mean is \\(\\int_{2}^{4}\\frac{1}{6}\\,\\mathrm dx=\\frac{1}{3}\\).</p><p>For the second moment integrate \\(\\frac{1}{x^{2}}\\) against the same density. This gives \\(\\frac{\\log{\\left(2 \\right)}}{6}\\).</p><p>Subtract the square of the mean to obtain \\(- \\frac{1}{9} + \\frac{\\log{\\left(2 \\right)}}{6}\\), which is \\(0.0044\\) to the requested accuracy.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find moments without transforming the density",
+        "question": "<p>The density is \\(\\frac{3 x^{2}}{8}\\) for \\(0\\le x\\le2\\) and zero elsewhere.</p><p>Let \\(Y=X\\). Find the mean of Y. Give exact values.</p>",
+        "solution": [
+          "<p>Use the original density against \\(x\\). The integral for the mean is \\(\\int_{0}^{2}\\frac{3 x^{3}}{8}\\,\\mathrm dx=\\frac{3}{2}\\).</p>",
+          "<p>Only the interval from \\(0\\) to \\(2\\) contributes. The antiderivative is \\(\\frac{3x^4}{32}\\), which gives \\(\\mathbb E(Y)=\\frac32\\) after substituting both limits.</p>"
+        ]
+      },
+      {
+        "title": "Find moments without transforming the density",
+        "question": "<p>The density is \\(\\frac{1}{5}\\) for \\(-2\\le x\\le3\\) and zero elsewhere.</p><p>Let \\(Y=X\\). Find the mean of Y. Give exact values.</p>",
+        "solution": [
+          "<p>Use the original density against \\(x\\). The integral for the mean is \\(\\int_{-2}^{3}\\frac{x}{5}\\,\\mathrm dx=\\frac{1}{2}\\).</p>",
+          "<p>The antiderivative is \\(\\frac{x^2}{10}\\), so the integral gives \\(\\frac{9-4}{10}=\\frac12\\). The density is uniform, and the interval midpoint confirms this mean.</p>"
+        ]
+      },
+      {
+        "title": "Find moments without transforming the density",
+        "question": "<p>The density is \\(\\frac{3 x^{2}}{8}\\) for \\(0\\le x\\le2\\) and zero elsewhere.</p><p>Let \\(Y=X\\). Find the mean and variance of Y. Give exact values.</p>",
+        "solution": [
+          "<p>Use the original density against \\(x\\). The integral for the mean is \\(\\int_{0}^{2}\\frac{3 x^{3}}{8}\\,\\mathrm dx=\\frac{3}{2}\\).</p>",
+          "<p>For the second moment integrate \\(x^{2}\\) against the same density. This gives \\(\\frac{12}{5}\\).</p>",
+          "<p>Subtract the square of the mean to obtain \\(\\frac{3}{20}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find moments without transforming the density",
+        "question": "<p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=\\left(X - 2\\right)^{2}\\). Find the mean and variance of Y. Give exact values.</p>",
+        "solution": [
+          "<p>Use the original density against \\(\\left(x - 2\\right)^{2}\\). The integral for the mean is \\(\\int_{0}^{4}\\frac{\\left(x - 2\\right)^{2}}{4}\\,\\mathrm dx=\\frac{4}{3}\\).</p>",
+          "<p>For the second moment integrate \\(x^{4} - 8 x^{3} + 24 x^{2} - 32 x + 16\\) against the same density. This gives \\(\\frac{16}{5}\\).</p>",
+          "<p>Subtract the square of the mean to obtain \\(\\frac{64}{45}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find moments without transforming the density",
+        "question": "<p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=3 - 2 X\\). Find the mean and variance of Y. Give exact values.</p>",
+        "solution": [
+          "<p>Use the original density against \\(3 - 2 x\\). The integral for the mean is \\(\\int_{0}^{4}\\frac{3}{4} - \\frac{x}{2}\\,\\mathrm dx=-1\\).</p>",
+          "<p>For the second moment integrate \\(4 x^{2} - 12 x + 9\\) against the same density. This gives \\(\\frac{19}{3}\\).</p>",
+          "<p>Subtract the square of the mean to obtain \\(\\frac{16}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find moments without transforming the density",
+        "question": "<p>The density is \\(\\frac{1}{2}\\) for \\(0\\le x&lt;1\\); \\(\\frac{1}{4}\\) for \\(2\\le x&lt;4\\) and zero elsewhere.</p><p>Let \\(Y=X\\). Find the mean and variance of Y. Give exact values.</p>",
+        "solution": [
+          "<p>Use the original density against \\(x\\). The integral for the mean is \\(\\int_{0}^{1}\\frac{x}{2}\\,\\mathrm dx+\\int_{2}^{4}\\frac{x}{4}\\,\\mathrm dx=\\frac{7}{4}\\).</p>",
+          "<p>For the second moment integrate \\(x^{2}\\) against the same density. This gives \\(\\frac{29}{6}\\).</p>",
+          "<p>Subtract the square of the mean to obtain \\(\\frac{85}{48}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find moments without transforming the density",
+        "question": "<p>The density is \\(\\frac{x}{4}\\) for \\(1\\le x\\le3\\) and zero elsewhere.</p><p>Let \\(Y=\\frac{1}{X}\\). Find the mean and variance of Y. Give results to 4 decimal places.</p>",
+        "solution": [
+          "<p>Use the original density against \\(\\frac{1}{x}\\). The integral for the mean is \\(\\int_{1}^{3}\\frac{1}{4}\\,\\mathrm dx=\\frac{1}{2}\\).</p>",
+          "<p>For the second moment integrate \\(\\frac{1}{x^{2}}\\) against the same density. This gives \\(\\frac{\\log{\\left(3 \\right)}}{4}\\).</p>",
+          "<p>Subtract the square of the mean to obtain \\(- \\frac{1}{4} + \\frac{\\log{\\left(3 \\right)}}{4}\\), which is \\(0.0247\\) to the requested accuracy.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Expectation",
+        "definition": "<p>The mean of a random variable or of a function of it.</p>"
+      },
+      {
+        "term": "Second moment",
+        "definition": "<p>The mean of the square, taken before subtracting the square of the mean.</p>"
+      },
+      {
+        "term": "Variance",
+        "definition": "<p>The mean squared distance from the variable’s own mean.</p>"
+      },
+      {
+        "term": "Affine transform",
+        "definition": "<p>A shift and a non-zero scaling of a variable.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-crv-moments-study-07",
+        "title": "Find moments without transforming the density",
+        "prompt": "<p>The density is \\(\\frac{1}{7}\\) for \\(-2\\le x\\le5\\) and zero elsewhere.</p><p>Let \\(Y=X\\). Find the mean of Y. Give exact values.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean of Y",
+            "expected": "3/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+        "solution": "<p>Use the original density against \\(x\\). The integral for the mean is \\(\\int_{-2}^{5}\\frac{x}{7}\\,\\mathrm dx=\\frac{3}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-moments-study-08",
+        "title": "Find moments without transforming the density",
+        "prompt": "<p>The density is \\(\\frac{2 x}{15}\\) for \\(1\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=X\\). Find the mean and variance of Y. Give exact values.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean of Y",
+            "expected": "14/5",
+            "type": "number"
+          },
+          {
+            "key": "variance",
+            "label": "Variance of Y",
+            "expected": "33/50",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "17/2",
+                "feedback": "<p>That is the second moment. Subtract the square of the mean.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+        "solution": "<p>Use the original density against \\(x\\). The integral for the mean is \\(\\int_{1}^{4}\\frac{2 x^{2}}{15}\\,\\mathrm dx=\\frac{14}{5}\\).</p><p>For the second moment integrate \\(x^{2}\\) against the same density. This gives \\(\\frac{17}{2}\\).</p><p>Subtract the square of the mean to obtain \\(\\frac{33}{50}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-moments-study-09",
+        "title": "Find moments without transforming the density",
+        "prompt": "<p>The density is \\(2 x\\) for \\(0\\le x\\le1\\) and zero elsewhere.</p><p>Let \\(Y=X^{2}\\). Find the mean and variance of Y. Give exact values.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean of Y",
+            "expected": "1/2",
+            "type": "number"
+          },
+          {
+            "key": "variance",
+            "label": "Variance of Y",
+            "expected": "1/12",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "1/3",
+                "feedback": "<p>That is the second moment. Subtract the square of the mean.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+        "solution": "<p>Use the original density against \\(x^{2}\\). The integral for the mean is \\(\\int_{0}^{1}2 x^{3}\\,\\mathrm dx=\\frac{1}{2}\\).</p><p>For the second moment integrate \\(x^{4}\\) against the same density. This gives \\(\\frac{1}{3}\\).</p><p>Subtract the square of the mean to obtain \\(\\frac{1}{12}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-moments-study-10",
+        "title": "Find moments without transforming the density",
+        "prompt": "<p>The density is \\(\\frac{x}{2}\\) for \\(0\\le x\\le2\\) and zero elsewhere.</p><p>Let \\(Y=4 - 3 X\\). Find the mean and variance of Y. Give exact values.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean of Y",
+            "expected": "0",
+            "type": "number"
+          },
+          {
+            "key": "variance",
+            "label": "Variance of Y",
+            "expected": "2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+        "solution": "<p>Use the original density against \\(4 - 3 x\\). The integral for the mean is \\(\\int_{0}^{2}\\frac{x \\left(4 - 3 x\\right)}{2}\\,\\mathrm dx=0\\).</p><p>For the second moment integrate \\(9 x^{2} - 24 x + 16\\) against the same density. This gives \\(2\\).</p><p>Subtract the square of the mean to obtain \\(2\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-moments-study-11",
+        "title": "Find moments without transforming the density",
+        "prompt": "<p>The density is \\(\\frac{1}{2}\\) for \\(0\\le x&lt;1\\); \\(\\frac{1}{4}\\) for \\(2\\le x&lt;4\\) and zero elsewhere.</p><p>Let \\(Y=X^{2}\\). Find the mean and variance of Y. Give exact values.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean of Y",
+            "expected": "29/6",
+            "type": "number"
+          },
+          {
+            "key": "variance",
+            "label": "Variance of Y",
+            "expected": "4741/180",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "497/10",
+                "feedback": "<p>That is the second moment. Subtract the square of the mean.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+        "solution": "<p>Use the original density against \\(x^{2}\\). The integral for the mean is \\(\\int_{0}^{1}\\frac{x^{2}}{2}\\,\\mathrm dx+\\int_{2}^{4}\\frac{x^{2}}{4}\\,\\mathrm dx=\\frac{29}{6}\\).</p><p>For the second moment integrate \\(x^{4}\\) against the same density. This gives \\(\\frac{497}{10}\\).</p><p>Subtract the square of the mean to obtain \\(\\frac{4741}{180}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-moments-study-12",
+        "title": "Find moments without transforming the density",
+        "prompt": "<p>The density is \\(\\frac{x}{8}\\) for \\(3\\le x\\le5\\) and zero elsewhere.</p><p>Let \\(Y=\\frac{1}{X}\\). Find the mean of Y. Give results to 4 decimal places.</p>",
+        "fields": [
+          {
+            "key": "mean",
+            "label": "Mean of Y (4 d.p.)",
+            "expected": "0.25",
+            "type": "approximate",
+            "absolute_tolerance": 5e-05
+          }
+        ],
+        "hint": "<p>Integrate the requested function against the original density. For variance use the square of the same function in the second moment.</p>",
+        "solution": "<p>Use the original density against \\(\\frac{1}{x}\\). The integral for the mean is \\(\\int_{3}^{5}\\frac{1}{8}\\,\\mathrm dx=\\frac{1}{4}\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Use the original density</h2><p>Every moment belongs to a specific variable or function.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Quantity</th><th scope=\"col\">Integral or rule</th></tr></thead><tbody><tr><th scope=\"row\">Mean of g(X)</th><td>\\(\\int g(x)f_X(x)\\,\\mathrm dx\\)</td></tr><tr><th scope=\"row\">Second moment of g(X)</th><td>\\(\\int g(x)^2 f_X(x)\\,\\mathrm dx\\)</td></tr><tr><th scope=\"row\">Variance</th><td>\\(\\mathrm E(Y^2)-[\\mathrm E(Y)]^2\\)</td></tr><tr><th scope=\"row\">Change of scale</th><td>\\(\\operatorname{Var}(aX+b)=a^2\\operatorname{Var}(X)\\)</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Use the whole support and split at joins.</li><li>Distinguish the squared mean from the mean of squares.</li><li>Check whether a reciprocal is defined throughout the support.</li></ul>",
+      "examTip": "<p>Write the two moments before subtracting. Avoid rounding the intermediate mean.</p>"
+    },
+    "related": [
+      {
+        "title": "Check the density on its support",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_crv_density"
+      },
+      {
+        "title": "Find a transformed distribution when needed",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_crv_monotone"
+      }
+    ]
+  },
+  "stats_crv_monotone": {
+    "updatedOn": "2026-11-21",
+    "description": "Map the support, invert increasing or decreasing events and differentiate a complete transformed CDF.",
+    "sections": [
+      {
+        "id": "support",
+        "title": "Where does the new support start and end?",
+        "label": "Map both endpoints",
+        "minutes": 6,
+        "level": "core",
+        "intro": "<p>Start with the image of the original support. On a monotone branch its two endpoints map to the two endpoints of the new range.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For an increasing transformation the order stays the same. State \\(G=0\\) below the support and \\(G=1\\) after it.</p>",
+            "figure": {
+              "src": "/assets/study/9231/stats_crv_monotone/map-endpoints.svg",
+              "alt": "An upper number line shows endpoints 0 and 1 for X. They map to 1 and 3 on a lower Y number line.",
+              "caption": "<p>Apply the transformation to both endpoints before considering CDF values inside the range.</p>",
+              "width": 640,
+              "height": 325
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Retaining the original bounds can give probabilities which are zero or one at the wrong inputs.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-monotone-study-01",
+            "title": "Transform the event before differentiating",
+            "prompt": "<p>The density is \\(\\frac{2 x}{15} + \\frac{2}{15}\\) for \\(0\\le x\\le3\\) and zero elsewhere.</p><p>Let \\(Y=2 X - 2\\). On paper, find its support and cumulative function. Enter \\(G(1)\\) and the density at \\(1\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "cdf",
+                "label": "Cumulative value",
+                "expected": "7/20",
+                "type": "number"
+              },
+              {
+                "key": "pdf",
+                "label": "Density value",
+                "expected": "1/6",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "7/20",
+                    "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+            "solution": "<p>The new range extends from \\(-2\\) to \\(4\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\le\\frac{y}{2} + 1\\).</p><p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;-2\\\\\\frac{y^{2}}{60} + \\frac{2 y}{15} + \\frac{1}{5}&amp;-2\\le y&lt;4\\\\1&amp;y\\ge4\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{y}{30} + \\frac{2}{15}&amp;-2&lt;y&lt;4\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{7}{20}\\) and the density is \\(\\frac{1}{6}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "increasing",
+        "title": "What event does a nonlinear increasing map create?",
+        "label": "Invert an increasing inequality",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>Write the event in the new variable first. On an increasing branch inversion preserves the direction of the inequality.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(h\\) is increasing and one-to-one on the support, \\(G(y)=F_X(h^{-1}(y))\\) for interior y.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Take the inverse which lies on the stated support. A second algebraic root outside it has no probability.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-monotone-study-02",
+            "title": "Transform the event before differentiating",
+            "prompt": "<p>The density is \\(\\frac{2 x}{21}\\) for \\(2\\le x\\le5\\) and zero elsewhere.</p><p>Let \\(Y=X^{2} + 3\\). On paper, find its support and cumulative function. Enter \\(G(12)\\) and the density at \\(12\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "cdf",
+                "label": "Cumulative value",
+                "expected": "5/21",
+                "type": "number"
+              },
+              {
+                "key": "pdf",
+                "label": "Density value",
+                "expected": "1/21",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "5/21",
+                    "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+            "solution": "<p>The new range extends from \\(7\\) to \\(28\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\le\\sqrt{y - 3}\\).</p><p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;7\\\\\\frac{y}{21} - \\frac{1}{3}&amp;7\\le y&lt;28\\\\1&amp;y\\ge28\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{1}{21}&amp;7&lt;y&lt;28\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{5}{21}\\) and the density is \\(\\frac{1}{21}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "decreasing",
+        "title": "Why does a decreasing inverse use a tail?",
+        "label": "Reverse the inequality",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>As the original input grows, the transformed value decreases. A lower event in Y corresponds to an upper event in X.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For decreasing \\(h\\), use \\(G(y)=1-F_X(h^{-1}(y))\\). The equality endpoint has no probability mass.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Subtract from one to obtain the tail and reverse the order of the mapped endpoints.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-monotone-study-03",
+            "title": "Transform the event before differentiating",
+            "prompt": "<p>The density is \\(\\frac{x}{4}\\) for \\(1\\le x\\le3\\) and zero elsewhere.</p><p>Let \\(Y=\\frac{6}{X}\\). On paper, find its support and cumulative function. Enter \\(G(3)\\) and the density at \\(3\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "cdf",
+                "label": "Cumulative value",
+                "expected": "5/8",
+                "type": "number"
+              },
+              {
+                "key": "pdf",
+                "label": "Density value",
+                "expected": "1/3",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "5/8",
+                    "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+            "solution": "<p>The new range extends from \\(2\\) to \\(6\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ge\\frac{6}{y}\\).</p><p>Use the upper tail at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;2\\\\\\frac{9}{8} - \\frac{9}{2 y^{2}}&amp;2\\le y&lt;6\\\\1&amp;y\\ge6\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{9}{y^{3}}&amp;2&lt;y&lt;6\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{5}{8}\\) and the density is \\(\\frac{1}{3}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "chain-rule",
+        "title": "What must happen when I differentiate the transformed CDF?",
+        "label": "Include the chain factor",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>Differentiate the interior CDF with respect to the new variable. Its formula contains the inverse.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>On a monotone branch the transformed density is \\(f_X(h^{-1}(y))\\lvert (h^{-1})^{\\prime}(y)\\rvert\\). This verifies the CDF derivation.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Substituting into the old density gives only one factor. A stretching of the axis changes the density needed to preserve area.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Transformation</th><th scope=\"col\">Event for interior y</th></tr></thead><tbody><tr><th scope=\"row\">Increasing</th><td>\\(X\\le h^{-1}(y)\\)</td></tr><tr><th scope=\"row\">Decreasing</th><td>\\(X\\ge h^{-1}(y)\\)</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-monotone-study-04",
+            "title": "Transform the event before differentiating",
+            "prompt": "<p>The density is \\(\\frac{x}{8} + \\frac{3}{8}\\) for \\(-3\\le x\\le1\\) and zero elsewhere.</p><p>Let \\(Y=3 - 2 X\\). On paper, find its support and cumulative function. Enter \\(G(5)\\) and the density at \\(5\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "cdf",
+                "label": "Cumulative value",
+                "expected": "3/4",
+                "type": "number"
+              },
+              {
+                "key": "pdf",
+                "label": "Density value",
+                "expected": "1/8",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "3/4",
+                    "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+            "solution": "<p>The new range extends from \\(1\\) to \\(9\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ge\\frac{3}{2} - \\frac{y}{2}\\).</p><p>Use the upper tail at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;1\\\\- \\frac{y^{2}}{64} + \\frac{9 y}{32} - \\frac{17}{64}&amp;1\\le y&lt;9\\\\1&amp;y\\ge9\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{9}{32} - \\frac{y}{32}&amp;1&lt;y&lt;9\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{3}{4}\\) and the density is \\(\\frac{1}{8}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "quantiles",
+        "title": "Which percentile does a decreasing map transport?",
+        "label": "Use the complementary level",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A percentile moves through an increasing transformation at the same cumulative level. A strictly decreasing transformation interchanges lower and upper ordering.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If the original distribution is continuous and strictly increasing over its support, use level \\(p\\) for an increasing map and \\(1-p\\) for a decreasing map.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A median stays at level one half, but other percentiles generally change level when the map decreases.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-monotone-study-05",
+            "title": "Transport a percentile through a monotone map",
+            "prompt": "<p>The density is \\(\\frac{1}{4}\\) for \\(1\\le x\\le5\\) and zero elsewhere.</p><p>Let \\(Y=X^{2}\\). Find the lower quantile of Y at level \\(\\frac{1}{4}\\).</p>",
+            "fields": [
+              {
+                "key": "quantile",
+                "label": "Quantile of Y",
+                "expected": "4",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Use the same cumulative level for an increasing map and its complement for a decreasing map.</p>",
+            "solution": "<p>An increasing function preserves cumulative order.</p><p>The original threshold is where \\(F(x)=\\frac{1}{4}\\). This gives \\(2\\).</p><p>Applying the transform gives \\(4\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "validate",
+        "title": "How do I check I have a valid transformed function?",
+        "label": "Check the endpoints and area",
+        "minutes": 5,
+        "level": "extension",
+        "intro": "<p>Use both support endpoints, and compare CDF and density on the same variable scale.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A valid result goes continuously from zero to one. Its derivative is non-negative on the active branches and integrates to one.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An endpoint value is not a second contribution to the continuous probability.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-monotone-study-06",
+            "title": "Transform the event before differentiating",
+            "prompt": "<p>The density is \\(\\frac{2 x}{21}\\) for \\(2\\le x\\le5\\) and zero elsewhere.</p><p>Let \\(Y=\\frac{4}{X}\\). On paper, find its support and cumulative function. Enter \\(G(1)\\) and the density at \\(1\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "cdf",
+                "label": "Cumulative value",
+                "expected": "3/7",
+                "type": "number"
+              },
+              {
+                "key": "pdf",
+                "label": "Density value",
+                "expected": "32/21",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "3/7",
+                    "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+            "solution": "<p>The new range extends from \\(\\frac{4}{5}\\) to \\(2\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ge\\frac{4}{y}\\).</p><p>Use the upper tail at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;\\frac{4}{5}\\\\\\frac{25}{21} - \\frac{16}{21 y^{2}}&amp;\\frac{4}{5}\\le y&lt;2\\\\1&amp;y\\ge2\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{32}{21 y^{3}}&amp;\\frac{4}{5}&lt;y&lt;2\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{3}{7}\\) and the density is \\(\\frac{32}{21}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Transform the event before differentiating",
+        "question": "<p>The density is \\(6 x \\left(1 - x\\right)\\) for \\(0\\le x\\le1\\) and zero elsewhere.</p><p>Let \\(Y=2 X + 1\\). On paper, find its support and cumulative function. Enter \\(G(2)\\) and the density at \\(2\\) exactly.</p>",
+        "solution": [
+          "<p>The new range extends from \\(1\\) to \\(3\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\le\\frac{y}{2} - \\frac{1}{2}\\).</p>",
+          "<p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;1\\\\\\frac{\\left(4 - y\\right) \\left(y - 1\\right)^{2}}{4}&amp;1\\le y&lt;3\\\\1&amp;y\\ge3\\end{cases}\\]",
+          "<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{\\left(4 - y\\right) \\left(2 y - 2\\right)}{4} - \\frac{\\left(y - 1\\right)^{2}}{4}&amp;1&lt;y&lt;3\\\\0&amp;\\text{otherwise}\\end{cases}\\]",
+          "<p>At the requested point the cumulative value is \\(\\frac{1}{2}\\) and the density is \\(\\frac{3}{4}\\).</p>"
+        ]
+      },
+      {
+        "title": "Transform the event before differentiating",
+        "question": "<p>The density is \\(\\frac{1}{3}\\) for \\(-1\\le x\\le2\\) and zero elsewhere.</p><p>Let \\(Y=3 X + 4\\). On paper, find its support and cumulative function. Enter \\(G(5)\\) and the density at \\(5\\) exactly.</p>",
+        "solution": [
+          "<p>The new range extends from \\(1\\) to \\(10\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\le\\frac{y}{3} - \\frac{4}{3}\\).</p>",
+          "<p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;1\\\\\\frac{y}{9} - \\frac{1}{9}&amp;1\\le y&lt;10\\\\1&amp;y\\ge10\\end{cases}\\]",
+          "<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{1}{9}&amp;1&lt;y&lt;10\\\\0&amp;\\text{otherwise}\\end{cases}\\]",
+          "<p>At the requested point the cumulative value is \\(\\frac{4}{9}\\) and the density is \\(\\frac{1}{9}\\).</p>"
+        ]
+      },
+      {
+        "title": "Transform the event before differentiating",
+        "question": "<p>The density is \\(\\frac{x}{4}\\) for \\(1\\le x\\le3\\) and zero elsewhere.</p><p>Let \\(Y=X^{2} + 2\\). On paper, find its support and cumulative function. Enter \\(G(6)\\) and the density at \\(6\\) exactly.</p>",
+        "solution": [
+          "<p>The new range extends from \\(3\\) to \\(11\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\le\\sqrt{y - 2}\\).</p>",
+          "<p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;3\\\\\\frac{y}{8} - \\frac{3}{8}&amp;3\\le y&lt;11\\\\1&amp;y\\ge11\\end{cases}\\]",
+          "<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{1}{8}&amp;3&lt;y&lt;11\\\\0&amp;\\text{otherwise}\\end{cases}\\]",
+          "<p>At the requested point the cumulative value is \\(\\frac{3}{8}\\) and the density is \\(\\frac{1}{8}\\).</p>"
+        ]
+      },
+      {
+        "title": "Transform the event before differentiating",
+        "question": "<p>The density is \\(\\frac{2 x}{15}\\) for \\(1\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=\\frac{1}{X}\\). On paper, find its support and cumulative function. Enter \\(G(\\frac{1}{2})\\) and the density at \\(\\frac{1}{2}\\) exactly.</p>",
+        "solution": [
+          "<p>The new range extends from \\(\\frac{1}{4}\\) to \\(1\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ge\\frac{1}{y}\\).</p>",
+          "<p>Use the upper tail at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;\\frac{1}{4}\\\\\\frac{16}{15} - \\frac{1}{15 y^{2}}&amp;\\frac{1}{4}\\le y&lt;1\\\\1&amp;y\\ge1\\end{cases}\\]",
+          "<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{2}{15 y^{3}}&amp;\\frac{1}{4}&lt;y&lt;1\\\\0&amp;\\text{otherwise}\\end{cases}\\]",
+          "<p>At the requested point the cumulative value is \\(\\frac{4}{5}\\) and the density is \\(\\frac{16}{15}\\).</p>"
+        ]
+      },
+      {
+        "title": "Transform the event before differentiating",
+        "question": "<p>The density is \\(\\frac{x}{8}\\) for \\(0\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=5 - 3 X\\). On paper, find its support and cumulative function. Enter \\(G(-1)\\) and the density at \\(-1\\) exactly.</p>",
+        "solution": [
+          "<p>The new range extends from \\(-7\\) to \\(5\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ge\\frac{5}{3} - \\frac{y}{3}\\).</p>",
+          "<p>Use the upper tail at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;-7\\\\1 - \\frac{\\left(y - 5\\right)^{2}}{144}&amp;-7\\le y&lt;5\\\\1&amp;y\\ge5\\end{cases}\\]",
+          "<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{5}{72} - \\frac{y}{72}&amp;-7&lt;y&lt;5\\\\0&amp;\\text{otherwise}\\end{cases}\\]",
+          "<p>At the requested point the cumulative value is \\(\\frac{3}{4}\\) and the density is \\(\\frac{1}{12}\\).</p>"
+        ]
+      },
+      {
+        "title": "Transport a percentile through a monotone map",
+        "question": "<p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=10 - 2 X\\). Find the lower quantile of Y at level \\(\\frac{3}{4}\\).</p>",
+        "solution": [
+          "<p>A decreasing function reverses cumulative order.</p>",
+          "<p>The original threshold is where \\(F(x)=\\frac{1}{4}\\). This gives \\(1\\).</p>",
+          "<p>Applying the transform gives \\(8\\).</p>"
+        ]
+      },
+      {
+        "title": "Transform the event before differentiating",
+        "question": "<p>The density is \\(\\frac{x}{4}\\) for \\(1\\le x\\le3\\) and zero elsewhere.</p><p>Let \\(Y=\\frac{X}{2} - 1\\). On paper, find its support and cumulative function. Enter \\(G(0)\\) and the density at \\(0\\) exactly.</p>",
+        "solution": [
+          "<p>The new range extends from \\(- \\frac{1}{2}\\) to \\(\\frac{1}{2}\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\le2 y + 2\\).</p>",
+          "<p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;- \\frac{1}{2}\\\\\\frac{\\left(y + 1\\right)^{2}}{2} - \\frac{1}{8}&amp;- \\frac{1}{2}\\le y&lt;\\frac{1}{2}\\\\1&amp;y\\ge\\frac{1}{2}\\end{cases}\\]",
+          "<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}y + 1&amp;- \\frac{1}{2}&lt;y&lt;\\frac{1}{2}\\\\0&amp;\\text{otherwise}\\end{cases}\\]",
+          "<p>At the requested point the cumulative value is \\(\\frac{3}{8}\\) and the density is \\(1\\).</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Transformation",
+        "definition": "<p>\\(Y=h(X)\\) defines a new variable from the original one.</p>"
+      },
+      {
+        "term": "Inverse",
+        "definition": "<p>\\(h^{-1}(y)\\) is the original value mapping to the input y.</p>"
+      },
+      {
+        "term": "Support endpoints",
+        "definition": "<p>The bounds of possible values in the new variable.</p>"
+      },
+      {
+        "term": "Chain factor",
+        "definition": "<p>The derivative of the inverse multiplies the density on its branch.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-crv-monotone-study-07",
+        "title": "Transform the event before differentiating",
+        "prompt": "<p>The density is \\(\\frac{x}{8}\\) for \\(0\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=3 X + 1\\). On paper, find its support and cumulative function. Enter \\(G(7)\\) and the density at \\(7\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "cdf",
+            "label": "Cumulative value",
+            "expected": "1/4",
+            "type": "number"
+          },
+          {
+            "key": "pdf",
+            "label": "Density value",
+            "expected": "1/12",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "1/4",
+                "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+        "solution": "<p>The new range extends from \\(1\\) to \\(13\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\le\\frac{y}{3} - \\frac{1}{3}\\).</p><p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;1\\\\\\frac{\\left(y - 1\\right)^{2}}{144}&amp;1\\le y&lt;13\\\\1&amp;y\\ge13\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{y}{72} - \\frac{1}{72}&amp;1&lt;y&lt;13\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{1}{4}\\) and the density is \\(\\frac{1}{12}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-monotone-study-08",
+        "title": "Transform the event before differentiating",
+        "prompt": "<p>The density is \\(\\frac{2 x}{15}\\) for \\(1\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=X^{2} + 4\\). On paper, find its support and cumulative function. Enter \\(G(13)\\) and the density at \\(13\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "cdf",
+            "label": "Cumulative value",
+            "expected": "8/15",
+            "type": "number"
+          },
+          {
+            "key": "pdf",
+            "label": "Density value",
+            "expected": "1/15",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "8/15",
+                "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+        "solution": "<p>The new range extends from \\(5\\) to \\(20\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\le\\sqrt{y - 4}\\).</p><p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;5\\\\\\frac{y}{15} - \\frac{1}{3}&amp;5\\le y&lt;20\\\\1&amp;y\\ge20\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{1}{15}&amp;5&lt;y&lt;20\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{8}{15}\\) and the density is \\(\\frac{1}{15}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-monotone-study-09",
+        "title": "Transform the event before differentiating",
+        "prompt": "<p>The density is \\(\\frac{x}{12}\\) for \\(1\\le x\\le5\\) and zero elsewhere.</p><p>Let \\(Y=\\frac{3}{X}\\). On paper, find its support and cumulative function. Enter \\(G(\\frac{3}{2})\\) and the density at \\(\\frac{3}{2}\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "cdf",
+            "label": "Cumulative value",
+            "expected": "7/8",
+            "type": "number"
+          },
+          {
+            "key": "pdf",
+            "label": "Density value",
+            "expected": "2/9",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "7/8",
+                "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+        "solution": "<p>The new range extends from \\(\\frac{3}{5}\\) to \\(3\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ge\\frac{3}{y}\\).</p><p>Use the upper tail at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;\\frac{3}{5}\\\\\\frac{25}{24} - \\frac{3}{8 y^{2}}&amp;\\frac{3}{5}\\le y&lt;3\\\\1&amp;y\\ge3\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{3}{4 y^{3}}&amp;\\frac{3}{5}&lt;y&lt;3\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{7}{8}\\) and the density is \\(\\frac{2}{9}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-monotone-study-10",
+        "title": "Transform the event before differentiating",
+        "prompt": "<p>The density is \\(\\frac{2 x}{9} + \\frac{2}{9}\\) for \\(-1\\le x\\le2\\) and zero elsewhere.</p><p>Let \\(Y=2 - 3 X\\). On paper, find its support and cumulative function. Enter \\(G(1)\\) and the density at \\(1\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "cdf",
+            "label": "Cumulative value",
+            "expected": "65/81",
+            "type": "number"
+          },
+          {
+            "key": "pdf",
+            "label": "Density value",
+            "expected": "8/81",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "65/81",
+                "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+        "solution": "<p>The new range extends from \\(-4\\) to \\(5\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ge\\frac{2}{3} - \\frac{y}{3}\\).</p><p>Use the upper tail at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;-4\\\\- \\frac{y^{2}}{81} + \\frac{10 y}{81} + \\frac{56}{81}&amp;-4\\le y&lt;5\\\\1&amp;y\\ge5\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{10}{81} - \\frac{2 y}{81}&amp;-4&lt;y&lt;5\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{65}{81}\\) and the density is \\(\\frac{8}{81}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-monotone-study-11",
+        "title": "Transport a percentile through a monotone map",
+        "prompt": "<p>The density is \\(\\frac{1}{4}\\) for \\(1\\le x\\le5\\) and zero elsewhere.</p><p>Let \\(Y=20 - 3 X\\). Find the lower quantile of Y at level \\(\\frac{1}{4}\\).</p>",
+        "fields": [
+          {
+            "key": "quantile",
+            "label": "Quantile of Y",
+            "expected": "8",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Use the same cumulative level for an increasing map and its complement for a decreasing map.</p>",
+        "solution": "<p>A decreasing function reverses cumulative order.</p><p>The original threshold is where \\(F(x)=\\frac{3}{4}\\). This gives \\(4\\).</p><p>Applying the transform gives \\(8\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-monotone-study-12",
+        "title": "Transform the event before differentiating",
+        "prompt": "<p>The density is \\(\\frac{1}{4}\\) for \\(2\\le x\\le6\\) and zero elsewhere.</p><p>Let \\(Y=\\frac{6}{X}\\). On paper, find its support and cumulative function. Enter \\(G(2)\\) and the density at \\(2\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "cdf",
+            "label": "Cumulative value",
+            "expected": "3/4",
+            "type": "number"
+          },
+          {
+            "key": "pdf",
+            "label": "Density value",
+            "expected": "3/8",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "3/4",
+                "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+        "solution": "<p>The new range extends from \\(1\\) to \\(3\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ge\\frac{6}{y}\\).</p><p>Use the upper tail at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;1\\\\\\frac{3 \\left(y - 1\\right)}{2 y}&amp;1\\le y&lt;3\\\\1&amp;y\\ge3\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{3}{2 y} - \\frac{3 \\left(y - 1\\right)}{2 y^{2}}&amp;1&lt;y&lt;3\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{3}{4}\\) and the density is \\(\\frac{3}{8}\\).</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Start with the event</h2><p>Set \\(G(y)=\\mathrm P(h(X)\\le y)\\). Map the endpoints first.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Map or check</th><th scope=\"col\">What to write</th></tr></thead><tbody><tr><th scope=\"row\">Increasing</th><td>\\(F_X(h^{-1}(y))\\)</td></tr><tr><th scope=\"row\">Decreasing</th><td>\\(1-F_X(h^{-1}(y))\\)</td></tr><tr><th scope=\"row\">Density</th><td>\\(G^{\\prime}(y)\\) on each open branch.</td></tr><tr><th scope=\"row\">End values</th><td>Zero below; one beyond the upper support.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Use the inverse on the actual support.</li><li>For a decreasing map choose the upper tail.</li><li>Differentiate with the chain rule.</li></ul>",
+      "examTip": "<p>Show the event equivalence before writing the CDF.</p>"
+    },
+    "related": [
+      {
+        "title": "Review the complete CDF",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_crv_cdf"
+      },
+      {
+        "title": "Map change points and both branches",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_crv_piecewise"
+      }
+    ]
+  },
+  "stats_crv_piecewise": {
+    "updatedOn": "2026-11-21",
+    "description": "Map every breakpoint and support gap, then combine all branches of squared and absolute-value transformations.",
+    "sections": [
+      {
+        "id": "breakpoints",
+        "title": "Where does a formula join after a transformation?",
+        "label": "Map every breakpoint",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A change of original density moves with the transformation. Map each endpoint and join, then assign the correct expression on each new interval.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For an increasing map, an original join at \\(x=c\\) becomes a new join at \\(y=h(c)\\). Keep the accumulated mass through the join.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Changing the support endpoints alone is insufficient when a density has an interior switch.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-piecewise-study-01",
+            "title": "Transform the event before differentiating",
+            "prompt": "<p>The density is \\(\\frac{1}{8}\\) for \\(0\\le x&lt;2\\); \\(\\frac{x}{8}\\) for \\(2\\le x&lt;4\\) and zero elsewhere.</p><p>Let \\(Y=2 X + 1\\). On paper, find its support and cumulative function. Enter \\(G(7)\\) and the density at \\(7\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "cdf",
+                "label": "Cumulative value",
+                "expected": "9/16",
+                "type": "number"
+              },
+              {
+                "key": "pdf",
+                "label": "Density value",
+                "expected": "3/16",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "9/16",
+                    "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+            "solution": "<p>The new range extends from \\(1\\) to \\(9\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\le\\frac{y}{2} - \\frac{1}{2}\\).</p><p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;1\\\\\\frac{y}{16} - \\frac{1}{16}&amp;1\\le y&lt;5\\\\\\frac{\\left(y - 1\\right)^{2}}{64}&amp;5\\le y&lt;9\\\\1&amp;y\\ge9\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{1}{16}&amp;1&lt;y&lt;5\\\\\\frac{y}{32} - \\frac{1}{32}&amp;5&lt;y&lt;9\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{9}{16}\\) and the density is \\(\\frac{3}{16}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "gap",
+        "title": "What happens to a gap under a decreasing map?",
+        "label": "Reflect the order of pieces",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>A monotone transformation carries every support interval through to its image. A decreasing map reverses their order.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The CDF remains flat on the mapped gap. Its constant value includes every piece already swept out on the new axis.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A gap contributes zero density but can carry a positive cumulative probability.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-piecewise-study-02",
+            "title": "Transform the event before differentiating",
+            "prompt": "<p>The density is \\(\\frac{1}{3}\\) for \\(0\\le x&lt;2\\); \\(\\frac{1}{3}\\) for \\(5\\le x&lt;6\\) and zero elsewhere.</p><p>Let \\(Y=12 - 2 X\\). On paper, find its support and cumulative function. Enter \\(G(5)\\) and the density at \\(5\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "cdf",
+                "label": "Cumulative value",
+                "expected": "1/3",
+                "type": "number"
+              },
+              {
+                "key": "pdf",
+                "label": "Density value",
+                "expected": "0",
+                "type": "number",
+                "retry": [
+                  {
+                    "answer": "1/3",
+                    "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+            "solution": "<p>The new range extends from \\(0\\) to \\(12\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ge6 - \\frac{y}{2}\\).</p><p>Use the upper tail at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{y}{6}&amp;0\\le y&lt;2\\\\\\frac{1}{3}&amp;2\\le y&lt;8\\\\\\frac{y}{6} - 1&amp;8\\le y&lt;12\\\\1&amp;y\\ge12\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{1}{6}&amp;0&lt;y&lt;2\\\\0&amp;2&lt;y&lt;8\\\\\\frac{1}{6}&amp;8&lt;y&lt;12\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{1}{3}\\) and the density is \\(0\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "square",
+        "title": "Why is one inverse of a square insufficient?",
+        "label": "Include both signs",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>A single transformed input can correspond to two original inputs. For a probability, invert the full inequality rather than selecting a single point.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(Y=X^2\\) and \\(y\\ge0\\), the event is \\(-\\sqrt y\\le X\\le\\sqrt y\\). Only values in the original support contribute.</p>",
+            "figure": {
+              "src": "/assets/study/9231/stats_crv_piecewise/square-preimages.svg",
+              "alt": "A U-shaped graph y equals x squared. A horizontal threshold intersects the left and right branches. The inputs between the intersections are highlighted.",
+              "caption": "<p>A squared event includes the inputs on both branches that lie below the threshold.</p>",
+              "width": 640,
+              "height": 350
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Taking the positive square-root branch alone can drop a whole interval of probability.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-piecewise-study-03",
+            "title": "Use the whole inverse event",
+            "prompt": "<p>The density is \\(\\frac{1}{7}\\) for \\(-3\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=(X-0)^2\\). Enter the exact cumulative probability and the density of Y at \\(4\\).</p>",
+            "fields": [
+              {
+                "key": "cdf",
+                "label": "Cumulative probability",
+                "expected": "4/7",
+                "type": "number"
+              },
+              {
+                "key": "pdf",
+                "label": "Density value",
+                "expected": "1/14",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Include both sides of the inverse event. If one side goes past the original support, keep only what remains inside.</p>",
+            "solution": "<p>For non-negative y the inverse event is \\(0-\\sqrt y\\le X\\le 0+\\sqrt y\\). Clip both sides to the original support.</p><p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{2 \\sqrt{y}}{7}&amp;0\\le y&lt;9\\\\\\frac{\\sqrt{y}}{7} + \\frac{3}{7}&amp;9\\le y&lt;16\\\\1&amp;y\\ge16\\end{cases}\\]<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{4}{7}\\) and \\(\\frac{1}{14}\\), respectively.</p>"
+          }
+        ]
+      },
+      {
+        "id": "clip",
+        "title": "When does one inverse branch stop contributing?",
+        "label": "Clip both ends separately",
+        "minutes": 8,
+        "level": "core",
+        "intro": "<p>As the symmetric interval widens it can hit a support endpoint on one side before hitting the other. Map those positions before writing separate CDF formulas.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Outside the support a CDF value is fixed at zero or one. Stop extending the corresponding branch once an inverse crosses that endpoint.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using two changing endpoints throughout overcounts after one has reached the edge.</p>"
+          },
+          {
+            "kind": "text",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Inverse endpoint</th><th scope=\"col\">What to do</th></tr></thead><tbody><tr><th scope=\"row\">Inside support</th><td>Use the appropriate cumulative branch.</td></tr><tr><th scope=\"row\">Below support</th><td>Use cumulative value zero.</td></tr><tr><th scope=\"row\">Above support</th><td>Use cumulative value one.</td></tr></tbody></table></div>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-piecewise-study-04",
+            "title": "Use the whole inverse event",
+            "prompt": "<p>The density is \\(\\frac{1}{7}\\) for \\(-2\\le x\\le5\\) and zero elsewhere.</p><p>Let \\(Y=(X-0)^2\\). Enter the exact cumulative probability and the density of Y at \\(9\\).</p>",
+            "fields": [
+              {
+                "key": "cdf",
+                "label": "Cumulative probability",
+                "expected": "5/7",
+                "type": "number"
+              },
+              {
+                "key": "pdf",
+                "label": "Density value",
+                "expected": "1/42",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Include both sides of the inverse event. If one side goes past the original support, keep only what remains inside.</p>",
+            "solution": "<p>For non-negative y the inverse event is \\(0-\\sqrt y\\le X\\le 0+\\sqrt y\\). Clip both sides to the original support.</p><p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{2 \\sqrt{y}}{7}&amp;0\\le y&lt;4\\\\\\frac{\\sqrt{y}}{7} + \\frac{2}{7}&amp;4\\le y&lt;25\\\\1&amp;y\\ge25\\end{cases}\\]<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{5}{7}\\) and \\(\\frac{1}{42}\\), respectively.</p>"
+          }
+        ]
+      },
+      {
+        "id": "absolute",
+        "title": "How do I invert a shifted absolute value?",
+        "label": "Build a two-sided interval",
+        "minutes": 7,
+        "level": "core",
+        "intro": "<p>For an absolute value, the distance from the specified centre is at most the new input. This gives one interval in the original variable.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(Y=\\lvert X-c\\rvert\\), use \\(c-y\\le X\\le c+y\\) when \\(y\\ge0\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The centre is the centre of the inverse event. Do not replace it by an endpoint of the support.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-piecewise-study-05",
+            "title": "Use the whole inverse event",
+            "prompt": "<p>The density is \\(\\frac{1}{5}\\) for \\(-2\\le x\\le3\\) and zero elsewhere.</p><p>Let \\(Y=\\lvert X-1\\rvert\\). Enter the exact cumulative probability and the density of Y at \\(\\frac{5}{2}\\).</p>",
+            "fields": [
+              {
+                "key": "cdf",
+                "label": "Cumulative probability",
+                "expected": "9/10",
+                "type": "number"
+              },
+              {
+                "key": "pdf",
+                "label": "Density value",
+                "expected": "1/5",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Include both sides of the inverse event. If one side goes past the original support, keep only what remains inside.</p>",
+            "solution": "<p>For non-negative y the inverse event is \\(1-y\\le X\\le 1+y\\). Clip both sides to the original support.</p><p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{2 y}{5}&amp;0\\le y&lt;2\\\\\\frac{y}{5} + \\frac{2}{5}&amp;2\\le y&lt;3\\\\1&amp;y\\ge3\\end{cases}\\]<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{9}{10}\\) and \\(\\frac{1}{5}\\), respectively.</p>"
+          }
+        ]
+      },
+      {
+        "id": "endpoint",
+        "title": "Can the new density be large near an endpoint?",
+        "label": "Check the probability area",
+        "minutes": 6,
+        "level": "extension",
+        "intro": "<p>A transformed density can become unbounded where the inverse changes very rapidly. The continuous CDF still determines whether an endpoint has probability mass.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check the limit of the CDF and the integral over the support. A finite mass can be spread over an interval with an unbounded density near one end.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A vertical tendency in a density graph is different from a jump in the CDF.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "stats-crv-piecewise-study-06",
+            "title": "Use the whole inverse event",
+            "prompt": "<p>The density is \\(\\frac{1}{4}\\) for \\(-2\\le x\\le2\\) and zero elsewhere.</p><p>Let \\(Y=(X-0)^2\\). Enter the exact cumulative probability and the density of Y at \\(1\\).</p>",
+            "fields": [
+              {
+                "key": "cdf",
+                "label": "Cumulative probability",
+                "expected": "1/2",
+                "type": "number"
+              },
+              {
+                "key": "pdf",
+                "label": "Density value",
+                "expected": "1/4",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Include both sides of the inverse event. If one side goes past the original support, keep only what remains inside.</p>",
+            "solution": "<p>For non-negative y the inverse event is \\(0-\\sqrt y\\le X\\le 0+\\sqrt y\\). Clip both sides to the original support.</p><p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{\\sqrt{y}}{2}&amp;0\\le y&lt;4\\\\1&amp;y\\ge4\\end{cases}\\]<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{1}{2}\\) and \\(\\frac{1}{4}\\), respectively.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Transform the event before differentiating",
+        "question": "<p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x&lt;2\\); \\(1 - \\frac{x}{4}\\) for \\(2\\le x&lt;4\\) and zero elsewhere.</p><p>Let \\(Y=\\sqrt{X + 1}\\). On paper, find its support and cumulative function. Enter \\(G(2)\\) and the density at \\(2\\) exactly.</p>",
+        "solution": [
+          "<p>The new range extends from \\(1\\) to \\(\\sqrt{5}\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ley^{2} - 1\\).</p>",
+          "<p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;1\\\\\\frac{y^{2}}{4} - \\frac{1}{4}&amp;1\\le y&lt;\\sqrt{3}\\\\- \\frac{y^{4}}{8} + \\frac{5 y^{2}}{4} - \\frac{17}{8}&amp;\\sqrt{3}\\le y&lt;\\sqrt{5}\\\\1&amp;y\\ge\\sqrt{5}\\end{cases}\\]",
+          "<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{y}{2}&amp;1&lt;y&lt;\\sqrt{3}\\\\- \\frac{y^{3}}{2} + \\frac{5 y}{2}&amp;\\sqrt{3}&lt;y&lt;\\sqrt{5}\\\\0&amp;\\text{otherwise}\\end{cases}\\]",
+          "<p>At the requested point the cumulative value is \\(\\frac{7}{8}\\) and the density is \\(1\\).</p>"
+        ]
+      },
+      {
+        "title": "Transform the event before differentiating",
+        "question": "<p>The density is \\(\\frac{2 x}{11} + \\frac{2}{11}\\) for \\(0\\le x&lt;1\\); \\(\\frac{4}{11}\\) for \\(1\\le x&lt;3\\) and zero elsewhere.</p><p>Let \\(Y=3 X + 1\\). On paper, find its support and cumulative function. Enter \\(G(2)\\) and the density at \\(2\\) exactly.</p>",
+        "solution": [
+          "<p>The new range extends from \\(1\\) to \\(10\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\le\\frac{y}{3} - \\frac{1}{3}\\).</p>",
+          "<p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;1\\\\\\frac{y^{2}}{99} + \\frac{4 y}{99} - \\frac{5}{99}&amp;1\\le y&lt;4\\\\\\frac{4 y}{33} - \\frac{7}{33}&amp;4\\le y&lt;10\\\\1&amp;y\\ge10\\end{cases}\\]",
+          "<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{2 y}{99} + \\frac{4}{99}&amp;1&lt;y&lt;4\\\\\\frac{4}{33}&amp;4&lt;y&lt;10\\\\0&amp;\\text{otherwise}\\end{cases}\\]",
+          "<p>At the requested point the cumulative value is \\(\\frac{7}{99}\\) and the density is \\(\\frac{8}{99}\\).</p>"
+        ]
+      },
+      {
+        "title": "Transform the event before differentiating",
+        "question": "<p>The density is \\(\\frac{1}{3}\\) for \\(0\\le x&lt;1\\); \\(\\frac{1}{3}\\) for \\(3\\le x&lt;5\\) and zero elsewhere.</p><p>Let \\(Y=7 - X\\). On paper, find its support and cumulative function. Enter \\(G(\\frac{9}{2})\\) and the density at \\(\\frac{9}{2}\\) exactly.</p>",
+        "solution": [
+          "<p>The new range extends from \\(2\\) to \\(7\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ge7 - y\\).</p>",
+          "<p>Use the upper tail at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;2\\\\\\frac{y}{3} - \\frac{2}{3}&amp;2\\le y&lt;4\\\\\\frac{2}{3}&amp;4\\le y&lt;6\\\\\\frac{y}{3} - \\frac{4}{3}&amp;6\\le y&lt;7\\\\1&amp;y\\ge7\\end{cases}\\]",
+          "<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{1}{3}&amp;2&lt;y&lt;4\\\\0&amp;4&lt;y&lt;6\\\\\\frac{1}{3}&amp;6&lt;y&lt;7\\\\0&amp;\\text{otherwise}\\end{cases}\\]",
+          "<p>At the requested point the cumulative value is \\(\\frac{2}{3}\\) and the density is \\(0\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the whole inverse event",
+        "question": "<p>The density is \\(\\frac{1}{5}\\) for \\(-2\\le x\\le3\\) and zero elsewhere.</p><p>Let \\(Y=(X-0)^2\\). Enter the exact cumulative probability and the density of Y at \\(1\\).</p>",
+        "solution": [
+          "<p>For non-negative y the inverse event is \\(0-\\sqrt y\\le X\\le 0+\\sqrt y\\). Clip both sides to the original support.</p>",
+          "<p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{2 \\sqrt{y}}{5}&amp;0\\le y&lt;4\\\\\\frac{\\sqrt{y}}{5} + \\frac{2}{5}&amp;4\\le y&lt;9\\\\1&amp;y\\ge9\\end{cases}\\]",
+          "<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{2}{5}\\) and \\(\\frac{1}{5}\\), respectively.</p>"
+        ]
+      },
+      {
+        "title": "Use the whole inverse event",
+        "question": "<p>The density is \\(\\frac{1}{5}\\) for \\(-1\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=(X-1)^2\\). Enter the exact cumulative probability and the density of Y at \\(6\\).</p>",
+        "solution": [
+          "<p>For non-negative y the inverse event is \\(1-\\sqrt y\\le X\\le 1+\\sqrt y\\). Clip both sides to the original support.</p>",
+          "<p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{2 \\sqrt{y}}{5}&amp;0\\le y&lt;4\\\\\\frac{\\sqrt{y}}{5} + \\frac{2}{5}&amp;4\\le y&lt;9\\\\1&amp;y\\ge9\\end{cases}\\]",
+          "<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{2}{5} + \\frac{\\sqrt{6}}{5}\\) and \\(\\frac{\\sqrt{6}}{60}\\), respectively.</p>"
+        ]
+      },
+      {
+        "title": "Use the whole inverse event",
+        "question": "<p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=\\lvert X-1\\rvert\\). Enter the exact cumulative probability and the density of Y at \\(\\frac{3}{2}\\).</p>",
+        "solution": [
+          "<p>For non-negative y the inverse event is \\(1-y\\le X\\le 1+y\\). Clip both sides to the original support.</p>",
+          "<p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{y}{2}&amp;0\\le y&lt;1\\\\\\frac{y}{4} + \\frac{1}{4}&amp;1\\le y&lt;3\\\\1&amp;y\\ge3\\end{cases}\\]",
+          "<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{5}{8}\\) and \\(\\frac{1}{4}\\), respectively.</p>"
+        ]
+      },
+      {
+        "title": "Use the whole inverse event",
+        "question": "<p>The density is \\(\\frac{1}{2}\\) for \\(-1\\le x\\le1\\) and zero elsewhere.</p><p>Let \\(Y=(X-0)^2\\). Enter the exact cumulative probability and the density of Y at \\(\\frac{1}{4}\\).</p>",
+        "solution": [
+          "<p>For non-negative y the inverse event is \\(0-\\sqrt y\\le X\\le 0+\\sqrt y\\). Clip both sides to the original support.</p>",
+          "<p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\sqrt{y}&amp;0\\le y&lt;1\\\\1&amp;y\\ge1\\end{cases}\\]",
+          "<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{1}{2}\\) and \\(1\\), respectively.</p>"
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Breakpoint",
+        "definition": "<p>An input where the formula or support changes.</p>"
+      },
+      {
+        "term": "Preimage",
+        "definition": "<p>Original inputs that map to the specified new input.</p>"
+      },
+      {
+        "term": "Clipped event",
+        "definition": "<p>An event intersected with the original support.</p>"
+      },
+      {
+        "term": "Integrable endpoint",
+        "definition": "<p>An endpoint where a density need not stay bounded but the total local area remains finite.</p>"
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stats-crv-piecewise-study-07",
+        "title": "Transform the event before differentiating",
+        "prompt": "<p>The density is \\(\\frac{1}{4}\\) for \\(0\\le x&lt;2\\); \\(1 - \\frac{x}{4}\\) for \\(2\\le x&lt;4\\) and zero elsewhere.</p><p>Let \\(Y=3 X + 2\\). On paper, find its support and cumulative function. Enter \\(G(9)\\) and the density at \\(9\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "cdf",
+            "label": "Cumulative value",
+            "expected": "47/72",
+            "type": "number"
+          },
+          {
+            "key": "pdf",
+            "label": "Density value",
+            "expected": "5/36",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "47/72",
+                "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+        "solution": "<p>The new range extends from \\(2\\) to \\(14\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\le\\frac{y}{3} - \\frac{2}{3}\\).</p><p>Use the original CDF at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;2\\\\\\frac{y}{12} - \\frac{1}{6}&amp;2\\le y&lt;8\\\\- \\frac{y^{2}}{72} + \\frac{7 y}{18} - \\frac{31}{18}&amp;8\\le y&lt;14\\\\1&amp;y\\ge14\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{1}{12}&amp;2&lt;y&lt;8\\\\\\frac{7}{18} - \\frac{y}{36}&amp;8&lt;y&lt;14\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{47}{72}\\) and the density is \\(\\frac{5}{36}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-piecewise-study-08",
+        "title": "Transform the event before differentiating",
+        "prompt": "<p>The density is \\(\\frac{1}{3}\\) for \\(0\\le x&lt;1\\); \\(\\frac{1}{3}\\) for \\(3\\le x&lt;5\\) and zero elsewhere.</p><p>Let \\(Y=11 - 2 X\\). On paper, find its support and cumulative function. Enter \\(G(7)\\) and the density at \\(7\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "cdf",
+            "label": "Cumulative value",
+            "expected": "2/3",
+            "type": "number"
+          },
+          {
+            "key": "pdf",
+            "label": "Density value",
+            "expected": "0",
+            "type": "number",
+            "retry": [
+              {
+                "answer": "2/3",
+                "feedback": "<p>This is the accumulated probability. The density is its derivative on the active branch.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Map both endpoints first. If the transformation decreases, reverse the inequality and use a tail.</p>",
+        "solution": "<p>The new range extends from \\(1\\) to \\(11\\). In its interior, \\(Y\\le y\\) is equivalent to \\(X\\ge\\frac{11}{2} - \\frac{y}{2}\\).</p><p>Use the upper tail at the inverse input.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;1\\\\\\frac{y}{6} - \\frac{1}{6}&amp;1\\le y&lt;5\\\\\\frac{2}{3}&amp;5\\le y&lt;9\\\\\\frac{y}{6} - \\frac{5}{6}&amp;9\\le y&lt;11\\\\1&amp;y\\ge11\\end{cases}\\]<p>Differentiate inside each branch to recover the density.</p>\\[g(y)=\\begin{cases}\\frac{1}{6}&amp;1&lt;y&lt;5\\\\0&amp;5&lt;y&lt;9\\\\\\frac{1}{6}&amp;9&lt;y&lt;11\\\\0&amp;\\text{otherwise}\\end{cases}\\]<p>At the requested point the cumulative value is \\(\\frac{2}{3}\\) and the density is \\(0\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-piecewise-study-09",
+        "title": "Use the whole inverse event",
+        "prompt": "<p>The density is \\(\\frac{1}{7}\\) for \\(-4\\le x\\le3\\) and zero elsewhere.</p><p>Let \\(Y=(X-0)^2\\). Enter the exact cumulative probability and the density of Y at \\(1\\).</p>",
+        "fields": [
+          {
+            "key": "cdf",
+            "label": "Cumulative probability",
+            "expected": "2/7",
+            "type": "number"
+          },
+          {
+            "key": "pdf",
+            "label": "Density value",
+            "expected": "1/7",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Include both sides of the inverse event. If one side goes past the original support, keep only what remains inside.</p>",
+        "solution": "<p>For non-negative y the inverse event is \\(0-\\sqrt y\\le X\\le 0+\\sqrt y\\). Clip both sides to the original support.</p><p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{2 \\sqrt{y}}{7}&amp;0\\le y&lt;9\\\\\\frac{\\sqrt{y}}{7} + \\frac{3}{7}&amp;9\\le y&lt;16\\\\1&amp;y\\ge16\\end{cases}\\]<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{2}{7}\\) and \\(\\frac{1}{7}\\), respectively.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-piecewise-study-10",
+        "title": "Use the whole inverse event",
+        "prompt": "<p>The density is \\(\\frac{1}{5}\\) for \\(-1\\le x\\le4\\) and zero elsewhere.</p><p>Let \\(Y=(X-0)^2\\). Enter the exact cumulative probability and the density of Y at \\(4\\).</p>",
+        "fields": [
+          {
+            "key": "cdf",
+            "label": "Cumulative probability",
+            "expected": "3/5",
+            "type": "number"
+          },
+          {
+            "key": "pdf",
+            "label": "Density value",
+            "expected": "1/20",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Include both sides of the inverse event. If one side goes past the original support, keep only what remains inside.</p>",
+        "solution": "<p>For non-negative y the inverse event is \\(0-\\sqrt y\\le X\\le 0+\\sqrt y\\). Clip both sides to the original support.</p><p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{2 \\sqrt{y}}{5}&amp;0\\le y&lt;1\\\\\\frac{\\sqrt{y}}{5} + \\frac{1}{5}&amp;1\\le y&lt;16\\\\1&amp;y\\ge16\\end{cases}\\]<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{3}{5}\\) and \\(\\frac{1}{20}\\), respectively.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-piecewise-study-11",
+        "title": "Use the whole inverse event",
+        "prompt": "<p>The density is \\(\\frac{1}{5}\\) for \\(-3\\le x\\le2\\) and zero elsewhere.</p><p>Let \\(Y=\\lvert X-1\\rvert\\). Enter the exact cumulative probability and the density of Y at \\(2\\).</p>",
+        "fields": [
+          {
+            "key": "cdf",
+            "label": "Cumulative probability",
+            "expected": "3/5",
+            "type": "number"
+          },
+          {
+            "key": "pdf",
+            "label": "Density value",
+            "expected": "1/5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Include both sides of the inverse event. If one side goes past the original support, keep only what remains inside.</p>",
+        "solution": "<p>For non-negative y the inverse event is \\(1-y\\le X\\le 1+y\\). Clip both sides to the original support.</p><p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{2 y}{5}&amp;0\\le y&lt;1\\\\\\frac{y}{5} + \\frac{1}{5}&amp;1\\le y&lt;4\\\\1&amp;y\\ge4\\end{cases}\\]<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{3}{5}\\) and \\(\\frac{1}{5}\\), respectively.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stats-crv-piecewise-study-12",
+        "title": "Use the whole inverse event",
+        "prompt": "<p>The density is \\(\\frac{1}{4}\\) for \\(-2\\le x\\le2\\) and zero elsewhere.</p><p>Let \\(Y=(X-1)^2\\). Enter the exact cumulative probability and the density of Y at \\(\\frac{9}{4}\\).</p>",
+        "fields": [
+          {
+            "key": "cdf",
+            "label": "Cumulative probability",
+            "expected": "5/8",
+            "type": "number"
+          },
+          {
+            "key": "pdf",
+            "label": "Density value",
+            "expected": "1/12",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Include both sides of the inverse event. If one side goes past the original support, keep only what remains inside.</p>",
+        "solution": "<p>For non-negative y the inverse event is \\(1-\\sqrt y\\le X\\le 1+\\sqrt y\\). Clip both sides to the original support.</p><p>At each mapped endpoint the inverse event begins or stops crossing an original piece.</p>\\[G(y)=\\begin{cases}0&amp;y&lt;0\\\\\\frac{\\sqrt{y}}{2}&amp;0\\le y&lt;1\\\\\\frac{\\sqrt{y}}{4} + \\frac{1}{4}&amp;1\\le y&lt;9\\\\1&amp;y\\ge9\\end{cases}\\]<p>Differentiate the active branch to obtain the density at the given point.</p><p>The required values are \\(\\frac{5}{8}\\) and \\(\\frac{1}{12}\\), respectively.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Keep every contributing branch</h2><p>Map the original joins and solve the inequality for the full event.</p><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Example</th><th scope=\"col\">Original event when y is non-negative</th></tr></thead><tbody><tr><th scope=\"row\">Square</th><td>\\(-\\sqrt y\\le X\\le\\sqrt y\\)</td></tr><tr><th scope=\"row\">Absolute value around c</th><td>\\(c-y\\le X\\le c+y\\)</td></tr><tr><th scope=\"row\">Mapped gap</th><td>CDF flat throughout the image of the gap.</td></tr><tr><th scope=\"row\">Density</th><td>Differentiate separately between the new breakpoints.</td></tr></tbody></table></div>",
+      "checks": "<ul><li>Intersect the event with the actual support.</li><li>At joins the continuous CDF values agree.</li><li>Check that the density integrates to one.</li></ul>",
+      "examTip": "<p>Draw the breakpoints on a number line before integrating or differentiating.</p>"
+    },
+    "related": [
+      {
+        "title": "Review one-branch inverse events",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_crv_monotone"
+      },
+      {
+        "title": "Review what a flat CDF means",
+        "href": "/courses/maths4u-9231-statistics/topics/stats_crv_cdf"
+      }
+    ]
+  }
+}
