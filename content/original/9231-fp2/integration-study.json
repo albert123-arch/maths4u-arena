@@ -1,0 +1,2685 @@
+{
+  "fp2_integration_techniques": {
+    "updatedOn": "2026-11-21",
+    "description": "Match quadratic roots to trigonometric or hyperbolic substitutions, change limits and handle a singular endpoint.",
+    "sections": [
+      {
+        "id": "use-sine-for-a-difference-of-squares",
+        "title": "What substitution removes a squared term from a fixed positive square?",
+        "label": "Identify the circular form",
+        "intro": "<p>Choose the substitution by matching the signs in the radicand. A circle identity is useful when the variable square is subtracted from a fixed positive square.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(kx=a\\sin t\\), then \\(a^2-k^2x^2=a^2\\cos^2t\\). Choose a branch with the appropriate square-root sign.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "techniques-use-sine-for-a-difference-of-squares-check",
+            "title": "Use sine substitution for a missing circular root",
+            "prompt": "<p>Evaluate \\(\\int_{0}^{2 \\sqrt{2}}\\frac{1}{\\sqrt{16 - x^{2}}}\\,\\mathrm d x\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Exact value",
+                "type": "number",
+                "expected": "pi/4"
+              }
+            ],
+            "hint": "<p>A real sine substitution turns \\(a^2\\) minus a square into a cosine square.</p>",
+            "solution": "<p>Substitute \\(kx=a\\sin t\\) with \\(k=1\\) and \\(a=4\\). On the chosen first-quadrant interval the cosine is positive.</p><p>The derivative and root cancel, giving \\(\\frac{1}{k}\\int\\mathrm dt\\) between transformed bounds zero and \\(\\frac{\\pi}{4}\\).</p><p>The exact integral is \\(\\frac{\\pi}{4}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The scale of the inside variable introduces a factor even when the root cancels.</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-sinh-for-a-sum-of-squares",
+        "title": "When does the hyperbolic sine substitution simplify the root?",
+        "label": "Use a hyperbolic identity",
+        "intro": "<p>For a positive sum of squares, hyperbolic sine converts the radicand into a hyperbolic cosine square.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Match \\(kx=a\\sinh t\\) with \\(a>0\\) and use \\(\\sqrt{a^2+a^2\\sinh^2t}=a\\cosh t\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "techniques-use-sinh-for-a-sum-of-squares-check",
+            "title": "Use sinh to remove a quadratic root",
+            "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{45}{8}}\\frac{1}{\\sqrt{x^{2} + 9}}\\,\\mathrm d x\\) in the form \\(C\\ln 4\\). Give the coefficient \\(C\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient of the logarithm",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Choose the hyperbolic function so its derivative cancels the root. Change the integration limits too.</p>",
+            "solution": "<p>Use \\(kx=a\\sinh t\\) with \\(k=1\\) and \\(a=3\\). The identity \\(1+\\sinh^2t=\\cosh^2t\\) cancels the square root against the derivative.</p><p>The transformed integrand is the constant \\(1\\). The limits are zero and \\(\\ln 4\\).</p><p>The integral is \\(1\\ln 4\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Remember to replace the original endpoints with values of the new variable.</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-cosh-and-check-the-endpoint",
+        "title": "How do I integrate from an endpoint where the root vanishes?",
+        "label": "Use the correct branch and limit",
+        "intro": "<p>For \\(kx\\ge a>0\\), choose \\(kx=a\\cosh t\\) with \\(t\\ge0\\). The original reciprocal-root integrand can be undefined at the endpoint.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Integrate from an interior bound first if needed, then take the limit to the endpoint.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "techniques-use-cosh-and-check-the-endpoint-check",
+            "title": "Use cosh to remove a quadratic root",
+            "prompt": "<p>Evaluate \\(\\int_{3}^{\\frac{51}{8}}\\frac{1}{\\sqrt{x^{2} - 9}}\\,\\mathrm d x\\) in the form \\(C\\ln 4\\). Give the coefficient \\(C\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient of the logarithm",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Choose the hyperbolic function so its derivative cancels the root. Change the integration limits too.</p>",
+            "solution": "<p>Use \\(kx=a\\cosh t\\) with \\(k=1\\) and \\(a=3\\). Use \\(t\\ge0\\): the square root and derivative both involve \\(\\sinh t\\). Interpret the lower endpoint as a limit.</p><p>The transformed integrand is the constant \\(1\\). The limits are zero and \\(\\ln 4\\).</p><p>The integral is \\(1\\ln 4\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Cancelling the transformed factors does not make the original reciprocal integrand defined there.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "techniques-use-cosh-and-check-the-endpoint-follow-up",
+            "title": "Use cosh to remove a quadratic root",
+            "prompt": "<p>Evaluate \\(\\int_{3}^{\\frac{37}{4}}\\frac{1}{\\sqrt{\\frac{25 x^{2}}{9} - 25}}\\,\\mathrm d x\\) in the form \\(C\\ln 6\\). Give the coefficient \\(C\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient of the logarithm",
+                "type": "number",
+                "expected": "3/5"
+              }
+            ],
+            "hint": "<p>Choose the hyperbolic function so its derivative cancels the root. Change the integration limits too.</p>",
+            "solution": "<p>Use \\(kx=a\\cosh t\\) with \\(k=\\frac{5}{3}\\) and \\(a=5\\). Use \\(t\\ge0\\): the square root and derivative both involve \\(\\sinh t\\). Interpret the lower endpoint as a limit.</p><p>The transformed integrand is the constant \\(\\frac{3}{5}\\). The limits are zero and \\(\\ln 6\\).</p><p>The integral is \\(\\frac{3}{5}\\ln 6\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "complete-the-square-and-shift-bounds",
+        "title": "What if the radicand also has a linear term?",
+        "label": "Move the centre of the quadratic",
+        "intro": "<p>Write the radicand as a square of a shifted variable plus or minus a constant. This determines the substitution and the location of each transformed bound.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The shift changes the x value corresponding to zero of the substituted variable.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "techniques-complete-the-square-and-shift-bounds-check",
+            "title": "Complete the square before choosing a substitution",
+            "prompt": "<p>Evaluate \\(\\int_{-3}^{- \\frac{1}{3}}2\\frac{1}{\\sqrt{x^{2} + 6 x + 13}}\\,\\mathrm d x\\) in the form \\(C\\ln 3\\). Find the centre shift \\(b\\) in \\((x+b)^2+a^2\\) and the coefficient \\(C\\).</p>",
+            "fields": [
+              {
+                "key": "shift",
+                "label": "Shift b",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "coefficient",
+                "label": "Coefficient of the logarithm",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Complete the square with the correct constant, then transform the limits.</p>",
+            "solution": "<p>The radicand rewrites as \\(\\left(x + 3\\right)^{2} + 4\\).</p><p>Set \\(x+3=2\\sinh t\\). The derivative cancels the cosine hyperbolic factor in the root.</p><p>The new limits are zero and \\(\\ln 3\\). The shift is \\(3\\) and the integral is \\(2\\ln 3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>After completing the square, do not keep the old x limits in the new variable.</p>"
+          }
+        ]
+      },
+      {
+        "id": "integrate-the-root-itself",
+        "title": "What changes when the root is in the numerator?",
+        "label": "Use the hyperbolic double angle",
+        "intro": "<p>After substitution, the root and differential can supply equal factors that multiply instead of cancelling.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\cosh^2t=\\frac{1+\\cosh2t}{2}\\) to integrate the remaining square.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "techniques-integrate-the-root-itself-check",
+            "title": "Use a double-angle identity after a hyperbolic substitution",
+            "prompt": "<p>Evaluate \\(\\int_{0}^{4}\\sqrt{x^{2} + 9}\\,\\mathrm d x\\) in the form \\(A+B\\ln 3\\). Give both coefficients.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Constant A",
+                "type": "number",
+                "expected": "10"
+              },
+              {
+                "key": "b",
+                "label": "Logarithm coefficient B",
+                "type": "number",
+                "expected": "9/2"
+              }
+            ],
+            "hint": "<p>A square root in the numerator and the derivative produce the square of a hyperbolic cosine.</p>",
+            "solution": "<p>Put \\(kx=a\\sinh t\\) with \\(a=3\\) and \\(k=1\\). This time the derivative multiplies the root.</p><p>The transformed integral uses \\(\\frac{a^2}{k}\\cosh^2t=\\frac{a^2}{2k}(1+\\cosh2t)\\). The upper limit is \\(\\log{\\left(3 \\right)}\\).</p><p>Integrating gives \\(\\frac{9 \\log{\\left(3 \\right)}}{2} + 10\\), hence \\(A=10\\) and \\(B=\\frac{9}{2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not apply the inverse-hyperbolic result for reciprocal roots to numerator roots.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "techniques-integrate-the-root-itself-follow-up",
+            "title": "Use a double-angle identity after a hyperbolic substitution",
+            "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{36}{5}}\\sqrt{\\frac{25 x^{2}}{9} + 25}\\,\\mathrm d x\\) in the form \\(A+B\\ln 5\\). Give both coefficients.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Constant A",
+                "type": "number",
+                "expected": "234/5"
+              },
+              {
+                "key": "b",
+                "label": "Logarithm coefficient B",
+                "type": "number",
+                "expected": "15/2"
+              }
+            ],
+            "hint": "<p>A square root in the numerator and the derivative produce the square of a hyperbolic cosine.</p>",
+            "solution": "<p>Put \\(kx=a\\sinh t\\) with \\(a=5\\) and \\(k=\\frac{5}{3}\\). This time the derivative multiplies the root.</p><p>The transformed integral uses \\(\\frac{a^2}{k}\\cosh^2t=\\frac{a^2}{2k}(1+\\cosh2t)\\). The upper limit is \\(\\log{\\left(5 \\right)}\\).</p><p>Integrating gives \\(\\frac{15 \\log{\\left(5 \\right)}}{2} + \\frac{234}{5}\\), hence \\(A=\\frac{234}{5}\\) and \\(B=\\frac{15}{2}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use sine substitution for a missing circular root",
+        "question": "<p>Evaluate \\(\\int_{0}^{\\frac{9}{4}}\\frac{1}{\\sqrt{9 - \\frac{4 x^{2}}{9}}}\\,\\mathrm d x\\) exactly.</p>",
+        "solution": [
+          "<p>Substitute \\(kx=a\\sin t\\) with \\(k=\\frac{2}{3}\\) and \\(a=3\\). On the chosen first-quadrant interval the cosine is positive.</p>",
+          "<p>The derivative and root cancel, giving \\(\\frac{1}{k}\\int\\mathrm dt\\) between transformed bounds zero and \\(\\frac{\\pi}{6}\\).</p>",
+          "<p>The exact integral is \\(\\frac{\\pi}{4}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use sinh to remove a quadratic root",
+        "question": "<p>Evaluate \\(\\int_{0}^{4}\\frac{1}{\\sqrt{\\frac{4 x^{2}}{9} + 4}}\\,\\mathrm d x\\) in the form \\(C\\ln 3\\). Give the coefficient \\(C\\).</p>",
+        "solution": [
+          "<p>Use \\(kx=a\\sinh t\\) with \\(k=\\frac{2}{3}\\) and \\(a=2\\). The identity \\(1+\\sinh^2t=\\cosh^2t\\) cancels the square root against the derivative.</p>",
+          "<p>The transformed integrand is the constant \\(\\frac{3}{2}\\). The limits are zero and \\(\\ln 3\\).</p>",
+          "<p>The integral is \\(\\frac{3}{2}\\ln 3\\).</p>"
+        ]
+      },
+      {
+        "title": "Use cosh to remove a quadratic root",
+        "question": "<p>Evaluate \\(\\int_{3}^{5}\\frac{1}{\\sqrt{\\frac{4 x^{2}}{9} - 4}}\\,\\mathrm d x\\) in the form \\(C\\ln 3\\). Give the coefficient \\(C\\).</p>",
+        "solution": [
+          "<p>Use \\(kx=a\\cosh t\\) with \\(k=\\frac{2}{3}\\) and \\(a=2\\). Use \\(t\\ge0\\): the square root and derivative both involve \\(\\sinh t\\). Interpret the lower endpoint as a limit.</p>",
+          "<p>The transformed integrand is the constant \\(\\frac{3}{2}\\). The limits are zero and \\(\\ln 3\\).</p>",
+          "<p>The integral is \\(\\frac{3}{2}\\ln 3\\).</p>"
+        ]
+      },
+      {
+        "title": "Use cosh to remove a quadratic root",
+        "question": "<p>Evaluate \\(\\int_{3}^{\\frac{39}{5}}\\frac{1}{\\sqrt{\\frac{16 x^{2}}{9} - 16}}\\,\\mathrm d x\\) in the form \\(C\\ln 5\\). Give the coefficient \\(C\\).</p>",
+        "solution": [
+          "<p>Use \\(kx=a\\cosh t\\) with \\(k=\\frac{4}{3}\\) and \\(a=4\\). Use \\(t\\ge0\\): the square root and derivative both involve \\(\\sinh t\\). Interpret the lower endpoint as a limit.</p>",
+          "<p>The transformed integrand is the constant \\(\\frac{3}{4}\\). The limits are zero and \\(\\ln 5\\).</p>",
+          "<p>The integral is \\(\\frac{3}{4}\\ln 5\\).</p>"
+        ]
+      },
+      {
+        "title": "Complete the square before choosing a substitution",
+        "question": "<p>Evaluate \\(\\int_{-2}^{- \\frac{5}{4}}\\frac{3}{2}\\frac{1}{\\sqrt{x^{2} + 4 x + 5}}\\,\\mathrm d x\\) in the form \\(C\\ln 2\\). Find the centre shift \\(b\\) in \\((x+b)^2+a^2\\) and the coefficient \\(C\\).</p>",
+        "solution": [
+          "<p>The radicand rewrites as \\(\\left(x + 2\\right)^{2} + 1\\).</p>",
+          "<p>Set \\(x+2=1\\sinh t\\). The derivative cancels the cosine hyperbolic factor in the root.</p>",
+          "<p>The new limits are zero and \\(\\ln 2\\). The shift is \\(2\\) and the integral is \\(\\frac{3}{2}\\ln 2\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a double-angle identity after a hyperbolic substitution",
+        "question": "<p>Evaluate \\(\\int_{0}^{\\frac{9}{4}}\\sqrt{\\frac{4 x^{2}}{9} + 4}\\,\\mathrm d x\\) in the form \\(A+B\\ln 2\\). Give both coefficients.</p>",
+        "solution": [
+          "<p>Put \\(kx=a\\sinh t\\) with \\(a=2\\) and \\(k=\\frac{2}{3}\\). This time the derivative multiplies the root.</p>",
+          "<p>The transformed integral uses \\(\\frac{a^2}{k}\\cosh^2t=\\frac{a^2}{2k}(1+\\cosh2t)\\). The upper limit is \\(\\log{\\left(2 \\right)}\\).</p>",
+          "<p>Integrating gives \\(3 \\log{\\left(2 \\right)} + \\frac{45}{16}\\), hence \\(A=\\frac{45}{16}\\) and \\(B=3\\).</p>"
+        ]
+      },
+      {
+        "title": "Use a double-angle identity after a hyperbolic substitution",
+        "question": "<p>Evaluate \\(\\int_{0}^{\\frac{45}{8}}\\sqrt{\\frac{16 x^{2}}{9} + 16}\\,\\mathrm d x\\) in the form \\(A+B\\ln 4\\). Give both coefficients.</p>",
+        "solution": [
+          "<p>Put \\(kx=a\\sinh t\\) with \\(a=4\\) and \\(k=\\frac{4}{3}\\). This time the derivative multiplies the root.</p>",
+          "<p>The transformed integral uses \\(\\frac{a^2}{k}\\cosh^2t=\\frac{a^2}{2k}(1+\\cosh2t)\\). The upper limit is \\(\\log{\\left(4 \\right)}\\).</p>",
+          "<p>Integrating gives \\(6 \\log{\\left(4 \\right)} + \\frac{765}{32}\\), hence \\(A=\\frac{765}{32}\\) and \\(B=6\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "techniques-use-sine-for-a-difference-of-squares-extra",
+        "title": "Use sine substitution for a missing circular root",
+        "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{15 \\sqrt{3}}{8}}\\frac{1}{\\sqrt{25 - \\frac{16 x^{2}}{9}}}\\,\\mathrm d x\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Exact value",
+            "type": "number",
+            "expected": "pi/4"
+          }
+        ],
+        "hint": "<p>A real sine substitution turns \\(a^2\\) minus a square into a cosine square.</p>",
+        "solution": "<p>Substitute \\(kx=a\\sin t\\) with \\(k=\\frac{4}{3}\\) and \\(a=5\\). On the chosen first-quadrant interval the cosine is positive.</p><p>The derivative and root cancel, giving \\(\\frac{1}{k}\\int\\mathrm dt\\) between transformed bounds zero and \\(\\frac{\\pi}{3}\\).</p><p>The exact integral is \\(\\frac{\\pi}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "techniques-use-sinh-for-a-sum-of-squares-extra",
+        "title": "Use sinh to remove a quadratic root",
+        "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{36}{5}}\\frac{1}{\\sqrt{\\frac{16 x^{2}}{9} + 16}}\\,\\mathrm d x\\) in the form \\(C\\ln 5\\). Give the coefficient \\(C\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient of the logarithm",
+            "type": "number",
+            "expected": "3/4"
+          }
+        ],
+        "hint": "<p>Choose the hyperbolic function so its derivative cancels the root. Change the integration limits too.</p>",
+        "solution": "<p>Use \\(kx=a\\sinh t\\) with \\(k=\\frac{4}{3}\\) and \\(a=4\\). The identity \\(1+\\sinh^2t=\\cosh^2t\\) cancels the square root against the derivative.</p><p>The transformed integrand is the constant \\(\\frac{3}{4}\\). The limits are zero and \\(\\ln 5\\).</p><p>The integral is \\(\\frac{3}{4}\\ln 5\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "techniques-use-cosh-and-check-the-endpoint-extra",
+        "title": "Use cosh to remove a quadratic root",
+        "prompt": "<p>Evaluate \\(\\int_{3}^{\\frac{75}{7}}\\frac{1}{\\sqrt{4 x^{2} - 36}}\\,\\mathrm d x\\) in the form \\(C\\ln 7\\). Give the coefficient \\(C\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient of the logarithm",
+            "type": "number",
+            "expected": "1/2"
+          }
+        ],
+        "hint": "<p>Choose the hyperbolic function so its derivative cancels the root. Change the integration limits too.</p>",
+        "solution": "<p>Use \\(kx=a\\cosh t\\) with \\(k=2\\) and \\(a=6\\). Use \\(t\\ge0\\): the square root and derivative both involve \\(\\sinh t\\). Interpret the lower endpoint as a limit.</p><p>The transformed integrand is the constant \\(\\frac{1}{2}\\). The limits are zero and \\(\\ln 7\\).</p><p>The integral is \\(\\frac{1}{2}\\ln 7\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "techniques-complete-the-square-and-shift-bounds-extra",
+        "title": "Complete the square before choosing a substitution",
+        "prompt": "<p>Evaluate \\(\\int_{-4}^{\\frac{13}{8}}\\frac{5}{2}\\frac{1}{\\sqrt{x^{2} + 8 x + 25}}\\,\\mathrm d x\\) in the form \\(C\\ln 4\\). Find the centre shift \\(b\\) in \\((x+b)^2+a^2\\) and the coefficient \\(C\\).</p>",
+        "fields": [
+          {
+            "key": "shift",
+            "label": "Shift b",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "coefficient",
+            "label": "Coefficient of the logarithm",
+            "type": "number",
+            "expected": "5/2"
+          }
+        ],
+        "hint": "<p>Complete the square with the correct constant, then transform the limits.</p>",
+        "solution": "<p>The radicand rewrites as \\(\\left(x + 4\\right)^{2} + 9\\).</p><p>Set \\(x+4=3\\sinh t\\). The derivative cancels the cosine hyperbolic factor in the root.</p><p>The new limits are zero and \\(\\ln 4\\). The shift is \\(4\\) and the integral is \\(\\frac{5}{2}\\ln 4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "techniques-integrate-the-root-itself-extra",
+        "title": "Use a double-angle identity after a hyperbolic substitution",
+        "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{35}{4}}\\sqrt{4 x^{2} + 36}\\,\\mathrm d x\\) in the form \\(A+B\\ln 6\\). Give both coefficients.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Constant A",
+            "type": "number",
+            "expected": "1295/16"
+          },
+          {
+            "key": "b",
+            "label": "Logarithm coefficient B",
+            "type": "number",
+            "expected": "9"
+          }
+        ],
+        "hint": "<p>A square root in the numerator and the derivative produce the square of a hyperbolic cosine.</p>",
+        "solution": "<p>Put \\(kx=a\\sinh t\\) with \\(a=6\\) and \\(k=2\\). This time the derivative multiplies the root.</p><p>The transformed integral uses \\(\\frac{a^2}{k}\\cosh^2t=\\frac{a^2}{2k}(1+\\cosh2t)\\). The upper limit is \\(\\log{\\left(6 \\right)}\\).</p><p>Integrating gives \\(9 \\log{\\left(6 \\right)} + \\frac{1295}{16}\\), hence \\(A=\\frac{1295}{16}\\) and \\(B=9\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Radicand",
+        "definition": "<p>The expression under a square root.</p>"
+      },
+      {
+        "term": "Branch",
+        "definition": "<p>An interval selected so a substitution or inverse function has the required sign and is single-valued.</p>"
+      },
+      {
+        "term": "Improper endpoint",
+        "definition": "<p>An endpoint where an integrand is unbounded or undefined, handled by a one-sided limit.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Circular root</th><td>\\(\\sqrt{a^2-z^2}\\) suggests \\(z=a\\sin t\\).</td></tr><tr><th scope=\"row\">Sum of squares</th><td>\\(\\sqrt{a^2+z^2}\\) suggests \\(z=a\\sinh t\\).</td></tr><tr><th scope=\"row\">Difference of squares</th><td>\\(\\sqrt{z^2-a^2}\\) for \\(z\\ge a\\) suggests \\(z=a\\cosh t\\).</td></tr><tr><th scope=\"row\">Linear term</th><td>Complete the square before substituting.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Choose a substitution for \\(\\sqrt{x^2+4x+13}\\).</p><p><strong>Check</strong> Rewrite the root as \\(\\sqrt{(x+2)^2+9}\\), then let \\(x+2=3\\sinh t\\).</p>",
+      "checks": "<ul><li>The scale of the inside variable introduces a factor even when the root cancels.</li><li>Remember to replace the original endpoints with values of the new variable.</li></ul>",
+      "examTip": "<p>Show the transformed limits and any constant factor in the differential.</p>"
+    },
+    "related": [
+      {
+        "title": "Algebraic and exponential reduction formulae",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_integration_reduction"
+      }
+    ]
+  },
+  "fp2_integration_reduction": {
+    "updatedOn": "2026-11-21",
+    "description": "Derive integral recurrences, keep endpoint terms and evaluate exact results with the appropriate base case.",
+    "sections": [
+      {
+        "id": "reduce-a-power-times-an-exponential",
+        "title": "Which factor should I differentiate in integration by parts?",
+        "label": "Lower the power",
+        "intro": "<p>Differentiate a positive power to lower its exponent. Integrate an exponential because its form stays the same.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(I_n=\\left[\\frac{x^n\\mathrm e^{kx}}k\\right]_a^b-\\frac nk I_{n-1}\\) when \\(I_n\\) has integrand \\(x^n\\mathrm e^{kx}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "reduction-reduce-a-power-times-an-exponential-check",
+            "title": "Reduce a monomial times an exponential",
+            "prompt": "<p>For \\(\\int_{0}^{\\frac{3}{2}}x^n\\mathrm e^{3 x}\\,\\mathrm d x\\) write \\(I_n=B+A I_{n-1}\\), where \\(B\\) is the boundary term. At \\(n=3\\), find \\(A\\) and the coefficient of \\(\\mathrm e^{\\frac{9}{2}}\\) in \\(B\\).</p>",
+            "fields": [
+              {
+                "key": "factor",
+                "label": "Multiplier A",
+                "type": "number",
+                "expected": "-1"
+              },
+              {
+                "key": "up",
+                "label": "Upper endpoint coefficient",
+                "type": "number",
+                "expected": "9/8"
+              }
+            ],
+            "hint": "<p>The power decreases by one. The exponential antiderivative introduces a factor of one over its rate.</p>",
+            "solution": "<p>Choose the monomial to differentiate and the exponential to integrate.</p><p>Integration by parts gives boundary term \\(\\left[\\frac{x^n\\mathrm e^{kx}}{k}\\right]_a^b\\) and multiplier \\(-\\frac{n}{k}\\).</p><p>The lower endpoint term is zero. The multiplier is \\(-1\\) and the upper exponential coefficient is \\(\\frac{9}{8}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Carry the reciprocal exponential rate into both the boundary and recurrence terms.</p>"
+          }
+        ]
+      },
+      {
+        "id": "retain-a-nonzero-lower-bound",
+        "title": "When does the lower endpoint matter?",
+        "label": "Keep both boundaries",
+        "intro": "<p>Write the full boundary bracket before evaluating. A positive lower bound generally contributes a term.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>An upper-minus-lower bracket subtracts the whole lower expression.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "reduction-retain-a-nonzero-lower-bound-check",
+            "title": "Retain both endpoint terms in a reduction",
+            "prompt": "<p>For \\(\\int_{\\frac{1}{2}}^{\\frac{3}{2}}x^n\\mathrm e^{3 x}\\,\\mathrm d x\\) write \\(I_n=B+A I_{n-1}\\), where \\(B\\) is the boundary term. At \\(n=3\\), find the coefficients of \\(\\mathrm e^{\\frac{9}{2}}\\) and \\(\\mathrm e^{\\frac{3}{2}}\\) in \\(B\\).</p>",
+            "fields": [
+              {
+                "key": "upper",
+                "label": "Upper endpoint coefficient",
+                "type": "number",
+                "expected": "9/8"
+              },
+              {
+                "key": "lower",
+                "label": "Lower endpoint coefficient",
+                "type": "number",
+                "expected": "-1/24"
+              }
+            ],
+            "hint": "<p>Use the upper minus lower evaluation. The integrand at the starting point need not vanish.</p>",
+            "solution": "<p>Differentiate the power and integrate the exponential. The endpoint term is \\(\\left[\\frac{x^n\\mathrm e^{kx}}{k}\\right]_a^b\\).</p><p>Neither endpoint is zero. Evaluation subtracts the lower contribution.</p><p>The upper and lower exponential coefficients are \\(\\frac{9}{8}\\) and \\(- \\frac{1}{24}\\), respectively.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A zero lower term on one interval does not make the same term vanish on another.</p>"
+          }
+        ]
+      },
+      {
+        "id": "shift-and-decay",
+        "title": "How do signs change for a shifted power and decaying exponential?",
+        "label": "Track both negatives",
+        "intro": "<p>A shifted power of b minus x has a negative derivative. A decaying exponential also introduces a negative factor when integrated.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Keep those signs inside the formal by-parts formula, then evaluate the two endpoints.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "reduction-shift-and-decay-check",
+            "title": "Track both signs in a shifted-power reduction",
+            "prompt": "<p>Let \\(I_n=\\int_0^{\\frac{3}{2}}(\\frac{3}{2}-x)^n\\mathrm e^{-3x}\\,\\mathrm dx\\). Find both numbers in \\(I_3=A+B I_2\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Boundary constant A",
+                "type": "number",
+                "expected": "9/8"
+              },
+              {
+                "key": "b",
+                "label": "Reduced integral multiplier B",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>Keep the minus in the derivative of b minus x and the minus from the antiderivative of the decaying exponential.</p>",
+            "solution": "<p>Differentiate the shifted power: \\(\\frac{\\mathrm d}{\\mathrm dx}(b-x)^n=-n(b-x)^{n-1}\\). Integrating the exponential supplies a second negative.</p><p>The upper endpoint vanishes for positive power. The subtracted lower endpoint gives \\(\\frac{9}{8}\\).</p><p>Integration by parts subtracts the remaining integral. Thus \\(A=\\frac{9}{8}\\) and \\(B=-1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>There is still a subtraction in the integration-by-parts formula.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "reduction-shift-and-decay-follow-up",
+            "title": "Track both signs in a shifted-power reduction",
+            "prompt": "<p>Let \\(I_n=\\int_0^{\\frac{5}{2}}(\\frac{5}{2}-x)^n\\mathrm e^{-5x}\\,\\mathrm dx\\). Find both numbers in \\(I_5=A+B I_4\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Boundary constant A",
+                "type": "number",
+                "expected": "625/32"
+              },
+              {
+                "key": "b",
+                "label": "Reduced integral multiplier B",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>Keep the minus in the derivative of b minus x and the minus from the antiderivative of the decaying exponential.</p>",
+            "solution": "<p>Differentiate the shifted power: \\(\\frac{\\mathrm d}{\\mathrm dx}(b-x)^n=-n(b-x)^{n-1}\\). Integrating the exponential supplies a second negative.</p><p>The upper endpoint vanishes for positive power. The subtracted lower endpoint gives \\(\\frac{625}{32}\\).</p><p>Integration by parts subtracts the remaining integral. Thus \\(A=\\frac{625}{32}\\) and \\(B=-1\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "reduce-by-polynomial-division",
+        "title": "Can a recurrence come from algebra alone?",
+        "label": "Divide the numerator by the pattern",
+        "intro": "<p>When multiplying the denominator by a lower power almost matches the numerator, subtract the remaining term to obtain a relation between integrals.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The lower power recurrence ends at a known logarithmic base case.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "reduction-reduce-by-polynomial-division-check",
+            "title": "Use division to lower a power without integration by parts",
+            "prompt": "<p>Evaluate \\(\\int_{0}^{3}\\frac{x^{3}}{1+x}\\,\\mathrm d x\\) in the form \\(A+B\\ln 4\\). Give both coefficients.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Rational part A",
+                "type": "number",
+                "expected": "15/2"
+              },
+              {
+                "key": "b",
+                "label": "Logarithm coefficient B",
+                "type": "number",
+                "expected": "-1"
+              }
+            ],
+            "hint": "<p>Separate the polynomial term, then apply the recurrence down to the logarithmic base case.</p>",
+            "solution": "<p>Write \\(\\frac{x^n}{1+x}=x^{n-1}-\\frac{x^{n-1}}{1+x}\\). Integrating reduces the power by one.</p><p>Start from \\(I_0=\\log{\\left(4 \\right)}\\). Repeatedly use \\(I_n=\\frac{b^n}{n}-I_{n-1}\\).</p><p>The exact value is \\(\\frac{15}{2} - \\log{\\left(4 \\right)}\\), so \\(A=\\frac{15}{2}\\) and \\(B=-1\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not accidentally change the integration bounds as the power changes.</p>"
+          }
+        ]
+      },
+      {
+        "id": "boundary-limits-or-returning-integrals",
+        "title": "How should I handle a limiting endpoint or a returning integral?",
+        "label": "Track the full term",
+        "intro": "<p>Check a product containing a logarithm by taking a limit of the entire product. In a cyclic integration-by-parts problem, name the original integral and collect it when it reappears.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Keep the target clearly named until all boundary and remaining integral terms are accounted for.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "reduction-boundary-limits-or-returning-integrals-check",
+            "title": "Evaluate the limiting boundary for a logarithmic integral",
+            "prompt": "<p>Evaluate \\(\\int_{0}^{3}x^{3}\\ln x\\,\\mathrm d x\\) as \\(A\\ln 3+B\\). Find \\(A\\) and \\(B\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Logarithm coefficient A",
+                "type": "number",
+                "expected": "81/4"
+              },
+              {
+                "key": "b",
+                "label": "Rational term B",
+                "type": "number",
+                "expected": "-81/16"
+              }
+            ],
+            "hint": "<p>Evaluate endpoint limits of the entire product, rather than of its logarithmic factor alone.</p>",
+            "solution": "<p>Use integration by parts for \\(\\ln x\\) and a positive power of \\(x\\). The antiderivative is \\(\\frac{x^{4} \\log{\\left(x \\right)}}{4} - \\frac{x^{4}}{16}\\).</p><p>As \\(x\\to0^+\\), both terms tend to zero. Do not substitute zero into the logarithm itself.</p><p>At the upper limit, the log coefficient is \\(\\frac{81}{4}\\) and the rational term is \\(- \\frac{81}{16}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not replace the product limit by a product of separate limits if one factor is unbounded.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "reduction-boundary-limits-or-returning-integrals-follow-up",
+            "title": "Recover the original integral after two integrations by parts",
+            "prompt": "<p>An antiderivative of \\(e^{5 x} \\cos{\\left(x \\right)}\\) is \\(\\mathrm e^{5 x}(A\\cos x+B\\sin x)+C\\). Find \\(A\\) and \\(B\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Cosine coefficient A",
+                "type": "number",
+                "expected": "5/26"
+              },
+              {
+                "key": "b",
+                "label": "Sine coefficient B",
+                "type": "number",
+                "expected": "1/26"
+              }
+            ],
+            "hint": "<p>Let the original integral keep its own name so that you can collect it when it reappears.</p>",
+            "solution": "<p>Name the cosine integral \\(I\\) and its sine counterpart \\(J\\), with exponential rate \\(k\\). Integrating by parts gives \\(I=\\frac{\\mathrm e^{kx}\\cos x}{k}+\\frac Jk\\).</p><p>For the sine integral, integration by parts gives \\(J=\\frac{\\mathrm e^{kx}\\sin x}{k}-\\frac Ik\\). Substitute this expression into the first equation.</p><p>Collect \\(I\\) and divide by \\(1+\\frac{1}{k^2}\\). With the given rate, \\(A=\\frac{5}{26}\\) and \\(B=\\frac{1}{26}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Reduce a monomial times an exponential",
+        "question": "<p>For \\(\\int_{0}^{1}x^n\\mathrm e^{2 x}\\,\\mathrm d x\\) write \\(I_n=B+A I_{n-1}\\), where \\(B\\) is the boundary term. At \\(n=2\\), find \\(A\\) and the coefficient of \\(\\mathrm e^{2}\\) in \\(B\\).</p>",
+        "solution": [
+          "<p>Choose the monomial to differentiate and the exponential to integrate.</p>",
+          "<p>Integration by parts gives boundary term \\(\\left[\\frac{x^n\\mathrm e^{kx}}{k}\\right]_a^b\\) and multiplier \\(-\\frac{n}{k}\\).</p>",
+          "<p>The lower endpoint term is zero. The multiplier is \\(-1\\) and the upper exponential coefficient is \\(\\frac{1}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Retain both endpoint terms in a reduction",
+        "question": "<p>For \\(\\int_{\\frac{1}{2}}^{1}x^n\\mathrm e^{2 x}\\,\\mathrm d x\\) write \\(I_n=B+A I_{n-1}\\), where \\(B\\) is the boundary term. At \\(n=2\\), find the coefficients of \\(\\mathrm e^{2}\\) and \\(\\mathrm e^{1}\\) in \\(B\\).</p>",
+        "solution": [
+          "<p>Differentiate the power and integrate the exponential. The endpoint term is \\(\\left[\\frac{x^n\\mathrm e^{kx}}{k}\\right]_a^b\\).</p>",
+          "<p>Neither endpoint is zero. Evaluation subtracts the lower contribution.</p>",
+          "<p>The upper and lower exponential coefficients are \\(\\frac{1}{2}\\) and \\(- \\frac{1}{8}\\), respectively.</p>"
+        ]
+      },
+      {
+        "title": "Track both signs in a shifted-power reduction",
+        "question": "<p>Let \\(I_n=\\int_0^{1}(1-x)^n\\mathrm e^{-2x}\\,\\mathrm dx\\). Find both numbers in \\(I_2=A+B I_1\\).</p>",
+        "solution": [
+          "<p>Differentiate the shifted power: \\(\\frac{\\mathrm d}{\\mathrm dx}(b-x)^n=-n(b-x)^{n-1}\\). Integrating the exponential supplies a second negative.</p>",
+          "<p>The upper endpoint vanishes for positive power. The subtracted lower endpoint gives \\(\\frac{1}{2}\\).</p>",
+          "<p>Integration by parts subtracts the remaining integral. Thus \\(A=\\frac{1}{2}\\) and \\(B=-1\\).</p>"
+        ]
+      },
+      {
+        "title": "Track both signs in a shifted-power reduction",
+        "question": "<p>Let \\(I_n=\\int_0^{2}(2-x)^n\\mathrm e^{-4x}\\,\\mathrm dx\\). Find both numbers in \\(I_4=A+B I_3\\).</p>",
+        "solution": [
+          "<p>Differentiate the shifted power: \\(\\frac{\\mathrm d}{\\mathrm dx}(b-x)^n=-n(b-x)^{n-1}\\). Integrating the exponential supplies a second negative.</p>",
+          "<p>The upper endpoint vanishes for positive power. The subtracted lower endpoint gives \\(4\\).</p>",
+          "<p>Integration by parts subtracts the remaining integral. Thus \\(A=4\\) and \\(B=-1\\).</p>"
+        ]
+      },
+      {
+        "title": "Use division to lower a power without integration by parts",
+        "question": "<p>Evaluate \\(\\int_{0}^{2}\\frac{x^{2}}{1+x}\\,\\mathrm d x\\) in the form \\(A+B\\ln 3\\). Give both coefficients.</p>",
+        "solution": [
+          "<p>Write \\(\\frac{x^n}{1+x}=x^{n-1}-\\frac{x^{n-1}}{1+x}\\). Integrating reduces the power by one.</p>",
+          "<p>Start from \\(I_0=\\log{\\left(3 \\right)}\\). Repeatedly use \\(I_n=\\frac{b^n}{n}-I_{n-1}\\).</p>",
+          "<p>The exact value is \\(\\log{\\left(3 \\right)}\\), so \\(A=0\\) and \\(B=1\\).</p>"
+        ]
+      },
+      {
+        "title": "Evaluate the limiting boundary for a logarithmic integral",
+        "question": "<p>Evaluate \\(\\int_{0}^{2}x^{2}\\ln x\\,\\mathrm d x\\) as \\(A\\ln 2+B\\). Find \\(A\\) and \\(B\\).</p>",
+        "solution": [
+          "<p>Use integration by parts for \\(\\ln x\\) and a positive power of \\(x\\). The antiderivative is \\(\\frac{x^{3} \\log{\\left(x \\right)}}{3} - \\frac{x^{3}}{9}\\).</p>",
+          "<p>As \\(x\\to0^+\\), both terms tend to zero. Do not substitute zero into the logarithm itself.</p>",
+          "<p>At the upper limit, the log coefficient is \\(\\frac{8}{3}\\) and the rational term is \\(- \\frac{8}{9}\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover the original integral after two integrations by parts",
+        "question": "<p>An antiderivative of \\(e^{4 x} \\cos{\\left(x \\right)}\\) is \\(\\mathrm e^{4 x}(A\\cos x+B\\sin x)+C\\). Find \\(A\\) and \\(B\\).</p>",
+        "solution": [
+          "<p>Name the cosine integral \\(I\\) and its sine counterpart \\(J\\), with exponential rate \\(k\\). Integrating by parts gives \\(I=\\frac{\\mathrm e^{kx}\\cos x}{k}+\\frac Jk\\).</p>",
+          "<p>For the sine integral, integration by parts gives \\(J=\\frac{\\mathrm e^{kx}\\sin x}{k}-\\frac Ik\\). Substitute this expression into the first equation.</p>",
+          "<p>Collect \\(I\\) and divide by \\(1+\\frac{1}{k^2}\\). With the given rate, \\(A=\\frac{4}{17}\\) and \\(B=\\frac{1}{17}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "reduction-reduce-a-power-times-an-exponential-extra",
+        "title": "Reduce a monomial times an exponential",
+        "prompt": "<p>For \\(\\int_{0}^{2}x^n\\mathrm e^{4 x}\\,\\mathrm d x\\) write \\(I_n=B+A I_{n-1}\\), where \\(B\\) is the boundary term. At \\(n=4\\), find \\(A\\) and the coefficient of \\(\\mathrm e^{8}\\) in \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "factor",
+            "label": "Multiplier A",
+            "type": "number",
+            "expected": "-1"
+          },
+          {
+            "key": "up",
+            "label": "Upper endpoint coefficient",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>The power decreases by one. The exponential antiderivative introduces a factor of one over its rate.</p>",
+        "solution": "<p>Choose the monomial to differentiate and the exponential to integrate.</p><p>Integration by parts gives boundary term \\(\\left[\\frac{x^n\\mathrm e^{kx}}{k}\\right]_a^b\\) and multiplier \\(-\\frac{n}{k}\\).</p><p>The lower endpoint term is zero. The multiplier is \\(-1\\) and the upper exponential coefficient is \\(4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "reduction-retain-a-nonzero-lower-bound-extra",
+        "title": "Retain both endpoint terms in a reduction",
+        "prompt": "<p>For \\(\\int_{\\frac{1}{2}}^{2}x^n\\mathrm e^{4 x}\\,\\mathrm d x\\) write \\(I_n=B+A I_{n-1}\\), where \\(B\\) is the boundary term. At \\(n=4\\), find the coefficients of \\(\\mathrm e^{8}\\) and \\(\\mathrm e^{2}\\) in \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "upper",
+            "label": "Upper endpoint coefficient",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "lower",
+            "label": "Lower endpoint coefficient",
+            "type": "number",
+            "expected": "-1/64"
+          }
+        ],
+        "hint": "<p>Use the upper minus lower evaluation. The integrand at the starting point need not vanish.</p>",
+        "solution": "<p>Differentiate the power and integrate the exponential. The endpoint term is \\(\\left[\\frac{x^n\\mathrm e^{kx}}{k}\\right]_a^b\\).</p><p>Neither endpoint is zero. Evaluation subtracts the lower contribution.</p><p>The upper and lower exponential coefficients are \\(4\\) and \\(- \\frac{1}{64}\\), respectively.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "reduction-shift-and-decay-extra",
+        "title": "Track both signs in a shifted-power reduction",
+        "prompt": "<p>Let \\(I_n=\\int_0^{3}(3-x)^n\\mathrm e^{-6x}\\,\\mathrm dx\\). Find both numbers in \\(I_6=A+B I_5\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Boundary constant A",
+            "type": "number",
+            "expected": "243/2"
+          },
+          {
+            "key": "b",
+            "label": "Reduced integral multiplier B",
+            "type": "number",
+            "expected": "-1"
+          }
+        ],
+        "hint": "<p>Keep the minus in the derivative of b minus x and the minus from the antiderivative of the decaying exponential.</p>",
+        "solution": "<p>Differentiate the shifted power: \\(\\frac{\\mathrm d}{\\mathrm dx}(b-x)^n=-n(b-x)^{n-1}\\). Integrating the exponential supplies a second negative.</p><p>The upper endpoint vanishes for positive power. The subtracted lower endpoint gives \\(\\frac{243}{2}\\).</p><p>Integration by parts subtracts the remaining integral. Thus \\(A=\\frac{243}{2}\\) and \\(B=-1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "reduction-reduce-by-polynomial-division-extra",
+        "title": "Use division to lower a power without integration by parts",
+        "prompt": "<p>Evaluate \\(\\int_{0}^{4}\\frac{x^{4}}{1+x}\\,\\mathrm d x\\) in the form \\(A+B\\ln 5\\). Give both coefficients.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Rational part A",
+            "type": "number",
+            "expected": "140/3"
+          },
+          {
+            "key": "b",
+            "label": "Logarithm coefficient B",
+            "type": "number",
+            "expected": "1"
+          }
+        ],
+        "hint": "<p>Separate the polynomial term, then apply the recurrence down to the logarithmic base case.</p>",
+        "solution": "<p>Write \\(\\frac{x^n}{1+x}=x^{n-1}-\\frac{x^{n-1}}{1+x}\\). Integrating reduces the power by one.</p><p>Start from \\(I_0=\\log{\\left(5 \\right)}\\). Repeatedly use \\(I_n=\\frac{b^n}{n}-I_{n-1}\\).</p><p>The exact value is \\(\\log{\\left(5 \\right)} + \\frac{140}{3}\\), so \\(A=\\frac{140}{3}\\) and \\(B=1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "reduction-boundary-limits-or-returning-integrals-extra",
+        "title": "Evaluate the limiting boundary for a logarithmic integral",
+        "prompt": "<p>Evaluate \\(\\int_{0}^{6}x^{6}\\ln x\\,\\mathrm d x\\) as \\(A\\ln 6+B\\). Find \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Logarithm coefficient A",
+            "type": "number",
+            "expected": "279936/7"
+          },
+          {
+            "key": "b",
+            "label": "Rational term B",
+            "type": "number",
+            "expected": "-279936/49"
+          }
+        ],
+        "hint": "<p>Evaluate endpoint limits of the entire product, rather than of its logarithmic factor alone.</p>",
+        "solution": "<p>Use integration by parts for \\(\\ln x\\) and a positive power of \\(x\\). The antiderivative is \\(\\frac{x^{7} \\log{\\left(x \\right)}}{7} - \\frac{x^{7}}{49}\\).</p><p>As \\(x\\to0^+\\), both terms tend to zero. Do not substitute zero into the logarithm itself.</p><p>At the upper limit, the log coefficient is \\(\\frac{279936}{7}\\) and the rational term is \\(- \\frac{279936}{49}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Reduction formula",
+        "definition": "<p>An identity expressing an integral in terms of one with a lower index.</p>"
+      },
+      {
+        "term": "Base case",
+        "definition": "<p>A simpler integral at which a recurrence terminates.</p>"
+      },
+      {
+        "term": "Boundary term",
+        "definition": "<p>The evaluated product from integration by parts.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Choose by-parts factors</th><td>Differentiate the power to lower its index.</td></tr><tr><th scope=\"row\">Evaluate boundaries</th><td>Check both ends, using a limit if needed.</td></tr><tr><th scope=\"row\">Choose a base case</th><td>Stop at a directly evaluable integral.</td></tr><tr><th scope=\"row\">Cyclic parts</th><td>Bring the returning integral to the same side before solving.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For \\(I_n=\\int_0^1 x^n\\mathrm e^x\\,\\mathrm dx\\), write its recurrence for positive \\(n\\).</p><p><strong>Check</strong> \\(I_n=\\mathrm e-nI_{n-1}\\).</p>",
+      "checks": "<ul><li>Carry the reciprocal exponential rate into both the boundary and recurrence terms.</li><li>A zero lower term on one interval does not make the same term vanish on another.</li></ul>",
+      "examTip": "<p>Always state the index range for a recurrence.</p>"
+    },
+    "related": [
+      {
+        "title": "Further integration techniques",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_integration_techniques"
+      },
+      {
+        "title": "Trigonometric and hyperbolic reductions",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_integration_trigonometric"
+      }
+    ]
+  },
+  "fp2_integration_trigonometric": {
+    "updatedOn": "2026-11-21",
+    "description": "Use derivative identities to lower trig or hyperbolic powers, with correct boundary terms and base values.",
+    "sections": [
+      {
+        "id": "derive-a-sine-power-recurrence",
+        "title": "Why does the sine reduction lower the power by two?",
+        "label": "Use the complementary square",
+        "intro": "<p>Separate a sine factor and integrate by parts. After differentiating the remaining factors, the complementary cosine square couples two sine powers.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>On \\([0,\\frac\\pi2]\\), the endpoint term vanishes for \\(n>1\\). Then \\(I_n=\\frac{n-1}{n}I_{n-2}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "trigonometric-derive-a-sine-power-recurrence-check",
+            "title": "Reduce a sine power two at a time",
+            "prompt": "<p>Use a reduction formula to evaluate \\(\\int_{0}^{\\frac{\\pi}{2}}\\sin^{4}x\\,\\mathrm d x\\) exactly.</p>",
+            "fields": [
+              {
+                "key": "integral",
+                "label": "Exact integral value",
+                "type": "number",
+                "expected": "3*pi/16"
+              }
+            ],
+            "hint": "<p>Find whether the power is odd or even before choosing the base case.</p>",
+            "solution": "<p>Separate a factor of \\(\\sin x\\) and integrate it by parts. The endpoint term is zero at both ends for \\(n>1\\).</p><p>Replace \\(\\cos^2x\\) by \\(1-\\sin^2x\\) and collect terms. This gives \\(I_n=\\frac{n-1}{n}I_{n-2}\\).</p><p>Use the base \\(I_0=\\frac\\pi2\\). The result is \\(\\frac{3 \\pi}{16}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Choose the base case by parity.</p>"
+          }
+        ]
+      },
+      {
+        "id": "retain-the-cosine-endpoint",
+        "title": "Why is the boundary term present on a shorter interval?",
+        "label": "Check the trigonometric values",
+        "intro": "<p>The product rule can create a combination of same-family powers. Its boundary contribution depends on the endpoints, not just the integrand.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Differentiate \\(\\sin x\\cos^{n-1}x\\), then evaluate at both endpoints.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "trigonometric-retain-the-cosine-endpoint-check",
+            "title": "Keep the endpoint term when the cosine interval is shortened",
+            "prompt": "<p>Let \\(I_n=\\int_0^{\\frac\\pi3}\\cos^n x\\,\\mathrm dx\\). Find \\(A\\) and \\(B\\) in \\(I_4=A\\sqrt3+B I_2\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient of square root of three",
+                "type": "number",
+                "expected": "1/64"
+              },
+              {
+                "key": "b",
+                "label": "Reduced multiplier",
+                "type": "number",
+                "expected": "3/4"
+              }
+            ],
+            "hint": "<p>A recurrence learned for a right-angle upper limit does not remove this boundary term.</p>",
+            "solution": "<p>Differentiate \\(\\sin x\\cos^{n-1}x\\) to obtain \\(n\\cos^n x-(n-1)\\cos^{n-2}x\\).</p><p>The lower boundary is zero but the upper one is not. Compute \\(\\sin(\\frac\\pi3)\\cos^{n-1}(\\frac\\pi3)\\).</p><p>Divide the integrated identity by \\(4\\). The boundary coefficient is \\(\\frac{1}{64}\\) and the reduced multiplier is \\(\\frac{3}{4}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not discard the upper product at a non-right-angle endpoint.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reduce-secants-on-a-finite-interval",
+        "title": "Which product generates neighbouring secant powers?",
+        "label": "Differentiate tan times a secant power",
+        "intro": "<p>Choose a product that uses the derivative of tangent and then replaces the resulting tangent square with a secant square.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\frac{\\mathrm d}{\\mathrm dx}(\\tan x\\sec^{n-2}x)=(n-1)\\sec^n x-(n-2)\\sec^{n-2}x\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "trigonometric-reduce-secants-on-a-finite-interval-check",
+            "title": "Choose a differentiated product for secant reduction",
+            "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{4}}\\sec^{6}x\\,\\mathrm d x\\) using a reduction.</p>",
+            "fields": [
+              {
+                "key": "integral",
+                "label": "Exact integral value",
+                "type": "number",
+                "expected": "28/15"
+              }
+            ],
+            "hint": "<p>Retain the boundary term and lower the power by two each time.</p>",
+            "solution": "<p>Differentiate \\(\\tan x\\sec^{n-2}x\\). It gives \\((n-1)\\sec^n x-(n-2)\\sec^{n-2}x\\).</p><p>The boundary term at \\(\\frac\\pi4\\) is \\(2^{\\frac{n-2}{2}}\\). At zero it is zero.</p><p>Start from \\(I_2=1\\), then apply the recurrence. The result is \\(\\frac{28}{15}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Check that the interval stays away from a pole.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "trigonometric-reduce-secants-on-a-finite-interval-follow-up",
+            "title": "Choose a differentiated product for secant reduction",
+            "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{4}}\\sec^{10}x\\,\\mathrm d x\\) using a reduction.</p>",
+            "fields": [
+              {
+                "key": "integral",
+                "label": "Exact integral value",
+                "type": "number",
+                "expected": "1328/315"
+              }
+            ],
+            "hint": "<p>Retain the boundary term and lower the power by two each time.</p>",
+            "solution": "<p>Differentiate \\(\\tan x\\sec^{n-2}x\\). It gives \\((n-1)\\sec^n x-(n-2)\\sec^{n-2}x\\).</p><p>The boundary term at \\(\\frac\\pi4\\) is \\(2^{\\frac{n-2}{2}}\\). At zero it is zero.</p><p>Start from \\(I_2=1\\), then apply the recurrence. The result is \\(\\frac{1328}{315}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "reduce-hyperbolic-sine-powers",
+        "title": "How does the hyperbolic identity affect the recurrence sign?",
+        "label": "Build the sinh recurrence",
+        "intro": "<p>When differentiating a product with a power of hyperbolic sine, rewriting a cosine hyperbolic square produces a plus sign in the derivative.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\cosh^2x=1+\\sinh^2x\\). Rearranging gives a negative multiplier on the reduced integral.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "trigonometric-reduce-hyperbolic-sine-powers-check",
+            "title": "Track the sign in a hyperbolic reduction",
+            "prompt": "<p>Let \\(I_n=\\int_0^{\\ln 3}\\sinh^n x\\,\\mathrm dx\\). Find \\(A\\) and \\(B\\) in \\(I_4=A+B I_2\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Boundary term A",
+                "type": "number",
+                "expected": "80/81"
+              },
+              {
+                "key": "b",
+                "label": "Reduced multiplier B",
+                "type": "number",
+                "expected": "-3/4"
+              }
+            ],
+            "hint": "<p>Check whether the differentiated product produces a plus or a minus lower power before rearranging.</p>",
+            "solution": "<p>Differentiate \\(\\sinh^{n-1}x\\cosh x\\) using the product rule and \\(\\cosh^2 x-\\sinh^2 x=1\\).</p><p>At the upper limit the values of sinh and cosh are \\(\\frac{4}{3}\\) and \\(\\frac{5}{3}\\). The lower boundary term is zero.</p><p>Rearrange the integrated identity. The boundary term is \\(\\frac{80}{81}\\) and the reduced integral multiplier is \\(- \\frac{3}{4}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not copy the sign from the ordinary sine-power formula.</p>"
+          }
+        ]
+      },
+      {
+        "id": "reduce-hyperbolic-cosine-powers",
+        "title": "What changes for a hyperbolic cosine power?",
+        "label": "Build the cosh recurrence",
+        "intro": "<p>For a derivative with a hyperbolic sine square, substitute the hyperbolic cosine square minus one.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The reduced integral gets a positive multiplier after rearrangement.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "trigonometric-reduce-hyperbolic-cosine-powers-check",
+            "title": "Track the sign in a hyperbolic reduction",
+            "prompt": "<p>Let \\(I_n=\\int_0^{\\ln 3}\\cosh^n x\\,\\mathrm dx\\). Find \\(A\\) and \\(B\\) in \\(I_4=A+B I_2\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Boundary term A",
+                "type": "number",
+                "expected": "125/81"
+              },
+              {
+                "key": "b",
+                "label": "Reduced multiplier B",
+                "type": "number",
+                "expected": "3/4"
+              }
+            ],
+            "hint": "<p>Check whether the differentiated product produces a plus or a minus lower power before rearranging.</p>",
+            "solution": "<p>Differentiate \\(\\cosh^{n-1}x\\sinh x\\) using the product rule and \\(\\cosh^2 x-\\sinh^2 x=1\\).</p><p>At the upper limit the values of sinh and cosh are \\(\\frac{4}{3}\\) and \\(\\frac{5}{3}\\). The lower boundary term is zero.</p><p>Rearrange the integrated identity. The boundary term is \\(\\frac{125}{81}\\) and the reduced integral multiplier is \\(\\frac{3}{4}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The sinh and cosh reductions do not have the same lower-power sign.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "trigonometric-reduce-hyperbolic-cosine-powers-follow-up",
+            "title": "Track the sign in a hyperbolic reduction",
+            "prompt": "<p>Let \\(I_n=\\int_0^{\\ln 5}\\cosh^n x\\,\\mathrm dx\\). Find \\(A\\) and \\(B\\) in \\(I_6=A+B I_4\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Boundary term A",
+                "type": "number",
+                "expected": "742586/15625"
+              },
+              {
+                "key": "b",
+                "label": "Reduced multiplier B",
+                "type": "number",
+                "expected": "5/6"
+              }
+            ],
+            "hint": "<p>Check whether the differentiated product produces a plus or a minus lower power before rearranging.</p>",
+            "solution": "<p>Differentiate \\(\\cosh^{n-1}x\\sinh x\\) using the product rule and \\(\\cosh^2 x-\\sinh^2 x=1\\).</p><p>At the upper limit the values of sinh and cosh are \\(\\frac{12}{5}\\) and \\(\\frac{13}{5}\\). The lower boundary term is zero.</p><p>Rearrange the integrated identity. The boundary term is \\(\\frac{742586}{15625}\\) and the reduced integral multiplier is \\(\\frac{5}{6}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Reduce a sine power two at a time",
+        "question": "<p>Use a reduction formula to evaluate \\(\\int_{0}^{\\frac{\\pi}{2}}\\sin^{3}x\\,\\mathrm d x\\) exactly.</p>",
+        "solution": [
+          "<p>Separate a factor of \\(\\sin x\\) and integrate it by parts. The endpoint term is zero at both ends for \\(n>1\\).</p>",
+          "<p>Replace \\(\\cos^2x\\) by \\(1-\\sin^2x\\) and collect terms. This gives \\(I_n=\\frac{n-1}{n}I_{n-2}\\).</p>",
+          "<p>Use the base \\(I_1=1\\). The result is \\(\\frac{2}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the endpoint term when the cosine interval is shortened",
+        "question": "<p>Let \\(I_n=\\int_0^{\\frac\\pi3}\\cos^n x\\,\\mathrm dx\\). Find \\(A\\) and \\(B\\) in \\(I_3=A\\sqrt3+B I_1\\).</p>",
+        "solution": [
+          "<p>Differentiate \\(\\sin x\\cos^{n-1}x\\) to obtain \\(n\\cos^n x-(n-1)\\cos^{n-2}x\\).</p>",
+          "<p>The lower boundary is zero but the upper one is not. Compute \\(\\sin(\\frac\\pi3)\\cos^{n-1}(\\frac\\pi3)\\).</p>",
+          "<p>Divide the integrated identity by \\(3\\). The boundary coefficient is \\(\\frac{1}{24}\\) and the reduced multiplier is \\(\\frac{2}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Choose a differentiated product for secant reduction",
+        "question": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{4}}\\sec^{4}x\\,\\mathrm d x\\) using a reduction.</p>",
+        "solution": [
+          "<p>Differentiate \\(\\tan x\\sec^{n-2}x\\). It gives \\((n-1)\\sec^n x-(n-2)\\sec^{n-2}x\\).</p>",
+          "<p>The boundary term at \\(\\frac\\pi4\\) is \\(2^{\\frac{n-2}{2}}\\). At zero it is zero.</p>",
+          "<p>Start from \\(I_2=1\\), then apply the recurrence. The result is \\(\\frac{4}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Choose a differentiated product for secant reduction",
+        "question": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{4}}\\sec^{8}x\\,\\mathrm d x\\) using a reduction.</p>",
+        "solution": [
+          "<p>Differentiate \\(\\tan x\\sec^{n-2}x\\). It gives \\((n-1)\\sec^n x-(n-2)\\sec^{n-2}x\\).</p>",
+          "<p>The boundary term at \\(\\frac\\pi4\\) is \\(2^{\\frac{n-2}{2}}\\). At zero it is zero.</p>",
+          "<p>Start from \\(I_2=1\\), then apply the recurrence. The result is \\(\\frac{96}{35}\\).</p>"
+        ]
+      },
+      {
+        "title": "Track the sign in a hyperbolic reduction",
+        "question": "<p>Let \\(I_n=\\int_0^{\\ln 2}\\sinh^n x\\,\\mathrm dx\\). Find \\(A\\) and \\(B\\) in \\(I_3=A+B I_1\\).</p>",
+        "solution": [
+          "<p>Differentiate \\(\\sinh^{n-1}x\\cosh x\\) using the product rule and \\(\\cosh^2 x-\\sinh^2 x=1\\).</p>",
+          "<p>At the upper limit the values of sinh and cosh are \\(\\frac{3}{4}\\) and \\(\\frac{5}{4}\\). The lower boundary term is zero.</p>",
+          "<p>Rearrange the integrated identity. The boundary term is \\(\\frac{15}{64}\\) and the reduced integral multiplier is \\(- \\frac{2}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Track the sign in a hyperbolic reduction",
+        "question": "<p>Let \\(I_n=\\int_0^{\\ln 2}\\cosh^n x\\,\\mathrm dx\\). Find \\(A\\) and \\(B\\) in \\(I_3=A+B I_1\\).</p>",
+        "solution": [
+          "<p>Differentiate \\(\\cosh^{n-1}x\\sinh x\\) using the product rule and \\(\\cosh^2 x-\\sinh^2 x=1\\).</p>",
+          "<p>At the upper limit the values of sinh and cosh are \\(\\frac{3}{4}\\) and \\(\\frac{5}{4}\\). The lower boundary term is zero.</p>",
+          "<p>Rearrange the integrated identity. The boundary term is \\(\\frac{25}{64}\\) and the reduced integral multiplier is \\(\\frac{2}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Track the sign in a hyperbolic reduction",
+        "question": "<p>Let \\(I_n=\\int_0^{\\ln 4}\\cosh^n x\\,\\mathrm dx\\). Find \\(A\\) and \\(B\\) in \\(I_5=A+B I_3\\).</p>",
+        "solution": [
+          "<p>Differentiate \\(\\cosh^{n-1}x\\sinh x\\) using the product rule and \\(\\cosh^2 x-\\sinh^2 x=1\\).</p>",
+          "<p>At the upper limit the values of sinh and cosh are \\(\\frac{15}{8}\\) and \\(\\frac{17}{8}\\). The lower boundary term is zero.</p>",
+          "<p>Rearrange the integrated identity. The boundary term is \\(\\frac{250563}{32768}\\) and the reduced integral multiplier is \\(\\frac{4}{5}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "trigonometric-derive-a-sine-power-recurrence-extra",
+        "title": "Reduce a sine power two at a time",
+        "prompt": "<p>Use a reduction formula to evaluate \\(\\int_{0}^{\\frac{\\pi}{2}}\\sin^{5}x\\,\\mathrm d x\\) exactly.</p>",
+        "fields": [
+          {
+            "key": "integral",
+            "label": "Exact integral value",
+            "type": "number",
+            "expected": "8/15"
+          }
+        ],
+        "hint": "<p>Find whether the power is odd or even before choosing the base case.</p>",
+        "solution": "<p>Separate a factor of \\(\\sin x\\) and integrate it by parts. The endpoint term is zero at both ends for \\(n>1\\).</p><p>Replace \\(\\cos^2x\\) by \\(1-\\sin^2x\\) and collect terms. This gives \\(I_n=\\frac{n-1}{n}I_{n-2}\\).</p><p>Use the base \\(I_1=1\\). The result is \\(\\frac{8}{15}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "trigonometric-retain-the-cosine-endpoint-extra",
+        "title": "Keep the endpoint term when the cosine interval is shortened",
+        "prompt": "<p>Let \\(I_n=\\int_0^{\\frac\\pi3}\\cos^n x\\,\\mathrm dx\\). Find \\(A\\) and \\(B\\) in \\(I_5=A\\sqrt3+B I_3\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient of square root of three",
+            "type": "number",
+            "expected": "1/160"
+          },
+          {
+            "key": "b",
+            "label": "Reduced multiplier",
+            "type": "number",
+            "expected": "4/5"
+          }
+        ],
+        "hint": "<p>A recurrence learned for a right-angle upper limit does not remove this boundary term.</p>",
+        "solution": "<p>Differentiate \\(\\sin x\\cos^{n-1}x\\) to obtain \\(n\\cos^n x-(n-1)\\cos^{n-2}x\\).</p><p>The lower boundary is zero but the upper one is not. Compute \\(\\sin(\\frac\\pi3)\\cos^{n-1}(\\frac\\pi3)\\).</p><p>Divide the integrated identity by \\(5\\). The boundary coefficient is \\(\\frac{1}{160}\\) and the reduced multiplier is \\(\\frac{4}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "trigonometric-reduce-secants-on-a-finite-interval-extra",
+        "title": "Choose a differentiated product for secant reduction",
+        "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{4}}\\sec^{12}x\\,\\mathrm d x\\) using a reduction.</p>",
+        "fields": [
+          {
+            "key": "integral",
+            "label": "Exact integral value",
+            "type": "number",
+            "expected": "4672/693"
+          }
+        ],
+        "hint": "<p>Retain the boundary term and lower the power by two each time.</p>",
+        "solution": "<p>Differentiate \\(\\tan x\\sec^{n-2}x\\). It gives \\((n-1)\\sec^n x-(n-2)\\sec^{n-2}x\\).</p><p>The boundary term at \\(\\frac\\pi4\\) is \\(2^{\\frac{n-2}{2}}\\). At zero it is zero.</p><p>Start from \\(I_2=1\\), then apply the recurrence. The result is \\(\\frac{4672}{693}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "trigonometric-reduce-hyperbolic-sine-powers-extra",
+        "title": "Track the sign in a hyperbolic reduction",
+        "prompt": "<p>Let \\(I_n=\\int_0^{\\ln 4}\\sinh^n x\\,\\mathrm dx\\). Find \\(A\\) and \\(B\\) in \\(I_5=A+B I_3\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Boundary term A",
+            "type": "number",
+            "expected": "172125/32768"
+          },
+          {
+            "key": "b",
+            "label": "Reduced multiplier B",
+            "type": "number",
+            "expected": "-4/5"
+          }
+        ],
+        "hint": "<p>Check whether the differentiated product produces a plus or a minus lower power before rearranging.</p>",
+        "solution": "<p>Differentiate \\(\\sinh^{n-1}x\\cosh x\\) using the product rule and \\(\\cosh^2 x-\\sinh^2 x=1\\).</p><p>At the upper limit the values of sinh and cosh are \\(\\frac{15}{8}\\) and \\(\\frac{17}{8}\\). The lower boundary term is zero.</p><p>Rearrange the integrated identity. The boundary term is \\(\\frac{172125}{32768}\\) and the reduced integral multiplier is \\(- \\frac{4}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "trigonometric-reduce-hyperbolic-cosine-powers-extra",
+        "title": "Track the sign in a hyperbolic reduction",
+        "prompt": "<p>Let \\(I_n=\\int_0^{\\ln 6}\\cosh^n x\\,\\mathrm dx\\). Find \\(A\\) and \\(B\\) in \\(I_7=A+B I_5\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Boundary term A",
+            "type": "number",
+            "expected": "12828632045/35831808"
+          },
+          {
+            "key": "b",
+            "label": "Reduced multiplier B",
+            "type": "number",
+            "expected": "6/7"
+          }
+        ],
+        "hint": "<p>Check whether the differentiated product produces a plus or a minus lower power before rearranging.</p>",
+        "solution": "<p>Differentiate \\(\\cosh^{n-1}x\\sinh x\\) using the product rule and \\(\\cosh^2 x-\\sinh^2 x=1\\).</p><p>At the upper limit the values of sinh and cosh are \\(\\frac{35}{12}\\) and \\(\\frac{37}{12}\\). The lower boundary term is zero.</p><p>Rearrange the integrated identity. The boundary term is \\(\\frac{12828632045}{35831808}\\) and the reduced integral multiplier is \\(\\frac{6}{7}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Parity",
+        "definition": "<p>Whether an integer index is even or odd.</p>"
+      },
+      {
+        "term": "Reduction step",
+        "definition": "<p>A relation with a smaller index and an explicit endpoint term.</p>"
+      },
+      {
+        "term": "Hyperbolic identity",
+        "definition": "<p>The identity relating squared hyperbolic sine and cosine.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Sine and cosine</th><td>Use the complementary squared identity.</td></tr><tr><th scope=\"row\">Secant</th><td>Use \\(\\tan^2x=\\sec^2x-1\\).</td></tr><tr><th scope=\"row\">Hyperbolic</th><td>Use \\(\\cosh^2x-\\sinh^2x=1\\).</td></tr><tr><th scope=\"row\">Base case</th><td>Use the right parity and evaluate the full boundary.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For the usual sine-power integral on \\([0,\\frac\\pi2]\\), what is the ratio \\(I_4:I_2\\)?</p><p><strong>Check</strong> \\(3:4\\).</p>",
+      "checks": "<ul><li>Choose the base case by parity.</li><li>Do not discard the upper product at a non-right-angle endpoint.</li></ul>",
+      "examTip": "<p>Include the exact interval before evaluating the power product at its endpoints.</p>"
+    },
+    "related": [
+      {
+        "title": "Algebraic and exponential reduction formulae",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_integration_reduction"
+      },
+      {
+        "title": "Arc length in Cartesian, parametric and polar form",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_integration_arcs"
+      }
+    ]
+  },
+  "fp2_integration_arcs": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose the correct length element and integrate it over one traversal, using derivatives and physical bounds.",
+    "sections": [
+      {
+        "id": "cartesian-arc-length",
+        "title": "How does a curve's slope determine its arc length?",
+        "label": "Use the Cartesian element",
+        "intro": "<p>A small straight segment of the curve has horizontal and vertical components. Combining their lengths gives the element to integrate.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(y=f(x)\\), use \\(\\mathrm ds=\\sqrt{1+f'(x)^2}\\,\\mathrm dx\\) when integrating with increasing x.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp2/integration/arc-versus-advance.svg",
+              "alt": "An arc between A and B has a chord and a separate horizontal projection.",
+              "caption": "<p>Arc length measures travel along the curved path. Horizontal advance alone measures only one coordinate change.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "arcs-cartesian-arc-length-check",
+            "title": "Integrate the positive arc element in Cartesian form",
+            "prompt": "<p>Find the exact arc length of \\(y=\\frac{2 \\sqrt{2} x^{\\frac{3}{2}}}{3}\\) from \\(x=0\\) to \\(x=4\\).</p>",
+            "fields": [
+              {
+                "key": "length",
+                "label": "Exact arc length",
+                "type": "number",
+                "expected": "26/3"
+              }
+            ],
+            "hint": "<p>Use the length element, not the integral of the curve's height.</p>",
+            "solution": "<p>Differentiate the curve first. One plus the squared derivative is \\(2 x + 1\\).</p><p>Integrate its non-negative square root over the given bounds. The length is \\(\\frac{26}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The area under the graph is a different quantity from the length of its curve.</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-a-hyperbolic-square",
+        "title": "When can the square root simplify to a familiar function?",
+        "label": "Apply an identity before integrating",
+        "intro": "<p>Look for a derivative whose square plus one is another exact square. Then check the sign of the square root.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If \\(f'(x)=\\sinh(ax)\\), the length factor is \\(\\cosh(ax)>0\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "arcs-use-a-hyperbolic-square-check",
+            "title": "Integrate the positive arc element in Cartesian form",
+            "prompt": "<p>Find the exact arc length of \\(y=\\frac{\\cosh{\\left(3 x \\right)}}{3}\\) for \\(0\\le x\\le \\frac{\\log{\\left(3 \\right)}}{3}\\).</p>",
+            "fields": [
+              {
+                "key": "length",
+                "label": "Exact arc length",
+                "type": "number",
+                "expected": "4/9"
+              }
+            ],
+            "hint": "<p>Use the length element, not the integral of the curve's height.</p>",
+            "solution": "<p>The derivative is \\(\\sinh(ax)\\). The length integrand simplifies to the positive \\(\\cosh(ax)\\).</p><p>Its integral over the bounds gives length \\(\\frac{4}{9}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Factoring a perfect square from a square root generally gives a magnitude.</p>"
+          }
+        ]
+      },
+      {
+        "id": "parametric-length-through-a-turn",
+        "title": "What if the horizontal coordinate reverses along the path?",
+        "label": "Use both parametric derivatives",
+        "intro": "<p>The parameter can describe a single traversal even when the x-coordinate is not monotone. Use both coordinate derivatives directly.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(\\mathrm ds=\\sqrt{x'(t)^2+y'(t)^2}\\,\\mathrm dt\\) for increasing parameter.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "arcs-parametric-length-through-a-turn-check",
+            "title": "Use the full parameter interval for arc length",
+            "prompt": "<p>Find the length of the parametric path \\(x=\\frac{3 \\cos{\\left(t \\right)}}{2}\\) and \\(y=\\frac{3 \\sin{\\left(t \\right)}}{2}\\) for \\(0\\le t\\le \\frac{43 \\pi}{30}\\).</p>",
+            "fields": [
+              {
+                "key": "length",
+                "label": "Exact arc length",
+                "type": "number",
+                "expected": "43*pi/20"
+              }
+            ],
+            "hint": "<p>The sum of squared coordinate derivatives uses both components and stays valid at a vertical tangent.</p>",
+            "solution": "<p>Use \\(\\sqrt{x'^2+y'^2}\\), because the path is parameterised and \\(x\\) is not monotonic here.</p><p>The squared derivatives sum to \\(\\frac{9}{4}\\), so the length factor is constant \\(\\frac{3}{2}\\).</p><p>Multiplying by the parameter interval gives length \\(\\frac{43 \\pi}{20}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An x-only integral can miss a return segment or count the wrong part of a curve.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "arcs-parametric-length-through-a-turn-follow-up",
+            "title": "Use the full parameter interval for arc length",
+            "prompt": "<p>Find the length of one arch of the parametric curve \\(x=\\frac{5 t}{2} - \\frac{5 \\sin{\\left(t \\right)}}{2}\\) and \\(y=\\frac{5}{2} - \\frac{5 \\cos{\\left(t \\right)}}{2}\\) for \\(0\\le t\\le 2\\pi\\).</p>",
+            "fields": [
+              {
+                "key": "length",
+                "label": "Exact arc length",
+                "type": "number",
+                "expected": "20"
+              }
+            ],
+            "hint": "<p>The sum of squared coordinate derivatives uses both components and stays valid at a vertical tangent.</p>",
+            "solution": "<p>The speed factor satisfies \\(x'^2+y'^2=4a^2\\sin^2(\\frac t2)\\).</p><p>Since \\(\\sin(\\frac t2)\\ge0\\) on this interval, integrate \\(2a\\sin(\\frac t2)\\) for the whole arch.</p><p>The length is \\(20\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "polar-arc-element",
+        "title": "How does changing the radius affect polar arc length?",
+        "label": "Include radial and angular changes",
+        "intro": "<p>Both changing radius and changing direction contribute to a small displacement in polar form.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(r=r(\\theta)\\), use \\(\\mathrm ds=\\sqrt{r^2+(\\frac{\\mathrm dr}{\\mathrm d\\theta})^2}\\,\\mathrm d\\theta\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "arcs-polar-arc-element-check",
+            "title": "Use the radius and its angular rate in polar arc length",
+            "prompt": "<p>Find the length of the polar arc \\(r=3 \\cos{\\left(\\theta \\right)}\\) for \\(- \\frac{\\pi}{5}\\le\\theta\\le \\frac{\\pi}{5}\\).</p>",
+            "fields": [
+              {
+                "key": "length",
+                "label": "Exact arc length",
+                "type": "number",
+                "expected": "6*pi/5"
+              }
+            ],
+            "hint": "<p>Check the sign of any trigonometric factor you take out of a square root.</p>",
+            "solution": "<p>The polar length integrand is \\(\\sqrt{r^2+r'^2}\\), not \\(\\frac12r^2\\).</p><p>The sum under the root is \\(9\\), so the arc length is \\(\\frac{6 \\pi}{5}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The polar area formula is not the length factor.</p>"
+          }
+        ]
+      },
+      {
+        "id": "manage-signs-in-polar-length",
+        "title": "Why does an absolute value appear after simplifying a polar length?",
+        "label": "Check the interval",
+        "intro": "<p>When the expression under the square root is a square, the length element is the magnitude of its square root.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Choose the sign from the angular interval. Split at any interior sign change.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "arcs-manage-signs-in-polar-length-check",
+            "title": "Use the radius and its angular rate in polar arc length",
+            "prompt": "<p>Find the length of the polar curve \\(r=3 \\cos{\\left(\\theta \\right)} + 3\\) over \\(0\\le\\theta\\le\\pi\\).</p>",
+            "fields": [
+              {
+                "key": "length",
+                "label": "Exact arc length",
+                "type": "number",
+                "expected": "12"
+              }
+            ],
+            "hint": "<p>Check the sign of any trigonometric factor you take out of a square root.</p>",
+            "solution": "<p>The polar arc factor is \\(\\sqrt{r^2+(\\frac{\\mathrm dr}{\\mathrm d\\theta})^2}\\).</p><p>It simplifies to \\(2a|\\cos(\\frac\\theta2)|\\). Cosine is non-negative on the half-angle interval here.</p><p>Integrating gives \\(12\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not integrate a negative length factor.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "arcs-manage-signs-in-polar-length-follow-up",
+            "title": "Use the radius and its angular rate in polar arc length",
+            "prompt": "<p>Find the length of the polar curve \\(r=5 \\cos{\\left(\\theta \\right)} + 5\\) over \\(0\\le\\theta\\le\\pi\\).</p>",
+            "fields": [
+              {
+                "key": "length",
+                "label": "Exact arc length",
+                "type": "number",
+                "expected": "20"
+              }
+            ],
+            "hint": "<p>Check the sign of any trigonometric factor you take out of a square root.</p>",
+            "solution": "<p>The polar arc factor is \\(\\sqrt{r^2+(\\frac{\\mathrm dr}{\\mathrm d\\theta})^2}\\).</p><p>It simplifies to \\(2a|\\cos(\\frac\\theta2)|\\). Cosine is non-negative on the half-angle interval here.</p><p>Integrating gives \\(20\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Integrate the positive arc element in Cartesian form",
+        "question": "<p>Find the exact arc length of \\(y=\\frac{\\sqrt{6} x^{\\frac{3}{2}}}{3}\\) from \\(x=0\\) to \\(x=2\\).</p>",
+        "solution": [
+          "<p>Differentiate the curve first. One plus the squared derivative is \\(\\frac{3 x}{2} + 1\\).</p>",
+          "<p>Integrate its non-negative square root over the given bounds. The length is \\(\\frac{28}{9}\\).</p>"
+        ]
+      },
+      {
+        "title": "Integrate the positive arc element in Cartesian form",
+        "question": "<p>Find the exact arc length of \\(y=\\frac{\\cosh{\\left(2 x \\right)}}{2}\\) for \\(0\\le x\\le \\frac{\\log{\\left(2 \\right)}}{2}\\).</p>",
+        "solution": [
+          "<p>The derivative is \\(\\sinh(ax)\\). The length integrand simplifies to the positive \\(\\cosh(ax)\\).</p>",
+          "<p>Its integral over the bounds gives length \\(\\frac{3}{8}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the full parameter interval for arc length",
+        "question": "<p>Find the length of the parametric path \\(x=\\cos{\\left(t \\right)}\\) and \\(y=\\sin{\\left(t \\right)}\\) for \\(0\\le t\\le \\frac{4 \\pi}{3}\\).</p>",
+        "solution": [
+          "<p>Use \\(\\sqrt{x'^2+y'^2}\\), because the path is parameterised and \\(x\\) is not monotonic here.</p>",
+          "<p>The squared derivatives sum to \\(1\\), so the length factor is constant \\(1\\).</p>",
+          "<p>Multiplying by the parameter interval gives length \\(\\frac{4 \\pi}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the full parameter interval for arc length",
+        "question": "<p>Find the length of one arch of the parametric curve \\(x=2 t - 2 \\sin{\\left(t \\right)}\\) and \\(y=2 - 2 \\cos{\\left(t \\right)}\\) for \\(0\\le t\\le 2\\pi\\).</p>",
+        "solution": [
+          "<p>The speed factor satisfies \\(x'^2+y'^2=4a^2\\sin^2(\\frac t2)\\).</p>",
+          "<p>Since \\(\\sin(\\frac t2)\\ge0\\) on this interval, integrate \\(2a\\sin(\\frac t2)\\) for the whole arch.</p>",
+          "<p>The length is \\(16\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the radius and its angular rate in polar arc length",
+        "question": "<p>Find the length of the polar arc \\(r=2 \\cos{\\left(\\theta \\right)}\\) for \\(- \\frac{2 \\pi}{15}\\le\\theta\\le \\frac{2 \\pi}{15}\\).</p>",
+        "solution": [
+          "<p>The polar length integrand is \\(\\sqrt{r^2+r'^2}\\), not \\(\\frac12r^2\\).</p>",
+          "<p>The sum under the root is \\(4\\), so the arc length is \\(\\frac{8 \\pi}{15}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the radius and its angular rate in polar arc length",
+        "question": "<p>Find the length of the polar curve \\(r=2 \\cos{\\left(\\theta \\right)} + 2\\) over \\(0\\le\\theta\\le\\pi\\).</p>",
+        "solution": [
+          "<p>The polar arc factor is \\(\\sqrt{r^2+(\\frac{\\mathrm dr}{\\mathrm d\\theta})^2}\\).</p>",
+          "<p>It simplifies to \\(2a|\\cos(\\frac\\theta2)|\\). Cosine is non-negative on the half-angle interval here.</p>",
+          "<p>Integrating gives \\(8\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the radius and its angular rate in polar arc length",
+        "question": "<p>Find the length of the polar curve \\(r=4 \\cos{\\left(\\theta \\right)} + 4\\) over \\(0\\le\\theta\\le\\pi\\).</p>",
+        "solution": [
+          "<p>The polar arc factor is \\(\\sqrt{r^2+(\\frac{\\mathrm dr}{\\mathrm d\\theta})^2}\\).</p>",
+          "<p>It simplifies to \\(2a|\\cos(\\frac\\theta2)|\\). Cosine is non-negative on the half-angle interval here.</p>",
+          "<p>Integrating gives \\(16\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "arcs-cartesian-arc-length-extra",
+        "title": "Integrate the positive arc element in Cartesian form",
+        "prompt": "<p>Find the exact arc length of \\(y=\\frac{\\sqrt{10} x^{\\frac{3}{2}}}{3}\\) from \\(x=0\\) to \\(x=6\\).</p>",
+        "fields": [
+          {
+            "key": "length",
+            "label": "Exact arc length",
+            "type": "number",
+            "expected": "84/5"
+          }
+        ],
+        "hint": "<p>Use the length element, not the integral of the curve's height.</p>",
+        "solution": "<p>Differentiate the curve first. One plus the squared derivative is \\(\\frac{5 x}{2} + 1\\).</p><p>Integrate its non-negative square root over the given bounds. The length is \\(\\frac{84}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "arcs-use-a-hyperbolic-square-extra",
+        "title": "Integrate the positive arc element in Cartesian form",
+        "prompt": "<p>Find the exact arc length of \\(y=\\frac{\\cosh{\\left(4 x \\right)}}{4}\\) for \\(0\\le x\\le \\frac{\\log{\\left(4 \\right)}}{4}\\).</p>",
+        "fields": [
+          {
+            "key": "length",
+            "label": "Exact arc length",
+            "type": "number",
+            "expected": "15/32"
+          }
+        ],
+        "hint": "<p>Use the length element, not the integral of the curve's height.</p>",
+        "solution": "<p>The derivative is \\(\\sinh(ax)\\). The length integrand simplifies to the positive \\(\\cosh(ax)\\).</p><p>Its integral over the bounds gives length \\(\\frac{15}{32}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "arcs-parametric-length-through-a-turn-extra",
+        "title": "Use the full parameter interval for arc length",
+        "prompt": "<p>Find the length of the parametric path \\(x=3 \\cos{\\left(t \\right)}\\) and \\(y=3 \\sin{\\left(t \\right)}\\) for \\(0\\le t\\le \\frac{26 \\pi}{15}\\).</p>",
+        "fields": [
+          {
+            "key": "length",
+            "label": "Exact arc length",
+            "type": "number",
+            "expected": "26*pi/5"
+          }
+        ],
+        "hint": "<p>The sum of squared coordinate derivatives uses both components and stays valid at a vertical tangent.</p>",
+        "solution": "<p>Use \\(\\sqrt{x'^2+y'^2}\\), because the path is parameterised and \\(x\\) is not monotonic here.</p><p>The squared derivatives sum to \\(9\\), so the length factor is constant \\(3\\).</p><p>Multiplying by the parameter interval gives length \\(\\frac{26 \\pi}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "arcs-polar-arc-element-extra",
+        "title": "Use the radius and its angular rate in polar arc length",
+        "prompt": "<p>Find the length of the polar arc \\(r=4 \\cos{\\left(\\theta \\right)}\\) for \\(- \\frac{4 \\pi}{15}\\le\\theta\\le \\frac{4 \\pi}{15}\\).</p>",
+        "fields": [
+          {
+            "key": "length",
+            "label": "Exact arc length",
+            "type": "number",
+            "expected": "32*pi/15"
+          }
+        ],
+        "hint": "<p>Check the sign of any trigonometric factor you take out of a square root.</p>",
+        "solution": "<p>The polar length integrand is \\(\\sqrt{r^2+r'^2}\\), not \\(\\frac12r^2\\).</p><p>The sum under the root is \\(16\\), so the arc length is \\(\\frac{32 \\pi}{15}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "arcs-manage-signs-in-polar-length-extra",
+        "title": "Use the radius and its angular rate in polar arc length",
+        "prompt": "<p>Find the length of the polar curve \\(r=6 \\cos{\\left(\\theta \\right)} + 6\\) over \\(0\\le\\theta\\le\\pi\\).</p>",
+        "fields": [
+          {
+            "key": "length",
+            "label": "Exact arc length",
+            "type": "number",
+            "expected": "24"
+          }
+        ],
+        "hint": "<p>Check the sign of any trigonometric factor you take out of a square root.</p>",
+        "solution": "<p>The polar arc factor is \\(\\sqrt{r^2+(\\frac{\\mathrm dr}{\\mathrm d\\theta})^2}\\).</p><p>It simplifies to \\(2a|\\cos(\\frac\\theta2)|\\). Cosine is non-negative on the half-angle interval here.</p><p>Integrating gives \\(24\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Arc length",
+        "definition": "<p>Distance measured along a curve.</p>"
+      },
+      {
+        "term": "Length element",
+        "definition": "<p>The local non-negative factor giving a small path length.</p>"
+      },
+      {
+        "term": "Parameter",
+        "definition": "<p>A variable used to describe points along a path.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Cartesian</th><td>\\(\\sqrt{1+y'^2}\\,\\mathrm dx\\).</td></tr><tr><th scope=\"row\">Parametric</th><td>\\(\\sqrt{x'^2+y'^2}\\,\\mathrm dt\\).</td></tr><tr><th scope=\"row\">Polar</th><td>\\(\\sqrt{r^2+r'^2}\\,\\mathrm d\\theta\\).</td></tr><tr><th scope=\"row\">Domain</th><td>Choose an interval giving exactly the desired traversal.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A circle of radius \\(3\\) is parameterised by a central angle from zero to \\(\\frac\\pi2\\). Find the arc length.</p><p><strong>Check</strong> \\(\\frac{3\\pi}{2}\\).</p>",
+      "checks": "<ul><li>The area under the graph is a different quantity from the length of its curve.</li><li>Factoring a perfect square from a square root generally gives a magnitude.</li></ul>",
+      "examTip": "<p>Calculate the derivative and simplify the length factor before inserting the integration limits.</p>"
+    },
+    "related": [
+      {
+        "title": "Trigonometric and hyperbolic reductions",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_integration_trigonometric"
+      },
+      {
+        "title": "Curved surfaces of revolution",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_integration_surfaces"
+      }
+    ]
+  },
+  "fp2_integration_surfaces": {
+    "updatedOn": "2026-11-21",
+    "description": "Use the distance to a coordinate axis and a consistent length element to calculate curved surface area.",
+    "sections": [
+      {
+        "id": "rotate-about-the-x-axis",
+        "title": "How does arc length become a curved surface under rotation?",
+        "label": "Use the circle traced by each bit of arc",
+        "intro": "<p>A short curve element sweeps out a narrow band when rotated. Its circumference comes from its distance to the axis.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>About the x-axis the band radius is \\(|y|\\), so integrate \\(2\\pi |y|\\,\\mathrm ds\\).</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp2/integration/radius-and-curved-band.svg",
+              "alt": "A curve above the x-axis is rotated around it. One circular band and its radius are shown.",
+              "caption": "<p>Each small band has circumference given by the distance to the axis. Multiply it by the small arc length of the generating curve.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-rotate-about-the-x-axis-check",
+            "title": "Use distance to the axis as the radius of each band",
+            "prompt": "<p>Find the curved surface area after rotating the line segment \\(y=\\frac{3 x}{4} + 2\\) for \\(0\\le x\\le 3\\) about the x-axis. Give only the curved surface.</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Exact curved surface area",
+                "type": "number",
+                "expected": "375*pi/16"
+              }
+            ],
+            "hint": "<p>The radius is measured perpendicular to the stated axis of rotation.</p>",
+            "solution": "<p>The slant length factor is \\(\\frac{5}{4}\\). Rotation about the x-axis uses radius \\(\\frac{3 x}{4} + 2\\).</p><p>Multiply the radius by the length element and integrate with the factor \\(2\\pi\\).</p><p>The surface area is \\(\\frac{375 \\pi}{16}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>This gives curved surface area. End disks are separate if a total closed area is requested.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rotate-about-the-y-axis",
+        "title": "Which radius should I use when the rotation axis changes?",
+        "label": "Measure distance perpendicular to the axis",
+        "intro": "<p>For rotation about the y-axis, horizontal position determines the distance to that axis. A Cartesian curve given as y in terms of x can still use x as the integration variable.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>About the y-axis use \\(2\\pi |x|\\,\\mathrm ds\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-rotate-about-the-y-axis-check",
+            "title": "Use distance to the axis as the radius of each band",
+            "prompt": "<p>Find the curved surface area after rotating the line segment \\(y=\\frac{3 x}{4} + 2\\) for \\(0\\le x\\le 3\\) about the y-axis. Give only the curved surface.</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Exact curved surface area",
+                "type": "number",
+                "expected": "45*pi/4"
+              }
+            ],
+            "hint": "<p>The radius is measured perpendicular to the stated axis of rotation.</p>",
+            "solution": "<p>The slant length factor is \\(\\frac{5}{4}\\). Rotation about the y-axis uses radius \\(x\\).</p><p>Multiply the radius by the length element and integrate with the factor \\(2\\pi\\).</p><p>The surface area is \\(\\frac{45 \\pi}{4}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not change the derivative or integration variable merely because the axis changes.</p>"
+          }
+        ]
+      },
+      {
+        "id": "split-when-the-curve-crosses-the-axis",
+        "title": "How can both sides contribute a positive area?",
+        "label": "Split the radius at an axis crossing",
+        "intro": "<p>If the generating curve crosses the rotation axis, the signed coordinate changes sign. Its distance from the axis remains non-negative.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the absolute coordinate or split and use its correct sign on each segment.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-split-when-the-curve-crosses-the-axis-check",
+            "title": "Split the surface integral where the curve crosses the axis",
+            "prompt": "<p>Find the curved surface area formed by rotating \\(y=\\frac{3 x}{4}\\) around the x-axis for \\(-3\\le x\\le 4\\).</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Exact curved surface area",
+                "type": "number",
+                "expected": "375*pi/16"
+              }
+            ],
+            "hint": "<p>Distance to the rotation axis is never negative.</p>",
+            "solution": "<p>The circular radius equals \\(|y|\\), including where \\(y<0\\).</p><p>Split at \\(x=0\\) and integrate \\(-y\\) on the negative side and \\(y\\) on the positive side. The constant slant factor is \\(\\frac{5}{4}\\).</p><p>The total curved surface area is \\(\\frac{375 \\pi}{16}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Opposite sides of an axis do not give opposite contributions to area.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-split-when-the-curve-crosses-the-axis-follow-up",
+            "title": "Split the surface integral where the curve crosses the axis",
+            "prompt": "<p>Find the curved surface area formed by rotating \\(y=\\frac{3 x}{4}\\) around the x-axis for \\(-5\\le x\\le 6\\).</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Exact curved surface area",
+                "type": "number",
+                "expected": "915*pi/16"
+              }
+            ],
+            "hint": "<p>Distance to the rotation axis is never negative.</p>",
+            "solution": "<p>The circular radius equals \\(|y|\\), including where \\(y<0\\).</p><p>Split at \\(x=0\\) and integrate \\(-y\\) on the negative side and \\(y\\) on the positive side. The constant slant factor is \\(\\frac{5}{4}\\).</p><p>The total curved surface area is \\(\\frac{915 \\pi}{16}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "parameterise-a-rotation-about-x",
+        "title": "How do I use a parameter to rotate a semicircle?",
+        "label": "Keep all factors in the parameter",
+        "intro": "<p>A semicircle can generate a full sphere without requiring a separate x-based algebraic expression.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the parametric arc element and the rotation radius expressed with the same parameter.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-parameterise-a-rotation-about-x-check",
+            "title": "Rotate a parameterised circular arc",
+            "prompt": "<p>The curve \\(x=3 \\cos{\\left(t \\right)}\\), \\(y=3 \\sin{\\left(t \\right)}\\) for \\(0\\le t\\le \\pi\\) is rotated about the x-axis. Find the exact curved surface area.</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Exact curved surface area",
+                "type": "number",
+                "expected": "36*pi"
+              }
+            ],
+            "hint": "<p>Use the parameter limits after forming the correct radius and speed factors.</p>",
+            "solution": "<p>Use the arc factor \\(3\\) from the two derivative components. The rotation radius is \\(3 \\sin{\\left(t \\right)}\\) throughout these bounds.</p><p>Integrate \\(2\\pi\\) times that radius and the arc factor. The curved surface area is \\(36 \\pi\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use one traversal only when finding the geometric surface area.</p>"
+          }
+        ]
+      },
+      {
+        "id": "parameterise-a-rotation-about-y",
+        "title": "How do I rotate a partial arc about the other axis?",
+        "label": "Use the new radius and parameter bounds",
+        "intro": "<p>Rotating a parameterised partial arc about the y-axis uses the same parametric speed factor but a different coordinate as radius.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check the sign and geometric interpretation of the radius throughout the chosen bounds.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-parameterise-a-rotation-about-y-check",
+            "title": "Rotate a parameterised circular arc",
+            "prompt": "<p>The curve \\(x=3 \\cos{\\left(t \\right)}\\), \\(y=3 \\sin{\\left(t \\right)}\\) for \\(0\\le t\\le \\frac{\\pi}{3}\\) is rotated about the y-axis. Find the exact curved surface area.</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Exact curved surface area",
+                "type": "number",
+                "expected": "9*sqrt(3)*pi"
+              }
+            ],
+            "hint": "<p>Use the parameter limits after forming the correct radius and speed factors.</p>",
+            "solution": "<p>Use the arc factor \\(3\\) from the two derivative components. The rotation radius is \\(3 \\cos{\\left(t \\right)}\\) throughout these bounds.</p><p>Integrate \\(2\\pi\\) times that radius and the arc factor. The curved surface area is \\(9 \\sqrt{3} \\pi\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not include a flat cap that was not generated by the given arc.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "surfaces-parameterise-a-rotation-about-y-follow-up",
+            "title": "Rotate a parameterised circular arc",
+            "prompt": "<p>The curve \\(x=5 \\cos{\\left(t \\right)}\\), \\(y=5 \\sin{\\left(t \\right)}\\) for \\(0\\le t\\le \\frac{\\pi}{3}\\) is rotated about the y-axis. Find the exact curved surface area.</p>",
+            "fields": [
+              {
+                "key": "area",
+                "label": "Exact curved surface area",
+                "type": "number",
+                "expected": "25*sqrt(3)*pi"
+              }
+            ],
+            "hint": "<p>Use the parameter limits after forming the correct radius and speed factors.</p>",
+            "solution": "<p>Use the arc factor \\(5\\) from the two derivative components. The rotation radius is \\(5 \\cos{\\left(t \\right)}\\) throughout these bounds.</p><p>Integrate \\(2\\pi\\) times that radius and the arc factor. The curved surface area is \\(25 \\sqrt{3} \\pi\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use distance to the axis as the radius of each band",
+        "question": "<p>Find the curved surface area after rotating the line segment \\(y=\\frac{3 x}{4} + 1\\) for \\(0\\le x\\le 2\\) about the x-axis. Give only the curved surface.</p>",
+        "solution": [
+          "<p>The slant length factor is \\(\\frac{5}{4}\\). Rotation about the x-axis uses radius \\(\\frac{3 x}{4} + 1\\).</p>",
+          "<p>Multiply the radius by the length element and integrate with the factor \\(2\\pi\\).</p>",
+          "<p>The surface area is \\(\\frac{35 \\pi}{4}\\).</p>"
+        ]
+      },
+      {
+        "title": "Use distance to the axis as the radius of each band",
+        "question": "<p>Find the curved surface area after rotating the line segment \\(y=\\frac{3 x}{4} + 1\\) for \\(0\\le x\\le 2\\) about the y-axis. Give only the curved surface.</p>",
+        "solution": [
+          "<p>The slant length factor is \\(\\frac{5}{4}\\). Rotation about the y-axis uses radius \\(x\\).</p>",
+          "<p>Multiply the radius by the length element and integrate with the factor \\(2\\pi\\).</p>",
+          "<p>The surface area is \\(5 \\pi\\).</p>"
+        ]
+      },
+      {
+        "title": "Split the surface integral where the curve crosses the axis",
+        "question": "<p>Find the curved surface area formed by rotating \\(y=\\frac{3 x}{4}\\) around the x-axis for \\(-2\\le x\\le 3\\).</p>",
+        "solution": [
+          "<p>The circular radius equals \\(|y|\\), including where \\(y<0\\).</p>",
+          "<p>Split at \\(x=0\\) and integrate \\(-y\\) on the negative side and \\(y\\) on the positive side. The constant slant factor is \\(\\frac{5}{4}\\).</p>",
+          "<p>The total curved surface area is \\(\\frac{195 \\pi}{16}\\).</p>"
+        ]
+      },
+      {
+        "title": "Split the surface integral where the curve crosses the axis",
+        "question": "<p>Find the curved surface area formed by rotating \\(y=\\frac{3 x}{4}\\) around the x-axis for \\(-4\\le x\\le 5\\).</p>",
+        "solution": [
+          "<p>The circular radius equals \\(|y|\\), including where \\(y<0\\).</p>",
+          "<p>Split at \\(x=0\\) and integrate \\(-y\\) on the negative side and \\(y\\) on the positive side. The constant slant factor is \\(\\frac{5}{4}\\).</p>",
+          "<p>The total curved surface area is \\(\\frac{615 \\pi}{16}\\).</p>"
+        ]
+      },
+      {
+        "title": "Rotate a parameterised circular arc",
+        "question": "<p>The curve \\(x=2 \\cos{\\left(t \\right)}\\), \\(y=2 \\sin{\\left(t \\right)}\\) for \\(0\\le t\\le \\pi\\) is rotated about the x-axis. Find the exact curved surface area.</p>",
+        "solution": [
+          "<p>Use the arc factor \\(2\\) from the two derivative components. The rotation radius is \\(2 \\sin{\\left(t \\right)}\\) throughout these bounds.</p>",
+          "<p>Integrate \\(2\\pi\\) times that radius and the arc factor. The curved surface area is \\(16 \\pi\\).</p>"
+        ]
+      },
+      {
+        "title": "Rotate a parameterised circular arc",
+        "question": "<p>The curve \\(x=2 \\cos{\\left(t \\right)}\\), \\(y=2 \\sin{\\left(t \\right)}\\) for \\(0\\le t\\le \\frac{\\pi}{3}\\) is rotated about the y-axis. Find the exact curved surface area.</p>",
+        "solution": [
+          "<p>Use the arc factor \\(2\\) from the two derivative components. The rotation radius is \\(2 \\cos{\\left(t \\right)}\\) throughout these bounds.</p>",
+          "<p>Integrate \\(2\\pi\\) times that radius and the arc factor. The curved surface area is \\(4 \\sqrt{3} \\pi\\).</p>"
+        ]
+      },
+      {
+        "title": "Rotate a parameterised circular arc",
+        "question": "<p>The curve \\(x=4 \\cos{\\left(t \\right)}\\), \\(y=4 \\sin{\\left(t \\right)}\\) for \\(0\\le t\\le \\frac{\\pi}{3}\\) is rotated about the y-axis. Find the exact curved surface area.</p>",
+        "solution": [
+          "<p>Use the arc factor \\(4\\) from the two derivative components. The rotation radius is \\(4 \\cos{\\left(t \\right)}\\) throughout these bounds.</p>",
+          "<p>Integrate \\(2\\pi\\) times that radius and the arc factor. The curved surface area is \\(16 \\sqrt{3} \\pi\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "surfaces-rotate-about-the-x-axis-extra",
+        "title": "Use distance to the axis as the radius of each band",
+        "prompt": "<p>Find the curved surface area after rotating the line segment \\(y=\\frac{3 x}{4} + 3\\) for \\(0\\le x\\le 4\\) about the x-axis. Give only the curved surface.</p>",
+        "fields": [
+          {
+            "key": "area",
+            "label": "Exact curved surface area",
+            "type": "number",
+            "expected": "45*pi"
+          }
+        ],
+        "hint": "<p>The radius is measured perpendicular to the stated axis of rotation.</p>",
+        "solution": "<p>The slant length factor is \\(\\frac{5}{4}\\). Rotation about the x-axis uses radius \\(\\frac{3 x}{4} + 3\\).</p><p>Multiply the radius by the length element and integrate with the factor \\(2\\pi\\).</p><p>The surface area is \\(45 \\pi\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "surfaces-rotate-about-the-y-axis-extra",
+        "title": "Use distance to the axis as the radius of each band",
+        "prompt": "<p>Find the curved surface area after rotating the line segment \\(y=\\frac{3 x}{4} + 3\\) for \\(0\\le x\\le 4\\) about the y-axis. Give only the curved surface.</p>",
+        "fields": [
+          {
+            "key": "area",
+            "label": "Exact curved surface area",
+            "type": "number",
+            "expected": "20*pi"
+          }
+        ],
+        "hint": "<p>The radius is measured perpendicular to the stated axis of rotation.</p>",
+        "solution": "<p>The slant length factor is \\(\\frac{5}{4}\\). Rotation about the y-axis uses radius \\(x\\).</p><p>Multiply the radius by the length element and integrate with the factor \\(2\\pi\\).</p><p>The surface area is \\(20 \\pi\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "surfaces-split-when-the-curve-crosses-the-axis-extra",
+        "title": "Split the surface integral where the curve crosses the axis",
+        "prompt": "<p>Find the curved surface area formed by rotating \\(y=\\frac{3 x}{4}\\) around the x-axis for \\(-6\\le x\\le 7\\).</p>",
+        "fields": [
+          {
+            "key": "area",
+            "label": "Exact curved surface area",
+            "type": "number",
+            "expected": "1275*pi/16"
+          }
+        ],
+        "hint": "<p>Distance to the rotation axis is never negative.</p>",
+        "solution": "<p>The circular radius equals \\(|y|\\), including where \\(y<0\\).</p><p>Split at \\(x=0\\) and integrate \\(-y\\) on the negative side and \\(y\\) on the positive side. The constant slant factor is \\(\\frac{5}{4}\\).</p><p>The total curved surface area is \\(\\frac{1275 \\pi}{16}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "surfaces-parameterise-a-rotation-about-x-extra",
+        "title": "Rotate a parameterised circular arc",
+        "prompt": "<p>The curve \\(x=4 \\cos{\\left(t \\right)}\\), \\(y=4 \\sin{\\left(t \\right)}\\) for \\(0\\le t\\le \\pi\\) is rotated about the x-axis. Find the exact curved surface area.</p>",
+        "fields": [
+          {
+            "key": "area",
+            "label": "Exact curved surface area",
+            "type": "number",
+            "expected": "64*pi"
+          }
+        ],
+        "hint": "<p>Use the parameter limits after forming the correct radius and speed factors.</p>",
+        "solution": "<p>Use the arc factor \\(4\\) from the two derivative components. The rotation radius is \\(4 \\sin{\\left(t \\right)}\\) throughout these bounds.</p><p>Integrate \\(2\\pi\\) times that radius and the arc factor. The curved surface area is \\(64 \\pi\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "surfaces-parameterise-a-rotation-about-y-extra",
+        "title": "Rotate a parameterised circular arc",
+        "prompt": "<p>The curve \\(x=6 \\cos{\\left(t \\right)}\\), \\(y=6 \\sin{\\left(t \\right)}\\) for \\(0\\le t\\le \\frac{\\pi}{3}\\) is rotated about the y-axis. Find the exact curved surface area.</p>",
+        "fields": [
+          {
+            "key": "area",
+            "label": "Exact curved surface area",
+            "type": "number",
+            "expected": "36*sqrt(3)*pi"
+          }
+        ],
+        "hint": "<p>Use the parameter limits after forming the correct radius and speed factors.</p>",
+        "solution": "<p>Use the arc factor \\(6\\) from the two derivative components. The rotation radius is \\(6 \\cos{\\left(t \\right)}\\) throughout these bounds.</p><p>Integrate \\(2\\pi\\) times that radius and the arc factor. The curved surface area is \\(36 \\sqrt{3} \\pi\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Rotation axis",
+        "definition": "<p>The fixed line about which the generating curve rotates.</p>"
+      },
+      {
+        "term": "Curved surface",
+        "definition": "<p>The surface swept out by the curve itself.</p>"
+      },
+      {
+        "term": "Generating curve",
+        "definition": "<p>The curve whose rotation forms the surface.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Band</th><td>\\(\\mathrm dA=2\\pi(\\text{radius})\\,\\mathrm ds\\).</td></tr><tr><th scope=\"row\">Around x-axis</th><td>Radius \\(|y|\\).</td></tr><tr><th scope=\"row\">Around y-axis</th><td>Radius \\(|x|\\).</td></tr><tr><th scope=\"row\">Parametric curve</th><td>Use parameter bounds with both radius and arc factor in that parameter.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A segment of length \\(4\\) stays a constant distance \\(3\\) from the rotation axis. Find its curved surface area.</p><p><strong>Check</strong> \\(2\\pi(3)(4)=24\\pi\\).</p>",
+      "checks": "<ul><li>This gives curved surface area. End disks are separate if a total closed area is requested.</li><li>Do not change the derivative or integration variable merely because the axis changes.</li></ul>",
+      "examTip": "<p>Label the distance from the rotation axis before choosing the integral.</p>"
+    },
+    "related": [
+      {
+        "title": "Arc length in Cartesian, parametric and polar form",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_integration_arcs"
+      },
+      {
+        "title": "Rectangle estimates, sums and limits",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_integration_limits"
+      }
+    ]
+  },
+  "fp2_integration_limits": {
+    "updatedOn": "2026-11-21",
+    "description": "Construct lower and upper sums, compare reciprocal series and recognise an exact integral limit.",
+    "sections": [
+      {
+        "id": "choose-lower-and-upper-endpoints",
+        "title": "Which endpoints give the upper and lower rectangles?",
+        "label": "Use the direction of monotonicity",
+        "intro": "<p>For positive increasing functions, left endpoints give lower heights. For positive decreasing functions, right endpoints give lower heights.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Multiply the sum of the chosen heights by the common width.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp2/integration/lower-rectangles.svg",
+              "alt": "Lower rectangle steps under an increasing graph leave a shrinking gap from the curve.",
+              "caption": "<p>For an increasing function, each left endpoint gives a lower height. Use the same width for every rectangle.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "limits-choose-lower-and-upper-endpoints-check",
+            "title": "Calculate strict integral bounds using rectangles",
+            "prompt": "<p>Use \\(4\\) equal rectangles to find lower and upper bounds on \\(\\int_{0}^{3}\\left(3 - x\\right)^{2} + 4\\,\\mathrm d x\\).</p>",
+            "fields": [
+              {
+                "key": "lower",
+                "label": "Lower bound",
+                "type": "number",
+                "expected": "573/32"
+              },
+              {
+                "key": "upper",
+                "label": "Upper bound",
+                "type": "number",
+                "expected": "789/32"
+              }
+            ],
+            "hint": "<p>First decide which endpoint gives the smaller height on each subinterval.</p>",
+            "solution": "<p>The width of each rectangle is \\(\\frac{3}{4}\\). The integrand is decreasing on the interval.</p><p>Use right endpoint heights for the lower bound and the opposite endpoint heights for the upper bound.</p><p>Multiplying each height sum by the common width gives lower bound \\(\\frac{573}{32}\\) and upper bound \\(\\frac{789}{32}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The height choices reverse when the direction of monotonicity reverses.</p>"
+          }
+        ]
+      },
+      {
+        "id": "bound-the-width-of-the-estimate",
+        "title": "Why does the upper-minus-lower difference simplify?",
+        "label": "Cancel the shared heights",
+        "intro": "<p>An endpoint that belongs to two adjacent intervals appears once in each sum. It cancels in the difference.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The gap equals the common width times the absolute difference of endpoint heights on a monotone interval.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "limits-bound-the-width-of-the-estimate-check",
+            "title": "Find how many rectangles make the bounds close enough",
+            "prompt": "<p>Use equal rectangles on \\(1\\le x\\le 3\\) for the curve \\(y=x^{2}\\). Find the least integer number of rectangles for which the upper minus lower sum is at most \\(\\frac{16}{13}\\).</p>",
+            "fields": [
+              {
+                "key": "n",
+                "label": "Least number of rectangles",
+                "type": "number",
+                "expected": "13"
+              }
+            ],
+            "hint": "<p>Write the gap directly using the two endpoint heights. You do not need to evaluate either entire sum.</p>",
+            "solution": "<p>Adjacent heights cancel in the difference of endpoint sums. The only survivors are the first and last heights.</p><p>Multiply their difference by width. The gap with \\(n\\) rectangles is \\(\\frac{16}{n}\\).</p><p>Solving the inequality gives the least integer \\(13\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not use just the difference of endpoint heights without multiplying by the width.</p>"
+          }
+        ]
+      },
+      {
+        "id": "compare-a-reciprocal-series",
+        "title": "How does an integral bound a sum of reciprocal terms?",
+        "label": "Draw unit-width strips",
+        "intro": "<p>For a decreasing positive function, compare its value at each integer with the integral over the interval before or after that integer.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The lower comparison uses the strips immediately to the right of the samples, and the upper one those to the left.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "limits-compare-a-reciprocal-series-check",
+            "title": "Compare a finite reciprocal sum with two integrals",
+            "prompt": "<p>For \\(S=\\sum_{r=2}^{6}\\frac1{r+3}\\), find the positive ratios \\(A\\) and \\(B\\) for the rectangle bounds \\(\\ln A<S<\\ln B\\) obtained from unit-width strips immediately to the left and right of the sum’s sample points.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Ratio A for the lower bound",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "b",
+                "label": "Ratio B for the upper bound",
+                "type": "number",
+                "expected": "9/4"
+              }
+            ],
+            "hint": "<p>Allow the unit-width strips to run one integer farther to the right for the lower comparison.</p>",
+            "solution": "<p>The function \\(\\frac1{x+3}\\) decreases. Each unit rectangle at an integer lies above the curve immediately to its right and below the curve immediately to its left.</p><p>Use the integral from \\(2\\) to \\(7\\) for a lower bound and from \\(1\\) to \\(6\\) for an upper bound.</p><p>Evaluate the log differences. The lower logarithm has ratio \\(2\\) and the upper logarithm has ratio \\(\\frac{9}{4}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The integral bounds have different endpoints.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "limits-compare-a-reciprocal-series-follow-up",
+            "title": "Compare a finite reciprocal sum with two integrals",
+            "prompt": "<p>For \\(S=\\sum_{r=4}^{8}\\frac1{r+5}\\), find the positive ratios \\(A\\) and \\(B\\) for the rectangle bounds \\(\\ln A<S<\\ln B\\) obtained from unit-width strips immediately to the left and right of the sum’s sample points.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Ratio A for the lower bound",
+                "type": "number",
+                "expected": "14/9"
+              },
+              {
+                "key": "b",
+                "label": "Ratio B for the upper bound",
+                "type": "number",
+                "expected": "13/8"
+              }
+            ],
+            "hint": "<p>Allow the unit-width strips to run one integer farther to the right for the lower comparison.</p>",
+            "solution": "<p>The function \\(\\frac1{x+5}\\) decreases. Each unit rectangle at an integer lies above the curve immediately to its right and below the curve immediately to its left.</p><p>Use the integral from \\(4\\) to \\(9\\) for a lower bound and from \\(3\\) to \\(8\\) for an upper bound.</p><p>Evaluate the log differences. The lower logarithm has ratio \\(\\frac{14}{9}\\) and the upper logarithm has ratio \\(\\frac{13}{8}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "recognise-a-riemann-sum",
+        "title": "What tells me the interval and sample point in a scaled sum?",
+        "label": "Read the width and sample",
+        "intro": "<p>An expression of the form \\(\\frac1n\\sum_{r=1}^n f(\\frac rn)\\) uses rectangle width \\(\\frac1n\\) and right endpoints covering the unit interval.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a continuous integrand, the sum tends to the definite integral across that interval.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "limits-recognise-a-riemann-sum-check",
+            "title": "Identify the rectangle width and sample position",
+            "prompt": "<p>Find the exact value of \\(\\lim_{n\\to\\infty}\\frac1n\\sum_{r=1}^n\\left(3+4\\frac{r^2}{n^2}\\right)\\).</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Exact sum limit",
+                "type": "number",
+                "expected": "13/3"
+              }
+            ],
+            "hint": "<p>Read the outside factor as a width and the repeated fraction depending on r as the sample position.</p>",
+            "solution": "<p>The common width is \\(\\frac1n\\). The sample position \\(\\frac rn\\) runs through right endpoints on \\([0,1]\\).</p><p>The integrand is \\(4 x^{2} + 3\\). It is continuous throughout this interval, so the Riemann sums converge to its integral.</p><p>Integrate the polynomial from zero to one, giving \\(\\frac{13}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Replacing the sum symbol by an integral without matching width and limits leaves the wrong scaling.</p>"
+          }
+        ]
+      },
+      {
+        "id": "use-continuity-to-justify-a-limit",
+        "title": "Why does the rectangle approximation converge?",
+        "label": "Identify the definite integral",
+        "intro": "<p>Continuity on a closed interval ensures that upper and lower rectangle sums approach the same value as the mesh shrinks.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Identify the continuous function, set the interval and evaluate its integral.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "limits-use-continuity-to-justify-a-limit-check",
+            "title": "Identify the rectangle width and sample position",
+            "prompt": "<p>Find \\(A\\) and \\(B\\) if \\(\\lim_{n\\to\\infty}\\frac1n\\sum_{r=1}^n\\frac1{3+4\\frac rn}\\) equals \\(A\\ln B\\), where \\(A\\) is the reciprocal of the coefficient of the variable in the denominator of the limiting integrand and \\(B\\) is the upper endpoint denominator divided by the lower one.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "1/4"
+              },
+              {
+                "key": "b",
+                "label": "Ratio B",
+                "type": "number",
+                "expected": "7/3"
+              }
+            ],
+            "hint": "<p>Read the outside factor as a width and the repeated fraction depending on r as the sample position.</p>",
+            "solution": "<p>The common width is \\(\\frac1n\\). The sample position \\(\\frac rn\\) runs through right endpoints on \\([0,1]\\).</p><p>The integrand is \\(\\frac{1}{4 x + 3}\\). It is continuous throughout this interval, so the Riemann sums converge to its integral.</p><p>The integral is \\(\\frac{\\log{\\left(\\frac{7}{3} \\right)}}{4}\\). The coefficient is \\(\\frac{1}{4}\\) and the ratio is \\(\\frac{7}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A sum that uses terms on a changing grid is not the sum of the termwise limits.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "limits-use-continuity-to-justify-a-limit-follow-up",
+            "title": "Identify the rectangle width and sample position",
+            "prompt": "<p>Find \\(A\\) and \\(B\\) if \\(\\lim_{n\\to\\infty}\\frac1n\\sum_{r=1}^n\\frac1{5+6\\frac rn}\\) equals \\(A\\ln B\\), where \\(A\\) is the reciprocal of the coefficient of the variable in the denominator of the limiting integrand and \\(B\\) is the upper endpoint denominator divided by the lower one.</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Coefficient A",
+                "type": "number",
+                "expected": "1/6"
+              },
+              {
+                "key": "b",
+                "label": "Ratio B",
+                "type": "number",
+                "expected": "11/5"
+              }
+            ],
+            "hint": "<p>Read the outside factor as a width and the repeated fraction depending on r as the sample position.</p>",
+            "solution": "<p>The common width is \\(\\frac1n\\). The sample position \\(\\frac rn\\) runs through right endpoints on \\([0,1]\\).</p><p>The integrand is \\(\\frac{1}{6 x + 5}\\). It is continuous throughout this interval, so the Riemann sums converge to its integral.</p><p>The integral is \\(\\frac{\\log{\\left(\\frac{11}{5} \\right)}}{6}\\). The coefficient is \\(\\frac{1}{6}\\) and the ratio is \\(\\frac{11}{5}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Calculate strict integral bounds using rectangles",
+        "question": "<p>Use \\(3\\) equal rectangles to find lower and upper bounds on \\(\\int_{0}^{2}x^{2} + 3\\,\\mathrm d x\\).</p>",
+        "solution": [
+          "<p>The width of each rectangle is \\(\\frac{2}{3}\\). The integrand is increasing on the interval.</p>",
+          "<p>Use left endpoint heights for the lower bound and the opposite endpoint heights for the upper bound.</p>",
+          "<p>Multiplying each height sum by the common width gives lower bound \\(\\frac{202}{27}\\) and upper bound \\(\\frac{274}{27}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find how many rectangles make the bounds close enough",
+        "question": "<p>Use equal rectangles on \\(1\\le x\\le 2\\) for the curve \\(y=x^{2}\\). Find the least integer number of rectangles for which the upper minus lower sum is at most \\(\\frac{1}{4}\\).</p>",
+        "solution": [
+          "<p>Adjacent heights cancel in the difference of endpoint sums. The only survivors are the first and last heights.</p>",
+          "<p>Multiply their difference by width. The gap with \\(n\\) rectangles is \\(\\frac{3}{n}\\).</p>",
+          "<p>Solving the inequality gives the least integer \\(12\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare a finite reciprocal sum with two integrals",
+        "question": "<p>For \\(S=\\sum_{r=1}^{5}\\frac1{r+2}\\), find the positive ratios \\(A\\) and \\(B\\) for the rectangle bounds \\(\\ln A<S<\\ln B\\) obtained from unit-width strips immediately to the left and right of the sum’s sample points.</p>",
+        "solution": [
+          "<p>The function \\(\\frac1{x+2}\\) decreases. Each unit rectangle at an integer lies above the curve immediately to its right and below the curve immediately to its left.</p>",
+          "<p>Use the integral from \\(1\\) to \\(6\\) for a lower bound and from \\(0\\) to \\(5\\) for an upper bound.</p>",
+          "<p>Evaluate the log differences. The lower logarithm has ratio \\(\\frac{8}{3}\\) and the upper logarithm has ratio \\(\\frac{7}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare a finite reciprocal sum with two integrals",
+        "question": "<p>For \\(S=\\sum_{r=3}^{7}\\frac1{r+4}\\), find the positive ratios \\(A\\) and \\(B\\) for the rectangle bounds \\(\\ln A<S<\\ln B\\) obtained from unit-width strips immediately to the left and right of the sum’s sample points.</p>",
+        "solution": [
+          "<p>The function \\(\\frac1{x+4}\\) decreases. Each unit rectangle at an integer lies above the curve immediately to its right and below the curve immediately to its left.</p>",
+          "<p>Use the integral from \\(3\\) to \\(8\\) for a lower bound and from \\(2\\) to \\(7\\) for an upper bound.</p>",
+          "<p>Evaluate the log differences. The lower logarithm has ratio \\(\\frac{12}{7}\\) and the upper logarithm has ratio \\(\\frac{11}{6}\\).</p>"
+        ]
+      },
+      {
+        "title": "Identify the rectangle width and sample position",
+        "question": "<p>Find the exact value of \\(\\lim_{n\\to\\infty}\\frac1n\\sum_{r=1}^n\\left(2+3\\frac{r^2}{n^2}\\right)\\).</p>",
+        "solution": [
+          "<p>The common width is \\(\\frac1n\\). The sample position \\(\\frac rn\\) runs through right endpoints on \\([0,1]\\).</p>",
+          "<p>The integrand is \\(3 x^{2} + 2\\). It is continuous throughout this interval, so the Riemann sums converge to its integral.</p>",
+          "<p>Integrate the polynomial from zero to one, giving \\(3\\).</p>"
+        ]
+      },
+      {
+        "title": "Identify the rectangle width and sample position",
+        "question": "<p>Find \\(A\\) and \\(B\\) if \\(\\lim_{n\\to\\infty}\\frac1n\\sum_{r=1}^n\\frac1{2+3\\frac rn}\\) equals \\(A\\ln B\\), where \\(A\\) is the reciprocal of the coefficient of the variable in the denominator of the limiting integrand and \\(B\\) is the upper endpoint denominator divided by the lower one.</p>",
+        "solution": [
+          "<p>The common width is \\(\\frac1n\\). The sample position \\(\\frac rn\\) runs through right endpoints on \\([0,1]\\).</p>",
+          "<p>The integrand is \\(\\frac{1}{3 x + 2}\\). It is continuous throughout this interval, so the Riemann sums converge to its integral.</p>",
+          "<p>The integral is \\(\\frac{\\log{\\left(\\frac{5}{2} \\right)}}{3}\\). The coefficient is \\(\\frac{1}{3}\\) and the ratio is \\(\\frac{5}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Identify the rectangle width and sample position",
+        "question": "<p>Find \\(A\\) and \\(B\\) if \\(\\lim_{n\\to\\infty}\\frac1n\\sum_{r=1}^n\\frac1{4+5\\frac rn}\\) equals \\(A\\ln B\\), where \\(A\\) is the reciprocal of the coefficient of the variable in the denominator of the limiting integrand and \\(B\\) is the upper endpoint denominator divided by the lower one.</p>",
+        "solution": [
+          "<p>The common width is \\(\\frac1n\\). The sample position \\(\\frac rn\\) runs through right endpoints on \\([0,1]\\).</p>",
+          "<p>The integrand is \\(\\frac{1}{5 x + 4}\\). It is continuous throughout this interval, so the Riemann sums converge to its integral.</p>",
+          "<p>The integral is \\(\\frac{\\log{\\left(\\frac{9}{4} \\right)}}{5}\\). The coefficient is \\(\\frac{1}{5}\\) and the ratio is \\(\\frac{9}{4}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "limits-choose-lower-and-upper-endpoints-extra",
+        "title": "Calculate strict integral bounds using rectangles",
+        "prompt": "<p>Use \\(5\\) equal rectangles to find lower and upper bounds on \\(\\int_{0}^{4}x^{2} + 5\\,\\mathrm d x\\).</p>",
+        "fields": [
+          {
+            "key": "lower",
+            "label": "Lower bound",
+            "type": "number",
+            "expected": "884/25"
+          },
+          {
+            "key": "upper",
+            "label": "Upper bound",
+            "type": "number",
+            "expected": "1204/25"
+          }
+        ],
+        "hint": "<p>First decide which endpoint gives the smaller height on each subinterval.</p>",
+        "solution": "<p>The width of each rectangle is \\(\\frac{4}{5}\\). The integrand is increasing on the interval.</p><p>Use left endpoint heights for the lower bound and the opposite endpoint heights for the upper bound.</p><p>Multiplying each height sum by the common width gives lower bound \\(\\frac{884}{25}\\) and upper bound \\(\\frac{1204}{25}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "limits-bound-the-width-of-the-estimate-extra",
+        "title": "Find how many rectangles make the bounds close enough",
+        "prompt": "<p>Use equal rectangles on \\(1\\le x\\le 4\\) for the curve \\(y=x^{2}\\). Find the least integer number of rectangles for which the upper minus lower sum is at most \\(\\frac{45}{14}\\).</p>",
+        "fields": [
+          {
+            "key": "n",
+            "label": "Least number of rectangles",
+            "type": "number",
+            "expected": "14"
+          }
+        ],
+        "hint": "<p>Write the gap directly using the two endpoint heights. You do not need to evaluate either entire sum.</p>",
+        "solution": "<p>Adjacent heights cancel in the difference of endpoint sums. The only survivors are the first and last heights.</p><p>Multiply their difference by width. The gap with \\(n\\) rectangles is \\(\\frac{45}{n}\\).</p><p>Solving the inequality gives the least integer \\(14\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "limits-compare-a-reciprocal-series-extra",
+        "title": "Compare a finite reciprocal sum with two integrals",
+        "prompt": "<p>For \\(S=\\sum_{r=5}^{9}\\frac1{r+6}\\), find the positive ratios \\(A\\) and \\(B\\) for the rectangle bounds \\(\\ln A<S<\\ln B\\) obtained from unit-width strips immediately to the left and right of the sum’s sample points.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Ratio A for the lower bound",
+            "type": "number",
+            "expected": "16/11"
+          },
+          {
+            "key": "b",
+            "label": "Ratio B for the upper bound",
+            "type": "number",
+            "expected": "3/2"
+          }
+        ],
+        "hint": "<p>Allow the unit-width strips to run one integer farther to the right for the lower comparison.</p>",
+        "solution": "<p>The function \\(\\frac1{x+6}\\) decreases. Each unit rectangle at an integer lies above the curve immediately to its right and below the curve immediately to its left.</p><p>Use the integral from \\(5\\) to \\(10\\) for a lower bound and from \\(4\\) to \\(9\\) for an upper bound.</p><p>Evaluate the log differences. The lower logarithm has ratio \\(\\frac{16}{11}\\) and the upper logarithm has ratio \\(\\frac{3}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "limits-recognise-a-riemann-sum-extra",
+        "title": "Identify the rectangle width and sample position",
+        "prompt": "<p>Find the exact value of \\(\\lim_{n\\to\\infty}\\frac1n\\sum_{r=1}^n\\left(4+5\\frac{r^2}{n^2}\\right)\\).</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Exact sum limit",
+            "type": "number",
+            "expected": "17/3"
+          }
+        ],
+        "hint": "<p>Read the outside factor as a width and the repeated fraction depending on r as the sample position.</p>",
+        "solution": "<p>The common width is \\(\\frac1n\\). The sample position \\(\\frac rn\\) runs through right endpoints on \\([0,1]\\).</p><p>The integrand is \\(5 x^{2} + 4\\). It is continuous throughout this interval, so the Riemann sums converge to its integral.</p><p>Integrate the polynomial from zero to one, giving \\(\\frac{17}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "limits-use-continuity-to-justify-a-limit-extra",
+        "title": "Identify the rectangle width and sample position",
+        "prompt": "<p>Find \\(A\\) and \\(B\\) if \\(\\lim_{n\\to\\infty}\\frac1n\\sum_{r=1}^n\\frac1{6+7\\frac rn}\\) equals \\(A\\ln B\\), where \\(A\\) is the reciprocal of the coefficient of the variable in the denominator of the limiting integrand and \\(B\\) is the upper endpoint denominator divided by the lower one.</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "type": "number",
+            "expected": "1/7"
+          },
+          {
+            "key": "b",
+            "label": "Ratio B",
+            "type": "number",
+            "expected": "13/6"
+          }
+        ],
+        "hint": "<p>Read the outside factor as a width and the repeated fraction depending on r as the sample position.</p>",
+        "solution": "<p>The common width is \\(\\frac1n\\). The sample position \\(\\frac rn\\) runs through right endpoints on \\([0,1]\\).</p><p>The integrand is \\(\\frac{1}{7 x + 6}\\). It is continuous throughout this interval, so the Riemann sums converge to its integral.</p><p>The integral is \\(\\frac{\\log{\\left(\\frac{13}{6} \\right)}}{7}\\). The coefficient is \\(\\frac{1}{7}\\) and the ratio is \\(\\frac{13}{6}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Lower sum",
+        "definition": "<p>Sum of rectangle areas bounded above by the area under the graph.</p>"
+      },
+      {
+        "term": "Upper sum",
+        "definition": "<p>Sum of rectangle areas bounding the area from above.</p>"
+      },
+      {
+        "term": "Riemann sum",
+        "definition": "<p>A sum of sampled function values weighted by subinterval widths.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Increasing</th><td>Left endpoints low, right endpoints high.</td></tr><tr><th scope=\"row\">Decreasing</th><td>Right endpoints low, left endpoints high.</td></tr><tr><th scope=\"row\">Gap</th><td>Width times the absolute endpoint height difference.</td></tr><tr><th scope=\"row\">Limit</th><td>Match the sample and width to an integral.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Find \\(\\lim_{n\\to\\infty}\\frac1n\\sum_{r=1}^n\\frac rn\\).</p><p><strong>Check</strong> It is \\(\\int_0^1x\\,\\mathrm dx=\\frac12\\).</p>",
+      "checks": "<ul><li>The height choices reverse when the direction of monotonicity reverses.</li><li>Do not use just the difference of endpoint heights without multiplying by the width.</li></ul>",
+      "examTip": "<p>Draw or describe the strip before writing which side of the inequality it supplies.</p>"
+    },
+    "related": [
+      {
+        "title": "Curved surfaces of revolution",
+        "href": "/courses/maths4u-9231-fp2/topics/fp2_integration_surfaces"
+      }
+    ]
+  }
+}

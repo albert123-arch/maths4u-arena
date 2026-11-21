@@ -41,6 +41,7 @@ import study9231Fp1Induction from "../../content/original/9231-fp1/induction-stu
 import study9231Fp2Hyperbolic from "../../content/original/9231-fp2/hyperbolic-study.json";
 import study9231Fp2Matrices2 from "../../content/original/9231-fp2/matrices2-study.json";
 import study9231Fp2Differentiation from "../../content/original/9231-fp2/differentiation-study.json";
+import study9231Fp2Integration from "../../content/original/9231-fp2/integration-study.json";
 import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
 import { renderContent } from "./content";
 import { checkExact, checkExactInverseAngle, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
@@ -80,6 +81,7 @@ const lessons = {
   ...study9231Fp2Hyperbolic,
   ...study9231Fp2Matrices2,
   ...study9231Fp2Differentiation,
+  ...study9231Fp2Integration,
 } as Record<string, AuthoredLesson>;
 const examPaths = examPracticePaths as Record<string, Omit<StudyExamPractice, "starters"> & { starters?: StudyExamPractice["starters"] }>;
 
