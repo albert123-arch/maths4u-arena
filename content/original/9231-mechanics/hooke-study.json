@@ -1,0 +1,1983 @@
+{
+  "fm_hooke_models": {
+    "updatedOn": "2026-11-21",
+    "description": "Calculate extension, tension or thrust, and use Hooke’s law with equilibrium or measured changes of load.",
+    "sections": [
+      {
+        "id": "measure-extension",
+        "title": "Which length is measured in Hooke's law?",
+        "label": "Subtract the natural length",
+        "intro": "<p>Start with the straight separation of the attachment points and compare it with natural length.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a stretched string \\(T=kx\\) with \\(k=\\frac{\\lambda}{l}\\) and \\(x=L-l\\).</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/hooke/natural-and-stretched.svg",
+              "alt": "Natural and stretched springs start at equal-height supports and have labelled lengths l and L.",
+              "caption": "<p>Extension measures the difference between the two lengths, \\(L-l\\).</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "models-measure-extension-check",
+            "title": "Interpret the deformation before calculating force",
+            "prompt": "<p>A light elastic string of natural length \\(2\\,\\mathrm m\\) and modulus \\(56\\,\\mathrm N\\) has straight end separation \\(\\frac{5}{2}\\,\\mathrm m\\). Give its signed change in length and the magnitude of its force.</p>",
+            "fields": [
+              {
+                "key": "change",
+                "label": "Signed change in length",
+                "type": "number",
+                "expected": "1/2"
+              },
+              {
+                "key": "force",
+                "label": "Force magnitude",
+                "type": "number",
+                "expected": "14"
+              }
+            ],
+            "hint": "<p>First decide whether the model transmits force for the specified length.</p>",
+            "solution": "<p>Subtract the natural length from the current separation. The signed change is \\(\\frac{1}{2}\\,\\mathrm m\\).</p><p>The modulus divided by the natural length gives stiffness \\(28\\). A stretched string pulls with tension \\(14\\,\\mathrm N\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not multiply by the whole stretched length.</p>"
+          }
+        ]
+      },
+      {
+        "id": "distinguish-slack-and-compression",
+        "title": "Will the model transmit a force when shortened?",
+        "label": "Decide whether it can push",
+        "intro": "<p>A string can pull when stretched. On the slack side it cannot push. A spring can also be compressed.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A spring's compressive thrust points opposite to its tension direction.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "models-distinguish-slack-and-compression-check",
+            "title": "Interpret the deformation before calculating force",
+            "prompt": "<p>A light elastic spring of natural length \\(2\\,\\mathrm m\\) and modulus \\(56\\,\\mathrm N\\) has straight end separation \\(\\frac{3}{2}\\,\\mathrm m\\). Give its signed change in length and the magnitude of its force.</p>",
+            "fields": [
+              {
+                "key": "change",
+                "label": "Signed change in length",
+                "type": "number",
+                "expected": "-1/2"
+              },
+              {
+                "key": "force",
+                "label": "Force magnitude",
+                "type": "number",
+                "expected": "14"
+              }
+            ],
+            "hint": "<p>First decide whether the model transmits force for the specified length.</p>",
+            "solution": "<p>Subtract the natural length from the current separation. The signed change is \\(- \\frac{1}{2}\\,\\mathrm m\\).</p><p>The modulus divided by the natural length gives stiffness \\(28\\). A compressed spring pushes. The thrust magnitude is \\(14\\,\\mathrm N\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not treat a negative string extension as a compressive force.</p>"
+          }
+        ]
+      },
+      {
+        "id": "fit-from-load-readings",
+        "title": "How can two measurements reveal the natural length?",
+        "label": "Find the force gradient",
+        "intro": "<p>A Hookean force-length graph has constant slope. Use two measured tensile states to find that slope without knowing the natural length.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find \\(k=\\frac{F_2-F_1}{L_2-L_1}\\), then use \\(l=L-\\frac Fk\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "models-fit-from-load-readings-check",
+            "title": "Find stiffness and natural length from measurements",
+            "prompt": "<p>A spring has length \\(\\frac{8}{5}\\,\\mathrm m\\) under a tensile force of \\(21\\,\\mathrm N\\) and length \\(\\frac{7}{3}\\,\\mathrm m\\) under force \\(\\frac{140}{3}\\,\\mathrm N\\). Find the natural length and modulus.</p>",
+            "fields": [
+              {
+                "key": "length",
+                "label": "Natural length",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "modulus",
+                "label": "Modulus",
+                "type": "number",
+                "expected": "35"
+              }
+            ],
+            "hint": "<p>Differences in force and length remove the unknown natural length.</p>",
+            "solution": "<p>The slope of force against length is stiffness. Subtract the readings to obtain \\(35\\).</p><p>Solve \\(F=k(L-l)\\) with either reading. The natural length is \\(1\\,\\mathrm m\\) and modulus is \\(35\\,\\mathrm N\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The modulus is stiffness multiplied by natural length.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "models-fit-from-load-readings-follow-up",
+            "title": "Find stiffness and natural length from measurements",
+            "prompt": "<p>A spring has length \\(3\\,\\mathrm m\\) under a tensile force of \\(45\\,\\mathrm N\\) and length \\(4\\,\\mathrm m\\) under force \\(90\\,\\mathrm N\\). Find the natural length and modulus.</p>",
+            "fields": [
+              {
+                "key": "length",
+                "label": "Natural length",
+                "type": "number",
+                "expected": "2"
+              },
+              {
+                "key": "modulus",
+                "label": "Modulus",
+                "type": "number",
+                "expected": "90"
+              }
+            ],
+            "hint": "<p>Differences in force and length remove the unknown natural length.</p>",
+            "solution": "<p>The slope of force against length is stiffness. Subtract the readings to obtain \\(45\\).</p><p>Solve \\(F=k(L-l)\\) with either reading. The natural length is \\(2\\,\\mathrm m\\) and modulus is \\(90\\,\\mathrm N\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "change-the-equilibrium-load",
+        "title": "How does extra load affect the extension?",
+        "label": "Balance for each load",
+        "intro": "<p>Use equilibrium separately before and after adding a load. Both states have zero resultant force.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the total new load for final extension. Only the change uses the added weight alone.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "models-change-the-equilibrium-load-check",
+            "title": "Find equilibrium and the effect of an added load",
+            "prompt": "<p>A light elastic string of natural length \\(2\\,\\mathrm m\\) and modulus \\(48\\,\\mathrm N\\) holds a mass of \\(2\\) kilograms at rest vertically below the attachment. A further mass of \\(1\\) kilograms is then attached and the enlarged load is allowed to settle at rest. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the first and second equilibrium extensions.</p>",
+            "fields": [
+              {
+                "key": "initial",
+                "label": "First equilibrium extension",
+                "type": "number",
+                "expected": "5/6"
+              },
+              {
+                "key": "final",
+                "label": "Second equilibrium extension",
+                "type": "number",
+                "expected": "5/4",
+                "retry": [
+                  {
+                    "answer": "5/12",
+                    "feedback": "<p>That is the extra extension, not the final total extension.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Use the total new mass in the second force balance.</p>",
+            "solution": "<p>At each equilibrium the resultant along the string is zero. The required tension is the weight of the load.</p><p>Dividing the two required forces by the stiffness gives initial extension \\(\\frac{5}{6}\\,\\mathrm m\\) and final extension \\(\\frac{5}{4}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The final extension is not the extra extension.</p>"
+          }
+        ]
+      },
+      {
+        "id": "resolve-a-slope-load",
+        "title": "What weight component stretches a string on an incline?",
+        "label": "Resolve along the string",
+        "intro": "<p>For a smooth slope and a parallel string, the slope-normal reaction does not enter the along-slope force balance.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(kx=mg\\sin\\alpha\\) at equilibrium.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "models-resolve-a-slope-load-check",
+            "title": "Find equilibrium and the effect of an added load",
+            "prompt": "<p>A light elastic string of natural length \\(2\\,\\mathrm m\\) and modulus \\(48\\,\\mathrm N\\) holds a mass of \\(2\\) kilograms on a smooth incline with the string parallel to the slope and slope sine \\(\\frac{3}{5}\\). A further mass of \\(1\\) kilograms is then attached and the enlarged load is allowed to settle at rest. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the first and second equilibrium extensions.</p>",
+            "fields": [
+              {
+                "key": "initial",
+                "label": "First equilibrium extension",
+                "type": "number",
+                "expected": "1/2"
+              },
+              {
+                "key": "final",
+                "label": "Second equilibrium extension",
+                "type": "number",
+                "expected": "3/4",
+                "retry": [
+                  {
+                    "answer": "1/4",
+                    "feedback": "<p>That is the extra extension, not the final total extension.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Use the total new mass in the second force balance.</p>",
+            "solution": "<p>At each equilibrium the resultant along the string is zero. The required tension is the downhill weight component.</p><p>Dividing the two required forces by the stiffness gives initial extension \\(\\frac{1}{2}\\,\\mathrm m\\) and final extension \\(\\frac{3}{4}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The string need not support the full weight of the particle.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "models-resolve-a-slope-load-follow-up",
+            "title": "Find equilibrium and the effect of an added load",
+            "prompt": "<p>A light elastic string of natural length \\(\\frac{8}{3}\\,\\mathrm m\\) and modulus \\(\\frac{256}{3}\\,\\mathrm N\\) holds a mass of \\(3\\) kilograms on a smooth incline with the string parallel to the slope and slope sine \\(\\frac{3}{5}\\). A further mass of \\(2\\) kilograms is then attached and the enlarged load is allowed to settle at rest. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the first and second equilibrium extensions.</p>",
+            "fields": [
+              {
+                "key": "initial",
+                "label": "First equilibrium extension",
+                "type": "number",
+                "expected": "9/16"
+              },
+              {
+                "key": "final",
+                "label": "Second equilibrium extension",
+                "type": "number",
+                "expected": "15/16",
+                "retry": [
+                  {
+                    "answer": "3/8",
+                    "feedback": "<p>That is the extra extension, not the final total extension.</p>"
+                  }
+                ]
+              }
+            ],
+            "hint": "<p>Use the total new mass in the second force balance.</p>",
+            "solution": "<p>At each equilibrium the resultant along the string is zero. The required tension is the downhill weight component.</p><p>Dividing the two required forces by the stiffness gives initial extension \\(\\frac{9}{16}\\,\\mathrm m\\) and final extension \\(\\frac{15}{16}\\,\\mathrm m\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Interpret the deformation before calculating force",
+        "question": "<p>A light elastic string of natural length \\(\\frac{3}{2}\\,\\mathrm m\\) and modulus \\(36\\,\\mathrm N\\) has straight end separation \\(\\frac{7}{4}\\,\\mathrm m\\). Give its signed change in length and the magnitude of its force.</p>",
+        "solution": [
+          "<p>Subtract the natural length from the current separation. The signed change is \\(\\frac{1}{4}\\,\\mathrm m\\).</p>",
+          "<p>The modulus divided by the natural length gives stiffness \\(24\\). A stretched string pulls with tension \\(6\\,\\mathrm N\\).</p>"
+        ]
+      },
+      {
+        "title": "Interpret the deformation before calculating force",
+        "question": "<p>A light elastic string of natural length \\(\\frac{3}{2}\\,\\mathrm m\\) and modulus \\(36\\,\\mathrm N\\) has straight end separation \\(\\frac{5}{4}\\,\\mathrm m\\). Give its signed change in length and the magnitude of its force.</p>",
+        "solution": [
+          "<p>Subtract the natural length from the current separation. The signed change is \\(- \\frac{1}{4}\\,\\mathrm m\\).</p>",
+          "<p>The modulus divided by the natural length gives stiffness \\(24\\). The ends are closer than the natural length. The string is slack, and it exerts no tension.</p>"
+        ]
+      },
+      {
+        "title": "Find stiffness and natural length from measurements",
+        "question": "<p>A spring has length \\(\\frac{9}{10}\\,\\mathrm m\\) under a tensile force of \\(12\\,\\mathrm N\\) and length \\(\\frac{3}{2}\\,\\mathrm m\\) under force \\(30\\,\\mathrm N\\). Find the natural length and modulus.</p>",
+        "solution": [
+          "<p>The slope of force against length is stiffness. Subtract the readings to obtain \\(30\\).</p>",
+          "<p>Solve \\(F=k(L-l)\\) with either reading. The natural length is \\(\\frac{1}{2}\\,\\mathrm m\\) and modulus is \\(15\\,\\mathrm N\\).</p>"
+        ]
+      },
+      {
+        "title": "Find stiffness and natural length from measurements",
+        "question": "<p>A spring has length \\(\\frac{23}{10}\\,\\mathrm m\\) under a tensile force of \\(32\\,\\mathrm N\\) and length \\(\\frac{19}{6}\\,\\mathrm m\\) under force \\(\\frac{200}{3}\\,\\mathrm N\\). Find the natural length and modulus.</p>",
+        "solution": [
+          "<p>The slope of force against length is stiffness. Subtract the readings to obtain \\(40\\).</p>",
+          "<p>Solve \\(F=k(L-l)\\) with either reading. The natural length is \\(\\frac{3}{2}\\,\\mathrm m\\) and modulus is \\(60\\,\\mathrm N\\).</p>"
+        ]
+      },
+      {
+        "title": "Find equilibrium and the effect of an added load",
+        "question": "<p>A light elastic string of natural length \\(\\frac{5}{3}\\,\\mathrm m\\) and modulus \\(\\frac{100}{3}\\,\\mathrm N\\) holds a mass of \\(\\frac{3}{2}\\) kilograms at rest vertically below the attachment. A further mass of \\(\\frac{1}{2}\\) kilograms is then attached and the enlarged load is allowed to settle at rest. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the first and second equilibrium extensions.</p>",
+        "solution": [
+          "<p>At each equilibrium the resultant along the string is zero. The required tension is the weight of the load.</p>",
+          "<p>Dividing the two required forces by the stiffness gives initial extension \\(\\frac{3}{4}\\,\\mathrm m\\) and final extension \\(1\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Find equilibrium and the effect of an added load",
+        "question": "<p>A light elastic string of natural length \\(\\frac{5}{3}\\,\\mathrm m\\) and modulus \\(\\frac{100}{3}\\,\\mathrm N\\) holds a mass of \\(\\frac{3}{2}\\) kilograms on a smooth incline with the string parallel to the slope and slope sine \\(\\frac{3}{5}\\). A further mass of \\(\\frac{1}{2}\\) kilograms is then attached and the enlarged load is allowed to settle at rest. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the first and second equilibrium extensions.</p>",
+        "solution": [
+          "<p>At each equilibrium the resultant along the string is zero. The required tension is the downhill weight component.</p>",
+          "<p>Dividing the two required forces by the stiffness gives initial extension \\(\\frac{9}{20}\\,\\mathrm m\\) and final extension \\(\\frac{3}{5}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Find equilibrium and the effect of an added load",
+        "question": "<p>A light elastic string of natural length \\(\\frac{7}{3}\\,\\mathrm m\\) and modulus \\(\\frac{196}{3}\\,\\mathrm N\\) holds a mass of \\(\\frac{5}{2}\\) kilograms on a smooth incline with the string parallel to the slope and slope sine \\(\\frac{3}{5}\\). A further mass of \\(\\frac{3}{2}\\) kilograms is then attached and the enlarged load is allowed to settle at rest. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the first and second equilibrium extensions.</p>",
+        "solution": [
+          "<p>At each equilibrium the resultant along the string is zero. The required tension is the downhill weight component.</p>",
+          "<p>Dividing the two required forces by the stiffness gives initial extension \\(\\frac{15}{28}\\,\\mathrm m\\) and final extension \\(\\frac{6}{7}\\,\\mathrm m\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "models-measure-extension-extra",
+        "title": "Interpret the deformation before calculating force",
+        "prompt": "<p>A light elastic string of natural length \\(\\frac{5}{2}\\,\\mathrm m\\) and modulus \\(80\\,\\mathrm N\\) has straight end separation \\(\\frac{13}{4}\\,\\mathrm m\\). Give its signed change in length and the magnitude of its force.</p>",
+        "fields": [
+          {
+            "key": "change",
+            "label": "Signed change in length",
+            "type": "number",
+            "expected": "3/4"
+          },
+          {
+            "key": "force",
+            "label": "Force magnitude",
+            "type": "number",
+            "expected": "24"
+          }
+        ],
+        "hint": "<p>First decide whether the model transmits force for the specified length.</p>",
+        "solution": "<p>Subtract the natural length from the current separation. The signed change is \\(\\frac{3}{4}\\,\\mathrm m\\).</p><p>The modulus divided by the natural length gives stiffness \\(32\\). A stretched string pulls with tension \\(24\\,\\mathrm N\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "models-distinguish-slack-and-compression-extra",
+        "title": "Interpret the deformation before calculating force",
+        "prompt": "<p>A light elastic string of natural length \\(\\frac{5}{2}\\,\\mathrm m\\) and modulus \\(80\\,\\mathrm N\\) has straight end separation \\(\\frac{7}{4}\\,\\mathrm m\\). Give its signed change in length and the magnitude of its force.</p>",
+        "fields": [
+          {
+            "key": "change",
+            "label": "Signed change in length",
+            "type": "number",
+            "expected": "-3/4"
+          },
+          {
+            "key": "force",
+            "label": "Force magnitude",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>First decide whether the model transmits force for the specified length.</p>",
+        "solution": "<p>Subtract the natural length from the current separation. The signed change is \\(- \\frac{3}{4}\\,\\mathrm m\\).</p><p>The modulus divided by the natural length gives stiffness \\(32\\). The ends are closer than the natural length. The string is slack, and it exerts no tension.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "models-fit-from-load-readings-extra",
+        "title": "Find stiffness and natural length from measurements",
+        "prompt": "<p>A spring has length \\(\\frac{37}{10}\\,\\mathrm m\\) under a tensile force of \\(60\\,\\mathrm N\\) and length \\(\\frac{29}{6}\\,\\mathrm m\\) under force \\(\\frac{350}{3}\\,\\mathrm N\\). Find the natural length and modulus.</p>",
+        "fields": [
+          {
+            "key": "length",
+            "label": "Natural length",
+            "type": "number",
+            "expected": "5/2"
+          },
+          {
+            "key": "modulus",
+            "label": "Modulus",
+            "type": "number",
+            "expected": "125"
+          }
+        ],
+        "hint": "<p>Differences in force and length remove the unknown natural length.</p>",
+        "solution": "<p>The slope of force against length is stiffness. Subtract the readings to obtain \\(50\\).</p><p>Solve \\(F=k(L-l)\\) with either reading. The natural length is \\(\\frac{5}{2}\\,\\mathrm m\\) and modulus is \\(125\\,\\mathrm N\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "models-change-the-equilibrium-load-extra",
+        "title": "Find equilibrium and the effect of an added load",
+        "prompt": "<p>A light elastic string of natural length \\(\\frac{7}{3}\\,\\mathrm m\\) and modulus \\(\\frac{196}{3}\\,\\mathrm N\\) holds a mass of \\(\\frac{5}{2}\\) kilograms at rest vertically below the attachment. A further mass of \\(\\frac{3}{2}\\) kilograms is then attached and the enlarged load is allowed to settle at rest. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the first and second equilibrium extensions.</p>",
+        "fields": [
+          {
+            "key": "initial",
+            "label": "First equilibrium extension",
+            "type": "number",
+            "expected": "25/28"
+          },
+          {
+            "key": "final",
+            "label": "Second equilibrium extension",
+            "type": "number",
+            "expected": "10/7",
+            "retry": [
+              {
+                "answer": "15/28",
+                "feedback": "<p>That is the extra extension, not the final total extension.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Use the total new mass in the second force balance.</p>",
+        "solution": "<p>At each equilibrium the resultant along the string is zero. The required tension is the weight of the load.</p><p>Dividing the two required forces by the stiffness gives initial extension \\(\\frac{25}{28}\\,\\mathrm m\\) and final extension \\(\\frac{10}{7}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "models-resolve-a-slope-load-extra",
+        "title": "Find equilibrium and the effect of an added load",
+        "prompt": "<p>A light elastic string of natural length \\(3\\,\\mathrm m\\) and modulus \\(108\\,\\mathrm N\\) holds a mass of \\(\\frac{7}{2}\\) kilograms on a smooth incline with the string parallel to the slope and slope sine \\(\\frac{3}{5}\\). A further mass of \\(\\frac{5}{2}\\) kilograms is then attached and the enlarged load is allowed to settle at rest. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the first and second equilibrium extensions.</p>",
+        "fields": [
+          {
+            "key": "initial",
+            "label": "First equilibrium extension",
+            "type": "number",
+            "expected": "7/12"
+          },
+          {
+            "key": "final",
+            "label": "Second equilibrium extension",
+            "type": "number",
+            "expected": "1",
+            "retry": [
+              {
+                "answer": "5/12",
+                "feedback": "<p>That is the extra extension, not the final total extension.</p>"
+              }
+            ]
+          }
+        ],
+        "hint": "<p>Use the total new mass in the second force balance.</p>",
+        "solution": "<p>At each equilibrium the resultant along the string is zero. The required tension is the downhill weight component.</p><p>Dividing the two required forces by the stiffness gives initial extension \\(\\frac{7}{12}\\,\\mathrm m\\) and final extension \\(1\\,\\mathrm m\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Natural length",
+        "definition": "<p>Length of a spring or string without load.</p>"
+      },
+      {
+        "term": "Stiffness",
+        "definition": "<p>Force produced per unit change of length on the linear branch.</p>"
+      },
+      {
+        "term": "Modulus",
+        "definition": "<p>The force quantity whose ratio to natural length is stiffness.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Extension</th><td>\\(x=L-l\\).</td></tr><tr><th scope=\"row\">Taut string</th><td>\\(T=\\frac{\\lambda x}{l}\\) if \\(x>0\\).</td></tr><tr><th scope=\"row\">Shortened string</th><td>No tension.</td></tr><tr><th scope=\"row\">Compressed spring</th><td>Thrust magnitude equals stiffness times compression.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A natural length of \\(2\\,\\mathrm m\\) increases to \\(\\frac52\\,\\mathrm m\\). What is the extension?</p><p><strong>Check</strong> \\(\\frac12\\,\\mathrm m\\).</p>",
+      "checks": "<ul><li>Do not multiply by the whole stretched length.</li><li>Do not treat a negative string extension as a compressive force.</li></ul>",
+      "examTip": "<p>Write whether the element is taut, slack, or compressed before using a force model.</p>"
+    },
+    "related": [
+      {
+        "title": "Elastic energy, extension and compression",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_hooke_energy"
+      }
+    ]
+  },
+  "fm_hooke_energy": {
+    "updatedOn": "2026-11-21",
+    "description": "Include elastic energy in work–energy calculations and distinguish fastest points from turning positions.",
+    "sections": [
+      {
+        "id": "elastic-energy-from-extension",
+        "title": "How much energy does changing the length store?",
+        "label": "Calculate stored energy",
+        "intro": "<p>The force grows from zero with extension. The area under its linear force–extension graph gives stored energy.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(E_e=\\frac12kx^2\\) on the stretched branch or for compressed springs, using the actual deformation.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/hooke/elastic-energy-area.svg",
+              "alt": "An increasing line on force against extension axes encloses a shaded triangular area.",
+              "caption": "<p>The area gives the elastic energy stored. At zero extension the spring force is zero.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "energy-elastic-energy-from-extension-check",
+            "title": "Interpret the deformation before calculating force",
+            "prompt": "<p>A light elastic string of natural length \\(2\\,\\mathrm m\\) and modulus \\(56\\,\\mathrm N\\) has straight end separation \\(\\frac{5}{2}\\,\\mathrm m\\). Find its extension and elastic potential energy.</p>",
+            "fields": [
+              {
+                "key": "extension",
+                "label": "Extension",
+                "type": "number",
+                "expected": "1/2"
+              },
+              {
+                "key": "energy",
+                "label": "Elastic energy",
+                "type": "number",
+                "expected": "7/2"
+              }
+            ],
+            "hint": "<p>First decide whether the model transmits force for the specified length.</p>",
+            "solution": "<p>Subtract the natural length from the current separation. The signed change is \\(\\frac{1}{2}\\,\\mathrm m\\).</p><p>The modulus divided by the natural length gives stiffness \\(28\\). A stretched string pulls with tension \\(14\\,\\mathrm N\\). This stores \\(\\frac{7}{2}\\,\\mathrm J\\) of elastic energy.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The force at final extension multiplied by extension overcounts stored energy.</p>"
+          }
+        ]
+      },
+      {
+        "id": "recover-initial-compression",
+        "title": "How can the speed at natural length reveal the compression?",
+        "label": "Balance elastic energy and KE",
+        "intro": "<p>At the natural length the spring stores zero energy. On a smooth horizontal track the released energy appears as kinetic energy.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Set \\(\\frac12kx^2=\\frac12mv^2\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "energy-recover-initial-compression-check",
+            "title": "Use an energy balance up to natural length",
+            "prompt": "<p>A compressed spring of stiffness \\(60\\) newtons per metre releases a \\(4\\) kilogram cart along a smooth horizontal track. It leaves the spring at natural length at speed \\(\\sqrt{15}\\,\\mathrm{m\\,s^{-1}}\\). Find the original compression and stored energy.</p>",
+            "fields": [
+              {
+                "key": "energy",
+                "label": "Stored energy",
+                "type": "number",
+                "expected": "30"
+              },
+              {
+                "key": "compression",
+                "label": "Original compression",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Use the natural-length state as a boundary. It has zero elastic potential energy.</p>",
+            "solution": "<p>At natural length the elastic energy is zero. The current kinetic energy is \\(30\\,\\mathrm J\\).</p><p>Equating the initial elastic energy to that KE gives compression \\(1\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use a positive compression magnitude, even if length minus natural length is negative.</p>"
+          }
+        ]
+      },
+      {
+        "id": "starting-at-natural-length",
+        "title": "Why is the greatest extension beyond equilibrium?",
+        "label": "Set velocity to zero",
+        "intro": "<p>From rest at natural length, a hanging mass gains speed as it falls through the equilibrium position, then slows as tension increases.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The next turning point has zero KE. Use the full fall in GPE and the stored elastic energy.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "energy-starting-at-natural-length-check",
+            "title": "Find the equilibrium and turning extensions",
+            "prompt": "<p>A mass of \\(3\\) kilograms is attached to a fixed point by a light elastic string of natural length \\(\\frac{5}{3}\\,\\mathrm m\\) and modulus \\(50\\,\\mathrm N\\). It starts from rest at natural length. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the extension at maximum speed and the greatest extension.</p>",
+            "fields": [
+              {
+                "key": "fast",
+                "label": "Extension at maximum speed",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "largest",
+                "label": "Greatest extension",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Equilibrium and a turning point satisfy different conditions. Use energy with zero speed for the second.</p>",
+            "solution": "<p>Speed is greatest where the potential energy \\(\\frac12kx^2-mgx\\) is minimised, at extension \\(1\\,\\mathrm m\\).</p><p>For the other stop, equate the fall in GPE to the stored energy. The non-zero solution gives greatest extension \\(2\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Equilibrium is not the point of greatest extension.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "energy-starting-at-natural-length-follow-up",
+            "title": "Find the equilibrium and turning extensions",
+            "prompt": "<p>A mass of \\(5\\) kilograms is attached to a fixed point by a light elastic string of natural length \\(\\frac{7}{3}\\,\\mathrm m\\) and modulus \\(\\frac{350}{3}\\,\\mathrm N\\). It starts from rest at natural length. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the extension at maximum speed and the greatest extension.</p>",
+            "fields": [
+              {
+                "key": "fast",
+                "label": "Extension at maximum speed",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "largest",
+                "label": "Greatest extension",
+                "type": "number",
+                "expected": "2"
+              }
+            ],
+            "hint": "<p>Equilibrium and a turning point satisfy different conditions. Use energy with zero speed for the second.</p>",
+            "solution": "<p>Speed is greatest where the potential energy \\(\\frac12kx^2-mgx\\) is minimised, at extension \\(1\\,\\mathrm m\\).</p><p>For the other stop, equate the fall in GPE to the stored energy. The non-zero solution gives greatest extension \\(2\\,\\mathrm m\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "find-the-other-taut-turn",
+        "title": "What if both turning points remain stretched?",
+        "label": "Complete the square in energy",
+        "intro": "<p>With downwards extension \\(x\\), use total potential energy \\(\\frac12kx^2-mgx\\) relative to natural length.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The potential energy is symmetric about the equilibrium extension. Equal energy points on each side have opposite signed offsets.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "energy-find-the-other-taut-turn-check",
+            "title": "Find a turning point without losing tension",
+            "prompt": "<p>A mass of \\(3\\) kilograms on a light elastic string of natural length \\(\\frac{5}{3}\\,\\mathrm m\\) and modulus \\(50\\,\\mathrm N\\). It is released from rest below equilibrium at extension \\(\\frac{3}{2}\\,\\mathrm m\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its next turning extension and greatest speed.</p>",
+            "fields": [
+              {
+                "key": "extension",
+                "label": "Next turning extension",
+                "type": "number",
+                "expected": "1/2"
+              },
+              {
+                "key": "speed",
+                "label": "Greatest speed",
+                "type": "number",
+                "expected": "sqrt(10)/2"
+              }
+            ],
+            "hint": "<p>Complete the square in total potential energy, then check that the string is still stretched.</p>",
+            "solution": "<p>The potential energy \\(\\frac12kx^2-mgx\\) is parabolic and symmetric about the equilibrium extension.</p><p>An equal-energy point on the other side has extension \\(\\frac{1}{2}\\,\\mathrm m\\), which is still positive.</p><p>At equilibrium the potential energy is least. The resulting greatest speed is \\(\\frac{\\sqrt{10}}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Check that the new turning extension is still positive.</p>"
+          }
+        ]
+      },
+      {
+        "id": "match-energy-and-natural-boundary",
+        "title": "How do I tell whether the string becomes slack?",
+        "label": "Check a candidate boundary",
+        "intro": "<p>The energy equation can predict that natural length is not accessible from a given starting extension.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check kinetic energy at the boundary. If it is positive, use the slack model on the other side.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "energy-match-energy-and-natural-boundary-check",
+            "title": "Decide whether natural length is physically reached",
+            "prompt": "<p>A mass of \\(3\\) kilograms on a light vertical elastic string of stiffness \\(35\\) newtons per metre is released from rest at extension \\(\\frac{18}{7}\\,\\mathrm m\\) below equilibrium. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which event occurs first as it rises?</p>",
+            "fields": [
+              {
+                "key": "event",
+                "label": "First boundary outcome",
+                "type": "choice",
+                "expected": "cross",
+                "options": {
+                  "cross": "Crosses natural length with positive speed",
+                  "rest": "Just reaches natural length with zero speed",
+                  "turn": "Turns while still taut"
+                }
+              }
+            ],
+            "hint": "<p>A negative kinetic energy prediction means the assumed endpoint is not physically reachable.</p>",
+            "solution": "<p>Use the energy balance to predict the kinetic energy at natural length.</p><p>After the rise against gravity, the prediction is \\(\\frac{270}{7}\\,\\mathrm J\\).</p><p>A negative prediction rules out reaching natural length. A zero prediction is a turning boundary. In this case: Crosses natural length with positive speed.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not continue the stretched-string formula to a negative extension.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "energy-match-energy-and-natural-boundary-follow-up",
+            "title": "Decide whether natural length is physically reached",
+            "prompt": "<p>A mass of \\(5\\) kilograms on a light vertical elastic string of stiffness \\(45\\) newtons per metre is released from rest at extension \\(\\frac{25}{9}\\,\\mathrm m\\) below equilibrium. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which event occurs first as it rises?</p>",
+            "fields": [
+              {
+                "key": "event",
+                "label": "First boundary outcome",
+                "type": "choice",
+                "expected": "cross",
+                "options": {
+                  "cross": "Crosses natural length with positive speed",
+                  "rest": "Just reaches natural length with zero speed",
+                  "turn": "Turns while still taut"
+                }
+              }
+            ],
+            "hint": "<p>A negative kinetic energy prediction means the assumed endpoint is not physically reachable.</p>",
+            "solution": "<p>Use the energy balance to predict the kinetic energy at natural length.</p><p>After the rise against gravity, the prediction is \\(\\frac{625}{18}\\,\\mathrm J\\).</p><p>A negative prediction rules out reaching natural length. A zero prediction is a turning boundary. In this case: Crosses natural length with positive speed.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Interpret the deformation before calculating force",
+        "question": "<p>A light elastic string of natural length \\(\\frac{3}{2}\\,\\mathrm m\\) and modulus \\(36\\,\\mathrm N\\) has straight end separation \\(\\frac{7}{4}\\,\\mathrm m\\). Find its extension and elastic potential energy.</p>",
+        "solution": [
+          "<p>Subtract the natural length from the current separation. The signed change is \\(\\frac{1}{4}\\,\\mathrm m\\).</p>",
+          "<p>The modulus divided by the natural length gives stiffness \\(24\\). A stretched string pulls with tension \\(6\\,\\mathrm N\\). This stores \\(\\frac{3}{4}\\,\\mathrm J\\) of elastic energy.</p>"
+        ]
+      },
+      {
+        "title": "Use an energy balance up to natural length",
+        "question": "<p>A compressed spring of stiffness \\(50\\) newtons per metre releases a \\(3\\) kilogram cart along a smooth horizontal track. It leaves the spring at natural length at speed \\(\\frac{10 \\sqrt{6}}{9}\\,\\mathrm{m\\,s^{-1}}\\). Find the original compression and stored energy.</p>",
+        "solution": [
+          "<p>At natural length the elastic energy is zero. The current kinetic energy is \\(\\frac{100}{9}\\,\\mathrm J\\).</p>",
+          "<p>Equating the initial elastic energy to that KE gives compression \\(\\frac{2}{3}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the equilibrium and turning extensions",
+        "question": "<p>A mass of \\(2\\) kilograms is attached to a fixed point by a light elastic string of natural length \\(\\frac{4}{3}\\,\\mathrm m\\) and modulus \\(\\frac{80}{3}\\,\\mathrm N\\). It starts from rest at natural length. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the extension at maximum speed and the greatest extension.</p>",
+        "solution": [
+          "<p>Speed is greatest where the potential energy \\(\\frac12kx^2-mgx\\) is minimised, at extension \\(1\\,\\mathrm m\\).</p>",
+          "<p>For the other stop, equate the fall in GPE to the stored energy. The non-zero solution gives greatest extension \\(2\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the equilibrium and turning extensions",
+        "question": "<p>A mass of \\(4\\) kilograms is attached to a fixed point by a light elastic string of natural length \\(2\\,\\mathrm m\\) and modulus \\(80\\,\\mathrm N\\). It starts from rest at natural length. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the extension at maximum speed and the greatest extension.</p>",
+        "solution": [
+          "<p>Speed is greatest where the potential energy \\(\\frac12kx^2-mgx\\) is minimised, at extension \\(1\\,\\mathrm m\\).</p>",
+          "<p>For the other stop, equate the fall in GPE to the stored energy. The non-zero solution gives greatest extension \\(2\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a turning point without losing tension",
+        "question": "<p>A mass of \\(2\\) kilograms on a light elastic string of natural length \\(\\frac{4}{3}\\,\\mathrm m\\) and modulus \\(\\frac{80}{3}\\,\\mathrm N\\). It is released from rest below equilibrium at extension \\(\\frac{3}{2}\\,\\mathrm m\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its next turning extension and greatest speed.</p>",
+        "solution": [
+          "<p>The potential energy \\(\\frac12kx^2-mgx\\) is parabolic and symmetric about the equilibrium extension.</p>",
+          "<p>An equal-energy point on the other side has extension \\(\\frac{1}{2}\\,\\mathrm m\\), which is still positive.</p>",
+          "<p>At equilibrium the potential energy is least. The resulting greatest speed is \\(\\frac{\\sqrt{10}}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+        ]
+      },
+      {
+        "title": "Decide whether natural length is physically reached",
+        "question": "<p>A mass of \\(2\\) kilograms on a light vertical elastic string of stiffness \\(30\\) newtons per metre is released from rest at extension \\(1\\,\\mathrm m\\) below equilibrium. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which event occurs first as it rises?</p>",
+        "solution": [
+          "<p>Use the energy balance to predict the kinetic energy at natural length.</p>",
+          "<p>After the rise against gravity, the prediction is \\(-5\\,\\mathrm J\\).</p>",
+          "<p>A negative prediction rules out reaching natural length. A zero prediction is a turning boundary. In this case: Turns while still taut.</p>"
+        ]
+      },
+      {
+        "title": "Decide whether natural length is physically reached",
+        "question": "<p>A mass of \\(4\\) kilograms on a light vertical elastic string of stiffness \\(40\\) newtons per metre is released from rest at extension \\(2\\,\\mathrm m\\) below equilibrium. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which event occurs first as it rises?</p>",
+        "solution": [
+          "<p>Use the energy balance to predict the kinetic energy at natural length.</p>",
+          "<p>After the rise against gravity, the prediction is \\(0\\,\\mathrm J\\).</p>",
+          "<p>A negative prediction rules out reaching natural length. A zero prediction is a turning boundary. In this case: Just reaches natural length with zero speed.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "energy-elastic-energy-from-extension-extra",
+        "title": "Interpret the deformation before calculating force",
+        "prompt": "<p>A light elastic string of natural length \\(\\frac{5}{2}\\,\\mathrm m\\) and modulus \\(80\\,\\mathrm N\\) has straight end separation \\(\\frac{13}{4}\\,\\mathrm m\\). Find its extension and elastic potential energy.</p>",
+        "fields": [
+          {
+            "key": "extension",
+            "label": "Extension",
+            "type": "number",
+            "expected": "3/4"
+          },
+          {
+            "key": "energy",
+            "label": "Elastic energy",
+            "type": "number",
+            "expected": "9"
+          }
+        ],
+        "hint": "<p>First decide whether the model transmits force for the specified length.</p>",
+        "solution": "<p>Subtract the natural length from the current separation. The signed change is \\(\\frac{3}{4}\\,\\mathrm m\\).</p><p>The modulus divided by the natural length gives stiffness \\(32\\). A stretched string pulls with tension \\(24\\,\\mathrm N\\). This stores \\(9\\,\\mathrm J\\) of elastic energy.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "energy-recover-initial-compression-extra",
+        "title": "Use an energy balance up to natural length",
+        "prompt": "<p>A compressed spring of stiffness \\(70\\) newtons per metre releases a \\(5\\) kilogram cart along a smooth horizontal track. It leaves the spring at natural length at speed \\(\\frac{4 \\sqrt{14}}{3}\\,\\mathrm{m\\,s^{-1}}\\). Find the original compression and stored energy.</p>",
+        "fields": [
+          {
+            "key": "energy",
+            "label": "Stored energy",
+            "type": "number",
+            "expected": "560/9"
+          },
+          {
+            "key": "compression",
+            "label": "Original compression",
+            "type": "number",
+            "expected": "4/3"
+          }
+        ],
+        "hint": "<p>Use the natural-length state as a boundary. It has zero elastic potential energy.</p>",
+        "solution": "<p>At natural length the elastic energy is zero. The current kinetic energy is \\(\\frac{560}{9}\\,\\mathrm J\\).</p><p>Equating the initial elastic energy to that KE gives compression \\(\\frac{4}{3}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "energy-starting-at-natural-length-extra",
+        "title": "Find the equilibrium and turning extensions",
+        "prompt": "<p>A mass of \\(6\\) kilograms is attached to a fixed point by a light elastic string of natural length \\(\\frac{8}{3}\\,\\mathrm m\\) and modulus \\(160\\,\\mathrm N\\). It starts from rest at natural length. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find the extension at maximum speed and the greatest extension.</p>",
+        "fields": [
+          {
+            "key": "fast",
+            "label": "Extension at maximum speed",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "largest",
+            "label": "Greatest extension",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>Equilibrium and a turning point satisfy different conditions. Use energy with zero speed for the second.</p>",
+        "solution": "<p>Speed is greatest where the potential energy \\(\\frac12kx^2-mgx\\) is minimised, at extension \\(1\\,\\mathrm m\\).</p><p>For the other stop, equate the fall in GPE to the stored energy. The non-zero solution gives greatest extension \\(2\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "energy-find-the-other-taut-turn-extra",
+        "title": "Find a turning point without losing tension",
+        "prompt": "<p>A mass of \\(4\\) kilograms on a light elastic string of natural length \\(2\\,\\mathrm m\\) and modulus \\(80\\,\\mathrm N\\). It is released from rest below equilibrium at extension \\(\\frac{3}{2}\\,\\mathrm m\\). Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its next turning extension and greatest speed.</p>",
+        "fields": [
+          {
+            "key": "extension",
+            "label": "Next turning extension",
+            "type": "number",
+            "expected": "1/2"
+          },
+          {
+            "key": "speed",
+            "label": "Greatest speed",
+            "type": "number",
+            "expected": "sqrt(10)/2"
+          }
+        ],
+        "hint": "<p>Complete the square in total potential energy, then check that the string is still stretched.</p>",
+        "solution": "<p>The potential energy \\(\\frac12kx^2-mgx\\) is parabolic and symmetric about the equilibrium extension.</p><p>An equal-energy point on the other side has extension \\(\\frac{1}{2}\\,\\mathrm m\\), which is still positive.</p><p>At equilibrium the potential energy is least. The resulting greatest speed is \\(\\frac{\\sqrt{10}}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "energy-match-energy-and-natural-boundary-extra",
+        "title": "Decide whether natural length is physically reached",
+        "prompt": "<p>A mass of \\(6\\) kilograms on a light vertical elastic string of stiffness \\(50\\) newtons per metre is released from rest at extension \\(\\frac{8}{5}\\,\\mathrm m\\) below equilibrium. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which event occurs first as it rises?</p>",
+        "fields": [
+          {
+            "key": "event",
+            "label": "First boundary outcome",
+            "type": "choice",
+            "expected": "turn",
+            "options": {
+              "cross": "Crosses natural length with positive speed",
+              "rest": "Just reaches natural length with zero speed",
+              "turn": "Turns while still taut"
+            }
+          }
+        ],
+        "hint": "<p>A negative kinetic energy prediction means the assumed endpoint is not physically reachable.</p>",
+        "solution": "<p>Use the energy balance to predict the kinetic energy at natural length.</p><p>After the rise against gravity, the prediction is \\(-32\\,\\mathrm J\\).</p><p>A negative prediction rules out reaching natural length. A zero prediction is a turning boundary. In this case: Turns while still taut.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Elastic potential energy",
+        "definition": "<p>Energy stored by stretching or compressing an elastic element with an active force.</p>"
+      },
+      {
+        "term": "Turning point",
+        "definition": "<p>A point where the speed momentarily becomes zero.</p>"
+      },
+      {
+        "term": "Equilibrium position",
+        "definition": "<p>Where the resultant force is zero.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Energy</th><td>\\(E_e=\\frac12kx^2\\).</td></tr><tr><th scope=\"row\">Speed</th><td>Use KE from the difference in total potential energies.</td></tr><tr><th scope=\"row\">Natural length</th><td>Elastic energy is zero.</td></tr><tr><th scope=\"row\">Turning point</th><td>Set KE to zero and check the branch.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A spring with \\(k=40\\) is compressed by \\(\\frac12\\,\\mathrm m\\). Find the stored energy.</p><p><strong>Check</strong> \\(5\\,\\mathrm J\\).</p>",
+      "checks": "<ul><li>The force at final extension multiplied by extension overcounts stored energy.</li><li>Use a positive compression magnitude, even if length minus natural length is negative.</li></ul>",
+      "examTip": "<p>When you include elastic potential energy, do not count the elastic work again.</p>"
+    },
+    "related": [
+      {
+        "title": "Elastic models, equilibrium and changes of load",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_hooke_models"
+      },
+      {
+        "title": "Coupled elements, geometry and friction",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_hooke_systems"
+      }
+    ]
+  },
+  "fm_hooke_systems": {
+    "updatedOn": "2026-11-21",
+    "description": "Track lengths and forces in joined elastic systems, and use friction inequalities to find equilibrium ranges.",
+    "sections": [
+      {
+        "id": "series-extensions",
+        "title": "Which quantity is shared by two springs in series?",
+        "label": "Use the transmitted load",
+        "intro": "<p>Light springs in series transmit the same load. Their extensions can differ.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find each extension and add them for the total change of length.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "systems-series-extensions-check",
+            "title": "Use the common force in series",
+            "prompt": "<p>Two light springs of stiffnesses \\(24\\) and \\(36\\) newtons per metre are connected end to end and hang vertically. A load of \\(20\\,\\mathrm N\\) is in equilibrium below them. Find the two extensions and the total increase in length.</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "Extension of first spring",
+                "type": "number",
+                "expected": "5/6"
+              },
+              {
+                "key": "second",
+                "label": "Extension of second spring",
+                "type": "number",
+                "expected": "5/9"
+              },
+              {
+                "key": "total",
+                "label": "Total extension",
+                "type": "number",
+                "expected": "25/18"
+              }
+            ],
+            "hint": "<p>The extensions add in series. The tension is shared, so do not divide the load in two.</p>",
+            "solution": "<p>Both light springs transmit the same load, after neglecting their own masses. Divide that force separately by each stiffness.</p><p>The first extension is \\(\\frac{5}{6}\\,\\mathrm m\\), the second \\(\\frac{5}{9}\\,\\mathrm m\\), and the total increase is \\(\\frac{25}{18}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not split the load between springs in series.</p>"
+          }
+        ]
+      },
+      {
+        "id": "parallel-extensions",
+        "title": "Which quantity is shared by equal-length parallel elements?",
+        "label": "Use common length change",
+        "intro": "<p>A level guided plate at the lower ends keeps both equal-natural-length springs at the same length.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The forces add, with magnitudes proportional to their stiffnesses.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "systems-parallel-extensions-check",
+            "title": "Use equal extensions in parallel",
+            "prompt": "<p>Two springs of identical natural length but stiffnesses \\(24\\) and \\(36\\) newtons per metre support a light joining plate. Smooth guides keep it level and do not exert vertical forces. Both springs hang vertically. The total load is \\(20\\,\\mathrm N\\). Find the common extension and the larger spring force.</p>",
+            "fields": [
+              {
+                "key": "extension",
+                "label": "Common extension",
+                "type": "number",
+                "expected": "1/3"
+              },
+              {
+                "key": "force",
+                "label": "Larger spring force",
+                "type": "number",
+                "expected": "12"
+              }
+            ],
+            "hint": "<p>Same extension does not mean the same force when stiffnesses differ.</p>",
+            "solution": "<p>The two lengths are equal, so the extensions are equal. The upward forces add.</p><p>Solve \\((k_1+k_2)x=20\\) to obtain common extension \\(\\frac{1}{3}\\,\\mathrm m\\). The greater individual spring force is \\(12\\,\\mathrm N\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Unequal stiffness gives unequal force even if the extension is shared.</p>"
+          }
+        ]
+      },
+      {
+        "id": "cut-string-stiffness",
+        "title": "What changes if a uniform string is cut?",
+        "label": "Keep the modulus",
+        "intro": "<p>Uniform pieces share a material model and modulus, but have different natural lengths.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Calculate each new stiffness using \\(k=\\frac{\\lambda}{l}\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "systems-cut-string-stiffness-check",
+            "title": "Find the stiffnesses after cutting an elastic string",
+            "prompt": "<p>A uniform elastic string of natural length \\(2\\,\\mathrm m\\) and modulus \\(48\\,\\mathrm N\\) is cut into two lengths in the ratio three to two. Find the stiffness of each piece.</p>",
+            "fields": [
+              {
+                "key": "long",
+                "label": "Longer piece stiffness",
+                "type": "number",
+                "expected": "40"
+              },
+              {
+                "key": "short",
+                "label": "Shorter piece stiffness",
+                "type": "number",
+                "expected": "60"
+              }
+            ],
+            "hint": "<p>It is the modulus that stays the same, not the stiffness.</p>",
+            "solution": "<p>Both pieces keep the same modulus because the material and cross-section are unchanged.</p><p>Divide the modulus by each new natural length. The longer piece has stiffness \\(40\\) and the shorter piece has stiffness \\(60\\), in newtons per metre.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A shorter piece is stiffer for the same modulus.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "systems-cut-string-stiffness-follow-up",
+            "title": "Find the stiffnesses after cutting an elastic string",
+            "prompt": "<p>A uniform elastic string of natural length \\(3\\,\\mathrm m\\) and modulus \\(96\\,\\mathrm N\\) is cut into two lengths in the ratio three to two. Find the stiffness of each piece.</p>",
+            "fields": [
+              {
+                "key": "long",
+                "label": "Longer piece stiffness",
+                "type": "number",
+                "expected": "160/3"
+              },
+              {
+                "key": "short",
+                "label": "Shorter piece stiffness",
+                "type": "number",
+                "expected": "80"
+              }
+            ],
+            "hint": "<p>It is the modulus that stays the same, not the stiffness.</p>",
+            "solution": "<p>Both pieces keep the same modulus because the material and cross-section are unchanged.</p><p>Divide the modulus by each new natural length. The longer piece has stiffness \\(\\frac{160}{3}\\) and the shorter piece has stiffness \\(80\\), in newtons per metre.</p>"
+          }
+        ]
+      },
+      {
+        "id": "opposed-strings",
+        "title": "How do I combine geometry with force balance?",
+        "label": "Write a separate length equation",
+        "intro": "<p>When two strings oppose each other between fixed supports, first account for the sum of their current lengths.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For two taut strings at rest, the tensions balance. Check deformations at the solution.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/hooke/opposed-string-lengths.svg",
+              "alt": "A particle between supports A and B is held by two zigzag strings.",
+              "caption": "<p>The two actual string lengths add to the distance between the supports. Force balance uses the two tensions separately.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "systems-opposed-strings-check",
+            "title": "Balance opposed elastic strings",
+            "prompt": "<p>Two fixed points on a smooth horizontal track are \\(\\frac{20}{3}\\,\\mathrm m\\) apart. A mass between them is connected to each by an elastic string. Their natural lengths are \\(2\\,\\mathrm m\\) and \\(3\\,\\mathrm m\\), and their stiffnesses are \\(24\\) and \\(36\\) newtons per metre. Find each extension at equilibrium.</p>",
+            "fields": [
+              {
+                "key": "first",
+                "label": "First extension",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "second",
+                "label": "Second extension",
+                "type": "number",
+                "expected": "2/3"
+              }
+            ],
+            "hint": "<p>Use the length condition and the force condition before deciding that each string is stretched.</p>",
+            "solution": "<p>The extensions add to the separation of the supports minus the two natural lengths.</p><p>Both strings pull in opposite directions, and their tensions balance.</p><p>The two extensions are \\(1\\,\\mathrm m\\) and \\(\\frac{2}{3}\\,\\mathrm m\\). Both are positive, validating the assumed taut model.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A length condition is separate from the force equation.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rough-slope-range",
+        "title": "Why can several extensions be in static equilibrium?",
+        "label": "Use both sides of a friction inequality",
+        "intro": "<p>When friction can change direction, it can balance tension above or below the downslope weight component.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Require \\(|W\\sin\\alpha-kx|\\le\\mu W\\cos\\alpha\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "systems-rough-slope-range-check",
+            "title": "Find an equilibrium interval with friction",
+            "prompt": "<p>A particle of weight \\(35\\,\\mathrm N\\) rests on a rough track of inclination with sine \\(\\frac{3}{5}\\). It is held by a taut string along the slope with stiffness \\(24\\) newtons per metre. The coefficient of static friction is \\(\\frac{1}{4}\\). Find the inclusive lower and upper bounds for extension.</p>",
+            "fields": [
+              {
+                "key": "lo",
+                "label": "Lower extension",
+                "type": "number",
+                "expected": "7/12"
+              },
+              {
+                "key": "hi",
+                "label": "Upper extension",
+                "type": "number",
+                "expected": "7/6"
+              }
+            ],
+            "hint": "<p>Compare the tension with the downhill weight component in both directions of possible slip.</p>",
+            "solution": "<p>The normal reaction is the inward weight component \\(28\\,\\mathrm N\\). Required signed uphill friction is \\(W\\sin\\alpha-kx\\).</p><p>Its magnitude cannot exceed \\(7\\,\\mathrm N\\). Solving the two inequalities gives \\(\\frac{7}{12}\\le x\\le \\frac{7}{6}\\). Both bounds are positive.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Only the endpoints require limiting friction, unless another physical bound intervenes.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "systems-rough-slope-range-follow-up",
+            "title": "Find an equilibrium interval with friction",
+            "prompt": "<p>A particle of weight \\(45\\,\\mathrm N\\) rests on a rough track of inclination with sine \\(\\frac{3}{5}\\). It is held by a taut string along the slope with stiffness \\(32\\) newtons per metre. The coefficient of static friction is \\(\\frac{1}{4}\\). Find the inclusive lower and upper bounds for extension.</p>",
+            "fields": [
+              {
+                "key": "lo",
+                "label": "Lower extension",
+                "type": "number",
+                "expected": "9/16"
+              },
+              {
+                "key": "hi",
+                "label": "Upper extension",
+                "type": "number",
+                "expected": "9/8"
+              }
+            ],
+            "hint": "<p>Compare the tension with the downhill weight component in both directions of possible slip.</p>",
+            "solution": "<p>The normal reaction is the inward weight component \\(36\\,\\mathrm N\\). Required signed uphill friction is \\(W\\sin\\alpha-kx\\).</p><p>Its magnitude cannot exceed \\(9\\,\\mathrm N\\). Solving the two inequalities gives \\(\\frac{9}{16}\\le x\\le \\frac{9}{8}\\). Both bounds are positive.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use the common force in series",
+        "question": "<p>Two light springs of stiffnesses \\(20\\) and \\(30\\) newtons per metre are connected end to end and hang vertically. A load of \\(15\\,\\mathrm N\\) is in equilibrium below them. Find the two extensions and the total increase in length.</p>",
+        "solution": [
+          "<p>Both light springs transmit the same load, after neglecting their own masses. Divide that force separately by each stiffness.</p>",
+          "<p>The first extension is \\(\\frac{3}{4}\\,\\mathrm m\\), the second \\(\\frac{1}{2}\\,\\mathrm m\\), and the total increase is \\(\\frac{5}{4}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Use equal extensions in parallel",
+        "question": "<p>Two springs of identical natural length but stiffnesses \\(20\\) and \\(30\\) newtons per metre support a light joining plate. Smooth guides keep it level and do not exert vertical forces. Both springs hang vertically. The total load is \\(15\\,\\mathrm N\\). Find the common extension and the larger spring force.</p>",
+        "solution": [
+          "<p>The two lengths are equal, so the extensions are equal. The upward forces add.</p>",
+          "<p>Solve \\((k_1+k_2)x=15\\) to obtain common extension \\(\\frac{3}{10}\\,\\mathrm m\\). The greater individual spring force is \\(9\\,\\mathrm N\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the stiffnesses after cutting an elastic string",
+        "question": "<p>A uniform elastic string of natural length \\(\\frac{3}{2}\\,\\mathrm m\\) and modulus \\(30\\,\\mathrm N\\) is cut into two lengths in the ratio three to two. Find the stiffness of each piece.</p>",
+        "solution": [
+          "<p>Both pieces keep the same modulus because the material and cross-section are unchanged.</p>",
+          "<p>Divide the modulus by each new natural length. The longer piece has stiffness \\(\\frac{100}{3}\\) and the shorter piece has stiffness \\(50\\), in newtons per metre.</p>"
+        ]
+      },
+      {
+        "title": "Find the stiffnesses after cutting an elastic string",
+        "question": "<p>A uniform elastic string of natural length \\(\\frac{5}{2}\\,\\mathrm m\\) and modulus \\(70\\,\\mathrm N\\) is cut into two lengths in the ratio three to two. Find the stiffness of each piece.</p>",
+        "solution": [
+          "<p>Both pieces keep the same modulus because the material and cross-section are unchanged.</p>",
+          "<p>Divide the modulus by each new natural length. The longer piece has stiffness \\(\\frac{140}{3}\\) and the shorter piece has stiffness \\(70\\), in newtons per metre.</p>"
+        ]
+      },
+      {
+        "title": "Balance opposed elastic strings",
+        "question": "<p>Two fixed points on a smooth horizontal track are \\(\\frac{19}{3}\\,\\mathrm m\\) apart. A mass between them is connected to each by an elastic string. Their natural lengths are \\(2\\,\\mathrm m\\) and \\(3\\,\\mathrm m\\), and their stiffnesses are \\(20\\) and \\(30\\) newtons per metre. Find each extension at equilibrium.</p>",
+        "solution": [
+          "<p>The extensions add to the separation of the supports minus the two natural lengths.</p>",
+          "<p>Both strings pull in opposite directions, and their tensions balance.</p>",
+          "<p>The two extensions are \\(\\frac{4}{5}\\,\\mathrm m\\) and \\(\\frac{8}{15}\\,\\mathrm m\\). Both are positive, validating the assumed taut model.</p>"
+        ]
+      },
+      {
+        "title": "Find an equilibrium interval with friction",
+        "question": "<p>A particle of weight \\(30\\,\\mathrm N\\) rests on a rough track of inclination with sine \\(\\frac{3}{5}\\). It is held by a taut string along the slope with stiffness \\(20\\) newtons per metre. The coefficient of static friction is \\(\\frac{1}{4}\\). Find the inclusive lower and upper bounds for extension.</p>",
+        "solution": [
+          "<p>The normal reaction is the inward weight component \\(24\\,\\mathrm N\\). Required signed uphill friction is \\(W\\sin\\alpha-kx\\).</p>",
+          "<p>Its magnitude cannot exceed \\(6\\,\\mathrm N\\). Solving the two inequalities gives \\(\\frac{3}{5}\\le x\\le \\frac{6}{5}\\). Both bounds are positive.</p>"
+        ]
+      },
+      {
+        "title": "Find an equilibrium interval with friction",
+        "question": "<p>A particle of weight \\(40\\,\\mathrm N\\) rests on a rough track of inclination with sine \\(\\frac{3}{5}\\). It is held by a taut string along the slope with stiffness \\(28\\) newtons per metre. The coefficient of static friction is \\(\\frac{1}{4}\\). Find the inclusive lower and upper bounds for extension.</p>",
+        "solution": [
+          "<p>The normal reaction is the inward weight component \\(32\\,\\mathrm N\\). Required signed uphill friction is \\(W\\sin\\alpha-kx\\).</p>",
+          "<p>Its magnitude cannot exceed \\(8\\,\\mathrm N\\). Solving the two inequalities gives \\(\\frac{4}{7}\\le x\\le \\frac{8}{7}\\). Both bounds are positive.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "systems-series-extensions-extra",
+        "title": "Use the common force in series",
+        "prompt": "<p>Two light springs of stiffnesses \\(28\\) and \\(42\\) newtons per metre are connected end to end and hang vertically. A load of \\(25\\,\\mathrm N\\) is in equilibrium below them. Find the two extensions and the total increase in length.</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "Extension of first spring",
+            "type": "number",
+            "expected": "25/28"
+          },
+          {
+            "key": "second",
+            "label": "Extension of second spring",
+            "type": "number",
+            "expected": "25/42"
+          },
+          {
+            "key": "total",
+            "label": "Total extension",
+            "type": "number",
+            "expected": "125/84"
+          }
+        ],
+        "hint": "<p>The extensions add in series. The tension is shared, so do not divide the load in two.</p>",
+        "solution": "<p>Both light springs transmit the same load, after neglecting their own masses. Divide that force separately by each stiffness.</p><p>The first extension is \\(\\frac{25}{28}\\,\\mathrm m\\), the second \\(\\frac{25}{42}\\,\\mathrm m\\), and the total increase is \\(\\frac{125}{84}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "systems-parallel-extensions-extra",
+        "title": "Use equal extensions in parallel",
+        "prompt": "<p>Two springs of identical natural length but stiffnesses \\(28\\) and \\(42\\) newtons per metre support a light joining plate. Smooth guides keep it level and do not exert vertical forces. Both springs hang vertically. The total load is \\(25\\,\\mathrm N\\). Find the common extension and the larger spring force.</p>",
+        "fields": [
+          {
+            "key": "extension",
+            "label": "Common extension",
+            "type": "number",
+            "expected": "5/14"
+          },
+          {
+            "key": "force",
+            "label": "Larger spring force",
+            "type": "number",
+            "expected": "15"
+          }
+        ],
+        "hint": "<p>Same extension does not mean the same force when stiffnesses differ.</p>",
+        "solution": "<p>The two lengths are equal, so the extensions are equal. The upward forces add.</p><p>Solve \\((k_1+k_2)x=25\\) to obtain common extension \\(\\frac{5}{14}\\,\\mathrm m\\). The greater individual spring force is \\(15\\,\\mathrm N\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "systems-cut-string-stiffness-extra",
+        "title": "Find the stiffnesses after cutting an elastic string",
+        "prompt": "<p>A uniform elastic string of natural length \\(\\frac{7}{2}\\,\\mathrm m\\) and modulus \\(126\\,\\mathrm N\\) is cut into two lengths in the ratio three to two. Find the stiffness of each piece.</p>",
+        "fields": [
+          {
+            "key": "long",
+            "label": "Longer piece stiffness",
+            "type": "number",
+            "expected": "60"
+          },
+          {
+            "key": "short",
+            "label": "Shorter piece stiffness",
+            "type": "number",
+            "expected": "90"
+          }
+        ],
+        "hint": "<p>It is the modulus that stays the same, not the stiffness.</p>",
+        "solution": "<p>Both pieces keep the same modulus because the material and cross-section are unchanged.</p><p>Divide the modulus by each new natural length. The longer piece has stiffness \\(60\\) and the shorter piece has stiffness \\(90\\), in newtons per metre.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "systems-opposed-strings-extra",
+        "title": "Balance opposed elastic strings",
+        "prompt": "<p>Two fixed points on a smooth horizontal track are \\(7\\,\\mathrm m\\) apart. A mass between them is connected to each by an elastic string. Their natural lengths are \\(2\\,\\mathrm m\\) and \\(3\\,\\mathrm m\\), and their stiffnesses are \\(28\\) and \\(42\\) newtons per metre. Find each extension at equilibrium.</p>",
+        "fields": [
+          {
+            "key": "first",
+            "label": "First extension",
+            "type": "number",
+            "expected": "6/5"
+          },
+          {
+            "key": "second",
+            "label": "Second extension",
+            "type": "number",
+            "expected": "4/5"
+          }
+        ],
+        "hint": "<p>Use the length condition and the force condition before deciding that each string is stretched.</p>",
+        "solution": "<p>The extensions add to the separation of the supports minus the two natural lengths.</p><p>Both strings pull in opposite directions, and their tensions balance.</p><p>The two extensions are \\(\\frac{6}{5}\\,\\mathrm m\\) and \\(\\frac{4}{5}\\,\\mathrm m\\). Both are positive, validating the assumed taut model.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "systems-rough-slope-range-extra",
+        "title": "Find an equilibrium interval with friction",
+        "prompt": "<p>A particle of weight \\(50\\,\\mathrm N\\) rests on a rough track of inclination with sine \\(\\frac{3}{5}\\). It is held by a taut string along the slope with stiffness \\(36\\) newtons per metre. The coefficient of static friction is \\(\\frac{1}{4}\\). Find the inclusive lower and upper bounds for extension.</p>",
+        "fields": [
+          {
+            "key": "lo",
+            "label": "Lower extension",
+            "type": "number",
+            "expected": "5/9"
+          },
+          {
+            "key": "hi",
+            "label": "Upper extension",
+            "type": "number",
+            "expected": "10/9"
+          }
+        ],
+        "hint": "<p>Compare the tension with the downhill weight component in both directions of possible slip.</p>",
+        "solution": "<p>The normal reaction is the inward weight component \\(40\\,\\mathrm N\\). Required signed uphill friction is \\(W\\sin\\alpha-kx\\).</p><p>Its magnitude cannot exceed \\(10\\,\\mathrm N\\). Solving the two inequalities gives \\(\\frac{5}{9}\\le x\\le \\frac{10}{9}\\). Both bounds are positive.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Series",
+        "definition": "<p>Elements connected end to end along one load path.</p>"
+      },
+      {
+        "term": "Parallel",
+        "definition": "<p>Elements acting together between shared moving or fixed parts.</p>"
+      },
+      {
+        "term": "Limiting friction",
+        "definition": "<p>Greatest available static friction magnitude.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Series</th><td>Same transmitted force, add extensions.</td></tr><tr><th scope=\"row\">Parallel</th><td>For common extension, add individual forces.</td></tr><tr><th scope=\"row\">Cut a uniform string</th><td>Keep modulus, recompute stiffness.</td></tr><tr><th scope=\"row\">Rough slope</th><td>Use the signed friction demand and both bounds.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Two series springs each carry \\(20\\,\\mathrm N\\), with stiffnesses \\(40\\) and \\(60\\) in SI units. Find the total extension.</p><p><strong>Check</strong> \\(\\frac56\\,\\mathrm m\\).</p>",
+      "checks": "<ul><li>Do not split the load between springs in series.</li><li>Unequal stiffness gives unequal force even if the extension is shared.</li></ul>",
+      "examTip": "<p>Check which quantities the geometry forces to be equal.</p>"
+    },
+    "related": [
+      {
+        "title": "Elastic energy, extension and compression",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_hooke_energy"
+      },
+      {
+        "title": "Slack phases, collisions and changes of force",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_hooke_stages"
+      }
+    ]
+  },
+  "fm_hooke_stages": {
+    "updatedOn": "2026-11-21",
+    "description": "Transfer positions and speeds between valid elastic, slack, dissipative and impact stages.",
+    "sections": [
+      {
+        "id": "rise-past-natural-length",
+        "title": "How far does a mass continue rising after the string slackens?",
+        "label": "Restart at natural length",
+        "intro": "<p>The taut stage ends at natural length with a speed that must be carried into the free stage.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>First use elastic and gravitational energies. Then use gravity alone while the string is slack.</p>",
+            "figure": {
+              "src": "/assets/study/9231/mechanics/hooke/taut-and-slack.svg",
+              "alt": "A vertical diagram marks the support, an upper position with slack string, the natural-length boundary and the lower taut state.",
+              "caption": "<p>Start a new motion model at the natural-length boundary. No elastic force acts beyond it on the slack side.</p>",
+              "width": 480,
+              "height": 260
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "stages-rise-past-natural-length-check",
+            "title": "Split at the first slackening",
+            "prompt": "<p>A mass of \\(3\\) kilograms on a light elastic string of natural length \\(\\frac{5}{3}\\,\\mathrm m\\) and modulus \\(50\\,\\mathrm N\\) is released from rest with extension \\(\\frac{7}{2}\\,\\mathrm m\\). It rises through the natural-length position. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its exact speed there and the further maximum rise while the string is slack.</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Speed at natural length",
+                "type": "number",
+                "expected": "sqrt(210)/2"
+              },
+              {
+                "key": "rise",
+                "label": "Further maximum rise",
+                "type": "number",
+                "expected": "21/8"
+              }
+            ],
+            "hint": "<p>Watch for the natural-length boundary. After passing it an elastic string loses its tension.</p>",
+            "solution": "<p>At natural length there is no elastic energy left. Some initial elastic energy has gone into the GPE rise.</p><p>The remaining KE is \\(\\frac{315}{4}\\,\\mathrm J\\), giving speed \\(\\frac{\\sqrt{210}}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Above that point the string is slack. Gravity alone reduces the speed to zero, giving additional rise \\(\\frac{21}{8}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not carry elastic potential energy into a slack stage.</p>"
+          }
+        ]
+      },
+      {
+        "id": "drop-before-taut",
+        "title": "What happens before a slack string first becomes taut?",
+        "label": "Find the first taut state",
+        "intro": "<p>A mass initially closer to the support than the natural length can fall freely until the separation equals natural length.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Carry its acquired speed into the stretched phase, or include the full fall in a single energy balance.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "stages-drop-before-taut-check",
+            "title": "Follow a slack drop until the stretch turns",
+            "prompt": "<p>A mass of \\(4\\) kilograms hangs directly below a fixed point on an elastic string of natural length \\(4\\,\\mathrm m\\) and modulus \\(240\\,\\mathrm N\\). It is released from rest when its distance below the point is just \\(\\frac{61}{16}\\,\\mathrm m\\). It remains below the attachment. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its speed when the string first becomes taut and the greatest extension.</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Speed at natural length",
+                "type": "number",
+                "expected": "sqrt(15)/2"
+              },
+              {
+                "key": "extension",
+                "label": "Greatest extension",
+                "type": "number",
+                "expected": "3/2"
+              }
+            ],
+            "hint": "<p>The total fall includes both the initial slack distance and the following extension.</p>",
+            "solution": "<p>The string is slack initially, so the particle falls freely over \\(\\frac{3}{16}\\,\\mathrm m\\). Its speed at natural length is \\(\\frac{\\sqrt{15}}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>At greatest extension, total gravity work equals the elastic energy. Solve \\(mg(d+x)=\\frac12kx^2\\) where \\(d\\) is the initial fall before the string is taut.</p><p>Discard the negative extension root because the second stage is taut. The greatest extension is \\(\\frac{3}{2}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The total vertical loss exceeds the final extension.</p>"
+          }
+        ]
+      },
+      {
+        "id": "spring-launch-to-rough-patch",
+        "title": "How far does a released cart travel against a new resistance?",
+        "label": "Use a loss-free release and a separate loss",
+        "intro": "<p>At natural length, stored energy has become kinetic energy if there was no earlier resistance.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The KE from launch is the initial energy for the rough stage.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "stages-spring-launch-to-rough-patch-check",
+            "title": "Use an energy balance up to natural length",
+            "prompt": "<p>A spring of stiffness \\(60\\) newtons per metre launches a \\(4\\) kilogram cart after being compressed by \\(1\\,\\mathrm m\\). The cart leaves at natural length and crosses a level rough patch with constant resistance \\(16\\,\\mathrm N\\). There is no earlier dissipation. Find the exact launch speed and how far into the patch it stops.</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Launch speed",
+                "type": "number",
+                "expected": "sqrt(15)"
+              },
+              {
+                "key": "distance",
+                "label": "Stopping distance into patch",
+                "type": "number",
+                "expected": "15/8"
+              }
+            ],
+            "hint": "<p>Use the natural-length state as a boundary. It has zero elastic potential energy.</p>",
+            "solution": "<p>Initial elastic energy becomes kinetic energy at the natural length. This gives \\(\\sqrt{15}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Only resistance does work on the level patch. Its work removes \\(30\\,\\mathrm J\\), so the stopping distance is \\(\\frac{15}{8}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use the distance travelled only where resistance actually acts.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stages-spring-launch-to-rough-patch-follow-up",
+            "title": "Use an energy balance up to natural length",
+            "prompt": "<p>A spring of stiffness \\(80\\) newtons per metre launches a \\(6\\) kilogram cart after being compressed by \\(\\frac{5}{3}\\,\\mathrm m\\). The cart leaves at natural length and crosses a level rough patch with constant resistance \\(24\\,\\mathrm N\\). There is no earlier dissipation. Find the exact launch speed and how far into the patch it stops.</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Launch speed",
+                "type": "number",
+                "expected": "10*sqrt(30)/9"
+              },
+              {
+                "key": "distance",
+                "label": "Stopping distance into patch",
+                "type": "number",
+                "expected": "125/27"
+              }
+            ],
+            "hint": "<p>Use the natural-length state as a boundary. It has zero elastic potential energy.</p>",
+            "solution": "<p>Initial elastic energy becomes kinetic energy at the natural length. This gives \\(\\frac{10 \\sqrt{30}}{9}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Only resistance does work on the level patch. Its work removes \\(\\frac{1000}{9}\\,\\mathrm J\\), so the stopping distance is \\(\\frac{125}{27}\\,\\mathrm m\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "impact-then-compression",
+        "title": "Which laws apply before and after an impact?",
+        "label": "Separate the impulse and energy calculations",
+        "intro": "<p>An impact may transfer momentum between bodies and dissipate kinetic energy. Then the cart that reaches the spring begins a new elastic phase.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use restitution and momentum during the impact, then energy for the compression.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "stages-impact-then-compression-check",
+            "title": "Solve the collision before the elastic motion",
+            "prompt": "<p>A \\(4\\) kilogram cart strikes a stationary \\(3\\) kilogram cart directly at speed \\(6\\,\\mathrm{m\\,s^{-1}}\\). Their coefficient of restitution is \\(\\frac{1}{3}\\). The second cart immediately reaches a light uncompressed spring on a smooth track, with stiffness \\(50\\) newtons per metre. Find the second cart's exact speed just after impact and its maximum spring compression.</p>",
+            "fields": [
+              {
+                "key": "speed",
+                "label": "Second cart's post-impact speed",
+                "type": "number",
+                "expected": "32/7"
+              },
+              {
+                "key": "compression",
+                "label": "Maximum compression",
+                "type": "number",
+                "expected": "16*sqrt(6)/35"
+              }
+            ],
+            "hint": "<p>Kinetic energy can change at impact. Start a new energy balance immediately after the collision.</p>",
+            "solution": "<p>Use momentum conservation and restitution during the collision. The second cart leaves at \\(\\frac{32}{7}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Use the second cart’s new KE, not the total initial KE of the two carts, for the compression stage.</p><p>Equate that KE to elastic energy at rest. Maximum compression is \\(\\frac{16 \\sqrt{6}}{35}\\,\\mathrm m\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The cart's post-impact KE is not the original KE of the full system.</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-the-first-boundary",
+        "title": "How do I avoid switching to the slack model too early?",
+        "label": "Check whether natural length is reached",
+        "intro": "<p>Calculate the energy at the natural-length state. If that state is inaccessible, use the taut turning point first.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A zero value gives a limiting point with zero speed. A positive value allows passage into the slack region.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "stages-check-the-first-boundary-check",
+            "title": "Decide whether natural length is physically reached",
+            "prompt": "<p>A mass of \\(3\\) kilograms on a light vertical elastic string of stiffness \\(35\\) newtons per metre is released from rest at extension \\(\\frac{18}{7}\\,\\mathrm m\\) below equilibrium. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which event occurs first as it rises?</p>",
+            "fields": [
+              {
+                "key": "event",
+                "label": "First boundary outcome",
+                "type": "choice",
+                "expected": "cross",
+                "options": {
+                  "cross": "Crosses natural length with positive speed",
+                  "rest": "Just reaches natural length with zero speed",
+                  "turn": "Turns while still taut"
+                }
+              }
+            ],
+            "hint": "<p>A negative kinetic energy prediction means the assumed endpoint is not physically reachable.</p>",
+            "solution": "<p>Use the energy balance to predict the kinetic energy at natural length.</p><p>After the rise against gravity, the prediction is \\(\\frac{270}{7}\\,\\mathrm J\\).</p><p>A negative prediction rules out reaching natural length. A zero prediction is a turning boundary. In this case: Crosses natural length with positive speed.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not treat a hypothetical negative KE as a speed.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "stages-check-the-first-boundary-follow-up",
+            "title": "Decide whether natural length is physically reached",
+            "prompt": "<p>A mass of \\(5\\) kilograms on a light vertical elastic string of stiffness \\(45\\) newtons per metre is released from rest at extension \\(\\frac{25}{9}\\,\\mathrm m\\) below equilibrium. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which event occurs first as it rises?</p>",
+            "fields": [
+              {
+                "key": "event",
+                "label": "First boundary outcome",
+                "type": "choice",
+                "expected": "cross",
+                "options": {
+                  "cross": "Crosses natural length with positive speed",
+                  "rest": "Just reaches natural length with zero speed",
+                  "turn": "Turns while still taut"
+                }
+              }
+            ],
+            "hint": "<p>A negative kinetic energy prediction means the assumed endpoint is not physically reachable.</p>",
+            "solution": "<p>Use the energy balance to predict the kinetic energy at natural length.</p><p>After the rise against gravity, the prediction is \\(\\frac{625}{18}\\,\\mathrm J\\).</p><p>A negative prediction rules out reaching natural length. A zero prediction is a turning boundary. In this case: Crosses natural length with positive speed.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Split at the first slackening",
+        "question": "<p>A mass of \\(2\\) kilograms on a light elastic string of natural length \\(\\frac{4}{3}\\,\\mathrm m\\) and modulus \\(\\frac{80}{3}\\,\\mathrm N\\) is released from rest with extension \\(3\\,\\mathrm m\\). It rises through the natural-length position. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its exact speed there and the further maximum rise while the string is slack.</p>",
+        "solution": [
+          "<p>At natural length there is no elastic energy left. Some initial elastic energy has gone into the GPE rise.</p>",
+          "<p>The remaining KE is \\(30\\,\\mathrm J\\), giving speed \\(\\sqrt{30}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Above that point the string is slack. Gravity alone reduces the speed to zero, giving additional rise \\(\\frac{3}{2}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Follow a slack drop until the stretch turns",
+        "question": "<p>A mass of \\(3\\) kilograms hangs directly below a fixed point on an elastic string of natural length \\(\\frac{7}{2}\\,\\mathrm m\\) and modulus \\(175\\,\\mathrm N\\). It is released from rest when its distance below the point is just \\(\\frac{13}{5}\\,\\mathrm m\\). It remains below the attachment. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its speed when the string first becomes taut and the greatest extension.</p>",
+        "solution": [
+          "<p>The string is slack initially, so the particle falls freely over \\(\\frac{9}{10}\\,\\mathrm m\\). Its speed at natural length is \\(3 \\sqrt{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>At greatest extension, total gravity work equals the elastic energy. Solve \\(mg(d+x)=\\frac12kx^2\\) where \\(d\\) is the initial fall before the string is taut.</p>",
+          "<p>Discard the negative extension root because the second stage is taut. The greatest extension is \\(\\frac{9}{5}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Use an energy balance up to natural length",
+        "question": "<p>A spring of stiffness \\(50\\) newtons per metre launches a \\(3\\) kilogram cart after being compressed by \\(\\frac{2}{3}\\,\\mathrm m\\). The cart leaves at natural length and crosses a level rough patch with constant resistance \\(12\\,\\mathrm N\\). There is no earlier dissipation. Find the exact launch speed and how far into the patch it stops.</p>",
+        "solution": [
+          "<p>Initial elastic energy becomes kinetic energy at the natural length. This gives \\(\\frac{10 \\sqrt{6}}{9}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Only resistance does work on the level patch. Its work removes \\(\\frac{100}{9}\\,\\mathrm J\\), so the stopping distance is \\(\\frac{25}{27}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Use an energy balance up to natural length",
+        "question": "<p>A spring of stiffness \\(70\\) newtons per metre launches a \\(5\\) kilogram cart after being compressed by \\(\\frac{4}{3}\\,\\mathrm m\\). The cart leaves at natural length and crosses a level rough patch with constant resistance \\(20\\,\\mathrm N\\). There is no earlier dissipation. Find the exact launch speed and how far into the patch it stops.</p>",
+        "solution": [
+          "<p>Initial elastic energy becomes kinetic energy at the natural length. This gives \\(\\frac{4 \\sqrt{14}}{3}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Only resistance does work on the level patch. Its work removes \\(\\frac{560}{9}\\,\\mathrm J\\), so the stopping distance is \\(\\frac{28}{9}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Solve the collision before the elastic motion",
+        "question": "<p>A \\(3\\) kilogram cart strikes a stationary \\(2\\) kilogram cart directly at speed \\(5\\,\\mathrm{m\\,s^{-1}}\\). Their coefficient of restitution is \\(\\frac{1}{6}\\). The second cart immediately reaches a light uncompressed spring on a smooth track, with stiffness \\(40\\) newtons per metre. Find the second cart's exact speed just after impact and its maximum spring compression.</p>",
+        "solution": [
+          "<p>Use momentum conservation and restitution during the collision. The second cart leaves at \\(\\frac{7}{2}\\,\\mathrm{m\\,s^{-1}}\\).</p>",
+          "<p>Use the second cart’s new KE, not the total initial KE of the two carts, for the compression stage.</p>",
+          "<p>Equate that KE to elastic energy at rest. Maximum compression is \\(\\frac{7 \\sqrt{5}}{20}\\,\\mathrm m\\).</p>"
+        ]
+      },
+      {
+        "title": "Decide whether natural length is physically reached",
+        "question": "<p>A mass of \\(2\\) kilograms on a light vertical elastic string of stiffness \\(30\\) newtons per metre is released from rest at extension \\(1\\,\\mathrm m\\) below equilibrium. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which event occurs first as it rises?</p>",
+        "solution": [
+          "<p>Use the energy balance to predict the kinetic energy at natural length.</p>",
+          "<p>After the rise against gravity, the prediction is \\(-5\\,\\mathrm J\\).</p>",
+          "<p>A negative prediction rules out reaching natural length. A zero prediction is a turning boundary. In this case: Turns while still taut.</p>"
+        ]
+      },
+      {
+        "title": "Decide whether natural length is physically reached",
+        "question": "<p>A mass of \\(4\\) kilograms on a light vertical elastic string of stiffness \\(40\\) newtons per metre is released from rest at extension \\(2\\,\\mathrm m\\) below equilibrium. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which event occurs first as it rises?</p>",
+        "solution": [
+          "<p>Use the energy balance to predict the kinetic energy at natural length.</p>",
+          "<p>After the rise against gravity, the prediction is \\(0\\,\\mathrm J\\).</p>",
+          "<p>A negative prediction rules out reaching natural length. A zero prediction is a turning boundary. In this case: Just reaches natural length with zero speed.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "stages-rise-past-natural-length-extra",
+        "title": "Split at the first slackening",
+        "prompt": "<p>A mass of \\(4\\) kilograms on a light elastic string of natural length \\(2\\,\\mathrm m\\) and modulus \\(80\\,\\mathrm N\\) is released from rest with extension \\(4\\,\\mathrm m\\). It rises through the natural-length position. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its exact speed there and the further maximum rise while the string is slack.</p>",
+        "fields": [
+          {
+            "key": "speed",
+            "label": "Speed at natural length",
+            "type": "number",
+            "expected": "4*sqrt(5)"
+          },
+          {
+            "key": "rise",
+            "label": "Further maximum rise",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>Watch for the natural-length boundary. After passing it an elastic string loses its tension.</p>",
+        "solution": "<p>At natural length there is no elastic energy left. Some initial elastic energy has gone into the GPE rise.</p><p>The remaining KE is \\(160\\,\\mathrm J\\), giving speed \\(4 \\sqrt{5}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Above that point the string is slack. Gravity alone reduces the speed to zero, giving additional rise \\(4\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stages-drop-before-taut-extra",
+        "title": "Follow a slack drop until the stretch turns",
+        "prompt": "<p>A mass of \\(5\\) kilograms hangs directly below a fixed point on an elastic string of natural length \\(\\frac{9}{2}\\,\\mathrm m\\) and modulus \\(315\\,\\mathrm N\\). It is released from rest when its distance below the point is just \\(\\frac{37}{10}\\,\\mathrm m\\). It remains below the attachment. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Find its speed when the string first becomes taut and the greatest extension.</p>",
+        "fields": [
+          {
+            "key": "speed",
+            "label": "Speed at natural length",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "extension",
+            "label": "Greatest extension",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>The total fall includes both the initial slack distance and the following extension.</p>",
+        "solution": "<p>The string is slack initially, so the particle falls freely over \\(\\frac{4}{5}\\,\\mathrm m\\). Its speed at natural length is \\(4\\,\\mathrm{m\\,s^{-1}}\\).</p><p>At greatest extension, total gravity work equals the elastic energy. Solve \\(mg(d+x)=\\frac12kx^2\\) where \\(d\\) is the initial fall before the string is taut.</p><p>Discard the negative extension root because the second stage is taut. The greatest extension is \\(2\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stages-spring-launch-to-rough-patch-extra",
+        "title": "Use an energy balance up to natural length",
+        "prompt": "<p>A spring of stiffness \\(90\\) newtons per metre launches a \\(7\\) kilogram cart after being compressed by \\(2\\,\\mathrm m\\). The cart leaves at natural length and crosses a level rough patch with constant resistance \\(28\\,\\mathrm N\\). There is no earlier dissipation. Find the exact launch speed and how far into the patch it stops.</p>",
+        "fields": [
+          {
+            "key": "speed",
+            "label": "Launch speed",
+            "type": "number",
+            "expected": "6*sqrt(70)/7"
+          },
+          {
+            "key": "distance",
+            "label": "Stopping distance into patch",
+            "type": "number",
+            "expected": "45/7"
+          }
+        ],
+        "hint": "<p>Use the natural-length state as a boundary. It has zero elastic potential energy.</p>",
+        "solution": "<p>Initial elastic energy becomes kinetic energy at the natural length. This gives \\(\\frac{6 \\sqrt{70}}{7}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Only resistance does work on the level patch. Its work removes \\(180\\,\\mathrm J\\), so the stopping distance is \\(\\frac{45}{7}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stages-impact-then-compression-extra",
+        "title": "Solve the collision before the elastic motion",
+        "prompt": "<p>A \\(5\\) kilogram cart strikes a stationary \\(4\\) kilogram cart directly at speed \\(7\\,\\mathrm{m\\,s^{-1}}\\). Their coefficient of restitution is \\(\\frac{1}{2}\\). The second cart immediately reaches a light uncompressed spring on a smooth track, with stiffness \\(60\\) newtons per metre. Find the second cart's exact speed just after impact and its maximum spring compression.</p>",
+        "fields": [
+          {
+            "key": "speed",
+            "label": "Second cart's post-impact speed",
+            "type": "number",
+            "expected": "35/6"
+          },
+          {
+            "key": "compression",
+            "label": "Maximum compression",
+            "type": "number",
+            "expected": "7*sqrt(15)/18"
+          }
+        ],
+        "hint": "<p>Kinetic energy can change at impact. Start a new energy balance immediately after the collision.</p>",
+        "solution": "<p>Use momentum conservation and restitution during the collision. The second cart leaves at \\(\\frac{35}{6}\\,\\mathrm{m\\,s^{-1}}\\).</p><p>Use the second cart’s new KE, not the total initial KE of the two carts, for the compression stage.</p><p>Equate that KE to elastic energy at rest. Maximum compression is \\(\\frac{7 \\sqrt{15}}{18}\\,\\mathrm m\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "stages-check-the-first-boundary-extra",
+        "title": "Decide whether natural length is physically reached",
+        "prompt": "<p>A mass of \\(6\\) kilograms on a light vertical elastic string of stiffness \\(50\\) newtons per metre is released from rest at extension \\(\\frac{8}{5}\\,\\mathrm m\\) below equilibrium. Take \\(g=10\\,\\mathrm{m\\,s^{-2}}\\). Which event occurs first as it rises?</p>",
+        "fields": [
+          {
+            "key": "event",
+            "label": "First boundary outcome",
+            "type": "choice",
+            "expected": "turn",
+            "options": {
+              "cross": "Crosses natural length with positive speed",
+              "rest": "Just reaches natural length with zero speed",
+              "turn": "Turns while still taut"
+            }
+          }
+        ],
+        "hint": "<p>A negative kinetic energy prediction means the assumed endpoint is not physically reachable.</p>",
+        "solution": "<p>Use the energy balance to predict the kinetic energy at natural length.</p><p>After the rise against gravity, the prediction is \\(-32\\,\\mathrm J\\).</p><p>A negative prediction rules out reaching natural length. A zero prediction is a turning boundary. In this case: Turns while still taut.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Slack phase",
+        "definition": "<p>A stage during which the string has no force.</p>"
+      },
+      {
+        "term": "Natural-length boundary",
+        "definition": "<p>The transition separation between stretched and slack branches.</p>"
+      },
+      {
+        "term": "Restitution",
+        "definition": "<p>Ratio of separation speed to approach speed along the line of impact.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Natural length</th><td>Set elastic energy to zero there.</td></tr><tr><th scope=\"row\">Slack stage</th><td>No string tension.</td></tr><tr><th scope=\"row\">Impact</th><td>Use momentum and restitution where applicable.</td></tr><tr><th scope=\"row\">Friction stage</th><td>Compute the energy lost only over the rough distance.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>A particle reaches a slack stage with upward speed \\(4\\,\\mathrm{m\\,s^{-1}}\\). For \\(g=10\\) in SI units, find its further rise.</p><p><strong>Check</strong> \\(\\frac45\\,\\mathrm m\\).</p>",
+      "checks": "<ul><li>Do not carry elastic potential energy into a slack stage.</li><li>The total vertical loss exceeds the final extension.</li></ul>",
+      "examTip": "<p>State the state at each boundary before moving to a new law.</p>"
+    },
+    "related": [
+      {
+        "title": "Coupled elements, geometry and friction",
+        "href": "/courses/maths4u-9231-mechanics/topics/fm_hooke_systems"
+      }
+    ]
+  }
+}
