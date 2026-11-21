@@ -1,0 +1,2569 @@
+{
+  "fp1_polar_coordinates": {
+    "updatedOn": "2026-11-21",
+    "description": "Convert between Cartesian and polar coordinates, recognise circle and line equations, and retain the specified branch.",
+    "sections": [
+      {
+        "id": "resolve-a-polar-point",
+        "title": "How do polar coordinates give horizontal and vertical positions?",
+        "label": "Resolve the radius in two directions",
+        "intro": "<p>The initial line is the positive x-axis. Measure the given angle from it and project the radius onto the two axes.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(x=r\\cos\\theta,\\quad y=r\\sin\\theta\\) with the radius non-negative for this convention.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "coordinates-resolve-a-polar-point-check",
+            "title": "Resolve a radius horizontally and vertically",
+            "prompt": "<p>Convert polar point \\(\\left(6,\\frac{2 \\pi}{3}\\right)\\) to Cartesian coordinates. Angles are in radians and the initial line is the positive x-axis.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Value of x",
+                "type": "number",
+                "expected": "-3"
+              },
+              {
+                "key": "y",
+                "label": "Value of y",
+                "type": "number",
+                "expected": "3*sqrt(3)"
+              }
+            ],
+            "hint": "<p>Keep the signs of the trigonometric functions, even though the radius is positive.</p>",
+            "solution": "<p>Resolve the radius using \\(x=r\\cos\\theta\\) and \\(y=r\\sin\\theta\\).</p><p>Use the exact cosine and sine at \\(\\frac{2 \\pi}{3}\\). Their signs locate the correct quadrant.</p><p>This gives Cartesian point \\(\\left(-3,3 \\sqrt{3}\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Positive radius does not make both Cartesian coordinates positive. Use the signs of the trigonometric factors.</p>"
+          }
+        ]
+      },
+      {
+        "id": "choose-the-angle-branch",
+        "title": "How do I find the correct polar angle from a point?",
+        "label": "Use the original quadrant",
+        "intro": "<p>Find the radius by Pythagoras. Then use the signs of both Cartesian coordinates to choose an angle in the stated interval.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(r=\\sqrt{x^2+y^2}\\). Use both \\(\\cos\\theta=\\frac{x}{r}\\) and \\(\\sin\\theta=\\frac{y}{r}\\) when the quadrant is uncertain.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "coordinates-choose-the-angle-branch-check",
+            "title": "Use both signs to choose the polar angle",
+            "prompt": "<p>Write \\(\\left(-3,3 \\sqrt{3}\\right)\\) in polar form with \\(r>0,\\ -\\pi<\\theta\\le\\pi\\). Give exact radius and angle.</p>",
+            "fields": [
+              {
+                "key": "r",
+                "label": "Radius r",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "angle",
+                "label": "Angle in radians",
+                "type": "number",
+                "expected": "2*pi/3"
+              }
+            ],
+            "hint": "<p>The value from inverse tangent can lie in a different quadrant. Use both coordinates.</p>",
+            "solution": "<p>The radius is \\(\\sqrt{x^2+y^2}\\), giving \\(6\\).</p><p>Use the signs of x and y to identify the quadrant. Sine and cosine are \\(\\frac{\\sqrt{3}}{2}\\) and \\(- \\frac{1}{2}\\) at the chosen direction.</p><p>The polar pair in the stated angle interval is \\(\\left(6,\\frac{2 \\pi}{3}\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An inverse-tangent calculation alone may return the angle of the opposite ray. Check the signs and range.</p>"
+          }
+        ]
+      },
+      {
+        "id": "identify-the-circle",
+        "title": "How does a simple polar rule give a circle?",
+        "label": "Use a standard Cartesian identity",
+        "intro": "<p>Multiply an equation involving sine or cosine by r so that the resulting factors can be replaced.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Replace \\(r^2\\) by \\(x^2+y^2\\), and \\(r\\sin\\theta\\) by \\(y\\). Complete the square to identify the centre.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_polar_coordinates/circle-centre-and-pole.svg",
+              "caption": "<p>The pole lies on the circle. Its centre is above the origin.</p>",
+              "alt": "The circle has centre (0, 2) and radius two. Its lowest point is the pole, and its highest point is (0, 4).",
+              "width": 465,
+              "height": 245
+            }
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "coordinates-identify-the-circle-check",
+            "title": "Complete the square to identify a polar circle",
+            "prompt": "<p>For \\(r=6 \\sin{\\left(\\theta \\right)}\\) and \\(0\\le\\theta\\le \\pi\\), find the centre and radius of the traced circle.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Centre x-coordinate",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "y",
+                "label": "Centre y-coordinate",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "r",
+                "label": "Circle radius",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Use r² and r sin θ to remove the polar variables.</p>",
+            "solution": "<p>Multiply by r to get \\(r^2=6r\\sin\\theta\\). Replace these expressions to get \\(x^{2} + y^{2} - 6 y=0\\).</p><p>Completing the square gives \\(x^{2} + \\left(y - 3\\right)^{2}=9\\).</p><p>The centre is \\(\\left(0,3\\right)\\) and the radius is \\(3\\). The angle interval traces the complete circle, including the pole.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Include the pole if the radius is zero at an allowed angle. The equation can describe a whole circle or a restricted arc depending on the stated angles.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "coordinates-identify-the-circle-follow-up",
+            "title": "Complete the square to identify a polar circle",
+            "prompt": "<p>For \\(r=10 \\sin{\\left(\\theta \\right)}\\) and \\(0\\le\\theta\\le \\pi\\), find the centre and radius of the traced circle.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Centre x-coordinate",
+                "type": "number",
+                "expected": "0"
+              },
+              {
+                "key": "y",
+                "label": "Centre y-coordinate",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "r",
+                "label": "Circle radius",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>Use r² and r sin θ to remove the polar variables.</p>",
+            "solution": "<p>Multiply by r to get \\(r^2=10r\\sin\\theta\\). Replace these expressions to get \\(x^{2} + y^{2} - 10 y=0\\).</p><p>Completing the square gives \\(x^{2} + \\left(y - 5\\right)^{2}=25\\).</p><p>The centre is \\(\\left(0,5\\right)\\) and the radius is \\(5\\). The angle interval traces the complete circle, including the pole.</p>"
+          }
+        ]
+      },
+      {
+        "id": "identify-a-line",
+        "title": "When does a reciprocal trigonometric radius give a line?",
+        "label": "Recognise r times the relevant ratio",
+        "intro": "<p>An equation for r involving secant can be rewritten as a constant horizontal component.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(\\sec\\theta=\\frac1{\\cos\\theta}\\) whenever the cosine is non-zero, then multiply by the cosine.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "coordinates-identify-a-line-check",
+            "title": "Convert a polar secant rule without introducing endpoints",
+            "prompt": "<p>The polar relation is \\(r=3\\sec\\theta\\) for \\(-\\frac{\\pi}{2}<\\theta<\\frac{\\pi}{2}\\). Give its Cartesian equation and y-coordinate when \\(\\theta=\\frac{\\pi}{4}\\).</p>",
+            "fields": [
+              {
+                "key": "equation",
+                "label": "Cartesian equation in x and y",
+                "type": "equation",
+                "expected": "x - 3=0",
+                "variables": [
+                  "x",
+                  "y"
+                ]
+              },
+              {
+                "key": "y",
+                "label": "Requested y-coordinate",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Use the definition of Cartesian x rather than squaring the relation.</p>",
+            "solution": "<p>Multiply by cosine. The expression \\(r\\cos\\theta\\) is x, giving \\(x=3\\).</p><p>Inside the angle interval r is positive. All real y-values occur as \\(y=3\\tan\\theta\\).</p><p>At the specified angle the tangent is one, giving \\(y=3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Record the angles where secant is undefined. Do not add an endpoint simply because it disappears from the new equation.</p>"
+          }
+        ]
+      },
+      {
+        "id": "restrict-a-branch",
+        "title": "What happens to the angle restriction when I eliminate θ?",
+        "label": "Supply the Cartesian branch condition",
+        "intro": "<p>A Cartesian equation can encode several branches of the full relation. Use the given angular interval to select the requested branch.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Convert the double-angle expression using sine and cosine in terms of x and y. Then state any restrictions on x or y that the conversion alone does not retain.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "coordinates-restrict-a-branch-check",
+            "title": "Keep the right-hand loop after eliminating the angle",
+            "prompt": "<p>The curve is \\(r^2=9\\cos(2\\theta)\\) for \\(- \\frac{\\pi}{4}\\le\\theta\\le \\frac{\\pi}{4}\\). Give the Cartesian equation, and its positive x-intercept.</p>",
+            "fields": [
+              {
+                "key": "equation",
+                "label": "Cartesian equation in x and y",
+                "type": "equation",
+                "expected": "-9*x^2 + 9*y^2 + (x^2 + y^2)^2=0",
+                "variables": [
+                  "x",
+                  "y"
+                ]
+              },
+              {
+                "key": "intercept",
+                "label": "Positive x-intercept",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>The algebraic equation can contain a second loop. State the branch restriction with it.</p>",
+            "solution": "<p>For non-pole points, \\(\\cos(2\\theta)=\\frac{x^2-y^2}{x^2+y^2}\\). Multiply through to obtain \\(- 9 x^{2} + 9 y^{2} + \\left(x^{2} + y^{2}\\right)^{2}=0\\).</p><p>The pole also satisfies that equation, but the angle restriction keeps only the loop with \\(x\\ge0\\).</p><p>At \\(\\theta=0\\), \\(r=3\\), so the positive intercept is \\(\\left(3,0\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Squaring or clearing powers of the radius can introduce solutions outside the interval. Check the pole as a separate case.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "coordinates-restrict-a-branch-follow-up",
+            "title": "Keep the right-hand loop after eliminating the angle",
+            "prompt": "<p>The curve is \\(r^2=25\\cos(2\\theta)\\) for \\(- \\frac{\\pi}{4}\\le\\theta\\le \\frac{\\pi}{4}\\). Give the Cartesian equation, and its positive x-intercept.</p>",
+            "fields": [
+              {
+                "key": "equation",
+                "label": "Cartesian equation in x and y",
+                "type": "equation",
+                "expected": "-25*x^2 + 25*y^2 + (x^2 + y^2)^2=0",
+                "variables": [
+                  "x",
+                  "y"
+                ]
+              },
+              {
+                "key": "intercept",
+                "label": "Positive x-intercept",
+                "type": "number",
+                "expected": "5"
+              }
+            ],
+            "hint": "<p>The algebraic equation can contain a second loop. State the branch restriction with it.</p>",
+            "solution": "<p>For non-pole points, \\(\\cos(2\\theta)=\\frac{x^2-y^2}{x^2+y^2}\\). Multiply through to obtain \\(- 25 x^{2} + 25 y^{2} + \\left(x^{2} + y^{2}\\right)^{2}=0\\).</p><p>The pole also satisfies that equation, but the angle restriction keeps only the loop with \\(x\\ge0\\).</p><p>At \\(\\theta=0\\), \\(r=5\\), so the positive intercept is \\(\\left(5,0\\right)\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Resolve a radius horizontally and vertically",
+        "question": "<p>Convert polar point \\(\\left(4,\\frac{5 \\pi}{6}\\right)\\) to Cartesian coordinates. Angles are in radians and the initial line is the positive x-axis.</p>",
+        "solution": [
+          "<p>Resolve the radius using \\(x=r\\cos\\theta\\) and \\(y=r\\sin\\theta\\).</p>",
+          "<p>Use the exact cosine and sine at \\(\\frac{5 \\pi}{6}\\). Their signs locate the correct quadrant.</p>",
+          "<p>This gives Cartesian point \\(\\left(- 2 \\sqrt{3},2\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Use both signs to choose the polar angle",
+        "question": "<p>Write \\(\\left(- 2 \\sqrt{3},2\\right)\\) in polar form with \\(r>0,\\ -\\pi<\\theta\\le\\pi\\). Give exact radius and angle.</p>",
+        "solution": [
+          "<p>The radius is \\(\\sqrt{x^2+y^2}\\), giving \\(4\\).</p>",
+          "<p>Use the signs of x and y to identify the quadrant. Sine and cosine are \\(\\frac{1}{2}\\) and \\(- \\frac{\\sqrt{3}}{2}\\) at the chosen direction.</p>",
+          "<p>The polar pair in the stated angle interval is \\(\\left(4,\\frac{5 \\pi}{6}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Complete the square to identify a polar circle",
+        "question": "<p>For \\(r=4 \\sin{\\left(\\theta \\right)}\\) and \\(0\\le\\theta\\le \\pi\\), find the centre and radius of the traced circle.</p>",
+        "solution": [
+          "<p>Multiply by r to get \\(r^2=4r\\sin\\theta\\). Replace these expressions to get \\(x^{2} + y^{2} - 4 y=0\\).</p>",
+          "<p>Completing the square gives \\(x^{2} + \\left(y - 2\\right)^{2}=4\\).</p>",
+          "<p>The centre is \\(\\left(0,2\\right)\\) and the radius is \\(2\\). The angle interval traces the complete circle, including the pole.</p>"
+        ]
+      },
+      {
+        "title": "Complete the square to identify a polar circle",
+        "question": "<p>For \\(r=8 \\sin{\\left(\\theta \\right)}\\) and \\(0\\le\\theta\\le \\pi\\), find the centre and radius of the traced circle.</p>",
+        "solution": [
+          "<p>Multiply by r to get \\(r^2=8r\\sin\\theta\\). Replace these expressions to get \\(x^{2} + y^{2} - 8 y=0\\).</p>",
+          "<p>Completing the square gives \\(x^{2} + \\left(y - 4\\right)^{2}=16\\).</p>",
+          "<p>The centre is \\(\\left(0,4\\right)\\) and the radius is \\(4\\). The angle interval traces the complete circle, including the pole.</p>"
+        ]
+      },
+      {
+        "title": "Convert a polar secant rule without introducing endpoints",
+        "question": "<p>The polar relation is \\(r=2\\sec\\theta\\) for \\(-\\frac{\\pi}{2}<\\theta<\\frac{\\pi}{2}\\). Give its Cartesian equation and y-coordinate when \\(\\theta=\\frac{\\pi}{4}\\).</p>",
+        "solution": [
+          "<p>Multiply by cosine. The expression \\(r\\cos\\theta\\) is x, giving \\(x=2\\).</p>",
+          "<p>Inside the angle interval r is positive. All real y-values occur as \\(y=2\\tan\\theta\\).</p>",
+          "<p>At the specified angle the tangent is one, giving \\(y=2\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the right-hand loop after eliminating the angle",
+        "question": "<p>The curve is \\(r^2=4\\cos(2\\theta)\\) for \\(- \\frac{\\pi}{4}\\le\\theta\\le \\frac{\\pi}{4}\\). Give the Cartesian equation, and its positive x-intercept.</p>",
+        "solution": [
+          "<p>For non-pole points, \\(\\cos(2\\theta)=\\frac{x^2-y^2}{x^2+y^2}\\). Multiply through to obtain \\(- 4 x^{2} + 4 y^{2} + \\left(x^{2} + y^{2}\\right)^{2}=0\\).</p>",
+          "<p>The pole also satisfies that equation, but the angle restriction keeps only the loop with \\(x\\ge0\\).</p>",
+          "<p>At \\(\\theta=0\\), \\(r=2\\), so the positive intercept is \\(\\left(2,0\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the right-hand loop after eliminating the angle",
+        "question": "<p>The curve is \\(r^2=16\\cos(2\\theta)\\) for \\(- \\frac{\\pi}{4}\\le\\theta\\le \\frac{\\pi}{4}\\). Give the Cartesian equation, and its positive x-intercept.</p>",
+        "solution": [
+          "<p>For non-pole points, \\(\\cos(2\\theta)=\\frac{x^2-y^2}{x^2+y^2}\\). Multiply through to obtain \\(- 16 x^{2} + 16 y^{2} + \\left(x^{2} + y^{2}\\right)^{2}=0\\).</p>",
+          "<p>The pole also satisfies that equation, but the angle restriction keeps only the loop with \\(x\\ge0\\).</p>",
+          "<p>At \\(\\theta=0\\), \\(r=4\\), so the positive intercept is \\(\\left(4,0\\right)\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "coordinates-resolve-a-polar-point-extra",
+        "title": "Resolve a radius horizontally and vertically",
+        "prompt": "<p>Convert polar point \\(\\left(8,- \\frac{\\pi}{4}\\right)\\) to Cartesian coordinates. Angles are in radians and the initial line is the positive x-axis.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Value of x",
+            "type": "number",
+            "expected": "4*sqrt(2)"
+          },
+          {
+            "key": "y",
+            "label": "Value of y",
+            "type": "number",
+            "expected": "-4*sqrt(2)"
+          }
+        ],
+        "hint": "<p>Keep the signs of the trigonometric functions, even though the radius is positive.</p>",
+        "solution": "<p>Resolve the radius using \\(x=r\\cos\\theta\\) and \\(y=r\\sin\\theta\\).</p><p>Use the exact cosine and sine at \\(- \\frac{\\pi}{4}\\). Their signs locate the correct quadrant.</p><p>This gives Cartesian point \\(\\left(4 \\sqrt{2},- 4 \\sqrt{2}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "coordinates-choose-the-angle-branch-extra",
+        "title": "Use both signs to choose the polar angle",
+        "prompt": "<p>Write \\(\\left(4 \\sqrt{2},- 4 \\sqrt{2}\\right)\\) in polar form with \\(r>0,\\ -\\pi<\\theta\\le\\pi\\). Give exact radius and angle.</p>",
+        "fields": [
+          {
+            "key": "r",
+            "label": "Radius r",
+            "type": "number",
+            "expected": "8"
+          },
+          {
+            "key": "angle",
+            "label": "Angle in radians",
+            "type": "number",
+            "expected": "-pi/4"
+          }
+        ],
+        "hint": "<p>The value from inverse tangent can lie in a different quadrant. Use both coordinates.</p>",
+        "solution": "<p>The radius is \\(\\sqrt{x^2+y^2}\\), giving \\(8\\).</p><p>Use the signs of x and y to identify the quadrant. Sine and cosine are \\(- \\frac{\\sqrt{2}}{2}\\) and \\(\\frac{\\sqrt{2}}{2}\\) at the chosen direction.</p><p>The polar pair in the stated angle interval is \\(\\left(8,- \\frac{\\pi}{4}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "coordinates-identify-the-circle-extra",
+        "title": "Complete the square to identify a polar circle",
+        "prompt": "<p>For \\(r=12 \\sin{\\left(\\theta \\right)}\\) and \\(0\\le\\theta\\le \\pi\\), find the centre and radius of the traced circle.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Centre x-coordinate",
+            "type": "number",
+            "expected": "0"
+          },
+          {
+            "key": "y",
+            "label": "Centre y-coordinate",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "r",
+            "label": "Circle radius",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>Use r² and r sin θ to remove the polar variables.</p>",
+        "solution": "<p>Multiply by r to get \\(r^2=12r\\sin\\theta\\). Replace these expressions to get \\(x^{2} + y^{2} - 12 y=0\\).</p><p>Completing the square gives \\(x^{2} + \\left(y - 6\\right)^{2}=36\\).</p><p>The centre is \\(\\left(0,6\\right)\\) and the radius is \\(6\\). The angle interval traces the complete circle, including the pole.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "coordinates-identify-a-line-extra",
+        "title": "Convert a polar secant rule without introducing endpoints",
+        "prompt": "<p>The polar relation is \\(r=4\\sec\\theta\\) for \\(-\\frac{\\pi}{2}<\\theta<\\frac{\\pi}{2}\\). Give its Cartesian equation and y-coordinate when \\(\\theta=\\frac{\\pi}{4}\\).</p>",
+        "fields": [
+          {
+            "key": "equation",
+            "label": "Cartesian equation in x and y",
+            "type": "equation",
+            "expected": "x - 4=0",
+            "variables": [
+              "x",
+              "y"
+            ]
+          },
+          {
+            "key": "y",
+            "label": "Requested y-coordinate",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>Use the definition of Cartesian x rather than squaring the relation.</p>",
+        "solution": "<p>Multiply by cosine. The expression \\(r\\cos\\theta\\) is x, giving \\(x=4\\).</p><p>Inside the angle interval r is positive. All real y-values occur as \\(y=4\\tan\\theta\\).</p><p>At the specified angle the tangent is one, giving \\(y=4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "coordinates-restrict-a-branch-extra",
+        "title": "Keep the right-hand loop after eliminating the angle",
+        "prompt": "<p>The curve is \\(r^2=36\\cos(2\\theta)\\) for \\(- \\frac{\\pi}{4}\\le\\theta\\le \\frac{\\pi}{4}\\). Give the Cartesian equation, and its positive x-intercept.</p>",
+        "fields": [
+          {
+            "key": "equation",
+            "label": "Cartesian equation in x and y",
+            "type": "equation",
+            "expected": "-36*x^2 + 36*y^2 + (x^2 + y^2)^2=0",
+            "variables": [
+              "x",
+              "y"
+            ]
+          },
+          {
+            "key": "intercept",
+            "label": "Positive x-intercept",
+            "type": "number",
+            "expected": "6"
+          }
+        ],
+        "hint": "<p>The algebraic equation can contain a second loop. State the branch restriction with it.</p>",
+        "solution": "<p>For non-pole points, \\(\\cos(2\\theta)=\\frac{x^2-y^2}{x^2+y^2}\\). Multiply through to obtain \\(- 36 x^{2} + 36 y^{2} + \\left(x^{2} + y^{2}\\right)^{2}=0\\).</p><p>The pole also satisfies that equation, but the angle restriction keeps only the loop with \\(x\\ge0\\).</p><p>At \\(\\theta=0\\), \\(r=6\\), so the positive intercept is \\(\\left(6,0\\right)\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Pole",
+        "definition": "<p>The origin, represented by radius zero with any angle.</p>"
+      },
+      {
+        "term": "Initial line",
+        "definition": "<p>The positive horizontal ray from the pole.</p>"
+      },
+      {
+        "term": "Polar radius",
+        "definition": "<p>Distance along the ray used in the non-negative convention.</p>"
+      },
+      {
+        "term": "Quadrant",
+        "definition": "<p>One of the four regions divided by the Cartesian axes.</p>"
+      },
+      {
+        "term": "Branch",
+        "definition": "<p>Part of the Cartesian equation corresponding to the stated radius and angle restrictions.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Polar to Cartesian</th><td>\\(x=r\\cos\\theta,\\quad y=r\\sin\\theta\\)</td></tr><tr><th scope=\"row\">Cartesian to polar</th><td>\\(r=\\sqrt{x^2+y^2}\\), then identify the angle from both signs.</td></tr><tr><th scope=\"row\">Point at the pole</th><td>Radius zero, angle non-unique.</td></tr><tr><th scope=\"row\">Elimination</th><td>Keep any Cartesian restriction representing the original sweep.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Convert \\(\\left(6,\\frac{\\pi}{3}\\right)\\) into Cartesian coordinates.</p><p><strong>Check</strong> \\(\\left(3,3 \\sqrt{3}\\right)\\).</p>",
+      "checks": "<ul><li>Positive radius does not make both Cartesian coordinates positive. Use the signs of the trigonometric factors.</li><li>An inverse-tangent calculation alone may return the angle of the opposite ray. Check the signs and range.</li></ul>",
+      "examTip": "<p>Mention the angle range and radius convention when converting back to polar coordinates.</p>"
+    },
+    "related": [
+      {
+        "title": "Sketching admissible polar curves",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_polar_sketches"
+      }
+    ]
+  },
+  "fp1_polar_sketches": {
+    "updatedOn": "2026-11-21",
+    "description": "Find non-negative radius intervals, symmetry, endpoints and landmarks before tracing a polar curve.",
+    "sections": [
+      {
+        "id": "choose-the-admissible-interval",
+        "title": "Which parts of the radius rule should I draw?",
+        "label": "Check non-negative radius",
+        "intro": "<p>Find the permitted angular intervals before plotting. In this course use the non-negative-radius convention.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Where a radius changes sign, split the interval at its zeros. A connected petal can start and end at the pole.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_polar_sketches/single-nonnegative-petal.svg",
+              "caption": "<p>Only the permitted positive-radius petal is drawn.</p>",
+              "alt": "One petal in the first quadrant starts and ends at the pole. Its farthest point from the pole lies on the diagonal ray.",
+              "width": 465,
+              "height": 245
+            }
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "sketches-choose-the-admissible-interval-check",
+            "title": "Find the angular interval for a non-negative petal",
+            "prompt": "<p>On \\(0\\le\\theta\\le \\pi\\), keep only non-negative values in \\(r=3 \\sin{\\left(2 \\theta \\right)}\\). Give the complete allowed angle interval in interval notation, containing \\(\\frac{\\pi}{4}\\) and the maximum radius.</p>",
+            "fields": [
+              {
+                "key": "angles",
+                "label": "Allowed angular interval (radians)",
+                "type": "set",
+                "expected": "[0,pi/2]"
+              },
+              {
+                "key": "r",
+                "label": "Maximum radius",
+                "type": "number",
+                "expected": "3"
+              }
+            ],
+            "hint": "<p>Find where 2θ runs through a non-negative sine interval, then divide both endpoints by two.</p>",
+            "solution": "<p>The sine factor is non-negative from zero through \\(\\frac{\\pi}{2}\\) in this part of the interval.</p><p>The isolated angle \\(\\pi\\) is also a pole, but lies outside the requested connected piece.</p><p>Within the requested interval the sine reaches one at \\(\\theta=\\frac{\\pi}{4}\\), so the maximum radius is \\(3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not draw a reflected negative-radius branch in a question that restricts r to non-negative values.</p>"
+          }
+        ]
+      },
+      {
+        "id": "choose-landmarks",
+        "title": "Which landmarks establish the shape of a cardioid?",
+        "label": "Find the zero and farthest points",
+        "intro": "<p>Use the extreme cosine values and the coordinate axes as starting rays. Evaluate the radius on these rays and place the points.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The largest radius determines the farthest point from the pole. Use its angle to decide which side of the initial line it lies on.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "sketches-choose-landmarks-check",
+            "title": "Use the pole and opposite-axis landmark",
+            "prompt": "<p>For \\(r=3 - 3 \\cos{\\left(\\theta \\right)}\\) on \\(0\\le\\theta\\le 2 \\pi\\), identify the greatest radius and the x-coordinate of the point attaining it.</p>",
+            "fields": [
+              {
+                "key": "r",
+                "label": "Largest radius",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "x",
+                "label": "x-coordinate of farthest point",
+                "type": "number",
+                "expected": "-6"
+              }
+            ],
+            "hint": "<p>Sketch the point at θ = π before assigning the Cartesian sign.</p>",
+            "solution": "<p>The radius is zero at the two ends, meeting the pole. Reflection across the initial line corresponds to replacing θ by \\(2\\pi-\\theta\\).</p><p>The largest radius occurs where cosine is minus one, at \\(\\theta=\\pi\\). It is \\(6\\).</p><p>At that angle the point lies to the left of the pole on the x-axis. Its x-coordinate is \\(-6\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A radius is a distance. Its value at the negative x-axis has a positive radius but a negative Cartesian x-coordinate.</p>"
+          }
+        ]
+      },
+      {
+        "id": "complete-by-symmetry",
+        "title": "When can I reflect one half of a sketch?",
+        "label": "Compare opposite angles",
+        "intro": "<p>Under reflection in the initial line an angle changes to its negative. The radius must be the same on the reflected ray.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>If both angles are in the domain and the radius function is even, use reflection to complete the graph.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "sketches-complete-by-symmetry-check",
+            "title": "Use symmetry to complete an admissible lobe",
+            "prompt": "<p>For \\(r=3 \\cos{\\left(2 \\theta \\right)}\\) on \\(- \\frac{\\pi}{4}\\le\\theta\\le \\frac{\\pi}{4}\\), find the greatest radius and decide whether the curve is symmetric about the initial line.</p>",
+            "fields": [
+              {
+                "key": "r",
+                "label": "Greatest radius",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "symmetry",
+                "label": "Symmetric about the initial line?",
+                "type": "choice",
+                "expected": "yes",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>Compare radii at opposite angles in the given angle interval.</p>",
+            "solution": "<p>Cosine is even, so replacing θ by its negative leaves the radius unchanged.</p><p>Both endpoints have zero radius. Their intermediate points form one connected lobe reflected across the initial line.</p><p>The maximum occurs at \\(\\theta=0\\), when cosine is one. It equals \\(3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Check the allowed interval too. Symmetry of a formula does not automatically give symmetry of a restricted arc.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "sketches-complete-by-symmetry-follow-up",
+            "title": "Use symmetry to complete an admissible lobe",
+            "prompt": "<p>For \\(r=5 \\cos{\\left(2 \\theta \\right)}\\) on \\(- \\frac{\\pi}{4}\\le\\theta\\le \\frac{\\pi}{4}\\), find the greatest radius and decide whether the curve is symmetric about the initial line.</p>",
+            "fields": [
+              {
+                "key": "r",
+                "label": "Greatest radius",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "symmetry",
+                "label": "Symmetric about the initial line?",
+                "type": "choice",
+                "expected": "yes",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>Compare radii at opposite angles in the given angle interval.</p>",
+            "solution": "<p>Cosine is even, so replacing θ by its negative leaves the radius unchanged.</p><p>Both endpoints have zero radius. Their intermediate points form one connected lobe reflected across the initial line.</p><p>The maximum occurs at \\(\\theta=0\\), when cosine is one. It equals \\(5\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "mark-start-and-end",
+        "title": "How can an increasing radius determine a spiral?",
+        "label": "Mark both endpoint rays",
+        "intro": "<p>When the direction turns and the radius steadily grows, the curve traces an outward spiral segment.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Evaluate positive radius at the start, the end and one intermediate axis. Then attach each point to the correct ray.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "sketches-mark-start-and-end-check",
+            "title": "Sketch a spiral from its endpoint rays",
+            "prompt": "<p>For \\(r=2 \\theta + 3\\) on \\(0\\le\\theta\\le \\pi\\), find the starting x-coordinate, ending x-coordinate and the height on the positive y-axis.</p>",
+            "fields": [
+              {
+                "key": "start",
+                "label": "Starting x-coordinate",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "end",
+                "label": "Final x-coordinate",
+                "type": "number",
+                "expected": "-2*pi - 3"
+              },
+              {
+                "key": "height",
+                "label": "Height on the positive y-axis",
+                "type": "number",
+                "expected": "3 + pi"
+              }
+            ],
+            "hint": "<p>Evaluate the radius on each special ray and use the direction to give signed coordinates.</p>",
+            "solution": "<p>The radius increases as the direction turns anticlockwise. At θ zero the starting point is \\(\\left(3,0\\right)\\).</p><p>At θ equal to π, the curve lies on the negative x-axis, so the ending position is \\(\\left(- 2 \\pi - 3,0\\right)\\).</p><p>At \\(\\theta=\\frac{\\pi}{2}\\) the radius equals the y-coordinate, giving \\(3 + \\pi\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The start is not automatically the pole. Calculate its radius at the lower angular limit.</p>"
+          }
+        ]
+      },
+      {
+        "id": "cross-an-axis",
+        "title": "How do I distinguish the pole from another point on an axis?",
+        "label": "Use the radius with each special angle",
+        "intro": "<p>An axis point can occur because a sine or cosine projection vanishes even when the radius is non-zero.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>First find all cases where radius is zero. Then check the permitted axis directions separately for ordinary intercepts.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "sketches-cross-an-axis-check",
+            "title": "Distinguish a pole from an ordinary axis crossing",
+            "prompt": "<p>The curve is \\(r=3 \\cos{\\left(\\theta \\right)} + 3\\) for \\(0\\le\\theta\\le 2 \\pi\\). Give the positive x-intercept and the angle at the pole.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Positive x-intercept",
+                "type": "number",
+                "expected": "6"
+              },
+              {
+                "key": "angle",
+                "label": "Pole angle in radians",
+                "type": "number",
+                "expected": "pi"
+              }
+            ],
+            "hint": "<p>Use r = 0 for the pole. Check ordinary axis intersections separately.</p>",
+            "solution": "<p>The initial line is crossed at \\(\\theta=0\\) with radius \\(6\\). The right intercept is \\(\\left(6,0\\right)\\).</p><p>A pole point has r equal to zero, requiring cosine minus one.</p><p>This occurs at \\(\\theta=\\pi\\) within the stated interval.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Several angles may describe the same pole. Do not count the origin as a different point for each such angle.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "sketches-cross-an-axis-follow-up",
+            "title": "Distinguish a pole from an ordinary axis crossing",
+            "prompt": "<p>The curve is \\(r=5 \\cos{\\left(\\theta \\right)} + 5\\) for \\(0\\le\\theta\\le 2 \\pi\\). Give the positive x-intercept and the angle at the pole.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Positive x-intercept",
+                "type": "number",
+                "expected": "10"
+              },
+              {
+                "key": "angle",
+                "label": "Pole angle in radians",
+                "type": "number",
+                "expected": "pi"
+              }
+            ],
+            "hint": "<p>Use r = 0 for the pole. Check ordinary axis intersections separately.</p>",
+            "solution": "<p>The initial line is crossed at \\(\\theta=0\\) with radius \\(10\\). The right intercept is \\(\\left(10,0\\right)\\).</p><p>A pole point has r equal to zero, requiring cosine minus one.</p><p>This occurs at \\(\\theta=\\pi\\) within the stated interval.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find the angular interval for a non-negative petal",
+        "question": "<p>On \\(0\\le\\theta\\le \\pi\\), keep only non-negative values in \\(r=2 \\sin{\\left(2 \\theta \\right)}\\). Give the complete allowed angle interval in interval notation, containing \\(\\frac{\\pi}{4}\\) and the maximum radius.</p>",
+        "solution": [
+          "<p>The sine factor is non-negative from zero through \\(\\frac{\\pi}{2}\\) in this part of the interval.</p>",
+          "<p>The isolated angle \\(\\pi\\) is also a pole, but lies outside the requested connected piece.</p>",
+          "<p>Within the requested interval the sine reaches one at \\(\\theta=\\frac{\\pi}{4}\\), so the maximum radius is \\(2\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the pole and opposite-axis landmark",
+        "question": "<p>For \\(r=2 - 2 \\cos{\\left(\\theta \\right)}\\) on \\(0\\le\\theta\\le 2 \\pi\\), identify the greatest radius and the x-coordinate of the point attaining it.</p>",
+        "solution": [
+          "<p>The radius is zero at the two ends, meeting the pole. Reflection across the initial line corresponds to replacing θ by \\(2\\pi-\\theta\\).</p>",
+          "<p>The largest radius occurs where cosine is minus one, at \\(\\theta=\\pi\\). It is \\(4\\).</p>",
+          "<p>At that angle the point lies to the left of the pole on the x-axis. Its x-coordinate is \\(-4\\).</p>"
+        ]
+      },
+      {
+        "title": "Use symmetry to complete an admissible lobe",
+        "question": "<p>For \\(r=2 \\cos{\\left(2 \\theta \\right)}\\) on \\(- \\frac{\\pi}{4}\\le\\theta\\le \\frac{\\pi}{4}\\), find the greatest radius and decide whether the curve is symmetric about the initial line.</p>",
+        "solution": [
+          "<p>Cosine is even, so replacing θ by its negative leaves the radius unchanged.</p>",
+          "<p>Both endpoints have zero radius. Their intermediate points form one connected lobe reflected across the initial line.</p>",
+          "<p>The maximum occurs at \\(\\theta=0\\), when cosine is one. It equals \\(2\\).</p>"
+        ]
+      },
+      {
+        "title": "Use symmetry to complete an admissible lobe",
+        "question": "<p>For \\(r=4 \\cos{\\left(2 \\theta \\right)}\\) on \\(- \\frac{\\pi}{4}\\le\\theta\\le \\frac{\\pi}{4}\\), find the greatest radius and decide whether the curve is symmetric about the initial line.</p>",
+        "solution": [
+          "<p>Cosine is even, so replacing θ by its negative leaves the radius unchanged.</p>",
+          "<p>Both endpoints have zero radius. Their intermediate points form one connected lobe reflected across the initial line.</p>",
+          "<p>The maximum occurs at \\(\\theta=0\\), when cosine is one. It equals \\(4\\).</p>"
+        ]
+      },
+      {
+        "title": "Sketch a spiral from its endpoint rays",
+        "question": "<p>For \\(r=\\theta + 2\\) on \\(0\\le\\theta\\le \\pi\\), find the starting x-coordinate, ending x-coordinate and the height on the positive y-axis.</p>",
+        "solution": [
+          "<p>The radius increases as the direction turns anticlockwise. At θ zero the starting point is \\(\\left(2,0\\right)\\).</p>",
+          "<p>At θ equal to π, the curve lies on the negative x-axis, so the ending position is \\(\\left(- \\pi - 2,0\\right)\\).</p>",
+          "<p>At \\(\\theta=\\frac{\\pi}{2}\\) the radius equals the y-coordinate, giving \\(\\frac{\\pi}{2} + 2\\).</p>"
+        ]
+      },
+      {
+        "title": "Distinguish a pole from an ordinary axis crossing",
+        "question": "<p>The curve is \\(r=2 \\cos{\\left(\\theta \\right)} + 2\\) for \\(0\\le\\theta\\le 2 \\pi\\). Give the positive x-intercept and the angle at the pole.</p>",
+        "solution": [
+          "<p>The initial line is crossed at \\(\\theta=0\\) with radius \\(4\\). The right intercept is \\(\\left(4,0\\right)\\).</p>",
+          "<p>A pole point has r equal to zero, requiring cosine minus one.</p>",
+          "<p>This occurs at \\(\\theta=\\pi\\) within the stated interval.</p>"
+        ]
+      },
+      {
+        "title": "Distinguish a pole from an ordinary axis crossing",
+        "question": "<p>The curve is \\(r=4 \\cos{\\left(\\theta \\right)} + 4\\) for \\(0\\le\\theta\\le 2 \\pi\\). Give the positive x-intercept and the angle at the pole.</p>",
+        "solution": [
+          "<p>The initial line is crossed at \\(\\theta=0\\) with radius \\(8\\). The right intercept is \\(\\left(8,0\\right)\\).</p>",
+          "<p>A pole point has r equal to zero, requiring cosine minus one.</p>",
+          "<p>This occurs at \\(\\theta=\\pi\\) within the stated interval.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "sketches-choose-the-admissible-interval-extra",
+        "title": "Find the angular interval for a non-negative petal",
+        "prompt": "<p>On \\(0\\le\\theta\\le \\pi\\), keep only non-negative values in \\(r=4 \\sin{\\left(2 \\theta \\right)}\\). Give the complete allowed angle interval in interval notation, containing \\(\\frac{\\pi}{4}\\) and the maximum radius.</p>",
+        "fields": [
+          {
+            "key": "angles",
+            "label": "Allowed angular interval (radians)",
+            "type": "set",
+            "expected": "[0,pi/2]"
+          },
+          {
+            "key": "r",
+            "label": "Maximum radius",
+            "type": "number",
+            "expected": "4"
+          }
+        ],
+        "hint": "<p>Find where 2θ runs through a non-negative sine interval, then divide both endpoints by two.</p>",
+        "solution": "<p>The sine factor is non-negative from zero through \\(\\frac{\\pi}{2}\\) in this part of the interval.</p><p>The isolated angle \\(\\pi\\) is also a pole, but lies outside the requested connected piece.</p><p>Within the requested interval the sine reaches one at \\(\\theta=\\frac{\\pi}{4}\\), so the maximum radius is \\(4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "sketches-choose-landmarks-extra",
+        "title": "Use the pole and opposite-axis landmark",
+        "prompt": "<p>For \\(r=4 - 4 \\cos{\\left(\\theta \\right)}\\) on \\(0\\le\\theta\\le 2 \\pi\\), identify the greatest radius and the x-coordinate of the point attaining it.</p>",
+        "fields": [
+          {
+            "key": "r",
+            "label": "Largest radius",
+            "type": "number",
+            "expected": "8"
+          },
+          {
+            "key": "x",
+            "label": "x-coordinate of farthest point",
+            "type": "number",
+            "expected": "-8"
+          }
+        ],
+        "hint": "<p>Sketch the point at θ = π before assigning the Cartesian sign.</p>",
+        "solution": "<p>The radius is zero at the two ends, meeting the pole. Reflection across the initial line corresponds to replacing θ by \\(2\\pi-\\theta\\).</p><p>The largest radius occurs where cosine is minus one, at \\(\\theta=\\pi\\). It is \\(8\\).</p><p>At that angle the point lies to the left of the pole on the x-axis. Its x-coordinate is \\(-8\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "sketches-complete-by-symmetry-extra",
+        "title": "Use symmetry to complete an admissible lobe",
+        "prompt": "<p>For \\(r=6 \\cos{\\left(2 \\theta \\right)}\\) on \\(- \\frac{\\pi}{4}\\le\\theta\\le \\frac{\\pi}{4}\\), find the greatest radius and decide whether the curve is symmetric about the initial line.</p>",
+        "fields": [
+          {
+            "key": "r",
+            "label": "Greatest radius",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "symmetry",
+            "label": "Symmetric about the initial line?",
+            "type": "choice",
+            "expected": "yes",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          }
+        ],
+        "hint": "<p>Compare radii at opposite angles in the given angle interval.</p>",
+        "solution": "<p>Cosine is even, so replacing θ by its negative leaves the radius unchanged.</p><p>Both endpoints have zero radius. Their intermediate points form one connected lobe reflected across the initial line.</p><p>The maximum occurs at \\(\\theta=0\\), when cosine is one. It equals \\(6\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "sketches-mark-start-and-end-extra",
+        "title": "Sketch a spiral from its endpoint rays",
+        "prompt": "<p>For \\(r=3 \\theta + 4\\) on \\(0\\le\\theta\\le \\pi\\), find the starting x-coordinate, ending x-coordinate and the height on the positive y-axis.</p>",
+        "fields": [
+          {
+            "key": "start",
+            "label": "Starting x-coordinate",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "end",
+            "label": "Final x-coordinate",
+            "type": "number",
+            "expected": "-3*pi - 4"
+          },
+          {
+            "key": "height",
+            "label": "Height on the positive y-axis",
+            "type": "number",
+            "expected": "4 + 3*pi/2"
+          }
+        ],
+        "hint": "<p>Evaluate the radius on each special ray and use the direction to give signed coordinates.</p>",
+        "solution": "<p>The radius increases as the direction turns anticlockwise. At θ zero the starting point is \\(\\left(4,0\\right)\\).</p><p>At θ equal to π, the curve lies on the negative x-axis, so the ending position is \\(\\left(- 3 \\pi - 4,0\\right)\\).</p><p>At \\(\\theta=\\frac{\\pi}{2}\\) the radius equals the y-coordinate, giving \\(4 + \\frac{3 \\pi}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "sketches-cross-an-axis-extra",
+        "title": "Distinguish a pole from an ordinary axis crossing",
+        "prompt": "<p>The curve is \\(r=6 \\cos{\\left(\\theta \\right)} + 6\\) for \\(0\\le\\theta\\le 2 \\pi\\). Give the positive x-intercept and the angle at the pole.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Positive x-intercept",
+            "type": "number",
+            "expected": "12"
+          },
+          {
+            "key": "angle",
+            "label": "Pole angle in radians",
+            "type": "number",
+            "expected": "pi"
+          }
+        ],
+        "hint": "<p>Use r = 0 for the pole. Check ordinary axis intersections separately.</p>",
+        "solution": "<p>The initial line is crossed at \\(\\theta=0\\) with radius \\(12\\). The right intercept is \\(\\left(12,0\\right)\\).</p><p>A pole point has r equal to zero, requiring cosine minus one.</p><p>This occurs at \\(\\theta=\\pi\\) within the stated interval.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Petal",
+        "definition": "<p>A loop of a polar curve traced between two arrivals at the same point.</p>"
+      },
+      {
+        "term": "Radius convention",
+        "definition": "<p>The restriction placed on the sign of the radius in this problem.</p>"
+      },
+      {
+        "term": "Landmark",
+        "definition": "<p>An endpoint, intercept, pole crossing or largest-radius point used to organize a sketch.</p>"
+      },
+      {
+        "term": "Symmetry",
+        "definition": "<p>One part of the curve is the reflection of another part.</p>"
+      },
+      {
+        "term": "Spiral",
+        "definition": "<p>A curve that turns around the pole with a progressively changing radius.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Before sketching</th><td>Find where the radius is non-negative on the given interval.</td></tr><tr><th scope=\"row\">Poles</th><td>Solve the radius equation with right-hand side zero.</td></tr><tr><th scope=\"row\">Axis landmarks</th><td>Use the special angle and compute the signed Cartesian position.</td></tr><tr><th scope=\"row\">Initial-line symmetry</th><td>Compare allowed pairs of angles with equal radii.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For \\(r=3\\sin(2\\theta)\\) on \\(0\\le\\theta\\le \\frac{\\pi}{2}\\), where is the radius greatest?</p><p><strong>Check</strong> At \\(\\theta=\\frac{\\pi}{4}\\), when the radius is three.</p>",
+      "checks": "<ul><li>Do not draw a reflected negative-radius branch in a question that restricts r to non-negative values.</li><li>A radius is a distance. Its value at the negative x-axis has a positive radius but a negative Cartesian x-coordinate.</li></ul>",
+      "examTip": "<p>Show symmetry, initial-line intersections, behaviour at the pole and extreme radii on the sketch.</p>"
+    },
+    "related": [
+      {
+        "title": "Connecting polar and Cartesian forms",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_polar_coordinates"
+      },
+      {
+        "title": "Intersections and changing boundaries",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_polar_intersections"
+      }
+    ]
+  },
+  "fp1_polar_intersections": {
+    "updatedOn": "2026-11-21",
+    "description": "Find geometric intersections of polar curves, test the pole independently and choose the active boundary on each interval.",
+    "sections": [
+      {
+        "id": "match-two-radii",
+        "title": "When does an equality of radii give a common point?",
+        "label": "Use a common ray and a positive radius",
+        "intro": "<p>Away from the pole, a polar point with non-negative radius is specified by its radius and direction. Choose a common angle for the two curves.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Solve equality of the two radii inside the overlapping domain and check the common radius is positive.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "intersections-match-two-radii-check",
+            "title": "Equate the distances on a common ray",
+            "prompt": "<p>Find the polar coordinates in the first quadrant of the common point of \\(r=6 \\cos{\\left(\\theta \\right)}\\) and \\(r=3\\).</p>",
+            "fields": [
+              {
+                "key": "r",
+                "label": "Common radius",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "angle",
+                "label": "Angle in radians",
+                "type": "number",
+                "expected": "pi/3"
+              }
+            ],
+            "hint": "<p>Solve on the stated quadrant before evaluating the radius.</p>",
+            "solution": "<p>At a non-pole intersection both curves have the same positive radius along the same ray.</p><p>Equating radii gives \\(\\cos\\theta=\\frac12\\). The first-quadrant solution is \\(\\theta=\\frac{\\pi}{3}\\).</p><p>The shared radius is \\(3\\), so the point is \\(\\left(3,\\frac{\\pi}{3}\\right)\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Equating radii without an angular condition can introduce points outside one curve’s stated sweep.</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-the-pole-separately",
+        "title": "Can both curves meet the pole at different angles?",
+        "label": "Check each radius independently",
+        "intro": "<p>A zero radius is the same Cartesian point for all angles. For the pole, it is enough that each curve reaches zero somewhere in its own domain.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For other intersections both curves must share a direction as well as a positive radius.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_polar_intersections/two-circles-common-points.svg",
+              "caption": "<p>The pole is common even though each circle reaches it at a different polar angle.</p>",
+              "alt": "Two circles share the pole and the non-pole point (2, 2) in the first quadrant. Each circle has a different centre.",
+              "width": 465,
+              "height": 245
+            }
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "intersections-check-the-pole-separately-check",
+            "title": "Check the pole through each curve separately",
+            "prompt": "<p>The full non-negative-radius circles are \\(r=6 \\cos{\\left(\\theta \\right)}\\) and \\(r=6 \\sin{\\left(\\theta \\right)}\\). Give the polar radius and angle of their common non-pole point. Do they also share the pole?</p>",
+            "fields": [
+              {
+                "key": "r",
+                "label": "Non-pole radius",
+                "type": "number",
+                "expected": "3*sqrt(2)"
+              },
+              {
+                "key": "angle",
+                "label": "Angle in radians",
+                "type": "number",
+                "expected": "pi/4"
+              },
+              {
+                "key": "pole",
+                "label": "Does the pole belong to both?",
+                "type": "choice",
+                "expected": "yes",
+                "options": {
+                  "yes": "Yes",
+                  "no": "No"
+                }
+              }
+            ],
+            "hint": "<p>A shared pole does not require the same angle to give zero radius on both curves.</p>",
+            "solution": "<p>The positive shared radii give cosine equal to sine. Their common positive-angle ray is at \\(\\theta=\\frac{\\pi}{4}\\).</p><p>The shared radius is \\(3 \\sqrt{2}\\).</p><p>The cosine circle has zero radius at a y-axis direction. The sine circle has zero radius on the initial line. These both denote the same geometric pole.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Failure to find a simultaneous zero at the same angle does not rule out the shared pole.</p>"
+          }
+        ]
+      },
+      {
+        "id": "switch-the-inner-curve",
+        "title": "Which radius bounds the common region?",
+        "label": "Compare the smaller radii",
+        "intro": "<p>On a common ray, points inside both regions are limited by whichever boundary reaches the smaller radius.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find every switch by equating radii, then test each subinterval to choose the active boundary.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "intersections-switch-the-inner-curve-check",
+            "title": "Identify which curve bounds the common interior",
+            "prompt": "<p>For the curves \\(r=3 \\cos{\\left(\\theta \\right)} + 3\\) and \\(r=3\\) on \\(0\\le\\theta\\le \\pi\\), find their positive-radius switch angle. Which curve bounds their common region near the initial line?</p>",
+            "fields": [
+              {
+                "key": "angle",
+                "label": "Switch angle in radians",
+                "type": "number",
+                "expected": "pi/2"
+              },
+              {
+                "key": "boundary",
+                "label": "Inner boundary near theta = 0",
+                "type": "choice",
+                "expected": "circle",
+                "options": {
+                  "circle": "The constant-radius circle",
+                  "cardioid": "The curve with the cosine term"
+                }
+              }
+            ],
+            "hint": "<p>Compare sample radii on both sides of the equal-radius angle.</p>",
+            "solution": "<p>The common interior reaches only as far as the smaller radius.</p><p>Near θ zero, the first radius is bigger, so the constant-radius circle bounds the common region there.</p><p>Equality at positive radius gives cosine zero. The switch is at \\(\\theta=\\frac{\\pi}{2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The same curve need not give the inner boundary throughout the region.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "intersections-switch-the-inner-curve-follow-up",
+            "title": "Identify which curve bounds the common interior",
+            "prompt": "<p>For the curves \\(r=5 \\cos{\\left(\\theta \\right)} + 5\\) and \\(r=5\\) on \\(0\\le\\theta\\le \\pi\\), find their positive-radius switch angle. Which curve bounds their common region near the initial line?</p>",
+            "fields": [
+              {
+                "key": "angle",
+                "label": "Switch angle in radians",
+                "type": "number",
+                "expected": "pi/2"
+              },
+              {
+                "key": "boundary",
+                "label": "Inner boundary near theta = 0",
+                "type": "choice",
+                "expected": "circle",
+                "options": {
+                  "circle": "The constant-radius circle",
+                  "cardioid": "The curve with the cosine term"
+                }
+              }
+            ],
+            "hint": "<p>Compare sample radii on both sides of the equal-radius angle.</p>",
+            "solution": "<p>The common interior reaches only as far as the smaller radius.</p><p>Near θ zero, the first radius is bigger, so the constant-radius circle bounds the common region there.</p><p>Equality at positive radius gives cosine zero. The switch is at \\(\\theta=\\frac{\\pi}{2}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-each-angular-candidate",
+        "title": "Why can an algebraic solution still be excluded?",
+        "label": "Compare against both angular intervals",
+        "intro": "<p>Trigonometric or algebraic equalities may have more solutions than the original curves allow.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For each candidate verify the interval and the sign of radius. Check excluded endpoints and duplicate angles explicitly.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "intersections-check-each-angular-candidate-check",
+            "title": "Check angle restrictions after solving an algebraic intersection",
+            "prompt": "<p>The curves are \\(r=\\theta + 3\\) and \\(r=\\theta^{2} + 3\\) for \\(0<\\theta\\le2\\). Find the angle and radius of their intersection.</p>",
+            "fields": [
+              {
+                "key": "angle",
+                "label": "Allowed angle in radians",
+                "type": "number",
+                "expected": "1"
+              },
+              {
+                "key": "r",
+                "label": "Common radius",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>An algebraic endpoint is valid only if it belongs to both curve domains.</p>",
+            "solution": "<p>Equating radii gives \\(\\theta^2-\\theta=\\theta(\\theta-1)=0\\).</p><p>The lower endpoint zero is excluded by the angle condition. The accepted solution is \\(\\theta=1\\).</p><p>The radius at that angle is \\(4\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not turn an open angular bound into a closed one when solving.</p>"
+          }
+        ]
+      },
+      {
+        "id": "divide-only-at-a-non-pole-point",
+        "title": "When is it valid to divide by a trigonometric factor?",
+        "label": "Treat a zero factor as its own case",
+        "intro": "<p>A factored equality may have one case corresponding to the pole and another giving a positive-radius point.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Record the zero-factor case first. Divide by that factor only when finding non-pole intersections.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "intersections-divide-only-at-a-non-pole-point-check",
+            "title": "Separate a positive-radius equation from a pole case",
+            "prompt": "<p>Find the non-pole intersection of \\(r=3 \\cos{\\left(\\theta \\right)}\\) and \\(r=3 \\sin{\\left(2 \\theta \\right)}\\) for \\(0\\le\\theta\\le \\frac{\\pi}{2}\\).</p>",
+            "fields": [
+              {
+                "key": "angle",
+                "label": "Non-pole angle in radians",
+                "type": "number",
+                "expected": "pi/6"
+              },
+              {
+                "key": "r",
+                "label": "Common radius",
+                "type": "number",
+                "expected": "3*sqrt(3)/2"
+              }
+            ],
+            "hint": "<p>Do not divide by cosine until the pole case has been excluded.</p>",
+            "solution": "<p>Use the double-angle identity and write \\(a\\cos\\theta=2a\\sin\\theta\\cos\\theta\\).</p><p>At the non-pole point the common radius is positive, so cosine can be divided out. This gives \\(\\sin\\theta=\\frac12\\).</p><p>Thus \\(\\theta=\\frac{\\pi}{6}\\) with radius \\(\\frac{3 \\sqrt{3}}{2}\\). The zero-cosine endpoint gives only the pole.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If the divided factor can be zero, losing that case can remove a required intersection.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "intersections-divide-only-at-a-non-pole-point-follow-up",
+            "title": "Separate a positive-radius equation from a pole case",
+            "prompt": "<p>Find the non-pole intersection of \\(r=5 \\cos{\\left(\\theta \\right)}\\) and \\(r=5 \\sin{\\left(2 \\theta \\right)}\\) for \\(0\\le\\theta\\le \\frac{\\pi}{2}\\).</p>",
+            "fields": [
+              {
+                "key": "angle",
+                "label": "Non-pole angle in radians",
+                "type": "number",
+                "expected": "pi/6"
+              },
+              {
+                "key": "r",
+                "label": "Common radius",
+                "type": "number",
+                "expected": "5*sqrt(3)/2"
+              }
+            ],
+            "hint": "<p>Do not divide by cosine until the pole case has been excluded.</p>",
+            "solution": "<p>Use the double-angle identity and write \\(a\\cos\\theta=2a\\sin\\theta\\cos\\theta\\).</p><p>At the non-pole point the common radius is positive, so cosine can be divided out. This gives \\(\\sin\\theta=\\frac12\\).</p><p>Thus \\(\\theta=\\frac{\\pi}{6}\\) with radius \\(\\frac{5 \\sqrt{3}}{2}\\). The zero-cosine endpoint gives only the pole.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Equate the distances on a common ray",
+        "question": "<p>Find the polar coordinates in the first quadrant of the common point of \\(r=4 \\cos{\\left(\\theta \\right)}\\) and \\(r=2\\).</p>",
+        "solution": [
+          "<p>At a non-pole intersection both curves have the same positive radius along the same ray.</p>",
+          "<p>Equating radii gives \\(\\cos\\theta=\\frac12\\). The first-quadrant solution is \\(\\theta=\\frac{\\pi}{3}\\).</p>",
+          "<p>The shared radius is \\(2\\), so the point is \\(\\left(2,\\frac{\\pi}{3}\\right)\\).</p>"
+        ]
+      },
+      {
+        "title": "Check the pole through each curve separately",
+        "question": "<p>The full non-negative-radius circles are \\(r=4 \\cos{\\left(\\theta \\right)}\\) and \\(r=4 \\sin{\\left(\\theta \\right)}\\). Give the polar radius and angle of their common non-pole point. Do they also share the pole?</p>",
+        "solution": [
+          "<p>The positive shared radii give cosine equal to sine. Their common positive-angle ray is at \\(\\theta=\\frac{\\pi}{4}\\).</p>",
+          "<p>The shared radius is \\(2 \\sqrt{2}\\).</p>",
+          "<p>The cosine circle has zero radius at a y-axis direction. The sine circle has zero radius on the initial line. These both denote the same geometric pole.</p>"
+        ]
+      },
+      {
+        "title": "Identify which curve bounds the common interior",
+        "question": "<p>For the curves \\(r=2 \\cos{\\left(\\theta \\right)} + 2\\) and \\(r=2\\) on \\(0\\le\\theta\\le \\pi\\), find their positive-radius switch angle. Which curve bounds their common region near the initial line?</p>",
+        "solution": [
+          "<p>The common interior reaches only as far as the smaller radius.</p>",
+          "<p>Near θ zero, the first radius is bigger, so the constant-radius circle bounds the common region there.</p>",
+          "<p>Equality at positive radius gives cosine zero. The switch is at \\(\\theta=\\frac{\\pi}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Identify which curve bounds the common interior",
+        "question": "<p>For the curves \\(r=4 \\cos{\\left(\\theta \\right)} + 4\\) and \\(r=4\\) on \\(0\\le\\theta\\le \\pi\\), find their positive-radius switch angle. Which curve bounds their common region near the initial line?</p>",
+        "solution": [
+          "<p>The common interior reaches only as far as the smaller radius.</p>",
+          "<p>Near θ zero, the first radius is bigger, so the constant-radius circle bounds the common region there.</p>",
+          "<p>Equality at positive radius gives cosine zero. The switch is at \\(\\theta=\\frac{\\pi}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Check angle restrictions after solving an algebraic intersection",
+        "question": "<p>The curves are \\(r=\\theta + 2\\) and \\(r=\\theta^{2} + 2\\) for \\(0<\\theta\\le2\\). Find the angle and radius of their intersection.</p>",
+        "solution": [
+          "<p>Equating radii gives \\(\\theta^2-\\theta=\\theta(\\theta-1)=0\\).</p>",
+          "<p>The lower endpoint zero is excluded by the angle condition. The accepted solution is \\(\\theta=1\\).</p>",
+          "<p>The radius at that angle is \\(3\\).</p>"
+        ]
+      },
+      {
+        "title": "Separate a positive-radius equation from a pole case",
+        "question": "<p>Find the non-pole intersection of \\(r=2 \\cos{\\left(\\theta \\right)}\\) and \\(r=2 \\sin{\\left(2 \\theta \\right)}\\) for \\(0\\le\\theta\\le \\frac{\\pi}{2}\\).</p>",
+        "solution": [
+          "<p>Use the double-angle identity and write \\(a\\cos\\theta=2a\\sin\\theta\\cos\\theta\\).</p>",
+          "<p>At the non-pole point the common radius is positive, so cosine can be divided out. This gives \\(\\sin\\theta=\\frac12\\).</p>",
+          "<p>Thus \\(\\theta=\\frac{\\pi}{6}\\) with radius \\(\\sqrt{3}\\). The zero-cosine endpoint gives only the pole.</p>"
+        ]
+      },
+      {
+        "title": "Separate a positive-radius equation from a pole case",
+        "question": "<p>Find the non-pole intersection of \\(r=4 \\cos{\\left(\\theta \\right)}\\) and \\(r=4 \\sin{\\left(2 \\theta \\right)}\\) for \\(0\\le\\theta\\le \\frac{\\pi}{2}\\).</p>",
+        "solution": [
+          "<p>Use the double-angle identity and write \\(a\\cos\\theta=2a\\sin\\theta\\cos\\theta\\).</p>",
+          "<p>At the non-pole point the common radius is positive, so cosine can be divided out. This gives \\(\\sin\\theta=\\frac12\\).</p>",
+          "<p>Thus \\(\\theta=\\frac{\\pi}{6}\\) with radius \\(2 \\sqrt{3}\\). The zero-cosine endpoint gives only the pole.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "intersections-match-two-radii-extra",
+        "title": "Equate the distances on a common ray",
+        "prompt": "<p>Find the polar coordinates in the first quadrant of the common point of \\(r=8 \\cos{\\left(\\theta \\right)}\\) and \\(r=4\\).</p>",
+        "fields": [
+          {
+            "key": "r",
+            "label": "Common radius",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "angle",
+            "label": "Angle in radians",
+            "type": "number",
+            "expected": "pi/3"
+          }
+        ],
+        "hint": "<p>Solve on the stated quadrant before evaluating the radius.</p>",
+        "solution": "<p>At a non-pole intersection both curves have the same positive radius along the same ray.</p><p>Equating radii gives \\(\\cos\\theta=\\frac12\\). The first-quadrant solution is \\(\\theta=\\frac{\\pi}{3}\\).</p><p>The shared radius is \\(4\\), so the point is \\(\\left(4,\\frac{\\pi}{3}\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "intersections-check-the-pole-separately-extra",
+        "title": "Check the pole through each curve separately",
+        "prompt": "<p>The full non-negative-radius circles are \\(r=8 \\cos{\\left(\\theta \\right)}\\) and \\(r=8 \\sin{\\left(\\theta \\right)}\\). Give the polar radius and angle of their common non-pole point. Do they also share the pole?</p>",
+        "fields": [
+          {
+            "key": "r",
+            "label": "Non-pole radius",
+            "type": "number",
+            "expected": "4*sqrt(2)"
+          },
+          {
+            "key": "angle",
+            "label": "Angle in radians",
+            "type": "number",
+            "expected": "pi/4"
+          },
+          {
+            "key": "pole",
+            "label": "Does the pole belong to both?",
+            "type": "choice",
+            "expected": "yes",
+            "options": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          }
+        ],
+        "hint": "<p>A shared pole does not require the same angle to give zero radius on both curves.</p>",
+        "solution": "<p>The positive shared radii give cosine equal to sine. Their common positive-angle ray is at \\(\\theta=\\frac{\\pi}{4}\\).</p><p>The shared radius is \\(4 \\sqrt{2}\\).</p><p>The cosine circle has zero radius at a y-axis direction. The sine circle has zero radius on the initial line. These both denote the same geometric pole.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "intersections-switch-the-inner-curve-extra",
+        "title": "Identify which curve bounds the common interior",
+        "prompt": "<p>For the curves \\(r=6 \\cos{\\left(\\theta \\right)} + 6\\) and \\(r=6\\) on \\(0\\le\\theta\\le \\pi\\), find their positive-radius switch angle. Which curve bounds their common region near the initial line?</p>",
+        "fields": [
+          {
+            "key": "angle",
+            "label": "Switch angle in radians",
+            "type": "number",
+            "expected": "pi/2"
+          },
+          {
+            "key": "boundary",
+            "label": "Inner boundary near theta = 0",
+            "type": "choice",
+            "expected": "circle",
+            "options": {
+              "circle": "The constant-radius circle",
+              "cardioid": "The curve with the cosine term"
+            }
+          }
+        ],
+        "hint": "<p>Compare sample radii on both sides of the equal-radius angle.</p>",
+        "solution": "<p>The common interior reaches only as far as the smaller radius.</p><p>Near θ zero, the first radius is bigger, so the constant-radius circle bounds the common region there.</p><p>Equality at positive radius gives cosine zero. The switch is at \\(\\theta=\\frac{\\pi}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "intersections-check-each-angular-candidate-extra",
+        "title": "Check angle restrictions after solving an algebraic intersection",
+        "prompt": "<p>The curves are \\(r=\\theta + 4\\) and \\(r=\\theta^{2} + 4\\) for \\(0<\\theta\\le2\\). Find the angle and radius of their intersection.</p>",
+        "fields": [
+          {
+            "key": "angle",
+            "label": "Allowed angle in radians",
+            "type": "number",
+            "expected": "1"
+          },
+          {
+            "key": "r",
+            "label": "Common radius",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>An algebraic endpoint is valid only if it belongs to both curve domains.</p>",
+        "solution": "<p>Equating radii gives \\(\\theta^2-\\theta=\\theta(\\theta-1)=0\\).</p><p>The lower endpoint zero is excluded by the angle condition. The accepted solution is \\(\\theta=1\\).</p><p>The radius at that angle is \\(5\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "intersections-divide-only-at-a-non-pole-point-extra",
+        "title": "Separate a positive-radius equation from a pole case",
+        "prompt": "<p>Find the non-pole intersection of \\(r=6 \\cos{\\left(\\theta \\right)}\\) and \\(r=6 \\sin{\\left(2 \\theta \\right)}\\) for \\(0\\le\\theta\\le \\frac{\\pi}{2}\\).</p>",
+        "fields": [
+          {
+            "key": "angle",
+            "label": "Non-pole angle in radians",
+            "type": "number",
+            "expected": "pi/6"
+          },
+          {
+            "key": "r",
+            "label": "Common radius",
+            "type": "number",
+            "expected": "3*sqrt(3)"
+          }
+        ],
+        "hint": "<p>Do not divide by cosine until the pole case has been excluded.</p>",
+        "solution": "<p>Use the double-angle identity and write \\(a\\cos\\theta=2a\\sin\\theta\\cos\\theta\\).</p><p>At the non-pole point the common radius is positive, so cosine can be divided out. This gives \\(\\sin\\theta=\\frac12\\).</p><p>Thus \\(\\theta=\\frac{\\pi}{6}\\) with radius \\(3 \\sqrt{3}\\). The zero-cosine endpoint gives only the pole.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Intersection",
+        "definition": "<p>A geometric point belonging to both curves.</p>"
+      },
+      {
+        "term": "Common ray",
+        "definition": "<p>A direction from the pole present in both angular domains.</p>"
+      },
+      {
+        "term": "Non-pole point",
+        "definition": "<p>A point with strictly positive radius in the stated convention.</p>"
+      },
+      {
+        "term": "Common region",
+        "definition": "<p>Points inside both curves.</p>"
+      },
+      {
+        "term": "Switch angle",
+        "definition": "<p>A direction where the active boundary changes.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Non-pole</th><td>Equate the radii on a common allowed ray.</td></tr><tr><th scope=\"row\">Pole</th><td>Check each curve has an allowed zero radius.</td></tr><tr><th scope=\"row\">Common area boundary</th><td>Use the smaller radius on each angular interval.</td></tr><tr><th scope=\"row\">Candidate angle</th><td>Check it is in both domains and radius satisfies the sign condition.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>The full circles \\(r=2\\sin\\theta\\) and \\(r=2\\cos\\theta\\) intersect away from the pole at which angle?</p><p><strong>Check</strong> \\(\\theta=\\frac{\\pi}{4}\\) and shared radius \\(\\sqrt{2}\\). They also share the pole.</p>",
+      "checks": "<ul><li>Equating radii without an angular condition can introduce points outside one curve’s stated sweep.</li><li>Failure to find a simultaneous zero at the same angle does not rule out the shared pole.</li></ul>",
+      "examTip": "<p>Separate the geometric pole from solutions found by matching positive radii.</p>"
+    },
+    "related": [
+      {
+        "title": "Sketching admissible polar curves",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_polar_sketches"
+      },
+      {
+        "title": "Polar areas and composite regions",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_polar_areas"
+      }
+    ]
+  },
+  "fp1_polar_areas": {
+    "updatedOn": "2026-11-21",
+    "description": "Calculate polar sector, petal and overlapping areas. Split active boundaries and account for straight edges.",
+    "sections": [
+      {
+        "id": "one-sector-sweep",
+        "title": "Why does a polar sector use half the square of the radius?",
+        "label": "Integrate the sector element",
+        "intro": "<p>A small wedge with angle in radians has area approximately half its radius squared times its angle. Sum wedges over the interval as their widths tend to zero.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(A=\\frac12\\int_\\alpha^\\beta r^2\\,\\mathrm d\\theta\\) when the boundary is traced once on the interval.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "areas-one-sector-sweep-check",
+            "title": "Integrate one petal exactly once",
+            "prompt": "<p>Find the exact area of the petal \\(r=3 \\sin{\\left(2 \\theta \\right)}\\) for \\(0\\le\\theta\\le \\frac{\\pi}{2}\\). Give the multiplier of \\(\\pi\\) in the area.</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Multiplier of pi",
+                "type": "number",
+                "expected": "9/8"
+              }
+            ],
+            "hint": "<p>Use the given one-petal interval in radians.</p>",
+            "solution": "<p>The interval runs from the pole round one petal back to the pole. The sector element is \\(\\frac12r^2\\,\\mathrm d\\theta\\).</p><p>Replace \\(\\sin^2(2\\theta)\\) with \\(\\frac12\\bigl(1-\\cos(4\\theta)\\bigr)\\).</p><p>The cosine contribution integrates to zero at these endpoints. The area is \\(\\frac{9 \\pi}{8}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Use radians and square the entire radius before integrating. Counting the same petal twice doubles the answer.</p>"
+          }
+        ]
+      },
+      {
+        "id": "spiral-between-rays",
+        "title": "How is a spiral area measured between two rays?",
+        "label": "Integrate the changing radius",
+        "intro": "<p>The two rays determine the angular limits. The curve gives how far the sector extends on each ray.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Substitute the spiral radius, square it, and use the corresponding limits. A non-constant radius cannot be replaced with its final value.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "areas-spiral-between-rays-check",
+            "title": "Square the radius before integrating the spiral",
+            "prompt": "<p>Find the area between \\(r=3 \\theta\\) and the two endpoint rays on \\(0\\le\\theta\\le 3\\).</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Exact area",
+                "type": "number",
+                "expected": "81/2"
+              }
+            ],
+            "hint": "<p>The integral uses the square of the radius and the factor one half.</p>",
+            "solution": "<p>The radius is non-negative on the interval and sweeps each angle once.</p><p>Use \\(A=\\frac12\\int_0^{3}\\left(3 \\theta\\right)^2\\,\\mathrm d\\theta\\).</p><p>Integrate the squared radius to obtain \\(\\frac{81}{2}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A missing factor of one half or a missing square changes the area’s scale.</p>"
+          }
+        ]
+      },
+      {
+        "id": "two-active-boundaries",
+        "title": "How do I find the area common to two curves?",
+        "label": "Split when the smaller radius changes",
+        "intro": "<p>Each ray in the common region is cut off at the smaller of the two radii. Mark the intersection angles before integrating.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Split the integral at the switch angles and use the smaller radius on each interval. Use symmetry only after identifying what is being reflected.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_polar_areas/two-circle-common-area.svg",
+              "caption": "<p>Use the smaller radius at each angle inside the lens.</p>",
+              "alt": "Two circles meet at the pole and at (1, 1). The shaded lens in the first quadrant is their common region.",
+              "width": 465,
+              "height": 245
+            }
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "areas-two-active-boundaries-check",
+            "title": "Split the area when the smaller radius changes",
+            "prompt": "<p>Find the common area of the two full circles \\(r=3 \\sin{\\left(\\theta \\right)}\\) and \\(r=3 \\cos{\\left(\\theta \\right)}\\) with non-negative radii. Give coefficients in \\(A=p\\pi+q\\).</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Coefficient p",
+                "type": "number",
+                "expected": "9/8"
+              },
+              {
+                "key": "q",
+                "label": "Constant q",
+                "type": "number",
+                "expected": "-9/4"
+              }
+            ],
+            "hint": "<p>For a common interior use the smaller radius and split at the equal-radius ray.</p>",
+            "solution": "<p>The common interior is in the first quadrant. The sine radius is smaller before \\(\\theta=\\frac{\\pi}{4}\\), and the cosine radius is smaller after it.</p><p>Integrate half the smaller squared radius on each interval. By symmetry both contributions are equal.</p><p>Using the sine double-angle identity in the first part gives total \\(- \\frac{9}{4} + \\frac{9 \\pi}{8}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Using the larger radius instead gives some points that belong to only one region.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "areas-two-active-boundaries-follow-up",
+            "title": "Split the area when the smaller radius changes",
+            "prompt": "<p>Find the common area of the two full circles \\(r=5 \\sin{\\left(\\theta \\right)}\\) and \\(r=5 \\cos{\\left(\\theta \\right)}\\) with non-negative radii. Give coefficients in \\(A=p\\pi+q\\).</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Coefficient p",
+                "type": "number",
+                "expected": "25/8"
+              },
+              {
+                "key": "q",
+                "label": "Constant q",
+                "type": "number",
+                "expected": "-25/4"
+              }
+            ],
+            "hint": "<p>For a common interior use the smaller radius and split at the equal-radius ray.</p>",
+            "solution": "<p>The common interior is in the first quadrant. The sine radius is smaller before \\(\\theta=\\frac{\\pi}{4}\\), and the cosine radius is smaller after it.</p><p>Integrate half the smaller squared radius on each interval. By symmetry both contributions are equal.</p><p>Using the sine double-angle identity in the first part gives total \\(- \\frac{25}{4} + \\frac{25 \\pi}{8}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "region-between-curves",
+        "title": "What do I subtract in the area between two polar curves?",
+        "label": "Subtract the inner squared radius",
+        "intro": "<p>When the outer and inner boundaries are fixed on a shared angle interval, each small wedge between them has area equal to the outer wedge minus the inner wedge.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>\\(A=\\frac12\\int_\\alpha^\\beta \\left(r_{\\rm outer}^2-r_{\\rm inner}^2\\right)\\,\\mathrm d\\theta\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "areas-region-between-curves-check",
+            "title": "Subtract squared radii on a shared angular interval",
+            "prompt": "<p>Between the rays \\(\\theta=0\\) and \\(\\theta=\\frac{\\pi}{2}\\), find the area inside \\(r=5\\) and outside \\(r=3\\). Give the coefficient of \\(\\pi\\).</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Multiplier of pi",
+                "type": "number",
+                "expected": "4"
+              }
+            ],
+            "hint": "<p>The difference of the squares is not the square of the difference.</p>",
+            "solution": "<p>The outer sector has radius \\(5\\) and the inner sector radius \\(3\\).</p><p>Subtract half the inner radius squared from half the outer radius squared at each angle, then integrate over the common interval.</p><p>The area is \\(4 \\pi\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The difference of squares is not the square of the difference.</p>"
+          }
+        ]
+      },
+      {
+        "id": "straight-edge-correction",
+        "title": "Why does the full sector overcount a circular segment?",
+        "label": "Remove the triangle below the chord",
+        "intro": "<p>When a line cuts a cap off a circle, rays from the pole through the chord endpoints define a larger sector.</p>",
+        "minutes": 7,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Subtract the triangle under the chord or use a separate radial formula for the straight boundary. State the angle at the pole in radians.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "areas-straight-edge-correction-check",
+            "title": "Subtract a triangle for a straight boundary",
+            "prompt": "<p>Inside \\(r=3\\), find the area above the chord \\(y=\\frac{3}{2}\\). Give coefficients in \\(A=p\\pi+q\\sqrt3\\).</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Coefficient p",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "q",
+                "label": "Coefficient q",
+                "type": "number",
+                "expected": "-9/4"
+              }
+            ],
+            "hint": "<p>The sector alone includes the central triangle below the chord.</p>",
+            "solution": "<p>At the chord endpoints \\(\\sin\\theta=\\frac12\\), so the rays are \\(\\theta=\\frac{\\pi}{6}\\) and \\(\\theta=\\frac{5 \\pi}{6}\\).</p><p>The enclosed area equals the sector between these rays minus the triangle from the pole to the chord.</p><p>The angle at the pole is \\(\\frac{2 \\pi}{3}\\). Use the sector and sine-area formulae to get \\(- \\frac{9 \\sqrt{3}}{4} + 3 \\pi\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not assume the chord is a ray from the pole. The sector includes a region the cap excludes.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "areas-straight-edge-correction-follow-up",
+            "title": "Subtract a triangle for a straight boundary",
+            "prompt": "<p>Inside \\(r=5\\), find the area above the chord \\(y=\\frac{5}{2}\\). Give coefficients in \\(A=p\\pi+q\\sqrt3\\).</p>",
+            "fields": [
+              {
+                "key": "p",
+                "label": "Coefficient p",
+                "type": "number",
+                "expected": "25/3"
+              },
+              {
+                "key": "q",
+                "label": "Coefficient q",
+                "type": "number",
+                "expected": "-25/4"
+              }
+            ],
+            "hint": "<p>The sector alone includes the central triangle below the chord.</p>",
+            "solution": "<p>At the chord endpoints \\(\\sin\\theta=\\frac12\\), so the rays are \\(\\theta=\\frac{\\pi}{6}\\) and \\(\\theta=\\frac{5 \\pi}{6}\\).</p><p>The enclosed area equals the sector between these rays minus the triangle from the pole to the chord.</p><p>The angle at the pole is \\(\\frac{2 \\pi}{3}\\). Use the sector and sine-area formulae to get \\(- \\frac{25 \\sqrt{3}}{4} + \\frac{25 \\pi}{3}\\).</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Integrate one petal exactly once",
+        "question": "<p>Find the exact area of the petal \\(r=2 \\sin{\\left(2 \\theta \\right)}\\) for \\(0\\le\\theta\\le \\frac{\\pi}{2}\\). Give the multiplier of \\(\\pi\\) in the area.</p>",
+        "solution": [
+          "<p>The interval runs from the pole round one petal back to the pole. The sector element is \\(\\frac12r^2\\,\\mathrm d\\theta\\).</p>",
+          "<p>Replace \\(\\sin^2(2\\theta)\\) with \\(\\frac12\\bigl(1-\\cos(4\\theta)\\bigr)\\).</p>",
+          "<p>The cosine contribution integrates to zero at these endpoints. The area is \\(\\frac{\\pi}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Square the radius before integrating the spiral",
+        "question": "<p>Find the area between \\(r=2 \\theta\\) and the two endpoint rays on \\(0\\le\\theta\\le 2\\).</p>",
+        "solution": [
+          "<p>The radius is non-negative on the interval and sweeps each angle once.</p>",
+          "<p>Use \\(A=\\frac12\\int_0^{2}\\left(2 \\theta\\right)^2\\,\\mathrm d\\theta\\).</p>",
+          "<p>Integrate the squared radius to obtain \\(\\frac{16}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Split the area when the smaller radius changes",
+        "question": "<p>Find the common area of the two full circles \\(r=2 \\sin{\\left(\\theta \\right)}\\) and \\(r=2 \\cos{\\left(\\theta \\right)}\\) with non-negative radii. Give coefficients in \\(A=p\\pi+q\\).</p>",
+        "solution": [
+          "<p>The common interior is in the first quadrant. The sine radius is smaller before \\(\\theta=\\frac{\\pi}{4}\\), and the cosine radius is smaller after it.</p>",
+          "<p>Integrate half the smaller squared radius on each interval. By symmetry both contributions are equal.</p>",
+          "<p>Using the sine double-angle identity in the first part gives total \\(-1 + \\frac{\\pi}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Split the area when the smaller radius changes",
+        "question": "<p>Find the common area of the two full circles \\(r=4 \\sin{\\left(\\theta \\right)}\\) and \\(r=4 \\cos{\\left(\\theta \\right)}\\) with non-negative radii. Give coefficients in \\(A=p\\pi+q\\).</p>",
+        "solution": [
+          "<p>The common interior is in the first quadrant. The sine radius is smaller before \\(\\theta=\\frac{\\pi}{4}\\), and the cosine radius is smaller after it.</p>",
+          "<p>Integrate half the smaller squared radius on each interval. By symmetry both contributions are equal.</p>",
+          "<p>Using the sine double-angle identity in the first part gives total \\(-4 + 2 \\pi\\).</p>"
+        ]
+      },
+      {
+        "title": "Subtract squared radii on a shared angular interval",
+        "question": "<p>Between the rays \\(\\theta=0\\) and \\(\\theta=\\frac{\\pi}{2}\\), find the area inside \\(r=4\\) and outside \\(r=2\\). Give the coefficient of \\(\\pi\\).</p>",
+        "solution": [
+          "<p>The outer sector has radius \\(4\\) and the inner sector radius \\(2\\).</p>",
+          "<p>Subtract half the inner radius squared from half the outer radius squared at each angle, then integrate over the common interval.</p>",
+          "<p>The area is \\(3 \\pi\\).</p>"
+        ]
+      },
+      {
+        "title": "Subtract a triangle for a straight boundary",
+        "question": "<p>Inside \\(r=2\\), find the area above the chord \\(y=1\\). Give coefficients in \\(A=p\\pi+q\\sqrt3\\).</p>",
+        "solution": [
+          "<p>At the chord endpoints \\(\\sin\\theta=\\frac12\\), so the rays are \\(\\theta=\\frac{\\pi}{6}\\) and \\(\\theta=\\frac{5 \\pi}{6}\\).</p>",
+          "<p>The enclosed area equals the sector between these rays minus the triangle from the pole to the chord.</p>",
+          "<p>The angle at the pole is \\(\\frac{2 \\pi}{3}\\). Use the sector and sine-area formulae to get \\(- \\sqrt{3} + \\frac{4 \\pi}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Subtract a triangle for a straight boundary",
+        "question": "<p>Inside \\(r=4\\), find the area above the chord \\(y=2\\). Give coefficients in \\(A=p\\pi+q\\sqrt3\\).</p>",
+        "solution": [
+          "<p>At the chord endpoints \\(\\sin\\theta=\\frac12\\), so the rays are \\(\\theta=\\frac{\\pi}{6}\\) and \\(\\theta=\\frac{5 \\pi}{6}\\).</p>",
+          "<p>The enclosed area equals the sector between these rays minus the triangle from the pole to the chord.</p>",
+          "<p>The angle at the pole is \\(\\frac{2 \\pi}{3}\\). Use the sector and sine-area formulae to get \\(- 4 \\sqrt{3} + \\frac{16 \\pi}{3}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "areas-one-sector-sweep-extra",
+        "title": "Integrate one petal exactly once",
+        "prompt": "<p>Find the exact area of the petal \\(r=4 \\sin{\\left(2 \\theta \\right)}\\) for \\(0\\le\\theta\\le \\frac{\\pi}{2}\\). Give the multiplier of \\(\\pi\\) in the area.</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Multiplier of pi",
+            "type": "number",
+            "expected": "2"
+          }
+        ],
+        "hint": "<p>Use the given one-petal interval in radians.</p>",
+        "solution": "<p>The interval runs from the pole round one petal back to the pole. The sector element is \\(\\frac12r^2\\,\\mathrm d\\theta\\).</p><p>Replace \\(\\sin^2(2\\theta)\\) with \\(\\frac12\\bigl(1-\\cos(4\\theta)\\bigr)\\).</p><p>The cosine contribution integrates to zero at these endpoints. The area is \\(2 \\pi\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "areas-spiral-between-rays-extra",
+        "title": "Square the radius before integrating the spiral",
+        "prompt": "<p>Find the area between \\(r=4 \\theta\\) and the two endpoint rays on \\(0\\le\\theta\\le 4\\).</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Exact area",
+            "type": "number",
+            "expected": "512/3"
+          }
+        ],
+        "hint": "<p>The integral uses the square of the radius and the factor one half.</p>",
+        "solution": "<p>The radius is non-negative on the interval and sweeps each angle once.</p><p>Use \\(A=\\frac12\\int_0^{4}\\left(4 \\theta\\right)^2\\,\\mathrm d\\theta\\).</p><p>Integrate the squared radius to obtain \\(\\frac{512}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "areas-two-active-boundaries-extra",
+        "title": "Split the area when the smaller radius changes",
+        "prompt": "<p>Find the common area of the two full circles \\(r=6 \\sin{\\left(\\theta \\right)}\\) and \\(r=6 \\cos{\\left(\\theta \\right)}\\) with non-negative radii. Give coefficients in \\(A=p\\pi+q\\).</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Coefficient p",
+            "type": "number",
+            "expected": "9/2"
+          },
+          {
+            "key": "q",
+            "label": "Constant q",
+            "type": "number",
+            "expected": "-9"
+          }
+        ],
+        "hint": "<p>For a common interior use the smaller radius and split at the equal-radius ray.</p>",
+        "solution": "<p>The common interior is in the first quadrant. The sine radius is smaller before \\(\\theta=\\frac{\\pi}{4}\\), and the cosine radius is smaller after it.</p><p>Integrate half the smaller squared radius on each interval. By symmetry both contributions are equal.</p><p>Using the sine double-angle identity in the first part gives total \\(-9 + \\frac{9 \\pi}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "areas-region-between-curves-extra",
+        "title": "Subtract squared radii on a shared angular interval",
+        "prompt": "<p>Between the rays \\(\\theta=0\\) and \\(\\theta=\\frac{\\pi}{2}\\), find the area inside \\(r=6\\) and outside \\(r=4\\). Give the coefficient of \\(\\pi\\).</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Multiplier of pi",
+            "type": "number",
+            "expected": "5"
+          }
+        ],
+        "hint": "<p>The difference of the squares is not the square of the difference.</p>",
+        "solution": "<p>The outer sector has radius \\(6\\) and the inner sector radius \\(4\\).</p><p>Subtract half the inner radius squared from half the outer radius squared at each angle, then integrate over the common interval.</p><p>The area is \\(5 \\pi\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "areas-straight-edge-correction-extra",
+        "title": "Subtract a triangle for a straight boundary",
+        "prompt": "<p>Inside \\(r=6\\), find the area above the chord \\(y=3\\). Give coefficients in \\(A=p\\pi+q\\sqrt3\\).</p>",
+        "fields": [
+          {
+            "key": "p",
+            "label": "Coefficient p",
+            "type": "number",
+            "expected": "12"
+          },
+          {
+            "key": "q",
+            "label": "Coefficient q",
+            "type": "number",
+            "expected": "-9"
+          }
+        ],
+        "hint": "<p>The sector alone includes the central triangle below the chord.</p>",
+        "solution": "<p>At the chord endpoints \\(\\sin\\theta=\\frac12\\), so the rays are \\(\\theta=\\frac{\\pi}{6}\\) and \\(\\theta=\\frac{5 \\pi}{6}\\).</p><p>The enclosed area equals the sector between these rays minus the triangle from the pole to the chord.</p><p>The angle at the pole is \\(\\frac{2 \\pi}{3}\\). Use the sector and sine-area formulae to get \\(- 9 \\sqrt{3} + 12 \\pi\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Sector element",
+        "definition": "<p>\\(\\frac12r^2\\,\\mathrm d\\theta\\) is the radial contribution to area.</p>"
+      },
+      {
+        "term": "Common area",
+        "definition": "<p>Points belonging to both regions, using the smaller available radius.</p>"
+      },
+      {
+        "term": "Area between curves",
+        "definition": "<p>Area of the outer wedge minus the inner wedge on each ray.</p>"
+      },
+      {
+        "term": "Chord",
+        "definition": "<p>Straight segment joining two points on a circle.</p>"
+      },
+      {
+        "term": "Segment",
+        "definition": "<p>Region between a chord and its circular arc.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">One trace</th><td>\\(\\frac12\\int_\\alpha^\\beta r^2\\,\\mathrm d\\theta\\)</td></tr><tr><th scope=\"row\">Common region</th><td>Choose the smaller radius and split at each switch.</td></tr><tr><th scope=\"row\">Between curves</th><td>Subtract squared radii inside the integral.</td></tr><tr><th scope=\"row\">Chord boundary</th><td>Use sector minus triangle if that describes the required region.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>Find the area swept by \\(r=4\\) on \\(0\\le\\theta\\le \\frac{\\pi}{3}\\).</p><p><strong>Check</strong> \\(\\frac12(16)\\frac{\\pi}{3}=\\frac{8\\pi}{3}\\).</p>",
+      "checks": "<ul><li>Use radians and square the entire radius before integrating. Counting the same petal twice doubles the answer.</li><li>A missing factor of one half or a missing square changes the area’s scale.</li></ul>",
+      "examTip": "<p>Draw the boundary and label the angular limits before deciding which radius enters each integral.</p>"
+    },
+    "related": [
+      {
+        "title": "Intersections and changing boundaries",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_polar_intersections"
+      },
+      {
+        "title": "Distances, tangents and extreme points",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_polar_extrema"
+      }
+    ]
+  },
+  "fp1_polar_extrema": {
+    "updatedOn": "2026-11-21",
+    "description": "Choose the appropriate distance from the pole or an axis, locate extrema and check tangent directions using coordinate derivatives.",
+    "sections": [
+      {
+        "id": "distance-from-the-pole",
+        "title": "When is the quantity to maximise just the radius?",
+        "label": "Optimise the radial distance directly",
+        "intro": "<p>For the non-negative-radius convention, the distance from the pole is r. This is not the same as the height from a horizontal line.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Find any stationary radii inside the allowed interval and compare their values with the endpoints and admissible limiting values.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "kind": "check",
+            "id": "extrema-distance-from-the-pole-check",
+            "title": "Maximise the distance measured from the pole",
+            "prompt": "<p>For \\(r=5 - \\left(\\theta - 1\\right)^{2}\\) on \\(0\\le\\theta\\le 2\\), give the greatest distance from the pole and the angle attaining it.</p>",
+            "fields": [
+              {
+                "key": "r",
+                "label": "Greatest radius",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "angle",
+                "label": "Angle in radians",
+                "type": "number",
+                "expected": "1"
+              }
+            ],
+            "hint": "<p>Use the radius directly only when the distance is measured from the pole.</p>",
+            "solution": "<p>The distance from the pole is the non-negative radius itself.</p><p>The subtracted square attains its minimum value zero at \\(\\theta=1\\). This angle is within the domain.</p><p>The greatest radius is \\(5\\). Both endpoint values are lower.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A largest radius can occur at an endpoint. Checking only stationary points can miss it.</p>"
+          }
+        ]
+      },
+      {
+        "id": "distance-from-the-line",
+        "title": "How do I find the greatest height above the initial line?",
+        "label": "Optimise the vertical projection",
+        "intro": "<p>The height above the initial line is y. The perpendicular distance is its magnitude, and in the upper half-plane the two agree.</p>",
+        "minutes": 5,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use \\(y=r\\sin\\theta\\) before taking a derivative or recognising a trigonometric maximum.</p>",
+            "figure": {
+              "src": "/assets/study/9231/fp1_polar_extrema/highest-point-on-circle.svg",
+              "caption": "<p>Greatest height and greatest radius occur at different points.</p>",
+              "alt": "The top of the first-quadrant semicircle is at (1, 1), at an angle of π over four. The farthest point from the pole is (2, 0).",
+              "width": 465,
+              "height": 245
+            }
+          },
+          {
+            "kind": "example",
+            "index": 1
+          },
+          {
+            "kind": "check",
+            "id": "extrema-distance-from-the-line-check",
+            "title": "Maximise perpendicular distance from the initial line",
+            "prompt": "<p>Find the greatest height above the initial line and its angle for \\(r=3 \\cos{\\left(\\theta \\right)}\\) on \\(0\\le\\theta\\le \\frac{\\pi}{2}\\).</p>",
+            "fields": [
+              {
+                "key": "height",
+                "label": "Greatest height",
+                "type": "number",
+                "expected": "3/2"
+              },
+              {
+                "key": "angle",
+                "label": "Angle in radians",
+                "type": "number",
+                "expected": "pi/4"
+              }
+            ],
+            "hint": "<p>Use the Cartesian vertical coordinate to measure height, not r alone.</p>",
+            "solution": "<p>The height is \\(y=r\\sin\\theta\\). Here this gives \\(y=\\frac{3}{2}\\sin(2\\theta)\\).</p><p>The sine reaches one at \\(\\theta=\\frac{\\pi}{4}\\) in the allowed interval.</p><p>Therefore the greatest height is \\(\\frac{3}{2}\\), while the endpoint heights are both zero.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Maximising r alone can pick a point on the initial line instead of above it.</p>"
+          }
+        ]
+      },
+      {
+        "id": "horizontal-companion-derivative",
+        "title": "What makes a tangent horizontal?",
+        "label": "Check that only the vertical derivative vanishes",
+        "intro": "<p>Use the Cartesian coordinates as functions of the angle. A regular tangent has a non-zero derivative vector.</p>",
+        "minutes": 7,
+        "level": "further",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a horizontal tangent the y derivative is zero and the x derivative is non-zero. Substitute into the original coordinates to find its height.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "kind": "check",
+            "id": "extrema-horizontal-companion-derivative-check",
+            "title": "Check the companion derivative at a horizontal tangent",
+            "prompt": "<p>For the petal \\(r=3 \\sin{\\left(2 \\theta \\right)}\\) on \\(0\\le\\theta\\le \\frac{\\pi}{2}\\), find the value of \\(\\sin^2\\theta\\) for its non-pole horizontal tangent and the height of that tangent.</p>",
+            "fields": [
+              {
+                "key": "square",
+                "label": "Value of sin² theta",
+                "type": "number",
+                "expected": "2/3"
+              },
+              {
+                "key": "height",
+                "label": "Horizontal tangent height",
+                "type": "number",
+                "expected": "4*sqrt(3)/3"
+              }
+            ],
+            "hint": "<p>A zero y derivative shows a horizontal tangent only if the x derivative is non-zero.</p>",
+            "solution": "<p>The height is \\(6\\sin^2\\theta\\cos\\theta\\). Differentiate it with respect to the angle.</p><p>The derivative is \\(6 \\left(2 - 3 \\sin^{2}{\\left(\\theta \\right)}\\right) \\sin{\\left(\\theta \\right)}\\). At a non-pole horizontal tangent this vanishes when \\(\\sin^2\\theta=\\frac23\\).</p><p>The x derivative at this angle is \\(- 2 \\sqrt{3}\\), non-zero. Using the positive cosine gives height \\(\\frac{4 \\sqrt{3}}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A zero derivative of r does not by itself give the direction of a Cartesian tangent.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "extrema-horizontal-companion-derivative-follow-up",
+            "title": "Check the companion derivative at a horizontal tangent",
+            "prompt": "<p>For the petal \\(r=5 \\sin{\\left(2 \\theta \\right)}\\) on \\(0\\le\\theta\\le \\frac{\\pi}{2}\\), find the value of \\(\\sin^2\\theta\\) for its non-pole horizontal tangent and the height of that tangent.</p>",
+            "fields": [
+              {
+                "key": "square",
+                "label": "Value of sin² theta",
+                "type": "number",
+                "expected": "2/3"
+              },
+              {
+                "key": "height",
+                "label": "Horizontal tangent height",
+                "type": "number",
+                "expected": "20*sqrt(3)/9"
+              }
+            ],
+            "hint": "<p>A zero y derivative shows a horizontal tangent only if the x derivative is non-zero.</p>",
+            "solution": "<p>The height is \\(10\\sin^2\\theta\\cos\\theta\\). Differentiate it with respect to the angle.</p><p>The derivative is \\(10 \\left(2 - 3 \\sin^{2}{\\left(\\theta \\right)}\\right) \\sin{\\left(\\theta \\right)}\\). At a non-pole horizontal tangent this vanishes when \\(\\sin^2\\theta=\\frac23\\).</p><p>The x derivative at this angle is \\(- \\frac{10 \\sqrt{3}}{3}\\), non-zero. Using the positive cosine gives height \\(\\frac{20 \\sqrt{3}}{9}\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "vertical-companion-derivative",
+        "title": "What makes a tangent vertical?",
+        "label": "Check that only the horizontal derivative vanishes",
+        "intro": "<p>Interchange the roles of the coordinate derivatives. A vertical line can occur at an interior angle even if r is not extreme there.</p>",
+        "minutes": 5,
+        "level": "further",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a regular vertical tangent the x derivative is zero and the y derivative is non-zero.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "kind": "check",
+            "id": "extrema-vertical-companion-derivative-check",
+            "title": "Locate a vertical tangent using the x derivative",
+            "prompt": "<p>Find the non-pole vertical tangent of \\(r=3 \\cos{\\left(\\theta \\right)}\\) on \\(- \\frac{\\pi}{2}\\le\\theta\\le \\frac{\\pi}{2}\\). Give its x-coordinate and angle.</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Tangent x-coordinate",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "angle",
+                "label": "Angle in radians",
+                "type": "number",
+                "expected": "0"
+              }
+            ],
+            "hint": "<p>Find where the x derivative is zero and confirm that the other derivative is non-zero.</p>",
+            "solution": "<p>The horizontal coordinate is \\(3 \\cos^{2}{\\left(\\theta \\right)}\\). Its derivative vanishes at angle zero and the two endpoints.</p><p>Both endpoints have zero radius so this question excludes them. At zero, the vertical derivative is \\(3\\), so the curve is regular there.</p><p>The point has horizontal coordinate \\(3\\). The tangent is \\(x=3\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>If both coordinate derivatives vanish, analyse the local curve before assigning a tangent direction.</p>"
+          }
+        ]
+      },
+      {
+        "id": "direction-at-the-pole",
+        "title": "How can I find a tangent when the radius is zero?",
+        "label": "Use the limiting direction",
+        "intro": "<p>The origin can correspond to several angular endpoints. Consider the curve approaching it from each admissible side.</p>",
+        "minutes": 7,
+        "level": "further",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the limiting ray direction or calculate the coordinate derivatives directly. Check whether different branches have different tangent directions.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5
+          },
+          {
+            "kind": "check",
+            "id": "extrema-direction-at-the-pole-check",
+            "title": "Find the limiting tangent at the pole",
+            "prompt": "<p>The curve \\(r=3 \\sin{\\left(\\theta \\right)}\\) starts at the pole at \\(\\theta=0\\). Find the x derivative there and choose the direction of the tangent.</p>",
+            "fields": [
+              {
+                "key": "dx",
+                "label": "x derivative at the start",
+                "type": "number",
+                "expected": "3"
+              },
+              {
+                "key": "direction",
+                "label": "Tangent direction",
+                "type": "choice",
+                "expected": "horizontal",
+                "options": {
+                  "horizontal": "Horizontal",
+                  "vertical": "Vertical"
+                }
+              }
+            ],
+            "hint": "<p>At the pole, use the limiting directions or the coordinate derivatives if at least one is non-zero.</p>",
+            "solution": "<p>The polar radius is zero at the starting point. Compute the coordinate derivatives separately rather than dividing by r.</p><p>Here the x derivative at the start is \\(3\\) and the y derivative is zero.</p><p>The tangent is therefore horizontal. The same line follows from the direction of the approaching ray.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Dividing by radius at a pole discards the very point where the tangent is requested.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6,
+            "tryFirst": true
+          },
+          {
+            "kind": "check",
+            "id": "extrema-direction-at-the-pole-follow-up",
+            "title": "Find the limiting tangent at the pole",
+            "prompt": "<p>The curve \\(r=5 \\sin{\\left(\\theta \\right)}\\) starts at the pole at \\(\\theta=0\\). Find the x derivative there and choose the direction of the tangent.</p>",
+            "fields": [
+              {
+                "key": "dx",
+                "label": "x derivative at the start",
+                "type": "number",
+                "expected": "5"
+              },
+              {
+                "key": "direction",
+                "label": "Tangent direction",
+                "type": "choice",
+                "expected": "horizontal",
+                "options": {
+                  "horizontal": "Horizontal",
+                  "vertical": "Vertical"
+                }
+              }
+            ],
+            "hint": "<p>At the pole, use the limiting directions or the coordinate derivatives if at least one is non-zero.</p>",
+            "solution": "<p>The polar radius is zero at the starting point. Compute the coordinate derivatives separately rather than dividing by r.</p><p>Here the x derivative at the start is \\(5\\) and the y derivative is zero.</p><p>The tangent is therefore horizontal. The same line follows from the direction of the approaching ray.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Maximise the distance measured from the pole",
+        "question": "<p>For \\(r=4 - \\left(\\theta - 1\\right)^{2}\\) on \\(0\\le\\theta\\le 2\\), give the greatest distance from the pole and the angle attaining it.</p>",
+        "solution": [
+          "<p>The distance from the pole is the non-negative radius itself.</p>",
+          "<p>The subtracted square attains its minimum value zero at \\(\\theta=1\\). This angle is within the domain.</p>",
+          "<p>The greatest radius is \\(4\\). Both endpoint values are lower.</p>"
+        ]
+      },
+      {
+        "title": "Maximise perpendicular distance from the initial line",
+        "question": "<p>Find the greatest height above the initial line and its angle for \\(r=2 \\cos{\\left(\\theta \\right)}\\) on \\(0\\le\\theta\\le \\frac{\\pi}{2}\\).</p>",
+        "solution": [
+          "<p>The height is \\(y=r\\sin\\theta\\). Here this gives \\(y=\\frac{2}{2}\\sin(2\\theta)\\).</p>",
+          "<p>The sine reaches one at \\(\\theta=\\frac{\\pi}{4}\\) in the allowed interval.</p>",
+          "<p>Therefore the greatest height is \\(1\\), while the endpoint heights are both zero.</p>"
+        ]
+      },
+      {
+        "title": "Check the companion derivative at a horizontal tangent",
+        "question": "<p>For the petal \\(r=2 \\sin{\\left(2 \\theta \\right)}\\) on \\(0\\le\\theta\\le \\frac{\\pi}{2}\\), find the value of \\(\\sin^2\\theta\\) for its non-pole horizontal tangent and the height of that tangent.</p>",
+        "solution": [
+          "<p>The height is \\(4\\sin^2\\theta\\cos\\theta\\). Differentiate it with respect to the angle.</p>",
+          "<p>The derivative is \\(4 \\left(2 - 3 \\sin^{2}{\\left(\\theta \\right)}\\right) \\sin{\\left(\\theta \\right)}\\). At a non-pole horizontal tangent this vanishes when \\(\\sin^2\\theta=\\frac23\\).</p>",
+          "<p>The x derivative at this angle is \\(- \\frac{4 \\sqrt{3}}{3}\\), non-zero. Using the positive cosine gives height \\(\\frac{8 \\sqrt{3}}{9}\\).</p>"
+        ]
+      },
+      {
+        "title": "Check the companion derivative at a horizontal tangent",
+        "question": "<p>For the petal \\(r=4 \\sin{\\left(2 \\theta \\right)}\\) on \\(0\\le\\theta\\le \\frac{\\pi}{2}\\), find the value of \\(\\sin^2\\theta\\) for its non-pole horizontal tangent and the height of that tangent.</p>",
+        "solution": [
+          "<p>The height is \\(8\\sin^2\\theta\\cos\\theta\\). Differentiate it with respect to the angle.</p>",
+          "<p>The derivative is \\(8 \\left(2 - 3 \\sin^{2}{\\left(\\theta \\right)}\\right) \\sin{\\left(\\theta \\right)}\\). At a non-pole horizontal tangent this vanishes when \\(\\sin^2\\theta=\\frac23\\).</p>",
+          "<p>The x derivative at this angle is \\(- \\frac{8 \\sqrt{3}}{3}\\), non-zero. Using the positive cosine gives height \\(\\frac{16 \\sqrt{3}}{9}\\).</p>"
+        ]
+      },
+      {
+        "title": "Locate a vertical tangent using the x derivative",
+        "question": "<p>Find the non-pole vertical tangent of \\(r=2 \\cos{\\left(\\theta \\right)}\\) on \\(- \\frac{\\pi}{2}\\le\\theta\\le \\frac{\\pi}{2}\\). Give its x-coordinate and angle.</p>",
+        "solution": [
+          "<p>The horizontal coordinate is \\(2 \\cos^{2}{\\left(\\theta \\right)}\\). Its derivative vanishes at angle zero and the two endpoints.</p>",
+          "<p>Both endpoints have zero radius so this question excludes them. At zero, the vertical derivative is \\(2\\), so the curve is regular there.</p>",
+          "<p>The point has horizontal coordinate \\(2\\). The tangent is \\(x=2\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the limiting tangent at the pole",
+        "question": "<p>The curve \\(r=2 \\sin{\\left(\\theta \\right)}\\) starts at the pole at \\(\\theta=0\\). Find the x derivative there and choose the direction of the tangent.</p>",
+        "solution": [
+          "<p>The polar radius is zero at the starting point. Compute the coordinate derivatives separately rather than dividing by r.</p>",
+          "<p>Here the x derivative at the start is \\(2\\) and the y derivative is zero.</p>",
+          "<p>The tangent is therefore horizontal. The same line follows from the direction of the approaching ray.</p>"
+        ]
+      },
+      {
+        "title": "Find the limiting tangent at the pole",
+        "question": "<p>The curve \\(r=4 \\sin{\\left(\\theta \\right)}\\) starts at the pole at \\(\\theta=0\\). Find the x derivative there and choose the direction of the tangent.</p>",
+        "solution": [
+          "<p>The polar radius is zero at the starting point. Compute the coordinate derivatives separately rather than dividing by r.</p>",
+          "<p>Here the x derivative at the start is \\(4\\) and the y derivative is zero.</p>",
+          "<p>The tangent is therefore horizontal. The same line follows from the direction of the approaching ray.</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "extrema-distance-from-the-pole-extra",
+        "title": "Maximise the distance measured from the pole",
+        "prompt": "<p>For \\(r=6 - \\left(\\theta - 1\\right)^{2}\\) on \\(0\\le\\theta\\le 2\\), give the greatest distance from the pole and the angle attaining it.</p>",
+        "fields": [
+          {
+            "key": "r",
+            "label": "Greatest radius",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "angle",
+            "label": "Angle in radians",
+            "type": "number",
+            "expected": "1"
+          }
+        ],
+        "hint": "<p>Use the radius directly only when the distance is measured from the pole.</p>",
+        "solution": "<p>The distance from the pole is the non-negative radius itself.</p><p>The subtracted square attains its minimum value zero at \\(\\theta=1\\). This angle is within the domain.</p><p>The greatest radius is \\(6\\). Both endpoint values are lower.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "extrema-distance-from-the-line-extra",
+        "title": "Maximise perpendicular distance from the initial line",
+        "prompt": "<p>Find the greatest height above the initial line and its angle for \\(r=4 \\cos{\\left(\\theta \\right)}\\) on \\(0\\le\\theta\\le \\frac{\\pi}{2}\\).</p>",
+        "fields": [
+          {
+            "key": "height",
+            "label": "Greatest height",
+            "type": "number",
+            "expected": "2"
+          },
+          {
+            "key": "angle",
+            "label": "Angle in radians",
+            "type": "number",
+            "expected": "pi/4"
+          }
+        ],
+        "hint": "<p>Use the Cartesian vertical coordinate to measure height, not r alone.</p>",
+        "solution": "<p>The height is \\(y=r\\sin\\theta\\). Here this gives \\(y=\\frac{4}{2}\\sin(2\\theta)\\).</p><p>The sine reaches one at \\(\\theta=\\frac{\\pi}{4}\\) in the allowed interval.</p><p>Therefore the greatest height is \\(2\\), while the endpoint heights are both zero.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "extrema-horizontal-companion-derivative-extra",
+        "title": "Check the companion derivative at a horizontal tangent",
+        "prompt": "<p>For the petal \\(r=6 \\sin{\\left(2 \\theta \\right)}\\) on \\(0\\le\\theta\\le \\frac{\\pi}{2}\\), find the value of \\(\\sin^2\\theta\\) for its non-pole horizontal tangent and the height of that tangent.</p>",
+        "fields": [
+          {
+            "key": "square",
+            "label": "Value of sin² theta",
+            "type": "number",
+            "expected": "2/3"
+          },
+          {
+            "key": "height",
+            "label": "Horizontal tangent height",
+            "type": "number",
+            "expected": "8*sqrt(3)/3"
+          }
+        ],
+        "hint": "<p>A zero y derivative shows a horizontal tangent only if the x derivative is non-zero.</p>",
+        "solution": "<p>The height is \\(12\\sin^2\\theta\\cos\\theta\\). Differentiate it with respect to the angle.</p><p>The derivative is \\(12 \\left(2 - 3 \\sin^{2}{\\left(\\theta \\right)}\\right) \\sin{\\left(\\theta \\right)}\\). At a non-pole horizontal tangent this vanishes when \\(\\sin^2\\theta=\\frac23\\).</p><p>The x derivative at this angle is \\(- 4 \\sqrt{3}\\), non-zero. Using the positive cosine gives height \\(\\frac{8 \\sqrt{3}}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "extrema-vertical-companion-derivative-extra",
+        "title": "Locate a vertical tangent using the x derivative",
+        "prompt": "<p>Find the non-pole vertical tangent of \\(r=4 \\cos{\\left(\\theta \\right)}\\) on \\(- \\frac{\\pi}{2}\\le\\theta\\le \\frac{\\pi}{2}\\). Give its x-coordinate and angle.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Tangent x-coordinate",
+            "type": "number",
+            "expected": "4"
+          },
+          {
+            "key": "angle",
+            "label": "Angle in radians",
+            "type": "number",
+            "expected": "0"
+          }
+        ],
+        "hint": "<p>Find where the x derivative is zero and confirm that the other derivative is non-zero.</p>",
+        "solution": "<p>The horizontal coordinate is \\(4 \\cos^{2}{\\left(\\theta \\right)}\\). Its derivative vanishes at angle zero and the two endpoints.</p><p>Both endpoints have zero radius so this question excludes them. At zero, the vertical derivative is \\(4\\), so the curve is regular there.</p><p>The point has horizontal coordinate \\(4\\). The tangent is \\(x=4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "extrema-direction-at-the-pole-extra",
+        "title": "Find the limiting tangent at the pole",
+        "prompt": "<p>The curve \\(r=6 \\sin{\\left(\\theta \\right)}\\) starts at the pole at \\(\\theta=0\\). Find the x derivative there and choose the direction of the tangent.</p>",
+        "fields": [
+          {
+            "key": "dx",
+            "label": "x derivative at the start",
+            "type": "number",
+            "expected": "6"
+          },
+          {
+            "key": "direction",
+            "label": "Tangent direction",
+            "type": "choice",
+            "expected": "horizontal",
+            "options": {
+              "horizontal": "Horizontal",
+              "vertical": "Vertical"
+            }
+          }
+        ],
+        "hint": "<p>At the pole, use the limiting directions or the coordinate derivatives if at least one is non-zero.</p>",
+        "solution": "<p>The polar radius is zero at the starting point. Compute the coordinate derivatives separately rather than dividing by r.</p><p>Here the x derivative at the start is \\(6\\) and the y derivative is zero.</p><p>The tangent is therefore horizontal. The same line follows from the direction of the approaching ray.</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Radial extreme",
+        "definition": "<p>Largest or smallest distance from the pole.</p>"
+      },
+      {
+        "term": "Cartesian projection",
+        "definition": "<p>Horizontal or vertical component of the radius.</p>"
+      },
+      {
+        "term": "Regular tangent",
+        "definition": "<p>A tangent at a parameter value whose coordinate derivative vector is non-zero.</p>"
+      },
+      {
+        "term": "Endpoint",
+        "definition": "<p>Start or end of the allowed angular interval.</p>"
+      },
+      {
+        "term": "Limiting ray",
+        "definition": "<p>Direction approached by the ray as the polar point tends to the pole.</p>"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Choose the next step</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Situation</th><th scope=\"col\">Method</th></tr></thead><tbody><tr><th scope=\"row\">Distance from the pole</th><td>Use r when it is non-negative.</td></tr><tr><th scope=\"row\">Distance from an axis</th><td>Use the magnitude of the corresponding perpendicular Cartesian coordinate.</td></tr><tr><th scope=\"row\">Horizontal tangent</th><td>Check y derivative zero and x derivative non-zero.</td></tr><tr><th scope=\"row\">Vertical tangent</th><td>Check x derivative zero and y derivative non-zero.</td></tr></tbody></table></div><h2>Try a quick check</h2><p>For \\(r=8\\cos\\theta\\) on \\(0\\le\\theta\\le \\frac{\\pi}{2}\\), find the greatest height.</p><p><strong>Check</strong> \\(y=4\\sin(2\\theta)\\) gives height four at \\(\\theta=\\frac{\\pi}{4}\\).</p>",
+      "checks": "<ul><li>A largest radius can occur at an endpoint. Checking only stationary points can miss it.</li><li>Maximising r alone can pick a point on the initial line instead of above it.</li></ul>",
+      "examTip": "<p>Write which distance you are optimising, then compare all permitted candidates including interval endpoints.</p>"
+    },
+    "related": [
+      {
+        "title": "Polar areas and composite regions",
+        "href": "/courses/maths4u-9231-fp1/topics/fp1_polar_areas"
+      }
+    ]
+  }
+}
