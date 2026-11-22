@@ -17,7 +17,7 @@ import { hasOriginalRevisionStudy, studyLayout, studyMetadata, studyRevision } f
 import type { DiscoveryProps } from "@/components/discovery-home";
 import { publicDiscovery } from "./discovery";
 import { redirectSignedInFromHome, studentSearchCourses } from "./home-role-routing";
-import { courseLevels, discoverySample, levelHref, learningDirections, type DiscoveryData } from "./discovery-model";
+import { courseLabel, courseLevels, discoverySample, levelHref, learningDirections, type DiscoveryData } from "./discovery-model";
 import { quadraticTopics } from "./square-model";
 import { publicLearningTopic } from "./public-learning-topic";
 import { squarePublicLesson, questionsForTopic } from "./square-content";
@@ -25,11 +25,18 @@ import { AppError } from "./errors";
 import { assertLessonVisible } from "./content-access";
 import { visibleSquareMappings } from "./square-learning";
 import { publicLanguages } from "./public-language";
-import { hasRussianPage, isPublicLearningPath } from "./public-presentation";
+import { hasRussianPage, isPublicLearningPath, isPublicLearningRoute, mayHaveRussianPage } from "./public-presentation";
 import { publicCourses, publicQuestions, publicTopic } from "./public-page-data";
 import type { PublicPageData } from "./public-page-model";
 import type { Locale } from "./locale";
 export type PageProps = { params: Promise<{ page?: string[] }>; searchParams: Promise<Record<string, string | string[] | undefined>> };
+const shareImage = { url: arenaOrigin + "/share/maths4u-arena.png", width: 1200, height: 630, alt: "Maths4U Arena" };
+const directoryMetadata: Record<string, { title: string; description: string }> = {
+  "/courses": { title: "Cambridge maths courses", description: "Find Cambridge maths lessons by syllabus, from Lower Secondary Stages 7–9 through IGCSE, Additional Mathematics, A Level and Further Mathematics." },
+  "/library": { title: "Maths practice question bank", description: "Choose a course and topic, then practise with multiple-choice, short-answer or written questions. Use hints and solutions to review your methods." },
+  "/search": { title: "Search courses and topics", description: "Find maths lessons and courses by topic, syllabus code or paper." },
+  "/for-teachers": { title: "Maths teaching tools", description: "Prepare maths lessons, set questions for your classes and review student work in Maths4U Arena." },
+};
 const topicAtPath = cache(async (lessonId: string, path: string) => {
   const topic = await publicLearningTopic(lessonId);
   if (topic?.packageKey && topic.path !== path && studyMetadata(topic.lessonId)) notFound();
@@ -43,11 +50,12 @@ function discoveryRoute(parts: string[]): Omit<DiscoveryProps, "data"> | null {
   return null;
 }
 export async function pageMetadata({ params,searchParams }: PageProps, locale: Locale): Promise<Metadata> {
-  const query=await searchParams;if(query.source||query.taskId||query.legacyLesson)return {robots:{index:false,follow:false}};
   const parts = (await params).page ?? [], path = "/" + parts.join("/"), publicPage = isPublicLearningPath(path);
   if (!publicPage) return { robots: { index: false, follow: false } };
+  if (!isPublicLearningRoute(parts)) notFound();
+  const query=await searchParams;if(query.source||query.taskId||query.legacyLesson)return {robots:{index:false,follow:false}};
   await connection();
-  const available = await publicLanguages(), translated = hasRussianPage(path, available);
+  const translated = mayHaveRussianPage(parts) && hasRussianPage(path, await publicLanguages());
   if (locale === "ru" && !translated) notFound();
   const chapters = locale === "en" && parts[0] === "courses" && parts[1] ? await publicChapters(parts[1],
     parts[0] === "courses" && parts[2] === "topics" ? parts[3] : undefined) : [];
@@ -57,11 +65,17 @@ export async function pageMetadata({ params,searchParams }: PageProps, locale: L
   const discovery = discoveryRoute(parts), topic = parts[0]==="courses"&&parts[2]==="topics"&&parts[3]?await topicAtPath(parts[3],path):undefined;
   const lessonChapter = chapters.find(ch => ch.lessons.some(l => l.path === path));
   const specific = chapter ? chapterMetadata(chapter) : lessonChapter ? chapterMetadata(lessonChapter, lessonChapter.lessons.find(l => l.path === path)) : null;
-  const item = topic || specific || discovery ? undefined : (await publicDiscovery(locale)).items.find(i => i.href === (locale === "ru" ? "/ru" : "") + path);
+  const directory = directoryMetadata[path];
+  const index = topic || specific || discovery || directory ? undefined : await publicDiscovery(locale);
+  const item = index?.items.find(i => i.href === (locale === "ru" ? "/ru" : "") + path);
+  const courseDescription = item?.kind === "course" ? index?.courses.find(c => c.slug === item.courseSlug)?.description : undefined;
   const further = chapters.filter(ch => ch.courseCode === "9231");
   const direction = learningDirections.find(d => d.key === discovery?.direction);
-  const title = topic ? topic.title : item ? (locale === "ru" ? item.ru : item.title) : direction ? locale === "ru" ? direction.ru : direction.title : path === "/library" ? "Practice" : path === "/courses" ? "Mathematics courses" : path === "/search" ? "Search courses and topics" : path === "/for-teachers" ? "Maths teaching tools" : "Learn mathematics, practise and prepare for exams";
-  const description = topic?.summary ?? (direction ? locale === "ru" ? direction.descriptionRu : direction.description : locale === "ru" ? "Конспекты, задачи и решения по теме «" + title + "» на Maths4U." : "Explore " + title + " and its available practice questions on Maths4U.");
+  const itemTitle = item && (locale === "ru" ? item.ru : item.title);
+  const title = topic?.title || (item?.kind === "course" && itemTitle ? courseLabel(item.courseSlug, itemTitle) : itemTitle)
+    || (direction && (locale === "ru" ? direction.ru : direction.title)) || directory?.title || "Maths4U";
+  const description = topic?.summary || courseDescription || (direction && (locale === "ru" ? direction.descriptionRu : direction.description)) || directory?.description
+    || (locale === "ru" ? "Конспекты, задачи и решения по теме «" + title + "» на Maths4U." : "Explore " + title + " and its available practice questions on Maths4U.");
   const course = further.find(ch => path === '/courses/' + ch.courseSlug);
   const finalTitle = specific?.title ?? (course ? '9231 ' + furtherCourseName(course.courseTitle) + ' notes & practice | Maths4U'
     : path === '/' ? 'Cambridge Mathematics 0862, 0580, 0606, 9709 & 9231 | Maths4U'
@@ -69,7 +83,12 @@ export async function pageMetadata({ params,searchParams }: PageProps, locale: L
     : (direction && direction.key !== "olympiad" ? direction.code + " " : "") + title + ' | Maths4U');
   const finalDescription = specific?.description ?? (course ? 'Study 9231 ' + furtherCourseName(course.courseTitle) + ' with notes, worked examples, quick checks and exam-style questions with solutions.'
     : path === '/' ? 'Study Cambridge Maths from Stage 7 to A Level: 0862, 0580, 0606, 9709 and 9231. Choose a course for notes, worked examples and practice with feedback.' : description);
-  return { title: finalTitle, description:finalDescription, alternates, ...(path === "/search" || query.view === "revision" || process.env.MATHS4U_ENV !== "production" ? { robots: { index: false, follow: true } } : {}), openGraph: { title:finalTitle, description:finalDescription, url: canonical, siteName: "Maths4U", type: "website" } };
+  return {
+    title: finalTitle, description: finalDescription, alternates,
+    ...(path === "/search" || query.view === "revision" || process.env.MATHS4U_ENV !== "production" ? { robots: { index: false, follow: true } } : {}),
+    openGraph: { title: finalTitle, description: finalDescription, url: canonical, siteName: "Maths4U", type: "website", images: [shareImage] },
+    twitter: { card: "summary_large_image", title: finalTitle, description: finalDescription, images: [shareImage] },
+  };
 }
 async function privateArchivePage(parts:string[],search:Record<string,string>){
   // Authenticate only private archive routes; public language/theme stay cookie-free.
@@ -92,8 +111,9 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   if(parts[0]==="content")notFound();
   if (!parts.length && locale === "en") await redirectSignedInFromHome();
   if (!publicPage) { if (locale === "ru") notFound(); return <Platform />; }
+  if (!isPublicLearningRoute(parts)) notFound();
   await connection();
-  const available = await publicLanguages(), translated = hasRussianPage(path, available);
+  const translated = mayHaveRussianPage(parts) && hasRussianPage(path, await publicLanguages());
   if (locale === "ru" && !translated) notFound();
   const pair = translated ? { en: path, ru: "/ru" + path } : undefined;
   const raw = await searchParams, search = Object.fromEntries(Object.entries(raw).filter((e): e is [string, string] => typeof e[1] === "string"));
@@ -172,7 +192,15 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   if (parts[0] === "courses" && parts[2] === "topics" && parts[3]) {
     try{initial.topic = await publicTopic(locale, parts[3]);}
     catch(e){if(e instanceof AppError&&e.status===404)return privateArchivePage(parts,search);throw e;}
-    if (locale === "en" && parts[1] === initial.topic.course.slug && hasOriginalRevisionStudy(parts[3])) {
+    if (parts[1] !== initial.topic.course.slug) {
+      const params = new URLSearchParams();
+      for (const [key, value] of Object.entries(raw)) {
+        for (const entry of [value].flat()) if (entry !== undefined) params.append(key, entry);
+      }
+      const target = `/courses/${encodeURIComponent(initial.topic.course.slug)}/topics/${encodeURIComponent(parts[3])}`;
+      permanentRedirect(params.size ? `${target}?${params}` : target);
+    }
+    if (locale === "en" && hasOriginalRevisionStudy(parts[3])) {
       if (search.view === "revision") {
         const revision = studyRevision(parts[3]);
         if (revision) return <StudyRevision title={initial.topic.title} revision={revision} path={path}

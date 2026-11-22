@@ -23,6 +23,13 @@ export function displayTeacherNote(raw: string, internal = false) {
 }
 export function publicPath(path: string) { return path.replace(/^\/ru(?=\/|$)/, "") || "/"; }
 export function isPublicLearningPath(path: string) { return path === "/" || /^\/(?:courses|library|learn|search|for-teachers)(?:\/|$)/.test(path); }
+export function isPublicLearningRoute(parts: string[]) {
+  const [section, courseOrDirection, resource] = parts;
+  if (!parts.length) return true;
+  if (["library", "search", "for-teachers"].includes(section)) return parts.length === 1;
+  if (section === "learn") return parts.length === 2 && learningDirections.some(d => d.key === courseOrDirection);
+  return section === "courses" && (parts.length <= 2 || parts.length === 4 && ["chapters", "topics"].includes(resource));
+}
 export function programKey(slug: string) { return courseDirection(slug) ?? "other"; }
 export function programName(slug: string, ru = false) { const d = learningDirections.find(d => d.key === programKey(slug)); return d ? ru ? d.ru : d.title : ru ? "Другие курсы" : "Other courses"; }
 export function programOrder(slug: string) { const i = learningDirections.findIndex(d => d.key === programKey(slug)); return i < 0 ? learningDirections.length : i; }
@@ -33,6 +40,10 @@ export function russianAvailability(rows: LanguageLesson[]) {
   return { lessons: lessons.map(l => ({ id: l.id, slug: l.slug })), courses: [...new Set(lessons.map(l => l.slug))], directions: [...new Set(lessons.map(l => courseDirection(l.slug)).filter((d): d is NonNullable<typeof d> => !!d))] };
 }
 export type LanguageAvailability = ReturnType<typeof russianAvailability>;
+export function mayHaveRussianPage(parts: string[]) {
+  return parts.length === 2 && ["learn", "courses"].includes(parts[0])
+    || parts.length === 4 && parts[0] === "courses" && parts[2] === "topics";
+}
 export function hasRussianPage(path: string, data: LanguageAvailability) {
   const p = publicPath(path).split("/").filter(Boolean);
   return p[0] === "learn" && p.length === 2 ? data.directions.some(d => d === p[1])

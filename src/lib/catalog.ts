@@ -124,7 +124,6 @@ export type CatalogDto = Awaited<ReturnType<typeof catalog>>;
 
 export async function courseCatalog(actor: Actor | null, lang: string, slug?: string, strictLocale = false, archiveView=false) {
   ensure(!archiveView||archiveAdmin(actor),403,"FORBIDDEN");
-  const permission = await taskPermission(actor);
   const overlay=await courseTreeOverlay(actor),publicChapters=await publishedChapters();
   const follows = actor ? await db().courseFollow.findMany({ where: { userId: actor.id }, select: { courseId: true } }) : [];
   const progress = actor ? await latestPracticeProgress(actor.id) : [];
@@ -140,7 +139,7 @@ export async function courseCatalog(actor: Actor | null, lang: string, slug?: st
     return { MC: sets.MC.size, SHORT: sets.SHORT.size, WRITTEN: sets.WRITTEN.size };
   };
   const taskCount = (lessonIds: string[], allowed: boolean) => allowed ? new Set(modeRows.filter(r => lessonIds.includes(r.lessonId)).map(r => r.taskId)).size : 0;
-  const rows = await db().course.findMany({ orderBy: [{ position: "asc" }, { id: "asc" }], where: { archivedAt: null, ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) }, include: { texts: true, topics: { orderBy: [{ position: "asc" }, { id: "asc" }], include: { texts: true, lessons: { where: { archivedAt: null }, orderBy: [{ position: "asc" }, { id: "asc" }], include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: { select: { locale: true, title: true } } } }, _count: { select: { tasks: { where: { task: permission } } } } } } } } } });
+  const rows = await db().course.findMany({ orderBy: [{ position: "asc" }, { id: "asc" }], where: { archivedAt: null, ...(slug ? { slug } : {}), ...(actor && isAdmin(actor) ? {} : { published: true }) }, include: { texts: true, topics: { orderBy: [{ position: "asc" }, { id: "asc" }], include: { texts: true, lessons: { where: { archivedAt: null }, orderBy: [{ position: "asc" }, { id: "asc" }], include: { versions: { take: 1, orderBy: { number: "desc" }, include: { texts: { select: { locale: true, title: true } } } } } } } } } });
   const russian = strictLocale && lang === "ru" ? await publicLanguages() : null;
   const result = await Promise.all(rows.filter(c => (archiveAdmin(actor)&&archiveView || modeRows.some(r => c.topics.some(ch => ch.lessons.some(l => l.id === r.lessonId)))) && (!russian || russian.courses.includes(c.slug))).map(async c => {
     const allowed = !c.featureKey || canUseTeacherLibrary(actor) || !!(actor && await hasFeature(actor, c.featureKey));

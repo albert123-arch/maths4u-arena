@@ -106,8 +106,8 @@ export function DiscoveryHome({ data, view, direction, query = "", resumeLessons
       {!data.unavailable && <section className="discovery-results" aria-labelledby="results-title"><h2 id="results-title" aria-live="polite">{search.trim() ? t(`Найдено: ${results.length}`, `${results.length} ${results.length === 1 ? "result" : "results"}`) : t("С чего начнём?", "Where shall we start?")}</h2>
         {searchEmptyState ?? <>
           <ul>{results.slice(0, limit).map(item => <li key={item.href}><Link href={item.href}>
-            <span>{local(item)} <span aria-hidden="true">→</span></span>
-            <small>{courseLabel(item.courseSlug, lang === "ru" ? item.courseRu : item.course)}{item.chapter ? " · " + (lang === "ru" ? item.chapterRu : item.chapter) : ""}</small>
+            <span>{item.kind === "course" ? courseLabel(item.courseSlug, local(item)) : local(item)} <span aria-hidden="true">→</span></span>
+            {item.kind === "topic" && <small>{courseLabel(item.courseSlug, lang === "ru" ? item.courseRu : item.course)}{item.chapter ? " · " + (lang === "ru" ? item.chapterRu : item.chapter) : ""}</small>}
           </Link></li>)}</ul>
           {results.length > limit && <Button type="button" className="secondary" onClick={() => setLimit(limit + 25)}>{t("Показать ещё", "Show more results")}</Button>}
         </>}

@@ -16,6 +16,13 @@ export const publicLanguages = cache(async () => {
     JOIN TaskVersion v ON v.taskId=t.id AND v.number=(SELECT MAX(n.number) FROM TaskVersion n WHERE n.taskId=t.id)
     LEFT JOIN TaskText x ON x.versionId=v.id AND x.locale='ru'
     LEFT JOIN TaskPart p ON p.versionId=v.id LEFT JOIN PartText pt ON pt.partId=p.id AND pt.locale='ru'
-    WHERE t.visibility='PUBLIC' AND t.archivedAt IS NULL AND t.examArchivedAt IS NULL AND t.featureKey IS NULL AND t.origin <> 'UNKNOWN' AND (t.origin='ORIGINAL' OR t.originManual=true)`);
-  return russianAvailability(lessons.map(l => ({ id: l.id, slug: l.slug, texts: [l.body ?? "", l.examples ?? "", ...tasks.filter(t => t.lessonId === l.id).flatMap(t => [t.statement ?? "", t.prompt ?? ""])] })));
+    WHERE t.visibility='PUBLIC' AND t.archivedAt IS NULL AND t.examArchivedAt IS NULL AND t.featureKey IS NULL AND t.origin <> 'UNKNOWN' AND (t.origin='ORIGINAL' OR t.originManual=true)
+    AND (x.statement IS NOT NULL OR pt.prompt IS NOT NULL)`);
+  const taskTexts = new Map<string, string[]>();
+  for (const task of tasks) {
+    const texts = taskTexts.get(task.lessonId) ?? [];
+    texts.push(task.statement ?? "", task.prompt ?? "");
+    taskTexts.set(task.lessonId, texts);
+  }
+  return russianAvailability(lessons.map(l => ({ id: l.id, slug: l.slug, texts: [l.body ?? "", l.examples ?? "", ...(taskTexts.get(l.id) ?? [])] })));
 });

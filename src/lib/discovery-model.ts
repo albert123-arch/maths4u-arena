@@ -56,7 +56,25 @@ export type DiscoveryItem = { title: string; ru: string; courseSlug: string; cou
 export type DiscoveryData = { courses: DiscoveryCourse[]; items: DiscoveryItem[]; unavailable: boolean };
 const fold = (s: string) => s.normalize("NFKD").replace(/\p{M}/gu, "").toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 export function searchDiscovery(items: DiscoveryItem[], query: string): DiscoveryItem[] {
-  const terms = fold(query.slice(0, 120)).split(/\s+/).filter(Boolean);
-  if (!terms.length) return [];
-  return items.filter(i => terms.every(t => fold([i.title, i.ru, i.course, i.courseRu, i.chapter, i.chapterRu, i.href, learningDirections.find(d => d.key === i.direction)?.code ?? ""].join(" ")).includes(t))).sort((a, b) => Number(a.kind === "course") - Number(b.kind === "course") || a.title.localeCompare(b.title));
+  const phrase = fold(query.slice(0, 120));
+  if (!phrase) return [];
+  const terms = phrase.split(" ");
+  const matches = items.flatMap(item => {
+    const code = learningDirections.find(direction => direction.key === item.direction)?.code ?? "";
+    const paper = item.courseSlug.replace(/^maths4u-/, "");
+    const context = fold([item.title, item.ru, item.course, item.courseRu, item.chapter, item.chapterRu, item.href, code].join(" "));
+    if (!terms.every(term => context.includes(term))) return [];
+    const titles = [fold(item.title), fold(item.ru)];
+    const codeMatch = item.kind === "course" && [fold(code), fold(paper)].includes(phrase);
+    let rank = 4;
+    if (codeMatch || titles.includes(phrase)) rank = 0;
+    else if (titles.some(title => title.startsWith(phrase + " "))) rank = 1;
+    else if (titles.some(title => title.includes(phrase))) rank = 2;
+    else if (titles.some(title => terms.every(term => title.includes(term)))) rank = 3;
+    return [{ item, rank }];
+  });
+  matches.sort((a, b) => a.rank - b.rank
+    || (a.item.kind === "course" && b.item.kind === "course" ? compareLearningCourses({ slug: a.item.courseSlug }, { slug: b.item.courseSlug }) : 0)
+    || a.item.title.localeCompare(b.item.title));
+  return matches.map(match => match.item);
 }
