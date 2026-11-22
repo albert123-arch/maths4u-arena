@@ -66,15 +66,19 @@ test("foundation: existing student, teacher, administrator and access boundaries
   await fs.writeFile(`${folder}/roles.json`, JSON.stringify(results, null, 2));
 });
 
-test("foundation: public language follows the URL and private language is an account setting", async ({ browser }) => {
-  const context = await browser.newContext({ baseURL: "http://127.0.0.1:3102" });
-  await context.addCookies([{ name: "maths4u_locale", value: "ru", url: "http://127.0.0.1:3102" }]);
+test("foundation: public language follows the URL and private language is an account setting", async ({ browser, baseURL }) => {
+  const origin = baseURL ?? "http://127.0.0.1:3102";
+  const context = await browser.newContext({ baseURL: origin });
+  await context.addCookies([{ name: "maths4u_locale", value: "ru", url: origin }]);
   expect(await (await context.request.get("/")).text()).toMatch(/<html[^>]*lang="en"/);
   const page = await context.newPage(); await page.goto("/"); await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.locator('.locale')).toHaveCount(0);
-  await page.goto('/login'); await expect(page.locator('html')).toHaveAttribute('lang','ru');
-  await page.locator('.discovery-account summary').click(); await page.getByRole('radio',{name:'English',exact:true}).check();
+  await expect(page.locator('.desktop-locale').getByRole('link',{name:'RU · Materials'})).toHaveAttribute('href','/ru');
+  await Promise.all([page.waitForResponse(r => new URL(r.url()).pathname === '/api/auth/me' && r.ok(), { timeout: 60000 }), page.goto('/login')]);
   await expect(page.locator('html')).toHaveAttribute('lang','en');
+  await page.locator('.discovery-account summary').click();
+  await expect(page.getByRole('radio',{name:'Русский',exact:true})).toBeChecked();
+  await page.getByRole('radio',{name:'English',exact:true}).check();
+  await expect.poll(async () => (await context.cookies()).find(cookie => cookie.name === 'maths4u_locale')?.value).toBe('en');
   await page.reload(); await expect(page.locator('html')).toHaveAttribute('lang','en');
   await context.close();
 });

@@ -74,7 +74,7 @@ export function LessonStudy({ lesson, study, activeId, checkpoints = {}, onCheck
         <div className={"card " + styles.sidebarCard}><strong>Key words</strong>{words}</div>
       </div>
       <details className={styles.mobileContents}>
-        <summary>Section {selected + 1} of {sections.length} · {sectionInfo(sections[selected])}</summary>
+        <summary>In this lesson</summary>
         {extensionMinutes > 0 && <p>{duration}</p>}
         {contents()}
         <details className={styles.mobileGlossary}><summary>Key words</summary>{words}</details>
@@ -280,7 +280,7 @@ function YourTurn({ check, lessonId, onCheckpoint, session, supplementary = fals
     {fields.map(field => {
       const fieldId = id + "-" + field.key;
       const format = answerFormat(field);
-      const label = field.labelHtml ? <span dangerouslySetInnerHTML={{ __html: field.labelHtml }} /> : field.label;
+      const label = field.labelHtml ? <span dangerouslySetInnerHTML={{ __html: field.labelHtml }} /> : field.label.replace(/([=<>≤≥]\s*)-(?=\d)/g, "$1−");
       if (field.options) return <fieldset key={field.key} className={styles.checkChoices}>
         <legend>{label}</legend>
         {Object.entries(field.options).map(([value, html]) => <label key={value}>

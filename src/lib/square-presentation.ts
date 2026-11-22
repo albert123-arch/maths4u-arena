@@ -69,7 +69,7 @@ export function answerFormat(f: SquareField): { en: string; ru: string; placehol
       placeholder: "1/4 or 0.25",
     };
     if (f.decimalPlaces === 2) return { en: "Enter an exact value or round to two decimal places.", ru: "Введите точное значение или округлите до двух знаков после запятой.", placeholder: "3.61" };
-    if (!f.significantFigures) return { en: "Enter a number, for example 12, 0.25 or 3/4.", ru: "Введите число, например 12, 0.25 или 3/4.", placeholder: "12 or 3/4" };
+    if (!f.significantFigures) return { en: "Enter one number. Fractions and decimals are accepted.", ru: "Введите одно число. Можно записать обыкновенную или десятичную дробь.", placeholder: "" };
   }
 
   if (f.significantFigures === 3) return {

@@ -36,6 +36,7 @@ const directoryMetadata: Record<string, { title: string; description: string }> 
   "/library": { title: "Maths practice question bank", description: "Choose a course and topic, then practise with multiple-choice, short-answer or written questions. Use hints and solutions to review your methods." },
   "/search": { title: "Search courses and topics", description: "Find maths lessons and courses by topic, syllabus code or paper." },
   "/for-teachers": { title: "Maths teaching tools", description: "Prepare maths lessons, set questions for your classes and review student work in Maths4U Arena." },
+  "/about": { title: "About Maths4U Arena", description: "Learn what Maths4U Arena offers, contact the team and find out how the site uses your data." },
 };
 const topicAtPath = cache(async (lessonId: string, path: string) => {
   const topic = await publicLearningTopic(lessonId);
@@ -51,6 +52,7 @@ function discoveryRoute(parts: string[]): Omit<DiscoveryProps, "data"> | null {
 }
 export async function pageMetadata({ params,searchParams }: PageProps, locale: Locale): Promise<Metadata> {
   const parts = (await params).page ?? [], path = "/" + parts.join("/"), publicPage = isPublicLearningPath(path);
+  if (!parts.length && locale === "ru") return { robots: { index: false, follow: true } };
   if (!publicPage) return { robots: { index: false, follow: false } };
   if (!isPublicLearningRoute(parts)) notFound();
   const query=await searchParams;if(query.source||query.taskId||query.legacyLesson)return {robots:{index:false,follow:false}};
@@ -106,6 +108,12 @@ async function privateArchivePage(parts:string[],search:Record<string,string>){
 }
 async function renderAllowedPage({ params, searchParams }: PageProps, locale: Locale) {
   const parts = (await params).page ?? [], path = "/" + parts.join("/"), publicPage = isPublicLearningPath(path);
+  if (!parts.length && locale === "ru") {
+    await connection();
+    const { directions } = await publicLanguages();
+    const direction = learningDirections.find(level => directions.some(key => key === level.key));
+    redirect(direction ? `/ru/learn/${direction.key}` : "/courses");
+  }
   // Versioned source packages contain private keys/provenance and are not an
   // HTTP file tree. Keep this namespace a real 404, never a client login shell.
   if(parts[0]==="content")notFound();

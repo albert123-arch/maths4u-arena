@@ -24,6 +24,8 @@ export function DiscoveryHome({ data, view, direction, query = "", resumeLessons
   const lessonId = guest?.lessonHref?.split("/").at(-1);
   const resumeLesson = resumeCourse && lessonId && resumeLessons?.[resumeCourse.slug]?.includes(lessonId)
     ? { href: "/courses/" + resumeCourse.slug + "/topics/" + lessonId, title: guest?.lessonTitle } : null;
+  const resumeTitle = resumeCourse ? courseLabel(resumeCourse.slug, local(resumeCourse))
+    : resumeLevel ? resumeLevel.code + " · " + local(resumeLevel) : "";
   const sample = direction ? discoverySample(data.items, direction) : undefined;
   const homeSamples = (["igcse", "a-level"] as const).flatMap(key => discoverySample(data.items, key) ?? []);
   const sampleLink = (item: typeof data.items[number]) => <Link className="discovery-sample" href={item.href} key={item.href}>
@@ -70,9 +72,15 @@ export function DiscoveryHome({ data, view, direction, query = "", resumeLessons
   return <div className="discovery">
     {data.unavailable && <p className="notice" role="alert">{t("Каталог временно недоступен. Вы можете открыть материалы на основном сайте.", "The course catalogue is temporarily unavailable. You can still open the resources on the main site.")} <a href="https://maths4u.sbs/">Maths4U ↗</a></p>}
     {view === "home" && <>
-      {resumeLevel && <div className="discovery-resume"><Link href={resumeCourse ? "/courses/" + encodeURIComponent(resumeCourse.slug) : levelHref(resumeLevel.key, data.courses)}>
-        {t("Продолжить", "Continue")} · {resumeCourse ? courseLabel(resumeCourse.slug, local(resumeCourse)) : resumeLevel.code + " " + local(resumeLevel)} <Arrow /></Link>
-        {resumeLesson && <Link href={resumeLesson.href}>{t("Последний урок", "Last lesson")}{resumeLesson.title && " · " + resumeLesson.title} <Arrow /></Link>}</div>}
+      {resumeLevel && <section className="discovery-resume" aria-label={t("Продолжить обучение", "Continue learning")}>
+        <div>
+          <strong>{resumeLesson?.title || (resumeLesson ? t("Последний урок", "Last lesson") : resumeTitle)}</strong>
+          {resumeLesson && <small>{resumeTitle}</small>}
+        </div>
+        <ButtonLink variant="primary" href={resumeLesson?.href ?? (resumeCourse ? "/courses/" + resumeCourse.slug : levelHref(resumeLevel.key, data.courses))}>
+          {t("Продолжить", "Continue")} <Arrow />
+        </ButtonLink>
+      </section>}
       <header className="discovery-hero"><h1>{t("Математика Cambridge от Stage 7 до A Level", "Cambridge Maths from Stage 7 to A Level")}</h1>
         <p className="discovery-lead">{t("Изучайте тему на разобранных примерах, проверяйте ответы и возвращайтесь к сложным задачам.", "Learn with worked examples, check your answers and revisit the skills you need.")}</p>
       </header>

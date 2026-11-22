@@ -261,6 +261,6 @@ export function packageTeaching(topic:QuadraticTopic) {
   const p=contentPackage(topic.packageKey,topic.version),l=p.lessons.find(l=>l.id===topic.lessonId)!;
   return {notes:'<h2>Objective</h2><p>'+l.objective+'</p><h3>Before you start</h3>'+l.before+'<h2>Key ideas</h2>'+l.ideas+'<h2>Method</h2>'+l.method+'<h3>Common mistakes</h3><ul>'+l.mistakes.map(m=>'<li>'+m+'</li>').join('')+'</ul>',
     examples:l.examples,
-    navigation:{directionPath:"/learn/"+p.course.direction,directionTitle:p.course.direction==="further"?"Further Mathematics":p.course.code==="0580"?"IGCSE Mathematics":p.course.code==="0606"?"Additional Mathematics":p.course.code==="0862"?"School Mathematics":"AS & A Level",coursePath:"/courses/"+p.course.slug,courseTitle:p.course.title,
+    navigation:{directionPath:"/learn/"+p.course.direction,directionTitle:p.course.direction==="further"?"Further Mathematics":p.course.code==="0580"?"IGCSE Mathematics":p.course.code==="0606"?"Additional Mathematics":p.course.code==="0862"?"School Mathematics":"AS & A Level",coursePath:"/courses/"+p.course.slug,courseTitle:p.course.title,courseCode:p.course.code,
       chapterTitle:p.chapter.title,chapterPath:publicChapterPath(p)??"/courses/"+p.course.slug+"?chapter="+p.chapter.id,topics:p.lessons.map(l=>({key:l.id,title:l.title,path:"/courses/"+p.course.slug+"/topics/"+l.id}))}};
 }

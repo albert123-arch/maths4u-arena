@@ -22,11 +22,11 @@ export function displayTeacherNote(raw: string, internal = false) {
   return displayMarkup(raw);
 }
 export function publicPath(path: string) { return path.replace(/^\/ru(?=\/|$)/, "") || "/"; }
-export function isPublicLearningPath(path: string) { return path === "/" || /^\/(?:courses|library|learn|search|for-teachers)(?:\/|$)/.test(path); }
+export function isPublicLearningPath(path: string) { return path === "/" || path === "/about" || /^\/(?:courses|library|learn|search|for-teachers)(?:\/|$)/.test(path); }
 export function isPublicLearningRoute(parts: string[]) {
   const [section, courseOrDirection, resource] = parts;
   if (!parts.length) return true;
-  if (["library", "search", "for-teachers"].includes(section)) return parts.length === 1;
+  if (["library", "search", "for-teachers", "about"].includes(section)) return parts.length === 1;
   if (section === "learn") return parts.length === 2 && learningDirections.some(d => d.key === courseOrDirection);
   return section === "courses" && (parts.length <= 2 || parts.length === 4 && ["chapters", "topics"].includes(resource));
 }

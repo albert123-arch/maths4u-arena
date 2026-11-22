@@ -25,6 +25,8 @@ import { SquareLessonView } from "./square-lesson";
 import type { SquareLesson } from "@/lib/square-model";
 import { CourseSelection, MyLearning } from "./learning-home";
 import { SiteHeader } from "./site-header";
+import { SiteFooter } from "./site-footer";
+import { AboutArena } from "./about-arena";
 import { storedLocale, rememberLocale } from "@/lib/locale";
 import { afterSigningIn, authHref, courseContext, localDestination } from "@/lib/auth-navigation";
 import { readGuestCourseChoice } from "@/lib/guest-course-choice";
@@ -74,7 +76,7 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   // Restoring account preferences also writes html.lang; reapply the workspace
   // language after the actor arrives even when that language remains English.
   useEffect(() => { document.documentElement.lang = workspaceLanguage; }, [workspaceLanguage, actor]);
-  const publicPage = !parts.length || ["login", "register", "recover", "library", "courses", "learn", "search", "for-teachers"].includes(parts[0]);
+  const publicPage = publicLearning || ["login", "register", "recover"].includes(parts[0]);
   const boardPage = ready && teacher && parts[0] === "teacher" && parts[1] === "board" && !!parts[2];
   const markingPage = teacher && (parts[0] === 'attempts' && parts[2] === 'review' || parts[0] === 'teacher' && parts[1] === 'classes' && parts[5] === 'attempts' && !!parts[6]);
   let content;
@@ -86,6 +88,7 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   else if (discovery) content = discovery.view === "home" && actor ? teacher && !admin ? <TeacherDashboard/> : <MyLearning sessionReady={ready} /> : <DiscoveryHome key={discovery.view === "search" ? JSON.stringify([discovery.query, discovery.searchAll]) : discovery.view} {...discovery} sessionReady={ready && !error} />;
   else if (!parts.length) content = <CourseCatalogScreen home />;
   else if (["login", "register", "recover"].includes(parts[0])) content = <Auth mode={parts[0]} />;
+  else if (path === "/about") content = <AboutArena />;
   else if (parts[0] === "library") content = <CatalogScreen initial={publicData} />;
   else if (parts[0] === "bookmarks") content = <CatalogScreen bookmarksOnly />;
   else if (parts[0] === "courses") content = parts[2] === "topics" && parts[3] ? <TopicScreen id={parts[3]} initial={publicData} /> : <CourseCatalogScreen key={path} slug={parts[1]} initial={publicData} />;
@@ -120,7 +123,7 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   return <LocaleContext.Provider value={workspaceLanguage}><ActorContext.Provider value={actor}><ViewContext.Provider value={lens}><PublicLocaleContext.Provider value={publicLearning ? initialLocale : null}><TaskBasketProvider key={(actor?.id ?? "guest") + (lens?.nonce ?? "")}>
     <SiteHeader key={"header:" + rawPath} actor={actor} path={path} hidden={(!!boardPage || !!markingPage || adminWorkspace) && !lens} publicPage={publicLearning} languagePair={languagePair} accountLanguage={accountLanguage} viewChanged={setLens} changeLanguage={value => { if (lens) return; setAccountLanguage(value); if (!publicLearning) setLang(value); rememberLocale(value); if (publicLearning) document.documentElement.lang = initialLocale; if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
     <main className={"container" + (adminWorkspace ? " admin-container" : teacherWorkspace ? " teacher-workspace" : "")} id="main-content" data-home={!parts.length && !actor} key={"page:" + path}>{(discovery || square) && !!error && <ErrorNotice error={error} />}{content}</main>
-    <footer className="footer" hidden={!!boardPage}><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><a href="https://maths4u.sbs/">Maths4U main site ↗</a><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
+    {!boardPage && <SiteFooter languagePair={languagePair} />}
     <GuestCourseVisit enabled={ready && !actor && !lens && !error} level={discovery?.direction}
       slug={square?.topic.path.split("/")[2] ?? publicData?.topic?.course.slug ?? publicData?.courses?.find(c => c.slug === parts[1] && !c.locked)?.slug}
       lessonHref={square || publicData?.topic ? rawPath : undefined} lessonTitle={square?.title ?? publicData?.topic?.title} />
@@ -154,7 +157,13 @@ function Auth({ mode, next }: { mode: string; next?: string }) {
       window.location.assign(afterSigningIn(home, intended, register));
     }}>
       {register && <Field name="displayName" label={t("Имя и фамилия", "Full name")} />}
-      {recovery ? <Field name="token" label={t("Код от администратора", "Administrator recovery code")} /> : <label>{t("Логин", "Login")}<Input aria-label={t("Логин", "Login")} name="username" autoComplete="username" required pattern="[a-zA-Z0-9_.\-]{3,64}" /><span className="muted">{t("От 3 символов: латинские буквы, цифры, точка, дефис.", "3 or more characters: letters, numbers, dots or hyphens.")}</span></label>}
+      {recovery ? <Field name="token" label={t("Код от администратора", "Administrator recovery code")} /> : <label>
+        {t("Логин", "Login")}
+        <Input aria-label={t("Логин", "Login")} name="username" autoComplete="username" required
+          pattern={register ? String.raw`[a-zA-Z0-9_.\-]{3,64}` : undefined}
+          aria-describedby={register ? "signup-username-help" : undefined} />
+        {register && <span className="muted" id="signup-username-help">{t("3–64 знака: латинские буквы, цифры, точки, подчёркивания или дефисы.", "3–64 characters: letters, numbers, dots, underscores or hyphens.")}</span>}
+      </label>}
       <label>{recovery ? t("Новый пароль", "New password") : t("Пароль", "Password")}<Input aria-label={recovery ? t("Новый пароль", "New password") : t("Пароль", "Password")} name="password" type="password" required minLength={register || recovery ? 10 : 1} maxLength={72} autoComplete={register || recovery ? "new-password" : "current-password"} />{(register || recovery) && <span className="muted">{t("Не менее 10 символов.", "At least 10 characters.")}</span>}</label>
       {register && <Field name="email" label={t("Почта (необязательно)", "Email (optional)")} type="email" required={false} />}
     </Form>; }

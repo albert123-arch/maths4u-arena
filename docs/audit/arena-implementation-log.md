@@ -75,3 +75,13 @@ Run `node --import tsx scripts/content/revise-book2-gcd.mts <isolated-env>` to o
 Commit: `80e22a8e`, `Correct Book 2 GCD proofs with versioned bilingual revisions`.
 
 The final local pass covers 134 focused Node tests, eight retained browser regressions and the additional Stage 7, Further Statistics and Book 2 walkthroughs. The live audit was read-only. The remaining independent editorial coverage and unavailable search metrics are tracked in the [backlog](arena-fix-backlog.md) and [growth plan](arena-seo-growth-plan.md).
+
+## Follow-up · Compact public navigation
+
+The desktop and mobile lesson pages now share one keyboard-operable lesson selector. At 375 px, mobile breadcrumbs use the syllabus code and chapter title. Five sticky lesson links fit without clipping, and compact value tables fit the reading column. Wider mathematical content retains keyboard scrolling.
+
+The public catalogue uses compact cards with lesson totals. Course pages place the back link first, group chapters in a full-width desktop grid and show the selected chapter's lessons below. The repeated guest banner is gone. Guest navigation omits Practice, while lesson practice and the public question bank keep their existing URLs.
+
+The shared language control opens an exact counterpart when it exists. Otherwise, the Russian materials entry resolves an available direction from the published catalogue. It creates no additional translated lesson URLs or language alternates. The footer links to learning levels, account help and the new About page with the existing support address and privacy information. Sign-in keeps its original return target, and username guidance appears only at registration. A returning guest sees one Continue card linking to the last available lesson.
+
+On the isolated preview, browser checks at 375 and 1280 px covered the 0580 lesson, course grid, guest return and language navigation. The six-column value table fit on mobile. The selected 38th chapter of 0580 remained visible after reload. The learner journey opened the A4 sheet, corrected an answer and continued to the next lesson. The sitemap still lists 872 URLs, including three Russian pages.

@@ -12,6 +12,7 @@ import type { LanguagePair } from "@/lib/public-page-model";
 import { ViewBanner } from "./view-controls";
 import { useView } from "./view-state";
 import type { ViewLens } from "@/lib/request-view";
+import { SiteLanguages } from "./site-languages";
 
 export function SiteHeader({ actor, path, hidden, publicPage, languagePair, accountLanguage, changeLanguage, viewChanged }: { actor: Actor | null; path: string; hidden: boolean; publicPage: boolean; languagePair?: LanguagePair; accountLanguage: Locale; changeLanguage: (lang: Locale) => void; viewChanged: (lens: ViewLens | null) => void }) {
   const lens = useView();
@@ -28,6 +29,7 @@ export function SiteHeader({ actor, path, hidden, publicPage, languagePair, acco
   useEffect(()=>{if(!staff)return;const refresh=()=>refreshMarking();window.addEventListener('arena:marking-updated',refresh);window.addEventListener('focus',refresh);return()=>{window.removeEventListener('arena:marking-updated',refresh);window.removeEventListener('focus',refresh);};},[staff,refreshMarking]);
   const hash = useSyncExternalStore(callback => { window.addEventListener("hashchange", callback); return () => window.removeEventListener("hashchange", callback); }, () => window.location.hash, () => "");
   const dashboardPath = path === "/" || path === "/student";
+  const showLanguages = publicPage || ["/login", "/register", "/recover"].includes(path);
   const initials = actor?.displayName.trim().split(/\s+/).filter(Boolean).slice(0, 2).map(n => n[0]).join("").toUpperCase();
   function close() { setOpen(false); if (account.current) account.current.open = false; }
   useEffect(() => {
@@ -36,7 +38,6 @@ export function SiteHeader({ actor, path, hidden, publicPage, languagePair, acco
     document.addEventListener("keydown", key); document.addEventListener("pointerdown", outside);
     return () => { document.removeEventListener("keydown", key); document.removeEventListener("pointerdown", outside); };
   }, []);
-  function languages(className: string) { return publicPage && languagePair ? <div className={`locale ${className}`} aria-label={t("Язык страницы", "Page language")}>{(["en", "ru"] as const).map(value => <Link key={value} href={languagePair[value]} aria-current={lang === value ? "page" : undefined}>{value.toUpperCase()}</Link>)}</div> : null; }
   return <header className="topbar" data-student={student || undefined} data-teacher={staff || undefined} hidden={hidden} ref={root}><ViewBanner changed={viewChanged} /><div className="topbar-inner">
     <Link className="brand" href="/" onClick={close}><span className="brand-symbol" aria-hidden="true">m</span>Maths4U<span className="badge beta-badge">BETA</span></Link>
     <Button variant="text" className="mobile-nav-toggle" ref={toggle} aria-expanded={open} aria-controls="site-navigation" onClick={() => { setOpen(v => !v); if (account.current) account.current.open = false; }}><span aria-hidden="true">{open ? "×" : "☰"}</span>{t("Меню", "Menu")}</Button>
@@ -56,14 +57,14 @@ export function SiteHeader({ actor, path, hidden, publicPage, languagePair, acco
         <Link aria-current={path.startsWith('/library') ? 'page' : undefined} href="/library" onClick={close}>Question bank</Link>
       </> : <>
       <Link aria-current={path.startsWith("/courses") ? "page" : undefined} href="/courses" onClick={close}>{t("Все курсы", "All courses")}</Link>
-      <Link aria-current={path.startsWith("/library") ? "page" : undefined} href="/library" onClick={close}>{t("Практика", "Practice")}</Link>
+      {actor && <Link aria-current={path.startsWith("/library") ? "page" : undefined} href="/library" onClick={close}>{t("Практика", "Practice")}</Link>}
       <Link href="/search" onClick={close}>{t("Поиск", "Search")}</Link>
       <Link aria-current={path.startsWith("/teacher") ? "page" : undefined} href={teacher ? "/teacher" : "/for-teachers"} onClick={close}>{t("Учителю", "For teachers")}</Link>
       </>}
       {(student || staff) && <Link className="student-mobile-search" href="/search" onClick={close}>Search</Link>}
-      {languages("mobile-locale")}
+      {showLanguages && <SiteLanguages className="mobile-locale" languagePair={languagePair} onNavigate={close} />}
     </nav>
-    <div className="account">{(student || staff) && <Link className="student-header-search" href="/search" aria-label="Search"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></Link>}{languages("desktop-locale")}<details className="discovery-account" ref={account} onToggle={e => {
+    <div className="account">{(student || staff) && <Link className="student-header-search" href="/search" aria-label="Search"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></Link>}{showLanguages && <SiteLanguages className="desktop-locale" languagePair={languagePair} onNavigate={close} />}<details className="discovery-account" ref={account} onToggle={e => {
       if (!e.currentTarget.open) return;
       setOpen(false);
       if (!actor) setGuestDestination(authReturnAt(window.location));

@@ -1,5 +1,46 @@
 import { expect, test } from "@playwright/test";
 
+for (const width of [375, 1280]) {
+  test("compact lesson navigation at " + width + "px", async ({ page }) => {
+    await page.setViewportSize({ width, height: 667 });
+    await page.goto("/courses/maths4u-0580/topics/igcse-0580-graphs-functions-straight-lines");
+    await expect(page.locator("#notes[data-interactive]")).toBeVisible();
+
+    const tabs = page.getByRole("navigation", { name: "Lesson sections" });
+    await expect(tabs.getByRole("link", { name: width === 375 ? "Exam" : "Exam-style", exact: true })).toBeVisible();
+    await expect(tabs.getByRole("link", { name: "Review" })).toBeInViewport();
+    expect(await tabs.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
+
+    const chapterPicker = page.locator(".square-topic-picker");
+    const summary = chapterPicker.locator("summary");
+    await expect(summary).toContainText("Lesson 1 of 7");
+    await summary.focus();
+    await summary.press("Enter");
+    const topicLinks = chapterPicker.getByRole("navigation").getByRole("link");
+    await expect(topicLinks).toHaveCount(7);
+    const currentTopic = chapterPicker.locator('a[aria-current="page"]');
+    await currentTopic.focus();
+    await currentTopic.press("Escape");
+    await expect(chapterPicker.getByRole("navigation")).toBeHidden();
+    await expect(summary).toBeFocused();
+
+    if (width === 375) {
+      const breadcrumb = page.getByRole("navigation", { name: "Breadcrumb" });
+      await expect(breadcrumb.getByRole("link", { name: "0580", exact: true })).toBeVisible();
+      await expect(breadcrumb.getByRole("link", { name: "Graphs of functions" })).toBeVisible();
+      await expect(page.getByText(/^Section 1 of 3 · Core · about/)).toHaveCount(1);
+      const valueTable = page.locator("#notes table").first();
+      await expect(valueTable.getByRole("row").first().getByRole("columnheader")).toHaveCount(6);
+      expect(await valueTable.evaluate(element => element.getBoundingClientRect().width - element.parentElement!.clientWidth)).toBeLessThanOrEqual(1);
+      await expect(page.getByText("y at x = −1", { exact: true }).first()).toBeVisible();
+    }
+
+    await tabs.getByRole("link", { name: "Review" }).click();
+    await expect(page).toHaveURL(/#review$/);
+    await expect(page.locator("#review")).toHaveCount(1);
+  });
+}
+
 for (const width of [390, 1280]) {
   test("lesson Review and support controls resolve at " + width + "px", async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });

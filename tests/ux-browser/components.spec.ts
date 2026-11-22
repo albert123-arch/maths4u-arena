@@ -55,12 +55,16 @@ test('components: public pages and dashboards in both themes, four widths',async
 });
 
 test('components: keyboard menu, focus, language and account controls',async({page})=>{
-  await page.setViewportSize({width:390,height:844});await ready(page,'/');
+  await page.setViewportSize({width:375,height:844});
+  await Promise.all([page.waitForResponse(r=>new URL(r.url()).pathname==='/api/auth/me'&&r.ok(),{timeout:60000}),ready(page,'/')]);
   await page.keyboard.press('Tab');await expect(page.locator('.brand')).toBeFocused();
   await page.keyboard.press('Tab');await expect(page.locator('.mobile-nav-toggle')).toBeFocused();
   expect(await page.locator('.mobile-nav-toggle').evaluate(e=>getComputedStyle(e).outlineStyle)).toBe('solid');
   await page.keyboard.press('Enter');await expect(page.locator('#site-navigation')).toBeVisible();
   await page.keyboard.press('Tab');await expect(page.locator('#site-navigation>a').first()).toBeFocused();
+  const russianMaterials=page.locator('.mobile-locale').getByRole('link',{name:'RU · Materials'});
+  await expect(russianMaterials).toBeVisible();await expect(russianMaterials).toHaveAttribute('href','/ru');
+  await expect(page.locator('#site-navigation').getByRole('link',{name:'Practice',exact:true})).toHaveCount(0);
   await page.screenshot({path:`${root}/after/mobile-navigation.png`,fullPage:false});
   await page.keyboard.press('Escape');await expect(page.locator('#site-navigation')).toBeHidden();await expect(page.locator('.mobile-nav-toggle')).toBeFocused();
   await page.keyboard.press('Tab');await expect(page.locator('.discovery-account summary')).toBeFocused();
@@ -70,12 +74,12 @@ test('components: keyboard menu, focus, language and account controls',async({pa
   await expect(page.locator('.discovery-account')).not.toHaveAttribute('open');
   await page.keyboard.press('Enter');await page.getByRole('radio',{name:'System',exact:true}).focus();
   await page.keyboard.press('Tab');await expect(page.locator('.discovery-account')).not.toHaveAttribute('open');
-  await expect(page.locator('.locale')).toHaveCount(0);
+  await expect(russianMaterials).toBeHidden();
   await page.reload();await expect(page.locator('html')).toHaveAttribute('lang','en');
   const html=await (await page.request.get('/')).text();expect(html).toMatch(/<html[^>]*lang="en"/);
   await page.locator('#discovery-q').focus();await page.keyboard.type('quadratic');await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/search\?q=quadratic/);
-  await ready(page,lesson+'#practice');
+  await ready(page,lesson+'?practice=previous#practice');
   const check=page.getByRole('button',{name:'Check answer',exact:true});await expect(check).toBeEnabled();
   await page.locator('.square-choice input').first().focus();await page.keyboard.press('ArrowDown');
   await expect(page.locator('.square-choice input').nth(1)).toBeChecked();

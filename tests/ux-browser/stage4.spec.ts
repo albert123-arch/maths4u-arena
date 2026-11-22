@@ -27,7 +27,11 @@ test('stage4: server HTML, canonical, real language pairs and unavailable transl
   expect(sitemap).not.toContain('/student');expect(sitemap).not.toContain('/search');
 });
 
-test('stage4: course navigation, five-chapter disclosures and display-only source cleanup', async ({page,request})=>{
+test('stage4: course navigation, compact course catalogue and display-only source cleanup', async ({page,request})=>{
+  const all: { slug: string; chapters: { title: string; topics: { id: string }[] }[] }[] =
+    await (await request.get('/api/catalog/courses?lang=en')).json();
+  const pure = all.find(c=>c.slug==='maths4u-9709-p1')!;
+  const lessonCount = pure.chapters.flatMap(ch=>ch.topics).length;
   await page.setViewportSize({width:390,height:844});await ready(page,'/courses/maths4u-9709-p1');
   await expect(page.locator('.chapter-navigation')).toBeHidden();await expect(page.locator('.chapter-mobile summary')).toContainText('Chapter · Quadratics (1 of 10)');
   const disclosure=page.locator('.chapter-mobile summary');
@@ -35,18 +39,20 @@ test('stage4: course navigation, five-chapter disclosures and display-only sourc
   expect(await disclosure.evaluate(e=>getComputedStyle(e,'::marker').content)).toBe('""');
   await expect(disclosure.locator('[aria-hidden=true]')).toHaveText('▾');
   expect(await page.locator('.chapter-topics').evaluate(e=>e.getBoundingClientRect().top)).toBeLessThan(750);
-  await expect(page.locator('h1')).not.toContainText('Maths4U Original');await expect(page.locator('.course-origin')).toHaveCount(1);
+  await expect(page.locator('h1')).not.toContainText('Maths4U Original');await expect(page.locator('.course-page-heading')).toContainText(`${lessonCount} lessons`);
+  await expect(page.locator('.course-back')).toHaveAttribute('href','/courses');await expect(page.locator('.catalog-guest-note')).toHaveCount(0);
   await expect(page.locator('.page-heading')).not.toContainText('pilot:');await expect(page.locator('.course-personal-progress')).toHaveCount(0);
   await page.locator('.chapter-mobile summary').click();await page.locator('.chapter-mobile nav a').filter({hasText:'Functions'}).first().click();
-  await expect(page.locator('.chapter-topics>h2')).toHaveText('Functions');await expect(page.locator('.chapter-mobile')).not.toHaveAttribute('open');
-  const url=page.url();await page.reload();await expect(page.locator('.chapter-topics>h2')).toHaveText('Functions');expect(page.url()).toBe(url);
+  await expect(page.locator('h1')).toHaveText('Functions');await expect(page.locator('.chapter-mobile')).not.toHaveAttribute('open');
+  const url=page.url();await page.reload();await expect(page.locator('h1')).toHaveText('Functions');expect(page.url()).toBe(url);
   await page.setViewportSize({width:1280,height:900});await expect(page.locator('.chapter-navigation a[aria-current=page]')).toContainText('Functions');
-  for(const a of await page.locator('.chapter-navigation a').all()){await expect(a.locator('small')).toContainText('questions');expect(await a.evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);}
-  await page.goto('/courses');const card=page.locator('.compact-course').filter({has:page.getByRole('link',{name:'Pure Mathematics 1 (9709) →',exact:true})});
-  await expect(card.locator('.chapter-index li')).toHaveCount(5);await card.getByRole('button',{name:'Show all (10)',exact:true}).click();await expect(card.locator('.chapter-index li')).toHaveCount(10);
-  const all=await (await request.get('/api/catalog/courses?lang=en')).json(),functions=all.find((c:{slug:string})=>c.slug==='maths4u-9709-p1').chapters.find((c:{title:string})=>c.title==='Functions');
+  for(const a of await page.locator('.chapter-navigation a').all()){await expect(a.locator('small')).toContainText(/lessons?/);expect(await a.evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);}
+  await page.goto('/courses');const card=page.locator('.compact-course').filter({has:page.getByRole('link',{name:'Pure Mathematics 1 (9709)',exact:true})});
+  await expect(card.locator('.course-count')).toHaveText(`${lessonCount} lessons`);await expect(card.locator('a')).toHaveCount(1);
+  await expect(page.locator('.course-sign-in')).toHaveCount(1);
+  const functions=pure.chapters.find(c=>c.title==='Functions')!;
   const functionTopic='/courses/maths4u-9709-p1/topics/'+functions.topics[0].id;
-  await ready(page,functionTopic);await expect(page.locator('.topic-theory')).not.toContainText('Maths4U Original');
+  await ready(page,functionTopic);await expect(page.locator('main')).not.toContainText('Maths4U Original');
   await ready(page,functionTopic+'?mode=WRITTEN');
   const text=await page.locator('main').innerText();expect(text).not.toMatch(/M4U-ORIG-|Maths4U Original ·/);await expect(page.locator('.catalog-task').first()).toBeVisible();
 });

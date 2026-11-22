@@ -3,11 +3,27 @@ body:has(.square-lesson) .topbar { position:sticky;top:0;z-index:40; }
 body:has(.square-lesson) { overflow-anchor:none; }
 .square-lesson { --lesson-header-height:76px;--lesson-nav-height:60px; }
 .square-lesson[data-structured-notes] { max-width:var(--w-page); }
+.square-crumbs-course-code,.square-tab-short { display:none; }
 .square-heading { padding:var(--sp-4) 0; }
 .square-heading h1 { margin:var(--sp-2) 0 var(--sp-3); }
 .square-heading p { margin:0 0 var(--sp-2); }
-.square-heading .muted { font-size:var(--fs-small);margin-left:var(--sp-2); }
-.square-topic-mobile { display:none; }
+.square-topic-picker {
+  position:relative;inline-size:max-content;min-inline-size:min(10rem, 100%);max-inline-size:100%;margin-bottom:var(--sp-3);
+  border:1px solid var(--c-border-strong);border-radius:var(--radius-control);background:var(--c-surface);
+}
+.square-topic-picker summary {
+  display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);min-height:var(--h-control);
+  padding:var(--sp-2) var(--sp-3);cursor:pointer;font-size:var(--fs-small);font-weight:600;list-style:none;
+}
+.square-topic-picker summary::-webkit-details-marker { display:none; }
+.square-topic-picker nav {
+  position:absolute;inset-inline-start:0;inset-block-start:100%;z-index:35;
+  inline-size:min(24rem, calc(100vw - var(--sp-6)));max-block-size:min(50vh, 24rem);overflow:auto;padding:var(--sp-2);
+  background:var(--c-surface);box-shadow:var(--shadow-menu);border:1px solid var(--c-border-strong);border-radius:var(--radius-control);
+}
+.square-topic-picker nav a { display:flex;align-items:center;min-height:var(--h-control);padding:var(--sp-2);font-size:var(--fs-small); }
+.square-topic-picker nav a:is(:hover, [aria-current=page]) { background:var(--c-surface-muted); }
+.square-topic-picker nav a[aria-current=page] { font-weight:600; }
 .quadratics-topics { flex-wrap:nowrap;overflow-x:auto;padding:var(--sp-1);margin:0 0 var(--sp-3); }
 .quadratics-topics a { flex:1 0 150px; }
 .quadratics-topics a[aria-current=page] { color:var(--c-on-primary); }
@@ -36,7 +52,7 @@ body:has(.square-lesson) { overflow-anchor:none; }
 .square-question-nav progress::-webkit-progress-bar { background:var(--c-surface-muted);border-radius:var(--radius-control); }
 .square-question-nav progress::-webkit-progress-value { background:var(--c-primary);border-radius:var(--radius-control); }
 .square-progress-label { margin:var(--sp-1) 0; }
-.square-question-list summary,.square-topic-mobile summary { cursor:pointer;min-height:var(--h-control);padding:var(--sp-3) 0;font-size:var(--fs-small); }
+.square-question-list summary { cursor:pointer;min-height:var(--h-control);padding:var(--sp-3) 0;font-size:var(--fs-small); }
 .square-question-list > div { margin-top:var(--sp-3); }
 .square-question-list h3 { font-size:var(--fs-small);margin:var(--sp-3) 0 var(--sp-1); }
 .square-question-list ol { list-style:none;padding:0;margin:0; }
@@ -73,15 +89,24 @@ body:has(.square-lesson) { overflow-anchor:none; }
 .exam-prerequisites { font-size:var(--fs-small);margin:var(--sp-2) 0 var(--sp-3); }
 @media(max-width:768px) {
   .quadratics-topics { display:none; }
-  .square-topic-mobile { display:block;position:relative;margin-bottom:var(--sp-3);border:1px solid var(--c-border-strong);border-radius:var(--radius-control);background:var(--c-surface); }
-  .square-topic-mobile summary { display:flex;justify-content:space-between;padding:var(--sp-3) var(--sp-4);font-weight:600;list-style:none; }
-  .square-topic-mobile summary::-webkit-details-marker { display:none; }
-  .square-topic-mobile nav { position:absolute;left:0;right:0;top:100%;z-index:35;padding:var(--sp-2);background:var(--c-surface);box-shadow:var(--shadow-menu);border:1px solid var(--c-border-strong);border-radius:var(--radius-control); }
-  .square-topic-mobile nav a { display:flex;align-items:center;min-height:var(--h-control);padding:var(--sp-2);font-size:var(--fs-small); }
-  .square-topic-mobile [aria-current=page] { background:var(--c-surface-muted);font-weight:600; }
-  .square-heading .muted { display:inline;margin:0 0 0 var(--sp-2); }
-  .square-lesson .square-nav { gap:0;padding:var(--sp-1) 0; }
-  .square-nav a { padding:var(--sp-2) var(--sp-1); }
+  .square-crumbs { display:flex;align-items:baseline;gap:var(--sp-2);white-space:nowrap; }
+  .square-crumbs-direction,.square-crumbs-course-title,.square-tab-full,
+    .square-heading .square-quick-check { display:none; }
+  .square-crumbs-course-code,.square-tab-short { display:inline; }
+  .square-crumbs-chapter { min-width:0;overflow:hidden;text-overflow:ellipsis; }
+  .square-heading { padding:var(--sp-2) 0 var(--sp-3); }
+  .square-heading h1 { margin:var(--sp-1) 0 var(--sp-2); }
+  .square-heading p { margin-bottom:0; }
+  .square-topic-picker,.square-topic-picker nav { inline-size:100%; }
+  .square-lesson .square-nav { gap:0;padding:var(--sp-1) 0;margin-bottom:var(--sp-3);scrollbar-width:none; }
+  .square-lesson .square-nav::-webkit-scrollbar { display:none; }
+  .square-nav a { flex:1 0 auto;justify-content:center;padding:var(--sp-2) var(--sp-1);font-size:var(--fs-meta); }
+  .square-nav a:focus-visible { outline-offset:-2px; }
+  /* Value tables have a header row of inputs and a single labelled row of outputs. */
+  .square-lesson .math-content table:has(> thead > tr > :nth-child(5)):has(> tbody > tr:only-child > th[scope=row]:first-child):not(:has(> thead > tr > :nth-child(8), [colspan], [rowspan])) {
+    width:100%;
+    & :is(th,td) { min-width:0;padding-inline:var(--sp-1); }
+  }
   .square-question-nav > .row > .row { gap:var(--sp-2); }
   .square-question-nav .ui-button { padding:var(--sp-2); }
 }

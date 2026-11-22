@@ -33,7 +33,7 @@ export function SquareLessonView({ lesson, sessionReady, studySession = "ready" 
   const checkpoints = useStudyCheckpoints(topic.lessonId, !!study && !lesson.draft, studySession);
   const teacher = actor?.roles.some(r => r.role === "TEACHER" || r.role === "ADMIN");
   const diagnostic = lesson.questions.find(q => q.collection === "diagnostic")??lesson.questions.find(q=>q.collection==="short")??lesson.questions[0], primary = lesson.questions.filter(q => q.collection === "short");
-  const navigation:NonNullable<SquareLesson["navigation"]>=lesson.navigation??{directionPath:"/learn/a-level",directionTitle:"AS & A Level",coursePath:"/courses/maths4u-9709-p1",courseTitle:"Pure 1 · 9709",chapterTitle:"Quadratics",topics:quadraticTopics};
+  const navigation:NonNullable<SquareLesson["navigation"]>=lesson.navigation??{directionPath:"/learn/a-level",directionTitle:"AS & A Level",coursePath:"/courses/maths4u-9709-p1",courseTitle:"Pure 1 · 9709",courseCode:"9709",chapterTitle:"Quadratics",topics:quadraticTopics};
   const topicIndex = navigation.topics.findIndex(q => q.key === topic.key);
   const nextTopic = topicIndex >= 0 ? navigation.topics[topicIndex + 1] : undefined;
   const [uid, setUid] = useState(diagnostic.uid), [restored, setRestored] = useState(false), [active, setActive] = useState("notes");
@@ -144,13 +144,45 @@ export function SquareLessonView({ lesson, sessionReady, studySession = "ready" 
   const markRead = actor && !teacher && <Button disabled={!!lens || !state.ready || !!state.snapshot.notesRead} onClick={() => void state.markRead()}>{state.snapshot.notesRead ? t("✓ Конспект прочитан", "✓ Notes marked as read") : t("Отметить прочитанным", "Mark notes as read")}</Button>;
   return <div className="square-lesson" ref={root} data-structured-notes={study ? "" : undefined}>
     {lesson.draft&&<p className="muted">{t("Не опубликовано · предпросмотр администратора","Unpublished · administrator preview")}</p>}
-    <nav className="square-crumbs" aria-label={t("Путь", "Breadcrumb")}><Link href={navigation.directionPath}>{navigation.directionTitle}</Link><span> / </span><Link href={navigation.coursePath}>{navigation.courseTitle}</Link><span> / </span>{navigation.chapterPath?<Link href={navigation.chapterPath}>{navigation.chapterTitle}</Link>:<span>{navigation.chapterTitle}</span>}</nav>
+    <nav className="square-crumbs" aria-label={t("Путь", "Breadcrumb")}>
+      <Link className="square-crumbs-direction" href={navigation.directionPath}>{navigation.directionTitle}</Link>
+      <span className="square-crumbs-direction" aria-hidden="true"> / </span>
+      <Link className="square-crumbs-course" href={navigation.coursePath} title={navigation.courseTitle}>
+        <span className={navigation.courseCode ? "square-crumbs-course-title" : undefined}>{navigation.courseTitle}</span>
+        {navigation.courseCode && <span className="square-crumbs-course-code">{navigation.courseCode}</span>}
+      </Link>
+      <span aria-hidden="true"> › </span>
+      {navigation.chapterPath
+        ? <Link className="square-crumbs-chapter" href={navigation.chapterPath}>{navigation.chapterTitle}</Link>
+        : <span className="square-crumbs-chapter">{navigation.chapterTitle}</span>}
+    </nav>
     <header className="square-heading"><h1>{topic.title}</h1>
       {lesson.summaryHtml ? <p dangerouslySetInnerHTML={{ __html: lesson.summaryHtml }} /> : <p>{topic.summary}</p>}
-      <ButtonLink variant="text" href="#practice">{t("Начать с короткой проверки →", "Try the quick check →")}</ButtonLink>{!lesson.draft&&<span className="muted">{t("Без регистрации", "No account needed")}</span>}{teacher&&!lesson.draft && <ButtonLink href={"/teacher/works/new?topic=" + topic.lessonId}>{t("Задание из темы", "Assign from this topic")} →</ButtonLink>}</header>
-    <details className="square-topic-mobile"><summary>{navigation.chapterTitle} · {topicIndex + 1} {t("из", "of")} {navigation.topics.length}<span aria-hidden="true">▾</span></summary><nav aria-label={t("Выбрать тему главы", "Choose a chapter topic")}>{navigation.topics.map(q => <Link key={q.key} href={q.path} aria-current={q.key === topic.key ? "page" : undefined}>{q.title}</Link>)}</nav></details>
-    <nav className="quadratics-topics" aria-label={t("Темы главы", "Chapter topics")}>{navigation.topics.map(q => <Link key={q.key} href={q.path} aria-current={q.key === topic.key ? "page" : undefined}>{q.title}</Link>)}</nav>
-    <nav className="square-nav" ref={sectionNav} aria-label={t("Разделы урока", "Lesson sections")}>{[t("Конспект", "Notes"), t("Примеры", "Examples"), t("Практика", "Practice"), t("Задачи", "Exam-style"), t("Повторение", "Review")].map((label, i) => <a key={sectionIds[i]} href={"#" + sectionIds[i]} aria-current={active === sectionIds[i] ? "location" : undefined}>{label}</a>)}</nav>
+      <ButtonLink className="square-quick-check" variant="text" href="#practice">{t("Начать с короткой проверки →", "Try the quick check →")}</ButtonLink>{teacher&&!lesson.draft && <ButtonLink href={"/teacher/works/new?topic=" + topic.lessonId}>{t("Задание из темы", "Assign from this topic")} →</ButtonLink>}</header>
+    {navigation.topics.length > 1 && <details className="square-topic-picker" onKeyDown={event => {
+      const picker = event.currentTarget;
+      if (event.key !== "Escape" || !picker.open) return;
+      event.preventDefault();
+      picker.open = false;
+      picker.querySelector("summary")?.focus();
+    }}>
+      <summary>{topicIndex >= 0 ? t(`Урок ${topicIndex + 1} из ${navigation.topics.length}`, `Lesson ${topicIndex + 1} of ${navigation.topics.length}`) : t("Темы главы", "Chapter lessons")}<span aria-hidden="true">▾</span></summary>
+      <nav aria-label={t("Выбрать тему главы", "Choose a chapter topic")}>
+        {navigation.topics.map(q => <Link key={q.key} href={q.path} aria-current={q.key === topic.key ? "page" : undefined}
+          onClick={event => {
+            const picker = event.currentTarget.closest("details");
+            if (!picker) return;
+            picker.open = false;
+            if (q.key === topic.key) picker.querySelector("summary")?.focus();
+          }}>
+          {q.title}
+        </Link>)}
+      </nav>
+    </details>}
+    <nav className="square-nav" ref={sectionNav} aria-label={t("Разделы урока", "Lesson sections")}>
+      {[t("Конспект", "Notes"), t("Примеры", "Examples"), t("Практика", "Practice"), lang === "ru" ? "Задачи" : <><span className="square-tab-full">Exam-style</span><span className="square-tab-short">Exam</span></>, t("Повторение", "Review")].map((label, i) =>
+        <a key={sectionIds[i]} href={"#" + sectionIds[i]} aria-current={active === sectionIds[i] ? "location" : undefined}>{label}</a>)}
+    </nav>
     {study
       ? <LessonStudy lesson={lesson} study={study} activeId={activeNote} checkpoints={checkpoints.checks} onCheckpoint={checkpoints.record} session={studySession}>{markRead}</LessonStudy>
       : <section className="card square-reading" id="notes"><MathContent html={lesson.notes} />{markRead}</section>}
