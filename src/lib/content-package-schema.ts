@@ -54,7 +54,11 @@ export const contentPackageSchema = z.object({ schema_version: z.literal(1), key
     if(q.fields.some(f=>f.type==='choice'&&(!f.options||typeof f.expected!=='string'||!f.options[f.expected])))fail("Invalid choice: "+q.id);
     for(const text of [q.title,q.prompt_html,q.hint_html,q.solution_html,q.answer_html])if(/Maths4U Original|teacher review pending|AI-assisted|\b(?:June|November)\s+20\d{2}\s+p\d+\s+q\d+/i.test(text))fail("Editorial metadata in teaching content: "+q.id);
   }
-  for(const l of p.lessons){const n=p.questions.filter(q=>q.lesson===l.key&&q.collection!=="exam").length;if(n<6||n>10)fail("Each lesson needs 6–10 quick checks: "+l.key);}
+  const quickLimit = p.course.code === "0862" ? 24 : 10;
+  for (const lesson of p.lessons) {
+    const quickCount = p.questions.filter(q => q.lesson === lesson.key && q.collection !== "exam").length;
+    if (quickCount < 6 || quickCount > quickLimit) fail(`Each lesson needs 6–${quickLimit} quick checks: ${lesson.key}`);
+  }
 });
 export type ContentPackage = z.infer<typeof contentPackageSchema>;
 export type PackageQuestion = ContentPackage["questions"][number];

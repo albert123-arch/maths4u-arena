@@ -118,7 +118,7 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   const initial: PublicPageData = { filters: search, chapter: search.chapter ?? "" };
   if(chapterPage){
     initial.chapter=chapterPage.chapterId;initial.chapterTitle=chapterPage.chapterTitle;
-    if (chapterPage.courseCode === "9709") {
+    if (["9709", "0580", "0606", "0862"].includes(chapterPage.courseCode)) {
       initial.chapterSummary = chapterMetadata(chapterPage).description;
       initial.lessonObjectives = Object.fromEntries(chapterPage.lessons.map(l => [l.id, l.objective]));
     }

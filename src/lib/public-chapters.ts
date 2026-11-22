@@ -16,7 +16,7 @@ export const publicChapters = cache(async () => {
   const packages = contentPackages.flatMap(p => {
     const chapterPath = publicChapterPath(p), state = byKey.get(p.key);
     if (!chapterPath || !state) return [];
-    if (p.course.code === "9709" && !matchesPublishedPackage(p, state)) return [];
+    if (["9709", "0580", "0606", "0862"].includes(p.course.code) && !matchesPublishedPackage(p, state)) return [];
     return [{ p, chapterPath, publishedAt: state.publishedAt?.getTime() ?? 0 }];
   });
   const visible = await db().lesson.findMany({
@@ -54,7 +54,7 @@ export const furtherCourseName = (title: string) => title.replace(/\s*\(9231\)/,
 
 export function matchPublicChapter(chapters: PublicChapter[], path: string, chapterId?: string | string[]) {
   return chapters.find(ch => ch.chapterPath === path || (
-    ch.courseCode === "9709" && ch.chapterId === chapterId && path === "/courses/" + ch.courseSlug
+    ch.courseCode !== "9231" && ch.chapterId === chapterId && path === "/courses/" + ch.courseSlug
   ));
 }
 
@@ -81,6 +81,16 @@ const chapterDescriptions: Record<string, string> = {
 };
 
 export function chapterMetadata(ch: PublicChapter, lesson?: PublicLesson) {
+  if (ch.courseCode === "0862") return {
+    title: (lesson?.title ?? ch.chapterTitle) + " | " + ch.courseTitle + " | Maths4U",
+    description: lesson?.description ?? lesson?.objective
+      ?? "Learn " + ch.chapterTitle.toLowerCase() + " with visual explanations, worked examples and practice for " + ch.courseTitle + ".",
+  };
+  if (ch.courseCode === "0580" || ch.courseCode === "0606") return {
+    title: (lesson?.title ?? ch.chapterTitle) + " | Cambridge IGCSE " + ch.courseCode + " | Maths4U",
+    description: lesson?.description ?? lesson?.objective
+      ?? "Learn " + ch.chapterTitle.toLowerCase() + " for Cambridge IGCSE " + ch.courseCode + " with diagrams, worked examples, practice and review.",
+  };
   if (ch.courseCode === "9709") {
     const course = ch.courseTitle.replace(/\s*\(9709\)/, "")
       .replace("Pure Mathematics", "Pure").replace("Probability & Statistics", "Statistics");
@@ -99,12 +109,13 @@ export function chapterMetadata(ch: PublicChapter, lesson?: PublicLesson) {
 }
 
 export function learningStructuredData(ch: PublicChapter, lesson?: PublicLesson) {
-  const path = lesson?.path ?? ch.chapterPath, is9709 = ch.courseCode === "9709";
-  const educationalLevel = ch.courseSlug === "maths4u-9709-p3" ? "Cambridge International A Level"
+  const path = lesson?.path ?? ch.chapterPath, is9709 = ch.courseCode === "9709", addmaths = ch.courseCode === "0606", igcse = ch.courseCode === "0580" || addmaths;
+  const lowerSecondary = ch.courseCode === "0862";
+  const educationalLevel = lowerSecondary ? "Cambridge Lower Secondary" : igcse ? "Cambridge IGCSE" : ch.courseSlug === "maths4u-9709-p3" ? "Cambridge International A Level"
     : is9709 ? "Cambridge International AS Level" : "A Level Further Mathematics";
   const crumbs = [
-    is9709 ? { name: "AS & A Level", path: "/learn/a-level" } : { name: "Maths4U", path: "/" },
-    { name: is9709 ? ch.courseTitle : "9231 " + furtherCourseName(ch.courseTitle), path: "/courses/" + ch.courseSlug },
+    lowerSecondary ? { name: "School Mathematics", path: "/learn/school" } : addmaths ? { name: "Additional Mathematics", path: "/learn/additional" } : igcse ? { name: "IGCSE Mathematics", path: "/learn/igcse" } : is9709 ? { name: "AS & A Level", path: "/learn/a-level" } : { name: "Maths4U", path: "/" },
+    { name: lowerSecondary || igcse || is9709 ? ch.courseTitle : "9231 " + furtherCourseName(ch.courseTitle), path: "/courses/" + ch.courseSlug },
     { name: ch.chapterTitle, path: ch.chapterPath },
     ...(lesson ? [{ name: lesson.title, path: lesson.path }] : []),
   ];

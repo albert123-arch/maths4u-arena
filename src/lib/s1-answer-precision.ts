@@ -67,12 +67,18 @@ const exact: Record<string, "*" | readonly string[]> = {
 const statedPrecision = /\b(?:\d+|one|two|three|four|five|six)\s+(?:decimal places?|significant figures?)\b|\b\d+\s*(?:d\.?\s*p|s\.?\s*f)\b/i;
 const precisionRequest = /\b(?:give|find|calculate|state|report|enter|write|round)\b[^.!?;]{0,180}?\bto\s+(?:the nearest\b|(?:(?:\d+|one|two|three|four|five|six)\s+(?:decimal places?|significant figures?)\b|\d+\s*(?:d\.?\s*p|s\.?\s*f)\b))/i;
 const exactForm = /\b(?:as|in)\s+(?:an?\s+)?(?:(?:exact|reduced|simplified)\s+)?(?:fractions?|surds?|exact form)\b|\bwithout rounding\b/i;
-const exactRequest = /\b(?:give|find|calculate|state|determine|recover|report|enter|write|answer)\b\s+(?:the\s+)?(?:exact|unrounded)\b|\b(?:give|find|calculate|state|determine|recover|report|enter|write|answer)\b[^.!?;]{0,180}?\bexactly(?=\s*(?:[.!?;]|for\b|under\b|using\b|$))/i;
+const exactRequest = /\b(?:give|find|calculate|state|determine|recover|report|enter|write|answer)\b\s+(?:(?:the|its|both)\s+)?(?:exact|unrounded)\b|\b(?:give|find|calculate|state|determine|recover|report|enter|write|answer)\b[^.!?;]{0,180}?\bexactly(?=\s*(?:[.!?;]|for\b|under\b|using\b|$))/i;
 // Exact-count probabilities and the other listed labels describe the event.
 const exactLabel = /^(?:unrounded\b|exact(?:$|\s+(?!(?:gap|qualifying-batch|transferred)\b)))/i;
 
 function plainPrompt(prompt: string) {
   return prompt.replace(/<\/?[a-z][\w-]*(?:\s[^<>]*)?>/gi, " ");
+}
+
+export function hasStatedAnswerPrecision(label: string, prompt: string) {
+  const text = plainPrompt(prompt);
+  return exactLabel.test(label) || statedPrecision.test(label) || exactForm.test(label)
+    || precisionRequest.test(text) || exactRequest.test(text) || exactForm.test(text);
 }
 
 export function s1StudyRounding(lessonId: string) {

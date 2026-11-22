@@ -1,0 +1,2931 @@
+{
+  "addmaths-0606-series-pascal-binomial": {
+    "updatedOn": "2026-11-22",
+    "description": "Expand positive integer powers with Pascal coefficients and powers of both terms.",
+    "sections": [
+      {
+        "id": "pascal-row",
+        "title": "Which row supplies the coefficients?",
+        "label": "Pascal row",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Number the rows starting with row 0. The row for the exponent lists one multiplier for each term.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Add two adjacent numbers in one row to obtain the number between them in the next row. The outer entries are one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "id": "addmaths-0606-series-pascal-binomial-pascal-row-a",
+            "kind": "check",
+            "title": "Expand a positive integer binomial",
+            "prompt": "<p>Expand and simplify \\(\\left(2+5x\\right)^{4}\\), in ascending powers of \\(x\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Expanded expression",
+              "type": "polynomial",
+              "expected": "16+160x+600x^2+1000x^3+625x^4",
+              "variables": [
+                "x"
+              ]
+            },
+            "hint": "<p>Use one row for the whole expansion and keep the sign of the x-term when taking a power.</p>",
+            "solution": "<p>Use row 4 of Pascal's triangle. The multipliers are \\(1,\\ 4,\\ 6,\\ 4,\\ 1\\).</p><p>The general coefficient is \\(\\binom{4}{r}2^{4-r}(5)^r\\). Attach \\(x^r\\) to it.</p><p>Evaluate the coefficients to give \\(16+160x+600x^{2}+1000x^{3}+625x^{4}\\).</p><p>Answer: \\(16+160x+600x^{2}+1000x^{3}+625x^{4}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Row n has n plus one entries, including the initial constant term.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-pascal-binomial-pascal-row-b",
+            "kind": "check",
+            "title": "Select one coefficient without expanding",
+            "prompt": "<p>Find the coefficient of \\(x^{5}\\) in \\(\\left(1-x\\right)^{7}\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "-21"
+            },
+            "hint": "<p>Use the power of x to determine how many times x was selected.</p>",
+            "solution": "<p>To produce exactly \\(x^{5}\\), take the x-term 5 times.</p><p>Use \\(\\binom{7}{5}1^{2}(-1)^{5}\\).</p><p>Answer: \\(-21\\).</p>",
+            "retry": [
+              {
+                "answer": "21",
+                "feedback": "<p>An odd number of negative factors produces a negative coefficient.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+          }
+        ]
+      },
+      {
+        "id": "both-factors",
+        "title": "How do the two powers change?",
+        "label": "Both factors",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>In \\(\\left(a+b\\right)^n\\), a typical term is \\(\\binom nr a^{n-r}b^r\\).</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Let r count choices of the second term. All n factors contribute, with the other n minus r factors contributing the first term.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "id": "addmaths-0606-series-pascal-binomial-both-factors-a",
+            "kind": "check",
+            "title": "Expand a positive integer binomial",
+            "prompt": "<p>Expand and simplify \\(\\left(2+x\\right)^{4}\\), in ascending powers of \\(x\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Expanded expression",
+              "type": "polynomial",
+              "expected": "16+32x+24x^2+8x^3+x^4",
+              "variables": [
+                "x"
+              ]
+            },
+            "hint": "<p>Use one row for the whole expansion and keep the sign of the x-term when taking a power.</p>",
+            "solution": "<p>Use row 4 of Pascal's triangle. The multipliers are \\(1,\\ 4,\\ 6,\\ 4,\\ 1\\).</p><p>The general coefficient is \\(\\binom{4}{r}2^{4-r}(1)^r\\). Attach \\(x^r\\) to it.</p><p>Evaluate the coefficients to give \\(16+32x+24x^{2}+8x^{3}+x^{4}\\).</p><p>Answer: \\(16+32x+24x^{2}+8x^{3}+x^{4}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Raise the coefficient of x to the same power as x.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-pascal-binomial-both-factors-b",
+            "kind": "check",
+            "title": "Expand a positive integer binomial",
+            "prompt": "<p>Expand and simplify \\(\\left(1+2x\\right)^{4}\\), in ascending powers of \\(x\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Expanded expression",
+              "type": "polynomial",
+              "expected": "1+8x+24x^2+32x^3+16x^4",
+              "variables": [
+                "x"
+              ]
+            },
+            "hint": "<p>Use one row for the whole expansion and keep the sign of the x-term when taking a power.</p>",
+            "solution": "<p>Use row 4 of Pascal's triangle. The multipliers are \\(1,\\ 4,\\ 6,\\ 4,\\ 1\\).</p><p>The general coefficient is \\(\\binom{4}{r}1^{4-r}(2)^r\\). Attach \\(x^r\\) to it.</p><p>Evaluate the coefficients to give \\(1+8x+24x^{2}+32x^{3}+16x^{4}\\).</p><p>Answer: \\(1+8x+24x^{2}+32x^{3}+16x^{4}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+          }
+        ]
+      },
+      {
+        "id": "negative-term",
+        "title": "What happens when the x coefficient is negative?",
+        "label": "Negative term",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The powers of a negative second term give alternating signs.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Keep brackets around the negative coefficient until the power is evaluated. Check the constant and highest-power terms.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "id": "addmaths-0606-series-pascal-binomial-negative-term-a",
+            "kind": "check",
+            "title": "Select one coefficient without expanding",
+            "prompt": "<p>Find the coefficient of \\(x^{6}\\) in \\(\\left(2-2x\\right)^{7}\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "896"
+            },
+            "hint": "<p>Use the power of x to determine how many times x was selected.</p>",
+            "solution": "<p>To produce exactly \\(x^{6}\\), take the x-term 6 times.</p><p>Use \\(\\binom{7}{6}2^{1}(-2)^{6}\\).</p><p>Answer: \\(896\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Only odd powers of a negative coefficient are negative.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-pascal-binomial-negative-term-b",
+            "kind": "check",
+            "title": "Expand a positive integer binomial",
+            "prompt": "<p>Expand and simplify \\(\\left(1+3x\\right)^{5}\\), in ascending powers of \\(x\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Expanded expression",
+              "type": "polynomial",
+              "expected": "1+15x+90x^2+270x^3+405x^4+243x^5",
+              "variables": [
+                "x"
+              ]
+            },
+            "hint": "<p>Use one row for the whole expansion and keep the sign of the x-term when taking a power.</p>",
+            "solution": "<p>Use row 5 of Pascal's triangle. The multipliers are \\(1,\\ 5,\\ 10,\\ 10,\\ 5,\\ 1\\).</p><p>The general coefficient is \\(\\binom{5}{r}1^{5-r}(3)^r\\). Attach \\(x^r\\) to it.</p><p>Evaluate the coefficients to give \\(1+15x+90x^{2}+270x^{3}+405x^{4}+243x^{5}\\).</p><p>Answer: \\(1+15x+90x^{2}+270x^{3}+405x^{4}+243x^{5}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Expand a positive integer binomial",
+        "question": "<p>Expand and simplify \\(\\left(3+x\\right)^{3}\\), in ascending powers of \\(x\\).</p>",
+        "solution": [
+          "<p>Use row 3 of Pascal's triangle. The multipliers are \\(1,\\ 3,\\ 3,\\ 1\\).</p>",
+          "<p>The general coefficient is \\(\\binom{3}{r}3^{3-r}(1)^r\\). Attach \\(x^r\\) to it.</p>",
+          "<p>Evaluate the coefficients to give \\(27+27x+9x^{2}+x^{3}\\).</p>",
+          "<p>Answer: \\(27+27x+9x^{2}+x^{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Select one coefficient without expanding",
+        "question": "<p>Find the coefficient of \\(x^{3}\\) in \\(\\left(3-2x\\right)^{5}\\).</p>",
+        "solution": [
+          "<p>To produce exactly \\(x^{3}\\), take the x-term 3 times.</p>",
+          "<p>Use \\(\\binom{5}{3}3^{2}(-2)^{3}\\).</p>",
+          "<p>Answer: \\(-720\\).</p>"
+        ]
+      },
+      {
+        "title": "Expand a positive integer binomial",
+        "question": "<p>Expand and simplify \\(\\left(3-2x\\right)^{3}\\), in ascending powers of \\(x\\).</p>",
+        "solution": [
+          "<p>Use row 3 of Pascal's triangle. The multipliers are \\(1,\\ 3,\\ 3,\\ 1\\).</p>",
+          "<p>The general coefficient is \\(\\binom{3}{r}3^{3-r}(-2)^r\\). Attach \\(x^r\\) to it.</p>",
+          "<p>Evaluate the coefficients to give \\(27-54x+36x^{2}-8x^{3}\\).</p>",
+          "<p>Answer: \\(27-54x+36x^{2}-8x^{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Expand a positive integer binomial",
+        "question": "<p>Expand and simplify \\(\\left(3+3x\\right)^{3}\\), in ascending powers of \\(x\\).</p>",
+        "solution": [
+          "<p>Use row 3 of Pascal's triangle. The multipliers are \\(1,\\ 3,\\ 3,\\ 1\\).</p>",
+          "<p>The general coefficient is \\(\\binom{3}{r}3^{3-r}(3)^r\\). Attach \\(x^r\\) to it.</p>",
+          "<p>Evaluate the coefficients to give \\(27+81x+81x^{2}+27x^{3}\\).</p>",
+          "<p>Answer: \\(27+81x+81x^{2}+27x^{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Select one coefficient without expanding",
+        "question": "<p>Find the coefficient of \\(x^{3}\\) in \\(\\left(3+3x\\right)^{6}\\).</p>",
+        "solution": [
+          "<p>To produce exactly \\(x^{3}\\), take the x-term 3 times.</p>",
+          "<p>Use \\(\\binom{6}{3}3^{3}(3)^{3}\\).</p>",
+          "<p>Answer: \\(14580\\).</p>"
+        ]
+      },
+      {
+        "title": "Expand a positive integer binomial",
+        "question": "<p>Expand and simplify \\(\\left(3+4x\\right)^{4}\\), in ascending powers of \\(x\\).</p>",
+        "solution": [
+          "<p>Use row 4 of Pascal's triangle. The multipliers are \\(1,\\ 4,\\ 6,\\ 4,\\ 1\\).</p>",
+          "<p>The general coefficient is \\(\\binom{4}{r}3^{4-r}(4)^r\\). Attach \\(x^r\\) to it.</p>",
+          "<p>Evaluate the coefficients to give \\(81+432x+864x^{2}+768x^{3}+256x^{4}\\).</p>",
+          "<p>Answer: \\(81+432x+864x^{2}+768x^{3}+256x^{4}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "id": "addmaths-0606-series-pascal-binomial-pascal-row-review-a",
+        "kind": "check",
+        "title": "Expand a positive integer binomial",
+        "prompt": "<p>Expand and simplify \\(\\left(4-4x\\right)^{5}\\), in ascending powers of \\(x\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Expanded expression",
+          "type": "polynomial",
+          "expected": "1024-5120x+10240x^2-10240x^3+5120x^4-1024x^5",
+          "variables": [
+            "x"
+          ]
+        },
+        "hint": "<p>Use one row for the whole expansion and keep the sign of the x-term when taking a power.</p>",
+        "solution": "<p>Use row 5 of Pascal's triangle. The multipliers are \\(1,\\ 5,\\ 10,\\ 10,\\ 5,\\ 1\\).</p><p>The general coefficient is \\(\\binom{5}{r}4^{5-r}(-4)^r\\). Attach \\(x^r\\) to it.</p><p>Evaluate the coefficients to give \\(1024-5120x+10240x^{2}-10240x^{3}+5120x^{4}-1024x^{5}\\).</p><p>Answer: \\(1024-5120x+10240x^{2}-10240x^{3}+5120x^{4}-1024x^{5}\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-pascal-binomial-pascal-row-review-b",
+        "kind": "check",
+        "title": "Select one coefficient without expanding",
+        "prompt": "<p>Find the coefficient of \\(x^{5}\\) in \\(\\left(2-3x\\right)^{10}\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "-1959552"
+        },
+        "hint": "<p>Use the power of x to determine how many times x was selected.</p>",
+        "solution": "<p>To produce exactly \\(x^{5}\\), take the x-term 5 times.</p><p>Use \\(\\binom{10}{5}2^{5}(-3)^{5}\\).</p><p>Answer: \\(-1959552\\).</p>",
+        "retry": [
+          {
+            "answer": "1959552",
+            "feedback": "<p>An odd number of negative factors produces a negative coefficient.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-pascal-binomial-both-factors-review-a",
+        "kind": "check",
+        "title": "Expand a positive integer binomial",
+        "prompt": "<p>Expand and simplify \\(\\left(4+5x\\right)^{5}\\), in ascending powers of \\(x\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Expanded expression",
+          "type": "polynomial",
+          "expected": "1024+6400x+16000x^2+20000x^3+12500x^4+3125x^5",
+          "variables": [
+            "x"
+          ]
+        },
+        "hint": "<p>Use one row for the whole expansion and keep the sign of the x-term when taking a power.</p>",
+        "solution": "<p>Use row 5 of Pascal's triangle. The multipliers are \\(1,\\ 5,\\ 10,\\ 10,\\ 5,\\ 1\\).</p><p>The general coefficient is \\(\\binom{5}{r}4^{5-r}(5)^r\\). Attach \\(x^r\\) to it.</p><p>Evaluate the coefficients to give \\(1024+6400x+16000x^{2}+20000x^{3}+12500x^{4}+3125x^{5}\\).</p><p>Answer: \\(1024+6400x+16000x^{2}+20000x^{3}+12500x^{4}+3125x^{5}\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-pascal-binomial-both-factors-review-b",
+        "kind": "check",
+        "title": "Expand a positive integer binomial",
+        "prompt": "<p>Expand and simplify \\(\\left(2+4x\\right)^{6}\\), in ascending powers of \\(x\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Expanded expression",
+          "type": "polynomial",
+          "expected": "64+768x+3840x^2+10240x^3+15360x^4+12288x^5+4096x^6",
+          "variables": [
+            "x"
+          ]
+        },
+        "hint": "<p>Use one row for the whole expansion and keep the sign of the x-term when taking a power.</p>",
+        "solution": "<p>Use row 6 of Pascal's triangle. The multipliers are \\(1,\\ 6,\\ 15,\\ 20,\\ 15,\\ 6,\\ 1\\).</p><p>The general coefficient is \\(\\binom{6}{r}2^{6-r}(4)^r\\). Attach \\(x^r\\) to it.</p><p>Evaluate the coefficients to give \\(64+768x+3840x^{2}+10240x^{3}+15360x^{4}+12288x^{5}+4096x^{6}\\).</p><p>Answer: \\(64+768x+3840x^{2}+10240x^{3}+15360x^{4}+12288x^{5}+4096x^{6}\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-pascal-binomial-negative-term-review-a",
+        "kind": "check",
+        "title": "Select one coefficient without expanding",
+        "prompt": "<p>Find the coefficient of \\(x^{4}\\) in \\(\\left(4+x\\right)^{9}\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "129024"
+        },
+        "hint": "<p>Use the power of x to determine how many times x was selected.</p>",
+        "solution": "<p>To produce exactly \\(x^{4}\\), take the x-term 4 times.</p><p>Use \\(\\binom{9}{4}4^{5}(1)^{4}\\).</p><p>Answer: \\(129024\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-pascal-binomial-negative-term-review-b",
+        "kind": "check",
+        "title": "Expand a positive integer binomial",
+        "prompt": "<p>Expand and simplify \\(\\left(2+5x\\right)^{3}\\), in ascending powers of \\(x\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Expanded expression",
+          "type": "polynomial",
+          "expected": "8+60x+150x^2+125x^3",
+          "variables": [
+            "x"
+          ]
+        },
+        "hint": "<p>Use one row for the whole expansion and keep the sign of the x-term when taking a power.</p>",
+        "solution": "<p>Use row 3 of Pascal's triangle. The multipliers are \\(1,\\ 3,\\ 3,\\ 1\\).</p><p>The general coefficient is \\(\\binom{3}{r}2^{3-r}(5)^r\\). Attach \\(x^r\\) to it.</p><p>Evaluate the coefficients to give \\(8+60x+150x^{2}+125x^{3}\\).</p><p>Answer: \\(8+60x+150x^{2}+125x^{3}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Term",
+        "definition": "<p>A single quantity of a sequence.</p>"
+      },
+      {
+        "term": "Series",
+        "definition": "<p>The sum of indicated terms of a sequence.</p>"
+      },
+      {
+        "term": "Coefficient",
+        "definition": "<p>The numerical factor multiplying a given power.</p>"
+      },
+      {
+        "term": "Common ratio",
+        "definition": "<p>The factor multiplying a geometric term to give the next.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Individual binomial coefficients",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-target-coefficients"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Which row supplies the coefficients?</h2><p>Number the rows starting with row 0. The row for the exponent lists one multiplier for each term.</p><h2>How do the two powers change?</h2><p>In \\(\\left(a+b\\right)^n\\), a typical term is \\(\\binom nr a^{n-r}b^r\\).</p><h2>What happens when the x coefficient is negative?</h2><p>The powers of a negative second term give alternating signs.</p>",
+      "checks": "<ol><li><p>Expand and simplify \\(\\left(4+2x\\right)^{3}\\), in ascending powers of \\(x\\).</p><p><strong>Answer.</strong> \\(64+96x+48x^{2}+8x^{3}\\).</p></li><li><p>Expand and simplify \\(\\left(5+2x\\right)^{3}\\), in ascending powers of \\(x\\).</p><p><strong>Answer.</strong> \\(125+150x+60x^{2}+8x^{3}\\).</p></li><li><p>Find the coefficient of \\(x^{3}\\) in \\(\\left(1-3x\\right)^{5}\\).</p><p><strong>Answer.</strong> \\(-270\\).</p></li></ol>",
+      "examTip": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+    }
+  },
+  "addmaths-0606-series-target-coefficients": {
+    "updatedOn": "2026-11-22",
+    "description": "Extract a designated coefficient and combine neighbouring powers.",
+    "sections": [
+      {
+        "id": "target-index",
+        "title": "Which term gives the requested power?",
+        "label": "Target index",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>In \\((a+bx)^n\\) the selected index r equals the power of x.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Write the one term that contributes, including its combinatorial factor.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "id": "addmaths-0606-series-target-coefficients-target-index-a",
+            "kind": "check",
+            "title": "Select one coefficient without expanding",
+            "prompt": "<p>Find the coefficient of \\(x^{6}\\) in \\(\\left(5-2x\\right)^{8}\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "44800"
+            },
+            "hint": "<p>Use the power of x to determine how many times x was selected.</p>",
+            "solution": "<p>To produce exactly \\(x^{6}\\), take the x-term 6 times.</p><p>Use \\(\\binom{8}{6}5^{2}(-2)^{6}\\).</p><p>Answer: \\(44800\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The numerical coefficient leaves out the variable and its power.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-target-coefficients-target-index-b",
+            "kind": "check",
+            "title": "Select one coefficient without expanding",
+            "prompt": "<p>Find the coefficient of \\(x^{2}\\) in \\(\\left(4+3x\\right)^{8}\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "1032192"
+            },
+            "hint": "<p>Use the power of x to determine how many times x was selected.</p>",
+            "solution": "<p>To produce exactly \\(x^{2}\\), take the x-term 2 times.</p><p>Use \\(\\binom{8}{2}4^{6}(3)^{2}\\).</p><p>Answer: \\(1032192\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+          }
+        ]
+      },
+      {
+        "id": "two-contributions",
+        "title": "Why do two powers contribute to a product?",
+        "label": "Two contributions",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>In a product with a linear factor, the constant and the x-term can both contribute to the same final power.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>List which binomial powers are needed before calculating either coefficient.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "id": "addmaths-0606-series-target-coefficients-two-contributions-a",
+            "kind": "check",
+            "title": "Combine contributions from a linear factor",
+            "prompt": "<p>Find the coefficient of \\(x^{2}\\) in \\((1+5x)\\left(5+3x\\right)^{8}\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "13312500"
+            },
+            "hint": "<p>The x-term in the multiplier raises the power of a term by one.</p>",
+            "solution": "<p>The constant in the first factor multiplies the coefficient \\(3937500\\) of \\(x^{2}\\) from the binomial.</p><p>The term \\(5x\\) multiplies the coefficient \\(1875000\\) of \\(x\\). Their contributions add.</p><p>Answer: \\(13312500\\).</p>",
+            "retry": [
+              {
+                "answer": "3937500",
+                "feedback": "<p>You have the contribution from the constant multiplier. Include the one from the x multiplier.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The x multiplier increases the degree by one. Its partner’s degree is one less.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-target-coefficients-two-contributions-b",
+            "kind": "check",
+            "title": "Select one coefficient without expanding",
+            "prompt": "<p>Find the coefficient of \\(x^{3}\\) in \\(\\left(4-4x\\right)^{8}\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "-3670016"
+            },
+            "hint": "<p>Use the power of x to determine how many times x was selected.</p>",
+            "solution": "<p>To produce exactly \\(x^{3}\\), take the x-term 3 times.</p><p>Use \\(\\binom{8}{3}4^{5}(-4)^{3}\\).</p><p>Answer: \\(-3670016\\).</p>",
+            "retry": [
+              {
+                "answer": "3670016",
+                "feedback": "<p>An odd number of negative factors produces a negative coefficient.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+          }
+        ]
+      },
+      {
+        "id": "find-unknown",
+        "title": "Can a coefficient reveal a missing multiplier?",
+        "label": "Find unknown",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A stated coefficient gives an equation for the unknown coefficient in the bracket.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>For the x coefficient, exactly one choice of the x-term is required. All other choices contribute the constant term.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "id": "addmaths-0606-series-target-coefficients-find-unknown-a",
+            "kind": "check",
+            "title": "Find an unknown linear coefficient",
+            "prompt": "<p>The coefficient of \\(x\\) in \\(\\left(1+bx\\right)^{10}\\) is \\(40\\). Find \\(b\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "4"
+            },
+            "hint": "<p>Only one of the n factors contributes x.</p>",
+            "solution": "<p>Exactly one choice of \\(bx\\) is required.</p><p>Equate \\(10(1)^{9}b\\) to \\(40\\) and divide through.</p><p>Answer: \\(4\\).</p>",
+            "retry": [
+              {
+                "answer": "40",
+                "feedback": "<p>This is the resulting coefficient of x, after multiplying by the other factors.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The coefficient after expansion has other factors besides the unknown.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-target-coefficients-find-unknown-b",
+            "kind": "check",
+            "title": "Combine contributions from a linear factor",
+            "prompt": "<p>Find the coefficient of \\(x^{3}\\) in \\((1+2x)\\left(4+5x\\right)^{9}\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "72499200"
+            },
+            "hint": "<p>The x-term in the multiplier raises the power of a term by one.</p>",
+            "solution": "<p>The constant in the first factor multiplies the coefficient \\(43008000\\) of \\(x^{3}\\) from the binomial.</p><p>The term \\(2x\\) multiplies the coefficient \\(14745600\\) of \\(x^{2}\\). Their contributions add.</p><p>Answer: \\(72499200\\).</p>",
+            "retry": [
+              {
+                "answer": "43008000",
+                "feedback": "<p>You have the contribution from the constant multiplier. Include the one from the x multiplier.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Select one coefficient without expanding",
+        "question": "<p>Find the coefficient of \\(x^{4}\\) in \\(\\left(1+4x\\right)^{6}\\).</p>",
+        "solution": [
+          "<p>To produce exactly \\(x^{4}\\), take the x-term 4 times.</p>",
+          "<p>Use \\(\\binom{6}{4}1^{2}(4)^{4}\\).</p>",
+          "<p>Answer: \\(3840\\).</p>"
+        ]
+      },
+      {
+        "title": "Select one coefficient without expanding",
+        "question": "<p>Find the coefficient of \\(x^{4}\\) in \\(\\left(1+5x\\right)^{6}\\).</p>",
+        "solution": [
+          "<p>To produce exactly \\(x^{4}\\), take the x-term 4 times.</p>",
+          "<p>Use \\(\\binom{6}{4}1^{2}(5)^{4}\\).</p>",
+          "<p>Answer: \\(9375\\).</p>"
+        ]
+      },
+      {
+        "title": "Combine contributions from a linear factor",
+        "question": "<p>Find the coefficient of \\(x^{4}\\) in \\((1+4x)\\left(1+5x\\right)^{6}\\).</p>",
+        "solution": [
+          "<p>The constant in the first factor multiplies the coefficient \\(9375\\) of \\(x^{4}\\) from the binomial.</p>",
+          "<p>The term \\(4x\\) multiplies the coefficient \\(2500\\) of \\(x^{3}\\). Their contributions add.</p>",
+          "<p>Answer: \\(19375\\).</p>"
+        ]
+      },
+      {
+        "title": "Select one coefficient without expanding",
+        "question": "<p>Find the coefficient of \\(x^{5}\\) in \\(\\left(1-x\\right)^{7}\\).</p>",
+        "solution": [
+          "<p>To produce exactly \\(x^{5}\\), take the x-term 5 times.</p>",
+          "<p>Use \\(\\binom{7}{5}1^{2}(-1)^{5}\\).</p>",
+          "<p>Answer: \\(-21\\).</p>"
+        ]
+      },
+      {
+        "title": "Find an unknown linear coefficient",
+        "question": "<p>The coefficient of \\(x\\) in \\(\\left(1+bx\\right)^{7}\\) is \\(42\\). Find \\(b\\).</p>",
+        "solution": [
+          "<p>Exactly one choice of \\(bx\\) is required.</p>",
+          "<p>Equate \\(7(1)^{6}b\\) to \\(42\\) and divide through.</p>",
+          "<p>Answer: \\(6\\).</p>"
+        ]
+      },
+      {
+        "title": "Combine contributions from a linear factor",
+        "question": "<p>Find the coefficient of \\(x^{6}\\) in \\((1+2x)\\left(1+2x\\right)^{7}\\).</p>",
+        "solution": [
+          "<p>The constant in the first factor multiplies the coefficient \\(448\\) of \\(x^{6}\\) from the binomial.</p>",
+          "<p>The term \\(2x\\) multiplies the coefficient \\(672\\) of \\(x^{5}\\). Their contributions add.</p>",
+          "<p>Answer: \\(1792\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "id": "addmaths-0606-series-target-coefficients-target-index-review-a",
+        "kind": "check",
+        "title": "Select one coefficient without expanding",
+        "prompt": "<p>Find the coefficient of \\(x^{5}\\) in \\(\\left(2+2x\\right)^{10}\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "258048"
+        },
+        "hint": "<p>Use the power of x to determine how many times x was selected.</p>",
+        "solution": "<p>To produce exactly \\(x^{5}\\), take the x-term 5 times.</p><p>Use \\(\\binom{10}{5}2^{5}(2)^{5}\\).</p><p>Answer: \\(258048\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-target-coefficients-target-index-review-b",
+        "kind": "check",
+        "title": "Select one coefficient without expanding",
+        "prompt": "<p>Find the coefficient of \\(x^{2}\\) in \\(\\left(5+5x\\right)^{11}\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "2685546875"
+        },
+        "hint": "<p>Use the power of x to determine how many times x was selected.</p>",
+        "solution": "<p>To produce exactly \\(x^{2}\\), take the x-term 2 times.</p><p>Use \\(\\binom{11}{2}5^{9}(5)^{2}\\).</p><p>Answer: \\(2685546875\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-target-coefficients-two-contributions-review-a",
+        "kind": "check",
+        "title": "Combine contributions from a linear factor",
+        "prompt": "<p>Find the coefficient of \\(x^{5}\\) in \\((1+3x)\\left(2-3x\\right)^{10}\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "1306368"
+        },
+        "hint": "<p>The x-term in the multiplier raises the power of a term by one.</p>",
+        "solution": "<p>The constant in the first factor multiplies the coefficient \\(-1959552\\) of \\(x^{5}\\) from the binomial.</p><p>The term \\(3x\\) multiplies the coefficient \\(1088640\\) of \\(x^{4}\\). Their contributions add.</p><p>Answer: \\(1306368\\).</p>",
+        "retry": [
+          {
+            "answer": "-1959552",
+            "feedback": "<p>You have the contribution from the constant multiplier. Include the one from the x multiplier.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-target-coefficients-two-contributions-review-b",
+        "kind": "check",
+        "title": "Select one coefficient without expanding",
+        "prompt": "<p>Find the coefficient of \\(x^{3}\\) in \\(\\left(5-x\\right)^{12}\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "-429687500"
+        },
+        "hint": "<p>Use the power of x to determine how many times x was selected.</p>",
+        "solution": "<p>To produce exactly \\(x^{3}\\), take the x-term 3 times.</p><p>Use \\(\\binom{12}{3}5^{9}(-1)^{3}\\).</p><p>Answer: \\(-429687500\\).</p>",
+        "retry": [
+          {
+            "answer": "429687500",
+            "feedback": "<p>An odd number of negative factors produces a negative coefficient.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-target-coefficients-find-unknown-review-a",
+        "kind": "check",
+        "title": "Find an unknown linear coefficient",
+        "prompt": "<p>The coefficient of \\(x\\) in \\(\\left(2+bx\\right)^{6}\\) is \\(960\\). Find \\(b\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "5"
+        },
+        "hint": "<p>Only one of the n factors contributes x.</p>",
+        "solution": "<p>Exactly one choice of \\(bx\\) is required.</p><p>Equate \\(6(2)^{5}b\\) to \\(960\\) and divide through.</p><p>Answer: \\(5\\).</p>",
+        "retry": [
+          {
+            "answer": "960",
+            "feedback": "<p>This is the resulting coefficient of x, after multiplying by the other factors.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-target-coefficients-find-unknown-review-b",
+        "kind": "check",
+        "title": "Combine contributions from a linear factor",
+        "prompt": "<p>Find the coefficient of \\(x^{4}\\) in \\((1+2x)\\left(5+2x\\right)^{12}\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "9968750000"
+        },
+        "hint": "<p>The x-term in the multiplier raises the power of a term by one.</p>",
+        "solution": "<p>The constant in the first factor multiplies the coefficient \\(3093750000\\) of \\(x^{4}\\) from the binomial.</p><p>The term \\(2x\\) multiplies the coefficient \\(3437500000\\) of \\(x^{3}\\). Their contributions add.</p><p>Answer: \\(9968750000\\).</p>",
+        "retry": [
+          {
+            "answer": "3093750000",
+            "feedback": "<p>You have the contribution from the constant multiplier. Include the one from the x multiplier.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Term",
+        "definition": "<p>A single quantity of a sequence.</p>"
+      },
+      {
+        "term": "Series",
+        "definition": "<p>The sum of indicated terms of a sequence.</p>"
+      },
+      {
+        "term": "Coefficient",
+        "definition": "<p>The numerical factor multiplying a given power.</p>"
+      },
+      {
+        "term": "Common ratio",
+        "definition": "<p>The factor multiplying a geometric term to give the next.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Pascal’s triangle and binomial expansions",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-pascal-binomial"
+      },
+      {
+        "title": "General terms and missing values",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-general-term"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Which term gives the requested power?</h2><p>In \\((a+bx)^n\\) the selected index r equals the power of x.</p><h2>Why do two powers contribute to a product?</h2><p>In a product with a linear factor, the constant and the x-term can both contribute to the same final power.</p><h2>Can a coefficient reveal a missing multiplier?</h2><p>A stated coefficient gives an equation for the unknown coefficient in the bracket.</p>",
+      "checks": "<ol><li><p>Find the coefficient of \\(x^{3}\\) in \\(\\left(4+2x\\right)^{5}\\).</p><p><strong>Answer.</strong> \\(1280\\).</p></li><li><p>Find the coefficient of \\(x^{3}\\) in \\((1+5x)\\left(5+2x\\right)^{5}\\).</p><p><strong>Answer.</strong> \\(27000\\).</p></li><li><p>The coefficient of \\(x\\) in \\(\\left(1+bx\\right)^{5}\\) is \\(25\\). Find \\(b\\).</p><p><strong>Answer.</strong> \\(5\\).</p></li></ol>",
+      "examTip": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+    }
+  },
+  "addmaths-0606-series-general-term": {
+    "updatedOn": "2026-11-22",
+    "description": "Use the general term to find constant terms, missing coefficients and integer powers.",
+    "sections": [
+      {
+        "id": "index-condition",
+        "title": "How can a reciprocal power cancel an x power?",
+        "label": "Index condition",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Choose the term whose net power of x is zero. Negative and positive indices add when the factors multiply.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Use the general term with a variable selection index. Equate the net exponent to zero, then check that the index is a permitted integer.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "id": "addmaths-0606-series-general-term-index-condition-a",
+            "kind": "check",
+            "title": "Find the term independent of x",
+            "prompt": "<p>Find the term independent of \\(x\\) in \\(\\left(4x^{3}-\\frac{4}{x}\\right)^{16}\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "7816840478720"
+            },
+            "hint": "<p>Find the net power of x before finding its numerical coefficient.</p>",
+            "solution": "<p>If the reciprocal term is chosen \\(r\\) times, the exponent is \\(3(16-r)-1r\\).</p><p>Set this equal to zero, giving \\(r=12\\). Evaluate \\(\\binom{16}{12}4^{4}(-4)^{12}\\).</p><p>Answer: \\(7816840478720\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A constant term can arise after several non-constant factors are multiplied.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-general-term-index-condition-b",
+            "kind": "check",
+            "title": "Find the term independent of x",
+            "prompt": "<p>Find the term independent of \\(x\\) in \\(\\left(3x-\\frac{5}{x^{3}}\\right)^{16}\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "604514137500"
+            },
+            "hint": "<p>Find the net power of x before finding its numerical coefficient.</p>",
+            "solution": "<p>If the reciprocal term is chosen \\(r\\) times, the exponent is \\(1(16-r)-3r\\).</p><p>Set this equal to zero, giving \\(r=4\\). Evaluate \\(\\binom{16}{4}3^{12}(-5)^{4}\\).</p><p>Answer: \\(604514137500\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+          }
+        ]
+      },
+      {
+        "id": "match-coefficient",
+        "title": "How does matching a coefficient form an equation?",
+        "label": "Match coefficient",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the required power to select a term, then equate its scalar part to the given number.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Isolate what remains unknown in that coefficient. Only then substitute back or compare a second coefficient.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "id": "addmaths-0606-series-general-term-match-coefficient-a",
+            "kind": "check",
+            "title": "Find an unknown linear coefficient",
+            "prompt": "<p>The coefficient of \\(x\\) in \\(\\left(2+bx\\right)^{4}\\) is \\(160\\). Find \\(b\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "5"
+            },
+            "hint": "<p>Only one of the n factors contributes x.</p>",
+            "solution": "<p>Exactly one choice of \\(bx\\) is required.</p><p>Equate \\(4(2)^{3}b\\) to \\(160\\) and divide through.</p><p>Answer: \\(5\\).</p>",
+            "retry": [
+              {
+                "answer": "160",
+                "feedback": "<p>This is the resulting coefficient of x, after multiplying by the other factors.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep the factor from the unchanged terms in the bracket.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-general-term-match-coefficient-b",
+            "kind": "check",
+            "title": "Find an unknown linear coefficient",
+            "prompt": "<p>The coefficient of \\(x\\) in \\(\\left(2+bx\\right)^{5}\\) is \\(160\\). Find \\(b\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "2"
+            },
+            "hint": "<p>Only one of the n factors contributes x.</p>",
+            "solution": "<p>Exactly one choice of \\(bx\\) is required.</p><p>Equate \\(5(2)^{4}b\\) to \\(160\\) and divide through.</p><p>Answer: \\(2\\).</p>",
+            "retry": [
+              {
+                "answer": "160",
+                "feedback": "<p>This is the resulting coefficient of x, after multiplying by the other factors.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+          }
+        ]
+      },
+      {
+        "id": "integer-exponent",
+        "title": "How do I solve for a positive integer power?",
+        "label": "Integer exponent",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Choosing x twice contributes a factor n times one fewer than n, divided by two.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Set up a quadratic in n. The number of repeated factors in a finite binomial expansion is a positive integer.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "id": "addmaths-0606-series-general-term-integer-exponent-a",
+            "kind": "check",
+            "title": "Recover a positive integer exponent",
+            "prompt": "<p>The coefficient of \\(x^2\\) in \\((1+6x)^n\\) is \\(2808\\). Find the positive integer \\(n\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "13"
+            },
+            "hint": "<p>Selecting x exactly twice contributes both a binomial coefficient and the square of its multiplier.</p>",
+            "solution": "<p>Set \\(\\frac{n(n-1)}{2}\\cdot 6^2=2808\\).</p><p>After division the product is \\(n(n-1)=156\\). Take the positive integer root.</p><p>Answer: \\(13\\).</p>",
+            "retry": [
+              {
+                "answer": "12",
+                "feedback": "<p>Take the larger of the two consecutive factors.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Reject algebraic roots outside that domain.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-general-term-integer-exponent-b",
+            "kind": "check",
+            "title": "Find the term independent of x",
+            "prompt": "<p>Find the term independent of \\(x\\) in \\(\\left(3x^{2}-\\frac{1}{x^{3}}\\right)^{10}\\).</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "153090"
+            },
+            "hint": "<p>Find the net power of x before finding its numerical coefficient.</p>",
+            "solution": "<p>If the reciprocal term is chosen \\(r\\) times, the exponent is \\(2(10-r)-3r\\).</p><p>Set this equal to zero, giving \\(r=4\\). Evaluate \\(\\binom{10}{4}3^{6}(-1)^{4}\\).</p><p>Answer: \\(153090\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find the term independent of x",
+        "question": "<p>Find the term independent of \\(x\\) in \\(\\left(5x^{2}+\\frac{6}{x}\\right)^{6}\\).</p>",
+        "solution": [
+          "<p>If the reciprocal term is chosen \\(r\\) times, the exponent is \\(2(6-r)-1r\\).</p>",
+          "<p>Set this equal to zero, giving \\(r=4\\). Evaluate \\(\\binom{6}{4}5^{2}(6)^{4}\\).</p>",
+          "<p>Answer: \\(486000\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the term independent of x",
+        "question": "<p>Find the term independent of \\(x\\) in \\(\\left(5x-\\frac{1}{x^{3}}\\right)^{8}\\).</p>",
+        "solution": [
+          "<p>If the reciprocal term is chosen \\(r\\) times, the exponent is \\(1(8-r)-3r\\).</p>",
+          "<p>Set this equal to zero, giving \\(r=2\\). Evaluate \\(\\binom{8}{2}5^{6}(-1)^{2}\\).</p>",
+          "<p>Answer: \\(437500\\).</p>"
+        ]
+      },
+      {
+        "title": "Find an unknown linear coefficient",
+        "question": "<p>The coefficient of \\(x\\) in \\(\\left(1+bx\\right)^{8}\\) is \\(56\\). Find \\(b\\).</p>",
+        "solution": [
+          "<p>Exactly one choice of \\(bx\\) is required.</p>",
+          "<p>Equate \\(8(1)^{7}b\\) to \\(56\\) and divide through.</p>",
+          "<p>Answer: \\(7\\).</p>"
+        ]
+      },
+      {
+        "title": "Find an unknown linear coefficient",
+        "question": "<p>The coefficient of \\(x\\) in \\(\\left(1+bx\\right)^{9}\\) is \\(45\\). Find \\(b\\).</p>",
+        "solution": [
+          "<p>Exactly one choice of \\(bx\\) is required.</p>",
+          "<p>Equate \\(9(1)^{8}b\\) to \\(45\\) and divide through.</p>",
+          "<p>Answer: \\(5\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a positive integer exponent",
+        "question": "<p>The coefficient of \\(x^2\\) in \\((1+5x)^n\\) is \\(375\\). Find the positive integer \\(n\\).</p>",
+        "solution": [
+          "<p>Set \\(\\frac{n(n-1)}{2}\\cdot 5^2=375\\).</p>",
+          "<p>After division the product is \\(n(n-1)=30\\). Take the positive integer root.</p>",
+          "<p>Answer: \\(6\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the term independent of x",
+        "question": "<p>Find the term independent of \\(x\\) in \\(\\left(5x^{2}-\\frac{3}{x^{3}}\\right)^{15}\\).</p>",
+        "solution": [
+          "<p>If the reciprocal term is chosen \\(r\\) times, the exponent is \\(2(15-r)-3r\\).</p>",
+          "<p>Set this equal to zero, giving \\(r=6\\). Evaluate \\(\\binom{15}{6}5^{9}(-3)^{6}\\).</p>",
+          "<p>Answer: \\(7126259765625\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "id": "addmaths-0606-series-general-term-index-condition-review-a",
+        "kind": "check",
+        "title": "Find the term independent of x",
+        "prompt": "<p>Find the term independent of \\(x\\) in \\(\\left(6x-\\frac{2}{x^{3}}\\right)^{12}\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "-17736744960"
+        },
+        "hint": "<p>Find the net power of x before finding its numerical coefficient.</p>",
+        "solution": "<p>If the reciprocal term is chosen \\(r\\) times, the exponent is \\(1(12-r)-3r\\).</p><p>Set this equal to zero, giving \\(r=3\\). Evaluate \\(\\binom{12}{3}6^{9}(-2)^{3}\\).</p><p>Answer: \\(-17736744960\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-general-term-index-condition-review-b",
+        "kind": "check",
+        "title": "Find the term independent of x",
+        "prompt": "<p>Find the term independent of \\(x\\) in \\(\\left(4x-\\frac{6}{x^{3}}\\right)^{8}\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "4128768"
+        },
+        "hint": "<p>Find the net power of x before finding its numerical coefficient.</p>",
+        "solution": "<p>If the reciprocal term is chosen \\(r\\) times, the exponent is \\(1(8-r)-3r\\).</p><p>Set this equal to zero, giving \\(r=2\\). Evaluate \\(\\binom{8}{2}4^{6}(-6)^{2}\\).</p><p>Answer: \\(4128768\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-general-term-match-coefficient-review-a",
+        "kind": "check",
+        "title": "Find an unknown linear coefficient",
+        "prompt": "<p>The coefficient of \\(x\\) in \\(\\left(2+bx\\right)^{7}\\) is \\(2688\\). Find \\(b\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "6"
+        },
+        "hint": "<p>Only one of the n factors contributes x.</p>",
+        "solution": "<p>Exactly one choice of \\(bx\\) is required.</p><p>Equate \\(7(2)^{6}b\\) to \\(2688\\) and divide through.</p><p>Answer: \\(6\\).</p>",
+        "retry": [
+          {
+            "answer": "2688",
+            "feedback": "<p>This is the resulting coefficient of x, after multiplying by the other factors.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-general-term-match-coefficient-review-b",
+        "kind": "check",
+        "title": "Find an unknown linear coefficient",
+        "prompt": "<p>The coefficient of \\(x\\) in \\(\\left(2+bx\\right)^{10}\\) is \\(15360\\). Find \\(b\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "3"
+        },
+        "hint": "<p>Only one of the n factors contributes x.</p>",
+        "solution": "<p>Exactly one choice of \\(bx\\) is required.</p><p>Equate \\(10(2)^{9}b\\) to \\(15360\\) and divide through.</p><p>Answer: \\(3\\).</p>",
+        "retry": [
+          {
+            "answer": "15360",
+            "feedback": "<p>This is the resulting coefficient of x, after multiplying by the other factors.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-general-term-integer-exponent-review-a",
+        "kind": "check",
+        "title": "Recover a positive integer exponent",
+        "prompt": "<p>The coefficient of \\(x^2\\) in \\((1+3x)^n\\) is \\(495\\). Find the positive integer \\(n\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "11"
+        },
+        "hint": "<p>Selecting x exactly twice contributes both a binomial coefficient and the square of its multiplier.</p>",
+        "solution": "<p>Set \\(\\frac{n(n-1)}{2}\\cdot 3^2=495\\).</p><p>After division the product is \\(n(n-1)=110\\). Take the positive integer root.</p><p>Answer: \\(11\\).</p>",
+        "retry": [
+          {
+            "answer": "10",
+            "feedback": "<p>Take the larger of the two consecutive factors.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-general-term-integer-exponent-review-b",
+        "kind": "check",
+        "title": "Find the term independent of x",
+        "prompt": "<p>Find the term independent of \\(x\\) in \\(\\left(4x^{2}-\\frac{2}{x^{3}}\\right)^{15}\\).</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "83969966080"
+        },
+        "hint": "<p>Find the net power of x before finding its numerical coefficient.</p>",
+        "solution": "<p>If the reciprocal term is chosen \\(r\\) times, the exponent is \\(2(15-r)-3r\\).</p><p>Set this equal to zero, giving \\(r=6\\). Evaluate \\(\\binom{15}{6}4^{9}(-2)^{6}\\).</p><p>Answer: \\(83969966080\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Term",
+        "definition": "<p>A single quantity of a sequence.</p>"
+      },
+      {
+        "term": "Series",
+        "definition": "<p>The sum of indicated terms of a sequence.</p>"
+      },
+      {
+        "term": "Coefficient",
+        "definition": "<p>The numerical factor multiplying a given power.</p>"
+      },
+      {
+        "term": "Common ratio",
+        "definition": "<p>The factor multiplying a geometric term to give the next.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Individual binomial coefficients",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-target-coefficients"
+      },
+      {
+        "title": "Arithmetic progressions and sums",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-arithmetic-progressions"
+      }
+    ],
+    "revision": {
+      "body": "<h2>How can a reciprocal power cancel an x power?</h2><p>Choose the term whose net power of x is zero. Negative and positive indices add when the factors multiply.</p><h2>How does matching a coefficient form an equation?</h2><p>Use the required power to select a term, then equate its scalar part to the given number.</p><h2>How do I solve for a positive integer power?</h2><p>Choosing x twice contributes a factor n times one fewer than n, divided by two.</p>",
+      "checks": "<ol><li><p>Find the term independent of \\(x\\) in \\(\\left(5x^{3}+\\frac{2}{x^{3}}\\right)^{12}\\).</p><p><strong>Answer.</strong> \\(924000000\\).</p></li><li><p>The coefficient of \\(x\\) in \\(\\left(1+bx\\right)^{5}\\) is \\(20\\). Find \\(b\\).</p><p><strong>Answer.</strong> \\(4\\).</p></li><li><p>The coefficient of \\(x^2\\) in \\((1+2x)^n\\) is \\(364\\). Find the positive integer \\(n\\).</p><p><strong>Answer.</strong> \\(14\\).</p></li></ol>",
+      "examTip": "<p>Identify the power you need before expanding and keep exact coefficients throughout.</p>"
+    }
+  },
+  "addmaths-0606-series-arithmetic-progressions": {
+    "updatedOn": "2026-11-22",
+    "description": "Find a term, a finite sum and missing values from given arithmetic terms.",
+    "sections": [
+      {
+        "id": "difference",
+        "title": "How does a constant difference fix the sequence?",
+        "label": "Difference",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A constant difference d gives \\(u_n=a+(n-1)d\\).</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Subtract a term from its successor to find the signed difference. Count from position 1.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "id": "addmaths-0606-series-arithmetic-progressions-difference-a",
+            "kind": "check",
+            "title": "Find a specified arithmetic term",
+            "prompt": "<p>An arithmetic progression starts \\(18,\\ 22,\\ 26\\). Find term 13.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "66"
+            },
+            "hint": "<p>Count the gaps from term 1 to the requested position.</p>",
+            "solution": "<p>The constant difference is \\(4\\). There are 12 steps from term 1 to term 13.</p><p>Evaluate \\(18+(13-1)(4)\\).</p><p>Answer: \\(66\\).</p>",
+            "retry": [
+              {
+                "answer": "70",
+                "feedback": "<p>That uses n steps. Term 1 is already given.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An arithmetic progression may decrease as well as increase.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-arithmetic-progressions-difference-b",
+            "kind": "check",
+            "title": "Recover an arithmetic first term",
+            "prompt": "<p>Term 3 of an arithmetic progression is \\(30\\) and term 6 is \\(42\\). Find the first term.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "22"
+            },
+            "hint": "<p>Subtract the known terms and divide by the number of gaps.</p>",
+            "solution": "<p>Term 6 is three steps after term 3, so the common difference is \\(\\frac{42-(30)}{3}=4\\).</p><p>Go back two steps from term 3: \\(30-2(4)\\).</p><p>Answer: \\(22\\).</p>",
+            "retry": [
+              {
+                "answer": "26",
+                "feedback": "<p>Term 3 is two steps from the first term.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "finite-sum",
+        "title": "Why do I average the first and last terms?",
+        "label": "Finite sum",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Pairing terms from opposite ends gives equal totals. Multiply the mean of the extremes by the number of terms.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Use \\(S_n=\\frac n2(a+u_n)\\) after finding the final term.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "id": "addmaths-0606-series-arithmetic-progressions-finite-sum-a",
+            "kind": "check",
+            "title": "Find a finite arithmetic sum",
+            "prompt": "<p>An arithmetic progression starts \\(23,\\ 19,\\ 15\\). Find the sum of its first 14 terms.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "-42"
+            },
+            "hint": "<p>Pair the first term with the last, or use the standard formula.</p>",
+            "solution": "<p>The 14th term is \\(23+(14-1)(-4)=-29\\).</p><p>Multiply the average of the first and last terms by 14: \\(\\frac{14}{2}(23+(-29))\\).</p><p>Answer: \\(-42\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Do not substitute the final term in place of the sum.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-arithmetic-progressions-finite-sum-b",
+            "kind": "check",
+            "title": "Use an arithmetic sum in a model",
+            "prompt": "<p>A table records the number of flyers delivered. On day 1 the number is 18, then it rises by 7 each day. Find the total for the first 9 days.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "414"
+            },
+            "hint": "<p>Distinguish the count on the final day from the total across all days.</p>",
+            "solution": "<p>The last daily count is \\(18+(9-1)(7)=74\\).</p><p>Use \\(\\frac{9}{2}(18+74)\\).</p><p>Answer: \\(414\\).</p>",
+            "retry": [
+              {
+                "answer": "74",
+                "feedback": "<p>That is only the amount on the last day.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "known-positions",
+        "title": "Can two later terms recover the start?",
+        "label": "Known positions",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Subtract the later terms and divide by the number of gaps. Then work back to position 1.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Write the position numbers in a row before setting up equations. Each forward step adds the signed common difference.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "id": "addmaths-0606-series-arithmetic-progressions-known-positions-a",
+            "kind": "check",
+            "title": "Recover an arithmetic first term",
+            "prompt": "<p>Term 3 of an arithmetic progression is \\(15\\) and term 6 is \\(30\\). Find the first term.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "5"
+            },
+            "hint": "<p>Subtract the known terms and divide by the number of gaps.</p>",
+            "solution": "<p>Term 6 is three steps after term 3, so the common difference is \\(\\frac{30-(15)}{3}=5\\).</p><p>Go back two steps from term 3: \\(15-2(5)\\).</p><p>Answer: \\(5\\).</p>",
+            "retry": [
+              {
+                "answer": "10",
+                "feedback": "<p>Term 3 is two steps from the first term.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Subtracting two given terms only gives the common difference when the positions are consecutive.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-arithmetic-progressions-known-positions-b",
+            "kind": "check",
+            "title": "Recover a daily increase from a total",
+            "prompt": "<p>A table records the number of flyers delivered each day. The first day had 23. The count increases by a constant number each day and the total for 10 days is 590. Find the daily increase.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "8"
+            },
+            "hint": "<p>Use a finite arithmetic sum with the increase as the unknown.</p>",
+            "solution": "<p>Let the common increase be \\(d\\). Use \\(\\frac{10}{2}(2(23)+(10-1)d)=590\\).</p><p>Multiply by two, divide by 10, subtract the two first-term contributions and divide by 9.</p><p>Answer: \\(8\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find a specified arithmetic term",
+        "question": "<p>An arithmetic progression starts \\(22,\\ 25,\\ 28\\). Find term 11.</p>",
+        "solution": [
+          "<p>The constant difference is \\(3\\). There are 10 steps from term 1 to term 11.</p>",
+          "<p>Evaluate \\(22+(11-1)(3)\\).</p>",
+          "<p>Answer: \\(52\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover an arithmetic first term",
+        "question": "<p>Term 3 of an arithmetic progression is \\(12\\) and term 6 is \\(24\\). Find the first term.</p>",
+        "solution": [
+          "<p>Term 6 is three steps after term 3, so the common difference is \\(\\frac{24-(12)}{3}=4\\).</p>",
+          "<p>Go back two steps from term 3: \\(12-2(4)\\).</p>",
+          "<p>Answer: \\(4\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a finite arithmetic sum",
+        "question": "<p>An arithmetic progression starts \\(4,\\ 8,\\ 12\\). Find the sum of its first 11 terms.</p>",
+        "solution": [
+          "<p>The 11th term is \\(4+(11-1)(4)=44\\).</p>",
+          "<p>Multiply the average of the first and last terms by 11: \\(\\frac{11}{2}(4+(44))\\).</p>",
+          "<p>Answer: \\(264\\).</p>"
+        ]
+      },
+      {
+        "title": "Use an arithmetic sum in a model",
+        "question": "<p>A table records the number of food boxes assembled. On day 1 the number is 21, then it rises by 6 each day. Find the total for the first 6 days.</p>",
+        "solution": [
+          "<p>The last daily count is \\(21+(6-1)(6)=51\\).</p>",
+          "<p>Use \\(\\frac{6}{2}(21+51)\\).</p>",
+          "<p>Answer: \\(216\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover an arithmetic first term",
+        "question": "<p>Term 3 of an arithmetic progression is \\(1\\) and term 6 is \\(-11\\). Find the first term.</p>",
+        "solution": [
+          "<p>Term 6 is three steps after term 3, so the common difference is \\(\\frac{-11-(1)}{3}=-4\\).</p>",
+          "<p>Go back two steps from term 3: \\(1-2(-4)\\).</p>",
+          "<p>Answer: \\(9\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a daily increase from a total",
+        "question": "<p>A table records the number of trees counted each day. The first day had 26. The count increases by a constant number each day and the total for 7 days is 329. Find the daily increase.</p>",
+        "solution": [
+          "<p>Let the common increase be \\(d\\). Use \\(\\frac{7}{2}(2(26)+(7-1)d)=329\\).</p>",
+          "<p>Multiply by two, divide by 7, subtract the two first-term contributions and divide by 6.</p>",
+          "<p>Answer: \\(7\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "id": "addmaths-0606-series-arithmetic-progressions-difference-review-a",
+        "kind": "check",
+        "title": "Find a specified arithmetic term",
+        "prompt": "<p>An arithmetic progression starts \\(17,\\ 22,\\ 27\\). Find term 16.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "92"
+        },
+        "hint": "<p>Count the gaps from term 1 to the requested position.</p>",
+        "solution": "<p>The constant difference is \\(5\\). There are 15 steps from term 1 to term 16.</p><p>Evaluate \\(17+(16-1)(5)\\).</p><p>Answer: \\(92\\).</p>",
+        "retry": [
+          {
+            "answer": "97",
+            "feedback": "<p>That uses n steps. Term 1 is already given.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-arithmetic-progressions-difference-review-b",
+        "kind": "check",
+        "title": "Recover an arithmetic first term",
+        "prompt": "<p>Term 3 of an arithmetic progression is \\(0\\) and term 6 is \\(-18\\). Find the first term.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "12"
+        },
+        "hint": "<p>Subtract the known terms and divide by the number of gaps.</p>",
+        "solution": "<p>Term 6 is three steps after term 3, so the common difference is \\(\\frac{-18-(0)}{3}=-6\\).</p><p>Go back two steps from term 3: \\(0-2(-6)\\).</p><p>Answer: \\(12\\).</p>",
+        "retry": [
+          {
+            "answer": "6",
+            "feedback": "<p>Term 3 is two steps from the first term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-arithmetic-progressions-finite-sum-review-a",
+        "kind": "check",
+        "title": "Find a finite arithmetic sum",
+        "prompt": "<p>An arithmetic progression starts \\(22,\\ 27,\\ 32\\). Find the sum of its first 16 terms.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "952"
+        },
+        "hint": "<p>Pair the first term with the last, or use the standard formula.</p>",
+        "solution": "<p>The 16th term is \\(22+(16-1)(5)=97\\).</p><p>Multiply the average of the first and last terms by 16: \\(\\frac{16}{2}(22+(97))\\).</p><p>Answer: \\(952\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-arithmetic-progressions-finite-sum-review-b",
+        "kind": "check",
+        "title": "Use an arithmetic sum in a model",
+        "prompt": "<p>A table records the number of batteries tested. On day 1 the number is 12, then it rises by 10 each day. Find the total for the first 8 days.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "376"
+        },
+        "hint": "<p>Distinguish the count on the final day from the total across all days.</p>",
+        "solution": "<p>The last daily count is \\(12+(8-1)(10)=82\\).</p><p>Use \\(\\frac{8}{2}(12+82)\\).</p><p>Answer: \\(376\\).</p>",
+        "retry": [
+          {
+            "answer": "82",
+            "feedback": "<p>That is only the amount on the last day.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-arithmetic-progressions-known-positions-review-a",
+        "kind": "check",
+        "title": "Recover an arithmetic first term",
+        "prompt": "<p>Term 3 of an arithmetic progression is \\(16\\) and term 6 is \\(34\\). Find the first term.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "4"
+        },
+        "hint": "<p>Subtract the known terms and divide by the number of gaps.</p>",
+        "solution": "<p>Term 6 is three steps after term 3, so the common difference is \\(\\frac{34-(16)}{3}=6\\).</p><p>Go back two steps from term 3: \\(16-2(6)\\).</p><p>Answer: \\(4\\).</p>",
+        "retry": [
+          {
+            "answer": "10",
+            "feedback": "<p>Term 3 is two steps from the first term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-arithmetic-progressions-known-positions-review-b",
+        "kind": "check",
+        "title": "Recover a daily increase from a total",
+        "prompt": "<p>A table records the number of batteries tested each day. The first day had 17. The count increases by a constant number each day and the total for 9 days is 513. Find the daily increase.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "10"
+        },
+        "hint": "<p>Use a finite arithmetic sum with the increase as the unknown.</p>",
+        "solution": "<p>Let the common increase be \\(d\\). Use \\(\\frac{9}{2}(2(17)+(9-1)d)=513\\).</p><p>Multiply by two, divide by 9, subtract the two first-term contributions and divide by 8.</p><p>Answer: \\(10\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Term",
+        "definition": "<p>A single quantity of a sequence.</p>"
+      },
+      {
+        "term": "Series",
+        "definition": "<p>The sum of indicated terms of a sequence.</p>"
+      },
+      {
+        "term": "Coefficient",
+        "definition": "<p>The numerical factor multiplying a given power.</p>"
+      },
+      {
+        "term": "Common ratio",
+        "definition": "<p>The factor multiplying a geometric term to give the next.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "General terms and missing values",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-general-term"
+      },
+      {
+        "title": "Geometric progressions and finite sums",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-geometric-progressions"
+      }
+    ],
+    "revision": {
+      "body": "<h2>How does a constant difference fix the sequence?</h2><p>A constant difference d gives \\(u_n=a+(n-1)d\\).</p><h2>Why do I average the first and last terms?</h2><p>Pairing terms from opposite ends gives equal totals. Multiply the mean of the extremes by the number of terms.</p><h2>Can two later terms recover the start?</h2><p>Subtract the later terms and divide by the number of gaps. Then work back to position 1.</p>",
+      "checks": "<ol><li><p>An arithmetic progression starts \\(12,\\ 14,\\ 16\\). Find term 7.</p><p><strong>Answer.</strong> \\(24\\).</p></li><li><p>An arithmetic progression starts \\(13,\\ 11,\\ 9\\). Find the sum of its first 7 terms.</p><p><strong>Answer.</strong> \\(49\\).</p></li><li><p>Term 3 of an arithmetic progression is \\(18\\) and term 6 is \\(24\\). Find the first term.</p><p><strong>Answer.</strong> \\(14\\).</p></li></ol>",
+      "examTip": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+    }
+  },
+  "addmaths-0606-series-geometric-progressions": {
+    "updatedOn": "2026-11-22",
+    "description": "Use a common ratio to find geometric terms, finite sums and missing data.",
+    "sections": [
+      {
+        "id": "ratio",
+        "title": "How do I identify a geometric progression?",
+        "label": "Ratio",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Multiplying by the same ratio r at every step gives \\(u_n=ar^{n-1}\\).</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Divide a term by its non-zero predecessor. A negative ratio changes the sign at each step.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "id": "addmaths-0606-series-geometric-progressions-ratio-a",
+            "kind": "check",
+            "title": "Find a specified geometric term",
+            "prompt": "<p>A geometric progression begins \\(19,\\ -57,\\ 171\\). Find term 10.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "-373977"
+            },
+            "hint": "<p>The index is the term position, one more than the number of ratio multiplications.</p>",
+            "solution": "<p>Divide the second term by the first to get \\(-3\\).</p><p>Multiply the first term by this ratio 9 times. Use \\(19\\left(-3\\right)^{9}\\).</p><p>Answer: \\(-373977\\).</p>",
+            "retry": [
+              {
+                "answer": "1121931",
+                "feedback": "<p>The first term already occupies position one.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Subtracting neighbouring terms tests for an arithmetic pattern.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-geometric-progressions-ratio-b",
+            "kind": "check",
+            "title": "Recover a geometric ratio",
+            "prompt": "<p>The fourth and seventh terms of a geometric progression are \\(\\frac{23}{125}\\) and \\(\\frac{23}{15625}\\) respectively. Find its common ratio.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "1/5"
+            },
+            "hint": "<p>A gap of three indices gives the cube of the ratio.</p>",
+            "solution": "<p>Divide term 7 by term 4. The three steps give \\(r^3=\\frac{1}{125}\\).</p><p>Take the real cube root, keeping the sign.</p><p>Answer: \\(\\frac{1}{5}\\).</p>",
+            "retry": [
+              {
+                "answer": "1/125",
+                "feedback": "<p>This is the cube of the ratio. Take the cube root.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "geometric-sum",
+        "title": "How do I add the first n terms?",
+        "label": "Geometric sum",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For \\(r\\ne1\\), use \\(S_n=\\frac{a(1-r^n)}{1-r}\\).</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>The expansion of the numerator and denominator can be checked by subtracting r times the original finite sum from the sum itself.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "id": "addmaths-0606-series-geometric-progressions-geometric-sum-a",
+            "kind": "check",
+            "title": "Find a finite geometric sum",
+            "prompt": "<p>A geometric progression begins \\(24,\\ 96,\\ 384\\). Find the sum of the first 11 terms.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "33554424"
+            },
+            "hint": "<p>Use the geometric sum even if the ratio is negative.</p>",
+            "solution": "<p>The ratio is \\(4\\). The first term is \\(24\\).</p><p>Substitute into \\(S_n=\\frac{a(1-r^n)}{1-r}\\), using \\(n=11\\).</p><p>Answer: \\(33554424\\).</p>",
+            "retry": [
+              {
+                "answer": "25165824",
+                "feedback": "<p>That is the final term alone. Add all terms.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>When r is one, sum n copies of a instead.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-geometric-progressions-geometric-sum-b",
+            "kind": "check",
+            "title": "Find a specified geometric term",
+            "prompt": "<p>A geometric progression begins \\(28,\\ -84,\\ 252\\). Find term 11.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "1653372"
+            },
+            "hint": "<p>The index is the term position, one more than the number of ratio multiplications.</p>",
+            "solution": "<p>Divide the second term by the first to get \\(-3\\).</p><p>Multiply the first term by this ratio 10 times. Use \\(28\\left(-3\\right)^{10}\\).</p><p>Answer: \\(1653372\\).</p>",
+            "retry": [
+              {
+                "answer": "-4960116",
+                "feedback": "<p>The first term already occupies position one.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "find-ratio",
+        "title": "How do I use a gap between two positions?",
+        "label": "Find ratio",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Divide the later term by the earlier term. The result is the ratio to the power of the index gap.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>For an odd gap, a real root keeps the sign. For an even gap, check the information about the sign before selecting a root.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "id": "addmaths-0606-series-geometric-progressions-find-ratio-a",
+            "kind": "check",
+            "title": "Recover a geometric ratio",
+            "prompt": "<p>The fourth and seventh terms of a geometric progression are \\(\\frac{29}{8}\\) and \\(\\frac{29}{64}\\) respectively. Find its common ratio.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "1/2"
+            },
+            "hint": "<p>A gap of three indices gives the cube of the ratio.</p>",
+            "solution": "<p>Divide term 7 by term 4. The three steps give \\(r^3=\\frac{1}{8}\\).</p><p>Take the real cube root, keeping the sign.</p><p>Answer: \\(\\frac{1}{2}\\).</p>",
+            "retry": [
+              {
+                "answer": "1/8",
+                "feedback": "<p>This is the cube of the ratio. Take the cube root.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A ratio derived from non-consecutive terms needs a root.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-geometric-progressions-find-ratio-b",
+            "kind": "check",
+            "title": "Find a finite geometric sum",
+            "prompt": "<p>A geometric progression begins \\(5,\\ 25,\\ 125\\). Find the sum of the first 11 terms.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "61035155"
+            },
+            "hint": "<p>Use the geometric sum even if the ratio is negative.</p>",
+            "solution": "<p>The ratio is \\(5\\). The first term is \\(5\\).</p><p>Substitute into \\(S_n=\\frac{a(1-r^n)}{1-r}\\), using \\(n=11\\).</p><p>Answer: \\(61035155\\).</p>",
+            "retry": [
+              {
+                "answer": "48828125",
+                "feedback": "<p>That is the final term alone. Add all terms.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Find a specified geometric term",
+        "question": "<p>A geometric progression begins \\(28,\\ 84,\\ 252\\). Find term 8.</p>",
+        "solution": [
+          "<p>Divide the second term by the first to get \\(3\\).</p>",
+          "<p>Multiply the first term by this ratio 7 times. Use \\(28\\left(3\\right)^{7}\\).</p>",
+          "<p>Answer: \\(61236\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a geometric ratio",
+        "question": "<p>The fourth and seventh terms of a geometric progression are \\(\\frac{1}{25}\\) and \\(\\frac{1}{3125}\\) respectively. Find its common ratio.</p>",
+        "solution": [
+          "<p>Divide term 7 by term 4. The three steps give \\(r^3=\\frac{1}{125}\\).</p>",
+          "<p>Take the real cube root, keeping the sign.</p>",
+          "<p>Answer: \\(\\frac{1}{5}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a finite geometric sum",
+        "question": "<p>A geometric progression begins \\(5,\\ 1,\\ \\frac{1}{5}\\). Find the sum of the first 9 terms.</p>",
+        "solution": [
+          "<p>The ratio is \\(\\frac{1}{5}\\). The first term is \\(5\\).</p>",
+          "<p>Substitute into \\(S_n=\\frac{a(1-r^n)}{1-r}\\), using \\(n=9\\).</p>",
+          "<p>Answer: \\(\\frac{488281}{78125}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a specified geometric term",
+        "question": "<p>A geometric progression begins \\(10,\\ -30,\\ 90\\). Find term 9.</p>",
+        "solution": [
+          "<p>Divide the second term by the first to get \\(-3\\).</p>",
+          "<p>Multiply the first term by this ratio 8 times. Use \\(10\\left(-3\\right)^{8}\\).</p>",
+          "<p>Answer: \\(65610\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a geometric ratio",
+        "question": "<p>The fourth and seventh terms of a geometric progression are \\(-270\\) and \\(7290\\) respectively. Find its common ratio.</p>",
+        "solution": [
+          "<p>Divide term 7 by term 4. The three steps give \\(r^3=-27\\).</p>",
+          "<p>Take the real cube root, keeping the sign.</p>",
+          "<p>Answer: \\(-3\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a finite geometric sum",
+        "question": "<p>A geometric progression begins \\(15,\\ 60,\\ 240\\). Find the sum of the first 10 terms.</p>",
+        "solution": [
+          "<p>The ratio is \\(4\\). The first term is \\(15\\).</p>",
+          "<p>Substitute into \\(S_n=\\frac{a(1-r^n)}{1-r}\\), using \\(n=10\\).</p>",
+          "<p>Answer: \\(5242875\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "id": "addmaths-0606-series-geometric-progressions-ratio-review-a",
+        "kind": "check",
+        "title": "Find a specified geometric term",
+        "prompt": "<p>A geometric progression begins \\(13,\\ \\frac{13}{5},\\ \\frac{13}{25}\\). Find term 4.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "13/125"
+        },
+        "hint": "<p>The index is the term position, one more than the number of ratio multiplications.</p>",
+        "solution": "<p>Divide the second term by the first to get \\(\\frac{1}{5}\\).</p><p>Multiply the first term by this ratio 3 times. Use \\(13\\left(\\frac{1}{5}\\right)^{3}\\).</p><p>Answer: \\(\\frac{13}{125}\\).</p>",
+        "retry": [
+          {
+            "answer": "13/625",
+            "feedback": "<p>The first term already occupies position one.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-geometric-progressions-ratio-review-b",
+        "kind": "check",
+        "title": "Recover a geometric ratio",
+        "prompt": "<p>The fourth and seventh terms of a geometric progression are \\(\\frac{3}{64}\\) and \\(\\frac{3}{4096}\\) respectively. Find its common ratio.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "1/4"
+        },
+        "hint": "<p>A gap of three indices gives the cube of the ratio.</p>",
+        "solution": "<p>Divide term 7 by term 4. The three steps give \\(r^3=\\frac{1}{64}\\).</p><p>Take the real cube root, keeping the sign.</p><p>Answer: \\(\\frac{1}{4}\\).</p>",
+        "retry": [
+          {
+            "answer": "1/64",
+            "feedback": "<p>This is the cube of the ratio. Take the cube root.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-geometric-progressions-geometric-sum-review-a",
+        "kind": "check",
+        "title": "Find a finite geometric sum",
+        "prompt": "<p>A geometric progression begins \\(18,\\ -54,\\ 162\\). Find the sum of the first 5 terms.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "1098"
+        },
+        "hint": "<p>Use the geometric sum even if the ratio is negative.</p>",
+        "solution": "<p>The ratio is \\(-3\\). The first term is \\(18\\).</p><p>Substitute into \\(S_n=\\frac{a(1-r^n)}{1-r}\\), using \\(n=5\\).</p><p>Answer: \\(1098\\).</p>",
+        "retry": [
+          {
+            "answer": "1458",
+            "feedback": "<p>That is the final term alone. Add all terms.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-geometric-progressions-geometric-sum-review-b",
+        "kind": "check",
+        "title": "Find a specified geometric term",
+        "prompt": "<p>A geometric progression begins \\(8,\\ -24,\\ 72\\). Find term 6.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "-1944"
+        },
+        "hint": "<p>The index is the term position, one more than the number of ratio multiplications.</p>",
+        "solution": "<p>Divide the second term by the first to get \\(-3\\).</p><p>Multiply the first term by this ratio 5 times. Use \\(8\\left(-3\\right)^{5}\\).</p><p>Answer: \\(-1944\\).</p>",
+        "retry": [
+          {
+            "answer": "5832",
+            "feedback": "<p>The first term already occupies position one.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-geometric-progressions-find-ratio-review-a",
+        "kind": "check",
+        "title": "Recover a geometric ratio",
+        "prompt": "<p>The fourth and seventh terms of a geometric progression are \\(2875\\) and \\(359375\\) respectively. Find its common ratio.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "5"
+        },
+        "hint": "<p>A gap of three indices gives the cube of the ratio.</p>",
+        "solution": "<p>Divide term 7 by term 4. The three steps give \\(r^3=125\\).</p><p>Take the real cube root, keeping the sign.</p><p>Answer: \\(5\\).</p>",
+        "retry": [
+          {
+            "answer": "125",
+            "feedback": "<p>This is the cube of the ratio. Take the cube root.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-geometric-progressions-find-ratio-review-b",
+        "kind": "check",
+        "title": "Find a finite geometric sum",
+        "prompt": "<p>A geometric progression begins \\(13,\\ 26,\\ 52\\). Find the sum of the first 7 terms.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "1651"
+        },
+        "hint": "<p>Use the geometric sum even if the ratio is negative.</p>",
+        "solution": "<p>The ratio is \\(2\\). The first term is \\(13\\).</p><p>Substitute into \\(S_n=\\frac{a(1-r^n)}{1-r}\\), using \\(n=7\\).</p><p>Answer: \\(1651\\).</p>",
+        "retry": [
+          {
+            "answer": "832",
+            "feedback": "<p>That is the final term alone. Add all terms.</p>"
+          }
+        ]
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Term",
+        "definition": "<p>A single quantity of a sequence.</p>"
+      },
+      {
+        "term": "Series",
+        "definition": "<p>The sum of indicated terms of a sequence.</p>"
+      },
+      {
+        "term": "Coefficient",
+        "definition": "<p>The numerical factor multiplying a given power.</p>"
+      },
+      {
+        "term": "Common ratio",
+        "definition": "<p>The factor multiplying a geometric term to give the next.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Arithmetic progressions and sums",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-arithmetic-progressions"
+      },
+      {
+        "title": "Convergent geometric series",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-infinite-series"
+      }
+    ],
+    "revision": {
+      "body": "<h2>How do I identify a geometric progression?</h2><p>Multiplying by the same ratio r at every step gives \\(u_n=ar^{n-1}\\).</p><h2>How do I add the first n terms?</h2><p>For \\(r\\ne1\\), use \\(S_n=\\frac{a(1-r^n)}{1-r}\\).</p><h2>How do I use a gap between two positions?</h2><p>Divide the later term by the earlier term. The result is the ratio to the power of the index gap.</p>",
+      "checks": "<ol><li><p>A geometric progression begins \\(10,\\ \\frac{10}{3},\\ \\frac{10}{9}\\). Find term 4.</p><p><strong>Answer.</strong> \\(\\frac{10}{27}\\).</p></li><li><p>A geometric progression begins \\(11,\\ 22,\\ 44\\). Find the sum of the first 4 terms.</p><p><strong>Answer.</strong> \\(165\\).</p></li><li><p>The fourth and seventh terms of a geometric progression are \\(-324\\) and \\(8748\\) respectively. Find its common ratio.</p><p><strong>Answer.</strong> \\(-3\\).</p></li></ol>",
+      "examTip": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+    }
+  },
+  "addmaths-0606-series-infinite-series": {
+    "updatedOn": "2026-11-22",
+    "description": "Decide when an infinite geometric sum exists and calculate a limit or tail.",
+    "sections": [
+      {
+        "id": "test-convergence",
+        "title": "When does the limiting sum exist?",
+        "label": "Test convergence",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>For a non-zero first term, a geometric series converges when \\(|r|<1\\).</p>",
+            "figure": {
+              "src": "/assets/study/0606/series/shrinking-geometric-terms.svg",
+              "alt": "Bar diagram for the terms 16, 8, 4 and 2.",
+              "caption": "<p>The first four terms have common ratio one half. Later terms contribute increasingly small amounts.</p>",
+              "width": 420,
+              "height": 218
+            }
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Check the ratio including its sign. With an allowable negative ratio, the terms alternate and their magnitudes diminish.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "id": "addmaths-0606-series-infinite-series-test-convergence-a",
+            "kind": "check",
+            "title": "Decide which ratio gives convergence",
+            "prompt": "<p>Which of these common ratios gives a convergent geometric series with non-zero first term?</p>",
+            "field": {
+              "key": "answer",
+              "label": "Choose one answer",
+              "type": "choice",
+              "expected": "B",
+              "options": {
+                "A": "\\(1\\)",
+                "B": "\\(\\frac{1}{6}\\)",
+                "C": "\\(-3\\)",
+                "D": "\\(-1\\)"
+              }
+            },
+            "hint": "<p>Check the magnitude of the ratio, including when the ratio is negative.</p>",
+            "solution": "<p>Every term must tend to zero. That happens here when \\(|r|<1\\).</p><p>Only \\(\\frac{1}{6}\\) lies strictly between −1 and 1.</p><p>Answer: \\(\\frac{1}{6}\\).</p>",
+            "retry": [
+              {
+                "answer": "C",
+                "feedback": "<p>A negative ratio below −1 still makes term magnitudes grow.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A ratio less than one may still have magnitude greater than one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-infinite-series-test-convergence-b",
+            "kind": "check",
+            "title": "Find a sum to infinity",
+            "prompt": "<p>The geometric series begins \\(19,\\ \\frac{19}{8},\\ \\frac{19}{64}\\). Find its sum to infinity.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "152/7"
+            },
+            "hint": "<p>Check convergence before applying the formula.</p>",
+            "solution": "<p>Check that \\(|r|=\\frac{1}{8}<1\\), so the terms diminish.</p><p>Apply \\(S_\\infty=\\frac{a}{1-r}\\) with \\(19\\) and \\(\\frac{1}{8}\\).</p><p>Answer: \\(\\frac{152}{7}\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "limit-sum",
+        "title": "How do I use the sum to infinity?",
+        "label": "Limit sum",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Since \\(r^n\\) tends to zero, take the limit of the finite formula to get \\(S_\\infty=\\frac{a}{1-r}\\).</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>The denominator uses the signed ratio. Rearrange the same formula when the limiting sum is given.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "id": "addmaths-0606-series-infinite-series-limit-sum-a",
+            "kind": "check",
+            "title": "Find a sum to infinity",
+            "prompt": "<p>The geometric series begins \\(20,\\ -10,\\ 5\\). Find its sum to infinity.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "40/3"
+            },
+            "hint": "<p>Check convergence before applying the formula.</p>",
+            "solution": "<p>Check that \\(|r|=\\frac{1}{2}<1\\), so the terms diminish.</p><p>Apply \\(S_\\infty=\\frac{a}{1-r}\\) with \\(20\\) and \\(-\\frac{1}{2}\\).</p><p>Answer: \\(\\frac{40}{3}\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep the negative sign when substituting a negative ratio.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-infinite-series-limit-sum-b",
+            "kind": "check",
+            "title": "Recover the ratio from a finite limiting sum",
+            "prompt": "<p>A convergent geometric series has first term \\(24\\) and sum to infinity \\(16\\). Find the ratio.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "-1/2"
+            },
+            "hint": "<p>Find the ratio by clearing the denominator before rearranging.</p>",
+            "solution": "<p>Substitute into \\(16=\\frac{24}{1-r}\\).</p><p>Rearrange to \\(r=1-\\frac{a}{S_\\infty}\\). Check that its magnitude is less than one.</p><p>Answer: \\(-\\frac{1}{2}\\).</p>",
+            "retry": [
+              {
+                "answer": "1/2",
+                "feedback": "<p>Check which side changes sign when isolating the ratio.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "remaining-tail",
+        "title": "How do I find the part after n terms?",
+        "label": "Remaining tail",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>The omitted terms form another geometric series, with the same ratio and a new first term.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Use the first omitted term in the limiting formula, or subtract the initial finite sum from the full limiting sum.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "id": "addmaths-0606-series-infinite-series-remaining-tail-a",
+            "kind": "check",
+            "title": "Find the sum omitted after a finite stopping point",
+            "prompt": "<p>The geometric series begins \\(25,\\ \\frac{25}{2},\\ \\frac{25}{4}\\). Find the sum of all terms after its first 5 terms.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "25/16"
+            },
+            "hint": "<p>Start the infinite sum at the first omitted term.</p>",
+            "solution": "<p>The first omitted term is \\(25\\left(\\frac{1}{2}\\right)^{5}\\). The tail has the same ratio.</p><p>Divide the first omitted term by \\(1-(\\frac{1}{2})\\).</p><p>Answer: \\(\\frac{25}{16}\\).</p>",
+            "retry": [
+              {
+                "answer": "50",
+                "feedback": "<p>That includes the terms before the stopping point.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>After n terms, the first omitted term is term n plus one.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-infinite-series-remaining-tail-b",
+            "kind": "check",
+            "title": "Find a sum to infinity",
+            "prompt": "<p>The geometric series begins \\(29,\\ \\frac{29}{2},\\ \\frac{29}{4}\\). Find its sum to infinity.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "58"
+            },
+            "hint": "<p>Check convergence before applying the formula.</p>",
+            "solution": "<p>Check that \\(|r|=\\frac{1}{2}<1\\), so the terms diminish.</p><p>Apply \\(S_\\infty=\\frac{a}{1-r}\\) with \\(29\\) and \\(\\frac{1}{2}\\).</p><p>Answer: \\(58\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Decide which ratio gives convergence",
+        "question": "<p>Which of these common ratios gives a convergent geometric series with non-zero first term?</p>",
+        "solution": [
+          "<p>Every term must tend to zero. That happens here when \\(|r|<1\\).</p>",
+          "<p>Only \\(\\frac{1}{8}\\) lies strictly between −1 and 1.</p>",
+          "<p>Answer: \\(\\frac{1}{8}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a sum to infinity",
+        "question": "<p>The geometric series begins \\(28,\\ 4,\\ \\frac{4}{7}\\). Find its sum to infinity.</p>",
+        "solution": [
+          "<p>Check that \\(|r|=\\frac{1}{7}<1\\), so the terms diminish.</p>",
+          "<p>Apply \\(S_\\infty=\\frac{a}{1-r}\\) with \\(28\\) and \\(\\frac{1}{7}\\).</p>",
+          "<p>Answer: \\(\\frac{98}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a sum to infinity",
+        "question": "<p>The geometric series begins \\(28,\\ 4,\\ \\frac{4}{7}\\). Find its sum to infinity.</p>",
+        "solution": [
+          "<p>Check that \\(|r|=\\frac{1}{7}<1\\), so the terms diminish.</p>",
+          "<p>Apply \\(S_\\infty=\\frac{a}{1-r}\\) with \\(28\\) and \\(\\frac{1}{7}\\).</p>",
+          "<p>Answer: \\(\\frac{98}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover the ratio from a finite limiting sum",
+        "question": "<p>A convergent geometric series has first term \\(33\\) and sum to infinity \\(\\frac{231}{8}\\). Find the ratio.</p>",
+        "solution": [
+          "<p>Substitute into \\(\\frac{231}{8}=\\frac{33}{1-r}\\).</p>",
+          "<p>Rearrange to \\(r=1-\\frac{a}{S_\\infty}\\). Check that its magnitude is less than one.</p>",
+          "<p>Answer: \\(-\\frac{1}{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the sum omitted after a finite stopping point",
+        "question": "<p>The geometric series begins \\(33,\\ -\\frac{33}{7},\\ \\frac{33}{49}\\). Find the sum of all terms after its first 9 terms.</p>",
+        "solution": [
+          "<p>The first omitted term is \\(33\\left(-\\frac{1}{7}\\right)^{9}\\). The tail has the same ratio.</p>",
+          "<p>Divide the first omitted term by \\(1-(-\\frac{1}{7})\\).</p>",
+          "<p>Answer: \\(-\\frac{33}{46118408}\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a sum to infinity",
+        "question": "<p>The geometric series begins \\(11,\\ \\frac{11}{8},\\ \\frac{11}{64}\\). Find its sum to infinity.</p>",
+        "solution": [
+          "<p>Check that \\(|r|=\\frac{1}{8}<1\\), so the terms diminish.</p>",
+          "<p>Apply \\(S_\\infty=\\frac{a}{1-r}\\) with \\(11\\) and \\(\\frac{1}{8}\\).</p>",
+          "<p>Answer: \\(\\frac{88}{7}\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "id": "addmaths-0606-series-infinite-series-test-convergence-review-a",
+        "kind": "check",
+        "title": "Decide which ratio gives convergence",
+        "prompt": "<p>Which of these common ratios gives a convergent geometric series with non-zero first term?</p>",
+        "field": {
+          "key": "answer",
+          "label": "Choose one answer",
+          "type": "choice",
+          "expected": "D",
+          "options": {
+            "A": "\\(-5\\)",
+            "B": "\\(-1\\)",
+            "C": "\\(1\\)",
+            "D": "\\(\\frac{1}{6}\\)"
+          }
+        },
+        "hint": "<p>Check the magnitude of the ratio, including when the ratio is negative.</p>",
+        "solution": "<p>Every term must tend to zero. That happens here when \\(|r|<1\\).</p><p>Only \\(\\frac{1}{6}\\) lies strictly between −1 and 1.</p><p>Answer: \\(\\frac{1}{6}\\).</p>",
+        "retry": [
+          {
+            "answer": "A",
+            "feedback": "<p>A negative ratio below −1 still makes term magnitudes grow.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-infinite-series-test-convergence-review-b",
+        "kind": "check",
+        "title": "Find a sum to infinity",
+        "prompt": "<p>The geometric series begins \\(28,\\ 7,\\ \\frac{7}{4}\\). Find its sum to infinity.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "112/3"
+        },
+        "hint": "<p>Check convergence before applying the formula.</p>",
+        "solution": "<p>Check that \\(|r|=\\frac{1}{4}<1\\), so the terms diminish.</p><p>Apply \\(S_\\infty=\\frac{a}{1-r}\\) with \\(28\\) and \\(\\frac{1}{4}\\).</p><p>Answer: \\(\\frac{112}{3}\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-infinite-series-limit-sum-review-a",
+        "kind": "check",
+        "title": "Find a sum to infinity",
+        "prompt": "<p>The geometric series begins \\(15,\\ -5,\\ \\frac{5}{3}\\). Find its sum to infinity.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "45/4"
+        },
+        "hint": "<p>Check convergence before applying the formula.</p>",
+        "solution": "<p>Check that \\(|r|=\\frac{1}{3}<1\\), so the terms diminish.</p><p>Apply \\(S_\\infty=\\frac{a}{1-r}\\) with \\(15\\) and \\(-\\frac{1}{3}\\).</p><p>Answer: \\(\\frac{45}{4}\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-infinite-series-limit-sum-review-b",
+        "kind": "check",
+        "title": "Recover the ratio from a finite limiting sum",
+        "prompt": "<p>A convergent geometric series has first term \\(33\\) and sum to infinity \\(\\frac{55}{2}\\). Find the ratio.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "-1/5"
+        },
+        "hint": "<p>Find the ratio by clearing the denominator before rearranging.</p>",
+        "solution": "<p>Substitute into \\(\\frac{55}{2}=\\frac{33}{1-r}\\).</p><p>Rearrange to \\(r=1-\\frac{a}{S_\\infty}\\). Check that its magnitude is less than one.</p><p>Answer: \\(-\\frac{1}{5}\\).</p>",
+        "retry": [
+          {
+            "answer": "1/5",
+            "feedback": "<p>Check which side changes sign when isolating the ratio.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-infinite-series-remaining-tail-review-a",
+        "kind": "check",
+        "title": "Find the sum omitted after a finite stopping point",
+        "prompt": "<p>The geometric series begins \\(20,\\ 5,\\ \\frac{5}{4}\\). Find the sum of all terms after its first 9 terms.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "5/49152"
+        },
+        "hint": "<p>Start the infinite sum at the first omitted term.</p>",
+        "solution": "<p>The first omitted term is \\(20\\left(\\frac{1}{4}\\right)^{9}\\). The tail has the same ratio.</p><p>Divide the first omitted term by \\(1-(\\frac{1}{4})\\).</p><p>Answer: \\(\\frac{5}{49152}\\).</p>",
+        "retry": [
+          {
+            "answer": "80/3",
+            "feedback": "<p>That includes the terms before the stopping point.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-infinite-series-remaining-tail-review-b",
+        "kind": "check",
+        "title": "Find a sum to infinity",
+        "prompt": "<p>The geometric series begins \\(11,\\ \\frac{11}{5},\\ \\frac{11}{25}\\). Find its sum to infinity.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "55/4"
+        },
+        "hint": "<p>Check convergence before applying the formula.</p>",
+        "solution": "<p>Check that \\(|r|=\\frac{1}{5}<1\\), so the terms diminish.</p><p>Apply \\(S_\\infty=\\frac{a}{1-r}\\) with \\(11\\) and \\(\\frac{1}{5}\\).</p><p>Answer: \\(\\frac{55}{4}\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Term",
+        "definition": "<p>A single quantity of a sequence.</p>"
+      },
+      {
+        "term": "Series",
+        "definition": "<p>The sum of indicated terms of a sequence.</p>"
+      },
+      {
+        "term": "Coefficient",
+        "definition": "<p>The numerical factor multiplying a given power.</p>"
+      },
+      {
+        "term": "Common ratio",
+        "definition": "<p>The factor multiplying a geometric term to give the next.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Geometric progressions and finite sums",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-geometric-progressions"
+      },
+      {
+        "title": "Choosing a progression in a model",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-sequence-models"
+      }
+    ],
+    "revision": {
+      "body": "<h2>When does the limiting sum exist?</h2><p>For a non-zero first term, a geometric series converges when \\(|r|<1\\).</p><h2>How do I use the sum to infinity?</h2><p>Since \\(r^n\\) tends to zero, take the limit of the finite formula to get \\(S_\\infty=\\frac{a}{1-r}\\).</p><h2>How do I find the part after n terms?</h2><p>The omitted terms form another geometric series, with the same ratio and a new first term.</p>",
+      "checks": "<ol><li><p>Which of these common ratios gives a convergent geometric series with non-zero first term?</p><p><strong>Answer.</strong> \\(\\frac{1}{4}\\).</p></li><li><p>The geometric series begins \\(19,\\ -\\frac{19}{2},\\ \\frac{19}{4}\\). Find its sum to infinity.</p><p><strong>Answer.</strong> \\(\\frac{38}{3}\\).</p></li><li><p>The geometric series begins \\(20,\\ 10,\\ 5\\). Find the sum of all terms after its first 4 terms.</p><p><strong>Answer.</strong> \\(\\frac{5}{2}\\).</p></li></ol>",
+      "examTip": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+    }
+  },
+  "addmaths-0606-series-sequence-models": {
+    "updatedOn": "2026-11-22",
+    "description": "Interpret additive or multiplicative change in a multi-step situation.",
+    "sections": [
+      {
+        "id": "add-or-multiply",
+        "title": "Is the change additive or multiplicative?",
+        "label": "Add or multiply",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A fixed increase is arithmetic. A fixed multiplier is geometric.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Write the first three amounts in a table of positions. Check whether the differences or the successive ratios match.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 0
+          },
+          {
+            "id": "addmaths-0606-series-sequence-models-add-or-multiply-a",
+            "kind": "check",
+            "title": "Use an arithmetic sum in a model",
+            "prompt": "<p>A table records the number of postcards printed. On day 1 the number is 27, then it rises by 10 each day. Find the total for the first 6 days.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "312"
+            },
+            "hint": "<p>Distinguish the count on the final day from the total across all days.</p>",
+            "solution": "<p>The last daily count is \\(27+(6-1)(10)=77\\).</p><p>Use \\(\\frac{6}{2}(27+77)\\).</p><p>Answer: \\(312\\).</p>",
+            "retry": [
+              {
+                "answer": "77",
+                "feedback": "<p>That is only the amount on the last day.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An increase by a fixed proportion usually changes by a different amount each period.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 1,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-sequence-models-add-or-multiply-b",
+            "kind": "check",
+            "title": "Find a specified geometric term",
+            "prompt": "<p>A geometric progression begins \\(21,\\ -63,\\ 189\\). Find term 5.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "1701"
+            },
+            "hint": "<p>The index is the term position, one more than the number of ratio multiplications.</p>",
+            "solution": "<p>Divide the second term by the first to get \\(-3\\).</p><p>Multiply the first term by this ratio 4 times. Use \\(21\\left(-3\\right)^{4}\\).</p><p>Answer: \\(1701\\).</p>",
+            "retry": [
+              {
+                "answer": "-5103",
+                "feedback": "<p>The first term already occupies position one.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "rebuild-model",
+        "title": "How can the total give an unknown rate?",
+        "label": "Rebuild model",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>A stated total after a fixed number of terms leads to a finite series equation.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Substitute the first term and term count, label the unknown and solve. Check the units of the answer.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 2
+          },
+          {
+            "id": "addmaths-0606-series-sequence-models-rebuild-model-a",
+            "kind": "check",
+            "title": "Recover a daily increase from a total",
+            "prompt": "<p>A table records the number of batteries tested each day. The first day had 32. The count increases by a constant number each day and the total for 7 days is 434. Find the daily increase.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "10"
+            },
+            "hint": "<p>Use a finite arithmetic sum with the increase as the unknown.</p>",
+            "solution": "<p>Let the common increase be \\(d\\). Use \\(\\frac{7}{2}(2(32)+(7-1)d)=434\\).</p><p>Multiply by two, divide by 7, subtract the two first-term contributions and divide by 6.</p><p>Answer: \\(10\\).</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The total can include the starting value, depending on what the first counted period means.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 3,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-sequence-models-rebuild-model-b",
+            "kind": "check",
+            "title": "Use an arithmetic sum in a model",
+            "prompt": "<p>A table records the number of batteries tested. On day 1 the number is 15, then it rises by 10 each day. Find the total for the first 8 days.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "400"
+            },
+            "hint": "<p>Distinguish the count on the final day from the total across all days.</p>",
+            "solution": "<p>The last daily count is \\(15+(8-1)(10)=85\\).</p><p>Use \\(\\frac{8}{2}(15+85)\\).</p><p>Answer: \\(400\\).</p>",
+            "retry": [
+              {
+                "answer": "85",
+                "feedback": "<p>That is only the amount on the last day.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      },
+      {
+        "id": "first-threshold",
+        "title": "How do I justify the first time a target is reached?",
+        "label": "First threshold",
+        "minutes": 8,
+        "level": "core",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Use the nth-term rule to test the threshold and the immediately previous period.</p>"
+          },
+          {
+            "kind": "text",
+            "title": "Practise the method",
+            "html": "<p>Check how the first term is indexed. A value supplied at time zero has experienced zero growth steps.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4
+          },
+          {
+            "id": "addmaths-0606-series-sequence-models-first-threshold-a",
+            "kind": "check",
+            "title": "Find the first index to reach a batch target",
+            "prompt": "<p>A laboratory begins with 7 small cultures at time zero. The number is multiplied by 3 at the end of each hour. Find the earliest whole hour when the number is at least 15309.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "7"
+            },
+            "hint": "<p>The number of growth periods is zero at the starting time.</p>",
+            "solution": "<p>At hour \\(h\\) there are \\(7(3)^h\\). Initial values correspond to hour zero.</p><p>Test powers of 3: hour 6 gives 5103, then hour 7 gives the required value.</p><p>Answer: \\(7\\).</p>",
+            "retry": [
+              {
+                "answer": "8",
+                "feedback": "<p>The first term corresponds to hour zero.</p>"
+              }
+            ]
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Rounding to the nearest time may leave the model below the threshold.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
+          },
+          {
+            "id": "addmaths-0606-series-sequence-models-first-threshold-b",
+            "kind": "check",
+            "title": "Recover a daily increase from a total",
+            "prompt": "<p>A table records the number of batteries tested each day. The first day had 20. The count increases by a constant number each day and the total for 9 days is 288. Find the daily increase.</p>",
+            "field": {
+              "key": "answer",
+              "label": "Exact value",
+              "type": "number",
+              "expected": "3"
+            },
+            "hint": "<p>Use a finite arithmetic sum with the increase as the unknown.</p>",
+            "solution": "<p>Let the common increase be \\(d\\). Use \\(\\frac{9}{2}(2(20)+(9-1)d)=288\\).</p><p>Multiply by two, divide by 9, subtract the two first-term contributions and divide by 8.</p><p>Answer: \\(3\\).</p>"
+          },
+          {
+            "kind": "tip",
+            "html": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "Use an arithmetic sum in a model",
+        "question": "<p>A table records the number of instruments serviced. On day 1 the number is 29, then it rises by 8 each day. Find the total for the first 12 days.</p>",
+        "solution": [
+          "<p>The last daily count is \\(29+(12-1)(8)=117\\).</p>",
+          "<p>Use \\(\\frac{12}{2}(29+117)\\).</p>",
+          "<p>Answer: \\(876\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a specified geometric term",
+        "question": "<p>A geometric progression begins \\(3,\\ -9,\\ 27\\). Find term 11.</p>",
+        "solution": [
+          "<p>Divide the second term by the first to get \\(-3\\).</p>",
+          "<p>Multiply the first term by this ratio 10 times. Use \\(3\\left(-3\\right)^{10}\\).</p>",
+          "<p>Answer: \\(177147\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a daily increase from a total",
+        "question": "<p>A table records the number of instruments serviced each day. The first day had 13. The count increases by a constant number each day and the total for 13 days is 871. Find the daily increase.</p>",
+        "solution": [
+          "<p>Let the common increase be \\(d\\). Use \\(\\frac{13}{2}(2(13)+(13-1)d)=871\\).</p>",
+          "<p>Multiply by two, divide by 13, subtract the two first-term contributions and divide by 12.</p>",
+          "<p>Answer: \\(9\\).</p>"
+        ]
+      },
+      {
+        "title": "Use an arithmetic sum in a model",
+        "question": "<p>A table records the number of instruments serviced. On day 1 the number is 18, then it rises by 9 each day. Find the total for the first 5 days.</p>",
+        "solution": [
+          "<p>The last daily count is \\(18+(5-1)(9)=54\\).</p>",
+          "<p>Use \\(\\frac{5}{2}(18+54)\\).</p>",
+          "<p>Answer: \\(180\\).</p>"
+        ]
+      },
+      {
+        "title": "Find the first index to reach a batch target",
+        "question": "<p>A laboratory begins with 14 small cultures at time zero. The number is multiplied by 2 at the end of each hour. Find the earliest whole hour when the number is at least 224.</p>",
+        "solution": [
+          "<p>At hour \\(h\\) there are \\(14(2)^h\\). Initial values correspond to hour zero.</p>",
+          "<p>Test powers of 2: hour 3 gives 112, then hour 4 gives the required value.</p>",
+          "<p>Answer: \\(4\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover a daily increase from a total",
+        "question": "<p>A table records the number of postcards printed each day. The first day had 23. The count increases by a constant number each day and the total for 6 days is 273. Find the daily increase.</p>",
+        "solution": [
+          "<p>Let the common increase be \\(d\\). Use \\(\\frac{6}{2}(2(23)+(6-1)d)=273\\).</p>",
+          "<p>Multiply by two, divide by 6, subtract the two first-term contributions and divide by 5.</p>",
+          "<p>Answer: \\(9\\).</p>"
+        ]
+      }
+    ],
+    "extraPractice": [
+      {
+        "id": "addmaths-0606-series-sequence-models-add-or-multiply-review-a",
+        "kind": "check",
+        "title": "Use an arithmetic sum in a model",
+        "prompt": "<p>A table records the number of reading pages completed. On day 1 the number is 28, then it rises by 3 each day. Find the total for the first 11 days.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "473"
+        },
+        "hint": "<p>Distinguish the count on the final day from the total across all days.</p>",
+        "solution": "<p>The last daily count is \\(28+(11-1)(3)=58\\).</p><p>Use \\(\\frac{11}{2}(28+58)\\).</p><p>Answer: \\(473\\).</p>",
+        "retry": [
+          {
+            "answer": "58",
+            "feedback": "<p>That is only the amount on the last day.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-sequence-models-add-or-multiply-review-b",
+        "kind": "check",
+        "title": "Find a specified geometric term",
+        "prompt": "<p>A geometric progression begins \\(29,\\ -87,\\ 261\\). Find term 8.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "-63423"
+        },
+        "hint": "<p>The index is the term position, one more than the number of ratio multiplications.</p>",
+        "solution": "<p>Divide the second term by the first to get \\(-3\\).</p><p>Multiply the first term by this ratio 7 times. Use \\(29\\left(-3\\right)^{7}\\).</p><p>Answer: \\(-63423\\).</p>",
+        "retry": [
+          {
+            "answer": "190269",
+            "feedback": "<p>The first term already occupies position one.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-sequence-models-rebuild-model-review-a",
+        "kind": "check",
+        "title": "Recover a daily increase from a total",
+        "prompt": "<p>A table records the number of reading pages completed each day. The first day had 12. The count increases by a constant number each day and the total for 12 days is 408. Find the daily increase.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "4"
+        },
+        "hint": "<p>Use a finite arithmetic sum with the increase as the unknown.</p>",
+        "solution": "<p>Let the common increase be \\(d\\). Use \\(\\frac{12}{2}(2(12)+(12-1)d)=408\\).</p><p>Multiply by two, divide by 12, subtract the two first-term contributions and divide by 11.</p><p>Answer: \\(4\\).</p>"
+      },
+      {
+        "id": "addmaths-0606-series-sequence-models-rebuild-model-review-b",
+        "kind": "check",
+        "title": "Use an arithmetic sum in a model",
+        "prompt": "<p>A table records the number of food boxes assembled. On day 1 the number is 30, then it rises by 5 each day. Find the total for the first 6 days.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "255"
+        },
+        "hint": "<p>Distinguish the count on the final day from the total across all days.</p>",
+        "solution": "<p>The last daily count is \\(30+(6-1)(5)=55\\).</p><p>Use \\(\\frac{6}{2}(30+55)\\).</p><p>Answer: \\(255\\).</p>",
+        "retry": [
+          {
+            "answer": "55",
+            "feedback": "<p>That is only the amount on the last day.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-sequence-models-first-threshold-review-a",
+        "kind": "check",
+        "title": "Find the first index to reach a batch target",
+        "prompt": "<p>A laboratory begins with 3 small cultures at time zero. The number is multiplied by 2 at the end of each hour. Find the earliest whole hour when the number is at least 12288.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "12"
+        },
+        "hint": "<p>The number of growth periods is zero at the starting time.</p>",
+        "solution": "<p>At hour \\(h\\) there are \\(3(2)^h\\). Initial values correspond to hour zero.</p><p>Test powers of 2: hour 11 gives 6144, then hour 12 gives the required value.</p><p>Answer: \\(12\\).</p>",
+        "retry": [
+          {
+            "answer": "13",
+            "feedback": "<p>The first term corresponds to hour zero.</p>"
+          }
+        ]
+      },
+      {
+        "id": "addmaths-0606-series-sequence-models-first-threshold-review-b",
+        "kind": "check",
+        "title": "Recover a daily increase from a total",
+        "prompt": "<p>A table records the number of food boxes assembled each day. The first day had 14. The count increases by a constant number each day and the total for 7 days is 203. Find the daily increase.</p>",
+        "field": {
+          "key": "answer",
+          "label": "Exact value",
+          "type": "number",
+          "expected": "5"
+        },
+        "hint": "<p>Use a finite arithmetic sum with the increase as the unknown.</p>",
+        "solution": "<p>Let the common increase be \\(d\\). Use \\(\\frac{7}{2}(2(14)+(7-1)d)=203\\).</p><p>Multiply by two, divide by 7, subtract the two first-term contributions and divide by 6.</p><p>Answer: \\(5\\).</p>"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Term",
+        "definition": "<p>A single quantity of a sequence.</p>"
+      },
+      {
+        "term": "Series",
+        "definition": "<p>The sum of indicated terms of a sequence.</p>"
+      },
+      {
+        "term": "Coefficient",
+        "definition": "<p>The numerical factor multiplying a given power.</p>"
+      },
+      {
+        "term": "Common ratio",
+        "definition": "<p>The factor multiplying a geometric term to give the next.</p>"
+      }
+    ],
+    "related": [
+      {
+        "title": "Convergent geometric series",
+        "href": "/courses/maths4u-0606/topics/addmaths-0606-series-infinite-series"
+      }
+    ],
+    "revision": {
+      "body": "<h2>Is the change additive or multiplicative?</h2><p>A fixed increase is arithmetic. A fixed multiplier is geometric.</p><h2>How can the total give an unknown rate?</h2><p>A stated total after a fixed number of terms leads to a finite series equation.</p><h2>How do I justify the first time a target is reached?</h2><p>Use the nth-term rule to test the threshold and the immediately previous period.</p>",
+      "checks": "<ol><li><p>A table records the number of batteries tested. On day 1 the number is 20, then it rises by 3 each day. Find the total for the first 6 days.</p><p><strong>Answer.</strong> \\(165\\).</p></li><li><p>A table records the number of batteries tested each day. The first day had 21. The count increases by a constant number each day and the total for 6 days is 171. Find the daily increase.</p><p><strong>Answer.</strong> \\(3\\).</p></li><li><p>A laboratory begins with 12 small cultures at time zero. The number is multiplied by 2 at the end of each hour. Find the earliest whole hour when the number is at least 768.</p><p><strong>Answer.</strong> \\(6\\).</p></li></ol>",
+      "examTip": "<p>Check whether the question asks for one term or the sum, then count steps from the first term.</p>"
+    }
+  }
+}

@@ -68,6 +68,7 @@ export async function applyContentPackage(actor:Actor,key:string,input:unknown){
     await installPackageAssets(tx,actor,await readPackageAssets(p));
     const old=await tx.contentPackage.findUnique({where:{key}});
     if(old){const a=old.version.split('.').map(Number),b=p.version.split('.').map(Number);ensure(b.some((n,i)=>n>a[i]&&b.slice(0,i).every((m,j)=>m===a[j])),409,"PACKAGE_VERSION_ORDER");}
+    const newVisibility = old?.state === "PUBLISHED" ? "PUBLIC" : "PRIVATE";
     const course=await tx.course.findUnique({where:{slug:p.course.slug}})??await tx.course.create({data:{slug:p.course.slug,published:false,texts:{create:{locale:"en",title:p.course.title,description:""}}}});
     const chapter=await tx.topic.findUnique({where:{id:p.chapter.id}})??await tx.topic.create({data:{id:p.chapter.id,courseId:course.id,slug:p.chapter.slug,position:p.chapter.position,texts:{create:{locale:"en",title:p.chapter.title}}}});
     ensure(chapter.courseId===course.id,409,"PACKAGE_ID_COLLISION");
@@ -82,7 +83,7 @@ export async function applyContentPackage(actor:Actor,key:string,input:unknown){
       const data=packageTask(p,q),hash=digest(JSON.stringify(data));let taskId=r?.taskId;
       if(!r||r.contentHash!==hash){
         const current=taskId?await tx.task.findUniqueOrThrow({where:{id:taskId}}):null;
-        const v=await createTaskVersion(tx,actor,{...data,visibility:current?.visibility??"PRIVATE"},taskId);
+        const v=await createTaskVersion(tx,actor,{...data,visibility:current?.visibility??newVisibility},taskId);
         taskId=v.taskId;
         await tx.task.update({where:{id:taskId},data:{origin:"ORIGINAL",originManual:true,originReason:"Owner-approved authored content package "+p.key,originRule:"content-package-v1"}});
         await tx.importRecord.upsert({where:{sourceProject_legacyId:identity},create:{...identity,taskId,contentHash:hash},update:{contentHash:hash}});

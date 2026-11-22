@@ -419,28 +419,29 @@ export function scalarAnswerValue(field: ExactField, input: string): string {
   return input.slice(assignment[0].length);
 }
 
-export function isRoundedNumberAnswer(field: ExactField, input: string) {
+export function isRoundedNumberAnswer(field: ExactField, input: string, includeInteger = false) {
   if (field.type !== "number" || typeof field.expected !== "string") return false;
   const entered = normalize(scalarAnswerValue(field, input));
-  const decimals = /^[+-]?\d*\.(\d+)$/.exec(entered)?.[1].length;
-  if (!decimals) return false;
+  const decimals = /^[+-]?\d*\.(\d+)$/.exec(entered)?.[1].length
+    ?? (includeInteger && /^[+-]?\d+$/.test(entered) ? 0 : undefined);
+  if (decimals === undefined) return false;
   const exact = numeric(field.expected), decimal = Number(entered);
   return Math.abs(exact - decimal) <= 0.5 * 10 ** -decimals + Math.abs(exact) * Number.EPSILON;
 }
 
-function nonIntegerScalar(field: ExactField) {
+function roundableScalar(field: ExactField, allowInteger: boolean) {
   if (field.type !== "number" || typeof field.expected !== "string" || field.variables?.length) return undefined;
   const value = numeric(field.expected);
-  return Number.isFinite(value) && !Number.isInteger(value) ? value : undefined;
+  return Number.isFinite(value) && (!Number.isInteger(value) || allowInteger && Math.abs(value) >= 1000) ? value : undefined;
 }
 
-export function canRoundScalar(field: ExactField) {
-  return nonIntegerScalar(field) !== undefined;
+export function canRoundScalar(field: ExactField, allowInteger = false) {
+  return roundableScalar(field, allowInteger) !== undefined;
 }
 
 /** An optional self-study policy. Assigned exact keys continue to use checkExact. */
-export function checkThreeSignificantFigures(field: ExactField, input: string, prompt?: string) {
-  const target = nonIntegerScalar(field);
+export function checkThreeSignificantFigures(field: ExactField, input: string, prompt?: string, allowInteger = false) {
+  const target = roundableScalar(field, allowInteger);
   if (target === undefined) return checkExact(field, input, prompt);
   const entered = normalize(scalarAnswerValue(field, input));
   const decimal = /^[+-]?(\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d{1,3})?$/i.exec(entered);
@@ -507,9 +508,11 @@ export function checkExact(field: ExactField, input: string, prompt?: string): b
   }
   if (field.type === "choice") { if (!Object.hasOwn(field.options ?? {}, input)) fail(); return input === field.expected; }
   if (field.type === "ratio") {
-    const parts=ratioParts(input), expected=field.expected;
-    if(!Array.isArray(expected)||expected.length!==2)fail();
-    const [a,b]=parts.map(p=>poly(p,field.variables)),[c,d]=(expected as string[]).map(p=>poly(p,field.variables));
+    const parts = ratioParts(input);
+    const expected = Array.isArray(field.expected) ? field.expected : ratioParts(field.expected);
+    if (expected.length !== 2) fail();
+    const [a, b] = parts.map(part => poly(part, field.variables));
+    const [c, d] = expected.map(part => poly(part, field.variables));
     // Same denominator domain: do not cancel away an excluded parameter value.
     return proportional(b,d) && same(pmul(a,d),pmul(c,b));
   }
@@ -525,7 +528,7 @@ export function checkExact(field: ExactField, input: string, prompt?: string): b
     const values = /\bdegrees\b/i.test(field.label)
       ? input.replace(/(?:°|\^\{?\\circ\}?)(?=\s*(?:[,;}]|$|\b(?:or|and)\b))/g, "")
       : input;
-    return answerSetKey(field, values, prompt) === setKey(expected);
+    return answerSetKey(field, values, prompt) === answerSetKey(field, expected, prompt);
   }
   if (field.type === "pairs") return pairsKey(input, field.dimension, isCoordinateField(field)) === pairsKey(expected, field.dimension);
   if (field.type === "equation") return proportional(equation(input,field.variables??[]),equation(expected,field.variables??[]));

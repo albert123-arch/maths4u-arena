@@ -1,0 +1,14 @@
+# 0580 Powers and roots — source review
+
+Cambridge assigns these skills to C1.3 and E1.3 in both checked examination cycles. Confirmed in the [2025–2027 syllabus and current Version 3](https://www.cambridgeinternational.org/Images/662466-2025-2027-syllabus.pdf), its [syllabus update](https://www.cambridgeinternational.org/Images/709706-2025-2027-syllabus-update.pdf), and the [2028–2030 syllabus, Version 2](https://www.cambridgeinternational.org/Images/745681-2028-2030-syllabus.pdf). The separate [2028–2030 update](https://www.cambridgeinternational.org/Images/763300-2028-2030-syllabus-update.pdf) updates assessment information.
+
+The local Scheme of Work (p. 9) introduces small integer examples before extending to fraction and decimal bases. The Number properties and Indices groups in the 0580 Extended bank snapshot were checked for exam demand. The new written questions use independently chosen values and contexts, explanations and Maths4U marking criteria.
+
+| Lesson | Core and Extended textbook | Extended fifth edition | Save My Exams | Corbettmaths |
+| --- | --- | --- | --- | --- |
+| Squares and square roots | §1.4, pp. 10–11, square arrays and inverse calculations | pp. 3, 7–9, input and output of squaring | [Powers & Roots](https://www.savemyexams.com/igcse/maths/cie/25/core/revision-notes/number/powers-roots-and-standard-form/powers-and-roots/) | [Squaring numbers](https://corbettmaths.com/wp-content/uploads/2018/09/Squaring-Numbers-pdf.pdf) |
+| Cubes and cube roots | §1.4, pp. 10–11, building layers and finding the side | pp. 7–8, cubic facts and practice | [Powers & Roots](https://www.savemyexams.com/igcse/maths/cie/25/core/revision-notes/number/powers-roots-and-standard-form/powers-and-roots/) | [Cube roots](https://corbettmaths.com/wp-content/uploads/2018/11/Cube-root-pdf.pdf) |
+| Other powers and roots | §1.4, p. 12, relate any positive whole exponent to the root | pp. 7–8, repeat a factor and read its exponent | [Powers & Roots](https://www.savemyexams.com/igcse/maths/cie/25/core/revision-notes/number/powers-roots-and-standard-form/powers-and-roots/) | [Index notation](https://corbettmaths.com/wp-content/uploads/2018/12/Indices-Exercise-172-pdf.pdf) |
+| Calculations with powers and roots | §1.4, pp. 11–13, mixed operations | pp. 2–3, order of operations with powers; p. 8, calculation practice | [Powers & Roots](https://www.savemyexams.com/igcse/maths/cie/25/core/revision-notes/number/powers-roots-and-standard-form/powers-and-roots/) | [Powers and calculations](https://corbettmaths.com/wp-content/uploads/2024/01/Indices.pdf) |
+
+The four lessons have 24 worked examples, 48 checks, 40 short tasks and 80 written tasks including variants, four SVGs and four A4 sheets. The squares and cubes tables use the recall lists in the syllabus. General laws of indices and standard form belong in their own lessons.

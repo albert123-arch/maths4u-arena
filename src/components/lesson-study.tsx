@@ -223,7 +223,7 @@ function YourTurn({ check, lessonId, supplementary = false }: { check: StudyChec
         setBusy(false);
       }
     }}>
-    <h3>{supplementary ? check.title : "Your turn"}</h3>
+    {(!supplementary || check.title) && <h3>{supplementary ? check.title : "Your turn"}</h3>}
     <MathContent html={check.prompt} />
     <noscript><p>Work out your answer on paper. Enable JavaScript to check it here.</p></noscript>
     {fields.map(field => {

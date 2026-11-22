@@ -1,0 +1,14 @@
+# 0606 Kinematics
+
+## Sources and teaching sequence
+
+- Cambridge 0606 objectives 14.14–14.15 cover motion in a straight line with constant and variable acceleration, and the five time graphs for displacement, distance, velocity, speed and acceleration. Arena keeps position, direction and accumulated distance distinct throughout. [Cambridge 2025–2027 syllabus](https://www.cambridgeinternational.org/Images/662470-2025-2027-syllabus.pdf)
+- Sue Pemberton's third-edition coursebook in `D:/new_books/addMaths10.pdf`, §§16.1–16.2, starts from rates of change and returns to integration. Arena divides the chapter into links from displacement, recovery of motion with initial data, signed versus total travel, and sketching the five graph types. The scenarios, numerical data and diagrams are independent.
+- Save My Exams introduces the precise language of one-dimensional motion and follows it with calculus and graph interpretation. Arena pairs the equations with sign changes and units in each worked example. [Kinematics Toolkit](https://www.savemyexams.com/igcse/further-maths/cie/additional-maths/25/revision-notes/calculus/calculus-for-kinematics/kinematics-toolkit/), [Calculus for Kinematics](https://www.savemyexams.com/igcse/further-maths/cie/additional-maths/25/revision-notes/calculus/calculus-for-kinematics/calculus-for-kinematics/), [Sketching Travel Graphs](https://www.savemyexams.com/igcse/further-maths/cie/additional-maths/25/revision-notes/calculus/calculus-for-kinematics/sketching-travel-graphs/)
+- TLMaths shows how to recover initial conditions after each integration and how to distinguish the gradients and areas of different graph types. Arena explains those steps with original examples involving stops and reversals. [Straight-line Kinematics](https://www.tlmaths.com/home/a-level-maths/as-only/q-kinematics), [Calculus in Kinematics](https://www.tlmaths.com/home/a-level-maths/full-a-level/q-kinematics/q4-calculus-in-kinematics)
+
+## Local bank audit
+
+The 6 November read-only Maths4U 0606 export contains 76 questions in these categories, including `0606_w25_qp_23_q10`, `0606_w25_qp_21_q8` and `0606_m19_qp_12_q6`. The package meets this count with independent, marked questions using variable and constant acceleration, initial conditions, signed displacement, distance and interpretation or sketching of the five motion graphs.
+
+The package has 76 main written tasks and 228 written variants, 20 short checks with 20 fresh practice variants, 24 worked examples and 48 checks in 4 lessons. The generator verified 416 scenarios with exact calculations of acceleration, initial data, reversal times, travelled distance and signed area. The production schema, exact-answer checker and KaTeX renderer passed 1,920 rendered fragments, 88 expected fields and 44 encoded misconception responses.

@@ -56,10 +56,73 @@ import study9231StatisticsChi2 from "../../content/original/9231-statistics/chi2
 import study9231StatisticsNonparam from "../../content/original/9231-statistics/nonparam-study.json";
 import study9231StatisticsPgf from "../../content/original/9231-statistics/pgf-study.json";
 import examPracticePaths from "../../content/original/9709-p1/exam-practice-paths.json";
+import igcseNumberTypes from "../../content/original/0580/number-types-study.json";
+import igcsePowersRoots from "../../content/original/0580/powers-roots-study.json";
+import igcseNumberSets from "../../content/original/0580/number-sets-study.json";
+import igcseIndicesI from "../../content/original/0580/indices-i-study.json";
+import igcseStandardForm from "../../content/original/0580/standard-form-study.json";
+import igcseEstimation from "../../content/original/0580/estimation-study.json";
+import igcseCoordinate from "../../content/original/0580/coordinate-geometry-study.json";
+import igcseGeometry from "../../content/original/0580/geometry-study.json";
+import igcseMensuration from "../../content/original/0580/mensuration-study.json";
+import igcseTrigonometry from "../../content/original/0580/trigonometry-study.json";
+import igcseTransformations from "../../content/original/0580/transformations-vectors-study.json";
+import igcseProbability from "../../content/original/0580/probability-study.json";
+import igcseStatistics from "../../content/original/0580/statistics-study.json";
+import addmathsFunctions from "../../content/original/0606/functions-study.json";
+import addmathsQuadratics from "../../content/original/0606/quadratics-simultaneous-study.json";
+import addmathsPolynomials from "../../content/original/0606/factors-polynomials-study.json";
+import addmathsEquations from "../../content/original/0606/equations-inequalities-graphs-study.json";
+import addmathsLogarithms from "../../content/original/0606/logarithms-exponentials-study.json";
+import addmathsStraightLine from "../../content/original/0606/straight-line-graphs-study.json";
+import addmathsCircle from "../../content/original/0606/coordinate-circle-study.json";
+import addmathsCircularMeasure from "../../content/original/0606/circular-measure-study.json";
+import addmathsTrigonometry from "../../content/original/0606/trigonometry-study.json";
+import addmathsCounting from "../../content/original/0606/permutations-combinations-study.json";
+import addmathsSeries from "../../content/original/0606/series-study.json";
+import addmathsDifferentiation1 from "../../content/original/0606/differentiation-1-study.json";
+import addmathsVectors from "../../content/original/0606/vectors-study.json";
+import addmathsDifferentiation2 from "../../content/original/0606/differentiation-2-study.json";
+import addmathsIntegration from "../../content/original/0606/integration-study.json";
+import addmathsKinematics from "../../content/original/0606/kinematics-study.json";
+import stage7Study from "../../content/original/0862/stage-7-study.json";
+import stage7Thinking from "../../content/original/0862/stage-7-thinking-study.json";
+import stage8Study from "../../content/original/0862/stage-8-study.json";
+import stage8Thinking from "../../content/original/0862/stage-8-thinking-study.json";
+import stage9Study from "../../content/original/0862/stage-9-study.json";
+import stage9Thinking from "../../content/original/0862/stage-9-thinking-study.json";
+import igcseFunctions from "../../content/original/0580/functions-study.json";
+import igcseDiff from "../../content/original/0580/differentiation-study.json";
+import igcseGraphsFunctions from "../../content/original/0580/graphs-of-functions-study.json";
+import igcseSketching from "../../content/original/0580/sketching-curves-study.json";
+import igcsePracticalGraphs from "../../content/original/0580/practical-graphs-study.json";
+import igcseDirectInverse from "../../content/original/0580/algebra-proportion-study.json";
+import igcseSequences from "../../content/original/0580/sequences-study.json";
+import igcseInequalities from "../../content/original/0580/inequalities-study.json";
+import igcseEquations from "../../content/original/0580/equations-study.json";
+import igcseIndicesII from "../../content/original/0580/indices-ii-study.json";
+import igcseAlgebraicFractions from "../../content/original/0580/algebraic-fractions-study.json";
+import igcseManipulation from "../../content/original/0580/algebraic-manipulation-study.json";
+import igcseIntroAlgebra from "../../content/original/0580/introduction-to-algebra-study.json";
+import igcseSurds from "../../content/original/0580/surds-study.json";
+import igcseGrowthDecay from "../../content/original/0580/exponential-growth-decay-study.json";
+import igcseMoney from "../../content/original/0580/money-study.json";
+import igcseTime from "../../content/original/0580/time-study.json";
+import igcseCalculator from "../../content/original/0580/using-a-calculator-study.json";
+import igcsePercentages from "../../content/original/0580/percentages-study.json";
+import igcseRates from "../../content/original/0580/rates-study.json";
+import igcseRatioProportion from "../../content/original/0580/ratio-proportion-study.json";
+import igcseLimitsOfAccuracy from "../../content/original/0580/limits-of-accuracy-study.json";
+import igcseFourOperations from "../../content/original/0580/four-operations-study.json";
+import igcseEquivalentForms from "../../content/original/0580/fractions-decimals-percentages-study.json";
+import igcseOrdering from "../../content/original/0580/ordering-study.json";
+import { z } from "zod";
 import { renderContent } from "./content";
 import { checkExact, checkExactInverseAngle, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
 import { answerFormat, exactValueFeedback } from "./square-presentation";
-import { fourPlaceFeedback, needsFourPlaceFeedback, permitsThreeSignificantFigures, s1FourDecimalPlaces, s1StudyRounding } from "./s1-answer-precision";
+import { fourPlaceFeedback, needsFourPlaceFeedback } from "./s1-answer-precision";
+import { igcseNumberInput } from "./igcse-number-input";
+import { furtherStatisticsRoundingTip, lessonAnswerPrecision, studyPrecisionPolicy, type LessonPrecision } from "./lesson-answer-precision";
 import type { StudyBlock, StudyCheck, StudyCheckResult, StudyExamPractice, StudyLesson, StudySection } from "./study-lesson-model";
 
 type Retry = { answer: string; feedback: string }[];
@@ -72,13 +135,73 @@ type AuthoredBlock = Exclude<StudyBlock, { kind: "check" }> | AuthoredCheck;
 type AuthoredLesson = Omit<StudyLesson, "sections" | "extraPractice"> & {
   updatedOn: string;
   description: string;
-  sections: (Omit<StudySection, "blocks"> & { blocks: AuthoredBlock[] })[];
+  sections: (Omit<StudySection, "blocks" | "intro"> & { intro?: string; blocks: AuthoredBlock[] })[];
   examples: { title: string; question: string; solution: string[] }[];
   revision: { body: string; checks: string; examTip: string };
   extraPractice?: AuthoredCheck[];
 };
 
 const lessons = {
+  ...igcseNumberTypes,
+  ...igcseNumberSets,
+  ...igcsePowersRoots,
+  ...igcseEquivalentForms,
+  ...igcseOrdering,
+  ...igcseFourOperations,
+  ...igcseIndicesI,
+  ...igcseStandardForm,
+  ...igcseEstimation,
+  ...igcseRatioProportion,
+  ...igcseRates,
+  ...igcsePercentages,
+  ...igcseCalculator,
+  ...igcseTime,
+  ...igcseMoney,
+  ...igcseGrowthDecay,
+  ...igcseSurds,
+  ...igcseIntroAlgebra,
+  ...igcseManipulation,
+  ...igcseAlgebraicFractions,
+  ...igcseIndicesII,
+  ...igcseEquations,
+  ...igcseInequalities,
+  ...igcseSequences,
+  ...igcseDirectInverse,
+  ...igcsePracticalGraphs,
+  ...igcseSketching,
+  ...igcseGraphsFunctions,
+  ...igcseDiff,
+  ...igcseFunctions,
+  ...igcseCoordinate,
+  ...igcseGeometry,
+  ...igcseMensuration,
+  ...igcseTrigonometry,
+  ...igcseTransformations,
+  ...igcseProbability,
+  ...igcseStatistics,
+  ...addmathsFunctions,
+  ...addmathsQuadratics,
+  ...addmathsPolynomials,
+  ...addmathsEquations,
+  ...addmathsLogarithms,
+  ...addmathsStraightLine,
+  ...addmathsCircle,
+  ...addmathsCircularMeasure,
+  ...addmathsTrigonometry,
+  ...addmathsCounting,
+  ...addmathsSeries,
+  ...addmathsDifferentiation1,
+  ...addmathsVectors,
+  ...addmathsDifferentiation2,
+  ...addmathsIntegration,
+  ...addmathsKinematics,
+  ...stage7Study,
+  ...stage7Thinking,
+  ...stage8Study,
+  ...stage8Thinking,
+  ...stage9Study,
+  ...stage9Thinking,
+  ...igcseLimitsOfAccuracy,
   ...quadratics, ...functions, ...coordinateGeometry, ...circularMeasure, ...trigonometry,
   ...series, ...binomialExpansion, ...differentiation, ...integration, ...crossTopic,
   ...pure3Algebra, ...pure3FurtherAlgebra, ...pure3Logarithms, ...pure3Trigonometry, ...pure3Differentiation, ...pure3Integration, ...pure3NumericalMethods, ...pure3Vectors, ...pure3DifferentialEquations, ...pure3ComplexNumbers, ...mechanicsForcesStudy, ...mechanicsKinematicsStudy, ...mechanicsMomentumStudy, ...mechanicsNewtonStudy, ...mechanicsEnergyStudy,
@@ -151,30 +274,31 @@ function authoredFields(check: AuthoredCheck): StudyField[] {
   return "fields" in check ? check.fields : [{ ...check.field, retry: check.retry }];
 }
 
-function publicCheck(check: AuthoredCheck, s1Rounding: boolean): { kind: "check" } & StudyCheck {
+function publicCheck(check: AuthoredCheck, policy: LessonPrecision | undefined): { kind: "check" } & StudyCheck {
+  const fields = authoredFields(check).map(field => {
+    const { key, label, type, variables, dimension, options, inverseAngle } = field;
+    return {
+      key, label, type, variables, dimension,
+      ...(/[\\$]/.test(label) && { labelHtml: renderContent(label) }),
+      ...(options && { options: Object.fromEntries(Object.entries(options).map(([value, html]) => [value, renderContent(html)])) }),
+      ...(inverseAngle && { inverseAngle: true }),
+      ...lessonAnswerPrecision(policy, check.id, field, check.prompt),
+    };
+  });
+  const precisionTip = policy === "further-statistics" && fields.some(field => field.decimalPlaces === 4)
+    ? "<p>" + furtherStatisticsRoundingTip + "</p>" : "";
   return {
     kind: "check",
     id: check.id,
     title: check.title,
-    prompt: renderContent(check.prompt),
+    prompt: renderContent(check.prompt + precisionTip),
     hint: renderContent(check.hint),
-    fields: authoredFields(check).map(field => {
-      const { key, label, type, variables, dimension, options, inverseAngle } = field;
-      const round = s1Rounding && permitsThreeSignificantFigures(check.id, field, check.prompt);
-      return {
-        key, label, type, variables, dimension,
-        ...(/[\\$]/.test(label) && { labelHtml: renderContent(label) }),
-        ...(options && { options: Object.fromEntries(Object.entries(options).map(([value, html]) => [value, renderContent(html)])) }),
-        ...(inverseAngle && { inverseAngle: true }),
-        ...(round && { significantFigures: 3 as const }),
-        ...(s1Rounding && s1FourDecimalPlaces(check.id, field, check.prompt) && { decimalPlaces: 4 as const }),
-      };
-    }),
+    fields,
   };
 }
 
-function publicBlock(block: AuthoredBlock, s1Rounding: boolean): StudyBlock {
-  if (block.kind === "check") return publicCheck(block, s1Rounding);
+function publicBlock(block: AuthoredBlock, policy: LessonPrecision | undefined): StudyBlock {
+  if (block.kind === "check") return publicCheck(block, policy);
   if (block.kind === "example") return block;
   return {
     ...block,
@@ -187,16 +311,16 @@ export function studyLayout(lessonId: string) {
   const lesson = lessonById(lessonId);
   if (!lesson) return undefined;
   const path = examPaths[lessonId] ?? lesson.examPractice;
-  const s1Rounding = s1StudyRounding(lessonId);
+  const policy = studyPrecisionPolicy(lessonId);
   const study: StudyLesson = {
     sections: lesson.sections.map(section => ({
       ...section,
-      intro: renderContent(section.intro),
-      blocks: section.blocks.map(block => publicBlock(block, s1Rounding)),
+      intro: section.intro ? renderContent(section.intro) : "",
+      blocks: section.blocks.map(block => publicBlock(block, policy)),
     })),
     glossary: lesson.glossary.map(word => ({ ...word, definition: renderContent(word.definition) })),
     related: lesson.related,
-    ...(lesson.extraPractice && { extraPractice: lesson.extraPractice.map(check => publicCheck(check, s1Rounding)) }),
+    ...(lesson.extraPractice && { extraPractice: lesson.extraPractice.map(check => publicCheck(check, policy)) }),
     ...(path && { examPractice: {
       needs: path.needs,
       starters: (path.starters ?? []).map(q => ({
@@ -226,18 +350,20 @@ function studyAnswerMatches(field: StudyField, answer: string, prompt: string) {
   return field.inverseAngle ? checkExactInverseAngle(field, answer, field.inverseAngle) : checkExact(field, answer, prompt);
 }
 
-function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck, s1Rounding: boolean): StudyCheckResult | undefined {
-  const round = s1Rounding && permitsThreeSignificantFigures(check.id, field, check.prompt);
-  const fourPlaces = s1Rounding && s1FourDecimalPlaces(check.id, field, check.prompt);
-  const format = { ...field, ...(round && { significantFigures: 3 as const }), ...(fourPlaces && { decimalPlaces: 4 as const }) };
+function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck, policy: LessonPrecision | undefined): StudyCheckResult | undefined {
+  const format = { ...field, ...lessonAnswerPrecision(policy, check.id, field, check.prompt) };
+  const { significantFigures, decimalPlaces } = format;
+  const mechanics = policy === "mechanics";
+  let precisionHint: string | undefined;
   try {
-    const correct = round ? checkThreeSignificantFigures(field, answer, check.prompt) : studyAnswerMatches(field, answer, check.prompt);
-    if (fourPlaces && needsFourPlaceFeedback(field, answer, correct)) {
-      return { status: "retry", feedback: renderContent("<p>" + fourPlaceFeedback + "</p>") };
+    const correct = significantFigures ? checkThreeSignificantFigures(field, answer, check.prompt, mechanics) : studyAnswerMatches(field, answer, check.prompt);
+    if (decimalPlaces && (policy === "statistics-1" || !correct) && needsFourPlaceFeedback(field, answer, correct)) {
+      const feedback = policy === "further-statistics" ? furtherStatisticsRoundingTip : fourPlaceFeedback;
+      return { status: "retry", feedback: renderContent("<p>" + feedback + "</p>") };
     }
     if (correct) return undefined;
-    if (!field.inverseAngle && isRoundedNumberAnswer(field, answer)) {
-      return { status: "retry", feedback: renderContent("<p>" + (round ? answerFormat(format).en : exactValueFeedback) + "</p>") };
+    if (!field.inverseAngle && isRoundedNumberAnswer(field, answer, mechanics)) {
+      precisionHint = "<p>" + (significantFigures ? answerFormat(format).en : exactValueFeedback) + "</p>";
     }
   } catch (error) {
     if (error instanceof AnswerVariableError) return {
@@ -252,8 +378,17 @@ function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck, 
     catch { return false; }
   });
   const exactAngleHint = field.inverseAngle ? "<p>Use exact inverse trigonometric notation where needed.</p>" : "";
-  return { status: "retry", feedback: renderContent(matching?.feedback ?? exactAngleHint + check.hint) };
+  return { status: "retry", feedback: renderContent(matching?.feedback ?? precisionHint ?? exactAngleHint + check.hint) };
 }
+
+const studyAnswer = z.string().trim().min(1).max(400);
+export const studyCheckRequest = z.object({
+  lessonId: z.string().min(1).max(80),
+  id: z.string().min(1).max(128),
+  answer: studyAnswer.optional(),
+  answers: z.record(z.string().min(1).max(60), studyAnswer)
+    .refine(fields => Object.keys(fields).length >= 1 && Object.keys(fields).length <= 12).optional(),
+}).strict().refine(data => !!data.answer !== !!data.answers);
 
 export function gradeStudyCheck(lessonId: string, id: string, answers: string | Record<string, string>): StudyCheckResult | undefined {
   const lesson = lessonById(lessonId);
@@ -265,9 +400,11 @@ export function gradeStudyCheck(lessonId: string, id: string, answers: string | 
   if (Object.keys(values).length !== fields.length || fields.some(field => !Object.hasOwn(values, field.key) || !values[field.key]?.trim())) {
     return { status: "format", feedback: "<p>Enter an answer in every field.</p>" };
   }
-  const s1Rounding = s1StudyRounding(lessonId);
+  const policy = studyPrecisionPolicy(lessonId);
   for (const field of fields) {
-    const result = fieldFeedback(field, values[field.key], block, s1Rounding);
+    const typed = values[field.key];
+    const classroomNotation = lessonId.startsWith("igcse-0580-") || lessonId.startsWith("lower-0862-");
+    const result = fieldFeedback(field, classroomNotation ? igcseNumberInput(field, typed) : typed, block, policy);
     if (result) return fields.length === 1 ? result : {
       ...result, feedback: renderContent("<p><strong>" + field.label + "</strong></p>") + result.feedback,
     };

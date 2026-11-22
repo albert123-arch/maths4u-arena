@@ -1,6 +1,8 @@
 import type { SquareField, SquareQuestion } from "./square-model";
 import { isCoordinateField, isIntervalField, rangeOutputs, scalarLabels, setSymbol } from "./answer-notation";
 
+import { igcseClockLabel, igcsePercentageLabel, usesClassroomRatio } from "./igcse-number-input";
+
 // Display labels only: the original IDs, titles and progress keys stay intact.
 const titles: Record<string, string> = {
   "M4U-9709-Q26-D01": "Keep every root",
@@ -21,6 +23,27 @@ export function questionTitle(q: Pick<SquareQuestion, "uid" | "title">) { return
 export const exactValueFeedback = "Give the exact value. Use a fraction or sqrt(...) when needed.";
 
 export function answerFormat(f: SquareField): { en: string; ru: string; placeholder: string } {
+  if (f.type === "number" && f.label === igcseClockLabel) return {
+    en: "Use a 24-hour clock time, for example 08:30 or 0830.",
+    ru: "Укажите время в 24-часовом формате, например 08:30 или 0830.",
+    placeholder: "08:30",
+  };
+  if (f.type === "number" && f.label === igcsePercentageLabel) return {
+    en: "Give the percentage, for example 25% or 25.",
+    ru: "Укажите процент, например 25% или 25.",
+    placeholder: "25%",
+  };
+  if (usesClassroomRatio(f)) return {
+    en: "Give both parts in the order asked, for example 2:3.",
+    ru: "Запишите обе части в указанном порядке, например 2:3.",
+    placeholder: "2:3",
+  };
+  if (f.type === "set" && f.label === "Error interval for x") return {
+    en: "Enter both bounds, for example 4.5 <= x < 5.5 or [4.5, 5.5).",
+    ru: "Укажите обе границы, например 4.5 <= x < 5.5 или [4.5, 5.5).",
+    placeholder: "4.5 <= x < 5.5",
+  };
+
   if (f.significantFigures === 3) return {
     en: "Enter an exact value or round to 3 significant figures.",
     ru: "Введите точное значение или округлите до 3 значащих цифр.",

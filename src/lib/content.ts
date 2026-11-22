@@ -9,17 +9,25 @@ import { hasFeature } from "./subscriptions";
 import type { Prisma } from "../generated/prisma/client";
 import { mathPattern, protectMathHtml } from "./math-markup.mjs";
 import { parseDocument } from "htmlparser2";
-import { findAll, textContent } from "domutils";
+import { findAll, findOne, textContent } from "domutils";
 import { isPure1ShortUid } from "./pure1-practice-number";
 import { displayMarkup, displaySource, displayTitle } from "./public-presentation";
 import { archiveWhere, hiddenMaterial } from "./content-access";
 import { quarantineImportedTask } from "./import-content-policy";
 import { canUseTeacherLibrary } from "./teacher-account-model";
 import fractionDisplay from "../../content/original/9709-p1/fraction-display.json";
+import bankNotation from "../../content/original/reviewed-bank-notation.json";
 import { projectAttachedSolutionImages } from "./solution-image-display";
 
 const reviewedFractions: Readonly<Record<string, string>> = fractionDisplay.formulas;
 const reviewedFractionProse = Object.entries(fractionDisplay.prose);
+const reviewedBankProse: Readonly<Record<string, string>> = bankNotation.prose;
+const reviewedBankLabels: Readonly<Record<string, string>> = bankNotation.labels;
+const htmlTag = /(<(?:[^<>"']|"[^"]*"|'[^']*')+>)/g;
+
+export function displayBankFieldLabel(label: string) {
+  return Object.hasOwn(reviewedBankLabels, label) ? reviewedBankLabels[label] : label;
+}
 
 const locale = z.enum(["ru", "en"]);
 const text = z.string().max(100000);
@@ -61,6 +69,21 @@ export type Version = Prisma.TaskVersionGetPayload<{ include: typeof versionIncl
 export function localized<T extends { locale: string }>(rows: T[], lang: string): T {
   return rows.find(r => r.locale === lang) ?? rows.find(r => r.locale === "en") ?? rows[0];
 }
+type MathMarkupNode = ReturnType<typeof parseDocument>["children"][number];
+function mathAltText(node: MathMarkupNode): string {
+  if (node.type === "text") return node.data;
+  if (node.type !== "tag" || node.name === "annotation" || node.name === "annotation-xml") return "";
+  const children = node.children.map(mathAltText);
+  if (node.name === "mfrac") return `fraction (${children[0]}) over (${children[1]})`;
+  if (node.name === "msqrt") return `square root of (${children.join("")})`;
+  if (node.name === "mroot") return `root of (${children[0]}) of degree (${children[1]})`;
+  if (node.name === "msup") return `${children[0]} to the power (${children[1]})`;
+  if (node.name === "msub" || node.name === "msubsup") {
+    const subscript = `${children[0]} subscript (${children[1]})`;
+    return node.name === "msubsup" ? `${subscript} to the power (${children[2]})` : subscript;
+  }
+  return children.join("");
+}
 export function renderContent(raw: string, anonymousImages = false) {
   // Retypeset the reviewed copy while keeping immutable question versions intact.
   if (raw.includes("/")) {
@@ -70,8 +93,15 @@ export function renderContent(raw: string, anonymousImages = false) {
   // expressions first so an inequality cannot split a matrix or cases block.
   let prefix="MATHS4UFORMULA";while(raw.includes(prefix))prefix+="X";
   const formulas:string[]=[];
-  const protectedHtml:string=protectMathHtml(raw);
-  const prepared=protectedHtml.replace(mathPattern,(_m,inline,display,double,single)=>{
+  const placeholder = new RegExp(prefix + "(\\d+)END", "g");
+  // Apply reviewed text spans to the display copy only, after protecting TeX
+  // inequalities and without replacing anything inside HTML attributes.
+  const protectedHtml: string = protectMathHtml(raw);
+  const displayHtml: string = /\b(?:sqrt|cbrt)\s*\(|(?<!<)\//.test(protectedHtml)
+    ? protectedHtml.split(htmlTag).map((text, index) =>
+        index % 2 === 0 && Object.hasOwn(reviewedBankProse, text) ? reviewedBankProse[text] : text).join("")
+    : protectedHtml;
+  const prepared=displayHtml.replace(mathPattern,(_m,inline,display,double,single)=>{
     const value=textContent(parseDocument(inline??display??double??single));
     const tex = Object.hasOwn(reviewedFractions, value) ? reviewedFractions[value] : value;
     const rendered=katex.renderToString(tex,{displayMode:display!==undefined||double!==undefined,throwOnError:false,trust:false,strict:"ignore",maxExpand:1000,maxSize:20});
@@ -82,9 +112,18 @@ export function renderContent(raw: string, anonymousImages = false) {
     allowedAttributes: { img: ["src", "alt", "width", "height"], td: ["colspan", "rowspan"], th: ["colspan", "rowspan", "scope"], table: ["class"], div: ["class"], ol: ["type", "start", "class"], span: ["class"] },
     allowedClasses: { ol: ["parts"], span: ["marks"], table: ["stem-leaf", "stem-leaf-back"], div: ["stem-leaf-scroll", "table-scroll"] },
     allowedSchemes: [], allowProtocolRelative: false,
-    // Imported alt text may contain the paper/session reference. Keep the image,
-    // dimensions and mathematical content, but omit that description in a live assessment.
-    ...(anonymousImages ? { transformTags: { img: (tagName: string, attribs: Record<string, string>) => ({ tagName, attribs: { ...attribs, alt: "" } }) } } : {}),
+    transformTags: {
+      img: (tagName, attribs) => {
+        // Imported descriptions may contain the paper reference. Omit them in live assessments.
+        if (anonymousImages) return { tagName, attribs: { ...attribs, alt: "" } };
+        if (!attribs.alt?.includes(prefix)) return { tagName, attribs };
+        const alt = attribs.alt.replace(placeholder, (_match, index) => {
+          const math = findOne(node => node.name === "math", parseDocument(formulas[Number(index)] ?? "").children);
+          return (math && mathAltText(math)) || "mathematical expression";
+        });
+        return { tagName, attribs: { ...attribs, alt } };
+      },
+    },
     // Reviewed first-party diagrams are static, same-origin assets. Retain the
     // private-file boundary and reject arbitrary paths, URLs and query strings.
     exclusiveFilter: frame => frame.tag === "img" && !/^\/api\/files\/[a-zA-Z0-9_-]+$/.test(frame.attribs.src || "") &&
@@ -92,8 +131,10 @@ export function renderContent(raw: string, anonymousImages = false) {
       !/^\/assets\/original\/coordinate-geometry\/study-(segment|equidistance|diameter|perpendicular|axis-lines|intercepts|semicircle|tangent|secant|line-cases|external-tangents|chord|common-chord)\.svg$/.test(frame.attribs.src || "") &&
       !/^\/assets\/original\/circular-measure\/study-[a-z]+(?:-[a-z]+)*\.svg$/.test(frame.attribs.src || "") &&
       !/^\/assets\/study\/9709\/orig_[a-z0-9_]+\/[a-z0-9]+(?:-[a-z0-9]+)*\.svg$/.test(frame.attribs.src || "") &&
+      !/^\/assets\/study\/(?:0580|0606)\/[a-z0-9]+(?:-[a-z0-9]+)*\/[a-z0-9]+(?:-[a-z0-9]+)*\.svg$/.test(frame.attribs.src || "") &&
+      !/^\/assets\/study\/0862\/stage-[789]\/[a-z0-9]+(?:-[a-z0-9]+)*\.svg$/.test(frame.attribs.src || "") &&
       !/^\/assets\/original\/(quadratics\/(factorisation-roots|vertex-and-axis|square-sketch|restricted-domain|discriminant-root-cases|parabola-line-intersections|inequality-sign-interval|inequality-domain-overlap|simultaneous-matching-pairs|simultaneous-tangency-cases)|coordinate-geometry\/(segment|perpendicular|line-intercepts|circle|line-circle)|circular-measure\/(radian|arc-length|sector-area|segment|annular-sector|composite-boundary|overlapping-circles)|trigonometry\/(unit-circle|wave-graphs|tangent-graph|sine-solutions|identity-triangle|quadratic-levels|cosine-levels)|series\/(arithmetic-terms|geometric-terms|partial-sums|arithmetic-condition|geometric-condition|rebound-heights)|binomial-expansion\/(pascal-triangle|term-index|laurent-powers|coefficient-pairs|parameter-branches|approximation-error)|differentiation\/(secant-to-tangent|tangent-normal|stationary-sign-chart|stationary-inflection|related-rates|optimisation-interval)|integration\/(family-of-curves|initial-condition|signed-area|between-curves|disk-volume|accumulation)|s1-central-tendency\/(raw-centres|modal-density|weighted-means)|s1-variation\/(equal-centres|pooled-spread|percentiles)|s1-probability\/(sample-grid|venn-regions|mixture-tree)|s1-counting\/(block-orders|available-gaps|group-swap)|s1-distributions\/(probability-bars|sum-grid|stopping-positions)|s1-binomial-geometric\/(binomial-counts|first-success|stopped-tree)|s1-normal\/(normal-region|normal-quantile|continuity-strip)|s1-representation\/(histogram|cumulative|boxplot)|cross-topic-revision\/(restricted-inverse|shared-tangent|distance-squared|sector-segment|coefficient-ratio-tail|area-washers))\.svg$/.test(frame.attribs.src || ""),
-    textFilter: escaped=>escaped.replace(new RegExp(prefix+"(\\d+)END","g"),(_m,index)=>formulas[Number(index)]??""),
+    textFilter: escaped=>escaped.replace(placeholder,(_m,index)=>formulas[Number(index)]??""),
   });
   // Legacy alphabetical questions put marks in a final text node. Restore only
   // that presentational wrapper; keep stored statements and mathematics intact.

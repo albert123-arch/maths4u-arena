@@ -1,5 +1,6 @@
 import { restrictedMaterial, restrictedWhere, approvedWhere } from "./content-access";
 import { checkExact } from "./exact-answer";
+import { igcseNumberInput } from "./igcse-number-input";
 import { requireVisibleTasks, requireVisibleWork } from "./cambridge-access";
 import { z } from "zod";
 import { db } from "./prisma";
@@ -116,7 +117,11 @@ export function automaticPoints(part: FullAttempt["workVersion"]["items"][number
   // The checker descriptor lives in the assigned immutable TaskPart, not the
   // current JSON package, so a later package cannot regrade an old assignment.
   if(part.kind==="SHORT"&&part.acceptedAnswers.length===1&&part.acceptedAnswers[0].value.startsWith('{"checker":"arena-exact-v1"')){
-    try {const stored=JSON.parse(part.acceptedAnswers[0].value);return checkExact(stored.field,value)?part.maxPoints:0;}catch{return 0;}
+    try {
+      const { field } = JSON.parse(part.acceptedAnswers[0].value);
+      const answer = sourceUid?.startsWith("lower-0862-") ? igcseNumberInput(field, value) : value;
+      return checkExact(field, answer) ? part.maxPoints : 0;
+    } catch { return 0; }
   }
   if (part.kind === "NUMERIC") {
     if (isPure1ShortUid(sourceUid)) {

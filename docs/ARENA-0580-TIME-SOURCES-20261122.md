@@ -1,0 +1,14 @@
+# 0580 Time
+
+C1.15 and E1.15 use the same scope in the [Cambridge 2025–2027 syllabus](https://www.cambridgeinternational.org/Images/662466-2025-2027-syllabus.pdf). The [2028–2030 syllabus](https://www.cambridgeinternational.org/Images/745681-2028-2030-syllabus.pdf) retains units of time, 12-hour and 24-hour readings, timetables and local times. The supplied 0580/0980 Scheme of Work, PDF page 9 and the matching DOCX section, begins with connections between units, then uses timetables and local-time problems.
+
+| Lesson | Cambridge Core and Extended | Complete Mathematics, fifth edition Extended | Save My Exams | Corbettmaths |
+| --- | --- | --- | --- | --- |
+| Time units and durations | §13.2 pp. 285–288. Group minutes and hours, then combine durations. | pp. 40–41. Work with minutes and hours as different units. | [Time](https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/number/time-currency-and-conversions/time/) | [Calculations involving time](https://corbettmaths.com/2013/10/24/calculations-involving-time/) |
+| 12-hour, 24-hour and analogue clocks | pp. 285–286. Identify the clock hands and use a.m. and p.m. | p. 40. Connect morning readings, clock notation and a 00:05 arrival. | [Clock and timetable notes](https://cdn.savemyexams.com/pdfs/0ofBCXEK6fuN_lFH.pdf) | [Timetables and time exercises](https://corbettmaths.com/wp-content/uploads/2025/03/Timetables-and-Time-Practice-Questions.pdf) |
+| Elapsed time and crossing midnight | pp. 286–289. Read sequences of times and calculate durations from records. | p. 40. Follow the new day on a journey arriving just after midnight. | [Time](https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/number/time-currency-and-conversions/time/) | [Calculations involving time](https://corbettmaths.com/2013/10/24/calculations-involving-time/) |
+| Timetables and time zones | pp. 287–289. Read rows and columns of a schedule and compare times. | pp. 40–41. Read a stated itinerary and use the given time assumptions. | [Time and time zones](https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/number/time-currency-and-conversions/time/) | [Timetables practice](https://corbettmaths.com/2019/09/06/timetables-practice-questions/) |
+
+The read-only Maths4U archive includes time problems in both Arithmetic and Mensuration. Reviewed skills include converting minutes and hours, handling a clock reading in a short question, and calculating with a duration within a longer paper problem. The new questions use independent schedules, values, wording, diagrams and solutions. Timetables are HTML tables. The A4 revision sheets include the same lesson diagrams and direct answer checks.
+
+The four lessons contain 24 examples and 48 formative checks. The practice bank contains 20 short tasks, 20 fresh variants and 80 written tasks including variants.
