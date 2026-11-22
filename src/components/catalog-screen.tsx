@@ -153,13 +153,21 @@ export function CourseCatalogScreen({ slug, home = false, initial }: { slug?: st
       return <div key={c.id}>{follow(c)}{lang === "ru" && c.description && <p className="muted course-description">{c.description}</p>}
         {c.slug === "maths4u-9231-statistics" && !initial?.chapterTitle && !c.locked && <section className="card" aria-labelledby="further-statistics-preparation">
           <h2 id="further-statistics-preparation">Before you start</h2>
-          <p>Paper 4 builds on 9709 Pure Mathematics 1 and 3 and Probability &amp; Statistics 1 and 2. Check that you can integrate a density, interpret discrete and normal distributions, and explain a confidence interval or hypothesis test.</p>
+          <p>Paper 4 assumes knowledge from 9709 Papers 1, 3, 5 and 6. <a href="https://www.cambridgeinternational.org/Images/697357-2026-2027-syllabus.pdf#page=15">Cambridge 9231 prior knowledge</a></p>
           <ul>
             <li><Link href="/courses/maths4u-9709-p1/topics/orig_integration_areas">Definite integration and areas</Link> and <Link href="/courses/maths4u-9709-p3/topics/orig_9709_p3_int_substitution">integration by substitution</Link></li>
             <li><Link href="/courses/maths4u-9709-s1/topics/orig_9709_s1_dist_tables_parameters">Discrete distributions</Link> and <Link href="/courses/maths4u-9709-s1/topics/orig_9709_s1_norm_normal_areas">normal probabilities</Link></li>
-            <li><Link href="/courses/maths4u-9231-statistics/topics/stats_crv_density">Density and cumulative probability</Link> and <Link href="/courses/maths4u-9231-statistics/topics/stats_inference_one_sample">sample means, standard error and test tails</Link></li>
           </ul>
-          <details><summary>Statistics 2 preparation</summary><p>Review the Poisson model, independent sums, random sampling and the central limit theorem, confidence intervals, discrete tests, and Type I and II errors. Some of these are introduced in the linked lessons. Use the Cambridge checklist for the full Paper 6 scope.</p><a href="https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf">Cambridge 9709 syllabus, Paper 6</a></details>
+          <details><summary>Statistics 2 preparation (9709 Paper 6)</summary>
+            <p>Use these lessons to review shared skills. For the remaining Paper 6 work, use your course materials and the <a href="https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf#page=37">Cambridge 9709 syllabus</a>.</p>
+            <ul>
+              <li><strong>6.1 Poisson distribution.</strong> Review the model in <Link href="/courses/maths4u-9231-statistics/topics/stats_pgf_construct">Generating functions for common distributions</Link>. Study the Poisson approximation to the binomial and the normal approximation to the Poisson separately.</li>
+              <li><strong>6.2 Linear combinations.</strong> Review <Link href="/courses/maths4u-9231-statistics/topics/stats_pgf_sums">independent count sums</Link> and <Link href="/courses/maths4u-9231-statistics/topics/stats_inference_normal">differences of independent normal means</Link>. Practise general weighted combinations of random variables separately.</li>
+              <li><strong>6.3 Continuous random variables.</strong> Review <Link href="/courses/maths4u-9231-statistics/topics/stats_crv_density">probability densities and areas</Link> and <Link href="/courses/maths4u-9231-statistics/topics/stats_crv_moments">means and variances by integration</Link>.</li>
+              <li><strong>6.4 Sampling and estimation.</strong> Review <Link href="/courses/maths4u-9231-statistics/topics/stats_inference_one_sample">sample means, unbiased variance and standard error</Link> and <Link href="/courses/maths4u-9231-statistics/topics/stats_inference_differences">normal confidence intervals for differences</Link>. Cover random sample selection, the central limit theorem for one mean, and Paper 6 intervals for a single mean or proportion separately.</li>
+              <li><strong>6.5 Hypothesis tests.</strong> Review one- and two-tailed decisions in <Link href="/courses/maths4u-9231-statistics/topics/stats_inference_one_sample">one-sample inference</Link>. Cover one-mean normal tests, tests for a single binomial or Poisson count, and Type I and II error probabilities separately.</li>
+            </ul>
+          </details>
         </section>}
         {c.locked ? <p className="catalog-guest-note">{t("Для этого курса нужен доступ.", "This course requires access.")}</p> : <div className="course-study-layout">
         <nav className="card chapter-navigation" aria-label={t("Главы курса", "Course chapters")}><h2>{t("Главы", "Chapters")}</h2>{c.chapters.map(ch => chapterLink(c, ch, selected?.id))}</nav>

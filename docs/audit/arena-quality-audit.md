@@ -24,4 +24,16 @@ Audit date: 22 November 2026. Local starting point: `f94fd02a`. Live observation
 
 The older audit already recorded fixes to Stage 7 mixed numbers, the theory-checkpoint Review loop, programme discovery, 0580 graph activities and the prior 0606 bank. These are regression targets. The local calculus revision is a separate commit from the latest deployed release.
 
+## Earlier audit reconciliation
+
+| November ZIP IDs | Status and evidence |
+| --- | --- |
+| A01–A03 | The corrected force answer, checkpoint-to-Review loop and reproducible t-test are present. Ran existing answer and Review checks and re-ran independent 9231 inference verification. |
+| A04–A08, A17, A19 | Previous stage fixed angle examples, practical graphs, views, rotations, data displays, probability trees and Pythagoras diagrams. This pass verified package assets and re-ran 0580 diagram and answer scripts. See the [teaching audit report](../ARENA-TEACHING-AUDIT-REPORT-20261122.md) for the individual diagrams and activities. |
+| A09–A16, A20 | Previous stage corrected the sampled Further and 9709 diagrams and generated notation. No missing referenced assets or unrendered command fragments were found in the registry scan. Diagram interpretation and phrasing still need independent editorial review beyond the sampled items. |
+| A18, A21 | The source has quantity- and age-dependent response guidance. Eight Stage 7 probability fields still had generic labels, now replaced with the actual quantities. Five Normal distribution topics have structured study sessions. Exact, rounded and mixed-number regressions passed. |
+| A22 | Cambridge levels appear on the homepage. Browser navigation from the level selector through course and chapter to a real topic passed at both widths. |
+| A23 | The Further Statistics preparation route was present but its Paper 6 match was too general. The follow-up identifies actual links and remaining preparation by syllabus section. |
+| A24 | The four originally cited lessons now have distinct sample worked examples. Current registry scan found and corrected three other exact duplicate example prompts. Near-duplicate banks remain an editorial sampling item. |
+
 See [execution backlog](arena-fix-backlog.md), [content review](arena-content-review.md), [SEO and growth](arena-seo-growth-plan.md) and [implementation history](arena-implementation-log.md).

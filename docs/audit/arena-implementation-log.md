@@ -48,8 +48,18 @@ Commit: `a728968a`, `Improve Arena public discovery, search and crawl paths`.
 
 Display equations and maths tables enter the keyboard tab order only when they have horizontal overflow. Size and content changes update those targets. The learner can advance from Review to the next lesson, with a chapter or course link at the end. Long titles wrap on smaller screens.
 
-The keyboard test moved the scroll position of a wide equation and an example table. It also checked fitting content after resizing. The 390 and 1280 px journey followed the homepage to 9709 Pure 1, Functions and the inverse lesson. A wrong domain answer entered Review, the independently corrected answer cleared the entry, the A4 print controls worked, and the next lesson opened.
+The keyboard test moved the scroll position of a wide equation and an example table. It also checked fitting content after resizing. The 390 and 1280 px journey followed the homepage to 9709 Pure 1, Functions and the inverse lesson. A wrong domain answer entered Review, the independently corrected answer cleared the entry, the A4 print controls worked, and the next lesson opened. Three actual browser print samples from Pure 1, Statistics 1 and 0606 each exported one A4 page with the answer check, examination tip and footer.
 
 A static scan of 27,422 generated anchors across 704 study entries found no remaining duplicate anchors in the scoped templates. A read-only comparison of 20 rehearsal tables matched the post-calculus baseline, including user accounts, classes, assignments, progress, answers, reviews and presentations.
 
-Commit subject: `Make lesson maths scrollable by keyboard and link the next topic`. Next stage: complete the separate Book 2 review and reconcile earlier audit evidence.
+The combined pass passed 74 focused unit regressions, another 58 student and teacher workspace and permission tests, and eight Playwright cases. ESLint and scoped TypeScript checking passed. The legacy fixture-specific tests require their own preloaded database schemas and were outside the verified automated set.
+
+Commit: `c4b3418f`, `Make lesson maths scrollable by keyboard and link the next topic`.
+
+## Stage 7 · Make prerequisites and answer quantities explicit
+
+Reconciled A01–A24 from the earlier ZIP with the current lessons and published verification. The two remaining concrete navigation and labelling gaps concerned Further Statistics and Stage 7 probability. The Further Statistics page now maps the five Paper 6 groups to actual Arena lessons and names the additional preparation needed. Each Stage 7 field now identifies its probability or outcome count. Prompts and grading keys are unchanged. [9231 syllabus](https://www.cambridgeinternational.org/Images/697357-2026-2027-syllabus.pdf) · [9709 syllabus](https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf)
+
+The five groups and their links passed at 390 and 1280 px, and all 11 unique targets returned HTTP 200. All eight checked answers were accepted at each width with their new accessible labels.
+
+Commit subject: `Clarify probability answers and Further Statistics prerequisites`. Next stage: finish verification of the bilingual Book 2 corrections.
