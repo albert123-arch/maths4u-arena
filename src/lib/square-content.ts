@@ -4,6 +4,10 @@ import lowerSecondaryDiagrams from "../../content/original/0862/practice-diagram
 import additionalMathsDiagrams from "../../content/original/0606/practice-diagrams.json";
 import circularMeasurePracticeDiagrams from "../../content/original/0606/circular-measure-practice-diagrams.json";
 import vectorPracticeDiagrams from "../../content/original/0606/vectors-practice-diagrams.json";
+import probabilityPracticeDiagrams from "../../content/original/0580/probability-practice-diagrams.json";
+import mensurationPracticeDiagrams from "../../content/original/0580/mensuration-practice-diagrams.json";
+import trigonometryPracticeDiagrams from "../../content/original/0580/trigonometry-practice-diagrams.json";
+import transformationPracticeDiagrams from "../../content/original/0580/transformations-vectors-practice-diagrams.json";
 import { quadraticsTeaching } from "./quadratics-notes";
 import pack from "../../content/original/completing-square-20261105-v1.json";
 import { checkExact, checkRoundedDecimalPlaces, checkThreeSignificantFigures, isExpandedPolynomial, isRoundedNumberAnswer, scalarAnswerValue, AnswerVariableError, type ExactField } from "./exact-answer";
@@ -62,21 +66,37 @@ const examples = [
   { title: "4 · Count intersections within the domain", question: String.raw`<p>For \(f(x)=(x-2)^2+1\), \(0\le x\le5\), find all levels \(t\) giving two distinct solutions of \(f(x)=t\).</p>`, solution: String.raw`<p>The vertex level is \(1\); it gives only one solution. The left branch reaches \(f(0)=5\), and the right branch reaches \(f(5)=10\). Both branches meet the level precisely when \(1<t\le5\). At \(t=5\), the roots \(0\) and \(4\) both belong to the domain.</p>` },
 ];
 const lowerSecondaryFigures: Record<string, { src: string; alt: string; width: number; height: number }> = lowerSecondaryDiagrams;
-const additionalMathsFigures: Record<string, { prompt?: string; solution?: string }> = {
-  ...additionalMathsDiagrams, ...circularMeasurePracticeDiagrams, ...vectorPracticeDiagrams,
+type PracticeFigures = {
+  prompt?: string;
+  solution?: string;
+  promptImages?: Record<string, string>;
+  solutionImages?: Record<string, string>;
 };
+const practiceFigures: Record<string, PracticeFigures> = {
+  ...additionalMathsDiagrams, ...circularMeasurePracticeDiagrams, ...vectorPracticeDiagrams,
+  ...probabilityPracticeDiagrams, ...mensurationPracticeDiagrams, ...trigonometryPracticeDiagrams, ...transformationPracticeDiagrams,
+};
+
+function replacePracticeImages(html: string, images?: Record<string, string>) {
+  if (!images) return html;
+  return html.replace(/<img\b[^>]*?\bsrc=(["'])([^"']+)\1[^>]*>/g,
+    (tag, _quote, src: string) => Object.hasOwn(images, src) ? images[src] : tag);
+}
 
 function practicePrompt(question: SourceQuestion) {
   const statement = question.id.startsWith("addmaths-0606-circular-compound-circular-shapes-")
     ? question.prompt_html.replace("with a semicircle added to each shorter edge.", "with a semicircle added to each edge whose length is the stated width.")
-    : question.prompt_html;
+    : question.id === "igcse-0580-mensuration-notch-E1-3"
+      ? question.prompt_html.replace("into the middle of one long edge.", "into the middle of one short edge.")
+      : question.prompt_html;
   const prompt = question.fields.some(field => field.type === "ratio")
     ? statement.replace("Enter its numerator and denominator separately with a semicolon", "Give the inverse as a single fraction")
       .replace("as numerator ; denominator", "as a single fraction")
     : statement;
   const figure = lowerSecondaryFigures[question.id];
   const illustration = figure ? `<p><img src="${figure.src}" alt="${figure.alt.replaceAll("&", "&amp;").replaceAll('"', "&quot;")}" width="${figure.width}" height="${figure.height}"></p>` : "";
-  return renderContent(prompt + illustration + (additionalMathsFigures[question.id]?.prompt ?? "")).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>');
+  const figures = practiceFigures[question.id];
+  return renderContent(replacePracticeImages(prompt, figures?.promptImages) + illustration + (figures?.prompt ?? "")).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>');
 }
 
 function practiceChoiceText(uid: string, field: ExactField, option: string, text: string) {
@@ -168,5 +188,8 @@ export function squareHelp(q: SourceQuestion, kind: SupportKind) {
     }
     return renderContent(q.hint_html);
   }
-  return kind === "solution" ? renderContent(q.answer_html + projectSolutionImages(q.solution_html, q.id).html + (additionalMathsFigures[q.id]?.solution ?? "")) : "";
+  if (kind !== "solution") return "";
+  const figures = practiceFigures[q.id];
+  const solution = projectSolutionImages(q.solution_html, q.id).html;
+  return renderContent(q.answer_html + replacePracticeImages(solution, figures?.solutionImages) + (figures?.solution ?? ""));
 }
