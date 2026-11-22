@@ -58,9 +58,11 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   const [error, setError] = useState<unknown>(null);
   const [accountLanguage, setAccountLanguage] = useState<"ru" | "en">("en");
   const [lens, setLens] = useState<ViewLens | null>(null);
+  const [examArchive, setExamArchive] = useState(false);
   useEffect(() => {
-    api<{ user: Actor | null; lens: ViewLens | null }>("auth/me").then(({ user, lens }) => {
+    api<{ user: Actor | null; lens: ViewLens | null; examArchive?: boolean }>("auth/me").then(({ user, lens, examArchive }) => {
       setError(null);
+      setExamArchive(examArchive === true);
       setViewNonce(lens?.nonce ?? ""); setLens(lens);
       setActor(user);
       const preferred = user?.profile?.locale ?? (!publicLearning ? storedLocale() : undefined) ?? initialLocale;
@@ -121,7 +123,7 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   else if (["student", "teacher"].includes(parts[0])) content = <Dashboard manage={parts[0] === "teacher"} />;
   else content = <div className="card"><h1>404</h1><Link href="/">{t("На главную", "Go home")}</Link></div>;
   return <LocaleContext.Provider value={workspaceLanguage}><ActorContext.Provider value={actor}><ViewContext.Provider value={lens}><PublicLocaleContext.Provider value={publicLearning ? initialLocale : null}><TaskBasketProvider key={(actor?.id ?? "guest") + (lens?.nonce ?? "")}>
-    <SiteHeader key={"header:" + rawPath} actor={actor} path={path} hidden={(!!boardPage || !!markingPage || adminWorkspace) && !lens} publicPage={publicLearning} languagePair={languagePair} accountLanguage={accountLanguage} viewChanged={setLens} changeLanguage={value => { if (lens) return; setAccountLanguage(value); if (!publicLearning) setLang(value); rememberLocale(value); if (publicLearning) document.documentElement.lang = initialLocale; if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
+    <SiteHeader key={"header:" + rawPath} actor={actor} examArchive={examArchive && !lens} path={path} hidden={(!!boardPage || !!markingPage || adminWorkspace) && !lens} publicPage={publicLearning} languagePair={languagePair} accountLanguage={accountLanguage} viewChanged={setLens} changeLanguage={value => { if (lens) return; setAccountLanguage(value); if (!publicLearning) setLang(value); rememberLocale(value); if (publicLearning) document.documentElement.lang = initialLocale; if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
     <main className={"container" + (adminWorkspace ? " admin-container" : teacherWorkspace ? " teacher-workspace" : "")} id="main-content" data-home={!parts.length && !actor} key={"page:" + path}>{(discovery || square) && !!error && <ErrorNotice error={error} />}{content}</main>
     {!boardPage && <SiteFooter languagePair={languagePair} />}
     <GuestCourseVisit enabled={ready && !actor && !lens && !error} level={discovery?.direction}

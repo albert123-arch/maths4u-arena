@@ -14,7 +14,7 @@ import { useView } from "./view-state";
 import type { ViewLens } from "@/lib/request-view";
 import { SiteLanguages } from "./site-languages";
 
-export function SiteHeader({ actor, path, hidden, publicPage, languagePair, accountLanguage, changeLanguage, viewChanged }: { actor: Actor | null; path: string; hidden: boolean; publicPage: boolean; languagePair?: LanguagePair; accountLanguage: Locale; changeLanguage: (lang: Locale) => void; viewChanged: (lens: ViewLens | null) => void }) {
+export function SiteHeader({ actor, examArchive, path, hidden, publicPage, languagePair, accountLanguage, changeLanguage, viewChanged }: { actor: Actor | null; examArchive: boolean; path: string; hidden: boolean; publicPage: boolean; languagePair?: LanguagePair; accountLanguage: Locale; changeLanguage: (lang: Locale) => void; viewChanged: (lens: ViewLens | null) => void }) {
   const lens = useView();
   const { lang, t: translate } = useLocale(), [open, setOpen] = useState(false);
   const [guestDestination, setGuestDestination] = useState<string | null>(null);
@@ -61,6 +61,7 @@ export function SiteHeader({ actor, path, hidden, publicPage, languagePair, acco
       <Link href="/search" onClick={close}>{t("Поиск", "Search")}</Link>
       <Link aria-current={path.startsWith("/teacher") ? "page" : undefined} href={teacher ? "/teacher" : "/for-teachers"} onClick={close}>{t("Учителю", "For teachers")}</Link>
       </>}
+      {examArchive && <Link href="/exam-archive" prefetch={false} onClick={close}>Exam archive</Link>}
       {(student || staff) && <Link className="student-mobile-search" href="/search" onClick={close}>Search</Link>}
       {showLanguages && <SiteLanguages className="mobile-locale" languagePair={languagePair} onNavigate={close} />}
     </nav>
