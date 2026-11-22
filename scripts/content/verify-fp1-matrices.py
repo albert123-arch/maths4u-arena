@@ -1,11 +1,13 @@
 """Exact matrix certificates, complete root sets and geometric boundary review."""
 import argparse,hashlib,json,re,html,sys
 from pathlib import Path
+from reviewed_audit_bindings import audited_question_bindings
 from functools import lru_cache
 import sympy as s
 from sympy.parsing.latex import parse_latex
 ap=argparse.ArgumentParser();ap.add_argument('--report',required=True);ap.add_argument('--owner');args=ap.parse_args()
 base=Path('content/original/9231-fp1');pack=json.loads((base/'matrices1-v1.json').read_text(encoding='utf8'))
+matches_question=audited_question_bindings(pack)
 fixtures=json.loads((base/'matrices1-owner-verification-v1.json').read_text(encoding='utf8'));by={v['id']:v for v in fixtures}
 audit=json.loads(Path('docs/ARENA-C2-MATRICES-SOURCE-AUDIT-20261106.json').read_text(encoding='utf8'))
 symbols={key:s.Symbol(key,real=True) for key in ['a','b','c','k','m','n','p','q','r','t','u','v','w','x','y','z','X','Y','theta']}
@@ -176,9 +178,11 @@ if args.owner:
     truth('SOURCE','read-only source SHA',hashlib.sha256(source.read_bytes()).hexdigest()==pack['source']['sha256'])
 for fixture in fixtures:
     uid=fixture['id'];item=next(q for q in pack['questions'] if q['id']==fixture['uid'])
-    truth(uid,'manifest fixture binding',digest(item)==fixture['contentSha256']);record(uid,'all part marks preserved',sum(p['marks'] for p in fixture['parts']),item['marks'])
+    truth(uid,'manifest fixture binding',matches_question(item['id'],digest(item),fixture['contentSha256']));record(uid,'all part marks preserved',sum(p['marks'] for p in fixture['parts']),item['marks'])
     if args.owner:
-        old=original[uid];truth(uid,'owner keys and teaching unchanged',all(item[new]==old[key] for new,key in [('prompt_html','question_html'),('answer_html','answer_html'),('solution_html','solution_html'),('hint_html','hint_html')]) and fixture['parts']==old['parts'])
+        old=original[uid]
+        precursor={**item, **{name:old[key] for name,key in [('prompt_html','question_html'),('answer_html','answer_html'),('solution_html','solution_html'),('hint_html','hint_html')]}}
+        truth(uid,'owner keys and teaching match the audited precursor',digest(precursor)==fixture['contentSha256'] and fixture['parts']==old['parts'])
 for lesson in pack['lessons']:
     truth(lesson['id'],'teaching digest',hashlib.sha256(json.dumps(lesson,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()==audit['teachingDigests'][lesson['id']])
 owner_checks()

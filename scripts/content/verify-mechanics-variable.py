@@ -203,6 +203,9 @@ n,m,r,j=s.symbols('n m r j',integer=True);theta=x;phi,delta=s.symbols('phi delta
 loc.update(n=n,m=m,r=r,j=j,i=s.I,theta=x,phi=phi,delta=delta)
 
 package=json.loads(Path('content/original/9231-mechanics/variable-v1.json').read_text(encoding='utf8'));fixtures=json.loads(Path('content/original/9231-mechanics/variable-verification-v1.json').read_text(encoding='utf8'))
+# Exact digests of the approved display edits, scoped to this package version.
+reviewed = json.loads(Path(__file__).with_name('mechanics-reviewed-digests-20261122.json').read_text(encoding='utf8'))
+reviewed_quick = reviewed[package['key']].get(package['version'], {})
 source=[f['original'] for f in fixtures['owner']];qmap={q['bank_number']:q for q in source};qby={q['id']:q for q in package['questions']}
 a,h,k,r,W,M,mm,g,lam,mu,q,d=s.symbols('a h k r W M m g lambda mu q d',positive=True);th=s.Symbol('theta',real=True);z=s.Symbol('z',real=True)
 loc.update(a=a,h=h,k=k,r=r,W=W,M=M,m=mm,g=g,mu=mu,q=q,d=d,theta=th,z=z);loc['lambda']=lam
@@ -340,7 +343,7 @@ def calculated(data):
   Pn=d['k']*d['limit']**3;A=Pn/d['k'];B=d['u']**3-A;C=3*d['k'];W=A+B*s.exp(-C*x);exact(s.diff(W,x),3*(Pn-d['k']*W),'complete cubic-speed ODE');exact(W.subs(x,0),d['u']**3,'constant-power launch cube');check(B<0,'target trajectory approaches limit from below');return dict(A=A,B=B,C=C,limit=s.real_root(A,3),power=d['mass']*Pn)
  raise ValueError(kind)
 for item in fixtures['quick']:
- active=item['uid'];question=qby[active];fields={f['key']:f for f in question['fields']};data=item['model'];check(digest(question)==item['contentSha256'],'quick fingerprint '+active)
+ active=item['uid'];question=qby[active];fields={f['key']:f for f in question['fields']};data=item['model'];check(digest(question)==reviewed_quick.get(active,item['contentSha256']),'quick fingerprint '+active)
  if data['kind']=='logic':check(fields['reason']['expected']==data['answer'],'reviewed physical principle '+active);continue
  values=calculated(data);check(set(values)==set(fields),'every full-answer field recomputed '+active)
  for field,value in values.items():

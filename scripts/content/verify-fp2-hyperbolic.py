@@ -1,5 +1,6 @@
 """Independent exact hyperbolic, branch, graph, parameter and differential-equation audit."""
 import argparse,hashlib,html,json,re
+from fp2_audit_revision import read_audited_package
 from functools import lru_cache
 from pathlib import Path
 import sympy as s
@@ -123,7 +124,7 @@ def claim(raw,value,label):
 def root(expr,values,label):
  for index,value in enumerate(values):proof(expr.subs(x,value),label+' root '+str(index+1))
 def identity(expr,label):proof(expr.rewrite(s.exp),label)
-package=json.loads(Path('content/original/9231-fp2/hyperbolic-v1.json').read_text(encoding='utf8'));fixtures=json.loads(Path('content/original/9231-fp2/hyperbolic-verification-v1.json').read_text(encoding='utf8'))
+package=read_audited_package('content/original/9231-fp2/hyperbolic-v1.json');fixtures=json.loads(Path('content/original/9231-fp2/hyperbolic-verification-v1.json').read_text(encoding='utf8'))
 if args.source:
  data=Path(args.source);owner=json.loads(data.read_text(encoding='utf-8-sig'));source=[q for l in owner['lessons'] for q in l['questions']];check(hashlib.sha256(data.read_bytes()).hexdigest()==package['source']['sha256'],'read-only owner SHA')
 else:source=[r['original'] for r in fixtures['owner']]

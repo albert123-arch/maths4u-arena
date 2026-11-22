@@ -3,6 +3,7 @@ import argparse,hashlib,html,itertools,json,math,re
 from collections import Counter
 from functools import lru_cache
 from pathlib import Path
+from reviewed_audit_bindings import audited_question_bindings
 import sympy as s
 from sympy.parsing.latex import parse_latex
 from sympy.core.function import AppliedUndef
@@ -93,6 +94,7 @@ def answer_values(q,index):
   except Exception:pass
  return values
 package=json.loads(Path('content/original/9231-statistics/pgf-v1.json').read_text(encoding='utf8'));fixtures=json.loads(Path('content/original/9231-statistics/pgf-verification-v1.json').read_text(encoding='utf8'))
+matches_question=audited_question_bindings(package)
 if args.source:
  source=Path(args.source);data=json.loads(source.read_text(encoding='utf-8-sig'));owner=[q for l in data['lessons'] for q in l['questions']];check(hashlib.sha256(source.read_bytes()).hexdigest()==package['source']['sha256'],'owner read-only SHA')
 else:owner=[r['original'] for r in fixtures['owner']]
@@ -169,7 +171,7 @@ check(set(models)==set(qs)==set(range(1,51)),'all 50 owner models covered')
 owner_audit=[]
 for num,q in qs.items():
  start=len(log);tag='owner '+str(num);actual=next(z for z in package['questions'] if z['id']==q['content_uid']);fixture=next(z for z in fixtures['owner'] if z['bank_number']==num)
- check(fixture['original']==q,tag+' unchanged source fixture');check(digest(actual)==fixture['contentSha256'],tag+' package binding')
+ check(fixture['original']==q,tag+' unchanged source fixture');check(matches_question(actual['id'],digest(actual),fixture['contentSha256']),tag+' package binding')
  check(actual['prompt_html']==q['stem_html']+'<ol class="parts" type="a">'+''.join('<li>'+z['prompt_html']+'<span class="marks">['+str(z['marks'])+']</span></li>' for z in q['parts'])+'</ol>',tag+' unchanged prompts in standard layout')
  for field in ['answer_html','solution_html','hint_html','marks']:check(actual[field]==q[field],tag+' unchanged '+field)
  check(actual['parts']==[dict(label=chr(97+j),marking_criteria=[dict(code=c['code'],marks=c['marks'],description_html=c['criterion_html']) for c in z['criteria']]) for j,z in enumerate(q['parts'])],tag+' every criterion retained')
@@ -217,7 +219,7 @@ def evaluate(model):
   u=model['upper'];nn=model['n'];target=model['target'];outcomes=list(itertools.product(range(u+1),repeat=nn));hit=[row for row in outcomes if sum(row)==target];joint=[row for row in hit if row[0]==0];return dict(total=s.Rational(len(hit),len(outcomes)),joint=s.Rational(len(joint),len(outcomes)),conditional=s.Rational(len(joint),len(hit)))
  raise ValueError(kind)
 for row in fixtures['quick']:
- q=next(z for z in package['questions'] if z['id']==row['uid']);check(digest(q)==row['contentSha256'],q['id']+' content binding');values=evaluate(row['model'])
+ q=next(z for z in package['questions'] if z['id']==row['uid']);check(matches_question(q['id'],digest(q),row['contentSha256']),q['id']+' content binding');values=evaluate(row['model'])
  for field in q['fields']:
   expected=field['expected'];value=values[field['key']]
   check(value==expected if field['type']=='choice' else all(eq(P(x),P(y)) for x,y in zip(value,expected)) if isinstance(expected,list) else eq(P(value),P(expected)),q['id']+' complete key '+field['key'])

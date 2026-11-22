@@ -1,6 +1,7 @@
 """Independent exact checks of chapter claims, examples and complete quick keys."""
 import argparse,hashlib,json,re,html
 from pathlib import Path
+from reviewed_audit_bindings import audited_question_bindings
 from functools import lru_cache
 import sympy as s
 from sympy.parsing.latex import parse_latex
@@ -74,8 +75,11 @@ def stationary(f):
 def digest(q):return hashlib.sha256('\0'.join([q['title'],q['prompt_html'],q['answer_html'],q['solution_html'],q['hint_html'],str(q['marks'])]).encode()).hexdigest()
 root=Path('content/original/9231-fp1')
 pack=json.loads((root/'rational-v1.json').read_text(encoding='utf-8'))
+matches_question=audited_question_bindings(pack)
 audit=json.loads(Path('docs/ARENA-C2-RATIONAL-SOURCE-AUDIT-20261106.json').read_text(encoding='utf-8'))
-for row in audit['rows']:assert digest(next(q for q in pack['questions'] if q['id']==row['uid']))==row['contentSha256']
+for row in audit['rows']:
+    q=next(q for q in pack['questions'] if q['id']==row['uid'])
+    assert matches_question(q['id'],digest(q),row['contentSha256'])
 for lesson in pack['lessons']:
     assert hashlib.sha256(json.dumps(lesson,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()==audit['teachingDigests'][lesson['id']]
 owner=json.loads((root/'rational-owner-verification-v1.json').read_text(encoding='utf-8'))
@@ -253,7 +257,7 @@ record('E-T1','missing reciprocal ordinate',s.limit((x+2)/(x-1),x,-2),0)
 record('E-T1','reciprocal horizontal height',s.limit((x+2)/(x-1),x,s.oo),1)
 quick=json.loads((root/'rational-quick-verification-v1.json').read_text(encoding='utf-8'))
 for row in quick:
-    q=next(q for q in pack['questions'] if q['id']==row['uid']);assert digest(q)==row['contentSha256']
+    q=next(q for q in pack['questions'] if q['id']==row['uid']);assert matches_question(q['id'],digest(q),row['contentSha256'])
     assert {f['key']:f['expected'] for f in q['fields']}==row['answers']
     ref=row['reference'];kind=ref['kind'];ans=row['answers'];uid=row['uid']
     if kind=='division':

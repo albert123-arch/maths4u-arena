@@ -1,5 +1,6 @@
 """Differentiation-based audit of differential equations and complete answer fields."""
 import argparse,hashlib,html,json,re
+from fp2_audit_revision import read_audited_package
 from functools import lru_cache
 from pathlib import Path
 import sympy as s
@@ -194,7 +195,7 @@ def ode(q):
   raw=re.sub(r'\\(ln|coth)(?=[a-z0-9])',lambda m:'\\'+m[1]+' ',raw).replace(r'\coth',r'\operatorname{coth}');a,b=raw.split('=');return (tex(a)-tex(b)).subs(t,x)
  raise ValueError('No equation '+str(q['bank_number']))
 
-package=json.loads(Path('content/original/9231-fp2/ode-v1.json').read_text(encoding='utf8'))
+package=read_audited_package('content/original/9231-fp2/ode-v1.json')
 fixtures=json.loads(Path('content/original/9231-fp2/ode-verification-v1.json').read_text(encoding='utf8'))
 source=[f['original'] for f in fixtures['owner']];qmap={q['bank_number']:q for q in source};qby={q['id']:q for q in package['questions']}
 loc.update(t=x,lnx=s.log(x),coth=s.coth)

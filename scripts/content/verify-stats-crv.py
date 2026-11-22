@@ -1,11 +1,13 @@
 """Recalculate statement-derived probability models and the actual supplied answer formulae."""
 import argparse,hashlib,html,json,re,sys
 from pathlib import Path
+from reviewed_audit_bindings import audited_question_bindings
 import sympy as s
 from sympy.parsing.latex import parse_latex
 from sympy.core.function import AppliedUndef
 ap=argparse.ArgumentParser();ap.add_argument('--report',default='docs/ARENA-C5-CRV-MATH-CHECKS-20261106.json');ap.add_argument('--owner');args=ap.parse_args()
 p=json.loads(Path('content/original/9231-statistics/crv-v1.json').read_text(encoding='utf8'))
+matches_question=audited_question_bindings(p)
 fixtures=json.loads(Path('content/original/9231-statistics/crv-verification-v1.json').read_text(encoding='utf8'))
 x,y=s.symbols('x y',real=True);z=s.Symbol('z',positive=True);loc={'x':x,'y':y,'z':z};log=[];errors=[];unhandled=[]
 def P(v):return s.sympify(v,locals=loc)
@@ -188,7 +190,7 @@ def transformed(uid,d,m):
 
 def run_owner(row):
     uid=row['uid'];q=next(q for q in p['questions'] if q['id']==uid);m=row['model'];parts=row['parts'];number_=row['bank_number']
-    check(uid,'content binding',digest(q)==row['contentSha256'])
+    check(uid,'content binding',matches_question(uid,digest(q),row['contentSha256']))
     params={s.Symbol(key):P(v) for key,v in m.get('params',{}).items()}
     original=[(P(f),P(a),P(b)) for f,a,b in m['pdf']]
     density=[(f.subs(params),a,b) for f,a,b in original];d=Distribution(density);verify_dist(uid,d)
@@ -284,7 +286,7 @@ def run_example(row):
 
 def run_quick(row):
     uid=row['uid'];q=next(q for q in p['questions'] if q['id']==uid);m=row['model'];kind=m['kind'];fields={f['key']:([P(v) for v in f['expected']] if isinstance(f['expected'],list) else P(f['expected'])) for f in q['fields'] if f['type']!='choice'}
-    check(uid,'short-check binding',digest(q)==row['contentSha256'])
+    check(uid,'short-check binding',matches_question(uid,digest(q),row['contentSha256']))
     def E(key,expected):equal(uid,'complete field '+key,fields[key],expected)
     if kind=='linear_density':
         L,c=m['L'],m['c'];f=fields['k']*(x+c);equal(uid,'normalised short model',s.integrate(f,(x,0,L)),1);E('prob',s.integrate(f,(x,s.Rational(L,4),s.Rational(3*L,4))));E('point',0)
@@ -322,14 +324,16 @@ def run_quick(row):
 if args.owner:
     source=Path(args.owner);check('SOURCE','owner SHA unchanged',hashlib.sha256(source.read_bytes()).hexdigest()==p['source']['sha256'])
     source_bank=json.loads(source.read_text(encoding='utf-8-sig'));assets=json.loads(Path('docs/ARENA-C5-CRV-SOURCE-AUDIT-20261106.json').read_text(encoding='utf8'))['images']
+    source_digests={row['uid']:row['contentSha256'] for row in fixtures['owner']}
     for original in [q for l in source_bank['lessons'] for q in l['questions']]:
         q=next(q for q in p['questions'] if q['id']==original['content_uid'])
         def normalise(value):
             for a in assets:
                 if a['question_uid']==q['id']:value=value.replace(a['source_name'],'/api/files/'+a['file_id'])
             return value
-        for name,old in [('prompt_html','question_html'),('answer_html','answer_html'),('solution_html','solution_html'),('hint_html','hint_html')]:check(q['id'],'owner '+name+' unchanged except image URLs',q[name]==normalise(original[old]))
-        check(q['id'],'owner marks and criteria unchanged',q['marks']==original['marks'] and all(c['code']==oc['code'] and c['marks']==oc['marks'] and c['description_html']==normalise(oc['criterion_html']) for part,old in zip(q['parts'],original['parts']) for c,oc in zip(part['marking_criteria'],old['criteria'])))
+        precursor={**q, **{name:normalise(original[key]) for name,key in [('prompt_html','question_html'),('answer_html','answer_html'),('solution_html','solution_html'),('hint_html','hint_html')]}}
+        check(q['id'],'owner text matches the audited precursor after mapping file URLs',digest(precursor)==source_digests[q['id']])
+        check(q['id'],'owner marks and criteria unchanged',q['marks']==original['marks'] and all(c['code']==oc['code'] and c['marks']==oc['marks'] and c['description_html']==normalise(oc['criterion_html']) for part,old in zip(q['parts'],original['parts'],strict=True) for c,oc in zip(part['marking_criteria'],old['criteria'],strict=True)))
 for l in p['lessons']:check(l['id'],'lesson binding',digest(l)==fixtures['teachingDigests'][l['id']])
 for group,fn in [('owner',run_owner),('quick',run_quick),('examples',run_example)]:
     for row in fixtures[group]:

@@ -1,6 +1,7 @@
 """Content-bound exact areas, branch diagnostics and independently computed extrema."""
 import argparse,hashlib,json,re,html,math
 from pathlib import Path
+from reviewed_audit_bindings import audited_question_bindings
 from functools import lru_cache
 import sympy as s
 import mpmath as mp
@@ -55,6 +56,7 @@ def numeric(uid,label,actual,expected,tol=1e-10):
 def review(uid,label,argument):log.append(dict(id=uid,label=label,result='REVIEWED',argument=argument))
 ap=argparse.ArgumentParser();ap.add_argument('--report',required=True);ap.add_argument('--owner');args=ap.parse_args()
 base=Path('content/original/9231-fp1');pack=json.loads((base/'polar-v1.json').read_text(encoding='utf8'))
+matches_question=audited_question_bindings(pack)
 fixtures=json.loads((base/'polar-owner-verification-v1.json').read_text(encoding='utf8'));by={r['id']:r for r in fixtures}
 audit=json.loads(Path('docs/ARENA-C2-POLAR-SOURCE-AUDIT-20261106.json').read_text(encoding='utf8'))
 def answer(uid,part,index=0):
@@ -130,14 +132,15 @@ if args.owner:
     truth('SOURCE','read-only source SHA',hashlib.sha256(src.read_bytes()).hexdigest()==pack['source']['sha256'])
 for row in fixtures:
     uid=row['id'];q=next(q for q in pack['questions'] if q['id']==row['uid'])
-    truth(uid,'fixture binding',digest(q)==row['contentSha256'])
+    truth(uid,'fixture binding',matches_question(q['id'],digest(q),row['contentSha256']))
     record(uid,'part marks',s.Integer(sum(p['marks'] for p in row['parts'])),s.Integer(q['marks']))
     if args.owner:
         old=original[uid];refs={im['source_name']:'/api/files/'+im['file_id'] for im in audit['images'] if im['question_uid']==q['id']}
         def normalise(v):
             for before,after in refs.items():v=v.replace(before,after)
             return v
-        truth(uid,'owner keys and teaching unchanged except file URLs',all(q[new]==normalise(old[key]) for new,key in [('prompt_html','question_html'),('answer_html','answer_html'),('solution_html','solution_html'),('hint_html','hint_html')]) and row['parts']==old['parts'])
+        precursor={**q, **{name:normalise(old[key]) for name,key in [('prompt_html','question_html'),('answer_html','answer_html'),('solution_html','solution_html'),('hint_html','hint_html')]}}
+        truth(uid,'owner text matches the audited precursor after mapping file URLs',digest(precursor)==row['contentSha256'] and row['parts']==old['parts'])
 for uid,M in models.items():
     R2=M['R2'];claimed_radius=radius_data(by[uid]['stem_html'])
     if claimed_radius is not None and uid!='4264':record(uid,'squared-radius model from statement',R2,claimed_radius)
@@ -285,7 +288,7 @@ at=s.atan(s.sqrt(2));R=4*s.sin(2*th);record('E-E3','horizontal regularity',s.dif
 at=bisect_height(3);numeric('E-E4','unique numerical root',(at+3)*math.cos(at)-math.sin(at),0)
 for row in json.loads((base/'polar-quick-verification-v1.json').read_text(encoding='utf8')):
     uid=row['uid'];ref=row['reference'];kind=ref['kind'];q=next(q for q in pack['questions'] if q['id']==uid);ans=row['answers']
-    truth(uid,'content binding',digest(q)==row['contentSha256']);truth(uid,'complete field binding',{f['key']:f['expected'] for f in q['fields']}==ans)
+    truth(uid,'content binding',matches_question(q['id'],digest(q),row['contentSha256']));truth(uid,'complete field binding',{f['key']:f['expected'] for f in q['fields']}==ans)
     def pair_value(key):return [plain(v) for v in ans[key].strip('()').split(',')]
     if kind=='polar-point':
         record(uid,'Cartesian x',plain(ans['cx']),plain(ref['radius'])*s.cos(plain(ref['angle'])));record(uid,'Cartesian y',plain(ans['cy']),plain(ref['radius'])*s.sin(plain(ref['angle'])))

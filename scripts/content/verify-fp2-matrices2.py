@@ -1,12 +1,13 @@
 """Independent exact statement/answer audit; standalone CI uses checked immutable fixtures."""
 import argparse,hashlib,html,json,re,sys
+from fp2_audit_revision import read_audited_package
 from pathlib import Path
 from functools import lru_cache
 import sympy as s
 from sympy.parsing.latex import parse_latex
 sys.stdout.reconfigure(encoding='utf8')
 ap=argparse.ArgumentParser();ap.add_argument('--source');ap.add_argument('--report',default='docs/ARENA-C5-FP2-MATRICES2-MATH-CHECKS-20261107.json');args=ap.parse_args()
-base=Path('content/original/9231-fp2');pack=json.loads((base/'matrices2-v1.0.1.json').read_text(encoding='utf8'));fixtures=json.loads((base/'matrices2-verification-v1.json').read_text(encoding='utf8'))
+base=Path('content/original/9231-fp2');pack=read_audited_package(base/'matrices2-v1.0.1.json');fixtures=json.loads((base/'matrices2-verification-v1.json').read_text(encoding='utf8'))
 by={z['bank_number']:z['original'] for z in fixtures['owner']};questions={z['id']:z for z in pack['questions']}
 symbols={k:s.Symbol(k,real=True) for k in ['a','b','c','k','p','q','r','t','u','v','x','y','z','lambda']};symbols['n']=s.Symbol('n',integer=True,positive=True)
 a,b,c,k,p,q,r,t,u,v,x,y,z,lam,n=[symbols[j] for j in ['a','b','c','k','p','q','r','t','u','v','x','y','z','lambda','n']]

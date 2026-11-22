@@ -202,6 +202,9 @@ n,m,r,j=s.symbols('n m r j',integer=True);theta=x;phi,delta=s.symbols('phi delta
 loc.update(n=n,m=m,r=r,j=j,i=s.I,theta=x,phi=phi,delta=delta)
 
 package=json.loads(Path('content/original/9231-mechanics/circular-v1.json').read_text(encoding='utf8'));fixtures=json.loads(Path('content/original/9231-mechanics/circular-verification-v1.json').read_text(encoding='utf8'))
+# Exact digests of the approved display edits, scoped to this package version.
+reviewed = json.loads(Path(__file__).with_name('mechanics-reviewed-digests-20261122.json').read_text(encoding='utf8'))
+reviewed_quick = reviewed[package['key']].get(package['version'], {})
 source=[f['original'] for f in fixtures['owner']];qmap={q['bank_number']:q for q in source};qby={q['id']:q for q in package['questions']}
 a,h,k,r,W,M,mm,g,lam,mu,q,d=s.symbols('a h k r W M m g lambda mu q d',positive=True);th=s.Symbol('theta',real=True);z=s.Symbol('z',real=True)
 loc.update(a=a,h=h,k=k,r=r,W=W,M=M,m=mm,g=g,mu=mu,q=q,d=d,theta=th,z=z);loc['lambda']=lam
@@ -404,7 +407,7 @@ def calculated(data):
   rr=d['radius'];bottom=d['bottom2'];top=bottom-4*rr;check(0<rr<1 and top/rr-1>0,'shortened string completes its circle');return dict(before=bottom+1,after=bottom/rr+1,top2=top,top=top/rr-1)
  raise ValueError(kind)
 for item in fixtures['quick']:
- active=item['uid'];question=qby[active];fields={f['key']:f for f in question['fields']};data=item['model'];check(digest(question)==item['contentSha256'],'quick fingerprint '+active)
+ active=item['uid'];question=qby[active];fields={f['key']:f for f in question['fields']};data=item['model'];check(digest(question)==reviewed_quick.get(active,item['contentSha256']),'quick fingerprint '+active)
  if data['kind']=='logic':check(fields['reason']['expected']==data['answer'],'reviewed physical principle '+active);continue
  values=calculated(data);check(set(values)==set(fields),'every short-answer field independently recomputed '+active)
  for field,value in values.items():

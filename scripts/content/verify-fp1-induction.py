@@ -1,12 +1,14 @@
 """Independent symbolic transitions, integrality certificates and content bindings."""
 import argparse,hashlib,json,sys
 from pathlib import Path
+from reviewed_audit_bindings import audited_question_bindings
 import sympy as s
 from sympy.parsing.latex import parse_latex
 import re
 
 ap=argparse.ArgumentParser();ap.add_argument('--report',default='docs/ARENA-C3-INDUCTION-MATH-CHECKS-20261106.json');args=ap.parse_args()
 p=json.loads(Path('content/original/9231-fp1/induction-v1.json').read_text(encoding='utf8'))
+matches_question=audited_question_bindings(p)
 fixtures=json.loads(Path('content/original/9231-fp1/induction-verification-v1.json').read_text(encoding='utf8'))
 n=s.Symbol('n',integer=True,nonnegative=True);r=s.Symbol('r',integer=True,nonnegative=True)
 x,u,t=s.symbols('x u t',real=True);k=s.Symbol('k',integer=True,nonnegative=True)
@@ -194,7 +196,7 @@ for lesson in p['lessons']:
     check(lesson['id'],'teaching content binding',digest(lesson)==fixtures['teachingDigests'][lesson['id']])
 for row in fixtures['questions']:
     uid=row['id'];q=next(q for q in p['questions'] if q['id']==uid)
-    check(uid,'actual question content binding',digest(q)==row['contentSha256'])
+    check(uid,'actual question content binding',matches_question(uid,digest(q),row['contentSha256']))
     check(uid,'complete rubric mark total',sum(c['marks'] for part in q['parts'] for c in part['marking_criteria'])==q['marks'])
     check(uid,'independent identity without archive provenance','provenance' not in q)
     try:

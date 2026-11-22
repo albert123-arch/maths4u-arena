@@ -1,5 +1,6 @@
 """Independent complex algebra, root completeness, harmonic and summation audit."""
 import argparse,hashlib,html,json,re
+from fp2_audit_revision import read_audited_package
 from functools import lru_cache
 from pathlib import Path
 import sympy as s
@@ -176,7 +177,7 @@ import mpmath as mp
 mp.mp.dps=55
 n,m,r,j=s.symbols('n m r j',integer=True);theta=x;phi,delta=s.symbols('phi delta',real=True)
 loc.update(n=n,m=m,r=r,j=j,i=s.I,theta=x,phi=phi,delta=delta)
-package=json.loads(Path('content/original/9231-fp2/complex-v1.json').read_text(encoding='utf8'));fixtures=json.loads(Path('content/original/9231-fp2/complex-verification-v1.json').read_text(encoding='utf8'));source=[f['original'] for f in fixtures['owner']];qmap={q['bank_number']:q for q in source};qby={q['id']:q for q in package['questions']};actual_claims=0
+package=read_audited_package('content/original/9231-fp2/complex-v1.json');fixtures=json.loads(Path('content/original/9231-fp2/complex-verification-v1.json').read_text(encoding='utf8'));source=[f['original'] for f in fixtures['owner']];qmap={q['bank_number']:q for q in source};qby={q['id']:q for q in package['questions']};actual_claims=0
 if args.source:
  data=Path(args.source);owner=json.loads(data.read_text(encoding='utf-8-sig'));check(hashlib.sha256(data.read_bytes()).hexdigest()==package['source']['sha256'],'unmodified source SHA');check(source==[q for l in owner['lessons'] for q in l['questions']],'all supplied fields unchanged')
 _candidates=candidates
