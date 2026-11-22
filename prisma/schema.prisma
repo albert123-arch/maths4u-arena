@@ -126,6 +126,10 @@ model User {
   authoredTasks        TaskAuthoring[]
   reviewedAuthoredTasks TaskAuthoringSubmission[] @relation("AuthoringReviewer")
 
+  examArchiveGrant ExamArchiveGrant? @relation("ExamArchiveRecipient")
+  issuedExamArchiveGrants ExamArchiveGrant[] @relation("ExamArchiveIssuer")
+  examArchivePreference ExamArchivePreference?
+
   @@index([status])
 }
 
@@ -293,6 +297,8 @@ model Lesson {
   progress   LearningProgress[]
   studyChecks StudyCheckEvidence[]
   tasks      LessonTask[]
+
+  examArchiveTopics ExamArchiveTopic[]
 
   @@index([topicId])
 }
@@ -467,6 +473,8 @@ model TaskVersion {
   assets         TaskAsset[]
   items          WorkItem[]
   reports        TaskReport[]
+
+  examArchiveQuestion ExamArchiveQuestion?
 
   @@unique([taskId, number])
   @@index([sourceId])
@@ -1198,5 +1206,116 @@ model TaskAuthoringSubmission {
   @@index([taskVersionId])
   @@index([reviewerId])
   @@index([courseId])
+  @@index([topicId])
+}
+
+
+model ExamArchiveGrant {
+  userId     String   @id
+  issuerId   String
+  startsAt   DateTime
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  syllabuses Json
+  user       User     @relation("ExamArchiveRecipient", fields: [userId], references: [id], onDelete: Restrict)
+  issuer     User     @relation("ExamArchiveIssuer", fields: [issuerId], references: [id], onDelete: Restrict)
+
+  @@index([expiresAt, revokedAt])
+  @@index([issuerId])
+}
+
+model ExamArchivePreference {
+  userId           String  @id
+  mode             String  @default("topicwise") @db.VarChar(20)
+  showOtherCourses Boolean @default(false)
+  topicKey         String? @db.VarChar(191)
+  paperId          String? @db.VarChar(191)
+  syllabus         String? @db.VarChar(10)
+  year             Int?
+  session          String? @db.VarChar(40)
+  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ExamArchivePaper {
+  id            String @id
+  syllabus      String @db.VarChar(10)
+  year          Int
+  session       String @db.VarChar(40)
+  paperCode     String @db.VarChar(30)
+  officialUrl   String? @db.VarChar(500)
+  markSchemeUrl String? @db.VarChar(500)
+  questions     ExamArchivePaperQuestion[]
+
+  @@unique([syllabus, year, session, paperCode], map: "ExamArchivePaper_identity")
+}
+
+model ExamArchiveQuestion {
+  id                String @id
+  syllabus          String @db.VarChar(10)
+  marks             Int?
+  questionType      String? @db.VarChar(30)
+  difficulty        Int?
+  taskVersionId     String? @unique
+  approvalReference String? @db.VarChar(500)
+  studentApproved   Boolean @default(false)
+  statementAllowed  Boolean @default(false)
+  solutionAllowed   Boolean @default(false)
+  markSchemeAllowed Boolean @default(false)
+  assetsAllowed     Boolean @default(false)
+  taskVersion       TaskVersion? @relation(fields: [taskVersionId], references: [id], onDelete: Restrict)
+  papers            ExamArchivePaperQuestion[]
+  topics            ExamArchiveQuestionTopic[]
+  sources           ExamArchiveSource[]
+
+  @@index([syllabus])
+}
+
+model ExamArchivePaperQuestion {
+  paperId    String
+  number     String @db.VarChar(40)
+  questionId String
+  paper      ExamArchivePaper @relation(fields: [paperId], references: [id], onDelete: Restrict)
+  question   ExamArchiveQuestion @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@id([paperId, number])
+  @@index([questionId])
+}
+
+model ExamArchiveSource {
+  sourceKey   String @id
+  questionId  String
+  printedPart String? @db.VarChar(40)
+  references Json?
+  question   ExamArchiveQuestion @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@index([questionId])
+}
+
+model ExamArchiveTopic {
+  id           String @id
+  syllabus     String @db.VarChar(10)
+  courseKey    String @db.VarChar(120)
+  courseTitle  String @db.VarChar(191)
+  chapterKey   String @db.VarChar(120)
+  chapterTitle String @db.VarChar(191)
+  chapterOrder Int
+  title        String @db.VarChar(191)
+  position     Int
+  courseSlug   String? @db.VarChar(120)
+  lessonId     String?
+  lesson       Lesson? @relation(fields: [lessonId], references: [id], onDelete: Restrict)
+  questions    ExamArchiveQuestionTopic[]
+
+  @@index([syllabus, courseKey])
+  @@index([lessonId])
+}
+
+model ExamArchiveQuestionTopic {
+  questionId String
+  topicId    String
+  question   ExamArchiveQuestion @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  topic      ExamArchiveTopic @relation(fields: [topicId], references: [id], onDelete: Restrict)
+
+  @@id([questionId, topicId])
   @@index([topicId])
 }

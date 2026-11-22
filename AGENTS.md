@@ -46,6 +46,13 @@ Before changing educational content, read
   aliases and historical-version guard, alongside reversible archiving and history
   redaction. Release D preparation is authorised locally only; no push or production
   writes. See docs/ARENA-RELEASE-D-PLAN-20261106.md.
+- **Owner decision, 22 November 2026:** the dedicated Exam Archive can serve
+  authorised learners while their individual grant is active. This permission
+  applies only within the dedicated archive pages and endpoints. The server
+  separately checks documented rights for each question and file before any
+  learner can receive its contents. Metadata and official references can be
+  used for entries awaiting that decision. Existing catalogue, search, work,
+  history, AI and generic file permissions remain governed by Stage 6 and H1.
 - Preserve task identities, sources, immutable versions, import mappings, work
   assignments, files, answers and reviews. Do not relabel imported tasks as original
   or put a new original problem over an unrelated existing Task identity.
