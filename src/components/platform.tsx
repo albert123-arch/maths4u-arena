@@ -26,7 +26,7 @@ import type { SquareLesson } from "@/lib/square-model";
 import { CourseSelection, MyLearning } from "./learning-home";
 import { SiteHeader } from "./site-header";
 import { storedLocale, rememberLocale } from "@/lib/locale";
-import { authHref, courseContext, localDestination } from "@/lib/auth-navigation";
+import { afterSigningIn, authHref, courseContext, localDestination } from "@/lib/auth-navigation";
 import { readGuestCourseChoice } from "@/lib/guest-course-choice";
 import { isPublicLearningPath, publicPath } from "@/lib/public-presentation";
 import type { LanguagePair, PublicPageData } from "@/lib/public-page-model";
@@ -80,7 +80,7 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   let content;
   if (!ready && !discovery && !square && !publicData) content = <Loading />;
   else if (error && !discovery && !square && !publicData) content = <ErrorNotice error={error} />;
-  else if (!publicPage && !actor) content = <Auth mode="login" next={path} />;
+  else if (!publicPage && !actor) content = <Auth mode="login" next={rawPath} />;
   else if (parts[0] === "admin" && !admin || parts[0] === "teacher" && !teacher) content = <div className="notice error">{t("Этот раздел недоступен вашему аккаунту.", "This section is not available to your account.")}</div>;
   else if (square) content = <SquareLessonView lesson={square} sessionReady={ready && !error} studySession={!ready ? "loading" : error ? "device" : "ready"} />;
   else if (discovery) content = discovery.view === "home" && actor ? teacher && !admin ? <TeacherDashboard/> : <MyLearning sessionReady={ready} /> : <DiscoveryHome key={discovery.view === "search" ? JSON.stringify([discovery.query, discovery.searchAll]) : discovery.view} {...discovery} sessionReady={ready && !error} />;
@@ -127,23 +127,31 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
     <VisitorStatistics path={path} eligible={ready && !actor && !error} language={lang} />
   </TaskBasketProvider></PublicLocaleContext.Provider></ViewContext.Provider></ActorContext.Provider></LocaleContext.Provider>;
 }
-function subscribeAuthLocation(changed:()=>void){window.addEventListener("popstate",changed);return()=>window.removeEventListener("popstate",changed);}
+function subscribeAuthLocation(changed: () => void) {
+  window.addEventListener("popstate", changed);
+  window.addEventListener("hashchange", changed);
+  return () => {
+    window.removeEventListener("popstate", changed);
+    window.removeEventListener("hashchange", changed);
+  };
+}
 function Auth({ mode, next }: { mode: string; next?: string }) {
   const { t, lang } = useLocale();
   const [remembered] = useState(readGuestCourseChoice);
   const [selectedAccountType,setAccountType]=useState<"STUDENT"|"TEACHER"|null>(null);
-  const search=useSyncExternalStore(subscribeAuthLocation,()=>window.location.search,()=>"");
-  const accountType=selectedAccountType??(mode==="register"&&new URLSearchParams(search).get("accountType")==="teacher"?"TEACHER":"STUDENT");
+  const location=useSyncExternalStore(subscribeAuthLocation,()=>window.location.search + window.location.hash,()=>"");
+  const search=location.split("#", 1)[0];
+  const query = new URLSearchParams(search);
+  const accountType=selectedAccountType??(mode==="register"&&query.get("accountType")==="teacher"?"TEACHER":"STUDENT");
   const register = mode === "register", recovery = mode === "recover";
-  const intended = localDestination(next ?? new URLSearchParams(search).get("next"));
+  const intended = localDestination(next ? next + location : query.get("next"));
   const origin = courseContext(intended);
   function accountFields(courseSlugs: string[]) { return <Form primary label={recovery ? t("Сменить пароль", "Reset password") : register ? t("Создать аккаунт", "Create account") : t("Войти", "Sign in")} submit={async f => {
       if (recovery) { await api("auth/recover", "POST", { token: str(f, "token"), password: str(f, "password") }); window.location.assign("/login"); return; }
       if (register) await api("auth/register", "POST", { username: str(f, "username"), password: str(f, "password"), displayName: str(f, "displayName"), locale: lang, courseSlugs, accountType, ...(str(f, "email") ? { email: str(f, "email") } : {}) });
       const user = await api<Actor>("auth/login", "POST", { username: str(f, "username"), password: str(f, "password") });
       const home = user.roles.some(r => r.role === "ADMIN") ? "/admin" : user.roles.some(r => r.role === "TEACHER") ? "/teacher" : "/student";
-      // Course sign-ups begin in the workspace. Explicit class invitations and assignment links keep their destination.
-      window.location.assign((register && origin ? null : intended) ?? home);
+      window.location.assign(afterSigningIn(home, intended, register));
     }}>
       {register && <Field name="displayName" label={t("Имя и фамилия", "Full name")} />}
       {recovery ? <Field name="token" label={t("Код от администратора", "Administrator recovery code")} /> : <label>{t("Логин", "Login")}<Input aria-label={t("Логин", "Login")} name="username" autoComplete="username" required pattern="[a-zA-Z0-9_.\-]{3,64}" /><span className="muted">{t("От 3 символов: латинские буквы, цифры, точка, дефис.", "3 or more characters: letters, numbers, dots or hyphens.")}</span></label>}

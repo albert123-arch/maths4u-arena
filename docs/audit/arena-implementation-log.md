@@ -16,4 +16,14 @@ Checked 140 packages, 699 lessons, 8,825 interactive checkpoints and 24,744 bank
 
 Corrected incomplete or repeated worked examples in IGCSE recurring decimals, Additional Mathematics counting and series and Further Pure 2 hyperbolic graphs. Each edited example was checked on the isolated preview, including 390 and 1280 px and the corresponding A4 routes.
 
-Commit subject: `Repair incomplete and repeated worked examples`. Next stage: auth handoff and practice-state recovery.
+Commit: `2ae5d8cf`, `Repair incomplete and repeated worked examples`.
+
+## Stage 3 · Retain practice and account destinations
+
+Kept local return destinations on the account menu, signup and login forms, course sign-in and direct question practice and bookmark links. Protected routes keep their query and fragment. Plain course signups still take the learner to their dashboard once courses are chosen.
+
+Notes, multiple choice, short answers and written practice now preserve `view=legacy`, filters and fragment. Changing modes clears pagination and the prior mode's pinned review task. The selected mode follows Back, Forward and reload. The chapter state follows navigation on older course routes too.
+
+Six targeted unit tests passed. At 390 and 1280 px, the local browser verified mode switching, Back, Forward, reload and the auth destination. Mocked login and signup responses exercised the form submission return without writing test accounts. The local preview retained the original lesson and practice IDs.
+
+Commit subject: `Preserve learning routes through sign-in and practice`. Next stage: reading and lesson progression.

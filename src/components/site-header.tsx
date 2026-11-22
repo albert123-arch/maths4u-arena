@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { Actor } from "@/lib/security";
 import type { Locale } from "@/lib/locale";
-import { authHref, courseContext } from "@/lib/auth-navigation";
+import { authHref, authReturnAt } from "@/lib/auth-navigation";
 import { api, useLocale, useResource } from "./ui";
 import { Button, Input } from "./controls";
 import { ThemePicker } from "./theme-picker";
@@ -16,6 +16,8 @@ import type { ViewLens } from "@/lib/request-view";
 export function SiteHeader({ actor, path, hidden, publicPage, languagePair, accountLanguage, changeLanguage, viewChanged }: { actor: Actor | null; path: string; hidden: boolean; publicPage: boolean; languagePair?: LanguagePair; accountLanguage: Locale; changeLanguage: (lang: Locale) => void; viewChanged: (lens: ViewLens | null) => void }) {
   const lens = useView();
   const { lang, t: translate } = useLocale(), [open, setOpen] = useState(false);
+  const [guestDestination, setGuestDestination] = useState<string | null>(null);
+  const authReturn = guestDestination ?? (publicPage && path !== "/" ? languagePair?.[lang] ?? path : null);
   const root = useRef<HTMLElement>(null), toggle = useRef<HTMLButtonElement>(null), account = useRef<HTMLDetailsElement>(null);
   const admin = actor?.roles.some(r => r.role === "ADMIN"), teacher = admin || actor?.roles.some(r => r.role === "TEACHER");
   const student = !!actor && !teacher;
@@ -61,10 +63,14 @@ export function SiteHeader({ actor, path, hidden, publicPage, languagePair, acco
       {(student || staff) && <Link className="student-mobile-search" href="/search" onClick={close}>Search</Link>}
       {languages("mobile-locale")}
     </nav>
-    <div className="account">{(student || staff) && <Link className="student-header-search" href="/search" aria-label="Search"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></Link>}{languages("desktop-locale")}<details className="discovery-account" ref={account} onToggle={e => { if (e.currentTarget.open) setOpen(false); }} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) e.currentTarget.open = false; }}>
+    <div className="account">{(student || staff) && <Link className="student-header-search" href="/search" aria-label="Search"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></Link>}{languages("desktop-locale")}<details className="discovery-account" ref={account} onToggle={e => {
+      if (!e.currentTarget.open) return;
+      setOpen(false);
+      if (!actor) setGuestDestination(authReturnAt(window.location));
+    }} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) e.currentTarget.open = false; }}>
       <summary aria-label={t("Меню аккаунта", "Account menu")}>{student || staff ? <span className="student-avatar" aria-hidden="true">{initials}</span> : <><svg className="account-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="12" cy="8" r="3.5"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span className="header-account-name">{actor ? actor.displayName.split(" ")[0] : t("Аккаунт", "Account")}</span><span className="header-account-chevron" aria-hidden="true">⌄</span></>}</summary>
       <div className="discovery-account-links" onClick={e => { if ((e.target as HTMLElement).closest("a")) close(); }}>
-        {actor ? <><Link href="/">{t("Моё обучение", "My learning")}</Link><Link href={teacher ? "/teacher" : "/student"}>{t("Мой кабинет", "My dashboard")}</Link><Link href="/student/progress">{t("Мой прогресс", "My progress")}</Link><Link href="/bookmarks">{t("Закладки", "Bookmarks")}</Link><Link href="/access">{t("Мой доступ", "My access")}</Link>{admin && <Link href="/admin">{t("Управление", "Admin")}</Link>}<Button variant="text" onClick={async () => { await api("auth/logout", "POST"); window.location.assign("/login"); }}>{t("Выйти", "Sign out")}</Button></> : <><Link href="/login">{t("Войти", "Sign in")}</Link><Link href={authHref('register', courseContext(path) ? path : null)}>{t("Создать аккаунт", "Create an account")}</Link></>}
+        {actor ? <><Link href="/">{t("Моё обучение", "My learning")}</Link><Link href={teacher ? "/teacher" : "/student"}>{t("Мой кабинет", "My dashboard")}</Link><Link href="/student/progress">{t("Мой прогресс", "My progress")}</Link><Link href="/bookmarks">{t("Закладки", "Bookmarks")}</Link><Link href="/access">{t("Мой доступ", "My access")}</Link>{admin && <Link href="/admin">{t("Управление", "Admin")}</Link>}<Button variant="text" onClick={async () => { await api("auth/logout", "POST"); window.location.assign("/login"); }}>{t("Выйти", "Sign out")}</Button></> : <><Link href={authHref('login', authReturn)}>{t("Войти", "Sign in")}</Link><Link href={authHref('register', authReturn)}>{t("Создать аккаунт", "Create an account")}</Link></>}
         <Link href="/olympiads">{t("Олимпиады и соревнования", "Olympiads & competitions")}</Link>
         {student && <><Link href="/courses" onClick={close}>Browse all courses</Link><Link href="/library" onClick={close}>Question bank</Link></>}
         {(actor || !publicPage) && !student && !staff && <fieldset className="account-language" disabled={!!lens}><legend>{t("Язык личного кабинета", "Dashboard language")}</legend>{(["en", "ru"] as const).map(value => <label key={value}><Input type="radio" name="account-language" value={value} checked={accountLanguage === value} onChange={() => changeLanguage(value)} /><span>{value === "en" ? "English" : "Русский"}</span></label>)}</fieldset>}
