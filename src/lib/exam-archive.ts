@@ -5,6 +5,7 @@ import { ensure } from "./errors";
 import {
   type ExamArchiveAccess, type ExamArchiveSyllabus, examArchiveId, examArchivePreferences, logExamArchiveAccess,
 } from "./exam-archive-access";
+import { archiveAuthoredTopicTitles, archiveLegacyLessonIds } from "./exam-archive-lesson-links";
 import { examArchiveOriginals } from "./exam-archive-originals";
 
 export { hasExamArchiveAccess, requireExamArchiveAccess } from "./exam-archive-access";
@@ -26,6 +27,11 @@ const questionSelect = {
   markSchemeAllowed: true, assetsAllowed: true,
 } satisfies Prisma.ExamArchiveQuestionSelect;
 export type ExamArchiveQuestionMetadata = Prisma.ExamArchiveQuestionGetPayload<{ select: typeof questionSelect }>;
+const listedQuestionSelect = {
+  ...questionSelect, internalContent: { select: { questionId: true } },
+} satisfies Prisma.ExamArchiveQuestionSelect;
+type ListedQuestion = Prisma.ExamArchiveQuestionGetPayload<{ select: typeof listedQuestionSelect }>;
+
 
 export function archiveContentRights(access: Pick<ExamArchiveAccess, "admin" | "syllabuses">, question: ExamArchiveQuestionMetadata) {
   if (!(access.syllabuses as readonly string[]).includes(question.syllabus) || !question.taskVersionId ||
@@ -73,8 +79,13 @@ function courseSyllabus(slug: string) {
   return /^maths4u-(9709|9231|0606|0580)(?:-|$)/.exec(slug)?.[1] as ExamArchiveSyllabus | undefined;
 }
 
-async function archiveTopics(access: ExamArchiveAccess) {
-  const [legacy, courses] = await Promise.all([
+function linkArchiveLesson(topic: ListedTopic): ListedTopic {
+  const lessonId = topic.lessonId ?? archiveLegacyLessonIds[topic.id];
+  return lessonId ? { ...topic, lessonId } : topic;
+}
+
+async function archiveTopics(access: ExamArchiveAccess, includeLinked = false) {
+  const [imported, courses] = await Promise.all([
     db().examArchiveTopic.findMany({ where: { syllabus: { in: access.syllabuses } }, select: topicSelect, orderBy: [
       { courseKey: "asc" }, { chapterOrder: "asc" }, { position: "asc" },
     ] }),
@@ -96,9 +107,14 @@ async function archiveTopics(access: ExamArchiveAccess) {
       },
     }),
   ]);
+  const legacy = imported.map(linkArchiveLesson);
   const courseRows = new Map(legacy.flatMap(topic => topic.courseSlug ? [[topic.courseSlug, topic] as const] : []));
   const chapterRows = new Map(legacy.flatMap(topic => topic.courseSlug ? [[topic.courseSlug + ":" + normalize(topic.chapterTitle), topic] as const] : []));
-  const linkedLessons = new Set(legacy.flatMap(topic => topic.lessonId ? [topic.lessonId] : []));
+  const linkedTopics = new Map<string, string | null>();
+  for (const topic of legacy) {
+    if (topic.lessonId) linkedTopics.set(topic.lessonId, linkedTopics.has(topic.lessonId) ? null : topic.id);
+  }
+  const topicAliases: Record<string, string> = {};
   const authored = courses.flatMap(course => {
     const syllabus = courseSyllabus(course.slug);
     if (!syllabus || !access.syllabuses.includes(syllabus)) return [];
@@ -107,20 +123,30 @@ async function archiveTopics(access: ExamArchiveAccess) {
     return course.topics.flatMap(chapter => {
       const chapterTitle = chapter.texts[0]?.title ?? chapter.slug;
       const olderChapter = chapterRows.get(course.slug + ":" + normalize(chapterTitle));
-      return chapter.lessons.filter(lesson => !linkedLessons.has(lesson.id)).map(lesson => ({
-        id: "arena_" + lesson.id, syllabus, courseKey: olderCourse?.courseKey ?? course.slug, courseTitle,
-        chapterKey: olderChapter?.chapterKey ?? chapter.slug, chapterTitle: olderChapter?.chapterTitle ?? chapterTitle,
-        chapterOrder: olderChapter?.chapterOrder ?? chapter.position, title: lesson.versions[0]?.texts[0]?.title ?? chapterTitle,
-        position: lesson.position, courseSlug: course.slug, lessonId: lesson.id,
-      } satisfies ListedTopic));
+      return chapter.lessons.flatMap(lesson => {
+        const id = "arena_" + lesson.id;
+        const linkedTopicId = linkedTopics.get(lesson.id);
+        if (linkedTopicId && !includeLinked) {
+          topicAliases[id] = linkedTopicId;
+          return [];
+        }
+        return [{
+          id, syllabus, courseKey: olderCourse?.courseKey ?? course.slug, courseTitle,
+          chapterKey: olderChapter?.chapterKey ?? chapter.slug, chapterTitle: olderChapter?.chapterTitle ?? chapterTitle,
+          chapterOrder: olderChapter?.chapterOrder ?? chapter.position,
+          title: archiveAuthoredTopicTitles[lesson.id] ?? lesson.versions[0]?.texts[0]?.title ?? chapterTitle,
+          position: lesson.position, courseSlug: course.slug, lessonId: lesson.id,
+        } satisfies ListedTopic];
+      });
     });
   });
-  return [...legacy, ...authored].sort((left, right) => paperOrder.compare(left.courseKey, right.courseKey) ||
+  const topics = [...legacy, ...authored].sort((left, right) => paperOrder.compare(left.courseKey, right.courseKey) ||
     left.chapterOrder - right.chapterOrder || left.position - right.position || paperOrder.compare(left.title, right.title));
+  return { topics, topicAliases };
 }
 
 export async function examArchiveOverview(access: ExamArchiveAccess) {
-  const [preferences, courses, topics, papers] = await Promise.all([
+  const [preferences, courses, { topics, topicAliases }, papers] = await Promise.all([
     examArchivePreferences(access),
     db().courseFollow.findMany({ where: { userId: access.actor.id }, select: { course: { select: { slug: true } } } }),
     archiveTopics(access),
@@ -141,10 +167,12 @@ export async function examArchiveOverview(access: ExamArchiveAccess) {
     followedCourseSlugs: courses.map(row => row.course.slug),
     preferences: {
       ...preferences,
-      topicKey: topics.some(topic => topic.id === preferences.topicKey) ? preferences.topicKey : null,
+      topicKey: topics.some(topic => topic.id === preferences.topicKey) ? preferences.topicKey
+        : preferences.topicKey && Object.hasOwn(topicAliases, preferences.topicKey) ? topicAliases[preferences.topicKey] : null,
       paperId: papers.some(paper => paper.id === preferences.paperId) ? preferences.paperId : null,
     },
     topics,
+    topicAliases,
     papers: papers.flatMap(paper => {
       const questions = paper.questions.filter(row => row.question.syllabus === paper.syllabus);
       return questions.length ? [toPaperSummary(paper, questions)] : [];
@@ -156,10 +184,10 @@ function referenceFor(paper: Pick<ExamPaper, "syllabus" | "session" | "year" | "
   return paper.syllabus + " · " + paper.session + " " + paper.year + " · Paper " + paper.paperCode + " · Question " + number;
 }
 
-function questionSummary(access: ExamArchiveAccess, question: ExamArchiveQuestionMetadata, paper?: ExamPaper, number?: string) {
+function questionSummary(access: ExamArchiveAccess, question: ListedQuestion, paper?: ExamPaper, number?: string) {
   return {
     id: question.id, marks: question.marks, questionType: question.questionType, difficulty: question.difficulty,
-    number: number ?? "", hasContent: archiveContentRights(access, question).statement,
+    number: number ?? "", hasContent: !!question.internalContent || archiveContentRights(access, question).statement,
     sourceReference: paper && number ? referenceFor(paper, number) : null,
   };
 }
@@ -168,7 +196,7 @@ export async function examArchivePaper(access: ExamArchiveAccess, rawId: string)
   const id = examArchiveId(rawId);
   const paper = await db().examArchivePaper.findFirst({
     where: { id, syllabus: { in: access.syllabuses } },
-    select: { ...paperSelect, questions: { select: { number: true, question: { select: questionSelect } } } },
+    select: { ...paperSelect, questions: { select: { number: true, question: { select: listedQuestionSelect } } } },
   });
   ensure(paper, 404, "NOT_FOUND");
   const visible = paper.questions
@@ -197,13 +225,32 @@ const archiveTopicFilters = z.object({
   originalPage: filterInteger(1, 10000),
 }).strict();
 
+async function authoredExamQuestions(topic: ListedTopic): Promise<Prisma.ExamArchiveQuestionWhereInput[]> {
+  const { syllabus, courseSlug, lessonId } = topic;
+  if (!courseSlug || !lessonId) return [];
+  const linkedTopics = await db().examArchiveTopic.findMany({ where: { syllabus, courseSlug, OR: [{ lessonId }, { lessonId: null }] }, select: topicSelect });
+  const linkedIds = linkedTopics.filter(row => linkArchiveLesson(row).lessonId === lessonId).map(row => row.id);
+  const matching: Prisma.ExamArchiveQuestionWhereInput[] = [];
+  if (linkedIds.length) matching.push({ topics: { some: { topicId: { in: linkedIds } } } });
+  if (syllabus === "0606" || syllabus === "9231") {
+    matching.push({ taskVersion: { task: { archivePlacements: { some: {
+      targetLessonId: lessonId, course: { slug: courseSlug }, method: { in: ["PROVENANCE", "APPROVED_MAP"] },
+    } } } } });
+  }
+  return matching;
+}
+
 export async function examArchiveTopic(access: ExamArchiveAccess, rawId: string, input: unknown = {}) {
   const id = examArchiveId(rawId);
   const filters = archiveTopicFilters.parse(input);
   ensure(filters.minMarks === undefined || filters.maxMarks === undefined || filters.minMarks <= filters.maxMarks, 400, "INVALID_MARKS_RANGE");
-  let topic = await db().examArchiveTopic.findFirst({ where: { id, syllabus: { in: access.syllabuses } }, select: topicSelect });
-  if (!topic && id.startsWith("arena_")) topic = (await archiveTopics(access)).find(row => row.id === id) ?? null;
+  const imported = await db().examArchiveTopic.findFirst({ where: { id, syllabus: { in: access.syllabuses } }, select: topicSelect });
+  const topic = imported ? linkArchiveLesson(imported) : id.startsWith("arena_")
+    ? (await archiveTopics(access, true)).topics.find(row => row.id === id) : undefined;
   ensure(topic, 404, "NOT_FOUND");
+  const topicQuestions: Prisma.ExamArchiveQuestionWhereInput = imported
+    ? { topics: { some: { topicId: id } } }
+    : { OR: await authoredExamQuestions(topic) };
   const pageSize = 30;
   const page = filters.page ?? 1;
   const paperFilter: Prisma.ExamArchivePaperWhereInput = {
@@ -213,7 +260,7 @@ export async function examArchiveTopic(access: ExamArchiveAccess, rawId: string,
     session: filters.session,
   };
   const where: Prisma.ExamArchiveQuestionWhereInput = {
-    syllabus: topic.syllabus, topics: { some: { topicId: id } }, papers: { some: { paper: paperFilter } },
+    syllabus: topic.syllabus, ...topicQuestions, papers: { some: { paper: paperFilter } },
     difficulty: filters.difficulty, questionType: filters.type,
     ...(filters.minMarks !== undefined || filters.maxMarks !== undefined
       ? { marks: { gte: filters.minMarks, lte: filters.maxMarks } } : {}),
@@ -222,7 +269,7 @@ export async function examArchiveTopic(access: ExamArchiveAccess, rawId: string,
     db().examArchiveQuestion.count({ where }),
     db().examArchiveQuestion.findMany({
       where, select: {
-        ...questionSelect,
+        ...listedQuestionSelect,
         papers: { where: { paper: paperFilter }, select: { number: true, paper: { select: paperSelect } }, orderBy: { paper: { year: "desc" } }, take: 1 },
       }, orderBy: { id: "asc" }, skip: (page - 1) * pageSize, take: pageSize,
     }),
@@ -240,10 +287,10 @@ export async function lookupExamArchiveQuestion(access: ExamArchiveAccess, rawId
   const question = await db().examArchiveQuestion.findFirst({
     where: { id, syllabus: { in: access.syllabuses } },
     select: {
-      ...questionSelect,
+      ...listedQuestionSelect,
       topics: { select: { topic: { select: { id: true, title: true, syllabus: true } } } },
       papers: { select: { number: true, paper: { select: paperSelect } }, orderBy: { paper: { year: "desc" } } },
-      sources: { select: { printedPart: true } },
+      sources: { select: { sourceKey: true, printedPart: true }, orderBy: { sourceKey: "asc" } },
     },
   });
   ensure(question, 404, "NOT_FOUND");

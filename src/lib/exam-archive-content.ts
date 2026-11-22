@@ -23,16 +23,51 @@ function archiveAssetLinks(questionId: string, assets: { id: string; caption: st
   }));
 }
 
-// Images are delivered by the archive route and bound to the approved version.
-// In particular, do not retain old /api/files or imported external references.
+// Source markup is rendered without fetching images or retaining arbitrary links.
 const archiveHtml = (text: string | null | undefined) => renderContent(text ?? "").replace(/<img\b[^>]*>/gi, "");
 const english = { locale: "en" } as const;
 const localeAsset = { OR: [{ locale: null }, { locale: "en" }] } satisfies Prisma.TaskAssetWhereInput;
 const publishedVersion = (id: string, syllabus: string): Prisma.TaskVersionWhereInput =>
   ({ id, syllabus: { equals: syllabus }, task: { archivedAt: null } });
 
+type LegacyLink = { href: string; caption: string };
+
+export function archiveLegacyAssetLinks(data: unknown, kind: "diagram" | "mark-scheme"): LegacyLink[] {
+  if (!Array.isArray(data)) return [];
+  const extensions = kind === "diagram" ? /\.(?:jpe?g|png|svg)$/i : /\.(?:jpe?g|png|svg|pdf)$/i;
+  const links = new Map<string, LegacyLink>();
+  for (const item of data) {
+    if (!item || typeof item.href !== "string") continue;
+    try {
+      const url = new URL(item.href);
+      if (url.origin !== "https://maths4u.sbs" || url.username || url.password || url.search || url.hash) continue;
+      const filename = decodeURIComponent(url.pathname);
+      const hasControl = [...filename].some(char => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127);
+      if (!/^\/uploads\/(?:exams|problems)\//.test(filename) || /[%\\]/.test(filename) || hasControl ||
+        filename.split("/").some(segment => segment === "." || segment === "..") || !extensions.test(filename)) continue;
+      if (links.has(url.href)) continue;
+      const caption = typeof item.caption === "string" ? item.caption.trim() : "";
+      links.set(url.href, { href: url.href, caption: caption || (kind === "diagram" ? "Diagram" : "Mark scheme") });
+    } catch { /* An invalid legacy URL is omitted. */ }
+  }
+  return [...links.values()];
+}
+
+function archiveLegacySourceLinks(sources: { sourceKey: string; printedPart: string | null }[]): LegacyLink[] {
+  return sources.flatMap(({ sourceKey, printedPart }) => {
+    const id = /^maths4u:problems:([1-9]\d*)$/.exec(sourceKey)?.[1];
+    if (!id) return [];
+    const caption = printedPart ? "Maths4U source · " + printedPart : "Maths4U source";
+    return [{ href: "https://maths4u.sbs/problems.php?id=" + id, caption }];
+  });
+}
+
 export async function examArchiveQuestion(access: ExamArchiveAccess, rawId: string) {
   const { question, rights, summary, topics, papers } = await lookupExamArchiveQuestion(access, rawId);
+  const internal = question.internalContent ? await db().examArchiveInternalContent.findUnique({
+    where: { questionId: question.id },
+    select: { statementHtml: true, solutionHtml: true, images: true, solutionImages: true, markSchemes: true },
+  }) : null;
   const roles = allowedAssetRoles(rights);
   const version = rights.statement && question.taskVersionId ? await db().taskVersion.findFirst({
     where: publishedVersion(question.taskVersionId, question.syllabus),
@@ -64,17 +99,22 @@ export async function examArchiveQuestion(access: ExamArchiveAccess, rawId: stri
       : partCount > 1 && index < 26 ? "(" + String.fromCharCode(97 + index) + ")" : "";
     return [{ label, marks: part.maxPoints, html, options }];
   }) ?? [];
-  const statementHtml = archiveHtml(text?.statement) || null;
+  const internalStatement = archiveHtml(internal?.statementHtml);
+  const statementHtml = internalStatement || archiveHtml(text?.statement) || null;
   const hasAsset = (role: ArchiveAssetRole) => !!version?.assets.some(asset => asset.role === role);
   const hasVerifiedMarkScheme = (value: { markSchemeStatus?: string; markSchemeText?: string | null } | undefined) =>
     value?.markSchemeStatus === "VERIFIED" && !!value.markSchemeText?.trim();
   await logExamArchiveAccess(access, "QUESTION_READ", question.id);
   return {
-    ...summary, hasContent: !!(statementHtml || parts.length), topics, papers, statementHtml, parts,
+    ...summary, hasContent: !!(statementHtml || parts.length), topics, papers, statementHtml, parts: internalStatement ? [] : parts,
     assets: archiveAssetLinks(question.id, (version?.assets ?? []).filter(asset => asset.role === "STATEMENT")),
+    legacyImages: archiveLegacyAssetLinks(internal?.images, "diagram"),
+    legacyMarkSchemes: archiveLegacyAssetLinks(internal?.markSchemes, "mark-scheme"),
+    sourceLinks: internal ? archiveLegacySourceLinks(question.sources) : [],
     teacherNotesHtml: access.admin ? archiveHtml(text?.teacherNote) || null : null,
     support: {
-      solution: rights.solution && (!!text?.solution?.trim() || hasAsset("SOLUTION")),
+      solution: !!internal?.solutionHtml?.trim() || archiveLegacyAssetLinks(internal?.solutionImages, "diagram").length > 0 ||
+        rights.solution && (!!text?.solution?.trim() || hasAsset("SOLUTION")),
       markScheme: rights.markScheme && (hasVerifiedMarkScheme(text) ||
         !!version?.parts.some(part => hasVerifiedMarkScheme(part.texts[0])) || hasAsset("MARK_SCHEME")),
     },
@@ -84,6 +124,17 @@ export async function examArchiveQuestion(access: ExamArchiveAccess, rawId: stri
 export async function examArchiveSupport(access: ExamArchiveAccess, rawId: string, kind: "solution" | "mark-scheme") {
   const { question, rights } = await lookupExamArchiveQuestion(access, rawId);
   const solution = kind === "solution";
+  if (solution && question.internalContent) {
+    const internal = await db().examArchiveInternalContent.findUnique({
+      where: { questionId: question.id }, select: { solutionHtml: true, solutionImages: true },
+    });
+    const html = archiveHtml(internal?.solutionHtml);
+    const assets = archiveLegacyAssetLinks(internal?.solutionImages, "diagram");
+    if (html || assets.length) {
+      await logExamArchiveAccess(access, "SOLUTION_READ", question.id);
+      return { html, assets };
+    }
+  }
   ensure(question.taskVersionId && (solution ? rights.solution : rights.markScheme), 404, "NOT_FOUND");
   const role = solution ? "SOLUTION" : "MARK_SCHEME";
   const version = await db().taskVersion.findFirst({

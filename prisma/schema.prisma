@@ -1266,8 +1266,20 @@ model ExamArchiveQuestion {
   papers            ExamArchivePaperQuestion[]
   topics            ExamArchiveQuestionTopic[]
   sources           ExamArchiveSource[]
+  internalContent   ExamArchiveInternalContent?
 
   @@index([syllabus])
+}
+
+/// Content imported into the dedicated Exam Archive only. Its visibility is controlled by archive grants.
+model ExamArchiveInternalContent {
+  questionId     String              @id
+  statementHtml  String              @db.LongText
+  solutionHtml   String?             @db.LongText
+  images         Json
+  solutionImages Json
+  markSchemes    Json
+  question       ExamArchiveQuestion @relation(fields: [questionId], references: [id], onDelete: Restrict)
 }
 
 model ExamArchivePaperQuestion {

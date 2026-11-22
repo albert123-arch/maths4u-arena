@@ -33,7 +33,7 @@ function ArchiveContents({ overview, revision, initialQuery }: { overview: Overv
       const parsed = readLocation(overview.preferences, window.location.search);
       return parsed.mode === "topicwise"
         ? { ...current, ...parsed, syllabus: current.syllabus, year: current.year, session: current.session, paperId: current.paperId }
-        : { ...current, ...parsed, course: current.course, chapter: current.chapter, topicKey: current.topicKey, filters: current.filters };
+        : { ...current, ...parsed, course: current.course, chapter: current.chapter, topicKey: current.topicKey, topicActivity: current.topicActivity, filters: current.filters };
     });
     window.addEventListener("popstate", restore);
     return () => window.removeEventListener("popstate", restore);
@@ -85,14 +85,16 @@ function courseGroups(topics: TopicNode[]) {
 }
 
 function Topicwise({ overview, view, navigate, revision }: Shared) {
-  const selected = overview.topics.find(topic => topic.id === view.topicKey);
+  const topicKey = view.topicKey && Object.hasOwn(overview.topicAliases, view.topicKey)
+    ? overview.topicAliases[view.topicKey] : view.topicKey;
+  const selected = overview.topics.find(topic => topic.id === topicKey);
   const courseKey = selected?.courseKey ?? view.course;
   const chapterKey = selected?.chapterKey ?? view.chapter;
   const followed = new Set(overview.followedCourseSlugs);
   const groups = courseGroups(overview.topics.filter(topic => view.showOtherCourses || !!(topic.courseSlug && followed.has(topic.courseSlug))));
   const group = courseGroups(overview.topics.filter(topic => topic.courseKey === courseKey))[0];
   const chapter = group?.chapters.find(items => items[0].chapterKey === chapterKey);
-  const reset = { topicKey: null, questionId: "", originalPage: 1, page: 1, filters: emptyFilters };
+  const reset = { topicKey: null, questionId: "", topicActivity: "overview" as const, originalPage: 1, page: 1, filters: emptyFilters };
   const openTopic = (topic: TopicNode) => ({ ...reset, course: topic.courseKey, chapter: topic.chapterKey, topicKey: topic.id });
 
   if (selected && chapter) return <>
@@ -161,10 +163,41 @@ function TopicDetail({ topic, overview, view, navigate, revision }: Shared & { t
   if (result?.error) return <Status error={result.error} />;
   if (!result?.value) return <Loading />;
   const { originalQuestions, questions, page, pageSize, total } = result.value;
+  const back = <ArchiveLink view={view} next={{ topicActivity: "overview", page: 1, originalPage: 1, filters: emptyFilters }}
+    navigate={navigate} className={styles.backLink}>← Topic activities</ArchiveLink>;
+  const lessonPath = originalQuestions.href;
+  const notes = originalQuestions.hasNotes && lessonPath;
+  if (view.topicActivity === "overview") return <div className={styles.topicActivities} data-notes={notes ? "" : undefined}>
+    {notes && <section className={"card " + styles.activityCard}>
+      <h3>Notes</h3>
+      <ButtonLink href={lessonPath + "#notes"} prefetch={false}>Open Notes</ButtonLink>
+    </section>}
+    <div className={styles.questionActivities}>
+      <section className={"card " + styles.activityCard}>
+        <div><h3>Practice Questions</h3><p>{countLabel(originalQuestions.total, "original question")}</p></div>
+        <ArchiveLink view={view} next={{ topicActivity: "practice", originalPage: 1 }} navigate={navigate}
+          className="ui-button ui-button--primary">Open Questions</ArchiveLink>
+      </section>
+      <section className={"card " + styles.activityCard}>
+        <div><h3>Exam-Style Problems</h3><p>{countLabel(total, "past-paper question")}</p></div>
+        <ArchiveLink view={view} next={{ topicActivity: "exam", page: 1, filters: emptyFilters }} navigate={navigate}
+          className="ui-button ui-button--primary">Open Problems</ArchiveLink>
+      </section>
+    </div>
+  </div>;
+  if (view.topicActivity === "exam") return <section className={styles.references}>
+    {back}
+    <h3>Exam-Style Problems</h3>
+    <TopicFilters key={JSON.stringify(view.filters)} view={view} papers={overview.papers.filter(paper => paper.syllabus === topic.syllabus)}
+      onApply={filters => navigate({ filters, page: 1 })} />
+    <QuestionRows questions={questions} view={view} navigate={navigate} withSource />
+    <Pagination page={page} pages={Math.ceil(total / pageSize)} onChange={value => navigate({ page: value })} />
+  </section>;
   return <>
+    {back}
     <div className={styles.toolbar}>
-      <h3>Original questions{originalQuestions.total ? <small>{originalQuestions.total}</small> : null}</h3>
-      {originalQuestions.hasNotes && originalQuestions.href && <ButtonLink href={originalQuestions.href + "#notes"} prefetch={false}>Open notes</ButtonLink>}
+      <h3>Practice Questions</h3>
+      {lessonPath && <ButtonLink href={lessonPath + "#practice"} prefetch={false}>Open interactive practice</ButtonLink>}
     </div>
     {originalQuestions.items.length ? <>
       <div className={styles.questions}>
@@ -175,13 +208,6 @@ function TopicDetail({ topic, overview, view, navigate, revision }: Shared & { t
       </div>
       <Pagination page={originalQuestions.page} pages={originalQuestions.pages} onChange={value => navigate({ originalPage: value })} />
     </> : <Empty>No original questions are linked to this topic.</Empty>}
-    <section className={styles.references}>
-      <h3>Exam references</h3>
-      <TopicFilters key={JSON.stringify(view.filters)} view={view} papers={overview.papers.filter(paper => paper.syllabus === topic.syllabus)}
-        onApply={filters => navigate({ filters, page: 1 })} />
-      <QuestionRows questions={questions} view={view} navigate={navigate} withSource />
-      <Pagination page={page} pages={Math.ceil(total / pageSize)} onChange={value => navigate({ page: value })} />
-    </section>
   </>;
 }
 
@@ -197,7 +223,7 @@ function TopicFilters({ view, papers, onApply }: { view: View; papers: PaperRow[
     onApply(filters);
   }
   return <details className={styles.filters} open={Object.values(view.filters).some(Boolean)}>
-    <summary>Filter exam references</summary>
+    <summary>Filter exam-style problems</summary>
     <form onSubmit={apply} onReset={() => onApply(emptyFilters)}>
       <label>Paper<Select name="paper" defaultValue={view.filters.paper}><option value="">Any paper</option>{codes.map(code => <option key={code}>{code}</option>)}</Select></label>
       <label>Year<Select name="year" defaultValue={view.filters.year}><option value="">Any year</option>{years.map(year => <option key={year}>{year}</option>)}</Select></label>

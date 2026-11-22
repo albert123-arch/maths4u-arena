@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { archiveContentRights, officialExamUrl, type ExamArchiveQuestionMetadata } from "../src/lib/exam-archive";
 import { examArchiveGrantScope, examArchiveHeaders, hasExamArchiveAccess } from "../src/lib/exam-archive-access";
-import { archiveImageMatchesType, examArchiveFileRange } from "../src/lib/exam-archive-content";
+import { archiveImageMatchesType, archiveLegacyAssetLinks, examArchiveFileRange } from "../src/lib/exam-archive-content";
 import { inRequestView } from "../src/lib/request-view";
 import type { Actor } from "../src/lib/security";
 
@@ -59,6 +59,27 @@ test("Archive references only link to the Cambridge domain and carry no-store he
   }
   assert.match(examArchiveHeaders["Cache-Control"], /private, no-store/);
   assert.match(examArchiveHeaders["X-Robots-Tag"], /noindex/);
+});
+
+test("Archive legacy resources only link to approved file paths on Maths4U", () => {
+  const image = { href: "https://maths4u.sbs/uploads/problems/question.png", caption: "Diagram for part (a)" };
+  const markScheme = { href: "https://maths4u.sbs/uploads/exams/example.pdf", caption: "Mark scheme" };
+  const rows = [
+    image, image, markScheme,
+    { href: "https://maths4u.sbs/uploads/exams/example.png?variant=1" },
+    { href: "https://maths4u.sbs/uploads/problems/example.png#diagram" },
+    { href: "https://maths4u.sbs/assets/example.svg" },
+    { href: "https://example.com/uploads/problems/example.png" },
+    { href: "https://username@maths4u.sbs/uploads/problems/example.png" },
+    { href: "https://maths4u.sbs:1234/uploads/problems/example.png" },
+    { href: "https://maths4u.sbs/uploads/problems/example.php" },
+    { href: "https://maths4u.sbs/uploads/problems/%2520example.png" },
+    { href: "/uploads/problems/example.png" },
+    null, { href: 1 },
+  ];
+  assert.deepEqual(archiveLegacyAssetLinks(rows, "diagram"), [image]);
+  assert.deepEqual(archiveLegacyAssetLinks(rows, "mark-scheme"), [image, markScheme]);
+  assert.deepEqual(archiveLegacyAssetLinks(null, "diagram"), []);
 });
 
 test("Archive images require a matching type and validated passive SVG", () => {

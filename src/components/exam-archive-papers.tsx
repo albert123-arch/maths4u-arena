@@ -103,12 +103,12 @@ export function QuestionPanel({ view, navigate, revision }: { view: View; naviga
   const question = result?.value;
   const source = question?.papers.find(paper => paper.id === view.paperId) ?? question?.papers[0];
   return <section className={styles.questionPanel}>
-    <ArchiveLink view={view} next={{ questionId: "" }} navigate={navigate} className={styles.backLink}>← {view.mode === "topicwise" ? "Topic" : "Questions"}</ArchiveLink>
+    <ArchiveLink view={view} next={{ questionId: "", ...(view.mode === "topicwise" && { topicActivity: "exam" }) }} navigate={navigate} className={styles.backLink}>← {view.mode === "topicwise" ? "Exam-Style Problems" : "Questions"}</ArchiveLink>
     {result?.error ? <Status error={result.error} /> : !question ? <Loading /> : <article className="card">
       <h3>Question {source?.number ?? question.number}</h3>
       {source && <p className={styles.meta}>{source.syllabus} · {sessionLabel(source.session)} {source.year} · Paper {source.paperCode}</p>}
       {question.statementHtml ? <MathContent html={question.statementHtml} /> : <p>This entry contains a paper reference. Open the corresponding question in your authorised source.</p>}
-      <ArchiveAssets assets={question.assets} />
+      <ArchiveAssets assets={[...question.assets, ...question.legacyImages]} />
       {question.parts.map((part, index) => <section key={part.label + index} className={styles.part}>
         <div className={styles.toolbar}><h4>{part.label}</h4>{part.marks !== null && <span className={styles.meta}>{countLabel(part.marks, "mark")}</span>}</div>
         <MathContent html={part.html} />
@@ -119,12 +119,23 @@ export function QuestionPanel({ view, navigate, revision }: { view: View; naviga
       {question.topics.length > 0 && <section className={styles.questionTopics}>
         <h4>Topics</h4>
         {question.topics.map(topic => <ArchiveLink key={topic.id} view={view}
-          next={{ mode: "topicwise", topicKey: topic.id, questionId: "", filters: emptyFilters, originalPage: 1, page: 1 }} navigate={navigate}
+          next={{ mode: "topicwise", topicKey: topic.id, questionId: "", topicActivity: "overview", filters: emptyFilters, originalPage: 1, page: 1 }} navigate={navigate}
           save={{ mode: "topicwise", topicKey: topic.id }}>{topic.title}</ArchiveLink>)}
       </section>}
       {question.support.solution && <SupportPanel questionId={view.questionId} kind="solution" revision={revision} />}
       {question.support.markScheme && <SupportPanel questionId={view.questionId} kind="mark-scheme" revision={revision} />}
+      {question.legacyMarkSchemes.length > 0 && <details className={styles.support}>
+        <summary>Mark scheme on Maths4U</summary>
+        <ul>{question.legacyMarkSchemes.map(scheme => <li key={scheme.href}>
+          <a href={scheme.href} rel="noreferrer" target="_blank">{scheme.caption || "Open mark scheme"} ↗</a>
+        </li>)}</ul>
+      </details>}
       {question.teacherNotesHtml && <details className={styles.support}><summary>Teacher notes</summary><MathContent html={question.teacherNotesHtml} /></details>}
+      {question.sourceLinks.length > 0 && <p className={styles.official}>
+        {question.sourceLinks.map((link, index) => <span key={link.href}>
+          {index > 0 && " · "}<a href={link.href} rel="noreferrer" target="_blank">{link.caption} ↗</a>
+        </span>)}
+      </p>}
       {source && <OfficialSource paper={source} />}
     </article>}
   </section>;
@@ -132,7 +143,7 @@ export function QuestionPanel({ view, navigate, revision }: { view: View; naviga
 
 function ArchiveAssets({ assets }: { assets: { href: string; caption: string }[] }) {
   return <>{assets.map(asset => <figure key={asset.href} className={styles.asset}>
-    <Image src={asset.href} alt={asset.caption} unoptimized width={1000} height={750} />
+    <Image src={asset.href} alt={asset.caption} unoptimized width={1000} height={750} referrerPolicy="no-referrer" />
     {asset.caption && <figcaption>{asset.caption}</figcaption>}
   </figure>)}</>;
 }

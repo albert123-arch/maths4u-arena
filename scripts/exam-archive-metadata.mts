@@ -12,7 +12,7 @@ export const archiveSyllabuses = {
 
 type Syllabus = keyof typeof archiveSyllabuses;
 
-const archiveCourses = [
+export const archiveCourses = [
   ["0580 IGCSE Mathematics (Extended)", "0580", "maths4u-0580"],
   ["0606 Additional Mathematics", "0606", "maths4u-0606"],
   ["9709 Pure Mathematics 1", "9709", "maths4u-9709-p1"],

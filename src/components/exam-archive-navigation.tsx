@@ -18,10 +18,11 @@ export type Preference = Overview["preferences"];
 export type Mode = Preference["mode"];
 export const filterKeys = ["paper", "year", "session", "difficulty", "minMarks", "maxMarks", "type"] as const;
 export type Filters = Record<(typeof filterKeys)[number], string>;
+export type TopicActivity = "overview" | "practice" | "exam";
 export type View = {
   mode: Mode; showOtherCourses: boolean; course: string; chapter: string; topicKey: string | null;
   syllabus: string | null; year: number | null; session: string | null; paperId: string | null;
-  questionId: string; originalPage: number; page: number; filters: Filters; manage: boolean;
+  questionId: string; topicActivity: TopicActivity; originalPage: number; page: number; filters: Filters; manage: boolean;
 };
 export type Navigate = (next: Partial<View>, save?: Partial<Preference>) => void;
 export type Shared = { overview: Overview; view: View; navigate: Navigate; revision: number };
@@ -62,6 +63,7 @@ const filterParameter = { paper: "filterPaper", year: "filterYear", session: "fi
 export function readLocation(preferences: Preference, query: string): View {
   const params = new URLSearchParams(query);
   const mode = params.get("mode");
+  const activity = params.get("activity");
   const restore = !params.has("mode") && !params.has("access");
   const filters = { ...emptyFilters };
   for (const key of filterKeys) filters[key] = params.get(filterParameter[key]) ?? "";
@@ -74,7 +76,8 @@ export function readLocation(preferences: Preference, query: string): View {
     year: /^\d{4}$/.test(params.get("year") ?? "") ? Number(params.get("year")) : restore ? preferences.year : null,
     session: params.get("session") ?? (restore ? preferences.session : null),
     paperId: params.get("paperId") ?? (restore ? preferences.paperId : null),
-    questionId: params.get("question") ?? "", originalPage: asPage(params.get("originalPage")),
+    questionId: params.get("question") ?? "",
+    topicActivity: activity === "practice" || activity === "exam" ? activity : "overview", originalPage: asPage(params.get("originalPage")),
     page: asPage(params.get("page")), filters, manage: params.get("access") === "1",
   };
 }
@@ -86,6 +89,7 @@ export function hrefFor(view: View) {
     if (view.course) params.set("course", view.course);
     if (view.chapter) params.set("chapter", view.chapter);
     if (view.topicKey) params.set("topic", view.topicKey);
+    if (view.topicActivity !== "overview") params.set("activity", view.topicActivity);
     if (view.page > 1) params.set("page", String(view.page));
     if (view.originalPage > 1) params.set("originalPage", String(view.originalPage));
     for (const key of filterKeys) if (view.filters[key]) params.set(filterParameter[key], view.filters[key]);
