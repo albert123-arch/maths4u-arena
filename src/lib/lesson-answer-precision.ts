@@ -1,9 +1,10 @@
 import { canRoundScalar, type ExactField } from "./exact-answer";
 import { additionalMathsInput, classroomAnswerKind, igcseNumberInput, isOrderedVectorField, type ClassroomAnswerKind } from "./igcse-number-input";
 import { hasStatedAnswerPrecision, permitsThreeSignificantFigures, s1FourDecimalPlaces, s1PracticeRounding, s1StudyRounding } from "./s1-answer-precision";
+import { requestedMixedNumber, type MixedNumberFormat } from "./mixed-number";
 
 export type LessonPrecision = "statistics-1" | "mechanics" | "further-statistics" | "igcse" | "lower-secondary" | "additional-maths";
-type AnswerPrecision = { classroom?: ClassroomAnswerKind; significantFigures?: 3; decimalPlaces?: 0 | 1 | 2 | 4; vectorComponents?: true };
+type AnswerPrecision = { classroom?: ClassroomAnswerKind; significantFigures?: 3; decimalPlaces?: 0 | 1 | 2 | 4; vectorComponents?: true; mixedNumber?: MixedNumberFormat };
 
 export function studyPrecisionPolicy(lessonId: string): LessonPrecision | undefined {
   if (s1StudyRounding(lessonId)) return "statistics-1";
@@ -55,6 +56,8 @@ export function lessonAnswerPrecision(policy: LessonPrecision | undefined, id: s
     const radians = /\brad(?:ian)?s?\b/i.test(field.label + " " + prompt);
     const classroom = policy === "additional-maths" && kind === "angle" && radians ? "number" : kind;
     const control = { classroom };
+    const mixedNumber = policy === "lower-secondary" && field.type === "number" ? requestedMixedNumber(prompt) : undefined;
+    if (mixedNumber) return { ...control, mixedNumber };
     if (field.schoolDecimalPlaces !== undefined) return { ...control, decimalPlaces: field.schoolDecimalPlaces };
     if (!canRoundScalar(field) || hasStatedAnswerPrecision(field.label, prompt)
       || /\b(?:in terms of|as a multiple of)\s*(?:\\\(\s*)?(?:\\pi\b|π)/i.test(field.label + " " + prompt)) return control;

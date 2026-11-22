@@ -11,6 +11,7 @@ import { answerFormat } from "@/lib/square-presentation";
 import type { SquareExample, SquareLesson } from "@/lib/square-model";
 import type { StudyBlock, StudyCheck, StudyCheckpoint, StudyCheckResult, StudyLesson, StudySection } from "@/lib/study-lesson-model";
 import { checkpointAnchor, type StudySessionState } from "./study-checkpoint-progress";
+import { MixedNumberInput } from "./mixed-number-input";
 import styles from "./lesson-study.module.css";
 
 const levelNames = { core: "Core", further: "Further applications", extension: "Extension" };
@@ -235,7 +236,7 @@ function YourTurn({ check, lessonId, onCheckpoint, session, supplementary = fals
   const [failed, setFailed] = useState(false);
   const preview = lens?.mode === "USER";
   const { fields } = check;
-  const simple = fields.length === 1 && fields[0].type !== "choice";
+  const simple = fields.length === 1 && fields[0].type !== "choice" && !fields[0].mixedNumber;
   const complete = fields.every(field => answers[field.key]?.trim());
   const actions = <>
     <Button variant="primary" disabled={busy || preview || session === "loading" || !complete} type="submit">{busy ? "Checking…" : session === "loading" ? "Preparing check…" : "Check"}</Button>
@@ -288,6 +289,12 @@ function YourTurn({ check, lessonId, onCheckpoint, session, supplementary = fals
           <MathContent html={html} />
         </label>)}
       </fieldset>;
+      if (field.mixedNumber) return <div key={field.key}>
+        <MixedNumberInput label={field.label} value={answers[field.key] ?? ""} readOnly={busy || preview}
+          describedBy={fieldId + "-format " + id + "-result"} invalid={result ? result.status !== "correct" : undefined}
+          onChange={value => change(field.key, value)} />
+        <p className={styles.format} id={fieldId + "-format"}>{format.en}</p>
+      </div>;
       return <div key={field.key}>
         <label htmlFor={fieldId}>{label}</label>
         <div className={simple ? styles.answerRow : styles.studyInput}>

@@ -8,6 +8,7 @@ import { Button, ButtonLink, Input } from "./controls";
 import { ActorContext, api, ErrorNotice, Loading, MathContent, useLocale, useResource } from "./ui";
 import { Feedback } from "./feedback";
 import { QuestionSupport } from "./question-support";
+import { MixedNumberInput } from "./mixed-number-input";
 import { AdminArchiveLinks } from './admin-archive-links';
 import type { SupportContent } from "@/lib/question-support-model";
 import { LessonPresentations } from "./lesson-presentations";
@@ -218,7 +219,11 @@ function SquareQuestionForm({ q, enabled, onResult, topic, reportReady }: { repo
       <div className="square-answer-grid">{q.fields.map(f => {
         const field = result?.fields[f.key], format = answerFormat(f), invalid = field && !field.correct, feedbackId = "feedback-" + f.key, helpId = "format-" + f.key;
         return <div className="square-answer" key={f.key}>
-          {f.type === "choice" ? <fieldset aria-invalid={invalid || undefined} aria-describedby={helpId + " " + feedbackId}><legend>{f.label}</legend>{Object.entries(f.options ?? {}).map(([key, html]) => <label className="square-choice" data-state={answers[f.key] === key && field ? field.correct ? "correct" : "again" : undefined} key={key}><Input type="radio" name={f.key} value={key} aria-invalid={answers[f.key] === key && invalid || undefined} aria-describedby={helpId + " " + feedbackId} checked={answers[f.key] === key} onChange={() => change(f.key, key)} required disabled={!enabled || busy} /><MathContent html={html} />{answers[f.key] === key && field && <span className="square-choice-status" aria-label={field.correct ? t("Верно", "Correct") : t("Попробуйте ещё", "Look again")}>{field.correct ? "✓" : "↻"}</span>}</label>)}</fieldset> : <label>{f.label}<Input name={f.key} aria-invalid={invalid || undefined} aria-describedby={helpId + " " + feedbackId} value={answers[f.key] ?? ""} onChange={e => change(f.key, e.target.value)} maxLength={400} required autoComplete="off" spellCheck={false} disabled={!enabled || busy} placeholder={format.placeholder} /></label>}
+          {f.type === "choice" ? <fieldset aria-invalid={invalid || undefined} aria-describedby={helpId + " " + feedbackId}><legend>{f.label}</legend>{Object.entries(f.options ?? {}).map(([key, html]) => <label className="square-choice" data-state={answers[f.key] === key && field ? field.correct ? "correct" : "again" : undefined} key={key}><Input type="radio" name={f.key} value={key} aria-invalid={answers[f.key] === key && invalid || undefined} aria-describedby={helpId + " " + feedbackId} checked={answers[f.key] === key} onChange={() => change(f.key, key)} required disabled={!enabled || busy} /><MathContent html={html} />{answers[f.key] === key && field && <span className="square-choice-status" aria-label={field.correct ? t("Верно", "Correct") : t("Попробуйте ещё", "Look again")}>{field.correct ? "✓" : "↻"}</span>}</label>)}</fieldset> : f.mixedNumber ?
+            <MixedNumberInput label={f.label} labels={[t("Целая часть", "Whole number"), t("Числитель", "Numerator"), t("Знаменатель", "Denominator")]}
+              value={answers[f.key] ?? ""} describedBy={helpId + " " + feedbackId} invalid={invalid || undefined}
+              disabled={!enabled || busy} onChange={value => change(f.key, value)} /> :
+            <label>{f.label}<Input name={f.key} aria-invalid={invalid || undefined} aria-describedby={helpId + " " + feedbackId} value={answers[f.key] ?? ""} onChange={e => change(f.key, e.target.value)} maxLength={400} required autoComplete="off" spellCheck={false} disabled={!enabled || busy} placeholder={format.placeholder} /></label>}
           <div className="square-field-status"><p className="square-field-format" id={helpId}>{t(format.ru, format.en)}</p><div id={feedbackId}>{field && <Feedback compact kind={field.correct ? "correct" : field.formatError ? "format" : "again"}>{!field.correct && (field.formatError ? t("Используйте формат, указанный под этим полем.", "Use the answer format shown under this field.") : field.message)}</Feedback>}</div></div>
         </div>;
       })}</div>

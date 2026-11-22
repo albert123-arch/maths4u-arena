@@ -21,6 +21,7 @@ import { answerFormat, exactValueFeedback } from "./square-presentation";
 import { isCoordinateField, isIntervalField, rangeOutputs } from "./answer-notation";
 import { fourPlaceFeedback, needsFourPlaceFeedback } from "./s1-answer-precision";
 import { lessonAnswerInput, lessonAnswerPrecision, type LessonPrecision } from "./lesson-answer-precision";
+import { mixedNumberFeedback } from "./mixed-number";
 import { projectSolutionImages } from "./solution-image-display";
 
 type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
@@ -122,7 +123,7 @@ function matchesFeedbackPattern(f: ExactField, input: string) {
 }
 function retryMessage(q: SourceQuestion, f: ExactField, input: string, precision: ReturnType<typeof lessonAnswerPrecision>) {
   if (isRoundedNumberAnswer(f, input, q.precisionPolicy === "mechanics" || !!precision.classroom)) {
-    if (precision.significantFigures || precision.decimalPlaces !== undefined) return answerFormat({ ...f, ...precision }).en;
+    if (precision.mixedNumber || precision.significantFigures || precision.decimalPlaces !== undefined) return answerFormat({ ...f, ...precision }).en;
     return precision.classroom ? "Give the exact value. Use a fraction if the decimal does not terminate." : exactValueFeedback;
   }
   const multiplier = q.fields.find(x => /^(a|form_a)$/.test(x.key));
@@ -153,6 +154,11 @@ export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): 
   for (const f of q.fields) {
     const precision = lessonAnswerPrecision(q.precisionPolicy, q.id, f, q.prompt_html);
     const typed = answers[f.key];
+    const mixedFeedback = mixedNumberFeedback(precision.mixedNumber, typed);
+    if (mixedFeedback) {
+      fields[f.key] = { correct: false, message: mixedFeedback };
+      continue;
+    }
     const classroomNotation = q.id.startsWith("igcse-0580-") || q.id.startsWith("lower-0862-");
     const answer = lessonAnswerInput(q.precisionPolicy, f, typed, q.prompt_html, classroomNotation);
     try {

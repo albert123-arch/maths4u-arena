@@ -122,6 +122,7 @@ import { checkExact, checkExactInverseAngle, checkRoundedDecimalPlaces, checkThr
 import { answerFormat, exactValueFeedback } from "./square-presentation";
 import { fourPlaceFeedback, needsFourPlaceFeedback } from "./s1-answer-precision";
 import { furtherStatisticsRoundingTip, lessonAnswerInput, lessonAnswerPrecision, studyPrecisionPolicy, type LessonPrecision } from "./lesson-answer-precision";
+import { mixedNumberFeedback } from "./mixed-number";
 import type { StudyBlock, StudyCheck, StudyCheckResult, StudyExamPractice, StudyLesson, StudySection } from "./study-lesson-model";
 
 type Retry = { answer: string; feedback: string }[];
@@ -361,9 +362,12 @@ function studyAnswerMatches(field: StudyField, answer: string, prompt: string) {
   return field.inverseAngle ? checkExactInverseAngle(field, answer, field.inverseAngle) : checkExact(field, answer, prompt);
 }
 
-function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck, policy: LessonPrecision | undefined): StudyCheckResult | undefined {
+function fieldFeedback(field: StudyField, input: string, check: AuthoredCheck, policy: LessonPrecision | undefined): StudyCheckResult | undefined {
   const format = { ...field, ...lessonAnswerPrecision(policy, check.id, field, check.prompt) };
   const { significantFigures, decimalPlaces, classroom } = format;
+  const mixedFeedback = mixedNumberFeedback(format.mixedNumber, input);
+  if (mixedFeedback) return { status: "retry", feedback: renderContent("<p>" + mixedFeedback + "</p>") };
+  const answer = lessonAnswerInput(policy, field, input, check.prompt, policy === "igcse" || policy === "lower-secondary");
   const mechanics = policy === "mechanics";
   let precisionHint: string | undefined;
   try {
@@ -376,7 +380,7 @@ function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck, 
     }
     if (correct) return undefined;
     if (!field.inverseAngle && isRoundedNumberAnswer(field, answer, mechanics || !!classroom)) {
-      precisionHint = "<p>" + (significantFigures || decimalPlaces !== undefined ? answerFormat(format).en : classroom ? "Give the exact value. Use a fraction if the decimal does not terminate." : exactValueFeedback) + "</p>";
+      precisionHint = "<p>" + (format.mixedNumber || significantFigures || decimalPlaces !== undefined ? answerFormat(format).en : classroom ? "Give the exact value. Use a fraction if the decimal does not terminate." : exactValueFeedback) + "</p>";
     }
   } catch (error) {
     if (error instanceof AnswerVariableError) return {
@@ -415,10 +419,8 @@ export function gradeStudyCheck(lessonId: string, id: string, answers: string | 
     return { status: "format", feedback: "<p>Enter an answer in every field.</p>" };
   }
   const policy = studyPrecisionPolicy(lessonId);
-  const classroomNotation = policy === "igcse" || policy === "lower-secondary";
   for (const field of fields) {
-    const answer = lessonAnswerInput(policy, field, values[field.key], block.prompt, classroomNotation);
-    const result = fieldFeedback(field, answer, block, policy);
+    const result = fieldFeedback(field, values[field.key], block, policy);
     if (result) return fields.length === 1 ? result : {
       ...result, feedback: renderContent("<p><strong>" + field.label + "</strong></p>") + result.feedback,
     };

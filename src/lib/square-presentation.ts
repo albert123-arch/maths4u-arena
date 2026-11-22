@@ -23,6 +23,11 @@ export function questionTitle(q: Pick<SquareQuestion, "uid" | "title">) { return
 export const exactValueFeedback = "Give the exact value. Use a fraction or sqrt(...) when needed.";
 
 export function answerFormat(f: SquareField): { en: string; ru: string; placeholder: string } {
+  if (f.mixedNumber) return {
+    en: f.mixedNumber === "simplest" ? "Enter the mixed number with the fractional part in simplest form." : "Enter the whole number and the fractional part.",
+    ru: f.mixedNumber === "simplest" ? "Запишите смешанное число и сократите дробную часть." : "Введите целую и дробную части.",
+    placeholder: "",
+  };
   if (f.type === "number" && f.label === igcseClockLabel) return {
     en: "Use a 24-hour clock time, for example 08:30 or 0830.",
     ru: "Укажите время в 24-часовом формате, например 08:30 или 0830.",
