@@ -130,6 +130,7 @@ export function SquareLessonView({ lesson, sessionReady, studySession = "ready" 
       <div className="square-next row">{next ? <Button onClick={() => choose(next)}>{t("Следующий шаг →", "Next step →")}</Button> : <ButtonLink href="#challenge">{t("Экзаменационная практика →", "Try exam-style practice →")}</ButtonLink>}{current.variantIndex===undefined && lesson.questions.some(q => q.family === current.family && q.uid !== current.uid) && <Button onClick={() => choose(lesson.questions.filter(q => q.family === current.family && q.uid !== current.uid).sort((a, b) => (state.snapshot.seen[a.uid] ?? 0) - (state.snapshot.seen[b.uid] ?? 0))[0])}>{t("Новый вариант", "Try a fresh variant")}</Button>}<a href="#examples">{t("Повторить метод", "Review the method")}</a></div>
       {(!teacher || lens) && <SquareSaveNotice state={state} />}
       {study?.extraPractice && <ExtraStudyPractice checks={study.extraPractice} lessonId={topic.lessonId} onCheckpoint={checkpoints.record} session={studySession} />}
+      {!!study?.previousChecks?.length && <ExtraStudyPractice label="Previous checkpoints" checks={study.previousChecks} lessonId={topic.lessonId} onCheckpoint={checkpoints.record} session={studySession} />}
     </section>
     <section id="challenge" className="card">
       <h2>{t("Примените метод · авторские экзаменационные задачи", "Apply it · original exam-style problems")}</h2>

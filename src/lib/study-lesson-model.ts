@@ -54,6 +54,7 @@ export type StudyLesson = {
   related?: { title: string; href: string }[];
   examPractice?: StudyExamPractice;
   extraPractice?: StudyCheck[];
+  previousChecks?: StudyCheck[];
   sessions?: StudySession[];
 };
 

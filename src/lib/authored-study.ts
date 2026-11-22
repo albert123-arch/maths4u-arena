@@ -131,13 +131,14 @@ type AuthoredCheck = { kind: "check"; solution: string } & Omit<StudyCheck, "fie
   | { fields: StudyField[] }
 );
 type AuthoredBlock = Exclude<StudyBlock, { kind: "check" }> | AuthoredCheck;
-type AuthoredLesson = Omit<StudyLesson, "sections" | "extraPractice"> & {
+type AuthoredLesson = Omit<StudyLesson, "sections" | "extraPractice" | "previousChecks"> & {
   updatedOn: string;
   description: string;
   sections: (Omit<StudySection, "blocks" | "intro"> & { intro?: string; blocks: AuthoredBlock[] })[];
   examples: { title: string; question: string; solution: string[] }[];
   revision: { body: string; checks: string; examTip: string };
   extraPractice?: AuthoredCheck[];
+  previousChecks?: AuthoredCheck[];
 };
 
 const lessons = {
@@ -330,6 +331,7 @@ export function studyLayout(lessonId: string) {
     related: lesson.related,
     ...(lesson.sessions && { sessions: lesson.sessions }),
     ...(lesson.extraPractice && { extraPractice: lesson.extraPractice.map(check => publicCheck(check, policy, optionShift(check))) }),
+    ...(lesson.previousChecks && { previousChecks: lesson.previousChecks.map(check => publicCheck(check, policy)) }),
     ...(path && { examPractice: {
       needs: path.needs,
       starters: (path.starters ?? []).map(q => ({
@@ -404,7 +406,8 @@ export const studyCheckRequest = z.object({
 export function gradeStudyCheck(lessonId: string, id: string, answers: string | Record<string, string>): StudyCheckResult | undefined {
   const lesson = lessonById(lessonId);
   const block = lesson?.sections.flatMap(section => section.blocks).find(b => b.kind === "check" && b.id === id)
-    ?? lesson?.extraPractice?.find(b => b.id === id);
+    ?? lesson?.extraPractice?.find(b => b.id === id)
+    ?? lesson?.previousChecks?.find(b => b.id === id);
   if (block?.kind !== "check") return undefined;
   const fields = authoredFields(block);
   const values = typeof answers === "string" ? { [fields[0].key]: answers } : answers;

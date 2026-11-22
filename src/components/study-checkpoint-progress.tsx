@@ -63,7 +63,11 @@ export function useStudyCheckpoints(lessonId: string, enabled: boolean, session:
 }
 
 export function StudyCheckpointReview({ study, checks }: { study: StudyLesson; checks: Checkpoints }) {
-  const available: StudyCheck[] = [...study.sections.flatMap(section => section.blocks.filter(block => block.kind === "check")), ...(study.extraPractice ?? [])];
+  const available: StudyCheck[] = [
+    ...study.sections.flatMap(section => section.blocks.filter(block => block.kind === "check")),
+    ...(study.extraPractice ?? []),
+    ...(study.previousChecks ?? []),
+  ];
   const due = available.filter(check => { const result = checks[check.id]; return result && (!result.correct || result.helpUsed); });
   if (!due.length) return null;
   return <div className="stack" aria-label="Topic checkpoints ready for review">

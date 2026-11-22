@@ -175,6 +175,7 @@ export function TopicScreen({ id, initial }: { id: string; initial?: PublicPageD
     </section>}{manage && <LessonPresentations key={id} lessonId={id} />}{actor && !manage && <TopicStudyPanel lessonId={id} />}
       <section className="card topic-start" id="practice"><h2>{t("Перейти к практике", "Practise this topic")}</h2><div className="topic-shortcuts">{tabs.filter(tab => tab.count !== null && tab.count > 0).map(tab => <Button className="secondary" key={tab.id} onClick={() => choose(tab.id)}>{tab.title} · {tab.count} →</Button>)}</div>
         {authored?.study.extraPractice && <ExtraStudyPractice checks={authored.study.extraPractice} lessonId={id} />}
+        {!!authored?.study.previousChecks?.length && <ExtraStudyPractice label="Previous checkpoints" checks={authored.study.previousChecks} lessonId={id} />}
       </section>
       {authored?.study.examPractice?.starters.length ? <section className="card square-lesson" id="challenge">
         <h2>Exam-style practice</h2><StudyWrittenQuestions questions={authored.study.examPractice.starters} />

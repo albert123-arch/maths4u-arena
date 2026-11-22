@@ -207,9 +207,9 @@ function ExampleSteps({ example, id, tryFirst }: { example: SquareExample; id: s
   </article>;
 }
 
-export function ExtraStudyPractice({ checks, lessonId, onCheckpoint, session = "ready" }: { checks: StudyCheck[]; lessonId: string; onCheckpoint?: RecordCheckpoint; session?: StudySessionState }) {
+export function ExtraStudyPractice({ checks, lessonId, onCheckpoint, session = "ready", label = "Extra practice from this lesson" }: { checks: StudyCheck[]; lessonId: string; onCheckpoint?: RecordCheckpoint; session?: StudySessionState; label?: string }) {
   return <details className={styles.extraPractice}>
-    <summary>Extra practice from this lesson</summary>
+    <summary>{label}</summary>
     <div>{checks.map(check => <YourTurn key={check.id} check={check} lessonId={lessonId} onCheckpoint={onCheckpoint} session={session} supplementary />)}</div>
   </details>;
 }
