@@ -25,7 +25,7 @@ import { mixedNumberFeedback } from "./mixed-number";
 import { projectSolutionImages } from "./solution-image-display";
 
 type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
-export type SourceQuestion = { id: string; family_uid: string; title: string; collection: string; prompt_html: string; hint_html: string; solution_html: string; answer_html: string; marks: number; difficulty: number; variant_index?: number; fields: ExactField[]; precisionPolicy?: LessonPrecision; marking_criteria?: Criterion[]; parts?: { label: string; marking_criteria: Criterion[] }[]; provenance?: { type: string; past_paper_reference: unknown } };
+export type SourceQuestion = { id: string; family_uid: string; title: string; collection: string; prompt_html: string; hint_html: string; solution_html: string; answer_html: string; marks: number; difficulty: number; variant_index?: number; revisedBank?: boolean; fields: ExactField[]; precisionPolicy?: LessonPrecision; marking_criteria?: Criterion[]; parts?: { label: string; marking_criteria: Criterion[] }[]; provenance?: { type: string; past_paper_reference: unknown } };
 export function questionCriteria(q: SourceQuestion) { return q.marking_criteria ?? q.parts?.flatMap(p=>p.marking_criteria.map(c=>({...c,code:p.label + " · " + c.code}))) ?? []; }
 export const squareQuestions = pack.questions as SourceQuestion[];
 if (pack.version !== squareVersion || squareQuestions.length !== 30 || pack.source.is_official_cambridge_material !== false || squareQuestions.some(q => q.provenance && (q.provenance.type !== "original" || q.provenance.past_paper_reference))) throw Error("SQUARE_ORIGINAL_SOURCE_REQUIRED");
@@ -96,7 +96,8 @@ function practicePrompt(question: SourceQuestion) {
     : statement;
   const figure = lowerSecondaryFigures[question.id];
   const illustration = figure ? `<p><img src="${figure.src}" alt="${figure.alt.replaceAll("&", "&amp;").replaceAll('"', "&quot;")}" width="${figure.width}" height="${figure.height}"></p>` : "";
-  const figures = practiceFigures[question.id];
+  // A revised prompt carries its own figure. An older overlay can depict different values.
+  const figures = question.revisedBank ? undefined : practiceFigures[question.id];
   return renderContent(replacePracticeImages(prompt, figures?.promptImages) + illustration + (figures?.prompt ?? "")).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>');
 }
 
@@ -195,7 +196,7 @@ export function squareHelp(q: SourceQuestion, kind: SupportKind) {
     return renderContent(q.hint_html);
   }
   if (kind !== "solution") return "";
-  const figures = practiceFigures[q.id];
+  const figures = q.revisedBank ? undefined : practiceFigures[q.id];
   const solution = projectSolutionImages(q.solution_html, q.id).html;
   return renderContent(q.answer_html + replacePracticeImages(solution, figures?.solutionImages) + (figures?.solution ?? ""));
 }

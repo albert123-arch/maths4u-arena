@@ -86,9 +86,12 @@ import addmathsTrigonometry from "../../content/original/0606/trigonometry-v1.js
 import addmathsCounting from "../../content/original/0606/permutations-combinations-v1.json";
 import addmathsSeries from "../../content/original/0606/series-v1.json";
 import addmathsDifferentiation1 from "../../content/original/0606/differentiation-1-v1.json";
+import differentiation1Revision from "../../content/original/0606/differentiation-1-revision.json";
 import addmathsVectors from "../../content/original/0606/vectors-v1.json";
 import addmathsDifferentiation2 from "../../content/original/0606/differentiation-2-v1.json";
+import differentiation2Revision from "../../content/original/0606/differentiation-2-revision.json";
 import addmathsIntegration from "../../content/original/0606/integration-v1.json";
+import integrationRevision from "../../content/original/0606/integration-revision.json";
 import addmathsKinematics from "../../content/original/0606/kinematics-v1.json";
 import igcseFunctions from "../../content/original/0580/functions-v1.json";
 import igcseDiff from "../../content/original/0580/differentiation-v1.json";
@@ -176,6 +179,9 @@ const addmathsPackages = [
 const bankRevisions = new Map([
   reviseQuestionBank(addmathsLogarithms, logarithmsRevision),
   reviseQuestionBank(addmathsStraightLine, straightLineRevision),
+  reviseQuestionBank(addmathsDifferentiation1, differentiation1Revision),
+  reviseQuestionBank(addmathsDifferentiation2, differentiation2Revision),
+  reviseQuestionBank(addmathsIntegration, integrationRevision),
 ].map(revision => [revision.current.key, revision]));
 export function bankRevision(key: string) { return bankRevisions.get(key); }
 export function questionPackageVersion(p: ContentPackage, uid: string) {
@@ -240,9 +246,11 @@ export function packageTopic(key: string, version?: string): QuadraticTopic | un
 export function packageQuestions(key:string, version?: string) {
   const t=packageTopic(key,version);if(!t)return undefined;
   const p=contentPackage(t.packageKey!,t.version),l=p.lessons.find(l=>l.id===key)!;
+  const revisedQuestions = new Set(t.revisedQuestions);
   return p.questions.filter(q=>q.lesson===l.key).map(q=>{
     const precisionPolicy = practicePrecisionPolicy(p.key, q.collection);
     return {id:q.id,family_uid:q.family_uid,title:q.title,collection:q.collection,prompt_html:q.prompt_html,
+      ...(revisedQuestions.has(q.id) && { revisedBank: true }),
       answer_html:q.answer_html,solution_html:q.solution_html,hint_html:q.hint_html,marks:q.marks,difficulty:q.difficulty,fields:q.fields,parts:q.parts,
       ...(precisionPolicy && { precisionPolicy }),
       ...(q.variant_index!==undefined?{variant_index:q.variant_index}:{})};

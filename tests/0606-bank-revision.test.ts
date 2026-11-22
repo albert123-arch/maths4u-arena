@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { bankRevision } from "../src/lib/content-package-content";
+import { bankRevision, packageTopic } from "../src/lib/content-package-content";
 import { packageFingerprint, packageTask } from "../src/lib/content-packages";
 import { publicLearningTopic } from "../src/lib/public-learning-topic";
-import { gradeSquare, squareQuestion } from "../src/lib/square-content";
+import { gradeSquare, squareHelp, squarePublicLesson, squareQuestion } from "../src/lib/square-content";
 import { readSquareDevice } from "../src/lib/square-device-progress";
 
-const keys = ["0606-logarithms-exponentials", "0606-straight-line-graphs"];
+const keys = ["0606-logarithms-exponentials", "0606-straight-line-graphs", "0606-differentiation-1", "0606-differentiation-2", "0606-integration"];
 
 for (const key of keys) {
   test(`${key} keeps the previous published bank available until the approved revision is applied`, async () => {
@@ -57,3 +57,22 @@ for (const key of keys) {
     assert.deepEqual(readSquareDevice(JSON.stringify(read), topic), read);
   });
 }
+
+test("Integration uses edition-specific area figures in questions and solutions", () => {
+  const { previous, current } = bankRevision("0606-integration")!;
+  const lesson = current.lessons.find(row => row.key === "int-area-axis")!;
+  const exam = current.questions.find(q => q.lesson === lesson.key && q.collection === "exam")!;
+  const oldSolution = squareHelp(squareQuestion(exam.id, lesson.id, previous.version), "solution");
+  const newSolution = squareHelp(squareQuestion(exam.id, lesson.id, current.version), "solution");
+  assert.match(oldSolution, /integration\/practice-0606-int-area-axis/);
+  assert.doesNotMatch(oldSolution, /bank-v2/);
+  assert.match(newSolution, /integration\/bank-v2-0606-int-area-axis/);
+  assert.doesNotMatch(newSolution, /integration\/practice-0606-int-area-axis/);
+  assert.equal((newSolution.match(/<img\b/g) ?? []).length, 1);
+
+  const area = current.questions.find(q => q.lesson === lesson.key && q.fields[0]?.key === "area")!;
+  const prompt = (version: string) => squarePublicLesson(packageTopic(lesson.id, version)!).questions.find(q => q.uid === area.id)!.prompt;
+  assert.match(prompt(previous.version), /integration\/practice-0606-int-area-axis/);
+  assert.match(prompt(current.version), /integration\/bank-v2-0606-int-area-axis/);
+  assert.doesNotMatch(prompt(current.version), /integration\/practice-0606-int-area-axis/);
+});
