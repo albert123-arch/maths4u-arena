@@ -41,7 +41,16 @@ The package table excludes the separate cross-topic lesson and versioned Book 2 
 
 All five corrected lessons and their A4 routes rendered at 390 and 1280 px. All seven edited worked examples expanded and displayed cleanly. An independent calculation checked the new steps and values. Lesson and example positions, existing questions, grading keys, checkpoints and revision sheets were preserved. Commit `2ae5d8cf`.
 
-The follow-up wording scan confirmed two more incomplete prompts. The [9231 FP2 differentiation geometry lesson](https://arena.maths4u.sbs/courses/maths4u-9231-fp2/topics/fp2_differentiation_geometry) now asks for the tangent and derives `x = 1` from the vertical derivative vector through `(1, −2)`. In [9709 P1 sequences](https://arena.maths4u.sbs/courses/maths4u-9709-p1/topics/orig_series_trig_arithmetic), E04 now presents the three AP, GP and proof parts with their marks. The AP solution is `x = 6` and the GP solutions are `x = −2` and `x = 8`. The last part asks for the proof directly and keeps the same two marks and criteria. Exact source comparisons and both viewport checks passed. Commit subject: `Make tangent and sequence prompts self-contained`.
+The follow-up wording scan confirmed two more incomplete prompts. The 9231 FP2 geometry lesson now asks for the tangent and derives `x = 1` from the vertical derivative vector through `(1, −2)`. In the 9709 P1 sequences lesson, E04 now presents the three AP, GP and proof parts with their marks. The AP solution is `x = 6` and the GP solutions are `x = −2` and `x = 8`. The last part asks for the proof directly and keeps the same two marks and criteria. Exact source comparisons and both viewport checks passed in `9bc27e10`. [9231 FP2 differentiation geometry](https://arena.maths4u.sbs/courses/maths4u-9231-fp2/topics/fp2_differentiation_geometry) · [9709 P1 sequences](https://arena.maths4u.sbs/courses/maths4u-9709-p1/topics/orig_series_trig_arithmetic)
+
+## Book 2 · Advanced GCD Problems
+
+The separate public catalogue has one lesson and 20 original written questions with English and Russian text. The audit found no Cambridge or unknown-origin tasks in that lesson.
+
+- The proof for the sum of squares now rules out a second factor of two with a modulo-4 argument. The factorial example specifies positive integers because \(n=0\) gives a counterexample.
+- P009 now uses a direct integer identity, valid at \(n=-2\). P017 works modulo a common divisor, so the argument also covers \(x+y=0\). P006, P010, P015 and P016 make the required domains explicit. Statements, hints and solutions retain their original marks and intent.
+- Independent integer-model checks passed 12,258 assertions over all 20 problems and additional boundary cases. A guarded rehearsal appended one lesson version and six task versions. Before-and-after snapshots preserved all 21 original versions, four existing work-item references to old versions and two practice records. The correction script requires a current dry-run fingerprint and a loopback test database. An old fingerprint was refused and a fresh repeat did no writes.
+- All six English and Russian landing, course and lesson routes passed at 390 and 1280 px. The guest catalogue retained all 20 original one-mark manual questions in both locales. All 80 gated hint and solution responses rendered, and the Cambridge catalogue filter was rejected for guests.
 
 ## Manual review still required
 

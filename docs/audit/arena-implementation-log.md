@@ -62,4 +62,14 @@ Reconciled A01–A24 from the earlier ZIP with the current lessons and published
 
 The five groups and their links passed at 390 and 1280 px, and all 11 unique targets returned HTTP 200. All eight checked answers were accepted at each width with their new accessible labels.
 
-Commit subject: `Clarify probability answers and Further Statistics prerequisites`. Next stage: finish verification of the bilingual Book 2 corrections.
+Commit: `9be3ed8e`, `Clarify probability answers and Further Statistics prerequisites`.
+
+## Stage 8 · Correct and rehearse the Book 2 proofs
+
+Reviewed the full public Advanced GCD Problems set of 20 bilingual problems. Corrected a missing parity argument, zero-modulus arguments and implicit integer domains. A guarded dry run produced an exact plan for one lesson version and six task versions. Applying it on the isolated preview left earlier versions, four work references and two practice records intact. Re-running with the current fingerprint did not add versions.
+
+Two unit tests cover stale and duplicate text fragments, idempotency and boundary cases. Independent model checks passed 12,258 assertions. Browser checks passed for all six English and Russian public routes at 390 and 1280 px. All 80 gated hint and solution responses rendered. The final read-only comparison matched all 20 rehearsal tables after accounting for the six Book 2 task versions.
+
+Run `node --import tsx scripts/content/revise-book2-gcd.mts <isolated-env>` to obtain the local dry-run fingerprint. Repeat with `--apply=<fresh fingerprint>` to apply to that isolated test database. Production data requires a separate approved release.
+
+Commit subject: `Correct Book 2 GCD proofs with versioned bilingual revisions`.
