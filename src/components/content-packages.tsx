@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "./controls";
-import { CourseRelease20261122 } from "./course-release-20261122";
+import { ContentRevisions20261122 } from "./content-revisions-20261122";
 import { api, ErrorNotice, Loading, useResource, useLocale } from "./ui";
 import { SquareLessonView } from "./square-lesson";
 import type { SquareLesson } from "@/lib/square-model";
@@ -12,7 +12,7 @@ export function ContentPackages({selected}:{selected?:string}){
   const [preview,setPreview]=useState<Awaited<ReturnType<typeof planContentPackage>>|null>(null),[singleBusy,setBusy]=useState(false),[releaseBusy,setReleaseBusy]=useState(false),[error,setError]=useState<unknown>(null);
   const busy = singleBusy || releaseBusy;
   async function act(fn:()=>Promise<unknown>){setBusy(true);setError(null);try{await fn();r.refresh();}catch(e){setError(e);}finally{setBusy(false);}}
-  return <><h1>{t("Пакеты содержания","Content packages")}</h1><ErrorNotice error={r.error||error}/>{!selected&&r.data&&!r.error&&<CourseRelease20261122 registry={r.data} onBusy={setReleaseBusy} onRefresh={r.refresh} disabled={singleBusy}/>} {!r.data?<Loading/>:r.data.filter(p=>!selected||p.key===selected).map(p=><section className="card stack" key={p.key}>
+  return <><h1>{t("Пакеты содержания","Content packages")}</h1><ErrorNotice error={r.error||error}/>{!selected&&r.data&&!r.error&&<ContentRevisions20261122 registry={r.data} onBusy={setReleaseBusy} onRefresh={r.refresh} disabled={singleBusy}/>} {!r.data?<Loading/>:r.data.filter(p=>!selected||p.key===selected).map(p=><section className="card stack" key={p.key}>
     <div><h2>{p.title}</h2><p>{p.course} · {p.version}</p><span className="badge">{p.state==="PUBLISHED"?t("Опубликовано","Published"):p.state==="ARCHIVED"?t("Архив","Archived"):t("Не опубликовано","Unpublished")}</span></div>
     <p>{p.lessons.length} {t("урока","lessons")} · {p.exam} exam-style · {p.questions-p.exam} {t("коротких проверок","quick checks")}</p>
     <ol>{p.lessons.map(l=><li key={l.id}><Link href={"/admin/content-packages/"+p.key+"/preview/"+l.id}>{l.title} →</Link></li>)}</ol>

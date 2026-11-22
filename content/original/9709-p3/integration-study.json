@@ -1,6 +1,6 @@
 {
   "orig_9709_p3_int_standard": {
-    "updatedOn": "2026-11-21",
+    "updatedOn": "2026-11-22",
     "description": "Recognise the standard primitives, reverse a linear inside slope and evaluate exact definite integrals on the right interval.",
     "sections": [
       {
@@ -13,7 +13,14 @@
         "blocks": [
           {
             "kind": "key",
-            "html": "<p>If \\(F'=f\\) and \\(a\\ne0\\), then \\(\\int f(ax+b)\\,\\mathrm dx=\\frac1aF(ax+b)+C\\), where the expressions are defined. Differentiating the right-hand side produces the factor \\(a\\), which cancels \\(\\frac1a\\).</p>"
+            "html": "<p>If \\(F'=f\\) and \\(a\\ne0\\), then \\(\\int f(ax+b)\\,\\mathrm dx=\\frac1aF(ax+b)+C\\), where the expressions are defined. Differentiating the right-hand side produces the factor \\(a\\), which cancels \\(\\frac1a\\).</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_int_standard/primitive-slope.svg",
+              "alt": "Two exponential curves rise to the right. The upper curve is twice the height of the lower curve at the same input.",
+              "caption": "<p>The lower curve is \\(\\tfrac12\\mathrm e^{2x}\\). Its slope at the marked input equals the height of the upper curve \\(\\mathrm e^{2x}\\) there.</p>",
+              "width": 640,
+              "height": 330
+            }
           },
           {
             "kind": "text",
@@ -26,6 +33,11 @@
           {
             "kind": "example",
             "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -70,6 +82,11 @@
           {
             "kind": "example",
             "index": 1
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -188,6 +205,44 @@
             "solution": "<p>The first is \\(\\big[2\\tan(2x)\\big]_0^{\\frac{\\pi}{8}}=2\\).</p><p>The second is \\(\\left[\\frac32\\arctan\\left(\\frac x2\\right)\\right]_0^2=\\frac{3\\pi}{8}\\).</p>"
           }
         ]
+      },
+      {
+        "id": "checked-antiderivative",
+        "title": "How can I prove that the inner scale is right?",
+        "label": "Check by differentiating",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>The chain rule makes the candidate primitive testable.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Differentiate the proposed primitive. Check the returned denominator, its scale, and the sign against the original integrand.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>An inverse tangent primitive is for a sum of squares, while a tangent primitive comes from squared secant.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "orig-9709-p3-int-standard-more-1",
+            "title": "Match a sum of squares to inverse tangent",
+            "prompt": "<p>Find \\(a\\) if \\(\\int \\frac{5}{9 x^{2} + 4}\\,\\mathrm dx=a\\left(\\operatorname{atan}{\\left(\\frac{3 x}{2} \\right)}\\right)+C\\).</p>",
+            "fields": [
+              {
+                "key": "coefficient",
+                "label": "Coefficient a",
+                "expected": "5/6",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Factor the constant term in the denominator before matching inverse tangent.</p>",
+            "solution": "<p>Factor \\(4\\) out of the denominator to obtain the pattern \\(\\frac1{1+u^2}\\).</p><p>Use \\(u=\\frac{3 x}{2}\\). Taking the derivative of the inverse tangent introduces \\(\\frac{3}{2}\\).</p><p>Comparing with the proposed primitive gives \\(a=\\frac{5}{6}\\).</p>"
+          }
+        ]
       }
     ],
     "glossary": [
@@ -244,6 +299,33 @@
           "<p>For the second, \\(x^2+9=x^2+3^2\\). The primitive is \\(2\\arctan\\left(\\frac x3\\right)\\).</p>",
           "<p>The second integral is \\(2(\\arctan1-\\arctan0)=\\frac{\\pi}{2}\\).</p>"
         ]
+      },
+      {
+        "title": "Undo the slope of the exponent",
+        "question": "<p>Find \\(a\\) if \\(\\int 9 \\mathrm e^{3 - 2 x}\\,\\mathrm dx=a\\left(\\mathrm e^{3 - 2 x}\\right)+C\\).</p>",
+        "solution": [
+          "<p>The derivative of the exponent is \\(-2\\).</p>",
+          "<p>Differentiating \\(a\\mathrm e^{3 - 2 x}\\) introduces an extra factor \\(-2\\). Divide the original multiplier by it.</p>",
+          "<p>Comparing with the proposed primitive gives \\(a=- \\frac{9}{2}\\).</p>"
+        ]
+      },
+      {
+        "title": "Choose the logarithm for the correct domain",
+        "question": "<p>Find \\(a\\) if \\(\\int \\frac{7}{3 x + 2}\\,\\mathrm dx=a\\left(\\ln{\\left(- 3 x - 2 \\right)}\\right)+C\\). Use \\(x&lt;- \\frac{2}{3}\\).</p>",
+        "solution": [
+          "<p>The derivative of the denominator is \\(3\\). A logarithm of its absolute value differentiates to \\(\\frac{3}{3 x + 2}\\).</p>",
+          "<p>Use \\(\\ln(- 3 x - 2)\\) on the stated branch.</p>",
+          "<p>Comparing with the proposed primitive gives \\(a=\\frac{7}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Match a sum of squares to inverse tangent",
+        "question": "<p>Find \\(a\\) if \\(\\int \\frac{7}{4 x^{2} + 25}\\,\\mathrm dx=a\\left(\\operatorname{atan}{\\left(\\frac{2 x}{5} \\right)}\\right)+C\\).</p>",
+        "solution": [
+          "<p>Factor \\(25\\) out of the denominator to obtain the pattern \\(\\frac1{1+u^2}\\).</p>",
+          "<p>Use \\(u=\\frac{2 x}{5}\\). Taking the derivative of the inverse tangent introduces \\(\\frac{2}{5}\\).</p>",
+          "<p>Comparing with the proposed primitive gives \\(a=\\frac{7}{10}\\).</p>"
+        ]
       }
     ],
     "revision": {
@@ -256,10 +338,108 @@
         "title": "Trigonometric integrals and logarithmic derivatives",
         "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_int_trig_log"
       }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-standard-more-2",
+        "title": "Undo the slope of the exponent",
+        "prompt": "<p>Find \\(a\\) if \\(\\int 7 \\mathrm e^{5 x - 2}\\,\\mathrm dx=a\\left(\\mathrm e^{5 x - 2}\\right)+C\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient a",
+            "expected": "7/5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Reverse the chain rule by dividing by the inner derivative.</p>",
+        "solution": "<p>The derivative of the exponent is \\(5\\).</p><p>Differentiating \\(a\\mathrm e^{5 x - 2}\\) introduces an extra factor \\(5\\). Divide the original multiplier by it.</p><p>Comparing with the proposed primitive gives \\(a=\\frac{7}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-standard-more-3",
+        "title": "Choose the logarithm for the correct domain",
+        "prompt": "<p>Find \\(a\\) if \\(\\int \\frac{3}{4 x + 5}\\,\\mathrm dx=a\\left(\\ln{\\left(- 4 x - 5 \\right)}\\right)+C\\). Use \\(x&lt;- \\frac{5}{4}\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient a",
+            "expected": "3/4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Use the positive expression inside the logarithm on the given branch.</p>",
+        "solution": "<p>The derivative of the denominator is \\(4\\). A logarithm of its absolute value differentiates to \\(\\frac{4}{4 x + 5}\\).</p><p>Use \\(\\ln(- 4 x - 5)\\) on the stated branch.</p><p>Comparing with the proposed primitive gives \\(a=\\frac{3}{4}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-standard-more-4",
+        "title": "Retain the inner angle and check the sign",
+        "prompt": "<p>Find \\(a\\) if \\(\\int 3 \\sin{\\left(7 x + \\frac{\\pi}{6} \\right)}\\,\\mathrm dx=a\\left(\\cos{\\left(7 x + \\frac{\\pi}{6} \\right)}\\right)+C\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient a",
+            "expected": "-3/7",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Differentiate the proposed cosine or sine primitive to confirm the sign and scale.</p>",
+        "solution": "<p>The inner derivative equals \\(7\\). Use the derivative of \\(\\cos{\\left(7 x + \\frac{\\pi}{6} \\right)}\\) to see which sign is required.</p><p>Match the derivative of the proposed form to the original multiplier \\(3\\).</p><p>Comparing with the proposed primitive gives \\(a=- \\frac{3}{7}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-standard-more-5",
+        "title": "Match a sum of squares to inverse tangent",
+        "prompt": "<p>Find \\(a\\) if \\(\\int \\frac{2}{16 x^{2} + 9}\\,\\mathrm dx=a\\left(\\operatorname{atan}{\\left(\\frac{4 x}{3} \\right)}\\right)+C\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient a",
+            "expected": "1/6",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Factor the constant term in the denominator before matching inverse tangent.</p>",
+        "solution": "<p>Factor \\(9\\) out of the denominator to obtain the pattern \\(\\frac1{1+u^2}\\).</p><p>Use \\(u=\\frac{4 x}{3}\\). Taking the derivative of the inverse tangent introduces \\(\\frac{4}{3}\\).</p><p>Comparing with the proposed primitive gives \\(a=\\frac{1}{6}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-standard-more-6",
+        "title": "Retain the inner angle and check the sign",
+        "prompt": "<p>Find \\(a\\) if \\(\\int 8 \\sin{\\left(5 x + \\frac{\\pi}{4} \\right)}\\,\\mathrm dx=a\\left(\\cos{\\left(5 x + \\frac{\\pi}{4} \\right)}\\right)+C\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient a",
+            "expected": "-8/5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Differentiate the proposed cosine or sine primitive to confirm the sign and scale.</p>",
+        "solution": "<p>The inner derivative equals \\(-5\\). Use the derivative of \\(\\cos{\\left(5 x + \\frac{\\pi}{4} \\right)}\\) to see which sign is required.</p><p>Match the derivative of the proposed form to the original multiplier \\(8\\).</p><p>Comparing with the proposed primitive gives \\(a=- \\frac{8}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-standard-more-7",
+        "title": "Choose the logarithm for the correct domain",
+        "prompt": "<p>Find \\(a\\) if \\(\\int \\frac{6}{2 - 3 x}\\,\\mathrm dx=a\\left(\\ln{\\left(2 - 3 x \\right)}\\right)+C\\). Use \\(x&lt;\\frac{2}{3}\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient a",
+            "expected": "-2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Use the positive expression inside the logarithm on the given branch.</p>",
+        "solution": "<p>The derivative of the denominator is \\(-3\\). A logarithm of its absolute value differentiates to \\(\\frac{-3}{2 - 3 x}\\).</p><p>Use \\(\\ln(2 - 3 x)\\) on the stated branch.</p><p>Comparing with the proposed primitive gives \\(a=-2\\).</p>"
+      }
     ]
   },
   "orig_9709_p3_int_trig_log": {
-    "updatedOn": "2026-11-21",
+    "updatedOn": "2026-11-22",
     "description": "Rewrite trigonometric squares and products before integrating, and identify logarithmic derivatives and tangent integrals.",
     "sections": [
       {
@@ -272,7 +452,14 @@
         "blocks": [
           {
             "kind": "key",
-            "html": "<p>\\(\\cos(2u)=1-2\\sin^2u=2\\cos^2u-1\\). Solve for the square before integrating.</p>"
+            "html": "<p>\\(\\cos(2u)=1-2\\sin^2u=2\\cos^2u-1\\). Solve for the square before integrating.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_int_trig_log/squared-wave-midline.svg",
+              "alt": "A cosine-squared graph starts at one, drops to zero and returns to one each half-turn. A horizontal dashed line marks half height.",
+              "caption": "<p>The dashed line is \\(y=\\tfrac12\\). The graph of \\(y=\\cos^2x\\) oscillates around it. This explains the constant term after using a double-angle identity.</p>",
+              "width": 640,
+              "height": 320
+            }
           },
           {
             "kind": "text",
@@ -285,6 +472,11 @@
           {
             "kind": "example",
             "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -323,6 +515,11 @@
           {
             "kind": "example",
             "index": 1
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -441,6 +638,50 @@
             "solution": "<p>At \\(0\\) the primitive is \\(0\\). At \\(-\\frac{\\pi}{3}\\) it is \\(-\\ln\\left(\\frac12\\right)=\\ln2\\).</p><p>The difference is \\(-\\ln2\\), so \\(k=-1\\).</p>"
           }
         ]
+      },
+      {
+        "id": "definite-trig-log",
+        "title": "Why do I check the interval before using a trig logarithm?",
+        "label": "Check for poles",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>The logarithmic primitive of tangent is valid only on an interval with no pole.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Check that cosine cannot be zero between the bounds. Apply both endpoint values on the same connected interval.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A finite expression at both endpoints does not justify integrating across an undefined point.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "orig-9709-p3-int-trig-log-more-1",
+            "title": "Evaluate tangent on an interval with no pole",
+            "prompt": "<p>Write \\(\\int_0^{\\frac{\\pi}{8}}\\tan(2x)\\,\\mathrm dx\\) as \\(a_0\\ln r\\), using the positive value of \\(r\\) obtained directly from the endpoint cosine ratio. Give \\(a_0\\) and \\(r\\).</p>",
+            "fields": [
+              {
+                "key": "a0",
+                "label": "Coefficient a₀",
+                "expected": "1/2",
+                "type": "number"
+              },
+              {
+                "key": "r",
+                "label": "Endpoint ratio r",
+                "expected": "sqrt(2)",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Treat the denominator as the inside of a logarithm and keep its negative derivative.</p>",
+            "solution": "<p>Rewrite tangent as \\(\\frac{\\sin(ax)}{\\cos(ax)}\\). The derivative of its denominator is \\(-a\\sin(ax)\\).</p><p>The primitive is \\(- \\frac{\\ln{\\left(\\cos{\\left(2 x \\right)} \\right)}}{2}\\). Cosine stays positive on this interval.</p><p>Evaluate the logarithm at both ends. Because \\(\\cos 0=1\\), the result is \\(\\frac{1}{2}\\ln\\left(\\sqrt{2}\\right)\\).</p>"
+          }
+        ]
       }
     ],
     "glossary": [
@@ -497,6 +738,32 @@
           "<p>The integrand therefore has primitive \\(-2\\ln|\\cos x|\\). Cosine is positive and has no zero between the given limits.</p>",
           "<p>The difference is \\(-2\\ln\\left(\\frac12\\right)+2\\ln1=2\\ln2\\).</p>"
         ]
+      },
+      {
+        "title": "Separate the constant term from the doubled wave",
+        "question": "<p>Write \\(\\int 7 \\cos^{2}{\\left(5 x \\right)}\\,\\mathrm dx\\) as \\(Ax+B\\sin(10x)+C\\). Give \\(A\\) and \\(B\\).</p>",
+        "solution": [
+          "<p>Use \\(\\cos^2 u=\\frac{1+\\cos 2u}{2}\\) with \\(u=5x\\).</p>",
+          "<p>Integrating the constant term gives \\(\\frac{7}{2}x\\). The cosine term contributes a sine with inner slope \\(10\\).</p>",
+          "<p>The primitive is \\(\\frac{7 x}{2} + \\frac{7 \\sin{\\left(10 x \\right)}}{20}+C\\).</p>"
+        ]
+      },
+      {
+        "title": "Turn an equal-angle product into one sine",
+        "question": "<p>Write \\(\\int 8 \\sin{\\left(3 x \\right)} \\cos{\\left(3 x \\right)}\\,\\mathrm dx\\) as \\(A\\cos(6x)+C\\). Find \\(A\\).</p>",
+        "solution": [
+          "<p>Use \\(2\\sin u\\cos u=\\sin(2u)\\) to rewrite the integrand.</p>",
+          "<p>The cosine primitive has negative sign and an extra factor from the inner slope. The final coefficient is \\(- \\frac{2}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Evaluate tangent on an interval with no pole",
+        "question": "<p>Write \\(\\int_0^{\\frac{\\pi}{9}}\\tan(3x)\\,\\mathrm dx\\) as \\(a_0\\ln r\\), using the positive value of \\(r\\) obtained directly from the endpoint cosine ratio. Give \\(a_0\\) and \\(r\\).</p>",
+        "solution": [
+          "<p>Rewrite tangent as \\(\\frac{\\sin(ax)}{\\cos(ax)}\\). The derivative of its denominator is \\(-a\\sin(ax)\\).</p>",
+          "<p>The primitive is \\(- \\frac{\\ln{\\left(\\cos{\\left(3 x \\right)} \\right)}}{3}\\). Cosine stays positive on this interval.</p>",
+          "<p>Evaluate the logarithm at both ends. Because \\(\\cos 0=1\\), the result is \\(\\frac{1}{3}\\ln\\left(2\\right)\\).</p>"
+        ]
       }
     ],
     "revision": {
@@ -509,10 +776,126 @@
         "title": "Standard integrals and linear arguments",
         "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_int_standard"
       }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-trig-log-more-2",
+        "title": "Separate the constant term from the doubled wave",
+        "prompt": "<p>Write \\(\\int 5 \\sin^{2}{\\left(3 x \\right)}\\,\\mathrm dx\\) as \\(Ax+B\\sin(6x)+C\\). Give \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "A",
+            "label": "Coefficient A",
+            "expected": "5/2",
+            "type": "number"
+          },
+          {
+            "key": "B",
+            "label": "Coefficient B",
+            "expected": "-5/12",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Convert the square into a constant and one doubled-frequency cosine.</p>",
+        "solution": "<p>Use \\(\\sin^2u=\\frac{1-\\cos 2u}{2}\\) with \\(u=3x\\).</p><p>Integrating the constant term gives \\(\\frac{5}{2}x\\). The cosine term contributes a sine with inner slope \\(6\\).</p><p>The primitive is \\(\\frac{5 x}{2} - \\frac{5 \\sin{\\left(6 x \\right)}}{12}+C\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-trig-log-more-3",
+        "title": "Turn an equal-angle product into one sine",
+        "prompt": "<p>Write \\(\\int 3 \\sin{\\left(4 x \\right)} \\cos{\\left(4 x \\right)}\\,\\mathrm dx\\) as \\(A\\cos(8x)+C\\). Find \\(A\\).</p>",
+        "fields": [
+          {
+            "key": "A",
+            "label": "Coefficient A",
+            "expected": "-3/16",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Double the angle, then account separately for the one-half and the inner slope.</p>",
+        "solution": "<p>Use \\(2\\sin u\\cos u=\\sin(2u)\\) to rewrite the integrand.</p><p>The cosine primitive has negative sign and an extra factor from the inner slope. The final coefficient is \\(- \\frac{3}{16}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-trig-log-more-4",
+        "title": "Compare the whole numerator with the denominator derivative",
+        "prompt": "<p>Find \\(a\\) if \\(\\int \\frac{16 x + 12}{2 x^{2} + 3 x + 5}\\,\\mathrm dx=a\\left(\\ln{\\left(2 x^{2} + 3 x + 5 \\right)}\\right)+C\\). Use \\(x=1\\text{ and nearby inputs}\\).</p>",
+        "fields": [
+          {
+            "key": "coefficient",
+            "label": "Coefficient a",
+            "expected": "4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Compare the entire numerator with the derivative, including the constant term.</p>",
+        "solution": "<p>The derivative of the denominator is \\(4 x + 3\\).</p><p>Compare the entire numerator to it. Matching both terms gives the factor \\(4\\).</p><p>Comparing with the proposed primitive gives \\(a=4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-trig-log-more-5",
+        "title": "Evaluate tangent on an interval with no pole",
+        "prompt": "<p>Write \\(\\int_0^{\\frac{\\pi}{15}}\\tan(5x)\\,\\mathrm dx\\) as \\(a_0\\ln r\\), using the positive value of \\(r\\) obtained directly from the endpoint cosine ratio. Give \\(a_0\\) and \\(r\\).</p>",
+        "fields": [
+          {
+            "key": "a0",
+            "label": "Coefficient a₀",
+            "expected": "1/5",
+            "type": "number"
+          },
+          {
+            "key": "r",
+            "label": "Endpoint ratio r",
+            "expected": "2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Treat the denominator as the inside of a logarithm and keep its negative derivative.</p>",
+        "solution": "<p>Rewrite tangent as \\(\\frac{\\sin(ax)}{\\cos(ax)}\\). The derivative of its denominator is \\(-a\\sin(ax)\\).</p><p>The primitive is \\(- \\frac{\\ln{\\left(\\cos{\\left(5 x \\right)} \\right)}}{5}\\). Cosine stays positive on this interval.</p><p>Evaluate the logarithm at both ends. Because \\(\\cos 0=1\\), the result is \\(\\frac{1}{5}\\ln\\left(2\\right)\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-trig-log-more-6",
+        "title": "Separate the constant term from the doubled wave",
+        "prompt": "<p>Write \\(\\int 2 \\cos^{2}{\\left(7 x \\right)}\\,\\mathrm dx\\) as \\(Ax+B\\sin(14x)+C\\). Give \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "A",
+            "label": "Coefficient A",
+            "expected": "1",
+            "type": "number"
+          },
+          {
+            "key": "B",
+            "label": "Coefficient B",
+            "expected": "1/14",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Convert the square into a constant and one doubled-frequency cosine.</p>",
+        "solution": "<p>Use \\(\\cos^2 u=\\frac{1+\\cos 2u}{2}\\) with \\(u=7x\\).</p><p>Integrating the constant term gives \\(1x\\). The cosine term contributes a sine with inner slope \\(14\\).</p><p>The primitive is \\(x + \\frac{\\sin{\\left(14 x \\right)}}{14}+C\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-trig-log-more-7",
+        "title": "Turn an equal-angle product into one sine",
+        "prompt": "<p>Write \\(\\int 7 \\sin{\\left(5 x \\right)} \\cos{\\left(5 x \\right)}\\,\\mathrm dx\\) as \\(A\\cos(10x)+C\\). Find \\(A\\).</p>",
+        "fields": [
+          {
+            "key": "A",
+            "label": "Coefficient A",
+            "expected": "-7/20",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Double the angle, then account separately for the one-half and the inner slope.</p>",
+        "solution": "<p>Use \\(2\\sin u\\cos u=\\sin(2u)\\) to rewrite the integrand.</p><p>The cosine primitive has negative sign and an extra factor from the inner slope. The final coefficient is \\(- \\frac{7}{20}\\).</p>"
+      }
     ]
   },
   "orig_9709_p3_int_partial_fractions": {
-    "updatedOn": "2026-11-21",
+    "updatedOn": "2026-11-22",
     "description": "Decompose rational functions, integrate each part and check definite intervals for poles.",
     "sections": [
       {
@@ -534,6 +917,11 @@
           {
             "kind": "example",
             "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -578,6 +966,11 @@
           {
             "kind": "example",
             "index": 1
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -669,7 +1062,14 @@
         "blocks": [
           {
             "kind": "key",
-            "html": "<p>For equal degrees subtract the denominator times the ratio of the leading coefficients. Integrate that constant as a multiple of \\(x\\) before adding the antiderivatives of the remaining fractions.</p>"
+            "html": "<p>For equal degrees subtract the denominator times the ratio of the leading coefficients. Integrate that constant as a multiple of \\(x\\) before adding the antiderivatives of the remaining fractions.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_int_partial_fractions/pole-breaks-interval.svg",
+              "alt": "Two branches of a reciprocal graph approach opposite sides of a vertical dashed asymptote at x equals one. The highlighted test interval spans the pole.",
+              "caption": "<p>The test interval shown crosses the pole at \\(x=1\\). The ordinary definite-integral method applies on a connected interval where the integrand is defined.</p>",
+              "width": 640,
+              "height": 320
+            }
           },
           {
             "kind": "mistake",
@@ -724,6 +1124,50 @@
             "solution": "<p>Division leaves remainder \\(-x-7\\), which gives \\(A=-3,\\ B=2\\). The poles are \\(x=2\\) and \\(x=-1\\). Only \\([3,4]\\) avoids both.</p>"
           }
         ]
+      },
+      {
+        "id": "compare-numerator-parts",
+        "title": "How do I decide which part gives a logarithm?",
+        "label": "Identify the numerator pieces",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>A quadratic denominator often gives two different antiderivatives.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Separate the part proportional to the denominator derivative from the remaining constant.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A complete linear numerator usually needs both patterns, with a different scaling factor for each.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "orig-9709-p3-int-partial-fractions-more-1",
+            "title": "Match two numerator pieces with two different primitives",
+            "prompt": "<p>Write \\(\\int \\frac{5 x + 3}{x^{2} + 4}\\,\\mathrm dx\\) as \\(A\\ln(x^{2} + 4)+B\\tan^{-1}\\left(\\frac{x}{2}\\right)+C\\). Find \\(A\\) and \\(B\\).</p>",
+            "fields": [
+              {
+                "key": "a",
+                "label": "Logarithm coefficient A",
+                "expected": "5/2",
+                "type": "number"
+              },
+              {
+                "key": "b",
+                "label": "Inverse-tangent coefficient B",
+                "expected": "3/2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Only the part proportional to the denominator derivative gives a logarithm.</p>",
+            "solution": "<p>Split the numerator into its \\(x\\) term and its constant.</p><p>The derivative of \\(x^{2} + 4\\) is \\(2x\\), so the logarithm coefficient is \\(\\frac{5}{2}\\).</p><p>The constant part matches inverse tangent with an inner derivative factor. The second coefficient is \\(\\frac{3}{2}\\).</p>"
+          }
+        ]
       }
     ],
     "glossary": [
@@ -776,6 +1220,33 @@
           "<p>The remainder splits as \\(\\frac{5x+1}{(x-1)(x+2)}=\\frac2{x-1}+\\frac3{x+2}\\). Both poles lie outside the integration interval.</p>",
           "<p>Use \\(\\left[2x+2\\ln(x-1)+3\\ln(x+2)\\right]_2^4\\). The exact value is \\(4+2\\ln3+3\\ln\\left(\\frac32\\right)\\).</p>"
         ]
+      },
+      {
+        "title": "Recover both coefficients before integration",
+        "question": "<p>Write \\(\\frac{x + 10}{\\left(x + 1\\right) \\left(x + 4\\right)}\\) as \\(\\frac{A}{x + 1}+\\frac{B}{x + 4}\\). Give \\(A\\) and \\(B\\).</p>",
+        "solution": [
+          "<p>Each distinct linear factor gets its own numerator. Clear denominators with the original factorisation.</p>",
+          "<p>Matching coefficients gives \\(A=3,\\quad B=-2\\).</p>",
+          "<p>For \\(x&gt;-1\\), integrating term by term then gives \\(3 \\ln{\\left(x + 1 \\right)} - 2 \\ln{\\left(x + 4 \\right)}+C\\).</p>"
+        ]
+      },
+      {
+        "title": "Recover both coefficients before integration",
+        "question": "<p>Write \\(\\frac{4 x + 17}{\\left(x + 3\\right)^{2}}\\) as \\(\\frac{A}{x + 3}+\\frac{B}{\\left(x + 3\\right)^{2}}\\). Give \\(A\\) and \\(B\\).</p>",
+        "solution": [
+          "<p>Each power of the repeated factor gets its own numerator. Clear denominators with the original factorisation.</p>",
+          "<p>Matching coefficients gives \\(A=4,\\quad B=5\\).</p>",
+          "<p>For \\(x&gt;-3\\), integrating term by term then gives \\(4 \\ln{\\left(x + 3 \\right)} - \\frac{5}{x + 3}+C\\).</p>"
+        ]
+      },
+      {
+        "title": "Match two numerator pieces with two different primitives",
+        "question": "<p>Write \\(\\int \\frac{8 x + 7}{x^{2} + 9}\\,\\mathrm dx\\) as \\(A\\ln(x^{2} + 9)+B\\tan^{-1}\\left(\\frac{x}{3}\\right)+C\\). Find \\(A\\) and \\(B\\).</p>",
+        "solution": [
+          "<p>Split the numerator into its \\(x\\) term and its constant.</p>",
+          "<p>The derivative of \\(x^{2} + 9\\) is \\(2x\\), so the logarithm coefficient is \\(4\\).</p>",
+          "<p>The constant part matches inverse tangent with an inner derivative factor. The second coefficient is \\(\\frac{7}{3}\\).</p>"
+        ]
       }
     ],
     "revision": {
@@ -792,10 +1263,144 @@
         "title": "Polynomial division",
         "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_alg_polynomial_division"
       }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-partial-fractions-more-2",
+        "title": "Recover both coefficients before integration",
+        "prompt": "<p>Write \\(\\frac{3 \\left(x + 1\\right)}{\\left(x + 2\\right) \\left(x + 5\\right)}\\) as \\(\\frac{A}{x + 2}+\\frac{B}{x + 5}\\). Give \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "-1",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Clear denominators first. Match both coefficients before integrating.</p>",
+        "solution": "<p>Each distinct linear factor gets its own numerator. Clear denominators with the original factorisation.</p><p>Matching coefficients gives \\(A=-1,\\quad B=4\\).</p><p>For \\(x&gt;-2\\), integrating term by term then gives \\(- \\ln{\\left(x + 2 \\right)} + 4 \\ln{\\left(x + 5 \\right)}+C\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-partial-fractions-more-3",
+        "title": "Recover both coefficients before integration",
+        "prompt": "<p>Write \\(\\frac{2 x + 3}{\\left(x + 4\\right)^{2}}\\) as \\(\\frac{A}{x + 4}+\\frac{B}{\\left(x + 4\\right)^{2}}\\). Give \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "2",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "-5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Clear denominators first. Match both coefficients before integrating.</p>",
+        "solution": "<p>Each power of the repeated factor gets its own numerator. Clear denominators with the original factorisation.</p><p>Matching coefficients gives \\(A=2,\\quad B=-5\\).</p><p>For \\(x&gt;-4\\), integrating term by term then gives \\(2 \\ln{\\left(x + 4 \\right)} + \\frac{5}{x + 4}+C\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-partial-fractions-more-4",
+        "title": "Match two numerator pieces with two different primitives",
+        "prompt": "<p>Write \\(\\int \\frac{x + 2}{x^{2} + 25}\\,\\mathrm dx\\) as \\(A\\ln(x^{2} + 25)+B\\tan^{-1}\\left(\\frac{x}{5}\\right)+C\\). Find \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Logarithm coefficient A",
+            "expected": "1/2",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Inverse-tangent coefficient B",
+            "expected": "2/5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Only the part proportional to the denominator derivative gives a logarithm.</p>",
+        "solution": "<p>Split the numerator into its \\(x\\) term and its constant.</p><p>The derivative of \\(x^{2} + 25\\) is \\(2x\\), so the logarithm coefficient is \\(\\frac{1}{2}\\).</p><p>The constant part matches inverse tangent with an inner derivative factor. The second coefficient is \\(\\frac{2}{5}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-partial-fractions-more-5",
+        "title": "Recover both coefficients before integration",
+        "prompt": "<p>Write \\(\\frac{11 x + 59}{\\left(x + 1\\right) \\left(x + 7\\right)}\\) as \\(\\frac{A}{x + 1}+\\frac{B}{x + 7}\\). Give \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "8",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "3",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Clear denominators first. Match both coefficients before integrating.</p>",
+        "solution": "<p>Each distinct linear factor gets its own numerator. Clear denominators with the original factorisation.</p><p>Matching coefficients gives \\(A=8,\\quad B=3\\).</p><p>For \\(x&gt;-1\\), integrating term by term then gives \\(8 \\ln{\\left(x + 1 \\right)} + 3 \\ln{\\left(x + 7 \\right)}+C\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-partial-fractions-more-6",
+        "title": "Recover both coefficients before integration",
+        "prompt": "<p>Write \\(- \\frac{3 \\left(x + 6\\right)}{\\left(x + 8\\right)^{2}}\\) as \\(\\frac{A}{x + 8}+\\frac{B}{\\left(x + 8\\right)^{2}}\\). Give \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "-3",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "6",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Clear denominators first. Match both coefficients before integrating.</p>",
+        "solution": "<p>Each power of the repeated factor gets its own numerator. Clear denominators with the original factorisation.</p><p>Matching coefficients gives \\(A=-3,\\quad B=6\\).</p><p>For \\(x&gt;-8\\), integrating term by term then gives \\(- 3 \\ln{\\left(x + 8 \\right)} - \\frac{6}{x + 8}+C\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-partial-fractions-more-7",
+        "title": "Match two numerator pieces with two different primitives",
+        "prompt": "<p>Write \\(\\int \\frac{9 x + 7}{x^{2} + 16}\\,\\mathrm dx\\) as \\(A\\ln(x^{2} + 16)+B\\tan^{-1}\\left(\\frac{x}{4}\\right)+C\\). Find \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Logarithm coefficient A",
+            "expected": "9/2",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Inverse-tangent coefficient B",
+            "expected": "7/4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Only the part proportional to the denominator derivative gives a logarithm.</p>",
+        "solution": "<p>Split the numerator into its \\(x\\) term and its constant.</p><p>The derivative of \\(x^{2} + 16\\) is \\(2x\\), so the logarithm coefficient is \\(\\frac{9}{2}\\).</p><p>The constant part matches inverse tangent with an inner derivative factor. The second coefficient is \\(\\frac{7}{4}\\).</p>"
+      }
     ]
   },
   "orig_9709_p3_int_substitution": {
-    "updatedOn": "2026-11-21",
+    "updatedOn": "2026-11-22",
     "description": "Use a given substitution to rewrite the integrand, transform limits and evaluate exact integrals.",
     "sections": [
       {
@@ -863,6 +1468,11 @@
             "index": 1
           },
           {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
+          },
+          {
             "kind": "check",
             "id": "int-sub-rewrite-square-root",
             "title": "Rewrite x and the differential together",
@@ -896,7 +1506,14 @@
         "blocks": [
           {
             "kind": "key",
-            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Original limit</th><th scope=\"col\">New limit</th></tr></thead><tbody><tr><th scope=\"row\">\\(x=a\\)</th><td>\\(u=g(a)\\)</td></tr><tr><th scope=\"row\">\\(x=b\\)</th><td>\\(u=g(b)\\)</td></tr></tbody></table></div><p>Keep those limits in their original order or swap them and introduce a minus sign. Carry the factor from \\(\\mathrm dx\\) as well.</p>"
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Original limit</th><th scope=\"col\">New limit</th></tr></thead><tbody><tr><th scope=\"row\">\\(x=a\\)</th><td>\\(u=g(a)\\)</td></tr><tr><th scope=\"row\">\\(x=b\\)</th><td>\\(u=g(b)\\)</td></tr></tbody></table></div><p>Keep those limits in their original order or swap them and introduce a minus sign. Carry the factor from \\(\\mathrm dx\\) as well.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_int_substitution/decreasing-substitution.svg",
+              "alt": "A line falls as x increases. The first input x equals one maps to seven and the second input x equals three maps to three.",
+              "caption": "<p>For \\(u=9-2x\\), inputs \\(x=1\\) then \\(x=3\\) give limits \\(u=7\\) then \\(u=3\\). The substitution also introduces a negative differential.</p>",
+              "width": 640,
+              "height": 340
+            }
           },
           {
             "kind": "mistake",
@@ -905,6 +1522,11 @@
           {
             "kind": "example",
             "index": 2
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -973,6 +1595,56 @@
             "solution": "<p>The transformed integral is \\(\\int_0^1(u^3-u^5)\\,\\mathrm du=\\frac14-\\frac16=\\frac1{12}\\).</p>"
           }
         ]
+      },
+      {
+        "id": "align-bounds-with-sign",
+        "title": "How do the two negatives cancel in a decreasing substitution?",
+        "label": "Match bounds and differential",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>An increasing original variable can correspond to a decreasing new variable.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Leave transformed limits in their original order and retain the negative differential, or reverse the limits and change the sign once.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Two sign changes occur when both the reversed limits and the negative differential are changed. Account for each explicitly.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "orig-9709-p3-int-substitution-more-1",
+            "title": "Keep the order when limits reverse",
+            "prompt": "<p>Use \\(u=20 - 4 x\\) to evaluate \\(\\int_{1}^{4}100 - 20 x\\,\\mathrm dx\\). Give the transformed lower and upper limits in the original order, then the exact integral.</p>",
+            "fields": [
+              {
+                "key": "lo",
+                "label": "Transformed starting limit",
+                "expected": "16",
+                "type": "number"
+              },
+              {
+                "key": "hi",
+                "label": "Transformed ending limit",
+                "expected": "4",
+                "type": "number"
+              },
+              {
+                "key": "value",
+                "label": "Exact integral",
+                "expected": "150",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Transform each endpoint in place and keep the sign from the differential.</p>",
+            "solution": "<p>At the original endpoints the new limits are \\(16\\) then \\(4\\).</p><p>\\(\\mathrm dx=-\\frac{1}{4}\\,\\mathrm du\\) contributes the minus sign. Swapping the transformed limits cancels it.</p><p>Evaluate the resulting positive integral to get \\(150\\).</p>"
+          }
+        ]
       }
     ],
     "glossary": [
@@ -1025,6 +1697,33 @@
           "<p>The limits \\(0\\) and \\(\\frac\\pi2\\) become \\(0\\) and \\(1\\). The integral becomes \\(\\int_0^1(u^2-u^4)\\,\\mathrm du\\).</p>",
           "<p>Evaluate \\(\\left[\\frac{u^3}3-\\frac{u^5}5\\right]_0^1=\\frac13-\\frac15=\\frac2{15}\\).</p>"
         ]
+      },
+      {
+        "title": "Rewrite a leftover linear factor",
+        "question": "<p>Use \\(u=3 x + 5\\) in \\(\\int \\left(3 x + 1\\right) \\left(3 x + 5\\right)^{2}\\,\\mathrm dx\\). In the resulting integral of \\(Au^{3}+Bu^{2}\\), give \\(A\\) and \\(B\\).</p>",
+        "solution": [
+          "<p>The leftover factor is \\(3 x + 1=u-4\\). Also \\(\\mathrm dx=\\frac{1}{3}\\,\\mathrm du\\).</p>",
+          "<p>Multiplying gives \\(u^{2} \\left(\\frac{u}{3} - \\frac{4}{3}\\right)\\). This determines both requested coefficients.</p>",
+          "<p>Integrating in \\(u\\) gives \\(\\frac{u^{4}}{12} - \\frac{4 u^{3}}{9}+C\\). Substitute back to return to the original variable.</p>"
+        ]
+      },
+      {
+        "title": "Keep the order when limits reverse",
+        "question": "<p>Use \\(u=16 - 2 x\\) to evaluate \\(\\int_{0}^{6}3 \\sqrt{16 - 2 x}\\,\\mathrm dx\\). Give the transformed lower and upper limits in the original order, then the exact integral.</p>",
+        "solution": [
+          "<p>At the original endpoints the new limits are \\(16\\) then \\(4\\).</p>",
+          "<p>\\(\\mathrm dx=-\\frac{1}{2}\\,\\mathrm du\\) contributes the minus sign. Swapping the transformed limits cancels it.</p>",
+          "<p>Evaluate the resulting positive integral to get \\(56\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the order when limits reverse",
+        "question": "<p>Use \\(u=18 - 3 x\\) to evaluate \\(\\int_{2}^{5}2 \\sqrt{18 - 3 x}\\,\\mathrm dx\\). Give the transformed lower and upper limits in the original order, then the exact integral.</p>",
+        "solution": [
+          "<p>At the original endpoints the new limits are \\(12\\) then \\(3\\).</p>",
+          "<p>\\(\\mathrm dx=-\\frac{1}{3}\\,\\mathrm du\\) contributes the minus sign. Swapping the transformed limits cancels it.</p>",
+          "<p>Evaluate the resulting positive integral to get \\(\\frac{28 \\sqrt{3}}{3}\\).</p>"
+        ]
       }
     ],
     "revision": {
@@ -1041,10 +1740,162 @@
         "title": "The chain rule",
         "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_diff_chain"
       }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-substitution-more-2",
+        "title": "Rewrite a leftover linear factor",
+        "prompt": "<p>Use \\(u=4 x + 1\\) in \\(\\int \\left(4 x - 1\\right) \\left(4 x + 1\\right)^{3}\\,\\mathrm dx\\). In the resulting integral of \\(Au^{4}+Bu^{3}\\), give \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "1/4",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "-1/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Replace both the inside expression and the leftover factor before integrating.</p>",
+        "solution": "<p>The leftover factor is \\(4 x - 1=u-2\\). Also \\(\\mathrm dx=\\frac{1}{4}\\,\\mathrm du\\).</p><p>Multiplying gives \\(u^{3} \\left(\\frac{u}{4} - \\frac{1}{2}\\right)\\). This determines both requested coefficients.</p><p>Integrating in \\(u\\) gives \\(\\frac{u^{5}}{20} - \\frac{u^{4}}{8}+C\\). Substitute back to return to the original variable.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-substitution-more-3",
+        "title": "Keep the order when limits reverse",
+        "prompt": "<p>Use \\(u=31 - 5 x\\) to evaluate \\(\\int_{1}^{5}93 - 15 x\\,\\mathrm dx\\). Give the transformed lower and upper limits in the original order, then the exact integral.</p>",
+        "fields": [
+          {
+            "key": "lo",
+            "label": "Transformed starting limit",
+            "expected": "26",
+            "type": "number"
+          },
+          {
+            "key": "hi",
+            "label": "Transformed ending limit",
+            "expected": "6",
+            "type": "number"
+          },
+          {
+            "key": "value",
+            "label": "Exact integral",
+            "expected": "192",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Transform each endpoint in place and keep the sign from the differential.</p>",
+        "solution": "<p>At the original endpoints the new limits are \\(26\\) then \\(6\\).</p><p>\\(\\mathrm dx=-\\frac{1}{5}\\,\\mathrm du\\) contributes the minus sign. Swapping the transformed limits cancels it.</p><p>Evaluate the resulting positive integral to get \\(192\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-substitution-more-4",
+        "title": "Rewrite a leftover linear factor",
+        "prompt": "<p>Use \\(u=5 x + 7\\) in \\(\\int \\left(5 x + 7\\right)^{2} \\left(10 x + 8\\right)\\,\\mathrm dx\\). In the resulting integral of \\(Au^{3}+Bu^{2}\\), give \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "2/5",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "-6/5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Replace both the inside expression and the leftover factor before integrating.</p>",
+        "solution": "<p>The leftover factor is \\(5 x + 4=u-3\\). Also \\(\\mathrm dx=\\frac{1}{5}\\,\\mathrm du\\).</p><p>Multiplying gives \\(u^{2} \\left(\\frac{2 u}{5} - \\frac{6}{5}\\right)\\). This determines both requested coefficients.</p><p>Integrating in \\(u\\) gives \\(\\frac{u^{4}}{10} - \\frac{2 u^{3}}{5}+C\\). Substitute back to return to the original variable.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-substitution-more-5",
+        "title": "Keep the order when limits reverse",
+        "prompt": "<p>Use \\(u=28 - 3 x\\) to evaluate \\(\\int_{1}^{8}2 \\sqrt{28 - 3 x}\\,\\mathrm dx\\). Give the transformed lower and upper limits in the original order, then the exact integral.</p>",
+        "fields": [
+          {
+            "key": "lo",
+            "label": "Transformed starting limit",
+            "expected": "25",
+            "type": "number"
+          },
+          {
+            "key": "hi",
+            "label": "Transformed ending limit",
+            "expected": "4",
+            "type": "number"
+          },
+          {
+            "key": "value",
+            "label": "Exact integral",
+            "expected": "52",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Transform each endpoint in place and keep the sign from the differential.</p>",
+        "solution": "<p>At the original endpoints the new limits are \\(25\\) then \\(4\\).</p><p>\\(\\mathrm dx=-\\frac{1}{3}\\,\\mathrm du\\) contributes the minus sign. Swapping the transformed limits cancels it.</p><p>Evaluate the resulting positive integral to get \\(52\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-substitution-more-6",
+        "title": "Rewrite a leftover linear factor",
+        "prompt": "<p>Use \\(u=2 x + 4\\) in \\(\\int \\left(2 x + 1\\right) \\left(2 x + 4\\right)^{4}\\,\\mathrm dx\\). In the resulting integral of \\(Au^{5}+Bu^{4}\\), give \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "1/2",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "-3/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Replace both the inside expression and the leftover factor before integrating.</p>",
+        "solution": "<p>The leftover factor is \\(2 x + 1=u-3\\). Also \\(\\mathrm dx=\\frac{1}{2}\\,\\mathrm du\\).</p><p>Multiplying gives \\(u^{4} \\left(\\frac{u}{2} - \\frac{3}{2}\\right)\\). This determines both requested coefficients.</p><p>Integrating in \\(u\\) gives \\(\\frac{u^{6}}{12} - \\frac{3 u^{5}}{10}+C\\). Substitute back to return to the original variable.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-substitution-more-7",
+        "title": "Keep the order when limits reverse",
+        "prompt": "<p>Use \\(u=31 - 6 x\\) to evaluate \\(\\int_{2}^{5}2 \\left(31 - 6 x\\right)^{2}\\,\\mathrm dx\\). Give the transformed lower and upper limits in the original order, then the exact integral.</p>",
+        "fields": [
+          {
+            "key": "lo",
+            "label": "Transformed starting limit",
+            "expected": "19",
+            "type": "number"
+          },
+          {
+            "key": "hi",
+            "label": "Transformed ending limit",
+            "expected": "1",
+            "type": "number"
+          },
+          {
+            "key": "value",
+            "label": "Exact integral",
+            "expected": "762",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Transform each endpoint in place and keep the sign from the differential.</p>",
+        "solution": "<p>At the original endpoints the new limits are \\(19\\) then \\(1\\).</p><p>\\(\\mathrm dx=-\\frac{1}{6}\\,\\mathrm du\\) contributes the minus sign. Swapping the transformed limits cancels it.</p><p>Evaluate the resulting positive integral to get \\(762\\).</p>"
+      }
     ]
   },
   "orig_9709_p3_int_parts": {
-    "updatedOn": "2026-11-21",
+    "updatedOn": "2026-11-22",
     "description": "Choose factors for integration by parts, simplify logarithmic and repeated products, and evaluate exact definite integrals.",
     "sections": [
       {
@@ -1066,6 +1917,11 @@
           {
             "kind": "mistake",
             "html": "<p>The factor that appears in the integrand is \\(v'\\). Integrate it once before forming \\(uv\\).</p>"
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -1116,6 +1972,11 @@
           {
             "kind": "mistake",
             "html": "<p>For \\(\\ln(3x+1)\\), the real domain is \\(3x+1>0\\). Retain it even if the final expression can be written in several ways.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -1253,6 +2114,51 @@
             "solution": "\\[\\left[\\frac{x\\sin(2x)}2+\\frac{\\cos(2x)}4\\right]_0^{\\frac{\\pi}{2}}=-\\frac14-\\frac14=-\\frac12.\\]"
           }
         ]
+      },
+      {
+        "id": "two-boundary-terms",
+        "title": "How can the endpoints simplify a by-parts calculation?",
+        "label": "Check the boundary term",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>The product term at the endpoints and the remaining integral may behave differently.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Write both evaluations and look for zeros before simplifying. The remainder can survive even if the endpoint product vanishes.</p>",
+            "figure": {
+              "src": "/assets/study/9709/orig_9709_p3_int_parts/parts-boundary-product.svg",
+              "alt": "The product curve starts at zero and ends below the axis. A marked point at the final input makes the negative end value visible.",
+              "caption": "<p>The product term \\(uv=-\\tfrac14 x\\cos(4x)\\) has values \\(0\\) then \\(-\\tfrac{\\pi}{8}\\) at the endpoints of \\([0,\\tfrac{\\pi}{2}]\\). Include the remaining integral after taking the product difference.</p>",
+              "width": 640,
+              "height": 335
+            }
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>When a minus sign is outside a bracket, subtract the complete lower-endpoint expression.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "orig-9709-p3-int-parts-more-1",
+            "title": "Apply integration by parts and keep the remainder",
+            "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{3}}x \\sin{\\left(6 x \\right)}\\,\\mathrm dx\\) exactly by parts.</p>",
+            "fields": [
+              {
+                "key": "value",
+                "label": "Exact integral",
+                "expected": "-pi/18",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Choose the factor that becomes simpler on differentiation. Subtract the entire remainder.</p>",
+            "solution": "<p>Choose \\(u=x,\\quad \\frac{\\mathrm dv}{\\mathrm dx}=\\sin{\\left(6 x \\right)}\\). Then \\(\\frac{\\mathrm du}{\\mathrm dx}=1,\\quad v=- \\frac{\\cos{\\left(6 x \\right)}}{6}\\).</p><p>Write the product term, then subtract the integral of \\(- \\frac{\\cos{\\left(6 x \\right)}}{6}\\).</p><p>Integrating that remainder gives \\(- \\frac{x \\cos{\\left(6 x \\right)}}{6} + \\frac{\\sin{\\left(6 x \\right)}}{36}+C\\) for the original primitive.</p><p>Evaluate the primitive at the upper limit, then subtract its value at the lower limit. The integral is \\(- \\frac{\\pi}{18}\\).</p>"
+          }
+        ]
       }
     ],
     "examples": [
@@ -1291,6 +2197,34 @@
           "\\[\\int_0^{\\frac{\\pi}{2}}x\\sin(2x)\\,dx=\\left[-\\frac{x\\cos(2x)}2+\\frac{\\sin(2x)}4\\right]_0^{\\frac{\\pi}{2}}.\\]",
           "<p>At the upper limit, \\(\\cos\\pi=-1\\) and \\(\\sin\\pi=0\\). The lower value is \\(0\\), so the integral is \\(\\frac{\\pi}{4}\\).</p>"
         ]
+      },
+      {
+        "title": "Apply integration by parts and keep the remainder",
+        "question": "<p>Write \\(\\int \\left(2 x + 3\\right) \\mathrm e^{7 x}\\,\\mathrm dx\\) as \\((Ax+B)\\mathrm e^{7 x}+C\\). Find \\(A\\) and \\(B\\).</p>",
+        "solution": [
+          "<p>Choose \\(u=2 x + 3,\\quad \\frac{\\mathrm dv}{\\mathrm dx}=\\mathrm e^{7 x}\\). Then \\(\\frac{\\mathrm du}{\\mathrm dx}=2,\\quad v=\\frac{\\mathrm e^{7 x}}{7}\\).</p>",
+          "<p>Write the product term, then subtract the integral of \\(\\frac{2 \\mathrm e^{7 x}}{7}\\).</p>",
+          "<p>Integrating that remainder gives \\(\\frac{\\left(14 x + 19\\right) \\mathrm e^{7 x}}{49}+C\\) for the original primitive.</p>"
+        ]
+      },
+      {
+        "title": "Apply integration by parts and keep the remainder",
+        "question": "<p>Write \\(\\int 4 \\ln{\\left(x \\right)}\\,\\mathrm dx\\) as \\(Ax\\ln x+Bx+C\\) for \\(x&gt;0\\). Find \\(A\\) and \\(B\\).</p>",
+        "solution": [
+          "<p>Choose \\(u=\\ln{\\left(x \\right)},\\quad \\frac{\\mathrm dv}{\\mathrm dx}=4\\). Then \\(\\frac{\\mathrm du}{\\mathrm dx}=\\frac{1}{x},\\quad v=4 x\\).</p>",
+          "<p>Write the product term, then subtract the integral of \\(4\\).</p>",
+          "<p>Integrating that remainder gives \\(4 x \\left(\\ln{\\left(x \\right)} - 1\\right)+C\\) for the original primitive.</p>"
+        ]
+      },
+      {
+        "title": "Apply integration by parts and keep the remainder",
+        "question": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{2}}x \\sin{\\left(4 x \\right)}\\,\\mathrm dx\\) exactly by parts.</p>",
+        "solution": [
+          "<p>Choose \\(u=x,\\quad \\frac{\\mathrm dv}{\\mathrm dx}=\\sin{\\left(4 x \\right)}\\). Then \\(\\frac{\\mathrm du}{\\mathrm dx}=1,\\quad v=- \\frac{\\cos{\\left(4 x \\right)}}{4}\\).</p>",
+          "<p>Write the product term, then subtract the integral of \\(- \\frac{\\cos{\\left(4 x \\right)}}{4}\\).</p>",
+          "<p>Integrating that remainder gives \\(- \\frac{x \\cos{\\left(4 x \\right)}}{4} + \\frac{\\sin{\\left(4 x \\right)}}{16}+C\\) for the original primitive.</p>",
+          "<p>Evaluate the primitive at the upper limit, then subtract its value at the lower limit. The integral is \\(- \\frac{\\pi}{8}\\).</p>"
+        ]
       }
     ],
     "glossary": [
@@ -1321,6 +2255,128 @@
       "body": "<p>Reverse the product rule: \\(\\int uv'\\,dx=uv-\\int u'v\\,dx\\). Pick \\(u\\) to simplify by differentiation and \\(v'\\) to give an easy primitive.</p>",
       "checks": "<div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Integrand</th><th scope=\"col\">Useful choice</th></tr></thead><tbody><tr><th scope=\"row\">Polynomial times \\(e^{kx}\\) or \\(\\sin kx\\)</th><td>Take the polynomial as \\(u\\). Repeat if a polynomial factor remains.</td></tr><tr><th scope=\"row\">\\(\\ln x\\) or \\(\\arctan x\\)</th><td>Take the named function as \\(u\\) and \\(v'=1\\).</td></tr><tr><th scope=\"row\">Definite product</th><td>Evaluate \\([uv]_a^b\\) and the remaining integral on the same interval.</td></tr></tbody></table></div><ul><li>Track the sign in \\(uv-\\int u'v\\,dx\\).</li><li>Use one final integration constant for an indefinite primitive.</li><li>Differentiate your result for a quick check.</li></ul>",
       "examTip": "<p>Keep the lower endpoint in the calculation even when part of the product vanishes at zero.</p>"
-    }
+    },
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-parts-more-2",
+        "title": "Apply integration by parts and keep the remainder",
+        "prompt": "<p>Write \\(\\int \\left(5 x + 1\\right) \\mathrm e^{3 x}\\,\\mathrm dx\\) as \\((Ax+B)\\mathrm e^{3 x}+C\\). Find \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "5/3",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "-2/9",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Choose the factor that becomes simpler on differentiation. Subtract the entire remainder.</p>",
+        "solution": "<p>Choose \\(u=5 x + 1,\\quad \\frac{\\mathrm dv}{\\mathrm dx}=\\mathrm e^{3 x}\\). Then \\(\\frac{\\mathrm du}{\\mathrm dx}=5,\\quad v=\\frac{\\mathrm e^{3 x}}{3}\\).</p><p>Write the product term, then subtract the integral of \\(\\frac{5 \\mathrm e^{3 x}}{3}\\).</p><p>Integrating that remainder gives \\(\\frac{\\left(15 x - 2\\right) \\mathrm e^{3 x}}{9}+C\\) for the original primitive.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-parts-more-3",
+        "title": "Apply integration by parts and keep the remainder",
+        "prompt": "<p>Write \\(\\int 7 \\ln{\\left(x \\right)}\\,\\mathrm dx\\) as \\(Ax\\ln x+Bx+C\\) for \\(x&gt;0\\). Find \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "7",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "-7",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Choose the factor that becomes simpler on differentiation. Subtract the entire remainder.</p>",
+        "solution": "<p>Choose \\(u=\\ln{\\left(x \\right)},\\quad \\frac{\\mathrm dv}{\\mathrm dx}=7\\). Then \\(\\frac{\\mathrm du}{\\mathrm dx}=\\frac{1}{x},\\quad v=7 x\\).</p><p>Write the product term, then subtract the integral of \\(7\\).</p><p>Integrating that remainder gives \\(7 x \\left(\\ln{\\left(x \\right)} - 1\\right)+C\\) for the original primitive.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-parts-more-4",
+        "title": "Apply integration by parts and keep the remainder",
+        "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{3}}x \\cos{\\left(3 x \\right)}\\,\\mathrm dx\\) exactly by parts.</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Exact integral",
+            "expected": "-2/9",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Choose the factor that becomes simpler on differentiation. Subtract the entire remainder.</p>",
+        "solution": "<p>Choose \\(u=x,\\quad \\frac{\\mathrm dv}{\\mathrm dx}=\\cos{\\left(3 x \\right)}\\). Then \\(\\frac{\\mathrm du}{\\mathrm dx}=1,\\quad v=\\frac{\\sin{\\left(3 x \\right)}}{3}\\).</p><p>Write the product term, then subtract the integral of \\(\\frac{\\sin{\\left(3 x \\right)}}{3}\\).</p><p>Integrating that remainder gives \\(\\frac{x \\sin{\\left(3 x \\right)}}{3} + \\frac{\\cos{\\left(3 x \\right)}}{9}+C\\) for the original primitive.</p><p>Evaluate the primitive at the upper limit, then subtract its value at the lower limit. The integral is \\(- \\frac{2}{9}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-parts-more-5",
+        "title": "Apply integration by parts and keep the remainder",
+        "prompt": "<p>Write \\(\\int \\left(3 x - 2\\right) \\mathrm e^{- 2 x}\\,\\mathrm dx\\) as \\((Ax+B)\\mathrm e^{- 2 x}+C\\). Find \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "-3/2",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "1/4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Choose the factor that becomes simpler on differentiation. Subtract the entire remainder.</p>",
+        "solution": "<p>Choose \\(u=3 x - 2,\\quad \\frac{\\mathrm dv}{\\mathrm dx}=\\mathrm e^{- 2 x}\\). Then \\(\\frac{\\mathrm du}{\\mathrm dx}=3,\\quad v=- \\frac{\\mathrm e^{- 2 x}}{2}\\).</p><p>Write the product term, then subtract the integral of \\(- \\frac{3 \\mathrm e^{- 2 x}}{2}\\).</p><p>Integrating that remainder gives \\(\\frac{\\left(1 - 6 x\\right) \\mathrm e^{- 2 x}}{4}+C\\) for the original primitive.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-parts-more-6",
+        "title": "Apply integration by parts and keep the remainder",
+        "prompt": "<p>Write \\(\\int 2 \\ln{\\left(x \\right)}\\,\\mathrm dx\\) as \\(Ax\\ln x+Bx+C\\) for \\(x&gt;0\\). Find \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "2",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "-2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Choose the factor that becomes simpler on differentiation. Subtract the entire remainder.</p>",
+        "solution": "<p>Choose \\(u=\\ln{\\left(x \\right)},\\quad \\frac{\\mathrm dv}{\\mathrm dx}=2\\). Then \\(\\frac{\\mathrm du}{\\mathrm dx}=\\frac{1}{x},\\quad v=2 x\\).</p><p>Write the product term, then subtract the integral of \\(2\\).</p><p>Integrating that remainder gives \\(2 x \\left(\\ln{\\left(x \\right)} - 1\\right)+C\\) for the original primitive.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-int-parts-more-7",
+        "title": "Apply integration by parts and keep the remainder",
+        "prompt": "<p>Evaluate \\(\\int_{0}^{\\frac{\\pi}{2}}2 x \\sin{\\left(2 x \\right)}\\,\\mathrm dx\\) exactly by parts.</p>",
+        "fields": [
+          {
+            "key": "value",
+            "label": "Exact integral",
+            "expected": "pi/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Choose the factor that becomes simpler on differentiation. Subtract the entire remainder.</p>",
+        "solution": "<p>Choose \\(u=2 x,\\quad \\frac{\\mathrm dv}{\\mathrm dx}=\\sin{\\left(2 x \\right)}\\). Then \\(\\frac{\\mathrm du}{\\mathrm dx}=2,\\quad v=- \\frac{\\cos{\\left(2 x \\right)}}{2}\\).</p><p>Write the product term, then subtract the integral of \\(- \\cos{\\left(2 x \\right)}\\).</p><p>Integrating that remainder gives \\(- x \\cos{\\left(2 x \\right)} + \\frac{\\sin{\\left(2 x \\right)}}{2}+C\\) for the original primitive.</p><p>Evaluate the primitive at the upper limit, then subtract its value at the lower limit. The integral is \\(\\frac{\\pi}{2}\\).</p>"
+      }
+    ]
   }
 }

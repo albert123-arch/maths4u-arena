@@ -203,7 +203,8 @@ const lowerSecondaryPackages = [
 contentPackages.push(...lowerSecondaryPackages.map(p => contentPackageSchema.parse(p)));
 export function publicChapterPath(p: ContentPackage) {
   if (p.course.direction === "further" || ["9709", "0580", "0606", "0862"].includes(p.course.code)) {
-    return "/courses/" + p.course.slug + "/chapters/" + p.chapter.slug;
+    const slug = p.key === "9231-fp1-roots" ? "roots-of-polynomial-equations" : p.chapter.slug;
+    return "/courses/" + p.course.slug + "/chapters/" + slug;
   }
 }
 export function packageTopic(key:string):QuadraticTopic|undefined {

@@ -1,6 +1,6 @@
 {
   "orig_9709_p3_diff_chain": {
-    "updatedOn": "2026-11-21",
+    "updatedOn": "2026-11-22",
     "description": "Differentiate exponential, logarithmic and trigonometric functions, including inverse tangent and composite inputs.",
     "sections": [
       {
@@ -70,6 +70,11 @@
           {
             "kind": "example",
             "index": 1
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -169,6 +174,11 @@
             "index": 3
           },
           {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
+          },
+          {
             "kind": "check",
             "id": "diff-chain-your-turn-arctan",
             "title": "Use an inverse-tangent gradient",
@@ -195,6 +205,44 @@
             ],
             "hint": "<p>The numerator of \\(y'\\) is \\(3\\). The denominator is smallest at a zero of the inner expression.</p>",
             "solution": "<p>\\(y'=\\frac3{1+(3x-2)^2}\\), so \\(y'(1)=\\frac32\\).</p><p>The gradient is \\(3\\) exactly when \\((3x-2)^2=0\\), hence \\(x=\\frac23\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "chain-at-an-input",
+        "title": "Why should I substitute only after differentiating?",
+        "label": "Check a point gradient",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>The derivative records how the function changes near an input. Substituting first turns a changing expression into a single number.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Differentiate while retaining the inside function, then substitute the input in both the outside derivative and the inner multiplier.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The derivative of a constant is zero, so replacing the whole function by its value first loses the gradient.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "orig-9709-p3-diff-chain-more-1",
+            "title": "Keep the inner angle when differentiating",
+            "prompt": "<p>Find the exact gradient of \\(y=\\cos{\\left(7 x + \\frac{\\pi}{6} \\right)}\\) at \\(x=0\\).</p>",
+            "fields": [
+              {
+                "key": "slope",
+                "label": "Exact gradient",
+                "expected": "-7/2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+            "solution": "<p>The input angle is in radians. The inner derivative is \\(7\\).</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=- 7 \\sin{\\left(7 x + \\frac{\\pi}{6} \\right)}\\).</p><p>Substitute \\(x=0\\) after differentiating. The gradient is \\(- \\frac{7}{2}\\).</p>"
           }
         ]
       }
@@ -253,6 +301,36 @@
           "<p>Set the derivative equal to \\(1\\). The denominator is positive, so \\((2x-1)^2=1\\).</p>",
           "<p>Use both signs: \\(2x-1=-1\\) or \\(2x-1=1\\). The values are \\(0\\) and \\(1\\).</p>"
         ]
+      },
+      {
+        "title": "Trace a curved exponent",
+        "question": "<p>Find the exact gradient of \\(y=\\mathrm e^{3 x^{2} + 5 x}\\) at \\(x=0\\).</p>",
+        "solution": [
+          "<p>Differentiate the inside and keep the same exponential.</p>",
+          "<p>\\(u=3 x^{2} + 5 x\\), so \\(\\frac{\\mathrm du}{\\mathrm dx}=6 x + 5\\).</p>",
+          "<p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(6 x + 5\\right) \\mathrm e^{x \\left(3 x + 5\\right)}\\).</p>",
+          "<p>Substitute \\(x=0\\) after differentiating. The gradient is \\(5\\).</p>"
+        ]
+      },
+      {
+        "title": "Use the inverse-tangent chain rule",
+        "question": "<p>Find the exact gradient of \\(y=2 \\operatorname{atan}{\\left(3 x + 1 \\right)}\\) at \\(x=0\\).</p>",
+        "solution": [
+          "<p>For \\(\\tan^{-1}u\\), the outer derivative with respect to \\(u\\) is \\(\\frac1{1+u^2}\\).</p>",
+          "<p>Multiply this by the coefficient and by \\(\\frac{\\mathrm du}{\\mathrm dx}=3\\).</p>",
+          "<p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{6}{\\left(3 x + 1\\right)^{2} + 1}\\).</p>",
+          "<p>Substitute \\(x=0\\) after differentiating. The gradient is \\(3\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the derivative of the log argument",
+        "question": "<p>Find the exact gradient of \\(y=\\ln{\\left(3 x^{2} + 8 x + 4 \\right)}\\) at \\(x=0\\).</p>",
+        "solution": [
+          "<p>Use \\(\\frac{\\mathrm d}{\\mathrm dx}\\ln u=\\frac{u^\\prime}{u}\\).</p>",
+          "<p>The given input lies in the positive argument branch because \\(u(0)=4\\).</p>",
+          "<p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{2 \\left(3 x + 4\\right)}{3 x^{2} + 8 x + 4}\\).</p>",
+          "<p>Substitute \\(x=0\\) after differentiating. The gradient is \\(2\\).</p>"
+        ]
       }
     ],
     "revision": {
@@ -265,10 +343,108 @@
         "title": "Product and quotient rules",
         "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_diff_product_quotient"
       }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-chain-more-2",
+        "title": "Trace a curved exponent",
+        "prompt": "<p>Find the exact gradient of \\(y=\\mathrm e^{2 x^{2} - 4 x}\\) at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Exact gradient",
+            "expected": "-4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+        "solution": "<p>Differentiate the inside and keep the same exponential.</p><p>\\(u=2 x^{2} - 4 x\\), so \\(\\frac{\\mathrm du}{\\mathrm dx}=4 x - 4\\).</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=4 \\left(x - 1\\right) \\mathrm e^{2 x \\left(x - 2\\right)}\\).</p><p>Substitute \\(x=0\\) after differentiating. The gradient is \\(-4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-chain-more-3",
+        "title": "Keep the derivative of the log argument",
+        "prompt": "<p>Find the exact gradient of \\(y=\\ln{\\left(7 x^{2} + 5 x + 2 \\right)}\\) at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Exact gradient",
+            "expected": "5/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+        "solution": "<p>Use \\(\\frac{\\mathrm d}{\\mathrm dx}\\ln u=\\frac{u^\\prime}{u}\\).</p><p>The given input lies in the positive argument branch because \\(u(0)=2\\).</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{14 x + 5}{7 x^{2} + 5 x + 2}\\).</p><p>Substitute \\(x=0\\) after differentiating. The gradient is \\(\\frac{5}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-chain-more-4",
+        "title": "Keep the inner angle when differentiating",
+        "prompt": "<p>Find the exact gradient of \\(y=- \\cos{\\left(5 x + \\frac{\\pi}{6} \\right)}\\) at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Exact gradient",
+            "expected": "5/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+        "solution": "<p>The input angle is in radians. The inner derivative is \\(5\\).</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=5 \\sin{\\left(5 x + \\frac{\\pi}{6} \\right)}\\).</p><p>Substitute \\(x=0\\) after differentiating. The gradient is \\(\\frac{5}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-chain-more-5",
+        "title": "Use the inverse-tangent chain rule",
+        "prompt": "<p>Find the exact gradient of \\(y=- 3 \\operatorname{atan}{\\left(5 x - 2 \\right)}\\) at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Exact gradient",
+            "expected": "-3",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+        "solution": "<p>For \\(\\tan^{-1}u\\), the outer derivative with respect to \\(u\\) is \\(\\frac1{1+u^2}\\).</p><p>Multiply this by the coefficient and by \\(\\frac{\\mathrm du}{\\mathrm dx}=-5\\).</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=- \\frac{15}{\\left(5 x - 2\\right)^{2} + 1}\\).</p><p>Substitute \\(x=0\\) after differentiating. The gradient is \\(-3\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-chain-more-6",
+        "title": "Keep the inner angle when differentiating",
+        "prompt": "<p>Find the exact gradient of \\(y=\\tan{\\left(3 x + \\frac{\\pi}{4} \\right)}\\) at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Exact gradient",
+            "expected": "6",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+        "solution": "<p>The input angle is in radians. The inner derivative is \\(3\\).</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=3 \\tan^{2}{\\left(3 x + \\frac{\\pi}{4} \\right)} + 3\\).</p><p>Substitute \\(x=0\\) after differentiating. The gradient is \\(6\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-chain-more-7",
+        "title": "Keep the derivative of the log argument",
+        "prompt": "<p>Find the exact gradient of \\(y=\\ln{\\left(- 2 x^{2} + 10 x + 5 \\right)}\\) at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Exact gradient",
+            "expected": "2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+        "solution": "<p>Use \\(\\frac{\\mathrm d}{\\mathrm dx}\\ln u=\\frac{u^\\prime}{u}\\).</p><p>The given input lies in the positive argument branch because \\(u(0)=5\\).</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{2 \\left(5 - 2 x\\right)}{- 2 x^{2} + 10 x + 5}\\).</p><p>Substitute \\(x=0\\) after differentiating. The gradient is \\(2\\).</p>"
+      }
     ]
   },
   "orig_9709_p3_diff_product_quotient": {
-    "updatedOn": "2026-11-21",
+    "updatedOn": "2026-11-22",
     "description": "Choose the product rule, quotient rule or simplification, then use the derivative for gradients, tangents and turning points.",
     "sections": [
       {
@@ -290,6 +466,11 @@
           {
             "kind": "example",
             "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -346,6 +527,11 @@
           {
             "kind": "example",
             "index": 1
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -485,6 +671,50 @@
             "solution": "<p>\\(y'=2e^x+(2x-1)e^x=(2x+1)e^x\\).</p><p>\\(2x+1=0\\) gives \\(x=-\\frac12\\). The derivative changes from negative to positive there, giving a local minimum.</p>"
           }
         ]
+      },
+      {
+        "id": "recognise-original-gap",
+        "title": "What happens to a cancelled point in a derivative?",
+        "label": "Keep the original gap",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Differentiating a simplified formula is legitimate on the original domain. Its derivative formula may misleadingly be defined elsewhere.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Record excluded inputs before cancelling. Report the derivative only where the original function is defined.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A finite value in the simplified derivative does not restore a missing point to the curve.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "orig-9709-p3-diff-product-quotient-more-1",
+            "title": "Distinguish the missing point from nearby gradients",
+            "prompt": "<p>Let \\(y=\\frac{\\left(x + 2\\right) \\left(x + 5\\right)}{x + 2}\\). Give the excluded input and the gradient at \\(x=1\\).</p>",
+            "fields": [
+              {
+                "key": "excluded",
+                "label": "Excluded x",
+                "expected": "-2",
+                "type": "number"
+              },
+              {
+                "key": "slope",
+                "label": "Gradient",
+                "expected": "1",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Cancel the common factor only on the original domain.</p>",
+            "solution": "<p>The original denominator is zero at \\(x=-2\\), so this input is excluded.</p><p>Elsewhere simplify to \\(y=x + 5\\). The gradient is \\(1\\) wherever the original expression is defined.</p>"
+          }
+        ]
       }
     ],
     "glossary": [
@@ -541,6 +771,34 @@
           "<p>Factor to get \\(y'=-(x+1)e^{-x}\\). The exponential is always positive, so the only stationary input is \\(x=-1\\), where \\(y=e\\).</p>",
           "<p>The derivative is positive before \\(x=-1\\) and negative after it, so \\((-1,e)\\) is a local maximum.</p>"
         ]
+      },
+      {
+        "title": "Keep both terms when differentiating a product",
+        "question": "<p>Find the exact gradient of \\(y=\\left(x + 3\\right) \\mathrm e^{2 x}\\) at \\(x=0\\).</p>",
+        "solution": [
+          "<p>Differentiate one factor in each term.</p>",
+          "<p>\\(u=x + 3,\\ v=\\mathrm e^{2 x},\\qquad (uv)^\\prime=u^\\prime v+uv^\\prime\\).</p>",
+          "<p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(2 x + 7\\right) \\mathrm e^{2 x}\\).</p>",
+          "<p>Substitute \\(x=0\\) after differentiating. The gradient is \\(7\\).</p>"
+        ]
+      },
+      {
+        "title": "Keep the order of the quotient numerator",
+        "question": "<p>Find the exact gradient of \\(y=\\frac{x^{2} - 1}{3 x + 4}\\) at \\(x=1\\).</p>",
+        "solution": [
+          "<p>For \\(\\tfrac uv\\) use \\(\\frac{vu^\\prime-uv^\\prime}{v^2}\\).</p>",
+          "<p>\\(u=x^{2} - 1,\\ v=3 x + 4\\). The original denominator at the input is non-zero.</p>",
+          "<p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{3 x^{2} + 8 x + 3}{9 x^{2} + 24 x + 16}\\).</p>",
+          "<p>Substitute \\(x=1\\) after differentiating. The gradient is \\(\\frac{2}{7}\\).</p>"
+        ]
+      },
+      {
+        "title": "Distinguish the missing point from nearby gradients",
+        "question": "<p>Let \\(y=\\frac{\\left(x - 4\\right) \\left(x + 3\\right)}{x - 4}\\). Give the excluded input and the gradient at \\(x=2\\).</p>",
+        "solution": [
+          "<p>The original denominator is zero at \\(x=4\\), so this input is excluded.</p>",
+          "<p>Elsewhere simplify to \\(y=x + 3\\). The gradient is \\(1\\) wherever the original expression is defined.</p>"
+        ]
       }
     ],
     "revision": {
@@ -553,10 +811,114 @@
         "title": "Elementary derivatives and the chain rule",
         "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_diff_chain"
       }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-product-quotient-more-2",
+        "title": "Keep both terms when differentiating a product",
+        "prompt": "<p>Find the exact gradient of \\(y=\\left(2 x + 1\\right) \\mathrm e^{- x}\\) at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Exact gradient",
+            "expected": "1",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+        "solution": "<p>Differentiate one factor in each term.</p><p>\\(u=2 x + 1,\\ v=\\mathrm e^{- x},\\qquad (uv)^\\prime=u^\\prime v+uv^\\prime\\).</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\left(1 - 2 x\\right) \\mathrm e^{- x}\\).</p><p>Substitute \\(x=0\\) after differentiating. The gradient is \\(1\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-product-quotient-more-3",
+        "title": "Keep the order of the quotient numerator",
+        "prompt": "<p>Find the exact gradient of \\(y=\\frac{3 x - 4}{2 x + 5}\\) at \\(x=-1\\).</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Exact gradient",
+            "expected": "23/9",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+        "solution": "<p>For \\(\\tfrac uv\\) use \\(\\frac{vu^\\prime-uv^\\prime}{v^2}\\).</p><p>\\(u=3 x - 4,\\ v=2 x + 5\\). The original denominator at the input is non-zero.</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{23}{\\left(2 x + 5\\right)^{2}}\\).</p><p>Substitute \\(x=-1\\) after differentiating. The gradient is \\(\\frac{23}{9}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-product-quotient-more-4",
+        "title": "Distinguish the missing point from nearby gradients",
+        "prompt": "<p>Let \\(y=\\frac{\\left(x - 7\\right) \\left(x + 2\\right)}{x - 7}\\). Give the excluded input and the gradient at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "excluded",
+            "label": "Excluded x",
+            "expected": "7",
+            "type": "number"
+          },
+          {
+            "key": "slope",
+            "label": "Gradient",
+            "expected": "1",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Cancel the common factor only on the original domain.</p>",
+        "solution": "<p>The original denominator is zero at \\(x=7\\), so this input is excluded.</p><p>Elsewhere simplify to \\(y=x + 2\\). The gradient is \\(1\\) wherever the original expression is defined.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-product-quotient-more-5",
+        "title": "Keep both terms when differentiating a product",
+        "prompt": "<p>Find the exact gradient of \\(y=\\left(x^{2} + 2\\right) \\cos{\\left(2 x \\right)}\\) at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Exact gradient",
+            "expected": "0",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+        "solution": "<p>Differentiate one factor in each term.</p><p>\\(u=x^{2} + 2,\\ v=\\cos{\\left(2 x \\right)},\\qquad (uv)^\\prime=u^\\prime v+uv^\\prime\\).</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=2 x \\cos{\\left(2 x \\right)} - 2 \\left(x^{2} + 2\\right) \\sin{\\left(2 x \\right)}\\).</p><p>Substitute \\(x=0\\) after differentiating. The gradient is \\(0\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-product-quotient-more-6",
+        "title": "Keep the order of the quotient numerator",
+        "prompt": "<p>Find the exact gradient of \\(y=\\frac{5 x^{2} + 2}{4 x + 7}\\) at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Exact gradient",
+            "expected": "-8/49",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+        "solution": "<p>For \\(\\tfrac uv\\) use \\(\\frac{vu^\\prime-uv^\\prime}{v^2}\\).</p><p>\\(u=5 x^{2} + 2,\\ v=4 x + 7\\). The original denominator at the input is non-zero.</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{2 \\left(10 x^{2} + 35 x - 4\\right)}{16 x^{2} + 56 x + 49}\\).</p><p>Substitute \\(x=0\\) after differentiating. The gradient is \\(- \\frac{8}{49}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-product-quotient-more-7",
+        "title": "Keep both terms when differentiating a product",
+        "prompt": "<p>Find the exact gradient of \\(y=\\left(x + 4\\right) \\ln{\\left(3 x + 1 \\right)}\\) at \\(x=0\\).</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Exact gradient",
+            "expected": "12",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Apply the indicated differentiation rule before substituting the input.</p>",
+        "solution": "<p>Differentiate one factor in each term.</p><p>\\(u=x + 4,\\ v=\\ln{\\left(3 x + 1 \\right)},\\qquad (uv)^\\prime=u^\\prime v+uv^\\prime\\).</p><p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{3 x + \\left(3 x + 1\\right) \\ln{\\left(3 x + 1 \\right)} + 12}{3 x + 1}\\).</p><p>Substitute \\(x=0\\) after differentiating. The gradient is \\(12\\).</p>"
+      }
     ]
   },
   "orig_9709_p3_diff_implicit": {
-    "updatedOn": "2026-11-21",
+    "updatedOn": "2026-11-22",
     "description": "Differentiate equations connecting x and y. Find exact gradients, vertical tangents and normal lines.",
     "sections": [
       {
@@ -578,6 +940,11 @@
           {
             "kind": "example",
             "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -622,6 +989,11 @@
           {
             "kind": "example",
             "index": 1
+          },
+          {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -753,6 +1125,44 @@
             "solution": "<p>Substituting \\(x+y=1\\) gives \\((1+y')+1-2y'=0\\), so \\(y'=2\\). The normal gradient is \\(-\\frac12\\).</p>"
           }
         ]
+      },
+      {
+        "id": "implicit-normal-check",
+        "title": "How can I check the direction of a normal?",
+        "label": "Check perpendicularity",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>A normal passes through the same point as the tangent and is perpendicular to its direction.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Differentiate implicitly to get the tangent slope, then take its negative reciprocal when that slope is finite and nonzero.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>A tangent slope and a normal slope have product minus one, so taking the reciprocal without changing sign gives the wrong direction.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "orig-9709-p3-diff-implicit-more-1",
+            "title": "Collect every derivative in an implicit curve",
+            "prompt": "<p>The curve \\(2 x^{2} - 2 x y + y^{2}=13\\) contains \\((3,1)\\). Give the exact normal gradient there.</p>",
+            "fields": [
+              {
+                "key": "slope",
+                "label": "Normal gradient",
+                "expected": "-2/5",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>In a mixed term use the product rule and collect the terms containing the slope.</p>",
+            "solution": "<p>Differentiate each term with respect to \\(x\\). Multiply terms differentiated through \\(y\\) by \\(\\frac{\\mathrm dy}{\\mathrm dx}\\).</p><p>After collecting slope terms, the differentiated equation is \\(4 x - 2 y+(- 2 x + 2 y)\\frac{\\mathrm dy}{\\mathrm dx}=0\\).</p><p>Substitute the point to find tangent gradient \\(\\frac{5}{2}\\). Take the negative reciprocal to get \\(- \\frac{2}{5}\\).</p>"
+          }
+        ]
       }
     ],
     "glossary": [
@@ -805,6 +1215,33 @@
           "<p>The exponential factor is one at \\((1,1)\\). Solve \\(2y'+1=0\\) to get tangent gradient \\(-\\frac12\\).</p>",
           "<p>Use gradient \\(2\\) through \\((1,1)\\). The normal is \\(y-1=2(x-1)\\).</p>"
         ]
+      },
+      {
+        "title": "Collect every derivative in an implicit curve",
+        "question": "<p>The curve \\(2 x^{2} + 3 y^{2}=14\\) contains \\((1,2)\\). Give the exact tangent gradient there.</p>",
+        "solution": [
+          "<p>Differentiate each term with respect to \\(x\\). Multiply terms differentiated through \\(y\\) by \\(\\frac{\\mathrm dy}{\\mathrm dx}\\).</p>",
+          "<p>After collecting slope terms, the differentiated equation is \\(4 x+(6 y)\\frac{\\mathrm dy}{\\mathrm dx}=0\\).</p>",
+          "<p>Substitute the point to find tangent gradient \\(- \\frac{1}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Collect every derivative in an implicit curve",
+        "question": "<p>The curve \\(3 x^{2} + 2 x y + y^{2}=17\\) contains \\((2,1)\\). Give the exact tangent gradient there.</p>",
+        "solution": [
+          "<p>Differentiate each term with respect to \\(x\\). Multiply terms differentiated through \\(y\\) by \\(\\frac{\\mathrm dy}{\\mathrm dx}\\).</p>",
+          "<p>After collecting slope terms, the differentiated equation is \\(6 x + 2 y+(2 x + 2 y)\\frac{\\mathrm dy}{\\mathrm dx}=0\\).</p>",
+          "<p>Substitute the point to find tangent gradient \\(- \\frac{7}{3}\\).</p>"
+        ]
+      },
+      {
+        "title": "Collect every derivative in an implicit curve",
+        "question": "<p>The curve \\(x^{2} + x y + 4 y^{2}=10\\) contains \\((2,1)\\). Give the exact normal gradient there.</p>",
+        "solution": [
+          "<p>Differentiate each term with respect to \\(x\\). Multiply terms differentiated through \\(y\\) by \\(\\frac{\\mathrm dy}{\\mathrm dx}\\).</p>",
+          "<p>After collecting slope terms, the differentiated equation is \\(2 x + y+(x + 8 y)\\frac{\\mathrm dy}{\\mathrm dx}=0\\).</p>",
+          "<p>Substitute the point to find tangent gradient \\(- \\frac{1}{2}\\). Take the negative reciprocal to get \\(2\\).</p>"
+        ]
       }
     ],
     "revision": {
@@ -821,10 +1258,120 @@
         "title": "Parametric differentiation",
         "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_diff_parametric"
       }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-implicit-more-2",
+        "title": "Collect every derivative in an implicit curve",
+        "prompt": "<p>The curve \\(5 x^{2} + x y + 4 y^{2}=10\\) contains \\((1,1)\\). Give the exact tangent gradient there.</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Tangent gradient",
+            "expected": "-11/9",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>In a mixed term use the product rule and collect the terms containing the slope.</p>",
+        "solution": "<p>Differentiate each term with respect to \\(x\\). Multiply terms differentiated through \\(y\\) by \\(\\frac{\\mathrm dy}{\\mathrm dx}\\).</p><p>After collecting slope terms, the differentiated equation is \\(10 x + y+(x + 8 y)\\frac{\\mathrm dy}{\\mathrm dx}=0\\).</p><p>Substitute the point to find tangent gradient \\(- \\frac{11}{9}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-implicit-more-3",
+        "title": "Collect every derivative in an implicit curve",
+        "prompt": "<p>The curve \\(3 x^{2} - x y + 2 y^{2}=16\\) contains \\((2,-1)\\). Give the exact tangent gradient there.</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Tangent gradient",
+            "expected": "13/6",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>In a mixed term use the product rule and collect the terms containing the slope.</p>",
+        "solution": "<p>Differentiate each term with respect to \\(x\\). Multiply terms differentiated through \\(y\\) by \\(\\frac{\\mathrm dy}{\\mathrm dx}\\).</p><p>After collecting slope terms, the differentiated equation is \\(6 x - y+(- x + 4 y)\\frac{\\mathrm dy}{\\mathrm dx}=0\\).</p><p>Substitute the point to find tangent gradient \\(\\frac{13}{6}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-implicit-more-4",
+        "title": "Match the vertical and horizontal tangents",
+        "prompt": "<p>On \\(\\frac{x^{2}}{49} + \\frac{y^{2}}{16}=1\\), give the \\(x\\)-value of the vertical tangent at the right endpoint and the \\(y\\)-value of the horizontal tangent at the upper endpoint.</p>",
+        "fields": [
+          {
+            "key": "vertical",
+            "label": "Vertical line x-value",
+            "expected": "7",
+            "type": "number"
+          },
+          {
+            "key": "horizontal",
+            "label": "Horizontal line y-value",
+            "expected": "4",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Check which factor in the derivative equation vanishes at each endpoint.</p>",
+        "solution": "<p>Implicit differentiation gives \\(\\frac{x}{49}+\\frac{y}{16}\\frac{\\mathrm dy}{\\mathrm dx}=0\\).</p><p>At the right endpoint \\((7,0)\\), the tangent is \\(x=7\\). At the upper endpoint \\((0,4)\\), the tangent is \\(y=4\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-implicit-more-5",
+        "title": "Collect every derivative in an implicit curve",
+        "prompt": "<p>The curve \\(4 x^{2} + 2 x y + 3 y^{2}=23\\) contains \\((2,1)\\). Give the exact normal gradient there.</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Normal gradient",
+            "expected": "5/9",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>In a mixed term use the product rule and collect the terms containing the slope.</p>",
+        "solution": "<p>Differentiate each term with respect to \\(x\\). Multiply terms differentiated through \\(y\\) by \\(\\frac{\\mathrm dy}{\\mathrm dx}\\).</p><p>After collecting slope terms, the differentiated equation is \\(8 x + 2 y+(2 x + 6 y)\\frac{\\mathrm dy}{\\mathrm dx}=0\\).</p><p>Substitute the point to find tangent gradient \\(- \\frac{9}{5}\\). Take the negative reciprocal to get \\(\\frac{5}{9}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-implicit-more-6",
+        "title": "Collect every derivative in an implicit curve",
+        "prompt": "<p>The curve \\(2 x^{2} - x y + 4 x + 3 y^{2}=16\\) contains \\((1,2)\\). Give the exact normal gradient there.</p>",
+        "fields": [
+          {
+            "key": "slope",
+            "label": "Normal gradient",
+            "expected": "11/6",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>In a mixed term use the product rule and collect the terms containing the slope.</p>",
+        "solution": "<p>Differentiate each term with respect to \\(x\\). Multiply terms differentiated through \\(y\\) by \\(\\frac{\\mathrm dy}{\\mathrm dx}\\).</p><p>After collecting slope terms, the differentiated equation is \\(4 x - y + 4+(- x + 6 y)\\frac{\\mathrm dy}{\\mathrm dx}=0\\).</p><p>Substitute the point to find tangent gradient \\(- \\frac{6}{11}\\). Take the negative reciprocal to get \\(\\frac{11}{6}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-implicit-more-7",
+        "title": "Match the vertical and horizontal tangents",
+        "prompt": "<p>On \\(\\frac{x^{2}}{36} + \\frac{y^{2}}{25}=1\\), give the \\(x\\)-value of the vertical tangent at the right endpoint and the \\(y\\)-value of the horizontal tangent at the upper endpoint.</p>",
+        "fields": [
+          {
+            "key": "vertical",
+            "label": "Vertical line x-value",
+            "expected": "6",
+            "type": "number"
+          },
+          {
+            "key": "horizontal",
+            "label": "Horizontal line y-value",
+            "expected": "5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Check which factor in the derivative equation vanishes at each endpoint.</p>",
+        "solution": "<p>Implicit differentiation gives \\(\\frac{x}{36}+\\frac{y}{25}\\frac{\\mathrm dy}{\\mathrm dx}=0\\).</p><p>At the right endpoint \\((6,0)\\), the tangent is \\(x=6\\). At the upper endpoint \\((0,5)\\), the tangent is \\(y=5\\).</p>"
+      }
     ]
   },
   "orig_9709_p3_diff_parametric": {
-    "updatedOn": "2026-11-21",
+    "updatedOn": "2026-11-22",
     "description": "Find exact gradients and tangent equations from parametric curves, including vertical tangents and repeated points.",
     "sections": [
       {
@@ -846,6 +1393,11 @@
           {
             "kind": "example",
             "index": 0
+          },
+          {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
           },
           {
             "kind": "check",
@@ -954,6 +1506,11 @@
             "index": 2
           },
           {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
+          },
+          {
             "kind": "check",
             "id": "parametric-zero-rates",
             "title": "Locate the two axis-parallel tangents",
@@ -1030,6 +1587,50 @@
             "solution": "<p>The valid values are \\(t=\\pm1\\). The derivative ratio \\(\\frac{3t^2-1}{2t}\\) is \\(-1\\) at \\(t=-1\\) and \\(1\\) at \\(t=1\\).</p>"
           }
         ]
+      },
+      {
+        "id": "parametric-normal-check",
+        "title": "How do the parameter rates give a normal line?",
+        "label": "Find the normal",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>Differentiate both coordinate functions. Evaluate them at the same parameter value before forming a gradient.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>First get the tangent gradient from the rate ratio. For a finite nonzero tangent gradient, use its negative reciprocal for the normal.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>The normal passes through the Cartesian point, so use its coordinates rather than the parameter value in the line equation.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "orig-9709-p3-diff-parametric-more-1",
+            "title": "Find a normal directly from two parameter rates",
+            "prompt": "<p>For \\(x=3 t + 4,\\quad y=t^{2} + 2 t\\), find the normal at \\(t=1\\) in the form \\(y=mx+c\\). Give \\(m\\) and \\(c\\).</p>",
+            "fields": [
+              {
+                "key": "m",
+                "label": "Gradient m",
+                "expected": "-3/4",
+                "type": "number"
+              },
+              {
+                "key": "c",
+                "label": "Intercept c",
+                "expected": "33/4",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Find the Cartesian point and the two parameter derivatives before writing the line.</p>",
+            "solution": "<p>The point is \\((7,3)\\). The two rates at this parameter are \\(\\frac{\\mathrm dx}{\\mathrm dt}=3,\\ \\frac{\\mathrm dy}{\\mathrm dt}=4\\).</p><p>Divide the second rate by the first to get tangent gradient \\(\\frac{4}{3}\\). Take the negative reciprocal.</p><p>Use the point to get the line \\(y=\\frac{33}{4} - \\frac{3 x}{4}\\).</p>"
+          }
+        ]
       }
     ],
     "glossary": [
@@ -1082,6 +1683,33 @@
           "<p>The gradients are values of \\(\\frac{3t^2-4}{2t}\\). At \\(t=-2\\) the ratio is \\(\\frac8{-4}=-2\\).</p>",
           "<p>At \\(t=2\\) the ratio is \\(\\frac84=2\\). The two gradients are \\(-2\\) and \\(2\\).</p>"
         ]
+      },
+      {
+        "title": "Find a tangent directly from two parameter rates",
+        "question": "<p>For \\(x=2 t + 3,\\quad y=t^{2} - 4 t + 1\\), find the tangent at \\(t=1\\) in the form \\(y=mx+c\\). Give \\(m\\) and \\(c\\).</p>",
+        "solution": [
+          "<p>The point is \\((5,-2)\\). The two rates at this parameter are \\(\\frac{\\mathrm dx}{\\mathrm dt}=2,\\ \\frac{\\mathrm dy}{\\mathrm dt}=-2\\).</p>",
+          "<p>Divide the second rate by the first to get tangent gradient \\(-1\\).</p>",
+          "<p>Use the point to get the line \\(y=3 - x\\).</p>"
+        ]
+      },
+      {
+        "title": "Compare zero values of the two parametric rates",
+        "question": "<p>For \\(x=t^{2} + 3,\\ y=t^{3} - 12 t\\), use \\(t\\ge0\\). Give the parameter for the horizontal tangent and the \\(x\\)-value of the vertical tangent.</p>",
+        "solution": [
+          "<p>The rates are \\(\\frac{\\mathrm dx}{\\mathrm dt}=2t,\\quad\\frac{\\mathrm dy}{\\mathrm dt}=3t^2-12\\).</p>",
+          "<p>At \\(t=2\\) only the second rate is zero. This gives a horizontal tangent.</p>",
+          "<p>At \\(t=0\\) only the first rate is zero. The vertical tangent is \\(x=3\\).</p>"
+        ]
+      },
+      {
+        "title": "Find a normal directly from two parameter rates",
+        "question": "<p>For \\(x=\\mathrm e^{t} + 1,\\quad y=3 t + 2\\), find the normal at \\(t=0\\) in the form \\(y=mx+c\\). Give \\(m\\) and \\(c\\).</p>",
+        "solution": [
+          "<p>The point is \\((2,2)\\). The two rates at this parameter are \\(\\frac{\\mathrm dx}{\\mathrm dt}=1,\\ \\frac{\\mathrm dy}{\\mathrm dt}=3\\).</p>",
+          "<p>Divide the second rate by the first to get tangent gradient \\(3\\). Take the negative reciprocal.</p>",
+          "<p>Use the point to get the line \\(y=\\frac{8}{3} - \\frac{x}{3}\\).</p>"
+        ]
       }
     ],
     "revision": {
@@ -1098,10 +1726,144 @@
         "title": "Product and quotient rules",
         "href": "/courses/maths4u-9709-p3/topics/orig_9709_p3_diff_product_quotient"
       }
+    ],
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-parametric-more-2",
+        "title": "Find a tangent directly from two parameter rates",
+        "prompt": "<p>For \\(x=t^{2} + 2,\\quad y=t^{3} + 2 t\\), find the tangent at \\(t=1\\) in the form \\(y=mx+c\\). Give \\(m\\) and \\(c\\).</p>",
+        "fields": [
+          {
+            "key": "m",
+            "label": "Gradient m",
+            "expected": "5/2",
+            "type": "number"
+          },
+          {
+            "key": "c",
+            "label": "Intercept c",
+            "expected": "-9/2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find the Cartesian point and the two parameter derivatives before writing the line.</p>",
+        "solution": "<p>The point is \\((3,3)\\). The two rates at this parameter are \\(\\frac{\\mathrm dx}{\\mathrm dt}=2,\\ \\frac{\\mathrm dy}{\\mathrm dt}=5\\).</p><p>Divide the second rate by the first to get tangent gradient \\(\\frac{5}{2}\\).</p><p>Use the point to get the line \\(y=\\frac{5 x}{2} - \\frac{9}{2}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-parametric-more-3",
+        "title": "Find a normal directly from two parameter rates",
+        "prompt": "<p>For \\(x=\\sin{\\left(t \\right)},\\quad y=3 t + 2\\), find the normal at \\(t=0\\) in the form \\(y=mx+c\\). Give \\(m\\) and \\(c\\).</p>",
+        "fields": [
+          {
+            "key": "m",
+            "label": "Gradient m",
+            "expected": "-1/3",
+            "type": "number"
+          },
+          {
+            "key": "c",
+            "label": "Intercept c",
+            "expected": "2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find the Cartesian point and the two parameter derivatives before writing the line.</p>",
+        "solution": "<p>The point is \\((0,2)\\). The two rates at this parameter are \\(\\frac{\\mathrm dx}{\\mathrm dt}=1,\\ \\frac{\\mathrm dy}{\\mathrm dt}=3\\).</p><p>Divide the second rate by the first to get tangent gradient \\(3\\). Take the negative reciprocal.</p><p>Use the point to get the line \\(y=2 - \\frac{x}{3}\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-parametric-more-4",
+        "title": "Compare zero values of the two parametric rates",
+        "prompt": "<p>For \\(x=t^{2} + 8,\\ y=t^{3} - 27 t\\), use \\(t\\ge0\\). Give the parameter for the horizontal tangent and the \\(x\\)-value of the vertical tangent.</p>",
+        "fields": [
+          {
+            "key": "th",
+            "label": "Horizontal-tangent parameter",
+            "expected": "3",
+            "type": "number"
+          },
+          {
+            "key": "xv",
+            "label": "Vertical-tangent x-value",
+            "expected": "8",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Check that the other rate is nonzero before naming the tangent.</p>",
+        "solution": "<p>The rates are \\(\\frac{\\mathrm dx}{\\mathrm dt}=2t,\\quad\\frac{\\mathrm dy}{\\mathrm dt}=3t^2-27\\).</p><p>At \\(t=3\\) only the second rate is zero. This gives a horizontal tangent.</p><p>At \\(t=0\\) only the first rate is zero. The vertical tangent is \\(x=8\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-parametric-more-5",
+        "title": "Find a tangent directly from two parameter rates",
+        "prompt": "<p>For \\(x=2 t + 1,\\quad y=5 t^{2} + 1\\), find the tangent at \\(t=2\\) in the form \\(y=mx+c\\). Give \\(m\\) and \\(c\\).</p>",
+        "fields": [
+          {
+            "key": "m",
+            "label": "Gradient m",
+            "expected": "10",
+            "type": "number"
+          },
+          {
+            "key": "c",
+            "label": "Intercept c",
+            "expected": "-29",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find the Cartesian point and the two parameter derivatives before writing the line.</p>",
+        "solution": "<p>The point is \\((5,21)\\). The two rates at this parameter are \\(\\frac{\\mathrm dx}{\\mathrm dt}=2,\\ \\frac{\\mathrm dy}{\\mathrm dt}=20\\).</p><p>Divide the second rate by the first to get tangent gradient \\(10\\).</p><p>Use the point to get the line \\(y=10 x - 29\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-parametric-more-6",
+        "title": "Compare zero values of the two parametric rates",
+        "prompt": "<p>For \\(x=t^{2} + 6,\\ y=t^{3} - 3 t\\), use \\(t\\ge0\\). Give the parameter for the horizontal tangent and the \\(x\\)-value of the vertical tangent.</p>",
+        "fields": [
+          {
+            "key": "th",
+            "label": "Horizontal-tangent parameter",
+            "expected": "1",
+            "type": "number"
+          },
+          {
+            "key": "xv",
+            "label": "Vertical-tangent x-value",
+            "expected": "6",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Check that the other rate is nonzero before naming the tangent.</p>",
+        "solution": "<p>The rates are \\(\\frac{\\mathrm dx}{\\mathrm dt}=2t,\\quad\\frac{\\mathrm dy}{\\mathrm dt}=3t^2-3\\).</p><p>At \\(t=1\\) only the second rate is zero. This gives a horizontal tangent.</p><p>At \\(t=0\\) only the first rate is zero. The vertical tangent is \\(x=6\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-parametric-more-7",
+        "title": "Find a normal directly from two parameter rates",
+        "prompt": "<p>For \\(x=\\mathrm e^{2 t},\\quad y=\\sin{\\left(3 t \\right)} + 4\\), find the normal at \\(t=0\\) in the form \\(y=mx+c\\). Give \\(m\\) and \\(c\\).</p>",
+        "fields": [
+          {
+            "key": "m",
+            "label": "Gradient m",
+            "expected": "-2/3",
+            "type": "number"
+          },
+          {
+            "key": "c",
+            "label": "Intercept c",
+            "expected": "14/3",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>Find the Cartesian point and the two parameter derivatives before writing the line.</p>",
+        "solution": "<p>The point is \\((1,4)\\). The two rates at this parameter are \\(\\frac{\\mathrm dx}{\\mathrm dt}=2,\\ \\frac{\\mathrm dy}{\\mathrm dt}=3\\).</p><p>Divide the second rate by the first to get tangent gradient \\(\\frac{3}{2}\\). Take the negative reciprocal.</p><p>Use the point to get the line \\(y=\\frac{14}{3} - \\frac{2 x}{3}\\).</p>"
+      }
     ]
   },
   "orig_9709_p3_diff_applications": {
-    "updatedOn": "2026-11-21",
+    "updatedOn": "2026-11-22",
     "description": "Use derivatives to write tangents and normals, recover constants, classify stationary points and find all points with a given gradient.",
     "sections": [
       {
@@ -1182,6 +1944,11 @@
             "html": "<p>The derivative condition gives one equation. The point of contact gives the other.</p>"
           },
           {
+            "kind": "example",
+            "index": 4,
+            "tryFirst": true
+          },
+          {
             "kind": "check",
             "id": "M4U-9709-P3-DIFF-NOTE-APP-02",
             "title": "Match the given tangent",
@@ -1232,6 +1999,11 @@
             "html": "<p>A stationary point can have the same derivative sign on both sides. For example \\(e^x(x-1)^2\\) is positive on both sides of its zero.</p>"
           },
           {
+            "kind": "example",
+            "index": 5,
+            "tryFirst": true
+          },
+          {
             "kind": "check",
             "id": "M4U-9709-P3-DIFF-NOTE-APP-03",
             "title": "Classify both turning points",
@@ -1258,6 +2030,44 @@
             ],
             "hint": "<p>After factoring out \\(e^x(x-3)\\), simplify the remaining linear factor.</p>",
             "solution": "<p>\\(f'(x)=e^x(x-3)(x-1)\\). Its signs are \\(+,-,+\\) through the roots \\(1,3\\). The local maximum is at \\(x=1\\) and the local minimum at \\(x=3\\).</p>"
+          }
+        ]
+      },
+      {
+        "id": "check-more-than-one",
+        "title": "Which slope solutions survive a restricted domain?",
+        "label": "Check admissible contacts",
+        "minutes": 5,
+        "level": "core",
+        "intro": "<p>A cubic can have the same gradient at two inputs. Equal slope alone does not determine a unique input.</p>",
+        "blocks": [
+          {
+            "kind": "key",
+            "html": "<p>Set the derivative equal to the required slope, solve completely, and keep each solution in the domain.</p>"
+          },
+          {
+            "kind": "mistake",
+            "html": "<p>Keep both algebraic candidates until you impose the domain. Reject a root only when the stated restriction excludes it.</p>"
+          },
+          {
+            "kind": "example",
+            "index": 6
+          },
+          {
+            "kind": "check",
+            "id": "orig-9709-p3-diff-applications-more-1",
+            "title": "Find each allowed point with the required tangent gradient",
+            "prompt": "<p>The curve is restricted to \\(x\\ge0\\). Find every \\(x\\)-coordinate where the tangent to \\(y=2 x^{3} + x - 4\\) is parallel to \\(y=25 x + 1\\).</p>",
+            "fields": [
+              {
+                "key": "x",
+                "label": "Valid x-coordinate",
+                "expected": "2",
+                "type": "number"
+              }
+            ],
+            "hint": "<p>Parallel lines have the same gradient. Check both branches of the quadratic against the stated domain.</p>",
+            "solution": "<p>Differentiate the curve. Its gradient is \\(6 x^{2} + 1\\).</p><p>Set this equal to \\(25\\). The two candidates are \\(-2,\\ 2\\).</p><p>Only \\(x=2\\) lies in the given domain.</p>"
           }
         ]
       },
@@ -1356,6 +2166,31 @@
           "<p>Set the slopes equal. Then \\(x=y\\). Substitute into the curve to get \\(3y^2=18\\) and \\(y=\\pm\\sqrt6\\).</p>",
           "<p>The points are \\((\\sqrt6,\\sqrt6)\\) and \\((-\\sqrt6,-\\sqrt6)\\). Neither has \\(y=0\\), so both give finite tangents of the requested slope.</p>"
         ]
+      },
+      {
+        "title": "Read both constraints at a tangent contact",
+        "question": "<p>The curve \\(y=Ax^2+Bx+(1)\\) has tangent \\(y=5 x - 7\\) at \\(x=2\\). Find \\(A\\) and \\(B\\).</p>",
+        "solution": [
+          "<p>At the contact input the line gives \\(y=3\\) and has gradient \\(5\\).</p>",
+          "<p>Match the curve’s value and derivative there. The two equations give \\(A=2,\\ B=-3\\).</p>"
+        ]
+      },
+      {
+        "title": "Distinguish a stationary point from a turning point",
+        "question": "<p>For \\(y=2 \\left(x - 3\\right)^{3} + 7\\) give the stationary input and choose the nature of the point.</p>",
+        "solution": [
+          "<p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=6 \\left(x - 3\\right)^{2}\\). This is zero at \\(x=3\\).</p>",
+          "<p>The gradient has the same sign on either side. The point therefore has a horizontal tangent and is a stationary point of inflexion.</p>"
+        ]
+      },
+      {
+        "title": "Find each allowed point with the required tangent gradient",
+        "question": "<p>The curve is restricted to \\(x\\ge0\\). Find every \\(x\\)-coordinate where the tangent to \\(y=x^{3} - 3 x + 7\\) is parallel to \\(y=24 x + 1\\).</p>",
+        "solution": [
+          "<p>Differentiate the curve. Its gradient is \\(3 x^{2} - 3\\).</p>",
+          "<p>Set this equal to \\(24\\). The two candidates are \\(-3,\\ 3\\).</p>",
+          "<p>Only \\(x=3\\) lies in the given domain.</p>"
+        ]
       }
     ],
     "related": [
@@ -1372,6 +2207,138 @@
       "body": "<p>Start with the derivative and point of contact. For finite \\(m\\ne0\\), the tangent is \\(y-y_0=m(x-x_0)\\); use \\(-\\frac1m\\) for the normal.</p>",
       "checks": "<ul><li>If the tangent is horizontal, the normal is \\(x=x_0\\); if the tangent is vertical, the normal is \\(y=y_0\\).</li><li>For a given tangent match the value and the slope at contact.</li><li>Factor \\(f'(x)\\). Check its sign on both sides of every zero.</li><li>For a given gradient, solve the slope condition with the original curve and verify every candidate.</li></ul><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Signs of \\(f'\\)</th><th scope=\"col\">Classification</th></tr></thead><tbody><tr><th scope=\"row\">Positive to negative</th><td>Local maximum</td></tr><tr><th scope=\"row\">Negative to positive</th><td>Local minimum</td></tr><tr><th scope=\"row\">Same on both sides</th><td>Stationary with no turn</td></tr></tbody></table></div>",
       "examTip": "<p>State whether your slope is for the tangent or the normal. Use the coordinates of the point of contact when writing the line.</p>"
-    }
+    },
+    "extraPractice": [
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-applications-more-2",
+        "title": "Read both constraints at a tangent contact",
+        "prompt": "<p>The curve \\(y=Ax^2+Bx+(5)\\) has tangent \\(y=8 x + 2\\) at \\(x=1\\). Find \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "3",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "2",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A tangent contact fixes the value and the slope at the same input.</p>",
+        "solution": "<p>At the contact input the line gives \\(y=10\\) and has gradient \\(8\\).</p><p>Match the curve’s value and derivative there. The two equations give \\(A=3,\\ B=2\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-applications-more-3",
+        "title": "Distinguish a stationary point from a turning point",
+        "prompt": "<p>For \\(y=3 - 2 \\left(x + 4\\right)^{3}\\) give the stationary input and choose the nature of the point.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Stationary x-coordinate",
+            "expected": "-4",
+            "type": "number"
+          },
+          {
+            "key": "type",
+            "label": "Stationary point",
+            "type": "choice",
+            "expected": "C",
+            "options": {
+              "A": "<p>Local maximum</p>",
+              "B": "<p>Local minimum</p>",
+              "C": "<p>Stationary point of inflexion</p>"
+            }
+          }
+        ],
+        "hint": "<p>A stationary input is a candidate. Check what the gradient does on either side.</p>",
+        "solution": "<p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=- 6 \\left(x + 4\\right)^{2}\\). This is zero at \\(x=-4\\).</p><p>The gradient has the same sign on either side. The point therefore has a horizontal tangent and is a stationary point of inflexion.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-applications-more-4",
+        "title": "Find each allowed point with the required tangent gradient",
+        "prompt": "<p>Find every \\(x\\)-coordinate where the tangent to \\(y=2 x^{3} - x + 6\\) is parallel to \\(y=95 x + 1\\).</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Both x-coordinates",
+            "expected": "-4, 4",
+            "type": "set"
+          }
+        ],
+        "hint": "<p>Parallel lines have the same gradient. Check both branches of the quadratic against the stated domain.</p>",
+        "solution": "<p>Differentiate the curve. Its gradient is \\(6 x^{2} - 1\\).</p><p>Set this equal to \\(95\\). The two candidates are \\(-4,\\ 4\\).</p><p>Both inputs are allowed. Both satisfy the required slope equation.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-applications-more-5",
+        "title": "Read both constraints at a tangent contact",
+        "prompt": "<p>The curve \\(y=Ax^2+Bx+(-3)\\) has tangent \\(y=15 - 7 x\\) at \\(x=3\\). Find \\(A\\) and \\(B\\).</p>",
+        "fields": [
+          {
+            "key": "a",
+            "label": "Coefficient A",
+            "expected": "-2",
+            "type": "number"
+          },
+          {
+            "key": "b",
+            "label": "Coefficient B",
+            "expected": "5",
+            "type": "number"
+          }
+        ],
+        "hint": "<p>A tangent contact fixes the value and the slope at the same input.</p>",
+        "solution": "<p>At the contact input the line gives \\(y=-6\\) and has gradient \\(-7\\).</p><p>Match the curve’s value and derivative there. The two equations give \\(A=-2,\\ B=5\\).</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-applications-more-6",
+        "title": "Distinguish a stationary point from a turning point",
+        "prompt": "<p>For \\(y=3 \\left(x - 2\\right)^{3} - 1\\) give the stationary input and choose the nature of the point.</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Stationary x-coordinate",
+            "expected": "2",
+            "type": "number"
+          },
+          {
+            "key": "type",
+            "label": "Stationary point",
+            "type": "choice",
+            "expected": "C",
+            "options": {
+              "A": "<p>Local maximum</p>",
+              "B": "<p>Local minimum</p>",
+              "C": "<p>Stationary point of inflexion</p>"
+            }
+          }
+        ],
+        "hint": "<p>A stationary input is a candidate. Check what the gradient does on either side.</p>",
+        "solution": "<p>Differentiate to get \\(\\frac{\\mathrm dy}{\\mathrm dx}=9 \\left(x - 2\\right)^{2}\\). This is zero at \\(x=2\\).</p><p>The gradient has the same sign on either side. The point therefore has a horizontal tangent and is a stationary point of inflexion.</p>"
+      },
+      {
+        "kind": "check",
+        "id": "orig-9709-p3-diff-applications-more-7",
+        "title": "Find each allowed point with the required tangent gradient",
+        "prompt": "<p>Find every \\(x\\)-coordinate where the tangent to \\(y=3 x^{3} - 2 x + 5\\) is parallel to \\(y=34 x + 1\\).</p>",
+        "fields": [
+          {
+            "key": "x",
+            "label": "Both x-coordinates",
+            "expected": "-2, 2",
+            "type": "set"
+          }
+        ],
+        "hint": "<p>Parallel lines have the same gradient. Check both branches of the quadratic against the stated domain.</p>",
+        "solution": "<p>Differentiate the curve. Its gradient is \\(9 x^{2} - 2\\).</p><p>Set this equal to \\(34\\). The two candidates are \\(-2,\\ 2\\).</p><p>Both inputs are allowed. Both satisfy the required slope equation.</p>"
+      }
+    ]
   }
 }

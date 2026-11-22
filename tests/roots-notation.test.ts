@@ -8,7 +8,7 @@ import { renderContent } from "../src/lib/content";
 const roots = contentPackageSchema.parse(JSON.parse(readFileSync(new URL("../content/original/9231-fp1/roots-v1.json", import.meta.url), "utf8")));
 type Path = readonly (string | number)[];
 
-// These are the only presentation fields authorised for the 1.0.1 revision.
+// These are the only presentation fields authorised in the notation revisions.
 // Masking them binds all answer keys, choice options, marks, criteria, identities,
 // provenance and other teaching text to the independently audited 1.0.0 package.
 const notationPaths: readonly Path[] = [
@@ -28,6 +28,7 @@ const notationPaths: readonly Path[] = [
   ["questions", 18, "prompt_html"],
   ["questions", 19, "prompt_html"],
   ["questions", 20, "solution_html"],
+  ["questions", 31, "solution_html"],
   ["questions", 36, "solution_html"],
   ["questions", 46, "solution_html"],
   ["questions", 59, "solution_html"],
@@ -43,7 +44,7 @@ const notationPaths: readonly Path[] = [
   ["questions", 86, "solution_html"],
   ["questions", 91, "solution_html"],
 ];
-const protectedSha256 = "7b2041b77d4cab753ad30f796f3c23410bc2e2d0dd25283193e64c5392fc4f0d";
+const protectedSha256 = "b9a493fd30d2306e31ab2df49bac00ddfdd5e2d6655217497e7533c2afd8873d";
 
 function setAt(value: unknown, path: Path, replacement: unknown) {
   let node = value as Record<string | number, unknown>;
@@ -59,12 +60,13 @@ function protectedDigest(value: unknown) {
   return createHash("sha256").update(canonical).digest("hex");
 }
 
-test("Roots 1.0.1 changes only approved notation presentation, with the audited mathematics frozen", () => {
-  assert.equal(roots.version, "1.0.1");
+test("Roots 1.0.2 changes only approved notation presentation, with the audited mathematics frozen", () => {
+  assert.equal(roots.version, "1.0.2");
   assert.equal(roots.lessons.length, 4);
   assert.equal(roots.questions.length, 94);
-  assert.equal(notationPaths.length, 30);
+  assert.equal(notationPaths.length, 31);
   assert.equal(protectedDigest(roots), protectedSha256);
+  assert.match(roots.questions[31].solution_html, /x\^2-x\+1=0/);
 
   // Prove that the display-only projection cannot conceal a grading change or
   // an edit to unrelated content, including an incorrect multiple-choice option.

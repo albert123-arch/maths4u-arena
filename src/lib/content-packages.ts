@@ -56,7 +56,8 @@ async function plan(client:Client,p:ContentPackage){
   const lessonChanges=p.lessons.filter(l=>{const old=lessons.find(r=>r.id===l.id)?.versions[0]?.texts.find(t=>t.locale==="en"),t=lessonText(p,l);return !old||old.title!==t.title||old.body!==t.body||old.examples!==t.examples;}).length;
   ensure(!release||!create&&!update&&!lessonChanges,409,"PACKAGE_INSTALLED_CHANGED");
   const token=digest(JSON.stringify({fingerprint,course,chapter,state,records:records.map(r=>({id:r.taskId,uid:r.legacyId,hash:r.contentHash,versions:r.task.versions,visibility:r.task.visibility,archivedAt:r.task.archivedAt})),lessons}));
-  return {key:p.key,version:p.version,fingerprint,token,state:release?"ALREADY_APPLIED":"DRY_RUN",create,update,skip,lessonChanges};
+  const installed=state?{state:state.state,version:state.version,fingerprint:state.fingerprint}:null;
+  return {key:p.key,version:p.version,fingerprint,token,state:release?"ALREADY_APPLIED":"DRY_RUN",create,update,skip,lessonChanges,installed};
 }
 export async function planContentPackage(actor:Actor,key:string){permit(actor);return plan(db(),contentPackage(key));}
 export async function applyContentPackage(actor:Actor,key:string,input:unknown){
@@ -122,12 +123,23 @@ export async function changeContentPackage(actor:Actor,key:string,input:unknown)
   },{maxWait:30000,timeout:60000,isolationLevel:"Serializable"});
 }
 export async function contentPackageStatus(actor:Actor){
-  permit(actor);const installed=await db().contentPackage.findMany();
-  return contentPackages.map(p=>({key:p.key,version:p.version,fingerprint:packageFingerprint(p),title:p.chapter.title,course:p.course.title,coursePath:"/courses/"+p.course.slug,
-    state:installed.find(s=>s.key===p.key)?.state??"NOT_INSTALLED",lessons:p.lessons.map(l=>({id:l.id,title:l.title,path:"/courses/"+p.course.slug+"/topics/"+l.id})),
-    questions:p.questions.length,exam:p.questions.filter(q=>q.collection==="exam").length,held:p.source.held,
-    // Deliberately only on this authenticated administrator endpoint.
-    sourceLinks:p.questions.filter(q=>q.provenance).map(q=>({uid:q.id,original_id:q.provenance!.original_id,original_uid:q.provenance!.original_uid,archiveTaskId:q.provenance!.archiveTaskId}))}));
+  permit(actor);
+  const installed=await db().contentPackage.findMany({select:{key:true,state:true,version:true,fingerprint:true}});
+  const byKey=new Map(installed.map(row=>[row.key,row]));
+  const receipts=await db().contentRelease.findMany({
+    where:{state:"APPLIED",key:{in:installed.map(row=>`pkg:${row.key}:${row.version}`)}},select:{key:true,fingerprint:true},
+  });
+  const receiptHashes=new Map(receipts.map(row=>[row.key,row.fingerprint]));
+  return contentPackages.map(p=>{
+    const state=byKey.get(p.key);
+    return {key:p.key,version:p.version,fingerprint:packageFingerprint(p),title:p.chapter.title,course:p.course.title,coursePath:"/courses/"+p.course.slug,
+      state:state?.state??"NOT_INSTALLED",installedVersion:state?.version??null,installedFingerprint:state?.fingerprint??null,
+      installedReceiptMatches:!!state&&receiptHashes.get(`pkg:${p.key}:${state.version}`)===state.fingerprint,
+      lessons:p.lessons.map(l=>({id:l.id,title:l.title,path:"/courses/"+p.course.slug+"/topics/"+l.id})),
+      questions:p.questions.length,exam:p.questions.filter(q=>q.collection==="exam").length,held:p.source.held,
+      // Deliberately only on this authenticated administrator endpoint.
+      sourceLinks:p.questions.filter(q=>q.provenance).map(q=>({uid:q.id,original_id:q.provenance!.original_id,original_uid:q.provenance!.original_uid,archiveTaskId:q.provenance!.archiveTaskId}))};
+  });
 }
 export async function packageVersionMappings(key:string){
   const p=contentPackage(key),state=await db().contentPackage.findUnique({where:{key}});

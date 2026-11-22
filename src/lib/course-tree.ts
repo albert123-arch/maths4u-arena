@@ -6,19 +6,35 @@ import { ensure } from './errors';
 import { archiveAdmin } from './content-access';
 import { cambridgeTask } from './cambridge-access';
 import { contentPackages } from './content-package-content';
+import type { ContentPackage } from './content-package-schema';
+import { notationProgressPolicy } from './content-progress-policy';
 import { buildCourseTreePlan, unallocatedId, type TreeInput } from './course-tree-plan';
 type Client=Prisma.TransactionClient;
 function permit(actor:Actor){admin(actor);ensure(archiveAdmin(actor),403,'FORBIDDEN');}
-async function input(client:Client):Promise<TreeInput>{
- const installed=await client.contentPackage.findMany(),packs=contentPackages.filter(p=>p.course.direction==='further'&&installed.some(i=>i.key===p.key));
- for(const p of packs)ensure(installed.find(i=>i.key===p.key)?.fingerprint===digest(JSON.stringify(p)),409,'PACKAGE_CHANGED');
+async function installedFurtherPackages(client:Client,courseId?:string){
+ const installed=await client.contentPackage.findMany(courseId?{where:{courseId}}:undefined);
+ const states=new Map(installed.map(s=>[s.key,s]));
+ const packs=contentPackages.filter(p=>p.course.direction==='further'&&states.has(p.key));
+ let pendingRevision=false;
+ for(const p of packs){
+  const state=states.get(p.key)!;
+  if(state.version===p.version&&state.fingerprint===digest(JSON.stringify(p)))continue;
+  const prior=courseId&&state.state==='PUBLISHED'&&notationProgressPolicy(p).find(r=>r.fromVersion===state.version&&r.fromFingerprint===state.fingerprint);
+  ensure(prior,409,'PACKAGE_CHANGED');
+  const receipt=await client.contentRelease.findUnique({where:{key:'pkg:'+p.key+':'+prior.fromVersion}});
+  ensure(receipt?.state==='APPLIED'&&receipt.fingerprint===prior.fromFingerprint,409,'PACKAGE_CHANGED');
+  pendingRevision=true;
+ }
+ return {packs,pendingRevision};
+}
+async function input(client:Client,packs:ContentPackage[]):Promise<TreeInput>{
  const rows=await client.course.findMany({orderBy:{id:'asc'},where:{slug:{in:packs.map(p=>p.course.slug)}},include:{texts:true,topics:{orderBy:{id:'asc'},include:{texts:true,lessons:{orderBy:{id:'asc'},include:{tasks:true,versions:{take:1,orderBy:{number:'desc'},include:{texts:true}}}}}}}});
  const tasks=await client.task.findMany({where:{OR:[{origin:'CAMBRIDGE_EXAM'},cambridgeTask]},orderBy:{id:'asc'},select:{id:true}});
  return {courses:rows.map(c=>({id:c.id,slug:c.slug,title:c.texts.find(t=>t.locale==='en')!.title,chapters:c.topics.map(ch=>({id:ch.id,title:ch.texts.find(t=>t.locale==='en')!.title,lessons:ch.lessons.map(l=>({id:l.id,title:l.versions[0]?.texts.find(t=>t.locale==='en')?.title??l.id,position:l.position,taskIds:l.tasks.map(t=>t.taskId)}))}))})),
   packages:packs.map(p=>({courseSlug:p.course.slug,chapterId:p.chapter.id,chapterTitle:p.chapter.title,lessons:p.lessons.map(l=>({id:l.id,title:l.title})),links:p.questions.filter(q=>q.provenance).map(q=>({uid:q.id,taskId:q.provenance!.archiveTaskId,lessonId:p.lessons.find(l=>l.key===q.lesson)!.id}))})),archiveTaskIds:tasks.map(t=>t.id),approvals:await client.archiveLessonLink.findMany({orderBy:{sourceLessonId:'asc'},select:{sourceLessonId:true,approvedLessonId:true}})};
 }
-async function plan(client:Client){
- const data=await input(client),result=buildCourseTreePlan(data),existing={chapters:await client.archiveChapterLink.findMany({orderBy:{sourceTopicId:'asc'}}),lessons:await client.archiveLessonLink.findMany({orderBy:{sourceLessonId:'asc'}}),placements:await client.archiveTaskPlacement.findMany({orderBy:[{courseId:'asc'},{taskId:'asc'}]})};
+async function plan(client:Client,packs?:ContentPackage[]){
+ const data=await input(client,packs??(await installedFurtherPackages(client)).packs),result=buildCourseTreePlan(data),existing={chapters:await client.archiveChapterLink.findMany({orderBy:{sourceTopicId:'asc'}}),lessons:await client.archiveLessonLink.findMany({orderBy:{sourceLessonId:'asc'}}),placements:await client.archiveTaskPlacement.findMany({orderBy:[{courseId:'asc'},{taskId:'asc'}]})};
  return {token:digest(JSON.stringify({data,result,existing})),data,result};
 }
 async function write(client:Client,actor:Actor,result:ReturnType<typeof buildCourseTreePlan>){
@@ -46,7 +62,10 @@ export async function disableCourseTree(actor:Actor,courseId:string){
 // New chapters join an already enabled overlay in the same package transaction.
 export async function syncEnabledCourseTree(tx:Client,actor:Actor,courseId:string){
  if(!await tx.archiveChapterLink.count({where:{active:true,source:{courseId}}}))return;
- const p=await plan(tx),chapterIds=new Set(p.data.courses.find(c=>c.id===courseId)?.chapters.map(ch=>ch.id));
+ const {packs,pendingRevision}=await installedFurtherPackages(tx,courseId);
+ // Leave the installed overlay in place until the last reviewed sibling revision applies.
+ if(pendingRevision)return;
+ const p=await plan(tx,packs),chapterIds=new Set(p.data.courses.find(c=>c.id===courseId)?.chapters.map(ch=>ch.id));
  await write(tx,actor,{chapters:p.result.chapters.filter(ch=>chapterIds.has(ch.sourceTopicId)),lessons:p.result.lessons.filter(l=>chapterIds.has(l.sourceTopicId)),placements:p.result.placements.filter(p=>p.courseId===courseId)});
 }
 export async function courseTreeOverlay(actor:Actor|null){

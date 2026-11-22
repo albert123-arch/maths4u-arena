@@ -7,15 +7,15 @@ import { squareSnapshot } from "../src/lib/square-model";
 
 test("only the complete approved Roots notation revision retains prior evidence", () => {
   const p = contentPackage("9231-fp1-roots");
-  assert.equal(p.version, "1.0.1");
-  assert.equal(notationProgressPolicy(p).length, 1);
-  assert.deepEqual(packageTopic(p.lessons[0].id)!.compatibleVersions, ["1.0.0"]);
+  assert.equal(p.version, "1.0.2");
+  assert.deepEqual(notationProgressPolicy(p).map(revision => revision.fromVersion), ["1.0.1", "1.0.0"]);
+  assert.deepEqual(packageTopic(p.lessons[0].id)!.compatibleVersions, ["1.0.1", "1.0.0"]);
   for (const mutate of [
     (v: typeof p) => { v.questions[0].fields[0].expected = "999"; },
     (v: typeof p) => { v.questions[0].prompt_html += "<p>A different question.</p>"; },
     (v: typeof p) => { v.questions[0].family_uid += "-other"; },
     (v: typeof p) => { v.questions[0].marks++; },
-    (v: typeof p) => { v.version = "1.0.2"; },
+    (v: typeof p) => { v.version = "1.0.3"; },
     (v: typeof p) => { v.version = "1.0.0"; },
     (v: typeof p) => { v.key = "9231-fp1-other"; },
   ]) { const changed = structuredClone(p); mutate(changed); assert.deepEqual(notationProgressPolicy(changed), []); }
