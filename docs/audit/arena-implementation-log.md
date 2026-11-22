@@ -24,6 +24,12 @@ Kept local return destinations on the account menu, signup and login forms, cour
 
 Notes, multiple choice, short answers and written practice now preserve `view=legacy`, filters and fragment. Changing modes clears pagination and the prior mode's pinned review task. The selected mode follows Back, Forward and reload. The chapter state follows navigation on older course routes too.
 
-Six targeted unit tests passed. At 390 and 1280 px, the local browser verified mode switching, Back, Forward, reload and the auth destination. Mocked login and signup responses exercised the form submission return without writing test accounts. The local preview retained the original lesson and practice IDs.
+Six targeted unit tests passed. At 390 and 1280 px, the local browser verified mode switching, chapter changes, Back, Forward, reload and the auth destination. Mocked login and signup responses exercised the form submission return without writing new accounts. Earlier practice and revision returned HTTP 200 with the expected practice anchor or A4 controls.
 
-Commit subject: `Preserve learning routes through sign-in and practice`. Next stage: reading and lesson progression.
+Commit: `a5231f30`, `Preserve learning routes through sign-in and practice`.
+
+## Stage 4 · Complete two missing prompts
+
+Rewrote an incomplete vertical tangent prompt in 9231 FP2 and the AP/GP starter E04 in 9709 P1. Independently checked the tangent equation, AP and GP solutions and proof. On the local preview at 390 and 1280 px, the vertical tangent example expanded and E04 showed the three correctly weighted parts with its existing solution. Identifiers, marking criteria and quick checks remain compatible.
+
+Commit subject: `Make tangent and sequence prompts self-contained`. Next stage: reading and lesson progression.
