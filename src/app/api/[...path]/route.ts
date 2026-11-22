@@ -1,4 +1,5 @@
 import { z, ZodError } from "zod";
+import { hasExamArchiveAccess } from "@/lib/exam-archive-access";
 import { db } from "@/lib/prisma";
 import { AppError, ensure } from "@/lib/errors";
 import { actorForToken, tokenFrom, register, login, logout, sessionCookie, requireActor, admin, changeUser, issueRecovery, recover, rateLimit, userSelect } from "@/lib/security";
@@ -110,7 +111,11 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
       if (requestView()?.lens) await exitView("EXIT_LOGOUT");
       await logout(tokenFrom(request)); return json({ ok: true }, 200, { "Set-Cookie": sessionCookie("", true) });
     }
-    if (method === "GET" && route === "auth/me") return json({ user: await actorForToken(tokenFrom(request)), lens: requestView()?.lens ?? null });
+    if (method === "GET" && route === "auth/me") {
+      const user = await actorForToken(tokenFrom(request));
+      const examArchive = await hasExamArchiveAccess(user).catch(() => false);
+      return json({ user, lens: requestView()?.lens ?? null, examArchive }, 200, { "Cache-Control": "private, no-store" });
+    }
     if (route === "view/enter" && method === "POST") return json(await enterView(input));
     if (route === "view/exit" && method === "POST") return json(await exitView());
     if (route === "view/touch" && method === "POST") return json(await touchView());
