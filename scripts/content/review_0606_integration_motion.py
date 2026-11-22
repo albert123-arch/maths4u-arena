@@ -359,14 +359,15 @@ def motion_graphs(lesson):
 
 
 def trigonometric_steps(lesson):
-    example = lesson["examples"][0]
-    example["solution"] = [
-        p("The variable term is a cosine. Sine differentiates to cosine, and the inner derivative is 8."),
-        p(m(r"\int -9\cos\left(8x+\frac{5\pi}{14}\right)\,\mathrm dx"
-            r"=-\frac98\sin\left(8x+\frac{5\pi}{14}\right)")),
-        p("The constant term integrates to " + m("-4x") + ". Add a single integration constant."),
-        p(m(r"-\frac98\sin\left(8x+\frac{5\pi}{14}\right)-4x+C"))
-    ]
+    lesson["examples"][0] = {
+        "title": "Integrate sine using negative cosine",
+        "question": p("Find " + m(r"\int(8\sin(4x)-3)\,\mathrm dx") + ". Use radians."),
+        "solution": [
+            p("Differentiate " + m(r"-\cos(4x)") + " to get " + m(r"4\sin(4x)") + ". The minus sign gives a positive sine."),
+            p("The coefficient needed is " + m(r"\frac84=2") + ". The constant term gives " + m("-3x") + "."),
+            p("The result is " + m(r"-2\cos(4x)-3x+C") + ". Differentiating gives " + m(r"8\sin(4x)-3") + ".")
+        ]
+    }
     check = next(b for b in lesson["sections"][0]["blocks"] if b["kind"] == "check")
     check["hint"] = p("Differentiate negative cosine to check the sign. The inner angle has gradient 2, so the antiderivative needs a factor of one half.")
 
