@@ -72,4 +72,6 @@ Two unit tests cover stale and duplicate text fragments, idempotency and boundar
 
 Run `node --import tsx scripts/content/revise-book2-gcd.mts <isolated-env>` to obtain the local dry-run fingerprint. Repeat with `--apply=<fresh fingerprint>` to apply to that isolated test database. Production data requires a separate approved release.
 
-Commit subject: `Correct Book 2 GCD proofs with versioned bilingual revisions`.
+Commit: `80e22a8e`, `Correct Book 2 GCD proofs with versioned bilingual revisions`.
+
+The final local pass covers 134 focused Node tests, eight retained browser regressions and the additional Stage 7, Further Statistics and Book 2 walkthroughs. The live audit was read-only. The remaining independent editorial coverage and unavailable search metrics are tracked in the [backlog](arena-fix-backlog.md) and [growth plan](arena-seo-growth-plan.md).
