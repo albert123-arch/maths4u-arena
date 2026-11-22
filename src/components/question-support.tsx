@@ -41,7 +41,18 @@ export function QuestionSupport({ storageKey, compatibleStorageKeys=[], manual, 
   function score(marks:Record<string,number>,points:number){store({...draft,marks,points});setSaved(!assess);if(assess){queue.current=queue.current.catch(()=>{}).then(async()=>{try{await assess(points);setSaved(true);}catch(e){setError(e);}});}}
   return <section className="question-support"><div className="support-actions">{(['hint','solution','guidance'] as const).map(kind=><Button key={kind} type="button" disabled={!enabled||!ready||busy||(kind!=='hint'&&!access)} aria-expanded={!!open[kind]} aria-controls={id+'-'+kind} onClick={()=>void reveal(kind)}>{labels[kind]}</Button>)}</div>
     {draft.access!=='paper'&&(draft.access!=='stuck'||manual)&&<div className="support-unlock">{draft.access!=='stuck'&&<Button type="button" variant="text" disabled={!enabled||!ready||busy} onClick={()=>store({...draft,access:'stuck'})}>{t('Я не знаю, как решить','I’m stuck')}</Button>}{manual&&<Button type="button" disabled={!enabled||!ready||busy} onClick={()=>{store({...draft,access:'paper'});onPaperFinished?.();}}>{t('Я закончил на бумаге','I’ve finished on paper')}</Button>}</div>}
-    <ErrorNotice error={error}/>{(['hint','solution','guidance'] as const).map(kind=>open[kind]&&panels[kind]&&<section id={id+'-'+kind} className={'support-panel support-'+kind} aria-label={labels[kind]} key={kind}>{kind==='guidance'?<Guidance data={panels[kind]} manual={manual} values={draft.marks} change={score}/>:<><h4>{labels[kind]}</h4>{!panels[kind].html&&!panels[kind].assets?.length&&<p>{kind==='hint'?t('Подсказка для этой задачи не предоставлена.','No hint was supplied for this question.'):t('Решение для этой задачи не предоставлено.','No worked solution was supplied for this question.')}</p>}<MathContent html={panels[kind].html??''}/>{panels[kind].assets?.map(a=><MaterialAsset key={a.id} asset={a}/>)}</>}</section>)}
+    <ErrorNotice error={error}/>
+    {(['hint','solution','guidance'] as const).map(kind=>{
+      const content = open[kind] ? panels[kind] : undefined;
+      return <section id={id+'-'+kind} className={'support-panel support-'+kind} aria-label={labels[kind]} key={kind} hidden={!content}>
+        {content && (kind==='guidance'
+          ? <Guidance data={content} manual={manual} values={draft.marks} change={score}/>
+          : <><h4>{labels[kind]}</h4>
+              {!content.html&&!content.assets?.length&&<p>{kind==='hint'?t('Подсказка для этой задачи не предоставлена.','No hint was supplied for this question.'):t('Решение для этой задачи не предоставлено.','No worked solution was supplied for this question.')}</p>}
+              <MathContent html={content.html??''}/>{content.assets?.map(a=><MaterialAsset key={a.id} asset={a}/>)}
+            </>)}
+      </section>;
+    })}
     {draft.points!==undefined&&<p className="support-saved" role="status">{t('Самооценка','Self-assessed')}: {draft.points} / {maximum}{saved?' · '+t('Сохранено','Saved'):''}</p>}
   </section>;
 }
