@@ -55,6 +55,7 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   const [lens, setLens] = useState<ViewLens | null>(null);
   useEffect(() => {
     api<{ user: Actor | null; lens: ViewLens | null }>("auth/me").then(({ user, lens }) => {
+      setError(null);
       setViewNonce(lens?.nonce ?? ""); setLens(lens);
       setActor(user);
       const preferred = user?.profile?.locale ?? (!publicLearning ? storedLocale() : undefined) ?? initialLocale;
@@ -78,7 +79,7 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   else if (error && !discovery && !square && !publicData) content = <ErrorNotice error={error} />;
   else if (!publicPage && !actor) content = <Auth mode="login" next={path} />;
   else if (parts[0] === "admin" && !admin || parts[0] === "teacher" && !teacher) content = <div className="notice error">{t("Этот раздел недоступен вашему аккаунту.", "This section is not available to your account.")}</div>;
-  else if (square) content = <SquareLessonView lesson={square} sessionReady={ready && !error} />;
+  else if (square) content = <SquareLessonView lesson={square} sessionReady={ready && !error} studySession={!ready ? "loading" : error ? "device" : "ready"} />;
   else if (discovery) content = discovery.view === "home" && actor ? teacher && !admin ? <TeacherDashboard/> : <MyLearning sessionReady={ready} /> : <DiscoveryHome {...discovery} sessionReady={ready && !error} />;
   else if (!parts.length) content = <CourseCatalogScreen home />;
   else if (["login", "register", "recover"].includes(parts[0])) content = <Auth mode={parts[0]} />;

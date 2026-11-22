@@ -44,6 +44,29 @@ export function answerFormat(f: SquareField): { en: string; ru: string; placehol
     placeholder: "4.5 <= x < 5.5",
   };
 
+  if (f.type === "number" && f.classroom) {
+    if (f.classroom === "count") return { en: "Enter the whole-number count.", ru: "Введите количество целым числом.", placeholder: "12" };
+    if (f.classroom === "bearing") return { en: "Enter a three-figure bearing, for example 065°.", ru: "Укажите трёхзначный пеленг, например 065°.", placeholder: "065°" };
+    if (f.classroom === "percentage") return { en: "Enter the percentage, for example 20% or 20.", ru: "Введите процент, например 20% или 20.", placeholder: "20%" };
+    if (f.classroom === "money") return {
+      en: f.decimalPlaces === 2 ? "Give the amount to two decimal places if needed." : "Give the amount in the currency shown.",
+      ru: f.decimalPlaces === 2 ? "При необходимости округлите сумму до двух знаков после запятой." : "Введите сумму в указанной валюте.",
+      placeholder: "12.50",
+    };
+    if (f.classroom === "angle") return {
+      en: f.decimalPlaces === 0 ? "Give the angle in degrees. Round to the nearest degree if needed." : f.decimalPlaces === 1 ? "Give the angle in degrees. Round to one decimal place if needed." : "Enter the angle in degrees.",
+      ru: f.decimalPlaces === 0 ? "Укажите угол в градусах. При необходимости округлите до целого градуса." : f.decimalPlaces === 1 ? "Укажите угол в градусах с одним знаком после запятой, если нужно округлить." : "Укажите угол в градусах.",
+      placeholder: "65°",
+    };
+    if (f.classroom === "probability") return {
+      en: f.significantFigures ? "Use a fraction, a percentage or a decimal rounded to at least 3 significant figures." : "Enter a probability such as 1/4, 0.25 or 25%.",
+      ru: f.significantFigures ? "Введите дробь, процент или десятичное число с точностью не менее трёх значащих цифр." : "Введите вероятность, например 1/4, 0.25 или 25%.",
+      placeholder: "1/4 or 0.25",
+    };
+    if (f.decimalPlaces === 2) return { en: "Enter an exact value or round to two decimal places.", ru: "Введите точное значение или округлите до двух знаков после запятой.", placeholder: "3.61" };
+    if (!f.significantFigures) return { en: "Enter a number, for example 12, 0.25 or 3/4.", ru: "Введите число, например 12, 0.25 или 3/4.", placeholder: "12 or 3/4" };
+  }
+
   if (f.significantFigures === 3) return {
     en: "Enter an exact value or round to 3 significant figures.",
     ru: "Введите точное значение или округлите до 3 значащих цифр.",
@@ -57,6 +80,11 @@ export function answerFormat(f: SquareField): { en: string; ru: string; placehol
   if (f.type === "approximate") return { en: "Round as requested in the label, or enter your calculator value. Decimal or fraction input is accepted.", ru: "Округлите как указано в подписи или введите значение калькулятора. Можно ввести десятичное число или дробь.", placeholder: "0.6827" };
   if (f.type === "choice") return { en: "Choose one option. Explain your reasoning on paper.", ru: "Выберите один вариант. Объясните рассуждение на бумаге.", placeholder: "" };
   if (f.type === "integers") return { en: "List every integer in braces, for example {1, 2, 3}; use empty if there are none.", ru: "Перечислите все целые числа в фигурных скобках, например {1, 2, 3}; если их нет, введите empty.", placeholder: "{1, 2, 3}" };
+  if (f.type === "pairs" && f.vectorComponents) return {
+    en: "Enter the horizontal and vertical components in order, or use i and j.",
+    ru: "Введите горизонтальную и вертикальную компоненты по порядку или используйте i и j.",
+    placeholder: "(3, −2) or 3i − 2j",
+  };
   if (f.type === "pairs") return f.dimension === 3
     ? { en: "Enter each triple in the order shown, for example (1, 2, 3). Separate multiple triples with semicolons.", ru: "Введите тройку в указанном порядке, например (1, 2, 3). Несколько троек разделяйте точкой с запятой.", placeholder: "(1, 2, 3)" }
     : isCoordinateField(f)

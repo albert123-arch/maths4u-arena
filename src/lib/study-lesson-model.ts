@@ -54,9 +54,27 @@ export type StudyLesson = {
   related?: { title: string; href: string }[];
   examPractice?: StudyExamPractice;
   extraPractice?: StudyCheck[];
+  sessions?: StudySession[];
+};
+
+export type StudySession = {
+  id: string;
+  title: string;
+  goal: string;
+  sections: string[];
+  exitChecks: string[];
+};
+
+export type StudyCheckpoint = {
+  id: string;
+  eventKey: string;
+  correct: boolean;
+  helpUsed: boolean;
+  checkedAt: number;
 };
 
 export type StudyCheckResult = {
   status: "correct" | "retry" | "format";
   feedback: string;
+  checkpoint?: StudyCheckpoint;
 };

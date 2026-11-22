@@ -119,6 +119,7 @@ model User {
   bookmarks            TaskBookmark[]
   followedCourses      CourseFollow[]
   independentChecks    IndependentCheck[]
+  studyCheckEvidence   StudyCheckEvidence[]
   taskReports          TaskReport[]           @relation("TaskReportReporter")
   reviewedTaskReports  TaskReport[]           @relation("TaskReportReviewer")
   teacherAccount       TeacherAccount?
@@ -290,6 +291,7 @@ model Lesson {
   topic      Topic              @relation(fields: [topicId], references: [id], onDelete: Restrict)
   versions   LessonVersion[]
   progress   LearningProgress[]
+  studyChecks StudyCheckEvidence[]
   tasks      LessonTask[]
 
   @@index([topicId])
@@ -1078,6 +1080,24 @@ model IndependentCheck {
   @@unique([userId, eventKey])
   @@index([userId, contentVersion, checkedAt])
   @@index([taskVersionId])
+}
+
+// Theory checkpoint outcomes are separate from bank attempts and assignment marks.
+model StudyCheckEvidence {
+  id        String   @id @default(cuid())
+  userId    String
+  lessonId  String
+  checkId   String   @db.VarChar(128)
+  eventKey  String   @db.Char(36)
+  correct   Boolean
+  helpUsed  Boolean
+  checkedAt DateTime @default(now()) @db.DateTime(3)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, eventKey])
+  @@index([userId, lessonId, checkedAt])
+  @@index([lessonId])
 }
 // Release D journals contain policy metadata only, never student responses.
 model ContentRelease {

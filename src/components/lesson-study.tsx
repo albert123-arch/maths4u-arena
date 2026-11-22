@@ -2,36 +2,46 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useId, useState, useSyncExternalStore } from "react";
+import { useId, useRef, useState, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
 import { Button, ButtonLink, Input } from "./controls";
 import { api, MathContent } from "./ui";
 import { useView } from "./view-state";
 import { answerFormat } from "@/lib/square-presentation";
 import type { SquareExample, SquareLesson } from "@/lib/square-model";
-import type { StudyBlock, StudyCheck, StudyCheckResult, StudyLesson, StudySection } from "@/lib/study-lesson-model";
+import type { StudyBlock, StudyCheck, StudyCheckpoint, StudyCheckResult, StudyLesson, StudySection } from "@/lib/study-lesson-model";
+import { checkpointAnchor, type StudySessionState } from "./study-checkpoint-progress";
 import styles from "./lesson-study.module.css";
 
 const levelNames = { core: "Core", further: "Further applications", extension: "Extension" };
-const level = (section: StudySection) => levelNames[section.level];
-const sectionInfo = (section: StudySection) => level(section) + " · about " + section.minutes + " min";
 const exampleAnchor = (index: number) => "worked-example-" + (index + 1);
 const subscribeToHydration = () => () => {};
 type StudyTeaching = { topic: Pick<SquareLesson["topic"], "path" | "lessonId">; examples: SquareLesson["examples"] };
+type RecordCheckpoint = (checkpoint: StudyCheckpoint) => void;
 
-export function LessonStudy({ lesson, study, activeId, children }: {
-  lesson: StudyTeaching; study: StudyLesson; activeId: string; children?: ReactNode;
+export function LessonStudy({ lesson, study, activeId, checkpoints = {}, onCheckpoint, session = "ready", children }: {
+  lesson: StudyTeaching; study: StudyLesson; activeId: string; checkpoints?: Record<string, StudyCheckpoint>;
+  onCheckpoint?: RecordCheckpoint; session?: StudySessionState; children?: ReactNode;
 }) {
   const { sections, glossary, related } = study;
   const interactive = useSyncExternalStore(subscribeToHydration, () => true, () => false);
   const selected = Math.max(0, sections.findIndex(section => section.id === activeId));
   const totalMinutes = sections.reduce((sum, section) => sum + section.minutes, 0);
   const extensionMinutes = sections.reduce((sum, section) => sum + (section.level === "extension" ? section.minutes : 0), 0);
+  const additionalMaths = lesson.topic.lessonId.startsWith("addmaths-0606-");
+  const extensionName = additionalMaths ? "Further practice" : levelNames.extension;
   const duration = extensionMinutes
-    ? (totalMinutes - extensionMinutes) + " min Core + " + extensionMinutes + " min Extension"
+    ? (totalMinutes - extensionMinutes) + (additionalMaths ? " min lesson + " : " min Core + ") + extensionMinutes + " min " + extensionName
     : "About " + totalMinutes + " min";
   const revision = lesson.topic.path + "?view=revision";
   const revisionLink = <ButtonLink href={revision} className={styles.revisionLink}>Quick revision sheet (A4)</ButtonLink>;
+  const igcse0580 = lesson.topic.path.startsWith("/courses/maths4u-0580/");
+  const level = (section: StudySection) => {
+    if (igcse0580 && section.level === "further") return "Extended";
+    if (additionalMaths && section.level === "core") return "Lesson";
+    return section.level === "extension" ? extensionName : levelNames[section.level];
+  };
+  const sectionInfo = (section: StudySection) => level(section) + " · about " + section.minutes + " min";
   function contents() {
     return <nav aria-label="In this lesson"><ol className={styles.contents}>
       {sections.map((section, index) => (
@@ -71,6 +81,7 @@ export function LessonStudy({ lesson, study, activeId, children }: {
       </details>
     </aside>
     <div className={styles.reading}>
+      {study.sessions?.length ? <StudySessions study={study} checkpoints={checkpoints} /> : null}
       {sections.map((section, index) => {
         const previous = sections[index - 1], next = sections[index + 1];
         return <section key={section.id} id={section.id} className={styles.noteSection} tabIndex={-1} aria-labelledby={section.id + "-title"}>
@@ -81,7 +92,7 @@ export function LessonStudy({ lesson, study, activeId, children }: {
             <MathContent html={section.intro} />
           </header>
           {section.blocks.map((block, i) => (
-            <LessonBlock key={block.kind === "check" ? block.id : i} block={block} lesson={lesson} />
+            <LessonBlock key={block.kind === "check" ? block.id : i} block={block} lesson={lesson} onCheckpoint={onCheckpoint} session={session} />
           ))}
           {index === sections.length - 1 && children}
           {index === sections.length - 1 && related?.length ? (
@@ -92,7 +103,7 @@ export function LessonStudy({ lesson, study, activeId, children }: {
           ) : null}
           <nav aria-label={section.label + " navigation"} className={styles.sectionNavigation}>
             {previous && <a className="ui-button ui-button--outline" href={"#" + previous.id}>{"← " + previous.label}</a>}
-            {next?.level === "extension" && <a className="ui-button ui-button--outline" href={"#" + next.id}>{"Extension · " + next.label + " →"}</a>}
+            {next?.level === "extension" && <a className="ui-button ui-button--outline" href={"#" + next.id}>{extensionName + " · " + next.label + " →"}</a>}
             {next && next.level !== "extension"
               ? <a className="ui-button ui-button--primary" href={"#" + next.id}>{"Next · " + next.label + " →"}</a>
               : <a className="ui-button ui-button--primary" href="#practice">Go to practice →</a>}
@@ -100,6 +111,31 @@ export function LessonStudy({ lesson, study, activeId, children }: {
         </section>;
       })}
     </div>
+  </section>;
+}
+
+function StudySessions({ study, checkpoints }: { study: StudyLesson; checkpoints: Record<string, StudyCheckpoint> }) {
+  const sessions = study.sessions!;
+  const sectionMinutes = new Map(study.sections.map(section => [section.id, section.minutes]));
+  const ready = (id: string) => Boolean(checkpoints[id]?.correct && !checkpoints[id].helpUsed);
+  const next = sessions.find(session => !session.exitChecks.every(ready));
+  const nextCheck = next?.exitChecks.find(id => !ready(id));
+  const resume = next && next.exitChecks.some(id => checkpoints[id]);
+  return <section className={"card stack " + styles.sessions} aria-label="Study sessions">
+    <h2>Study sessions</h2>
+    <p>Answer the checkpoints in a session without a hint before moving on.</p>
+    <ol>{sessions.map(session => {
+      const done = session.exitChecks.filter(ready).length;
+      const minutes = session.sections.reduce((total, id) => total + (sectionMinutes.get(id) ?? 0), 0);
+      return <li key={session.id} aria-current={next?.id === session.id ? "step" : undefined}>
+        <a href={"#" + session.sections[0]}>{session.title}</a><span> · {minutes} min</span>
+        <p>{session.goal}</p>
+        <small>{done} of {session.exitChecks.length} checkpoints answered independently</small>
+      </li>;
+    })}</ol>
+    <div className={styles.actions}>{next
+      ? <a className="ui-button ui-button--primary" href={"#" + (resume && nextCheck ? checkpointAnchor(nextCheck) : next.sections[0])}>{resume ? "Continue this session →" : next === sessions[0] ? "Start the first session →" : "Start the next session →"}</a>
+      : <a className="ui-button ui-button--primary" href="#practice">Continue to practice →</a>}</div>
   </section>;
 }
 
@@ -117,12 +153,12 @@ export function StudyExampleList({ study, examples }: { study: StudyLesson; exam
 }
 
 const labels = { key: "Key idea", mistake: "Common mistake", tip: "Exam tip" };
-function LessonBlock({ block, lesson }: { block: StudyBlock; lesson: StudyTeaching }) {
+function LessonBlock({ block, lesson, onCheckpoint, session }: { block: StudyBlock; lesson: StudyTeaching; onCheckpoint?: RecordCheckpoint; session: StudySessionState }) {
   switch (block.kind) {
     case "example":
       return <ExampleSteps example={lesson.examples[block.index]} id={exampleAnchor(block.index)} tryFirst={block.tryFirst} />;
     case "check":
-      return <YourTurn check={block} lessonId={lesson.topic.lessonId} />;
+      return <YourTurn check={block} lessonId={lesson.topic.lessonId} onCheckpoint={onCheckpoint} session={session} />;
     case "further":
       return <details className={"card " + styles.further}><summary>{block.title}</summary><MathContent html={block.html} /></details>;
     case "text":
@@ -171,10 +207,10 @@ function ExampleSteps({ example, id, tryFirst }: { example: SquareExample; id: s
   </article>;
 }
 
-export function ExtraStudyPractice({ checks, lessonId }: { checks: StudyCheck[]; lessonId: string }) {
+export function ExtraStudyPractice({ checks, lessonId, onCheckpoint, session = "ready" }: { checks: StudyCheck[]; lessonId: string; onCheckpoint?: RecordCheckpoint; session?: StudySessionState }) {
   return <details className={styles.extraPractice}>
     <summary>Extra practice from this lesson</summary>
-    <div>{checks.map(check => <YourTurn key={check.id} check={check} lessonId={lessonId} supplementary />)}</div>
+    <div>{checks.map(check => <YourTurn key={check.id} check={check} lessonId={lessonId} onCheckpoint={onCheckpoint} session={session} supplementary />)}</div>
   </details>;
 }
 
@@ -188,10 +224,12 @@ export function StudyWrittenQuestions({ questions }: { questions: NonNullable<St
   </details>);
 }
 
-function YourTurn({ check, lessonId, supplementary = false }: { check: StudyCheck; lessonId: string; supplementary?: boolean }) {
+function YourTurn({ check, lessonId, onCheckpoint, session, supplementary = false }: { check: StudyCheck; lessonId: string; onCheckpoint?: RecordCheckpoint; session: StudySessionState; supplementary?: boolean }) {
   const id = useId(), lens = useView();
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [hint, setHint] = useState(false);
+  const [helpUsed, setHelpUsed] = useState(false);
+  const attempt = useRef<{ signature: string; key: string }>(null);
   const [result, setResult] = useState<StudyCheckResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -200,23 +238,35 @@ function YourTurn({ check, lessonId, supplementary = false }: { check: StudyChec
   const simple = fields.length === 1 && fields[0].type !== "choice";
   const complete = fields.every(field => answers[field.key]?.trim());
   const actions = <>
-    <Button variant="primary" disabled={busy || preview || !complete} type="submit">{busy ? "Checking…" : "Check"}</Button>
-    <Button type="button" aria-expanded={hint} aria-controls={id + "-hint"} onClick={() => setHint(!hint)}>Hint</Button>
+    <Button variant="primary" disabled={busy || preview || session === "loading" || !complete} type="submit">{busy ? "Checking…" : session === "loading" ? "Preparing check…" : "Check"}</Button>
+    <Button type="button" aria-expanded={hint} aria-controls={id + "-hint"} onClick={() => { if (!hint) setHelpUsed(true); setHint(!hint); }}>Hint</Button>
   </>;
   function change(key: string, value: string) {
     setAnswers(current => ({ ...current, [key]: value }));
     setResult(null);
     setFailed(false);
   }
-  return <form className={styles.yourTurn} aria-label={(check.title ?? fields[0].label) + " quick check"} data-study-check={check.id}
+  function restart() {
+    setAnswers({});
+    setHint(false);
+    setHelpUsed(false);
+    setResult(null);
+    attempt.current = null;
+  }
+  return <form id={checkpointAnchor(check.id)} className={styles.yourTurn} aria-label={(check.title ?? fields[0].label) + " quick check"} data-study-check={check.id}
     onSubmit={async event => {
       event.preventDefault();
-      if (busy || preview || !complete) return;
+      if (busy || preview || session === "loading" || !complete) return;
       setBusy(true);
       setFailed(false);
       try {
         const values = fields.length === 1 ? { answer: answers[fields[0].key] } : { answers };
-        setResult(await api<StudyCheckResult>("learning/study-check", "POST", { lessonId, id: check.id, ...values }));
+        const signature = JSON.stringify([fields.map(field => answers[field.key]), helpUsed]);
+        if (onCheckpoint && attempt.current?.signature !== signature) attempt.current = { signature, key: crypto.randomUUID() };
+        const recording = onCheckpoint && attempt.current ? { event: { key: attempt.current.key, helpUsed } } : {};
+        const checked = await api<StudyCheckResult>("learning/study-check", "POST", { lessonId, id: check.id, ...values, ...recording }, session === "device" ? "omit" : "same-origin");
+        setResult(checked);
+        if (checked.checkpoint) onCheckpoint?.(checked.checkpoint);
       } catch {
         setFailed(true);
       } finally {
@@ -259,6 +309,8 @@ function YourTurn({ check, lessonId, supplementary = false }: { check: StudyChec
       {result && <div className={styles.checkResult} data-status={result.status}>
         <strong>{result.status === "correct" ? "Correct" : result.status === "format" ? "Check the format" : "Try again"}</strong>
         <MathContent html={result.feedback} />
+        {result.checkpoint && (!result.checkpoint.correct || result.checkpoint.helpUsed) && <p><a href="#review">See this checkpoint in Review →</a></p>}
+        {result.checkpoint?.helpUsed && <Button type="button" onClick={restart}>Start a new attempt</Button>}
       </div>}
       {failed && <p className={styles.checkResult} data-status="retry">The answer could not be checked. Try again.</p>}
     </div>

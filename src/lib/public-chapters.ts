@@ -7,13 +7,16 @@ import { studyMetadata } from "./authored-study";
 
 export const arenaOrigin = "https://arena.maths4u.sbs";
 
-export const publicChapters = cache(async () => {
+export const publicChapters = cache(async (courseSlug?: string, lessonId?: string) => {
+  const requested = contentPackages.filter(p => (!courseSlug || p.course.slug === courseSlug) &&
+    (!lessonId || p.lessons.some(lesson => lesson.id === lessonId)));
+  const requestedLessons = (p: (typeof requested)[number]) => lessonId ? p.lessons.filter(lesson => lesson.id === lessonId) : p.lessons;
   const installed = await db().contentPackage.findMany({
-    where: { state: "PUBLISHED" },
+    where: { state: "PUBLISHED", ...((courseSlug || lessonId) && { key: { in: requested.map(p => p.key) } }) },
     select: { key: true, state: true, publishedAt: true, version: true, fingerprint: true },
   });
   const byKey = new Map(installed.map(row => [row.key, row]));
-  const packages = contentPackages.flatMap(p => {
+  const packages = requested.flatMap(p => {
     const chapterPath = publicChapterPath(p), state = byKey.get(p.key);
     if (!chapterPath || !state) return [];
     if (["9709", "0580", "0606", "0862"].includes(p.course.code) && !matchesPublishedPackage(p, state)) return [];
@@ -21,7 +24,7 @@ export const publicChapters = cache(async () => {
   });
   const visible = await db().lesson.findMany({
     where: {
-      id: { in: packages.flatMap(({ p }) => p.lessons.map(l => l.id)) }, archivedAt: null,
+      id: { in: packages.flatMap(({ p }) => requestedLessons(p).map(l => l.id)) }, archivedAt: null,
       ...visibleLessonWhere(null), topic: { course: { published: true, archivedAt: null, featureKey: null } },
     },
     select: { id: true, versions: { take: 1, orderBy: { number: "desc" }, select: { createdAt: true } } },
@@ -29,7 +32,7 @@ export const publicChapters = cache(async () => {
   const versionDates = new Map(visible.map(row => [row.id, row.versions[0]?.createdAt.getTime() ?? 0]));
   return packages.flatMap(({ p, chapterPath, publishedAt }) => {
     const coursePath = "/courses/" + p.course.slug;
-    const lessons = p.lessons.flatMap(lesson => {
+    const lessons = requestedLessons(p).flatMap(lesson => {
       const versionDate = versionDates.get(lesson.id);
       if (versionDate === undefined) return [];
       const study = studyMetadata(lesson.id);

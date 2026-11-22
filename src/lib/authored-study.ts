@@ -118,15 +118,14 @@ import igcseEquivalentForms from "../../content/original/0580/fractions-decimals
 import igcseOrdering from "../../content/original/0580/ordering-study.json";
 import { z } from "zod";
 import { renderContent } from "./content";
-import { checkExact, checkExactInverseAngle, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
+import { checkExact, checkExactInverseAngle, checkRoundedDecimalPlaces, checkThreeSignificantFigures, isRoundedNumberAnswer, AnswerVariableError, type ExactField, type InverseAngle } from "./exact-answer";
 import { answerFormat, exactValueFeedback } from "./square-presentation";
 import { fourPlaceFeedback, needsFourPlaceFeedback } from "./s1-answer-precision";
-import { igcseNumberInput } from "./igcse-number-input";
-import { furtherStatisticsRoundingTip, lessonAnswerPrecision, studyPrecisionPolicy, type LessonPrecision } from "./lesson-answer-precision";
+import { furtherStatisticsRoundingTip, lessonAnswerInput, lessonAnswerPrecision, studyPrecisionPolicy, type LessonPrecision } from "./lesson-answer-precision";
 import type { StudyBlock, StudyCheck, StudyCheckResult, StudyExamPractice, StudyLesson, StudySection } from "./study-lesson-model";
 
 type Retry = { answer: string; feedback: string }[];
-type StudyField = ExactField & { inverseAngle?: InverseAngle; retry?: Retry };
+type StudyField = ExactField & { inverseAngle?: InverseAngle; retry?: Retry; schoolDecimalPlaces?: 0 | 1 | 2 };
 type AuthoredCheck = { kind: "check"; solution: string } & Omit<StudyCheck, "fields"> & (
   | { field: ExactField; retry?: Retry }
   | { fields: StudyField[] }
@@ -274,13 +273,19 @@ function authoredFields(check: AuthoredCheck): StudyField[] {
   return "fields" in check ? check.fields : [{ ...check.field, retry: check.retry }];
 }
 
-function publicCheck(check: AuthoredCheck, policy: LessonPrecision | undefined): { kind: "check" } & StudyCheck {
+function displayStudyOptions(options: Record<string, string>, shift: number) {
+  const entries = Object.entries(options);
+  const offset = entries.length && entries.every(([key]) => /^[A-D]$/.test(key)) ? shift % entries.length : 0;
+  return Object.fromEntries([...entries.slice(offset), ...entries.slice(0, offset)].map(([value, html]) => [value, renderContent(html)]));
+}
+
+function publicCheck(check: AuthoredCheck, policy: LessonPrecision | undefined, optionShift = 0): { kind: "check" } & StudyCheck {
   const fields = authoredFields(check).map(field => {
     const { key, label, type, variables, dimension, options, inverseAngle } = field;
     return {
       key, label, type, variables, dimension,
       ...(/[\\$]/.test(label) && { labelHtml: renderContent(label) }),
-      ...(options && { options: Object.fromEntries(Object.entries(options).map(([value, html]) => [value, renderContent(html)])) }),
+      ...(options && { options: displayStudyOptions(options, optionShift) }),
       ...(inverseAngle && { inverseAngle: true }),
       ...lessonAnswerPrecision(policy, check.id, field, check.prompt),
     };
@@ -297,8 +302,8 @@ function publicCheck(check: AuthoredCheck, policy: LessonPrecision | undefined):
   };
 }
 
-function publicBlock(block: AuthoredBlock, policy: LessonPrecision | undefined): StudyBlock {
-  if (block.kind === "check") return publicCheck(block, policy);
+function publicBlock(block: AuthoredBlock, policy: LessonPrecision | undefined, optionShift: (check: AuthoredCheck) => number): StudyBlock {
+  if (block.kind === "check") return publicCheck(block, policy, optionShift(block));
   if (block.kind === "example") return block;
   return {
     ...block,
@@ -312,15 +317,19 @@ export function studyLayout(lessonId: string) {
   if (!lesson) return undefined;
   const path = examPaths[lessonId] ?? lesson.examPractice;
   const policy = studyPrecisionPolicy(lessonId);
+  let choiceIndex = 0;
+  const optionShift = (check: AuthoredCheck) => policy === "additional-maths"
+    && authoredFields(check).some(field => field.options) ? choiceIndex++ : 0;
   const study: StudyLesson = {
     sections: lesson.sections.map(section => ({
       ...section,
       intro: section.intro ? renderContent(section.intro) : "",
-      blocks: section.blocks.map(block => publicBlock(block, policy)),
+      blocks: section.blocks.map(block => publicBlock(block, policy, optionShift)),
     })),
     glossary: lesson.glossary.map(word => ({ ...word, definition: renderContent(word.definition) })),
     related: lesson.related,
-    ...(lesson.extraPractice && { extraPractice: lesson.extraPractice.map(check => publicCheck(check, policy)) }),
+    ...(lesson.sessions && { sessions: lesson.sessions }),
+    ...(lesson.extraPractice && { extraPractice: lesson.extraPractice.map(check => publicCheck(check, policy, optionShift(check))) }),
     ...(path && { examPractice: {
       needs: path.needs,
       starters: (path.starters ?? []).map(q => ({
@@ -352,18 +361,20 @@ function studyAnswerMatches(field: StudyField, answer: string, prompt: string) {
 
 function fieldFeedback(field: StudyField, answer: string, check: AuthoredCheck, policy: LessonPrecision | undefined): StudyCheckResult | undefined {
   const format = { ...field, ...lessonAnswerPrecision(policy, check.id, field, check.prompt) };
-  const { significantFigures, decimalPlaces } = format;
+  const { significantFigures, decimalPlaces, classroom } = format;
   const mechanics = policy === "mechanics";
   let precisionHint: string | undefined;
   try {
-    const correct = significantFigures ? checkThreeSignificantFigures(field, answer, check.prompt, mechanics) : studyAnswerMatches(field, answer, check.prompt);
-    if (decimalPlaces && (policy === "statistics-1" || !correct) && needsFourPlaceFeedback(field, answer, correct)) {
+    const correct = significantFigures ? checkThreeSignificantFigures(field, answer, check.prompt, mechanics)
+      : decimalPlaces === 0 || decimalPlaces === 1 || decimalPlaces === 2 ? checkRoundedDecimalPlaces(field, answer, decimalPlaces, check.prompt)
+      : studyAnswerMatches(field, answer, check.prompt);
+    if (decimalPlaces === 4 && (policy === "statistics-1" || !correct) && needsFourPlaceFeedback(field, answer, correct)) {
       const feedback = policy === "further-statistics" ? furtherStatisticsRoundingTip : fourPlaceFeedback;
       return { status: "retry", feedback: renderContent("<p>" + feedback + "</p>") };
     }
     if (correct) return undefined;
-    if (!field.inverseAngle && isRoundedNumberAnswer(field, answer, mechanics)) {
-      precisionHint = "<p>" + (significantFigures ? answerFormat(format).en : exactValueFeedback) + "</p>";
+    if (!field.inverseAngle && isRoundedNumberAnswer(field, answer, mechanics || !!classroom)) {
+      precisionHint = "<p>" + (significantFigures || decimalPlaces !== undefined ? answerFormat(format).en : classroom ? "Give the exact value. Use a fraction if the decimal does not terminate." : exactValueFeedback) + "</p>";
     }
   } catch (error) {
     if (error instanceof AnswerVariableError) return {
@@ -401,10 +412,10 @@ export function gradeStudyCheck(lessonId: string, id: string, answers: string | 
     return { status: "format", feedback: "<p>Enter an answer in every field.</p>" };
   }
   const policy = studyPrecisionPolicy(lessonId);
+  const classroomNotation = policy === "igcse" || policy === "lower-secondary";
   for (const field of fields) {
-    const typed = values[field.key];
-    const classroomNotation = lessonId.startsWith("igcse-0580-") || lessonId.startsWith("lower-0862-");
-    const result = fieldFeedback(field, classroomNotation ? igcseNumberInput(field, typed) : typed, block, policy);
+    const answer = lessonAnswerInput(policy, field, values[field.key], block.prompt, classroomNotation);
+    const result = fieldFeedback(field, answer, block, policy);
     if (result) return fields.length === 1 ? result : {
       ...result, feedback: renderContent("<p><strong>" + field.label + "</strong></p>") + result.feedback,
     };

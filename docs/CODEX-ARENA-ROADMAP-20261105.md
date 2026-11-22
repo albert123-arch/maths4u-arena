@@ -1588,3 +1588,9 @@ UNKNOWN remains 0, Cambridge archive 2,654 and presentations 59.
 Report: [ARENA-9709-P1-S1-DEPLOY-20261108.md](ARENA-9709-P1-S1-DEPLOY-20261108.md).
 The acceptance documents are a separate local commit; no additional deployment
 is performed just to publish the report. No next content block was started.
+
+## Аудит учебных материалов · 22 ноября 2026
+
+[План исправлений Arena](ARENA-TEACHING-AUDIT-20261122.md) включает замечания по 0862, 0580, 0606, 9709 и 9231. Дополнение по 0606 охватывает автопроверку, математические выкладки, схемы, подсказки и разнообразие практики. Приёмка проходит локально на отдельной тестовой копии базы.
+
+[Отчёт о выполнении и проверках](ARENA-TEACHING-AUDIT-REPORT-20261122.md).

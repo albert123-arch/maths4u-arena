@@ -36,7 +36,8 @@ import { adminArchiveContext, planCourseTree, applyCourseTree, disableCourseTree
 import { squarePublicLesson } from "@/lib/square-content";
 import { publicLearningTopic } from "@/lib/public-learning-topic";
 import { assertLessonVisible } from "@/lib/content-access";
-import { gradeStudyCheck, hasOriginalRevisionStudy, studyCheckRequest } from "@/lib/authored-study";
+import { gradeStudyCheck, hasOriginalRevisionStudy } from "@/lib/authored-study";
+import { readStudyCheckpoints, recordStudyCheckpoint, studyCheckpointLesson, studyCheckpointRequest } from "@/lib/study-checkpoints";
 import { inRequestView, requestView, rolePreview } from "@/lib/request-view";
 import { resolveRequestView, guardViewRequest, enterView, exitView, touchView } from "@/lib/view-lens";
 import { previewMaterial, checkPreview } from "@/lib/view-preview";
@@ -118,13 +119,23 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
       if (parts.length === 5 && parts[4] === "check" && method === "POST") return json(await checkPreview(parts[2], parts[3], input, lang));
     }
     if (method === "GET" && route === "learning/course-choices") return json(await courseChoices(await actorForToken(tokenFrom(request))));
+    if (route === "learning/study-check" && method === "GET") {
+      const lessonId = studyCheckpointLesson.parse(url.searchParams.get("lessonId"));
+      const actor = requestView()?.lens ? null : await actorForToken(tokenFrom(request));
+      return json(actor ? await readStudyCheckpoints(actor, lessonId) : []);
+    }
     if (route === "learning/study-check" && method === "POST") {
-      const { lessonId, id, answer, answers } = studyCheckRequest.parse(input);
+      const { lessonId, id, answer, answers, event } = studyCheckpointRequest.parse(input);
       const lesson = await publicLearningTopic(lessonId);
       ensure(lesson?.packageKey || hasOriginalRevisionStudy(lessonId), 404, "NOT_FOUND");
       await assertLessonVisible(null, lessonId);
       const result = gradeStudyCheck(lessonId, id, answer ?? answers!);
       ensure(result, 404, "NOT_FOUND");
+      if (event && result.status !== "format" && !requestView()?.lens) {
+        const actor = await actorForToken(tokenFrom(request));
+        const checkpoint = await recordStudyCheckpoint(actor, lessonId, id, event, result.status === "correct");
+        return json({ ...result, checkpoint });
+      }
       return json(result);
     }
     if ((route === "learning/square/check" || action === "check") && method === "POST") {

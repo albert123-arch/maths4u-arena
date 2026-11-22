@@ -276,6 +276,22 @@ function comparisonSet(clause: string, allowed: string[], range: boolean): Inter
   ];
 }
 
+export function disjointCommaBounds(raw: string): string {
+  const clauses = split(raw.replace(/≤/g, "<=").replace(/≥/g, ">="), ",");
+  if (clauses.length !== 2) return raw;
+  const bounds = clauses.map(clause => /^\s*([a-z])\s*(<=|>=|<|>)\s*([^<>=]+?)\s*$/.exec(clause));
+  const [a, b] = bounds;
+  if (!a || !b || a[1] !== b[1] || a[2][0] === b[2][0]) return raw;
+  try {
+    const first = comparisonInterval(a[0].trim(), [a[1]], false);
+    const second = comparisonInterval(b[0].trim(), [b[1]], false);
+    if (first && second && !intersection(first, second)) return clauses.join(" or ");
+  } catch {
+    // Keep malformed expressions on the ordinary format-feedback path.
+  }
+  return raw;
+}
+
 function answerSetKey(field: ExactField, raw: string, prompt?: string) {
   const outputs = rangeOutputs(field, prompt);
   const symbol = setSymbol(field);
@@ -437,6 +453,23 @@ function roundableScalar(field: ExactField, allowInteger: boolean) {
 
 export function canRoundScalar(field: ExactField, allowInteger = false) {
   return roundableScalar(field, allowInteger) !== undefined;
+}
+
+/** In self-study, accept the correctly rounded measurement or its exact value. */
+export function checkRoundedDecimalPlaces(field: ExactField, input: string, places: 0 | 1 | 2, prompt?: string) {
+  if (checkExact(field, input, prompt)) return true;
+  const target = roundableScalar(field, false);
+  if (target === undefined) return false;
+  const entered = normalize(scalarAnswerValue(field, input));
+  const decimal = /^[+-]?(?:\d+(?:\.(\d*))?|\.(\d+))$/.exec(entered);
+  if (!decimal) return false;
+  const writtenPlaces = (decimal[1] ?? decimal[2] ?? "").length;
+  if (writtenPlaces > 12) return false;
+  const place = Math.max(places, writtenPlaces);
+  const scale = 10 ** place;
+  const scaled = Math.abs(target) * scale;
+  const rounded = Math.sign(target) * Math.floor(scaled + 0.5 + scaled * Number.EPSILON) / scale;
+  return Number(entered) === rounded;
 }
 
 /** An optional self-study policy. Assigned exact keys continue to use checkExact. */

@@ -1,8 +1,10 @@
 // Server-only content. Do not import this module into a client component.
 import extension from "../../content/original/quadratics-extension-20261105-v1.json";
+import lowerSecondaryDiagrams from "../../content/original/0862/practice-diagrams.json";
+import additionalMathsDiagrams from "../../content/original/0606/practice-diagrams.json";
 import { quadraticsTeaching } from "./quadratics-notes";
 import pack from "../../content/original/completing-square-20261105-v1.json";
-import { checkExact, checkThreeSignificantFigures, isExpandedPolynomial, isRoundedNumberAnswer, scalarAnswerValue, AnswerVariableError, type ExactField } from "./exact-answer";
+import { checkExact, checkRoundedDecimalPlaces, checkThreeSignificantFigures, isExpandedPolynomial, isRoundedNumberAnswer, scalarAnswerValue, AnswerVariableError, type ExactField } from "./exact-answer";
 import { displayBankFieldLabel, renderContent } from "./content";
 import { mathPattern } from "./math-markup.mjs";
 import { type SquareLesson, type CheckResult, squareVersion, quadraticTopic, type QuadraticTopic } from "./square-model";
@@ -12,8 +14,7 @@ import { legacyQuadraticsStudy, studyLayout } from "./authored-study";
 import { answerFormat, exactValueFeedback } from "./square-presentation";
 import { isCoordinateField, isIntervalField, rangeOutputs } from "./answer-notation";
 import { fourPlaceFeedback, needsFourPlaceFeedback } from "./s1-answer-precision";
-import { lessonAnswerPrecision, type LessonPrecision } from "./lesson-answer-precision";
-import { igcseNumberInput } from "./igcse-number-input";
+import { lessonAnswerInput, lessonAnswerPrecision, type LessonPrecision } from "./lesson-answer-precision";
 import { projectSolutionImages } from "./solution-image-display";
 
 type Criterion = { marks: number; code: string; description_html: string; guidance_html?: string };
@@ -58,12 +59,23 @@ const examples = [
   { title: "3 · Keep both exact roots", question: String.raw`<p>Solve \(3x^2-12x+5=0\) by completing the square.</p>`, solution: String.raw`\[3(x-2)^2-7=0\quad\Longrightarrow\quad(x-2)^2=\frac73.\]\[x=2\pm\sqrt{\frac73}=2\pm\frac{\sqrt{21}}3.\]<p>There are two roots. Enter both, for example <strong>{2-sqrt(21)/3, 2+sqrt(21)/3}</strong>. A decimal approximation is not an exact answer.</p>` },
   { title: "4 · Count intersections within the domain", question: String.raw`<p>For \(f(x)=(x-2)^2+1\), \(0\le x\le5\), find all levels \(t\) giving two distinct solutions of \(f(x)=t\).</p>`, solution: String.raw`<p>The vertex level is \(1\); it gives only one solution. The left branch reaches \(f(0)=5\), and the right branch reaches \(f(5)=10\). Both branches meet the level precisely when \(1<t\le5\). At \(t=5\), the roots \(0\) and \(4\) both belong to the domain.</p>` },
 ];
+const lowerSecondaryFigures: Record<string, { src: string; alt: string; width: number; height: number }> = lowerSecondaryDiagrams;
+const additionalMathsFigures: Record<string, { prompt?: string; solution?: string }> = additionalMathsDiagrams;
+
 function practicePrompt(question: SourceQuestion) {
   const prompt = question.fields.some(field => field.type === "ratio")
     ? question.prompt_html.replace("Enter its numerator and denominator separately with a semicolon", "Give the inverse as a single fraction")
       .replace("as numerator ; denominator", "as a single fraction")
     : question.prompt_html;
-  return renderContent(prompt).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>');
+  const figure = lowerSecondaryFigures[question.id];
+  const illustration = figure ? `<p><img src="${figure.src}" alt="${figure.alt.replaceAll("&", "&amp;").replaceAll('"', "&quot;")}" width="${figure.width}" height="${figure.height}"></p>` : "";
+  return renderContent(prompt + illustration + (additionalMathsFigures[question.id]?.prompt ?? "")).replace(/class="marks"/g, 'class="square-marks"').replace(/<\/p>\s*\[(\d{1,2})\]<\/li>/g, '</p><span class="square-marks">[$1]</span></li>').replace(/\s*\[(\d{1,2})\]\s*<\/li>/g,'<span class="square-marks">[$1]</span></li>');
+}
+
+function practiceChoiceText(uid: string, field: ExactField, option: string, text: string) {
+  const ambiguousHorizontalContact = uid === "M4U-9709-M1-FORCES-FORCE-MODELS-02-0" &&
+    field.key === "decision" && field.expected === "normal" && option === "vertical" && text === "It always acts vertically upwards.";
+  return ambiguousHorizontalContact ? "It acts horizontally along the table." : text;
 }
 
 export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): SquareLesson {
@@ -73,7 +85,7 @@ export function squarePublicLesson(topic: QuadraticTopic = quadraticTopic()): Sq
   const summaryHtml = topic.summary.match(mathPattern)
     ? renderContent(topic.summary.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"))
     : undefined;
-  return { topic, version: topic.version, title: topic.title, summaryHtml,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: practicePrompt(q), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey ? displayBankFieldLabel(f.type === "ratio" ? f.label.replace(/: numerator ; denominator/i, " as a fraction") : f.label) :topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(v)])) } : {}), ...lessonAnswerPrecision(q.precisionPolicy, q.id, f, q.prompt_html) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
+  return { topic, version: topic.version, title: topic.title, summaryHtml,...(packaged?{navigation:packaged.navigation}:{}), ...(layout ? { notes: "", ...layout } : { notes: renderContent(teaching.notes), examples: teaching.examples.map(e => ({ title: e.title, question: renderContent(e.question), solution: renderContent(e.solution) })) }), questions: questionsForTopic(topic.key).map(q => ({ uid: q.id, family: q.family_uid, title: q.title, collection: q.collection, ...(q.variant_index!==undefined?{variantIndex:q.variant_index}:{}), prompt: practicePrompt(q), fields: q.fields.map(f => ({ key: f.key, label: topic.packageKey ? displayBankFieldLabel(f.type === "ratio" ? f.label.replace(/: numerator ; denominator/i, " as a fraction") : f.label) :topic.code === "CS" ? label(f) : topicLabel(f), type: f.type, ...(f.dimension ? { dimension: f.dimension } : {}), ...(f.factor_variable ? { factor_variable: f.factor_variable } : {}), ...(f.variables ? { variables: f.variables } : {}), ...(f.options ? { options: Object.fromEntries(Object.entries(f.options).map(([k,v]) => [k, renderContent(practiceChoiceText(q.id, f, k, v))])) } : {}), ...lessonAnswerPrecision(q.precisionPolicy, q.id, f, q.prompt_html) })), marks: q.marks, manual: /sketch|explain|justify/i.test(q.prompt_html) || q.collection === "exam" || q.collection === "mixed" })) };
 }
 export function learningTopic(key:string){return packageTopic(key)??quadraticTopic(key);}
 // Feedback describes an identifiable answer pattern, not an assumed thought process.
@@ -81,8 +93,11 @@ export function learningTopic(key:string){return packageTopic(key)??quadraticTop
 function matchesFeedbackPattern(f: ExactField, input: string) {
   try { return checkExact(f, input); } catch { return false; }
 }
-function retryMessage(q: SourceQuestion, f: ExactField, input: string, round?: boolean) {
-  if (isRoundedNumberAnswer(f, input, q.precisionPolicy === "mechanics")) return round ? answerFormat({ ...f, significantFigures: 3 }).en : exactValueFeedback;
+function retryMessage(q: SourceQuestion, f: ExactField, input: string, precision: ReturnType<typeof lessonAnswerPrecision>) {
+  if (isRoundedNumberAnswer(f, input, q.precisionPolicy === "mechanics" || !!precision.classroom)) {
+    if (precision.significantFigures || precision.decimalPlaces !== undefined) return answerFormat({ ...f, ...precision }).en;
+    return precision.classroom ? "Give the exact value. Use a fraction if the decimal does not terminate." : exactValueFeedback;
+  }
   const multiplier = q.fields.find(x => /^(a|form_a)$/.test(x.key));
   const centre = q.fields.find(x => /^(h|form_h)$/.test(x.key));
   if (multiplier && /^(h|form_h)$/.test(f.key)) {
@@ -112,12 +127,15 @@ export function gradeSquare(q: SourceQuestion, answers: Record<string,string>): 
     const precision = lessonAnswerPrecision(q.precisionPolicy, q.id, f, q.prompt_html);
     const typed = answers[f.key];
     const classroomNotation = q.id.startsWith("igcse-0580-") || q.id.startsWith("lower-0862-");
-    const answer = classroomNotation ? igcseNumberInput(f, typed) : typed;
+    const answer = lessonAnswerInput(q.precisionPolicy, f, typed, q.prompt_html, classroomNotation);
     try {
-      const correct = precision.significantFigures ? checkThreeSignificantFigures(f, answer, q.prompt_html, q.precisionPolicy === "mechanics") : checkExact(f, answer, q.prompt_html);
-      fields[f.key] = precision.decimalPlaces && needsFourPlaceFeedback(f, answer, correct)
+      const { decimalPlaces } = precision;
+      const correct = precision.significantFigures ? checkThreeSignificantFigures(f, answer, q.prompt_html, q.precisionPolicy === "mechanics")
+        : decimalPlaces === 0 || decimalPlaces === 1 || decimalPlaces === 2 ? checkRoundedDecimalPlaces(f, answer, decimalPlaces, q.prompt_html)
+        : checkExact(f, answer, q.prompt_html);
+      fields[f.key] = decimalPlaces === 4 && needsFourPlaceFeedback(f, answer, correct)
         ? { correct: false, message: fourPlaceFeedback }
-        : { correct, message: correct ? "Correct." : retryMessage(q, f, answer, !!precision.significantFigures) };
+        : { correct, message: correct ? "Correct." : retryMessage(q, f, answer, precision) };
     }
     catch (error) {
       if (error instanceof AnswerVariableError && !error.formatOnly) fields[f.key] = { correct: false, message: error.message };
@@ -136,6 +154,12 @@ export function squareMarkingRows(q: SourceQuestion): MarkingRow[] {
   return parts.flatMap((p, i) => p.marking_criteria.map((c, j) => ({ id: `${i}-${j}`, part: p.label, code: c.code, marks: c.marks, html: renderContent(c.description_html), ...(c.guidance_html ? { guidance: renderContent(c.guidance_html) } : {}) })));
 }
 export function squareHelp(q: SourceQuestion, kind: SupportKind) {
-  if (kind === "hint") return renderContent(q.hint_html);
-  return kind === "solution" ? renderContent(q.answer_html + projectSolutionImages(q.solution_html, q.id).html) : "";
+  if (kind === "hint") {
+    if (q.id.startsWith("lower-0862-s7-") && q.hint_html.trim() === q.answer_html.trim()) {
+      if (q.title === "Identify a solid by its features") return "<p>Start with the bases. Are there two matching ends, or does the surface taper to a single vertex? Match the flat and curved faces to the options.</p>";
+      if (q.title === "Choosing a type of data") return "<p>Decide whether the answer is a label, a count or a measurement. Can a value lie between two whole numbers?</p>";
+    }
+    return renderContent(q.hint_html);
+  }
+  return kind === "solution" ? renderContent(q.answer_html + projectSolutionImages(q.solution_html, q.id).html + (additionalMathsFigures[q.id]?.solution ?? "")) : "";
 }

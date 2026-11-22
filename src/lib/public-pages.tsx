@@ -48,19 +48,24 @@ export async function pageMetadata({ params,searchParams }: PageProps, locale: L
   await connection();
   const available = await publicLanguages(), translated = hasRussianPage(path, available);
   if (locale === "ru" && !translated) notFound();
-  const chapters = locale === "en" ? await publicChapters() : [];
+  const chapters = locale === "en" ? await publicChapters(parts[0] === "courses" ? parts[1] : undefined,
+    parts[0] === "courses" && parts[2] === "topics" ? parts[3] : undefined) : [];
   const chapter = matchPublicChapter(chapters, path, query.chapter);
   const canonical = arenaOrigin + (locale === "ru" ? "/ru" : "") + (chapter?.chapterPath ?? path);
   const alternates = { canonical, ...(translated && (!chapter || chapter.chapterPath === path) ? { languages: { en: arenaOrigin + path, ru: arenaOrigin + "/ru" + path } } : {}) };
   const discovery = discoveryRoute(parts), topic = parts[0]==="courses"&&parts[2]==="topics"&&parts[3]?await topicAtPath(parts[3],path):undefined;
-  const data = await publicDiscovery(locale), item = data.items.find(i => i.href === (locale === "ru" ? "/ru" : "") + path);
   const lessonChapter = chapters.find(ch => ch.lessons.some(l => l.path === path));
   const specific = chapter ? chapterMetadata(chapter) : lessonChapter ? chapterMetadata(lessonChapter, lessonChapter.lessons.find(l => l.path === path)) : null;
+  const item = topic || specific ? undefined : (await publicDiscovery(locale)).items.find(i => i.href === (locale === "ru" ? "/ru" : "") + path);
   const further = chapters.filter(ch => ch.courseCode === "9231");
   const direction = learningDirections.find(d => d.key === discovery?.direction);
   const title = topic ? topic.title : item ? (locale === "ru" ? item.ru : item.title) : direction ? locale === "ru" ? direction.ru : direction.title : path === "/library" ? "Practice" : path === "/courses" ? "Mathematics courses" : path === "/search" ? "Search courses and topics" : path === "/for-teachers" ? "Maths teaching tools" : "Learn mathematics, practise and prepare for exams";
   const description = topic?.summary ?? (direction ? locale === "ru" ? direction.descriptionRu : direction.description : locale === "ru" ? "Конспекты, задачи и решения по теме «" + title + "» на Maths4U." : "Explore " + title + " and its available practice questions on Maths4U.");
-  const course=further.find(ch=>path==='/courses/'+ch.courseSlug),finalTitle=specific?.title??(course?'9231 '+furtherCourseName(course.courseTitle)+' notes & practice | Maths4U':path==='/'&&further.length?'9231 Further Mathematics: notes, examples & practice | Maths4U':title+' | Maths4U'),finalDescription=specific?.description??(course?'Study 9231 '+furtherCourseName(course.courseTitle)+' with notes, worked examples, quick checks and exam-style questions with solutions.':description);
+  const course = further.find(ch => path === '/courses/' + ch.courseSlug);
+  const finalTitle = specific?.title ?? (course ? '9231 ' + furtherCourseName(course.courseTitle) + ' notes & practice | Maths4U'
+    : path === '/' ? 'Cambridge Mathematics 0862, 0580, 0606, 9709 & 9231 | Maths4U' : title + ' | Maths4U');
+  const finalDescription = specific?.description ?? (course ? 'Study 9231 ' + furtherCourseName(course.courseTitle) + ' with notes, worked examples, quick checks and exam-style questions with solutions.'
+    : path === '/' ? 'Study Cambridge Lower Secondary, IGCSE, AS and A Level Mathematics with worked examples, answer checks and practice.' : description);
   return { title: finalTitle, description:finalDescription, alternates, ...(path === "/search" || query.view === "revision" || process.env.MATHS4U_ENV !== "production" ? { robots: { index: false, follow: true } } : {}), openGraph: { title:finalTitle, description:finalDescription, url: canonical, siteName: "Maths4U", type: "website" } };
 }
 async function privateArchivePage(parts:string[],search:Record<string,string>){
@@ -90,7 +95,8 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   const raw = await searchParams, search = Object.fromEntries(Object.entries(raw).filter((e): e is [string, string] => typeof e[1] === "string"));
   if(search.source||search.taskId||search.legacyLesson||parts[0]==='courses'&&parts[2]==='topics'&&unallocatedChapter(parts[3]??''))return privateArchivePage(parts,search);
   const packaged=parts[0]==="courses"&&parts[2]==="topics"&&parts[3]?await topicAtPath(parts[3],path):undefined;
-  const chapters = locale === "en" ? await publicChapters() : [];
+  const chapters = locale === "en" ? await publicChapters(parts[0] === "courses" ? parts[1] : undefined,
+    parts[0] === "courses" && parts[2] === "topics" ? parts[3] : undefined) : [];
   const chapterPage = matchPublicChapter(chapters, path, raw.chapter);
   if (chapterPage && path !== chapterPage.chapterPath && Object.keys(raw).length === 1) permanentRedirect(chapterPage.chapterPath);
   const lessonChapter = chapters.find(ch => ch.lessons.some(l => l.path === path));

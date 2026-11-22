@@ -12,6 +12,7 @@ import { AdminArchiveLinks } from './admin-archive-links';
 import type { SupportContent } from "@/lib/question-support-model";
 import { LessonPresentations } from "./lesson-presentations";
 import { ExtraStudyPractice, LessonStudy, StudyExampleList, StudyWrittenQuestions } from "./lesson-study";
+import { StudyCheckpointReview, useStudyCheckpoints, type StudySessionState } from "./study-checkpoint-progress";
 import { useSquareProgress, SquareSaveNotice } from "./square-progress";
 import { firstStoredValue } from "@/lib/square-device-progress";
 import { TeacherTaskPreview } from "./teacher-task-preview";
@@ -22,12 +23,13 @@ import { quadraticTopics, type QuadraticTopic, nextSquareReview, type SquareLess
 const sectionIds = ["notes", "examples", "practice", "challenge", "review"];
 const collectionOrder = ["diagnostic", "short", "variant", "exam", "mixed"];
 
-export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesson; sessionReady: boolean }) {
+export function SquareLessonView({ lesson, sessionReady, studySession = "ready" }: { lesson: SquareLesson; sessionReady: boolean; studySession?: StudySessionState }) {
   const { t } = useLocale(), root = useRef<HTMLDivElement>(null), sectionNav = useRef<HTMLElement>(null);
   const lens = useView();
   const study = lesson.study;
   const [activeNote, setActiveNote] = useState(study?.sections[0]?.id ?? "");
   const topic = lesson.topic, actor = useContext(ActorContext), state = useSquareProgress(sessionReady, topic);
+  const checkpoints = useStudyCheckpoints(topic.lessonId, !!study && !lesson.draft, studySession);
   const teacher = actor?.roles.some(r => r.role === "TEACHER" || r.role === "ADMIN");
   const diagnostic = lesson.questions.find(q => q.collection === "diagnostic")??lesson.questions.find(q=>q.collection==="short")??lesson.questions[0], primary = lesson.questions.filter(q => q.collection === "short");
   const navigation:NonNullable<SquareLesson["navigation"]>=lesson.navigation??{directionPath:"/learn/a-level",directionTitle:"AS & A Level",coursePath:"/courses/maths4u-9709-p1",courseTitle:"Pure 1 · 9709",chapterTitle:"Quadratics",topics:quadraticTopics};
@@ -113,7 +115,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
     <nav className="quadratics-topics" aria-label={t("Темы главы", "Chapter topics")}>{navigation.topics.map(q => <Link key={q.key} href={q.path} aria-current={q.key === topic.key ? "page" : undefined}>{q.title}</Link>)}</nav>
     <nav className="square-nav" ref={sectionNav} aria-label={t("Разделы урока", "Lesson sections")}>{[t("Конспект", "Notes"), t("Примеры", "Examples"), t("Практика", "Practice"), t("Задачи", "Exam-style"), t("Повторение", "Review")].map((label, i) => <a key={sectionIds[i]} href={"#" + sectionIds[i]} aria-current={active === sectionIds[i] ? "location" : undefined}>{label}</a>)}</nav>
     {study
-      ? <LessonStudy lesson={lesson} study={study} activeId={activeNote}>{markRead}</LessonStudy>
+      ? <LessonStudy lesson={lesson} study={study} activeId={activeNote} checkpoints={checkpoints.checks} onCheckpoint={checkpoints.record} session={studySession}>{markRead}</LessonStudy>
       : <section className="card square-reading" id="notes"><MathContent html={lesson.notes} />{markRead}</section>}
     <section className="card square-reading" id="examples"><h2>{t("Разобранные примеры", "Worked examples")}</h2>{study ? <StudyExampleList study={study} examples={lesson.examples} /> : lesson.examples.map(e => <article className="square-example" key={e.title}><h3>{e.title}</h3><MathContent html={e.question} /><details><summary>{t("Посмотреть решение", "Follow the solution")}</summary><MathContent html={e.solution} /></details></article>)}</section>
     <section id="practice" className="card square-practice"><h2>{t("Практика метода", "Practise the method")}</h2>
@@ -127,7 +129,7 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
       {teacher && !lens ? <TeacherLessonQuestion key={uid} topic={topic} q={current} /> : <SquareQuestionForm reportReady={restored && sessionReady} topic={topic} key={uid + (actor?.id ?? "guest")} q={current} enabled={restored && sessionReady && state.ready && !state.error && lens?.mode !== "USER"} onResult={async (event, result) => { await state.record(event, current.family, result); }} />}
       <div className="square-next row">{next ? <Button onClick={() => choose(next)}>{t("Следующий шаг →", "Next step →")}</Button> : <ButtonLink href="#challenge">{t("Экзаменационная практика →", "Try exam-style practice →")}</ButtonLink>}{current.variantIndex===undefined && lesson.questions.some(q => q.family === current.family && q.uid !== current.uid) && <Button onClick={() => choose(lesson.questions.filter(q => q.family === current.family && q.uid !== current.uid).sort((a, b) => (state.snapshot.seen[a.uid] ?? 0) - (state.snapshot.seen[b.uid] ?? 0))[0])}>{t("Новый вариант", "Try a fresh variant")}</Button>}<a href="#examples">{t("Повторить метод", "Review the method")}</a></div>
       {(!teacher || lens) && <SquareSaveNotice state={state} />}
-      {study?.extraPractice && <ExtraStudyPractice checks={study.extraPractice} lessonId={topic.lessonId} />}
+      {study?.extraPractice && <ExtraStudyPractice checks={study.extraPractice} lessonId={topic.lessonId} onCheckpoint={checkpoints.record} session={studySession} />}
     </section>
     <section id="challenge" className="card">
       <h2>{t("Примените метод · авторские экзаменационные задачи", "Apply it · original exam-style problems")}</h2>
@@ -146,7 +148,10 @@ export function SquareLessonView({ lesson, sessionReady }: { lesson: SquareLesso
         </div>)}</div>
       </details>}
     </section>
-    <section id="review" className="card"><h2>{t("Вернитесь к тому, что требует практики", "Come back to what needs practice")}</h2>{study && <ButtonLink href={topic.path + "?view=revision"}>Quick revision sheet (A4)</ButtonLink>}{!Object.keys(state.snapshot.states).length ? <p>{t("План повторения появится после первой проверки.", "Your review plan starts after your first check.")}</p> : <><p>{queue.length ? t("Навыков для повторения сейчас: " + queue.length + ".", queue.length + (queue.length === 1 ? " skill is" : " skills are") + " ready for review.") : t("Пока всё повторено. Вернитесь после перерыва, чтобы проверить, что запомнилось.", "You are up to date for now. Return after a break to check what you remember.")}</p>{queue.length > 0 && <Button onClick={() => choose(queue[0])}>{t("Повторить на новом варианте →", "Review with a fresh variant →")}</Button>}<p className="muted">{t("После верного ответа без помощи: через 1, 3, 7 и 14 дней. Повторы в тот же день не увеличивают интервал. Ошибки возвращаются сегодня; ответы с помощью — раньше.", "After a correct answer without help: 1, 3, 7, then 14 days. Same-day retries do not advance the interval. Mistakes return today; answers with help return sooner.")}</p></>}</section>
+    <section id="review" className="card"><h2>{t("Вернитесь к тому, что требует практики", "Come back to what needs practice")}</h2>{study && <><ButtonLink href={topic.path + "?view=revision"}>Quick revision sheet (A4)</ButtonLink><StudyCheckpointReview study={study} checks={checkpoints.checks} /></>}
+      {study && studySession === "device" && <p role="status">Account status is temporarily unavailable. New checkpoints are saved on this device.</p>}
+      {checkpoints.issue && <p role="alert">Your checkpoint history is unavailable. You can still check answers.</p>}
+      {!Object.keys(state.snapshot.states).length && !Object.keys(checkpoints.checks).length ? <p>{t("План повторения появится после первой проверки.", "Your review plan starts after your first check.")}</p> : <><p>{queue.length ? t("Навыков для повторения сейчас: " + queue.length + ".", queue.length + (queue.length === 1 ? " skill is" : " skills are") + " ready for review.") : t("Нет заданий из практики для повторения сейчас.", "No practice variants are due now.")}</p>{queue.length > 0 && <Button onClick={() => choose(queue[0])}>{t("Повторить на новом варианте →", "Review with a fresh variant →")}</Button>}{Object.keys(state.snapshot.states).length > 0 && <p className="muted">{t("После верного ответа без помощи: через 1, 3, 7 и 14 дней. Повторы в тот же день не увеличивают интервал. Ошибки возвращаются сегодня; ответы с помощью — раньше.", "After a correct answer without help: 1, 3, 7, then 14 days. Same-day retries do not advance the interval. Mistakes return today; answers with help return sooner.")}</p>}</>}</section>
     {topic.packageKey==="9709-p1-quadratics"&&<p><Link href={topic.path+"?practice=previous"}>Earlier practice and saved answers</Link></p>}
     {["9709-p1-functions","9709-p1-coordinate-geometry","9709-p1-circular-measure","9709-p1-trigonometry","9709-p1-series","9709-p1-binomial-expansion","9709-p1-differentiation","9709-p1-integration","9709-s1-representation","9709-s1-central-tendency","9709-s1-variation","9709-s1-probability","9709-s1-counting","9709-s1-distributions","9709-s1-binomial-geometric","9709-s1-normal"].includes(topic.packageKey??"")&&<p><Link href={topic.path+"?view=legacy"}>Question bank and saved work</Link></p>}
     {teacher && <LessonPresentations lessonId={topic.lessonId} />}

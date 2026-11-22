@@ -115,7 +115,18 @@ export function CourseCatalogScreen({ slug, home = false, initial }: { slug?: st
       {c.locked ? <p className="catalog-guest-note">{t("Для курса нужен доступ.", "This course requires access.")}</p> : <ChapterIndex course={c} prefix={prefix} />}
     </section>)}</div></section>) : visible.map(c => {
       const selected = c.chapters.find(ch => ch.id === chapter) ?? c.chapters[0], selectedIndex = c.chapters.findIndex(ch => ch.id === selected?.id);
-      return <div key={c.id}>{follow(c)}{lang === "ru" && c.description && <p className="muted course-description">{c.description}</p>}{c.locked ? <p className="catalog-guest-note">{t("Для этого курса нужен доступ.", "This course requires access.")}</p> : <div className="course-study-layout">
+      return <div key={c.id}>{follow(c)}{lang === "ru" && c.description && <p className="muted course-description">{c.description}</p>}
+        {c.slug === "maths4u-9231-statistics" && !initial?.chapterTitle && !c.locked && <section className="card" aria-labelledby="further-statistics-preparation">
+          <h2 id="further-statistics-preparation">Before you start</h2>
+          <p>Paper 4 builds on 9709 Pure Mathematics 1 and 3 and Probability &amp; Statistics 1 and 2. Check that you can integrate a density, interpret discrete and normal distributions, and explain a confidence interval or hypothesis test.</p>
+          <ul>
+            <li><Link href="/courses/maths4u-9709-p1/topics/orig_integration_areas">Definite integration and areas</Link> and <Link href="/courses/maths4u-9709-p3/topics/orig_9709_p3_int_substitution">integration by substitution</Link></li>
+            <li><Link href="/courses/maths4u-9709-s1/topics/orig_9709_s1_dist_tables_parameters">Discrete distributions</Link> and <Link href="/courses/maths4u-9709-s1/topics/orig_9709_s1_norm_normal_areas">normal probabilities</Link></li>
+            <li><Link href="/courses/maths4u-9231-statistics/topics/stats_crv_density">Density and cumulative probability</Link> and <Link href="/courses/maths4u-9231-statistics/topics/stats_inference_one_sample">sample means, standard error and test tails</Link></li>
+          </ul>
+          <details><summary>Statistics 2 preparation</summary><p>Review the Poisson model, independent sums, random sampling and the central limit theorem, confidence intervals, discrete tests, and Type I and II errors. Some of these are introduced in the linked lessons. Use the Cambridge checklist for the full Paper 6 scope.</p><a href="https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf">Cambridge 9709 syllabus, Paper 6</a></details>
+        </section>}
+        {c.locked ? <p className="catalog-guest-note">{t("Для этого курса нужен доступ.", "This course requires access.")}</p> : <div className="course-study-layout">
         <nav className="card chapter-navigation" aria-label={t("Главы курса", "Course chapters")}><h2>{t("Главы", "Chapters")}</h2>{c.chapters.map(ch => chapterLink(c, ch, selected?.id))}</nav>
         <details className="chapter-mobile"><summary>{t("Глава", "Chapter")} · {selected?.title} ({selectedIndex + 1} {t("из", "of")} {c.chapters.length})<span aria-hidden="true">▾</span></summary><nav aria-label={t("Выбрать главу", "Choose a chapter")}>{c.chapters.map(ch => chapterLink(c, ch, selected?.id))}</nav></details>
         <section className="card chapter-topics"><h2>{initial?.chapterSummary ? "Lessons in this chapter" : selected?.title}</h2><p className="muted">{t("Откройте тему или выберите практику.", "Open a topic or choose your practice.")}</p>

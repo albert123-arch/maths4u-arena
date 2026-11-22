@@ -698,7 +698,47 @@
       "body": "<p>Read the parameters, standardise the boundaries and identify the required area before using a normal table.</p><h2>Notation and continuous probability</h2>\\[X\\sim\\mathrm{N}(\\mu,\\sigma^2),\\qquad\\sigma&gt;0.\\]<p>The parameters are the mean and variance. The standard deviation is the positive square root of the variance. Probabilities are areas under the density curve, whose total area is one. Curve height is not point probability. For every real \\(a\\), \\(P(X=a)=0\\), so changing a strict endpoint to an inclusive one leaves the probability unchanged.</p><h2>Convert each boundary to a standard score</h2>\\[Z=\\frac{X-\\mu}{\\sigma}\\sim\\mathrm{N}(0,1),\\qquad z_a=\\frac{a-\\mu}{\\sigma}.\\]<p>The mean maps to zero; values above it have positive standard scores and values below it have negative scores. Use the standard deviation in the denominator. For an interval, convert both boundaries. Since \\(\\sigma&gt;0\\), standardisation preserves the direction of each inequality.</p><h2>Lower-cumulative tables, negatives and tails</h2>\\[\\Phi(z)=P(Z\\le z),\\qquad\\Phi(-z)=1-\\Phi(z).\\]\\[P(Z&gt;z)=1-\\Phi(z).\\]<p>Read the table’s convention first. A lower-cumulative table gives the whole area to the left. If a table instead gives the area from zero to a positive \\(z\\), add one half to obtain \\(\\Phi(z)\\). Sketch the tail so that its side agrees with the event.</p><h2>Subtract intervals and use reflection</h2>\\[P(a&lt;X&lt;b)=\\Phi(z_b)-\\Phi(z_a).\\]\\[P(|Z|&lt;c)=2\\cdot\\Phi(c)-1\\qquad(c&gt;0).\\]<p>Subtract the lower cumulative area from the upper, including when both boundaries lie on the same side of the mean. Reflected intervals have equal areas; equal widths alone do not guarantee this. Keep calculator precision until final rounding. Combining four-decimal table entries can change the last reported decimal, so use the stated table accuracy.</p>",
       "checks": "<ul><li>Variance identified; positive standard deviation; both boundaries standardised; sign checked; table convention read; correct tail or interval shaded; cumulative areas subtracted in order; final rounding.</li></ul>",
       "examTip": "<p>Show each method, retain the required precision and state the complete answer.</p>"
-    }
+    },
+    "sessions": [
+      {
+        "id": "start",
+        "title": "Read a normal model",
+        "goal": "Interpret a continuous distribution and convert observations to and from standard scores.",
+        "sections": [
+          "continuous-models",
+          "standardisation"
+        ],
+        "exitChecks": [
+          "S1-S061-20261121-C01",
+          "S1-S061-20261121-C02"
+        ]
+      },
+      {
+        "id": "probabilities",
+        "title": "Find tail probabilities",
+        "goal": "Read normal tables and choose the below-cutoff or above-cutoff area.",
+        "sections": [
+          "normal-tables",
+          "normal-tails"
+        ],
+        "exitChecks": [
+          "S1-S061-20261121-C03",
+          "S1-S061-20261121-C04"
+        ]
+      },
+      {
+        "id": "intervals",
+        "title": "Apply symmetry to intervals",
+        "goal": "Combine cumulative areas to find interval probabilities and interpret a distance from the mean.",
+        "sections": [
+          "intervals-symmetry"
+        ],
+        "exitChecks": [
+          "S1-S061-20261121-C05",
+          "S1-S061-20261121-C06"
+        ]
+      }
+    ]
   },
   "orig_9709_s1_norm_inverse_normal": {
     "updatedOn": "2026-11-21",
@@ -1431,7 +1471,47 @@
       "body": "<p>Convert the stated area to a lower-cumulative probability, then pair its quantile with the corresponding measured cutoff.</p><h2>Choose the cumulative area and the sign</h2>\\[z_q=\\Phi^{-1}(q),\\qquad0&lt;q&lt;1.\\]<p>Upper-tail probability \\(r\\) uses cumulative probability \\(1-r\\); a lower tail uses its stated area. Quantiles are negative for \\(q&lt;0.5\\), zero for \\(q=0.5\\), positive for \\(q&gt;0.5\\). Neither \\(q=0\\) nor \\(q=1\\) has a finite normal quantile.</p><h2>Percentiles and one unknown parameter</h2>\\[x_q=\\mu+\\sigma z_q,\\qquad\\sigma&gt;0.\\]<p>In \\(\\mathrm{N}(\\mu,\\sigma^2)\\), take the positive square root of the variance. Known \\(\\sigma\\) determines \\(\\mu\\). Known \\(\\mu\\) determines a candidate \\(\\sigma\\) only if \\(z_q\\ne0\\); require \\(\\sigma&gt;0\\). A matching median leaves spread undetermined. Retain chosen quantiles until final rounding. Quantile rounding can amplify parameter error.</p><h2>A central interval splits the missing probability</h2><p>For a symmetric central probability \\(0&lt;C&lt;1\\), put</p>\\[\\alpha=\\frac{1-C}{2},\\qquad k=z_{1-\\alpha}.\\]\\[\\text{endpoints: }\\mu-\\sigma k,\\quad\\mu+\\sigma k.\\]<p>Each excluded tail has probability \\(\\alpha\\). The mean is the midpoint, and \\(\\sigma k\\) is the half-width. An interval containing a stated probability is not automatically central: equal tails or symmetry must be specified.</p><h2>Two parameters need two independent equations</h2><p>Pair distinct quantiles: \\(a=\\mu+\\sigma z_1\\), \\(b=\\mu+\\sigma z_2\\). Then</p>\\[\\sigma=\\frac{b-a}{z_2-z_1},\\qquad\\mu=a-\\sigma z_1.\\]<p>Require \\(\\sigma&gt;0\\) and check both equations. Duplicate information leaves parameters undetermined; reversed cutoff and percentile order is inconsistent. For variance, square the unrounded standard deviation.</p>",
       "checks": "<ul><li>Lower-cumulative area identified; quantile sign checked; omitted central mass halved; cutoff and quantile paired; equations independent; standard deviation positive; variance squared after solving; rounding delayed.</li></ul>",
       "examTip": "<p>Show each method, retain the required precision and state the complete answer.</p>"
-    }
+    },
+    "sessions": [
+      {
+        "id": "start",
+        "title": "Work backwards from an area",
+        "goal": "Turn a tail probability into a percentile in the original units.",
+        "sections": [
+          "inverse-tail",
+          "percentiles"
+        ],
+        "exitChecks": [
+          "S1-S062-20261121-C01",
+          "S1-S062-20261121-C02"
+        ]
+      },
+      {
+        "id": "one-parameter",
+        "title": "Recover one parameter",
+        "goal": "Use symmetric intervals or a given percentile to find the missing parameter.",
+        "sections": [
+          "symmetric-intervals",
+          "one-unknown"
+        ],
+        "exitChecks": [
+          "S1-S062-20261121-C03",
+          "S1-S062-20261121-C04",
+          "S1-S062-20261121-C05"
+        ]
+      },
+      {
+        "id": "two-parameters",
+        "title": "Recover both parameters",
+        "goal": "Use two percentiles to solve for the mean and standard deviation and check the order.",
+        "sections": [
+          "two-unknowns"
+        ],
+        "exitChecks": [
+          "S1-S062-20261121-C06"
+        ]
+      }
+    ]
   },
   "orig_9709_s1_norm_normal_models": {
     "updatedOn": "2026-11-21",
@@ -2150,7 +2230,47 @@
       "body": "<p>Identify the observation and the population being sampled before choosing a conditional probability or a count model.</p><h2>Conditional normal areas need an intersection</h2>\\[P(A\\mid B)=\\frac{P(A\\cap B)}{P(B)},\\qquad P(B)&gt;0.\\]<p>For one measurement, intersect the requested interval with the conditioning region first. The denominator is the whole conditioning region. A zero-probability condition does not define this event-ratio probability. Independence of separate readings does not apply to nested events of one reading.</p><h2>Expected count needs the individual probabilities</h2>\\[E(K)=Nq.\\]<p>Here \\(K\\) counts an event among \\(N\\) observations, each with event probability \\(q\\). This expectation does not require independence and need not be an integer. Dependence can still change the entire count distribution.</p><h2>Independent threshold outcomes form a binomial count</h2><p>Calculate \\(q\\) from the normal area. For a fixed \\(N\\), independent observations with this common event probability give</p>\\[K\\sim\\mathrm{B}(N,q),\\qquad P(K=k)=\\binom{N}{k}q^k(1-q)^{N-k}.\\]\\[P(K\\ge1)=1-(1-q)^N.\\]<p>The measurement is normal; its threshold indicator is binary. Check independence for the actual observations being counted.</p><h2>Selection changes the probability used for counting</h2><p>For independent fresh accepted measurements, calculate the event probability within the accepted region before building the count model. Repeated copies of a reading are dependent. Use a supplied intermediate probability when instructed; otherwise retain calculator precision or propagate the declared table rounding through ratios, expected counts and binomial calculations.</p>",
       "checks": "<ul><li>Same or different observation; intersection formed; denominator positive; original or accepted population; fixed count; common probability; independence established; intermediate accuracy retained.</li></ul>",
       "examTip": "<p>Show each method, retain the required precision and state the complete answer.</p>"
-    }
+    },
+    "sessions": [
+      {
+        "id": "start",
+        "title": "Condition on part of a normal curve",
+        "goal": "Identify the surviving region and divide by the probability of the condition.",
+        "sections": [
+          "conditional-normal"
+        ],
+        "exitChecks": [
+          "S1-S063-20261121-C01",
+          "S1-S063-20261121-C02"
+        ]
+      },
+      {
+        "id": "repeated-counts",
+        "title": "Make a model for a count",
+        "goal": "Find a one-observation probability, then use it for expectations and independent counts.",
+        "sections": [
+          "expected-counts",
+          "normal-to-binomial"
+        ],
+        "exitChecks": [
+          "S1-S063-20261121-C03",
+          "S1-S063-20261121-C04"
+        ]
+      },
+      {
+        "id": "application",
+        "title": "Check the repeated-event model",
+        "goal": "Check when independent observations share a success probability and choose a model for repeated events.",
+        "sections": [
+          "repeated-thresholds",
+          "model-validity"
+        ],
+        "exitChecks": [
+          "S1-S063-20261121-C05",
+          "S1-S063-20261121-C06"
+        ]
+      }
+    ]
   },
   "orig_9709_s1_norm_binomial_approximation": {
     "updatedOn": "2026-11-21",
@@ -2889,7 +3009,47 @@
       "body": "<p>Identify the included integer counts, move to half-integer boundaries, then standardise using the matched normal parameters.</p><h2>Check both strict conditions and match the moments</h2>\\[X\\sim\\mathrm{B}(n,p),\\qquad np&gt;5,\\quad n(1-p)&gt;5.\\]\\[Y\\sim\\mathrm{N}\\bigl(np,np(1-p)\\bigr).\\]<p>The second normal parameter is variance; its positive square root is the standard deviation. Equality with five fails either condition. A constant binomial endpoint model needs exact calculation.</p><h2>Read the largest or smallest included integer</h2><p>For an integer boundary \\(k\\), the standard continuity corrections are</p>\\[X\\le k:\\ Y&lt;k+\\frac{1}{2},\\qquad X&lt;k:\\ Y&lt;k-\\frac{1}{2}.\\]\\[X\\ge k:\\ Y&gt;k-\\frac{1}{2},\\qquad X&gt;k:\\ Y&gt;k+\\frac{1}{2}.\\]<p>Apply the shift to the original count scale before standardising.</p><h2>An exact count becomes a cell of width one</h2>\\[X=k:\\quad k-\\frac{1}{2}&lt;Y&lt;k+\\frac{1}{2}.\\]\\[a\\le X\\le b:\\quad a-\\frac{1}{2}&lt;Y&lt;b+\\frac{1}{2}.\\]<p>Here \\(a,b\\) are included integer endpoints. A continuous point has probability zero; the interval represents a discrete probability mass. Convert strict discrete endpoints to included integers first.</p><h2>Standardise, shade and judge the approximation</h2>\\[z=\\frac{y-np}{\\sqrt{np(1-p)}}.\\]<p>Retain unrounded boundaries and standard scores unless a table route is specified. An event containing every possible count or none has exact probability one or zero. The normal model has unbounded tails and is not renormalised to the count support. Passing both conditions does not guarantee a particular decimal accuracy; compare with the exact binomial sum when needed.</p>",
       "checks": "<ul><li>Both strict tests; variance versus standard deviation; included integer endpoints; half-unit correction before standardising; correct tail or interval; stated rounding route; approximation sign.</li></ul>",
       "examTip": "<p>Show each method, retain the required precision and state the complete answer.</p>"
-    }
+    },
+    "sessions": [
+      {
+        "id": "start",
+        "title": "Choose the correct boundary",
+        "goal": "Check whether a normal approximation is appropriate and translate integer events to continuous boundaries.",
+        "sections": [
+          "approximation-conditions",
+          "continuity-boundaries"
+        ],
+        "exitChecks": [
+          "S1-S064-20261121-C01",
+          "S1-S064-20261121-C02"
+        ]
+      },
+      {
+        "id": "tail-calculations",
+        "title": "Approximate a tail",
+        "goal": "Use the continuity correction for a strict or inclusive tail, then standardise the boundary.",
+        "sections": [
+          "approximation-tails"
+        ],
+        "exitChecks": [
+          "S1-S064-20261121-C03",
+          "S1-S064-20261121-C04"
+        ]
+      },
+      {
+        "id": "model-check",
+        "title": "Approximate intervals and compare",
+        "goal": "Apply the same method to intervals and single values, then assess the approximation against the binomial model.",
+        "sections": [
+          "approximation-intervals",
+          "compare-models"
+        ],
+        "exitChecks": [
+          "S1-S064-20261121-C05",
+          "S1-S064-20261121-C06"
+        ]
+      }
+    ]
   },
   "orig_9709_s1_norm_mixed_inverse": {
     "updatedOn": "2026-11-21",
@@ -3603,6 +3763,55 @@
       "body": "<p>Keep each probability attached to its own experiment, then work backwards while preserving the model assumptions.</p><h2>Undo independent repetitions before taking a quantile</h2><p>For independent measurements from one normal model, write \\(F(c)=P(X\\le c)\\).</p>\\[P(\\text{all }n\\text{ below }c)=F(c)^n.\\]\\[P(\\text{at least one above }c)=1-F(c)^n.\\]<p>Recover the single-observation cumulative area first. Then use \\(z=\\Phi^{-1}(F(c))\\) and \\(c=\\mu+\\sigma z\\), with \\(\\sigma&gt;0\\).</p><h2>Weight probabilities for a population mixture</h2>\\[q=wq_A+(1-w)q_B,\\qquad0\\le w\\le1.\\]<p>The component probabilities refer to the same event. Averaging normal parameters does not generally produce the mixture distribution. A proposed mixture probability must lie between its component probabilities. If \\(q_A=q_B\\), that event probability cannot identify the weight.</p><h2>Fresh type choices and one shared type are different experiments</h2><p>Independent trials, each with a fresh type choice, give \\(Y\\sim\\mathrm{B}(n,q)\\). For one shared type, observations are conditionally independent given that type. Calculate the group event \\(H\\) within each component, then combine:</p>\\[P(H)=wP(H\\mid A)+(1-w)P(H\\mid B).\\]<p>Both mechanisms have expected count \\(nq\\), but they can have different count distributions.</p><h2>Check inverse equations before accepting a candidate</h2>\\[x_i=\\mu+\\sigma z_i,\\qquad\\frac{b-np}{\\sqrt{np(1-p)}}=z.\\]<p>In an inverse approximation, \\(b\\) is the continuity-corrected boundary. Test squared roots in the original signed equation. Check positive standard deviation, admissible probabilities, integer trial count and both strict conditions \\(np&gt;5\\), \\(n(1-p)&gt;5\\). Substitute into every original condition; retain the prescribed working precision. An approximate model does not make its inferred probability exact.</p>",
       "checks": "<ul><li>Correct experiment and conditioning; independence at the right stage; single-event probability recovered; compatible mixture weights; quantile sign; corrected boundary; original equations and parameter domains; final back-substitution.</li></ul>",
       "examTip": "<p>Show each method, retain the required precision and state the complete answer.</p>"
-    }
+    },
+    "sessions": [
+      {
+        "id": "start",
+        "title": "Reverse a repeated-event probability",
+        "goal": "Recover the probability for one observation before finding a normal cutoff.",
+        "sections": [
+          "inverse-repetition"
+        ],
+        "exitChecks": [
+          "S1-S065-20261121-C01"
+        ]
+      },
+      {
+        "id": "mixtures",
+        "title": "Identify the model for a mixed group",
+        "goal": "Distinguish independent type choices from a common type shared across a batch.",
+        "sections": [
+          "normal-mixtures"
+        ],
+        "exitChecks": [
+          "S1-S065-20261121-C02"
+        ]
+      },
+      {
+        "id": "unknown-parameters",
+        "title": "Recover missing model parameters",
+        "goal": "Solve inverse normal and corrected approximation problems, then check the candidate solutions.",
+        "sections": [
+          "unknown-parameters",
+          "inverse-approximation"
+        ],
+        "exitChecks": [
+          "S1-S065-20261121-C03",
+          "S1-S065-20261121-C04",
+          "S1-S065-20261121-C05"
+        ]
+      },
+      {
+        "id": "model-check",
+        "title": "Check a multi-stage model",
+        "goal": "Check that a derived probability or mixing weight is feasible in the original model.",
+        "sections": [
+          "model-chain-checks"
+        ],
+        "exitChecks": [
+          "S1-S065-20261121-C06"
+        ]
+      }
+    ]
   }
 }

@@ -71,9 +71,9 @@ export const errorLabels: Record<string, [string, string]> = {
   CLASS_NOT_FOUND: ["Класс с таким кодом не найден.", "Class code not found."], MEMBERSHIP_REMOVED: ["Обратитесь к учителю для восстановления доступа в класс.", "Ask your teacher to restore your class membership."],
 };
 export class ApiError extends Error { constructor(public code: string, public status: number, public fields?: { path: string; message: string }[], public diagnostic?: string) { super(code); } }
-export async function api<T = unknown>(url: string, method = "GET", body?: unknown): Promise<T> {
-  const response = await fetch("/api/" + url, { method, credentials: "same-origin", cache: "no-store",
-    headers: { "X-Arena-View": viewNonce(), ...(method !== "GET" && !(body instanceof FormData) ? { "Content-Type": "application/json" } : {}) },
+export async function api<T = unknown>(url: string, method = "GET", body?: unknown, credentials: RequestCredentials = "same-origin"): Promise<T> {
+  const response = await fetch("/api/" + url, { method, credentials, cache: "no-store",
+    headers: { ...(credentials !== "omit" && { "X-Arena-View": viewNonce() }), ...(method !== "GET" && !(body instanceof FormData) ? { "Content-Type": "application/json" } : {}) },
     ...(method !== "GET" ? { body: body instanceof FormData ? body : JSON.stringify(body ?? {}) } : {}) });
   const data = await response.json().catch(() => { throw new ApiError("UNEXPECTED_SERVER_RESPONSE", response.status, undefined, "HTTP_" + response.status + " / NON_JSON"); });
   if (!response.ok) throw new ApiError(data.error ?? "SERVICE_UNAVAILABLE", response.status, data.fields, data.diagnostic);
