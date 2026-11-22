@@ -7,9 +7,9 @@
         "id": "trace-a-move",
         "title": "Where did you finish?",
         "label": "Trace a move",
-        "minutes": 8,
+        "minutes": 10,
         "level": "core",
-        "intro": "<p>Mark the starting level first. For each lift move, find a new level on the line. Then compare the route with the distance between its ends.</p>",
+        "intro": "<p>Write the floor numbers in order, with 0 for the entrance. Each lift instruction tells you where to start the next move. To work backwards, undo the most recent move first.</p>",
         "blocks": [
           {
             "kind": "key",
@@ -36,7 +36,7 @@
               "type": "number",
               "expected": "-4"
             },
-            "hint": "<p>Use the sign of each move and add it to the current level.</p>",
+            "hint": "<p>Use the entrance as a landmark. From floor −9, nine floors up takes you to floor 0. Then take the final move.</p>",
             "solution": "<p>A move up adds 9. After that move the lift is on level 0.</p><p>A move down subtracts 4. \\(0-4=-4\\)</p><p>\\(-4\\)</p>",
             "retry": [
               {
@@ -55,6 +55,26 @@
             "tryFirst": true
           },
           {
+            "id": "audit-reverse-floors",
+            "kind": "check",
+            "title": "Work backwards to the starting floor",
+            "prompt": "<p>A lift goes up 5 floors and then down 2 floors. It finishes on floor 1. On which floor did it start?</p>",
+            "field": {
+              "key": "answer",
+              "label": "Starting floor",
+              "type": "number",
+              "expected": "-2"
+            },
+            "hint": "<p>Undo the descent first. After that, undo the climb.</p>",
+            "solution": "<p>From floor 1, undo the descent to reach floor \\(1+2=3\\). Undo the climb to reach \\(3-5=-2\\).</p>",
+            "retry": [
+              {
+                "answer": "4",
+                "feedback": "<p>Floor 4 comes from applying the moves to the final floor. Reverse each move and start with the last one.</p>"
+              }
+            ]
+          },
+          {
             "kind": "check",
             "id": "s1-try-2",
             "prompt": "<p>A lift starts on level -2. It goes up 10 levels and then down 4 levels. Level 0 is the entrance.</p><p>Which level does the lift reach?</p>",
@@ -64,7 +84,7 @@
               "type": "number",
               "expected": "4"
             },
-            "hint": "<p>Use the sign of each move and add it to the current level.</p>",
+            "hint": "<p>Start on floor −2. Count how many of the ten upward steps take you to floor 0, then finish the upward move.</p>",
             "solution": "<p>A move up adds 10. After that move the lift is on level 8.</p><p>A move down subtracts 4. \\(8-4=4\\)</p><p>\\(4\\)</p>",
             "retry": [
               {
@@ -83,9 +103,9 @@
         "id": "count-the-whole",
         "title": "Which parts make the whole?",
         "label": "Count the whole",
-        "minutes": 8,
+        "minutes": 10,
         "level": "core",
-        "intro": "<p>Draw one block for each part and make all blocks the same size. Label colours before counting.</p>",
+        "intro": "<p>A batch has a fixed mix. To work from just one colour, divide its count by that colour’s count per batch. This gives the number of whole batches you need for every colour.</p>",
         "blocks": [
           {
             "kind": "key",
@@ -112,7 +132,7 @@
               "type": "number",
               "expected": "12"
             },
-            "hint": "<p>Divide by the total in one batch. Then count the blue bands.</p>",
+            "hint": "<p>Combine the two colours to get 6 bands per batch. Find how many batches fit in 36 before counting blue.</p>",
             "solution": "<p>Each batch has 6 bands. There are \\(36\\div 6=6\\) batches.</p><p>There are 2 blue bands in each batch. Multiply by 6.</p><p>\\(12\\)</p>",
             "retry": [
               {
@@ -131,6 +151,26 @@
             "tryFirst": true
           },
           {
+            "id": "audit-total-from-one-colour",
+            "kind": "check",
+            "title": "Find the total from one colour",
+            "prompt": "<p>Each packet has 7 purple stickers and 3 white stickers. The packets use 15 white stickers altogether. How many stickers are in all the packets?</p>",
+            "field": {
+              "key": "answer",
+              "label": "Total number of stickers",
+              "type": "number",
+              "expected": "50"
+            },
+            "hint": "<p>There are 3 white stickers in one packet. Use the white stickers to count the packets.</p>",
+            "solution": "<p>There are \\(15\\div3=5\\) packets. Each packet has \\(7+3=10\\) stickers, so there are \\(5\\times10=50\\) stickers in all.</p>",
+            "retry": [
+              {
+                "answer": "35",
+                "feedback": "<p>35 is the number of purple stickers. Add the 15 white stickers to find the whole.</p>"
+              }
+            ]
+          },
+          {
             "kind": "check",
             "id": "s2-try-2",
             "prompt": "<p>Each batch for a school event has 3 blue bands and 5 yellow bands. The organisers pack 48 bands using whole batches.</p><p>How many bands are blue?</p>",
@@ -140,7 +180,7 @@
               "type": "number",
               "expected": "18"
             },
-            "hint": "<p>Divide by the total in one batch. Then count the blue bands.</p>",
+            "hint": "<p>There are 8 bands per batch. Use that to find the batch count, then use 3 blue bands per batch.</p>",
             "solution": "<p>Each batch has 8 bands. There are \\(48\\div 8=6\\) batches.</p><p>There are 3 blue bands in each batch. Multiply by 6.</p><p>\\(18\\)</p>",
             "retry": [
               {
@@ -159,9 +199,9 @@
         "id": "look-for-a-spare",
         "title": "Will there always be a spare?",
         "label": "Look for a spare",
-        "minutes": 8,
+        "minutes": 10,
         "level": "core",
-        "intro": "<p>Try one small case with counters first. Then ask what happens when a complete pair is added.</p>",
+        "intro": "<p>An even count can be grouped into pairs with no spare. One extra object changes whether there is a spare. Two extra objects form a new pair, so they leave the spare count the same.</p>",
         "blocks": [
           {
             "kind": "key",
@@ -188,7 +228,7 @@
               "type": "number",
               "expected": "21"
             },
-            "hint": "<p>Count two objects per pair before adding the singles.</p>",
+            "hint": "<p>Each of the eight pairs has two books. Count those books before adding the five single books.</p>",
             "solution": "<p>There are two in each pair. Multiply 8 by 2, then add the 5 singles.</p><p>\\(21\\)</p>",
             "retry": [
               {
@@ -207,6 +247,26 @@
             "tryFirst": true
           },
           {
+            "id": "audit-complete-the-pair",
+            "kind": "check",
+            "title": "Complete the remaining pair",
+            "prompt": "<p>A tray has 6 pairs of badges and 3 single badges. At least one more badge must be added. What is the smallest number to add so that every badge can be paired?</p>",
+            "field": {
+              "key": "answer",
+              "label": "Number of badges to add",
+              "type": "number",
+              "expected": "1"
+            },
+            "hint": "<p>Pair two of the three single badges. How many singles are now left?</p>",
+            "solution": "<p>The three singles make one new pair and one spare. Adding one badge makes a pair with the spare.</p>",
+            "retry": [
+              {
+                "answer": "2",
+                "feedback": "<p>Two new badges make another pair on their own. They leave the original spare.</p>"
+              }
+            ]
+          },
+          {
             "kind": "check",
             "id": "s3-try-2",
             "prompt": "<p>A display has 9 pairs of books and 5 single books on a shelf.</p><p>How many books are in the display?</p>",
@@ -216,7 +276,7 @@
               "type": "number",
               "expected": "23"
             },
-            "hint": "<p>Count two objects per pair before adding the singles.</p>",
+            "hint": "<p>Nine pairs account for eighteen books. Include each single book once.</p>",
             "solution": "<p>There are two in each pair. Multiply 9 by 2, then add the 5 singles.</p><p>\\(23\\)</p>",
             "retry": [
               {
@@ -247,16 +307,12 @@
         ]
       },
       {
-        "title": "A route between floors",
-        "question": "<p>A lift starts on level -6. It goes up 7 levels and then down 3 levels. Level 0 is the entrance.</p><ol type=\"a\" class=\"parts\"><li><p>Which level does the lift reach?</p><span class=\"marks\">[2]</span></li><li><p>How many levels does the lift travel in total?</p><span class=\"marks\">[2]</span></li><li><p>Describe one move that returns the lift to its starting level.</p><span class=\"marks\">[2]</span></li></ol>",
+        "title": "Work backwards from the final floor",
+        "question": "<p>A lift goes up 7 floors, then down 3 floors. It ends on floor 2. On which floor did it start? How many floors did it travel?</p>",
         "solution": [
-          "<p><strong>(a)</strong> A move up adds 7. After that move the lift is on level 1.</p>",
-          "<p>A move down subtracts 3. \\(1-3=-2\\)</p>",
-          "<p>\\(-2\\)</p>",
-          "<p><strong>(b)</strong> Both moves add to the distance travelled. Add the lengths 7 and 3.</p>",
-          "<p>\\(10\\)</p>",
-          "<p><strong>(c)</strong> Compare the finishing level -2 with the starting level -6.</p>",
-          "<p>Go down 4 levels.</p>"
+          "<p>Undo the last move by going up 3 from floor 2. That puts the lift on floor \\(2+3=5\\) before the descent.</p>",
+          "<p>Undo the first move by going down 7 from floor 5. It started on floor \\(5-7=-2\\).</p>",
+          "<p>For distance travelled, count both moves as lengths. The lift travelled \\(7+3=10\\) floors.</p>"
         ]
       },
       {
@@ -273,16 +329,12 @@
         ]
       },
       {
-        "title": "Two colours, one batch",
-        "question": "<p>Each batch for a school event has 3 blue bands and 4 yellow bands. The organisers pack 28 bands using whole batches.</p><ol type=\"a\" class=\"parts\"><li><p>How many bands are blue?</p><span class=\"marks\">[2]</span></li><li><p>What fraction of the whole batch is blue? Give your answer in simplest form.</p><span class=\"marks\">[2]</span></li><li><p>A volunteer packs 20 yellow bands. How many blue bands should go with them?</p><span class=\"marks\">[2]</span></li></ol>",
+        "title": "Find the total from one colour",
+        "question": "<p>Each bracelet uses 3 red beads and 2 green beads. All 12 green beads are used in whole bracelets. Find the total number of beads used and the fraction that are red.</p>",
         "solution": [
-          "<p><strong>(a)</strong> Each batch has 7 bands. There are \\(28\\div 7=4\\) batches.</p>",
-          "<p>There are 3 blue bands in each batch. Multiply by 4.</p>",
-          "<p>\\(12\\)</p>",
-          "<p><strong>(b)</strong> Use 3 blue bands over 7 bands altogether, then simplify.</p>",
-          "<p>\\(\\frac{3}{7}\\)</p>",
-          "<p><strong>(c)</strong> Divide the yellow count by 4 to find the new number of batches. Each batch needs 3 blue bands.</p>",
-          "<p>\\(15\\)</p>"
+          "<p>Two green beads go into each bracelet, so \\(12\\div2=6\\) bracelets can be made.</p>",
+          "<p>One bracelet uses \\(3+2=5\\) beads. Six bracelets use \\(6\\times5=30\\) beads.</p>",
+          "<p>Three of the five beads in every bracelet are red. The fraction stays \\(\\frac35\\) when all counts are multiplied by 6.</p>"
         ]
       },
       {
@@ -298,15 +350,12 @@
         ]
       },
       {
-        "title": "Pairs and spares",
-        "question": "<p>A display has 12 pairs of books and 3 single books on a shelf.</p><ol type=\"a\" class=\"parts\"><li><p>How many books are in the display?</p><span class=\"marks\">[2]</span></li><li><p>The number of pairs changes but the number of singles stays the same. Explain why the total is always odd.</p><span class=\"marks\">[2]</span></li><li><p>Another display of this kind has 39 items. How many pairs are there?</p><span class=\"marks\">[2]</span></li></ol>",
+        "title": "Test which change removes a spare",
+        "question": "<p>Twenty-three cards are grouped into pairs. Sam adds 4 cards and says there will be no spare. Test the claim. What is the smallest number of extra cards Sam could add to make complete pairs?</p>",
         "solution": [
-          "<p><strong>(a)</strong> There are two in each pair. Multiply 12 by 2, then add the 3 singles.</p>",
-          "<p>\\(27\\)</p>",
-          "<p><strong>(b)</strong> Group all the items into twos. The singles also leave one unmatched object when put into twos.</p>",
-          "<p>Pairs make an even total. The fixed number of singles is odd, so the total is odd.</p>",
-          "<p><strong>(c)</strong> Remove the 3 singles, then divide the rest by 2.</p>",
-          "<p>\\(18\\)</p>"
+          "<p>Twenty-three cards make 11 pairs and one spare. The four new cards add two complete pairs.</p>",
+          "<p>There are now \\(23+4=27\\) cards. Thirteen pairs use 26 cards, so one is still spare.</p>",
+          "<p>Add 1 more card to pair with the spare. Then \\(28\\) cards make 14 pairs.</p>"
         ]
       }
     ],
@@ -321,7 +370,7 @@
           "type": "number",
           "expected": "1"
         },
-        "hint": "<p>Use the sign of each move and add it to the current level.</p>",
+        "hint": "<p>Start five floors below zero. The upward move passes zero, then the downward move starts from that new floor.</p>",
         "solution": "<p>A move up adds 12. After that move the lift is on level 7.</p><p>A move down subtracts 6. \\(7-6=1\\)</p><p>\\(1\\)</p>",
         "retry": [
           {
@@ -340,7 +389,7 @@
           "type": "number",
           "expected": "0"
         },
-        "hint": "<p>Use the sign of each move and add it to the current level.</p>",
+        "hint": "<p>Use floor zero as a checkpoint. After reaching it, count how much of the upward move is still left.</p>",
         "solution": "<p>A move up adds 12. After that move the lift is on level 6.</p><p>A move down subtracts 6. \\(6-6=0\\)</p><p>\\(0\\)</p>",
         "retry": [
           {
@@ -359,7 +408,7 @@
           "type": "number",
           "expected": "14"
         },
-        "hint": "<p>Divide by the total in one batch. Then count the blue bands.</p>",
+        "hint": "<p>One batch has seven bands altogether. Find how many whole batches fit before counting two blue bands in each one.</p>",
         "solution": "<p>Each batch has 7 bands. There are \\(49\\div 7=7\\) batches.</p><p>There are 2 blue bands in each batch. Multiply by 7.</p><p>\\(14\\)</p>",
         "retry": [
           {
@@ -378,7 +427,7 @@
           "type": "number",
           "expected": "21"
         },
-        "hint": "<p>Divide by the total in one batch. Then count the blue bands.</p>",
+        "hint": "<p>Add the six yellow and three blue bands in one batch. Use that batch size to split the 63 bands.</p>",
         "solution": "<p>Each batch has 9 bands. There are \\(63\\div 9=7\\) batches.</p><p>There are 3 blue bands in each batch. Multiply by 7.</p><p>\\(21\\)</p>",
         "retry": [
           {
@@ -397,7 +446,7 @@
           "type": "number",
           "expected": "17"
         },
-        "hint": "<p>Count two objects per pair before adding the singles.</p>",
+        "hint": "<p>Make five groups of two books before counting the seven loose books.</p>",
         "solution": "<p>There are two in each pair. Multiply 5 by 2, then add the 7 singles.</p><p>\\(17\\)</p>",
         "retry": [
           {
@@ -416,7 +465,7 @@
           "type": "number",
           "expected": "19"
         },
-        "hint": "<p>Count two objects per pair before adding the singles.</p>",
+        "hint": "<p>Count the books in the six pairs. Count the seven single books separately so that each book is counted once.</p>",
         "solution": "<p>There are two in each pair. Multiply 6 by 2, then add the 7 singles.</p><p>\\(19\\)</p>",
         "retry": [
           {
@@ -442,9 +491,9 @@
       }
     ],
     "revision": {
-      "body": "<h2>Where did you finish?</h2><p>Going up adds to the current level. Going down subtracts. To count the total distance, add the lengths of all moves.</p><h2>Which parts make the whole?</h2><p>A fraction compares some equal parts with all the equal parts. Another complete batch keeps that fraction the same.</p><h2>Will there always be a spare?</h2><p>A pair adds two. When an odd number of singles is added, the complete display still has one item left after pairing.</p><p><img src=\"/assets/study/0862/stage-7/signed-moves.svg\" alt=\"A number line showing a move from −3 to 2 and then to −1.\" width=\"222\" height=\"178\"></p>",
-      "checks": "<p>A lift starts on level -5. It goes up 18 levels and then down 4 levels. Level 0 is the entrance.</p><p>Which level does the lift reach?</p><p><strong>Check.</strong> \\(9\\)</p>",
-      "examTip": "<p>A reason about any number of pairs earns more than a list of separate examples.</p>"
+      "body": "<h2>Reverse a route</h2><p>Start at the finish and undo the last move first. Add all move lengths to find the distance travelled.</p><h2>Find a total from one part</h2><p>Use one colour to find the number of batches. Multiply the total per batch by that number.</p><h2>Pair the extras</h2><p>An added pair leaves the spare count the same. One extra object changes whether there is a spare.</p><table><caption>A lift route</caption><thead><tr><th scope=\"col\">Start</th><th scope=\"col\">After going up 5</th><th scope=\"col\">After going down 2</th></tr></thead><tbody><tr><td>-2</td><td>3</td><td>1</td></tr></tbody></table>",
+      "checks": "<p>Each bag has 2 blue beads and 3 yellow beads. There are 12 yellow beads in whole bags. How many beads are there altogether?</p><p><strong>Check.</strong> 20 beads.</p>",
+      "examTip": "<p>Divide by the amount per batch. Multiply the number of batches by the whole batch size.</p>"
     }
   }
 }

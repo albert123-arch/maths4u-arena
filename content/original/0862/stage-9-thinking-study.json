@@ -7,9 +7,9 @@
         "id": "combine-counts",
         "title": "Whose visits count in the mean?",
         "label": "Combine counts",
-        "minutes": 8,
+        "minutes": 10,
         "level": "core",
-        "intro": "<p>Start with each group’s total. If you are given a group mean, recovering its total shows how much each group contributes.</p>",
+        "intro": "<p>A group mean tells you the total per person if everyone shared it equally. Multiply by the headcount to recover the total. The same idea works backwards when the combined mean is known and one group mean is missing.</p>",
         "blocks": [
           {
             "kind": "key",
@@ -36,7 +36,7 @@
               "type": "number",
               "expected": "75/7"
             },
-            "hint": "<p>Work out the two totals before finding the combined mean.</p>",
+            "hint": "<p>Recover the totals using the two headcounts, 8 and 13. The denominator of the final mean counts all 21 members.</p>",
             "solution": "<p>Find the two totals. The North total is 8 times 7. The South total is 13 times 13.</p><p>Together there are 225 visits and 21 people. Divide visits by people.</p><p>\\(\\frac{75}{7}\\)</p>",
             "retry": [
               {
@@ -55,6 +55,26 @@
             "tryFirst": true
           },
           {
+            "id": "audit-missing-group-mean",
+            "kind": "check",
+            "title": "Recover a missing group mean",
+            "prompt": "<p>Six pupils in one group average 2 trips to the library. There are 10 pupils in the other group. Together the 16 pupils average 7 trips. What is the mean for the group of 10?</p>",
+            "field": {
+              "key": "answer",
+              "label": "Mean trips for the group of 10",
+              "type": "number",
+              "expected": "10"
+            },
+            "hint": "<p>Recover the combined number of trips and the first group’s number of trips separately.</p>",
+            "solution": "<p>The total is \\(16\\times7=112\\). The first group accounts for \\(6\\times2=12\\), leaving 100 trips for 10 pupils. Their mean is 10.</p>",
+            "retry": [
+              {
+                "answer": "12",
+                "feedback": "<p>12 is the total for the smaller group. Take it away from the combined total, then divide by 10.</p>"
+              }
+            ]
+          },
+          {
             "kind": "check",
             "id": "s1-try-2",
             "prompt": "<p>The table gives the numbers of library visits made by the members of two clubs.</p><table><thead><tr><th scope=\"col\">Club</th><th scope=\"col\">Members</th><th scope=\"col\">Mean visits</th></tr></thead><tbody><tr><td>North</td><td>9</td><td>7</td></tr><tr><td>South</td><td>14</td><td>13</td></tr></tbody></table><p>Find the mean number of visits per person for both clubs combined. Give an exact answer.</p>",
@@ -64,7 +84,7 @@
               "type": "number",
               "expected": "245/23"
             },
-            "hint": "<p>Work out the two totals before finding the combined mean.</p>",
+            "hint": "<p>North and South have different numbers of members. Multiply each group’s mean by its own headcount before combining.</p>",
             "solution": "<p>Find the two totals. The North total is 9 times 7. The South total is 14 times 13.</p><p>Together there are 245 visits and 23 people. Divide visits by people.</p><p>\\(\\frac{245}{23}\\)</p>",
             "retry": [
               {
@@ -83,9 +103,9 @@
         "id": "test-both-orders",
         "title": "Which outcomes belong to the event?",
         "label": "Test both orders",
-        "minutes": 8,
+        "minutes": 10,
         "level": "core",
-        "intro": "<p>List possible two-draw routes first. Mark every order that fits what the question asks. If the first object is kept, update the counts for the second draw.</p>",
+        "intro": "<p>Decide whether the event names one route or several routes. If the event is ‘at least one’, its complement often gives a single route. Draw or list enough outcomes to see which calculation is shorter.</p>",
         "blocks": [
           {
             "kind": "key",
@@ -112,7 +132,7 @@
               "type": "number",
               "expected": "24/55"
             },
-            "hint": "<p>Multiply along each order and then add the probabilities for both orders.</p>",
+            "hint": "<p>Start by writing blue then white and white then blue. The second denominator is 10 after the first counter is kept out.</p>",
             "solution": "<p>List the orders BW and WB. The first draw is from 11 counters. The second draw is from 10 counters.</p><p>Each order has probability \\(\\frac{12}{55}\\). Add the two probabilities.</p><p>\\(\\frac{24}{55}\\)</p>",
             "retry": [
               {
@@ -131,6 +151,26 @@
             "tryFirst": true
           },
           {
+            "id": "audit-at-least-one-white",
+            "kind": "check",
+            "title": "Use the complement of at least one white",
+            "prompt": "<p>A bag contains four blue and four white counters. Two counters are drawn without replacement. What is the probability of getting at least one white?</p>",
+            "field": {
+              "key": "answer",
+              "label": "Probability",
+              "type": "number",
+              "expected": "11/14"
+            },
+            "hint": "<p>The event fails only if both counters are blue. Find that one path first.</p>",
+            "solution": "<p>Two blues have probability \\(\\frac48\\times\\frac37=\\frac3{14}\\). At least one white has probability \\(1-\\frac3{14}=\\frac{11}{14}\\).</p>",
+            "retry": [
+              {
+                "answer": "3/14",
+                "feedback": "<p>This is the probability of two blues. Subtract it from 1 to get the probability of at least one white.</p>"
+              }
+            ]
+          },
+          {
             "kind": "check",
             "id": "s2-try-2",
             "prompt": "<p>A bag holds 4 blue counters and 8 white counters. Two counters are drawn one after the other. The first counter is kept out of the bag.</p><p>Find the probability of getting one counter of each colour, in either order.</p>",
@@ -140,7 +180,7 @@
               "type": "number",
               "expected": "16/33"
             },
-            "hint": "<p>Multiply along each order and then add the probabilities for both orders.</p>",
+            "hint": "<p>Write both possible orders. Each starts with a different colour, but both second draws use the updated total.</p>",
             "solution": "<p>List the orders BW and WB. The first draw is from 12 counters. The second draw is from 11 counters.</p><p>Each order has probability \\(\\frac{8}{33}\\). Add the two probabilities.</p><p>\\(\\frac{16}{33}\\)</p>",
             "retry": [
               {
@@ -159,9 +199,9 @@
         "id": "choose-a-factor",
         "title": "Which measurements scale twice?",
         "label": "Choose a factor",
-        "minutes": 8,
+        "minutes": 10,
         "level": "core",
-        "intro": "<p>Sketch matching rectangles and mark the scaled side lengths. Count how many copies of the original area fit when both dimensions grow.</p>",
+        "intro": "<p>A length factor acts on each side separately. When the problem gives only areas, divide the new area by the old area and take the positive square root to recover the length factor.</p>",
         "blocks": [
           {
             "kind": "key",
@@ -188,7 +228,7 @@
               "type": "number",
               "expected": "3456"
             },
-            "hint": "<p>Square the length scale factor to get the area scale factor.</p>",
+            "hint": "<p>The two old sides make 216 square centimetres. Each side grows by the same factor, so the area uses that factor twice.</p>",
             "solution": "<p>Both side lengths are multiplied by \\(4\\). The area is multiplied by \\(16\\).</p><p>The old area is 216 square centimetres. Multiply it by the area factor.</p><p>\\(3456\\) square centimetres</p>",
             "retry": [
               {
@@ -207,6 +247,26 @@
             "tryFirst": true
           },
           {
+            "id": "audit-length-from-areas",
+            "kind": "check",
+            "title": "Find a corresponding length from two areas",
+            "prompt": "<p>A rectangular badge has area 24 square centimetres. A similar badge has area 54 square centimetres. An 8 cm side of the smaller badge corresponds to which length on the larger badge?</p>",
+            "field": {
+              "key": "answer",
+              "label": "Length in centimetres",
+              "type": "number",
+              "expected": "12"
+            },
+            "hint": "<p>Divide the areas to find the area factor, then recover the length factor before scaling the side.</p>",
+            "solution": "<p>The area factor is \\(\\frac{54}{24}=\\frac94\\). The length factor is \\(\\frac32\\), so the corresponding side is \\(8\\times\\frac32=12\\) cm.</p>",
+            "retry": [
+              {
+                "answer": "18",
+                "feedback": "<p>18 cm applies the area factor to a length. Use the positive square root of the area factor for a length.</p>"
+              }
+            ]
+          },
+          {
             "kind": "check",
             "id": "s3-try-2",
             "prompt": "<p>A rectangular design is 3 cm by 10 cm. A larger copy is made with length scale factor \\(4\\).</p><p>Find the area of the larger design in square centimetres.</p>",
@@ -216,7 +276,7 @@
               "type": "number",
               "expected": "480"
             },
-            "hint": "<p>Square the length scale factor to get the area scale factor.</p>",
+            "hint": "<p>You can find the new lengths separately before multiplying, or multiply the old area by the square of 4.</p>",
             "solution": "<p>Both side lengths are multiplied by \\(4\\). The area is multiplied by \\(16\\).</p><p>The old area is 30 square centimetres. Multiply it by the area factor.</p><p>\\(480\\) square centimetres</p>",
             "retry": [
               {
@@ -247,16 +307,12 @@
         ]
       },
       {
-        "title": "Combining two groups fairly",
-        "question": "<p>The table gives the numbers of library visits made by the members of two clubs.</p><table><thead><tr><th scope=\"col\">Club</th><th scope=\"col\">Members</th><th scope=\"col\">Mean visits</th></tr></thead><tbody><tr><td>North</td><td>9</td><td>3</td></tr><tr><td>South</td><td>12</td><td>13</td></tr></tbody></table><ol type=\"a\" class=\"parts\"><li><p>Find the mean number of visits per person for both clubs combined. Give an exact answer.</p><span class=\"marks\">[2]</span></li><li><p>Find the total number of visits by members of the larger club.</p><span class=\"marks\">[2]</span></li><li><p>One member changes clubs but keeps the same number of visits. Explain what happens to the combined mean.</p><span class=\"marks\">[2]</span></li></ol>",
+        "title": "Find a missing group mean",
+        "question": "<p>A survey includes 5 senior volunteers and 15 junior volunteers. The 20 volunteers average 7 library visits each. The seniors average 4 visits. Find the junior volunteers’ mean.</p>",
         "solution": [
-          "<p><strong>(a)</strong> Find the two totals. The North total is 9 times 3. The South total is 12 times 13.</p>",
-          "<p>Together there are 183 visits and 21 people. Divide visits by people.</p>",
-          "<p>\\(\\frac{61}{7}\\)</p>",
-          "<p><strong>(b)</strong> Each member contributes 13 visits on average. Multiply by 12 members.</p>",
-          "<p>\\(156\\)</p>",
-          "<p><strong>(c)</strong> The move changes the groups. The inputs to the combined mean stay fixed.</p>",
-          "<p>It stays the same. The total number of visits and the total number of people are unchanged.</p>"
+          "<p>The whole survey accounts for \\(20\\times7=140\\) visits. The seniors contribute \\(5\\times4=20\\) visits.</p>",
+          "<p>The 15 juniors contribute \\(140-20=120\\) visits.</p>",
+          "<p>Divide by the junior headcount to get \\(120\\div15=8\\) visits per junior on average.</p>"
         ]
       },
       {
@@ -273,16 +329,12 @@
         ]
       },
       {
-        "title": "Two draws without replacement",
-        "question": "<p>A bag holds 5 blue counters and 5 white counters. Two counters are drawn one after the other. The first counter is kept out of the bag.</p><ol type=\"a\" class=\"parts\"><li><p>Find the probability of getting one counter of each colour, in either order.</p><span class=\"marks\">[2]</span></li><li><p>Find the probability of two blue counters.</p><span class=\"marks\">[2]</span></li><li><p>Explain why the probability of blue usually changes between the first and second draws.</p><span class=\"marks\">[2]</span></li></ol>",
+        "title": "Use the complement for at least one blue counter",
+        "question": "<p>A bag contains 5 blue and 3 white counters. Two counters are drawn without replacement. Find the probability that at least one counter is blue.</p>",
         "solution": [
-          "<p><strong>(a)</strong> List the orders BW and WB. The first draw is from 10 counters. The second draw is from 9 counters.</p>",
-          "<p>Each order has probability \\(\\frac{5}{18}\\). Add the two probabilities.</p>",
-          "<p>\\(\\frac{5}{9}\\)</p>",
-          "<p><strong>(b)</strong> After drawing one blue counter, there are 4 blue counters left out of 9.</p>",
-          "<p>\\(\\frac{2}{9}\\)</p>",
-          "<p><strong>(c)</strong> The first draw determines which counts are used in the fraction for the second draw.</p>",
-          "<p>One counter has been removed. If it was blue, both the number of blue counters and the total fall. If it was white, only the total falls.</p>"
+          "<p>The event fails only if both counters are white. That is one route, so use its probability first.</p>",
+          "<p>For two whites the branch probabilities are \\(\\frac38\\) and \\(\\frac27\\). Their product is \\(\\frac{3}{28}\\).</p>",
+          "<p>The probability of at least one blue is \\(1-\\frac{3}{28}=\\frac{25}{28}\\). This includes two blues.</p>"
         ]
       },
       {
@@ -299,16 +351,12 @@
         ]
       },
       {
-        "title": "A larger copy of a display",
-        "question": "<p>A rectangular design is 3 cm by 8 cm. A larger copy is made with length scale factor \\(3\\).</p><ol type=\"a\" class=\"parts\"><li><p>Find the area of the larger design in square centimetres.</p><span class=\"marks\">[2]</span></li><li><p>Find the perimeter of the larger design in centimetres.</p><span class=\"marks\">[2]</span></li><li><p>Explain why the same multiplier cannot be used for both perimeter and area.</p><span class=\"marks\">[2]</span></li></ol>",
+        "title": "Recover a length scale factor from two areas",
+        "question": "<p>A rectangular poster has area 40 square centimetres. A similar poster has area 90 square centimetres. A 10 cm side of the smaller poster corresponds to a side of the larger poster. Find the larger side.</p>",
         "solution": [
-          "<p><strong>(a)</strong> Both side lengths are multiplied by \\(3\\). The area is multiplied by \\(9\\).</p>",
-          "<p>The old area is 24 square centimetres. Multiply it by the area factor.</p>",
-          "<p>\\(216\\) square centimetres</p>",
-          "<p><strong>(b)</strong> The perimeter is a length. Multiply the original perimeter 22 cm by \\(3\\) once.</p>",
-          "<p>\\(66\\) cm</p>",
-          "<p><strong>(c)</strong> Writing each calculation using the two side lengths shows how often the scale factor appears.</p>",
-          "<p>The perimeter adds scaled lengths. The area multiplies two scaled lengths, so the factor occurs twice.</p>"
+          "<p>The area factor is \\(\\frac{90}{40}=\\frac94\\). It is the square of the length scale factor.</p>",
+          "<p>The positive length scale factor is \\(\\sqrt{\\frac94}=\\frac32\\).</p>",
+          "<p>The corresponding length is \\(10\\times\\frac32=15\\) cm.</p>"
         ]
       }
     ],
@@ -323,7 +371,7 @@
           "type": "number",
           "expected": "234/23"
         },
-        "hint": "<p>Work out the two totals before finding the combined mean.</p>",
+        "hint": "<p>Multiply the North mean by 8 and the South mean by 15. Add those totals and divide by the number of members.</p>",
         "solution": "<p>Find the two totals. The North total is 8 times 3. The South total is 15 times 14.</p><p>Together there are 234 visits and 23 people. Divide visits by people.</p><p>\\(\\frac{234}{23}\\)</p>",
         "retry": [
           {
@@ -342,7 +390,7 @@
           "type": "number",
           "expected": "251/25"
         },
-        "hint": "<p>Work out the two totals before finding the combined mean.</p>",
+        "hint": "<p>The two means describe groups of 9 and 16 people. Find the total visits in each group before you combine them.</p>",
         "solution": "<p>Find the two totals. The North total is 9 times 3. The South total is 16 times 14.</p><p>Together there are 251 visits and 25 people. Divide visits by people.</p><p>\\(\\frac{251}{25}\\)</p>",
         "retry": [
           {
@@ -361,7 +409,7 @@
           "type": "number",
           "expected": "11/39"
         },
-        "hint": "<p>Multiply along each order and then add the probabilities for both orders.</p>",
+        "hint": "<p>List blue then white and white then blue. There are 13 counters before each first draw and 12 before its second draw.</p>",
         "solution": "<p>List the orders BW and WB. The first draw is from 13 counters. The second draw is from 12 counters.</p><p>Each order has probability \\(\\frac{11}{78}\\). Add the two probabilities.</p><p>\\(\\frac{11}{39}\\)</p>",
         "retry": [
           {
@@ -380,7 +428,7 @@
           "type": "number",
           "expected": "33/91"
         },
-        "hint": "<p>Multiply along each order and then add the probabilities for both orders.</p>",
+        "hint": "<p>Work out the two different-colour orders separately. There are 14 counters at first and 13 after the first counter is kept out.</p>",
         "solution": "<p>List the orders BW and WB. The first draw is from 14 counters. The second draw is from 13 counters.</p><p>Each order has probability \\(\\frac{33}{182}\\). Add the two probabilities.</p><p>\\(\\frac{33}{91}\\)</p>",
         "retry": [
           {
@@ -399,7 +447,7 @@
           "type": "number",
           "expected": "6000"
         },
-        "hint": "<p>Square the length scale factor to get the area scale factor.</p>",
+        "hint": "<p>You can multiply both the 12 cm length and the 20 cm width by 5 before you find the area.</p>",
         "solution": "<p>Both side lengths are multiplied by \\(5\\). The area is multiplied by \\(25\\).</p><p>The old area is 240 square centimetres. Multiply it by the area factor.</p><p>\\(6000\\) square centimetres</p>",
         "retry": [
           {
@@ -418,7 +466,7 @@
           "type": "number",
           "expected": "900"
         },
-        "hint": "<p>Square the length scale factor to get the area scale factor.</p>",
+        "hint": "<p>The original area uses 3 cm and 12 cm. Each dimension becomes five times as large, so apply the scale factor twice to that area.</p>",
         "solution": "<p>Both side lengths are multiplied by \\(5\\). The area is multiplied by \\(25\\).</p><p>The old area is 36 square centimetres. Multiply it by the area factor.</p><p>\\(900\\) square centimetres</p>",
         "retry": [
           {
@@ -444,9 +492,9 @@
       }
     ],
     "revision": {
-      "body": "<h2>Whose visits count in the mean?</h2><p>A combined mean is the sum of the group totals divided by the combined headcount. A larger group has more weight.</p><h2>Which outcomes belong to the event?</h2><p>For one route, multiply its consecutive probabilities. Add the probabilities of separate routes that can each give the event.</p><h2>Which measurements scale twice?</h2><p>Perimeter uses the length scale factor. For area, each of the two dimensions contributes one factor, so the multiplier is its square.</p><p><img src=\"/assets/study/0862/stage-9/unequal-groups.svg\" alt=\"One group of four people and another group of nine.\" width=\"222\" height=\"149\"></p>",
-      "checks": "<p>The table gives the numbers of library visits made by the members of two clubs.</p><table><thead><tr><th scope=\"col\">Club</th><th scope=\"col\">Members</th><th scope=\"col\">Mean visits</th></tr></thead><tbody><tr><td>North</td><td>6</td><td>5</td></tr><tr><td>South</td><td>18</td><td>15</td></tr></tbody></table><p>Find the mean number of visits per person for both clubs combined. Give an exact answer.</p><p><strong>Check.</strong> \\(\\frac{25}{2}\\)</p>",
-      "examTip": "<p>Name the quantity before choosing its multiplier. State length or area units with the answer.</p>"
+      "body": "<h2>Recover totals</h2><p>Multiply each group mean by its headcount. Divide the combined total by the combined headcount.</p><h2>Use a complement</h2><p>For ‘at least one’, consider the outcome with none. Without replacement, update the counts before the second draw.</p><h2>Recover a length factor</h2><p>Divide the new area by the old area. Take the positive square root of that ratio to find the length factor.</p><table><caption>Combining two groups of volunteers</caption><thead><tr><th scope=\"col\">Group</th><th scope=\"col\">People</th><th scope=\"col\">Mean visits</th><th scope=\"col\">Total visits</th></tr></thead><tbody><tr><td>Senior</td><td>5</td><td>4</td><td>20</td></tr><tr><td>Junior</td><td>15</td><td>8</td><td>120</td></tr><tr><td>All</td><td>20</td><td>7</td><td>140</td></tr></tbody></table>",
+      "checks": "<p>A similar copy has 36 square centimetres of area. The original has 16 square centimetres of area. An original length is 6 cm. Find the corresponding new length.</p><p><strong>Check.</strong> \\(6\\times\\sqrt{\\frac{36}{16}}=9\\) cm.</p>",
+      "examTip": "<p>Check whether the answer is a length or an area before choosing a multiplier.</p>"
     }
   }
 }

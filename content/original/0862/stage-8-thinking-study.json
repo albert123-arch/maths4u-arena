@@ -7,16 +7,16 @@
         "id": "growth-and-start",
         "title": "What changes each time?",
         "label": "Growth and start",
-        "minutes": 8,
+        "minutes": 10,
         "level": "core",
-        "intro": "<p>Make the first few rows. Point to the growing groups and the part that stays the same. Link them to the two terms of the rule.</p>",
+        "intro": "<p>Separate the part that grows with the row number from the part that stays fixed. To check whether a total can occur, remove the fixed part and see whether the rest makes a whole number of groups.</p>",
         "blocks": [
           {
             "kind": "key",
             "html": "<p>In a rule of the form \\(an+b\\), the coefficient \\(a\\) is the step between terms. The fixed part \\(b\\) accounts for the starting offset.</p>",
             "figure": {
               "src": "/assets/study/0862/stage-8/growing-groups.svg",
-              "alt": "Rows with one, two and three blue triples and two amber tiles at each end.",
+              "alt": "Rows with one, two and three blue triples followed by two amber tiles.",
               "width": 360,
               "height": 163,
               "caption": "<p>Each new row adds one blue triple. The two amber tiles stay fixed.</p>"
@@ -36,7 +36,7 @@
               "type": "number",
               "expected": "44"
             },
-            "hint": "<p>Multiply the row number by the number in one group, then add the end tiles.</p>",
+            "hint": "<p>Row 8 contains eight groups of five. Add the four fixed tiles once.</p>",
             "solution": "<p>Row 8 has 8 groups. Multiply 8 by 5 and add the 4 tiles at the end.</p><p>\\(44\\)</p>",
             "retry": [
               {
@@ -55,6 +55,26 @@
             "tryFirst": true
           },
           {
+            "id": "audit-maximum-complete-groups",
+            "kind": "check",
+            "title": "Find the largest row that fits",
+            "prompt": "<p>Row \\(n\\) uses \\(n\\) groups of 4 tiles and 3 fixed tiles. You have 34 tiles. What is the largest row number you can build?</p>",
+            "field": {
+              "key": "answer",
+              "label": "Largest row number",
+              "type": "number",
+              "expected": "7"
+            },
+            "hint": "<p>Set aside the three fixed tiles, then count complete groups of four that fit.</p>",
+            "solution": "<p>After setting aside 3 tiles, \\(34-3=31\\) tiles remain. Seven groups need 28, while eight need 32. The largest row number is 7.</p>",
+            "retry": [
+              {
+                "answer": "8",
+                "feedback": "<p>Eight groups would need 32 tiles plus the three fixed tiles. Only 34 tiles are available.</p>"
+              }
+            ]
+          },
+          {
             "kind": "check",
             "id": "s1-try-2",
             "prompt": "<p>Build row \\(n\\) with 6 tiles for each group and 4 extra tiles at the end. Row \\(n\\) has \\(n\\) groups.</p><table><thead><tr><th scope=\"col\">Row number</th><th scope=\"col\">1</th><th scope=\"col\">2</th><th scope=\"col\">3</th></tr></thead><tbody><tr><td>Tiles</td><td>10</td><td>16</td><td>22</td></tr></tbody></table><p>How many tiles are in row 8?</p>",
@@ -64,7 +84,7 @@
               "type": "number",
               "expected": "52"
             },
-            "hint": "<p>Multiply the row number by the number in one group, then add the end tiles.</p>",
+            "hint": "<p>Here each group has six tiles. Only the group count changes from row to row.</p>",
             "solution": "<p>Row 8 has 8 groups. Multiply 8 by 6 and add the 4 tiles at the end.</p><p>\\(52\\)</p>",
             "retry": [
               {
@@ -83,9 +103,9 @@
         "id": "one-counterexample",
         "title": "Can the same fence cover a different area?",
         "label": "One counterexample",
-        "minutes": 8,
+        "minutes": 10,
         "level": "core",
-        "intro": "<p>Draw two rectangles with the same total edge length. Find their areas in square units.</p>",
+        "intro": "<p>A claim that says ‘always’ has to work in every allowed case. To test a claim about perimeter and area, keep the perimeter fixed and look for two designs with different products of their side lengths.</p>",
         "blocks": [
           {
             "kind": "key",
@@ -112,7 +132,7 @@
               "type": "number",
               "expected": "30"
             },
-            "hint": "<p>Halve the perimeter to get length plus width.</p>",
+            "hint": "<p>Half of the 72 m perimeter is one length plus one width. Use the second design’s width of 6 m.</p>",
             "solution": "<p>Length plus width is half the perimeter, which is 36 m. Subtract the new width 6 m.</p><p>\\(30\\) m</p>",
             "retry": [
               {
@@ -131,6 +151,26 @@
             "tryFirst": true
           },
           {
+            "id": "audit-fixed-fence-area-gap",
+            "kind": "check",
+            "title": "Compare two areas inside the same fence",
+            "prompt": "<p>Two rectangles each use 28 m of fencing. One is 3 m wide and the other is 5 m wide. By how many square metres do their areas differ?</p>",
+            "field": {
+              "key": "answer",
+              "label": "Difference in square metres",
+              "type": "number",
+              "expected": "12"
+            },
+            "hint": "<p>Find the length of each rectangle from half its perimeter before finding the two areas.</p>",
+            "solution": "<p>One length plus one width is \\(28\\div2=14\\) m. The areas are \\(3\\times11=33\\) and \\(5\\times9=45\\) square metres. The difference is \\(45-33=12\\) square metres.</p>",
+            "retry": [
+              {
+                "answer": "0",
+                "feedback": "<p>The perimeters match. The areas use multiplication, so find each area separately.</p>"
+              }
+            ]
+          },
+          {
             "kind": "check",
             "id": "s2-try-2",
             "prompt": "<p>A gardener uses 74 metres of fencing around a rectangle. The first design has width 4 m. The second has width 6 m.</p><p>Find the length of the second rectangle in metres.</p>",
@@ -140,7 +180,7 @@
               "type": "number",
               "expected": "31"
             },
-            "hint": "<p>Halve the perimeter to get length plus width.</p>",
+            "hint": "<p>The full perimeter includes two lengths and two widths. Halve 74 before taking away the second width.</p>",
             "solution": "<p>Length plus width is half the perimeter, which is 37 m. Subtract the new width 6 m.</p><p>\\(31\\) m</p>",
             "retry": [
               {
@@ -159,9 +199,9 @@
         "id": "percent-base",
         "title": "Do two opposite changes cancel?",
         "label": "Percent base",
-        "minutes": 8,
+        "minutes": 10,
         "level": "extension",
-        "intro": "<p>Draw a bar for the starting amount. After a rise, make a new bar before working out the fall.</p>",
+        "intro": "<p>The amount after a percentage change becomes the starting amount for the next change. To undo a rise, find what fraction of the new amount must be removed. A fall by the same percentage uses a different base.</p>",
         "blocks": [
           {
             "kind": "key",
@@ -188,7 +228,7 @@
               "type": "number",
               "expected": "3069/8"
             },
-            "hint": "<p>Use a multiplier for each of the two changes.</p>",
+            "hint": "<p>After the 55% rise, keep the full new amount. The fall leaves 45% of that amount.</p>",
             "solution": "<p>After the rise, multiply the starting value by \\(\\frac{31}{20}\\) to get \\(\\frac{1705}{2}\\).</p><p>The fall uses that new value. Multiply it by \\(\\frac{9}{20}\\) to get \\(\\frac{3069}{8}\\).</p><p>\\(\\frac{3069}{8}\\) units</p>",
             "retry": [
               {
@@ -207,6 +247,26 @@
             "tryFirst": true
           },
           {
+            "id": "audit-undo-percentage-rise",
+            "kind": "check",
+            "title": "Find a decrease from the new price",
+            "prompt": "<p>A shop increases the price of a bag from £40 to £50. What percentage decrease from £50 brings it back to £40?</p>",
+            "field": {
+              "key": "answer",
+              "label": "Percentage decrease",
+              "type": "number",
+              "expected": "20"
+            },
+            "hint": "<p>Find the amount removed, then compare it with the price just before the decrease.</p>",
+            "solution": "<p>The amount removed is £10. The starting price for the decrease is £50, so the decrease is \\(\\frac{10}{50}\\times100\\%=20\\%\\).</p>",
+            "retry": [
+              {
+                "answer": "25",
+                "feedback": "<p>25% compares the £10 with the original £40. The decrease starts at £50.</p>"
+              }
+            ]
+          },
+          {
             "kind": "check",
             "id": "s3-try-2",
             "prompt": "<p>A machine setting is 575 units. It rises by 55% and then falls by 55%. Each percentage is taken from the current setting.</p><p>Find the final setting in units.</p>",
@@ -216,7 +276,7 @@
               "type": "number",
               "expected": "6417/16"
             },
-            "hint": "<p>Use a multiplier for each of the two changes.</p>",
+            "hint": "<p>Apply the multiplier for the rise to 575 first. Apply the multiplier for the fall to that new result.</p>",
             "solution": "<p>After the rise, multiply the starting value by \\(\\frac{31}{20}\\) to get \\(\\frac{3565}{4}\\).</p><p>The fall uses that new value. Multiply it by \\(\\frac{9}{20}\\) to get \\(\\frac{6417}{16}\\).</p><p>\\(\\frac{6417}{16}\\) units</p>",
             "retry": [
               {
@@ -235,26 +295,23 @@
     "examples": [
       {
         "title": "A growing row of tiles",
-        "question": "<p>Build row \\(n\\) with 6 tiles for each group and 1 extra tiles at the end. Row \\(n\\) has \\(n\\) groups.</p><table><thead><tr><th scope=\"col\">Row number</th><th scope=\"col\">1</th><th scope=\"col\">2</th><th scope=\"col\">3</th></tr></thead><tbody><tr><td>Tiles</td><td>7</td><td>13</td><td>19</td></tr></tbody></table><ol type=\"a\" class=\"parts\"><li><p>How many tiles are in row 7?</p><span class=\"marks\">[2]</span></li><li><p>Write a rule for the number of tiles in row \\(n\\).</p><span class=\"marks\">[2]</span></li><li><p>Which row uses 61 tiles?</p><span class=\"marks\">[2]</span></li></ol>",
+        "question": "<p>Build row \\(n\\) with 6 tiles for each group and one extra tile at the end. Row \\(n\\) has \\(n\\) groups.</p><table><thead><tr><th scope=\"col\">Row number</th><th scope=\"col\">1</th><th scope=\"col\">2</th><th scope=\"col\">3</th></tr></thead><tbody><tr><td>Tiles</td><td>7</td><td>13</td><td>19</td></tr></tbody></table><ol type=\"a\" class=\"parts\"><li><p>How many tiles are in row 7?</p><span class=\"marks\">[2]</span></li><li><p>Write a rule for the number of tiles in row \\(n\\).</p><span class=\"marks\">[2]</span></li><li><p>Which row uses 61 tiles?</p><span class=\"marks\">[2]</span></li></ol>",
         "solution": [
-          "<p><strong>(a)</strong> Row 7 has 7 groups. Multiply 7 by 6 and add the 1 tiles at the end.</p>",
+          "<p><strong>(a)</strong> Row 7 has 7 groups. Multiply 7 by 6 and add the extra tile at the end.</p>",
           "<p>\\(43\\)</p>",
-          "<p><strong>(b)</strong> The groups contribute \\(6n\\). The other 1 tiles do not change.</p>",
+          "<p><strong>(b)</strong> The groups contribute \\(6n\\). The extra tile stays the same.</p>",
           "<p>\\(6n+1\\)</p>",
-          "<p><strong>(c)</strong> Take off the fixed 1 tiles to leave whole groups of size 6.</p>",
+          "<p><strong>(c)</strong> Take off the fixed tile to leave whole groups of size 6.</p>",
           "<p>\\(10\\)</p>"
         ]
       },
       {
-        "title": "A growing row of tiles",
-        "question": "<p>Build row \\(n\\) with 7 tiles for each group and 1 extra tiles at the end. Row \\(n\\) has \\(n\\) groups.</p><table><thead><tr><th scope=\"col\">Row number</th><th scope=\"col\">1</th><th scope=\"col\">2</th><th scope=\"col\">3</th></tr></thead><tbody><tr><td>Tiles</td><td>8</td><td>15</td><td>22</td></tr></tbody></table><ol type=\"a\" class=\"parts\"><li><p>How many tiles are in row 7?</p><span class=\"marks\">[2]</span></li><li><p>Write a rule for the number of tiles in row \\(n\\).</p><span class=\"marks\">[2]</span></li><li><p>Which row uses 71 tiles?</p><span class=\"marks\">[2]</span></li></ol>",
+        "title": "Decide whether a total fits the pattern",
+        "question": "<p>Each row has \\(n\\) groups of 5 tiles and 2 extra tiles, where \\(n\\) is a positive whole number. Can a row use exactly 47 tiles? Can it use exactly 49?</p>",
         "solution": [
-          "<p><strong>(a)</strong> Row 7 has 7 groups. Multiply 7 by 7 and add the 1 tiles at the end.</p>",
-          "<p>\\(50\\)</p>",
-          "<p><strong>(b)</strong> The groups contribute \\(7n\\). The other 1 tiles do not change.</p>",
-          "<p>\\(7n+1\\)</p>",
-          "<p><strong>(c)</strong> Take off the fixed 1 tiles to leave whole groups of size 7.</p>",
-          "<p>\\(10\\)</p>"
+          "<p>Write the total as \\(5n+2\\). Take away the two fixed tiles before testing for groups of five.</p>",
+          "<p>For 47 tiles, \\(47-2=45\\). This makes 9 complete groups, so row 9 fits.</p>",
+          "<p>For 49 tiles, \\(49-2=47=5\\times9+2\\). Two tiles are left after the nine groups, so 49 is not a row total.</p>"
         ]
       },
       {
@@ -271,16 +328,12 @@
         ]
       },
       {
-        "title": "Rearranging a fixed fence",
-        "question": "<p>A gardener uses 72 metres of fencing around a rectangle. The first design has width 3 m. The second has width 5 m.</p><ol type=\"a\" class=\"parts\"><li><p>Find the length of the second rectangle in metres.</p><span class=\"marks\">[2]</span></li><li><p>Work out how much the area increases, in square metres.</p><span class=\"marks\">[2]</span></li><li><p>Someone says that equal perimeters always give equal areas. Does this example support the claim? Explain.</p><span class=\"marks\">[2]</span></li></ol>",
+        "title": "Use one comparison to disprove an area claim",
+        "question": "<p>Mina claims all rectangles made with 24 m of fencing have the same area. Compare a 3 m wide rectangle with a 5 m wide rectangle. Does the claim hold?</p>",
         "solution": [
-          "<p><strong>(a)</strong> Length plus width is half the perimeter, which is 36 m. Subtract the new width 5 m.</p>",
-          "<p>\\(31\\) m</p>",
-          "<p><strong>(b)</strong> The first area is 3 times 33, giving 99. The second area is 5 times 31, giving 155.</p>",
-          "<p>Subtract 99 from 155.</p>",
-          "<p>\\(56\\) square metres</p>",
-          "<p><strong>(c)</strong> The area changed by 56 square metres, even though the fence length stayed fixed.</p>",
-          "<p>No. The two perimeters are equal, but the areas differ.</p>"
+          "<p>The widths and lengths must add to \\(24\\div2=12\\) m. The lengths are \\(12-3=9\\) m and \\(12-5=7\\) m.</p>",
+          "<p>The two areas are \\(3\\times9=27\\) and \\(5\\times7=35\\) square metres.</p>",
+          "<p>Both rectangles have 24 m of fencing, and their areas differ. These two cases disprove the claim.</p>"
         ]
       },
       {
@@ -297,16 +350,12 @@
         ]
       },
       {
-        "title": "Up, then down by the same percentage",
-        "question": "<p>A machine setting is 850 units. It rises by 40% and then falls by 40%. Each percentage is taken from the current setting.</p><ol type=\"a\" class=\"parts\"><li><p>Find the final setting in units.</p><span class=\"marks\">[2]</span></li><li><p>How many units smaller is the final setting than the original?</p><span class=\"marks\">[2]</span></li><li><p>Explain why the rise and fall do not cancel.</p><span class=\"marks\">[2]</span></li></ol>",
+        "title": "Find the percentage decrease that undoes a rise",
+        "question": "<p>A bicycle helmet rises from £80 to £100. Find the percentage rise. What percentage decrease from £100 would return it to £80?</p>",
         "solution": [
-          "<p><strong>(a)</strong> After the rise, multiply the starting value by \\(\\frac{7}{5}\\) to get \\(1190\\).</p>",
-          "<p>The fall uses that new value. Multiply it by \\(\\frac{3}{5}\\) to get \\(714\\).</p>",
-          "<p>\\(714\\) units</p>",
-          "<p><strong>(b)</strong> The original is 850. Take away \\(714\\) using exact values.</p>",
-          "<p>\\(136\\) units</p>",
-          "<p><strong>(c)</strong> Compare the first percentage of 850 with the second percentage of \\(1190\\).</p>",
-          "<p>The fall takes the same percentage of the larger amount, so it removes more units than the rise added.</p>"
+          "<p>The rise is £20 out of the original £80. The percentage rise is \\(\\frac{20}{80}\\times100\\%=25\\%\\).</p>",
+          "<p>The fall is also £20, but it starts at £100. The percentage decrease is \\(\\frac{20}{100}\\times100\\%=20\\%\\).</p>",
+          "<p>Both changes are £20. The first percentage is based on £80 and the second on £100.</p>"
         ]
       }
     ],
@@ -321,7 +370,7 @@
           "type": "number",
           "expected": "47"
         },
-        "hint": "<p>Multiply the row number by the number in one group, then add the end tiles.</p>",
+        "hint": "<p>Use four tiles for each of the ten groups. The seven end tiles are added once.</p>",
         "solution": "<p>Row 10 has 10 groups. Multiply 10 by 4 and add the 7 tiles at the end.</p><p>\\(47\\)</p>",
         "retry": [
           {
@@ -340,7 +389,7 @@
           "type": "number",
           "expected": "57"
         },
-        "hint": "<p>Multiply the row number by the number in one group, then add the end tiles.</p>",
+        "hint": "<p>Look at how many tiles each new row adds. Multiply that increase by ten and then add the fixed seven.</p>",
         "solution": "<p>Row 10 has 10 groups. Multiply 10 by 5 and add the 7 tiles at the end.</p><p>\\(57\\)</p>",
         "retry": [
           {
@@ -359,7 +408,7 @@
           "type": "number",
           "expected": "30"
         },
-        "hint": "<p>Halve the perimeter to get length plus width.</p>",
+        "hint": "<p>One length and one width share half the 74 m fence. Use the second width, 7 m.</p>",
         "solution": "<p>Length plus width is half the perimeter, which is 37 m. Subtract the new width 7 m.</p><p>\\(30\\) m</p>",
         "retry": [
           {
@@ -378,7 +427,7 @@
           "type": "number",
           "expected": "11"
         },
-        "hint": "<p>Halve the perimeter to get length plus width.</p>",
+        "hint": "<p>The 38 m fence includes two matching lengths and two matching widths. Find the half perimeter, then use the 8 m width.</p>",
         "solution": "<p>Length plus width is half the perimeter, which is 19 m. Subtract the new width 8 m.</p><p>\\(11\\) m</p>",
         "retry": [
           {
@@ -397,7 +446,7 @@
           "type": "number",
           "expected": "2541/16"
         },
-        "hint": "<p>Use a multiplier for each of the two changes.</p>",
+        "hint": "<p>First increase the starting amount by 65%. The second step leaves 35% of that larger result.</p>",
         "solution": "<p>After the rise, multiply the starting value by \\(\\frac{33}{20}\\) to get \\(\\frac{1815}{4}\\).</p><p>The fall uses that new value. Multiply it by \\(\\frac{7}{20}\\) to get \\(\\frac{2541}{16}\\).</p><p>\\(\\frac{2541}{16}\\) units</p>",
         "retry": [
           {
@@ -416,7 +465,7 @@
           "type": "number",
           "expected": "153"
         },
-        "hint": "<p>Use a multiplier for each of the two changes.</p>",
+        "hint": "<p>Work out the amount after the 70% increase. Keep three tenths of that amount after the decrease.</p>",
         "solution": "<p>After the rise, multiply the starting value by \\(\\frac{17}{10}\\) to get \\(510\\).</p><p>The fall uses that new value. Multiply it by \\(\\frac{3}{10}\\) to get \\(153\\).</p><p>\\(153\\) units</p>",
         "retry": [
           {
@@ -442,9 +491,9 @@
       }
     ],
     "revision": {
-      "body": "<h2>What changes each time?</h2><p>In a rule of the form \\(an+b\\), the coefficient \\(a\\) is the step between terms. The fixed part \\(b\\) accounts for the starting offset.</p><h2>Can the same fence cover a different area?</h2><p>The fixed perimeter controls the sum of length and width. The area depends on their product, which can change even when the sum stays fixed.</p><h2>Do two opposite changes cancel?</h2><p>Each percentage acts on the current amount. The same percentage of the larger bar is a bigger quantity.</p><p><img src=\"/assets/study/0862/stage-8/growing-groups.svg\" alt=\"Rows with one, two and three blue triples and two amber tiles at each end.\" width=\"222\" height=\"163\"></p>",
-      "checks": "<p>Build row \\(n\\) with 3 tiles for each group and 6 extra tiles at the end. Row \\(n\\) has \\(n\\) groups.</p><table><thead><tr><th scope=\"col\">Row number</th><th scope=\"col\">1</th><th scope=\"col\">2</th><th scope=\"col\">3</th></tr></thead><tbody><tr><td>Tiles</td><td>9</td><td>12</td><td>15</td></tr></tbody></table><p>How many tiles are in row 14?</p><p><strong>Check.</strong> \\(48\\)</p>",
-      "examTip": "<p>Write both multipliers and round only at the end if asked.</p>"
+      "body": "<h2>Test a tile total</h2><p>Remove the fixed tiles and divide by the number in each group. A possible exact row has a positive whole number of groups.</p><h2>Disprove an ‘always’ claim</h2><p>Make two designs with the same perimeter and different areas. Use half the perimeter to find each length.</p><h2>Reverse a percentage change</h2><p>Compare the difference with the amount at the start of each change.</p><table><caption>Two designs with a 24 m perimeter</caption><thead><tr><th scope=\"col\">Length (m)</th><th scope=\"col\">Width (m)</th><th scope=\"col\">Area (m²)</th></tr></thead><tbody><tr><td>9</td><td>3</td><td>27</td></tr><tr><td>7</td><td>5</td><td>35</td></tr></tbody></table>",
+      "checks": "<p>Row \\(n\\) uses \\(4n+3\\) tiles. Can a row use exactly 35 tiles?</p><p><strong>Check.</strong> Yes. \\(35-3=32\\) gives 8 groups of 4.</p>",
+      "examTip": "<p>Write which quantity stays fixed before comparing two cases.</p>"
     }
   }
 }
