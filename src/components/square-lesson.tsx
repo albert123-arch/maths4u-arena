@@ -188,6 +188,8 @@ function SquareQuestionForm({ q, enabled, onResult, topic, reportReady }: { repo
   const [attempted, setAttempted] = useState(false), [paper, setPaper] = useState(false);
   const [answers, setAnswers] = useState<Record<string, string>>({}), [helpUsed, setHelpUsed] = useState(false), [result, setResult] = useState<CheckResult | null>(null), [error, setError] = useState<unknown>(null), [busy, setBusy] = useState(false), [storageIssue, setStorageIssue] = useState(false);
   const draftKey = topic.storage + ".draft." + (actor?.id ?? "guest") + "." + topic.version + "." + q.uid;
+  // An older answer and self-assessment belong to their original wording.
+  const compatibleDraftVersions = topic.revisedQuestions?.includes(q.uid) ? undefined : topic.compatibleVersions;
   // Restore after React has re-enabled the controls, rather than racing that commit.
   useLayoutEffect(() => {
     if (busy || !pendingFocus.current) return;
@@ -197,12 +199,12 @@ function SquareQuestionForm({ q, enabled, onResult, topic, reportReady }: { repo
   useEffect(() => {
     if (!enabled || lens) return;
     try {
-      const d = JSON.parse(firstStoredValue(localStorage,[draftKey,...(topic.compatibleVersions??[]).map(v=>topic.storage+".draft."+(actor?.id??"guest")+"."+v+"."+q.uid)]) ?? "null");
+      const d = JSON.parse(firstStoredValue(localStorage,[draftKey,...(compatibleDraftVersions??[]).map(v=>topic.storage+".draft."+(actor?.id??"guest")+"."+v+"."+q.uid)]) ?? "null");
       if (d && typeof d.answers === "object" && !(Number.isFinite(d.checkedAt) && Date.now() - d.checkedAt >= 86400000)) {
         setAnswers(Object.fromEntries(q.fields.map(f => [f.key, typeof d.answers[f.key] === "string" ? d.answers[f.key].slice(0, 400) : ""]))); setHelpUsed(d.helpUsed === true); setAttempted(d.attempted === true || Number.isFinite(d.checkedAt));
       }
     } catch { setStorageIssue(true); }
-  }, [enabled, draftKey, q.fields, lens, actor?.id, q.uid, topic.compatibleVersions, topic.storage]);
+  }, [enabled, draftKey, q.fields, lens, actor?.id, q.uid, compatibleDraftVersions, topic.storage]);
   function save(values: Record<string, string>, used: boolean, checkedAt?: number, didAttempt = attempted) { if (lens) return; try { localStorage.setItem(draftKey, JSON.stringify({ answers: values, helpUsed: used, checkedAt, attempted: didAttempt })); } catch { setStorageIssue(true); } }
   function change(k: string, value: string) { const next = { ...answers, [k]: value }; setAnswers(next); setResult(null); save(next, helpUsed); }
   function preserveFocus() {
@@ -233,7 +235,7 @@ function SquareQuestionForm({ q, enabled, onResult, topic, reportReady }: { repo
     <ErrorNotice error={error} />
     <div className="square-result">{result && <Feedback kind={result.correct ? "correct" : result.valid ? "again" : "format"}>{result.correct ? t("Все итоговые ответы верны.", "All final answers are correct.") + (helpUsed ? t(" Теперь попробуйте новый вариант без помощи.", " Now try a fresh variant without help.") : t(" Переходите дальше или вернитесь позже для повторения.", " Try the next step or return later for review.")) : result.valid ? t("Проверьте поля с отметкой «Попробуйте ещё».", "Look at the fields marked ‘Look again’, then try again.") : t("Некоторые ответы не удалось прочитать. Проверьте формат в отмеченных полях; результат ещё не записан.", "Some answers could not be read. Check the marked fields; no result has been recorded yet.")}</Feedback>}</div>
     {q.manual && <p className="muted">{q.fields.length?t("Проверяются только итоговые ответы. Сравните объяснение, рисунок и метод с разобранным решением; баллы за метод требуют проверки.", "The checker checks final answers only. Compare your explanation, sketch and method with the worked solution; method marks need review."):t("Решите задачу на бумаге, затем сравните работу с решением и критериями.", "Solve the complete problem on paper, then compare your working with the solution and marking guidance.")}</p>}
-    <QuestionSupport storageKey={draftKey+'.support'} compatibleStorageKeys={(topic.compatibleVersions??[]).map(v=>topic.storage+".draft."+(actor?.id??"guest")+"."+v+"."+q.uid+".support")} manual={q.manual} maximum={q.marks} enabled={enabled} attempted={attempted} onPaperFinished={()=>setPaper(true)} onHelp={()=>{setHelpUsed(true);save(answers,true);}} request={(kind,access)=>api<SupportContent>(topic.api+'/help','POST',{uid:q.uid,kind,version:topic.version,...(access?{access}:{}),...(access==='attempt'?{answers}:{})})} assess={actor&&!lens?points=>api(topic.api+'/self-assess','POST',{uid:q.uid,version:topic.version,points}):undefined}/>
+    <QuestionSupport storageKey={draftKey+'.support'} compatibleStorageKeys={(compatibleDraftVersions??[]).map(v=>topic.storage+".draft."+(actor?.id??"guest")+"."+v+"."+q.uid+".support")} manual={q.manual} maximum={q.marks} enabled={enabled} attempted={attempted} onPaperFinished={()=>setPaper(true)} onHelp={()=>{setHelpUsed(true);save(answers,true);}} request={(kind,access)=>api<SupportContent>(topic.api+'/help','POST',{uid:q.uid,kind,version:topic.version,...(access?{access}:{}),...(access==='attempt'?{answers}:{})})} assess={actor&&!lens?points=>api(topic.api+'/self-assess','POST',{uid:q.uid,version:topic.version,points}):undefined}/>
     <ReportError disabled={!reportReady} source={{topic:topic.key,uid:q.uid,version:topic.version}}/>
     {storageIssue && <p role="alert">{t("Не удалось сохранить черновик в браузере. Не закрывайте страницу до окончания работы.", "This draft could not be saved in your browser. Keep the page open until you finish.")}</p>}
   </article>;

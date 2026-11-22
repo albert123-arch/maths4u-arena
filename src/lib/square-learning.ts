@@ -7,7 +7,8 @@ import { ensure } from "./errors";
 import { digest, lockUser, transaction, type Actor } from "./security";
 import { taskSchema, createTaskVersion, versionInclude } from "./content";
 import { questionsForTopic, squareQuestion, gradeSquare, squareHelp, squareMarkingRows, questionCriteria, learningTopic, type SourceQuestion } from "./square-content";
-import { packageVersionMappings } from "./content-packages";
+import { packageReleaseMembers, packageVersionMappings } from "./content-packages";
+import { contentPackage, packageTopic } from "./content-package-content";
 import { taskPermission } from "./catalog";
 import { quadraticTopic, squareSnapshot, type Evidence, type QuadraticTopic } from "./square-model";
 import { databaseConfig } from "./database-url";
@@ -56,9 +57,10 @@ export async function importSquareLocal(actor: Actor, topic: QuadraticTopic = qu
   });
 }
 /** Refuse to grade a different edited version under a cached editorial UID. */
-export const squareMappings = cache(async (key = "completing-square") => {
-  const topic = learningTopic(key), sourceProject = topic.sourceProject, squareLessonId = topic.lessonId, squareQuestions = questionsForTopic(key);
-  if(topic.packageKey){const all=await packageVersionMappings(topic.packageKey);return new Map([...all].filter(([uid])=>squareQuestions.some(q=>q.id===uid)));}
+export const squareMappings = cache(async (key = "completing-square", version?: string) => {
+  const topic = packageTopic(key, version) ?? learningTopic(key), sourceProject = topic.sourceProject, squareLessonId = topic.lessonId;
+  const squareQuestions = questionsForTopic(key,version);
+  if(topic.packageKey){const all=await packageVersionMappings(topic.packageKey,version);return new Map([...all].filter(([uid])=>squareQuestions.some(q=>q.id===uid)));}
   const rows = await db().importRecord.findMany({ where: { sourceProject }, include: { task: { include: { lessons: true, versions: { orderBy: { number: "desc" }, take: 1, include: versionInclude } } } } });
   const mappings = new Map<string,string>();
   for (const q of squareQuestions) {
@@ -74,7 +76,7 @@ const eventSchema = z.object({ eventKey: z.string().uuid(), uid: z.string().max(
 const requestSchema = (topic: QuadraticTopic) => eventSchema.extend({ version: z.literal(topic.version) });
 const answerKey = (value: unknown) => JSON.stringify(Object.entries(value as Record<string,string>).sort(([a],[b])=>a.localeCompare(b)));
 async function recordCheck(actor: Actor, event: z.infer<typeof eventSchema>, mappings: Map<string,string>, imported: boolean, topic: QuadraticTopic, aliases: ReadonlyMap<string, CompatibleCheckVersion> = new Map()) {
-  const q = squareQuestion(event.uid, topic.key), result = gradeSquare(q, event.answers); ensure(result.valid, 400, "INVALID_INPUT");
+  const q = squareQuestion(event.uid, topic.key, topic.version), result = gradeSquare(q, event.answers); ensure(result.valid, 400, "INVALID_INPUT");
   return transaction(async tx => {
     await lockUser(tx, actor.id);
     const old = await tx.independentCheck.findUnique({ where: { userId_eventKey: { userId: actor.id, eventKey: event.eventKey } } });
@@ -86,22 +88,22 @@ async function recordCheck(actor: Actor, event: z.infer<typeof eventSchema>, map
   });
 }
 export async function visibleSquareMappings(actor: Actor | null, topic: QuadraticTopic = quadraticTopic()) {
-  const all=await squareMappings(topic.key);
+  const all=await squareMappings(topic.key,topic.version);
   const rows=await db().taskVersion.findMany({where:{id:{in:[...all.values()]},task:{AND:[{archivedAt:null,...archiveWhere(actor)},await taskPermission(actor)]}},select:{id:true}});
   const ids=new Set(rows.map(r=>r.id));return new Map([...all].filter(([,id])=>ids.has(id)));
 }
 export async function checkSquare(actor: Actor | null, input: unknown, topic: QuadraticTopic = quadraticTopic()) {
   const event = requestSchema(topic).parse(input), mappings = await visibleSquareMappings(actor,topic);
   ensure(mappings.has(event.uid), 404, "NOT_FOUND");
-  const result = gradeSquare(squareQuestion(event.uid, topic.key), event.answers);
-  if (actor && result.valid && !await db().taskVersion.count({where:{id:mappings.get(event.uid),task:restrictedWhere}})) await recordCheck(actor, event, mappings, false, topic, topic.packageKey ? await packageCheckVersionAliases(topic.packageKey, new Set(mappings.values())) : undefined);
+  const result = gradeSquare(squareQuestion(event.uid, topic.key, topic.version), event.answers);
+  if (actor && result.valid && !await db().taskVersion.count({where:{id:mappings.get(event.uid),task:restrictedWhere}})) await recordCheck(actor, event, mappings, false, topic, topic.packageKey ? await packageCheckVersionAliases(topic.packageKey, new Set(mappings.values()), topic.version) : undefined);
   return result;
 }
 export async function helpSquare(input: unknown, topic: QuadraticTopic = quadraticTopic(), actor:Actor|null=null) {
   const { uid, kind, version, access, answers } = z.object({ uid: z.string().max(80), kind: z.enum(["hint", "solution", "guidance"]), version: z.literal(topic.version), access: z.enum(["attempt", "stuck", "paper"]).optional(), answers: z.record(z.string().max(50),z.string().max(400)).optional() }).strict().parse(input);
   const mappings=await visibleSquareMappings(actor,topic);
   ensure(version === topic.version && mappings.has(uid), 404, "NOT_FOUND");
-  const q = squareQuestion(uid, topic.key);
+  const q = squareQuestion(uid, topic.key, topic.version);
   ensure(kind === "hint" || !!access, 403, "CHECK_ANSWER_FIRST");
   ensure(kind === "hint" || access !== "attempt" || (answers && Object.keys(answers).length === q.fields.length && q.fields.every(f => Object.hasOwn(answers,f.key)) && Object.values(answers).some(v => v.trim())), 403, "CHECK_ANSWER_FIRST");
   ensure(access !== "paper" || q.collection === "exam" || q.collection === "mixed" || /sketch|explain|justify/i.test(q.prompt_html), 400, "INVALID_INPUT");
@@ -110,18 +112,40 @@ export async function helpSquare(input: unknown, topic: QuadraticTopic = quadrat
 export async function squareProgress(actor: Actor, topic: QuadraticTopic = quadraticTopic()) {
   await assertLessonVisible(actor,topic.lessonId);
   const mappings = await visibleSquareMappings(actor,topic), uids = new Map([...mappings].map(([uid,v]) => [v,uid]));
-  const aliases = topic.packageKey ? await packageCheckVersionAliases(topic.packageKey, new Set(mappings.values())) : new Map();
+  const aliases = topic.packageKey ? await packageCheckVersionAliases(topic.packageKey, new Set(mappings.values()), topic.version) : new Map();
   for (const [old, current] of aliases) { const uid = uids.get(current.versionId); if (uid) uids.set(old, uid); }
   const rows = await db().independentCheck.findMany({ where: { userId: actor.id,...(topic.packageKey?{}:{contentVersion:topic.version}), taskVersionId: { in: [...uids.keys()] } }, orderBy: [{ checkedAt: "asc" }, { id: "asc" }] });
-  const evidence: Evidence[] = rows.filter(r => !aliases.has(r.taskVersionId) || aliases.get(r.taskVersionId)!.contentVersion === r.contentVersion).map(r => { const uid = uids.get(r.taskVersionId)!; return { eventKey: r.eventKey, uid, family: squareQuestion(uid, topic.key).family_uid, correct: r.correct, helpUsed: r.helpUsed, at: r.checkedAt.getTime(), imported: r.imported }; });
+  const evidence: Evidence[] = rows.filter(r => !aliases.has(r.taskVersionId) || aliases.get(r.taskVersionId)!.contentVersion === r.contentVersion).map(r => { const uid = uids.get(r.taskVersionId)!; return { eventKey: r.eventKey, uid, family: squareQuestion(uid, topic.key, topic.version).family_uid, correct: r.correct, helpUsed: r.helpUsed, at: r.checkedAt.getTime(), imported: r.imported }; });
   const notes = await db().learningProgress.findUnique({ where: { userId_lessonId: { userId: actor.id, lessonId: topic.lessonId } } });
   return { ...squareSnapshot(evidence), notesRead: notes?.completed ?? false };
 }
 export async function importSquareProgress(actor: Actor, input: unknown, topic: QuadraticTopic = quadraticTopic()) {
-  const data = z.object({ version: z.literal(topic.version), events: z.array(eventSchema).max(100) }).strict().parse(input);
+  const data = z.object({
+    version: z.literal(topic.version),
+    events: z.array(eventSchema.extend({ contentVersion: z.string().max(30).optional() })).max(100),
+  }).strict().parse(input);
   const mappings = await visibleSquareMappings(actor,topic);
-  for (const e of data.events) ensure(mappings.has(e.uid) && gradeSquare(squareQuestion(e.uid, topic.key), e.answers).valid, 400, "INVALID_INPUT");
-  const aliases = topic.packageKey ? await packageCheckVersionAliases(topic.packageKey, new Set(mappings.values())) : undefined;
-  for (const event of data.events) await recordCheck(actor, event, mappings, true, topic, aliases);
+  const aliases = topic.packageKey ? await packageCheckVersionAliases(topic.packageKey, new Set(mappings.values()), topic.version) : undefined;
+  let previous: { topic: QuadraticTopic; mappings: Map<string,string> } | undefined;
+  if (data.events.some(event => event.contentVersion && event.contentVersion !== topic.version)) {
+    ensure(topic.previousBankVersion && topic.packageKey,400,"INVALID_INPUT");
+    const oldTopic = packageTopic(topic.lessonId,topic.previousBankVersion);
+    ensure(oldTopic,400,"INVALID_INPUT");
+    const members = await packageReleaseMembers(contentPackage(topic.packageKey,oldTopic.version));
+    const oldMappings = new Map<string,string>();
+    for (const [uid,current] of mappings) {
+      const old = members.get(uid);
+      if (old && (old.versionId === current || aliases?.get(old.versionId)?.versionId === current)) oldMappings.set(uid,old.versionId);
+    }
+    previous = { topic: oldTopic, mappings: oldMappings };
+  }
+  const batch = data.events.map(event => {
+    const target = !event.contentVersion || event.contentVersion === topic.version ? { topic, mappings } : previous;
+    ensure(target && (!event.contentVersion || target.topic.version === event.contentVersion)
+      && target.mappings.has(event.uid)
+      && gradeSquare(squareQuestion(event.uid,target.topic.key,target.topic.version),event.answers).valid,400,"INVALID_INPUT");
+    return { event, target };
+  });
+  for (const { event, target } of batch) await recordCheck(actor,event,target.mappings,true,target.topic, target.topic === topic ? aliases : undefined);
   return squareProgress(actor, topic);
 }

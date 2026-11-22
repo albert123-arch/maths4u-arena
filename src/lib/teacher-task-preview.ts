@@ -7,6 +7,7 @@ import { approvedWhere, restrictedMaterial } from "./content-access";
 import { taskPermission } from "./catalog";
 import { localized, publicVersion, renderContent, versionInclude, type Version } from "./content";
 import { contentPackages, packageTopic } from "./content-package-content";
+import { activeBankTopic } from "./public-learning-topic";
 import { questionsForTopic, squareMarkingRows, type SourceQuestion } from "./square-content";
 import { quadraticTopics, type QuadraticTopic } from "./square-model";
 import { squareMappings, visibleSquareMappings } from "./square-learning";
@@ -41,12 +42,12 @@ const readers: TeacherPreviewReaders = {
   async sourceQuestion(version) {
     const pack = contentPackages.find(candidate => candidate.questions.some(question => question.id === version.sourceUid));
     const packaged = pack?.questions.find(question => question.id === version.sourceUid);
-    const topic = pack && packaged ? packageTopic(pack.lessons.find(lesson => lesson.key === packaged.lesson)!.id)
+    const topic = pack && packaged ? await activeBankTopic(packageTopic(pack.lessons.find(lesson => lesson.key === packaged.lesson)!.id))
       : quadraticTopics.find(candidate => questionsForTopic(candidate.key).some(question => question.id === version.sourceUid));
     if (!topic) return null;
     // Do not serve different packaged answers under a reused editorial UID.
-    ensure((await squareMappings(topic.key)).get(version.sourceUid!) === version.id, 409, "QUESTION_CHANGED");
-    return questionsForTopic(topic.key).find(question => question.id === version.sourceUid) ?? null;
+    ensure((await squareMappings(topic.key,topic.version)).get(version.sourceUid!) === version.id, 409, "QUESTION_CHANGED");
+    return questionsForTopic(topic.key,topic.version).find(question => question.id === version.sourceUid) ?? null;
   },
 };
 
@@ -124,7 +125,7 @@ const packageReaders: TeacherPackagePreviewReaders = {
 export async function teacherPackageTaskPreview(actor: Actor | null, input: unknown, lang: string, services: TeacherPackagePreviewReaders = packageReaders): Promise<TeacherTaskPreviewDto> {
   requireTeachingPreview(actor);
   const data = packageQuery.parse(input);
-  const packaged = packageTopic(data.lessonId), previous = quadraticTopics.find(candidate => candidate.lessonId === data.lessonId || candidate.key === data.lessonId);
+  const packaged = packageTopic(data.lessonId,data.version) ?? packageTopic(data.lessonId), previous = quadraticTopics.find(candidate => candidate.lessonId === data.lessonId || candidate.key === data.lessonId);
   // A canonical lesson can now have a new package alongside immutable old work.
   const topic = packaged?.version === data.version ? packaged : previous ?? packaged;
   ensure(topic, 404, "NOT_FOUND");

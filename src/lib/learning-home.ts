@@ -36,7 +36,11 @@ export async function learningHome(actor: Actor, lang: string) {
     return { id: c.id, slug: c.slug, title: localized(c.texts, lang).title, locked: false, read: await db().learningProgress.count({ where: { userId: actor.id, lessonId: { in: lessonIds }, completed: true } }), lessons: lessonIds.length, resume: candidates[0] ?? (lessonIds.includes(squareLessonId) ? { title: "Completing the square", href: squarePath, at: 0 } : null) };
   }));
   const enabled=await db().contentPackage.findMany({where:{state:"PUBLISHED",courseId:{in:courses.filter(c=>!c.locked).map(c=>c.id)}}});
-  const practiceTopics=contentPackages.filter(p=>enabled.some(e=>e.key===p.key&&e.version===p.version)).flatMap(p=>p.lessons.map(l=>packageTopic(l.id)!));
+  const installedVersions = new Map(enabled.map(p => [p.key, p.version]));
+  const practiceTopics = contentPackages.flatMap(p => {
+    const version = installedVersions.get(p.key);
+    return version ? p.lessons.flatMap(l => packageTopic(l.id,version) ?? []) : [];
+  });
   return { courses,practiceTopics };
 }
 export async function openSquareLesson(actor: Actor, topic: QuadraticTopic = quadraticTopic()) {

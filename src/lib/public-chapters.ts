@@ -2,7 +2,7 @@ import { cache } from "react";
 import { db } from "./prisma";
 import { contentPackages, publicChapterPath } from "./content-package-content";
 import { visibleLessonWhere } from "./content-access";
-import { matchesPublishedPackage } from "./public-learning-topic";
+import { publishedPackage } from "./public-learning-topic";
 import { studyMetadata } from "./authored-study";
 
 export const arenaOrigin = "https://arena.maths4u.sbs";
@@ -16,10 +16,13 @@ export const publicChapters = cache(async (courseSlug?: string, lessonId?: strin
     select: { key: true, state: true, publishedAt: true, version: true, fingerprint: true },
   });
   const byKey = new Map(installed.map(row => [row.key, row]));
-  const packages = requested.flatMap(p => {
-    const chapterPath = publicChapterPath(p), state = byKey.get(p.key);
-    if (!chapterPath || !state) return [];
-    if (["9709", "0580", "0606", "0862"].includes(p.course.code) && !matchesPublishedPackage(p, state)) return [];
+  const packages = requested.flatMap(latest => {
+    const state = byKey.get(latest.key);
+    if (!state) return [];
+    const p = ["9709", "0580", "0606", "0862"].includes(latest.course.code) ? publishedPackage(latest,state) : latest;
+    if (!p) return [];
+    const chapterPath = publicChapterPath(p);
+    if (!chapterPath) return [];
     return [{ p, chapterPath, publishedAt: state.publishedAt?.getTime() ?? 0 }];
   });
   const visible = await db().lesson.findMany({

@@ -50,7 +50,7 @@ export function useSquareProgress(sessionReady: boolean, topic: QuadraticTopic =
       let s = snapshot;
       for (let i = 0; i < pending.length; i += 100) {
         const batch = pending.slice(i, i + 100);
-        s = await api<SquareSnapshot>(topic.api + "/import", "POST", { version: squareVersion, events: batch.map(({ eventKey, uid, answers, helpUsed, at }) => ({ eventKey, uid, answers, helpUsed, at })) });
+        s = await api<SquareSnapshot>(topic.api + "/import", "POST", { version: squareVersion, events: batch.map(({ eventKey, uid, answers, helpUsed, at, contentVersion }) => ({ eventKey, uid, answers, helpUsed, at, contentVersion })) });
         // Keep device evidence. The claim marker prevents accidental import into a different account.
         for (const e of batch) e.claimedBy = actor.id;
         localStorage.setItem(key, JSON.stringify(d));

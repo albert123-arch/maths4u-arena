@@ -52,13 +52,17 @@ export async function studentDashboard(actor: Actor, lang: string, input: unknow
     db().topic.findMany({ where: { courseId: { in: selected.map(c => c.id) }, lessons: { some: { archivedAt: null, tasks: { some: { task: permittedTask } } } } }, distinct: ["courseId"], select: { courseId: true } }),
   ]);
   const lessonIds = new Set(lessons.map(l => l.id));
-  const practiceTopics = [...quadraticTopics, ...contentPackages.filter(p => packages.some(s => s.key === p.key && s.version === p.version)).flatMap(p => p.lessons.map(l => packageTopic(l.id)!))].filter(t => lessonIds.has(t.lessonId));
+  const installedVersions = new Map(packages.map(p => [p.key, p.version]));
+  const practiceTopics = [...quadraticTopics, ...contentPackages.flatMap(p => {
+    const version = installedVersions.get(p.key);
+    return version ? p.lessons.flatMap(l => packageTopic(l.id,version) ?? []) : [];
+  })].filter(t => lessonIds.has(t.lessonId));
   const descriptors = new Map<string, Map<string, ReturnType<typeof questionsForTopic>[number]>>();
-  for(const t of practiceTopics){const entries=descriptors.get(t.lessonId)??new Map();for(const q of questionsForTopic(t.key))entries.set(q.id,q);descriptors.set(t.lessonId,entries);}
+  for(const t of practiceTopics){const entries=descriptors.get(t.lessonId)??new Map();for(const q of questionsForTopic(t.key,t.version))entries.set(q.id,q);descriptors.set(t.lessonId,entries);}
   const versionIds = [...new Set(lessons.flatMap(l => l.tasks.flatMap(t => t.task.versions.map(v => v.id))))];
   const checkAliases = new Map<string, CompatibleCheckVersion>();
   if (!teacherLens) for (const key of new Set(practiceTopics.flatMap(t => t.packageKey ? [t.packageKey] : []))) {
-    for (const [old, current] of await packageCheckVersionAliases(key, new Set(versionIds))) checkAliases.set(old, current);
+    for (const [old, current] of await packageCheckVersionAliases(key, new Set(versionIds), installedVersions.get(key))) checkAliases.set(old, current);
   }
   const taskIds = [...new Set(lessons.flatMap(l => l.tasks.map(t => t.taskId)))];
   // listWorks supplies the actor's assigned work/history, including private

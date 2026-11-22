@@ -5,7 +5,7 @@ import { admin, digest, lockUser, type Actor } from "./security";
 import { ensure } from "./errors";
 import { requestView } from "./request-view";
 import { createTaskVersion, taskSchema } from "./content";
-import { contentPackage, contentPackages } from "./content-package-content";
+import { bankRevision, contentPackage, contentPackages, questionPackageVersion } from "./content-package-content";
 import type { ContentPackage, PackageQuestion } from "./content-package-schema";
 import { readPackageAssets, installPackageAssets, packageTaskAssets } from "./content-package-assets";
 import { syncEnabledCourseTree } from './course-tree';
@@ -22,7 +22,7 @@ export function packageTask(p:ContentPackage,q:PackageQuestion) {
     source:"Maths4U",sourceUid:q.id,syllabus:p.course.code,component:p.course.title,topicIds:[p.chapter.id],
     // Source exam metadata is not copied into public TaskVersion columns.
     texts:[{locale:"en",title:q.title,statement:q.prompt_html,answer:q.answer_html,hint:q.hint_html,solution:q.solution_html,markScheme:criteria,markSchemeText:criteria,markSchemeStatus:"DRAFT",
-      teacherNote:JSON.stringify({editorialUid:q.id,provenance:q.provenance??{type:"independently-authored"},package:p.key,version:p.version,markingStatus:"DRAFT",fullAnswerChecker:"exact-v1"})}],
+      teacherNote:JSON.stringify({editorialUid:q.id,provenance:q.provenance??{type:"independently-authored"},package:p.key,version:questionPackageVersion(p,q.id),markingStatus:"DRAFT",fullAnswerChecker:"exact-v1"})}],
     assets:packageTaskAssets(p,q.id),
     parts:choice?[{kind:"CHOICE",maxPoints:q.marks,texts:[{locale:"en",prompt:"",answer:q.answer_html}],options:Object.entries(f.options!).map(([key,text])=>({correct:key===f.expected,texts:[{locale:"en",text}]}))}]
       :manual?[{kind:"MANUAL",maxPoints:q.marks,texts:[{locale:"en",prompt:"",answer:q.answer_html,rubric:criteria,markSchemeText:criteria,markSchemeStatus:"DRAFT"}]}]
@@ -45,6 +45,16 @@ async function plan(client:Client,p:ContentPackage){
   const chapter=await client.topic.findUnique({where:{id:p.chapter.id}});
   ensure(!chapter||chapter.courseId===course?.id,409,"PACKAGE_ID_COLLISION");
   const records=await client.importRecord.findMany({where:{sourceProject:project(p)},orderBy:{legacyId:"asc"},include:{task:{include:{versions:{orderBy:{number:"desc"},take:1,select:{id:true,sourceUid:true}},lessons:true}}}});
+  const previous = bankRevision(p.key)?.previous;
+  if (previous && state && !release) {
+    const approved = await packageReleaseMembers(previous, client);
+    ensure(state.version === previous.version && state.fingerprint === packageFingerprint(previous)
+      && records.length === previous.questions.length
+      && records.every(r => {
+        const member = approved.get(r.legacyId);
+        return member?.taskId === r.taskId && member.versionId === r.task.versions[0]?.id;
+      }), 409, "BANK_REVISION_BASE_CHANGED");
+  }
   let create=0,update=0,skip=0;
   for(const q of p.questions){const r=records.find(r=>r.legacyId===q.id);
     ensure(!r||r.task.versions[0]?.sourceUid===q.id&&r.task.origin==="ORIGINAL"&&r.task.originManual&&!r.task.examArchivedAt,409,"PACKAGE_IDENTITY_CHANGED");
@@ -141,13 +151,21 @@ export async function contentPackageStatus(actor:Actor){
       sourceLinks:p.questions.filter(q=>q.provenance).map(q=>({uid:q.id,original_id:q.provenance!.original_id,original_uid:q.provenance!.original_uid,archiveTaskId:q.provenance!.archiveTaskId}))};
   });
 }
-export async function packageVersionMappings(key:string){
-  const p=contentPackage(key),state=await db().contentPackage.findUnique({where:{key}});
-  ensure(state&&state.state!=="ARCHIVED"&&state.fingerprint===packageFingerprint(p),404,"NOT_FOUND");
+type PackageMember = { uid: string; taskId: string; versionId: string };
+export async function packageReleaseMembers(pack: ContentPackage, client: Client = db()) {
+  const receipt = await client.contentRelease.findUnique({where:{key:releaseKey(pack)}});
+  ensure(receipt?.state === "APPLIED" && receipt.fingerprint === packageFingerprint(pack),404,"NOT_FOUND");
+  const approved = (receipt.details as {members:PackageMember[]}).members;
+  return new Map(approved.map(member => [member.uid, member]));
+}
+
+export async function packageVersionMappings(key:string, version?: string){
+  const state=await db().contentPackage.findUnique({where:{key}});
+  const p=contentPackage(key, version ?? (bankRevision(key) ? state?.version : undefined));
+  ensure(state&&state.state!=="ARCHIVED"&&state.version===p.version&&state.fingerprint===packageFingerprint(p),404,"NOT_FOUND");
   const refs=await db().importRecord.findMany({where:{sourceProject:project(p)},include:{task:{include:{versions:{orderBy:{number:"desc"},take:1}}}}});
-  const receipt=await db().contentRelease.findUniqueOrThrow({where:{key:releaseKey(p)}});
-  const approved=(receipt.details as {members:{uid:string;versionId:string}[]}).members;
+  const approved=await packageReleaseMembers(p);
   const mappings=new Map<string,string>();
-  for(const q of p.questions){const r=refs.find(r=>r.legacyId===q.id),v=r?.task.versions[0];ensure(r&&v&&r.contentHash===digest(JSON.stringify(packageTask(p,q)))&&v.sourceUid===q.id&&approved.some(a=>a.uid===q.id&&a.versionId===v.id),409,"QUESTION_CHANGED");mappings.set(q.id,v.id);}
+  for(const q of p.questions){const r=refs.find(r=>r.legacyId===q.id),v=r?.task.versions[0],member=approved.get(q.id);ensure(r&&v&&r.contentHash===digest(JSON.stringify(packageTask(p,q)))&&v.sourceUid===q.id&&member?.versionId===v.id&&member.taskId===r.taskId,409,"QUESTION_CHANGED");mappings.set(q.id,v.id);}
   return mappings;
 }

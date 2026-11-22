@@ -3,7 +3,7 @@ import { nextReview, type ReviewState } from "./pure1-review-policy.mjs";
 export const squarePath = "/courses/maths4u-9709-p1/topics/orig_quadratics_completing_square";
 export const squareLessonId = "orig_quadratics_completing_square";
 export const squareVersion = "2026-11-05.1";
-export type QuadraticTopic = { key: string; code: string; lessonId: string; path: string; title: string; summary: string; version: string; sourceProject: string; storage: string; api: string; packageKey?: string; compatibleVersions?: string[] };
+export type QuadraticTopic = { key: string; code: string; lessonId: string; path: string; title: string; summary: string; version: string; sourceProject: string; storage: string; api: string; packageKey?: string; compatibleVersions?: string[]; previousBankVersion?: string; revisedQuestions?: string[] };
 export const quadraticTopics: QuadraticTopic[] = [
   { key: "equations", code: "EQ", lessonId: "orig_quadratics_factorisation", title: "Equations, factorisation and valid roots", summary: "Choose a method, keep every valid root and check the original equation." },
   { key: "completing-square", code: "CS", lessonId: squareLessonId, title: "Completing the square", summary: "Turn a quadratic into a form that tells you its vertex, roots and range." },

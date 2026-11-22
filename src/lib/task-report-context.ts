@@ -11,7 +11,7 @@ import { visibleSquareMappings } from './square-learning';
 export async function taskReportContext(actor: Actor, input: unknown) {
   ensure(!requestView()?.lens, 403, 'EXIT_VIEW_FIRST');
   const data = z.object({ topic: z.string().min(1).max(191), uid: z.string().min(1).max(191), version: z.string().min(1).max(100) }).strict().parse(input);
-  const topic = packageTopic(data.topic) ?? quadraticTopics.find(t => t.key === data.topic);
+  const topic = packageTopic(data.topic,data.version) ?? packageTopic(data.topic) ?? quadraticTopics.find(t => t.key === data.topic);
   ensure(topic, 404, 'NOT_FOUND');
   ensure(topic.version === data.version, 409, 'QUESTION_CHANGED');
   const mappings = await visibleSquareMappings(actor, topic);

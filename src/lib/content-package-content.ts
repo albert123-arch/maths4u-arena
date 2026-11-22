@@ -78,6 +78,8 @@ import addmathsPolynomials from "../../content/original/0606/factors-polynomials
 import addmathsEquations from "../../content/original/0606/equations-inequalities-graphs-v1.json";
 import addmathsLogarithms from "../../content/original/0606/logarithms-exponentials-v1.json";
 import addmathsStraightLine from "../../content/original/0606/straight-line-graphs-v1.json";
+import logarithmsRevision from "../../content/original/0606/logarithms-exponentials-revision.json";
+import straightLineRevision from "../../content/original/0606/straight-line-graphs-revision.json";
 import addmathsCircle from "../../content/original/0606/coordinate-circle-v1.json";
 import addmathsCircularMeasure from "../../content/original/0606/circular-measure-v1.json";
 import addmathsTrigonometry from "../../content/original/0606/trigonometry-v1.json";
@@ -143,9 +145,13 @@ import stage9MathematicalThinking from "../../content/original/0862/stage-9-math
 import { notationProgressPolicy } from "./content-progress-policy";
 import type { QuadraticTopic } from "./square-model";
 import { practicePrecisionPolicy } from "./lesson-answer-precision";
+import { reviseQuestionBank } from "./content-package-revision";
 export const contentPackages: ContentPackage[] = [contentPackageSchema.parse(roots),contentPackageSchema.parse(rational),contentPackageSchema.parse(summation),contentPackageSchema.parse(matrices1),contentPackageSchema.parse(polar),contentPackageSchema.parse(vectors),contentPackageSchema.parse(induction),contentPackageSchema.parse(statsCrv),contentPackageSchema.parse(statsInference),contentPackageSchema.parse(statsChi2),contentPackageSchema.parse(statsNonparam),contentPackageSchema.parse(statsPgf),contentPackageSchema.parse(fp2Hyperbolic),contentPackageSchema.parse(fp2Matrices2),contentPackageSchema.parse(fp2Differentiation),contentPackageSchema.parse(fp2Integration),contentPackageSchema.parse(fp2Complex),contentPackageSchema.parse(fp2Ode),contentPackageSchema.parse(mechanicsProjectiles),contentPackageSchema.parse(mechanicsEquilibrium),contentPackageSchema.parse(mechanicsCircular),contentPackageSchema.parse(mechanicsHooke),contentPackageSchema.parse(mechanicsVariable),contentPackageSchema.parse(mechanicsMomentum),contentPackageSchema.parse(p1Quadratics),contentPackageSchema.parse(p1Functions),contentPackageSchema.parse(p1CoordinateGeometry),contentPackageSchema.parse(p1CircularMeasure),contentPackageSchema.parse(p1Trigonometry),contentPackageSchema.parse(p1Series),contentPackageSchema.parse(p1BinomialExpansion),contentPackageSchema.parse(p1Differentiation),contentPackageSchema.parse(p1Integration),contentPackageSchema.parse(p3Algebra),contentPackageSchema.parse(p3FurtherAlgebra),contentPackageSchema.parse(p3Logarithms),contentPackageSchema.parse(p3Trigonometry),contentPackageSchema.parse(p3Differentiation),contentPackageSchema.parse(p3Integration),contentPackageSchema.parse(p3NumericalMethods),contentPackageSchema.parse(p3Vectors),contentPackageSchema.parse(p3DifferentialEquations),contentPackageSchema.parse(p3ComplexNumbers),contentPackageSchema.parse(m1Forces),contentPackageSchema.parse(m1Kinematics),contentPackageSchema.parse(m1Momentum),contentPackageSchema.parse(m1Newton),contentPackageSchema.parse(m1Energy),contentPackageSchema.parse(s1Representation),contentPackageSchema.parse(s1CentralTendency),contentPackageSchema.parse(s1Variation),contentPackageSchema.parse(s1Probability),contentPackageSchema.parse(s1Counting),contentPackageSchema.parse(s1Distributions),contentPackageSchema.parse(s1BinomialGeometric),contentPackageSchema.parse(s1Normal)];
-export function contentPackage(key:string) {
-  const p=contentPackages.find(p=>p.key===key);if(!p)throw Error("UNKNOWN_CONTENT_PACKAGE");return p;
+export function contentPackage(key: string, version?: string) {
+  const latest = contentPackages.find(p => p.key === key);
+  const p = !version || latest?.version === version ? latest : bankRevisions.get(key)?.previous;
+  if (!p || version && p.version !== version) throw Error("UNKNOWN_CONTENT_PACKAGE");
+  return p;
 }
 const igcsePackages = [igcseNumberTypes, igcseNumberSets, igcsePowersRoots, igcseEquivalentForms, igcseOrdering, igcseFourOperations, igcseIndicesI, igcseStandardForm, igcseEstimation, igcseLimitsOfAccuracy, igcseRatioProportion, igcseRates, igcsePercentages, igcseCalculator, igcseTime, igcseMoney, igcseGrowthDecay, igcseSurds, igcseIntroAlgebra, igcseManipulation, igcseAlgebraicFractions, igcseIndicesII, igcseEquations, igcseInequalities, igcseSequences, igcseDirectInverse, igcsePracticalGraphs, igcseGraphsFunctions, igcseSketching, igcseDiff, igcseFunctions, igcseCoordinate, igcseGeometry, igcseMensuration, igcseTrigonometry, igcseTransformations, igcseProbability, igcseStatistics];
 contentPackages.push(...igcsePackages.map(p => contentPackageSchema.parse(p)));
@@ -167,7 +173,16 @@ const addmathsPackages = [
   addmathsIntegration,
   addmathsKinematics,
 ];
-contentPackages.push(...addmathsPackages.map(p => contentPackageSchema.parse(p)));
+const bankRevisions = new Map([
+  reviseQuestionBank(addmathsLogarithms, logarithmsRevision),
+  reviseQuestionBank(addmathsStraightLine, straightLineRevision),
+].map(revision => [revision.current.key, revision]));
+export function bankRevision(key: string) { return bankRevisions.get(key); }
+export function questionPackageVersion(p: ContentPackage, uid: string) {
+  const revision = bankRevision(p.key);
+  return revision?.current.version === p.version && !revision.changed.has(uid) ? revision.previous.version : p.version;
+}
+contentPackages.push(...addmathsPackages.map(p => bankRevision(p.key)?.current ?? contentPackageSchema.parse(p)));
 const lowerSecondaryPackages = [
   stage7NumberCalculation,
   stage7Algebra,
@@ -207,15 +222,24 @@ export function publicChapterPath(p: ContentPackage) {
     return "/courses/" + p.course.slug + "/chapters/" + slug;
   }
 }
-export function packageTopic(key:string):QuadraticTopic|undefined {
-  for(const p of contentPackages){const l=p.lessons.find(l=>l.id===key);if(l)return {key:l.id,code:l.key,lessonId:l.id,
+export function packageTopic(key: string, version?: string): QuadraticTopic | undefined {
+  for (const latest of contentPackages) {
+    const revision = bankRevision(latest.key);
+    const p = revision && version === revision.previous.version ? revision.previous : latest;
+    const l = p?.lessons.find(l => l.id === key);
+    if (!p || !l || version && p.version !== version) continue;
+    const previous = revision?.current === p ? revision.previous.version : undefined;
+    return {key:l.id,code:l.key,lessonId:l.id,
     title:l.title,summary:l.summary,version:p.version,sourceProject:"arena-package-"+p.key,
     storage:"maths4u.package."+l.id,api:"learning/packages/"+l.id,
-    path:"/courses/"+p.course.slug+"/topics/"+l.id,packageKey:p.key,compatibleVersions:notationProgressPolicy(p).map(r=>r.fromVersion)};}
+    path:"/courses/"+p.course.slug+"/topics/"+l.id,packageKey:p.key,
+    compatibleVersions: previous ? [previous] : notationProgressPolicy(p).map(r=>r.fromVersion),
+    ...(previous && revision && { previousBankVersion: previous, revisedQuestions: p.questions.filter(q => q.lesson === l.key && revision.changed.has(q.id)).map(q => q.id) })};
+  }
 }
-export function packageQuestions(key:string) {
-  const t=packageTopic(key);if(!t)return undefined;
-  const p=contentPackage(t.packageKey!),l=p.lessons.find(l=>l.id===key)!;
+export function packageQuestions(key:string, version?: string) {
+  const t=packageTopic(key,version);if(!t)return undefined;
+  const p=contentPackage(t.packageKey!,t.version),l=p.lessons.find(l=>l.id===key)!;
   return p.questions.filter(q=>q.lesson===l.key).map(q=>{
     const precisionPolicy = practicePrecisionPolicy(p.key, q.collection);
     return {id:q.id,family_uid:q.family_uid,title:q.title,collection:q.collection,prompt_html:q.prompt_html,
@@ -226,7 +250,7 @@ export function packageQuestions(key:string) {
 }
 export function packageTeaching(topic:QuadraticTopic) {
   if(!topic.packageKey)return undefined;
-  const p=contentPackage(topic.packageKey),l=p.lessons.find(l=>l.id===topic.lessonId)!;
+  const p=contentPackage(topic.packageKey,topic.version),l=p.lessons.find(l=>l.id===topic.lessonId)!;
   return {notes:'<h2>Objective</h2><p>'+l.objective+'</p><h3>Before you start</h3>'+l.before+'<h2>Key ideas</h2>'+l.ideas+'<h2>Method</h2>'+l.method+'<h3>Common mistakes</h3><ul>'+l.mistakes.map(m=>'<li>'+m+'</li>').join('')+'</ul>',
     examples:l.examples,
     navigation:{directionPath:"/learn/"+p.course.direction,directionTitle:p.course.direction==="further"?"Further Mathematics":p.course.code==="0580"?"IGCSE Mathematics":p.course.code==="0606"?"Additional Mathematics":p.course.code==="0862"?"School Mathematics":"AS & A Level",coursePath:"/courses/"+p.course.slug,courseTitle:p.course.title,

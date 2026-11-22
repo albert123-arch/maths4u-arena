@@ -34,7 +34,7 @@ import { contentPackage, packageTopic } from "@/lib/content-package-content";
 import { contentPackageStatus, planContentPackage, applyContentPackage, changeContentPackage } from "@/lib/content-packages";
 import { adminArchiveContext, planCourseTree, applyCourseTree, disableCourseTree, archivePresentationLessons } from '@/lib/course-tree';
 import { squarePublicLesson } from "@/lib/square-content";
-import { publicLearningTopic } from "@/lib/public-learning-topic";
+import { activeBankTopic, publicLearningTopic } from "@/lib/public-learning-topic";
 import { assertLessonVisible } from "@/lib/content-access";
 import { gradeStudyCheck, hasOriginalRevisionStudy } from "@/lib/authored-study";
 import { readStudyCheckpoints, recordStudyCheckpoint, studyCheckpointLesson, studyCheckpointRequest } from "@/lib/study-checkpoints";
@@ -76,7 +76,7 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
   try {
     const parts = (await context.params).path, route = parts.join("/"), method = request.method;
     guardViewRequest(request, route);
-    const topic = parts[0] === "learning" && parts[1] === "quadratics" && parts.length === 4 ? quadraticTopics.find(t => t.key === parts[2]) : parts[0]==="learning"&&parts[1]==="packages"&&parts.length===4?packageTopic(parts[2]):undefined;
+    const topic = parts[0] === "learning" && parts[1] === "quadratics" && parts.length === 4 ? quadraticTopics.find(t => t.key === parts[2]) : parts[0]==="learning"&&parts[1]==="packages"&&parts.length===4?await activeBankTopic(packageTopic(parts[2])):undefined;
     const action = topic ? parts[3] : "";
     const url = new URL(request.url), lang = url.searchParams.get("lang") === "ru" ? "ru" : "en";
     let input: unknown = {};
@@ -228,7 +228,8 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
       }
       if(parts.length===5&&parts[3]==="lessons"&&method==="GET"){
         admin(actor);ensure(!requestView()?.lens,403,"FORBIDDEN");
-        const p=contentPackage(key),t=packageTopic(parts[4]);ensure(t?.packageKey===key,404,"NOT_FOUND");
+        const t=await activeBankTopic(packageTopic(parts[4]));ensure(t?.packageKey===key,404,"NOT_FOUND");
+        const p=contentPackage(key,t.version);
         const visible=await visibleSquareMappings(actor,t),lesson=squarePublicLesson(t);lesson.questions=lesson.questions.filter(q=>visible.has(q.uid));
         ensure(lesson.questions.length,404,"NOT_FOUND");
         const status=(await contentPackageStatus(actor)).find(p=>p.key===key)!;
@@ -252,7 +253,7 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
     if (route === "learning/home" && method === "GET") return json(await learningHome(actor, lang));
     if ((route === "learning/square/progress" || action === "progress") && method === "GET") return json(await squareProgress(actor, topic));
     if ((route === "learning/square/import" || action === "import") && method === "POST") { await rateLimit("square-import:" + actor.id, 30, 3600); return json(await importSquareProgress(actor, input, topic)); }
-    if ((route === "learning/square/open" || action === "open") && method === "POST") { if (!rolePreview()) { await squareMappings(topic?.key); await openSquareLesson(actor, topic); } return json({ ok: true }); }
+    if ((route === "learning/square/open" || action === "open") && method === "POST") { if (!rolePreview()) { await squareMappings(topic?.key,topic?.version); await openSquareLesson(actor, topic); } return json({ ok: true }); }
     if (parts[0] === "learning" && parts[1] === "bookmarks" && parts.length === 3 && method === "POST") return json(await bookmarkTask(actor, parts[2], input));
     if (parts[0] === "learning" && parts[1] === "courses" && parts.length === 3 && method === "POST") return json(await followCourse(actor, parts[2], input));
     if (route === "learning/progress" && method === "GET") return json(await myProgress(actor, lang, Object.fromEntries(url.searchParams)));

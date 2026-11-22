@@ -13,6 +13,7 @@ import type { SupportContent } from "./question-support-model";
 import { materialGrant } from "./material-grant";
 import { rolePreview } from "./request-view";
 import { contentPackages, packageTopic } from "./content-package-content";
+import { activeBankTopic } from "./public-learning-topic";
 import { grantPackageHelp } from "./content-package-assets";
 
 const access = z.enum(["attempt", "stuck", "paper"]);
@@ -37,10 +38,10 @@ export async function catalogSupport(actor: Actor | null, id: string, input: unk
     }
   }
   const pack=contentPackages.find(p=>p.questions.some(q=>q.id===v.sourceUid)),packQuestion=pack?.questions.find(q=>q.id===v.sourceUid);
-  const topic = pack&&packQuestion?packageTopic(pack.lessons.find(l=>l.key===packQuestion.lesson)!.id):quadraticTopics.find(t => questionsForTopic(t.key).some(q => q.id === v.sourceUid));
+  const topic = pack&&packQuestion?await activeBankTopic(packageTopic(pack.lessons.find(l=>l.key===packQuestion.lesson)!.id)):quadraticTopics.find(t => questionsForTopic(t.key).some(q => q.id === v.sourceUid));
   if (topic) {
-    ensure((await squareMappings(topic.key)).get(v.sourceUid!) === v.id, 409, "QUESTION_CHANGED");
-    const q = questionsForTopic(topic.key).find(q => q.id === v.sourceUid)!;
+    ensure((await squareMappings(topic.key,topic.version)).get(v.sourceUid!) === v.id, 409, "QUESTION_CHANGED");
+    const q = questionsForTopic(topic.key,topic.version).find(q => q.id === v.sourceUid)!;
     return data.kind === "guidance" ? { rows: squareMarkingRows(q), total: q.marks } : { html: await grantPackageHelp(squareHelp(q,data.kind),v.id,data.kind,actor) };
   }
   const reveal = { hint: data.kind === "hint", answer: data.kind === "solution", solution: data.kind === "solution", markScheme: data.kind === "guidance" };
@@ -74,7 +75,7 @@ export async function saveSelfMarks(actor: Actor | null, id: string, input: unkn
 }
 export async function squareSelfMarks(actor: Actor | null, input: unknown, topic: QuadraticTopic = quadraticTopic()) {
   const data = z.object({ uid: z.string(), version: z.literal(topic.version), points: z.number().int().min(0) }).strict().parse(input);
-  const id = (await squareMappings(topic.key)).get(data.uid);ensure(id, 404, "NOT_FOUND");
+  const id = (await squareMappings(topic.key,topic.version)).get(data.uid);ensure(id, 404, "NOT_FOUND");
   const version = await db().taskVersion.findUniqueOrThrow({ where: { id }, select: { taskId: true } });
   return saveSelfMarks(actor, version.taskId, { points: data.points, lessonId: topic.lessonId }, "en");
 }
