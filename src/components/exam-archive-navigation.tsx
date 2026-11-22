@@ -32,7 +32,7 @@ export const programmes = [
   { code: "9231", title: "Further Mathematics", cambridge: "cambridge-international-as-and-a-level-further-mathematics-9231" },
   { code: "0606", title: "Additional Mathematics", cambridge: "cambridge-igcse-additional-mathematics-0606" },
   { code: "0580", title: "IGCSE Mathematics", cambridge: "cambridge-igcse-mathematics-0580" },
-];
+] as const;
 export const emptyFilters = { paper: "", year: "", session: "", difficulty: "", minMarks: "", maxMarks: "", type: "" };
 export const sortLabel = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
 export const countLabel = (count: number, unit: string) => count + " " + unit + (count === 1 ? "" : "s");
