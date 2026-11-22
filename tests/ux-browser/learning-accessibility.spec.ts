@@ -50,3 +50,31 @@ for (const width of [390, 1280]) {
     expect(errors).toEqual([]);
   });
 }
+
+test("only overflowing maths joins the tab order as lesson content changes", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 850 });
+  await page.goto("/courses/maths4u-9709-s1/topics/orig_9709_s1_rep_stem_comparison");
+  const longEquation = page.locator('#notes .katex-display[data-math-scroll]').first();
+  await expect(longEquation).toHaveAttribute("aria-label", "Scrollable equation");
+  await expect(longEquation).toHaveAttribute("tabindex", "0");
+  await longEquation.focus();
+  await longEquation.press("ArrowRight");
+  await expect.poll(() => longEquation.evaluate(element => element.scrollLeft)).toBeGreaterThan(0);
+
+  const table = page.locator("#notes [data-math-scroll]").filter({ has: page.locator("table") }).first();
+  await expect(table).toHaveAttribute("aria-label", "Scrollable maths content");
+  await expect(table).toHaveAttribute("tabindex", "0");
+  await table.focus();
+  await table.press("ArrowRight");
+  await expect.poll(() => table.evaluate(element => element.scrollLeft)).toBeGreaterThan(0);
+
+  async function fittingTabStops() {
+    return page.locator("#notes .katex-display[tabindex='0'], #notes [data-math-scroll]").evaluateAll(elements =>
+      elements.filter(element => !element.clientWidth || element.scrollWidth <= element.clientWidth + 1).length);
+  }
+  await expect.poll(fittingTabStops).toBe(0);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await expect.poll(fittingTabStops).toBe(0);
+  await expect(page.locator(".katex-error")).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(1280);
+});

@@ -42,4 +42,14 @@ Removed redundant reads in public discovery, language eligibility and catalogue 
 
 Seven metadata and discovery tests, targeted ESLint and three browser scenarios passed, including 390 and 1280 px. The local and live sitemap URL sets matched exactly at 872, and all three Russian canonicals and alternates were confirmed. The [90-day growth plan](arena-seo-growth-plan.md) states how to measure organic discovery and learning completion. Search Console and field Core Web Vitals remain unavailable for the baseline.
 
-Commit subject: `Improve Arena public discovery, search and crawl paths`. Next stage: reading and lesson progression.
+Commit: `a728968a`, `Improve Arena public discovery, search and crawl paths`.
+
+## Stage 6 · Improve keyboard reading and lesson progression
+
+Display equations and maths tables enter the keyboard tab order only when they have horizontal overflow. Size and content changes update those targets. The learner can advance from Review to the next lesson, with a chapter or course link at the end. Long titles wrap on smaller screens.
+
+The keyboard test moved the scroll position of a wide equation and an example table. It also checked fitting content after resizing. The 390 and 1280 px journey followed the homepage to 9709 Pure 1, Functions and the inverse lesson. A wrong domain answer entered Review, the independently corrected answer cleared the entry, the A4 print controls worked, and the next lesson opened.
+
+A static scan of 27,422 generated anchors across 704 study entries found no remaining duplicate anchors in the scoped templates. A read-only comparison of 20 rehearsal tables matched the post-calculus baseline, including user accounts, classes, assignments, progress, answers, reviews and presentations.
+
+Commit subject: `Make lesson maths scrollable by keyboard and link the next topic`. Next stage: complete the separate Book 2 review and reconcile earlier audit evidence.
