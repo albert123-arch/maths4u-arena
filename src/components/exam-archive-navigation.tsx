@@ -5,7 +5,6 @@ import { useEffect, useState, type MouseEvent, type ReactNode } from "react";
 import type { examArchiveOverview, examArchivePaper, examArchiveTopic } from '@/lib/exam-archive';
 import type { examArchiveGrants } from '@/lib/exam-archive-access';
 import type { examArchiveQuestion, examArchiveSupport } from '@/lib/exam-archive-content';
-import styles from "./exam-archive.module.css";
 
 export type Overview = Awaited<ReturnType<typeof examArchiveOverview>>;
 export type Paper = Awaited<ReturnType<typeof examArchivePaper>>;
