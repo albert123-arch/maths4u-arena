@@ -140,8 +140,8 @@ export function Status({ error }: { error: Error }) {
   return <p role="alert" className="notice error">{error.message}</p>;
 }
 
-export function ArchiveLink({ view, next, navigate, save, children, current, className }: {
-  view: View; next: Partial<View>; navigate: Navigate; save?: Partial<Preference>; children: ReactNode; current?: boolean; className?: string;
+export function ArchiveLink({ view, next, navigate, save, children, current, className, label }: {
+  view: View; next: Partial<View>; navigate: Navigate; save?: Partial<Preference>; children: ReactNode; current?: boolean; className?: string; label?: string;
 }) {
   function open(event: MouseEvent<HTMLAnchorElement>) {
     if (event.button || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
@@ -149,5 +149,5 @@ export function ArchiveLink({ view, next, navigate, save, children, current, cla
     navigate(next, save);
   }
   return <Link href={hrefFor({ ...view, ...next })} prefetch={false} onClick={open}
-    aria-current={current ? "page" : undefined} className={className}>{children}</Link>;
+    aria-current={current ? "page" : undefined} aria-label={label} className={className}>{children}</Link>;
 }

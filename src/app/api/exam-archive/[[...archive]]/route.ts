@@ -5,7 +5,7 @@ import {
   requireExamArchiveAccess, revokeExamArchiveAccess,
 } from "@/lib/exam-archive-access";
 import { examArchiveOverview, examArchivePaper, examArchiveTopic } from "@/lib/exam-archive";
-import { examArchiveAsset, examArchiveQuestion, examArchiveSupport } from "@/lib/exam-archive-content";
+import { examArchiveAsset, examArchiveQuestion, examArchiveQuestionCards, examArchiveSupport } from "@/lib/exam-archive-content";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -46,10 +46,17 @@ async function dispatch(request: Request, context: { params: Promise<{ archive?:
     const [collection, id, subroute, asset] = parts;
     if (read) {
       if (!parts.length) return respond(request, await examArchiveOverview(access));
+      const includeCards = request.method === "GET" && url.searchParams.get("cards") === "1";
       if (collection === "topics" && parts.length === 2) {
-        return respond(request, await examArchiveTopic(access, id, Object.fromEntries(url.searchParams)));
+        const filters = Object.fromEntries(url.searchParams);
+        delete filters.cards;
+        const topic = await examArchiveTopic(access, id, filters);
+        return respond(request, includeCards ? { ...topic, cards: await examArchiveQuestionCards(access, topic.questions) } : topic);
       }
-      if (collection === "papers" && parts.length === 2) return respond(request, await examArchivePaper(access, id));
+      if (collection === "papers" && parts.length === 2) {
+        const paper = await examArchivePaper(access, id);
+        return respond(request, includeCards ? { ...paper, cards: await examArchiveQuestionCards(access, paper.questions) } : paper);
+      }
       if (collection === "questions") {
         if (parts.length === 2) return respond(request, await examArchiveQuestion(access, id));
         if (parts.length === 3 && (subroute === "solution" || subroute === "mark-scheme")) {

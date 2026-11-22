@@ -5,9 +5,9 @@ import { Button, ButtonLink, Input, Select } from "./controls";
 import { FullQuestion } from "./full-question";
 import { Empty, Loading } from "./ui";
 import { ManageArchiveAccess } from "./exam-archive-access";
-import { PastPapers, QuestionPanel, QuestionRows } from "./exam-archive-papers";
+import { ExamArchiveQuestionList, PastPapers, QuestionPanel } from "./exam-archive-papers";
 import { ArchiveLink, countLabel, emptyFilters, filterKeys, hrefFor, readLocation, requestArchive, sessionLabel, sessionSort, sortLabel, Status, useArchive,
-  type Filters, type Navigate, type Overview, type PaperRow, type Shared, type Topic, type TopicNode, type View } from "./exam-archive-navigation";
+  type Filters, type Navigate, type Overview, type PaperRow, type Question, type Shared, type Topic, type TopicNode, type View } from "./exam-archive-navigation";
 import styles from "./exam-archive.module.css";
 
 export function ExamArchiveScreen({ initialQuery }: { initialQuery: string }) {
@@ -89,13 +89,15 @@ function Topicwise({ overview, view, navigate, revision }: Shared) {
     ? overview.topicAliases[view.topicKey] : view.topicKey;
   const selected = overview.topics.find(topic => topic.id === topicKey);
   const courseKey = selected?.courseKey ?? view.course;
-  const chapterKey = selected?.chapterKey ?? view.chapter;
+  const chapterAliases = Object.hasOwn(overview.chapterAliases, courseKey) ? overview.chapterAliases[courseKey] : undefined;
+  const chapterKey = selected?.chapterKey ?? (chapterAliases && Object.hasOwn(chapterAliases, view.chapter) ? chapterAliases[view.chapter] : view.chapter);
   const followed = new Set(overview.followedCourseSlugs);
   const groups = courseGroups(overview.topics.filter(topic => view.showOtherCourses || !!(topic.courseSlug && followed.has(topic.courseSlug))));
   const group = courseGroups(overview.topics.filter(topic => topic.courseKey === courseKey))[0];
   const chapter = group?.chapters.find(items => items[0].chapterKey === chapterKey);
   const reset = { topicKey: null, questionId: "", topicActivity: "overview" as const, originalPage: 1, page: 1, filters: emptyFilters };
-  const openTopic = (topic: TopicNode) => ({ ...reset, course: topic.courseKey, chapter: topic.chapterKey, topicKey: topic.id });
+  const openTopic = (topic: TopicNode, topicActivity: View["topicActivity"] = "overview") =>
+    ({ ...reset, course: topic.courseKey, chapter: topic.chapterKey, topicKey: topic.id, topicActivity });
 
   if (selected && chapter) return <>
     <nav aria-label="Topic path" className={styles.breadcrumbs}>
@@ -104,7 +106,7 @@ function Topicwise({ overview, view, navigate, revision }: Shared) {
       <ArchiveLink view={view} next={{ ...reset, course: courseKey, chapter: chapterKey }} save={{ topicKey: null }} navigate={navigate}>{selected.chapterTitle}</ArchiveLink>
     </nav>
     <nav aria-label="Subtopics" className={styles.siblings}>
-      {chapter.map(topic => <ArchiveLink key={topic.id} view={view} next={openTopic(topic)} save={{ topicKey: topic.id }} navigate={navigate}
+      {chapter.map(topic => <ArchiveLink key={topic.id} view={view} next={openTopic(topic, view.topicActivity)} save={{ topicKey: topic.id }} navigate={navigate}
         current={topic.id === selected.id} className={styles.pill}>{topic.title}</ArchiveLink>)}
     </nav>
     <h2>{selected.title}</h2>
@@ -119,11 +121,21 @@ function Topicwise({ overview, view, navigate, revision }: Shared) {
     </nav>
     <h2>{chapter ? chapter[0].chapterTitle : group.course.courseTitle}</h2>
     <ul className={styles.rows}>
-      {(chapter ?? group.chapters.map(items => items[0])).map(topic => <li key={chapter ? topic.id : topic.chapterKey}>
-        <ArchiveLink view={view} next={chapter ? openTopic(topic) : { ...reset, course: courseKey, chapter: topic.chapterKey }}
-          save={{ topicKey: chapter ? topic.id : null }} navigate={navigate} className={styles.row}>
-          <strong>{chapter ? topic.title : topic.chapterTitle}</strong>
-          {!chapter && <span>{countLabel(group.chapters.find(items => items[0].chapterKey === topic.chapterKey)!.length, "topic")}</span>}
+      {chapter ? chapter.map(topic => <li key={topic.id} className={styles.row}>
+        <ArchiveLink view={view} next={openTopic(topic)} save={{ topicKey: topic.id }} navigate={navigate} className={styles.topicTitle}>{topic.title}</ArchiveLink>
+        <div className={styles.topicActions}>
+          {topic.questionCounts.exam > 0 && <ArchiveLink view={view} next={openTopic(topic, "exam")} save={{ topicKey: topic.id }} navigate={navigate} className={styles.countLink}
+            label={countLabel(topic.questionCounts.exam, "exam question") + " · " + topic.title}>
+            <ProblemIcon />{countLabel(topic.questionCounts.exam, "exam question")}
+          </ArchiveLink>}
+          {topic.questionCounts.practice > 0 && <ArchiveLink view={view} next={openTopic(topic, "practice")} save={{ topicKey: topic.id }} navigate={navigate} className={styles.countLink}
+            label={countLabel(topic.questionCounts.practice, "practice question") + " · " + topic.title}>
+            <PracticeIcon />{countLabel(topic.questionCounts.practice, "practice question")}
+          </ArchiveLink>}
+        </div>
+      </li>) : group.chapters.map(items => <li key={items[0].chapterKey}>
+        <ArchiveLink view={view} next={{ ...reset, course: courseKey, chapter: items[0].chapterKey }} save={{ topicKey: null }} navigate={navigate} className={styles.row}>
+          <strong>{items[0].chapterTitle}</strong><span>{countLabel(items.length, "topic")}</span>
         </ArchiveLink>
       </li>)}
     </ul>
@@ -156,58 +168,59 @@ function Topicwise({ overview, view, navigate, revision }: Shared) {
   </>;
 }
 
+function ProblemIcon() {
+  return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6m-6 4h6" /></svg>;
+}
+
+function PracticeIcon() {
+  return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="m13 2-8 12h6l-1 8 9-12h-6z" /></svg>;
+}
+
 function TopicDetail({ topic, overview, view, navigate, revision }: Shared & { topic: TopicNode }) {
   const params = new URLSearchParams({ page: String(view.page), originalPage: String(view.originalPage) });
   for (const key of filterKeys) if (view.filters[key]) params.set(key, view.filters[key]);
-  const result = useArchive<Topic>("/topics/" + encodeURIComponent(topic.id) + "?" + params, revision);
+  const hasFilters = Object.values(view.filters).some(Boolean);
+  const activity = view.topicActivity === "overview"
+    ? topic.questionCounts.exam > 0 || hasFilters || !topic.questionCounts.practice ? "exam" : "practice"
+    : view.topicActivity;
+  if (activity === "exam") params.set("cards", "1");
+  const result = useArchive<Topic & { cards?: Question[] }>("/topics/" + encodeURIComponent(topic.id) + "?" + params, revision);
   if (result?.error) return <Status error={result.error} />;
-  if (!result?.value) return <Loading />;
-  const { originalQuestions, questions, page, pageSize, total } = result.value;
-  const back = <ArchiveLink view={view} next={{ topicActivity: "overview", page: 1, originalPage: 1, filters: emptyFilters }}
-    navigate={navigate} className={styles.backLink}>← Topic activities</ArchiveLink>;
-  const lessonPath = originalQuestions.href;
-  const notes = originalQuestions.hasNotes && lessonPath;
-  if (view.topicActivity === "overview") return <div className={styles.topicActivities} data-notes={notes ? "" : undefined}>
-    {notes && <section className={"card " + styles.activityCard}>
-      <h3>Notes</h3>
-      <ButtonLink href={lessonPath + "#notes"} prefetch={false}>Open Notes</ButtonLink>
-    </section>}
-    <div className={styles.questionActivities}>
-      <section className={"card " + styles.activityCard}>
-        <div><h3>Practice Questions</h3><p>{countLabel(originalQuestions.total, "original question")}</p></div>
-        <ArchiveLink view={view} next={{ topicActivity: "practice", originalPage: 1 }} navigate={navigate}
-          className="ui-button ui-button--primary">Open Questions</ArchiveLink>
-      </section>
-      <section className={"card " + styles.activityCard}>
-        <div><h3>Exam-Style Problems</h3><p>{countLabel(total, "past-paper question")}</p></div>
-        <ArchiveLink view={view} next={{ topicActivity: "exam", page: 1, filters: emptyFilters }} navigate={navigate}
-          className="ui-button ui-button--primary">Open Problems</ArchiveLink>
-      </section>
-    </div>
-  </div>;
-  if (view.topicActivity === "exam") return <section className={styles.references}>
-    {back}
-    <h3>Exam-Style Problems</h3>
-    <TopicFilters key={JSON.stringify(view.filters)} view={view} papers={overview.papers.filter(paper => paper.syllabus === topic.syllabus)}
-      onApply={filters => navigate({ filters, page: 1 })} />
-    <QuestionRows questions={questions} view={view} navigate={navigate} withSource />
-    <Pagination page={page} pages={Math.ceil(total / pageSize)} onChange={value => navigate({ page: value })} />
-  </section>;
+  const detail = result?.value;
+  const originalQuestions = detail?.originalQuestions;
+  const lessonPath = originalQuestions?.href;
+  const cards = detail?.cards ?? [];
   return <>
-    {back}
-    <div className={styles.toolbar}>
-      <h3>Practice Questions</h3>
-      {lessonPath && <ButtonLink href={lessonPath + "#practice"} prefetch={false}>Open interactive practice</ButtonLink>}
-    </div>
-    {originalQuestions.items.length ? <>
-      <div className={styles.questions}>
-        {originalQuestions.items.map(item => <article key={item.id} className="card">
-          <div className={styles.toolbar}><h4>{item.title}</h4><span className={styles.meta}>{countLabel(item.marks, "mark")}</span></div>
-          <FullQuestion question={item.question} />
-        </article>)}
+    <nav className={styles.activityTabs} aria-label="Topic activities">
+      <ArchiveLink view={view} next={{ topicActivity: "exam", page: 1 }} navigate={navigate} current={activity === "exam"} className={styles.pill}>
+        <ProblemIcon />Exam-Style Problems <span>{topic.questionCounts.exam}</span>
+      </ArchiveLink>
+      <ArchiveLink view={view} next={{ topicActivity: "practice", originalPage: 1 }} navigate={navigate} current={activity === "practice"} className={styles.pill}>
+        <PracticeIcon />Practice Questions <span>{topic.questionCounts.practice}</span>
+      </ArchiveLink>
+      {originalQuestions?.hasNotes && lessonPath && <ButtonLink href={lessonPath + "#notes"} prefetch={false}>Open Notes</ButtonLink>}
+    </nav>
+    {!detail || !originalQuestions ? <Loading /> : activity === "exam" ? <section className={styles.questions}>
+      <TopicFilters key={JSON.stringify(view.filters)} view={view} papers={overview.papers.filter(paper => paper.syllabus === topic.syllabus)}
+        onApply={filters => navigate({ filters, page: 1 })} />
+      {cards.length ? <ExamArchiveQuestionList questions={cards} view={view} navigate={navigate} revision={revision} />
+        : <Empty>{hasFilters ? "No exam questions match these filters." : "No past-paper questions are linked to this topic."}</Empty>}
+      <Pagination page={detail.page} pages={Math.ceil(detail.total / detail.pageSize)} onChange={value => navigate({ page: value })} />
+    </section> : <>
+      <div className={styles.toolbar}>
+        <h3>Practice Questions</h3>
+        {lessonPath && <ButtonLink href={lessonPath + "#practice"} prefetch={false}>Open interactive practice</ButtonLink>}
       </div>
-      <Pagination page={originalQuestions.page} pages={originalQuestions.pages} onChange={value => navigate({ originalPage: value })} />
-    </> : <Empty>No original questions are linked to this topic.</Empty>}
+      {originalQuestions.items.length ? <>
+        <div className={styles.questions}>
+          {originalQuestions.items.map(item => <article key={item.id} className="card">
+            <div className={styles.toolbar}><h4>{item.title}</h4><span className={styles.meta}>{countLabel(item.marks, "mark")}</span></div>
+            <FullQuestion question={item.question} />
+          </article>)}
+        </div>
+        <Pagination page={originalQuestions.page} pages={originalQuestions.pages} onChange={value => navigate({ originalPage: value })} />
+      </> : <Empty>No original questions are linked to this topic.</Empty>}
+    </>}
   </>;
 }
 

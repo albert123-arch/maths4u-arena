@@ -1,11 +1,11 @@
-import { approvedWhere } from "./content-access";
 import { publicVersion, versionInclude } from "./content";
+import { archiveOriginalTaskWhere } from "./exam-archive-counts";
 import { db } from "./prisma";
 
 const originalPageSize = 10;
 const empty = { items: [], total: 0, page: 1, pages: 1, href: null, hasNotes: false };
 
-export async function examArchiveOriginals(topic: { lessonId: string | null; courseSlug: string | null }, page = 1) {
+export async function examArchiveOriginals(topic: { lessonId: string | null; courseSlug: string | null }, page = 1, cachedTotal?: number) {
   if (!topic.lessonId || !topic.courseSlug) return empty;
   const client = db();
   const lesson = await client.lesson.findFirst({
@@ -18,12 +18,9 @@ export async function examArchiveOriginals(topic: { lessonId: string | null; cou
   if (!lesson) return empty;
   const where = {
     lessonId: topic.lessonId,
-    task: {
-      ...approvedWhere, origin: "ORIGINAL" as const, visibility: "PUBLIC" as const,
-      archivedAt: null, examArchivedAt: null, featureKey: null, versions: { some: {} },
-    },
+    task: archiveOriginalTaskWhere,
   };
-  const total = await client.lessonTask.count({ where });
+  const total = cachedTotal ?? await client.lessonTask.count({ where });
   const pages = Math.max(1, Math.ceil(total / originalPageSize));
   page = Math.min(Math.max(1, page), pages);
   const matches = await client.lessonTask.findMany({

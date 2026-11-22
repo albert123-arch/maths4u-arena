@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Button } from "./controls";
 import { Empty, Loading, MathContent } from "./ui";
 import { ArchiveLink, countLabel, emptyFilters, programmes, sessionLabel, sessionSort, sortLabel, Status, useArchive,
   type Navigate, type Paper, type Question, type Shared, type Support, type View } from "./exam-archive-navigation";
@@ -29,8 +30,7 @@ export function PastPapers({ overview, view, navigate, revision }: Shared) {
           save={{ syllabus: programme.code, year, session, paperId: null }}>← Papers</ArchiveLink>
       </nav>
       <h2>{programme.code} {sessionLabel(detail.session)} {detail.year} · Paper {detail.paperCode}</h2>
-      {view.questionId ? <QuestionPanel key={view.questionId} view={view} navigate={navigate} revision={revision} />
-        : <PaperDetail paperId={detail.id} view={view} navigate={navigate} revision={revision} />}
+      <PaperDetail paperId={detail.id} view={view} navigate={navigate} revision={revision} />
     </> : variants.length && session ? <>
       <nav aria-label="Paper path" className={styles.breadcrumbs}>
         <ArchiveLink view={view} next={{ syllabus: programme.code, year: null, session: null, paperId: null, questionId: "" }} navigate={navigate}
@@ -42,7 +42,7 @@ export function PastPapers({ overview, view, navigate, revision }: Shared) {
           <ArchiveLink view={view} next={{ syllabus: programme.code, year, session, paperId: paper.id, questionId: "" }}
             save={{ syllabus: programme.code, year, session, paperId: paper.id }} navigate={navigate} className={styles.row}>
             <strong>Question Paper {paper.paperCode}</strong>
-            <span>{countLabel(paper.questionCount, "question")} listed{paper.marks === null ? "" : " · " + countLabel(paper.marks, "mark") + " listed"}</span>
+            <span>{countLabel(paper.questionCount, "question")}{paper.marks === null ? "" : " · " + countLabel(paper.marks, "mark")}</span>
           </ArchiveLink>
         </li>)}
       </ul>
@@ -62,99 +62,135 @@ export function PastPapers({ overview, view, navigate, revision }: Shared) {
 }
 
 function PaperDetail({ paperId, view, navigate, revision }: { paperId: string; view: View; navigate: Navigate; revision: number }) {
-  const result = useArchive<Paper>("/papers/" + encodeURIComponent(paperId), revision);
+  const result = useArchive<Paper & { cards: Question[] }>("/papers/" + encodeURIComponent(paperId) + "?cards=1", revision);
   if (result?.error) return <Status error={result.error} />;
   if (!result?.value) return <Loading />;
+  const { cards, paper } = result.value;
+  if (view.questionId && !cards.some(question => question.id === view.questionId)) {
+    return <QuestionPanel key={view.questionId} view={view} navigate={navigate} revision={revision} />;
+  }
   return <>
-    <QuestionRows questions={result.value.questions} view={view} navigate={navigate} />
-    <OfficialSource paper={result.value.paper} />
+    <ExamArchiveQuestionList questions={cards} view={view} navigate={navigate} revision={revision} jumpToQuestions />
+    {paper.officialUrl && <p className={styles.official}>
+      <a href={paper.officialUrl} rel="noreferrer" target="_blank">Official question paper ↗</a>
+    </p>}
   </>;
 }
 
-function OfficialSource({ paper }: { paper: Pick<Paper["paper"], "syllabus" | "officialUrl" | "markSchemeUrl"> }) {
-  const { syllabus, officialUrl, markSchemeUrl } = paper;
-  if (officialUrl || markSchemeUrl) return <p className={styles.official}>
-    {officialUrl && <a href={officialUrl} rel="noreferrer" target="_blank">Official question paper ↗</a>}
-    {officialUrl && markSchemeUrl && " · "}
-    {markSchemeUrl && <a href={markSchemeUrl} rel="noreferrer" target="_blank">Official mark scheme ↗</a>}
-  </p>;
-  const programme = programmes.find(item => item.code === syllabus);
-  if (!programme) return null;
-  return <p className={styles.official}><a href={"https://www.cambridgeinternational.org/programmes-and-qualifications/" + programme.cambridge + "/past-papers/"}
-    rel="noreferrer" target="_blank">Cambridge past papers and mark schemes for {syllabus} ↗</a></p>;
-}
+const questionAnchor = (id: string) => "archive-question-" + id;
 
-export function QuestionRows({ questions, view, navigate, withSource }: {
-  questions: Paper["questions"]; view: View; navigate: Navigate; withSource?: boolean;
+export function ExamArchiveQuestionList({ questions, view, navigate, revision, jumpToQuestions }: {
+  questions: Question[]; view: View; navigate: Navigate; revision: number; jumpToQuestions?: boolean;
 }) {
-  if (!questions.length) return <Empty>No exam references match this selection.</Empty>;
-  return <ul className={styles.rows}>
-    {questions.map(question => <li key={question.id}><ArchiveLink view={view} next={{ questionId: question.id }} navigate={navigate} className={styles.row}>
-      <div><strong>Question {question.number}</strong>
-        {withSource && question.sourceReference && <small>{question.sourceReference}</small>}
-      </div>
-      <span>{question.marks === null ? "Marks not recorded" : countLabel(question.marks, "mark")}</span>
-    </ArchiveLink></li>)}
-  </ul>;
+  const selected = view.questionId;
+  useEffect(() => {
+    if (selected) document.getElementById(questionAnchor(selected))?.scrollIntoView();
+  }, [questions, selected]);
+
+  if (!questions.length) return <Empty>No exam questions match this selection.</Empty>;
+  return <>
+    {jumpToQuestions && <nav className={styles.numberJumps} aria-label="Jump to a question">
+      {questions.map(question => <a key={question.id} href={"#" + questionAnchor(question.id)}
+        aria-label={"Question " + question.number} className={styles.pill}>Q{question.number}</a>)}
+    </nav>}
+    <div className={styles.questions}>
+      {questions.map(question => <ExamArchiveQuestionCard key={question.id} question={question}
+        view={view} navigate={navigate} revision={revision} showTopicLinks={jumpToQuestions} />)}
+    </div>
+  </>;
 }
 
 export function QuestionPanel({ view, navigate, revision }: { view: View; navigate: Navigate; revision: number }) {
   const result = useArchive<Question>("/questions/" + encodeURIComponent(view.questionId), revision);
-  const question = result?.value;
-  const source = question?.papers.find(paper => paper.id === view.paperId) ?? question?.papers[0];
   return <section className={styles.questionPanel}>
     <ArchiveLink view={view} next={{ questionId: "", ...(view.mode === "topicwise" && { topicActivity: "exam" }) }} navigate={navigate} className={styles.backLink}>← {view.mode === "topicwise" ? "Exam-Style Problems" : "Questions"}</ArchiveLink>
-    {result?.error ? <Status error={result.error} /> : !question ? <Loading /> : <article className="card">
-      <h3>Question {source?.number ?? question.number}</h3>
-      {source && <p className={styles.meta}>{source.syllabus} · {sessionLabel(source.session)} {source.year} · Paper {source.paperCode}</p>}
-      {question.statementHtml ? <MathContent html={question.statementHtml} /> : <p>This entry contains a paper reference. Open the corresponding question in your authorised source.</p>}
-      <ArchiveAssets assets={[...question.assets, ...question.legacyImages]} />
-      {question.parts.map((part, index) => <section key={part.label + index} className={styles.part}>
-        <div className={styles.toolbar}><h4>{part.label}</h4>{part.marks !== null && <span className={styles.meta}>{countLabel(part.marks, "mark")}</span>}</div>
-        <MathContent html={part.html} />
-        {part.options.length > 0 && <ul className={styles.options}>{part.options.map(option => <li key={option.label}>
-          <strong>{option.label}</strong><MathContent html={option.html} />
-        </li>)}</ul>}
-      </section>)}
-      {question.topics.length > 0 && <section className={styles.questionTopics}>
-        <h4>Topics</h4>
-        {question.topics.map(topic => <ArchiveLink key={topic.id} view={view}
-          next={{ mode: "topicwise", topicKey: topic.id, questionId: "", topicActivity: "overview", filters: emptyFilters, originalPage: 1, page: 1 }} navigate={navigate}
-          save={{ mode: "topicwise", topicKey: topic.id }}>{topic.title}</ArchiveLink>)}
-      </section>}
-      {question.support.solution && <SupportPanel questionId={view.questionId} kind="solution" revision={revision} />}
-      {question.support.markScheme && <SupportPanel questionId={view.questionId} kind="mark-scheme" revision={revision} />}
-      {question.legacyMarkSchemes.length > 0 && <details className={styles.support}>
-        <summary>Mark scheme on Maths4U</summary>
-        <ul>{question.legacyMarkSchemes.map(scheme => <li key={scheme.href}>
-          <a href={scheme.href} rel="noreferrer" target="_blank">{scheme.caption || "Open mark scheme"} ↗</a>
-        </li>)}</ul>
-      </details>}
-      {question.teacherNotesHtml && <details className={styles.support}><summary>Teacher notes</summary><MathContent html={question.teacherNotesHtml} /></details>}
-      {question.sourceLinks.length > 0 && <p className={styles.official}>
-        {question.sourceLinks.map((link, index) => <span key={link.href}>
-          {index > 0 && " · "}<a href={link.href} rel="noreferrer" target="_blank">{link.caption} ↗</a>
-        </span>)}
-      </p>}
-      {source && <OfficialSource paper={source} />}
-    </article>}
+    {result?.error ? <Status error={result.error} /> : !result?.value ? <Loading /> :
+      <ExamArchiveQuestionCard question={result.value} view={view} navigate={navigate} revision={revision} showTopicLinks />}
   </section>;
 }
 
+function ExamArchiveQuestionCard({ question, view, navigate, revision, showTopicLinks }: {
+  question: Question; view: View; navigate: Navigate; revision: number; showTopicLinks?: boolean;
+}) {
+  const selectedPaper = view.mode === "past-papers" ? question.papers.find(paper => paper.id === view.paperId) : undefined;
+  const source = selectedPaper
+    ? selectedPaper.syllabus + " · " + sessionLabel(selectedPaper.session) + " " + selectedPaper.year + " · Paper " + selectedPaper.paperCode
+    : question.sourceReference?.replace(/ · Question [^·]+$/, "");
+  const number = selectedPaper?.number ?? question.number;
+  const anchor = questionAnchor(question.id);
+  const hasPrompt = question.statementHtml || question.parts.length > 0;
+  const hasSupport = question.support.solution || question.support.markScheme || question.legacyMarkSchemes.length > 0;
+  return <article id={anchor} className={"card " + styles.questionCard} aria-labelledby={anchor + "-title"}>
+    <header className={styles.questionHeader}>
+      <div>
+        <h3 id={anchor + "-title"}>{number ? "Question " + number : "Question"}</h3>
+        {source && <p className={styles.meta}>{source}</p>}
+      </div>
+      {question.marks !== null && <span className={styles.meta}>{countLabel(question.marks, "mark")}</span>}
+    </header>
+    {question.statementHtml && <MathContent html={question.statementHtml} />}
+    {!hasPrompt && <p>This question is available in the source paper.</p>}
+    <ArchiveAssets assets={[...question.assets, ...question.legacyImages]} />
+    {question.parts.map((part, index) => <section key={part.label + index} className={styles.part}>
+      <div className={styles.toolbar}><h4>{part.label}</h4>{part.marks !== null && <span className={styles.meta}>{countLabel(part.marks, "mark")}</span>}</div>
+      <MathContent html={part.html} />
+      {part.options.length > 0 && <ul className={styles.options}>{part.options.map(option => <li key={option.label}>
+        <strong>{option.label}</strong><MathContent html={option.html} />
+      </li>)}</ul>}
+    </section>)}
+    {hasSupport && <SolutionPanel question={question} revision={revision} elementId={anchor + "-solution"} />}
+    {showTopicLinks && question.topics.length > 0 && <div className={styles.questionTopics}>
+      {question.topics.map(topic => <ArchiveLink key={topic.id} view={view}
+        next={{ mode: "topicwise", topicKey: topic.id, questionId: "", topicActivity: "exam", filters: emptyFilters, originalPage: 1, page: 1 }} navigate={navigate}
+        save={{ mode: "topicwise", topicKey: topic.id }}>{topic.title}</ArchiveLink>)}
+    </div>}
+    {question.teacherNotesHtml && <details className={styles.support}><summary>Teacher notes</summary><MathContent html={question.teacherNotesHtml} /></details>}
+    {!hasPrompt && question.sourceLinks.length > 0 && <p className={styles.official}>
+      {question.sourceLinks.map((link, index) => <span key={link.href}>
+        {index > 0 && " · "}<a href={link.href} rel="noreferrer" target="_blank">{link.caption} ↗</a>
+      </span>)}
+    </p>}
+  </article>;
+}
+
 function ArchiveAssets({ assets }: { assets: { href: string; caption: string }[] }) {
-  return <>{assets.map(asset => <figure key={asset.href} className={styles.asset}>
+  const unique = [...new Map(assets.map(asset => [asset.href, asset])).values()];
+  return <>{unique.map(asset => <figure key={asset.href} className={styles.asset}>
     <Image src={asset.href} alt={asset.caption} unoptimized width={1000} height={750} referrerPolicy="no-referrer" />
     {asset.caption && <figcaption>{asset.caption}</figcaption>}
   </figure>)}</>;
 }
 
-function SupportPanel({ questionId, kind, revision }: { questionId: string; kind: "solution" | "mark-scheme"; revision: number }) {
+function SolutionPanel({ question, revision, elementId }: { question: Question; revision: number; elementId: string }) {
   const [expanded, setExpanded] = useState(false);
-  const result = useArchive<Support>(expanded ? "/questions/" + encodeURIComponent(questionId) + "/" + kind : null, revision);
-  return <details className={styles.support} onToggle={event => setExpanded(event.currentTarget.open)}>
-    <summary>{kind === "solution" ? "Worked solution" : "Mark scheme"}</summary>
-    {expanded && (result?.error ? <Status error={result.error} /> : !result?.value ? <Loading /> : <>
-      <MathContent html={result.value.html} /><ArchiveAssets assets={result.value.assets} />
-    </>)}
-  </details>;
+  const resourcePath = "/questions/" + encodeURIComponent(question.id);
+  const solution = useArchive<Support>(expanded && question.support.solution ? resourcePath + "/solution" : null, revision);
+  const marking = useArchive<Support>(expanded && question.support.markScheme ? resourcePath + "/mark-scheme" : null, revision);
+  const legacyImages = question.legacyMarkSchemes.filter(asset => !/\.pdf$/i.test(asset.href));
+  const hasMarking = question.support.markScheme || question.legacyMarkSchemes.length > 0;
+  return <div>
+    <Button type="button" className={styles.solutionToggle} aria-expanded={expanded} aria-controls={elementId}
+      onClick={() => setExpanded(value => !value)}>Solution</Button>
+    <div id={elementId} className={expanded ? styles.solutionBody : undefined} hidden={!expanded}>
+      {expanded && <>
+        {question.support.solution && <SupportContent result={solution} />}
+        {hasMarking && <section>
+          <h4>Mark scheme</h4>
+          {question.support.markScheme && <SupportContent result={marking} additionalAssets={legacyImages} />}
+          {!question.support.markScheme && <ArchiveAssets assets={legacyImages} />}
+          {legacyImages.length < question.legacyMarkSchemes.length && <p>PDF mark scheme preview unavailable.</p>}
+        </section>}
+      </>}
+    </div>
+  </div>;
+}
+
+function SupportContent({ result, additionalAssets = [] }: {
+  result: ReturnType<typeof useArchive<Support>>; additionalAssets?: Support["assets"];
+}) {
+  return <>
+    {result?.error ? <Status error={result.error} /> : !result?.value ? <Loading /> :
+      result.value.html && <MathContent html={result.value.html} />}
+    <ArchiveAssets assets={[...(result?.value?.assets ?? []), ...additionalAssets]} />
+  </>;
 }

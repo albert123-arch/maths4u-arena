@@ -5,8 +5,9 @@ import { ensure } from "./errors";
 import {
   type ExamArchiveAccess, type ExamArchiveSyllabus, examArchiveId, examArchivePreferences, logExamArchiveAccess,
 } from "./exam-archive-access";
-import { archiveAuthoredTopicTitles, archiveLegacyLessonIds } from "./exam-archive-lesson-links";
+import { archiveAuthoredTopicTitles, archiveChapterTitleAliases, archiveLegacyLessonIds, archiveTopicChapterSlugs } from "./exam-archive-lesson-links";
 import { examArchiveOriginals } from "./exam-archive-originals";
+import { archivePaperSummary, archiveQuestionCounts, examArchiveCounts } from "./exam-archive-counts";
 
 export { hasExamArchiveAccess, requireExamArchiveAccess } from "./exam-archive-access";
 
@@ -44,26 +45,6 @@ export function archiveContentRights(access: Pick<ExamArchiveAccess, "admin" | "
 }
 
 const paperOrder = new Intl.Collator("en", { numeric: true });
-const paperTotalMarks = (questions: { number: string; question: { marks: number | null } }[]) => {
-  if (!questions.length || questions.some(row => row.question.marks === null)) return null;
-  // An alternate printed question shares the score with its counterpart.
-  const baseNumbers = new Set<number>();
-  let total = 0;
-  for (const { number, question } of questions) {
-    const numeric = Number(number.match(/^\d+/)?.[0]);
-    if (!Number.isFinite(numeric) || baseNumbers.has(numeric)) return null;
-    baseNumbers.add(numeric);
-    total += question.marks!;
-  }
-  return total;
-};
-
-function toPaperSummary(paper: Pick<ExamPaper, "id" | "syllabus" | "year" | "session" | "paperCode">, questions: { number: string; question: { marks: number | null } }[]) {
-  return {
-    id: paper.id, syllabus: paper.syllabus, year: paper.year, session: paper.session, paperCode: paper.paperCode,
-    questionCount: questions.length, marks: paperTotalMarks(questions),
-  };
-}
 
 export function officialExamUrl(input: string | null) {
   if (!input) return null;
@@ -74,7 +55,10 @@ export function officialExamUrl(input: string | null) {
   } catch { return null; }
 }
 
-const normalize = (title: string) => title.toLowerCase().replace(/[^a-z0-9]/g, "");
+const normalizeChapter = (title: string) => title.toLowerCase()
+  .replace(/\s*·\s*maths4u original$/, "")
+  .replace(/^the\s+/, "")
+  .replace(/[^a-z0-9]/g, "");
 function courseSyllabus(slug: string) {
   return /^maths4u-(9709|9231|0606|0580)(?:-|$)/.exec(slug)?.[1] as ExamArchiveSyllabus | undefined;
 }
@@ -109,20 +93,34 @@ async function archiveTopics(access: ExamArchiveAccess, includeLinked = false) {
   ]);
   const legacy = imported.map(linkArchiveLesson);
   const courseRows = new Map(legacy.flatMap(topic => topic.courseSlug ? [[topic.courseSlug, topic] as const] : []));
-  const chapterRows = new Map(legacy.flatMap(topic => topic.courseSlug ? [[topic.courseSlug + ":" + normalize(topic.chapterTitle), topic] as const] : []));
+  const chapterRows = new Map(legacy.flatMap(topic => topic.courseSlug ? [[topic.courseSlug + ":" + normalizeChapter(topic.chapterTitle), topic] as const] : []));
   const linkedTopics = new Map<string, string | null>();
   for (const topic of legacy) {
     if (topic.lessonId) linkedTopics.set(topic.lessonId, linkedTopics.has(topic.lessonId) ? null : topic.id);
   }
   const topicAliases: Record<string, string> = {};
+  const chapterAliases: Record<string, Record<string, string>> = {};
+  const chapterLocations = new Map<string, Pick<ListedTopic, "chapterKey" | "chapterTitle" | "chapterOrder">>();
   const authored = courses.flatMap(course => {
     const syllabus = courseSyllabus(course.slug);
     if (!syllabus || !access.syllabuses.includes(syllabus)) return [];
     const olderCourse = courseRows.get(course.slug);
+    const courseKey = olderCourse?.courseKey ?? course.slug;
     const courseTitle = olderCourse?.courseTitle ?? course.texts[0]?.title ?? course.slug;
     return course.topics.flatMap(chapter => {
+      const placementKey = course.slug + ":" + chapter.slug;
       const chapterTitle = chapter.texts[0]?.title ?? chapter.slug;
-      const olderChapter = chapterRows.get(course.slug + ":" + normalize(chapterTitle));
+      const olderTitle = archiveChapterTitleAliases[placementKey] ?? chapterTitle;
+      const olderChapter = chapterRows.get(course.slug + ":" + normalizeChapter(olderTitle));
+      const location = {
+        chapterKey: olderChapter?.chapterKey ?? chapter.slug,
+        chapterTitle: olderChapter?.chapterTitle ?? chapterTitle,
+        chapterOrder: olderChapter?.chapterOrder ?? chapter.position,
+      };
+      chapterLocations.set(placementKey, location);
+      if (olderChapter && chapter.slug !== olderChapter.chapterKey) {
+        (chapterAliases[courseKey] ??= {})[chapter.slug] = olderChapter.chapterKey;
+      }
       return chapter.lessons.flatMap(lesson => {
         const id = "arena_" + lesson.id;
         const linkedTopicId = linkedTopics.get(lesson.id);
@@ -131,36 +129,32 @@ async function archiveTopics(access: ExamArchiveAccess, includeLinked = false) {
           return [];
         }
         return [{
-          id, syllabus, courseKey: olderCourse?.courseKey ?? course.slug, courseTitle,
-          chapterKey: olderChapter?.chapterKey ?? chapter.slug, chapterTitle: olderChapter?.chapterTitle ?? chapterTitle,
-          chapterOrder: olderChapter?.chapterOrder ?? chapter.position,
+          id, syllabus, courseKey, courseTitle, ...location,
           title: archiveAuthoredTopicTitles[lesson.id] ?? lesson.versions[0]?.texts[0]?.title ?? chapterTitle,
           position: lesson.position, courseSlug: course.slug, lessonId: lesson.id,
         } satisfies ListedTopic];
       });
     });
   });
-  const topics = [...legacy, ...authored].sort((left, right) => paperOrder.compare(left.courseKey, right.courseKey) ||
+  const relocated = legacy.map(topic => {
+    const chapterSlug = archiveTopicChapterSlugs[topic.id];
+    const location = chapterSlug && chapterLocations.get(topic.courseSlug + ":" + chapterSlug);
+    return location ? { ...topic, ...location } : topic;
+  });
+  const topics = [...relocated, ...authored].sort((left, right) => paperOrder.compare(left.courseKey, right.courseKey) ||
     left.chapterOrder - right.chapterOrder || left.position - right.position || paperOrder.compare(left.title, right.title));
-  return { topics, topicAliases };
+  return { topics, topicAliases, chapterAliases };
 }
 
 export async function examArchiveOverview(access: ExamArchiveAccess) {
-  const [preferences, courses, { topics, topicAliases }, papers] = await Promise.all([
+  const [preferences, courses, { topics, topicAliases, chapterAliases }, counts] = await Promise.all([
     examArchivePreferences(access),
     db().courseFollow.findMany({ where: { userId: access.actor.id }, select: { course: { select: { slug: true } } } }),
     archiveTopics(access),
-    db().examArchivePaper.findMany({
-      where: { syllabus: { in: access.syllabuses }, questions: { some: { question: { syllabus: { in: access.syllabuses } } } } },
-      select: {
-        id: true, syllabus: true, year: true, session: true, paperCode: true, questions: {
-          where: { question: { syllabus: { in: access.syllabuses } } },
-          select: { number: true, question: { select: { marks: true, syllabus: true } } },
-        },
-      },
-      orderBy: [{ year: "desc" }, { session: "asc" }, { paperCode: "asc" }],
-    }),
+    examArchiveCounts(),
   ]);
+  const scope = new Set<string>(access.syllabuses);
+  const papers = counts.papers.filter(paper => scope.has(paper.syllabus));
   await logExamArchiveAccess(access, "INDEX_READ", "index");
   return {
     admin: access.admin,
@@ -171,12 +165,10 @@ export async function examArchiveOverview(access: ExamArchiveAccess) {
         : preferences.topicKey && Object.hasOwn(topicAliases, preferences.topicKey) ? topicAliases[preferences.topicKey] : null,
       paperId: papers.some(paper => paper.id === preferences.paperId) ? preferences.paperId : null,
     },
-    topics,
+    topics: topics.map(topic => ({ ...topic, questionCounts: archiveQuestionCounts(counts, topic) })),
     topicAliases,
-    papers: papers.flatMap(paper => {
-      const questions = paper.questions.filter(row => row.question.syllabus === paper.syllabus);
-      return questions.length ? [toPaperSummary(paper, questions)] : [];
-    }),
+    chapterAliases,
+    papers,
   };
 }
 
@@ -206,7 +198,7 @@ export async function examArchivePaper(access: ExamArchiveAccess, rawId: string)
   await logExamArchiveAccess(access, "PAPER_READ", id);
   return {
     paper: {
-      ...toPaperSummary(paper, visible), officialUrl: officialExamUrl(paper.officialUrl), markSchemeUrl: officialExamUrl(paper.markSchemeUrl),
+      ...archivePaperSummary(paper, visible), officialUrl: officialExamUrl(paper.officialUrl), markSchemeUrl: officialExamUrl(paper.markSchemeUrl),
     },
     questions: visible.map(({ number, question }) => questionSummary(access, question, paper, number)),
   };
@@ -245,8 +237,9 @@ export async function examArchiveTopic(access: ExamArchiveAccess, rawId: string,
   const filters = archiveTopicFilters.parse(input);
   ensure(filters.minMarks === undefined || filters.maxMarks === undefined || filters.minMarks <= filters.maxMarks, 400, "INVALID_MARKS_RANGE");
   const imported = await db().examArchiveTopic.findFirst({ where: { id, syllabus: { in: access.syllabuses } }, select: topicSelect });
-  const topic = imported ? linkArchiveLesson(imported) : id.startsWith("arena_")
-    ? (await archiveTopics(access, true)).topics.find(row => row.id === id) : undefined;
+  const topic = imported && !archiveTopicChapterSlugs[id] ? linkArchiveLesson(imported)
+    : imported || id.startsWith("arena_") ? (await archiveTopics(access, true)).topics.find(row => row.id === id)
+    : undefined;
   ensure(topic, 404, "NOT_FOUND");
   const topicQuestions: Prisma.ExamArchiveQuestionWhereInput = imported
     ? { topics: { some: { topicId: id } } }
@@ -265,15 +258,17 @@ export async function examArchiveTopic(access: ExamArchiveAccess, rawId: string,
     ...(filters.minMarks !== undefined || filters.maxMarks !== undefined
       ? { marks: { gte: filters.minMarks, lte: filters.maxMarks } } : {}),
   };
+  const counts = archiveQuestionCounts(await examArchiveCounts(), topic);
+  const hasFilters = Object.entries(filters).some(([key, value]) => key !== "page" && key !== "originalPage" && value !== undefined);
   const [total, questions, originalQuestions] = await Promise.all([
-    db().examArchiveQuestion.count({ where }),
+    hasFilters ? db().examArchiveQuestion.count({ where }) : counts.exam,
     db().examArchiveQuestion.findMany({
       where, select: {
         ...listedQuestionSelect,
         papers: { where: { paper: paperFilter }, select: { number: true, paper: { select: paperSelect } }, orderBy: { paper: { year: "desc" } }, take: 1 },
       }, orderBy: { id: "asc" }, skip: (page - 1) * pageSize, take: pageSize,
     }),
-    examArchiveOriginals(topic, filters.originalPage),
+    examArchiveOriginals(topic, filters.originalPage, counts.practice),
   ]);
   await logExamArchiveAccess(access, "TOPIC_READ", id);
   return {
@@ -282,18 +277,15 @@ export async function examArchiveTopic(access: ExamArchiveAccess, rawId: string,
   };
 }
 
-export async function lookupExamArchiveQuestion(access: ExamArchiveAccess, rawId: string) {
-  const id = examArchiveId(rawId);
-  const question = await db().examArchiveQuestion.findFirst({
-    where: { id, syllabus: { in: access.syllabuses } },
-    select: {
-      ...listedQuestionSelect,
-      topics: { select: { topic: { select: { id: true, title: true, syllabus: true } } } },
-      papers: { select: { number: true, paper: { select: paperSelect } }, orderBy: { paper: { year: "desc" } } },
-      sources: { select: { sourceKey: true, printedPart: true }, orderBy: { sourceKey: "asc" } },
-    },
-  });
-  ensure(question, 404, "NOT_FOUND");
+const questionDetailsSelect = {
+  ...listedQuestionSelect,
+  topics: { select: { topic: { select: { id: true, title: true, syllabus: true } } } },
+  papers: { select: { number: true, paper: { select: paperSelect } }, orderBy: { paper: { year: "desc" } } },
+  sources: { select: { sourceKey: true, printedPart: true }, orderBy: { sourceKey: "asc" } },
+} satisfies Prisma.ExamArchiveQuestionSelect;
+type QuestionDetails = Prisma.ExamArchiveQuestionGetPayload<{ select: typeof questionDetailsSelect }>;
+
+function scopeQuestionDetails<T extends QuestionDetails>(access: ExamArchiveAccess, question: T) {
   const papers = question.papers.filter(row => row.paper.syllabus === question.syllabus);
   ensure(papers.length, 404, "NOT_FOUND");
   return {
@@ -305,4 +297,28 @@ export async function lookupExamArchiveQuestion(access: ExamArchiveAccess, rawId
       officialUrl: officialExamUrl(paper.officialUrl), markSchemeUrl: officialExamUrl(paper.markSchemeUrl),
     })),
   };
+}
+
+export async function lookupExamArchiveQuestion(access: ExamArchiveAccess, rawId: string) {
+  const question = await db().examArchiveQuestion.findFirst({
+    where: { id: examArchiveId(rawId), syllabus: { in: access.syllabuses } },
+    select: questionDetailsSelect,
+  });
+  ensure(question, 404, "NOT_FOUND");
+  return scopeQuestionDetails(access, question);
+}
+
+export async function lookupExamArchiveQuestionCards(access: ExamArchiveAccess, ids: string[]) {
+  const questions = await db().examArchiveQuestion.findMany({
+    where: { id: { in: ids }, syllabus: { in: access.syllabuses } },
+    select: {
+      ...questionDetailsSelect,
+      internalContent: { select: {
+        questionId: true, statementHtml: true, images: true, markSchemes: true,
+        solutionHtml: true, solutionImages: true,
+      } },
+    },
+  });
+  ensure(questions.length === ids.length, 404, "NOT_FOUND");
+  return questions.map(question => scopeQuestionDetails(access, question));
 }

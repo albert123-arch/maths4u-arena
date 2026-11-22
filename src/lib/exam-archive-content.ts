@@ -8,7 +8,7 @@ import { renderContent } from "./content";
 import { privateStorageRoot } from "./storage-config";
 import { verifyBankSvg } from "./bank-svg.mjs";
 import { type ExamArchiveAccess, examArchiveHeaders, examArchiveId, logExamArchiveAccess } from "./exam-archive-access";
-import { lookupExamArchiveQuestion } from "./exam-archive";
+import { lookupExamArchiveQuestion, lookupExamArchiveQuestionCards } from "./exam-archive";
 
 const diagramTypes = ["image/png", "image/jpeg", "image/svg+xml"] as const;
 type DiagramMime = (typeof diagramTypes)[number];
@@ -62,30 +62,24 @@ function archiveLegacySourceLinks(sources: { sourceKey: string; printedPart: str
   });
 }
 
-export async function examArchiveQuestion(access: ExamArchiveAccess, rawId: string) {
-  const { question, rights, summary, topics, papers } = await lookupExamArchiveQuestion(access, rawId);
-  const internal = question.internalContent ? await db().examArchiveInternalContent.findUnique({
-    where: { questionId: question.id },
-    select: { statementHtml: true, solutionHtml: true, images: true, solutionImages: true, markSchemes: true },
-  }) : null;
-  const roles = allowedAssetRoles(rights);
-  const version = rights.statement && question.taskVersionId ? await db().taskVersion.findFirst({
-    where: publishedVersion(question.taskVersionId, question.syllabus),
-    select: {
-      texts: { where: english, select: {
-        statement: true, ...(access.admin && { teacherNote: true }),
-        ...(rights.solution && { solution: true }),
-        ...(rights.markScheme && { markSchemeText: true, markSchemeStatus: true }),
-      } },
-      parts: { orderBy: { position: "asc" }, select: {
-        maxPoints: true, texts: { where: english, select: {
-          prompt: true, ...(rights.markScheme && { markSchemeText: true, markSchemeStatus: true }),
-        } },
-        options: { orderBy: { position: "asc" }, select: { texts: { where: english, select: { text: true } } } },
-      } },
-      assets: { where: { role: { in: roles }, ...localeAsset, file: fileWhere }, select: { id: true, caption: true, role: true } },
-    },
-  }) : null;
+const questionVersionSelect = (admin: boolean) => ({
+  id: true,
+  texts: { where: english, select: {
+    statement: true, ...(admin && { teacherNote: true }), solution: true, markSchemeText: true, markSchemeStatus: true,
+  } },
+  parts: { orderBy: { position: "asc" }, select: {
+    maxPoints: true, texts: { where: english, select: { prompt: true, markSchemeText: true, markSchemeStatus: true } },
+    options: { orderBy: { position: "asc" }, select: { texts: { where: english, select: { text: true } } } },
+  } },
+  assets: { where: { role: { in: ["STATEMENT", "SOLUTION", "MARK_SCHEME"] }, ...localeAsset, file: fileWhere }, select: { id: true, caption: true, role: true } },
+} satisfies Prisma.TaskVersionSelect);
+
+type QuestionDetails = Awaited<ReturnType<typeof lookupExamArchiveQuestionCards>>[number];
+type QuestionVersion = Prisma.TaskVersionGetPayload<{ select: ReturnType<typeof questionVersionSelect> }>;
+
+function archiveQuestionCard(access: ExamArchiveAccess, details: QuestionDetails, version?: QuestionVersion) {
+  const { question, rights, summary, topics, papers } = details;
+  const internal = question.internalContent;
   const text = version?.texts[0];
   const printedLabel = question.sources.length === 1 ? question.sources[0].printedPart : null;
   const partCount = version?.parts.length ?? 0;
@@ -101,13 +95,14 @@ export async function examArchiveQuestion(access: ExamArchiveAccess, rawId: stri
   }) ?? [];
   const internalStatement = archiveHtml(internal?.statementHtml);
   const statementHtml = internalStatement || archiveHtml(text?.statement) || null;
-  const hasAsset = (role: ArchiveAssetRole) => !!version?.assets.some(asset => asset.role === role);
+  const roles = allowedAssetRoles(rights);
+  const assets = (version?.assets ?? []).filter(asset => roles.some(role => role === asset.role));
+  const hasAsset = (role: ArchiveAssetRole) => assets.some(asset => asset.role === role);
   const hasVerifiedMarkScheme = (value: { markSchemeStatus?: string; markSchemeText?: string | null } | undefined) =>
     value?.markSchemeStatus === "VERIFIED" && !!value.markSchemeText?.trim();
-  await logExamArchiveAccess(access, "QUESTION_READ", question.id);
   return {
     ...summary, hasContent: !!(statementHtml || parts.length), topics, papers, statementHtml, parts: internalStatement ? [] : parts,
-    assets: archiveAssetLinks(question.id, (version?.assets ?? []).filter(asset => asset.role === "STATEMENT")),
+    assets: archiveAssetLinks(question.id, assets.filter(asset => asset.role === "STATEMENT")),
     legacyImages: archiveLegacyAssetLinks(internal?.images, "diagram"),
     legacyMarkSchemes: archiveLegacyAssetLinks(internal?.markSchemes, "mark-scheme"),
     sourceLinks: internal ? archiveLegacySourceLinks(question.sources) : [],
@@ -119,6 +114,41 @@ export async function examArchiveQuestion(access: ExamArchiveAccess, rawId: stri
         !!version?.parts.some(part => hasVerifiedMarkScheme(part.texts[0])) || hasAsset("MARK_SCHEME")),
     },
   };
+}
+
+async function questionCardsById(access: ExamArchiveAccess, ids: string[]) {
+  const details = await lookupExamArchiveQuestionCards(access, ids);
+  const approvedVersions = details.flatMap(({ rights, question }) => rights.statement && question.taskVersionId
+    ? [publishedVersion(question.taskVersionId, question.syllabus)] : []);
+  const versions = approvedVersions.length ? await db().taskVersion.findMany({
+    where: { OR: approvedVersions }, select: questionVersionSelect(access.admin),
+  }) : [];
+  const versionById = new Map(versions.map(row => [row.id, row]));
+  const questionById = new Map(details.map(row => [row.question.id,
+    archiveQuestionCard(access, row, row.question.taskVersionId ? versionById.get(row.question.taskVersionId) : undefined),
+  ]));
+  await db().auditEvent.createMany({ data: details.map(({ question }) => ({
+    actorId: access.actor.id, action: "EXAM_ARCHIVE_QUESTION_READ", targetId: question.id,
+  })) });
+  return questionById;
+}
+
+export async function examArchiveQuestion(access: ExamArchiveAccess, rawId: string) {
+  const cards = await questionCardsById(access, [examArchiveId(rawId)]);
+  return cards.values().next().value!;
+}
+
+const archiveQuestionCardBatchSize = 30;
+type ListedQuestionSource = { id: string; number: string; sourceReference: string | null };
+
+export async function examArchiveQuestionCards(access: ExamArchiveAccess, questions: ListedQuestionSource[]) {
+  const cards: Awaited<ReturnType<typeof examArchiveQuestion>>[] = [];
+  for (let start = 0; start < questions.length; start += archiveQuestionCardBatchSize) {
+    const batch = questions.slice(start, start + archiveQuestionCardBatchSize);
+    const byId = await questionCardsById(access, [...new Set(batch.map(question => question.id))]);
+    for (const { id, number, sourceReference } of batch) cards.push({ ...byId.get(id)!, number, sourceReference });
+  }
+  return cards;
 }
 
 export async function examArchiveSupport(access: ExamArchiveAccess, rawId: string, kind: "solution" | "mark-scheme") {
