@@ -16,7 +16,8 @@ import { StudyRevision } from "@/components/study-revision";
 import { hasOriginalRevisionStudy, studyLayout, studyMetadata, studyRevision } from "./authored-study";
 import type { DiscoveryProps } from "@/components/discovery-home";
 import { publicDiscovery } from "./discovery";
-import { learningDirections, type DiscoveryData } from "./discovery-model";
+import { redirectSignedInFromHome, studentSearchCourses } from "./home-role-routing";
+import { courseLevels, discoverySample, levelHref, learningDirections, type DiscoveryData } from "./discovery-model";
 import { quadraticTopics } from "./square-model";
 import { publicLearningTopic } from "./public-learning-topic";
 import { squarePublicLesson, questionsForTopic } from "./square-content";
@@ -48,7 +49,7 @@ export async function pageMetadata({ params,searchParams }: PageProps, locale: L
   await connection();
   const available = await publicLanguages(), translated = hasRussianPage(path, available);
   if (locale === "ru" && !translated) notFound();
-  const chapters = locale === "en" ? await publicChapters(parts[0] === "courses" ? parts[1] : undefined,
+  const chapters = locale === "en" && parts[0] === "courses" && parts[1] ? await publicChapters(parts[1],
     parts[0] === "courses" && parts[2] === "topics" ? parts[3] : undefined) : [];
   const chapter = matchPublicChapter(chapters, path, query.chapter);
   const canonical = arenaOrigin + (locale === "ru" ? "/ru" : "") + (chapter?.chapterPath ?? path);
@@ -56,16 +57,18 @@ export async function pageMetadata({ params,searchParams }: PageProps, locale: L
   const discovery = discoveryRoute(parts), topic = parts[0]==="courses"&&parts[2]==="topics"&&parts[3]?await topicAtPath(parts[3],path):undefined;
   const lessonChapter = chapters.find(ch => ch.lessons.some(l => l.path === path));
   const specific = chapter ? chapterMetadata(chapter) : lessonChapter ? chapterMetadata(lessonChapter, lessonChapter.lessons.find(l => l.path === path)) : null;
-  const item = topic || specific ? undefined : (await publicDiscovery(locale)).items.find(i => i.href === (locale === "ru" ? "/ru" : "") + path);
+  const item = topic || specific || discovery ? undefined : (await publicDiscovery(locale)).items.find(i => i.href === (locale === "ru" ? "/ru" : "") + path);
   const further = chapters.filter(ch => ch.courseCode === "9231");
   const direction = learningDirections.find(d => d.key === discovery?.direction);
   const title = topic ? topic.title : item ? (locale === "ru" ? item.ru : item.title) : direction ? locale === "ru" ? direction.ru : direction.title : path === "/library" ? "Practice" : path === "/courses" ? "Mathematics courses" : path === "/search" ? "Search courses and topics" : path === "/for-teachers" ? "Maths teaching tools" : "Learn mathematics, practise and prepare for exams";
   const description = topic?.summary ?? (direction ? locale === "ru" ? direction.descriptionRu : direction.description : locale === "ru" ? "Конспекты, задачи и решения по теме «" + title + "» на Maths4U." : "Explore " + title + " and its available practice questions on Maths4U.");
   const course = further.find(ch => path === '/courses/' + ch.courseSlug);
   const finalTitle = specific?.title ?? (course ? '9231 ' + furtherCourseName(course.courseTitle) + ' notes & practice | Maths4U'
-    : path === '/' ? 'Cambridge Mathematics 0862, 0580, 0606, 9709 & 9231 | Maths4U' : title + ' | Maths4U');
+    : path === '/' ? 'Cambridge Mathematics 0862, 0580, 0606, 9709 & 9231 | Maths4U'
+    : direction?.key === 'further' && locale === "en" ? '9231 Further Mathematics: notes, examples & practice | Maths4U'
+    : (direction && direction.key !== "olympiad" ? direction.code + " " : "") + title + ' | Maths4U');
   const finalDescription = specific?.description ?? (course ? 'Study 9231 ' + furtherCourseName(course.courseTitle) + ' with notes, worked examples, quick checks and exam-style questions with solutions.'
-    : path === '/' ? 'Study Cambridge Lower Secondary, IGCSE, AS and A Level Mathematics with worked examples, answer checks and practice.' : description);
+    : path === '/' ? 'Study Cambridge Maths from Stage 7 to A Level: 0862, 0580, 0606, 9709 and 9231. Choose a course for notes, worked examples and practice with feedback.' : description);
   return { title: finalTitle, description:finalDescription, alternates, ...(path === "/search" || query.view === "revision" || process.env.MATHS4U_ENV !== "production" ? { robots: { index: false, follow: true } } : {}), openGraph: { title:finalTitle, description:finalDescription, url: canonical, siteName: "Maths4U", type: "website" } };
 }
 async function privateArchivePage(parts:string[],search:Record<string,string>){
@@ -87,6 +90,7 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   // Versioned source packages contain private keys/provenance and are not an
   // HTTP file tree. Keep this namespace a real 404, never a client login shell.
   if(parts[0]==="content")notFound();
+  if (!parts.length && locale === "en") await redirectSignedInFromHome();
   if (!publicPage) { if (locale === "ru") notFound(); return <Platform />; }
   await connection();
   const available = await publicLanguages(), translated = hasRussianPage(path, available);
@@ -95,7 +99,7 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   const raw = await searchParams, search = Object.fromEntries(Object.entries(raw).filter((e): e is [string, string] => typeof e[1] === "string"));
   if(search.source||search.taskId||search.legacyLesson||parts[0]==='courses'&&parts[2]==='topics'&&unallocatedChapter(parts[3]??''))return privateArchivePage(parts,search);
   const packaged=parts[0]==="courses"&&parts[2]==="topics"&&parts[3]?await topicAtPath(parts[3],path):undefined;
-  const chapters = locale === "en" ? await publicChapters(parts[0] === "courses" ? parts[1] : undefined,
+  const chapters = locale === "en" && parts[0] === "courses" && parts[1] ? await publicChapters(parts[1],
     parts[0] === "courses" && parts[2] === "topics" ? parts[3] : undefined) : [];
   const chapterPage = matchPublicChapter(chapters, path, raw.chapter);
   if (chapterPage && path !== chapterPage.chapterPath && Object.keys(raw).length === 1) permanentRedirect(chapterPage.chapterPath);
@@ -119,7 +123,43 @@ async function renderAllowedPage({ params, searchParams }: PageProps, locale: Lo
   if (discovery) {
     let data: DiscoveryData;
     try { data = await publicDiscovery(locale); } catch { data = { courses: [], items: [], unavailable: true }; }
-    return <Platform languagePair={pair} discovery={{ ...discovery, data, query: (search.q ?? "").slice(0, 120) }} />;
+    const selectedCourses = discovery.view === "search" ? await studentSearchCourses(data.courses.map(course => course.slug)) : undefined;
+    if (selectedCourses && search.scope !== "all") {
+      const selected = new Set(selectedCourses);
+      data = { ...data, courses: data.courses.filter(course => selected.has(course.slug)), items: data.items.filter(item => selected.has(item.courseSlug)) };
+    }
+    // A short per-course list lets a returning guest recognise a still-public lesson.
+    // Only the search route needs to hydrate the full search index.
+    let resumeLessons: Record<string, string[]> | undefined;
+    if (discovery.view === "home") {
+      resumeLessons = {};
+      for (const item of data.items) {
+        if (item.kind === "topic") (resumeLessons[item.courseSlug] ??= []).push(item.href.split("/").at(-1)!);
+      }
+    }
+    if (discovery.view !== "search") {
+      const demos = discovery.view === "home" ? ["igcse", "a-level"] as const : discovery.direction ? [discovery.direction] : [];
+      data = { ...data, items: demos.flatMap(key => discoverySample(data.items, key) ?? []) };
+    }
+    const level = learningDirections.find(item => item.key === discovery.direction);
+    const levelUrl = arenaOrigin + (locale === "ru" ? "/ru" : "") + path;
+    const directory = data.unavailable ? null : discovery.view === "home" ? {
+      "@context": "https://schema.org",
+      "@type": "WebSite", name: "Maths4U Arena", url: arenaOrigin + "/", inLanguage: "en",
+      hasPart: courseLevels.filter(item => data.courses.some(course => course.direction === item.key)).map(item => ({
+        "@type": "WebPage", name: item.code + " · " + item.title, url: arenaOrigin + levelHref(item.key, data.courses),
+      })),
+    } : level ? {
+      "@context": "https://schema.org", "@type": "CollectionPage", inLanguage: locale, url: levelUrl,
+      name: (level.key === "olympiad" ? "" : level.code + " · ") + (locale === "ru" ? level.ru : level.title),
+      description: locale === "ru" ? level.descriptionRu : level.description,
+      hasPart: data.courses.filter(course => course.direction === level.key).map(course => ({
+        "@type": "WebPage", name: locale === "ru" ? course.ru : course.title,
+        url: arenaOrigin + (locale === "ru" ? "/ru" : "") + "/courses/" + encodeURIComponent(course.slug),
+      })),
+    } : null;
+    return <>{directory && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(directory) }} />}
+      <Platform languagePair={pair} discovery={{ ...discovery, data, resumeLessons, query: (search.q ?? "").slice(0, 120), selectedCourses, searchAll: search.scope === "all" }} /></>;
   }
   const initial: PublicPageData = { filters: search, chapter: search.chapter ?? "" };
   if(chapterPage){

@@ -18,6 +18,7 @@ import {AdminWorkspace} from "./admin-dashboard";
 import { SmartBoard } from "./smart-board";
 import { StudentProgress, MyProgress } from "./student-progress";
 import { ClassProgress } from "./class-progress";
+import { GuestCourseVisit } from "./guest-course-visit";
 import { VisitorStatistics } from "./visitor-statistics";
 import { DiscoveryHome, type DiscoveryProps } from "./discovery-home";
 import { SquareLessonView } from "./square-lesson";
@@ -25,6 +26,8 @@ import type { SquareLesson } from "@/lib/square-model";
 import { CourseSelection, MyLearning } from "./learning-home";
 import { SiteHeader } from "./site-header";
 import { storedLocale, rememberLocale } from "@/lib/locale";
+import { authHref, courseContext, localDestination } from "@/lib/auth-navigation";
+import { readGuestCourseChoice } from "@/lib/guest-course-choice";
 import { isPublicLearningPath, publicPath } from "@/lib/public-presentation";
 import type { LanguagePair, PublicPageData } from "@/lib/public-page-model";
 import { ViewContext, setViewNonce } from "./view-state";
@@ -80,7 +83,7 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
   else if (!publicPage && !actor) content = <Auth mode="login" next={path} />;
   else if (parts[0] === "admin" && !admin || parts[0] === "teacher" && !teacher) content = <div className="notice error">{t("Этот раздел недоступен вашему аккаунту.", "This section is not available to your account.")}</div>;
   else if (square) content = <SquareLessonView lesson={square} sessionReady={ready && !error} studySession={!ready ? "loading" : error ? "device" : "ready"} />;
-  else if (discovery) content = discovery.view === "home" && actor ? teacher && !admin ? <TeacherDashboard/> : <MyLearning sessionReady={ready} /> : <DiscoveryHome {...discovery} sessionReady={ready && !error} />;
+  else if (discovery) content = discovery.view === "home" && actor ? teacher && !admin ? <TeacherDashboard/> : <MyLearning sessionReady={ready} /> : <DiscoveryHome key={discovery.view === "search" ? JSON.stringify([discovery.query, discovery.searchAll]) : discovery.view} {...discovery} sessionReady={ready && !error} />;
   else if (!parts.length) content = <CourseCatalogScreen home />;
   else if (["login", "register", "recover"].includes(parts[0])) content = <Auth mode={parts[0]} />;
   else if (parts[0] === "library") content = <CatalogScreen initial={publicData} />;
@@ -118,35 +121,42 @@ export function Platform({ discovery, square, publicData, languagePair }: { disc
     <SiteHeader key={"header:" + rawPath} actor={actor} path={path} hidden={(!!boardPage || !!markingPage || adminWorkspace) && !lens} publicPage={publicLearning} languagePair={languagePair} accountLanguage={accountLanguage} viewChanged={setLens} changeLanguage={value => { if (lens) return; setAccountLanguage(value); if (!publicLearning) setLang(value); rememberLocale(value); if (publicLearning) document.documentElement.lang = initialLocale; if (actor) void api("profile", "PATCH", { locale: value }).catch(() => {}); }} />
     <main className={"container" + (adminWorkspace ? " admin-container" : teacherWorkspace ? " teacher-workspace" : "")} id="main-content" data-home={!parts.length && !actor} key={"page:" + path}>{(discovery || square) && !!error && <ErrorNotice error={error} />}{content}</main>
     <footer className="footer" hidden={!!boardPage}><span>© Maths4U · {t("Математика объединяет", "Mathematics brings us together")}</span><a href="https://maths4u.sbs/">Maths4U main site ↗</a><Link href="/recover">{t("Помощь со входом", "Account help")}</Link></footer>
+    <GuestCourseVisit enabled={ready && !actor && !lens && !error} level={discovery?.direction}
+      slug={square?.topic.path.split("/")[2] ?? publicData?.topic?.course.slug ?? publicData?.courses?.find(c => c.slug === parts[1] && !c.locked)?.slug}
+      lessonHref={square || publicData?.topic ? rawPath : undefined} lessonTitle={square?.title ?? publicData?.topic?.title} />
     <VisitorStatistics path={path} eligible={ready && !actor && !error} language={lang} />
   </TaskBasketProvider></PublicLocaleContext.Provider></ViewContext.Provider></ActorContext.Provider></LocaleContext.Provider>;
 }
 function subscribeAuthLocation(changed:()=>void){window.addEventListener("popstate",changed);return()=>window.removeEventListener("popstate",changed);}
 function Auth({ mode, next }: { mode: string; next?: string }) {
   const { t, lang } = useLocale();
-  const [courseSlugs, setCourseSlugs] = useState<string[]>([]);
+  const [remembered] = useState(readGuestCourseChoice);
   const [selectedAccountType,setAccountType]=useState<"STUDENT"|"TEACHER"|null>(null);
   const search=useSyncExternalStore(subscribeAuthLocation,()=>window.location.search,()=>"");
   const accountType=selectedAccountType??(mode==="register"&&new URLSearchParams(search).get("accountType")==="teacher"?"TEACHER":"STUDENT");
   const register = mode === "register", recovery = mode === "recover";
-  return <section className="form-narrow"><Heading title={recovery ? t("Восстановить доступ", "Recover your account") : register ? t("Добро пожаловать", "Welcome to Maths4U") : t("С возвращением", "Welcome back")}
-    subtitle={t("Один аккаунт для всего обучения.", "One account for all your learning.")} /><div className="card">
-    {recovery && <p className="notice">{t("Сообщите школьному администратору свой логин. После проверки личности он выдаст одноразовый код на 60 минут. Личная почта не нужна.", "Tell your school administrator your login. After verifying your identity, they will issue a one-time code valid for 60 minutes. No personal email is required.")}</p>}
-    <Form primary label={recovery ? t("Сменить пароль", "Reset password") : register ? t("Создать аккаунт", "Create account") : t("Войти", "Sign in")} submit={async f => {
+  const intended = localDestination(next ?? new URLSearchParams(search).get("next"));
+  const origin = courseContext(intended);
+  function accountFields(courseSlugs: string[]) { return <Form primary label={recovery ? t("Сменить пароль", "Reset password") : register ? t("Создать аккаунт", "Create account") : t("Войти", "Sign in")} submit={async f => {
       if (recovery) { await api("auth/recover", "POST", { token: str(f, "token"), password: str(f, "password") }); window.location.assign("/login"); return; }
       if (register) await api("auth/register", "POST", { username: str(f, "username"), password: str(f, "password"), displayName: str(f, "displayName"), locale: lang, courseSlugs, accountType, ...(str(f, "email") ? { email: str(f, "email") } : {}) });
       const user = await api<Actor>("auth/login", "POST", { username: str(f, "username"), password: str(f, "password") });
-      const intended = next ?? new URLSearchParams(window.location.search).get("next");
-      const safe = intended && /^\/(?!\/|\\)/.test(intended) ? intended : user.roles.some(r => r.role === "ADMIN") ? "/admin" : user.roles.some(r => r.role === "TEACHER") ? "/teacher" : "/student";
-      window.location.assign(safe);
+      const home = user.roles.some(r => r.role === "ADMIN") ? "/admin" : user.roles.some(r => r.role === "TEACHER") ? "/teacher" : "/student";
+      // Course sign-ups begin in the workspace. Explicit class invitations and assignment links keep their destination.
+      window.location.assign((register && origin ? null : intended) ?? home);
     }}>
-      {register && <fieldset className="ae-account-type"><legend>I am a</legend><div className="row">{(["STUDENT","TEACHER"] as const).map(role=><label key={role}><Input type="radio" name="accountType" value={role} checked={accountType===role} onChange={()=>setAccountType(role)}/>{role==='TEACHER'?'Teacher':'Student'}</label>)}</div><p className="muted">{accountType==='TEACHER'?'Create private questions, set class work and mark responses. Basic accounts include 3 active classes and 100 students. AI tools require separate access.':'Learn, practise and keep your progress across courses.'}</p></fieldset>}
       {register && <Field name="displayName" label={t("Имя и фамилия", "Full name")} />}
       {recovery ? <Field name="token" label={t("Код от администратора", "Administrator recovery code")} /> : <label>{t("Логин", "Login")}<Input aria-label={t("Логин", "Login")} name="username" autoComplete="username" required pattern="[a-zA-Z0-9_.\-]{3,64}" /><span className="muted">{t("От 3 символов: латинские буквы, цифры, точка, дефис.", "3 or more characters: letters, numbers, dots or hyphens.")}</span></label>}
       <label>{recovery ? t("Новый пароль", "New password") : t("Пароль", "Password")}<Input aria-label={recovery ? t("Новый пароль", "New password") : t("Пароль", "Password")} name="password" type="password" required minLength={register || recovery ? 10 : 1} maxLength={72} autoComplete={register || recovery ? "new-password" : "current-password"} />{(register || recovery) && <span className="muted">{t("Не менее 10 символов.", "At least 10 characters.")}</span>}</label>
       {register && <Field name="email" label={t("Почта (необязательно)", "Email (optional)")} type="email" required={false} />}
-      {register && <CourseSelection selected={courseSlugs} onChange={setCourseSlugs} />}
-    </Form>
-    <div className="row spread space-top-22" ><ButtonLink className="button quiet" href={register ? "/login" : "/register"}>{register ? t("Уже есть аккаунт", "Already have an account") : t("Зарегистрироваться", "Create an account")}</ButtonLink>{!recovery && <Link href="/recover" className="muted">{t("Забыли пароль?", "Forgot password?")}</Link>}</div>
+    </Form>; }
+  return <section className={register ? "form-narrow signup-panel" : "form-narrow"}><Heading title={recovery ? t("Восстановить доступ", "Recover your account") : register ? t("Добро пожаловать", "Welcome to Maths4U") : t("С возвращением", "Welcome back")}
+    subtitle={t("Один аккаунт для всего обучения.", "One account for all your learning.")} /><div className="card">
+    {recovery && <p className="notice">{t("Сообщите школьному администратору свой логин. После проверки личности он выдаст одноразовый код на 60 минут. Личная почта не нужна.", "Tell your school administrator your login. After verifying your identity, they will issue a one-time code valid for 60 minutes. No personal email is required.")}</p>}
+    {register ? <>
+      <fieldset className="ae-account-type"><legend>I am a</legend><div className="row">{(["STUDENT","TEACHER"] as const).map(role=><label key={role}><Input type="radio" name="accountType" value={role} checked={accountType===role} onChange={()=>setAccountType(role)}/>{role==='TEACHER'?'Teacher':'Student'}</label>)}</div><p className="muted">{accountType==='TEACHER'?'Create private questions, set class work and mark responses. Basic accounts include 3 active classes and 100 students. AI tools require separate access.':'Learn, practise and keep your progress across courses.'}</p></fieldset>
+      <CourseSelection key={accountType + search} teacher={accountType === 'TEACHER'} origin={origin ?? remembered}>{accountFields}</CourseSelection>
+    </> : accountFields([])}
+    <div className="row spread space-top-22" ><ButtonLink className="button quiet" href={authHref(register ? "login" : "register", intended)}>{register ? t("Уже есть аккаунт", "Already have an account") : t("Зарегистрироваться", "Create an account")}</ButtonLink>{!recovery && <Link href="/recover" className="muted">{t("Забыли пароль?", "Forgot password?")}</Link>}</div>
   </div></section>;
 }

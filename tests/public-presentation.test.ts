@@ -48,7 +48,7 @@ test("new Russian teaching content creates availability without a path allowlist
   assert.equal(hasRussianPage("/student", translated), false);
 });
 test("programme order is stable and untranslated/interface-only pages are not language pairs", () => {
-  assert.deepEqual(["olymp-book", "maths4u-9231-fp1", "maths4u-0606", "maths4u-9709-p1", "school-year7", "igcse-0580"].sort((a,b)=>programOrder(a)-programOrder(b)), ["igcse-0580", "maths4u-0606", "maths4u-9709-p1", "maths4u-9231-fp1", "school-year7", "olymp-book"]);
+  assert.deepEqual(["olymp-book", "maths4u-9231-fp1", "maths4u-0606", "maths4u-9709-p1", "school-year7", "igcse-0580"].sort((a,b)=>programOrder(a)-programOrder(b)), ["school-year7", "igcse-0580", "maths4u-0606", "maths4u-9709-p1", "maths4u-9231-fp1", "olymp-book"]);
   const none = russianAvailability([{ id: "x", slug: "olymp-x", texts: ["English notes", ""] }]);
   assert.equal(hasRussianPage("/learn/olympiad", none), false);
   assert.equal(hasRussianPage("/library", none), false);

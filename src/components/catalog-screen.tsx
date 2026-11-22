@@ -8,6 +8,7 @@ import { TopicStudyPanel, StudyStatus } from "./study-panel";
 import { ExtraStudyPractice, LessonStudy, StudyWrittenQuestions } from "./lesson-study";
 import type { CatalogDto, PracticeMode, courseCatalog, topicContent } from "@/lib/catalog";
 import { ActorContext, PublicLocaleContext, api, ActionButton, Empty, ErrorNotice, Heading, MaterialAsset, MathContent, useLocale, useResource } from "./ui";
+import { compareLearningCourses, courseDirection, courseLabel, sampleLessonId } from "@/lib/discovery-model";
 import { displayTitle, programKey, programName, programOrder } from "@/lib/public-presentation";
 import type { PublicPageData } from "@/lib/public-page-model";
 import { BasketPanel, useTaskBasket } from "./task-basket";
@@ -90,25 +91,30 @@ export function CourseCatalogScreen({ slug, home = false, initial }: { slug?: st
   const r = useResource<Awaited<ReturnType<typeof courseCatalog>>>("catalog/courses" + (slug ? "?slug=" + encodeURIComponent(slug) : ""), initial?.courses);
   const [chapter, setChapter] = useState(() => initial?.chapter ?? (typeof window === "undefined" ? "" : new URLSearchParams(window.location.search).get("chapter") ?? ""));
   const teacher = actor?.roles.some(r => ["TEACHER", "ADMIN"].includes(r.role));
-  const visible = (home && actor ? r.data?.filter(c => c.followed) : r.data)?.toSorted((a,b) => programOrder(a.slug) - programOrder(b.slug));
+  const visible = (home && actor ? r.data?.filter(c => c.followed) : r.data)?.toSorted((a,b) => programOrder(a.slug) - programOrder(b.slug) || compareLearningCourses(a, b));
   const groups = [...new Set(visible?.map(c => programKey(c.slug)) ?? [])];
   const follow = (c: NonNullable<typeof r.data>[number]) => actor ? <ActionButton secondary label={c.followed ? t("Убрать из моих курсов", "Remove from my courses") : t("Добавить в мои курсы", "Add to my courses")} action={() => api("learning/courses/" + c.id, "POST", { selected: !c.followed })} onDone={r.refresh} /> : null;
   const count = (n: number) => n + " " + t("вопросов", "questions");
   const currentCourse = slug ? r.data?.[0] : undefined;
+  const level = currentCourse && courseDirection(currentCourse.slug);
+  const directSample = !initial?.chapterTitle && !chapter && !currentCourse?.locked && (level === "igcse" || level === "additional")
+    ? currentCourse?.chapters.flatMap(ch => ch.topics).find(topic => topic.id === sampleLessonId(level)) : undefined;
   const chapterLink = (c: NonNullable<typeof r.data>[number], ch: NonNullable<typeof r.data>[number]["chapters"][number], selectedId?: string) => <Link key={ch.id} href={prefix+(ch.path??("/courses/"+c.slug+"?chapter="+ch.id))} aria-current={selectedId === ch.id ? "page" : undefined} onClick={e => {
     if (ch.path || initial?.chapterTitle || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
     e.preventDefault(); setChapter(ch.id); history.replaceState(null, "", prefix + "/courses/" + c.slug + "?chapter=" + ch.id);
     const disclosure = e.currentTarget.closest("details"); if (disclosure) { disclosure.open = false; disclosure.querySelector("summary")?.focus({ preventScroll: true }); }
   }}><span>{ch.title}</span><small>{count(ch.count)}</small></Link>;
-  return <><Heading title={initial?.chapterTitle??currentCourse?.title ?? (home && actor ? t("Мои курсы", "My courses") : t("Курсы математики", "Mathematics courses"))} subtitle={initial?.chapterSummary ?? (currentCourse ? programName(currentCourse.slug, lang === "ru") + " · " + count(currentCourse.count) : t("Выберите программу, главу и тему.", "Choose a programme, chapter and topic."))}>
+  return <><Heading title={initial?.chapterTitle ?? (currentCourse && courseLabel(currentCourse.slug, currentCourse.title)) ?? (home && actor ? t("Мои курсы", "My courses") : t("Курсы математики", "Mathematics courses"))} subtitle={initial?.chapterSummary ?? (currentCourse ? programName(currentCourse.slug, lang === "ru") + " · " + count(currentCourse.count) : t("Выберите программу, главу и тему.", "Choose a programme, chapter and topic."))}>
     {currentCourse?.original && <span className="badge course-origin">Maths4U Original</span>}
     {actor && !slug && <ButtonLink href={home ? "/courses" : "/"}>{home ? t("Выбрать курсы", "Choose courses") : t("Мои курсы", "My courses")}</ButtonLink>}
     {home && actor && <ButtonLink href={teacher ? "/teacher" : "/student"}>{t("Мой кабинет", "My dashboard")} →</ButtonLink>}
   </Heading>{!actor && <p className="catalog-guest-note">{t("Материалы доступны без регистрации. Войдите, чтобы сохранять результаты.", "Browse the materials as a guest. Sign in to save your results.")} <Link href="/login">{t("Войти", "Sign in")} →</Link></p>}
+    {directSample && currentCourse && <p className="discovery-course-demo"><Link href={prefix + "/courses/" + currentCourse.slug + "/topics/" + directSample.id}>
+      {t("Пример урока", "Sample lesson")} · {courseLabel(currentCourse.slug, currentCourse.title)} · {directSample.title} →</Link></p>}
     {home && <Pure1Review />}
     {slug && <Link href="/courses">← {t("Все курсы", "All courses")}</Link>}<ErrorNotice error={r.error} />
     {!r.data ? <CatalogSkeleton /> : !visible?.length ? <Empty>{t("Курсов пока нет", "No courses yet")}</Empty> : !slug ? groups.map(group => <section className="course-group" data-program={group} key={group}><h2>{programName(visible!.find(c => programKey(c.slug) === group)!.slug, lang === "ru")}</h2><div className="course-catalog">{visible!.filter(c => programKey(c.slug) === group).map(c => <section className="card compact-course" key={c.id}>
-      <h2><Link href={prefix + "/courses/" + c.slug}>{c.title} →</Link></h2>{c.original && <span className="badge">Maths4U Original</span>}
+      <h2><Link href={prefix + "/courses/" + c.slug}>{courseLabel(c.slug, c.title)} →</Link></h2>{c.original && <span className="badge">Maths4U Original</span>}
       {c.description && !/^Maths4U Original pilot:/i.test(c.description) && <p className="muted">{c.description}</p>}
       <p className="course-count">{count(c.count)} · {c.chapters.length} {t("глав", "chapters")}</p>
       {follow(c)}{actor && c.progress && <p className="course-personal-progress">{t("Решено", "Solved")}: {c.progress.solved} / {c.count} · {c.progress.selfSolved} {t("по самооценке", "self-assessed")}</p>}

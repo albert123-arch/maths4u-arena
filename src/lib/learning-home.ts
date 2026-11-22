@@ -6,10 +6,21 @@ import { squareLessonId, squarePath, type QuadraticTopic, quadraticTopic } from 
 import { assertLessonVisible, visibleCourseWhere, visibleLessonWhere, archiveWhere } from "./content-access";
 import { lensAttemptScope } from "./request-view";
 import { contentPackages, packageTopic } from "./content-package-content";
+import type { Prisma } from "../generated/prisma/client";
 
-export async function courseChoices(actor: Actor | null = null) {
-  const rows = await db().course.findMany({ where: { published: true, archivedAt: null, featureKey: null, ...visibleCourseWhere(actor) }, orderBy: [{ position: "asc" }, { id: "asc" }], select: { id: true, slug: true, texts: { select: { locale: true, title: true } } } });
-  return rows.map(c => ({ id: c.id, slug: c.slug, title: localized(c.texts, "en").title }));
+export async function courseChoices(actor: Actor | null = null, countLessons = false): Promise<{ id: string; slug: string; title: string; lessons?: number }[]> {
+  const query = {
+    where: { published: true, archivedAt: null, featureKey: null, ...visibleCourseWhere(actor) },
+    orderBy: [{ position: "asc" }, { id: "asc" }],
+    select: { id: true, slug: true, texts: { select: { locale: true, title: true } } },
+  } satisfies Prisma.CourseFindManyArgs;
+  const choice = (c: Prisma.CourseGetPayload<typeof query>) => ({ id: c.id, slug: c.slug, title: localized(c.texts, "en").title });
+  if (!countLessons) return (await db().course.findMany(query)).map(choice);
+  const lessons = { where: { archivedAt: null, versions: { some: { texts: { some: {} } } }, ...visibleLessonWhere(actor) } };
+  const rows = await db().course.findMany({ ...query, select: {
+    ...query.select, topics: { select: { _count: { select: { lessons } } } },
+  } });
+  return rows.map(c => ({ ...choice(c), lessons: c.topics.reduce((sum, ch) => sum + ch._count.lessons, 0) }));
 }
 export async function learningHome(actor: Actor, lang: string) {
   const follows = await db().courseFollow.findMany({ where: { userId: actor.id, course: { published: true, archivedAt: null, ...visibleCourseWhere(actor) } }, include: { course: { include: { texts: true, topics: { include: { lessons: { where: { archivedAt: null, ...visibleLessonWhere(actor) }, select: { id: true } } } } } } } });

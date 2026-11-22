@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { Actor } from "@/lib/security";
 import type { Locale } from "@/lib/locale";
+import { authHref, courseContext } from "@/lib/auth-navigation";
 import { api, useLocale, useResource } from "./ui";
 import { Button, Input } from "./controls";
 import { ThemePicker } from "./theme-picker";
@@ -40,7 +41,7 @@ export function SiteHeader({ actor, path, hidden, publicPage, languagePair, acco
     <nav id="site-navigation" className="nav" data-open={open} aria-label={t("Основная навигация", "Main navigation")}>
       {student ? <>
         <Link aria-current={dashboardPath && !hash ? "page" : undefined} href="/student" onClick={close}>Dashboard</Link>
-        <Link aria-current={path.startsWith("/courses") ? "page" : undefined} href="/courses" onClick={close}>Courses</Link>
+        <Link aria-current={dashboardPath && hash === "#my-courses" ? "page" : undefined} href="/student#my-courses" onClick={close}>My courses</Link>
         <Link aria-current={path === "/student/review" || dashboardPath && hash === "#review" ? "page" : undefined} href="/student/review" onClick={close}>Review</Link>
         <Link aria-current={path === "/student/assignments" ? "page" : undefined} href="/student/assignments" onClick={close}>Assignments</Link>
         <Link aria-current={path === "/student/notebook" || dashboardPath && hash === "#mistake-notebook" ? "page" : undefined} href="/student/notebook" onClick={close}>Notebook</Link>
@@ -63,9 +64,9 @@ export function SiteHeader({ actor, path, hidden, publicPage, languagePair, acco
     <div className="account">{(student || staff) && <Link className="student-header-search" href="/search" aria-label="Search"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></Link>}{languages("desktop-locale")}<details className="discovery-account" ref={account} onToggle={e => { if (e.currentTarget.open) setOpen(false); }} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) e.currentTarget.open = false; }}>
       <summary aria-label={t("Меню аккаунта", "Account menu")}>{student || staff ? <span className="student-avatar" aria-hidden="true">{initials}</span> : <><svg className="account-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="12" cy="8" r="3.5"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span className="header-account-name">{actor ? actor.displayName.split(" ")[0] : t("Аккаунт", "Account")}</span><span className="header-account-chevron" aria-hidden="true">⌄</span></>}</summary>
       <div className="discovery-account-links" onClick={e => { if ((e.target as HTMLElement).closest("a")) close(); }}>
-        {actor ? <><Link href="/">{t("Моё обучение", "My learning")}</Link><Link href={teacher ? "/teacher" : "/student"}>{t("Мой кабинет", "My dashboard")}</Link><Link href="/student/progress">{t("Мой прогресс", "My progress")}</Link><Link href="/bookmarks">{t("Закладки", "Bookmarks")}</Link><Link href="/access">{t("Мой доступ", "My access")}</Link>{admin && <Link href="/admin">{t("Управление", "Admin")}</Link>}<Button variant="text" onClick={async () => { await api("auth/logout", "POST"); window.location.assign("/login"); }}>{t("Выйти", "Sign out")}</Button></> : <><Link href="/login">{t("Войти", "Sign in")}</Link><Link href="/register">{t("Создать аккаунт", "Create an account")}</Link></>}
+        {actor ? <><Link href="/">{t("Моё обучение", "My learning")}</Link><Link href={teacher ? "/teacher" : "/student"}>{t("Мой кабинет", "My dashboard")}</Link><Link href="/student/progress">{t("Мой прогресс", "My progress")}</Link><Link href="/bookmarks">{t("Закладки", "Bookmarks")}</Link><Link href="/access">{t("Мой доступ", "My access")}</Link>{admin && <Link href="/admin">{t("Управление", "Admin")}</Link>}<Button variant="text" onClick={async () => { await api("auth/logout", "POST"); window.location.assign("/login"); }}>{t("Выйти", "Sign out")}</Button></> : <><Link href="/login">{t("Войти", "Sign in")}</Link><Link href={authHref('register', courseContext(path) ? path : null)}>{t("Создать аккаунт", "Create an account")}</Link></>}
         <Link href="/olympiads">{t("Олимпиады и соревнования", "Olympiads & competitions")}</Link>
-        {student && <Link href="/library" onClick={close}>Question bank</Link>}
+        {student && <><Link href="/courses" onClick={close}>Browse all courses</Link><Link href="/library" onClick={close}>Question bank</Link></>}
         {(actor || !publicPage) && !student && !staff && <fieldset className="account-language" disabled={!!lens}><legend>{t("Язык личного кабинета", "Dashboard language")}</legend>{(["en", "ru"] as const).map(value => <label key={value}><Input type="radio" name="account-language" value={value} checked={accountLanguage === value} onChange={() => changeLanguage(value)} /><span>{value === "en" ? "English" : "Русский"}</span></label>)}</fieldset>}
         <fieldset className="view-form-fields" disabled={!!lens}><ThemePicker /></fieldset>
       </div>

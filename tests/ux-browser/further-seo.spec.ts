@@ -20,12 +20,12 @@ test('Published Further chapter and lesson metadata, schema and sitemap are comp
   await fs.mkdir(dir,{recursive:true});await fs.writeFile(dir+'/metadata.json',JSON.stringify({pages:results,sitemapStable:true,protectedCoursesPresent:true},null,2));
  }finally{await api.dispose();}
 });
-test('Further-first home, chapter links and lessons fit mobile and desktop in both themes',async({browser})=>{
+test('All-level home, chapter links and lessons fit mobile and desktop in both themes',async({browser})=>{
  const ctx=await browser.newContext({baseURL:base}),page=await ctx.newPage(),errors:string[]=[],matrix=[];page.on('pageerror',e=>errors.push(e.message));
  try{
   for(const [name,path] of [['home','/'],['chapter','/courses/maths4u-9231-mechanics/chapters/hookes-law'],['lesson','/courses/maths4u-9231-mechanics/topics/fm_hooke_models']])for(const width of [360,390,768,1280])for(const theme of ['light','dark'] as const){
    await page.setViewportSize({width,height:900});await page.emulateMedia({colorScheme:theme});expect((await page.goto(path))?.status()).toBe(200);await expect(page.locator('.katex-error')).toHaveCount(0);expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+1);
-   if(name==='home'){await expect(page.locator('#further-courses .discovery-course')).toHaveCount(4);await expect(page.getByRole('heading',{level:1})).toContainText('Further Mathematics');}
+   if(name==='home'){await expect(page.locator('#learning-directions .discovery-direction')).toHaveCount(5);await expect(page.getByRole('heading',{level:1})).toContainText('Stage 7 to A Level');}
    if(name==='chapter')await expect(page.getByRole('heading',{level:1,exact:true,name:"Hooke's law"})).toBeVisible();
    if([390,1280].includes(width))await page.screenshot({path:dir+'/'+name+'-'+width+'-'+theme+'.png',fullPage:name!=='lesson'});matrix.push({name,width,theme});
   }

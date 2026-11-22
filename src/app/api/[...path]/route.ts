@@ -118,7 +118,7 @@ async function dispatch(request: Request, context: { params: Promise<{ path: str
       if (parts.length === 4 && method === "GET") return json(await previewMaterial(parts[2], parts[3], lang));
       if (parts.length === 5 && parts[4] === "check" && method === "POST") return json(await checkPreview(parts[2], parts[3], input, lang));
     }
-    if (method === "GET" && route === "learning/course-choices") return json(await courseChoices(await actorForToken(tokenFrom(request))));
+    if (method === "GET" && route === "learning/course-choices") return json(await courseChoices(await actorForToken(tokenFrom(request)), url.searchParams.get("counts") === "lessons"));
     if (route === "learning/study-check" && method === "GET") {
       const lessonId = studyCheckpointLesson.parse(url.searchParams.get("lessonId"));
       const actor = requestView()?.lens ? null : await actorForToken(tokenFrom(request));
