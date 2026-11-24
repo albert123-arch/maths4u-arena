@@ -127,7 +127,8 @@ export function CourseCatalogScreen({ slug, home = false, initial }: { slug?: st
   const chapter = (initial?.chapterTitle ? initial.chapter : chapterParam ?? initial?.chapter) ?? "";
   const chapterNav = useRef<HTMLElement>(null);
   const teacher = actor?.roles.some(r => ["TEACHER", "ADMIN"].includes(r.role));
-  const visible = (home && actor ? r.data?.filter(c => c.followed) : r.data)?.toSorted((a,b) => programOrder(a.slug) - programOrder(b.slug) || compareLearningCourses(a, b));
+  const courses = home && actor ? r.data?.filter(course => course.followed) : r.data;
+  const visible = courses?.slice().sort((a, b) => programOrder(a.slug) - programOrder(b.slug) || compareLearningCourses(a, b));
   const groups = [...new Set(visible?.map(c => programKey(c.slug)) ?? [])];
   const follow = (c: CatalogueCourse) => actor ? <ActionButton secondary label={c.followed ? t("Убрать из моих курсов", "Remove from my courses") : t("Добавить в мои курсы", "Add to my courses")} action={() => api("learning/courses/" + c.id, "POST", { selected: !c.followed })} onDone={r.refresh} /> : null;
   const currentCourse = slug ? r.data?.[0] : undefined;
